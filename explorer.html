@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAAG Archipelago 3D Explorer · Arche &amp; Paxos</title>
+  <style>
+    :root {
+      --bg: #0d131a;
+      --panel-bg: rgba(15, 23, 34, 0.85);
+      --panel-border: rgba(255, 255, 255, 0.12);
+      --accent: #38bdf8;
+      --accent-hover: #7dd3fc;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --gold: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      user-select: none;
+    }
+    #canvas-container {
+      width: 100%; height: 100%;
+      display: block;
+      position: absolute;
+      top: 0; left: 0;
+      z-index: 1;
+    }
+
+    /* Loading Overlay */
+    #loading-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #080d14;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    #loading-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .loader-card {
+      background: rgba(18, 28, 42, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      padding: 36px 44px;
+      max-width: 480px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+    .loader-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .loader-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 26px;
+    }
+    .progress-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #0284c7, #38bdf8);
+      border-radius: 4px;
+      transition: width 0.2s ease;
+    }
+    .spinner {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(255, 255, 255, 0.15);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-top: 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* UI Header Bar */
+    .top-bar {
+      position: absolute;
+      top: 16px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .brand-badge {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(12px);
+      padding: 10px 18px;
+      border-radius: 10px;
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-badge h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .brand-badge span {
+      font-size: 0.75rem;
+      background: rgba(56, 189, 248, 0.18);
+      color: var(--accent);
+      padding: 3px 8px;
+      border-radius: 99px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    /* Floating Controls Panel */
+    .floating-panel {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(14px);
+      border-radius: 14px;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      pointer-events: auto;
+      z-index: 10;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+      max-width: 95vw;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ctrl-label {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text);
+      font-size: 0.82rem;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-weight: 500;
+    }
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .btn.active {
+      background: var(--accent);
+      color: #04131d;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+    .btn-pill {
+      padding: 4px 10px;
+      font-size: 0.78rem;
+    }
+    .divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Range Slider */
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 120px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      background: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+    }
+    .val-display {
+      font-size: 0.82rem;
+      font-variant-numeric: tabular-nums;
+      color: var(--text);
+      min-width: 60px;
+      font-weight: 600;
+    }
+
+    /* Quick Guide / Tooltip */
+    .instructions-card {
+      position: absolute;
+      top: 76px;
+      left: 20px;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(12px);
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      z-index: 10;
+      line-height: 1.5;
+      pointer-events: auto;
+      max-width: 280px;
+    }
+    .instructions-card h4 {
+      color: var(--text);
+      font-size: 0.82rem;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+    .instructions-card ul {
+      padding-left: 16px;
+    }
+    .instructions-card li {
+      margin-bottom: 4px;
+    }
+
+    /* Side Settings Panel */
+    .side-panel {
+      position: absolute;
+      top: 76px;
+      right: 20px;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(12px);
+      padding: 16px 20px;
+      border-radius: 12px;
+      z-index: 10;
+      pointer-events: auto;
+      width: 280px;
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .side-panel::-webkit-scrollbar {
+      width: 4px;
+    }
+    .side-panel::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+    }
+    .side-panel h3 {
+      font-size: 0.86rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 6px;
+    }
+    .setting-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .setting-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Screen Flash Overlay & Toast Notification */
+    #flash-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #ffffff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 999;
+      transition: opacity 0.3s ease-out;
+    }
+    #flash-overlay.flash {
+      opacity: 0.55;
+      transition: none;
+    }
+    .toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-70px);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #f8fafc;
+      padding: 10px 24px;
+      border-radius: 99px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(56, 189, 248, 0.2);
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+
+  <!-- Import maps for Three.js and Addons -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Screen Flash & Toast Feedback -->
+  <div id="flash-overlay"></div>
+  <div id="toast" class="toast">📸 Screenshot copied to clipboard!</div>
+
+  <!-- 3D Canvas -->
+  <div id="canvas-container"></div>
+
+  <!-- Top Brand Header -->
+  <div class="top-bar">
+    <div class="brand-badge">
+      <h1>DAAG Archipelago</h1>
+      <span>3D Explorer</span>
+    </div>
+    <div style="pointer-events: auto;">
+      <button class="btn" id="btn-top-screenshot" style="display:flex; align-items:center; gap:8px; padding: 9px 18px; font-weight:600; background:rgba(18,28,42,0.92); border: 1px solid rgba(56,189,248,0.4); border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.45); cursor:pointer;">
+        <span style="font-size:1.15em">📸</span>
+        <span>Copy Screenshot</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Instructions Help Card -->
+  <div class="instructions-card">
+    <h4>Navigation Controls</h4>
+    <ul>
+      <li><strong>Orbit Mode:</strong> Left Drag to Rotate, Right Drag to Pan, Scroll to Zoom.</li>
+      <li><strong>Fly Mode:</strong> Mouse Drag to Look, <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> to fly, <kbd>Q</kbd>/<kbd>E</kbd> for altitude, <kbd>Shift</kbd> for boost.</li>
+      <li><strong>Focal Length:</strong> Select below or drag the slider.</li>
+      <li><strong>Screenshot:</strong> Click "Copy Screenshot" or press <kbd>P</kbd>.</li>
+    </ul>
+  </div>
+
+  <!-- Side Settings Panel -->
+  <div class="side-panel">
+    <h3>World Settings</h3>
+
+    <!-- Time of Day / Sun -->
+    <div class="setting-row">
+      <div class="setting-header">
+        <span>Sun Elevation</span>
+        <span id="sun-elev-val" class="val-display" style="min-width:auto">45°</span>
+      </div>
+      <input type="range" id="sun-elev-slider" min="2" max="85" value="45">
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-header">
+        <span>Sun Azimuth</span>
+        <span id="sun-azim-val" class="val-display" style="min-width:auto">135°</span>
+      </div>
+      <input type="range" id="sun-azim-slider" min="0" max="360" value="135">
+    </div>
+
+    <!-- Water Settings -->
+    <div class="setting-row">
+      <div class="setting-header">
+        <span>Water Tone (Static)</span>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn btn-pill active" id="btn-water-aegean" style="flex:1;">Aegean</button>
+        <button class="btn btn-pill" id="btn-water-deep" style="flex:1;">Deep</button>
+        <button class="btn btn-pill" id="btn-water-turquoise" style="flex:1;">Turquoise</button>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-header">
+        <span>Water Surface</span>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn btn-pill active" id="btn-water-ripples" style="flex:1;">Static Ripples</button>
+        <button class="btn btn-pill" id="btn-water-mirror" style="flex:1;">Mirror Calm</button>
+      </div>
+    </div>
+
+    <!-- Sky Gradient Settings -->
+    <div class="setting-row">
+      <div class="setting-header">
+        <span>Sky Gradient</span>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn btn-pill active" id="btn-sky-aegean" style="flex:1;">Midday</button>
+        <button class="btn btn-pill" id="btn-sky-azure" style="flex:1;">Azure</button>
+        <button class="btn btn-pill" id="btn-sky-soft" style="flex:1;">Soft</button>
+      </div>
+    </div>
+
+    <!-- Sea Level -->
+    <div class="setting-row">
+      <div class="setting-header">
+        <span>Sea Level Offset</span>
+        <span id="sea-level-val" class="val-display" style="min-width:auto">0.0m</span>
+      </div>
+      <input type="range" id="sea-level-slider" min="-10" max="10" step="0.2" value="0">
+    </div>
+
+    <!-- Island Spacing -->
+    <div class="setting-row">
+      <div class="setting-header">
+        <span>Island Separation</span>
+        <span id="spacing-val" class="val-display" style="min-width:auto">180m</span>
+      </div>
+      <input type="range" id="spacing-slider" min="80" max="400" step="5" value="180">
+    </div>
+
+    <!-- Island Scales -->
+    <div class="setting-row">
+      <div class="setting-header">
+        <span>Arche Scale</span>
+        <span id="arche-scale-val" class="val-display" style="min-width:auto">1.0x</span>
+      </div>
+      <input type="range" id="arche-scale-slider" min="0.4" max="2.0" step="0.05" value="1.0">
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-header">
+        <span>Paxos Scale <span style="font-size:0.7rem; color:var(--accent);">(Canon 0.42x)</span></span>
+        <span id="paxos-scale-val" class="val-display" style="min-width:auto">0.42x</span>
+      </div>
+      <input type="range" id="paxos-scale-slider" min="0.2" max="1.5" step="0.01" value="0.42">
+    </div>
+  </div>
+
+  <!-- Bottom Floating Control Center -->
+  <div class="floating-panel">
+    <!-- Camera Target Presets -->
+    <div class="ctrl-group">
+      <span class="ctrl-label">View:</span>
+      <button class="btn active" id="btn-view-overview">Both</button>
+      <button class="btn" id="btn-view-arche">Arche</button>
+      <button class="btn" id="btn-view-paxos">Paxos</button>
+      <button class="btn" id="btn-view-sealevel">Sea Level</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Navigation Mode -->
+    <div class="ctrl-group">
+      <span class="ctrl-label">Control:</span>
+      <button class="btn active" id="btn-mode-orbit">Orbit</button>
+      <button class="btn" id="btn-mode-fly">Flycam</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Focal Length / Lens Control -->
+    <div class="ctrl-group">
+      <span class="ctrl-label">Lens (Focal Length):</span>
+      <div class="slider-wrap">
+        <input type="range" id="focal-slider" min="15" max="250" value="50">
+        <span id="focal-val" class="val-display">50 mm</span>
+      </div>
+      <button class="btn btn-pill" data-focal="18">18mm</button>
+      <button class="btn btn-pill" data-focal="24">24mm</button>
+      <button class="btn btn-pill" data-focal="35">35mm</button>
+      <button class="btn btn-pill active" data-focal="50">50mm</button>
+      <button class="btn btn-pill" data-focal="85">85mm</button>
+      <button class="btn btn-pill" data-focal="135">135mm</button>
+      <button class="btn btn-pill" data-focal="200">200mm</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Quick Screenshot Button -->
+    <div class="ctrl-group">
+      <button class="btn" id="btn-bottom-screenshot" style="display:flex; align-items:center; gap:6px; font-weight:600; border-color:rgba(56,189,248,0.35);">
+        <span>📸</span>
+        <span>Screenshot</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay">
+    <div class="loader-card">
+      <h2 class="loader-title">DAAG 3D Explorer</h2>
+      <p class="loader-subtitle">Loading high-resolution Hellenistic island meshes...</p>
+
+      <div class="progress-group">
+        <div class="progress-label">
+          <span>Arche (Theory Island)</span>
+          <span id="arche-progress-pct">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="arche-progress-bar"></div>
+        </div>
+      </div>
+
+      <div class="progress-group">
+        <div class="progress-label">
+          <span>Paxos (Assembly Island)</span>
+          <span id="paxos-progress-pct">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="paxos-progress-bar"></div>
+        </div>
+      </div>
+
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+    // -------------------------------------------------------------------------
+    // Procedural Water Normal Texture (Self-contained, no external JPG dependency)
+    // -------------------------------------------------------------------------
+    function createProceduralWaterNormal() {
+      const size = 512;
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      const imgData = ctx.createImageData(size, size);
+      const d = imgData.data;
+
+      // Layered sine wave field
+      const h = new Float32Array(size * size);
+      for (let y = 0; y < size; y++) {
+        const fy = (y / size) * Math.PI * 2;
+        for (let x = 0; x < size; x++) {
+          const fx = (x / size) * Math.PI * 2;
+          let val = 0;
+          val += Math.sin(fx * 4.0 + fy * 2.0) * 0.45;
+          val += Math.sin(fx * 8.0 - fy * 6.0) * 0.28;
+          val += Math.cos(fx * 16.0 + fy * 12.0) * 0.16;
+          val += Math.sin(fx * 32.0 - fy * 24.0) * 0.08;
+          val += Math.cos(fx * 64.0 + fy * 48.0) * 0.03;
+          h[y * size + x] = val;
+        }
+      }
+
+      // Compute normal gradients
+      for (let y = 0; y < size; y++) {
+        const yP = (y - 1 + size) % size;
+        const yN = (y + 1) % size;
+        for (let x = 0; x < size; x++) {
+          const xP = (x - 1 + size) % size;
+          const xN = (x + 1) % size;
+
+          const dx = (h[y * size + xN] - h[y * size + xP]) * 4.0;
+          const dy = (h[yN * size + x] - h[yP * size + x]) * 4.0;
+          const dz = 1.0;
+          const len = Math.hypot(dx, dy, dz);
+
+          const idx = (y * size + x) * 4;
+          d[idx]     = Math.floor(((-dx / len) * 0.5 + 0.5) * 255);
+          d[idx + 1] = Math.floor(((-dy / len) * 0.5 + 0.5) * 255);
+          d[idx + 2] = Math.floor(((dz / len) * 0.5 + 0.5) * 255);
+          d[idx + 3] = 255;
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      return texture;
+    }
+
+    // -------------------------------------------------------------------------
+    // Scene, Camera, Renderer Setup
+    // -------------------------------------------------------------------------
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+
+    // Standard 35mm film sensor camera
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.5, 30000);
+    camera.filmGauge = 35; // 35mm film width
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+    container.appendChild(renderer.domElement);
+
+    // Initial camera position (overview looking at both islands)
+    camera.position.set(0, 120, 220);
+
+    // -------------------------------------------------------------------------
+    // Controls: Orbit + Freecam
+    // -------------------------------------------------------------------------
+    const orbitControls = new OrbitControls(camera, renderer.domElement);
+    orbitControls.enableDamping = true;
+    orbitControls.dampingFactor = 0.05;
+    orbitControls.maxPolarAngle = Math.PI / 2 - 0.02; // prevent dipping under water
+    orbitControls.minDistance = 5;
+    orbitControls.maxDistance = 1500;
+    orbitControls.target.set(0, 10, 0);
+
+    let controlMode = 'orbit'; // 'orbit' or 'fly'
+    const keys = { w: false, a: false, s: false, d: false, q: false, e: false, shift: false };
+    let flyPitch = -0.35, flyYaw = 0;
+    let isMouseDown = false, lastMouseX = 0, lastMouseY = 0;
+
+    window.addEventListener('keydown', (e) => {
+      const k = e.key.toLowerCase();
+      if (keys.hasOwnProperty(k)) keys[k] = true;
+      if (e.key === 'Shift') keys.shift = true;
+    });
+    window.addEventListener('keyup', (e) => {
+      const k = e.key.toLowerCase();
+      if (keys.hasOwnProperty(k)) keys[k] = false;
+      if (e.key === 'Shift') keys.shift = false;
+    });
+
+    renderer.domElement.addEventListener('mousedown', (e) => {
+      if (controlMode === 'fly') {
+        isMouseDown = true;
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+      }
+    });
+    window.addEventListener('mouseup', () => { isMouseDown = false; });
+    window.addEventListener('mousemove', (e) => {
+      if (controlMode === 'fly' && isMouseDown) {
+        const dx = e.clientX - lastMouseX;
+        const dy = e.clientY - lastMouseY;
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+        flyYaw -= dx * 0.003;
+        flyPitch -= dy * 0.003;
+        flyPitch = Math.max(-Math.PI / 2 + 0.05, Math.min(Math.PI / 2 - 0.05, flyPitch));
+      }
+    });
+
+    // -------------------------------------------------------------------------
+    // Sky Gradient Dome & Sunlight (Hellenistic Aegean Atmosphere)
+    // -------------------------------------------------------------------------
+    const skyVertexShader = `
+      varying vec3 vWorldPosition;
+      void main() {
+        vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+        vWorldPosition = worldPosition.xyz;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+
+    const skyFragmentShader = `
+      uniform vec3 topColor;
+      uniform vec3 bottomColor;
+      uniform vec3 sunPosition;
+      varying vec3 vWorldPosition;
+
+      void main() {
+        vec3 dir = normalize(vWorldPosition);
+        float h = clamp(dir.y, 0.0, 1.0);
+        float factor = pow(h, 0.62);
+        vec3 sky = mix(bottomColor, topColor, factor);
+
+        // Natural sun disk & atmospheric bloom (only above horizon)
+        vec3 sunDir = normalize(sunPosition);
+        float sunDot = max(0.0, dot(dir, sunDir));
+        float horizonMask = smoothstep(-0.02, 0.06, dir.y);
+        float sunGlow = pow(sunDot, 48.0) * 0.42;
+        float sunCore = pow(sunDot, 1600.0) * 0.95;
+        vec3 sunColor = vec3(1.0, 0.96, 0.88);
+        vec3 finalColor = sky + sunColor * (sunGlow + sunCore) * horizonMask;
+
+        gl_FragColor = vec4(finalColor, 1.0);
+      }
+    `;
+
+    const skyGeo = new THREE.SphereGeometry(22000, 32, 16);
+    const skyUniforms = {
+      topColor: { value: new THREE.Color(0x156bc6) },    // Vibrant Aegean zenith blue
+      bottomColor: { value: new THREE.Color(0x98d4f7) }, // Light clear horizon blue
+      sunPosition: { value: new THREE.Vector3() }
+    };
+    const skyMat = new THREE.ShaderMaterial({
+      vertexShader: skyVertexShader,
+      fragmentShader: skyFragmentShader,
+      uniforms: skyUniforms,
+      side: THREE.BackSide,
+      depthWrite: false
+    });
+    const skyMesh = new THREE.Mesh(skyGeo, skyMat);
+    scene.add(skyMesh);
+
+    // Horizon fog to blend water plane seamlessly with sky
+    const horizonFogColor = 0x98d4f7;
+    scene.fog = new THREE.Fog(horizonFogColor, 700, 6500);
+    renderer.setClearColor(horizonFogColor);
+
+    const sun = new THREE.Vector3();
+    const dirLight = new THREE.DirectionalLight(0xfffaed, 2.7);
+    dirLight.castShadow = true;
+    scene.add(dirLight);
+
+    const hemiLight = new THREE.HemisphereLight(0x90d5fb, 0x0f4e75, 1.25);
+    scene.add(hemiLight);
+
+    function updateSun(elevationDeg, azimuthDeg) {
+      const phi = THREE.MathUtils.degToRad(90 - elevationDeg);
+      const theta = THREE.MathUtils.degToRad(azimuthDeg);
+      sun.setFromSphericalCoords(1, phi, theta);
+      skyUniforms.sunPosition.value.copy(sun);
+      dirLight.position.copy(sun).multiplyScalar(1000);
+    }
+
+    // -------------------------------------------------------------------------
+    // Endless Static Ocean Plane (Vibrant Blue Mediterranean Sea)
+    // -------------------------------------------------------------------------
+    const waterGeometry = new THREE.PlaneGeometry(25000, 25000);
+    const waterNormals = createProceduralWaterNormal();
+    waterNormals.repeat.set(160, 160);
+    waterNormals.wrapS = THREE.RepeatWrapping;
+    waterNormals.wrapT = THREE.RepeatWrapping;
+
+    const waterMaterial = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(0x1473b8), // Aegean Blue
+      roughness: 0.18,                  // Liquid sheen with sun specular
+      metalness: 0.12,                  // Subtle reflectivity
+      normalMap: waterNormals,          // Static ripple normal map
+      normalScale: new THREE.Vector2(0.12, 0.12),
+      flatShading: false
+    });
+
+    const water = new THREE.Mesh(waterGeometry, waterMaterial);
+    water.rotation.x = -Math.PI / 2;
+    water.position.y = 0; // Sea level Z=0 in world coords
+    scene.add(water);
+
+    updateSun(45, 135);
+
+    // -------------------------------------------------------------------------
+    // Island Model Groups & Alignment
+    // -------------------------------------------------------------------------
+    const archeGroup = new THREE.Group();
+    const paxosGroup = new THREE.Group();
+    scene.add(archeGroup);
+    scene.add(paxosGroup);
+
+    let islandSeparation = 180;
+    let baseArcheScale = 1.0;
+    let basePaxosScale = 0.42; // Canonical scale ratio: 4,800m / 11,500m = 0.417
+    let seaLevelOffset = 0.0;
+
+    function applyTransforms() {
+      // Arche on West (-X), Paxos on East (+X)
+      archeGroup.position.set(-islandSeparation / 2, seaLevelOffset, 0);
+      paxosGroup.position.set(islandSeparation / 2, seaLevelOffset, 30);
+
+      archeGroup.scale.setScalar(baseArcheScale * 80);
+      paxosGroup.scale.setScalar(basePaxosScale * 80);
+    }
+    applyTransforms();
+
+    // -------------------------------------------------------------------------
+    // GLTF Loading with Progress Tracking
+    // -------------------------------------------------------------------------
+    const loader = new GLTFLoader();
+    let archeLoaded = false;
+    let paxosLoaded = false;
+
+    const archeProgressPct = document.getElementById('arche-progress-pct');
+    const archeProgressBar = document.getElementById('arche-progress-bar');
+    const paxosProgressPct = document.getElementById('paxos-progress-pct');
+    const paxosProgressBar = document.getElementById('paxos-progress-bar');
+    const loadingOverlay = document.getElementById('loading-overlay');
+
+    function checkAllLoaded() {
+      if (archeLoaded && paxosLoaded) {
+        setTimeout(() => {
+          loadingOverlay.classList.add('hidden');
+        }, 600);
+      }
+    }
+
+    // Load Arche
+    loader.load(
+      './art/arche-3d.glb',
+      (gltf) => {
+        const root = gltf.scene;
+        // Center model geometry at its bounding box center in X/Z, and sit base at Y=0
+        const box = new THREE.Box3().setFromObject(root);
+        const center = box.getCenter(new THREE.Vector3());
+        root.position.x = -center.x;
+        root.position.z = -center.z;
+        // Put base of model slightly submerged below water for clean waterline
+        root.position.y = -box.min.y - 0.02;
+
+        root.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            if (child.material) {
+              child.material.roughness = 0.85;
+              child.material.metalness = 0.05;
+            }
+          }
+        });
+
+        archeGroup.add(root);
+        archeLoaded = true;
+        archeProgressPct.textContent = '100%';
+        archeProgressBar.style.width = '100%';
+        checkAllLoaded();
+      },
+      (xhr) => {
+        if (xhr.total > 0) {
+          const pct = Math.round((xhr.loaded / xhr.total) * 100);
+          archeProgressPct.textContent = pct + '%';
+          archeProgressBar.style.width = pct + '%';
+        }
+      },
+      (err) => {
+        console.error('Error loading Arche GLB:', err);
+        archeProgressPct.textContent = 'Error';
+      }
+    );
+
+    // Load Paxos
+    loader.load(
+      './art/paxos-3d.glb',
+      (gltf) => {
+        const root = gltf.scene;
+        const box = new THREE.Box3().setFromObject(root);
+        const center = box.getCenter(new THREE.Vector3());
+        root.position.x = -center.x;
+        root.position.z = -center.z;
+        root.position.y = -box.min.y - 0.02;
+
+        root.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            if (child.material) {
+              child.material.roughness = 0.85;
+              child.material.metalness = 0.05;
+            }
+          }
+        });
+
+        paxosGroup.add(root);
+        paxosLoaded = true;
+        paxosProgressPct.textContent = '100%';
+        paxosProgressBar.style.width = '100%';
+        checkAllLoaded();
+      },
+      (xhr) => {
+        if (xhr.total > 0) {
+          const pct = Math.round((xhr.loaded / xhr.total) * 100);
+          paxosProgressPct.textContent = pct + '%';
+          paxosProgressBar.style.width = pct + '%';
+        }
+      },
+      (err) => {
+        console.error('Error loading Paxos GLB:', err);
+        paxosProgressPct.textContent = 'Error';
+      }
+    );
+
+    // -------------------------------------------------------------------------
+    // Camera Focal Length & Lens Presets
+    // -------------------------------------------------------------------------
+    const focalSlider = document.getElementById('focal-slider');
+    const focalVal = document.getElementById('focal-val');
+    const focalButtons = document.querySelectorAll('[data-focal]');
+
+    function setFocalLength(mm) {
+      camera.setFocalLength(mm);
+      camera.updateProjectionMatrix();
+      focalSlider.value = mm;
+      const fov = camera.fov.toFixed(1);
+      focalVal.textContent = `${mm} mm (${fov}°)`;
+
+      focalButtons.forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.focal) === mm);
+      });
+    }
+
+    focalSlider.addEventListener('input', (e) => {
+      setFocalLength(parseInt(e.target.value));
+    });
+
+    focalButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setFocalLength(parseInt(btn.dataset.focal));
+      });
+    });
+
+    // Set default 50mm
+    setFocalLength(50);
+
+    // -------------------------------------------------------------------------
+    // Camera Target & View Animation
+    // -------------------------------------------------------------------------
+    let targetCameraPos = null;
+    let targetOrbitCenter = null;
+    let isTransitioning = false;
+
+    function transitionTo(pos, lookAt) {
+      targetCameraPos = pos.clone();
+      targetOrbitCenter = lookAt.clone();
+      isTransitioning = true;
+    }
+
+    const btnOverview = document.getElementById('btn-view-overview');
+    const btnArche = document.getElementById('btn-view-arche');
+    const btnPaxos = document.getElementById('btn-view-paxos');
+    const btnSeaLevel = document.getElementById('btn-view-sealevel');
+
+    const viewBtns = [btnOverview, btnArche, btnPaxos, btnSeaLevel];
+    function setActiveViewBtn(activeBtn) {
+      viewBtns.forEach(b => b.classList.toggle('active', b === activeBtn));
+    }
+
+    btnOverview.addEventListener('click', () => {
+      setActiveViewBtn(btnOverview);
+      transitionTo(new THREE.Vector3(0, 140, 240), new THREE.Vector3(0, 10, 0));
+    });
+
+    btnArche.addEventListener('click', () => {
+      setActiveViewBtn(btnArche);
+      transitionTo(new THREE.Vector3(-islandSeparation / 2, 80, 130), new THREE.Vector3(-islandSeparation / 2, 15, 0));
+    });
+
+    btnPaxos.addEventListener('click', () => {
+      setActiveViewBtn(btnPaxos);
+      transitionTo(new THREE.Vector3(islandSeparation / 2, 70, 140), new THREE.Vector3(islandSeparation / 2, 12, 30));
+    });
+
+    btnSeaLevel.addEventListener('click', () => {
+      setActiveViewBtn(btnSeaLevel);
+      transitionTo(new THREE.Vector3(0, 8, 140), new THREE.Vector3(-20, 12, 0));
+    });
+
+    // -------------------------------------------------------------------------
+    // Control Mode Switcher (Orbit vs Flycam)
+    // -------------------------------------------------------------------------
+    const btnOrbit = document.getElementById('btn-mode-orbit');
+    const btnFly = document.getElementById('btn-mode-fly');
+
+    btnOrbit.addEventListener('click', () => {
+      controlMode = 'orbit';
+      orbitControls.enabled = true;
+      btnOrbit.classList.add('active');
+      btnFly.classList.remove('active');
+    });
+
+    btnFly.addEventListener('click', () => {
+      controlMode = 'fly';
+      orbitControls.enabled = false;
+      btnFly.classList.add('active');
+      btnOrbit.classList.remove('active');
+      // Initialize fly angles from current camera forward
+      const dir = new THREE.Vector3();
+      camera.getWorldDirection(dir);
+      flyYaw = Math.atan2(-dir.x, -dir.z);
+      flyPitch = Math.asin(dir.y);
+    });
+
+    // -------------------------------------------------------------------------
+    // Side Panel Sliders (Sun, Sea Level, Spacing, Scales)
+    // -------------------------------------------------------------------------
+    const sunElevSlider = document.getElementById('sun-elev-slider');
+    const sunAzimSlider = document.getElementById('sun-azim-slider');
+    const sunElevVal = document.getElementById('sun-elev-val');
+    const sunAzimVal = document.getElementById('sun-azim-val');
+
+    sunElevSlider.addEventListener('input', (e) => {
+      sunElevVal.textContent = e.target.value + '°';
+      updateSun(parseFloat(e.target.value), parseFloat(sunAzimSlider.value));
+    });
+
+    sunAzimSlider.addEventListener('input', (e) => {
+      sunAzimVal.textContent = e.target.value + '°';
+      updateSun(parseFloat(sunElevSlider.value), parseFloat(e.target.value));
+    });
+
+    const seaLevelSlider = document.getElementById('sea-level-slider');
+    const seaLevelVal = document.getElementById('sea-level-val');
+    seaLevelSlider.addEventListener('input', (e) => {
+      seaLevelOffset = parseFloat(e.target.value);
+      seaLevelVal.textContent = seaLevelOffset.toFixed(1) + 'm';
+      applyTransforms();
+    });
+
+    const spacingSlider = document.getElementById('spacing-slider');
+    const spacingVal = document.getElementById('spacing-val');
+    spacingSlider.addEventListener('input', (e) => {
+      islandSeparation = parseFloat(e.target.value);
+      spacingVal.textContent = islandSeparation + 'm';
+      applyTransforms();
+    });
+
+    const archeScaleSlider = document.getElementById('arche-scale-slider');
+    const archeScaleVal = document.getElementById('arche-scale-val');
+    archeScaleSlider.addEventListener('input', (e) => {
+      baseArcheScale = parseFloat(e.target.value);
+      archeScaleVal.textContent = baseArcheScale.toFixed(2) + 'x';
+      applyTransforms();
+    });
+
+    const paxosScaleSlider = document.getElementById('paxos-scale-slider');
+    const paxosScaleVal = document.getElementById('paxos-scale-val');
+    paxosScaleSlider.addEventListener('input', (e) => {
+      basePaxosScale = parseFloat(e.target.value);
+      paxosScaleVal.textContent = basePaxosScale.toFixed(2) + 'x';
+      applyTransforms();
+    });
+
+    // -------------------------------------------------------------------------
+    // Water & Sky Controls
+    // -------------------------------------------------------------------------
+    const btnWaterAegean = document.getElementById('btn-water-aegean');
+    const btnWaterDeep = document.getElementById('btn-water-deep');
+    const btnWaterTurquoise = document.getElementById('btn-water-turquoise');
+    const waterToneBtns = [btnWaterAegean, btnWaterDeep, btnWaterTurquoise];
+
+    function setWaterTone(colorHex, activeBtn) {
+      waterMaterial.color.setHex(colorHex);
+      waterToneBtns.forEach(b => b.classList.toggle('active', b === activeBtn));
+    }
+
+    btnWaterAegean.addEventListener('click', () => setWaterTone(0x1473b8, btnWaterAegean));
+    btnWaterDeep.addEventListener('click', () => setWaterTone(0x0c4d7f, btnWaterDeep));
+    btnWaterTurquoise.addEventListener('click', () => setWaterTone(0x0c8fa6, btnWaterTurquoise));
+
+    const btnWaterRipples = document.getElementById('btn-water-ripples');
+    const btnWaterMirror = document.getElementById('btn-water-mirror');
+    btnWaterRipples.addEventListener('click', () => {
+      waterMaterial.normalScale.set(0.12, 0.12);
+      btnWaterRipples.classList.add('active');
+      btnWaterMirror.classList.remove('active');
+    });
+    btnWaterMirror.addEventListener('click', () => {
+      waterMaterial.normalScale.set(0, 0);
+      btnWaterMirror.classList.add('active');
+      btnWaterRipples.classList.remove('active');
+    });
+
+    const btnSkyAegean = document.getElementById('btn-sky-aegean');
+    const btnSkyAzure = document.getElementById('btn-sky-azure');
+    const btnSkySoft = document.getElementById('btn-sky-soft');
+    const skyBtns = [btnSkyAegean, btnSkyAzure, btnSkySoft];
+
+    function setSkyGradient(topHex, bottomHex, activeBtn) {
+      skyUniforms.topColor.value.setHex(topHex);
+      skyUniforms.bottomColor.value.setHex(bottomHex);
+      scene.fog.color.setHex(bottomHex);
+      renderer.setClearColor(bottomHex);
+      skyBtns.forEach(b => b.classList.toggle('active', b === activeBtn));
+    }
+
+    btnSkyAegean.addEventListener('click', () => setSkyGradient(0x156bc6, 0x98d4f7, btnSkyAegean));
+    btnSkyAzure.addEventListener('click', () => setSkyGradient(0x0d5bb5, 0x8ecdf2, btnSkyAzure));
+    btnSkySoft.addEventListener('click', () => setSkyGradient(0x257ad8, 0xb8e3fa, btnSkySoft));
+
+    // -------------------------------------------------------------------------
+    // Animation Loop
+    // -------------------------------------------------------------------------
+    const clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const delta = clock.getDelta();
+
+      // Sky dome tracks camera position for seamless horizon
+      if (skyMesh) {
+        skyMesh.position.copy(camera.position);
+      }
+
+      // Smooth camera transition if active
+      if (isTransitioning && targetCameraPos && targetOrbitCenter) {
+        camera.position.lerp(targetCameraPos, 0.05);
+        orbitControls.target.lerp(targetOrbitCenter, 0.05);
+        if (camera.position.distanceTo(targetCameraPos) < 0.5) {
+          isTransitioning = false;
+        }
+      }
+
+      // Free Flight update
+      if (controlMode === 'fly') {
+        const speed = (keys.shift ? 120 : 40) * delta;
+        const forward = new THREE.Vector3(
+          -Math.sin(flyYaw) * Math.cos(flyPitch),
+          Math.sin(flyPitch),
+          -Math.cos(flyYaw) * Math.cos(flyPitch)
+        ).normalize();
+        const right = new THREE.Vector3(Math.cos(flyYaw), 0, -Math.sin(flyYaw)).normalize();
+        const up = new THREE.Vector3(0, 1, 0);
+
+        if (keys.w) camera.position.addScaledVector(forward, speed);
+        if (keys.s) camera.position.addScaledVector(forward, -speed);
+        if (keys.d) camera.position.addScaledVector(right, speed);
+        if (keys.a) camera.position.addScaledVector(right, -speed);
+        if (keys.e) camera.position.addScaledVector(up, speed);
+        if (keys.q) camera.position.addScaledVector(up, -speed);
+
+        // Keep camera above water
+        if (camera.position.y < 1.0) camera.position.y = 1.0;
+
+        // Apply orientation
+        const targetLook = camera.position.clone().add(forward);
+        camera.lookAt(targetLook);
+      } else {
+        orbitControls.update();
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // -------------------------------------------------------------------------
+    // Screenshot & Copy to Clipboard
+    // -------------------------------------------------------------------------
+    const toastEl = document.getElementById('toast');
+    const flashEl = document.getElementById('flash-overlay');
+    let toastTimeout = null;
+
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toastEl.classList.remove('show');
+      }, 3000);
+    }
+
+    function triggerFlash() {
+      flashEl.classList.add('flash');
+      setTimeout(() => {
+        flashEl.classList.remove('flash');
+      }, 150);
+    }
+
+    async function captureAndCopyScreenshot() {
+      triggerFlash();
+
+      // Ensure scene is freshly rendered
+      renderer.render(scene, camera);
+
+      renderer.domElement.toBlob(async (blob) => {
+        if (!blob) {
+          showToast('⚠️ Could not capture screenshot');
+          return;
+        }
+
+        let copied = false;
+        if (navigator.clipboard && window.ClipboardItem) {
+          try {
+            const item = new ClipboardItem({ 'image/png': blob });
+            await navigator.clipboard.write([item]);
+            copied = true;
+            showToast('📸 Screenshot copied to clipboard!');
+          } catch (err) {
+            console.warn('Clipboard write permission denied or unsupported:', err);
+          }
+        }
+
+        // Fallback: download PNG directly if clipboard API is restricted
+        if (!copied) {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+          a.href = url;
+          a.download = `daag-archipelago-${timestamp}.png`;
+          a.click();
+          URL.revokeObjectURL(url);
+          showToast('📸 Saved screenshot as PNG (clipboard restricted)');
+        }
+      }, 'image/png');
+    }
+
+    const btnTopScreenshot = document.getElementById('btn-top-screenshot');
+    const btnBottomScreenshot = document.getElementById('btn-bottom-screenshot');
+    if (btnTopScreenshot) btnTopScreenshot.addEventListener('click', captureAndCopyScreenshot);
+    if (btnBottomScreenshot) btnBottomScreenshot.addEventListener('click', captureAndCopyScreenshot);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'p' || e.key === 'P') {
+        if (!e.ctrlKey && !e.metaKey && !e.altKey && e.target.tagName !== 'INPUT') {
+          captureAndCopyScreenshot();
+        }
+      }
+    });
+
+    // -------------------------------------------------------------------------
+    // Window Resize Handler
+    // -------------------------------------------------------------------------
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
