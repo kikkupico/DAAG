@@ -46,52 +46,63 @@ disk and has been verified by opening it.
 
 ---
 
-## The Mercantile Exchange · *now Arche, the harbour town*
+## Arche · *The Island of Foundations (Volume I)*
 
-*Traders and purchase orders.*
+*The central mountain and the coastal ring road.*
 
-**Core physics.** Orders pass between trading houses by courier. With no master clock, the
-market must establish causality, serialisability and freshness purely from message receipts.
+**Core geography & physics.** Arche rises from the sea around a single 400-metre cone of rock,
+Mount Phyle, whose sheer limestone bulk cuts off all direct line of sight between opposite
+shores. Encircling the entire perimeter of the island is a single narrow coastal ring road cut
+into the cliff tops above the crashing Aegean surf. Because the cliff shelf allows no
+overtaking, traffic is strictly single-file, providing a natural physical enforcement of
+**first-in, first-out (FIFO) message and cargo delivery**.
 
-| Paper | In the world |
-|---|---|
-| `lamport-1978_time-clocks` | Traders ink incremental sequence numbers on purchase slips, establishing a partial order: A → B ⟹ C(A) < C(B) |
-| `fidge-1988_timestamps`, `mattern-1988_virtual-time` | Each house stamps orders with an array tracking the latest transaction seen from *every* house, distinguishing concurrent trades from causally dependent ones |
-| `herlihy-wing-1990_linearizability` | An external auditor verifies that if trade A clears before trade B is placed in absolute time, no trader may ever observe B executed without A |
-| `lloyd-2011_cops-causal-consistency` | Regional posts accept purchases locally at low latency, propagating dependency check-lists so no branch executes an order before its prerequisites clear |
-| `bailis-2014_hats` | Which guarantees (read committed, monotonic atomic view) can a desk offer during a courier strike without stalling or coordinating with rivals |
-| `bailis-2012_pbs` | Given courier flight times and (N, R, W), how often does a trader read a stale inventory balance |
+The island hosts two distinct zones that together carry the foundational papers of distributed
+computing:
 
-**The ground must provide:** a working harbour with trading houses, courier routes to at
-least two other ports of *different length* (so a reply can overtake its letter), and an
-open, unshaded headland for the dials.
+1. **The Coastal Ring Road (The Trading Houses):** Three houses — the **Dolphin** on the
+   western rocky shelf, the **Vine** on the northern terraced slopes, and the **Anchor** on the
+   sheltered eastern bay — act as an island-wide distribution network.
+   - *Book I: The Tally and the Column* (`lamport-1978_time-clocks`, `fidge-1988_timestamps`,
+     `mattern-1988_virtual-time`). When overcast winter skies silence the headland sundials,
+     houses serve distribution orders on a strict first-come basis using logical tallies (Lamport
+     scalar clocks), resolve ties via door signs (total order), coordinate mutual exclusion for
+     a shared storehouse (§5), and use multi-house column rooms (vector clocks) to detect true
+     causal independence.
+   - *Book II: The Census of the Ring Road* (`chandy-lamport-1985_distributed-snapshots`).
+     Taking an inventory of the entire distribution network without halting trade. Goods exist
+     both in the 3 house storehouses and in transit along the 6 directed road tracks. A runner
+     wearing a **red sash** serves as the marker dividing pre-recording shipments from
+     post-recording shipments. Proves cut consistency, reachability ($S_\iota \to S^* \to S_\phi$),
+     and stable property detection.
+   - *Book III: The Convoy of Arche* (`dwork-lynch-stockmeyer-1988`). Deciding when the island's
+     merchant fleet should sail together across the Mediterranean. Winter gales spraying the
+     cliff road cause **unbounded delays (asynchrony)**. The breaking of the storm represents
+     **Global Stabilization Time (GST)**, after which delays are bounded by $\Delta$. A
+     rotating coordinator protocol with majority quorum locks ($N \ge 2t + 1$, $N = 3, t = 1$)
+     guarantees safety during the wildest gale via quorum intersection, and ensures swift
+     termination once the calm arrives.
 
-### Decision taken — the dials fail to cloud, not to longitude
+2. **Mount Phyle (The Central Peak):**
+   - *Book IV: Mercenaries and Bandits* (`fischer-lynch-paterson-1985_flp-impossibility`,
+     `pease-shostak-lamport-1980`, `lamport-shostak-pease-1982`).
+     - **Below:** Four mercenaries in four camps at the quarter-points of the foot, communicating
+       solely by ravens with unbounded flight times. Trapped in bivalent indecision: an overrun camp
+       cannot be distinguished from a slow bird (FLP).
+     - **Above:** Four bandits on the summit crown inside a polygonal wall, communicating
+       synchronously in klepsydra-timed rounds, reaching agreement on whether to hold or scatter
+       iff $N \ge 3m + 1$ (or under seal rings, for any number of liars).
 
-Recorded here in full, since this was the only copy outside a page that has been retired.
+### The synchrony spectrum on Arche
 
-The books do **not** ask the map for an east–west spread, and the arithmetic says it never
-could have delivered one. At 39°N a degree of longitude is about **86 km** and worth four
-minutes of apparent solar time, so even a 42 km archipelago — wider than anything now drawn
-— buys about **two minutes** of disagreement between dials. No Greek sundial resolves that.
-A difference readable off a dial wants roughly 7.5°, about **647 km**: Corfu to Cyprus, which
-is not an archipelago.
-
-So the device is **overcast**. No shadow, no reading, and the dials fall silent together
-rather than drifting apart. Three consequences:
-
-- **Nothing is lost from the paper.** Lamport's physical-clock section turns on drift and
-  resynchronisation, not on standing offset. Dials that work only in sun, and drift between
-  readings, supply that directly — including the closing beat where the dials return with
-  their drift now bounded.
-- **It agrees with the canon.** `content-i1`'s standing device table already reads *"overcast sky, no
-  hourglasses → no synchronised clocks, no timeouts"*.
-- **It costs an art override.** The illustration bible asks for hazy mornings and hard midday
-  light, and hard light is exactly the shadow this ground must not have. The weather needs
-  recording as a deviation the way Mount Phyle's night is recorded in `content-i2`, or the
-  panels will drift back to sunshine.
+Arche embodies the complete progression of synchrony and fault models:
+- **Pure Asynchrony (Unbounded Delay, Crash Faults):** Mount Phyle gullies (FLP 1985).
+- **Asynchronous FIFO with Causality & Snapshots:** The Ring Road under fair skies (Lamport 1978, Chandy-Lamport 1985).
+- **Partial Synchrony (Unbounded Delay $\to$ GST $\to$ Bounded Delay $\Delta$):** The Ring Road under winter gales (DLS 1988).
+- **Pure Synchrony (Bounded Rounds, Byzantine Faults):** Mount Phyle crown council (PSL 1980, LSP 1982).
 
 ---
+
 
 ## The Grain Islands · *now Antipaxos*
 
@@ -131,101 +142,43 @@ Districts, not a fifth world. The count stays at four.
 
 ---
 
-## Mount Phyle · *now Arche, the mountain*
+## Mount Phyle · *The Mountain at Arche's Centre*
 
 *Garrisons around an enemy hill.* Strictly theoretical: what is solvable under which
 synchrony assumption, against which adversary.
 
-**No ambush, and no outcome.** The garrisons must commit to one gate or the other, and
-*nothing follows from the decision*. `content-i2` house rule 1 and ledger row 9 fix the siege as having
-no resolution in any book: no assault happens, no wall is carried, no one surrenders. An
-all-or-nothing ambush is an outcome and would reintroduce the plot the iteration retired.
+**No ambush, and no outcome.** The mercenaries must commit to one gate or the other, and
+*nothing follows from the decision*. The siege has no resolution in any book: no assault
+happens, no wall is carried, no one surrenders. An all-or-nothing ambush is an outcome and
+would reintroduce the plot the iteration retired.
 
 | Paper | In the world |
 |---|---|
-| `fischer-lynch-paterson-1985_flp-impossibility` | In an asynchronous gorge with one silent crash, commanders stay trapped in bivalence: an overrun camp cannot be told from a delayed raven |
-| `pease-shostak-lamport-1980`, `lamport-shostak-pease-1982` | In synchronous rounds with traitors sending conflicting scrolls, loyal commanders agree iff N ≥ 3m + 1 — or, **with unforgeable wax signets, for any number of generals at all** |
-| `dwork-lynch-stockmeyer-1988` | On the beacon ridge in the army's rear: the gales rage unpredictably, then a Global Stabilization Time arrives and a relay takes no longer than Δ. Safe throughout the storm, guaranteed to terminate after it. *Not at the camps; see row 11 below* |
-| `chandra-toueg-1996` | Each camp keeps a tally board and marks the rows that stay empty. The suspicion is often wrong — an empty perch is a dead commander or a raven still in the folds — but if it satisfies weak completeness and eventual weak accuracy (◇W), **and a majority of camps are correct**, that is enough to break the FLP deadlock. *No signal of any kind; see row 6 below* |
+| `fischer-lynch-paterson-1985_flp-impossibility` | In an asynchronous gorge with one silent crash, commanders stay trapped in bivalence: an overrun camp cannot be told from a delayed raven. (*Mercenaries and Bandits*, Part One) |
+| `pease-shostak-lamport-1980`, `lamport-shostak-pease-1982` | In synchronous rounds with traitors sending conflicting scrolls, loyal commanders agree iff N ≥ 3m + 1 — or, **with unforgeable wax signets, for any number of generals at all**. (*Mercenaries and Bandits*, Part Two) |
+| `chandra-toueg-1996` | Each camp keeps a tally board and marks the rows that stay empty. The suspicion is often wrong — an empty perch is a dead commander or a raven still in the folds — but if it satisfies weak completeness and eventual weak accuracy (◇W), **and a majority of camps are correct**, that is enough to break the FLP deadlock. |
 
-**The ground:** already built and measured in `content-i2` — a 400 m cone, 1.8 km footprint,
-slopes 24–34°, eight spurs and gullies, four camps at the quarter points with no pair able to
-see each other, verified by `scripts/check_hill_sightlines.py`. It must rise alone from a
-rolling plain with no other high ground in sight. Cast, architecture and a full panel
-inventory exist.
+**The ground:** a 400 m cone, 1.8 km footprint, slopes 24–34°, eight spurs and gullies, four
+camps at the quarter points with no pair able to see each other. It rises directly in the
+centre of Arche, blocking line of sight across the island.
 
-### The synchrony split — do not collapse it
+### The synchrony split on Mount Phyle
 
-**This is the one place the four-world scheme contradicts what is already built, and the
-contradiction is in the thing the books exist to carry.**
-
-`content-i2` does not put all four papers with the garrisons. It splits the hill:
+The hill itself embodies the split between asynchronous impossibility and synchronous agreement:
 
 - **The camps at the base carry the asynchronous model.** Ravens, unbounded delay, uncounted
   nights, no fire or signal. FLP lives here.
-- **The summit council carries the synchronous model.** A ring of five cut seats, everything
-  within shouting distance, rounds kept by klepsydra, one single council night. Byzantine
-  Generals lives here.
+- **The summit council carries the synchronous model.** A ring of five cut seats inside the
+  polygonal wall, everything within shouting distance, rounds kept by klepsydra, one single
+  council night. Byzantine Generals lives here.
 
-That split is enforced by the cross-book ledger: *no raven ever reaches the crown* (row 7),
-and *the camps' nights are uncounted while the summit is one night* (row 11). If the
-garrisons themselves run Byzantine agreement, the same population needs synchronous rounds
-for one paper and unbounded delay for another — the models collide, and a klepsydra at the
-base would import the deadline FLP cannot survive.
+Combined in **Book IV: Mercenaries and Bandits**, the contrast is held in stark relief:
+Below, honest men can die and messages take arbitrary time, yielding impossibility. Above,
+nobody dies and time is bounded, but men lie, yielding the 3m + 1 threshold.
 
-**Keep the split.** It costs nothing, preserves every built asset, and it is the better
-allegory anyway: the base is where delay cannot be bounded; the crown is where it can.
-
-### Mount Phyle needs three grounds, not two
-
-Putting the remaining two papers with the camps breaks two more ledger rows:
-
-- **Row 6 — "the soldiers *never* use fire, smoke or horns."** This is why ravens are the only
-  channel and why every camp panel is unlit. Spotters flashing signal mirrors *are* a signal.
-  Site the failure detectors as mirror-flashing watchmen among the besiegers and the camps'
-  concealment rule collapses, taking the visual grammar of the camps book with it.
-- **Row 11 — "the camps book's nights are *uncounted*."** `content-i2` is explicit that one shared night
-  would import a deadline, and that unbounded delay is the one thing that model cannot lose.
-  DLS's Global Stabilization Time is precisely a deadline arriving. A book at the same camps
-  saying "after this point, ravens come within Δ" contradicts row 11 outright.
-
-| Ground | Papers | Model |
-|---|---|---|
-| **The camps at the base** | FLP 1985; Chandra & Toueg 1996 | Asynchronous. Ravens only, no signal of any kind, uncounted nights |
-| **The crown council** | Byzantine Generals 1982; Reaching Agreement 1980 | Synchronous. Klepsydra rounds, face to face, one single night |
-| **The beacon ridge, in the army's rear** | DLS 1988 | Partially synchronous. Storms, seasons, and a Δ that holds once the weather turns |
-
-**Chandra & Toueg stays at the camps, and needs no mirrors at all.** The detector is not an
-instrument, it is a judgement about silence — and `content-i2` has already drawn it. `camps-tally` is
-"the tally board: rows with blazons, pegs marked with reported opinions, **one row with no
-pegs at all**." `camps-silent` is "the silent loft — a keeper looking uphill, an empty perch…
-**must read equally as a dead commander or a raven still in the folds, and must not resolve
-which**." That is an unreliable failure detector, drawn before anyone set out to draw one.
-◇W is defined without timing assumptions — implementations use timeouts, the abstraction does
-not — so weak completeness and eventual weak accuracy cost the camps neither a signal nor a
-counted night.
-
-> **The one thing this book must not do is decide.** ◇W solves consensus where FLP cannot,
-> and two books at the same camps reaching opposite conclusions would undo the first. The
-> detector book shows what *would have to be true* — an eventually correct suspicion, plus a
-> correct majority — and that the camps have no way to verify they have it. Nothing is
-> resolved, per house rule 1.
-
-**DLS needs its own ground, and it must be over the horizon.** The camps cannot host a GST
-without losing unbounded delay, and the hill cannot host a beacon ridge nearby: the brief
-requires it to rise "alone from a rolling plain with **no other high ground in sight of it**."
-Geometry says how far is far enough — a 200 m ridge and the 400 m crown are mutually visible
-out to about **122 km**, so the beacon line belongs in the army's rear, on the road back to
-the authority that sent it, and never in frame with the hill. i1 already had this instinct and
-gave DLS and the failure detectors their own site with their own people: the navigators
-Dworkis, Lynchaia and Stockmeros, the beacon-masters Chandras and Touegos, and watchmen
-keeping lists of whom they suspect. A separate population is what makes row 6 survive — the
-besiegers are not the ones lighting fires.
-
-**Decision to confirm:** i1 kept DLS *and* Chandra & Toueg together on the beacon hills.
-Splitting them — detectors at the camps, partial synchrony on the ridge — is the
-recommendation above, because it puts the failure detector where `content-i2` has already drawn its two
-best panels. Keeping i1's pairing is the alternative and costs those panels their paper.
+*(Note: Dwork, Lynch & Stockmeyer 1988, originally proposed for an external beacon ridge, has
+been relocated directly to Arche's coastal ring road in Book III: The Convoy of Arche, where
+winter sea-gales provide the asynchronous phase and the clearing of the sky provides GST.)*
 
 ### Two precision notes
 
@@ -234,8 +187,8 @@ best panels. Keeping i1's pairing is the alternative and costs those panels thei
   saying where the problem becomes *vacuous*, not a solvability threshold. The oral-message
   3m + 1 bound and its removal is the whole point of the book's second half.
 - **DLS has two models, not one.** Bounds exist but are unknown; *or* bounds are known but
-  hold only after GST. The description above is the second. Decide which the book uses, or
-  use both — they are different storms.
+  hold only after GST. The book uses the second: runner transit times are bounded by $\Delta$
+  once the storm breaks.
 
 ---
 

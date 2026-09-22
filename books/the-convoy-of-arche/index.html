@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Convoy of Arche — Mount Phyle</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">Arche · The Ring Road</span>
+    <div class="nav-arrows">
+      <a href="../the-census-of-moving-ships/index.html" class="nav-arrow">‹ The census</a>
+    </div>
+  </div>
+</nav>
+<div class="page">
+
+<!-- ================= COVER ================= -->
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · The Ring Road</div>
+  <h1 class="display" style="margin:18px 0 6px">The Convoy of Arche</h1>
+  <p class="sub">Being an account of how the trading houses agreed when their merchantmen
+  should sail without trusting the weather</p>
+  <p class="pub">Three trading houses with merchant ships anchored at their slipways, needing to
+  sail together as a convoy across the open sea. While winter gales batter the cliff road, runners
+  face unbounded delays and no consensus can be forced. But when the storm breaks and transit times
+  fall within a bound, a rotating coordinator and the rule of majority locks decide the sailing
+  tide without risking a divided fleet.</p>
+</header>
+
+<nav class="toc">
+  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
+  <ol>
+    <li><a href="#s1">I · The Sea Road and the Convoy</a></li>
+    <li><a href="#s2">II · The Storm and the Shadow of the Mercenaries</a></li>
+    <li><a href="#s3">III · The Breaking of the Storm</a></li>
+    <li><a href="#s4">IV · The Rotating Coordinator and the Quorum</a></li>
+    <li><a href="#s5">V · The Four Phases of a Round</a></li>
+    <li><a href="#s6">VI · Safety in the Wildest Gale</a></li>
+    <li><a href="#s7">VII · Liveness When the Calm Arrives</a></li>
+    <li><a href="#s8">VIII · The Bounds of Faults and Liars</a></li>
+    <li><a href="#s9">IX · In the Book, In the Paper</a></li>
+    <li><a href="#refs">The Paper Behind This Book</a></li>
+  </ol>
+</nav>
+
+<hr class="meander">
+
+<!-- ================= I ================= -->
+<section id="s1">
+  <div class="issue"><span class="no">Chapter I</span><h2>The Sea Road and the Convoy</h2></div>
+
+  <div class="prose">
+    <p>At the end of autumn, the trading houses of Arche prepare their merchant ships for the
+    crossing to Alexandria, Syracuse, and Rhodes. At the <span class="coin">Dolphin</span> on the
+    western shelf, the <span class="coin">Vine</span> on the northern terraces, and the
+    <span class="coin">Anchor</span> in the eastern bay, broad-beamed merchantmen lie in the
+    slipways, loaded with the season's dried fruit, wine-amphorae, and silver ingots.</p>
+
+    <p>To cross the open Mediterranean alone is folly. A single merchantman running into sudden
+    squalls or sighted by Cilician pirate galleys is taken or sunk. The ships must sail as a
+    single, united <span class="coin">convoy</span> on the identical morning tide, or remain
+    moored securely in their coves. If half the ships slip their cables while the other half stay
+    fast at anchor, the convoy is broken, and the isolated vessels are lost.</p>
+
+    <p>Each house watches its own local cove, examines its hull caulking, and reads its oil-glass.
+    At dawn of the decision season, each house forms an initial judgment:</p>
+  </div>
+
+  <div class="result">
+    <span class="name">The two choices</span>
+    <p><b>0 · Hold at anchor.</b> The roadstead is rough, the glass is falling, or the rigging is
+    unready. The ships remain tied to the stone bollards.</p>
+    <p><b>1 · Sail on the morning tide.</b> The roadstead is calm, the glass is steady, and the
+    crews are aboard. The fleet puts to sea in convoy.</p>
+  </div>
+
+  <div class="prose">
+    <p>Between these choices, the houses must reach an agreement that satisfies three exact
+    demands, established by the archons of the island:</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">The three demands of consensus</span>
+    <span class="stmt">(1) Agreement.</span> No two honest houses ever decide differently. It
+    cannot happen that the Dolphin puts to sea while the Vine remains at anchor.<br>
+    <span class="stmt">(2) Validity.</span> If every house initially judges that the fleet should
+    sail (all 1), the convoy must sail. If every house initially judges that it must hold (all 0),
+    the convoy must hold.<br>
+    <span class="stmt">(3) Termination.</span> Every house that does not suffer catastrophe must
+    eventually reach a final, irrevocable decision.
+  </div>
+
+  <div class="prose">
+    <p>The houses cannot shout to each other across Mount Phyle. They communicate solely through
+    runners along the narrow ring road cut into the cliffs above the surf. And in the decision
+    season, the weather on the cliff road makes mockery of all simple plans.</p>
+  </div>
+</section>
+
+<hr class="meander">
+
+<!-- ================= II ================= -->
+<section id="s2">
+  <div class="issue"><span class="no">Chapter II</span><h2>The Storm and the Shadow of the Mercenaries</h2></div>
+
+  <div class="prose">
+    <p>When the winter gales strike Arche, the sea smashes against the base of the cliffs. Spray
+    washes over the ring road, and loose shale tumbles down the slopes of Mount Phyle. A runner
+    dispatched between houses cannot maintain a steady pace. He may be forced to shelter under a
+    rocky ledge for six hours while breakers clear the road; a sudden rockslide may block a bend,
+    forcing him to scramble over rubble on his hands and knees.</p>
+
+    <p>No runner is lost — the island's messengers are tough and stubborn, and every message
+    eventually arrives. But <em>how long</em> a runner will take is completely unpredictable. A
+    journey that requires half an hour in clear sunlight may take ten hours or two days in a
+    howling gale.</p>
+
+    <p>Furthermore, a house itself may suffer a localized cliff collapse that crushes its gates,
+    silencing it permanently. Up to <var>t</var> houses may fail in this manner. On Arche, with
+    three houses in total (<var>N</var> = 3), the network must endure the silencing of at most
+    one house (<var>t</var> = 1).</p>
+
+    <p>The houses are familiar with the famous theorem proved by the mercenaries on the lower
+    slopes of Mount Phyle — the impossibility demonstrated by Fischer, Lynch, and Paterson.
+    Where message delays are unbounded and a participant may die without warning, <b>no protocol
+    can guarantee both safety and termination</b>. If the houses set a fixed sandglass deadline
+    and decide upon its expiry, they cannot distinguish a dead neighbor from a runner delayed by
+    spray. A premature decision risks splitting the fleet; perpetual waiting risks rotting the
+    cargo at the quays.</p>
+
+    <p>If the storm were perpetual, consensus would be unattainable. But storms in the Aegean,
+    however violent, do not rage forever.</p>
+  </div>
+</section>
+
+<hr class="meander">
+
+<!-- ================= III ================= -->
+<section id="s3">
+  <div class="issue"><span class="no">Chapter III</span><h2>The Breaking of the Storm</h2></div>
+
+  <div class="prose">
+    <p>The insight that rescues the fleet was formulated by three scribes: Dworkia of the Dolphin,
+    Lynchaia of the Vine, and Stockmeros of the Anchor. They recognized that Arche does not inhabit
+    a world of permanent chaos, nor a world of permanent clockwork. It inhabits
+    <span class="coin">partial synchrony</span>.</p>
+
+    <p>The model rests on a physical fact of the island's climate:</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">Partial synchrony (Model 2 of DLS 1988)</span>
+    There exists an unknown moment in time, <span class="stmt">GST</span> (the
+    <span class="stmt">Global Stabilization Time</span>, which the scribes call
+    <i>the breaking of the storm</i>), such that:
+    <br><span class="stmt">(1) Before GST:</span> Message delivery along the ring road is
+    arbitrarily and unpredictably delayed. Communication is purely asynchronous.
+    <br><span class="stmt">(2) After GST:</span> The storm clears, the cliff path dries, and every
+    runner dispatched between any two houses arrives within a known upper bound of time,
+    <span class="stmt">Δ</span> (measured by three turns of a standard customs sandglass).
+    <br><span class="stmt">(3) Unannounced arrival:</span> The houses do <em>not</em> know when
+    GST has arrived. A brief lull in the gale looks identical to the final clearing of the sky.
+  </div>
+
+  <div class="prose">
+    <p>This formulation captures reality with dry precision. The algorithm cannot wait for an
+    angel to blow a trumpet announcing GST. It must run continuously through the storm, never
+    violating safety (never sending part of the fleet to sea while others stay behind), and then,
+    when the storm finally breaks, swiftly reach a common decision.</p>
+  </div>
+</section>
+
+<hr class="meander">
+
+<!-- ================= IV ================= -->
+<section id="s4">
+  <div class="issue"><span class="no">Chapter IV</span><h2>The Rotating Coordinator and the Quorum</h2></div>
+
+  <div class="prose">
+    <p>To organize the decision without a common clock, the scribes divided time into successive
+    <span class="coin">rounds</span>: <var>r</var> = 1, 2, 3, …</p>
+
+    <p>Each round is governed by a designated <span class="coin">coordinator</span> chosen in
+    unbroken rotation:
+    <br>— Round 1 is directed by <b>Dworkia</b> at the Dolphin.
+    <br>— Round 2 is directed by <b>Lynchaia</b> at the Vine.
+    <br>— Round 3 is directed by <b>Stockmeros</b> at the Anchor.
+    <br>— Round 4 returns to Dworkia at the Dolphin, and the cycle repeats (<var>r</var> mod 3).</p>
+
+    <p>Each house maintains a local sandglass timer of fixed duration <var>T</var> = 4Δ. When a
+    house's sand runs out for round <var>r</var>, it advances its ledger to round <var>r</var> + 1,
+    regardless of whether round <var>r</var> reached a conclusion.</p>
+
+    <p>The second pillar of the arrangement is the <span class="coin">majority quorum</span>.
+    On Arche, there are three houses (<var>N</var> = 3), and at most one may be crushed by
+    rockfall (<var>t</var> = 1). Therefore, no coordinator can ever wait to hear from all three
+    houses, for the third house may be buried under stone. Every action must proceed upon hearing
+    from a majority of <var>N</var> − <var>t</var> = 2 houses.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">The Quorum Intersection</span>
+    <p>Any two majorities of size 2 out of 3 houses must share at least one house:</p>
+    <p style="text-align:center;font-weight:700">|Q<sub>1</sub>| = 2, |Q<sub>2</sub>| = 2, N = 3 ⟹ |Q<sub>1</sub> ∩ Q<sub>2</sub>| ≥ 1</p>
+    <p>That single overlapping house is the <span class="coin">witness</span> that prevents the
+    island from ever contradicting itself across rounds.</p>
+  </div>
+</section>
+
+<hr class="meander">
+
+<!-- ================= V ================= -->
+<section id="s5">
+  <div class="issue"><span class="no">Chapter V</span><h2>The Four Phases of a Round</h2></div>
+
+  <div class="prose">
+    <p>Each house <var>i</var> keeps three entries inked on its decision tablet:
+    <br>— <var>v</var><sub>i</sub>: its current proposed value (0 or 1), initially its own local
+    weather judgment.
+    <br>— <var>lock_round</var><sub>i</sub>: the round number in which it last locked its value
+    (initially 0).
+    <br>— <var>decided</var><sub>i</sub>: whether it has committed to a final decision.</p>
+
+    <p>Every round <var>r</var> proceeds through four strictly ordered phases:</p>
+  </div>
+
+  <div class="decree rules">
+    <div class="rhead">The Four Phases of Round r</div>
+    <ol>
+      <li><b>Phase 1 · Status.</b> Each house <var>i</var> dispatches a runner to the coordinator
+      of round <var>r</var> carrying a slip:
+      <br><span class="paper">STATUS(<var>v</var><sub>i</sub>, <var>lock_round</var><sub>i</sub>)</span>.</li>
+
+      <li><b>Phase 2 · Proposal.</b> The coordinator waits until she receives status slips from a
+      majority of houses (2 houses). She inspects the reported <var>lock_round</var> numbers.
+      She chooses the value <var>v</var> associated with the <em>highest</em> reported
+      <var>lock_round</var>. (If all report 0, she proposes her own initial preference). She
+      dispatches to all houses:
+      <br><span class="paper">PROPOSE(<var>v</var>, <var>r</var>)</span>.</li>
+
+      <li><b>Phase 3 · Lock &amp; Acknowledgment.</b> When house <var>i</var> receives
+      <span class="paper">PROPOSE(<var>v</var>, <var>r</var>)</span> before its round timer
+      expires: if <var>r</var> ≥ <var>lock_round</var><sub>i</sub>, the house adopts <var>v</var>,
+      sets its <var>lock_round</var><sub>i</sub> ← <var>r</var>, and sends back to the coordinator:
+      <br><span class="paper">ACK(<var>r</var>)</span>.</li>
+
+      <li><b>Phase 4 · Commit.</b> If the coordinator receives <span class="paper">ACK(<var>r</var>)</span>
+      from a majority of houses (2 houses) before her timer expires, she decides <var>v</var>,
+      inscribes it in stone as the final sailing order, and dispatches to all houses:
+      <br><span class="paper">COMMIT(<var>v</var>, <var>r</var>)</span>.
+      Any house receiving a <span class="paper">COMMIT</span> slip immediately decides <var>v</var>.</li>
+    </ol>
+  </div>
+
+  <div class="prose">
+    <p>If a house's local sandglass runs out before a phase completes, the house abandons that
+    round and advances to round <var>r</var> + 1. It keeps its <var>lock_round</var> and locked
+    value intact.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 480" role="img" aria-label="Spacetime diagram of two rounds. Round 1 during the storm: runner delayed by rockfall, timeout expires, round aborts without decision. Round 2 after the storm clears (GST): messages arrive within bound Delta, coordinator collects quorum, locks value, and commits the fleet to sail.">
+        <defs>
+          <marker id="arr" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
+          </marker>
+          <marker id="arr-red" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
+          </marker>
+          <marker id="arr-grn" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#4d7c0f"/>
+          </marker>
+        </defs>
+
+        <!-- Lifelines -->
+        <text class="d-house" x="110" y="28" text-anchor="middle">DOLPHIN (c₁)</text>
+        <text class="d-house" x="330" y="28" text-anchor="middle">VINE (c₂)</text>
+        <text class="d-house" x="550" y="28" text-anchor="middle">ANCHOR</text>
+
+        <line class="d-lifeline" x1="110" y1="40" x2="110" y2="450"/>
+        <line class="d-lifeline" x1="330" y1="40" x2="330" y2="450"/>
+        <line class="d-lifeline" x1="550" y1="40" x2="550" y2="450"/>
+
+        <!-- ============ ROUND 1: THE STORM ============ -->
+        <rect class="d-band" x="20" y="48" width="620" height="150" rx="4" fill="#f8f4ee" opacity="0.6"/>
+        <text class="d-key" x="30" y="66" fill="#bf4a26" font-weight="700">ROUND 1 · In the Storm (delays unbounded)</text>
+
+        <!-- Status msgs -->
+        <path class="d-msg" marker-end="url(#arr)" d="M330,76 L110,98"/>
+        <text class="d-num" x="220" y="84" text-anchor="middle">STATUS(0, 0)</text>
+
+        <!-- Delayed msg from Anchor -->
+        <path class="d-msg-hi" marker-end="url(#arr-red)" stroke-dasharray="4 4" d="M550,76 L280,185"/>
+        <text class="d-note" x="430" y="120" text-anchor="middle" fill="#bf4a26">delayed by rockfall</text>
+
+        <!-- Timeout at Dolphin -->
+        <line x1="90" y1="185" x2="130" y2="185" stroke="#bf4a26" stroke-width="2"/>
+        <text class="d-lbl" x="136" y="189" fill="#bf4a26">timer expires (no quorum)</text>
+
+        <!-- ============ GST DIVIDER ============ -->
+        <line x1="20" y1="216" x2="640" y2="216" stroke="#4d7c0f" stroke-width="2" stroke-dasharray="6 3"/>
+        <text class="d-key" x="330" y="210" text-anchor="middle" fill="#4d7c0f" font-weight="700">THE STORM BREAKS (GST) · runner delays bounded by Δ</text>
+
+        <!-- ============ ROUND 2: THE CALM ============ -->
+        <rect class="d-band" x="20" y="226" width="620" height="214" rx="4" fill="#f4f7ee" opacity="0.6"/>
+        <text class="d-key" x="30" y="244" fill="#4d7c0f" font-weight="700">ROUND 2 · Coordinator: Lynchaia (Vine)</text>
+
+        <!-- Phase 1: Status -->
+        <path class="d-msg" marker-end="url(#arr)" d="M110,252 L330,272"/>
+        <text class="d-num" x="200" y="258" text-anchor="middle">STATUS(1, 0)</text>
+        <path class="d-msg" marker-end="url(#arr)" d="M550,252 L330,272"/>
+        <text class="d-num" x="460" y="258" text-anchor="middle">STATUS(1, 0)</text>
+
+        <!-- Phase 2: Propose -->
+        <circle class="d-ev-hi" cx="330" cy="286" r="5"/>
+        <text class="d-lbl" x="336" y="298" font-size="10">proposes v=1</text>
+        <path class="d-msg" marker-end="url(#arr)" d="M330,300 L110,324"/>
+        <path class="d-msg" marker-end="url(#arr)" d="M330,300 L550,324"/>
+        <text class="d-num" x="210" y="310" text-anchor="middle">PROPOSE(1, 2)</text>
+        <text class="d-num" x="450" y="310" text-anchor="middle">PROPOSE(1, 2)</text>
+
+        <!-- Phase 3: Lock & Ack -->
+        <circle class="d-ev" cx="110" cy="324" r="4"/>
+        <circle class="d-ev" cx="550" cy="324" r="4"/>
+        <path class="d-msg" marker-end="url(#arr)" d="M110,336 L330,360"/>
+        <path class="d-msg" marker-end="url(#arr)" d="M550,336 L330,360"/>
+        <text class="d-num" x="210" y="354" text-anchor="middle">ACK(2)</text>
+        <text class="d-num" x="450" y="354" text-anchor="middle">ACK(2)</text>
+
+        <!-- Phase 4: Commit -->
+        <circle class="d-ev-hi" cx="330" cy="374" r="6" fill="#4d7c0f"/>
+        <text class="d-lbl" x="340" y="378" fill="#4d7c0f" font-weight="700">DECIDES v=1</text>
+        <path class="d-msg-hi" marker-end="url(#arr-grn)" stroke="#4d7c0f" d="M330,390 L110,414"/>
+        <path class="d-msg-hi" marker-end="url(#arr-grn)" stroke="#4d7c0f" d="M330,390 L550,414"/>
+        <text class="d-note" x="200" y="400" text-anchor="middle" fill="#4d7c0f">COMMIT(1, 2)</text>
+        <text class="d-note" x="460" y="400" text-anchor="middle" fill="#4d7c0f">COMMIT(1, 2)</text>
+
+        <circle class="d-ev-hi" cx="110" cy="414" r="5" fill="#4d7c0f"/>
+        <circle class="d-ev-hi" cx="550" cy="414" r="5" fill="#4d7c0f"/>
+        <text class="d-lbl" x="44" y="432" fill="#4d7c0f">decides v=1</text>
+        <text class="d-lbl" x="480" y="432" fill="#4d7c0f">decides v=1</text>
+      </svg>
+    </div>
+    <figcaption><b>The execution across the storm.</b> In Round 1, before GST, rockfalls delay
+    messages; Dworkia's timer expires without hearing from the Anchor, and the round aborts safely.
+    Once the storm breaks (GST), runner delays fall below Δ. In Round 2, Lynchaia collects status
+    slips within time, secures majority locks, and commits the entire fleet to sail on the morning
+    tide.</figcaption>
+  </figure>
+</section>
+
+<hr class="meander">
+
+<!-- ================= VI ================= -->
+<section id="s6">
+  <div class="issue"><span class="no">Chapter VI</span><h2>Safety in the Wildest Gale</h2></div>
+
+  <div class="prose">
+    <p>The first necessity of the fleet is that <b>it must never divide</b>. Even if the gale
+    rages for three weeks, and runners wander lost along the rocks, and timers expire out of order,
+    it must be impossible for the Dolphin to decide to sail while the Vine later decides to hold.</p>
+
+    <p>This safety guarantee does not depend on the weather. It holds during the height of the
+    storm, under unbounded delay, by virtue of the majority lock.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">Theorem 1 · Unconditional Agreement (DLS 1988)</span>
+    <p>No two houses ever decide different values, regardless of runner delays or the time of
+    GST.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 280" role="img" aria-label="Quorum intersection diagram. Round r commits value v using Quorum Q1 consisting of Dolphin and Vine. Later Round r prime gathers status reports from Quorum Q2 consisting of Vine and Anchor. The Vine belongs to both quorums and forces the coordinator to propose v.">
+        <!-- Quorum 1: Dolphin & Vine -->
+        <rect class="d-band" x="40" y="40" width="340" height="190" rx="8" fill="#eaf2f8" stroke="#136f9e" stroke-width="1.5"/>
+        <text class="d-key" x="56" y="66" fill="#136f9e" font-weight="700">QUORUM Q₁ (Round r Commit: v)</text>
+        <circle class="d-ev-hi" cx="120" cy="140" r="14" fill="#136f9e"/>
+        <text class="d-num" x="120" y="145" text-anchor="middle" fill="#fff" font-weight="700">D</text>
+        <text class="d-lbl" x="120" y="172" text-anchor="middle">Dolphin</text>
+        <text class="d-note" x="120" y="188" text-anchor="middle">locked v at r</text>
+
+        <!-- Quorum 2: Vine & Anchor -->
+        <rect class="d-band" x="280" y="40" width="340" height="190" rx="8" fill="#fdf2e9" stroke="#bf4a26" stroke-width="1.5" opacity="0.85"/>
+        <text class="d-key" x="604" y="66" text-anchor="end" fill="#bf4a26" font-weight="700">QUORUM Q₂ (Round r' Status)</text>
+        <circle class="d-ev-hi" cx="540" cy="140" r="14" fill="#bf4a26"/>
+        <text class="d-num" x="540" y="145" text-anchor="middle" fill="#fff" font-weight="700">A</text>
+        <text class="d-lbl" x="540" y="172" text-anchor="middle">Anchor</text>
+        <text class="d-note" x="540" y="188" text-anchor="middle">status reported</text>
+
+        <!-- Intersection: The Vine -->
+        <circle class="d-ev-hi" cx="330" cy="140" r="18" fill="#4d7c0f"/>
+        <text class="d-num" x="330" y="146" text-anchor="middle" fill="#fff" font-weight="700">V</text>
+        <text class="d-lbl" x="330" y="176" text-anchor="middle" font-weight="700" fill="#4d7c0f">THE VINE (Witness)</text>
+        <text class="d-note" x="330" y="194" text-anchor="middle">in Q₁ ∩ Q₂</text>
+        <text class="d-note" x="330" y="210" text-anchor="middle" font-weight="700" fill="#4d7c0f">reports lock (v, r)</text>
+
+        <!-- Explanation banner -->
+        <text class="d-key" x="330" y="258" text-anchor="middle">Because Vine is in both quorums, coordinator of r' cannot choose any value other than v</text>
+      </svg>
+    </div>
+    <figcaption><b>The lock that binds the future.</b> If Round <var>r</var> commits value
+    <var>v</var>, a majority <var>Q</var><sub>1</sub> locked <var>v</var> at round <var>r</var>.
+    Any coordinator in a later round <var>r'</var> must collect status reports from a majority
+    <var>Q</var><sub>2</sub>. Because the two majorities overlap at the Vine, the coordinator is
+    informed of the lock at round <var>r</var>, and is compelled to propose <var>v</var>.</figcaption>
+  </figure>
+
+  <details class="proof">
+    <summary>Proof — that no two rounds can commit different values</summary>
+    <ol class="proofsteps">
+      <li>Suppose some round <var>r</var> is the <em>earliest</em> round in which a coordinator
+      decides a value, and let that value be <var>v</var>.</li>
+      <li>To decide <var>v</var> at round <var>r</var>, the coordinator received
+      <span class="paper">ACK(<var>r</var>)</span> from a majority of houses
+      <var>Q</var><sub>1</sub>. By Phase 3, every house in <var>Q</var><sub>1</sub> set its
+      <var>lock_round</var> to <var>r</var> and locked value <var>v</var>.</li>
+      <li>Now consider any subsequent round <var>r'</var> > <var>r</var>. We show by induction
+      on <var>r'</var> that the coordinator of round <var>r'</var> can propose no value other
+      than <var>v</var>.</li>
+      <li>To form a proposal in Phase 2, the coordinator of <var>r'</var> must receive status
+      reports from a majority <var>Q</var><sub>2</sub>.</li>
+      <li>Because <var>N</var> = 3 and each quorum contains 2 houses,
+      |<var>Q</var><sub>1</sub> ∩ <var>Q</var><sub>2</sub>| ≥ 1. Let <var>w</var> be a house
+      in the intersection.</li>
+      <li>Because <var>w</var> ∈ <var>Q</var><sub>1</sub>, <var>w</var> locked <var>v</var> at
+      round <var>r</var>. Thus, when <var>w</var> reports its status to round <var>r'</var>, its
+      reported <var>lock_round</var><sub>w</sub> is at least <var>r</var>.</li>
+      <li>By the induction hypothesis, no coordinator in any intermediate round between
+      <var>r</var> and <var>r'</var> could have proposed or locked any value other than <var>v</var>.
+      Therefore, any lock held by any house at or above round <var>r</var> must be on value
+      <var>v</var>.</li>
+      <li>The rule of Phase 2 compels the coordinator of <var>r'</var> to choose the value with
+      the highest reported <var>lock_round</var>. Since <var>w</var> reports a lock at round
+      <var>r</var> or higher, the highest reported lock cannot be 0, and must belong to some round
+      ≥ <var>r</var>.</li>
+      <li>Hence the coordinator of <var>r'</var> is forced to choose value <var>v</var>. No
+      conflicting value can ever be proposed, acknowledged, or committed in any round.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+</section>
+
+<hr class="meander">
+
+<!-- ================= VII ================= -->
+<section id="s7">
+  <div class="issue"><span class="no">Chapter VII</span><h2>Liveness When the Calm Arrives</h2></div>
+
+  <div class="prose">
+    <p>Safety prevents a split fleet, but safety alone is not enough: the ships cannot remain
+    in their slips until the timbers rot. The protocol must guarantee that once the weather
+    relents, a decision is reached.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">Theorem 2 · Guaranteed Termination after GST (DLS 1988)</span>
+    <p>Once the storm breaks (after GST), every house that has not suffered catastrophe reaches
+    a final decision within a bounded number of rounds.</p>
+  </div>
+
+  <div class="prose">
+    <p>The proof relies on the synchrony that sets in once the sky clears:</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that consensus is reached after GST</summary>
+    <ol class="proofsteps">
+      <li>After GST, every runner between any two functioning houses completes his transit within
+      time Δ.</li>
+      <li>Because coordinators rotate cyclically among the houses, there must eventually begin a
+      round <var>r</var> whose start time occurs after GST, and whose designated coordinator
+      <var>c</var>(<var>r</var>) is a non-faulty house.</li>
+      <li>At the start of round <var>r</var>, all non-faulty houses dispatch status slips to
+      <var>c</var>(<var>r</var>). Each slip takes at most Δ.</li>
+      <li>The coordinator receives status reports from all functioning houses (at least 2 houses,
+      forming a majority) well before time 2Δ. She selects the highest locked value <var>v</var>
+      and dispatches <span class="paper">PROPOSE(<var>v</var>, <var>r</var>)</span> to all houses.</li>
+      <li>These proposal slips arrive at all houses within transit time Δ (total time ≤ 2Δ).</li>
+      <li>Each house receives the proposal before its local round timer <var>T</var> = 4Δ expires.
+      Because <var>r</var> is higher than any previously locked round, each functioning house locks
+      <var>v</var> and immediately dispatches <span class="paper">ACK(<var>r</var>)</span> to the
+      coordinator.</li>
+      <li>The acknowledgments reach the coordinator within transit time Δ (total elapsed time ≤ 3Δ).</li>
+      <li>Having received a majority of acknowledgments before her timer <var>T</var> = 4Δ expires,
+      the coordinator decides <var>v</var> and dispatches
+      <span class="paper">COMMIT(<var>v</var>, <var>r</var>)</span> to all houses.</li>
+      <li>The commit slips arrive before time 4Δ. Every non-faulty house receives the slip and
+      decides <var>v</var>.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>Notice how neatly the boundary is navigated: during the storm, rounds may abort harmlessly
+    because sandglasses expire before runners arrive; but the moment the calm arrives, the very
+    next honest round drives the decision home.</p>
+  </div>
+</section>
+
+<hr class="meander">
+
+<!-- ================= VIII ================= -->
+<section id="s8">
+  <div class="issue"><span class="no">Chapter VIII</span><h2>The Bounds of Faults and Liars</h2></div>
+
+  <div class="prose">
+    <p>It remains to explain why three houses are sufficient for Arche, and what would happen if
+    the houses did not merely crash, but lied.</p>
+
+    <p>In Arche's convoy problem, houses may be crushed by rockfalls (crash failures), but runners
+    do not forge signatures or alter numbers. Under crash failures in partial synchrony, DLS
+    proved that consensus requires strictly more than double the number of failures:</p>
+    <p style="text-align:center;font-weight:700;font-size:1.1rem">N ≥ 2t + 1</p>
+    <p>With <var>N</var> = 3 houses, Arche can endure <var>t</var> = 1 failure. If two houses
+    could fail simultaneously (<var>t</var> = 2), three houses would be helpless: a solitary
+    surviving house cannot distinguish two silent neighbors from two runners delayed by the gale.</p>
+
+    <p>What if the houses could act maliciously — forging status reports or proposing different
+    values to different neighbors, as the bandits did atop Mount Phyle?</p>
+
+    <p>DLS established the exact boundaries for Byzantine failures in partial synchrony:</p>
+  </div>
+
+  <div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>Failure Type</th><th>Authentication</th><th>Resilience Bound</th><th>Tolerated on Arche (N = 3)</th></tr></thead>
+      <tbody>
+        <tr><td><b>Crash (fail-stop)</b></td><td>Plain ink</td><td><var>N</var> ≥ 2<var>t</var> + 1</td><td><var>t</var> = 1</td></tr>
+        <tr><td><b>Byzantine (malicious)</b></td><td>Wax seals (signed)</td><td><var>N</var> ≥ 3<var>t</var> + 1</td><td><var>t</var> = 0 (needs <var>N</var> ≥ 4)</td></tr>
+        <tr><td><b>Byzantine (malicious)</b></td><td>Oral (unsigned)</td><td><var>N</var> ≥ 4<var>t</var> + 1</td><td><var>t</var> = 0 (needs <var>N</var> ≥ 5)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <p>Against rockslides, three houses suffice. Against treachery under partial synchrony, the
+    houses would require sealed signet rings and a fourth house on the southern cape.</p>
+  </div>
+</section>
+
+<hr class="meander">
+
+<!-- ================= IX ================= -->
+<section id="s9">
+  <div class="issue"><span class="no">Chapter IX</span><h2>In the Book, In the Paper</h2></div>
+
+  <div class="prose">
+    <p>So that the reader may verify the correspondence between the convoy of Arche and the
+    classic paper of Dwork, Lynch, and Stockmeyer.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td><span class="term">trading house</span></td><td>A distributed node maintaining local state and communicating solely via messages. <span class="paper">A processor.</span></td></tr>
+        <tr><td><span class="term">winter gale</span></td><td>Arbitrary, unbounded communication delay before stabilization. <span class="paper">Asynchronous phase before GST.</span></td></tr>
+        <tr><td><span class="term">the breaking of the storm</span></td><td>The unknown future moment after which delays become bounded. <span class="paper">Global Stabilization Time (GST).</span></td></tr>
+        <tr><td><span class="term">three sandglass turns (Δ)</span></td><td>The upper bound on message transit time holding after GST. <span class="paper">Message delay bound Δ.</span></td></tr>
+        <tr><td><span class="term">convoy sailing decision</span></td><td>Reaching agreement on a single binary value satisfying Agreement, Validity, and Termination. <span class="paper">Binary distributed consensus.</span></td></tr>
+        <tr><td><span class="term">rotating coordinator</span></td><td>A deterministic round-robin mapping from round number to designated coordinator. <span class="paper">Coordinator c(r) = r mod N.</span></td></tr>
+        <tr><td><span class="term">status slip</span></td><td>A message reporting current preference and the round in which it was locked. <span class="paper">Status message (v, val_round).</span></td></tr>
+        <tr><td><span class="term">highest locked round</span></td><td>Selecting the value from the status report with maximum timestamp/round. <span class="paper">Value from max round in Phase 2.</span></td></tr>
+        <tr><td><span class="term">majority lock (ACK)</span></td><td>Adopting a proposal and locking it with the round number. <span class="paper">Locking / voting phase.</span></td></tr>
+        <tr><td><span class="term">quorum intersection (2 of 3)</span></td><td>Any two majorities overlap in at least one processor, transferring the lock to subsequent rounds. <span class="paper">Quorum intersection property (N ≥ 2t + 1).</span></td></tr>
+        <tr><td><span class="term">commit slip</span></td><td>Broadcasting the final decision once a quorum of locks is secured. <span class="paper">Commit / decision message.</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="ideas-box">
+    <span class="lbl">The ideas, plainly</span>
+    <p>The FLP impossibility theorem demonstrated that consensus is impossible in an asynchronous
+    network if even one crash failure can occur. Yet real-world networks are not adversarial in
+    perpetuity: periods of severe packet delay or network partition are eventually followed by
+    relative calm.</p>
+    <p>Dwork, Lynch, and Stockmeyer introduced <i>partial synchrony</i>: systems where message
+    delays are unbounded before an unknown Global Stabilization Time (GST), but strictly bounded
+    by Δ thereafter. They showed that consensus is entirely achievable in such systems, requiring
+    only a majority of functioning nodes (<var>N</var> ≥ 2<var>t</var> + 1 for crash failures).</p>
+    <p>The core mechanism is a round-based rotating coordinator protocol with quorum locks. In each
+    round, the coordinator proposes a value chosen from the highest-round lock reported by a
+    majority quorum. If a majority acknowledges and locks the proposal, the coordinator commits.
+    Because any two majority quorums must intersect, any future coordinator is guaranteed to see
+    the locked value, preserving safety unconditionally even if the network is chaotic. Once GST
+    arrives, messages arrive within Δ, allowing the protocol to terminate cleanly.</p>
+    <p>This foundational architecture directly inspired Lamport's Paxos and the consensus engines
+    of modern distributed databases.</p>
+  </div>
+</section>
+
+<hr class="meander">
+
+<section id="refs" class="refs">
+  <h3 class="sect">The Paper Behind This Book</h3>
+  <ul>
+    <li>Cynthia Dwork, Nancy Lynch, and Larry Stockmeyer, <i>Consensus in the Presence of Partial
+    Synchrony</i>. Journal of the ACM <b>35</b>, 2 (April 1988), 288–323. — The formulation of
+    partial synchrony (Models 1 and 2), the rotating coordinator consensus protocols, the tight
+    bounds for crash failures (<var>N</var> ≥ 2<var>t</var> + 1) and Byzantine failures
+    (<var>N</var> ≥ 3<var>t</var> + 1 signed, <var>N</var> ≥ 4<var>t</var> + 1 unsigned).</li>
+  </ul>
+  <aside class="fn">Dworkia, Lynchaia, and Stockmeros are Hellenised from the paper's authors.
+  The setting of Arche, Mount Phyle, and the coastal ring road unites this book with <i>The Tally
+  and the Column</i> (logical time) and <i>The Census of the Ring Road</i> (distributed state).</aside>
+</section>
+
+</div>
+</body>
+</html>
