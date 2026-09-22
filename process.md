@@ -1,12 +1,12 @@
 # How a paper becomes a book
 
 A working procedure, written so that someone who has not been part of the conversation so far
-can pick up the next paper and produce a book that sits beside the four already written
+can pick up the next paper and produce a book that sits beside the three already written
 without looking like a different series.
 
 **Read first:** `buildings.md` (which paper lives in which building), `settings.md` (the
 analysis and the constraints that cannot be broken), `layouts.html` (the world).
-**Read as models:** the four finished books in `books/`. They are the specification. Where
+**Read as models:** the finished books in `books/`. They are the specification. Where
 this document and a finished book disagree, the book is right.
 
 ---
@@ -90,7 +90,7 @@ gossip book it would include anything resembling an assembly.
 
 ### 4. Draft the chapters
 
-The shape that has worked four times:
+The shape that has worked before:
 
 | | |
 |---|---|
@@ -216,7 +216,7 @@ depend on vocabulary the earlier ones establish.
 |---|---|---|
 | The auditor's court | Herlihy &amp; Wing 1990 | Self-contained. A good next one. |
 | The outport offices | Brewer 2000 · Gilbert &amp; Lynch 2002 | Needs the linearizability book first; CAP is stated in terms of it. |
-| The beacon line | DLS 1988 | Own ground, own people, ~130 km from the hill. Must not contradict *Four Camps, Two Gates* — see the synchrony split in `settings.md`. |
+| The beacon line | DLS 1988 | Own ground, own people, ~130 km from the hill. Must not contradict *Mercenaries and Bandits* — see the synchrony split in `settings.md`. |
 | The camps *(second book)* | Chandra &amp; Toueg 1996 | Shares the building with FLP. **Must not decide anything** — see the note in `settings.md`. |
 | The Rotunda | Lamport 1998, 2001 | Reuse the existing Paxos HTML in `content-i1/books/book-07/` rather than redrafting; the work is collapsing its proofs and stripping its art. |
 | The Odeon | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 | |
