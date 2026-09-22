@@ -1,7 +1,7 @@
 # Settings
 
 The **analysis** behind the world: what each paper needs from its ground, and the
-constraints that cannot be broken. Source papers in `../sources/`.
+constraints that cannot be broken. Source papers in `sources/`.
 
 > **Which file is which.** The grouping below is the original four-subject cut. It has since
 > been superseded by the **three-island scheme** — Arche, Paxos, Antipaxos — in
@@ -19,7 +19,7 @@ constraints that cannot be broken. Source papers in `../sources/`.
 
 ## Coverage
 
-Verified against `ls ../sources/`, not asserted:
+Verified against `ls sources/`, not asserted:
 
 | | |
 |---|---|
