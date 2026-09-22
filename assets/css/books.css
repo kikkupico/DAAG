@@ -1,0 +1,87 @@
+/* Text-phase additions to daag.css.
+   Diagrams are inline SVG; there is no art in this phase. */
+
+figure.diagram{
+  margin:26px auto; max-width:660px; padding:0;
+}
+figure.diagram .board{
+  background:var(--parchment);
+  border:3px solid var(--ink);
+  box-shadow:5px 5px 0 var(--shadow);
+  padding:14px 12px 10px;
+}
+figure.diagram svg{display:block; width:100%; height:auto}
+figure.diagram figcaption{
+  margin-top:10px; font-family:Optima,'Gill Sans',sans-serif;
+  font-size:.74rem; letter-spacing:.09em; text-transform:uppercase;
+  color:#5a4a33; line-height:1.5;
+}
+figure.diagram figcaption b{color:var(--ink)}
+
+/* SVG primitives, so every diagram in the set reads as one hand */
+.d-lifeline{stroke:#1c1512; stroke-width:1.6}
+.d-house{font:600 13px Optima,'Gill Sans',sans-serif; letter-spacing:.06em; fill:#1c1512}
+.d-ev{fill:#1c1512}
+.d-ev-hi{fill:#bf4a26}
+.d-lbl{font:italic 12px Georgia,serif; fill:#1c1512}
+.d-num{font:600 12px Optima,'Gill Sans',sans-serif; fill:#136f9e}
+.d-vec{font:600 10.5px Optima,'Gill Sans',sans-serif; fill:#5f6e28}
+.d-msg{stroke:#136f9e; stroke-width:1.5; fill:none}
+.d-msg-hi{stroke:#bf4a26; stroke-width:2; fill:none}
+.d-faint{stroke:#b9a77e; stroke-width:1; stroke-dasharray:4 4; fill:none}
+.d-note{font:italic 11.5px Georgia,serif; fill:#8a6a44}
+.d-key{font:11px Optima,'Gill Sans',sans-serif; fill:#5a4a33}
+.d-band{fill:#bf4a26; opacity:.10}
+.d-band-o{fill:#5f6e28; opacity:.12}
+
+/* an inline glossary term the first time a device is named */
+.coin{
+  font-style:normal; font-weight:600;
+  border-bottom:2px solid var(--caption); padding-bottom:1px;
+}
+
+/* a short aside that states the formal object without breaking the prose */
+.aside-formal{
+  max-width:600px; margin:16px auto; padding:10px 16px;
+  border-left:3px solid var(--aegean-d); background:rgba(255,255,255,.4);
+  font-size:.93rem;
+}
+.aside-formal .lbl{
+  display:block; font-family:Optima,'Gill Sans',sans-serif; font-size:.68rem;
+  letter-spacing:.11em; text-transform:uppercase; color:var(--aegean-d); margin-bottom:4px;
+}
+
+/* ---- generic book typography ----
+   Ported from content-i2/assets/css/hill.css, which defined these alongside
+   The Hill's night palette. They are setting-independent, so they live here
+   and every book gets them from daag.css + books.css alone. */
+
+.term{
+  color:var(--aegean-d); font-style:normal; font-weight:700; white-space:nowrap;
+}
+
+.paper{
+  color:#6d5c42; font-style:italic;
+}
+
+.result{
+  background:#faf3e0; border:1px solid #e6d5ae; border-left:3px solid var(--aegean);
+  padding:14px 20px; margin:24px auto; max-width:680px;
+  box-shadow:2px 2px 0 var(--shadow);
+}
+
+.result .name{
+  display:block;
+  font:700 .72rem/1.5 Optima,'Gill Sans',sans-serif;
+  letter-spacing:.14em; text-transform:uppercase;
+  color:var(--aegean-d); margin-bottom:8px;
+}
+
+.result p:last-child{margin-bottom:0}
+
+/* the cover's title, since books carry no cover art in this phase */
+.cover .display{
+  font-family:Optima,'Gill Sans',sans-serif; font-weight:700;
+  font-size:clamp(2rem,6vw,3.1rem); line-height:1.05; letter-spacing:.01em;
+  color:var(--ink); text-transform:uppercase;
+}
