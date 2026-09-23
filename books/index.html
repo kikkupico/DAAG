@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Distributed Algorithms of Ancient Greece · Volume : Foundations</title>
+<title>Distributed Algorithms of Ancient Greece</title>
 <link rel="stylesheet" href="../assets/css/daag.css">
 <link rel="stylesheet" href="../assets/css/books.css">
 </head>
@@ -11,13 +11,10 @@
 <div class="page">
 
 <header class="cover">
-  <div class="kicker">Classical Monograph Series</div>
   <h1 class="display" style="margin:18px 0 6px">Distributed Algorithms of Ancient Greece</h1>
-  <p class="sub">Volume : Foundations</p>
-  <p class="pub">Allegorical retellings of the papers that founded distributed computing,
-  in the manner of Lamport's own <i>Part-Time Parliament</i>. Each book is a setting in which
-  one paper's findings are explored. Nothing is resolved and nobody wins; the arguments are
-  given in full, and every proof waits behind a door for the reader who wants it.</p>
+  <p class="pub">An exploration of 31 papers in distributed computing employing the polarising
+  ancient Greece allegory introduced by Leslie Lamport in his seminal paper,
+  <i>The Part-Time Parliament</i>.</p>
 </header>
 
 <hr class="meander">
@@ -26,22 +23,26 @@
   <div class="issue"><span class="no">The Ring Road</span><h2>Causality, State &amp; Partial Synchrony</h2></div>
   <div class="prose">
     <p><a href="the-tally-and-the-column/index.html"><b>Book I · The Tally and the Column</b></a>
-    — the trading houses of the Dolphin, the Vine, and the Anchor. Serving trade requests on a
-    strict first-come basis without clocks along a narrow cliff road where runners cannot pass,
-    the rule of the rising number, mutual exclusion, and what no scalar tally can see.<br>
+    — In a distributed system, time as we know it ceases to make sense, because clocks are
+    unreliable and local. An alternative way of tracking the order of events is explored as a
+    problem of sorting purchase orders among three trading houses, linked by a cliff road on
+    which runners cannot overtake one another. Along the way: logical clocks, mutual exclusion
+    built on them, and the vector clocks needed to see what a single number cannot.<br>
     <span class="paper">Lamport 1978 · Fidge 1988 · Mattern 1988</span></p>
 
     <p><a href="the-census-of-the-ring-road/index.html"><b>Book II · The Census of the Ring Road</b></a>
-    — the customs seat and the storehouses. Counting the whole island's goods without stopping a
-    single cart, using a runner with a red sash to record a sound snapshot and evaluate settled
-    properties across a morning nobody lived through.<br>
+    — A distributed system has no single instant at which its whole state can be read, and
+    stopping it to look is rarely an option. How to record a consistent global snapshot while
+    the system keeps running, and what such a snapshot can reliably tell you, is explored as a
+    census of the island's goods taken without halting a single cart.<br>
     <span class="paper">Chandy &amp; Lamport 1985</span></p>
 
     <p><a href="the-convoy-of-arche/index.html"><b>Book III · The Convoy of Arche</b></a>
-    — the roadsteads and slipways. Three trading houses deciding whether their merchantmen should
-    sail together across the open sea. While winter gales inflict unbounded delays, rotating
-    coordinator rounds and majority locks preserve safety, driving consensus the moment the storm
-    breaks.<br>
+    — Consensus cannot be guaranteed when messages may be delayed without bound, yet real
+    networks are well-behaved most of the time. Partial synchrony, where a protocol stays safe
+    through any amount of delay and decides once delays settle within a bound, is explored as
+    three trading houses deciding whether their merchantmen should sail as one convoy while
+    winter gales hold up their runners.<br>
     <span class="paper">Dwork, Lynch &amp; Stockmeyer 1988</span></p>
   </div>
 </section>
@@ -52,10 +53,13 @@
   <div class="issue"><span class="no">Mount Phyle</span><h2>Consensus &amp; Faults</h2></div>
   <div class="prose">
     <p><a href="mercenaries-and-bandits/index.html"><b>Book IV · Mercenaries and Bandits</b></a>
-    — one hill, two parties, one question apiece. Below on the spurs, four mercenaries in four
-    tents who must go in at the same gate and cannot tell a dead man from a slow bird. Above on
-    the ramparts, four bandits who must hold the loot or scatter, and cannot tell a lying chief
-    from a lying peer.<br>
+    — Two limits on agreement. When messages are fully asynchronous, no protocol can guarantee
+    consensus if even one process may crash, because a crashed process looks exactly like a slow
+    one. When processes may lie, agreement is possible only if more than two thirds are honest,
+    unless messages can be signed. Both are explored on one hill: mercenaries below who must go
+    in at the same gate and cannot tell a dead comrade from a slow messenger bird, and bandits
+    above who must hold the loot or scatter together and cannot tell a lying chief from a lying
+    peer.<br>
     <span class="paper">Fischer, Lynch &amp; Paterson 1985 · Lamport, Shostak &amp; Pease 1982 ·
     Pease, Shostak &amp; Lamport 1980</span></p>
   </div>
@@ -65,11 +69,10 @@
 
 <section>
   <div class="prose">
-    <p style="font-size:.92rem;color:#6d5c42">Arche is the first of the islands, carrying
-    the foundations of time, state, synchrony, and agreement. Further volumes are in preparation:
-    Volume II on Paxos, where a domed rotunda and an odeon explore replicated state machines
-    and leader election, and Volume III on Antipaxos, where gossip and CRDTs explore eventual
-    consistency without central assembly.</p>
+    <p style="font-size:.92rem;color:#6d5c42">Arche, the first island, covers the foundations:
+    time, state, synchrony and agreement. Still to come: Paxos, where a domed rotunda and an odeon
+    explore replicated state machines and leader election; and Antipaxos, where gossip and CRDTs
+    explore eventual consistency without a central assembly.</p>
   </div>
 </section>
 
