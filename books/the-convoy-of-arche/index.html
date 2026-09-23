@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Convoy of Arche — Mount Phyle</title>
+<title>The Convoy of Arche — Arche</title>
 <link rel="stylesheet" href="../../assets/css/daag.css">
 <link rel="stylesheet" href="../../assets/css/books.css">
 </head>
@@ -13,7 +13,7 @@
     <a href="../index.html" class="nav-back">← The Books</a>
     <span class="nav-current">Arche · The Ring Road</span>
     <div class="nav-arrows">
-      <a href="../the-census-of-moving-ships/index.html" class="nav-arrow">‹ The census</a>
+      <a href="../the-census-of-the-ring-road/index.html" class="nav-arrow">‹ The census</a>
     </div>
   </div>
 </nav>
@@ -23,13 +23,13 @@
 <header class="cover">
   <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · The Ring Road</div>
   <h1 class="display" style="margin:18px 0 6px">The Convoy of Arche</h1>
-  <p class="sub">Being an account of how the trading houses agreed when their merchantmen
-  should sail without trusting the weather</p>
+  <p class="sub">Being an account of how the trading houses agreed whether their merchantmen
+  should sail, without trusting the weather</p>
   <p class="pub">Three trading houses with merchant ships anchored at their slipways, needing to
   sail together as a convoy across the open sea. While winter gales batter the cliff road, runners
   face unbounded delays and no consensus can be forced. But when the storm breaks and transit times
-  fall within a bound, a rotating coordinator and the rule of majority locks decide the sailing
-  tide without risking a divided fleet.</p>
+  fall within a bound, a rotating coordinator and the rule of majority locks decide whether the
+  fleet sails, without risking a divided one.</p>
 </header>
 
 <nav class="toc">
@@ -63,20 +63,62 @@
 
     <p>To cross the open Mediterranean alone is folly. A single merchantman running into sudden
     squalls or sighted by Cilician pirate galleys is taken or sunk. The ships must sail as a
-    single, united <span class="coin">convoy</span> on the identical morning tide, or remain
-    moored securely in their coves. If half the ships slip their cables while the other half stay
-    fast at anchor, the convoy is broken, and the isolated vessels are lost.</p>
+    single, united <span class="coin">convoy</span>, or remain moored securely in their
+    coves.</p>
 
+    <p>Three coves on three sides of a mountain cannot put to sea at one instant, and the convoy
+    does not ask them to. It forms at <span class="coin">the Needle</span>, a stack of rock half
+    a day's sail off the southern cape, in whose lee ships can lie for a few days. Each house, once
+    it knows the fleet is to sail, sends its ships out on the first dawn land-breeze. They gather
+    under the Needle and wait for one another for three days, which is as long as the lee can
+    hold ships and their water can last. Then the convoy leaves with whoever has come. It cannot
+    wait for "the last ship", because a house may have been crushed by rockfall and have no ships
+    to send, and nobody at the Needle can tell that house from a slow one. The decision the houses
+    must share is therefore not <em>when</em> but <em>whether</em>, and it does not matter that
+    one house learns it a day after another, so long as each learns it inside the three
+    days.</p>
+
+    <figure class="panel">
+      <img src="../../assets/img/panels/the-convoy-of-arche/v01-needle.jpg" width="1200" height="896" loading="lazy"
+           alt="At calm dawn after a storm, six merchantmen ride at anchor in the lee of a tall stack of pale rock far out at sea, the island of Arche low on the horizon behind them.">
+    </figure>
+
+    <p>What would matter is two houses deciding different things. Ships sent to the Needle for a
+    fleet whose house has decided to hold wait out their three days in open water the pirate
+    galleys watch. Then they must cross short-handed, too few to beat off an attack, or beat home
+    against a turning season with the cargo spoiling in the holds. If half the ships slip their
+    cables while the other half stay fast, the convoy is broken, and the isolated vessels are
+    lost.</p>
+  </div>
+
+  <aside class="leak">
+    <span class="lbl">Where the allegory leaks</span>
+    <p>The three days at the Needle quietly assume that every house still standing hears the
+    decision within three days of the first house to decide. Consensus promises only that each
+    will hear it <em>eventually</em>. After the storm has broken for good, the commit slips reach
+    every house within one runner's transit, so the assumption holds. A decision reached in a
+    lull that then closes up again could leave one house's ships sailing a week late to an empty
+    rock. The paper's consensus settles a value. Acting on it together by a deadline is a stronger
+    problem, and this book does not solve it.</p>
+  </aside>
+
+  <div class="prose">
     <p>Each house watches its own local cove, examines its hull caulking, and reads its oil-glass.
     At dawn of the decision season, each house forms an initial judgment:</p>
+
+    <figure class="panel">
+      <img src="../../assets/img/panels/the-convoy-of-arche/v02-gale.jpg" width="1200" height="896" loading="lazy"
+           alt="On the Anchor's quay in a winter gale, a heavy-set harbour scribe in a brown sea-cloak holds a flask of olive oil up to the light, while waves break over the mole and merchantmen strain at their ropes on the stone bollards.">
+    </figure>
   </div>
 
   <div class="result">
     <span class="name">The two choices</span>
     <p><b>0 · Hold at anchor.</b> The roadstead is rough, the glass is falling, or the rigging is
     unready. The ships remain tied to the stone bollards.</p>
-    <p><b>1 · Sail on the morning tide.</b> The roadstead is calm, the glass is steady, and the
-    crews are aboard. The fleet puts to sea in convoy.</p>
+    <p><b>1 · Sail.</b> The roadstead is calm, the glass is steady, and the crews are aboard.
+    Each house's ships leave on the first land-breeze after it learns the decision, and the fleet
+    forms under the Needle.</p>
   </div>
 
   <div class="prose">
@@ -117,7 +159,7 @@
 
     <p>No runner is lost — the island's messengers are tough and stubborn, and every message
     eventually arrives. But <em>how long</em> a runner will take is completely unpredictable. A
-    journey that requires half an hour in clear sunlight may take ten hours or two days in a
+    journey that takes a runner half a day in clear weather may take two days, or five, in a
     howling gale.</p>
 
     <p>Furthermore, a house itself may suffer a localized cliff collapse that crushes its gates,
@@ -172,6 +214,12 @@
     angel to blow a trumpet announcing GST. It must run continuously through the storm, never
     violating safety (never sending part of the fleet to sea while others stay behind), and then,
     when the storm finally breaks, swiftly reach a common decision.</p>
+
+    <p>Nor does the clearing of the sky open another road. A beacon on Mount Phyle would be seen
+    from every cove once the cloud lifts, but the summit belongs to the siege and no one from the
+    houses goes up. The swell goes on breaking over the reefs between the coves for days after the
+    wind has dropped, so no skiff coasts from one house to the next. The ring road is still the
+    only way word travels. What the calm changes is how long it takes.</p>
   </div>
 </section>
 
@@ -192,9 +240,25 @@
     <br>— Round 3 is directed by <b>Stockmeros</b> at the Anchor.
     <br>— Round 4 returns to Dworkia at the Dolphin, and the cycle repeats (<var>r</var> mod 3).</p>
 
-    <p>Each house maintains a local sandglass timer of fixed duration <var>T</var> = 4Δ. When a
+    <p>Each house maintains a local sandglass timer of fixed duration <var>T</var> = 5Δ. When a
     house's sand runs out for round <var>r</var>, it advances its ledger to round <var>r</var> + 1,
     regardless of whether round <var>r</var> reached a conclusion.</p>
+
+    <p>Three sandglasses on three sides of a mountain do not stay together. A house cut off for a
+    week of storm turns its glass as often as the others, but it started at a different moment. It
+    may come out of the storm in round 7 while its neighbours are in round 9, and since all three
+    glasses run at the same rate, it would stay two rounds behind for ever. So the scribes added
+    <span class="coin">the rule of catching up</span>. At the start of every round a house sends
+    its status slip to <em>all</em> the houses, not only to the coordinator. A house that
+    receives any slip bearing a round higher than its own drops its round at once, advances its
+    ledger to the higher number, and turns its glass afresh. Slips bearing a lower round are set
+    aside, except a commit slip, which is honoured whenever it comes.</p>
+
+    <p>Before the storm breaks, the rule of catching up changes nothing that matters. After it,
+    the house furthest ahead drags the others level within one runner's transit, so every round
+    begins at the three houses within Δ of one another. That is why <var>T</var> is 5Δ and not
+    4Δ: four transits for the round's business, and one more for the houses that started
+    late.</p>
 
     <p>The second pillar of the arrangement is the <span class="coin">majority quorum</span>.
     On Arche, there are three houses (<var>N</var> = 3), and at most one may be crushed by
@@ -232,9 +296,11 @@
   <div class="decree rules">
     <div class="rhead">The Four Phases of Round r</div>
     <ol>
-      <li><b>Phase 1 · Status.</b> Each house <var>i</var> dispatches a runner to the coordinator
-      of round <var>r</var> carrying a slip:
-      <br><span class="paper">STATUS(<var>v</var><sub>i</sub>, <var>lock_round</var><sub>i</sub>)</span>.</li>
+      <li><b>Phase 1 · Status.</b> On entering round <var>r</var>, each house <var>i</var>
+      dispatches runners to every house carrying a slip
+      <br><span class="paper">STATUS(<var>v</var><sub>i</sub>, <var>lock_round</var><sub>i</sub>, <var>r</var>)</span>.
+      <br>The coordinator of round <var>r</var> uses it. The other houses use only its round
+      number, to catch up.</li>
 
       <li><b>Phase 2 · Proposal.</b> The coordinator waits until she receives status slips from a
       majority of houses (2 houses). She inspects the reported <var>lock_round</var> numbers.
@@ -260,7 +326,8 @@
   <div class="prose">
     <p>If a house's local sandglass runs out before a phase completes, the house abandons that
     round and advances to round <var>r</var> + 1. It keeps its <var>lock_round</var> and locked
-    value intact.</p>
+    value intact. A house that has decided goes on taking part in the rounds, so that a house
+    whose commit slip went astray is not left alone to finish.</p>
   </div>
 
   <figure class="diagram">
@@ -363,7 +430,7 @@
 
   <div class="prose">
     <p>The first necessity of the fleet is that <b>it must never divide</b>. Even if the gale
-    rages for three weeks, and runners wander lost along the rocks, and timers expire out of order,
+    rages for three weeks, and runners shelter for days under the rocks, and timers expire out of order,
     it must be impossible for the Dolphin to decide to sail while the Vine later decides to hold.</p>
 
     <p>This safety guarantee does not depend on the weather. It holds during the height of the
@@ -475,24 +542,26 @@
       <li>After GST, every runner between any two functioning houses completes his transit within
       time Δ.</li>
       <li>Because coordinators rotate cyclically among the houses, there must eventually begin a
-      round <var>r</var> whose start time occurs after GST, and whose designated coordinator
-      <var>c</var>(<var>r</var>) is a non-faulty house.</li>
-      <li>At the start of round <var>r</var>, all non-faulty houses dispatch status slips to
-      <var>c</var>(<var>r</var>). Each slip takes at most Δ.</li>
-      <li>The coordinator receives status reports from all functioning houses (at least 2 houses,
-      forming a majority) well before time 2Δ. She selects the highest locked value <var>v</var>
-      and dispatches <span class="paper">PROPOSE(<var>v</var>, <var>r</var>)</span> to all houses.</li>
-      <li>These proposal slips arrive at all houses within transit time Δ (total time ≤ 2Δ).</li>
-      <li>Each house receives the proposal before its local round timer <var>T</var> = 4Δ expires.
-      Because <var>r</var> is higher than any previously locked round, each functioning house locks
-      <var>v</var> and immediately dispatches <span class="paper">ACK(<var>r</var>)</span> to the
-      coordinator.</li>
-      <li>The acknowledgments reach the coordinator within transit time Δ (total elapsed time ≤ 3Δ).</li>
-      <li>Having received a majority of acknowledgments before her timer <var>T</var> = 4Δ expires,
-      the coordinator decides <var>v</var> and dispatches
+      round <var>r</var>, first entered by some house at a time <var>t</var>₀ after GST, whose
+      designated coordinator <var>c</var>(<var>r</var>) is a non-faulty house.</li>
+      <li>The first house to enter <var>r</var> sends its status slip to every house. By the rule
+      of catching up, every non-faulty house is in round <var>r</var> by
+      <var>t</var>₀ + Δ. No house can leave <var>r</var> before <var>t</var>₀ + 5Δ, when the
+      earliest glass runs out, and slips from the storm carry no round above <var>r</var>, so none
+      can pull a house past it.</li>
+      <li>Each non-faulty house sends its status slip on entering <var>r</var>, so the coordinator
+      holds status from every functioning house (at least 2, a majority) by <var>t</var>₀ + 2Δ.
+      She selects the value of the highest reported lock and dispatches
+      <span class="paper">PROPOSE(<var>v</var>, <var>r</var>)</span> to all houses.</li>
+      <li>These proposal slips arrive at all houses by <var>t</var>₀ + 3Δ, while every house is
+      still in round <var>r</var>. Because <var>r</var> is at least as high as any lock yet taken,
+      each functioning house locks <var>v</var> and dispatches
+      <span class="paper">ACK(<var>r</var>)</span> to the coordinator.</li>
+      <li>The acknowledgments reach the coordinator by <var>t</var>₀ + 4Δ, still within the
+      round. She decides <var>v</var> and dispatches
       <span class="paper">COMMIT(<var>v</var>, <var>r</var>)</span> to all houses.</li>
-      <li>The commit slips arrive before time 4Δ. Every non-faulty house receives the slip and
-      decides <var>v</var>.<span class="qed">∎</span></li>
+      <li>The commit slips arrive by <var>t</var>₀ + 5Δ. A commit is honoured whatever round the
+      receiver is in, so every non-faulty house decides <var>v</var>.<span class="qed">∎</span></li>
     </ol>
   </details>
 
@@ -533,14 +602,24 @@
       <tbody>
         <tr><td><b>Crash (fail-stop)</b></td><td>Plain ink</td><td><var>N</var> ≥ 2<var>t</var> + 1</td><td><var>t</var> = 1</td></tr>
         <tr><td><b>Byzantine (malicious)</b></td><td>Wax seals (signed)</td><td><var>N</var> ≥ 3<var>t</var> + 1</td><td><var>t</var> = 0 (needs <var>N</var> ≥ 4)</td></tr>
-        <tr><td><b>Byzantine (malicious)</b></td><td>Oral (unsigned)</td><td><var>N</var> ≥ 4<var>t</var> + 1</td><td><var>t</var> = 0 (needs <var>N</var> ≥ 5)</td></tr>
+        <tr><td><b>Byzantine (malicious)</b></td><td>Plain ink (unsigned)</td><td><var>N</var> ≥ 3<var>t</var> + 1</td><td><var>t</var> = 0 (needs <var>N</var> ≥ 4)</td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="prose">
     <p>Against rockslides, three houses suffice. Against treachery under partial synchrony, the
-    houses would require sealed signet rings and a fourth house on the southern cape.</p>
+    houses would need a fourth house on the southern cape — and seals would not spare them it.</p>
+
+    <p>That is a sharp contrast with the summit, where the bandits' seal rings dissolved the
+    bound altogether. The difference is the storm. On the summit a jar measures every flight, so
+    a man who hears nothing knows nothing was sent. On the ring road before GST, a house can
+    never wait for every other house, since one may be buried. It can wait only for all but
+    <var>t</var>, and <var>t</var> of the ones it does hear from may be liars. A seal stops a liar
+    from forging another house's word. It does not stop him answering promptly while an honest
+    house's runner is still under a ledge, so the honest must outnumber the liars in every set of
+    replies a house can be made to act on. That needs <var>N</var> ≥ 3<var>t</var> + 1, sealed or
+    not.</p>
   </div>
 </section>
 
@@ -563,6 +642,8 @@
         <tr><td><span class="term">winter gale</span></td><td>Arbitrary, unbounded communication delay before stabilization. <span class="paper">Asynchronous phase before GST.</span></td></tr>
         <tr><td><span class="term">the breaking of the storm</span></td><td>The unknown future moment after which delays become bounded. <span class="paper">Global Stabilization Time (GST).</span></td></tr>
         <tr><td><span class="term">three sandglass turns (Δ)</span></td><td>The upper bound on message transit time holding after GST. <span class="paper">Message delay bound Δ.</span></td></tr>
+        <tr><td><span class="term">the rule of catching up</span></td><td>Status broadcast at the start of each round; a house seeing a higher round jumps to it. Keeps round starts within Δ of each other after GST. <span class="paper">A stand-in for DLS's common round numbering, which the paper obtains from a distributed clock.</span></td></tr>
+        <tr><td><span class="term">the Needle; whether, not when</span></td><td>Consensus fixes a value, not a common moment of action. <span class="paper">Agreement without simultaneity.</span></td></tr>
         <tr><td><span class="term">convoy sailing decision</span></td><td>Reaching agreement on a single binary value satisfying Agreement, Validity, and Termination. <span class="paper">Binary distributed consensus.</span></td></tr>
         <tr><td><span class="term">rotating coordinator</span></td><td>A deterministic round-robin mapping from round number to designated coordinator. <span class="paper">Coordinator c(r) = r mod N.</span></td></tr>
         <tr><td><span class="term">status slip</span></td><td>A message reporting current preference and the round in which it was locked. <span class="paper">Status message (v, val_round).</span></td></tr>
@@ -604,9 +685,12 @@
     Synchrony</i>. Journal of the ACM <b>35</b>, 2 (April 1988), 288–323. — The formulation of
     partial synchrony (Models 1 and 2), the rotating coordinator consensus protocols, the tight
     bounds for crash failures (<var>N</var> ≥ 2<var>t</var> + 1) and Byzantine failures
-    (<var>N</var> ≥ 3<var>t</var> + 1 signed, <var>N</var> ≥ 4<var>t</var> + 1 unsigned).</li>
+    (<var>N</var> ≥ 3<var>t</var> + 1, with or without signatures).</li>
   </ul>
   <aside class="fn">Dworkia, Lynchaia, and Stockmeros are Hellenised from the paper's authors.
+  Nancy Lynch is also an author of the impossibility paper, so a Lynchaia appears in
+  <i>Mercenaries and Bandits</i> as well, as a mercenary at the boar. They are two people: the
+  name belongs to the paper, not to the island.
   The setting of Arche, Mount Phyle, and the coastal ring road unites this book with <i>The Tally
   and the Column</i> (logical time) and <i>The Census of the Ring Road</i> (distributed state).</aside>
 </section>

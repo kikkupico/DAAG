@@ -42,7 +42,7 @@ Already built and measured in `content-i2`, with architecture, cast and panel in
 | Building | Papers | What it is |
 |---|---|---|
 | **The camp enclosures and raven lofts** (×4) | FLP 1985 · Chandra &amp; Toueg 1996 <span title="shared">◆</span> | Palisade, tents, and a wicker loft on stilts with a compartment painted for each other camp. **The two books share the same four camps**, and what separates them is a prop, not a building: the tally board, whose empty row is a dead commander or a raven still in the folds and must never resolve which. |
-| **The council ring, inside the circuit wall** | Byzantine Generals 1982 · Reaching Agreement 1980 <span title="shared">◆</span> | Five seats cut in stone on the crown, the chief's a step higher, a klepsydra at the centre. The 1980 paper is the earlier and more general result; the 1982 paper is the framing everyone remembers. One room. |
+| **The chief's hollow and the three crag posts, inside the circuit wall** | Byzantine Generals 1982 · Reaching Agreement 1980 <span title="shared">◆</span> | The chief in a rock hollow on the peak with the loot; three posts tucked into separate crags below the rim, each out of sight and earshot of the others and of the peak, each with its own klepsydra. The jars are filled together at dusk, before the posts are manned. *(Replaces the earlier council ring of five seats. Men within shouting distance of each other have a broadcast, and a chief with a broadcast cannot tell different men different things.)* The 1980 paper is the earlier and more general result; the 1982 paper is the framing everyone remembers. |
 | **The beacon line** | DLS 1988 | A chain of fire stations on a ridge in the army's rear, about 130 km off — over the horizon from the crown, with its own people and its own diorama. Off every map by construction. |
 
 ## Paxos
@@ -85,7 +85,7 @@ the street, which is the island's argument.
 |---|---|---|
 | The column room | Fidge · Mattern | Independent simultaneous discovery of one idea |
 | The outport offices | Brewer · Gilbert &amp; Lynch | A conjecture and the work that settles it |
-| The council ring | Reaching Agreement 1980 · Byzantine Generals 1982 | The general result and its famous framing, same authors |
+| The chief's hollow and crag posts | Reaching Agreement 1980 · Byzantine Generals 1982 | The general result and its famous framing, same authors |
 | The camp enclosures | FLP · Chandra &amp; Toueg | Same four camps; the difference is a prop, not a building |
 | The Rotunda | Lamport 1998 · 2001 | One algorithm, two presentations |
 | The Odeon | Oki &amp; Liskov · Liskov &amp; Cowling | One system, revisited by its own author |

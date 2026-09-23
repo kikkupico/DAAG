@@ -50,12 +50,26 @@ disk and has been verified by opening it.
 
 *The central mountain and the coastal ring road.*
 
-**Core geography & physics.** Arche rises from the sea around a single 400-metre cone of rock,
-Mount Phyle, whose sheer limestone bulk cuts off all direct line of sight between opposite
-shores. Encircling the entire perimeter of the island is a single narrow coastal ring road cut
-into the cliff tops above the crashing Aegean surf. Because the cliff shelf allows no
-overtaking, traffic is strictly single-file, providing a natural physical enforcement of
-**first-in, first-out (FIFO) message and cargo delivery**.
+**Core geography & physics.** Arche is about 8 km across. It rises from the sea around a single
+400-metre limestone massif, Mount Phyle, whose foot is some 5 km across and fills the interior.
+The three houses sit at ~120° round the coast (Dolphin WSW, Vine N, Anchor ESE), so every line
+between two houses passes through rock at least ~80 m high. With evenly spaced houses, each
+sightline passes about half the island's radius from the centre, so a small cone would not
+block them. That is why the massif must be broad.
+
+The ring road is **two stacked single-file cliff cuttings**: the upper runs sunwise only, the
+lower against the sun only, with no passing places. So there is no overtaking and no oncoming
+traffic, and by the law of the road a slip takes the direct stretch, never the long way round.
+Together these give **one FIFO channel per ordered pair of houses: six in all**.
+
+**What closes the other channels:**
+- **The summit** is visible from every shore. In the trading season it is capped by the same
+  cloud that silences the sundials, and in any season it is held by the siege of Book IV, so
+  the houses light no beacon there.
+- **The mountain paths** are the siege's ground. The goatherd of Book I Ch. VI is a rare
+  smuggler, with no bound on his crossing time.
+- **The sea**: reefs and tide-races off every headland stop small boats coasting between
+  coves. Big ships go out to sea, not round the island.
 
 The island hosts two distinct zones that together carry the foundational papers of distributed
 computing:
@@ -75,8 +89,9 @@ computing:
      wearing a **red sash** serves as the marker dividing pre-recording shipments from
      post-recording shipments. Proves cut consistency, reachability ($S_\iota \to S^* \to S_\phi$),
      and stable property detection.
-   - *Book III: The Convoy of Arche* (`dwork-lynch-stockmeyer-1988`). Deciding when the island's
-     merchant fleet should sail together across the Mediterranean. Winter gales spraying the
+   - *Book III: The Convoy of Arche* (`dwork-lynch-stockmeyer-1988`). Deciding whether the island's
+     merchant fleet should sail together across the Mediterranean (each house's ships then leave
+     when it learns the decision and gather at the Needle, a sea-stack off the southern cape). Winter gales spraying the
      cliff road cause **unbounded delays (asynchrony)**. The breaking of the storm represents
      **Global Stabilization Time (GST)**, after which delays are bounded by $\Delta$. A
      rotating coordinator protocol with majority quorum locks ($N \ge 2t + 1$, $N = 3, t = 1$)
@@ -158,9 +173,10 @@ would reintroduce the plot the iteration retired.
 | `pease-shostak-lamport-1980`, `lamport-shostak-pease-1982` | In synchronous rounds with traitors sending conflicting scrolls, loyal commanders agree iff N ≥ 3m + 1 — or, **with unforgeable wax signets, for any number of generals at all**. (*Mercenaries and Bandits*, Part Two) |
 | `chandra-toueg-1996` | Each camp keeps a tally board and marks the rows that stay empty. The suspicion is often wrong — an empty perch is a dead commander or a raven still in the folds — but if it satisfies weak completeness and eventual weak accuracy (◇W), **and a majority of camps are correct**, that is enough to break the FLP deadlock. |
 
-**The ground:** a 400 m cone, 1.8 km footprint, slopes 24–34°, eight spurs and gullies, four
-camps at the quarter points with no pair able to see each other. It rises directly in the
-centre of Arche, blocking line of sight across the island.
+**The ground:** a 400 m massif about 5 km across at its foot, broad lower slopes and a steep
+cragged crown, eight spurs and gullies, and four camps at the quarter points with no pair able
+to see each other. It fills the centre of Arche and blocks every line of sight between the
+houses.
 
 ### The synchrony split on Mount Phyle
 
@@ -168,9 +184,14 @@ The hill itself embodies the split between asynchronous impossibility and synchr
 
 - **The camps at the base carry the asynchronous model.** Ravens, unbounded delay, uncounted
   nights, no fire or signal. FLP lives here.
-- **The summit council carries the synchronous model.** A ring of five cut seats inside the
-  polygonal wall, everything within shouting distance, rounds kept by klepsydra, one single
-  council night. Byzantine Generals lives here.
+- **The summit carries the synchronous model.** The chief sits on the peak, and three posts
+  are tucked into separate crags below the rim, out of sight of one another and of the peak.
+  Nobody shouts, signals or lights a brand, because the tents below are listening. Every
+  message is a short, bounded bird flight, and the four jars are filled together at dusk,
+  before the posts are manned. Byzantine Generals lives here. *(This replaces an earlier
+  "council ring within shouting distance". A shout heard by everyone is a broadcast, and a
+  chief who can broadcast cannot tell different men different things. That would dissolve the
+  problem.)*
 
 Combined in **Book IV: Mercenaries and Bandits**, the contrast is held in stark relief:
 Below, honest men can die and messages take arbitrary time, yielding impossibility. Above,
@@ -269,8 +290,10 @@ ending).
 Two grounds drive the shape of the world, and both are satisfied by the three-island scheme
 in `layouts.html`:
 
-- **Mount Phyle needs a plain with no other high ground in sight and no sea in frame.** It
-  sits inland on Arche, 8.7–9.4 km from the nearest coast depending on the arrangement.
+- **Mount Phyle must block every sightline between the three houses.** It fills Arche's
+  interior, a ~5 km massif on an ~8 km island. The earlier figure, a 1.8 km cone set
+  8.7–9.4 km inland, is retired: at that scale the lines between evenly spaced houses clear
+  the cone entirely.
 - **Antipaxos needs to be an archipelago** — many small ports in casual sailing range, lanes
   of different length, a ring of ports, and a far coast out of reach of any assembly.
 
