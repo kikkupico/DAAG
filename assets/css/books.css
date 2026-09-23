@@ -1,5 +1,14 @@
-/* Text-phase additions to daag.css.
-   Diagrams are inline SVG; there is no art in this phase. */
+/* Book additions to daag.css.
+   Diagrams are inline SVG; panels are the art/panels pipeline's scenes. */
+
+figure.panel{
+  margin:26px auto; max-width:660px; padding:0;
+}
+figure.panel img{
+  display:block; width:100%; height:auto;
+  border:3px solid var(--ink);
+  box-shadow:5px 5px 0 var(--shadow);
+}
 
 figure.diagram{
   margin:26px auto; max-width:660px; padding:0;
@@ -50,6 +59,19 @@ figure.diagram figcaption b{color:var(--ink)}
   display:block; font-family:Optima,'Gill Sans',sans-serif; font-size:.68rem;
   letter-spacing:.11em; text-transform:uppercase; color:var(--aegean-d); margin-bottom:4px;
 }
+
+/* a note where the allegory knowingly departs from the model — the leak is named, not hidden */
+.leak{
+  max-width:600px; margin:16px auto; padding:10px 16px;
+  border-left:3px dotted #8a6a44; background:rgba(138,106,68,.07);
+  font-size:.9rem; color:#4a3d2c;
+}
+.leak .lbl{
+  display:block; font-family:Optima,'Gill Sans',sans-serif; font-size:.68rem;
+  letter-spacing:.11em; text-transform:uppercase; color:#8a6a44; margin-bottom:4px;
+}
+.leak p{margin:0 0 .5em}
+.leak p:last-child{margin-bottom:0}
 
 /* ---- generic book typography ----
    Ported from content-i2/assets/css/hill.css, which defined these alongside
