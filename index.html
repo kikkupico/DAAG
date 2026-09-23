@@ -45,21 +45,15 @@
     winter gales hold up their runners.<br>
     <span class="paper">Dwork, Lynch &amp; Stockmeyer 1988</span></p>
 
-    <p><b class="planned">The Auditor's Court</b> <span class="unwritten">Not yet written</span>
-    — When a shared object is spread over many machines, what should it mean for it to be
-    correct? Linearizability requires every operation to appear to take effect at a single
-    instant between its call and its return, so that anything finished before another began is
-    seen in that order. It also composes: if every part keeps the rule, so does the whole. This
-    is explored as a court outside the trading houses, which holds that once one trade has
-    cleared before another is placed, no trader may ever be shown the second without the first.<br>
-    <span class="paper">Herlihy &amp; Wing 1990</span></p>
 
     <p><b class="planned">The Closed Road</b> <span class="unwritten">Not yet written</span>
     — When a network splits, a replicated service must choose between answering every request
-    and answering every request correctly; it cannot do both. The conjecture, and the proof
-    that made it a theorem, are explored as a rockfall that closes the ring road between two
-    houses. Each house must then either keep trading from a book it knows may be stale, or
-    refuse to trade until the road reopens.<br>
+    and answering every request as if there were only one copy of the data; it cannot do both.
+    The conjecture, and the proof that made it a theorem, are explored as bandits reported on
+    both stretches of the ring road beside the Vine. No runner will go, and the Vine is cut off
+    until the road is safe again. Each side must then either refuse to trade, or keep trading
+    from a book it knows may be stale: a deliberate degradation of service, accepted with its
+    risks, and never the usual way of things on Arche.<br>
     <span class="paper">Brewer 2000 · Gilbert &amp; Lynch 2002</span></p>
   </div>
 </section>
@@ -94,13 +88,14 @@
     — Replication can keep working even when some machines lie, the leader included, and even
     when messages take arbitrarily long. With 3f + 1 replicas for f liars, every step waits for
     a quorum of 2f + 1, so any two quorums share an honest member, and a leader that stalls or
-    contradicts itself is replaced. This is explored with the same four bandits as the siege
-    wears on for days. Their jars were started together only once, before the posts were first
-    manned, and since no man may leave his post that meeting can never be repeated: the jars
-    drift, and silence stops meaning anything. Still exactly 3f + 1 for a single liar, they keep
-    one numbered sequence of orders by raven. The chief numbers each order, the guards echo it
-    twice before it stands, and a chief whose numbering stalls or contradicts itself loses the
-    job to the next man.<br>
+    contradicts itself is replaced. This is explored in the same four mercenary camps later in
+    the siege, when one of the four may have been bought: each was hired alone and paid alone.
+    The recruiters who hired them, off the hill, send orders by raven and accept an answer only
+    when enough camps give the same one. The camps keep the orders in one numbered sequence:
+    one camp numbers each order, the others echo it twice before it stands, and a camp whose
+    numbering stalls or contradicts itself loses the right to number. Four camps is exactly
+    3f + 1 for a single liar, and the ravens' unbounded flights are the model this answer was
+    built for.<br>
     <span class="paper">Castro &amp; Liskov 1999</span></p>
   </div>
 </section>
@@ -121,13 +116,19 @@
     foreign invasion destroyed Paxos, but for convenience we assume it didn't.<br>
     <span class="paper">Lamport 1998 · Lamport 2001</span></p>
 
-    <p><b class="planned">The Worn Ledgers</b> <span class="unwritten">Not yet written</span>
-    — An algorithm that is correct on paper meets disks that corrupt data, logs that grow
-    without end, and leaders that must answer reads without consulting anyone. Engineering
-    Paxos into a production system is told back in Lamport's Chamber, as its ledgers wear out:
-    the law book must be summarised, entries fade unread and must be found and recopied, and the
-    president holds office for a fixed term so as to answer without calling a ballot.<br>
-    <span class="paper">Chandra, Griesemer &amp; Redstone 2007</span></p>
+    <p><b class="planned">The Law and the Ledgers</b> <span class="unwritten">Not yet written</span>
+    — Two things <i>The Part-Time Parliament</i> passes over quickly, in two parts. First, what a
+    replicated system may tell the people who read from it. Linearizability requires every
+    operation to appear to take effect at a single instant between its call and its return, so
+    that anything finished before another began is seen in that order, and a system whose every
+    part keeps the rule keeps it as a whole. Lamport's own story of a farmer, a merchant and a
+    black goat states that rule, and his one specialist per area of the law is the way it
+    composes; Herlihy and Wing make both precise. Second, what an algorithm correct on paper had
+    to fix to run for years: the president holding a lease so as to answer readers without a
+    ballot, ledgers damaged unnoticed, presidencies that must be numbered, changes to who sits,
+    law books too large to copy, and testing. These are told as later repairs to the Paxon
+    parliament, in Lamport's Chamber.<br>
+    <span class="paper">Herlihy &amp; Wing 1990 · Chandra, Griesemer &amp; Redstone 2007</span></p>
 
     <p><b class="planned">The Empty Counting House</b> <span class="unwritten">Not yet written</span>
     — Letting every replica accept updates and reconcile them later looks cheap, but deadlocks
@@ -174,9 +175,10 @@
     — Updates can spread through a large system the way rumours spread through a crowd: each
     node passes news to a few random others, and loses interest once most of those it tells
     have already heard. Periodic full comparisons catch what the rumours miss. Homonoia is an
-    island of scholars and copyists. The traders of Arche cannot let their records disagree
-    even for a moment, since a jar promised to two buyers is a real loss; the scholars can live
-    with copies that differ for a while, as long as they agree in the end. This book, together with a survey of every
+    island of scholars and copyists. On Arche, trading from a stale
+    book is an emergency measure, since a jar promised to two buyers is a real loss; the
+    scholars answer from whatever copy they hold as a matter of course, as long as every copy
+    agrees in the end. This book, together with a survey of every
     optimistic replication practice in use, is explored as a colonnade where travelling
     scholars pass on a new finding, that the Earth goes round the Sun, each telling a few others
     until most of those they meet have already heard it, and a yearly festival where copyists

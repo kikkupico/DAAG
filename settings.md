@@ -131,9 +131,9 @@ the works in its keeping. Letters, corrections and fresh copies travel by courie
 mouth; couriers are delayed or stopped, and libraries close. **The line between
 Homonoia and Arche is how much disagreement each can live with**, not what is recorded: both
 islands keep records, and on Arche it is the count of jars that is ordered and snapshotted,
-never the jars themselves. The traders cannot let their records disagree even for a moment,
-because a jar promised to two buyers is a real loss. The scholars can live with copies that
-differ for a while, because an out-of-date line is put right at the next collation, as long
+never the jars themselves. On Arche, trading from a stale book is an emergency measure, taken
+knowingly, because a jar promised to two buyers is a real loss. The scholars answer from
+whatever copy they hold as a matter of course, and live with copies that differ for a while, because an out-of-date line is put right at the next collation, as long
 as every copy agrees in the end — which is strong consistency against eventual consistency. Greek scholarship already did every practice this island needs — collating manuscripts
 line by line, spreading the epics by rhapsode, drafting in wax before a fair copy.
 
@@ -173,7 +173,7 @@ would reintroduce the plot the iteration retired.
 | `fischer-lynch-paterson-1985_flp-impossibility` | In an asynchronous gorge with one silent crash, commanders stay trapped in bivalence: an overrun camp cannot be told from a delayed raven. (*Mercenaries and Bandits*, Part One) |
 | `pease-shostak-lamport-1980`, `lamport-shostak-pease-1982` | In synchronous rounds with traitors sending conflicting scrolls, loyal commanders agree iff N ≥ 3m + 1 — or, **with unforgeable wax signets, for any number of generals at all**. (*Mercenaries and Bandits*, Part Two) |
 | `chandra-toueg-1996` | Each camp keeps a tally board and marks the rows that stay empty. The suspicion is often wrong — an empty perch is a dead commander or a raven still in the folds — but if it satisfies weak completeness and eventual weak accuracy (◇W), **and a majority of camps are correct**, that is enough to break the FLP deadlock. |
-| `castro-liskov-1999` | *Moved from Paxos.* The same four bandits on later nights of the siege. Their jars were started together once, before the posts were first manned, and can never be again, since no man may leave his post: the jars drift and silence is no longer a fact. By raven they keep one numbered sequence of orders; the chief numbers, the guards echo twice with 2f + 1 before an order stands, and a stalling or equivocating chief loses the job. Four is exactly 3f + 1 for f = 1. Byzantine like the first night, without its synchrony: the one combination the hill lacked. Nothing follows from any order. |
+| `castro-liskov-1999` | *Moved from Paxos.* The same four camps later in the siege, when one mercenary may have been bought (each was hired alone and paid alone). The recruiters off the hill are the clients: they send orders by raven and accept an answer only when enough camps agree. The camps keep the orders in one numbered sequence; one camp numbers, the others echo twice with 2f + 1 before an order stands, and a stalling or equivocating camp loses the right to number. Four is exactly 3f + 1 for f = 1, and the unbounded ravens are PBFT's own asynchronous model, so no jars are involved. Book IV is untouched: within it, honest men die below and men lie above. Nothing follows from any order. |
 
 **The ground:** a 400 m massif about 5 km across at its foot, broad lower slopes and a steep
 cragged crown, eight spurs and gullies, and four camps at the quarter points with no pair able
@@ -223,7 +223,7 @@ chronicle across shifting quorums, absent members and corrupt leaders.
 | Paper | In the world |
 |---|---|
 | `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and not retold, drawn as a domed rotunda because its acoustics make oratory impossible. Legislators wander in and out, each keeps a ledger, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved |
-| `chandra-griesemer-redstone-2007` | **The Chamber again.** Physical reality: ledgers wear out, the law book must be summarised, entries fade unread, and the president holds a fixed term so reads need no ballot |
+| `herlihy-wing-1990_linearizability`, `chandra-griesemer-redstone-2007` | **The Chamber again**, one book in two parts, *The Law and the Ledgers*: what Lamport passes over quickly. Part One makes precise his §3.3.4 rule for what a citizen may be told (linearizability), and his specialists per area of law as its composition. Part Two tells *Paxos Made Live* as later repairs, only those Lamport lacks: the president's lease for reads, damaged ledgers, numbered presidencies, membership, snapshots too big to copy, testing. Not his law books (§3.3.2) or fixed-term bureaucrats (§3.3.3). *(Linearizability moved from Arche: it is defined by real time, and Arche has no common time and no way to learn of another house's trade except by message, so there it cannot be told from causal order.)* |
 | `gray-1996_dangers-of-replication` | The warning to the parliament: split decrees across independent regional councils with lazy synchronisation, and deadlock scales as O(N³) |
 
 **The ground must provide:** the **Chamber** on a route rather than at a dead end

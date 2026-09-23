@@ -15,8 +15,8 @@ version. They get separate buildings when they make **different claims about the
 subject**, and then the buildings stand next to each other so the difference is a walk of a
 few hundred metres rather than a footnote.
 
-Ten shares below cover **twenty-two papers into ten buildings**. Everything else gets its own,
-which comes to **19 buildings for 31 papers** — one of them structural, carrying no paper at
+Ten shares below cover **twenty-four papers into ten buildings**. Everything else gets its own,
+which comes to **18 buildings for 31 papers** — one of them structural, carrying no paper at
 all. (The sources were found to be broken while writing this and have since been fixed; see the end.)
 
 The corpus is **31 papers, not 32**: `demers-1989` turned out to be a byte-identical copy of
@@ -30,10 +30,9 @@ The corpus is **31 papers, not 32**: `demers-1989` turned out to be a byte-ident
 |---|---|---|
 | **The tally house** | Lamport 1978 | Three rooms for one paper's three parts: the front room where clerks ink rising numbers on slips and push their own past any number that arrives; the middle room where ties are broken by the house's name, which turns the partial order into a total one; and at the back, the drift-corrected dials for the orders that arrive outside the letters. |
 | **The column room** | Fidge 1988 · Mattern 1988 <span title="shared">◆</span> | Next door to the tally house, and the difference between them is the whole point: one column per house instead of one number. Two clerks can now tell whether their orders were placed in ignorance of each other, which the tally house can only fail to rule out. |
-| **The auditor's court** | Herlihy &amp; Wing 1990 | An external court, not a trading house. It holds that if one trade cleared before another was placed, no trader may ever be shown the second without the first — and that a house whose every counter keeps this rule keeps it as a house. |
 | **The customs house** | Chandy &amp; Lamport 1985 | Scribes count what is on hand, send a marker boat down every lane, and keep logging what arrives from a lane until that lane's marker comes in. The total is a state the harbour could have been in, though no one ever saw it. |
-| **The outport offices** | Brewer 2000 · Gilbert &amp; Lynch 2002 <span title="shared">◆</span> <span class="m">(+ their 2012 retrospective)</span> | A repeated type, one on each outport. **Two of them, on either side of the channel, are what make the point**: when the water closes, each clerk must answer from a book he knows may be stale, or refuse to answer at all. |
-| **The closed road** | *structural — no paper* | The inland road from the town to the hill, held by the soldiers. It is why the bandits in the market cannot reach their own council on the crown, and therefore why nothing they do can become a plot. |
+| **The closed road** | Brewer 2000 · Gilbert &amp; Lynch 2002 <span title="shared">◆</span> <span class="m">(+ their 2012 retrospective)</span> | The ring road, closed on both stretches beside the Vine because bandits are reported there. The danger is a condition, never a raid: no bandit is seen and nothing happens to a runner. Closing both stretches is what cuts the Vine off; one closed stretch would leave the third house to pass slips on. The road reopens when the danger passes. Meanwhile each side refuses to trade or trades from a book it knows may be stale — a deliberate degradation of service on an island where that is never the usual way. Consistency is stated informally here (*every house answers as if there were one book*); its precise form is on Paxos. Bandits are about the island as well as on the crown; the crown's four stay there by choice, guarding their loot, and the road's bandits need not be of their band. Which band they belong to is never said. |
+| **The inland road** | *structural — no paper* | The inland road from the town to the hill, held by the soldiers. It is why the bandits in the market cannot reach their own council on the crown, and therefore why nothing they do can become a plot. |
 
 ## Arche — Mount Phyle
 
@@ -41,16 +40,15 @@ Already built and measured in `content-i2`, with architecture, cast and panel in
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The camp enclosures and raven lofts** (×4) | FLP 1985 · Chandra &amp; Toueg 1996 <span title="shared">◆</span> | Palisade, tents, and a wicker loft on stilts with a compartment painted for each other camp. **The two books share the same four camps**, and what separates them is a prop, not a building: the tally board, whose empty row is a dead commander or a raven still in the folds and must never resolve which. |
+| **The camp enclosures and raven lofts** (×4) | FLP 1985 · Chandra &amp; Toueg 1996 · Castro &amp; Liskov 1999 <span title="shared">◆</span> | Palisade, tents, and a wicker loft on stilts with a compartment painted for each other camp. **Three books share the same four camps**, and each changes one assumption, never the building. FLP changes nothing. Chandra &amp; Toueg adds a prop: the tally board, whose empty row is a dead commander or a raven still in the folds and must never resolve which. Castro &amp; Liskov, later in the siege, adds a liar: one of the four may have been bought (each was hired alone and paid alone), and the recruiters off the hill send orders by raven and accept an answer only when enough camps agree. Four camps is exactly 3f + 1 for one liar, and the ravens' unbounded flights are PBFT's own model. The camps are where asynchrony is studied. |
 | **The chief's hollow and the three crag posts, inside the circuit wall** | Byzantine Generals 1982 · Reaching Agreement 1980 <span title="shared">◆</span> | The chief in a rock hollow on the peak with the loot; three posts tucked into separate crags below the rim, each out of sight and earshot of the others and of the peak, each with its own klepsydra. The jars are filled together at dusk, before the posts are manned. *(Replaces the earlier council ring of five seats. Men within shouting distance of each other have a broadcast, and a chief with a broadcast cannot tell different men different things.)* The 1980 paper is the earlier and more general result; the 1982 paper is the framing everyone remembers. |
-| **The chief's hollow and the crag posts, later in the siege** | Castro &amp; Liskov 1999 | The same four bandits in the same places, not a new building. The jars were started together once, at the meeting before the posts were first manned; since no man may leave his post, that meeting is never repeated, the jars drift, and silence stops being a fact. What separates this book from the Byzantine one is that loss, not a building. Four men is exactly 3f + 1 for one liar. The chief numbers each order and the guards echo it twice before it stands; a chief whose numbering stalls or contradicts itself loses the job to the next man (*"the chief is a job, not a rank"*). Each man's own jar still serves to notice a silent chief. No new cast, and nothing follows from any order. *(Moved from the three courts on the Paxos acropolis: the hill already holds delay without liars below and liars without delay above, and PBFT is the case with both.)* |
 | **The beacon line** | DLS 1988 | A chain of fire stations on a ridge in the army's rear, about 130 km off — over the horizon from the crown, with its own people and its own diorama. Off every map by construction. |
 
 ## Paxos
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The Chamber** | Lamport 1998 · Lamport 2001 · Chandra, Griesemer &amp; Redstone 2007 <span title="shared">◆</span> | Lamport's own Chamber, drawn as a rotunda to fit his description. *"The acoustics of the Chamber were poor, making oratory impossible"*, so: a circular hall under a hard stone dome, with no podium, no head of the room and no seating aimed at a speaker; legislators communicate only by messenger. Open doorways all round the drum, because legislators and messengers enter and leave whenever they like; statues on the terrace outside, one of which falls. The dome and the round plan illustrate Lamport's text and carry no meaning of their own. The first two papers are one algorithm in two presentations and are not retold. *Paxos Made Live* returns to the same room rather than building a new one, so that engineered Paxos can be set directly against the original: the ledgers wear out, the law book must be summarised, entries fade unread and must be recopied, and the president holds office for a fixed term so as to answer without calling a ballot. |
+| **The Chamber** | Lamport 1998 · Lamport 2001 · Herlihy &amp; Wing 1990 · Chandra, Griesemer &amp; Redstone 2007 <span title="shared">◆</span> | Lamport's own Chamber, drawn as a rotunda to fit his description. *"The acoustics of the Chamber were poor, making oratory impossible"*, so: a circular hall under a hard stone dome, with no podium, no head of the room and no seating aimed at a speaker; legislators communicate only by messenger. Open doorways all round the drum, because legislators and messengers enter and leave whenever they like; statues on the terrace outside, one of which falls. The dome and the round plan illustrate Lamport's text and carry no meaning of their own. The first two papers are one algorithm in two presentations and are not retold. The other two return to the same room as one book in two parts, *The Law and the Ledgers*, because both take up what Lamport passes over quickly. Part One: Herlihy &amp; Wing make precise the rule in Lamport's §3.3.4, where a farmer, a merchant and a black goat show what a citizen may be told, and his specialists, one per area of law, are how it composes. Part Two: *Paxos Made Live* as later repairs to the parliament. It must tell only what Lamport does not already have — his president choice (§3.3.1), law books (§3.3.2) and fixed-term bureaucrats (§3.3.3) are his; the president's lease for reads, damaged ledgers, numbered presidencies, membership, snapshots too big to copy and testing are not. The lease is the seam between the parts: it is how the parliament answers a reader quickly without breaking Part One's rule. |
 | **The abandoned counting house** | Gray 1996 | Empty, and kept empty. A lazy scheme that split decrees across independent regional councils, whose deadlocks grew as the cube of their number. It is the assembly's reason to exist, and it is the only building on Paxos that is not in use. |
 
 ## Skene
@@ -67,9 +65,9 @@ prevent.
 
 *Homonoia*, concord: everyone ends of one mind, by merging rather than by assembly. An island
 of scholars and copyists, and the line between it and Arche is **how much disagreement each
-can live with**. The traders of Arche cannot let their records disagree even for a moment: a
-jar promised to two buyers is a real loss. The scholars can live with copies that differ for a
-while, since an out-of-date line is put right at the next collation, as long as every copy
+can live with**. On Arche, trading from a stale book is an emergency measure, taken knowingly: a
+jar promised to two buyers is a real loss. The scholars answer from whatever copy they hold as
+a matter of course and live with copies that differ for a while, since an out-of-date line is put right at the next collation, as long as every copy
 agrees in the end. Homonoia has
 fewer buildings than Paxos on purpose: most of what happens here happens in the colonnades,
 which is the island's argument.
@@ -96,10 +94,10 @@ which is the island's argument.
 | Building | Papers | The relation |
 |---|---|---|
 | The column room | Fidge · Mattern | Independent simultaneous discovery of one idea |
-| The outport offices | Brewer · Gilbert &amp; Lynch | A conjecture and the work that settles it |
+| The closed road | Brewer · Gilbert &amp; Lynch | A conjecture and the work that settles it |
 | The chief's hollow and crag posts | Reaching Agreement 1980 · Byzantine Generals 1982 | The general result and its famous framing, same authors |
-| The camp enclosures | FLP · Chandra &amp; Toueg | Same four camps; the difference is a prop, not a building |
-| The Chamber | Lamport 1998 · 2001 · Chandra, Griesemer &amp; Redstone | One algorithm in two presentations, and the same algorithm engineered — told in the original's own room so the two can be compared |
+| The camp enclosures | FLP · Chandra &amp; Toueg · Castro &amp; Liskov | Same four camps; each book changes one assumption — nothing, a detector, a liar |
+| The Chamber | Lamport 1998 · 2001 · Herlihy &amp; Wing · Chandra, Griesemer &amp; Redstone | One algorithm in two presentations, and one later book in two parts on what it passed over — the rule for reads made precise, and the repairs needed to run it — told in the original's own room |
 | The Odeon | Oki &amp; Liskov · Liskov &amp; Cowling · Ongaro &amp; Ousterhout | One system revisited by its own author, and its re-derivation for teaching; the difference is a stage direction, not a building |
 | The stoa and festival ground | Demers · Saito &amp; Shapiro | A practice, and the catalogue of that practice |
 | The ring of libraries | Dynamo · PBS | A thing built, and a measurement of the thing built |
@@ -149,7 +147,7 @@ Not assigned a building of their own; they sit with the paper they accompany.
 | File | Sits with |
 |---|---|
 | `hellerstein-alvaro-2020_keeping-calm.pdf` | The hall of two doors — the clearest statement of the theorem, and the one to draft from |
-| `gilbert-lynch-2012_perspectives-on-cap.pdf` | The outport offices — the authors' own retrospective on what the proof did and did not say |
+| `gilbert-lynch-2012_perspectives-on-cap.pdf` | The closed road — the authors' own retrospective on what the proof did and did not say |
 | `zinn-green-ludascher-2012_win-move-coordination-free.pdf` | Background for the hall of two doors. Optional; it settles a narrower question than CALM itself |
 
 ## Open
@@ -157,8 +155,6 @@ Not assigned a building of their own; they sit with the paper they accompany.
 1. **Nothing is blocked on sources any more.** All 31 papers are present and verified.
 2. **Raft's placement.** Raft sits in the Odeon, with VR, rather than in the
    Chamber: its own paper names VR as its closest relative. It could be told in either.
-3. **Whether the outport offices are one building or a type.** They are drawn as a repeated
-   type, which is right for the map and possibly wrong for the panels: CAP needs exactly two
-   in frame, on either side of closed water.
+3. **Who the recruiters are.** *The Standing Orders* needs the mercenaries' recruiters off the hill, reachable by raven. The trading houses are the natural answer, tying Mount Phyle to the ring road; Book IV never says who hired the men, so nothing contradicts it. Undecided.
 4. **Mount Phyle's buildings are fixed**, not proposals — they exist in
    `content-i2/art/architecture.json`. Nothing here may contradict them.

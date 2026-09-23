@@ -214,15 +214,14 @@ depend on vocabulary the earlier ones establish.
 
 | Building | Paper(s) | Note |
 |---|---|---|
-| The auditor's court | Herlihy &amp; Wing 1990 | Self-contained. A good next one. |
-| The outport offices | Brewer 2000 · Gilbert &amp; Lynch 2002 | Needs the linearizability book first; CAP is stated in terms of it. |
+| The closed road | Brewer 2000 · Gilbert &amp; Lynch 2002 | Bandits reported on both stretches beside the Vine: a condition, never a raid. Bandits roam the island; they need not be the crown's band, and which band is never said. State consistency informally; its precise form comes later, on Paxos. Stale trading is a deliberate emergency measure on Arche. |
 | The beacon line | DLS 1988 | Own ground, own people, ~130 km from the hill. Must not contradict *Mercenaries and Bandits* — see the synchrony split in `settings.md`. |
 | The camps *(second book)* | Chandra &amp; Toueg 1996 | Shares the building with FLP. **Must not decide anything** — see the note in `settings.md`. |
 | The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, enhanced with visuals: it is the paper the whole project borrows its allegory from. Listed in the index as *The Part-Time Parliament*, unlinked until our rendition exists. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
 | The Odeon, Skene | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 | A genuine alternative to Paxos, on its own island. |
 | The Odeon, Skene *(second book)* | Ongaro &amp; Ousterhout 2014 | *The Rehearsal.* Same room as VR; the difference is stage directions. |
-| The crown, later in the siege | Castro &amp; Liskov 1999 | *The Standing Orders.* Needs the Byzantine book's vocabulary. The same four bandits, no new cast; the jars can never be restarted together, which is what makes it PBFT. Nothing follows from any order. |
-| The Chamber | Chandra, Griesemer &amp; Redstone 2007 | *The Worn Ledgers.* Lamport's own Chamber, reused; must not contradict *The Part-Time Parliament*. |
+| The camps *(third book)* | Castro &amp; Liskov 1999 | *The Standing Orders.* Needs the Byzantine book's vocabulary. One mercenary may have been bought; the recruiters off the hill are the clients. Book IV untouched. Nothing follows from any order. |
+| The Chamber | Herlihy &amp; Wing 1990 · Chandra, Griesemer &amp; Redstone 2007 | *The Law and the Ledgers*, two parts. Part One builds on Lamport §3.3.4 (the black goat); Part Two tells only repairs Lamport lacks — not his §3.3.1–3.3.3. The lease joins the parts. Must not contradict *The Part-Time Parliament*. |
 | The abandoned counting house | Gray 1996 | |
 | The stoa and festival ground | Demers 1987 · Saito &amp; Shapiro 2005 | |
 | The ring of libraries | Dynamo 2007 · PBS 2012 | |
@@ -238,7 +237,12 @@ depend on vocabulary the earlier ones establish.
 follow the harbour's practice. Four rules govern this and all four are load-bearing: no
 infiltration ever *happens* (an event would be a plot); no one is ever identified; no motive is
 given; and they cannot reach the crown, because the siege severs the road. `layouts.html` has
-the full statement. `The Tally and the Column` Chapter VIII shows how to use it — as the
+the full statement.
+
+**Bandits about the island.** The crown's four are not confined: they stay because the loot
+cannot be left. Other bandits roam Arche, and they need not belong to the band holding the
+crown. They appear only as a danger reported — a road no runner will take — never as an event,
+and which band they belong to is never said. `The Tally and the Column` Chapter VIII shows how to use it — as the
 honest-participant assumption made visible, never as a faction.
 
 **Mount Phyle is built.** Its geometry, cast, architecture and panel inventory exist in
