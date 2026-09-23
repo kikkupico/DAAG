@@ -117,31 +117,16 @@
     can block each other forever. This book is not retold. It is Lamport's paper in its original
     form, enhanced with visuals: the legislators of Paxos, their ballots and their ledgers, the
     allegory that every other book here borrows. Its plainer restatement, <i>Paxos Made
-    Simple</i>, stands beside it.<br>
+    Simple</i>, stands beside it, and later books return to its Chamber. The paper says that a
+    foreign invasion destroyed Paxos, but for convenience we assume it didn't.<br>
     <span class="paper">Lamport 1998 · Lamport 2001</span></p>
 
-    <p><b class="planned">The Odeon</b> <span class="unwritten">Not yet written</span>
-    — Most practical replication puts one leader in charge, and the hard part is replacing it.
-    Viewstamped replication numbers each leader's reign as a view, and changes view in a way
-    that loses nothing the old leader committed. This is explored as a theatre built so that a
-    single voice from the stage reaches every seat: when the speaker falls silent, the
-    performance stops until someone else takes the stage under a higher number.<br>
-    <span class="paper">Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012</span></p>
-
-    <p><b class="planned">The Rehearsal Hall</b> <span class="unwritten">Not yet written</span>
-    — A consensus algorithm that engineers cannot understand will be built wrong. Raft is
-    leader-driven consensus designed to be taught, with randomised election timeouts and a rule
-    that only a candidate with a complete log may lead, and it was tested on students who had
-    to learn it. This is explored as a plain hall beside the Odeon where the same performance
-    is rehearsed, and its refinements are stage directions.<br>
-    <span class="paper">Ongaro &amp; Ousterhout 2014</span></p>
-
-    <p><b class="planned">The Quarry</b> <span class="unwritten">Not yet written</span>
+    <p><b class="planned">The Worn Ledgers</b> <span class="unwritten">Not yet written</span>
     — An algorithm that is correct on paper meets disks that corrupt data, logs that grow
     without end, and leaders that must answer reads without consulting anyone. Engineering
-    Paxos into a production system is explored as the quarry where plans meet stone:
-    parchment runs out and the record must be summarised, tablets crack unread and must be
-    recut, and the mason holds office for a fixed term.<br>
+    Paxos into a production system is told back in Lamport's Chamber, as its ledgers wear out:
+    the law book must be summarised, entries fade unread and must be found and recopied, and the
+    president holds office for a fixed term so as to answer without calling a ballot.<br>
     <span class="paper">Chandra, Griesemer &amp; Redstone 2007</span></p>
 
     <p><b class="planned">The Empty Counting House</b> <span class="unwritten">Not yet written</span>
@@ -156,51 +141,86 @@
 <hr class="meander">
 
 <section>
-  <div class="issue"><span class="no">Antipaxos</span><h2>Replication Without Agreement</h2></div>
+  <div class="issue"><span class="no">Skene</span><h2>Leader-Driven Consensus</h2></div>
   <div class="prose">
-    <p><b class="planned">The Agora and the Fair</b> <span class="unwritten">Not yet written</span>
+    <p><b class="planned">The Odeon</b> <span class="unwritten">Not yet written</span>
+    — Most practical replication puts one leader in charge, and the hard part is replacing it
+    without losing anything it committed. Viewstamped replication numbers each leader's reign as
+    a view, and changes view in a way that keeps every committed operation. It was developed
+    independently of Paxos and published before it: a genuine alternative, not a descendant.
+    So it is explored on an island of its own, Skene, which governs itself from a theatre.
+    Where the Chamber on Paxos makes oratory impossible, the Odeon is built so that a single
+    voice from the stage reaches every seat. When the speaker falls silent, the performance
+    stops until someone else takes the stage under a higher number.<br>
+    <span class="paper">Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012</span></p>
+
+    <p><b class="planned">The Rehearsal</b> <span class="unwritten">Not yet written</span>
+    — A consensus algorithm that engineers cannot understand will be built wrong. Raft is
+    leader-driven consensus in the same lineage as viewstamped replication, designed to be
+    taught, and tested on students who had to learn it. It is told in the Odeon as the same
+    performance rehearsed, and its refinements are stage directions: a random wait before
+    claiming the stage, so that two rarely claim it at once, and no stage for a performer whose
+    script is less complete.<br>
+    <span class="paper">Ongaro &amp; Ousterhout 2014</span></p>
+  </div>
+</section>
+
+<hr class="meander">
+
+<section>
+  <div class="issue"><span class="no">Homonoia</span><h2>Replication Without Coordination</h2></div>
+  <div class="prose">
+    <p><b class="planned">The Stoa and the Festival</b> <span class="unwritten">Not yet written</span>
     — Updates can spread through a large system the way rumours spread through a crowd: each
     node passes news to a few random others, and loses interest once most of those it tells
-    have already heard. Periodic full comparisons catch what the rumours miss. This, together
-    with a survey of every optimistic replication practice in use, is explored as an open
-    square where sailors trade news, and a yearly fair where clerks compare entire ledgers line
-    by line.<br>
+    have already heard. Periodic full comparisons catch what the rumours miss. Homonoia is an
+    island of scholars and copyists. The traders of Arche cannot let their records disagree
+    even for a moment, since a jar promised to two buyers is a real loss; the scholars can live
+    with copies that differ for a while, as long as they agree in the end. This book, together with a survey of every
+    optimistic replication practice in use, is explored as a colonnade where travelling
+    scholars pass on a new finding, that the Earth goes round the Sun, each telling a few others
+    until most of those they meet have already heard it, and a yearly festival where copyists
+    collate whole texts line by line to catch whatever the talk missed.<br>
     <span class="paper">Demers et al. 1987 · Saito &amp; Shapiro 2005</span></p>
 
-    <p><b class="planned">The Ring of Warehouses</b> <span class="unwritten">Not yet written</span>
+    <p><b class="planned">The Ring of Libraries</b> <span class="unwritten">Not yet written</span>
     — A store that must always accept writes can spread keys around a ring by hashing, let a
     neighbour stand in for a node that is down, and reconcile conflicting versions afterwards.
     How often such a store returns stale data can then be measured rather than guessed. This is
-    explored as a ring of warehouses around one basin, where a flooded harbour's stock is kept
-    next door with a note to return it.<br>
+    explored as a ring of libraries around a lagoon, each holding the scrolls whose catalogue
+    marks fall between it and its neighbour. When a library is closed, its copies are made next
+    door with a note to return them, and a reader is sometimes handed an out-of-date copy.<br>
     <span class="paper">DeCandia et al. 2007 · Bailis et al. 2012</span></p>
 
     <p><b class="planned">The Wax Scriptorium</b> <span class="unwritten">Not yet written</span>
     — A replica that is often disconnected can still accept updates, if each update carries its
     own check for conflicts and its own way of resolving them, and stays tentative until a
     primary fixes its place in the order. This is explored as a scriptorium on the beach where
-    decrees are cut in wax, honoured at once but provisionally, and cut into stone only when
-    the flagship docks.<br>
+    scribes draft their changes in wax, used at once but only provisionally, and copied fair in
+    ink only when the head library has fixed their order.<br>
     <span class="paper">Terry et al. 1995</span></p>
 
     <p><b class="planned">The Far Terraces</b> <span class="unwritten">Not yet written</span>
     — Some data types can be merged in any order, any number of times, and every replica still
-    ends in the same state, so no coordination is ever needed. This is explored as terraces of
-    tally stones where each keeper adds pebbles only to their own column, and merging takes the
-    larger count in each, sited as far from any assembly as the island goes.<br>
+    ends in the same state, so no coordination is ever needed. This is explored as the island's
+    count of how many copies of each work exist, kept in voting pebbles on remote terraces. Each
+    library adds pebbles only to its own column, and merging two counts takes the larger in each
+    column.<br>
     <span class="paper">Shapiro, Preguiça, Baquero &amp; Zawirski 2011 · the same authors' comprehensive study, 2011</span></p>
 
     <p><b class="planned">The Sorting House</b> <span class="unwritten">Not yet written</span>
     — A system spread across data centres can promise that no one sees a reply before the
     message it answers, without coordinating on every write, by having each write name the
-    writes it depends on. This is explored as a sorting house at the mail harbour that holds
-    each letter back until everything it depends on has landed.<br>
+    writes it depends on. This is explored through the scholars' letters: a sorting house that
+    holds each letter back until every letter it answers has arrived.<br>
     <span class="paper">Lloyd et al. 2011</span></p>
 
-    <p><b class="planned">The Factor's Office</b> <span class="unwritten">Not yet written</span>
+    <p><b class="planned">The Reading Room</b> <span class="unwritten">Not yet written</span>
     — Some transactional guarantees can be kept while the network is split, and others
-    provably cannot. Which is which is explored as a factor's office next to the sorting house,
-    asking what a desk can still promise its customers while the couriers are on strike.<br>
+    provably cannot. Which is which is explored as a library's reading room, asking what a
+    librarian can still promise a reader while the couriers are stopped. A reader can be
+    promised never to see half of a revision; no one can be promised that two readers will not
+    both take the last copy.<br>
     <span class="paper">Bailis et al. 2014</span></p>
   </div>
 </section>
@@ -212,10 +232,11 @@
   <div class="prose">
     <p><b class="planned">The Hall of Two Doors</b> <span class="unwritten">Not yet written</span>
     — A program needs coordination exactly when it is not monotonic, that is, when a
-    conclusion may have to be withdrawn as more information arrives. A question like "have we
-    at least fifty bushels?" can be answered as soon as it becomes true; "is this all the grain
-    there is?" cannot be answered without everyone. This is explored as a hall with one door to
-    Paxos and one to Antipaxos, where each decree leaves by the door its own shape decides.<br>
+    conclusion may have to be withdrawn as more information arrives. A question like "does the
+    island hold at least one copy of this work?" can be answered as soon as it becomes true; "is
+    this every copy there is?" cannot be answered without everyone. This is explored as a hall with one door
+    facing the islands that assemble, Paxos and Skene, and one facing Homonoia, where each
+    decree leaves by the door its own shape decides.<br>
     <span class="paper">Hellerstein 2010 · Ameloot, Neven &amp; Van den Bussche 2011</span></p>
   </div>
 </section>

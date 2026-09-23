@@ -81,7 +81,7 @@ candidate against three questions:
   no more? A device that can do something the model object cannot will quietly break a proof.
 - **Is it mundane?** Could it be built from wood, stone, rope, water and birds?
 - **Does it earn its place?** A device that merely renames the concept is decoration. The good
-  ones do work — the Rotunda's dome *is* the liveness failure; the tally board's empty row *is*
+  ones do work — the jars on the crown *are* the synchronous round; the tally board's empty row *is*
   the indistinguishability of a crash from a delay.
 
 Then write the **must not exist** list: the things that would be natural to add and would
@@ -218,18 +218,18 @@ depend on vocabulary the earlier ones establish.
 | The outport offices | Brewer 2000 · Gilbert &amp; Lynch 2002 | Needs the linearizability book first; CAP is stated in terms of it. |
 | The beacon line | DLS 1988 | Own ground, own people, ~130 km from the hill. Must not contradict *Mercenaries and Bandits* — see the synchrony split in `settings.md`. |
 | The camps *(second book)* | Chandra &amp; Toueg 1996 | Shares the building with FLP. **Must not decide anything** — see the note in `settings.md`. |
-| The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, enhanced with visuals: it is the paper the whole project borrows its allegory from. Listed in the index as *The Part-Time Parliament*, unlinked until our rendition exists. |
-| The Odeon | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 | |
-| The rehearsal hall | Ongaro &amp; Ousterhout 2014 | Least certain building in the set; see `buildings.md`. |
+| The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, enhanced with visuals: it is the paper the whole project borrows its allegory from. Listed in the index as *The Part-Time Parliament*, unlinked until our rendition exists. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
+| The Odeon, Skene | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 | A genuine alternative to Paxos, on its own island. |
+| The Odeon, Skene *(second book)* | Ongaro &amp; Ousterhout 2014 | *The Rehearsal.* Same room as VR; the difference is stage directions. |
 | The crown, later in the siege | Castro &amp; Liskov 1999 | *The Standing Orders.* Needs the Byzantine book's vocabulary. The same four bandits, no new cast; the jars can never be restarted together, which is what makes it PBFT. Nothing follows from any order. |
-| The quarry and stone archive | Chandra, Griesemer &amp; Redstone 2007 | |
+| The Chamber | Chandra, Griesemer &amp; Redstone 2007 | *The Worn Ledgers.* Lamport's own Chamber, reused; must not contradict *The Part-Time Parliament*. |
 | The abandoned counting house | Gray 1996 | |
-| The agora and fair ground | Demers 1987 · Saito &amp; Shapiro 2005 | |
-| The ring of warehouses | Dynamo 2007 · PBS 2012 | |
+| The stoa and festival ground | Demers 1987 · Saito &amp; Shapiro 2005 | |
+| The ring of libraries | Dynamo 2007 · PBS 2012 | |
 | The wax scriptorium | Bayou 1995 | |
 | The far terraces | Shapiro et al. 2011 (both) | |
 | The sorting house | COPS 2011 | |
-| The factor's office | HATS 2014 | |
+| The reading room | HATS 2014 | |
 | The hall of two doors | Hellerstein 2010 · Ameloot 2011 · Hellerstein &amp; Alvaro 2020 | Draft from the 2020 paper; it is the clearest. |
 
 ### Two standing constraints on future books

@@ -4,7 +4,7 @@ A building for each paper, and a shared building where sharing is right. Islands
 `layouts.html`; this file is the next resolution down.
 
 **Map pins are districts, not buildings.** A pin called *Harbour* is four buildings; a pin
-called *Rotunda* is one. Keeping the maps at district resolution is what stops them turning
+called *Odeon* is one. Keeping the maps at district resolution is what stops them turning
 into floor plans.
 
 ## The rule for sharing
@@ -15,8 +15,8 @@ version. They get separate buildings when they make **different claims about the
 subject**, and then the buildings stand next to each other so the difference is a walk of a
 few hundred metres rather than a footnote.
 
-Ten shares below cover **twenty papers into ten buildings**. Everything else gets its own,
-which comes to **22 buildings for 31 papers** — two of them structural, carrying no paper at
+Ten shares below cover **twenty-two papers into ten buildings**. Everything else gets its own,
+which comes to **19 buildings for 31 papers** — one of them structural, carrying no paper at
 all. (The sources were found to be broken while writing this and have since been fixed; see the end.)
 
 The corpus is **31 papers, not 32**: `demers-1989` turned out to be a byte-identical copy of
@@ -50,32 +50,44 @@ Already built and measured in `content-i2`, with architecture, cast and panel in
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The Rotunda** | Lamport 1998 · Lamport 2001 <span title="shared">◆</span> | Circular, domed, no head of the room. One algorithm in two presentations, so one building. The dome returns sound: two proposers at once are one unintelligible wash, and the room is **safe and not live**. |
-| **The Odeon** | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 <span title="shared">◆</span> | Roofed, raked, aimed at one stage. One system revisited by its own author, so one building. The speaker is distinguished by the architecture; when he falls silent the performance stops until another takes the stage under a higher number. |
-| **The rehearsal hall** | Ongaro &amp; Ousterhout 2014 | Plain, small, beside the Odeon. **Split out from the Odeon now that buildings are cheap** — Raft's claim is not a better performance but a *teachable* one, tested on people who had to learn it. The Odeon is where leader-driven consensus is performed; the rehearsal hall is where it is taught. Its refinements are stage directions: a random wait before claiming the stage, and no yielding it to a performer whose script is less complete. |
-| **The chronicle house** | *structural — no paper* | Between the Rotunda and the Odeon, and written into by both. Two ways of deciding, one record — which is what replicated state machines are, and which neither building can say alone. **This resolves the open question from the previous pass.** |
-| **The quarry and the stone archive** | Chandra, Griesemer &amp; Redstone 2007 | Where the plans meet the stone. Parchment runs out and the record must be summarised; tablets crack unread and must be found and recut; and the mason holds his office for a fixed term so he can answer without convening anyone. |
+| **The Chamber** | Lamport 1998 · Lamport 2001 · Chandra, Griesemer &amp; Redstone 2007 <span title="shared">◆</span> | Lamport's own Chamber, drawn as a rotunda to fit his description. *"The acoustics of the Chamber were poor, making oratory impossible"*, so: a circular hall under a hard stone dome, with no podium, no head of the room and no seating aimed at a speaker; legislators communicate only by messenger. Open doorways all round the drum, because legislators and messengers enter and leave whenever they like; statues on the terrace outside, one of which falls. The dome and the round plan illustrate Lamport's text and carry no meaning of their own. The first two papers are one algorithm in two presentations and are not retold. *Paxos Made Live* returns to the same room rather than building a new one, so that engineered Paxos can be set directly against the original: the ledgers wear out, the law book must be summarised, entries fade unread and must be recopied, and the president holds office for a fixed term so as to answer without calling a ballot. |
 | **The abandoned counting house** | Gray 1996 | Empty, and kept empty. A lazy scheme that split decrees across independent regional councils, whose deadlocks grew as the cube of their number. It is the assembly's reason to exist, and it is the only building on Paxos that is not in use. |
 
-## Antipaxos
+## Skene
 
-Antipaxos has fewer buildings than Paxos on purpose. Most of what happens here happens in
-the street, which is the island's argument.
+A sovereign island of its own, governed from one theatre. It is not a second legislature on
+Paxos: two bodies keeping one island's law book would be the split the algorithms exist to
+prevent.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The agora and the fair ground** | Demers 1987 <span title="shared">◆</span> · Saito &amp; Shapiro 2005 | Barely a building: an open square where sailors pass news and lose interest once most of those they tell have heard, and a field where, once a year, pairs of clerks compare entire ledgers line by line. Saito &amp; Shapiro shares it because their paper is the catalogue of what this island already does. |
-| **The ring of warehouses** | Dynamo 2007 · PBS 2012 <span title="shared">◆</span> | A repeated type around one basin, each holding the goods whose marks fall between it and its neighbour. A flooded harbour's stock is kept next door with a note to return it — and PBS shares the ring because it does not build anything: it measures how often this ring hands back a stale count. |
-| **The wax scriptorium** | Bayou 1995 | On the beach. Decrees cut into wax, valid at home at once and provisional everywhere else, each carrying its own check and its own fallback, rolled back and redone when an earlier one lands — and cut into stone only when the flagship docks. |
-| **The tally-stone terraces** | Shapiro et al. 2011 (both) <span title="shared">◆</span> | The short paper and the comprehensive report are one work, so one place. Pebbles added only in one's own column; merging takes the greater count in each. Merge in any order, merge twice, and every terrace still agrees. Sited as far from any assembly as the island goes. |
-| **The sorting house** | COPS 2011 | At the mail harbour. Every letter names what it depends on, and the sorter holds it back until those have landed — so no island ever shows a reply before the letter it answers. |
-| **The factor's office** | HATS 2014 | Beside the sorting house, and a different claim: not what order letters arrive in, but **what a desk can still promise a customer while the couriers are stopped**. Some promises survive the strike and some provably cannot. |
+| **The Odeon** | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 · Ongaro &amp; Ousterhout 2014 <span title="shared">◆</span> | Roofed, raked, aimed at one stage. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it gets its own island, and the two law books never conflict: the speaker is distinguished by the architecture, and when he falls silent the performance stops until another takes the stage under a higher number. Raft shares it because it re-derives that lineage (its own paper names VR as its closest relative); its claim is that the performance can be *taught*, and its refinements are stage directions — a random wait before claiming the stage, and no stage for a performer whose script is less complete. |
+
+## Homonoia
+
+*Homonoia*, concord: everyone ends of one mind, by merging rather than by assembly. An island
+of scholars and copyists, and the line between it and Arche is **how much disagreement each
+can live with**. The traders of Arche cannot let their records disagree even for a moment: a
+jar promised to two buyers is a real loss. The scholars can live with copies that differ for a
+while, since an out-of-date line is put right at the next collation, as long as every copy
+agrees in the end. Homonoia has
+fewer buildings than Paxos on purpose: most of what happens here happens in the colonnades,
+which is the island's argument.
+
+| Building | Papers | What it is |
+|---|---|---|
+| **The stoa and the festival ground** | Demers 1987 <span title="shared">◆</span> · Saito &amp; Shapiro 2005 | Barely a building: a colonnade where travelling scholars pass on a new finding — that the Earth goes round the Sun — and lose interest once most of those they tell have already heard it, and a field where, once a year, pairs of copyists collate whole texts line by line to catch whatever the talk missed. (The finding is historical, but its author is not named: named figures are the papers' own authors.) Saito &amp; Shapiro shares it because their paper is the catalogue of what this island already does. |
+| **The ring of libraries** | Dynamo 2007 · PBS 2012 <span title="shared">◆</span> | A repeated type around one lagoon, each holding the scrolls whose catalogue marks fall between it and its neighbour. A closed library's copies are made next door with a note to return them — and PBS shares the ring because it does not build anything: it measures how often this ring hands a reader a stale copy. |
+| **The wax scriptorium** | Bayou 1995 | On the beach. Scribes draft changes in wax, used at home at once and provisional everywhere else, each carrying its own check and its own fallback, rolled back and redone when an earlier one lands — and copied fair in ink only when the head library has fixed their order. |
+| **The far terraces** | Shapiro et al. 2011 (both) <span title="shared">◆</span> | The short paper and the comprehensive report are one work, so one place. The island's count of how many copies of each work exist, kept in voting pebbles: each library adds only to its own column, and merging takes the greater count in each. Merge in any order, merge twice, and every terrace still agrees. Sited as far from any assembly as the island goes. |
+| **The sorting house** | COPS 2011 | Where the scholars' letters come in. Every letter names the letters it answers, and the sorter holds it back until those have arrived — so no library ever shows a reply before the letter it answers. |
+| **The reading room** | HATS 2014 | Beside the sorting house, and a different claim: not what order letters arrive in, but **what a librarian can still promise a reader while the couriers are stopped**. Never to see half a revision survives the strike; that two readers will not both take the last copy provably does not. |
 
 ## The council ground
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The hall of two doors** | Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020 <span title="shared">◆</span> | One door to Paxos, one to Antipaxos. Every decree brought here leaves by the door its own shape decides: those that only ever add leave by the Antipaxon door and need no assembly, and those resting on absence — *no one has claimed this* — leave by the Paxon one. The building does not rule; it sorts. |
+| **The hall of two doors** | Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020 <span title="shared">◆</span> | One door facing the islands that assemble, Paxos and Skene; one facing Homonoia. Every decree brought here leaves by the door its own shape decides: those that only ever add leave by Homonoia's door and need no assembly, and those resting on absence — *no one has claimed this* — leave by the door of the assemblies. The building does not rule; it sorts. |
 
 ---
 
@@ -87,22 +99,23 @@ the street, which is the island's argument.
 | The outport offices | Brewer · Gilbert &amp; Lynch | A conjecture and the work that settles it |
 | The chief's hollow and crag posts | Reaching Agreement 1980 · Byzantine Generals 1982 | The general result and its famous framing, same authors |
 | The camp enclosures | FLP · Chandra &amp; Toueg | Same four camps; the difference is a prop, not a building |
-| The Rotunda | Lamport 1998 · 2001 | One algorithm, two presentations |
-| The Odeon | Oki &amp; Liskov · Liskov &amp; Cowling | One system, revisited by its own author |
-| The agora | Demers · Saito &amp; Shapiro | A practice, and the catalogue of that practice |
-| The ring of warehouses | Dynamo · PBS | A thing built, and a measurement of the thing built |
-| The tally-stone terraces | Shapiro (short) · Shapiro (comprehensive) | Two lengths of one work |
+| The Chamber | Lamport 1998 · 2001 · Chandra, Griesemer &amp; Redstone | One algorithm in two presentations, and the same algorithm engineered — told in the original's own room so the two can be compared |
+| The Odeon | Oki &amp; Liskov · Liskov &amp; Cowling · Ongaro &amp; Ousterhout | One system revisited by its own author, and its re-derivation for teaching; the difference is a stage direction, not a building |
+| The stoa and festival ground | Demers · Saito &amp; Shapiro | A practice, and the catalogue of that practice |
+| The ring of libraries | Dynamo · PBS | A thing built, and a measurement of the thing built |
+| The far terraces | Shapiro (short) · Shapiro (comprehensive) | Two lengths of one work |
 | The hall of two doors | Hellerstein 2010 · Ameloot 2011 · Hellerstein &amp; Alvaro 2020 | A conjecture, its formal proof, and its definitive restatement — one idea at three resolutions |
 
 **The near-misses** — pairs that look shareable and are not:
 
 - **Tally house / column room.** Both are clocks. But one respects causality and the other
   *detects concurrency exactly*, which is a different claim. Adjacent, not merged.
-- **Odeon / rehearsal hall.** Both are strong-leader. But Raft's contribution is
-  understandability, tested on learners — a claim about people, not about the protocol.
-- **Sorting house / factor's office.** Both are about coping without coordination. But one is
+- **Sorting house / reading room.** Both are about coping without coordination. But one is
   about the order of writes and the other about what a transaction may promise.
-- **Rotunda / Odeon.** The whole point is that they are different rooms.
+- **Chamber / Odeon.** Both keep a law book by majority. But VR was found independently and
+  is a genuine alternative, not a variant; the whole point is that they are different rooms, on
+  different islands — one where no voice carries, one built so that a single voice reaches
+  every seat.
 
 ---
 
@@ -142,9 +155,8 @@ Not assigned a building of their own; they sit with the paper they accompany.
 ## Open
 
 1. **Nothing is blocked on sources any more.** All 31 papers are present and verified.
-2. **Whether the rehearsal hall survives.** It splits Raft out of the Odeon on the strength of
-   a claim about *teaching*, which is the one paper whose contribution is not a mechanism.
-   Defensible, but it is the least certain building here.
+2. **Raft's placement.** Raft sits in the Odeon, with VR, rather than in the
+   Chamber: its own paper names VR as its closest relative. It could be told in either.
 3. **Whether the outport offices are one building or a type.** They are drawn as a repeated
    type, which is right for the map and possibly wrong for the panels: CAP needs exactly two
    in frame, on either side of closed water.

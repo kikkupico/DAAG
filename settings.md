@@ -4,10 +4,10 @@ The **analysis** behind the world: what each paper needs from its ground, and th
 constraints that cannot be broken. Source papers in `sources/`.
 
 > **Which file is which.** The grouping below is the original four-subject cut. It has since
-> been superseded by the **three-island scheme** — Arche, Paxos, Antipaxos — in
+> been superseded by the **three-island scheme** — Arche, Paxos, Antipaxos (since renamed Homonoia, with Skene split from Paxos) — in
 > `layouts.html`, and the current paper-to-place assignment lives in `buildings.md` at
 > building resolution. Three papers moved in that change (CAP and the snapshots paper to
-> Arche; CALM to its own council ground; COPS, HATS and PBS to Antipaxos), and
+> Arche; CALM to its own council ground; COPS, HATS and PBS to Homonoia), and
 > `layouts.html` records why.
 >
 > **This file is kept for the analysis, not the grouping** — the synchrony split at Mount
@@ -119,41 +119,42 @@ Arche embodies the complete progression of synchrony and fault models:
 ---
 
 
-## The Grain Islands · *now Antipaxos*
+## Homonoia · *The Island of Scholars*
 
-*Grain stock between islands.* (Renamed from "The Archipelago": the archipelago is the
-container for the whole world, so the name cannot also belong to one island in it.)
+*Homonoia*, "concord": everyone ends of one mind, by merging rather than by assembly.
+(Formerly the Grain Islands, then Antipaxos. The name was retired because the island stands
+against coordination itself, and Skene assembles as much as Paxos does. The grain allegory was
+retired because it made Homonoia a second traders' island beside Arche.)
 
-**Core physics.** Grain sits in granaries across many islands and moves continuously by
-cargo skiff. Channels have capacity, boats are delayed or stopped by storms, and inventory
-must be counted without halting shipping.
+**Core physics.** Scholars and copyists in libraries round the island, each holding copies of
+the works in its keeping. Letters, corrections and fresh copies travel by courier and by word of
+mouth; couriers are delayed or stopped, and libraries close. **The line between
+Homonoia and Arche is how much disagreement each can live with**, not what is recorded: both
+islands keep records, and on Arche it is the count of jars that is ordered and snapshotted,
+never the jars themselves. The traders cannot let their records disagree even for a moment,
+because a jar promised to two buyers is a real loss. The scholars can live with copies that
+differ for a while, because an out-of-date line is put right at the next collation, as long
+as every copy agrees in the end — which is strong consistency against eventual consistency. Greek scholarship already did every practice this island needs — collating manuscripts
+line by line, spreading the epics by rhapsode, drafting in wax before a fair copy.
 
 | Paper | In the world |
 |---|---|
-| `chandy-lamport-1985_distributed-snapshots` | Scribes count grain on hand, dispatch marker boats down every lane, and record all grain arriving ahead of the marker — a consistent cut without freezing the islands |
-| `brewer-2000`, `gilbert-lynch-2002` | A typhoon severs the lanes. Elders either keep dispensing against stale ledgers, or lock the granary until ships sail again. There is no third choice |
-| `demers-1987` <span>(`demers-1989` is the same file)</span> | Ships trade recent manifests at whatever island they dock at; periodic full audits at the annual fair |
-| `decandia-2007_dynamo` | Consistent hashing around a ring of ports; a flooded harbour's grain is held by its neighbour with a note to return it, reconciled later by vector stamps |
-| `terry-1995_bayou-conflicts` | Disconnected islands pencil in tentative allocations with their own checks and merge rules, finalised when the flagship docks |
-| `shapiro-2011_crdt`, `shapiro-2011_crdt-comprehensive` | Granaries record stock strictly as join-semilattices, so merging any two manifests is associative, commutative and idempotent — no dispute is possible |
-| `hellerstein-2010`, `ameloot-2011`, `hellerstein-alvaro-2020` | Which questions are monotonic ("have we at least 50 bushels?", answerable without waiting) and which are not ("is this all the grain there is?", requiring coordination) |
-| `saito-shapiro-2005` | The systematic audit of every optimistic merging practice in use across the islands |
+| `demers-1987` <span>(`demers-1989` is the same file)</span> | Travelling scholars pass on a new finding in the stoa — that the Earth goes round the Sun — rumour-fashion, each losing interest once most of those they tell have heard; once a year the copyists collate whole texts at the festival, catching what the talk missed |
+| `saito-shapiro-2005` | The survey of every optimistic copying practice in use on the island |
+| `decandia-2007_dynamo` | A ring of libraries by catalogue mark; a closed library's copies are made next door with a note to return them, reconciled later by version marks |
+| `bailis-2012_pbs` | How often the ring hands a reader a stale copy, measured |
+| `terry-1995_bayou-conflicts` | Scribes draft changes in wax with their own checks and merge rules, copied fair in ink when the head library fixes their order |
+| `shapiro-2011_crdt`, `shapiro-2011_crdt-comprehensive` | The count of copies of each work, kept in voting pebbles, one column per library; merging takes the larger in each column, so it is associative, commutative and idempotent |
+| `lloyd-2011_cops-causal-consistency` | Letters name the letters they answer, and are held back until those have arrived |
+| `bailis-2014_hats` | What a librarian can promise a reader while the couriers are stopped |
 
-**The ground must provide:** many small ports within casual sailing range, real shipping
-lanes of differing length, a ring-shaped lagoon or port ring for Dynamo, a strait a storm
-can close, and a far coast out of reach of any assembly.
+CALM (`hellerstein-2010`, `ameloot-2011`) sits on the council ground between the islands, but
+takes its examples from here: "does the island hold at least one copy of this work?" can be
+answered as soon as it is true; "is this every copy there is?" needs everyone.
 
-**This world carries 12 of 32 papers and needs internal districts.** One setting establishes
-one device vocabulary, and gossip, sloppy quorums, semilattices and query monotonicity will
-not share one. The natural seam is the world's own:
-
-- **The shipping ports** — snapshots, CAP, gossip, Dynamo, Bayou, optimistic replication.
-  Everything about moving grain and reconciling what moved.
-- **The far terraces** — CRDTs and CALM. Ledgers that need no coordination at all, sited as
-  far from any assembly as the islands go. i1 already had this instinct and put the CRDT book
-  on the coast farthest from the strait.
-
-Districts, not a fifth world. The count stays at four.
+**The ground must provide:** many libraries within casual reach of one another, courier routes
+of differing length, a ring of libraries round a lagoon for Dynamo, a beach for the wax
+scriptorium, and a far coast out of reach of any assembly for the terraces.
 
 ---
 
@@ -221,43 +222,64 @@ chronicle across shifting quorums, absent members and corrupt leaders.
 
 | Paper | In the world |
 |---|---|
-| `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Rotunda.** Circular and domed: no head of the room, so any legislator may call a ballot, and intersecting quorums preserve past decrees. The dome returns sound, so two proposers at once are one unintelligible wash |
-| `oki-liskov-1988`, `liskov-cowling-2012`, `ongaro-ousterhout-2014_raft-consensus` | **The Odeon**, a short walk from the Rotunda. Roofed, raked, aimed at one stage so a single voice reaches every seat: the speaker is distinguished by the architecture. When he falls silent the performance stops until another takes the stage under a higher number. Raft's refinements are stage directions — a random wait before claiming the stage, and no yielding it to a performer whose script is less complete |
-| `chandra-griesemer-redstone-2007` | Physical reality: scribes run out of parchment, tablets crumble unread, and leases must be granted without message delay halting government |
+| `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and not retold, drawn as a domed rotunda because its acoustics make oratory impossible. Legislators wander in and out, each keeps a ledger, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved |
+| `chandra-griesemer-redstone-2007` | **The Chamber again.** Physical reality: ledgers wear out, the law book must be summarised, entries fade unread, and the president holds a fixed term so reads need no ballot |
 | `gray-1996_dangers-of-replication` | The warning to the parliament: split decrees across independent regional councils with lazy synchronisation, and deadlock scales as O(N³) |
 
-**The ground must provide:** the **Rotunda** on a route rather than at a dead end
-(legislators wander in and out); the **Odeon** a short walk from it, about two kilometres;
-and a stepped quarry on a shippable coast.
+**The ground must provide:** the **Chamber** on a route rather than at a dead end
+(legislators wander in and out).
 
-### Two buildings, not one chamber
+### One Chamber, and a reused room
 
-Paxos holds two consensus attitudes, and they are two buildings. This replaces the earlier
-causeway islet for Raft: *raftsmen on a raft* was a pun standing in for an idea, and the
-Odeon is the idea. **Nothing on Paxos is named after the algorithm it carries.**
+**The parliament is still sitting.** Lamport's §3.3.6 ends the Paxon parliament — a scribe's
+error names drowned sailors as the only legislators, government halts, a coup and an invasion
+follow. Every later book ignores this, as a matter of convenience, and says so once: in the
+index entry and at that point in our rendition.
 
-The division is sharper than the papers' own: it separates **symmetric** consensus from
-**leader-driven** consensus, which puts Viewstamped Replication and Raft together where they
-belong — Raft being a re-derivation of that lineage rather than a separate tradition.
+Paxos has one legislature, Lamport's Chamber. The other consensus tradition, Viewstamped
+Replication, is on its own island, Skene (below): two bodies keeping one island's law book
+would be the very split both algorithms exist to prevent.
+**Nothing on Paxos or Skene is named after the algorithm it carries.**
 
-**What the acoustics break, and what they do not.** The dome does *not* break agreement.
-Quorum intersection is a fact about who is **present**, not about who can be **heard**: any
-two majorities share a legislator, and he remembers what he voted for whether or not he
-could make it out over the echo. So the Rotunda is **safe and not live** — the most-missed
-point about the paper, standing here as a property of a building rather than a claim in a
-caption. It also puts Mount Phyle directly overhead: duelling proposers are FLP arriving
-indoors, in a room where nothing has failed and no raven is late.
+Later papers reuse existing rooms instead of adding devices, so that approaches can be
+compared directly and the reader carries fewer allegories. *Paxos Made Live* returns to the
+Chamber; Raft is told in Skene's Odeon, since it re-derives the VR lineage. What separates a
+later paper from an earlier one in the same room is a rule of procedure, not a building. This
+retires the rehearsal hall, the quarry and the chronicle house.
 
-If two claim the Odeon's stage at once it is as bad as the Rotunda. That is why views and
-terms are numbered.
+**The Chamber is drawn as a rotunda.** Lamport gives it one physical property: *"The acoustics
+of the Chamber were poor, making oratory impossible. Legislators could communicate only by
+messenger."* A circular hall under a hard stone dome, with no podium and no head of the room,
+illustrates that faithfully, and open doorways round the drum show legislators and messengers
+coming and going. The dome illustrates Lamport's text and carries no meaning of its own: the
+earlier claim that two proposers become *one unintelligible wash* under it is retired, since in
+Lamport nobody speaks aloud at all. Skene's Odeon is its opposite, built so that one voice
+reaches every seat.
 
-**On `gray-1996`.** It is the one paper that could sit on either Paxos or Antipaxos — it is
-about lazy replication, which is the Grain Islands' whole practice. Keeping it here makes it
+**On `gray-1996`.** It is the one paper that could sit on either Paxos or Homonoia — it is
+about lazy replication, which is Homonoia's whole practice. Keeping it here makes it
 the assembly's reason to exist and the bridge between the two worlds; moving it makes it the
 islands' apology. Paxos is the better choice, but it is a choice.
 
 **Casting note carried forward from i1.** Jim Gray was lost at sea in 2007. i1 resolved that
 Grayos appears as a designer and counsellor, never as a figure who dies. That decision holds.
+
+---
+
+## Skene · *The Island of the Stage*
+
+*A sovereign island governed from one theatre.* Split from Paxos because Viewstamped
+Replication is a genuine alternative to Paxos, found independently and published first, not a
+variant of it; two legislatures on one island would conflict.
+
+| Paper | In the world |
+|---|---|
+| `oki-liskov-1988`, `liskov-cowling-2012`, `ongaro-ousterhout-2014_raft-consensus` | **The Odeon.** Roofed, raked, aimed at one stage so a single voice reaches every seat: the speaker is distinguished by the architecture. When he falls silent the performance stops until another takes the stage under a higher number. Raft's refinements are stage directions — a random wait before claiming the stage, and no yielding it to a performer whose script is less complete |
+
+**The ground must provide:** a natural hillside bowl facing a sheltered bay, for the Odeon.
+
+If two claim the Odeon's stage at once, nothing proceeds. That is why views and terms are
+numbered.
 
 ---
 
@@ -294,8 +316,8 @@ in `layouts.html`:
   interior, a ~5 km massif on an ~8 km island. The earlier figure, a 1.8 km cone set
   8.7–9.4 km inland, is retired: at that scale the lines between evenly spaced houses clear
   the cone entirely.
-- **Antipaxos needs to be an archipelago** — many small ports in casual sailing range, lanes
-  of different length, a ring of ports, and a far coast out of reach of any assembly.
+- **Homonoia needs many libraries within casual reach** — courier routes of different
+  length, a ring of libraries round a lagoon, and a far coast out of reach of any assembly.
 
 The one ground no map can hold is **the beacon ridge**. A 200 m ridge and a 400 m crown stay
 mutually visible out to about 122 km, so it sits at roughly 130 km — off every map, with its
@@ -313,6 +335,6 @@ own people and its own diorama.
    shorter set. Neither paper is on disk.
 4. **How many books per island.** The grounds and buildings are fixed; the book count is not.
 
-*Resolved since this file was written:* the Paxos chronicle (the chronicle house, in
-`buildings.md`); the districts on Antipaxos (now explicit buildings); the source problems
+*Resolved since this file was written:* the Paxos chronicle (now the parliament's own law
+book; the chronicle house is retired); the districts on Homonoia (now explicit buildings); the source problems
 (all fixed and verified).
