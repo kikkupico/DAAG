@@ -1,19 +1,22 @@
 """Stage 1 previs: render art/arche-3d.glb from a camera given in explorer.html world coords.
 
 Explorer coords (three.js, +Y up): North = -X, East = -Z, South = +X, West = +Z.
-The island is placed exactly as explorer.html places it (centred at x=-90, scale 80),
-so a pose read off the explorer can be pasted here and vice versa.
+World units are metres. The island is placed exactly as explorer.html places it (centred at
+x=-1300, 950 m per model unit, its base at sea level), so a pose read off the explorer can be
+pasted here and vice versa.
 
     blender -b -P art/previs/render.py -- shots.json <shot-id> [out.png]
 
 A shot is {"eye": [x,y,z], "look": [x,y,z], "lens": mm, "aspect": "4:3",
            "vscale": 1.0, "sun": [elev_deg, azim_deg]}.
-`eye`/`look` y may be given as "+h" strings meaning h units above the terrain there.
+`eye`/`look` y may be given as "+h" strings meaning h metres above the terrain there.
 """
 import bpy, json, sys, math
 from mathutils import Vector
 
 GLB = "art/arche-3d.glb"
+SCALE = 950.0            # metres per model unit, as in explorer.html
+X0 = -1300.0             # where explorer.html centres Arche
 LONG_EDGE = 1600
 
 argv = sys.argv[sys.argv.index("--") + 1:]
@@ -31,14 +34,14 @@ bb = [island.matrix_world @ Vector(c) for c in island.bound_box]
 cx = (min(v.x for v in bb) + max(v.x for v in bb)) / 2
 cy = (min(v.y for v in bb) + max(v.y for v in bb)) / 2
 zmin = min(v.z for v in bb)
-island.scale = (80, 80, 80 * vs)
-island.location = (-90 - 80 * cx, -80 * cy, -80 * vs * zmin)
+island.scale = (SCALE, SCALE, SCALE * vs)
+island.location = (X0 - SCALE * cx, -SCALE * cy, -SCALE * vs * zmin)
 bpy.context.view_layer.update()
 
 # The mesh's crown is ~1.2 km across; canon's is modest. `crown_shrink` pulls the
 # summit toward a point on the crown axis, fully inside r_in and fading out by r_out,
 # so every later stage inherits a smaller crown. Explorer coords, as elsewhere.
-CROWN = (-84.0, 1.8)
+CROWN = (-1228.8, 21.4)
 cs = shot.get("crown_shrink")
 if cs:
     import numpy as np
@@ -66,7 +69,7 @@ def to_bl(p):  # explorer (x, y, z) -> blender
 
 def ground(x, z):
     ok, loc, *_ = bpy.context.scene.ray_cast(
-        bpy.context.view_layer.depsgraph, Vector((x, -z, 500)), Vector((0, 0, -1)))
+        bpy.context.view_layer.depsgraph, Vector((x, -z, 5000)), Vector((0, 0, -1)))
     return loc.z if ok else 0.0
 
 def resolve(p):
@@ -78,7 +81,7 @@ def resolve(p):
 eye, look = to_bl(resolve(shot["eye"])), to_bl(resolve(shot["look"]))
 
 # Sea plane at y=0, like the explorer.
-bpy.ops.mesh.primitive_plane_add(size=25000, location=(0, 0, 0.3))
+bpy.ops.mesh.primitive_plane_add(size=400000, location=(0, 0, 0.3))
 sea = bpy.context.object
 m = bpy.data.materials.new("sea"); m.use_nodes = True
 m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.02, 0.18, 0.4, 1)
@@ -87,7 +90,7 @@ sea.data.materials.append(m)
 cam_data = bpy.data.cameras.new("cam")
 cam_data.lens = shot.get("lens", 35)
 cam_data.sensor_width = 36
-cam_data.clip_start, cam_data.clip_end = 0.05, 20000
+cam_data.clip_start, cam_data.clip_end = 0.1, 200000
 cam = bpy.data.objects.new("cam", cam_data)
 bpy.context.scene.collection.objects.link(cam)
 cam.location = eye

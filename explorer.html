@@ -472,26 +472,9 @@
     <div class="setting-row">
       <div class="setting-header">
         <span>Island Separation</span>
-        <span id="spacing-val" class="val-display" style="min-width:auto">180m</span>
+        <span id="spacing-val" class="val-display" style="min-width:auto">2600m</span>
       </div>
-      <input type="range" id="spacing-slider" min="80" max="400" step="5" value="180">
-    </div>
-
-    <!-- Island Scales -->
-    <div class="setting-row">
-      <div class="setting-header">
-        <span>Arche Scale</span>
-        <span id="arche-scale-val" class="val-display" style="min-width:auto">1.0x</span>
-      </div>
-      <input type="range" id="arche-scale-slider" min="0.4" max="2.0" step="0.05" value="1.0">
-    </div>
-
-    <div class="setting-row">
-      <div class="setting-header">
-        <span>Paxos Scale <span style="font-size:0.7rem; color:var(--accent);">(Canon 0.42x)</span></span>
-        <span id="paxos-scale-val" class="val-display" style="min-width:auto">0.42x</span>
-      </div>
-      <input type="range" id="paxos-scale-slider" min="0.2" max="1.5" step="0.01" value="0.42">
+      <input type="range" id="spacing-slider" min="1000" max="5000" step="50" value="2600">
     </div>
   </div>
 
@@ -643,10 +626,11 @@
     const scene = new THREE.Scene();
 
     // Standard 35mm film sensor camera
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.5, 30000);
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 150000);
     camera.filmGauge = 35; // 35mm film width
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true,
+                                              logarithmicDepthBuffer: true });   // metres from 0.1 m to 150 km
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -654,7 +638,7 @@
     container.appendChild(renderer.domElement);
 
     // Initial camera position (overview looking at both islands)
-    camera.position.set(0, 120, 220);
+    camera.position.set(0, 3300, 5800);
 
     // -------------------------------------------------------------------------
     // Controls: Orbit + Freecam
@@ -663,9 +647,9 @@
     orbitControls.enableDamping = true;
     orbitControls.dampingFactor = 0.05;
     orbitControls.maxPolarAngle = Math.PI / 2 - 0.02; // prevent dipping under water
-    orbitControls.minDistance = 5;
-    orbitControls.maxDistance = 1500;
-    orbitControls.target.set(0, 10, 0);
+    orbitControls.minDistance = 2;
+    orbitControls.maxDistance = 20000;
+    orbitControls.target.set(0, 0, 200);
 
     let controlMode = 'orbit'; // 'orbit' or 'fly'
     const keys = { w: false, a: false, s: false, d: false, q: false, e: false, shift: false };
@@ -758,7 +742,7 @@
 
     // Horizon fog to blend water plane seamlessly with sky
     const horizonFogColor = 0x98d4f7;
-    scene.fog = new THREE.Fog(horizonFogColor, 700, 6500);
+    scene.fog = new THREE.Fog(horizonFogColor, 8000, 80000);
     renderer.setClearColor(horizonFogColor);
 
     const sun = new THREE.Vector3();
@@ -774,15 +758,15 @@
       const theta = THREE.MathUtils.degToRad(azimuthDeg);
       sun.setFromSphericalCoords(1, phi, theta);
       skyUniforms.sunPosition.value.copy(sun);
-      dirLight.position.copy(sun).multiplyScalar(1000);
+      dirLight.position.copy(sun).multiplyScalar(20000);
     }
 
     // -------------------------------------------------------------------------
     // Endless Static Ocean Plane (Vibrant Blue Mediterranean Sea)
     // -------------------------------------------------------------------------
-    const waterGeometry = new THREE.PlaneGeometry(25000, 25000);
+    const waterGeometry = new THREE.PlaneGeometry(400000, 400000);
     const waterNormals = createProceduralWaterNormal();
-    waterNormals.repeat.set(160, 160);
+    waterNormals.repeat.set(8000, 8000);        // ripples ~50 m across
     waterNormals.wrapS = THREE.RepeatWrapping;
     waterNormals.wrapT = THREE.RepeatWrapping;
 
@@ -810,18 +794,22 @@
     scene.add(archeGroup);
     scene.add(paxosGroup);
 
-    let islandSeparation = 180;
-    let baseArcheScale = 1.0;
-    let basePaxosScale = 0.42; // Canonical scale ratio: 4,800m / 11,500m = 0.417
+    // World units are metres, so the camera's focal lengths behave as real lenses. The Meshy
+    // models are ~2 units across; the plates' houses set their size: at 12 m a house, Arche is
+    // ~1.8 km across (950 m per model unit). Paxos's plate draws its houses 0.76 as large
+    // relative to an island of the same model size, so it takes 1.31 times Arche's scale.
+    let islandSeparation = 2600;
+    const ARCHE_SCALE = 950;
+    const PAXOS_SCALE = 950 * 1.31;
     let seaLevelOffset = 0.0;
 
     function applyTransforms() {
       // Arche on West (-X), Paxos on East (+X)
       archeGroup.position.set(-islandSeparation / 2, seaLevelOffset, 0);
-      paxosGroup.position.set(islandSeparation / 2, seaLevelOffset, 30);
+      paxosGroup.position.set(islandSeparation / 2, seaLevelOffset, 360);
 
-      archeGroup.scale.setScalar(baseArcheScale * 80);
-      paxosGroup.scale.setScalar(basePaxosScale * 80);
+      archeGroup.scale.setScalar(ARCHE_SCALE);
+      paxosGroup.scale.setScalar(PAXOS_SCALE);
     }
     applyTransforms();
 
@@ -987,22 +975,22 @@
 
     btnOverview.addEventListener('click', () => {
       setActiveViewBtn(btnOverview);
-      transitionTo(new THREE.Vector3(0, 140, 240), new THREE.Vector3(0, 10, 0));
+      transitionTo(new THREE.Vector3(0, 3300, 5800), new THREE.Vector3(0, 0, 200));
     });
 
     btnArche.addEventListener('click', () => {
       setActiveViewBtn(btnArche);
-      transitionTo(new THREE.Vector3(-islandSeparation / 2, 80, 130), new THREE.Vector3(-islandSeparation / 2, 15, 0));
+      transitionTo(new THREE.Vector3(-islandSeparation / 2, 1500, 2700), new THREE.Vector3(-islandSeparation / 2, 100, 0));
     });
 
     btnPaxos.addEventListener('click', () => {
       setActiveViewBtn(btnPaxos);
-      transitionTo(new THREE.Vector3(islandSeparation / 2, 70, 140), new THREE.Vector3(islandSeparation / 2, 12, 30));
+      transitionTo(new THREE.Vector3(islandSeparation / 2, 1900, 3800), new THREE.Vector3(islandSeparation / 2, 100, 360));
     });
 
     btnSeaLevel.addEventListener('click', () => {
       setActiveViewBtn(btnSeaLevel);
-      transitionTo(new THREE.Vector3(0, 8, 140), new THREE.Vector3(-20, 12, 0));
+      transitionTo(new THREE.Vector3(0, 95, 1660), new THREE.Vector3(-240, 140, 0));
     });
 
     // -------------------------------------------------------------------------
@@ -1031,7 +1019,7 @@
     });
 
     // -------------------------------------------------------------------------
-    // Side Panel Sliders (Sun, Sea Level, Spacing, Scales)
+    // Side Panel Sliders (Sun, Sea Level, Spacing)
     // -------------------------------------------------------------------------
     const sunElevSlider = document.getElementById('sun-elev-slider');
     const sunAzimSlider = document.getElementById('sun-azim-slider');
@@ -1061,22 +1049,6 @@
     spacingSlider.addEventListener('input', (e) => {
       islandSeparation = parseFloat(e.target.value);
       spacingVal.textContent = islandSeparation + 'm';
-      applyTransforms();
-    });
-
-    const archeScaleSlider = document.getElementById('arche-scale-slider');
-    const archeScaleVal = document.getElementById('arche-scale-val');
-    archeScaleSlider.addEventListener('input', (e) => {
-      baseArcheScale = parseFloat(e.target.value);
-      archeScaleVal.textContent = baseArcheScale.toFixed(2) + 'x';
-      applyTransforms();
-    });
-
-    const paxosScaleSlider = document.getElementById('paxos-scale-slider');
-    const paxosScaleVal = document.getElementById('paxos-scale-val');
-    paxosScaleSlider.addEventListener('input', (e) => {
-      basePaxosScale = parseFloat(e.target.value);
-      paxosScaleVal.textContent = basePaxosScale.toFixed(2) + 'x';
       applyTransforms();
     });
 
@@ -1152,7 +1124,7 @@
 
       // Free Flight update
       if (controlMode === 'fly') {
-        const speed = (keys.shift ? 120 : 40) * delta;
+        const speed = (keys.shift ? 400 : 60) * delta;   // m/s
         const forward = new THREE.Vector3(
           -Math.sin(flyYaw) * Math.cos(flyPitch),
           Math.sin(flyPitch),
