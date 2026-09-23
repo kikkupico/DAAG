@@ -90,8 +90,10 @@
     a quorum of 2f + 1, so any two quorums share an honest member, and a leader that stalls or
     contradicts itself is replaced. This is explored in the same four mercenary camps later in
     the siege, when one of the four may have been bought: each was hired alone and paid alone.
-    The recruiters who hired them, off the hill, send orders by raven and accept an answer only
-    when enough camps give the same one. The camps keep the orders in one numbered sequence:
+    The trading houses that hired them are traders and keep no ravens: each sends a runner to
+    its nearest camp, risking the next camp along the foot only if its own falls silent, and
+    accepts an answer only when two camps' seals agree on it. The camps keep the orders in one
+    numbered sequence:
     one camp numbers each order, the others echo it twice before it stands, and a camp whose
     numbering stalls or contradicts itself loses the right to number. Four camps is exactly
     3f + 1 for a single liar, and the ravens' unbounded flights are the model this answer was
@@ -130,12 +132,6 @@
     parliament, in Lamport's Chamber.<br>
     <span class="paper">Herlihy &amp; Wing 1990 · Chandra, Griesemer &amp; Redstone 2007</span></p>
 
-    <p><b class="planned">The Empty Counting House</b> <span class="unwritten">Not yet written</span>
-    — Letting every replica accept updates and reconcile them later looks cheap, but deadlocks
-    and conflicts grow with the cube of the number of replicas. This argument for coordinated
-    replication is explored as a counting house abandoned after splitting its decrees across
-    independent regional councils, and kept empty as the assembly's reason to exist.<br>
-    <span class="paper">Gray, Helland, O'Neil &amp; Shasha 1996</span></p>
   </div>
 </section>
 
@@ -149,19 +145,21 @@
     without losing anything it committed. Viewstamped replication numbers each leader's reign as
     a view, and changes view in a way that keeps every committed operation. It was developed
     independently of Paxos and published before it: a genuine alternative, not a descendant.
-    So it is explored on an island of its own, Skene, which governs itself from a theatre.
+    So it is explored on an island of its own, Skene, whose legislators govern from a theatre.
     Where the Chamber on Paxos makes oratory impossible, the Odeon is built so that a single
-    voice from the stage reaches every seat. When the speaker falls silent, the performance
-    stops until someone else takes the stage under a higher number.<br>
+    voice reaches every seat: one legislator speaks from the stage, the others keep their law
+    books in the front row, and the public in the seats behind learn the law. When the speaker
+    falls silent, business stops until another legislator takes the stage under a higher
+    number.<br>
     <span class="paper">Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012</span></p>
 
     <p><b class="planned">The Rehearsal</b> <span class="unwritten">Not yet written</span>
     — A consensus algorithm that engineers cannot understand will be built wrong. Raft is
     leader-driven consensus in the same lineage as viewstamped replication, designed to be
     taught, and tested on students who had to learn it. It is told in the Odeon as the same
-    performance rehearsed, and its refinements are stage directions: a random wait before
-    claiming the stage, so that two rarely claim it at once, and no stage for a performer whose
-    script is less complete.<br>
+    business rehearsed, and its refinements are stage directions: a random wait before claiming
+    the stage, so that two legislators rarely claim it at once, and no stage for a legislator
+    whose law book is less complete.<br>
     <span class="paper">Ongaro &amp; Ousterhout 2014</span></p>
   </div>
 </section>
@@ -169,7 +167,7 @@
 <hr class="meander">
 
 <section>
-  <div class="issue"><span class="no">Homonoia</span><h2>Replication Without Coordination</h2></div>
+  <div class="issue"><span class="no">Homonoia</span><h2>Replication Without Assembly</h2></div>
   <div class="prose">
     <p><b class="planned">The Stoa and the Festival</b> <span class="unwritten">Not yet written</span>
     — Updates can spread through a large system the way rumours spread through a crowd: each
@@ -180,9 +178,10 @@
     scholars answer from whatever copy they hold as a matter of course, as long as every copy
     agrees in the end. This book, together with a survey of every
     optimistic replication practice in use, is explored as a colonnade where travelling
-    scholars pass on a new finding, that the Earth goes round the Sun, each telling a few others
-    until most of those they meet have already heard it, and a yearly festival where copyists
-    collate whole texts line by line to catch whatever the talk missed.<br>
+    scholars pass on new learnings on scraps of papyrus, such as that the Earth goes round the
+    Sun, each passing a scrap to a few others until most of those they meet already have it,
+    and a yearly festival where copyists compare their whole collections, scraps included, to
+    catch whatever the talk missed.<br>
     <span class="paper">Demers et al. 1987 · Saito &amp; Shapiro 2005</span></p>
 
     <p><b class="planned">The Ring of Libraries</b> <span class="unwritten">Not yet written</span>
@@ -195,26 +194,30 @@
     <span class="paper">DeCandia et al. 2007 · Bailis et al. 2012</span></p>
 
     <p><b class="planned">The Wax Scriptorium</b> <span class="unwritten">Not yet written</span>
-    — A replica that is often disconnected can still accept updates, if each update carries its
-    own check for conflicts and its own way of resolving them, and stays tentative until a
-    primary fixes its place in the order. This is explored as a scriptorium on the beach where
-    scribes draft their changes in wax, used at once but only provisionally, and copied fair in
-    ink only when the head library has fixed their order.<br>
-    <span class="paper">Terry et al. 1995</span></p>
+    — Letting every replica accept updates anywhere and reconcile them later becomes unstable
+    as a system grows: conflicts and deadlocks rise with the cube of the number of replicas.
+    The remedy is two tiers. Replicas that are often disconnected make tentative updates, each
+    carrying its own check for conflicts and its own way of resolving them, and a primary later
+    fixes their place in one order. This is explored as a scriptorium on the beach where scribes
+    draft their changes in wax, used at once but only provisionally, and copied fair in ink when
+    the head library has fixed their order. Nobody waits for the head library: it confirms the
+    order afterwards, and until then the wax stands.<br>
+    <span class="paper">Gray, Helland, O'Neil &amp; Shasha 1996 · Terry et al. 1995</span></p>
 
     <p><b class="planned">The Far Terraces</b> <span class="unwritten">Not yet written</span>
     — Some data types can be merged in any order, any number of times, and every replica still
     ends in the same state, so no coordination is ever needed. This is explored as the island's
-    count of how many copies of each work exist, kept in voting pebbles on remote terraces. Each
+    count of how many copies of each work have been made, kept in voting pebbles on remote
+    terraces. Each
     library adds pebbles only to its own column, and merging two counts takes the larger in each
     column.<br>
     <span class="paper">Shapiro, Preguiça, Baquero &amp; Zawirski 2011 · the same authors' comprehensive study, 2011</span></p>
 
-    <p><b class="planned">The Sorting House</b> <span class="unwritten">Not yet written</span>
+    <p><b class="planned">The Sorting Shelves</b> <span class="unwritten">Not yet written</span>
     — A system spread across data centres can promise that no one sees a reply before the
     message it answers, without coordinating on every write, by having each write name the
-    writes it depends on. This is explored through the scholars' letters: a sorting house that
-    holds each letter back until every letter it answers has arrived.<br>
+    writes it depends on. This is explored through the scholars' letters: a sorting shelf in
+    every library that holds each letter back until every letter it answers has arrived there.<br>
     <span class="paper">Lloyd et al. 2011</span></p>
 
     <p><b class="planned">The Reading Room</b> <span class="unwritten">Not yet written</span>
@@ -234,11 +237,11 @@
   <div class="prose">
     <p><b class="planned">The Hall of Two Doors</b> <span class="unwritten">Not yet written</span>
     — A program needs coordination exactly when it is not monotonic, that is, when a
-    conclusion may have to be withdrawn as more information arrives. A question like "does the
-    island hold at least one copy of this work?" can be answered as soon as it becomes true; "is
-    this every copy there is?" cannot be answered without everyone. This is explored as a hall with one door
+    conclusion may have to be withdrawn as more information arrives. A question like "has at least
+    one copy of this work been made?" can be answered as soon as it becomes true; "is this every
+    copy that has been made?" cannot be answered without everyone. This is explored as a hall with one door
     facing the islands that assemble, Paxos and Skene, and one facing Homonoia, where each
-    decree leaves by the door its own shape decides.<br>
+    question leaves by the door its own shape decides.<br>
     <span class="paper">Hellerstein 2010 · Ameloot, Neven &amp; Van den Bussche 2011</span></p>
   </div>
 </section>

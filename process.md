@@ -5,7 +5,7 @@ can pick up the next paper and produce a book that sits beside the three already
 without looking like a different series.
 
 **Read first:** `buildings.md` (which paper lives in which building), `settings.md` (the
-analysis and the constraints that cannot be broken), `layouts.html` (the world).
+analysis, the constraints that cannot be broken, and the islands themselves).
 **Read as models:** the finished books in `books/`. They are the specification. Where
 this document and a finished book disagree, the book is right.
 
@@ -188,7 +188,7 @@ than by content. Both are documented in `buildings.md`.
   &ldquo;N ≥ m + 2&rdquo; is a remark about when the problem is vacuous. That error was in this
   project's own documents until the paper was opened.
 - **Confirm any number you put in prose.** If a book says two places are thirty kilometres
-  apart, measure it against `layouts.html`.
+  apart, measure it against `settings.md`.
 
 ---
 
@@ -215,19 +215,17 @@ depend on vocabulary the earlier ones establish.
 | Building | Paper(s) | Note |
 |---|---|---|
 | The closed road | Brewer 2000 · Gilbert &amp; Lynch 2002 | Bandits reported on both stretches beside the Vine: a condition, never a raid. Bandits roam the island; they need not be the crown's band, and which band is never said. State consistency informally; its precise form comes later, on Paxos. Stale trading is a deliberate emergency measure on Arche. |
-| The beacon line | DLS 1988 | Own ground, own people, ~130 km from the hill. Must not contradict *Mercenaries and Bandits* — see the synchrony split in `settings.md`. |
-| The camps *(second book)* | Chandra &amp; Toueg 1996 | Shares the building with FLP. **Must not decide anything** — see the note in `settings.md`. |
+| The camps *(second book)* | Chandra &amp; Toueg 1996 | *The Empty Row.* Shares the camps with FLP. The camps may decide; nothing follows from it. The tally board's guarantees are granted, not earned — see `settings.md`. |
 | The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, enhanced with visuals: it is the paper the whole project borrows its allegory from. Listed in the index as *The Part-Time Parliament*, unlinked until our rendition exists. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
 | The Odeon, Skene | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 | A genuine alternative to Paxos, on its own island. |
 | The Odeon, Skene *(second book)* | Ongaro &amp; Ousterhout 2014 | *The Rehearsal.* Same room as VR; the difference is stage directions. |
-| The camps *(third book)* | Castro &amp; Liskov 1999 | *The Standing Orders.* Needs the Byzantine book's vocabulary. One mercenary may have been bought; the recruiters off the hill are the clients. Book IV untouched. Nothing follows from any order. |
+| The camps *(third book)* | Castro &amp; Liskov 1999 | *The Standing Orders.* Needs the Byzantine book's vocabulary. One mercenary may have been bought; the trading houses are the recruiters and the clients. Runners to the nearest camp, and to the next along the foot only if it falls silent; replies under each man's signet, and a camp carries nothing between houses. Book IV untouched. Nothing follows from any order. |
 | The Chamber | Herlihy &amp; Wing 1990 · Chandra, Griesemer &amp; Redstone 2007 | *The Law and the Ledgers*, two parts. Part One builds on Lamport §3.3.4 (the black goat); Part Two tells only repairs Lamport lacks — not his §3.3.1–3.3.3. The lease joins the parts. Must not contradict *The Part-Time Parliament*. |
-| The abandoned counting house | Gray 1996 | |
 | The stoa and festival ground | Demers 1987 · Saito &amp; Shapiro 2005 | |
 | The ring of libraries | Dynamo 2007 · PBS 2012 | |
-| The wax scriptorium | Bayou 1995 | |
+| The wax scriptorium | Gray 1996 · Bayou 1995 | Gray's warning and two-tier remedy, and Bayou building it. Nobody waits for the head library. |
 | The far terraces | Shapiro et al. 2011 (both) | |
-| The sorting house | COPS 2011 | |
+| The sorting shelves | COPS 2011 | One per library, never a central sorting house. |
 | The reading room | HATS 2014 | |
 | The hall of two doors | Hellerstein 2010 · Ameloot 2011 · Hellerstein &amp; Alvaro 2020 | Draft from the 2020 paper; it is the clearest. |
 
@@ -236,13 +234,15 @@ depend on vocabulary the earlier ones establish.
 **The bandits.** On Arche, an unknown number of those writing in the harbour's books do not
 follow the harbour's practice. Four rules govern this and all four are load-bearing: no
 infiltration ever *happens* (an event would be a plot); no one is ever identified; no motive is
-given; and they cannot reach the crown, because the siege severs the road. `layouts.html` has
-the full statement.
+given; and no one can tell whether they belong to the band on the crown (see below).
 
-**Bandits about the island.** The crown's four are not confined: they stay because the loot
-cannot be left. Other bandits roam Arche, and they need not belong to the band holding the
-crown. They appear only as a danger reported — a road no runner will take — never as an event,
-and which band they belong to is never said. `The Tally and the Column` Chapter VIII shows how to use it — as the
+**What the rest of Arche knows about the bandits.** Only the bandits know how many of them
+there are, which band each belongs to, and what they plan. Everyone else knows two things:
+there are bandits about the island, and their loot is on the hilltop. So the constraints that
+govern the bandits inside *Mercenaries and Bandits* — four men on the crown, the jars, who may
+lie — bind only that book. Another book need not respect them; it must only not contradict
+those two facts. The crown's four are not confined (they stay because the loot cannot be
+left), and bandits met elsewhere need not be of their band; no one outside can tell. `The Tally and the Column` Chapter VIII shows how to use it — as the
 honest-participant assumption made visible, never as a faction.
 
 **Mount Phyle is built.** Its geometry, cast, architecture and panel inventory exist in
