@@ -3,7 +3,7 @@
     blender -b -P art/paxos/build/build.py -- art/paxos/build/sample art/paxos-built
 
 Reads <sample>-layout.npz / -layout.json (from analyse.py). Writes <out>.glb and <out>.blend.
-Units are metres. Compass: North = -X, East = +Y (the harbour side), West = -Y (the cliffs).
+Units are metres; terrain heights are exaggerated by VERT, buildings and trees are not. Compass: North = -X, East = +Y (the harbour side), West = -Y (the cliffs).
 Repeated objects are linked duplicates parented to one empty per kind, exported with
 EXT_mesh_gpu_instancing.
 """
@@ -18,7 +18,21 @@ random.seed(7)
 rng = np.random.default_rng(7)
 
 MPC = J["m_per_cell"]
+# Vertical exaggeration of the terrain (Arche's model is ~3.7x). With TAPER > 0 it ramps from
+# 1x at the coast to VERT at TAPER metres inland, so the cliffs keep their real height.
+VERT = float(os.environ.get("VERT", 1.0))
+TAPER = float(os.environ.get("TAPER", 0))
 ground = L["ground"].astype(np.float64)
+if TAPER > 0:
+    _land = L["land"]; _d = np.where(_land, np.inf, 0.0); _front = ~_land
+    for _k in range(1, int(TAPER / J["m_per_cell"]) + 1):
+        _p = np.pad(_front, 1)
+        _g = (_p[:-2, 1:-1] | _p[2:, 1:-1] | _p[1:-1, :-2] | _p[1:-1, 2:]) & ~_front
+        _d[_g] = _k * J["m_per_cell"]; _front |= _g
+    _f = 1 + (VERT - 1) * np.clip(np.nan_to_num(_d, posinf=TAPER) / TAPER, 0, 1)
+    ground = ground * _f
+else:
+    ground = ground * VERT
 land = L["land"]; woods = L["woods"]; fields = L["fields"]; town = L["town"]
 # the Meshy model's oversized plaza round its rotunda becomes olive groves
 _cx, _cy = J["chamber_px"]
@@ -200,7 +214,7 @@ cx, cy, cz = chamber
 COL_R, COL_H, ENT_H = 21.0, 7.0, 1.2
 WALL_R, WALL_T, WALL_H, DOOR_W, DOOR_H = 17.0, 1.2, 10.0, 3.0, 5.0
 bm = bmesh.new()
-box(bm, cx, cy, cz - 6, 2 * TER, 2 * TER, 6.3, mat_index=0)                   # terrace slab
+box(bm, cx, cy, cz - 30, 2 * TER, 2 * TER, 30.3, mat_index=0)                 # terrace slab
 for k, rr in enumerate((CH_R, CH_R - 1, CH_R - 2)):                          # crepidoma
     cyl(bm, cx, cy, cz + 0.3 + 0.5 * k, rr, 0.5, seg=64, mat_index=1)
 base = cz + 1.8
@@ -282,7 +296,7 @@ def house_mesh(name, sx_, sy_, court_x, court_y, wall_h):
     tx, ty = hx - cxh, hy - cyh
     for bx_, by_, ox, oy in ((sx_, ty, 0, hy - ty / 2), (sx_, ty, 0, -hy + ty / 2),
                              (tx, court_y, hx - tx / 2, 0), (tx, court_y, -hx + tx / 2, 0)):
-        box(bm, ox, oy, -3.0, bx_, by_, wall_h + 3.0, mat_index=0)
+        box(bm, ox, oy, -12.0, bx_, by_, wall_h + 12.0, mat_index=0)
         box(bm, ox, oy, wall_h, bx_ * 1.04, by_ * 1.04, 0.9, mat_index=1)    # tiled roof
     return finish(name, bm, [M["limestone"], M["terracotta"]]).data
 
@@ -290,7 +304,7 @@ def hall_mesh(name, length, depth, wall_h, colonnade=False):
     """A long building: a warehouse, or a stoa with a colonnade along its front (+Y side)."""
     bm = bmesh.new()
     back = depth * (0.55 if colonnade else 1.0)
-    box(bm, 0, -depth / 2 + back / 2, -3.0, length, back, wall_h + 3.0, mat_index=0)
+    box(bm, 0, -depth / 2 + back / 2, -12.0, length, back, wall_h + 12.0, mat_index=0)
     if colonnade:
         n = int(length // 4)
         for k in range(n + 1):
@@ -328,7 +342,7 @@ for me_ in house_protos + [farm_proto, olive, oak, cypress, warehouse, stoa, sta
 def slope_ok(x, y, lim=0.28):
     z0 = height(x, y); zx = height(x + 4, y); zy = height(x, y + 4)
     if None in (z0, zx, zy): return False
-    return abs(zx - z0) / 4 < lim and abs(zy - z0) / 4 < lim
+    return abs(zx - z0) / 4 < lim * VERT and abs(zy - z0) / 4 < lim * VERT
 
 def near_road(x, y, dist):
     return np.min(np.hypot(road[:, 0] - x, road[:, 1] - y)) < dist
