@@ -20,7 +20,7 @@
 <hr class="meander">
 
 <section>
-  <div class="issue"><span class="no">The Ring Road</span><h2>Causality, State &amp; Partial Synchrony</h2></div>
+  <div class="issue"><span class="no">Arche · The Ring Road</span><h2>Causality, State &amp; Partial Synchrony</h2></div>
   <div class="prose">
     <p><a href="books/the-tally-and-the-column/index.html"><b>Book I · The Tally and the Column</b></a>
     — In a distributed system, time as we know it ceases to make sense, because clocks are
@@ -44,13 +44,30 @@
     three trading houses deciding whether their merchantmen should sail as one convoy while
     winter gales hold up their runners.<br>
     <span class="paper">Dwork, Lynch &amp; Stockmeyer 1988</span></p>
+
+    <p><b class="planned">The Auditor's Court</b> <span class="unwritten">Not yet written</span>
+    — When a shared object is spread over many machines, what should it mean for it to be
+    correct? Linearizability requires every operation to appear to take effect at a single
+    instant between its call and its return, so that anything finished before another began is
+    seen in that order. It also composes: if every part keeps the rule, so does the whole. This
+    is explored as a court outside the trading houses, which holds that once one trade has
+    cleared before another is placed, no trader may ever be shown the second without the first.<br>
+    <span class="paper">Herlihy &amp; Wing 1990</span></p>
+
+    <p><b class="planned">The Closed Road</b> <span class="unwritten">Not yet written</span>
+    — When a network splits, a replicated service must choose between answering every request
+    and answering every request correctly; it cannot do both. The conjecture, and the proof
+    that made it a theorem, are explored as a rockfall that closes the ring road between two
+    houses. Each house must then either keep trading from a book it knows may be stale, or
+    refuse to trade until the road reopens.<br>
+    <span class="paper">Brewer 2000 · Gilbert &amp; Lynch 2002</span></p>
   </div>
 </section>
 
 <hr class="meander">
 
 <section>
-  <div class="issue"><span class="no">Mount Phyle</span><h2>Consensus &amp; Faults</h2></div>
+  <div class="issue"><span class="no">Arche · Mount Phyle</span><h2>Consensus &amp; Faults</h2></div>
   <div class="prose">
     <p><a href="books/mercenaries-and-bandits/index.html"><b>Book IV · Mercenaries and Bandits</b></a>
     — Two limits on agreement. When messages are fully asynchronous, no protocol can guarantee
@@ -62,17 +79,144 @@
     peer.<br>
     <span class="paper">Fischer, Lynch &amp; Paterson 1985 · Lamport, Shostak &amp; Pease 1982 ·
     Pease, Shostak &amp; Lamport 1980</span></p>
+
+    <p><b class="planned">The Empty Row</b> <span class="unwritten">Not yet written</span>
+    — Consensus is impossible in an asynchronous system with a single crash, yet a failure
+    detector that is often wrong can be enough to escape that result. It may suspect processes
+    that are alive, provided it eventually suspects every crashed one and eventually stops
+    suspecting some live one, and provided a majority never crash. This is explored in the
+    same four mercenary camps, each keeping a board of which camps' ravens have stopped
+    arriving, never sure whether an empty row means a dead commander or a bird still in the
+    folds.<br>
+    <span class="paper">Chandra &amp; Toueg 1996</span></p>
+
+    <p><b class="planned">The Standing Orders</b> <span class="unwritten">Not yet written</span>
+    — Replication can keep working even when some machines lie, the leader included, and even
+    when messages take arbitrarily long. With 3f + 1 replicas for f liars, every step waits for
+    a quorum of 2f + 1, so any two quorums share an honest member, and a leader that stalls or
+    contradicts itself is replaced. This is explored with the same four bandits as the siege
+    wears on for days. Their jars were started together only once, before the posts were first
+    manned, and since no man may leave his post that meeting can never be repeated: the jars
+    drift, and silence stops meaning anything. Still exactly 3f + 1 for a single liar, they keep
+    one numbered sequence of orders by raven. The chief numbers each order, the guards echo it
+    twice before it stands, and a chief whose numbering stalls or contradicts itself loses the
+    job to the next man.<br>
+    <span class="paper">Castro &amp; Liskov 1999</span></p>
   </div>
 </section>
 
 <hr class="meander">
 
 <section>
+  <div class="issue"><span class="no">Paxos</span><h2>Consensus &amp; Replicated State Machines</h2></div>
   <div class="prose">
-    <p style="font-size:.92rem;color:#6d5c42">Arche, the first island, covers the foundations:
-    time, state, synchrony and agreement. Still to come: Paxos, where a domed rotunda and an odeon
-    explore replicated state machines and leader election; and Antipaxos, where gossip and CRDTs
-    explore eventual consistency without a central assembly.</p>
+    <p><b class="planned">The Part-Time Parliament</b> <span class="unwritten">Not yet written</span>
+    — A group of machines can agree on a sequence of commands, with no fixed leader, as long as
+    any two majorities overlap. Whatever one majority has chosen, the next is bound to learn.
+    The algorithm is always safe, but it is not guaranteed to finish: two proposers competing
+    can block each other forever. This book is not retold. It is Lamport's paper in its original
+    form, enhanced with visuals: the legislators of Paxos, their ballots and their ledgers, the
+    allegory that every other book here borrows. Its plainer restatement, <i>Paxos Made
+    Simple</i>, stands beside it.<br>
+    <span class="paper">Lamport 1998 · Lamport 2001</span></p>
+
+    <p><b class="planned">The Odeon</b> <span class="unwritten">Not yet written</span>
+    — Most practical replication puts one leader in charge, and the hard part is replacing it.
+    Viewstamped replication numbers each leader's reign as a view, and changes view in a way
+    that loses nothing the old leader committed. This is explored as a theatre built so that a
+    single voice from the stage reaches every seat: when the speaker falls silent, the
+    performance stops until someone else takes the stage under a higher number.<br>
+    <span class="paper">Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012</span></p>
+
+    <p><b class="planned">The Rehearsal Hall</b> <span class="unwritten">Not yet written</span>
+    — A consensus algorithm that engineers cannot understand will be built wrong. Raft is
+    leader-driven consensus designed to be taught, with randomised election timeouts and a rule
+    that only a candidate with a complete log may lead, and it was tested on students who had
+    to learn it. This is explored as a plain hall beside the Odeon where the same performance
+    is rehearsed, and its refinements are stage directions.<br>
+    <span class="paper">Ongaro &amp; Ousterhout 2014</span></p>
+
+    <p><b class="planned">The Quarry</b> <span class="unwritten">Not yet written</span>
+    — An algorithm that is correct on paper meets disks that corrupt data, logs that grow
+    without end, and leaders that must answer reads without consulting anyone. Engineering
+    Paxos into a production system is explored as the quarry where plans meet stone:
+    parchment runs out and the record must be summarised, tablets crack unread and must be
+    recut, and the mason holds office for a fixed term.<br>
+    <span class="paper">Chandra, Griesemer &amp; Redstone 2007</span></p>
+
+    <p><b class="planned">The Empty Counting House</b> <span class="unwritten">Not yet written</span>
+    — Letting every replica accept updates and reconcile them later looks cheap, but deadlocks
+    and conflicts grow with the cube of the number of replicas. This argument for coordinated
+    replication is explored as a counting house abandoned after splitting its decrees across
+    independent regional councils, and kept empty as the assembly's reason to exist.<br>
+    <span class="paper">Gray, Helland, O'Neil &amp; Shasha 1996</span></p>
+  </div>
+</section>
+
+<hr class="meander">
+
+<section>
+  <div class="issue"><span class="no">Antipaxos</span><h2>Replication Without Agreement</h2></div>
+  <div class="prose">
+    <p><b class="planned">The Agora and the Fair</b> <span class="unwritten">Not yet written</span>
+    — Updates can spread through a large system the way rumours spread through a crowd: each
+    node passes news to a few random others, and loses interest once most of those it tells
+    have already heard. Periodic full comparisons catch what the rumours miss. This, together
+    with a survey of every optimistic replication practice in use, is explored as an open
+    square where sailors trade news, and a yearly fair where clerks compare entire ledgers line
+    by line.<br>
+    <span class="paper">Demers et al. 1987 · Saito &amp; Shapiro 2005</span></p>
+
+    <p><b class="planned">The Ring of Warehouses</b> <span class="unwritten">Not yet written</span>
+    — A store that must always accept writes can spread keys around a ring by hashing, let a
+    neighbour stand in for a node that is down, and reconcile conflicting versions afterwards.
+    How often such a store returns stale data can then be measured rather than guessed. This is
+    explored as a ring of warehouses around one basin, where a flooded harbour's stock is kept
+    next door with a note to return it.<br>
+    <span class="paper">DeCandia et al. 2007 · Bailis et al. 2012</span></p>
+
+    <p><b class="planned">The Wax Scriptorium</b> <span class="unwritten">Not yet written</span>
+    — A replica that is often disconnected can still accept updates, if each update carries its
+    own check for conflicts and its own way of resolving them, and stays tentative until a
+    primary fixes its place in the order. This is explored as a scriptorium on the beach where
+    decrees are cut in wax, honoured at once but provisionally, and cut into stone only when
+    the flagship docks.<br>
+    <span class="paper">Terry et al. 1995</span></p>
+
+    <p><b class="planned">The Far Terraces</b> <span class="unwritten">Not yet written</span>
+    — Some data types can be merged in any order, any number of times, and every replica still
+    ends in the same state, so no coordination is ever needed. This is explored as terraces of
+    tally stones where each keeper adds pebbles only to their own column, and merging takes the
+    larger count in each, sited as far from any assembly as the island goes.<br>
+    <span class="paper">Shapiro, Preguiça, Baquero &amp; Zawirski 2011 · the same authors' comprehensive study, 2011</span></p>
+
+    <p><b class="planned">The Sorting House</b> <span class="unwritten">Not yet written</span>
+    — A system spread across data centres can promise that no one sees a reply before the
+    message it answers, without coordinating on every write, by having each write name the
+    writes it depends on. This is explored as a sorting house at the mail harbour that holds
+    each letter back until everything it depends on has landed.<br>
+    <span class="paper">Lloyd et al. 2011</span></p>
+
+    <p><b class="planned">The Factor's Office</b> <span class="unwritten">Not yet written</span>
+    — Some transactional guarantees can be kept while the network is split, and others
+    provably cannot. Which is which is explored as a factor's office next to the sorting house,
+    asking what a desk can still promise its customers while the couriers are on strike.<br>
+    <span class="paper">Bailis et al. 2014</span></p>
+  </div>
+</section>
+
+<hr class="meander">
+
+<section>
+  <div class="issue"><span class="no">The Council Ground</span><h2>When Coordination Is Needed</h2></div>
+  <div class="prose">
+    <p><b class="planned">The Hall of Two Doors</b> <span class="unwritten">Not yet written</span>
+    — A program needs coordination exactly when it is not monotonic, that is, when a
+    conclusion may have to be withdrawn as more information arrives. A question like "have we
+    at least fifty bushels?" can be answered as soon as it becomes true; "is this all the grain
+    there is?" cannot be answered without everyone. This is explored as a hall with one door to
+    Paxos and one to Antipaxos, where each decree leaves by the door its own shape decides.<br>
+    <span class="paper">Hellerstein 2010 · Ameloot, Neven &amp; Van den Bussche 2011</span></p>
   </div>
 </section>
 

@@ -172,6 +172,7 @@ would reintroduce the plot the iteration retired.
 | `fischer-lynch-paterson-1985_flp-impossibility` | In an asynchronous gorge with one silent crash, commanders stay trapped in bivalence: an overrun camp cannot be told from a delayed raven. (*Mercenaries and Bandits*, Part One) |
 | `pease-shostak-lamport-1980`, `lamport-shostak-pease-1982` | In synchronous rounds with traitors sending conflicting scrolls, loyal commanders agree iff N ≥ 3m + 1 — or, **with unforgeable wax signets, for any number of generals at all**. (*Mercenaries and Bandits*, Part Two) |
 | `chandra-toueg-1996` | Each camp keeps a tally board and marks the rows that stay empty. The suspicion is often wrong — an empty perch is a dead commander or a raven still in the folds — but if it satisfies weak completeness and eventual weak accuracy (◇W), **and a majority of camps are correct**, that is enough to break the FLP deadlock. |
+| `castro-liskov-1999` | *Moved from Paxos.* The same four bandits on later nights of the siege. Their jars were started together once, before the posts were first manned, and can never be again, since no man may leave his post: the jars drift and silence is no longer a fact. By raven they keep one numbered sequence of orders; the chief numbers, the guards echo twice with 2f + 1 before an order stands, and a stalling or equivocating chief loses the job. Four is exactly 3f + 1 for f = 1. Byzantine like the first night, without its synchrony: the one combination the hill lacked. Nothing follows from any order. |
 
 **The ground:** a 400 m massif about 5 km across at its foot, broad lower slopes and a steep
 cragged crown, eight spurs and gullies, and four camps at the quarter points with no pair able
@@ -222,13 +223,12 @@ chronicle across shifting quorums, absent members and corrupt leaders.
 |---|---|
 | `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Rotunda.** Circular and domed: no head of the room, so any legislator may call a ballot, and intersecting quorums preserve past decrees. The dome returns sound, so two proposers at once are one unintelligible wash |
 | `oki-liskov-1988`, `liskov-cowling-2012`, `ongaro-ousterhout-2014_raft-consensus` | **The Odeon**, a short walk from the Rotunda. Roofed, raked, aimed at one stage so a single voice reaches every seat: the speaker is distinguished by the architecture. When he falls silent the performance stops until another takes the stage under a higher number. Raft's refinements are stage directions — a random wait before claiming the stage, and no yielding it to a performer whose script is less complete |
-| `castro-liskov-1999` | The Archon is corrupt and assigns one law number to two conflicting decrees. Three phases — pre-prepare, prepare, commit — needing 2f + 1 matches in an assembly of 3f + 1 |
 | `chandra-griesemer-redstone-2007` | Physical reality: scribes run out of parchment, tablets crumble unread, and leases must be granted without message delay halting government |
 | `gray-1996_dangers-of-replication` | The warning to the parliament: split decrees across independent regional councils with lazy synchronisation, and deadlock scales as O(N³) |
 
 **The ground must provide:** the **Rotunda** on a route rather than at a dead end
 (legislators wander in and out); the **Odeon** a short walk from it, about two kilometres;
-a stepped quarry on a shippable coast; and a steep acropolis with a single approach.
+and a stepped quarry on a shippable coast.
 
 ### Two buildings, not one chamber
 

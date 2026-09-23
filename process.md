@@ -218,10 +218,10 @@ depend on vocabulary the earlier ones establish.
 | The outport offices | Brewer 2000 · Gilbert &amp; Lynch 2002 | Needs the linearizability book first; CAP is stated in terms of it. |
 | The beacon line | DLS 1988 | Own ground, own people, ~130 km from the hill. Must not contradict *Mercenaries and Bandits* — see the synchrony split in `settings.md`. |
 | The camps *(second book)* | Chandra &amp; Toueg 1996 | Shares the building with FLP. **Must not decide anything** — see the note in `settings.md`. |
-| The Rotunda | Lamport 1998, 2001 | Reuse the existing Paxos HTML in `content-i1/books/book-07/` rather than redrafting; the work is collapsing its proofs and stripping its art. |
+| The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, enhanced with visuals: it is the paper the whole project borrows its allegory from. Listed in the index as *The Part-Time Parliament*, unlinked until our rendition exists. |
 | The Odeon | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 | |
 | The rehearsal hall | Ongaro &amp; Ousterhout 2014 | Least certain building in the set; see `buildings.md`. |
-| The three courts | Castro &amp; Liskov 1999 | Needs the Byzantine book's vocabulary. |
+| The crown, later in the siege | Castro &amp; Liskov 1999 | *The Standing Orders.* Needs the Byzantine book's vocabulary. The same four bandits, no new cast; the jars can never be restarted together, which is what makes it PBFT. Nothing follows from any order. |
 | The quarry and stone archive | Chandra, Griesemer &amp; Redstone 2007 | |
 | The abandoned counting house | Gray 1996 | |
 | The agora and fair ground | Demers 1987 · Saito &amp; Shapiro 2005 | |
@@ -243,5 +243,7 @@ honest-participant assumption made visible, never as a faction.
 
 **Mount Phyle is built.** Its geometry, cast, architecture and panel inventory exist in
 `content-i2` and are fixed. Nothing may contradict them: four camps that cannot see each other,
-ravens only, no fire or signal below the crown, uncounted nights at the base and one single
-night on the crown.
+ravens only, no fire or signal below the crown, uncounted nights at the base, and one single
+synchronous night on the crown: the jars are started together once, before the posts are first
+manned, and since no man may leave his post they are never started together again. The siege
+itself may last any number of days; later nights on the crown are not synchronous.
