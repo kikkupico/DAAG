@@ -1,7 +1,7 @@
 # How a paper becomes a book
 
 A working procedure, written so that someone who has not been part of the conversation so far
-can pick up the next paper and produce a book that sits beside the three already written
+can pick up the next paper and produce a book that sits beside the four already written
 without looking like a different series.
 
 **Read first:** `buildings.md` (which paper lives in which building), `settings.md` (the
@@ -44,8 +44,8 @@ These come from `content-i2/brief.md` and are correctness constraints, not prefe
 5. **Named figures are Hellenised authors** of that book's own papers, following Lamport's
    practice with the Paxon legislators. Where a setting needs a seat no author fills, use an
    ordinary Greek name.
-6. **Read the paper, not your memory of it.** Open the PDF. Quote the theorem. The project has
-   already been bitten by this twice — see *Verification* below.
+6. **Read the paper, not your memory of it.** Open the PDF. Quote the theorem. See
+   *Verification* below.
 7. **Close with the mapping.** Every book ends with an *In the book / In the paper* table and
    a plain-prose statement of the ideas, so a reader can check the allegory rather than trust
    it.
@@ -177,16 +177,13 @@ Always give the SVG a real `aria-label` describing what it shows. The caption sh
 
 ## Verification, which is not optional
 
-The project has twice recorded things that were false because they were checked by name rather
-than by content. Both are documented in `buildings.md`.
+Check things by content, never by name.
 
-- **Confirm the file is the paper.** `pdftotext -q -f 1 -l 2 file.pdf - | head`. Three files in
-  `sources/` were the wrong paper, one of them a quantum physics article filed under
-  Hellerstein.
+- **Confirm the file is the paper.** `pdftotext -q -f 1 -l 2 file.pdf - | head`. A file can
+  carry the right name and hold the wrong paper; `buildings.md` lists the known traps.
 - **Confirm every constant and bound against the PDF.** Grep for the theorem and read it.
   Signed-message Byzantine agreement works *for any number of generals*; the widely repeated
-  &ldquo;N ≥ m + 2&rdquo; is a remark about when the problem is vacuous. That error was in this
-  project's own documents until the paper was opened.
+  &ldquo;N ≥ m + 2&rdquo; is a remark about when the problem is vacuous.
 - **Confirm any number you put in prose.** If a book says two places are thirty kilometres
   apart, measure it against `settings.md`.
 
@@ -209,8 +206,8 @@ Before calling a book done:
 
 ## The remaining papers
 
-From `buildings.md`, in a suggested order — the first three are self-contained, the later ones
-depend on vocabulary the earlier ones establish.
+From `buildings.md`, in a suggested order: later ones depend on vocabulary the earlier ones
+establish.
 
 | Building | Paper(s) | Note |
 |---|---|---|
@@ -219,7 +216,7 @@ depend on vocabulary the earlier ones establish.
 | The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, enhanced with visuals: it is the paper the whole project borrows its allegory from. Listed in the index as *The Part-Time Parliament*, unlinked until our rendition exists. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
 | The Odeon, Skene | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 | A genuine alternative to Paxos, on its own island. |
 | The Odeon, Skene *(second book)* | Ongaro &amp; Ousterhout 2014 | *The Rehearsal.* Same room as VR; the difference is stage directions. |
-| The camps *(third book)* | Castro &amp; Liskov 1999 | *The Standing Orders.* Needs the Byzantine book's vocabulary. One mercenary may have been bought; the trading houses are the recruiters and the clients. Runners to the nearest camp, and to the next along the foot only if it falls silent; replies under each man's signet, and a camp carries nothing between houses. Book IV untouched. Nothing follows from any order. |
+| The camps *(third book)* | Castro &amp; Liskov 1999 | *The Standing Orders.* Needs the Byzantine book's vocabulary. One mercenary may have been bought; the trading houses are the recruiters and the clients. Runners to the nearest camp, and to the next along the foot only if it falls silent; replies under each man's signet, and a camp carries nothing between houses. Must not contradict Book IV. Nothing follows from any order. |
 | The Chamber | Herlihy &amp; Wing 1990 · Chandra, Griesemer &amp; Redstone 2007 | *The Law and the Ledgers*, two parts. Part One builds on Lamport §3.3.4 (the black goat); Part Two tells only repairs Lamport lacks — not his §3.3.1–3.3.3. The lease joins the parts. Must not contradict *The Part-Time Parliament*. |
 | The stoa and festival ground | Demers 1987 · Saito &amp; Shapiro 2005 | |
 | The ring of libraries | Dynamo 2007 · PBS 2012 | |
@@ -229,12 +226,14 @@ depend on vocabulary the earlier ones establish.
 | The reading room | HATS 2014 | |
 | The hall of two doors | Hellerstein 2010 · Ameloot 2011 · Hellerstein &amp; Alvaro 2020 | Draft from the 2020 paper; it is the clearest. |
 
-### Two standing constraints on future books
+### Standing constraints on future books
 
-**The bandits.** On Arche, an unknown number of those writing in the harbour's books do not
-follow the harbour's practice. Four rules govern this and all four are load-bearing: no
+**The bandits.** On Arche, an unknown number of those writing in the houses' books do not
+follow the houses' practice. Four rules govern this and all four are load-bearing: no
 infiltration ever *happens* (an event would be a plot); no one is ever identified; no motive is
-given; and no one can tell whether they belong to the band on the crown (see below).
+given; and no one can tell whether they belong to the band on the crown. *The Tally and the
+Column* Chapter VIII shows how to use it — as the honest-participant assumption made visible,
+never as a faction.
 
 **What the rest of Arche knows about the bandits.** Only the bandits know how many of them
 there are, which band each belongs to, and what they plan. Everyone else knows two things:
@@ -242,8 +241,7 @@ there are bandits about the island, and their loot is on the hilltop. So the con
 govern the bandits inside *Mercenaries and Bandits* — four men on the crown, the jars, who may
 lie — bind only that book. Another book need not respect them; it must only not contradict
 those two facts. The crown's four are not confined (they stay because the loot cannot be
-left), and bandits met elsewhere need not be of their band; no one outside can tell. `The Tally and the Column` Chapter VIII shows how to use it — as the
-honest-participant assumption made visible, never as a faction.
+left), and bandits met elsewhere need not be of their band; no one outside can tell.
 
 **Mount Phyle is built.** Its geometry, cast, architecture and panel inventory exist in
 `content-i2` and are fixed. Nothing may contradict them: four camps that cannot see each other,

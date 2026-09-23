@@ -3,23 +3,21 @@
 A building for each paper, and a shared building where sharing is right. The islands are
 described in `settings.md`; this file is the next resolution down.
 
-**Map pins are districts, not buildings.** A pin called *the ring of libraries* is twelve buildings; a
-pin called *Odeon* is one. Keeping the maps at district resolution is what stops them turning
-into floor plans.
+**Map pins are districts, not buildings.** A pin called *the ring of libraries* is twelve
+buildings; a pin called *Odeon* is one. Keeping the maps at district resolution is what stops
+them turning into floor plans.
 
 ## The rule for sharing
 
 Two papers share a building when they are **one idea at two resolutions** — an independent
 rediscovery, a conjecture and its proof, a system and its revision, a short and a long
-version. They get separate buildings when they make **different claims about the same
-subject**, and then the buildings stand next to each other so the difference is a walk of a
-few hundred metres rather than a footnote.
+version — or when a later paper is best told as a change of procedure in an existing room.
+They get separate buildings when they make **different claims about the same subject**, and
+then the buildings stand next to each other so the difference is a walk of a few hundred
+metres rather than a footnote.
 
-Eleven shares below cover **twenty-six papers into eleven buildings**. Everything else gets its
-own, which comes to **16 buildings for 31 papers**. (The sources were found to be broken while writing this and have since been fixed; see the end.)
-
-The corpus is **31 papers, not 32**: `demers-1989` turned out to be a byte-identical copy of
-`demers-1987`.
+Eleven shares below cover **twenty-six papers in eleven buildings**. Everything else gets its
+own, which comes to **16 buildings for 31 papers**.
 
 ---
 
@@ -31,16 +29,17 @@ The corpus is **31 papers, not 32**: `demers-1989` turned out to be a byte-ident
 | **The column room** | Fidge 1988 · Mattern 1988 <span title="shared">◆</span> | Next door to the tally house, and the difference between them is the whole point: one column per house instead of one number. Two clerks can now tell whether their orders were placed in ignorance of each other, which the tally house can only fail to rule out. |
 | **The customs seat and the storehouses** | Chandy &amp; Lamport 1985 | Scribes record each house's storehouse; a runner in a red sash goes down every stretch of road as the marker, and each house keeps a slate for each incoming stretch until the sash arrives. The total is a state the island could have been in, though no one ever saw it. |
 | **The slipways and the Needle** | DLS 1988 | Each house's merchantmen at their slipways; if the fleet sails, it gathers at the Needle, a sea-stack off the southern cape. Winter gales make runners' delays unbounded; when the storm breaks they fall within a bound. A rotating coordinator and majority locks decide whether the fleet sails, safe in any gale and live once the calm comes. |
-| **The closed road** | Brewer 2000 · Gilbert &amp; Lynch 2002 <span title="shared">◆</span> <span class="m">(+ their 2012 retrospective)</span> | The ring road, closed on both stretches beside the Vine because bandits are reported there. The danger is a condition, never a raid: no bandit is seen and nothing happens to a runner. Closing both stretches is what cuts the Vine off; one closed stretch would leave the third house to pass slips on. The road reopens when the danger passes. Meanwhile each side refuses to trade or trades from a book it knows may be stale — a deliberate degradation of service on an island where that is never the usual way. Consistency is stated informally here (*every house answers as if there were one book*); its precise form is on Paxos. Bandits are about the island as well as on the crown; the crown's four stay there by choice, guarding their loot, and the road's bandits need not be of their band. Which band they belong to is never said. |
+| **The closed road** | Brewer 2000 · Gilbert &amp; Lynch 2002 <span title="shared">◆</span> <span class="m">(+ their 2012 retrospective)</span> | The ring road, closed on both stretches beside the Vine because bandits are reported there. The danger is a condition, never a raid: no bandit is seen and nothing happens to a runner. Closing both stretches is what cuts the Vine off; one closed stretch would leave the third house to pass slips on. The road reopens when the danger passes. Meanwhile each side refuses to trade or trades from a book it knows may be stale — a deliberate degradation of service on an island where that is never the usual way. Consistency is stated informally here (*every house answers as if there were one book*); its precise form is on Paxos. Which band the road's bandits belong to is never said. |
 
 ## Arche — Mount Phyle
 
-Already built and measured in `content-i2`, with architecture, cast and panel inventory.
+Built and measured in `content-i2`, with architecture, cast and panel inventory, and fixed:
+nothing here may contradict `content-i2/art/architecture.json`.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The camp enclosures and raven lofts** (×4) | FLP 1985 · Chandra &amp; Toueg 1996 · Castro &amp; Liskov 1999 <span title="shared">◆</span> | Palisade, tents, and a wicker loft on stilts with a compartment painted for each other camp. **Three books share the same four camps**, and each changes one assumption, never the building. FLP changes nothing. Chandra &amp; Toueg adds a prop: the tally board, whose empty row is a dead commander or a raven still in the folds and must never resolve which. Castro &amp; Liskov, later in the siege, adds a liar: one of the four may have been bought (each was hired alone and paid alone), and the recruiters are the trading houses. Traders keep no ravens: each house sends a runner to its nearest camp, who waits there for the answer, and only if that camp falls silent risks a runner to the next camp along the foot, since the man in the tent cannot leave his quarter; the fourth camp has no house near it. The other camps' replies reach that camp by raven under each man's own signet, so a lying camp cannot forge them, and the house accepts an answer when two seals agree (f + 1). **A camp carries nothing from one house to another**: each man answers only to the house that hired him, so the camps never become a second channel between the houses. Four camps is exactly 3f + 1 for one liar, and the ravens' unbounded flights are PBFT's own model. The camps are where asynchrony is studied. |
-| **The chief's hollow and the three crag posts, inside the circuit wall** | Byzantine Generals 1982 · Reaching Agreement 1980 <span title="shared">◆</span> | The chief in a rock hollow on the peak with the loot; three posts tucked into separate crags below the rim, each out of sight and earshot of the others and of the peak, each with its own klepsydra. The jars are filled together at dusk, before the posts are manned. *(Replaces the earlier council ring of five seats. Men within shouting distance of each other have a broadcast, and a chief with a broadcast cannot tell different men different things.)* The 1980 paper is the earlier and more general result; the 1982 paper is the framing everyone remembers. |
+| **The camp enclosures and raven lofts** (×4) | FLP 1985 · Chandra &amp; Toueg 1996 · Castro &amp; Liskov 1999 <span title="shared">◆</span> | Palisade, tents, and a wicker loft on stilts with a compartment painted for each other camp. **Three books share the same four camps**, and each changes one assumption, never the building. FLP changes nothing. Chandra &amp; Toueg adds a prop: the tally board, whose empty row is a dead commander or a raven still in the folds and must never resolve which. Castro &amp; Liskov, later in the siege, adds a liar: one of the four may have been bought (each was hired alone and paid alone), and the recruiters are the trading houses. Traders keep no ravens: each house sends a runner to its nearest camp, who waits there for the answer, since the man in the tent cannot leave his quarter, and only if that camp falls silent risks a runner to the next camp along the foot; the fourth camp has no house near it. The other camps' replies reach that camp by raven under each man's own signet, so a lying camp cannot forge them, and the house accepts an answer when two seals agree (f + 1). **A camp carries nothing from one house to another**: each man answers only to the house that hired him, so the camps never become a second channel between the houses. Four camps is exactly 3f + 1 for one liar, and the ravens' unbounded flights are PBFT's own model. The camps are where asynchrony is studied. |
+| **The chief's hollow and the three crag posts, inside the circuit wall** | Byzantine Generals 1982 · Reaching Agreement 1980 <span title="shared">◆</span> | The chief in a rock hollow on the peak with the loot; three posts tucked into separate crags below the rim, each out of sight and earshot of the others and of the peak, each with its own klepsydra. The jars are filled together at dusk, before the posts are manned. The posts are out of earshot because men within shouting distance of each other have a broadcast, and a chief with a broadcast cannot tell different men different things. The 1980 paper is the earlier and more general result; the 1982 paper is the framing everyone remembers. |
 
 ## Paxos
 
@@ -56,22 +55,22 @@ prevent.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The Odeon** | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 · Ongaro &amp; Ousterhout 2014 <span title="shared">◆</span> | Roofed, raked, aimed at one stage. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it gets its own island, and the two law books never conflict. Its legislators govern from a theatre: one speaks from the stage, the others keep their law books in the front row (the *proedria*), and the public in the seats behind learn the law. The speaker is distinguished by the architecture, and when they fall silent business stops until another legislator takes the stage under a higher number. Raft shares it because it re-derives that lineage (its own paper names VR as its closest relative); its claim is that the performance can be *taught*, and its refinements are stage directions — a random wait before claiming the stage, and no stage for a legislator whose law book is less complete. |
+| **The Odeon** | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 · Ongaro &amp; Ousterhout 2014 <span title="shared">◆</span> | Roofed, raked, aimed at one stage. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has its own island, and the two law books never conflict. Its legislators govern from a theatre: one speaks from the stage, the others keep their law books in the front row (the *proedria*), and the public in the seats behind learn the law. The speaker is distinguished by the architecture, and when they fall silent business stops until another legislator takes the stage under a higher number. Raft shares it because it re-derives that lineage (its own paper names VR as its closest relative); its claim is that the performance can be *taught*, and its refinements are stage directions — a random wait before claiming the stage, and no stage for a legislator whose law book is less complete. |
 
 ## Homonoia
 
 *Homonoia*, concord: everyone ends of one mind, by merging rather than by assembly. An island
 of scholars and copyists, and the line between it and Arche is **how much disagreement each
-can live with**. On Arche, trading from a stale book is an emergency measure, taken knowingly: a
-jar promised to two buyers is a real loss. The scholars answer from whatever copy they hold as
-a matter of course and live with copies that differ for a while, since an out-of-date line is put right at the next collation, as long as every copy
-agrees in the end. Homonoia holds
-**no assembly**: nothing here waits for a vote, and most of what happens happens in the
-colonnades, which is the island's argument.
+can live with**. On Arche, trading from a stale book is an emergency measure, taken
+knowingly: a jar promised to two buyers is a real loss. The scholars answer from whatever copy
+they hold as a matter of course and live with copies that differ for a while, since an
+out-of-date line is put right at the next collation, as long as every copy agrees in the end.
+Homonoia holds **no assembly**: nothing here waits for a vote, and most of what happens
+happens in the colonnades, which is the island's argument.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The stoa and the festival ground** | Demers 1987 <span title="shared">◆</span> · Saito &amp; Shapiro 2005 | Barely a building: a colonnade where travelling scholars pass on new learnings on scraps of papyrus — that the Earth goes round the Sun, say — and lose interest once most of those they meet already have the scrap, and a field where, once a year, pairs of copyists compare their whole collections, scraps included, to catch whatever the talk missed. (The finding is historical, but its author is not named: named figures are the papers' own authors.) Saito &amp; Shapiro shares it because their paper is the catalogue of what this island already does. |
+| **The stoa and the festival ground** | Demers 1987 · Saito &amp; Shapiro 2005 <span title="shared">◆</span> | Barely a building: a colonnade where travelling scholars pass on new learnings on scraps of papyrus — that the Earth goes round the Sun, say — and lose interest once most of those they meet already have the scrap, and a field where, once a year, pairs of copyists compare their whole collections, scraps included, to catch whatever the talk missed. The finding is historical, but its author is not named: named figures are the papers' own authors. Saito &amp; Shapiro shares it because their paper is the catalogue of what this island already does. |
 | **The ring of libraries** | Dynamo 2007 · PBS 2012 <span title="shared">◆</span> | A repeated type around one lagoon, each holding the scrolls whose catalogue marks fall between it and its neighbour. A closed library's copies are made next door with a note to return them — and PBS shares the ring because it does not build anything: it measures how often this ring hands a reader a stale copy. |
 | **The wax scriptorium** | Gray 1996 · Bayou 1995 <span title="shared">◆</span> | On the beach. Gray shows why letting every library write anywhere and reconcile later breaks down as the island grows — conflicts and deadlocks rise with the cube of the number of libraries — and proposes two tiers; Bayou is that idea built. Scribes draft changes in wax, used at home at once and provisional everywhere else, each carrying its own check and its own fallback, rolled back and redone when an earlier one lands — and copied fair in ink when the head library has fixed their order. Nobody waits for the head library; it confirms afterwards. |
 | **The far terraces** | Shapiro et al. 2011 (both) <span title="shared">◆</span> | The short paper and the comprehensive report are one work, so one place. The island's count of how many copies of each work have been made, kept in voting pebbles: each library adds only to its own column, and merging takes the greater count in each. Merge in any order, merge twice, and every terrace still agrees. Sited as far from any assembly as the island goes. |
@@ -115,28 +114,16 @@ colonnades, which is the island's argument.
 
 ---
 
-## The sources, fixed
+## Sources
 
-Every PDF was opened and its title read, which turned up three misfiled files and one
-duplicate. All are now resolved. **`sources/` holds 34 verified PDFs: the 31 papers this
-file assigns, plus 3 useful companions.** No duplicates (checked by MD5), and every
-filename's lead surname appears on page 1 of its own file.
+**`sources/` holds 34 verified PDFs: the 31 papers this file assigns, plus 3 companions.** No
+duplicates (checked by MD5), and every filename's lead surname appears on page 1 of its own
+file. `demers-1989` is a byte-identical copy of `demers-1987`, so there is one Demers paper.
+`sources/_misfiled/` holds files that carried a paper's name but not its content.
 
-### What was wrong, and what was done
-
-| File | Was | Now |
-|---|---|---|
-| `hellerstein-2010_declarative-imperative-calm.pdf` | *"Heat pumping with optically driven excitons"* — a quantum physics paper | Replaced with the real **Declarative Imperative** (Berkeley). The physics paper is in `sources/_misfiled/`, not deleted. |
-| `ameloot-2011_relational-transducers-calm-proof.pdf` | *"Win-Move is Coordination-Free (Sometimes)"*, Zinn, Green &amp; Ludäscher | Replaced with the real **Ameloot, Neven &amp; Van den Bussche** (arXiv 1012.2858). The Zinn paper is kept, correctly renamed — it is genuine CALM-family work. |
-| `gilbert-lynch-2002_brewers-conjecture.pdf` | *"Perspectives on the CAP Theorem"* (2012) | Replaced with the real **2002 SIGACT News proof**, from Gilbert's own page at NUS. The 2012 retrospective is kept, correctly renamed, as a companion. |
-| `demers-1989_...-parc-csl-89-1.pdf` | Byte-identical to `demers-1987` | Moved to `sources/_misfiled/`. There is one Demers paper. |
-| — | Chandy &amp; Lamport was absent entirely | Fetched from **Lamport's own site**. |
-
-> **How the CAP file went wrong, and a warning.** MIT's TDS group serves the 2012
-> retrospective at a URL named `Brewer2.pdf`. Fetching that URL reproduces the original
-> error exactly — it did so once during this fix before the content check caught it. The
-> 2002 proof has to come from Gilbert's NUS page. **Verify by opening the file, never by the
-> URL or the filename.**
+**Verify by opening the file, never by the URL or the filename.** MIT's TDS group serves
+Gilbert & Lynch's 2012 retrospective at a URL named `Brewer2.pdf`; the 2002 proof has to come
+from Gilbert's own page at NUS.
 
 ### The three companions
 
@@ -150,8 +137,5 @@ Not assigned a building of their own; they sit with the paper they accompany.
 
 ## Open
 
-1. **Nothing is blocked on sources any more.** All 31 papers are present and verified.
-2. **Raft's placement.** Raft sits in the Odeon, with VR, rather than in the
-   Chamber: its own paper names VR as its closest relative. It could be told in either.
-3. **Mount Phyle's buildings are fixed**, not proposals — they exist in
-   `content-i2/art/architecture.json`. Nothing here may contradict them.
+1. **Raft's placement.** Raft sits in the Odeon, with VR, rather than in the Chamber: its
+   own paper names VR as its closest relative. It could be told in either.
