@@ -1,6 +1,6 @@
 """Sample the Meshy Paxos model from directly above.
 
-    blender -b -P art/paxos/build/sample_meshy.py -- art/paxos-3d-meshy.glb art/paxos/build/sample
+    blender -b -P art/paxos/build/sample_meshy.py -- art/archive/paxos-3d.glb art/paxos/build/sample
 
 Writes <out>-height.npy (surface height per cell, NaN off the island), <out>-albedo.png
 (unlit top-down colour, same grid) and <out>-grid.json (the grid's extent in model units).
