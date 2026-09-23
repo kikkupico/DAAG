@@ -197,26 +197,31 @@ NO council ring, NO circle of seats, NO roofs, NO banners, NO fire. Windswept sc
 
 > **Narrative Setting:** The island of sovereign civic consensus. An elongated limestone spine with dramatic vertical western sea-cliffs and gentle eastern slopes descending into olive groves and sheltered harbours. The civic heart contains the Chamber, a circular domed rotunda where the parliament of Paxos sits.
 
-### 3.1 Natural Geography and Clearings Prompt
+### 3.1 Island Plate Prompt (Geography, Habitation & the Chamber)
+Like Arche's, the Paxos plate carries its buildings in place. It is made in three steps.
+
+**Step 1 — plate** (text-to-image, `banana_pro`, aspect 16:9):
 ```text
-Detailed 3D isometric terrain asset of the Greek island Paxos, Hellenistic Mediterranean setting.
-High-angle orthographic axonometric projection, hyperfocal deep focus across all planes, crisp fine geometry, 8k resolution.
-Completely unpopulated natural landscape, pristine empty clearings, no buildings, zero people, no figures.
-
-Surrounding Ocean:
-The island rests naturally inside an expansive, continuous stretch of calm deep Aegean blue sea extending to all edges of the frame. Realistic turquoise coastal shoals, submerged sea-reefs, and white surf wrap naturally around the limestone shorelines. Flat natural water plane at sea level. Strictly NO cutaway box, NO acrylic glass slab, NO diorama pedestal, NO vertical water walls.
-
-Macro-Topography:
-A long, narrow elongated island spine running north to south.
-- Western coast: breathtaking vertical white limestone sea-cliffs rising 80 to 120 metres sheer out of deep indigo water, riddled with dramatic sea-caves, natural arches, and crashing spray.
-- Eastern slopes: descend gently in wide, undulating limestone hills toward the eastern shore, indented with sheltered turquoise coves, gravel beaches, and calm natural anchorages.
-
-Natural Clearings:
-- Eastern coastal plateau: a wide, level limestone terrace overlooking the main bay, crossed by a road rather than at a dead end (clearing for the Chamber).
-
-Vegetation:
-Extensive terraced olive groves with pale silvery-green foliage covering the eastern slopes, stands of tall dark-green Italian cypresses, wild maquis scrub, and exposed white limestone pavement. Warm directional sunlight, photorealistic PBR materials.
+Detailed 3D isometric diorama of the Greek island Paxos, Hellenistic Greece, 3rd century BC.
+True orthographic axonometric view, deep focus, warm directional sunlight, zero people.
+A long narrow limestone island running north to south, set in calm deep Aegean blue sea that reaches every frame edge, turquoise shoals and white surf at the shore; no pedestal, no cutaway.
+West coast: sheer white limestone sea-cliffs with sea-caves.
+East side: gentle slopes of terraced olive groves, goat pasture, cypresses and maquis down to sheltered coves.
+On a level civic terrace above the main eastern bay stands a single circular domed rotunda of white ashlar limestone ringed by a Doric colonnade, with evenly spaced doorways and statues round it; a paved road crosses the terrace past it.
+Below, a small harbour town of red-tiled stone houses, a market square, quays and moored merchant ships.
+Farmsteads along one road running the length of the island.
+No theatre, no citadel, no quarry, no ruins.
 ```
+
+**Step 2 — town pass** (image-to-image on the step 1 image, `banana_pro`, aspect 16:9). Small, tightly packed houses reconstruct in 3D as tall blocks, so the town is redrawn as low courtyard houses before conversion:
+```text
+Keep [image 1] exactly as it is: the same island, cliffs, sea, rotunda, road, olive terraces, trees, farmsteads, quays, ships, camera and lighting.
+Change only the harbour town: replace its houses with low single-storey Hellenistic courtyard houses of rough limestone, each a squat box with a shallow red-tiled roof and a small open courtyard, spaced a little apart with narrow lanes between them, clearly no taller than they are wide.
+No multi-storey buildings anywhere.
+Zero people.
+```
+
+**Step 3 — 3D: Meshy image-to-3D (web UI).** Meshy's image-to-3D is far better than Tripo's for these plates, and its text-to-3D is unusable for islands; Tripo is used only for the 2D steps above. Output: `art/paxos-3d.glb` (1.43M triangles, 8K colour and 4K metal-roughness and normal maps), loaded by `explorer.html`; the source image is `art/paxos-iso.png`.
 
 ### 3.2 Architectural Features Prompts
 
@@ -426,7 +431,7 @@ Surrounded by low stone parapets, gnarled wild olive trees, and breathtaking vie
 
 ## 7. Image-to-3D Reconstruction Guidelines
 
-When processing these 2D isometric renders through neural 3D generators (Trellis / Tripo3D / CSM / Rodin):
+When processing these 2D isometric renders through neural 3D generators — Meshy (web UI) is the one to use; Tripo's conversions are far worse:
 1. **Sea Level Plane Alignment ($Z = 0$):** Because the water extends continuously across the frame, the sea acts as a ground reference plane. Neural depth models (Marigold/ZoeDepth) reconstruct the water as a uniform planar baseline.
 2. **Mesh Generation Parameters:**
    - **Target Polycount:** 300,000 – 800,000 triangles for island terrains.
