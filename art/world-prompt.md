@@ -8,7 +8,7 @@ Rather than a single monolithic world prompt, this specification provides:
    - **One Natural Geography & Clearings Prompt** establishing pristine terrain, coastline, and unbuilt settlement clearings. *(Arche's is a full island plate carrying its buildings and book locations; see 2.1.)*
    - **A Set of Focused Architectural Prompts** capturing individual structures, houses, and civil engineering landmarks.
 
-**The island 3D models are built from the canon in Blender** by `art/arche/build/build.py` and `art/paxos/build/build.py`, not by image-to-3D: every measured constraint (the massif, the sightlines, the stacked cuttings, the Chamber on its road) is a parameter there. The prompts here are the visual brief, and the source for scene images.
+**The island 3D models are Meshy image-to-3D conversions of the island plates** (`art/arche-3d.glb`, `art/paxos-3d.glb`), loaded by `explorer.html` and rendered for previs by `art/previs/render.py`. The prompts here are the visual brief, and the source for scene images.
 
 ---
 
@@ -223,7 +223,7 @@ No multi-storey buildings anywhere.
 Zero people.
 ```
 
-**Step 3 — layout.** A Meshy image-to-3D conversion of this plate (archived at `art/archive/paxos-3d.glb`) supplies the layout — coastline, ground, woods, groves, town and road — that `art/paxos/build/` samples and builds on at real scale. The built island is `art/paxos/paxos-built.glb`, loaded by `explorer.html`.
+**Step 3 — 3D.** A Meshy image-to-3D conversion of this plate is the island model, `art/paxos-3d.glb`, loaded by `explorer.html`.
 
 ### 3.2 Architectural Features Prompts
 

@@ -1,9 +1,8 @@
-"""Stage 1 previs: render the built Arche from a camera given in explorer.html world coords.
+"""Stage 1 previs: render art/arche-3d.glb from a camera given in explorer.html world coords.
 
 Explorer coords (three.js, +Y up): North = -X, East = -Z, South = +X, West = +Z.
-The island is placed exactly as explorer.html places it (centred at x=-90, ~60 m per unit,
-its own waterline at sea level), so a pose read off the explorer can be pasted here and
-vice versa.
+The island is placed exactly as explorer.html places it (centred at x=-90, scale 80),
+so a pose read off the explorer can be pasted here and vice versa.
 
     blender -b -P art/previs/render.py -- shots.json <shot-id> [out.png]
 
@@ -14,8 +13,7 @@ A shot is {"eye": [x,y,z], "look": [x,y,z], "lens": mm, "aspect": "4:3",
 import bpy, json, sys, math
 from mathutils import Vector
 
-GLB = "art/arche/arche-built.glb"
-M_PER_UNIT = 60.0
+GLB = "art/arche-3d.glb"
 LONG_EDGE = 1600
 
 argv = sys.argv[sys.argv.index("--") + 1:]
@@ -25,21 +23,43 @@ out = argv[2] if len(argv) > 2 else f"art/previs/renders/{shot_id}.png"
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=GLB)
-tops = [o for o in bpy.context.scene.objects if o.parent is None]
-terrain = bpy.data.objects["terrain"]
+island = [o for o in bpy.context.scene.objects if o.type == "MESH"][0]
 
-# Match explorer placement: the model is in metres with sea level at z = 0.
+# Match explorer placement. glTF importer maps (x, y, z)_gltf -> (x, -z, y)_blender.
 vs = shot.get("vscale", 1.0)
-bb = [terrain.matrix_world @ Vector(c) for c in terrain.bound_box]
+bb = [island.matrix_world @ Vector(c) for c in island.bound_box]
 cx = (min(v.x for v in bb) + max(v.x for v in bb)) / 2
 cy = (min(v.y for v in bb) + max(v.y for v in bb)) / 2
-island = bpy.data.objects.new("island", None)
-bpy.context.scene.collection.objects.link(island)
-for o in tops:
-    o.parent = island
-island.scale = (1 / M_PER_UNIT, 1 / M_PER_UNIT, vs / M_PER_UNIT)
-island.location = (-90 - cx / M_PER_UNIT, -cy / M_PER_UNIT, 0)
+zmin = min(v.z for v in bb)
+island.scale = (80, 80, 80 * vs)
+island.location = (-90 - 80 * cx, -80 * cy, -80 * vs * zmin)
 bpy.context.view_layer.update()
+
+# The mesh's crown is ~1.2 km across; canon's is modest. `crown_shrink` pulls the
+# summit toward a point on the crown axis, fully inside r_in and fading out by r_out,
+# so every later stage inherits a smaller crown. Explorer coords, as elsewhere.
+CROWN = (-84.0, 1.8)
+cs = shot.get("crown_shrink")
+if cs:
+    import numpy as np
+    s, r_in, r_out, base = cs["scale"], cs["r_in"], cs["r_out"], cs["base"]
+    me = island.data
+    co = np.empty(len(me.vertices) * 3, np.float32)
+    me.vertices.foreach_get("co", co)
+    co = co.reshape(-1, 3)
+    M = np.array(island.matrix_world)
+    w_co = co @ M[:3, :3].T + M[:3, 3]
+    c = np.array([CROWN[0], -CROWN[1], base])
+    d = np.hypot(w_co[:, 0] - c[0], w_co[:, 1] - c[1])
+    t = np.clip((r_out - d) / (r_out - r_in), 0, 1)
+    wgt = (t * t * (3 - 2 * t))[:, None]
+    shrunk = c + (w_co - c) * s
+    w_co = w_co * (1 - wgt) + shrunk * wgt
+    Minv = np.linalg.inv(M)
+    co = w_co @ Minv[:3, :3].T + Minv[:3, 3]
+    me.vertices.foreach_set("co", co.astype(np.float32).ravel())
+    me.update()
+    bpy.context.view_layer.update()
 
 def to_bl(p):  # explorer (x, y, z) -> blender
     return Vector((p[0], -p[2], p[1]))
