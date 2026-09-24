@@ -14,7 +14,7 @@ A shot is {"eye": [x,y,z], "look": [x,y,z], "lens": mm, "aspect": "4:3",
 `eye`/`look` y may be given as "+h" strings meaning h metres above the terrain there.
 """
 import bpy, json, sys, math
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 # glb, metres per model unit, explorer centre (x, z), sink below sea level in model units
 ISLANDS = {
@@ -93,14 +93,30 @@ eye, look = to_bl(resolve(shot["eye"])), to_bl(resolve(shot["look"]))
 # in explorer coords; "props" likewise, e.g. {"kind": "strongbox", "at": [x, z]}. `tint`
 # reskins the model's pale cloth (tunic, sleeves) so the figures can be told apart;
 # everything else keeps the model's own texture.
-CAST = {"warrior": ("art/cast/warrior.glb", 1.12)}   # glb, scale to a ~1.75 m man
-# Hand targets per pose, in metres in the figure's own frame: (to his left, forward, up).
+# glb, scale to a 1.75 m man. The bandits are Meshy builds from the reference sheet.
+CAST = {
+    "warrior": ("art/cast/warrior.glb", 1.12),
+    "shostakos": ("art/cast/wolf-bearer.glb", 1.04),
+    "peasios": ("art/cast/bronze-shepherd.glb", 1.04),
+}
+# Poses, in metres in the figure's own frame: (to his left, forward, up). "L"/"R" are hand
+# targets. Optional: "elbows" overrides the elbow poles (out and back by default), "hips"
+# places the hips, "feet" and "knees" are foot targets and knee poles, "bend" pitches bones
+# forward by degrees, "glass" places a sandglass.
 # "glass" holds a sandglass in both hands at the chest; "word" holds it in the left hand
-# and raises the right, giving the word.
+# and raises the right, giving the word; "shade" shades the eyes with the right hand;
+# "kneel" is down on the right knee, left forearm on the raised knee, looking down.
 POSES = {
     "stand": {"L": (0.24, 0.02, 0.80), "R": (-0.24, 0.02, 0.80)},
     "glass": {"L": (0.07, 0.30, 1.12), "R": (-0.07, 0.30, 1.12), "glass": (0.0, 0.32, 1.13)},
     "word":  {"L": (0.07, 0.30, 1.12), "R": (-0.30, 0.20, 1.72), "glass": (0.07, 0.32, 1.02)},
+    "shade": {"L": (0.24, 0.02, 0.80), "R": (-0.03, 0.13, 1.62),
+              "elbows": {"R": (-0.45, 0.35, 1.55)}},
+    "kneel": {"L": (0.10, 0.46, 0.52), "R": (-0.20, 0.16, 0.42),
+              "hips": (0.0, 0.0, 0.52),
+              "feet": {"L": (0.14, 0.40, 0.07), "R": (-0.14, -0.42, 0.06)},
+              "knees": {"L": (0.14, 1.2, 0.7), "R": (-0.14, 1.0, 0.0)},
+              "bend": {"mixamorig:Spine": 12, "mixamorig:Neck": 12, "mixamorig:Head": 18}},
 }
 
 def material(name, rgb, rough=0.8, metal=0.0):
@@ -167,6 +183,35 @@ def add_actor(a, i):
     if a.get("tint"):
         tint_cloth(body, a["tint"])
     pose = POSES[a.get("pose", "stand")]
+    bpy.context.view_layer.update()
+    if "hips" in pose:
+        hb = arm.pose.bones["mixamorig:Hips"]
+        M = hb.matrix.copy()
+        l, fwd, up = pose["hips"]
+        M.translation = Vector((l, -fwd, up)) / k
+        hb.matrix = M
+        bpy.context.view_layer.update()
+    for name, deg in pose.get("bend", {}).items():
+        pb = arm.pose.bones[name]
+        h = pb.head.copy()
+        pb.matrix = (Matrix.Translation(h) @ Matrix.Rotation(math.radians(deg), 4, "X")
+                     @ Matrix.Translation(-h) @ pb.matrix)
+        bpy.context.view_layer.update()
+    for side, sgn in (("L", "Left"), ("R", "Right")):
+        if "feet" not in pose:
+            break
+        tgt = bpy.data.objects.new(f"foot{i}{side}", None)
+        pole = bpy.data.objects.new(f"knee{i}{side}", None)
+        for e in (tgt, pole):
+            bpy.context.scene.collection.objects.link(e)
+            e.parent = arm
+        l, fwd, up = pose["feet"][side]
+        tgt.location = Vector((l, -fwd, up)) / k
+        l, fwd, up = pose["knees"][side]
+        pole.location = Vector((l, -fwd, up)) / k
+        c = arm.pose.bones[f"mixamorig:{sgn}Leg"].constraints.new("IK")
+        c.target, c.pole_target, c.chain_count = tgt, pole, 2
+        c.pole_angle = math.radians(-90)
     for side, sgn in (("L", "Left"), ("R", "Right")):
         l, fwd, up = pose[side]
         tgt = bpy.data.objects.new(f"ik{i}{side}", None)
@@ -175,7 +220,11 @@ def add_actor(a, i):
             bpy.context.scene.collection.objects.link(e)
             e.parent = arm
         tgt.location = Vector((l, -fwd, up)) / k
-        pole.location = Vector((l * 2.5 + (0.3 if l > 0 else -0.3), 0.4, 1.0)) / k  # elbows out and back
+        if side in pose.get("elbows", {}):
+            el, ef, eu = pose["elbows"][side]
+            pole.location = Vector((el, -ef, eu)) / k
+        else:  # elbows out and back
+            pole.location = Vector((l * 2.5 + (0.3 if l > 0 else -0.3), 0.4, 1.0)) / k
         c = arm.pose.bones[f"mixamorig:{sgn}ForeArm"].constraints.new("IK")
         c.target, c.pole_target, c.chain_count = tgt, pole, 2
         c.pole_angle = math.radians(-90)
@@ -269,10 +318,20 @@ world.node_tree.nodes["Background"].inputs[1].default_value = 0.8
 bpy.context.scene.world = world
 
 if shot.get("light") == "dusk":
-    # Sun a few degrees up; warm key, cool dim sky so the shadow sides stay readable.
-    sun_data.energy, sun_data.color = 3.5, (1.0, 0.62, 0.38)
-    world.node_tree.nodes["Background"].inputs[0].default_value = (0.32, 0.36, 0.52, 1)
-    world.node_tree.nodes["Background"].inputs[1].default_value = 0.9
+    # A physical sky with the sun a few degrees up (give "sun": [elev, azim]), a warm low
+    # key, and a darker, glossier sea that picks up the sky's glow.
+    sun_data.energy, sun_data.color = 3.0, (1.0, 0.55, 0.3)
+    nt = world.node_tree
+    sky = nt.nodes.new("ShaderNodeTexSky")
+    sky.sky_type = "MULTIPLE_SCATTERING"
+    sky.sun_elevation = math.radians(elev)
+    s = -(sun.rotation_euler.to_matrix() @ Vector((0, 0, -1)))
+    sky.sun_rotation = math.pi / 2 - math.atan2(s.y, s.x)   # matches the lamp
+    nt.links.new(sky.outputs["Color"], nt.nodes["Background"].inputs["Color"])
+    nt.nodes["Background"].inputs["Strength"].default_value = shot.get("sky_strength", 0.12)
+    b = sea.data.materials[0].node_tree.nodes["Principled BSDF"]
+    b.inputs["Base Color"].default_value = (0.01, 0.05, 0.1, 1)
+    b.inputs["Roughness"].default_value = 0.12
 
 for i, a in enumerate(shot.get("cast", [])):
     add_actor(a, i)
