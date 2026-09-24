@@ -211,19 +211,18 @@ establish.
 
 | Building | Paper(s) | Note |
 |---|---|---|
-| The closed road | Brewer 2000 · Gilbert &amp; Lynch 2002 | Bandits reported on both stretches beside the Vine: a condition, never a raid. Bandits roam the island; they need not be the crown's band, and which band is never said. State consistency informally; its precise form comes later, on Paxos. Stale trading is a deliberate emergency measure on Arche. |
+| The counters | Herlihy &amp; Wing 1990 | *The Last Jar.* Builds on *The Tally and the Column* Ch. VI: the goatherd is the path the houses cannot see, and the rule is judged by the sun no one can read. It says what the houses owe their buyers, not how they could know it. One count per kind of goods for locality. Must not give Arche a readable hour in the trading season. |
+| The closed road | Brewer 2000 · Gilbert &amp; Lynch 2002 | Bandits reported on both stretches beside the Vine: a condition, never a raid. Bandits roam the island; they need not be the crown's band, and which band is never said. Consistency is *The Last Jar*'s rule; state it in that book's vocabulary. Stale trading is a deliberate emergency measure on Arche. |
 | The camps *(second book)* | Chandra &amp; Toueg 1996 | *The Empty Row.* Shares the camps with FLP. The camps may decide; nothing follows from it. The tally board's guarantees are granted, not earned — see `settings.md`. |
-| The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, enhanced with visuals: it is the paper the whole project borrows its allegory from. Listed in the index as *The Part-Time Parliament*, unlinked until our rendition exists. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
-| The Odeon, Skene | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 | A genuine alternative to Paxos, on its own island. |
-| The Odeon, Skene *(second book)* | Ongaro &amp; Ousterhout 2014 | *The Rehearsal.* Same room as VR; the difference is stage directions. |
+| The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, enhanced with visuals: it is the paper the whole project borrows its allegory from. Listed in the index as *Consensus by Overlapping Majorities*, unlinked until our rendition exists. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
+| The Odeon, Skene | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 · Ongaro &amp; Ousterhout 2014 | *The Odeon*, two parts. Part One: VR, a genuine alternative to Paxos, on its own island. Part Two, *The Rehearsal*: Raft in the same room; the difference is stage directions, so tell only what Raft changes. |
 | The camps *(third book)* | Castro &amp; Liskov 1999 | *The Standing Orders.* Needs the Byzantine book's vocabulary. One mercenary may have been bought; the trading houses are the recruiters and the clients. Runners to the nearest camp, and to the next along the foot only if it falls silent; replies under each man's signet, and a camp carries nothing between houses. Must not contradict Book IV. Nothing follows from any order. |
-| The Chamber | Herlihy &amp; Wing 1990 · Chandra, Griesemer &amp; Redstone 2007 | *The Law and the Ledgers*, two parts. Part One builds on Lamport §3.3.4 (the black goat); Part Two tells only repairs Lamport lacks — not his §3.3.1–3.3.3. The lease joins the parts. Must not contradict *The Part-Time Parliament*. |
+| The Chamber | Chandra, Griesemer &amp; Redstone 2007 | *The Ledgers.* Only repairs Lamport lacks — not his §3.3.1–3.3.3. The lease keeps *The Last Jar*'s rule, which Lamport's §3.3.4 (the black goat) states for Paxos; point to both, retell neither. Must not contradict *The Part-Time Parliament*. |
 | The stoa and festival ground | Demers 1987 · Saito &amp; Shapiro 2005 | |
 | The ring of libraries | Dynamo 2007 · PBS 2012 | |
 | The wax scriptorium | Gray 1996 · Bayou 1995 | Gray's warning and two-tier remedy, and Bayou building it. Nobody waits for the head library. |
 | The far terraces | Shapiro et al. 2011 (both) | |
-| The sorting shelves | COPS 2011 | One per library, never a central sorting house. |
-| The reading room | HATS 2014 | |
+| The sorting shelves · the reading room | COPS 2011 · HATS 2014 | *The Shelf and the Reading Room*, two parts across two adjacent buildings, as Book I spans the tally house and the column room. Part One: one sorting shelf per library, never a central sorting house. Part Two: what a librarian can promise while the couriers are stopped. |
 | The hall of two doors | Hellerstein 2010 · Ameloot 2011 · Hellerstein &amp; Alvaro 2020 | Draft from the 2020 paper; it is the clearest. |
 
 ### Standing constraints on future books

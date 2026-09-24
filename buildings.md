@@ -16,8 +16,14 @@ They get separate buildings when they make **different claims about the same sub
 then the buildings stand next to each other so the difference is a walk of a few hundred
 metres rather than a footnote.
 
-Eleven shares below cover **twenty-six papers in eleven buildings**. Everything else gets its
-own, which comes to **16 buildings for 31 papers**.
+Eleven shares below cover **twenty-five papers in eleven buildings**. Everything else gets its
+own, which comes to **17 buildings for 31 papers**.
+
+**A book is not a building.** A book may walk between two adjacent buildings when the
+difference between them is best read in one sitting: *The Tally and the Column* covers the
+tally house and the column room, and *The Shelf and the Reading Room* covers a library's
+sorting shelf and the reading room beside it. The buildings stay separate because the claims
+do.
 
 ---
 
@@ -29,7 +35,8 @@ own, which comes to **16 buildings for 31 papers**.
 | **The column room** | Fidge 1988 · Mattern 1988 <span title="shared">◆</span> | Next door to the tally house, and the difference between them is the whole point: one column per house instead of one number. Two clerks can now tell whether their orders were placed in ignorance of each other, which the tally house can only fail to rule out. |
 | **The customs seat and the storehouses** | Chandy &amp; Lamport 1985 | Scribes record each house's storehouse; a runner in a red sash goes down every stretch of road as the marker, and each house keeps a slate for each incoming stretch until the sash arrives. The total is a state the island could have been in, though no one ever saw it. |
 | **The slipways and the Needle** | DLS 1988 | Each house's merchantmen at their slipways; if the fleet sails, it gathers at the Needle, a sea-stack off the southern cape. Winter gales make runners' delays unbounded; when the storm breaks they fall within a bound. A rotating coordinator and majority locks decide whether the fleet sails, safe in any gale and live once the calm comes. |
-| **The closed road** | Brewer 2000 · Gilbert &amp; Lynch 2002 <span title="shared">◆</span> <span class="m">(+ their 2012 retrospective)</span> | The ring road, closed on both stretches beside the Vine because bandits are reported there. The danger is a condition, never a raid: no bandit is seen and nothing happens to a runner. Closing both stretches is what cuts the Vine off; one closed stretch would leave the third house to pass slips on. The road reopens when the danger passes. Meanwhile each side refuses to trade or trades from a book it knows may be stale — a deliberate degradation of service on an island where that is never the usual way. Consistency is stated informally here (*every house answers as if there were one book*); its precise form is on Paxos. Which band the road's bandits belong to is never said. |
+| **The counters** (one per house) | Herlihy &amp; Wing 1990 | A repeated type: the counter in each house's front room where a buyer asks for jars and is told what the house can do. A request is called when the buyer asks and returns when he is answered, and the rule is that every answer must fit one order of sales, the same at all three counters, in which anything answered before another was asked comes first. *Before* is judged by the sun, which no one on Arche can read in the trading season, and by paths the houses cannot see: the goatherd of Book I Ch. VI, who carries word over the mountain, is how a buyer at one counter learns what a buyer at another was told. So the rule says what the houses owe their buyers, not how they could know it — the gap *The Tally and the Column* Ch. VI opened, turned into a correctness condition. The houses keep one count per kind of goods, oil, wine and grain apart; if each count keeps the rule, the whole trade keeps it, which is locality. Next door to the closed road, which proves the rule cannot be kept while the road is shut. |
+| **The closed road** | Brewer 2000 · Gilbert &amp; Lynch 2002 <span title="shared">◆</span> <span class="m">(+ their 2012 retrospective)</span> | The ring road, closed on both stretches beside the Vine because bandits are reported there. The danger is a condition, never a raid: no bandit is seen and nothing happens to a runner. Closing both stretches is what cuts the Vine off; one closed stretch would leave the third house to pass slips on. The road reopens when the danger passes. Meanwhile each side refuses to trade or trades from a book it knows may be stale — a deliberate degradation of service on an island where that is never the usual way. Consistency here is the rule of the counters next door (*every house answers as if there were one book*, made precise), which is the consistency Gilbert &amp; Lynch prove cannot be kept. Which band the road's bandits belong to is never said. |
 
 ## Arche — Mount Phyle
 
@@ -45,7 +52,7 @@ nothing here may contradict `content-i2/art/architecture.json`.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The Chamber** | Lamport 1998 · Lamport 2001 · Herlihy &amp; Wing 1990 · Chandra, Griesemer &amp; Redstone 2007 <span title="shared">◆</span> | Lamport's own Chamber, drawn as a rotunda to fit his description. *"The acoustics of the Chamber were poor, making oratory impossible"*, so: a circular hall under a hard stone dome, with no podium, no head of the room and no seating aimed at a speaker; legislators communicate only by messenger. Open doorways all round the drum, because legislators and messengers enter and leave whenever they like; statues on the terrace outside, one of which falls. The dome and the round plan illustrate Lamport's text and carry no meaning of their own. The first two papers are one algorithm in two presentations and are not retold. The other two return to the same room as one book in two parts, *The Law and the Ledgers*, because both take up what Lamport passes over quickly. Part One: Herlihy &amp; Wing make precise the rule in Lamport's §3.3.4, where a farmer, a merchant and a black goat show what a citizen may be told, and his specialists, one per area of law, are how it composes. Part Two: *Paxos Made Live* as later repairs to the parliament. It must tell only what Lamport does not already have — his president choice (§3.3.1), law books (§3.3.2) and fixed-term bureaucrats (§3.3.3) are his; the president's lease for reads, damaged ledgers, numbered presidencies, membership, snapshots too big to copy and testing are not. The lease is the seam between the parts: it is how the parliament answers a reader quickly without breaking Part One's rule. |
+| **The Chamber** | Lamport 1998 · Lamport 2001 · Chandra, Griesemer &amp; Redstone 2007 <span title="shared">◆</span> | Lamport's own Chamber, drawn as a rotunda to fit his description. *"The acoustics of the Chamber were poor, making oratory impossible"*, so: a circular hall under a hard stone dome, with no podium, no head of the room and no seating aimed at a speaker; legislators communicate only by messenger. Open doorways all round the drum, because legislators and messengers enter and leave whenever they like; statues on the terrace outside, one of which falls. The dome and the round plan illustrate Lamport's text and carry no meaning of their own. The first two papers are one algorithm in two presentations and are not retold. The third returns to the same room as *The Ledgers*: *Paxos Made Live* as later repairs to the parliament. It must tell only what Lamport does not already have — his president choice (§3.3.1), law books (§3.3.2) and fixed-term bureaucrats (§3.3.3) are his; the president's lease for reads, damaged ledgers, numbered presidencies, membership, snapshots too big to copy and testing are not. The lease is how the parliament answers a reader quickly without breaking the rule of Arche's counters, which Lamport's §3.3.4 (a farmer, a merchant and a black goat) already states for Paxos. |
 
 ## Skene
 
@@ -55,7 +62,7 @@ prevent.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The Odeon** | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 · Ongaro &amp; Ousterhout 2014 <span title="shared">◆</span> | Roofed, raked, aimed at one stage. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has its own island, and the two law books never conflict. Its legislators govern from a theatre: one speaks from the stage, the others keep their law books in the front row (the *proedria*), and the public in the seats behind learn the law. The speaker is distinguished by the architecture, and when they fall silent business stops until another legislator takes the stage under a higher number. Raft shares it because it re-derives that lineage (its own paper names VR as its closest relative); its claim is that the performance can be *taught*, and its refinements are stage directions — a random wait before claiming the stage, and no stage for a legislator whose law book is less complete. |
+| **The Odeon** | Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 · Ongaro &amp; Ousterhout 2014 <span title="shared">◆</span> | Roofed, raked, aimed at one stage. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has its own island, and the two law books never conflict. Its legislators govern from a theatre: one speaks from the stage, the others keep their law books in the front row (the *proedria*), and the public in the seats behind learn the law. The speaker is distinguished by the architecture, and when they fall silent business stops until another legislator takes the stage under a higher number. Raft shares it because it re-derives that lineage (its own paper names VR as its closest relative); its claim is that the performance can be *taught*, and its refinements are stage directions — a random wait before claiming the stage, and no stage for a legislator whose law book is less complete. **One book in two parts**, *The Odeon*: VR and its revision first, then Raft as Part Two, *The Rehearsal*, so the stage directions are read against the performance they change. |
 
 ## Homonoia
 
@@ -74,8 +81,8 @@ happens in the colonnades, which is the island's argument.
 | **The ring of libraries** | Dynamo 2007 · PBS 2012 <span title="shared">◆</span> | A repeated type around one lagoon, each holding the scrolls whose catalogue marks fall between it and its neighbour. A closed library's copies are made next door with a note to return them — and PBS shares the ring because it does not build anything: it measures how often this ring hands a reader a stale copy. |
 | **The wax scriptorium** | Gray 1996 · Bayou 1995 <span title="shared">◆</span> | On the beach. Gray shows why letting every library write anywhere and reconcile later breaks down as the island grows — conflicts and deadlocks rise with the cube of the number of libraries — and proposes two tiers; Bayou is that idea built. Scribes draft changes in wax, used at home at once and provisional everywhere else, each carrying its own check and its own fallback, rolled back and redone when an earlier one lands — and copied fair in ink when the head library has fixed their order. Nobody waits for the head library; it confirms afterwards. |
 | **The far terraces** | Shapiro et al. 2011 (both) <span title="shared">◆</span> | The short paper and the comprehensive report are one work, so one place. The island's count of how many copies of each work have been made, kept in voting pebbles: each library adds only to its own column, and merging takes the greater count in each. Merge in any order, merge twice, and every terrace still agrees. Sited as far from any assembly as the island goes. |
-| **The sorting shelves** (one per library) | COPS 2011 | A repeated type: every library has its own, and none is central, since one sorting house for all letters would put everything in one order and make the problem trivial. Every letter names the letters it answers, and each library's sorter holds it back until those have arrived there — so no library ever shows a reply before the letter it answers. |
-| **The reading room** | HATS 2014 | In every library, beside its sorting shelf, and a different claim: not what order letters arrive in, but **what a librarian can still promise a reader while the couriers are stopped**. Never to see half a revision survives the strike; that two readers will not both take the last copy provably does not. |
+| **The sorting shelves** (one per library) | COPS 2011 | A repeated type: every library has its own, and none is central, since one sorting house for all letters would put everything in one order and make the problem trivial. Every letter names the letters it answers, and each library's sorter holds it back until those have arrived there — so no library ever shows a reply before the letter it answers. Part One of *The Shelf and the Reading Room*. |
+| **The reading room** | HATS 2014 | In every library, beside its sorting shelf, and a different claim: not what order letters arrive in, but **what a librarian can still promise a reader while the couriers are stopped**. Never to see half a revision survives the strike; that two readers will not both take the last copy provably does not. Part Two of *The Shelf and the Reading Room*. |
 
 ## The council ground
 
@@ -93,8 +100,8 @@ happens in the colonnades, which is the island's argument.
 | The closed road | Brewer · Gilbert &amp; Lynch | A conjecture and the work that settles it |
 | The chief's hollow and crag posts | Reaching Agreement 1980 · Byzantine Generals 1982 | The general result and its famous framing, same authors |
 | The camps | FLP · Chandra &amp; Toueg · Castro &amp; Liskov | Same four camps; each book changes one assumption — nothing, a detector, a liar |
-| The Chamber | Lamport 1998 · 2001 · Herlihy &amp; Wing · Chandra, Griesemer &amp; Redstone | One algorithm in two presentations, and one later book in two parts on what it passed over — the rule for reads made precise, and the repairs needed to run it — told in the original's own room |
-| The Odeon | Oki &amp; Liskov · Liskov &amp; Cowling · Ongaro &amp; Ousterhout | One system revisited by its own author, and its re-derivation for teaching; the difference is a stage direction, not a building |
+| The Chamber | Lamport 1998 · 2001 · Chandra, Griesemer &amp; Redstone | One algorithm in two presentations, and the repairs needed to run it, told in the original's own room |
+| The Odeon | Oki &amp; Liskov · Liskov &amp; Cowling · Ongaro &amp; Ousterhout | One system revisited by its own author, and its re-derivation for teaching; the difference is a stage direction, not a building, and one book in two parts |
 | The stoa and festival ground | Demers · Saito &amp; Shapiro | A practice, and the catalogue of that practice |
 | The ring of libraries | Dynamo · PBS | A thing built, and a measurement of the thing built |
 | The wax scriptorium | Gray · Bayou | A warning and a remedy, and the remedy built |
@@ -106,7 +113,12 @@ happens in the colonnades, which is the island's argument.
 - **Tally house / column room.** Both are clocks. But one respects causality and the other
   *detects concurrency exactly*, which is a different claim. Adjacent, not merged.
 - **Sorting shelves / reading room.** Both are about coping without coordination. But one is
-  about the order of writes and the other about what a transaction may promise.
+  about the order of writes and the other about what a transaction may promise. Adjacent, not
+  merged; one book walks between them, as Book I walks between the tally house and the column
+  room.
+- **Counters / closed road.** Both are about answering as if there were one book. But one
+  states the rule and the other proves it cannot be kept while the road is shut. Adjacent, not
+  merged.
 - **Chamber / Odeon.** Both keep a law book by majority. But VR was found independently and
   is a genuine alternative, not a variant; the whole point is that they are different rooms, on
   different islands — one where no voice carries, one built so that a single voice reaches
