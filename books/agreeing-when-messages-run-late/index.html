@@ -20,21 +20,21 @@
 <header class="cover">
   <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · The Ring Road</div>
   <h1 class="display" style="margin:18px 0 6px">Agreeing When Messages Run Late</h1>
-  <p class="sub">Reaching consensus under partial synchrony</p>
-  <div class="frame-cover portrait"><img src="../../assets/img/covers/the-convoy-of-arche.jpg" width="896" height="1200"
-    alt="Three harbour scribes on the Anchor's quay watch the merchant ships sail out together in one line as the winter storm breaks."></div>
-  <p class="pub">Three trading houses with merchant ships anchored at their slipways, needing to
-  sail together as a convoy across the open sea. While winter gales batter the cliff road, runners
-  face unbounded delays and no consensus can be forced. But when the storm breaks and transit times
-  fall within a bound, a rotating coordinator and the rule of majority locks decide whether the
-  fleet sails, without risking a divided one.</p>
-  <p class="lineage"><span class="lbl">Builds on</span> <a href="../mercenaries-and-bandits/index.html">The Limits of Agreement</a></p>
+  <p class="sub">If messages can run late without limit, agreement cannot be guaranteed; yet real networks
+  are prompt most of the time. Can a protocol stay safe however late messages run, and still
+  decide once they arrive on time again?</p>
+  <p class="pub">Three trading houses must post one price for oil for the whole winter, the same
+  at every gate. While winter gales batter the cliff road, runners face unbounded delays and no
+  agreement can be forced. But when the storm breaks and transit times fall within a bound, a
+  rotating coordinator and the rule of majority locks settle the price, and no two boards ever
+  disagree.</p>
+  <p class="lineage"><span class="lbl">Builds on</span> <a href="../the-limits-of-agreement/index.html">The Limits of Agreement</a></p>
 </header>
 
 <nav class="toc">
   <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
   <ol>
-    <li><a href="#s1">I · The Sea Road and the Convoy</a></li>
+    <li><a href="#s1">I · The Winter Price</a></li>
     <li><a href="#s2">II · The Storm and the Shadow of the Mercenaries</a></li>
     <li><a href="#s3">III · The Breaking of the Storm</a></li>
     <li><a href="#s4">IV · The Rotating Coordinator and the Quorum</a></li>
@@ -51,95 +51,61 @@
 
 <!-- ================= I ================= -->
 <section id="s1">
-  <div class="issue"><span class="no">Chapter I</span><h2>The Sea Road and the Convoy</h2></div>
+  <div class="issue"><span class="no">Chapter I</span><h2>The Winter Price</h2></div>
 
   <div class="prose">
-    <p>At the end of autumn, the trading houses of Arche prepare their merchant ships for the
-    crossing to Alexandria, Syracuse, and Rhodes. At the <span class="coin">Dolphin</span> on the
-    western shelf, the <span class="coin">Vine</span> on the northern terraces, and the
-    <span class="coin">Anchor</span> in the eastern bay, broad-beamed merchantmen lie in the
-    slipways, loaded with the season's dried fruit, wine-amphorae, and silver ingots.</p>
+    <p>When the winter trade opens, each of the three trading houses of Arche, the
+    <span class="coin">Dolphin</span> on the western shelf, the <span class="coin">Vine</span> on
+    the northern terraces and the <span class="coin">Anchor</span> in the eastern bay, posts the
+    price of oil for the season: so many drachmas the amphora. The price is cut into a slab of
+    limestone beside the house's gate, the <span class="coin">price board</span>, and it stands
+    until the next winter. No house sells a jar until its board is cut.</p>
 
-    <p>To cross the open Mediterranean alone is folly. A single merchantman running into sudden
-    squalls or sighted by Cilician pirate galleys is taken or sunk. The ships must sail as a
-    single, united <span class="coin">convoy</span>, or remain moored securely in their
-    coves.</p>
+    <p>The houses keep one rule about the boards, older than any scribe now cutting them:
+    <span class="coin">the compact of the ring road</span>. There is one price on Arche for the
+    season, the same on all three boards. The reason lies in the houses' own books. The three act
+    as a single distribution network, and goods pass between them along the road all winter: oil
+    from the Vine's presses goes round to the Anchor, and grain landed at the Anchor goes out to
+    the Dolphin. Every jar that moves from one house to another is reckoned at the season's price.
+    The sender writes it in, the receiver writes it out, and with one price the three books balance
+    when the winter ends. With two, the same jar is worth twelve drachmas where it leaves and
+    fourteen where it arrives, and no house's accounts will ever close.</p>
 
-    <p>Three coves on three sides of a mountain cannot put to sea at one instant, and the convoy
-    does not ask them to. It forms at <span class="coin">the Needle</span>, a stack of rock half
-    a day's sail off the southern cape, in whose lee ships can lie for a few days. Each house, once
-    it knows the fleet is to sail, sends its ships out on the first dawn land-breeze. They gather
-    under the Needle and wait for one another for three days, which is as long as the lee can
-    hold ships and their water can last. Then the convoy leaves with whoever has come. It cannot
-    wait for "the last ship", because a house may have been crushed by rockfall and have no ships
-    to send, and nobody at the Needle can tell that house from a slow one. The decision the houses
-    must share is therefore not <em>when</em> but <em>whether</em>, and it does not matter that
-    one house learns it a day after another, so long as each learns it inside the three
-    days.</p>
+    <p>Which price is posted matters far less. Each house forms its own proposal from what it can
+    see for itself: the oil in its storehouse after the pressing, and what its counter took last
+    winter. The Dolphin may think twelve drachmas right, the Vine fourteen, the Anchor thirteen.
+    Any of the three will serve. What cannot be borne is two.</p>
 
-    <figure class="panel">
-      <img src="../../assets/img/panels/the-convoy-of-arche/v01-needle.jpg" width="1200" height="896" loading="lazy"
-           alt="At calm dawn after a storm, six merchantmen ride at anchor in the lee of a tall stack of pale rock far out at sea, the island of Arche low on the horizon behind them.">
-    </figure>
+    <p>Nor is there a price to trade at while the houses settle it. Until its board is cut, a
+    house's counter stays shut. A jar sold at a price later changed would be reckoned at two
+    values, which is the very thing the compact forbids.</p>
 
-    <p>What would matter is two houses deciding different things. Ships sent to the Needle for a
-    fleet whose house has decided to hold wait out their three days in open water the pirate
-    galleys watch. Then they must cross short-handed, too few to beat off an attack, or beat home
-    against a turning season with the cargo spoiling in the holds. If half the ships slip their
-    cables while the other half stay fast, the convoy is broken, and the isolated vessels are
-    lost.</p>
-  </div>
-
-  <aside class="leak">
-    <span class="lbl">Where the allegory leaks</span>
-    <p>The three days at the Needle quietly assume that every house still standing hears the
-    decision within three days of the first house to decide. Consensus promises only that each
-    will hear it <em>eventually</em>. After the storm has broken for good, the commit slips reach
-    every house within one runner's transit, so the assumption holds. A decision reached in a
-    lull that then closes up again could leave one house's ships sailing a week late to an empty
-    rock. The paper's consensus settles a value. Acting on it together by a deadline is a stronger
-    problem, and this book does not solve it.</p>
-  </aside>
-
-  <div class="prose">
-    <p>Each house watches its own local cove, examines its hull caulking, and reads its oil-glass.
-    At dawn of the decision season, each house forms an initial judgment:</p>
-
-    <figure class="panel">
-      <img src="../../assets/img/panels/the-convoy-of-arche/v02-gale.jpg" width="1200" height="896" loading="lazy"
-           alt="On the Anchor's quay in a winter gale, a heavy-set harbour scribe in a brown sea-cloak holds a flask of olive oil up to the light, while waves break over the mole and merchantmen strain at their ropes on the stone bollards.">
-    </figure>
-  </div>
-
-  <div class="result">
-    <span class="name">The two choices</span>
-    <p><b>0 · Hold at anchor.</b> The roadstead is rough, the glass is falling, or the rigging is
-    unready. The ships remain tied to the stone bollards.</p>
-    <p><b>1 · Sail.</b> The roadstead is calm, the glass is steady, and the crews are aboard.
-    Each house's ships leave on the first land-breeze after it learns the decision, and the fleet
-    forms under the Needle.</p>
-  </div>
-
-  <div class="prose">
-    <p>Between these choices, the houses must reach an agreement that satisfies three exact
+    <p>Between their proposals, the houses must reach an agreement that satisfies three exact
     demands, established by the archons of the island:</p>
   </div>
 
   <div class="aside-formal">
     <span class="lbl">The three demands of consensus</span>
-    <span class="stmt">(1) Agreement.</span> No two honest houses ever decide differently. It
-    cannot happen that the Dolphin puts to sea while the Vine remains at anchor.<br>
-    <span class="stmt">(2) Validity.</span> If every house initially judges that the fleet should
-    sail (all 1), the convoy must sail. If every house initially judges that it must hold (all 0),
-    the convoy must hold.<br>
+    <span class="stmt">(1) Agreement.</span> No two honest houses ever post different prices. It
+    cannot happen that the Dolphin's board says twelve while the Vine's says fourteen.<br>
+    <span class="stmt">(2) Validity.</span> If every house proposes the same price, that price is
+    posted.<br>
     <span class="stmt">(3) Termination.</span> Every house that does not suffer catastrophe must
-    eventually reach a final, irrevocable decision.
+    eventually cut its board.
   </div>
 
   <div class="prose">
+    <p>The second demand is what rules out the easy answers. The houses cannot simply carry last
+    winter's price forward: when all three propose thirteen, the boards must say thirteen. In the
+    scheme that follows, the posted price is always one that some house proposed.</p>
+
+    <p>Nothing obliges the three boards to be cut on the same day. A house that learns the price a
+    day after another cuts its board a day later and opens its counter a day later, and the
+    accounts are none the worse. The houses must share a price, not a moment.</p>
+
     <p>The houses cannot shout to each other across Mount Phyle. They communicate solely through
-    runners along the narrow ring road cut into the cliffs above the surf. And in the decision
-    season, the weather on the cliff road makes mockery of all simple plans.</p>
+    runners along the narrow ring road cut into the cliffs above the surf. And when the winter trade
+    opens, the weather on the cliff road makes mockery of all simple plans.</p>
   </div>
 </section>
 
@@ -171,8 +137,8 @@
     Where message delays are unbounded and a participant may die without warning, <b>no protocol
     can guarantee both safety and termination</b>. If the houses set a fixed sandglass deadline
     and decide upon its expiry, they cannot distinguish a dead neighbor from a runner delayed by
-    spray. A premature decision risks splitting the fleet; perpetual waiting risks rotting the
-    cargo at the quays.</p>
+    spray. A premature decision risks two prices on two boards; perpetual waiting keeps every
+    counter on the island shut all winter.</p>
 
     <p>If the storm were perpetual, consensus would be unattainable. But storms in the Aegean,
     however violent, do not rage forever.</p>
@@ -186,7 +152,7 @@
   <div class="issue"><span class="no">Chapter III</span><h2>The Breaking of the Storm</h2></div>
 
   <div class="prose">
-    <p>The insight that rescues the fleet was formulated by three scribes: Dworkia of the Dolphin,
+    <p>The insight that rescues the compact was formulated by three scribes: Dworkia of the Dolphin,
     Lynchaia of the Vine, and Stockmeros of the Anchor. They recognized that Arche does not inhabit
     a world of permanent chaos, nor a world of permanent clockwork. It inhabits
     <span class="coin">partial synchrony</span>.</p>
@@ -211,7 +177,7 @@
   <div class="prose">
     <p>This formulation captures reality with dry precision. The algorithm cannot wait for an
     angel to blow a trumpet announcing GST. It must run continuously through the storm, never
-    violating safety (never sending part of the fleet to sea while others stay behind), and then,
+    violating safety (never letting two boards say different things), and then,
     when the storm finally breaks, swiftly reach a common decision.</p>
 
     <p>Nor does the clearing of the sky open another road. A beacon on Mount Phyle would be seen
@@ -283,11 +249,15 @@
 
   <div class="prose">
     <p>Each house <var>i</var> keeps three entries inked on its decision tablet:
-    <br>— <var>v</var><sub>i</sub>: its current proposed value (0 or 1), initially its own local
-    weather judgment.
-    <br>— <var>lock_round</var><sub>i</sub>: the round number in which it last locked its value
+    <br>— <var>v</var><sub>i</sub>: the price it currently proposes, initially the one it formed
+    from its own storehouse and counter.
+    <br>— <var>lock_round</var><sub>i</sub>: the round number in which it last locked a price
     (initially 0).
-    <br>— <var>decided</var><sub>i</sub>: whether it has committed to a final decision.</p>
+    <br>— <var>decided</var><sub>i</sub>: whether it has cut its board.</p>
+
+    <p>A lock is chalk, not stone. A house that locks a price chalks it on its slate beside the
+    round number, and a proposal from a later round may wipe the chalk and replace it. Only the
+    decision is cut into the board, and nothing ever changes the board.</p>
 
     <p>Every round <var>r</var> proceeds through four strictly ordered phases:</p>
   </div>
@@ -316,9 +286,10 @@
 
       <li><b>Phase 4 · Commit.</b> If the coordinator receives <span class="paper">ACK(<var>r</var>)</span>
       from a majority of houses (2 houses) before her timer expires, she decides <var>v</var>,
-      inscribes it in stone as the final sailing order, and dispatches to all houses:
+      cuts it into her house's board as the season's price, and dispatches to all houses:
       <br><span class="paper">COMMIT(<var>v</var>, <var>r</var>)</span>.
-      Any house receiving a <span class="paper">COMMIT</span> slip immediately decides <var>v</var>.</li>
+      Any house receiving a <span class="paper">COMMIT</span> slip immediately decides <var>v</var>
+      and cuts it into its own board.</li>
     </ol>
   </div>
 
@@ -331,7 +302,7 @@
 
   <figure class="diagram">
     <div class="board">
-      <svg viewBox="0 0 660 480" role="img" aria-label="Spacetime diagram of two rounds. Round 1 during the storm: runner delayed by rockfall, timeout expires, round aborts without decision. Round 2 after the storm clears (GST): messages arrive within bound Delta, coordinator collects quorum, locks value, and commits the fleet to sail.">
+      <svg viewBox="0 0 660 480" role="img" aria-label="Spacetime diagram of two rounds. Round 1 during the storm: runner delayed by rockfall, timeout expires, round aborts without decision. Round 2 after the storm clears (GST): messages arrive within bound Delta, the Vine's coordinator collects a quorum, proposes a price of fourteen, gathers locks, and commits it; every house decides fourteen.">
         <defs>
           <marker id="arr" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
@@ -359,7 +330,7 @@
 
         <!-- Status msgs -->
         <path class="d-msg" marker-end="url(#arr)" d="M330,76 L110,98"/>
-        <text class="d-num" x="220" y="84" text-anchor="middle">STATUS(0, 0)</text>
+        <text class="d-num" x="220" y="84" text-anchor="middle">STATUS(14, 0)</text>
 
         <!-- Delayed msg from Anchor -->
         <path class="d-msg-hi" marker-end="url(#arr-red)" stroke-dasharray="4 4" d="M550,76 L280,185"/>
@@ -379,17 +350,17 @@
 
         <!-- Phase 1: Status -->
         <path class="d-msg" marker-end="url(#arr)" d="M110,252 L330,272"/>
-        <text class="d-num" x="200" y="258" text-anchor="middle">STATUS(1, 0)</text>
+        <text class="d-num" x="200" y="258" text-anchor="middle">STATUS(12, 0)</text>
         <path class="d-msg" marker-end="url(#arr)" d="M550,252 L330,272"/>
-        <text class="d-num" x="460" y="258" text-anchor="middle">STATUS(1, 0)</text>
+        <text class="d-num" x="460" y="258" text-anchor="middle">STATUS(13, 0)</text>
 
         <!-- Phase 2: Propose -->
         <circle class="d-ev-hi" cx="330" cy="286" r="5"/>
-        <text class="d-lbl" x="336" y="298" font-size="10">proposes v=1</text>
+        <text class="d-lbl" x="336" y="298" font-size="10">proposes v=14</text>
         <path class="d-msg" marker-end="url(#arr)" d="M330,300 L110,324"/>
         <path class="d-msg" marker-end="url(#arr)" d="M330,300 L550,324"/>
-        <text class="d-num" x="210" y="310" text-anchor="middle">PROPOSE(1, 2)</text>
-        <text class="d-num" x="450" y="310" text-anchor="middle">PROPOSE(1, 2)</text>
+        <text class="d-num" x="210" y="310" text-anchor="middle">PROPOSE(14, 2)</text>
+        <text class="d-num" x="450" y="310" text-anchor="middle">PROPOSE(14, 2)</text>
 
         <!-- Phase 3: Lock & Ack -->
         <circle class="d-ev" cx="110" cy="324" r="4"/>
@@ -401,23 +372,23 @@
 
         <!-- Phase 4: Commit -->
         <circle class="d-ev-hi" cx="330" cy="374" r="6" fill="#4d7c0f"/>
-        <text class="d-lbl" x="340" y="378" fill="#4d7c0f" font-weight="700">DECIDES v=1</text>
+        <text class="d-lbl" x="340" y="378" fill="#4d7c0f" font-weight="700">DECIDES v=14</text>
         <path class="d-msg-hi" marker-end="url(#arr-grn)" stroke="#4d7c0f" d="M330,390 L110,414"/>
         <path class="d-msg-hi" marker-end="url(#arr-grn)" stroke="#4d7c0f" d="M330,390 L550,414"/>
-        <text class="d-note" x="200" y="400" text-anchor="middle" fill="#4d7c0f">COMMIT(1, 2)</text>
-        <text class="d-note" x="460" y="400" text-anchor="middle" fill="#4d7c0f">COMMIT(1, 2)</text>
+        <text class="d-note" x="200" y="400" text-anchor="middle" fill="#4d7c0f">COMMIT(14, 2)</text>
+        <text class="d-note" x="460" y="400" text-anchor="middle" fill="#4d7c0f">COMMIT(14, 2)</text>
 
         <circle class="d-ev-hi" cx="110" cy="414" r="5" fill="#4d7c0f"/>
         <circle class="d-ev-hi" cx="550" cy="414" r="5" fill="#4d7c0f"/>
-        <text class="d-lbl" x="44" y="432" fill="#4d7c0f">decides v=1</text>
-        <text class="d-lbl" x="480" y="432" fill="#4d7c0f">decides v=1</text>
+        <text class="d-lbl" x="44" y="432" fill="#4d7c0f">decides v=14</text>
+        <text class="d-lbl" x="480" y="432" fill="#4d7c0f">decides v=14</text>
       </svg>
     </div>
     <figcaption><b>The execution across the storm.</b> In Round 1, before GST, rockfalls delay
     messages; Dworkia's timer expires without hearing from the Anchor, and the round aborts safely.
     Once the storm breaks (GST), runner delays fall below Δ. In Round 2, Lynchaia collects status
-    slips within time, secures majority locks, and commits the entire fleet to sail on the morning
-    tide.</figcaption>
+    slips within time. No house holds a lock, so she proposes her own fourteen drachmas, secures
+    majority locks and commits it, and the commit slips carry it to both other boards.</figcaption>
   </figure>
 </section>
 
@@ -428,9 +399,10 @@
   <div class="issue"><span class="no">Chapter VI</span><h2>Safety in the Wildest Gale</h2></div>
 
   <div class="prose">
-    <p>The first necessity of the fleet is that <b>it must never divide</b>. Even if the gale
-    rages for three weeks, and runners shelter for days under the rocks, and timers expire out of order,
-    it must be impossible for the Dolphin to decide to sail while the Vine later decides to hold.</p>
+    <p>The first necessity of the compact is that <b>the boards must never disagree</b>. Even if
+    the gale rages for three weeks, and runners shelter for days under the rocks, and timers expire
+    out of order, it must be impossible for the Dolphin to cut twelve while the Vine later cuts
+    fourteen.</p>
 
     <p>This safety guarantee does not depend on the weather. It holds during the height of the
     storm, under unbounded delay, by virtue of the majority lock.</p>
@@ -520,9 +492,9 @@
   <div class="issue"><span class="no">Chapter VII</span><h2>Liveness When the Calm Arrives</h2></div>
 
   <div class="prose">
-    <p>Safety prevents a split fleet, but safety alone is not enough: the ships cannot remain
-    in their slips until the timbers rot. The protocol must guarantee that once the weather
-    relents, a decision is reached.</p>
+    <p>Safety prevents two prices, but safety alone is not enough: the counters cannot stay shut
+    all winter. The protocol must guarantee that once the weather relents, a decision is
+    reached.</p>
   </div>
 
   <div class="result">
@@ -581,7 +553,7 @@
     <p>It remains to explain why three houses are sufficient for Arche, and what would happen if
     the houses did not merely crash, but lied.</p>
 
-    <p>In Arche's convoy problem, houses may be crushed by rockfalls (crash failures), but runners
+    <p>In Arche's price problem, houses may be crushed by rockfalls (crash failures), but runners
     do not forge signatures or alter numbers. Under crash failures in partial synchrony, DLS
     proved that consensus requires strictly more than double the number of failures:</p>
     <p style="text-align:center;font-weight:700;font-size:1.1rem">N ≥ 2t + 1</p>
@@ -629,7 +601,7 @@
   <div class="issue"><span class="no">Chapter IX</span><h2>In the Book, In the Paper</h2></div>
 
   <div class="prose">
-    <p>So that the reader may verify the correspondence between the convoy of Arche and the
+    <p>So that the reader may verify the correspondence between the winter price of Arche and the
     classic paper of Dwork, Lynch, and Stockmeyer.</p>
   </div>
 
@@ -642,12 +614,15 @@
         <tr><td><span class="term">the breaking of the storm</span></td><td>The unknown future moment after which delays become bounded. <span class="paper">Global Stabilization Time (GST).</span></td></tr>
         <tr><td><span class="term">three sandglass turns (Δ)</span></td><td>The upper bound on message transit time holding after GST. <span class="paper">Message delay bound Δ.</span></td></tr>
         <tr><td><span class="term">the rule of catching up</span></td><td>Status broadcast at the start of each round; a house seeing a higher round jumps to it. Keeps round starts within Δ of each other after GST. <span class="paper">A stand-in for DLS's common round numbering, which the paper obtains from a distributed clock.</span></td></tr>
-        <tr><td><span class="term">the Needle; whether, not when</span></td><td>Consensus fixes a value, not a common moment of action. <span class="paper">Agreement without simultaneity.</span></td></tr>
-        <tr><td><span class="term">convoy sailing decision</span></td><td>Reaching agreement on a single binary value satisfying Agreement, Validity, and Termination. <span class="paper">Binary distributed consensus.</span></td></tr>
+        <tr><td><span class="term">the winter price</span></td><td>The value agreed on, drawn from any set of possible prices. <span class="paper">Consensus over an arbitrary value domain V.</span></td></tr>
+        <tr><td><span class="term">the compact of the ring road</span></td><td>No two houses post different prices. <span class="paper">Consistency (agreement).</span></td></tr>
+        <tr><td><span class="term">a price all three propose must be posted</span></td><td>If every initial value is <var>v</var>, the decision is <var>v</var>. <span class="paper">Strong unanimity.</span></td></tr>
+        <tr><td><span class="term">cutting the price board</span></td><td>A house's final, irrevocable decision. <span class="paper">Decision.</span></td></tr>
+        <tr><td><span class="term">boards cut on different days</span></td><td>Consensus fixes a value, not a common moment of action. <span class="paper">Agreement without simultaneity.</span></td></tr>
         <tr><td><span class="term">rotating coordinator</span></td><td>A deterministic round-robin mapping from round number to designated coordinator. <span class="paper">Coordinator c(r) = r mod N.</span></td></tr>
         <tr><td><span class="term">status slip</span></td><td>A message reporting current preference and the round in which it was locked. <span class="paper">Status message (v, val_round).</span></td></tr>
         <tr><td><span class="term">highest locked round</span></td><td>Selecting the value from the status report with maximum timestamp/round. <span class="paper">Value from max round in Phase 2.</span></td></tr>
-        <tr><td><span class="term">majority lock (ACK)</span></td><td>Adopting a proposal and locking it with the round number. <span class="paper">Locking / voting phase.</span></td></tr>
+        <tr><td><span class="term">majority lock (ACK); the chalked slate</span></td><td>Adopting a proposal and locking it with the round number; a later round's proposal may replace it. <span class="paper">Locking / voting phase.</span></td></tr>
         <tr><td><span class="term">quorum intersection (2 of 3)</span></td><td>Any two majorities overlap in at least one processor, transferring the lock to subsequent rounds. <span class="paper">Quorum intersection property (N ≥ 2t + 1).</span></td></tr>
         <tr><td><span class="term">commit slip</span></td><td>Broadcasting the final decision once a quorum of locks is secured. <span class="paper">Commit / decision message.</span></td></tr>
       </tbody>
@@ -670,8 +645,8 @@
     Because any two majority quorums must intersect, any future coordinator is guaranteed to see
     the locked value, preserving safety unconditionally even if the network is chaotic. Once GST
     arrives, messages arrive within Δ, allowing the protocol to terminate cleanly.</p>
-    <p>This foundational architecture directly inspired Lamport's Paxos and the consensus engines
-    of modern distributed databases.</p>
+    <p>The same structure — numbered rounds, a coordinator for each round, and locks carried
+    forward by overlapping majorities — is the one later consensus protocols are built on.</p>
   </div>
 </section>
 
