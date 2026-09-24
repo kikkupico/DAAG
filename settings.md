@@ -19,8 +19,8 @@ Verified against `ls sources/`, not asserted:
 
 | Island | Papers |
 |---|--:|
-| Arche (ring road and Mount Phyle) | 12 |
-| Paxos | 4 |
+| Arche (ring road and Mount Phyle) | 13 |
+| Paxos | 3 |
 | Skene | 3 |
 | Homonoia | 10 |
 | The council ground | 2 |
@@ -83,11 +83,29 @@ island-wide distribution network.
   after which delays are bounded by $\Delta$. A rotating coordinator protocol with majority
   quorum locks ($N \ge 2t + 1$, $N = 3, t = 1$) guarantees safety during the wildest gale via
   quorum intersection, and ensures swift termination once the calm arrives.
+- *The Last Jar* (`herlihy-wing-1990_linearizability`). What the houses owe the buyers at
+  their counters: every answer must fit one order of sales, the same at all three houses, in
+  which anything answered before another was asked comes first (linearizability). One count
+  per kind of goods; if each keeps the rule, the whole trade does (locality). See *Why
+  linearizability is on Arche* below.
 - *The Closed Road* (`brewer-2000`, `gilbert-lynch-2002`). Bandits are reported on both
   stretches beside the Vine, so no runner will go and the Vine is cut off until the road is
   safe. Each side refuses to trade or trades from a book it knows may be stale — a deliberate
-  degradation of service, never the usual way on Arche. Consistency is stated informally
-  (*every house answers as if there were one book*); its precise form is on Paxos.
+  degradation of service, never the usual way on Arche. Consistency is *The Last Jar*'s rule
+  (*every house answers as if there were one book*, made precise), which is the consistency
+  Gilbert & Lynch prove cannot be kept while the road is shut.
+
+**Why linearizability is on Arche.** It is defined by real time: one operation finished before
+another began. Arche has real time — the sun rises over it whether or not a dial can be read —
+but in the trading season no one can read it, and no house can learn of another's trade except
+by slip. That is not an objection but the point. *The Tally and the Column* Ch. VI already
+showed a causal path the houses cannot see: the goatherd who carries word over the mountain.
+Linearizability turns that gap into a correctness condition: the houses must answer so that no
+goatherd could ever catch them out, though they can never see one coming. It is judged by the
+sun, not computed from it. The rule says what the houses owe their buyers, not how they could
+know it, and it sits next to the closed road, whose proof depends on it. On Paxos, Lamport's
+black-goat story (§3.3.4) states the same rule for the parliament, and *The Ledgers* relies on
+it without retelling it.
 
 **What the rest of Arche knows about the bandits.** Only the bandits know how many of them
 there are, which band each belongs to, and what they plan. Everyone else knows two things:
@@ -165,13 +183,7 @@ chronicle across shifting quorums, absent members and changing presidents.
 | Paper | In the world |
 |---|---|
 | `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and not retold, drawn as a domed rotunda because its acoustics make oratory impossible. Legislators wander in and out, each keeps a ledger, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved |
-| `herlihy-wing-1990_linearizability`, `chandra-griesemer-redstone-2007` | **The Chamber again**, one book in two parts, *The Law and the Ledgers*: what Lamport passes over quickly. Part One makes precise his §3.3.4 rule for what a citizen may be told (linearizability), and his specialists per area of law as its composition. Part Two tells *Paxos Made Live* as later repairs, only those Lamport lacks: the president's lease for reads, damaged ledgers, numbered presidencies, membership, snapshots too big to copy, testing. Not his law books (§3.3.2) or fixed-term bureaucrats (§3.3.3) |
-
-**Why linearizability is here and not on Arche.** It is defined by real time: one operation
-finished before another began. Arche has no common time, and no way to learn of another
-house's trade except by message, so there real-time order cannot be told from causal order.
-Paxons tell time to within fifteen minutes by the sun and stars, and Lamport's black-goat
-story already states the rule.
+| `chandra-griesemer-redstone-2007` | **The Chamber again**, *The Ledgers*: *Paxos Made Live* told as later repairs to the parliament, only those Lamport lacks: the president's lease for reads, damaged ledgers, numbered presidencies, membership, snapshots too big to copy, testing. Not his law books (§3.3.2) or fixed-term bureaucrats (§3.3.3). The lease answers a reader without a ballot while keeping the rule of *The Last Jar*, which Lamport's black goat (§3.3.4) already states for Paxos |
 
 **The ground must provide:** the **Chamber** on a route rather than at a dead end
 (legislators wander in and out).
@@ -187,7 +199,7 @@ island's law book would be the very split both algorithms exist to prevent. **No
 Paxos or Skene is named after the algorithm it carries.**
 
 **Later papers reuse existing rooms** instead of adding devices, so that approaches can be
-compared directly and the reader carries fewer allegories. *The Law and the Ledgers* returns to
+compared directly and the reader carries fewer allegories. *The Ledgers* returns to
 the Chamber; Raft is told in Skene's Odeon, since it re-derives the VR lineage. What separates
 a later paper from an earlier one in the same room is a rule of procedure, not a building.
 
@@ -209,7 +221,7 @@ has an island of its own.
 
 | Paper | In the world |
 |---|---|
-| `oki-liskov-1988`, `liskov-cowling-2012`, `ongaro-ousterhout-2014_raft-consensus` | **The Odeon.** Roofed, raked, aimed at one stage so a single voice reaches every seat. The nodes are legislators, as on Paxos: one speaks from the stage, the others keep their law books in the front row, and the public in the seats behind are the ones who need to learn the law. When the speaker falls silent, business stops until another legislator takes the stage under a higher number. Raft's refinements are stage directions — a random wait before claiming the stage, and no stage for a legislator whose law book is less complete |
+| `oki-liskov-1988`, `liskov-cowling-2012`, `ongaro-ousterhout-2014_raft-consensus` | **The Odeon.** Roofed, raked, aimed at one stage so a single voice reaches every seat. The nodes are legislators, as on Paxos: one speaks from the stage, the others keep their law books in the front row, and the public in the seats behind are the ones who need to learn the law. When the speaker falls silent, business stops until another legislator takes the stage under a higher number. Raft's refinements are stage directions — a random wait before claiming the stage, and no stage for a legislator whose law book is less complete. One book in two parts, *The Odeon*, with Raft as Part Two, *The Rehearsal* |
 
 **The ground must provide:** a natural hillside bowl facing a sheltered bay, for the Odeon.
 
@@ -245,8 +257,8 @@ spreading the epics by rhapsode, drafting in wax before a fair copy.
 | `bailis-2012_pbs` | How often the ring hands a reader a stale copy, measured |
 | `gray-1996_dangers-of-replication`, `terry-1995_bayou-conflicts` | Why letting every library write anywhere and reconcile later breaks down as the island grows, and the two-tier remedy; Bayou builds it. Scribes draft changes in wax with their own checks and merge rules, copied fair in ink when the head library fixes their order. Nobody waits for the head library |
 | `shapiro-2011_crdt`, `shapiro-2011_crdt-comprehensive` | The count of copies made of each work, kept in voting pebbles, one column per library; merging takes the larger in each column, so it is associative, commutative and idempotent |
-| `lloyd-2011_cops-causal-consistency` | Letters name the letters they answer, and each library's own sorting shelf holds them back until those have arrived there. No central sorting house |
-| `bailis-2014_hats` | What a librarian can promise a reader while the couriers are stopped |
+| `lloyd-2011_cops-causal-consistency` | Letters name the letters they answer, and each library's own sorting shelf holds them back until those have arrived there. No central sorting house. Part One of *The Shelf and the Reading Room* |
+| `bailis-2014_hats` | What a librarian can promise a reader while the couriers are stopped. Part Two of *The Shelf and the Reading Room*, in the room beside the sorting shelf |
 
 **Casting note.** Jim Gray was lost at sea in 2007. Grayos appears as a designer and
 counsellor, never as a figure who dies.
@@ -296,3 +308,6 @@ it began, with the order of events.
 1. **Spanner and Calvin** — add them on Arche, or keep the set at 31. Neither paper is on
    disk.
 2. **How many books per island.** The grounds and buildings are fixed; the book count is not.
+   Current plan: VR and Raft are one book (*The Odeon*), COPS and HATS are one book (*The Shelf
+   and the Reading Room*), and the camps keep three books (FLP with Byzantine Generals in Book
+   IV, then Chandra & Toueg, then Castro & Liskov).

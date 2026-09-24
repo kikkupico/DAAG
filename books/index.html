@@ -46,9 +46,22 @@
     <span class="paper">Dwork, Lynch &amp; Stockmeyer 1988</span></p>
 
 
+    <p><b class="planned">The Last Jar</b> <span class="unwritten">Not yet written</span>
+    — A replicated service is easiest to use when it behaves as if there were one copy of the
+    data. Linearizability makes that precise: every operation must appear to take effect at a
+    single instant between its call and its return, so that anything finished before another
+    began is seen in that order, even when the two callers learned of each other by a path the
+    system never saw. And a system whose every part keeps the rule keeps it as a whole. This is
+    explored at the three houses' counters, where a jar promised to two buyers is a real loss,
+    and where the goatherd who carries word over the mountain can show a buyer's answer to be
+    out of date. The rule is judged by the sun, which no one on Arche can read in the trading
+    season: it says what the houses owe their buyers, not how they could know it.<br>
+    <span class="paper">Herlihy &amp; Wing 1990</span></p>
+
     <p><b class="planned">The Closed Road</b> <span class="unwritten">Not yet written</span>
     — When a network splits, a replicated service must choose between answering every request
-    and answering every request as if there were only one copy of the data; it cannot do both.
+    and answering every request as if there were only one copy of the data, in the sense of
+    <i>The Last Jar</i>; it cannot do both.
     The conjecture, and the proof that made it a theorem, are explored as bandits reported on
     both stretches of the ring road beside the Vine. No runner will go, and the Vine is cut off
     until the road is safe again. Each side must then either refuse to trade, or keep trading
@@ -118,19 +131,14 @@
     foreign invasion destroyed Paxos, but for convenience we assume it didn't.<br>
     <span class="paper">Lamport 1998 · Lamport 2001</span></p>
 
-    <p><b class="planned">The Law and the Ledgers</b> <span class="unwritten">Not yet written</span>
-    — Two things <i>The Part-Time Parliament</i> passes over quickly, in two parts. First, what a
-    replicated system may tell the people who read from it. Linearizability requires every
-    operation to appear to take effect at a single instant between its call and its return, so
-    that anything finished before another began is seen in that order, and a system whose every
-    part keeps the rule keeps it as a whole. Lamport's own story of a farmer, a merchant and a
-    black goat states that rule, and his one specialist per area of the law is the way it
-    composes; Herlihy and Wing make both precise. Second, what an algorithm correct on paper had
-    to fix to run for years: the president holding a lease so as to answer readers without a
-    ballot, ledgers damaged unnoticed, presidencies that must be numbered, changes to who sits,
-    law books too large to copy, and testing. These are told as later repairs to the Paxon
-    parliament, in Lamport's Chamber.<br>
-    <span class="paper">Herlihy &amp; Wing 1990 · Chandra, Griesemer &amp; Redstone 2007</span></p>
+    <p><b class="planned">The Ledgers</b> <span class="unwritten">Not yet written</span>
+    — An algorithm correct on paper has to be repaired before it can run for years. What
+    <i>The Part-Time Parliament</i> passes over quickly is told as later repairs to the Paxon
+    parliament, in Lamport's Chamber: the president holding a lease so as to answer readers
+    without a ballot while keeping the rule of <i>The Last Jar</i>, ledgers damaged unnoticed,
+    presidencies that must be numbered, changes to who sits, law books too large to copy, and
+    testing.<br>
+    <span class="paper">Chandra, Griesemer &amp; Redstone 2007</span></p>
 
   </div>
 </section>
@@ -150,17 +158,13 @@
     voice reaches every seat: one legislator speaks from the stage, the others keep their law
     books in the front row, and the public in the seats behind learn the law. When the speaker
     falls silent, business stops until another legislator takes the stage under a higher
-    number.<br>
-    <span class="paper">Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012</span></p>
+    number. The book has two parts. The second, <i>The Rehearsal</i>, takes up Raft: the same
+    lineage, designed to be taught and tested on students who had to learn it, told as the same
+    business rehearsed. Its refinements are stage directions: a random wait before claiming the
+    stage, so that two legislators rarely claim it at once, and no stage for a legislator whose
+    law book is less complete.<br>
+    <span class="paper">Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 · Ongaro &amp; Ousterhout 2014</span></p>
 
-    <p><b class="planned">The Rehearsal</b> <span class="unwritten">Not yet written</span>
-    — A consensus algorithm that engineers cannot understand will be built wrong. Raft is
-    leader-driven consensus in the same lineage as viewstamped replication, designed to be
-    taught, and tested on students who had to learn it. It is told in the Odeon as the same
-    business rehearsed, and its refinements are stage directions: a random wait before claiming
-    the stage, so that two legislators rarely claim it at once, and no stage for a legislator
-    whose law book is less complete.<br>
-    <span class="paper">Ongaro &amp; Ousterhout 2014</span></p>
   </div>
 </section>
 
@@ -213,20 +217,16 @@
     column.<br>
     <span class="paper">Shapiro, Preguiça, Baquero &amp; Zawirski 2011 · the same authors' comprehensive study, 2011</span></p>
 
-    <p><b class="planned">The Sorting Shelves</b> <span class="unwritten">Not yet written</span>
-    — A system spread across data centres can promise that no one sees a reply before the
-    message it answers, without coordinating on every write, by having each write name the
-    writes it depends on. This is explored through the scholars' letters: a sorting shelf in
-    every library that holds each letter back until every letter it answers has arrived there.<br>
-    <span class="paper">Lloyd et al. 2011</span></p>
-
-    <p><b class="planned">The Reading Room</b> <span class="unwritten">Not yet written</span>
-    — Some transactional guarantees can be kept while the network is split, and others
-    provably cannot. Which is which is explored as a library's reading room, asking what a
-    librarian can still promise a reader while the couriers are stopped. A reader can be
-    promised never to see half of a revision; no one can be promised that two readers will not
-    both take the last copy.<br>
-    <span class="paper">Bailis et al. 2014</span></p>
+    <p><b class="planned">The Shelf and the Reading Room</b> <span class="unwritten">Not yet written</span>
+    — Two things that can be promised without coordinating on every write, and one that cannot,
+    in two parts told in every library. First, a system spread across data centres can promise
+    that no one sees a reply before the message it answers, by having each write name the writes
+    it depends on: a sorting shelf in every library holds each letter back until every letter it
+    answers has arrived there. Second, some transactional guarantees can be kept while the
+    network is split, and others provably cannot. In the reading room beside the shelf, a
+    librarian asks what can still be promised a reader while the couriers are stopped: never to
+    see half of a revision, yes; that two readers will not both take the last copy, no.<br>
+    <span class="paper">Lloyd et al. 2011 · Bailis et al. 2014</span></p>
   </div>
 </section>
 
