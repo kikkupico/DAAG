@@ -277,21 +277,14 @@ of differing length, and a far coast out of reach of any assembly for the terrac
 ## Out of scope
 
 The settings cover 25 papers. Not covered: Flexible Paxos · Attiya, Bar-Noy & Dolev · Terry
-1994 session guarantees · Gray & Lamport 2006 (Paxos Commit) · Spanner · Calvin · Schneider
-1990 · Burrows (Chubby) · Abadi (PACELC) · Bailis *Coordination Avoidance*.
+1994 session guarantees · Gray & Lamport 2006 (Paxos Commit) · Schneider 1990 · Burrows
+(Chubby) · Abadi (PACELC) · Bailis *Coordination Avoidance*.
 
 **Systems papers, out of scope by the rule above**, though some are on disk: Liskov & Cowling
 2012 (VR Revisited) · Ongaro & Ousterhout 2014 (Raft) · Chandra, Griesemer & Redstone 2007
 (Paxos Made Live) · DeCandia et al. 2007 (Dynamo) · Lloyd et al. 2011 (COPS) · Gray et al.
 1996 · Terry et al. 1995 (Bayou) · Saito & Shapiro 2005 (a survey) · Carbone et al. 2015 (Flink
-snapshots).
-
-**The strongest candidates to add are Spanner and Calvin**, and both would belong on Arche.
-Its ring road runs an arc from no clock (Lamport) to partial order (vector clocks). Spanner is
-the natural capstone — *what if you buy back a bounded clock?* — with TrueTime intervals and
-commit wait making external consistency physical. Calvin is its opposite answer: fix the order
-before anyone acts, and nothing is left to decide. Together they would close the series where
-it began, with the order of events.
+snapshots) · Corbett et al. 2012 (Spanner) · Thomson et al. 2012 (Calvin).
 
 ---
 
@@ -307,10 +300,8 @@ it began, with the order of events.
 
 ## Open
 
-1. **Spanner and Calvin** — add them on Arche, or keep the set at 25. Neither paper is on
-   disk.
-2. **How many books per island.** The grounds and buildings are fixed; the book count is not.
-   Current plan: one paper per book except Book IV (FLP with Byzantine Generals) and the
-   paired papers (Lamport 1998 with 2001, Brewer with Gilbert & Lynch, Shapiro's two, Hellerstein
+1. **How many books per island.** The grounds and buildings are fixed; the book count is not.
+   Current plan: one paper per book except Book I (Lamport with Fidge and Mattern), Book IV
+   (FLP with Byzantine Generals) and the paired papers (Lamport 1998 with 2001, Brewer with Gilbert & Lynch, Shapiro's two, Hellerstein
    with Ameloot). The camps keep five books: Book IV, then Ben-Or, Chandra & Toueg, Castro &
    Liskov and HotStuff.
