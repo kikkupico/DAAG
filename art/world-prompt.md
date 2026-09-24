@@ -5,7 +5,7 @@ This document provides modular, high-fidelity generation prompts for the islands
 Rather than a single monolithic world prompt, this specification provides:
 1. **Universal Pipeline Directives & Negative Prompts** ensuring watertight 3D reconstruction.
 2. For each island:
-   - **One Natural Geography & Clearings Prompt** establishing pristine terrain, coastline, and unbuilt settlement clearings. *(Arche's is a full island plate carrying its buildings and book locations; see 2.1.)*
+   - **One Natural Geography & Clearings Prompt** establishing pristine terrain, coastline, and unbuilt settlement clearings. *(Arche's and Paxos's are full island plates carrying their buildings and book locations; see 2.1 and 3.1.)*
    - **A Set of Focused Architectural Prompts** capturing individual structures, houses, and civil engineering landmarks.
 
 **The island 3D models are Meshy image-to-3D conversions of the island plates** (`art/arche-3d.glb`, `art/paxos-3d.glb`), loaded by `explorer.html` and rendered for previs by `art/previs/render.py`. The prompts here are the visual brief, and the source for scene images.
@@ -197,33 +197,37 @@ NO council ring, NO circle of seats, NO roofs, NO banners, NO fire. Windswept sc
 
 ## 3. Island 2: Paxos
 
-> **Narrative Setting:** The island of sovereign civic consensus. An elongated limestone spine with dramatic vertical western sea-cliffs and gentle eastern slopes descending into olive groves and sheltered harbours. The civic heart contains the Chamber, a circular domed rotunda where the parliament of Paxos sits.
+> **Narrative Setting:** One island, two ways of keeping records, and its shape groups the papers. An elongated limestone body running north to south, with dramatic vertical western sea-cliffs and gentle eastern slopes descending into olive groves and sheltered coves, and from its southern end a narrow isthmus leading to a high headland that juts southeast towards AntiPaxos. Three districts:
+> - **The Chamber** (the headland): a circular domed rotunda on a terrace near the headland's tip, where the parliament sits, overlooking the strait and the Odeon on AntiPaxos opposite. The island road runs over the isthmus, past the Chamber, to a ferry landing at the tip, so the Chamber is on a through route. The harbour town sits on the headland's sheltered bay.
+> - **The hall of two doors** (the isthmus): one door faces out along the headland to the Chamber and AntiPaxos, one back into the island to the scholars' coast.
+> - **The scholars' coast** (the body of the island), which the scholars call Homonoia: lower, deeply indented country of coves and valleys, with the stoa and festival ground on a northern harbour, about a dozen small libraries within casual reach of one another along footpaths of differing length, a courier cove on the rocky northwest shore, and the far terraces on remote slopes at the northern tip, as far from the headland as the island goes. The scholars hold no assembly.
 
-### 3.1 Island Plate Prompt (Geography, Habitation & the Chamber)
+### 3.1 Island Plate Prompt (Geography, Habitation & Book Locations)
 Like Arche's, the Paxos plate carries its buildings in place. It is made in three steps.
 
 **Step 1 — plate** (text-to-image, `banana_pro`, aspect 16:9):
 ```text
 Detailed 3D isometric diorama of the Greek island Paxos, Hellenistic Greece, 3rd century BC.
 True orthographic axonometric view, deep focus, warm directional sunlight, zero people.
-A long narrow limestone island running north to south, set in calm deep Aegean blue sea that reaches every frame edge, turquoise shoals and white surf at the shore; no pedestal, no cutaway.
+A long limestone island running north to south; from its southern end a narrow low isthmus leads to a high rocky headland jutting southeast into the sea. Across a narrow strait from the headland's tip, the edge of a small separate islet is just visible. Calm deep Aegean blue sea reaches every frame edge, turquoise shoals and white surf at the shore; no pedestal, no cutaway.
 West coast: sheer white limestone sea-cliffs with sea-caves.
 East side: gentle slopes of terraced olive groves, goat pasture, cypresses and maquis down to sheltered coves.
-On a level civic terrace above the main eastern bay stands a single circular domed rotunda of white ashlar limestone ringed by a Doric colonnade, with evenly spaced doorways and statues round it; a paved road crosses the terrace past it.
-Below, a small harbour town of red-tiled stone houses, a market square, quays and moored merchant ships.
+The headland: on a level civic terrace near its tip, looking out over the strait, stands a single circular domed rotunda of white ashlar limestone ringed by a Doric colonnade, with evenly spaced doorways and statues round it; a paved road crosses the terrace past it and runs on to a small stone ferry landing at the tip. On the headland's sheltered bay, a small harbour town of red-tiled stone houses, a market square, quays and moored merchant ships.
+The isthmus: one small symmetrical gabled hall of pale limestone with a door in each end wall, one facing out along the headland, one facing back into the island.
+The body of the island: lower rolling hills and valleys with a deeply indented coast of coves and pebble beaches. On a northern harbour, a long colonnaded stoa facing an open ground set with rows of long tables. About a dozen small porched library buildings scattered in clearings among olive trees across the valleys and hill shoulders, linked by footpaths of differing length. A small rocky cove on the northwest shore with timber piers and small boats. At the remote northern tip, narrow stepped terraces with long stone tables on steep slopes facing the open sea.
 Farmsteads along one road running the length of the island.
 No theatre, no citadel, no quarry, no ruins.
 ```
 
 **Step 2 — town pass** (image-to-image on the step 1 image, `banana_pro`, aspect 16:9). Small, tightly packed houses reconstruct in 3D as tall blocks, so the town is redrawn as low courtyard houses before conversion:
 ```text
-Keep [image 1] exactly as it is: the same island, cliffs, sea, rotunda, road, olive terraces, trees, farmsteads, quays, ships, camera and lighting.
+Keep [image 1] exactly as it is: the same island, headland, isthmus, cliffs, sea, rotunda, ferry landing, hall, stoa, libraries, terraces, road, olive terraces, trees, farmsteads, quays, ships, camera and lighting.
 Change only the harbour town: replace its houses with low single-storey Hellenistic courtyard houses of rough limestone, each a squat box with a shallow red-tiled roof and a small open courtyard, spaced a little apart with narrow lanes between them, clearly no taller than they are wide.
 No multi-storey buildings anywhere.
 Zero people.
 ```
 
-**Step 3 — 3D.** A Meshy image-to-3D conversion of this plate is the island model, `art/paxos-3d.glb`, loaded by `explorer.html`.
+**Step 3 — 3D.** A Meshy image-to-3D conversion of this plate is the island model, `art/paxos-3d.glb`, loaded by `explorer.html`. The live model is a plain island carrying only the Chamber; the headland, the scholars' coast and the hall of two doors are not yet in it.
 
 ### 3.2 Architectural Features Prompts
 
@@ -254,23 +258,75 @@ A plain wooden bench for messengers beside each doorway.
 Warm daylight, photorealistic PBR stone, bronze and wood.
 ```
 
+#### Feature 2: The Stoa & Festival Ground
+```text
+Detailed 3D isometric architectural diorama of The Stoa and Festival Ground on Paxos's scholars' coast, Hellenistic Greece.
+Axonometric orthographic projection, hyperfocal focus, clean unpopulated civic space, zero people.
+Sited on the waterfront of the northern harbour.
+A long two-storey colonnaded stoa of pale limestone with a terracotta roof runs along the harbour front, its back wall lined with carved stone benches, wooden boards pinned thick with small scraps of papyrus, and niches holding rolled papyrus scrolls; a bronze armillary sphere and a painted diagram of the Sun at the centre with the Earth circling it stand on a plinth at the middle of the colonnade.
+In front of it, an open festival ground of beaten earth and flagstones set with rows of long plain wooden collation tables, paired facing each other, each with two scroll rests, oil lamps and inkpots.
+Stone quays with wooden mooring posts and small courier boats moored alongside; calm turquoise water.
+```
+
+#### Feature 3: A Library (repeated type)
+```text
+Detailed 3D isometric architectural asset of one small library on Paxos's scholars' coast, Hellenistic Greece.
+Axonometric orthographic projection, hyperfocal focus, clean unpopulated scholarly building, zero people.
+Sited in a small level clearing among olive trees, a footpath leading away.
+A small limestone building with a columned porch, a pitched oxblood terracotta tile roof, and a heavy timber double door standing open onto walls of wooden pigeonhole shelves (armaria) filled with rolled scrolls.
+Beside the main hall, a small reading room with a single reading table, a lectern and a bench.
+The same building is repeated about a dozen times across the scholars' coast.
+```
+
+#### Feature 4: The Courier Landing
+```text
+Detailed 3D isometric architectural asset of The Courier Landing on Paxos's scholars' coast, Hellenistic Greece.
+Axonometric orthographic projection, hyperfocal focus, clean unpopulated landing, zero people.
+Tucked into a steep, narrow rocky cove sheltered by high limestone cliffs.
+Features stone moorings and timber piers where swift courier boats are tied, a small open-sided shelter with benches, and paved stone paths climbing out of the cove toward the libraries.
+Rugged sea-cliff backdrop.
+```
+
+#### Feature 5: The Far Terraces (Tally Pebbles)
+```text
+Detailed 3D isometric architectural asset of The Far Terraces on Paxos's scholars' coast, Hellenistic Ancient Greece.
+Axonometric orthographic projection, hyperfocal focus, clean unpopulated terraces, zero people.
+Carved into steep, remote limestone hillsides at the island's northern tip, facing out toward the open, unbroken horizon of the sea.
+A dramatic flight of dry-stone retaining walls creating narrow, stepped terraces planted with wild olive trees.
+Set upon each terrace are long stone counting tables divided into twelve parallel shallow troughs, one column per library, each holding neat mounds of black and white voting pebbles; small inscribed stone markers head each column.
+Windswept, quiet, meditative landscape as far from the headland as the island goes.
+```
+
+#### Feature 6: The Hall of Two Doors
+```text
+Detailed 3D isometric architectural diorama of The Hall of Two Doors on Paxos, Hellenistic Ancient Greece.
+Axonometric orthographic projection, hyperfocal focus, clean unpopulated temple-hall, zero people.
+Standing on the narrow low isthmus that joins Paxos's headland to the rest of the island, the sea visible on both sides, the island's road running past it.
+An elegant, perfectly symmetrical Hellenistic temple-like hall built of pale dressed ashlar limestone with an oxblood terracotta tiled gabled roof.
+The defining architectural feature is two prominent, opposing monumental portal doorways on opposite facades:
+- The Inland Portal: facing back into the island toward the scholars' coast, framed with simple, unadorned rustic stone lintels.
+- The Headland Portal: facing out along the headland toward the Chamber and, across the strait, AntiPaxos, the bodies that assemble, framed with classical fluted pilasters and a carved pediment.
+Both massive bronze doors stand wide open, revealing an open, sunlit stone interior hall paved with alternating white and black marble tiles.
+Surrounded by low stone parapets, gnarled wild olive trees and maquis.
+```
+
 ---
 
-## 4. Island 3: Skene
+## 4. Islet: AntiPaxos
 
-> **Narrative Setting:** The island of the stage: a small sovereign island, separate from Paxos, that governs itself from one theatre. A compact rounded island of limestone hills around a single sheltered bay, with a natural hillside bowl above the harbour town where the Odeon stands.
+> **Narrative Setting:** The islet of the stage: a small sovereign islet across the strait from Paxos's headland, that governs itself from one theatre. A compact rounded islet of limestone hills around a single sheltered bay that opens on the strait, with a natural hillside bowl above the harbour town where the Odeon stands, facing the Chamber on the headland across the water.
 
 ### 4.1 Natural Geography and Clearings Prompt
 ```text
-Detailed 3D isometric terrain asset of a small Greek island, Hellenistic Mediterranean setting.
+Detailed 3D isometric terrain asset of a small Greek islet, Hellenistic Mediterranean setting.
 High-angle orthographic axonometric projection, hyperfocal deep focus across all planes, crisp fine geometry, 8k resolution.
 Completely unpopulated natural landscape, pristine empty clearings, no buildings, zero people, no figures.
 
 Surrounding Ocean:
-The island rests naturally inside an expansive, continuous stretch of calm deep Aegean blue sea extending to all edges of the frame. Realistic turquoise coastal shoals and white surf wrap naturally around the limestone shorelines. Flat natural water plane at sea level. Strictly NO cutaway box, NO acrylic glass slab, NO diorama pedestal, NO vertical water walls.
+The islet rests naturally inside an expansive, continuous stretch of calm deep Aegean blue sea extending to all edges of the frame. Realistic turquoise coastal shoals and white surf wrap naturally around the limestone shorelines. Flat natural water plane at sea level. Strictly NO cutaway box, NO acrylic glass slab, NO diorama pedestal, NO vertical water walls.
 
 Macro-Topography:
-A compact, rounded island of low limestone hills enclosing one deep, sheltered, horseshoe-shaped bay on its eastern side.
+A compact, rounded islet of low limestone hills enclosing one deep, sheltered, horseshoe-shaped bay on its northwestern side, opening on the strait toward a larger island.
 
 Natural Clearings:
 - Harbour flat: a level shelf at the head of the bay (clearing for the harbour town).
@@ -284,9 +340,9 @@ Terraced olive groves with pale silvery-green foliage, stands of tall dark-green
 
 #### Feature 1: The Odeon
 ```text
-Detailed 3D isometric architectural diorama of The Odeon on Skene, Hellenistic Greece.
+Detailed 3D isometric architectural diorama of The Odeon on AntiPaxos, Hellenistic Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated theatre hall, zero people.
-Built into the natural hillside bowl above Skene's sheltered bay.
+Built into the natural hillside bowl above AntiPaxos's sheltered bay.
 A roofed theatre hall: a large near-square limestone building whose single timber-trussed, oxblood terracotta-tiled roof covers both the semicircular raked seating inside and the raised stage, with a row of tall clerestory windows along each side wall.
 A colonnaded Doric porch runs across the front facing the bay, with broad doors into the hall; the rear of the building is set into the slope, following the rake of the seats within.
 Surrounded by dry-stone retaining terraces, paved stone ramps, and silver-green olive trees.
@@ -295,7 +351,7 @@ Surrounded by dry-stone retaining terraces, paved stone ramps, and silver-green 
 #### Feature 1a: The Odeon — Interior
 The roof is lifted away. Everything faces one stage: the legislators' thrones in the front row, each with its law book, and the public's benches behind. The board on the stage wall is for the number of the current speaker's term.
 ```text
-Isometric 3D interior model of the Odeon on Skene, a roofed Hellenistic Greek theatre hall.
+Isometric 3D interior model of the Odeon on AntiPaxos, a roofed Hellenistic Greek theatre hall.
 Orthographic axonometric view, deep focus, zero people.
 The timber roof is lifted away to show the whole interior.
 Semicircular raked stone benches for the public rise from a flat semicircular orchestra floor to the back wall; every seat faces one raised stone stage.
@@ -307,118 +363,7 @@ Warm daylight, photorealistic PBR stone, marble and timber.
 
 ---
 
-## 5. Island 4: Homonoia
-
-> **Narrative Setting:** The island of scholars and copyists, which holds no assembly: its copies may differ for a while, so long as they agree in the end. Lower-profile, highly indented coastline with sea-coves, pebble beaches, and remote hillside terraces. Features the stoa and festival ground, the libraries scattered within casual reach of one another, the courier cove where letters land, and the far terraces.
-
-### 5.1 Natural Geography and Clearings Prompt
-```text
-Detailed 3D isometric terrain asset of the Greek island Homonoia, Hellenistic Mediterranean archipelago setting.
-High-angle orthographic axonometric projection, hyperfocal deep focus across all planes, crisp fine geometry, 8k resolution.
-Completely unpopulated natural landscape, pristine empty clearings, no buildings, zero people, no figures.
-
-Surrounding Ocean:
-The island rests naturally inside an expansive, continuous stretch of calm deep Aegean blue sea extending to all edges of the frame. Highly intricate turquoise coastal lagoons, shallow shoals, sandbars, and submerged sea-reefs wrap naturally around the shorelines. Flat natural water plane at sea level. Strictly NO cutaway box, NO acrylic glass slab, NO diorama pedestal, NO vertical water walls.
-
-Macro-Topography:
-A lower-profile, deeply indented island of rolling limestone hills, gentle valleys, and highly convoluted shorelines.
-- Main eastern harbour: a large, sheltered natural bay with turquoise water and gentle gravel shores.
-- Southern shore: a broad, gently curving crescent bay with golden sand and calm water.
-- Western courier cove: a small, deeply indented rocky fjord-like cove sheltered from open swell.
-- Southwestern hills: steep, remote coastal slopes facing out toward the endless open sea, isolated from the rest of the island by rocky ridges.
-
-Natural Clearings:
-- Flat waterfront esplanade clearing along the main harbour (clearing for the Stoa and Festival Ground).
-- A dozen small level clearings scattered across the gentle valleys and hill shoulders, linked by footpaths of differing length (clearings for the Libraries).
-- Level rock-cut platform at the head of the courier cove (clearing for the Courier Landing).
-- Elaborate hillside tiers cleared on the far southwestern slopes (clearing for the Far Terraces).
-
-Vegetation:
-Abundant silvery-green olive orchards, aromatic maquis and phrygana scrub, dry golden summer grasses, and clusters of Italian cypress trees. Warm directional sunlight, photorealistic PBR limestone and soil.
-```
-
-### 5.2 Architectural Features Prompts
-
-#### Feature 1: The Stoa & Festival Ground
-```text
-Detailed 3D isometric architectural diorama of The Stoa and Festival Ground on Homonoia, Hellenistic Greece.
-Axonometric orthographic projection, hyperfocal focus, clean unpopulated civic space, zero people.
-Sited on the main eastern bay waterfront.
-A long two-storey colonnaded stoa of pale limestone with a terracotta roof runs along the harbour front, its back wall lined with carved stone benches, wooden boards pinned thick with small scraps of papyrus, and niches holding rolled papyrus scrolls; a bronze armillary sphere and a painted diagram of the Sun at the centre with the Earth circling it stand on a plinth at the middle of the colonnade.
-In front of it, an open festival ground of beaten earth and flagstones set with rows of long plain wooden collation tables, paired facing each other, each with two scroll rests, oil lamps and inkpots.
-Stone quays with wooden mooring posts and small courier boats moored alongside; calm turquoise water.
-```
-
-#### Feature 2: A Library (repeated type)
-```text
-Detailed 3D isometric architectural asset of one small library on Homonoia, Hellenistic Greece.
-Axonometric orthographic projection, hyperfocal focus, clean unpopulated scholarly building, zero people.
-Sited in a small level clearing among olive trees, a footpath leading away.
-A small limestone building with a columned porch, a pitched oxblood terracotta tile roof, and a heavy timber double door standing open onto walls of wooden pigeonhole shelves (armaria) filled with rolled scrolls.
-Beside the main hall, a small reading room with a single reading table, a lectern and a bench.
-The same building is repeated about a dozen times across the island.
-```
-
-#### Feature 3: The Courier Landing
-```text
-Detailed 3D isometric architectural asset of The Courier Landing on Homonoia, Hellenistic Greece.
-Axonometric orthographic projection, hyperfocal focus, clean unpopulated landing, zero people.
-Tucked into a steep, narrow rocky cove sheltered by high limestone cliffs.
-Features stone moorings and timber piers where swift courier boats are tied, a small open-sided shelter with benches, and paved stone paths climbing out of the cove toward the libraries.
-Rugged sea-cliff backdrop.
-```
-
-#### Feature 4: The Far Terraces (Tally Pebbles)
-```text
-Detailed 3D isometric architectural asset of The Far Terraces on Homonoia, Hellenistic Ancient Greece.
-Axonometric orthographic projection, hyperfocal focus, clean unpopulated terraces, zero people.
-Carved into steep, remote southwestern limestone hillsides facing out toward the open, unbroken horizon of the sea.
-A dramatic flight of dry-stone retaining walls creating narrow, stepped terraces planted with wild olive trees.
-Set upon each terrace are long stone counting tables divided into twelve parallel shallow troughs, one column per library, each holding neat mounds of black and white voting pebbles; small inscribed stone markers head each column.
-Windswept, quiet, meditative landscape far from all cities and assemblies.
-```
-
----
-
-## 6. Island 5: Boule / Mesonisi (The Council Islet — The Adjudicator)
-
-> **Narrative Setting:** The small intermediate rock sitting in the open channel between Paxos and Homonoia. It houses the CALM theorem: the single architectural building that adjudicates whether a decree requires parliamentary consensus or can proceed coordination-free.
-
-### 6.1 Natural Geography and Clearings Prompt
-```text
-Detailed 3D isometric terrain asset of the Council Islet Boule (Mesonisi), Hellenistic Aegean setting.
-High-angle orthographic axonometric projection, hyperfocal deep focus across all planes, crisp fine geometry, 8k resolution.
-Completely unpopulated natural islet, pristine empty clearing, no buildings, zero people, no figures.
-
-Surrounding Ocean:
-The solitary islet sits naturally in the centre of an expansive, continuous stretch of deep Aegean blue sea extending to all edges of the frame. White surf breaks against submerged rocky reefs and jagged limestone sea-ledges around the islet base. Flat natural water plane at sea level. Strictly NO cutaway box, NO acrylic glass slab, NO diorama pedestal, NO vertical water walls.
-
-Macro-Topography:
-A steep, solitary limestone crag rising dramatically out of open water.
-The islet features rugged, stepped rock faces on all flanks, culminating in a small, level flattened limestone rock plateau at the central crest.
-A natural winding path ascends from a sheltered rock-cut boat notch at sea level up to the crest plateau.
-
-Vegetation:
-Hardy Mediterranean vegetation adapted to sea salt and wind: gnarled wild olive trees clinging to crevices, wind-stunted pine trees, and aromatic thyme scrub. Warm directional sunlight, photorealistic PBR rock materials.
-```
-
-### 6.2 Architectural Feature Prompt: The Hall of Two Doors
-```text
-Detailed 3D isometric architectural diorama of The Hall of Two Doors on Boule, Hellenistic Ancient Greece.
-Axonometric orthographic projection, hyperfocal focus, clean unpopulated temple-hall, zero people.
-Perched upon the highest crest of the solitary rocky islet.
-A winding monumental stone stairway cut into the living rock ascends from a small sea-level stone boat slip to the summit.
-Dominating the crest stands The Hall of Two Doors: an elegant, perfectly symmetrical Hellenistic temple-like hall built of pale dressed ashlar limestone with an oxblood terracotta tiled gabled roof.
-The defining architectural feature is two prominent, opposing monumental portal doorways on opposite facades:
-- The Western Portal: facing west toward Homonoia, framed with simple, unadorned rustic stone lintels.
-- The Eastern Portal: facing east toward Paxos and Skene, the islands that assemble, framed with classical fluted pilasters and a carved pediment.
-Both massive bronze doors stand wide open, revealing an open, sunlit stone interior hall paved with alternating white and black marble tiles.
-Surrounded by low stone parapets, gnarled wild olive trees, and breathtaking views of the surrounding deep blue Aegean sea.
-```
-
----
-
-## 7. Image-to-3D Reconstruction Guidelines
+## 5. Image-to-3D Reconstruction Guidelines
 
 When processing these 2D isometric renders through neural 3D generators — Meshy (web UI) is the one to use; Tripo's conversions are far worse:
 1. **Sea Level Plane Alignment ($Z = 0$):** Because the water extends continuously across the frame, the sea acts as a ground reference plane. Neural depth models (Marigold/ZoeDepth) reconstruct the water as a uniform planar baseline.

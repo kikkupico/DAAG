@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knowing When to Wait — Paxos</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">Paxos · The Hall of Two Doors</span>
+  </div>
+</nav>
+<div class="page">
+
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Paxos · The Hall of Two Doors</div>
+  <h1 class="display" style="margin:18px 0 6px">Knowing When to Wait</h1>
+  <p class="sub">Which problems can machines solve without ever waiting for one another, and which force them to wait?</p>
+  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the allegorical
+  devices it will use, what each stands for in the paper, and where each meets the other books.
+  It will be replaced by the book.
+  <br><span class="paper">Hellerstein 2010 · Ameloot, Neven &amp; Van den Bussche 2011 · Hellerstein &amp; Alvaro 2020 · the hall of two doors, Paxos</span></p>
+</header>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>The idea</h2></div>
+  <div class="prose">
+<p><b>CALM:</b> a program has a consistent, coordination-free distributed implementation if and only if it is <b>monotonic</b>: more input never retracts an output. Conjectured by Hellerstein (2010); proved by Ameloot, Neven and Van den Bussche (2011) for networks of relational transducers, where coordination-free programs compute exactly the monotone queries, as do <b>oblivious</b> ones that know neither the other nodes nor how many there are; restated by Hellerstein and Alvaro (2020), who show how to <b>seal</b> a non-monotone step so that only it needs coordination.</p>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>The devices</h2></div>
+  <div class="prose">
+<div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In this book</th><th>In the paper</th><th>Also in</th></tr></thead>
+      <tbody>
+        <tr><td><b>a question brought to the hall</b></td><td>A program or query.</td><td></td></tr>
+        <tr><td><b>"has at least one copy of this work been made?": once yes, yes for ever</b></td><td>A monotone query.</td><td></td></tr>
+        <tr><td><b>"is this every copy?", "no one has claimed this"</b></td><td>A non-monotone query: it rests on absence.</td><td></td></tr>
+        <tr><td><b>the scholars' door</b></td><td>Coordination-free.</td><td>The scholars' coast</td></tr>
+        <tr><td><b>the door of the assemblies, facing the Chamber and across the strait the Odeon</b></td><td>Coordination.</td><td><i>The Part-Time Parliament</i>; <i>One Leader at a Time</i></td></tr>
+        <tr><td><b>a waiting chain: library A waits on B's copy, B on A's; once found, it stays found</b></td><td>Deadlock detection: monotone.</td><td></td></tr>
+        <tr><td><b>a work no one cites any more may be discarded, but only once all have been heard from</b></td><td>Garbage collection: non-monotone.</td><td></td></tr>
+        <tr><td><b>a librarian who knows neither how many libraries there are nor their names</b></td><td>An oblivious transducer.</td><td></td></tr>
+        <tr><td><b>every library already holding every copy, so nobody needs to read a letter</b></td><td>Ameloot's coordination-free: an ideal distribution on which no message is needed.</td><td></td></tr>
+        <tr><td><b>a reading list sent sealed with its count, so the receiver knows when he has it all</b></td><td>Sealing (the 2020 shopping-cart checkout).</td><td></td></tr>
+        <tr><td><b>the terrace merge</b></td><td>A monotone merge.</td><td><i>Changes That Never Clash</i></td></tr>
+        <tr><td><b>the last copy on loan</b></td><td>Lost update needs coordination because it is non-monotone.</td><td><i>What You Can Promise Alone</i></td></tr>
+        <tr><td><b>a stable property: once true, true for ever</b></td><td>Detectable from a partial view.</td><td><i>Taking Stock Without Stopping</i></td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Planned chapters</h2></div>
+  <div class="prose">
+<ol><li>Two doors.</li><li>Questions that only grow.</li><li>Questions that rest on absence.</li><li>The waiting chain and the unwanted work.</li><li>The librarian without a roster.</li><li>The proof, in outline.</li><li>Sealing: waiting only once.</li><li>What goes out by each door, across the series.</li><li>In the Book, In the Paper.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Must not exist</h2></div>
+  <div class="prose">
+<p>the hall ruling on anything; a question it cannot sort; a third door; an assembly inside the hall.</p>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Open questions</h2></div>
+  <div class="prose">
+<ol><li><b>The proof.</b> Ameloot's definition of coordination-free (an ideal distribution on which no message is needed) is subtle. How much of it goes in the prose, and how much in closed proofs?</li><li><b>The 2010 paper's other conjectures</b> (CRON, Fateful Time) are left out.</li><li><b>Names.</b> Hellersteinos and Alvaria, with Ameloot, Neven and Van den Bussche as three of the questioners; the footnote credits all five.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+</div>
+</body>
+</html>

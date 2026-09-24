@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Changes That Never Clash — Paxos</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">Paxos · The Scholars' Coast</span>
+  </div>
+</nav>
+<div class="page">
+
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Paxos · The Scholars' Coast</div>
+  <h1 class="display" style="margin:18px 0 6px">Changes That Never Clash</h1>
+  <p class="sub">Can some changes be combined in any order, any number of times, and still come out the same everywhere, so that they never clash and no one ever needs to coordinate?</p>
+  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the allegorical
+  devices it will use, what each stands for in the paper, and where each meets the other books.
+  It will be replaced by the book.
+  <br><span class="paper">Shapiro, Preguiça, Baquero &amp; Zawirski 2011 (both papers) · the far terraces, Paxos</span></p>
+</header>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>The idea</h2></div>
+  <div class="prose">
+<p><b>Strong eventual consistency (SEC):</b> replicas that have received the same updates are in the same state, with no coordination. Two sufficient conditions. <b>State-based (CvRDT):</b> states form a join-semilattice, updates only move up, and merge is the least upper bound. <b>Op-based (CmRDT):</b> concurrent operations commute, and delivery is causal. Each kind can emulate the other. SEC is not sequential consistency. The comprehensive report adds the portfolio: counters, registers, sets, graphs, sequences.</p>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>The devices</h2></div>
+  <div class="prose">
+<div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In this book</th><th>In the paper</th><th>Also in</th></tr></thead>
+      <tbody>
+        <tr><td><b>the terrace tables: for each work, one column of pebbles per library</b></td><td>A counter as a vector, one entry per replica (G-Counter).</td><td>The column room (<i>Ordering Without Clocks</i>)</td></tr>
+        <tr><td><b>a library adds pebbles only to its own column</b></td><td>An update touches only the replica's own entry.</td><td></td></tr>
+        <tr><td><b>merging two tables: take the larger pile in each column</b></td><td>Merge as join: commutative, associative, idempotent.</td><td></td></tr>
+        <tr><td><b>why not one pile: two terraces adding each other's totals count twice, and again at every merge</b></td><td>Why a plain sum is not a CRDT.</td><td></td></tr>
+        <tr><td><b>white pebbles for copies made, black for copies lost</b></td><td>Two counters, one up and one down (PN-Counter).</td><td></td></tr>
+        <tr><td><b>sending the whole table, or a notice "one more copy at library X"</b></td><td>State-based or op-based.</td><td></td></tr>
+        <tr><td><b>a notice must arrive once, and after those it follows</b></td><td>Op-based needs exactly-once, causal delivery.</td><td><i>What You Can Promise Alone</i>: no reply before the letter it answers</td></tr>
+        <tr><td><b>two terraces that have taken in the same notices show the same piles</b></td><td>SEC.</td><td></td></tr>
+        <tr><td><b>the catalogue of titles, only ever added to</b></td><td>G-Set.</td><td></td></tr>
+        <tr><td><b>the struck-off list: once struck, never restored</b></td><td>2P-Set.</td><td></td></tr>
+        <tr><td><b>each entry carries its own mark; striking out removes only the marks you have seen</b></td><td>OR-Set (add wins).</td><td></td></tr>
+        <tr><td><b>two libraries each adding one title and striking the other's, ending with both</b></td><td>SEC is not sequential consistency.</td><td><i>Many Copies, Acting as One</i></td></tr>
+        <tr><td><b>the latest edition wins by its tally</b></td><td>LWW-Register.</td><td>The tally house (<i>Ordering Without Clocks</i>)</td></tr>
+        <tr><td><b>the register of which work cites which</b></td><td>The graph CRDT (the paper's web-crawler example).</td><td></td></tr>
+        <tr><td><b>Arche's count of jars</b></td><td>The contrast: ordered and snapshotted, never merged.</td><td><i>Taking Stock Without Stopping</i></td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Planned chapters</h2></div>
+  <div class="prose">
+<ol><li>The count no one settles.</li><li>One column each.</li><li>Take the larger: why merging never clashes.</li><li>Sending the table or sending the change.</li><li>Made and lost: counting down.</li><li>Lists of titles: adding, striking, adding back.</li><li>Not the same as one order.</li><li>In the Book, In the Paper.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Must not exist</h2></div>
+  <div class="prose">
+<p>an assembly; a vote over a count; a pile that shrinks; any wait for another library before adding a pebble.</p>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Open questions</h2></div>
+  <div class="prose">
+<ol><li><b>Black pebbles.</b> <code>settings.md</code> counts copies made only, which is a G-Counter; the terrace prompt already shows black and white. Use black for copies lost (PN-Counter)?</li><li><b>The graph</b> is the short paper's worked example. Keep it (cross-references between works) or leave it to the paper column?</li><li><b>Names.</b> Four authors at four terraces: Shapirios, Preguiçaia, Baqueros, Zawirskios.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+</div>
+</body>
+</html>

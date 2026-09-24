@@ -45,45 +45,51 @@ Built, and fixed by *The Limits of Agreement*: nothing here may contradict that 
 | **The camps** (×4) | FLP 1985 · Ben-Or 1983 · Chandra &amp; Toueg 1996 <span title="shared">◆</span> | One small linen tent in a clearing at the foot of each gully, one man to a tent, and at its mouth a shield, a chest and a wicker basket holding a few birds that belong to the other tents. Nothing else: no palisade, no loft, no fire. **Three books share the same four camps**, and each changes one assumption, never the building. FLP changes nothing. Ben-Or adds a prop: a coin of Attic silver, owl for north and goddess for south, tossed by a man who cannot settle on a gate, each alone in his own tent, so that chance breaks what no plan can; the tosses line up in the end with probability 1, never by a night anyone can name. Chandra &amp; Toueg adds a prop: the slate, a row per other tent, whose chalk mark is a dead man or a raven still in the folds and must never resolve which; with a majority alive, a turn to propose passes round the tents by round number, which is no one's command. The mercenaries have no leader and do not lie, so the leader-based papers are on the crown. **A camp carries nothing from one house to another**, so the camps never become a channel between the houses. The camps are where asynchrony is studied. |
 | **The chief's hollow and the three crag posts, inside the circuit wall** | Byzantine Generals 1982 · Reaching Agreement 1980 · Castro &amp; Liskov 1999 · HotStuff 2019 <span title="shared">◆</span> | The chief in a rock hollow on the peak with the loot; three posts tucked into separate crags below the rim, each out of sight and earshot of the others and of the peak, each with its own sandglass. The glasses are turned together at dusk, before the posts are manned, on the one synchronous night. The posts are out of earshot because men within shouting distance of each other have a broadcast, and a chief with a broadcast cannot tell different men different things. The 1980 paper is the earlier and more general result; the 1982 paper is the framing everyone remembers. **Later nights** keep the same four men, birds and seal rings, and add the **loot book**, a copy at each post, whose entries each man files and trusts only when two seals agree. Wind on the peak pins the ravens down while it blows; when it drops, flights are short again. Castro &amp; Liskov: the chief's job, numbering the entries, passes in a fixed order when its holder is suspected (the chief is a job, not a rank); four men is exactly 3f + 1 for one liar. HotStuff changes a procedure, not the crown: the job passes with every entry, and its holder ties the others' sealed votes into one bundle and sends the bundle on, instead of every man writing to every other. |
 
-## Paxos
+## Paxos — the Chamber
+
+One island, three districts, and its shape groups the papers: the Chamber on a headland that
+juts towards AntiPaxos and looks across the strait at the Odeon; the scholars' coast, which is
+the body of the island; and the hall of two doors on the isthmus between them. The parliament passes decrees, the island's law; the scholars'
+copies are not law, and no decree settles which copy is right.
 
 | Building | Papers | What it is |
 |---|---|---|
 | **The Chamber** | Lamport 1998 · Lamport 2001 <span title="shared">◆</span> | Lamport's own Chamber, drawn as a rotunda to fit his description. *"The acoustics of the Chamber were poor, making oratory impossible"*, so: a circular hall under a hard stone dome, with no podium, no head of the room and no seating aimed at a speaker; legislators communicate only by messenger. Open doorways all round the drum, because legislators and messengers enter and leave whenever they like; statues on the terrace outside, one of which falls. The dome and the round plan illustrate Lamport's text and carry no meaning of their own. The two papers are one algorithm in two presentations and are not retold. Lamport's §3.3.4 (a farmer, a merchant and a black goat) states for Paxos the rule of Arche's counters. |
 
-## Skene
+## AntiPaxos
 
-A sovereign island of its own, governed from one theatre. It is not a second legislature on
-Paxos: two bodies keeping one island's law book would be the split the algorithms exist to
-prevent.
+A sovereign islet across the strait from Paxos, governed from one theatre. It is not a second
+legislature on Paxos: two bodies keeping one island's law book would be the split the
+algorithms exist to prevent.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The Odeon** | Oki &amp; Liskov 1988 | Roofed, raked, aimed at one stage. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has its own island, and the two law books never conflict. Its legislators govern from a theatre: one speaks from the stage, the others keep their law books in the front row (the *proedria*), and the public in the seats behind learn the law. The speaker is distinguished by the architecture, and when they fall silent business stops until another legislator takes the stage under a higher number, and gathers what a majority of the front row holds before speaking. |
+| **The Odeon** | Oki &amp; Liskov 1988 | Roofed, raked, aimed at one stage. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has its own islet, and the two law books never conflict. Its legislators govern from a theatre: one speaks from the stage, the others keep their law books in the front row (the *proedria*), and the public in the seats behind learn the law. The speaker is distinguished by the architecture, and when they fall silent business stops until another legislator takes the stage under a higher number, and gathers what a majority of the front row holds before speaking. |
 
-## Homonoia
+## Paxos — the scholars' coast
 
-*Homonoia*, concord: everyone ends of one mind, by merging rather than by assembly. An island
-of scholars and copyists, and the line between it and Arche is **how much disagreement each
-can live with**. On Arche, trading from a stale book is an emergency measure, taken
+*Homonoia*, concord, the scholars call it: everyone ends of one mind, by merging rather than by
+assembly. A coast of scholars and copyists, and the line between it and Arche is **how much
+disagreement each can live with**. On Arche, trading from a stale book is an emergency measure, taken
 knowingly: a jar promised to two buyers is a real loss. The scholars answer from whatever copy
 they hold as a matter of course and live with copies that differ for a while, since an
 out-of-date line is put right at the next collation, as long as every copy agrees in the end.
-Homonoia holds **no assembly**: nothing here waits for a vote, and most of what happens
-happens in the colonnades, which is the island's argument.
+The scholars hold **no assembly**: nothing here waits for a vote, though the Chamber is a
+morning's walk away, and most of what happens happens in the colonnades, which is the coast's
+argument.
 
 | Building | Papers | What it is |
 |---|---|---|
 | **The stoa and the festival ground** | Demers 1987 | Barely a building: a colonnade where travelling scholars pass on new learnings on scraps of papyrus — that the Earth goes round the Sun, say — and lose interest once most of those they meet already have the scrap, and a field where, once a year, pairs of copyists compare their whole collections, scraps included, to catch whatever the talk missed. The finding is historical, but its author is not named: named figures are the papers' own authors. |
 | **The libraries** | PBS 2012 | A repeated type: each work is kept at several libraries, a new edition reaches some before others, and a reader asks only a few. Nothing is built here; the paper is a model. It measures how likely the copy a reader is handed is out of date, and by how much, so a library can promise that it is *probably* current. |
-| **The far terraces** | Shapiro et al. 2011 (both) <span title="shared">◆</span> | The short paper and the comprehensive report are one work, so one place. The island's count of how many copies of each work have been made, kept in voting pebbles: each library adds only to its own column, and merging takes the greater count in each. Merge in any order, merge twice, and every terrace still agrees. Sited as far from any assembly as the island goes. |
+| **The far terraces** | Shapiro et al. 2011 (both) <span title="shared">◆</span> | The short paper and the comprehensive report are one work, so one place. The coast's count of how many copies of each work have been made, kept in voting pebbles: each library adds only to its own column, and merging takes the greater count in each. Merge in any order, merge twice, and every terrace still agrees. Sited on the far shore, as far from the headland as the island goes. |
 | **The reading room** | HATS 2014 | In every library: **what a librarian can still promise a reader while the couriers are stopped**. That no reply is shown before the letter it answers, and that no one sees half a revision, both survive the strike; that two readers will not both take the last copy provably does not. |
 
-## The council ground
+## Paxos — the hall of two doors
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The hall of two doors** | Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020 <span title="shared">◆</span> | One door facing the islands that assemble, Paxos and Skene; one facing Homonoia. Every question brought here leaves by the door its own shape decides: those that only ever add leave by Homonoia's door and need no assembly, and those resting on absence — *no one has claimed this* — leave by the door of the assemblies. The building does not rule; it sorts. |
+| **The hall of two doors** | Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020 <span title="shared">◆</span> | On the isthmus where the Chamber's headland meets the scholars' coast. One door facing out along the headland to the bodies that assemble, the Chamber and, across the strait, AntiPaxos; one facing back into the island, the scholars' coast. Every question brought here leaves by the door its own shape decides: those that only ever add leave by the scholars' door and need no assembly, and those resting on absence — *no one has claimed this* — leave by the door of the assemblies. The building does not rule; it sorts. |
 
 ---
 
@@ -108,7 +114,7 @@ happens in the colonnades, which is the island's argument.
   merged.
 - **Chamber / Odeon.** Both keep a law book by majority. But VR was found independently and
   is a genuine alternative, not a variant; the whole point is that they are different rooms, on
-  different islands — one where no voice carries, one built so that a single voice reaches
+  either side of a strait — one where no voice carries, one built so that a single voice reaches
   every seat.
 
 ---

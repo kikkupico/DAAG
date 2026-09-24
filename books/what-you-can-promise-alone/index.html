@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What You Can Promise Alone — Paxos</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">Paxos · The Scholars' Coast</span>
+  </div>
+</nav>
+<div class="page">
+
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Paxos · The Scholars' Coast</div>
+  <h1 class="display" style="margin:18px 0 6px">What You Can Promise Alone</h1>
+  <p class="sub">When a machine cannot stop to check with the others on every change, what can it still promise on its own?</p>
+  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the allegorical
+  devices it will use, what each stands for in the paper, and where each meets the other books.
+  It will be replaced by the book.
+  <br><span class="paper">Bailis et al. 2014 · the reading room, Paxos</span></p>
+</header>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>The idea</h2></div>
+  <div class="prose">
+<p>Which transactional isolation levels and consistency guarantees can a system give while every replica stays available through a partition? <b>Achievable (HAT):</b> read uncommitted, read committed, <b>monotonic atomic view</b>, item and predicate cut isolation. <b>With sticky availability</b> (a client keeps to one replica): read your writes, monotonic reads and writes, writes follow reads, <b>causal consistency</b>. <b>Not achievable:</b> preventing <b>lost update</b> or <b>write skew</b>, hence snapshot isolation, repeatable read and serializability; and any <b>recency</b> guarantee.</p>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>The devices</h2></div>
+  <div class="prose">
+<div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In this book</th><th>In the paper</th><th>Also in</th></tr></thead>
+      <tbody>
+        <tr><td><b>a reader's business at one visit: several works asked for, or several corrections made</b></td><td>A transaction.</td><td></td></tr>
+        <tr><td><b>the couriers stopped</b></td><td>A partition.</td><td>Bandits on the road (<i>Answering While Cut Off</i>)</td></tr>
+        <tr><td><b>the librarian who answers from his own shelves</b></td><td>High availability.</td><td>The gate-glass: answering from one's own book</td></tr>
+        <tr><td><b>a reader who keeps to his own library</b></td><td>Sticky availability.</td><td></td></tr>
+        <tr><td><b>never shown a correction abandoned or half written</b></td><td>Read committed.</td><td></td></tr>
+        <tr><td><b>corrections to several works bound under one seal: seen all together or not at all</b></td><td>Monotonic atomic view.</td><td></td></tr>
+        <tr><td><b>asking twice in one visit, and getting the same answer</b></td><td>Item cut isolation; predicate cut for "every work on the stars".</td><td></td></tr>
+        <tr><td><b>a reader who always finds his own corrections</b></td><td>Read your writes.</td><td></td></tr>
+        <tr><td><b>never a reply read before the letter it answers</b></td><td>Causal consistency.</td><td>The column room (<i>Ordering Without Clocks</i>)</td></tr>
+        <tr><td><b>two readers borrowing the last copy at two libraries</b></td><td>Lost update: cannot be prevented.</td><td>A jar promised to two buyers (<i>Answering While Cut Off</i>)</td></tr>
+        <tr><td><b>two readers each borrowing one of the last two copies, when one must stay on the shelf</b></td><td>Write skew.</td><td></td></tr>
+        <tr><td><b>"this is the latest edition"</b></td><td>Recency: cannot be promised.</td><td><i>Probably Up to Date</i>: only probably</td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Planned chapters</h2></div>
+  <div class="prose">
+<ol><li>The couriers stop.</li><li>A reader's visit.</li><li>No half-made corrections.</li><li>The same answer twice.</li><li>Keeping to one library.</li><li>Letters and replies.</li><li>The last copy.</li><li>What no librarian can promise alone.</li><li>In the Book, In the Paper.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Must not exist</h2></div>
+  <div class="prose">
+<p>an assembly; a librarian waiting on a courier before answering; a promise that needs another library; a lost copy that anyone is blamed for.</p>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Open questions</h2></div>
+  <div class="prose">
+<ol><li><b>Lending.</b> The last-copy example needs libraries that lend. <code>settings.md</code> already says "two readers never take the last copy"; confirm lending is part of the coast's practice.</li><li><b>Names.</b> Bailios again, with Davidsonia, Feketeos and others for the seven authors; the footnote says names follow papers.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+</div>
+</body>
+</html>
