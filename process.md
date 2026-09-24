@@ -1,7 +1,7 @@
 # How a paper becomes a book
 
 A working procedure, written so that someone who has not been part of the conversation so far
-can pick up the next paper and produce a book that sits beside the four already written
+can pick up the next paper and produce a book that sits beside the five already written
 without looking like a different series.
 
 **Read first:** `buildings.md` (which paper lives in which building), `settings.md` (the
@@ -97,7 +97,7 @@ The shape that has worked before:
 | **I** | The place, and the problem it has. Concrete, physical, no formalism. |
 | **II–III** | The model, built up one device at a time. The reader should not notice they are being handed a formal system. |
 | **IV–VII** | The paper's results, one per chapter, each stated in the setting's own vocabulary and then proved in a collapsed section. |
-| **VIII** | What the result does *not* say, or what it costs, or what it assumes and never verifies. The best chapter in three of the four existing books is this one. |
+| **VIII** | What the result does *not* say, or what it costs, or what it assumes and never verifies. It is often the best chapter in a book. |
 | **IX** | *In the book / In the paper*, then the ideas plainly. |
 
 ### 5. Register
@@ -159,14 +159,14 @@ The primitives are defined in `assets/css/books.css` — `.d-lifeline`, `.d-ev`,
 `.d-msg`, `.d-msg-hi`, `.d-lbl`, `.d-num`, `.d-note`, `.d-key`, `.d-band` — and using them is
 what makes every diagram in the series read as one hand. Do not introduce new colours.
 
-**Draw a diagram when the argument has a shape**, and not otherwise. The four books have
-eleven between them, and each one does a job prose could not:
+**Draw a diagram when the argument has a shape**, and not otherwise. The five books have
+thirteen between them, and each one does a job prose could not:
 
 | Kind | What it does | Seen in |
 |---|---|---|
 | **Space–time** | Lifelines down, messages as arrows. The workhorse: any argument about order, causality or cuts. | *Ordering Without Clocks*, *Taking Stock Without Stopping* |
 | **The same picture annotated twice** | Draw one scene, then redraw it with the numbers, then with the vectors. The reader compares like with like. | *Ordering Without Clocks* |
-| **Two panels, sound and impossible** | Put the legal case beside the illegal one with a divider. Far clearer than describing the illegal one. | *Taking Stock Without Stopping* |
+| **Two panels, sound and impossible** | Put the legal case beside the illegal one with a divider. Far clearer than describing the illegal one. | *Taking Stock Without Stopping*, *Answering While Cut Off* |
 | **Commuting diamond** | For any argument that two things may be done in either order. | *The Limits of Agreement* |
 | **A chain of cases** | For arguments that walk from one extreme to another one step at a time. | *The Limits of Agreement* |
 
@@ -211,8 +211,7 @@ establish.
 
 | Building | Paper(s) | Note |
 |---|---|---|
-| The counters | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Builds on *Ordering Without Clocks* Ch. VI: the goatherd is the path the houses cannot see, and the rule is judged by the sun no one can read. It says what the houses owe their buyers, not how they could know it. One count per kind of goods for locality. Must not give Arche a readable hour in the trading season. |
-| The closed road | Brewer 2000 · Gilbert &amp; Lynch 2002 | Bandits reported on both stretches beside the Vine: a condition, never a raid. Bandits roam the island; they need not be the crown's band, and which band is never said. Consistency is *Many Copies, Acting as One*'s rule; state it in that book's vocabulary. Stale trading is a deliberate emergency measure on Arche. |
+| The counters | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Builds on *Ordering Without Clocks* Ch. VI: the goatherd is the path the houses cannot see, and the rule is judged by the sun no one can read. It says what the houses owe their buyers, not how they could know it. The object is a jar's line (a read/write register), one line per jar, for locality; not a running count. Must not contradict *Answering While Cut Off*, which already states the rule of the counters and its vocabulary. Must not give Arche a readable hour in the trading season. |
 | The camps | Ben-Or 1983 | Shares the camps with FLP; the one change is a coin, thrown as knucklebones. Termination with probability 1, never a guaranteed end: say so plainly. The camps may decide; nothing follows from it. |
 | The camps | Chandra &amp; Toueg 1996 | *Telling the Dead from the Slow.* Shares the camps with FLP. The camps may decide; nothing follows from it. The tally board's guarantees are granted, not earned — see `settings.md`. |
 | The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, enhanced with visuals: it is the paper the whole project borrows its allegory from. Listed in the index under its own title, unlinked until our rendition exists. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |

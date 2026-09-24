@@ -95,15 +95,25 @@ island-wide distribution network.
   quorum intersection, and ensures swift termination once the calm arrives.
 - *Many Copies, Acting as One* (`herlihy-wing-1990_linearizability`). What the houses owe the buyers at
   their counters: every answer must fit one order of sales, the same at all three houses, in
-  which anything answered before another was asked comes first (linearizability). One count
-  per kind of goods; if each keeps the rule, the whole trade does (locality). See *Why
+  which anything answered before another was asked comes first (linearizability). The object is
+  a jar's **line** in the book: the name of the buyer it is promised to, or nothing while free. A
+  purchase writes the line, a question reads it, so each line is a read/write register. If each
+  line keeps the rule, the whole trade does (locality). A running count of jars is not the object:
+  it cannot carry the Delayed-t promise of *Answering While Cut Off*, which fixes this vocabulary. See *Why
   linearizability is on Arche* below.
 - *Answering While Cut Off* (`brewer-2000`, `gilbert-lynch-2002`). Bandits are reported on both
   stretches beside the Vine, so no runner will go and the Vine is cut off until the road is
   safe. Each side refuses to trade or trades from a book it knows may be stale — a deliberate
   degradation of service, never the usual way on Arche. Consistency is *Many Copies, Acting as One*'s rule
   (*every house answers as if there were one book*, made precise), which is the consistency
-  Gilbert & Lynch prove cannot be kept while the road is shut.
+  Gilbert & Lynch prove cannot be kept while the road is shut. Set later in the trading season,
+  after the gales and with the boards cut; a **crossing** is the post-storm bound Δ of *Agreeing
+  When Messages Run Late*, so Gilbert & Lynch's partially synchronous model (§4) is the one used,
+  and the gale is the asynchronous model of Corollary 1.1. A slip for a closed stretch is not
+  carried and not held for later (a lost message). Devices: the house that **keeps the book** for a
+  cargo (the centralized algorithm), the **gate-glass** (timeout of two crossings and a clerk's
+  reply), the **promise of the span t** (Delayed-t). Breweros keeps the Vine's counter, Gilbertos
+  is of the Dolphin, Lynchaia of the Anchor.
 
 **Why linearizability is on Arche.** It is defined by real time: one operation finished before
 another began. Arche has real time — the sun rises over it whether or not a dial can be read —
