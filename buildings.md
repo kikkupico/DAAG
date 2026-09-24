@@ -47,24 +47,26 @@ Built, and fixed by *The Limits of Agreement*: nothing here may contradict that 
 
 ## Paxos — the Chamber
 
-One island, three districts, and its shape groups the papers: the Chamber on a headland that
-juts towards AntiPaxos and looks across the strait at the Odeon; the scholars' coast, which is
-the body of the island; and the hall of two doors on the isthmus between them. The parliament passes decrees, the island's law; the scholars'
-copies are not law, and no decree settles which copy is right.
+One island shaped like a Y, and its shape groups the papers. Two arms reach north and face
+each other across a bay: the Chamber on the western arm, the city of Schedia and its Odeon on the
+eastern. The hall of two doors stands at the fork, and the stem widens into the scholars'
+coast. The parliament passes decrees, the law of Paxos; Schedia keeps its own laws; the
+scholars' copies are not law, and no decree settles which copy is right.
 
 | Building | Papers | What it is |
 |---|---|---|
 | **The Chamber** | Lamport 1998 · Lamport 2001 <span title="shared">◆</span> | Lamport's own Chamber, drawn as a rotunda to fit his description. *"The acoustics of the Chamber were poor, making oratory impossible"*, so: a circular hall under a hard stone dome, with no podium, no head of the room and no seating aimed at a speaker; legislators communicate only by messenger. Open doorways all round the drum, because legislators and messengers enter and leave whenever they like; statues on the terrace outside, one of which falls. The dome and the round plan illustrate Lamport's text and carry no meaning of their own. The two papers are one algorithm in two presentations and are not retold. Lamport's §3.3.4 (a farmer, a merchant and a black goat) states for Paxos the rule of Arche's counters. |
 
-## AntiPaxos
+## Paxos — Schedia
 
-A sovereign islet across the strait from Paxos, governed from one theatre. It is not a second
-legislature on Paxos: two bodies keeping one island's law book would be the split the
-algorithms exist to prevent.
+A city on the eastern arm, governed from one theatre, with laws of its own: its founders came
+from a different mother city and brought their laws with them, and the Parliament's decrees
+have never run there. Each law book covers its own city, so the two never contradict each
+other.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The Odeon** | Oki &amp; Liskov 1988 | Roofed, raked, aimed at one stage. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has its own islet, and the two law books never conflict. Its legislators govern from a theatre: one speaks from the stage, the others keep their law books in the front row (the *proedria*), and the public in the seats behind learn the law. The speaker is distinguished by the architecture, and when they fall silent business stops until another legislator takes the stage under a higher number, and gathers what a majority of the front row holds before speaking. |
+| **The Odeon** | Oki &amp; Liskov 1988 | Roofed, raked, aimed at one stage. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has a city of its own, and the two law books never conflict. Its legislators govern from a theatre: one speaks from the stage, the others keep their law books in the front row (the *proedria*), and the public in the seats behind learn the law. The speaker is distinguished by the architecture, and when they fall silent business stops until another legislator takes the stage under a higher number, and gathers what a majority of the front row holds before speaking. |
 
 ## Paxos — the scholars' coast
 
@@ -82,14 +84,14 @@ argument.
 |---|---|---|
 | **The stoa and the festival ground** | Demers 1987 | Barely a building: a colonnade where travelling scholars pass on new learnings on scraps of papyrus — that the Earth goes round the Sun, say — and lose interest once most of those they meet already have the scrap, and a field where, once a year, pairs of copyists compare their whole collections, scraps included, to catch whatever the talk missed. The finding is historical, but its author is not named: named figures are the papers' own authors. |
 | **The libraries** | PBS 2012 | A repeated type: each work is kept at several libraries, a new edition reaches some before others, and a reader asks only a few. Nothing is built here; the paper is a model. It measures how likely the copy a reader is handed is out of date, and by how much, so a library can promise that it is *probably* current. |
-| **The far terraces** | Shapiro et al. 2011 (both) <span title="shared">◆</span> | The short paper and the comprehensive report are one work, so one place. The coast's count of how many copies of each work have been made, kept in voting pebbles: each library adds only to its own column, and merging takes the greater count in each. Merge in any order, merge twice, and every terrace still agrees. Sited on the far shore, as far from the headland as the island goes. |
+| **The far terraces** | Shapiro et al. 2011 (both) <span title="shared">◆</span> | The short paper and the comprehensive report are one work, so one place. The coast's count of how many copies of each work have been made, kept in voting pebbles: each library adds only to its own column, and merging takes the greater count in each. Merge in any order, merge twice, and every terrace still agrees. Sited on the far shore at the southern tip, as far from the assemblies as the island goes. |
 | **The reading room** | HATS 2014 | In every library: **what a librarian can still promise a reader while the couriers are stopped**. That no reply is shown before the letter it answers, and that no one sees half a revision, both survive the strike; that two readers will not both take the last copy provably does not. |
 
 ## Paxos — the hall of two doors
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The hall of two doors** | Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020 <span title="shared">◆</span> | On the isthmus where the Chamber's headland meets the scholars' coast. One door facing out along the headland to the bodies that assemble, the Chamber and, across the strait, AntiPaxos; one facing back into the island, the scholars' coast. Every question brought here leaves by the door its own shape decides: those that only ever add leave by the scholars' door and need no assembly, and those resting on absence — *no one has claimed this* — leave by the door of the assemblies. The building does not rule; it sorts. |
+| **The hall of two doors** | Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020 <span title="shared">◆</span> | At the fork of the island, on common ground that belongs to neither city. One door facing north up the bay to the bodies that assemble, the Chamber and the Odeon; one facing south down the stem to the scholars' coast. Every question brought here leaves by the door its own shape decides: those that only ever add leave by the scholars' door and need no assembly, and those resting on absence — *no one has claimed this* — leave by the door of the assemblies. The building does not rule; it sorts. |
 
 ---
 
@@ -114,7 +116,7 @@ argument.
   merged.
 - **Chamber / Odeon.** Both keep a law book by majority. But VR was found independently and
   is a genuine alternative, not a variant; the whole point is that they are different rooms, on
-  either side of a strait — one where no voice carries, one built so that a single voice reaches
+  either arm of the island, facing each other across the bay — one where no voice carries, one built so that a single voice reaches
   every seat.
 
 ---
