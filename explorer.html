@@ -414,7 +414,7 @@
       <li><strong>Fly Mode:</strong> Mouse Drag to Look, <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> to fly, <kbd>Q</kbd>/<kbd>E</kbd> for altitude, <kbd>Shift</kbd> for boost.</li>
       <li><strong>Focal Length:</strong> Select below or drag the slider.</li>
       <li><strong>Screenshot:</strong> Click "Copy Screenshot" or press <kbd>P</kbd>.</li>
-      <li><strong>Cast:</strong> Turn on <em>Drop</em>, then click the island to place the chosen character; drag before letting go to face them. Click a character to select or move it; <kbd>Delete</kbd> removes it, <kbd>[</kbd> <kbd>]</kbd> turn it.</li>
+      <li><strong>Cast:</strong> Turn on <em>Drop</em>, then click the island to place the chosen character in the chosen pose; drag before letting go to face them. Click a character to select or move it; <kbd>Delete</kbd> removes it, <kbd>[</kbd> <kbd>]</kbd> turn it.</li>
       <li><strong>Scene:</strong> Click "Copy Scene" or press <kbd>C</kbd> to copy a previs shot (camera and cast).</li>
     </ul>
   </div>
@@ -428,14 +428,8 @@
     </div>
     <div class="setting-row">
       <div class="setting-header"><span>Pose</span></div>
-      <!-- the poses art/previs/render.py knows; the explorer shows every figure standing -->
-      <select id="cast-pose">
-        <option value="stand">stand</option>
-        <option value="glass">glass (sandglass in both hands)</option>
-        <option value="word">word (arm raised)</option>
-        <option value="shade">shade (hand at brow)</option>
-        <option value="kneel">kneel</option>
-      </select>
+      <!-- filled from art/cast/poses.json, baked from art/previs/poses.py -->
+      <select id="cast-pose"></select>
     </div>
     <div style="display:flex; gap:6px;">
       <button class="btn btn-pill" id="btn-cast-drop" style="flex:1;">Drop</button>
@@ -1307,17 +1301,25 @@
     // Cast: rigged characters dropped on the islands (art/cast/cast.json)
     // -------------------------------------------------------------------------
     // Each figure is parented to its island's group, so it rides along with the spacing and
-    // sea level sliders. Figures stand in their rest pose here; the pose is a label that
-    // art/previs/render.py acts on.
+    // sea level sliders. Poses are the hand-tuned ones of art/previs/poses.py, baked per
+    // character into art/cast/poses.json (art/cast/bake_poses.py): each bone's rotation from
+    // rest in armature space, and the hips' move.
     const castWho = document.getElementById('cast-who');
     const castPose = document.getElementById('cast-pose');
     const castStatus = document.getElementById('cast-status');
     const btnCastDrop = document.getElementById('btn-cast-drop');
     let castDefs = {};
+    let poseBank = {};          // who -> pose -> { bones: {name: [x, y, z, w]}, hips: [x, y, z] }
     const castTemplates = {};
     const actors = [];          // { who, pose, root, model, group }
     let selected = null, dropMode = false, drag = null;
 
+    fetch('./art/cast/poses.json').then((r) => r.json()).then((p) => {
+      poseBank = p.baked;
+      castPose.innerHTML = Object.entries(p.labels)
+        .map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+      actors.forEach(applyPose);
+    });
     fetch('./art/cast/cast.json').then((r) => r.json()).then((defs) => {
       castDefs = Object.fromEntries(Object.entries(defs).filter(([k]) => !k.startsWith('_')));
       castWho.innerHTML = Object.entries(castDefs)
@@ -1362,6 +1364,33 @@
       a.model.scale.setScalar(castDefs[a.who].scale);
       a.model.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.userData.actor = a; } });
       a.root.add(a.model);
+      // rest pose, parents before children, and each bone's rest orientation in armature
+      // space (the frame of the hips' parent)
+      a.bones = [];
+      a.model.traverse((o) => { if (o.isBone) a.bones.push(o); });
+      a.rest = new Map();
+      for (const b of a.bones) {
+        const up = a.rest.get(b.parent);
+        a.rest.set(b, { q: b.quaternion.clone(), p: b.position.clone(),
+                        arm: up ? up.arm.clone().multiply(b.quaternion) : b.quaternion.clone() });
+      }
+      applyPose(a);
+    }
+
+    function applyPose(a) {
+      if (!a.bones) return;
+      const baked = (poseBank[a.who] || {})[a.pose];
+      const arm = new Map();
+      for (const b of a.bones) {
+        const r = a.rest.get(b);
+        b.position.copy(r.p);
+        const d = baked && (baked.bones[b.name] || baked.bones[b.name.replace('mixamorig', 'mixamorig:')]);
+        const q = d ? new THREE.Quaternion(...d).multiply(r.arm) : r.arm.clone();
+        arm.set(b, q);
+        const up = arm.get(b.parent);
+        b.quaternion.copy(up ? up.clone().invert().multiply(q) : q);
+        if (baked && !a.rest.has(b.parent)) b.position.add(new THREE.Vector3(...baked.hips));
+      }
     }
 
     function islandAt(point) {
@@ -1449,7 +1478,7 @@
       if (selected && selected.who !== castWho.value) { selected.who = castWho.value; setModel(selected); updateCastStatus(); }
     });
     castPose.addEventListener('change', () => {
-      if (selected) { selected.pose = castPose.value; updateCastStatus(); }
+      if (selected) { selected.pose = castPose.value; applyPose(selected); updateCastStatus(); }
     });
     window.addEventListener('keydown', (e) => {
       if (!selected || ['INPUT', 'SELECT'].includes(e.target.tagName)) return;

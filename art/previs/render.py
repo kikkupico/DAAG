@@ -14,7 +14,7 @@ A shot is {"eye": [x,y,z], "look": [x,y,z], "lens": mm, "aspect": "4:3",
 `eye`/`look` y may be given as "+h" strings meaning h metres above the terrain there.
 """
 import bpy, json, sys, math
-from mathutils import Matrix, Vector
+from mathutils import Vector
 
 # glb, metres per model unit, explorer centre (x, z), sink below sea level in model units
 ISLANDS = {
@@ -97,25 +97,9 @@ eye, look = to_bl(resolve(shot["eye"])), to_bl(resolve(shot["look"]))
 # who -> (glb, scale to a 1.75 m man), from art/cast/cast.json, which the explorer reads too.
 CAST = {k: (v["glb"], v["scale"]) for k, v in json.load(open("art/cast/cast.json")).items()
         if not k.startswith("_")}
-# Poses, in metres in the figure's own frame: (to his left, forward, up). "L"/"R" are hand
-# targets. Optional: "elbows" overrides the elbow poles (out and back by default), "hips"
-# places the hips, "feet" and "knees" are foot targets and knee poles, "bend" pitches bones
-# forward by degrees, "glass" places a sandglass.
-# "glass" holds a sandglass in both hands at the chest; "word" holds it in the left hand
-# and raises the right, giving the word; "shade" shades the eyes with the right hand;
-# "kneel" is down on the right knee, left forearm on the raised knee, looking down.
-POSES = {
-    "stand": {"L": (0.24, 0.02, 0.80), "R": (-0.24, 0.02, 0.80)},
-    "glass": {"L": (0.07, 0.30, 1.12), "R": (-0.07, 0.30, 1.12), "glass": (0.0, 0.32, 1.13)},
-    "word":  {"L": (0.07, 0.30, 1.12), "R": (-0.30, 0.20, 1.72), "glass": (0.07, 0.32, 1.02)},
-    "shade": {"L": (0.24, 0.02, 0.80), "R": (-0.03, 0.13, 1.62),
-              "elbows": {"R": (-0.45, 0.35, 1.55)}},
-    "kneel": {"L": (0.10, 0.46, 0.52), "R": (-0.20, 0.16, 0.42),
-              "hips": (0.0, 0.0, 0.52),
-              "feet": {"L": (0.14, 0.40, 0.07), "R": (-0.14, -0.42, 0.06)},
-              "knees": {"L": (0.14, 1.2, 0.7), "R": (-0.14, 1.0, 0.0)},
-              "bend": {"mixamorig:Spine": 12, "mixamorig:Neck": 12, "mixamorig:Head": 18}},
-}
+# Poses live in art/previs/poses.py, shared with art/cast/bake_poses.py (for the explorer).
+sys.path.insert(0, "art/previs")
+from poses import POSES, apply_pose
 
 def material(name, rgb, rough=0.8, metal=0.0):
     m = bpy.data.materials.new(name); m.use_nodes = True
@@ -181,51 +165,7 @@ def add_actor(a, i):
     if a.get("tint"):
         tint_cloth(body, a["tint"])
     pose = POSES[a.get("pose", "stand")]
-    bpy.context.view_layer.update()
-    if "hips" in pose:
-        hb = arm.pose.bones["mixamorig:Hips"]
-        M = hb.matrix.copy()
-        l, fwd, up = pose["hips"]
-        M.translation = Vector((l, -fwd, up)) / k
-        hb.matrix = M
-        bpy.context.view_layer.update()
-    for name, deg in pose.get("bend", {}).items():
-        pb = arm.pose.bones[name]
-        h = pb.head.copy()
-        pb.matrix = (Matrix.Translation(h) @ Matrix.Rotation(math.radians(deg), 4, "X")
-                     @ Matrix.Translation(-h) @ pb.matrix)
-        bpy.context.view_layer.update()
-    for side, sgn in (("L", "Left"), ("R", "Right")):
-        if "feet" not in pose:
-            break
-        tgt = bpy.data.objects.new(f"foot{i}{side}", None)
-        pole = bpy.data.objects.new(f"knee{i}{side}", None)
-        for e in (tgt, pole):
-            bpy.context.scene.collection.objects.link(e)
-            e.parent = arm
-        l, fwd, up = pose["feet"][side]
-        tgt.location = Vector((l, -fwd, up)) / k
-        l, fwd, up = pose["knees"][side]
-        pole.location = Vector((l, -fwd, up)) / k
-        c = arm.pose.bones[f"mixamorig:{sgn}Leg"].constraints.new("IK")
-        c.target, c.pole_target, c.chain_count = tgt, pole, 2
-        c.pole_angle = math.radians(-90)
-    for side, sgn in (("L", "Left"), ("R", "Right")):
-        l, fwd, up = pose[side]
-        tgt = bpy.data.objects.new(f"ik{i}{side}", None)
-        pole = bpy.data.objects.new(f"pole{i}{side}", None)
-        for e in (tgt, pole):
-            bpy.context.scene.collection.objects.link(e)
-            e.parent = arm
-        tgt.location = Vector((l, -fwd, up)) / k
-        if side in pose.get("elbows", {}):
-            el, ef, eu = pose["elbows"][side]
-            pole.location = Vector((el, -ef, eu)) / k
-        else:  # elbows out and back
-            pole.location = Vector((l * 2.5 + (0.3 if l > 0 else -0.3), 0.4, 1.0)) / k
-        c = arm.pose.bones[f"mixamorig:{sgn}ForeArm"].constraints.new("IK")
-        c.target, c.pole_target, c.chain_count = tgt, pole, 2
-        c.pole_angle = math.radians(-90)
+    apply_pose(arm, k, a.get("pose", "stand"), i)
     if "glass" in pose:
         l, fwd, up = pose["glass"]
         g = sandglass(f"glass{i}")
