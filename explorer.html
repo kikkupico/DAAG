@@ -468,18 +468,18 @@
     <div class="setting-row">
       <div class="setting-header">
         <span>Sea Level Offset</span>
-        <span id="sea-level-val" class="val-display" style="min-width:auto">0.0m</span>
+        <span id="sea-level-val" class="val-display" style="min-width:auto">0.00m</span>
       </div>
-      <input type="range" id="sea-level-slider" min="-10" max="10" step="0.2" value="0">
+      <input type="range" id="sea-level-slider" min="-1" max="1" step="0.02" value="0">
     </div>
 
     <!-- Island Spacing -->
     <div class="setting-row">
       <div class="setting-header">
         <span>Island Separation</span>
-        <span id="spacing-val" class="val-display" style="min-width:auto">2600m</span>
+        <span id="spacing-val" class="val-display" style="min-width:auto">260m</span>
       </div>
-      <input type="range" id="spacing-slider" min="1000" max="5000" step="50" value="2600">
+      <input type="range" id="spacing-slider" min="100" max="500" step="5" value="260">
     </div>
   </div>
 
@@ -643,7 +643,7 @@
     container.appendChild(renderer.domElement);
 
     // Initial camera position (overview looking at both islands)
-    camera.position.set(0, 3300, 5800);
+    camera.position.set(0, 330, 580);
 
     // -------------------------------------------------------------------------
     // Controls: Orbit + Freecam
@@ -652,9 +652,9 @@
     orbitControls.enableDamping = true;
     orbitControls.dampingFactor = 0.05;
     orbitControls.maxPolarAngle = Math.PI / 2 - 0.02; // prevent dipping under water
-    orbitControls.minDistance = 2;
-    orbitControls.maxDistance = 20000;
-    orbitControls.target.set(0, 0, 200);
+    orbitControls.minDistance = 0.5;
+    orbitControls.maxDistance = 2000;
+    orbitControls.target.set(0, 0, 20);
 
     let controlMode = 'orbit'; // 'orbit' or 'fly'
     const keys = { w: false, a: false, s: false, d: false, q: false, e: false, shift: false };
@@ -747,7 +747,7 @@
 
     // Horizon fog to blend water plane seamlessly with sky
     const horizonFogColor = 0x98d4f7;
-    scene.fog = new THREE.Fog(horizonFogColor, 8000, 80000);
+    scene.fog = new THREE.Fog(horizonFogColor, 800, 8000);
     renderer.setClearColor(horizonFogColor);
 
     const sun = new THREE.Vector3();
@@ -771,7 +771,7 @@
     // -------------------------------------------------------------------------
     const waterGeometry = new THREE.PlaneGeometry(400000, 400000);
     const waterNormals = createProceduralWaterNormal();
-    waterNormals.repeat.set(8000, 8000);        // ripples ~50 m across
+    waterNormals.repeat.set(80000, 80000);      // ripples ~5 m across
     waterNormals.wrapS = THREE.RepeatWrapping;
     waterNormals.wrapT = THREE.RepeatWrapping;
 
@@ -800,18 +800,19 @@
     scene.add(paxosGroup);
 
     // World units are metres, so the camera's focal lengths behave as real lenses. The Meshy
-    // models are ~2 units across; the plates' houses set their size: at 12 m a house, Arche is
-    // ~1.8 km across (950 m per model unit). Paxos's plate draws its houses 0.76 as large
-    // relative to an island of the same model size, so it takes 1.31 times Arche's scale.
-    let islandSeparation = 2600;
-    const ARCHE_SCALE = 950;
-    const PAXOS_SCALE = 950 * 1.31;
+    // models are ~2 units across; their buildings set the size, so that a 1.75 m person fits
+    // the harbour's doorways and bales: Arche is ~180 m across (95 m per model unit), far
+    // smaller than canon's island. Paxos's plate draws its houses 0.76 as large relative to an
+    // island of the same model size, so it takes 1.31 times Arche's scale.
+    let islandSeparation = 260;
+    const ARCHE_SCALE = 95;
+    const PAXOS_SCALE = 95 * 1.31;
     let seaLevelOffset = 0.0;
 
     function applyTransforms() {
       // Arche on West (-X), Paxos on East (+X)
       archeGroup.position.set(-islandSeparation / 2, seaLevelOffset, 0);
-      paxosGroup.position.set(islandSeparation / 2, seaLevelOffset, 360);
+      paxosGroup.position.set(islandSeparation / 2, seaLevelOffset, 36);
 
       archeGroup.scale.setScalar(ARCHE_SCALE);
       paxosGroup.scale.setScalar(PAXOS_SCALE);
@@ -843,10 +844,10 @@
     // `crown_shrink`, the summit is pulled toward a point on the crown axis: fully inside
     // r_in, fading out by r_out. Done here too so a view framed in the explorer is the view
     // that renders. Worked in the explorer frame at the default spacing (Arche centred at
-    // x = -1300), with the base at sea level, as render.py has it.
-    const CROWN_SHRINK = { x: -1228.8, z: 21.4, scale: 0.75, r_in: 166.2, r_out: 285.0, base: 142.5 };
+    // x = -130), with the base at sea level, as render.py has it.
+    const CROWN_SHRINK = { x: -122.88, z: 2.14, scale: 0.75, r_in: 16.62, r_out: 28.5, base: 14.25 };
     function shrinkCrown(root) {
-      const cs = CROWN_SHRINK, home = new THREE.Vector3(-1300, 0, 0);
+      const cs = CROWN_SHRINK, home = new THREE.Vector3(-130, 0, 0);
       const c = new THREE.Vector3(cs.x, cs.base, cs.z);
       archeGroup.updateMatrixWorld(true);
       const groupInv = archeGroup.matrixWorld.clone().invert();
@@ -1014,22 +1015,22 @@
 
     btnOverview.addEventListener('click', () => {
       setActiveViewBtn(btnOverview);
-      transitionTo(new THREE.Vector3(0, 3300, 5800), new THREE.Vector3(0, 0, 200));
+      transitionTo(new THREE.Vector3(0, 330, 580), new THREE.Vector3(0, 0, 20));
     });
 
     btnArche.addEventListener('click', () => {
       setActiveViewBtn(btnArche);
-      transitionTo(new THREE.Vector3(-islandSeparation / 2, 1500, 2700), new THREE.Vector3(-islandSeparation / 2, 100, 0));
+      transitionTo(new THREE.Vector3(-islandSeparation / 2, 150, 270), new THREE.Vector3(-islandSeparation / 2, 10, 0));
     });
 
     btnPaxos.addEventListener('click', () => {
       setActiveViewBtn(btnPaxos);
-      transitionTo(new THREE.Vector3(islandSeparation / 2, 1900, 3800), new THREE.Vector3(islandSeparation / 2, 100, 360));
+      transitionTo(new THREE.Vector3(islandSeparation / 2, 190, 380), new THREE.Vector3(islandSeparation / 2, 10, 36));
     });
 
     btnSeaLevel.addEventListener('click', () => {
       setActiveViewBtn(btnSeaLevel);
-      transitionTo(new THREE.Vector3(0, 95, 1660), new THREE.Vector3(-240, 140, 0));
+      transitionTo(new THREE.Vector3(0, 9.5, 166), new THREE.Vector3(-24, 14, 0));
     });
 
     // -------------------------------------------------------------------------
@@ -1079,7 +1080,7 @@
     const seaLevelVal = document.getElementById('sea-level-val');
     seaLevelSlider.addEventListener('input', (e) => {
       seaLevelOffset = parseFloat(e.target.value);
-      seaLevelVal.textContent = seaLevelOffset.toFixed(1) + 'm';
+      seaLevelVal.textContent = seaLevelOffset.toFixed(2) + 'm';
       applyTransforms();
     });
 
@@ -1163,7 +1164,7 @@
 
       // Free Flight update
       if (controlMode === 'fly') {
-        const speed = (keys.shift ? 400 : 60) * delta;   // m/s
+        const speed = (keys.shift ? 40 : 6) * delta;   // m/s
         const forward = new THREE.Vector3(
           -Math.sin(flyYaw) * Math.cos(flyPitch),
           Math.sin(flyPitch),
@@ -1180,7 +1181,7 @@
         if (keys.q) camera.position.addScaledVector(up, -speed);
 
         // Keep camera above water
-        if (camera.position.y < 1.0) camera.position.y = 1.0;
+        if (camera.position.y < 0.3) camera.position.y = 0.3;
 
         // Apply orientation
         const targetLook = camera.position.clone().add(forward);
@@ -1272,7 +1273,7 @@
     // Copy Camera: the current view as a shot for art/previs/render.py
     // -------------------------------------------------------------------------
     // render.py places the islands at the default spacing and sea level (Arche centred at
-    // x = -1300, Paxos at (1300, 360)), so the pose is reported in that frame whatever the
+    // x = -130, Paxos at (130, 36)), so the pose is reported in that frame whatever the
     // sliders say. three.js measures focal length against a 35 mm film width; Blender
     // uses 36 mm, so the lens is rescaled to keep the horizontal field of view.
     function cameraShot() {
@@ -1280,10 +1281,10 @@
       camera.getWorldDirection(dir);
       const look = controlMode === 'orbit'
         ? orbitControls.target.clone()
-        : camera.position.clone().addScaledVector(dir, 100);
+        : camera.position.clone().addScaledVector(dir, 10);
       const onPaxos = look.distanceTo(paxosGroup.position) < look.distanceTo(archeGroup.position);
       const group = onPaxos ? paxosGroup : archeGroup;
-      const home = onPaxos ? new THREE.Vector3(1300, 0, 360) : new THREE.Vector3(-1300, 0, 0);
+      const home = onPaxos ? new THREE.Vector3(130, 0, 36) : new THREE.Vector3(-130, 0, 0);
       const shift = home.sub(group.position);
       // Heights go out as "+h", metres above the terrain below, as the shots write them,
       // so the sea level slider doesn't shift them.
