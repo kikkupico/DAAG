@@ -89,16 +89,14 @@ eye, look = to_bl(resolve(shot["eye"])), to_bl(resolve(shot["look"]))
 # --- cast and props ---------------------------------------------------------
 # Rigged reference characters (Meshy GLBs, Mixamo skeleton, A-pose rest) stood on the
 # terrain. The shot's "cast" is a list of
-#   {"who": "warrior", "at": [x, z], "face": [x, z], "pose": "glass", "tint": [r, g, b]}
+#   {"who": "shostakos", "at": [x, z], "face": [x, z], "pose": "glass", "tint": [r, g, b],
+#    "under": h}
 # in explorer coords; "props" likewise, e.g. {"kind": "strongbox", "at": [x, z]}. `tint`
 # reskins the model's pale cloth (tunic, sleeves) so the figures can be told apart;
 # everything else keeps the model's own texture.
-# glb, scale to a 1.75 m man. The bandits are Meshy builds from the reference sheet.
-CAST = {
-    "warrior": ("art/cast/warrior.glb", 1.12),
-    "shostakos": ("art/cast/wolf-bearer.glb", 1.04),
-    "peasios": ("art/cast/bronze-shepherd.glb", 1.04),
-}
+# who -> (glb, scale to a 1.75 m man), from art/cast/cast.json, which the explorer reads too.
+CAST = {k: (v["glb"], v["scale"]) for k, v in json.load(open("art/cast/cast.json")).items()
+        if not k.startswith("_")}
 # Poses, in metres in the figure's own frame: (to his left, forward, up). "L"/"R" are hand
 # targets. Optional: "elbows" overrides the elbow poles (out and back by default), "hips"
 # places the hips, "feet" and "knees" are foot targets and knee poles, "bend" pitches bones
@@ -127,10 +125,10 @@ def material(name, rgb, rough=0.8, metal=0.0):
     b.inputs["Metallic"].default_value = metal
     return m
 
-def ground_bl(x, z):  # explorer (x, z) -> blender point on the terrain
-    # A shot's "under" (metres above sea) starts the ray below overhangs, so things
-    # stand on a cleft floor rather than on the rock roof above it.
-    return Vector((x, -z, ground(x, z, shot.get("under", 5000.0))))
+def ground_bl(x, z, under=None):  # explorer (x, z) -> blender point on the terrain
+    # "under" (metres above sea; per item, else the shot's) starts the ray below overhangs,
+    # so things stand on a cleft floor rather than on the rock roof above it.
+    return Vector((x, -z, ground(x, z, under or shot.get("under", 5000.0))))
 
 def tint_cloth(mesh_obj, rgb):
     """Recolour near-white, unsaturated texels of the base colour (the cloth) to rgb,
@@ -161,7 +159,7 @@ def tint_cloth(mesh_obj, rgb):
     nt.links.new(mix.outputs[2], bsdf.inputs["Base Color"])
 
 def add_actor(a, i):
-    glb, k = CAST[a.get("who", "warrior")]
+    glb, k = CAST[a["who"]]
     before = set(bpy.data.objects)
     bpy.ops.import_scene.gltf(filepath=glb)
     new = [o for o in bpy.data.objects if o not in before]
@@ -175,7 +173,7 @@ def add_actor(a, i):
     for pb in arm.pose.bones:
         pb.rotation_quaternion, pb.location = (1, 0, 0, 0), (0, 0, 0)
     arm.scale = (k, k, k)
-    arm.location = ground_bl(*a["at"])
+    arm.location = ground_bl(*a["at"], a.get("under"))
     f = ground_bl(*a["face"]) - arm.location
     # the model faces -Y; turn it to face f
     arm.rotation_mode = "XYZ"
@@ -285,7 +283,7 @@ def add_prop(p):
         q.select_set(True)
     bpy.ops.object.transform_apply(scale=True)
     o = join(parts, "strongbox")
-    o.location = ground_bl(*p["at"])
+    o.location = ground_bl(*p["at"], p.get("under"))
     f = ground_bl(*p.get("face", p["at"])) - o.location
     o.rotation_euler = (0, 0, math.atan2(f.y, f.x) + math.pi / 2 if f.length else 0)
 
