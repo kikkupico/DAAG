@@ -830,11 +830,13 @@
     // World units are metres, so the camera's focal lengths behave as real lenses. The Meshy
     // models are ~2 units across; their buildings set the size, so that a 1.75 m person fits
     // the harbour's doorways and bales: Arche is ~180 m across (95 m per model unit), far
-    // smaller than canon's island. Paxos's plate draws its houses 0.76 as large relative to an
-    // island of the same model size, so it takes 1.31 times Arche's scale.
+    // smaller than canon's island. Paxos is set by eye so that a person beside the rotunda
+    // looks right: 104 m per unit, ~190 m across.
     let islandSeparation = 260;
     const ARCHE_SCALE = 95;
-    const PAXOS_SCALE = 95 * 1.31;
+    const PAXOS_SCALE = 104;
+    // The model's arms point along its +Z; a quarter turn points them north (-X), as canon has it.
+    const PAXOS_YAW = -Math.PI / 2;
     let seaLevelOffset = 0.0;
 
     function applyTransforms() {
@@ -844,6 +846,7 @@
 
       archeGroup.scale.setScalar(ARCHE_SCALE);
       paxosGroup.scale.setScalar(PAXOS_SCALE);
+      paxosGroup.rotation.y = PAXOS_YAW;
     }
     applyTransforms();
 

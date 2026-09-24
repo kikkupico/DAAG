@@ -3,8 +3,8 @@
 Explorer coords (three.js, +Y up): North = -X, East = -Z, South = +X, West = +Z.
 World units are metres. Each island is placed as explorer.html places it, so a pose read off
 the explorer can be pasted here and vice versa: Arche (the default) centred at x=-130, 95 m
-per model unit; Paxos (`"island": "paxos"`) centred at (x, z) = (130, 36), 95 x 1.31 m
-per model unit. Both sit with their base at sea level. The scale is set by the buildings, so
+per model unit; Paxos (`"island": "paxos"`) centred at (x, z) = (130, 36), 104 m per
+model unit, set by eye so a person beside the rotunda looks right. Both sit with their base at sea level. The scale is set by the buildings, so
 a 1.75 m person fits the harbour; the islands come out far smaller than canon's geography.
 
     blender -b -P art/previs/render.py -- shots.json <shot-id> [out.png]
@@ -19,10 +19,12 @@ handled below. The explorer's Copy Scene button writes the camera and cast in th
 import bpy, json, sys, math
 from mathutils import Vector
 
-# glb, metres per model unit, explorer centre (x, z), sink below sea level in model units
+# glb, metres per model unit, explorer centre (x, z), sink below sea level in model units,
+# yaw about the vertical in degrees, as the explorer's group rotation.y (Paxos's arms point
+# along the model's +Z; a quarter turn points them north)
 ISLANDS = {
-    "arche": ("art/arche-3d.glb", 95.0, (-130.0, 0.0), 0.0),
-    "paxos": ("art/paxos-3d.glb", 95.0 * 1.31, (130.0, 36.0), 0.0),
+    "arche": ("art/arche-3d.glb", 95.0, (-130.0, 0.0), 0.0, 0.0),
+    "paxos": ("art/paxos-3d.glb", 104.0, (130.0, 36.0), 0.0, -90.0),
 }
 LONG_EDGE = 1600
 
@@ -30,7 +32,7 @@ argv = sys.argv[sys.argv.index("--") + 1:]
 shots_path, shot_id = argv[0], argv[1]
 shot = json.load(open(shots_path))[shot_id]
 out = argv[2] if len(argv) > 2 else f"art/previs/renders/{shot_id}.png"
-GLB, SCALE, (X0, Z0), SINK = ISLANDS[shot.get("island", "arche")]
+GLB, SCALE, (X0, Z0), SINK, YAW = ISLANDS[shot.get("island", "arche")]
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=GLB)
@@ -42,8 +44,16 @@ bb = [island.matrix_world @ Vector(c) for c in island.bound_box]
 cx = (min(v.x for v in bb) + max(v.x for v in bb)) / 2
 cy = (min(v.y for v in bb) + max(v.y for v in bb)) / 2
 zmin = min(v.z for v in bb)
+# A yaw of t about the explorer's +Y is a yaw of t about Blender's +Z; the centring offset
+# turns with the island.
+t = math.radians(YAW)
+ox, oy = SCALE * cx, SCALE * cy
 island.scale = (SCALE, SCALE, SCALE * vs)
-island.location = (X0 - SCALE * cx, -Z0 - SCALE * cy, -SCALE * vs * (zmin + SINK))
+island.rotation_mode = "XYZ"  # the glTF importer leaves objects in quaternion mode
+island.rotation_euler = (0.0, 0.0, t)
+island.location = (X0 - (ox * math.cos(t) - oy * math.sin(t)),
+                   -Z0 - (ox * math.sin(t) + oy * math.cos(t)),
+                   -SCALE * vs * (zmin + SINK))
 bpy.context.view_layer.update()
 
 # The mesh's crown is ~120 m across; canon's is modest. `crown_shrink` pulls the
