@@ -81,7 +81,7 @@ candidate against three questions:
   no more? A device that can do something the model object cannot will quietly break a proof.
 - **Is it mundane?** Could it be built from wood, stone, rope, water and birds?
 - **Does it earn its place?** A device that merely renames the concept is decoration. The good
-  ones do work — the jars on the crown *are* the synchronous round; the tally board's empty row *is*
+  ones do work — the sandglasses on the crown *are* the synchronous round; the tally board's empty row *is*
   the indistinguishability of a crash from a delay.
 
 Then write the **must not exist** list: the things that would be natural to add and would
@@ -212,12 +212,12 @@ establish.
 | Building | Paper(s) | Note |
 |---|---|---|
 | The counters | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Builds on *Ordering Without Clocks* Ch. VI: the goatherd is the path the houses cannot see, and the rule is judged by the sun no one can read. It says what the houses owe their buyers, not how they could know it. The object is a jar's line (a read/write register), one line per jar, for locality; not a running count. Must not contradict *Answering While Cut Off*, which already states the rule of the counters and its vocabulary. Must not give Arche a readable hour in the trading season. |
-| The camps | Ben-Or 1983 | Shares the camps with FLP; the one change is a coin, thrown as knucklebones. Termination with probability 1, never a guaranteed end: say so plainly. The camps may decide; nothing follows from it. |
+| The camps | Ben-Or 1983 | *Agreeing by Chance.* Shares the camps with FLP; the one change is a coin, tossed by each camp alone in its own tent (a local coin), over the two gates. Termination with probability 1, never a guaranteed end: say so plainly. The camps may decide; nothing follows from it. |
 | The camps | Chandra &amp; Toueg 1996 | *Telling the Dead from the Slow.* Shares the camps with FLP. The camps may decide; nothing follows from it. The tally board's guarantees are granted, not earned — see `settings.md`. |
 | The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, enhanced with visuals: it is the paper the whole project borrows its allegory from. Listed in the index under its own title, unlinked until our rendition exists. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
 | The Odeon, Skene | Oki &amp; Liskov 1988 | *One Leader at a Time.* VR, a genuine alternative to Paxos, found independently and published first, on its own island. |
-| The camps | Castro &amp; Liskov 1999 | *Keeping Order Among Liars.* Needs the Byzantine book's vocabulary. One mercenary may have been bought; the trading houses are the recruiters and the clients. Runners to the nearest camp, and to the next along the foot only if it falls silent; replies under each man's signet, and a camp carries nothing between houses. Must not contradict *The Limits of Agreement*. Nothing follows from any order. |
-| The camps | Yin et al. 2019 (HotStuff) | Needs the vocabulary of *Keeping Order Among Liars* and must not contradict it. Tell only what changes: the right to number passes in turn, and one camp bundles the others' seals instead of every camp writing to every other. Nothing follows from any order. |
+| The crown | Castro &amp; Liskov 1999 | *Keeping Order Among Liars.* Needs the Byzantine book's vocabulary and must not contradict *The Limits of Agreement*. A later, windy night: the loot book, each man both replica and client (two agreeing seals, f + 1), the chief's job numbering entries and passing in a fixed order when suspected. Safe in any wind; progress once the wind drops. Nothing follows from any entry. |
+| The crown | Yin et al. 2019 (HotStuff) | *Changing Leaders Among Liars.* Needs the vocabulary of *Keeping Order Among Liars* and must not contradict it. Tell only what changes: the chief's job passes with every entry, and its holder bundles the others' seals instead of every man writing to every other. Say plainly that a threshold signature makes the bundle one seal's size. Nothing follows from any entry. |
 | The stoa and festival ground | Demers 1987 | |
 | The libraries | PBS 2012 | *Probably Up to Date.* The model, not a store: how likely a reader who asks only a few libraries is handed an out-of-date copy, and by how much. |
 | The far terraces | Shapiro et al. 2011 (both) | |
@@ -236,14 +236,15 @@ never as a faction.
 **What the rest of Arche knows about the bandits.** Only the bandits know how many of them
 there are, which band each belongs to, and what they plan. Everyone else knows two things:
 there are bandits about the island, and their loot is on the hilltop. So the constraints that
-govern the bandits inside *The Limits of Agreement* — four men on the crown, the jars, who may
+govern the bandits inside *The Limits of Agreement* — four men on the crown, the sandglasses, who may
 lie — bind only that book. Another book need not respect them; it must only not contradict
 those two facts. The crown's four are not confined (they stay because the loot cannot be
 left), and bandits met elsewhere need not be of their band; no one outside can tell.
 
-**Mount Phyle is built.** Its geometry, cast and architecture are fixed by *Mercenaries and
-Bandits* and `buildings.md`. Nothing may contradict them: four camps that cannot see each other,
+**Mount Phyle is built.** Its geometry, cast and architecture are fixed by *The Limits of
+Agreement* and `buildings.md`. Nothing may contradict them: four camps that cannot see each other,
 ravens only, no fire or signal below the crown, uncounted nights at the base, and one single
-synchronous night on the crown: the jars are started together once, before the posts are first
-manned, and since no man may leave his post they are never started together again. The siege
-itself may last any number of days; later nights on the crown are not synchronous.
+synchronous night on the crown: the sandglasses are turned together once, before the posts are first
+manned, and since no man may leave his post they are never turned together again. The siege
+itself may last any number of days; later nights on the crown are not synchronous, and on them
+wind on the peak can pin the ravens down for as long as it blows.
