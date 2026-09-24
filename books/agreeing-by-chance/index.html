@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agreeing by Chance — Mount Phyle</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">Arche · Mount Phyle</span>
+  </div>
+</nav>
+<div class="page">
+
+<!-- ================= COVER ================= -->
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · Mount Phyle</div>
+  <h1 class="display" style="margin:18px 0 6px">Agreeing by Chance</h1>
+  <p class="sub">If no plan can guarantee agreement when a machine may stop without warning, can chance
+  succeed where planning cannot? What if a machine that is stuck simply tosses a coin?</p>
+  <p class="pub">Four mercenaries at the foot of the hill must go in at one gate, and any one of
+  them may fall silent while no bird has a longest flight. No arrangement guarantees that any of
+  them ever goes. Change one thing: let a man who cannot settle toss a coin, alone in his own tent.
+  Then the four never go to different gates, and they go in the end with probability one, though
+  on no night anyone can name.</p>
+  <p class="lineage"><span class="lbl">Builds on</span> <a href="../the-limits-of-agreement/index.html">The Limits of Agreement</a></p>
+</header>
+
+<nav class="toc">
+  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
+  <ol>
+    <li><a href="#s1">I · The Same Four Tents</a></li>
+    <li><a href="#s2">II · A Coin in Each Tent</a></li>
+    <li><a href="#s3">III · Rounds of Birds</a></li>
+    <li><a href="#s4">IV · Never Two Gates</a></li>
+    <li><a href="#s5">V · The Toss</a></li>
+    <li><a href="#s6">VI · With Probability One</a></li>
+    <li><a href="#s7">VII · What the Coin Changed</a></li>
+    <li><a href="#s8">VIII · What Chance Does Not Buy</a></li>
+    <li><a href="#s9">IX · In the Book, In the Paper</a></li>
+    <li><a href="#refs">The Paper Behind This Book</a></li>
+  </ol>
+</nav>
+
+<hr class="rule">
+
+<!-- ================= I ================= -->
+<section id="s1">
+  <div class="issue"><span class="no">Chapter I</span><h2>The Same Four Tents</h2></div>
+
+  <div class="prose">
+    <p>Bandits hold the crown of Mount Phyle, where the loot is. At the foot, at the four quarters,
+    four mercenaries keep four small tents, one man to a tent, hired separately and paid separately,
+    under nobody's command. The tents are the same four as in <em>The Limits of Agreement</em>, and
+    so are their shields: <span class="coin">Benorios</span> at the bull, Menon at the boar, Eudoros
+    at the trident and Hagnon at the stag. Between any two tents stand two wooded spurs, so no man
+    can see another. They light no fires and sound no horns, and no man leaves his quarter to carry
+    word, since leaving it is the very thing that must be agreed.</p>
+
+    <p>They must go in at one gate, the narrow slot on the north side of the crown or the
+    timber-framed gap on the south, and all four at the same one. Each formed his own opinion at
+    dusk from what he could see of his quarter: his <span class="coin">sighting</span>, north or
+    south. Going is a definite act. A man goes by striking his tent and taking the path round the
+    slope to his gate, and once he has done it his quarter is open behind him and he will not be back
+    before dawn. What he thinks before that does not count; then he does one thing, and it counts
+    for good.</p>
+
+    <p>Word passes by raven, on the same terms as before. A man writes on a strip, rolls it into a
+    bronze tube and ties it to a bird belonging to the tent he is writing to. The birds always
+    arrive, and what they carry is what was written. But there is no longest flight: a bird may
+    spend an hour or the night among the hill's crows before it goes on, and birds sent an hour
+    apart arrive in either order. And any one of the four may be killed. It has not happened, and
+    no one is killed in this book; what matters is that it may. A dead man's tent falls silent and
+    stays silent, and a silent tent cannot be told from a live one whose bird is in a pine two spurs
+    away.</p>
+
+    <p><em>The Limits of Agreement</em> proved what follows from that. Nobody lies, nothing goes
+    wrong, and still there is no arrangement the four could make which guarantees that any of them
+    ever goes. The birds can always be ordered so that the night stays open. The three demands are
+    those of that book, put in the form this book's paper uses:</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">The three demands</span>
+    <span class="stmt">First.</span> No two of them go to different gates.<br>
+    <span class="stmt">Second.</span> If all four sighted the same gate, that is the gate they go
+    to.<br>
+    <span class="stmt">Third.</span> Every man who is not killed eventually goes.
+  </div>
+
+  <div class="prose">
+    <p>Two of them are stated a little differently from the earlier book. The second there asked
+    only that both gates stay possible; here it says exactly how: when the sightings all agree, the
+    four follow them, which is what rules out agreeing on the north gate in advance. The third there
+    asked only that <em>somebody</em> go; here it asks it of every man left alive. The earlier book
+    showed that even the weaker demand cannot be guaranteed, so the stronger one cannot either.</p>
+
+    <p>That earlier proof rested on one assumption, stated in its second chapter and easy to pass
+    over: that the four may not draw lots. Each acts only on what has reached him, so that given the
+    same sighting and the same birds in the same order, he does the same thing every time. This book
+    is about what happens when that one assumption is dropped, and nothing else is changed.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= II ================= -->
+<section id="s2">
+  <div class="issue"><span class="no">Chapter II</span><h2>A Coin in Each Tent</h2></div>
+
+  <div class="prose">
+    <p>Every man at the foot was paid in Attic silver, and every Attic coin has the goddess's head on
+    one face and her owl on the other. Before the tents were pitched it was settled, as part of the
+    arrangement all four knew, that the <span class="coin">owl</span> stands for the north slot
+    and the <span class="coin">goddess</span> for the south gap. A man who, by the rules below, cannot
+    settle on a gate spins a coin on the lid of his chest and takes the gate it shows.</p>
+
+    <p>Each man tosses his own coin, alone in his tent. They cannot toss one coin together, or draw
+    one lot from one bag: that would need them in one place, and nothing on the hill brings them
+    there. Nor can one man toss for all and send the result round, since a bird from him might be
+    the one still in the pines, or he might be the one who is killed. So there are four coins and
+    four separate tosses, and nobody learns another's toss except by bird, if at all.</p>
+
+    <p>Three things are asked of a coin, and a coin of silver spun on a wooden lid gives them.</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">What a toss is taken to be</span>
+    <span class="stmt">(1) Fair.</span> Owl and goddess come up equally often.<br>
+    <span class="stmt">(2) Fresh.</span> Each toss owes nothing to any toss before it, in this tent
+    or any other.<br>
+    <span class="stmt">(3) Unforeseen.</span> Before it is made, no one knows how it will fall. After
+    it is made, anyone may know it.
+  </div>
+
+  <div class="prose">
+    <p>The third clause matters because of how the arguments of this book treat the birds. In
+    <em>The Limits of Agreement</em>, the birds were taken in the worst order the argument could find:
+    whatever the four arranged, the order of arrivals could be chosen against them. The same is done
+    here, and done harder. Think of the order in which birds come down as arranged by someone who can
+    see into every tent, read every strip and see every toss already made, and who arranges the
+    arrivals to keep the four apart for as long as possible. The one thing this arranger cannot do is
+    see a toss before it is made. It is only the worst case, and no such person exists; but anything
+    that holds against him holds on every night.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= III ================= -->
+<section id="s3">
+  <div class="issue"><span class="no">Chapter III</span><h2>Rounds of Birds</h2></div>
+
+  <div class="prose">
+    <p>Benorios's arrangement goes in numbered <span class="coin">rounds</span>, and every bird carries
+    the number of its round, so that a man can tell a late bird of the second round from an early
+    one of the third. In each round each man sends two birds to each of the others, and counts his
+    own two as though they had come to him.</p>
+
+    <p>The first is his <span class="coin">report</span>: the gate he holds to at the start of the round,
+    beginning with his sighting. The second says one of two things: <span class="coin">sure of</span> a
+    gate, or <span class="coin">unsure</span>. A man writes <i>sure of north</i> only when the reports
+    that reached him in that round show more than half of all four men holding north.</p>
+
+    <p>Every waiting in the arrangement is a waiting for three birds, not four. With four men and at
+    most one silent, three always come; a man who waited for four would wait for ever whenever one of
+    them had been killed, and could not know it.</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">One round, <var>r</var>, at one tent</span>
+    <span class="stmt">(1)</span> Send the report of round <var>r</var>, the gate held now, to all.<br>
+    <span class="stmt">(2)</span> Wait for three reports of round <var>r</var>. If more than two of
+    them, that is all three, name the same gate, send <i>sure of</i> that gate to all; otherwise send
+    <i>unsure</i>.<br>
+    <span class="stmt">(3)</span> Wait for three second birds of round <var>r</var>. Then:
+    <br>&nbsp;&nbsp;(a) if at least one says <i>sure of</i> a gate, hold that gate from now on;
+    <br>&nbsp;&nbsp;(b) if two or more say <i>sure of</i> it, be <span class="coin">settled</span> on it;
+    <br>&nbsp;&nbsp;(c) if none says <i>sure</i>, toss the coin and hold the gate it shows.<br>
+    <span class="stmt">(4)</span> Go on to round <var>r</var> + 1.
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">The same, for <var>N</var> men of whom <var>t</var> may fall silent</span>
+    Wait each time for <var>N</var> − <var>t</var> birds. Send <i>sure of v</i> when more than
+    <var>N</var>/2 of the reports received name <var>v</var>. Hold <var>v</var> on one <i>sure of v</i>;
+    settle on <var>v</var> on more than <var>t</var> of them; toss otherwise. The arrangement needs
+    <var>N</var> &gt; 2<var>t</var>. On the hill, <var>N</var> = 4 and <var>t</var> = 1.
+  </div>
+
+  <div class="prose">
+    <p>A settled man still has to <em>go</em>, and there is a catch in it. A man who strikes his tent
+    falls as silent as a dead one, and the others are waiting for three birds each round; if two men
+    went and a third were killed, the last would wait for ever. So a settled man does one thing more
+    before he goes.</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">The rule of going</span>
+    A man who becomes settled on a gate in round <var>r</var> at once sends both his birds of round
+    <var>r</var> + 1 to all: the report, that gate, and the second bird, <i>sure of</i> that gate.
+    Then he strikes his tent and goes to it.
+  </div>
+
+  <div class="prose">
+    <p>This rule is not in Ben-Or's paper. There a process that has decided simply goes on taking
+    part, and nothing is said of stopping. On the hill deciding is going, and going is silence, so
+    the rule is needed; Chapter IV shows that the two birds it sends early are exactly the two the man
+    would have sent had he stayed.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= IV ================= -->
+<section id="s4">
+  <div class="issue"><span class="no">Chapter IV</span><h2>Never Two Gates</h2></div>
+
+  <div class="prose">
+    <p>The first two demands hold on every night, whatever the birds and whatever the coins. The
+    whole of it rests on one small fact about majorities.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">One sure gate a round</span>
+    <p>In any round, every <i>sure</i> bird names the same gate.</p>
+  </div>
+
+  <div class="prose">
+    <p>Each man sends one report a round, so the round has at most four reports. A man writes <i>sure
+    of north</i> only after seeing three reports of north, and <i>sure of south</i> only after seeing
+    three of south. Three and three out of four must share a man, and he cannot have reported both.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">Never two gates</span>
+    <p>No two men go to different gates. If one man is settled on a gate in round <var>r</var>, every
+    man who finishes round <var>r</var> holds that gate, and every man who is not killed is settled on
+    it in round <var>r</var> + 1.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that once one man is settled, all end at his gate</summary>
+    <ol class="proofsteps">
+      <li>Say Benorios is settled on north in round <var>r</var>. Then two or more of the three
+      second birds that reached him said <i>sure of north</i>, so at least two such birds were sent in
+      round <var>r</var>.</li>
+      <li>Any other man who finishes round <var>r</var> read three of the four second birds of that
+      round, so he missed at most one. He therefore read at least one <i>sure of north</i>. By
+      <i>one sure gate a round</i> he read no <i>sure of south</i>, so he holds north: by rule (a) if
+      he read one, and he may also be settled on north by rule (b). He does not toss.</li>
+      <li>So every report of round <var>r</var> + 1 names north. Every man who reaches step (2) of that
+      round sees three reports of north and sends <i>sure of north</i>; every man who reaches step (3)
+      reads three <i>sure of north</i> and is settled on north.</li>
+      <li>The birds a settled man sends early under the rule of going are a report of north and
+      <i>sure of north</i>. By step 3 these are exactly the birds he would have sent in round
+      <var>r</var> + 1 had he stayed, whichever three reports he had read. So the rule changes nothing
+      the others see, and each of them still gets three birds at every step, since at most one man
+      is dead and the settled ones have sent theirs.</li>
+      <li>No man is settled on south in round <var>r</var> or any later round, since no <i>sure of
+      south</i> is ever sent from round <var>r</var> on. So no two men go to different
+      gates.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="result">
+    <span class="name">The sightings respected</span>
+    <p>If all four sighted the same gate, every man who is not killed is settled on it in the first
+    round.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that four matching sightings settle the first round</summary>
+    <ol class="proofsteps">
+      <li>Every report of round 1 names that gate, so every man reads three reports of it and sends
+      <i>sure of</i> it.</li>
+      <li>Every man then reads three <i>sure</i> birds for it, more than one, and is settled on it.
+      No coin is tossed.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>Neither result has anything to do with chance. A coin is tossed only by a man who read no
+    <i>sure</i> bird at all, and <i>one sure gate a round</i> means that while anyone at all is settled,
+    no one is tossing against him. The coins can delay the four. They can never divide them.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= V ================= -->
+<section id="s5">
+  <div class="issue"><span class="no">Chapter V</span><h2>The Toss</h2></div>
+
+  <div class="prose">
+    <p>The coin does its work in the rounds where nobody is sure. Here is one way a night can go,
+    with the stag silent from the start, so that every waiting is for the three who remain. The
+    sightings were north at the bull, south at the boar and north at the trident.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 330" role="img" aria-label="A grid of three rounds at four tents. The stag is silent throughout. Round 1: reports north, south, north; no gate has three, so all three are unsure and toss: south, south, north. Round 2: reports south, south, north; unsure again; tosses north, north, north. Round 3: reports north, north, north; all three send sure of north, read three sure birds, and are settled on north.">
+        <text class="d-house" x="235" y="28" text-anchor="middle">ROUND 1</text>
+        <text class="d-house" x="405" y="28" text-anchor="middle">ROUND 2</text>
+        <text class="d-house" x="575" y="28" text-anchor="middle">ROUND 3</text>
+        <text class="d-key" x="235" y="46" text-anchor="middle">report · second bird · then</text>
+        <text class="d-key" x="405" y="46" text-anchor="middle">report · second bird · then</text>
+        <text class="d-key" x="575" y="46" text-anchor="middle">report · second bird · then</text>
+
+        <text class="d-house" x="20" y="92">BULL</text>
+        <text class="d-house" x="20" y="152">BOAR</text>
+        <text class="d-house" x="20" y="212">TRIDENT</text>
+        <text class="d-house" x="20" y="272" fill="#b9a77e">STAG</text>
+
+        <line class="d-faint" x1="150" y1="60" x2="150" y2="290"/>
+        <line class="d-faint" x1="320" y1="60" x2="320" y2="290"/>
+        <line class="d-faint" x1="490" y1="60" x2="490" y2="290"/>
+
+        <!-- round 1 -->
+        <text class="d-lbl" x="175" y="92">N</text><text class="d-lbl" x="200" y="92">unsure</text><text class="d-num" x="258" y="92" style="fill:#bf4a26">toss: S</text>
+        <text class="d-lbl" x="175" y="152">S</text><text class="d-lbl" x="200" y="152">unsure</text><text class="d-num" x="258" y="152" style="fill:#bf4a26">toss: S</text>
+        <text class="d-lbl" x="175" y="212">N</text><text class="d-lbl" x="200" y="212">unsure</text><text class="d-num" x="258" y="212" style="fill:#bf4a26">toss: N</text>
+
+        <!-- round 2 -->
+        <text class="d-lbl" x="345" y="92">S</text><text class="d-lbl" x="370" y="92">unsure</text><text class="d-num" x="428" y="92" style="fill:#bf4a26">toss: N</text>
+        <text class="d-lbl" x="345" y="152">S</text><text class="d-lbl" x="370" y="152">unsure</text><text class="d-num" x="428" y="152" style="fill:#bf4a26">toss: N</text>
+        <text class="d-lbl" x="345" y="212">N</text><text class="d-lbl" x="370" y="212">unsure</text><text class="d-num" x="428" y="212" style="fill:#bf4a26">toss: N</text>
+
+        <!-- round 3 -->
+        <text class="d-lbl" x="515" y="92">N</text><text class="d-lbl" x="540" y="92">sure N</text><text class="d-num" x="598" y="92">settled</text>
+        <text class="d-lbl" x="515" y="152">N</text><text class="d-lbl" x="540" y="152">sure N</text><text class="d-num" x="598" y="152">settled</text>
+        <text class="d-lbl" x="515" y="212">N</text><text class="d-lbl" x="540" y="212">sure N</text><text class="d-num" x="598" y="212">settled</text>
+
+        <rect class="d-band" x="150" y="252" width="510" height="30"/>
+        <text class="d-note" x="405" y="272" text-anchor="middle">silent: no bird from the stag in any round</text>
+
+        <text class="d-note" x="330" y="316" text-anchor="middle">the tosses of round 2 happen to agree; round 3 cannot fail to settle</text>
+      </svg>
+    </div>
+    <figcaption><b>Chance ends what reasoning cannot.</b> While the reports are split, no man may be
+    sure, and each tosses alone. Once the tosses happen to agree, every report of the next round is
+    the same, and that round settles all of them.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p>Two things are worth seeing in it. First, the tosses did not have to agree with anybody's
+    sighting. The trident sighted north and tossed north, the bull sighted north and tossed south;
+    that is allowed, because the second demand speaks only of nights when all four sightings agree.
+    Second, round 2 settled nothing even though two of the three held south, because <i>sure</i>
+    needs more than half of all four men, not more than half of those heard from. That is what
+    keeps <i>one sure gate a round</i> true when a slow bird may be carrying the fourth report.</p>
+
+    <p>Nor is there anything to be read into which gate the coins chose. The coins pick a gate the
+    way the birds' order would otherwise have picked it: by nothing anyone can know in advance. The
+    night could as well have ended south.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VI ================= -->
+<section id="s6">
+  <div class="issue"><span class="no">Chapter VI</span><h2>With Probability One</h2></div>
+
+  <div class="prose">
+    <p>The example ended in three rounds. It could have taken thirty, and there is a course of
+    birds and coins, one course among very many, in which it never ends at all: the tosses keep
+    coming up split, round after round, for ever. What can be promised is that such courses, taken
+    together, have no chance whatever of happening.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">Going with probability one</span>
+    <p>With at most one of the four silent, and however the birds are ordered, the chance that every
+    man who is not killed eventually goes is one.</p>
+  </div>
+
+  <div class="prose">
+    <p>The idea is that the coins keep giving the four a way out, and the birds cannot shut it for
+    good. In any round at most one gate can be the subject of <i>sure</i> birds. If every man who
+    tosses in that round comes up with that gate, or, when there is none, all with the same gate,
+    then every man starts the next round holding one gate, and the next round settles everyone, as
+    the proof of Chapter IV showed. The arranger can make that harder, round by round, but a way out
+    that keeps coming back with some chance is taken in the end with chance one.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — a sketch, that the four go with probability one</summary>
+    <ol class="proofsteps">
+      <li>Fix a round <var>r</var> in which no one is yet settled. Let <var>g</var> be the gate named by
+      <i>sure</i> birds in round <var>r</var>, if any are sent, and let <var>g</var> be north
+      otherwise.</li>
+      <li>Every man who finishes round <var>r</var> either reads a <i>sure of g</i> and holds
+      <var>g</var>, or tosses. Each toss is fair and fresh, and the arranger cannot see it before it
+      is made, so each comes up <var>g</var> with chance one half, whatever has gone before.</li>
+      <li>At most four men toss in round <var>r</var>, so with chance at least 1/16 (the sketch's figure,
+      not a proven bound) every one of them
+      comes up <var>g</var>. Then every report of round <var>r</var> + 1 names <var>g</var>, and as in
+      the proof of <i>never two gates</i>, every man who is not killed is settled on <var>g</var> in round
+      <var>r</var> + 1.</li>
+      <li>The rounds' tosses are fresh, so the chance that this fails in each of <var>k</var> rounds in a
+      row is at most (15/16)<sup><var>k</var></sup>, which shrinks towards nothing as <var>k</var>
+      grows. The chance that it fails for ever is therefore nothing.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>That is a sketch, and it should be said plainly where it fails. Step 1 treats the gate
+    <var>g</var> as fixed before the round's tosses. But a slow man's report for round <var>r</var>
+    comes from how his round <var>r</var> − 1 ended, and the arranger chooses which second birds he
+    reads there, and may choose after seeing some tosses of round <var>r</var>. So the gate named
+    <i>sure</i> in round <var>r</var> can be picked against the early tosses, and the one-in-sixteen
+    of step 3 is not a bound anyone has proved. Ben-Or's paper states its theorems without any
+    proof. A proof that closes every such gap was published only in 2012, by Aguilera and Toueg; it
+    comes to the same conclusion by a longer road.</p>
+
+    <p>Now say out loud what is not claimed. <b>No night can be named</b> by which the four will have
+    gone. There is no round after which going is certain; there is only a chance, growing towards
+    one, that it has happened by then. Ben-Or's paper gives no figure for how fast that chance
+    grows, and this book gives none. A man who asks <i>will we have gone by the fortieth round?</i> can only be
+    told <i>almost certainly</i>. And the courses that never end still exist. They have been given
+    chance nothing, not abolished.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VII ================= -->
+<section id="s7">
+  <div class="issue"><span class="no">Chapter VII</span><h2>What the Coin Changed</h2></div>
+
+  <div class="prose">
+    <p><em>The Limits of Agreement</em> built its endless night in three steps: there is a way for the
+    sightings to fall that leaves the night <span class="term">two-gated</span>; from any two-gated
+    standing, any arrival can be deferred and taken without closing the night; and so an arranger who
+    defers well can keep it open for ever. Every step leaned on the four being unable to draw lots.
+    Given the same birds in the same order, each man did the same thing, so the arranger knew, before
+    choosing an arrival, what it would lead to.</p>
+
+    <p>With coins the arranger no longer knows. At a toss the night forks, one way for the owl and one
+    for the goddess, and the fork is taken by the coin, not by him. He can still be as clever as
+    before about the birds. What he cannot do is steer both forks at once. The two-gated standings are
+    still there, and so are the courses that stay two-gated for ever: fix every toss in advance and the
+    earlier book's argument runs unchanged. What has changed is that an endless course now needs the coins to cooperate,
+    round after round, and the coins do not.</p>
+
+    <p>So the result of the earlier book stands, and this book does not contradict it. <b>No
+    arrangement guarantees that anybody ever goes.</b> Benorios's arrangement does not guarantee it
+    either. It guarantees that the four never go to different gates, and makes going certain in the
+    sense that failing to go has no chance at all. The difference between <i>on every course</i> and
+    <i>with probability one</i> is the whole of what the coin bought.</p>
+
+    <p>The earlier book ended by listing what would have to change at the foot of the hill: a longest
+    flight, or some report of who has died, or all the deaths happening before the evening begins.
+    The coin is a fourth way, and a different kind. The other three give the four men more knowledge
+    of the world. The coin gives them none. It gives the world less power over them.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VIII ================= -->
+<section id="s8">
+  <div class="issue"><span class="no">Chapter VIII</span><h2>What Chance Does Not Buy</h2></div>
+
+  <div class="prose">
+    <p><b>More than half must live.</b> The arrangement needs the dead to be fewer than half, and
+    that is not a weakness of the arrangement. With two of the four allowed to fall silent, no
+    arrangement at all, with coins or without, can keep the first demand while keeping the other
+    two.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">Half is too many</span>
+    <p>If half the men or more may fall silent, no arrangement, with or without coins, can meet all three
+    demands: that no two go to different gates, that matching sightings are followed, and that every
+    man not killed eventually goes.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that with two of four silent, the gates can divide</summary>
+    <ol class="proofsteps">
+      <li>Suppose the bull and the boar sighted north and the trident and the stag sighted south, and
+      take any arrangement that follows matching sightings and makes every man not killed go
+      eventually.</li>
+      <li>Two men may be silent, so the bull and the boar must be able to go without ever hearing from
+      the trident or the stag: for all they can tell, those two are dead. Hold every bird from the
+      trident and the stag in the pines; the bull and the boar, hearing only each other, go. Whatever
+      their coins show, what they see is exactly what they would see on a night when all four sighted
+      north and the other two were killed at dusk, and on that night the second demand sends them
+      north. So they go north.</li>
+      <li>In the same way hold every bird from the bull and the boar, and the trident and the stag go
+      south.</li>
+      <li>Do both at once, releasing the held birds only after all four have gone: all four are alive,
+      every bird is merely late, and neither pair can tell. The pairs go to different
+      gates.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>Ben-Or notes this in a single line: with half or more silent, the order of birds can imitate a
+    hill split in two. Four tents bear one silent man, and no more.</p>
+
+    <p><b>Liars are another matter.</b> Nobody lies at the foot of the hill, and this book has not
+    needed to ask what a lying man could do. Ben-Or's paper gives a second arrangement, of the same
+    shape, for men who may lie as well as die: each man must be able to tell whose bird he holds, and
+    the liars must be fewer than one in five. Against one liar that is six men. The four bandits on
+    the crown could not use it, and do not need to; they have their own methods, in <em>The Limits of
+    Agreement</em> and in the books of the crown. Ben-Or did not know whether one in five was the best
+    that could be done.</p>
+
+    <p><b>It is not quick.</b> With many men and many possible deaths, the tosses that must all come up
+    alike are many too, and Ben-Or warns that the expected number of rounds may grow very fast. Ben-Or showed one happier case: if the silent are few compared
+    with the whole, about the square root of their number, and the birds happen to come in step, the
+    rounds needed on average do not grow at all. No deterministic arrangement can do that when birds
+    come in step, since those need at least one more round than there are men who may fail.</p>
+
+    <p><b>It does not choose a good gate.</b> The coins say nothing about which gate is wiser. When the
+    sightings agree, the four go where they sighted; when they do not, the gate is whichever the coins
+    and the birds happen to reach. As always on the hill, nothing follows from it: no assault is told,
+    and no one learns whether it was the right gate.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= IX ================= -->
+<section id="s9">
+  <div class="issue"><span class="no">Chapter IX</span><h2>In the Book, In the Paper</h2></div>
+
+  <div class="prose">
+    <p>So that the reader may check the coins at the foot of the hill against Ben-Or's extended
+    abstract.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td><span class="term">the four tents</span></td><td>The processes. <span class="paper"><var>N</var> = 4 asynchronous processes.</span></td></tr>
+        <tr><td><span class="term">a sighting; north or south</span></td><td>Each process's input. <span class="paper">A binary initial value <var>x<sub>P</sub></var>.</span></td></tr>
+        <tr><td><span class="term">going to a gate</span></td><td>An irrevocable decision. <span class="paper">Setting the write-once output register.</span></td></tr>
+        <tr><td><span class="term">the three demands</span></td><td>Agreement; validity when all inputs are equal; termination. <span class="paper">Consensus with correctness criterion (C1).</span></td></tr>
+        <tr><td><span class="term">ravens: they arrive, as written, with no longest flight, in any order</span></td><td>Reliable asynchronous message passing. <span class="paper">The message buffer; every message is eventually delivered to a process that keeps taking steps.</span></td></tr>
+        <tr><td><span class="term">a man killed; a silent tent</span></td><td>A crash failure, indistinguishable from slowness. <span class="paper">A process death; a <var>t</var>-correct schedule, <var>t</var> = 1.</span></td></tr>
+        <tr><td><span class="term">the arranger of the birds</span></td><td>The worst case over message orderings, chosen with knowledge of everything so far. <span class="paper">The adversary scheduler, which "knows all about the system".</span></td></tr>
+        <tr><td><span class="term">the coin, owl or goddess; tossed alone in each tent</span></td><td>A private fair random bit at each process. <span class="paper">Step 3(c): set <var>x<sub>P</sub></var> to 0 or 1 with probability ½ each (a local coin).</span></td></tr>
+        <tr><td><span class="term">a round; the report</span></td><td>A numbered phase; the first message of the round. <span class="paper">Round <var>r</var>; message (1, <var>r</var>, <var>x<sub>P</sub></var>).</span></td></tr>
+        <tr><td><span class="term">sure of a gate; unsure</span></td><td>The second message. <span class="paper">(2, <var>r</var>, <var>v</var>, D) when more than <var>N</var>/2 of the received values are <var>v</var>; (2, <var>r</var>, ?) otherwise.</span></td></tr>
+        <tr><td><span class="term">waiting for three birds</span></td><td>Waiting for all but <var>t</var>. <span class="paper">Wait for <var>N</var> − <var>t</var> messages.</span></td></tr>
+        <tr><td><span class="term">holding a gate on one sure bird; settled on two</span></td><td>Adopting a value; deciding. <span class="paper">Step 3(a): one D-message; step 3(b): more than <var>t</var> D-messages.</span></td></tr>
+        <tr><td><span class="term">the rule of going</span></td><td>A decided process sends its next round's messages and halts. <span class="paper">Not in the paper, where decided processes keep running; added here because going is silence, and shown to change nothing.</span></td></tr>
+        <tr><td><span class="term">never two gates; the sightings respected</span></td><td>Agreement and validity, on every run. <span class="paper">Theorem 1 (ii), (iii).</span></td></tr>
+        <tr><td><span class="term">going with probability one</span></td><td>Termination with probability 1 for <var>N</var> &gt; 2<var>t</var>. <span class="paper">Theorem 1 (i). The paper gives no proof; Aguilera and Toueg (2012) give a complete one.</span></td></tr>
+        <tr><td><span class="term">half is too many</span></td><td>No consensus when <var>N</var> ≤ 2<var>t</var>. <span class="paper">The remark after Theorem 2: the schedule can simulate a partition.</span></td></tr>
+        <tr><td><span class="term">six men against one liar</span></td><td>Byzantine agreement for <var>N</var> &gt; 5<var>t</var>, with authenticated senders. <span class="paper">Protocol B, Theorem 2.</span></td></tr>
+        <tr><td><span class="term">the happier case</span></td><td>Constant expected rounds when <var>t</var> = O(√<var>N</var>), run synchronously. <span class="paper">Theorem 3.</span></td></tr>
+        <tr><td><span class="term">may not draw lots (<i>The Limits of Agreement</i>)</span></td><td>Deterministic processes. <span class="paper">The assumption of FLP that randomization removes.</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="ideas-box">
+    <span class="lbl">The ideas, plainly</span>
+    <p>Fischer, Lynch and Paterson proved that no deterministic protocol can guarantee consensus in an
+    asynchronous system if even one process may crash: an adversary ordering the messages can always
+    keep the outcome undecided. Their proof depends on determinism, since the adversary must know in
+    advance what each step will lead to.</p>
+    <p>Ben-Or showed that randomness removes the obstacle. Processes run in rounds. In each round every
+    process broadcasts its current value, waits for <var>N</var> − <var>t</var> values, and broadcasts a
+    proposal marked D if a strict majority of all <var>N</var> processes hold the same value. It then
+    waits for <var>N</var> − <var>t</var> proposals: it decides on more than <var>t</var> D-proposals for
+    a value, adopts the value on at least one, and otherwise flips a private fair coin.</p>
+    <p>Safety holds on every run. Two strict majorities intersect, so only one value can be proposed with
+    D in a round; a decision means more than <var>t</var> D-proposals exist, so every process that
+    finishes the round sees one and adopts the value, and all decide it in the next round. Termination
+    holds with probability 1 when <var>N</var> &gt; 2<var>t</var>: once every correct process holds
+    the same value, the next round decides, and the coin flips keep giving that a chance the adversary
+    cannot remove. Ben-Or states this without proof; a complete proof, which must handle an adversary
+    that sees earlier flips, is Aguilera and Toueg's (2012). Runs that never terminate still exist, but together they have probability zero.</p>
+    <p>The protocol does not contradict FLP; it changes a hypothesis. It needs a correct majority, which
+    is necessary, and it may take many rounds. Later work replaced the private coins with a shared
+    coin to make the expected number of rounds small.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="refs" class="refs">
+  <h3 class="sect">The Paper Behind This Book</h3>
+  <ul>
+    <li>Michael Ben-Or, <i>Another Advantage of Free Choice: Completely Asynchronous Agreement
+    Protocols</i> (extended abstract). Proceedings of the 2nd ACM Symposium on Principles of
+    Distributed Computing (PODC), Montreal, August 1983, 27–30. — The randomized consensus protocol for
+    crash failures with <var>N</var> &gt; 2<var>t</var> (Theorem 1), the Byzantine protocol with
+    <var>N</var> &gt; 5<var>t</var> (Theorem 2), and constant expected rounds when <var>t</var> =
+    O(√<var>N</var>) (Theorem 3), stated without proofs.</li>
+  </ul>
+  <aside class="fn">Benorios is Hellenised from the paper's author. Menon, Eudoros and Hagnon are
+  ordinary Greek names for seats no author fills. The tents and their shields are those of <i>The
+  Limits of Agreement</i>; the men in them are not Fischeros, Lynchaia, Patersonos and Kallias. Names
+  follow papers, not people of the island.</aside>
+</section>
+
+<hr class="rule">
+
+<p class="lineage"><span class="lbl">Leads to</span> <span class="unwritten-link" title="Not yet written">Telling the Dead from the Slow</span> · <span class="unwritten-link" title="Not yet written">Spreading by Word of Mouth</span> · <span class="unwritten-link" title="Not yet written">Changing Leaders Among Liars</span><br>
+  <span class="outside"><span class="tag">Outside this series</span> Rabin 1983, <i>randomized Byzantine generals</i> · Bracha 1987, <i>asynchronous Byzantine agreement with n &gt; 3t</i> · Aguilera &amp; Toueg 2012, <i>the correctness proof of Ben-Or's algorithm</i></span></p>
+
+</div>
+</body>
+</html>

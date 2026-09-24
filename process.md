@@ -1,7 +1,7 @@
 # How a paper becomes a book
 
 A working procedure, written so that someone who has not been part of the conversation so far
-can pick up the next paper and produce a book that sits beside the five already written
+can pick up the next paper and produce a book that sits beside the six already written
 without looking like a different series.
 
 **Read first:** `buildings.md` (which paper lives in which building), `settings.md` (the
@@ -159,8 +159,8 @@ The primitives are defined in `assets/css/books.css` — `.d-lifeline`, `.d-ev`,
 `.d-msg`, `.d-msg-hi`, `.d-lbl`, `.d-num`, `.d-note`, `.d-key`, `.d-band` — and using them is
 what makes every diagram in the series read as one hand. Do not introduce new colours.
 
-**Draw a diagram when the argument has a shape**, and not otherwise. The five books have
-thirteen between them, and each one does a job prose could not:
+**Draw a diagram when the argument has a shape**, and not otherwise. The six books have
+fourteen between them, and each one does a job prose could not:
 
 | Kind | What it does | Seen in |
 |---|---|---|
@@ -212,7 +212,6 @@ establish.
 | Building | Paper(s) | Note |
 |---|---|---|
 | The counters | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Builds on *Ordering Without Clocks* Ch. VI: the goatherd is the path the houses cannot see, and the rule is judged by the sun no one can read. It says what the houses owe their buyers, not how they could know it. The object is a jar's line (a read/write register), one line per jar, for locality; not a running count. Must not contradict *Answering While Cut Off*, which already states the rule of the counters and its vocabulary. Must not give Arche a readable hour in the trading season. |
-| The camps | Ben-Or 1983 | *Agreeing by Chance.* Shares the camps with FLP; the one change is a coin, tossed by each camp alone in its own tent (a local coin), over the two gates. Termination with probability 1, never a guaranteed end: say so plainly. The camps may decide; nothing follows from it. |
 | The camps | Chandra &amp; Toueg 1996 | *Telling the Dead from the Slow.* Shares the camps with FLP. The camps may decide; nothing follows from it. The tally board's guarantees are granted, not earned — see `settings.md`. |
 | The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, enhanced with visuals: it is the paper the whole project borrows its allegory from. Listed in the index under its own title, unlinked until our rendition exists. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
 | The Odeon, Skene | Oki &amp; Liskov 1988 | *One Leader at a Time.* VR, a genuine alternative to Paxos, found independently and published first, on its own island. |
