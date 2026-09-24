@@ -309,7 +309,7 @@ Warm daylight, photorealistic PBR stone, marble and timber.
 
 ## 5. Island 4: Homonoia
 
-> **Narrative Setting:** The island of scholars and copyists, which holds no assembly: its copies may differ for a while, so long as they agree in the end. Lower-profile, highly indented coastline with turquoise lagoons, sea-coves, pebble beaches, and remote hillside terraces. Features the stoa and festival ground, the ring of libraries round the lagoon, the wax scriptorium on the beach, the courier cove where letters land, and the far terraces.
+> **Narrative Setting:** The island of scholars and copyists, which holds no assembly: its copies may differ for a while, so long as they agree in the end. Lower-profile, highly indented coastline with sea-coves, pebble beaches, and remote hillside terraces. Features the stoa and festival ground, the libraries scattered within casual reach of one another, the courier cove where letters land, and the far terraces.
 
 ### 5.1 Natural Geography and Clearings Prompt
 ```text
@@ -323,15 +323,13 @@ The island rests naturally inside an expansive, continuous stretch of calm deep 
 Macro-Topography:
 A lower-profile, deeply indented island of rolling limestone hills, gentle valleys, and highly convoluted shorelines.
 - Main eastern harbour: a large, sheltered natural bay with turquoise water and gentle gravel shores.
-- Saltwater lagoon basin: a naturally enclosed, nearly circular sea lagoon connected to the open water by a narrow rocky throat.
 - Southern shore: a broad, gently curving crescent bay with golden sand and calm water.
 - Western courier cove: a small, deeply indented rocky fjord-like cove sheltered from open swell.
 - Southwestern hills: steep, remote coastal slopes facing out toward the endless open sea, isolated from the rest of the island by rocky ridges.
 
 Natural Clearings:
 - Flat waterfront esplanade clearing along the main harbour (clearing for the Stoa and Festival Ground).
-- Circular shore fringe clearing enclosing the saltwater lagoon (clearing for the Ring of Libraries).
-- Wide sand and pebble crescent beach clearing (clearing for the Wax Scriptorium).
+- A dozen small level clearings scattered across the gentle valleys and hill shoulders, linked by footpaths of differing length (clearings for the Libraries).
 - Level rock-cut platform at the head of the courier cove (clearing for the Courier Landing).
 - Elaborate hillside tiers cleared on the far southwestern slopes (clearing for the Far Terraces).
 
@@ -351,37 +349,26 @@ In front of it, an open festival ground of beaten earth and flagstones set with 
 Stone quays with wooden mooring posts and small courier boats moored alongside; calm turquoise water.
 ```
 
-#### Feature 2: The Ring of Libraries
+#### Feature 2: A Library (repeated type)
 ```text
-Detailed 3D isometric architectural diorama of The Ring of Libraries on Homonoia, Hellenistic Greece.
-Axonometric orthographic projection, hyperfocal focus, clean unpopulated scholarly precinct, zero people.
-A completely sheltered, circular natural saltwater lagoon connected to the sea by a narrow stone-flanked channel.
-The perimeter of the circular basin is ringed by an unbroken, symmetric circle of exactly twelve identical small limestone library buildings.
-Each library has a small columned porch, a pitched oxblood terracotta tile roof, a heavy timber double door standing open onto walls of wooden pigeonhole shelves (armaria) filled with rolled scrolls, a small side room with a sorting shelf of letter pigeonholes and a reading table, and its own short stone landing stage into the calm green-blue basin water.
-A continuous stone perimeter walkway connects all twelve buildings in an unbroken ring.
+Detailed 3D isometric architectural asset of one small library on Homonoia, Hellenistic Greece.
+Axonometric orthographic projection, hyperfocal focus, clean unpopulated scholarly building, zero people.
+Sited in a small level clearing among olive trees, a footpath leading away.
+A small limestone building with a columned porch, a pitched oxblood terracotta tile roof, and a heavy timber double door standing open onto walls of wooden pigeonhole shelves (armaria) filled with rolled scrolls.
+Beside the main hall, a small reading room with a single reading table, a lectern and a bench.
+The same building is repeated about a dozen times across the island.
 ```
 
-#### Feature 3: The Wax Scriptorium
-```text
-Detailed 3D isometric architectural diorama of The Wax Scriptorium on Homonoia, Hellenistic Greece.
-Axonometric orthographic projection, hyperfocal focus, clean unpopulated beach workshop, zero people.
-Sited along a broad, curving crescent beach of golden sand and smooth pebbles lapped by calm turquoise water.
-Lined along the high-water mark are long, open-sided timber scribe pavilions with reed-thatch roofs supported by cedar posts.
-Features extensive rows of wooden racks holding black and red beeswax writing tablets; bronze kettles over cold stone hearths for melting wax; low wooden scribe desks with bronze styluses; and, at one end, a separate enclosed ink room with shelves of finished papyrus rolls and reed pens.
-Clean sandy ground, wooden boardwalks, and gentle sea lapping the shore.
-```
-
-#### Feature 4: The Courier Landing
+#### Feature 3: The Courier Landing
 ```text
 Detailed 3D isometric architectural asset of The Courier Landing on Homonoia, Hellenistic Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated landing, zero people.
 Tucked into a steep, narrow rocky cove sheltered by high limestone cliffs.
 Features stone moorings and timber piers where swift courier boats are tied, a small open-sided shelter with benches, and paved stone paths climbing out of the cove toward the libraries.
-No sorting building here: letters are sorted in each library, not at the landing.
 Rugged sea-cliff backdrop.
 ```
 
-#### Feature 5: The Far Terraces (Tally Pebbles)
+#### Feature 4: The Far Terraces (Tally Pebbles)
 ```text
 Detailed 3D isometric architectural asset of The Far Terraces on Homonoia, Hellenistic Ancient Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated terraces, zero people.

@@ -27,7 +27,7 @@ will be built from what you write.
 
 ## The seven rules that are not negotiable
 
-These come from `content-i2/brief.md` and are correctness constraints, not preferences.
+These are correctness constraints, not preferences.
 
 1. **Not a story.** No plot, no battle, no outcome. A book is *a setting in which a paper's
    findings are explored*. Nothing is resolved, nobody wins, there is no protagonist and no
@@ -242,8 +242,8 @@ lie — bind only that book. Another book need not respect them; it must only no
 those two facts. The crown's four are not confined (they stay because the loot cannot be
 left), and bandits met elsewhere need not be of their band; no one outside can tell.
 
-**Mount Phyle is built.** Its geometry, cast, architecture and panel inventory exist in
-`content-i2` and are fixed. Nothing may contradict them: four camps that cannot see each other,
+**Mount Phyle is built.** Its geometry, cast and architecture are fixed by *Mercenaries and
+Bandits* and `buildings.md`. Nothing may contradict them: four camps that cannot see each other,
 ravens only, no fire or signal below the crown, uncounted nights at the base, and one single
 synchronous night on the crown: the jars are started together once, before the posts are first
 manned, and since no man may leave his post they are never started together again. The siege
