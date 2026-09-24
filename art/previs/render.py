@@ -12,6 +12,9 @@ a 1.75 m person fits the harbour; the islands come out far smaller than canon's 
 A shot is {"eye": [x,y,z], "look": [x,y,z], "lens": mm, "aspect": "4:3",
            "island": "arche", "vscale": 1.0, "sun": [elev_deg, azim_deg]}.
 `eye`/`look` y may be given as "+h" strings meaning h metres above the terrain there.
+Optional: "cast" (rigged characters from art/cast/cast.json, posed from art/previs/poses.py),
+"props", "light": "dusk" | "night", "under" and "crown_shrink"; each is described where it is
+handled below. The explorer's Copy Scene button writes the camera and cast in this form.
 """
 import bpy, json, sys, math
 from mathutils import Vector
