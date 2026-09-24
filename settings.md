@@ -20,8 +20,7 @@ Verified against `ls sources/`, not asserted:
 | Island | Papers |
 |---|--:|
 | Arche (ring road and Mount Phyle) | 15 |
-| Paxos (the Chamber, the scholars' coast, the hall of two doors) | 9 |
-| AntiPaxos | 1 |
+| Paxos (the Chamber, Schedia, the scholars' coast, the hall of two doors) | 10 |
 
 No PDF is unassigned and nothing is blocked. Every paper the islands name is on disk and has
 been verified by opening it.
@@ -202,19 +201,20 @@ time is bounded, but men lie, yielding the 3m + 1 threshold.
 
 ---
 
-## Paxos · *The Island of the Parliament and the Scholars*
+## Paxos · *The Island of the Parliament, the Stage and the Scholars*
 
-*One island, two ways of keeping records.* Paxos holds Lamport's parliament, which keeps one
-append-only civic chronicle across shifting quorums, absent members and changing presidents,
-and the scholars and copyists, who keep many copies and hold no assembly. Putting them on one
-island makes the difference between them a walk: the scholars could take any question to the
-Chamber, and the hall of two doors shows which questions need it.
+*One island, two ways of keeping records.* Paxos holds two assemblies, each keeping one
+append-only law book across absent members and changing leaders — Lamport's parliament and
+the Odeon of Schedia — and the scholars and copyists, who keep many copies and hold no assembly.
+Putting them on one island makes the difference a walk: the scholars could take any question
+to an assembly, and the hall of two doors shows which questions need one.
 
-**The geography groups the papers.** The body of the island is the scholars' coast. The
-Chamber stands on a **headland** that juts from it towards AntiPaxos, joined to the rest by a
-narrow isthmus, and looks across the strait at the Odeon. The two ways of keeping one law book
-face each other over the water; eventual consistency has the rest of the island to itself.
-The hall of two doors stands on the isthmus, where the headland meets the island.
+**The island is a Y, and its shape groups the papers.** Two arms reach north: the western arm
+holds the Chamber, the eastern arm the city of **Schedia** and its Odeon, and the two face each
+other across the bay between the arms. The two ways of keeping one law book share the top of
+the island. The arms join at a fork, and below it the stem widens into the body of the island,
+the scholars' coast, which eventual consistency has to itself. The hall of two doors stands at
+the fork.
 
 **The parliament has no say over the scholars' copies.** It passes decrees, the island's law;
 a scholar's copy of a work is not law, and no decree settles which copy is right. So nothing
@@ -226,20 +226,28 @@ on the scholars' coast waits for a vote, although the Chamber is a morning's wal
 |---|---|
 | `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and not retold, drawn as a domed rotunda because its acoustics make oratory impossible. Legislators wander in and out, each keeps a ledger, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved |
 
-**The ground must provide:** the **Chamber** on the headland, overlooking the strait, and
-on a route rather than at a dead end (legislators wander in and out): the island road runs
-over the isthmus and past the Chamber to the ferry landing for AntiPaxos at the headland's
-tip.
+**The ground must provide:** the **Chamber** on the western arm, looking across the bay at
+the Odeon, and on a route rather than at a dead end (legislators wander in and out): the
+island road runs up the stem, forks, and runs out along the western arm past the Chamber to
+the harbour town at the arm's tip.
 
 **The parliament is still sitting.** Lamport's §3.3.6 ends the Paxon parliament — a scribe's
 error names drowned sailors as the only legislators, government halts, a coup and an invasion
 follow. Every later book ignores this, as a matter of convenience, and says so once: in the
 index entry and at that point in our rendition.
 
-**One legislature per island.** Paxos has one, Lamport's Chamber. The other consensus
-tradition, Viewstamped Replication, is on its own islet, AntiPaxos, across the strait: two
-bodies keeping one island's law book would be the very split both algorithms exist to
-prevent. **Nothing on Paxos or AntiPaxos is named after the algorithm it carries.**
+**One legislature per city.** Paxos has two cities and two law books. The Paxon Parliament
+makes the law of Paxos: the western arm, the stem and the scholars' coast. **Schedia** keeps its
+own. Its name means *raft*: it was founded by settlers from a different mother city, who came
+by sea and brought their founders' laws with them, and the Parliament's decrees have never run on the eastern arm. That is
+ordinary Greek practice: Amorgos, a small island, held three independent cities — Minoa
+settled from Samos, Aigiale from Miletus, Arkesine from Naxos — each with its own laws, and
+Lesbos held five. Each law book covers its own city, so the two never contradict each other,
+and there is no split for either algorithm to prevent. Viewstamped Replication is a genuine
+alternative to Paxos, found independently and published first, and a city of its own says so.
+**Nothing on Paxos is named after the algorithm it carries.** Schedia's name nods to Raft, a
+systems paper outside the series that set out to leave the island of Paxos; it names no paper
+the city carries.
 
 **Later papers reuse existing rooms** instead of adding devices, so that approaches can be
 compared directly and the reader carries fewer allegories. Ben-Or and Chandra & Toueg return
@@ -251,8 +259,22 @@ of the Chamber were poor, making oratory impossible. Legislators could communica
 messenger."* A circular hall under a hard stone dome, with no podium and no head of the room,
 illustrates that faithfully, and open doorways round the drum show legislators and messengers
 coming and going. The dome illustrates Lamport's text and carries no meaning of its own; in
-Lamport nobody speaks aloud at all. The Odeon on AntiPaxos is its opposite, built so that one
+Lamport nobody speaks aloud at all. The Odeon of Schedia is its opposite, built so that one
 voice reaches every seat.
+
+### Schedia and the Odeon
+
+*A city on the eastern arm, with its own laws, governed from one theatre.*
+
+| Paper | In the world |
+|---|---|
+| `oki-liskov-1988` | **The Odeon.** Roofed, raked, aimed at one stage so a single voice reaches every seat. The nodes are legislators, as in the Chamber: one speaks from the stage, the others keep their law books in the front row, and the public in the seats behind are the ones who need to learn the law. When the speaker falls silent, business stops until another legislator takes the stage under a higher number, and gathers what a majority of the front row holds before speaking. *One Leader at a Time* |
+
+**The ground must provide:** a natural hillside bowl on the eastern arm, above a sheltered
+cove on the bay, so the Odeon faces the Chamber across the water.
+
+If two claim the Odeon's stage at once, nothing proceeds. That is why views and terms are
+numbered.
 
 ### The scholars' coast
 
@@ -281,31 +303,14 @@ and spreading the epics by rhapsode.
 | `bailis-2014_hats` | What a librarian can promise a reader while the couriers are stopped: that no reply is read before the letter it answers, that no change is seen half made; and what no librarian alone can promise, that two readers never take the last copy. *What You Can Promise Alone* |
 
 **The ground must provide:** many libraries within casual reach of one another, courier routes
-of differing length, and a far shore, the farthest point from the headland, for the terraces.
+of differing length, and a far shore at the island's southern tip, as far from the assemblies
+as the island goes, for the terraces.
 
 ### The hall of two doors
 
 | Paper | In the world |
 |---|---|
-| `hellerstein-2010`, `ameloot-2011` | **The hall of two doors**, on the isthmus where the Chamber's headland meets the scholars' coast. A question needs coordination exactly when it is not monotonic. The examples come from the scholars: "has at least one copy of this work been made?" can be answered as soon as it is true; "is this every copy that has been made?" needs everyone. Each question leaves by the door its own shape decides — one facing out along the headland to the Chamber and, across the strait, AntiPaxos, the two bodies that assemble; one facing back into the island, the scholars' coast, which does not |
-
----
-
-## AntiPaxos · *The Islet of the Stage*
-
-*A sovereign islet across the strait from Paxos's headland, governed from one theatre.* Viewstamped
-Replication is a genuine alternative to Paxos, found independently and published first, not a
-variant of it, so it has ground of its own.
-
-| Paper | In the world |
-|---|---|
-| `oki-liskov-1988` | **The Odeon.** Roofed, raked, aimed at one stage so a single voice reaches every seat. The nodes are legislators, as on Paxos: one speaks from the stage, the others keep their law books in the front row, and the public in the seats behind are the ones who need to learn the law. When the speaker falls silent, business stops until another legislator takes the stage under a higher number, and gathers what a majority of the front row holds before speaking. *One Leader at a Time* |
-
-**The ground must provide:** a natural hillside bowl above a sheltered bay that opens on the
-strait, so the Odeon faces the Chamber's headland across the water.
-
-If two claim the Odeon's stage at once, nothing proceeds. That is why views and terms are
-numbered.
+| `hellerstein-2010`, `ameloot-2011` | **The hall of two doors**, at the fork, on common ground that belongs to neither city, as the Messon on Lesbos was the common sanctuary of that island's cities. A question needs coordination exactly when it is not monotonic. The examples come from the scholars: "has at least one copy of this work been made?" can be answered as soon as it is true; "is this every copy that has been made?" needs everyone. Each question leaves by the door its own shape decides — one facing north up the bay between the arms, to the Chamber and the Odeon, the two bodies that assemble; one facing south down the stem, to the scholars' coast, which does not |
 
 ---
 
@@ -328,12 +333,11 @@ snapshots) · Corbett et al. 2012 (Spanner) · Thomson et al. 2012 (Calvin).
 - **Mount Phyle must block every sightline between the three houses.** It fills Arche's
   interior, a ~5 km massif on an ~8 km island; a small cone would leave the lines between
   evenly spaced houses clear.
-- **Paxos's shape groups its papers.** The body of the island is the scholars' coast, with
-  many libraries within casual reach, courier routes of different length and a far shore for
-  the terraces. The Chamber stands on a headland jutting towards AntiPaxos, on the road to
-  the ferry landing at its tip; the hall of two doors stands on the isthmus at its root.
-- **AntiPaxos lies across a narrow strait from the headland**, its Odeon in a hillside bowl
-  facing the Chamber over the water.
+- **Paxos is a Y, and its shape groups its papers.** Two arms reach north and face each
+  other across a bay: the Chamber on the western arm, on the road to the harbour town at its
+  tip; Schedia and its Odeon on the eastern arm. The hall of two doors stands at the fork. The
+  stem widens into the scholars' coast, with many libraries within casual reach, courier
+  routes of different length and a far shore at the southern tip for the terraces.
 
 ---
 

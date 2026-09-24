@@ -1,4 +1,4 @@
-# The Paxos and AntiPaxos books
+# The Paxos books
 
 One page per book, centred on the **allegorical devices**: each device, what it stands for in the paper, and where it meets the other books. Read with `settings.md`, `buildings.md` and `process.md`; where this file and those disagree, those are right until this file's decisions are taken back into them.
 
@@ -8,7 +8,7 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 
 ## One Leader at a Time
 
-**Oki & Liskov 1988 · the Odeon, AntiPaxos**
+**Oki & Liskov 1988 · the Odeon, Schedia, Paxos**
 
 **The idea.** Primary-copy replication that survives crashes and partitions. One cohort, the **primary**, does all the work and passes every event to the **backups** in order; an event is safe once a majority of cohorts know it. When the primary is lost, a **view change** forms a new view from a majority and starts it from the most complete record, so everything a majority knew survives. The paper builds this for **transactions**: one-copy serializability, with two-phase commit across groups.
 
@@ -46,7 +46,7 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 9. Against the Chamber: one voice, or anyone may propose.
 10. In the Book, In the Paper.
 
-**Must not exist:** a law settled without a majority of the front row; a speaker chosen for his views; a second legislature on Paxos; anything named after the algorithm; oratory used as a broadcast that no one can miss.
+**Must not exist:** a law settled without a majority of the front row; a speaker chosen for his views; a Paxon decree that binds Schedia; anything named after the algorithm; oratory used as a broadcast that no one can miss.
 
 **Open.**
 1. **Transactions.** The paper's case is transactions that call several module groups, with psets and two-phase commit. Carry it (several committees in the Odeon, each with its own front row and speaker, and a measure that touches more than one), or keep to one group and leave transactions to the paper column?
@@ -243,7 +243,7 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 | "has at least one copy of this work been made?": once yes, yes for ever | A monotone query. |  |
 | "is this every copy?", "no one has claimed this" | A non-monotone query: it rests on absence. |  |
 | the scholars' door | Coordination-free. | The scholars' coast |
-| the door of the assemblies, facing the Chamber and across the strait the Odeon | Coordination. | *The Part-Time Parliament*; *One Leader at a Time* |
+| the door of the assemblies, facing north up the bay to the Chamber and the Odeon | Coordination. | *The Part-Time Parliament*; *One Leader at a Time* |
 | a waiting chain: library A waits on B's copy, B on A's; once found, it stays found | Deadlock detection: monotone. |  |
 | a work no one cites any more may be discarded, but only once all have been heard from | Garbage collection: non-monotone. |  |
 | a librarian who knows neither how many libraries there are nor their names | An oblivious transducer. |  |
@@ -277,6 +277,7 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 
 - **Shared vocabulary on the scholars' coast.** A *library* is a replica, a *work* an item, an *edition* a version, a *courier* a message and a stopped courier a partition, a *reader* a client. Every book uses these words the same way.
 - **Editions carry tallies.** Which edition is newer is settled by a tally, the device of *Ordering Without Clocks*; where causality matters, by columns, as in its column room.
+- **Schedia is on the same island.** Its laws are its own, but the sun, the couriers and the scholars' roads reach it as they reach the rest of Paxos.
 - **Paxos can read the sun.** Unlike Arche in the trading season, Paxos tells time by the sun; the Chamber has a meridian line.
 - **Names follow papers**, with a footnote in every book.
-- **Order.** *Spreading by Word of Mouth* first on the coast, since it sets the vocabulary; then *Probably Up to Date*, *Changes That Never Clash*, *What You Can Promise Alone*; *Knowing When to Wait* last, since it sorts all of them. *One Leader at a Time* can be written any time after *The Part-Time Parliament*'s rendition.
+- **Order.** *Spreading by Word of Mouth* first on the coast, since it sets the vocabulary; then *Probably Up to Date*, *Changes That Never Clash*, *What You Can Promise Alone*; *Knowing When to Wait* last, since it sorts all of them. *One Leader at a Time* can be written any time.

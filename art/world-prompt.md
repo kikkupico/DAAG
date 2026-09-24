@@ -197,10 +197,11 @@ NO council ring, NO circle of seats, NO roofs, NO banners, NO fire. Windswept sc
 
 ## 3. Island 2: Paxos
 
-> **Narrative Setting:** One island, two ways of keeping records, and its shape groups the papers. An elongated limestone body running north to south, with dramatic vertical western sea-cliffs and gentle eastern slopes descending into olive groves and sheltered coves, and from its southern end a narrow isthmus leading to a high headland that juts southeast towards AntiPaxos. Three districts:
-> - **The Chamber** (the headland): a circular domed rotunda on a terrace near the headland's tip, where the parliament sits, overlooking the strait and the Odeon on AntiPaxos opposite. The island road runs over the isthmus, past the Chamber, to a ferry landing at the tip, so the Chamber is on a through route. The harbour town sits on the headland's sheltered bay.
-> - **The hall of two doors** (the isthmus): one door faces out along the headland to the Chamber and AntiPaxos, one back into the island to the scholars' coast.
-> - **The scholars' coast** (the body of the island), which the scholars call Homonoia: lower, deeply indented country of coves and valleys, with the stoa and festival ground on a northern harbour, about a dozen small libraries within casual reach of one another along footpaths of differing length, a courier cove on the rocky northwest shore, and the far terraces on remote slopes at the northern tip, as far from the headland as the island goes. The scholars hold no assembly.
+> **Narrative Setting:** One island shaped like a Y, and its shape groups the papers. Two arms reach north and face each other across a sheltered bay; they join at a fork, and below it a short stem widens into the broad, lower body of the island. Two cities: Paxos, whose parliament governs the western arm, the stem and the body; and Schedia on the eastern arm, founded from a different mother city, which keeps its own laws. Four districts:
+> - **The Chamber** (the western arm): a circular domed rotunda on a terrace above the bay, where the parliament sits, looking across the water at the Odeon. The island road runs up the stem, forks, and runs out along the western arm past the Chamber to the harbour town at the arm's tip, so the Chamber is on a through route.
+> - **Schedia and the Odeon** (the eastern arm): a small unwalled city of its own above a cove on the bay, with the Odeon, a roofed theatre hall, built into a hillside bowl facing the Chamber across the bay.
+> - **The hall of two doors** (the fork): on common ground belonging to neither city; one door faces north up the bay to the Chamber and the Odeon, one south down the stem to the scholars' coast.
+> - **The scholars' coast** (the body of the island), which the scholars call Homonoia: lower, deeply indented country of coves and valleys, with the stoa and festival ground on an eastern harbour, about a dozen small libraries within casual reach of one another along footpaths of differing length, a courier cove on the rocky southwest shore, and the far terraces on remote slopes at the southern tip, as far from the assemblies as the island goes. The scholars hold no assembly.
 
 ### 3.1 Island Plate Prompt (Geography, Habitation & Book Locations)
 Like Arche's, the Paxos plate carries its buildings in place. It is made in three steps.
@@ -209,25 +210,25 @@ Like Arche's, the Paxos plate carries its buildings in place. It is made in thre
 ```text
 Detailed 3D isometric diorama of the Greek island Paxos, Hellenistic Greece, 3rd century BC.
 True orthographic axonometric view, deep focus, warm directional sunlight, zero people.
-A long limestone island running north to south; from its southern end a narrow low isthmus leads to a high rocky headland jutting southeast into the sea. Across a narrow strait from the headland's tip, the edge of a small separate islet is just visible. Calm deep Aegean blue sea reaches every frame edge, turquoise shoals and white surf at the shore; no pedestal, no cutaway.
-West coast: sheer white limestone sea-cliffs with sea-caves.
-East side: gentle slopes of terraced olive groves, goat pasture, cypresses and maquis down to sheltered coves.
-The headland: on a level civic terrace near its tip, looking out over the strait, stands a single circular domed rotunda of white ashlar limestone ringed by a Doric colonnade, with evenly spaced doorways and statues round it; a paved road crosses the terrace past it and runs on to a small stone ferry landing at the tip. On the headland's sheltered bay, a small harbour town of red-tiled stone houses, a market square, quays and moored merchant ships.
-The isthmus: one small symmetrical gabled hall of pale limestone with a door in each end wall, one facing out along the headland, one facing back into the island.
-The body of the island: lower rolling hills and valleys with a deeply indented coast of coves and pebble beaches. On a northern harbour, a long colonnaded stoa facing an open ground set with rows of long tables. About a dozen small porched library buildings scattered in clearings among olive trees across the valleys and hill shoulders, linked by footpaths of differing length. A small rocky cove on the northwest shore with timber piers and small boats. At the remote northern tip, narrow stepped terraces with long stone tables on steep slopes facing the open sea.
-Farmsteads along one road running the length of the island.
-No theatre, no citadel, no quarry, no ruins.
+A limestone island shaped like the letter Y: two high rocky arms reach north, side by side, enclosing a sheltered bay of turquoise water between them; they join at a fork, and below it a short stem widens into a broad, lower body that fills the south of the island. Calm deep Aegean blue sea reaches every frame edge, turquoise shoals and white surf at the shore; no pedestal, no cutaway.
+Outer coasts of both arms: sheer white limestone sea-cliffs with sea-caves. Inner slopes facing the bay: terraced olive groves, cypresses and maquis.
+The western arm: on a level civic terrace above the bay stands a single circular domed rotunda of white ashlar limestone ringed by a Doric colonnade, with evenly spaced doorways and statues round it; a paved road crosses the terrace past it and runs on to the arm's tip, where a small harbour town of red-tiled stone houses, a market square, quays and moored merchant ships sits on a cove.
+The eastern arm, directly across the bay from the rotunda: a small town of red-tiled stone houses above a cove, and above it, built into a hillside bowl facing the bay, a large near-square roofed theatre hall of limestone with a single oxblood tiled roof and a colonnaded porch facing the water.
+The fork, where the two arms meet: one small symmetrical gabled hall of pale limestone with a door in each end wall, one facing north up the bay, one facing south down the stem.
+The body of the island: lower rolling hills and valleys with a deeply indented coast of coves and pebble beaches. On an eastern harbour, a long colonnaded stoa facing an open ground set with rows of long tables. About a dozen small porched library buildings scattered in clearings among olive trees across the valleys and hill shoulders, linked by footpaths of differing length. A small rocky cove on the southwest shore with timber piers and small boats. At the remote southern tip, narrow stepped terraces with long stone tables on steep slopes facing the open sea.
+Farmsteads along one road running from the southern body up the stem, forking at the hall, one branch along each arm.
+No open-air theatre, no citadel, no quarry, no ruins.
 ```
 
 **Step 2 — town pass** (image-to-image on the step 1 image, `banana_pro`, aspect 16:9). Small, tightly packed houses reconstruct in 3D as tall blocks, so the town is redrawn as low courtyard houses before conversion:
 ```text
-Keep [image 1] exactly as it is: the same island, headland, isthmus, cliffs, sea, rotunda, ferry landing, hall, stoa, libraries, terraces, road, olive terraces, trees, farmsteads, quays, ships, camera and lighting.
-Change only the harbour town: replace its houses with low single-storey Hellenistic courtyard houses of rough limestone, each a squat box with a shallow red-tiled roof and a small open courtyard, spaced a little apart with narrow lanes between them, clearly no taller than they are wide.
+Keep [image 1] exactly as it is: the same Y-shaped island, arms, bay, cliffs, sea, rotunda, theatre hall, hall at the fork, stoa, libraries, terraces, road, olive terraces, trees, farmsteads, quays, ships, camera and lighting.
+Change only the two towns: replace their houses with low single-storey Hellenistic courtyard houses of rough limestone, each a squat box with a shallow red-tiled roof and a small open courtyard, spaced a little apart with narrow lanes between them, clearly no taller than they are wide.
 No multi-storey buildings anywhere.
 Zero people.
 ```
 
-**Step 3 — 3D.** A Meshy image-to-3D conversion of this plate is the island model, `art/paxos-3d.glb`, loaded by `explorer.html`. The live model is a plain island carrying only the Chamber; the headland, the scholars' coast and the hall of two doors are not yet in it.
+**Step 3 — 3D.** A Meshy image-to-3D conversion of this plate is the island model, `art/paxos-3d.glb`, loaded by `explorer.html`. The live model is a plain island carrying only the Chamber; the Y shape, Schedia, the scholars' coast and the hall of two doors are not yet in it.
 
 ### 3.2 Architectural Features Prompts
 
@@ -262,7 +263,7 @@ Warm daylight, photorealistic PBR stone, bronze and wood.
 ```text
 Detailed 3D isometric architectural diorama of The Stoa and Festival Ground on Paxos's scholars' coast, Hellenistic Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated civic space, zero people.
-Sited on the waterfront of the northern harbour.
+Sited on the waterfront of the scholars' eastern harbour.
 A long two-storey colonnaded stoa of pale limestone with a terracotta roof runs along the harbour front, its back wall lined with carved stone benches, wooden boards pinned thick with small scraps of papyrus, and niches holding rolled papyrus scrolls; a bronze armillary sphere and a painted diagram of the Sun at the centre with the Earth circling it stand on a plinth at the middle of the colonnade.
 In front of it, an open festival ground of beaten earth and flagstones set with rows of long plain wooden collation tables, paired facing each other, each with two scroll rests, oil lamps and inkpots.
 Stone quays with wooden mooring posts and small courier boats moored alongside; calm turquoise water.
@@ -291,67 +292,40 @@ Rugged sea-cliff backdrop.
 ```text
 Detailed 3D isometric architectural asset of The Far Terraces on Paxos's scholars' coast, Hellenistic Ancient Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated terraces, zero people.
-Carved into steep, remote limestone hillsides at the island's northern tip, facing out toward the open, unbroken horizon of the sea.
+Carved into steep, remote limestone hillsides at the island's southern tip, facing out toward the open, unbroken horizon of the sea.
 A dramatic flight of dry-stone retaining walls creating narrow, stepped terraces planted with wild olive trees.
 Set upon each terrace are long stone counting tables divided into twelve parallel shallow troughs, one column per library, each holding neat mounds of black and white voting pebbles; small inscribed stone markers head each column.
-Windswept, quiet, meditative landscape as far from the headland as the island goes.
+Windswept, quiet, meditative landscape as far from the assemblies as the island goes.
 ```
 
 #### Feature 6: The Hall of Two Doors
 ```text
 Detailed 3D isometric architectural diorama of The Hall of Two Doors on Paxos, Hellenistic Ancient Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated temple-hall, zero people.
-Standing on the narrow low isthmus that joins Paxos's headland to the rest of the island, the sea visible on both sides, the island's road running past it.
+Standing at the fork of the Y-shaped island, where the two northern arms meet the stem, on common ground belonging to neither city; the bay opens to the north, and the island's road runs past it and forks.
 An elegant, perfectly symmetrical Hellenistic temple-like hall built of pale dressed ashlar limestone with an oxblood terracotta tiled gabled roof.
 The defining architectural feature is two prominent, opposing monumental portal doorways on opposite facades:
-- The Inland Portal: facing back into the island toward the scholars' coast, framed with simple, unadorned rustic stone lintels.
-- The Headland Portal: facing out along the headland toward the Chamber and, across the strait, AntiPaxos, the bodies that assemble, framed with classical fluted pilasters and a carved pediment.
+- The Southern Portal: facing south down the stem toward the scholars' coast, framed with simple, unadorned rustic stone lintels.
+- The Northern Portal: facing north up the bay toward the Chamber and the Odeon, the bodies that assemble, framed with classical fluted pilasters and a carved pediment.
 Both massive bronze doors stand wide open, revealing an open, sunlit stone interior hall paved with alternating white and black marble tiles.
 Surrounded by low stone parapets, gnarled wild olive trees and maquis.
 ```
 
----
 
-## 4. Islet: AntiPaxos
-
-> **Narrative Setting:** The islet of the stage: a small sovereign islet across the strait from Paxos's headland, that governs itself from one theatre. A compact rounded islet of limestone hills around a single sheltered bay that opens on the strait, with a natural hillside bowl above the harbour town where the Odeon stands, facing the Chamber on the headland across the water.
-
-### 4.1 Natural Geography and Clearings Prompt
+#### Feature 7: The Odeon
 ```text
-Detailed 3D isometric terrain asset of a small Greek islet, Hellenistic Mediterranean setting.
-High-angle orthographic axonometric projection, hyperfocal deep focus across all planes, crisp fine geometry, 8k resolution.
-Completely unpopulated natural landscape, pristine empty clearings, no buildings, zero people, no figures.
-
-Surrounding Ocean:
-The islet rests naturally inside an expansive, continuous stretch of calm deep Aegean blue sea extending to all edges of the frame. Realistic turquoise coastal shoals and white surf wrap naturally around the limestone shorelines. Flat natural water plane at sea level. Strictly NO cutaway box, NO acrylic glass slab, NO diorama pedestal, NO vertical water walls.
-
-Macro-Topography:
-A compact, rounded islet of low limestone hills enclosing one deep, sheltered, horseshoe-shaped bay on its northwestern side, opening on the strait toward a larger island.
-
-Natural Clearings:
-- Harbour flat: a level shelf at the head of the bay (clearing for the harbour town).
-- Natural hillside amphitheater bowl: a semicircular concave slope carved naturally into the hillside directly above the harbour flat, facing the bay (clearing for the Odeon).
-
-Vegetation:
-Terraced olive groves with pale silvery-green foliage, stands of tall dark-green Italian cypresses, wild maquis scrub, and exposed white limestone pavement. Warm directional sunlight, photorealistic PBR materials.
-```
-
-### 4.2 Architectural Features Prompts
-
-#### Feature 1: The Odeon
-```text
-Detailed 3D isometric architectural diorama of The Odeon on AntiPaxos, Hellenistic Greece.
+Detailed 3D isometric architectural diorama of The Odeon of Schedia, on Paxos, Hellenistic Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated theatre hall, zero people.
-Built into the natural hillside bowl above AntiPaxos's sheltered bay.
+Built into a natural hillside bowl on the eastern arm of Paxos, above a cove on the bay, facing the Chamber across the water.
 A roofed theatre hall: a large near-square limestone building whose single timber-trussed, oxblood terracotta-tiled roof covers both the semicircular raked seating inside and the raised stage, with a row of tall clerestory windows along each side wall.
 A colonnaded Doric porch runs across the front facing the bay, with broad doors into the hall; the rear of the building is set into the slope, following the rake of the seats within.
 Surrounded by dry-stone retaining terraces, paved stone ramps, and silver-green olive trees.
 ```
 
-#### Feature 1a: The Odeon — Interior
+#### Feature 7a: The Odeon — Interior
 The roof is lifted away. Everything faces one stage: the legislators' thrones in the front row, each with its law book, and the public's benches behind. The board on the stage wall is for the number of the current speaker's term.
 ```text
-Isometric 3D interior model of the Odeon on AntiPaxos, a roofed Hellenistic Greek theatre hall.
+Isometric 3D interior model of the Odeon of Schedia, on Paxos, a roofed Hellenistic Greek theatre hall.
 Orthographic axonometric view, deep focus, zero people.
 The timber roof is lifted away to show the whole interior.
 Semicircular raked stone benches for the public rise from a flat semicircular orchestra floor to the back wall; every seat faces one raised stone stage.
@@ -363,7 +337,7 @@ Warm daylight, photorealistic PBR stone, marble and timber.
 
 ---
 
-## 5. Image-to-3D Reconstruction Guidelines
+## 4. Image-to-3D Reconstruction Guidelines
 
 When processing these 2D isometric renders through neural 3D generators — Meshy (web UI) is the one to use; Tripo's conversions are far worse:
 1. **Sea Level Plane Alignment ($Z = 0$):** Because the water extends continuously across the frame, the sea acts as a ground reference plane. Neural depth models (Marigold/ZoeDepth) reconstruct the water as a uniform planar baseline.
