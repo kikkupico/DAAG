@@ -2,9 +2,10 @@
 
 Explorer coords (three.js, +Y up): North = -X, East = -Z, South = +X, West = +Z.
 World units are metres. Each island is placed as explorer.html places it, so a pose read off
-the explorer can be pasted here and vice versa: Arche (the default) centred at x=-1300, 950 m
-per model unit; Paxos (`"island": "paxos"`) centred at (x, z) = (1300, 360), 950 x 1.31 m
-per model unit. Both sit with their base at sea level.
+the explorer can be pasted here and vice versa: Arche (the default) centred at x=-130, 95 m
+per model unit; Paxos (`"island": "paxos"`) centred at (x, z) = (130, 36), 95 x 1.31 m
+per model unit. Both sit with their base at sea level. The scale is set by the buildings, so
+a 1.75 m person fits the harbour; the islands come out far smaller than canon's geography.
 
     blender -b -P art/previs/render.py -- shots.json <shot-id> [out.png]
 
@@ -17,8 +18,8 @@ from mathutils import Vector
 
 # glb, metres per model unit, explorer centre (x, z), sink below sea level in model units
 ISLANDS = {
-    "arche": ("art/arche-3d.glb", 950.0, (-1300.0, 0.0), 0.0),
-    "paxos": ("art/paxos-3d.glb", 950.0 * 1.31, (1300.0, 360.0), 0.0),
+    "arche": ("art/arche-3d.glb", 95.0, (-130.0, 0.0), 0.0),
+    "paxos": ("art/paxos-3d.glb", 95.0 * 1.31, (130.0, 36.0), 0.0),
 }
 LONG_EDGE = 1600
 
@@ -42,10 +43,10 @@ island.scale = (SCALE, SCALE, SCALE * vs)
 island.location = (X0 - SCALE * cx, -Z0 - SCALE * cy, -SCALE * vs * (zmin + SINK))
 bpy.context.view_layer.update()
 
-# The mesh's crown is ~1.2 km across; canon's is modest. `crown_shrink` pulls the
+# The mesh's crown is ~120 m across; canon's is modest. `crown_shrink` pulls the
 # summit toward a point on the crown axis, fully inside r_in and fading out by r_out,
 # so every later stage inherits a smaller crown. Explorer coords, as elsewhere.
-CROWN = (-1228.8, 21.4)
+CROWN = (-122.88, 2.14)
 cs = shot.get("crown_shrink") if shot.get("island", "arche") == "arche" else None
 if cs:
     import numpy as np
@@ -89,13 +90,10 @@ eye, look = to_bl(resolve(shot["eye"])), to_bl(resolve(shot["look"]))
 # Rigged reference characters (Meshy GLBs, Mixamo skeleton, A-pose rest) stood on the
 # terrain. The shot's "cast" is a list of
 #   {"who": "warrior", "at": [x, z], "face": [x, z], "pose": "glass", "tint": [r, g, b]}
-# in explorer coords; "props" likewise, e.g. {"kind": "strongbox", "at": [x, z]}. `tint` reskins the model's pale cloth (tunic, sleeves) so the
-# figures can be told apart; everything else keeps the model's own texture.
+# in explorer coords; "props" likewise, e.g. {"kind": "strongbox", "at": [x, z]}. `tint`
+# reskins the model's pale cloth (tunic, sleeves) so the figures can be told apart;
+# everything else keeps the model's own texture.
 CAST = {"warrior": ("art/cast/warrior.glb", 1.12)}   # glb, scale to a ~1.75 m man
-# The island models are diorama-scale (the summit crags stand ~35 m), so true-size people
-# look like ants against them. A shot's "figure_scale" enlarges every figure and prop by
-# the same factor to match; place them and the camera with it in mind.
-FS = shot.get("figure_scale", 1.0)
 # Hand targets per pose, in metres in the figure's own frame: (to his left, forward, up).
 # "glass" holds a sandglass in both hands at the chest; "word" holds it in the left hand
 # and raises the right, giving the word.
@@ -148,7 +146,6 @@ def tint_cloth(mesh_obj, rgb):
 
 def add_actor(a, i):
     glb, k = CAST[a.get("who", "warrior")]
-    k *= FS
     before = set(bpy.data.objects)
     bpy.ops.import_scene.gltf(filepath=glb)
     new = [o for o in bpy.data.objects if o not in before]
@@ -177,8 +174,8 @@ def add_actor(a, i):
         for e in (tgt, pole):
             bpy.context.scene.collection.objects.link(e)
             e.parent = arm
-        tgt.location = Vector((l, -fwd, up)) * FS / k
-        pole.location = Vector((l * 2.5 + (0.3 if l > 0 else -0.3), 0.4, 1.0)) * FS / k  # elbows out and back
+        tgt.location = Vector((l, -fwd, up)) / k
+        pole.location = Vector((l * 2.5 + (0.3 if l > 0 else -0.3), 0.4, 1.0)) / k  # elbows out and back
         c = arm.pose.bones[f"mixamorig:{sgn}ForeArm"].constraints.new("IK")
         c.target, c.pole_target, c.chain_count = tgt, pole, 2
         c.pole_angle = math.radians(-90)
@@ -186,8 +183,8 @@ def add_actor(a, i):
         l, fwd, up = pose["glass"]
         g = sandglass(f"glass{i}")
         g.parent = arm
-        g.location = Vector((l, -fwd, up - 0.1)) * FS / k
-        g.scale = Vector((1, 1, 1)) * FS / k
+        g.location = Vector((l, -fwd, up - 0.1)) / k
+        g.scale = Vector((1, 1, 1)) / k
 
 def sandglass(name):
     """A 20 cm sandglass: two glass cones point to point between wooden end plates."""
@@ -239,7 +236,6 @@ def add_prop(p):
         q.select_set(True)
     bpy.ops.object.transform_apply(scale=True)
     o = join(parts, "strongbox")
-    o.scale = (FS, FS, FS)
     o.location = ground_bl(*p["at"])
     f = ground_bl(*p.get("face", p["at"])) - o.location
     o.rotation_euler = (0, 0, math.atan2(f.y, f.x) + math.pi / 2 if f.length else 0)
