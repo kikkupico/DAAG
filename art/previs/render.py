@@ -333,6 +333,16 @@ if shot.get("light") == "dusk":
     b.inputs["Base Color"].default_value = (0.01, 0.05, 0.1, 1)
     b.inputs["Roughness"].default_value = 0.12
 
+elif shot.get("light") == "night":
+    # Moonlight ("sun" gives the moon's [elev, azim]): a cool key, a dark blue sky that still
+    # lifts the shadow sides, and a dark glossy sea. Exposed so every plane stays readable.
+    sun_data.energy, sun_data.color = shot.get("moon_energy", 1.2), (0.6, 0.7, 1.0)
+    world.node_tree.nodes["Background"].inputs[0].default_value = (0.012, 0.02, 0.05, 1)
+    world.node_tree.nodes["Background"].inputs[1].default_value = 1.6
+    b = sea.data.materials[0].node_tree.nodes["Principled BSDF"]
+    b.inputs["Base Color"].default_value = (0.004, 0.012, 0.03, 1)
+    b.inputs["Roughness"].default_value = 0.15
+
 for i, a in enumerate(shot.get("cast", [])):
     add_actor(a, i)
 for p in shot.get("props", []):
