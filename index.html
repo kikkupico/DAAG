@@ -22,52 +22,63 @@
 <section>
   <div class="issue"><span class="no">Arche · The Ring Road</span><h2>Causality, State &amp; Partial Synchrony</h2></div>
   <div class="prose">
-    <p><a href="books/the-tally-and-the-column/index.html"><b>Book I · The Tally and the Column</b></a>
-    — In a distributed system, time as we know it ceases to make sense, because clocks are
-    unreliable and local. An alternative way of tracking the order of events is explored as a
-    problem of sorting purchase orders among three trading houses, linked by a cliff road on
-    which runners cannot overtake one another. Along the way: logical clocks, mutual exclusion
-    built on them, and the vector clocks needed to see what a single number cannot.<br>
-    <span class="paper">Lamport 1978 · Fidge 1988 · Mattern 1988</span></p>
+    <div class="entry">
+      <p><a href="books/the-tally-and-the-column/index.html"><b>Book I · Ordering Without Clocks</b></a></p>
+      <p>
+      If no two machines agree on the time, how can they agree on what happened first? And
+      when two things happen far apart, how can anyone tell whether one led to the other or
+      neither knew of the other?</p>
+      <p>
+      We find out by exploring how ancient Greek trading houses kept the order of trades
+      when sundials became useless on cloudy days.<br>
+      <span class="paper">Lamport 1978 · Fidge 1988 · Mattern 1988</span></p>
+    </div>
 
-    <p><a href="books/the-census-of-the-ring-road/index.html"><b>Book II · The Census of the Ring Road</b></a>
-    — A distributed system has no single instant at which its whole state can be read, and
-    stopping it to look is rarely an option. How to record a consistent global snapshot while
-    the system keeps running, and what such a snapshot can reliably tell you, is explored as a
-    census of the island's goods taken without halting a single cart.<br>
-    <span class="paper">Chandy &amp; Lamport 1985</span></p>
+    <div class="entry">
+      <p><a href="books/the-census-of-the-ring-road/index.html"><b>Book II · Consistent Snapshots</b></a></p>
+      <p>
+      How do you record the state of a whole system when it never stops moving and no one
+      can see all of it at once? And what can such a record reliably tell you?</p>
+      <p>
+      We find out by exploring how the same trading houses counted every jar on their
+      island, including those still on the road, without halting a single runner.<br>
+      <span class="paper">Chandy &amp; Lamport 1985</span></p>
+    </div>
 
-    <p><a href="books/the-convoy-of-arche/index.html"><b>Book III · The Convoy of Arche</b></a>
-    — Consensus cannot be guaranteed when messages may be delayed without bound, yet real
-    networks are well-behaved most of the time. Partial synchrony, where a protocol stays safe
-    through any amount of delay and decides once delays settle within a bound, is explored as
-    three trading houses deciding whether their merchantmen should sail as one convoy while
-    winter gales hold up their runners.<br>
-    <span class="paper">Dwork, Lynch &amp; Stockmeyer 1988</span></p>
+    <div class="entry">
+      <p><a href="books/the-convoy-of-arche/index.html"><b>Book III · Consensus in Partial Synchrony</b></a></p>
+      <p>
+      If messages can be delayed without limit, agreement cannot be guaranteed; yet real
+      networks behave well most of the time. Can a protocol stay safe through any delay, and
+      still decide once things settle?</p>
+      <p>
+      We find out by exploring how the trading houses decided whether their merchant fleet
+      should sail together while winter gales held up their runners.<br>
+      <span class="paper">Dwork, Lynch &amp; Stockmeyer 1988</span></p>
+    </div>
 
 
-    <p><b class="planned">The Last Jar</b> <span class="unwritten">Not yet written</span>
-    — A replicated service is easiest to use when it behaves as if there were one copy of the
-    data. Linearizability makes that precise: every operation must appear to take effect at a
-    single instant between its call and its return, so that anything finished before another
-    began is seen in that order, even when the two callers learned of each other by a path the
-    system never saw. And a system whose every part keeps the rule keeps it as a whole. This is
-    explored at the three houses' counters, where a jar promised to two buyers is a real loss,
-    and where the goatherd who carries word over the mountain can show a buyer's answer to be
-    out of date. The rule is judged by the sun, which no one on Arche can read in the trading
-    season: it says what the houses owe their buyers, not how they could know it.<br>
-    <span class="paper">Herlihy &amp; Wing 1990</span></p>
+    <div class="entry">
+      <p><b class="planned">Behaving as One Copy</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      When data is copied onto several machines, what does it mean for them to behave as if
+      there were only one copy? And who could ever tell the difference?</p>
+      <p>
+      We find out by exploring how the trading houses sold from one stock of jars without
+      promising the last jar to two buyers.<br>
+      <span class="paper">Herlihy &amp; Wing 1990</span></p>
+    </div>
 
-    <p><b class="planned">The Closed Road</b> <span class="unwritten">Not yet written</span>
-    — When a network splits, a replicated service must choose between answering every request
-    and answering every request as if there were only one copy of the data, in the sense of
-    <i>The Last Jar</i>; it cannot do both.
-    The conjecture, and the proof that made it a theorem, are explored as bandits reported on
-    both stretches of the ring road beside the Vine. No runner will go, and the Vine is cut off
-    until the road is safe again. Each side must then either refuse to trade, or keep trading
-    from a book it knows may be stale: a deliberate degradation of service, accepted with its
-    risks, and never the usual way of things on Arche.<br>
-    <span class="paper">Brewer 2000 · Gilbert &amp; Lynch 2002</span></p>
+    <div class="entry">
+      <p><b class="planned">Consistency or Availability</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      When a network splits, can a replicated service keep answering every request, and
+      still answer as if there were one copy?</p>
+      <p>
+      We find out by exploring what the trading houses did when bandits on the road cut one
+      house off from the others.<br>
+      <span class="paper">Brewer 2000 · Gilbert &amp; Lynch 2002</span></p>
+    </div>
   </div>
 </section>
 
@@ -76,42 +87,40 @@
 <section>
   <div class="issue"><span class="no">Arche · Mount Phyle</span><h2>Consensus &amp; Faults</h2></div>
   <div class="prose">
-    <p><a href="books/mercenaries-and-bandits/index.html"><b>Book IV · Mercenaries and Bandits</b></a>
-    — Two limits on agreement. When messages are fully asynchronous, no protocol can guarantee
-    consensus if even one process may crash, because a crashed process looks exactly like a slow
-    one. When processes may lie, agreement is possible only if more than two thirds are honest,
-    unless messages can be signed. Both are explored on one hill: mercenaries below who must go
-    in at the same gate and cannot tell a dead comrade from a slow messenger bird, and bandits
-    above who must hold the loot or scatter together and cannot tell a lying chief from a lying
-    peer.<br>
-    <span class="paper">Fischer, Lynch &amp; Paterson 1985 · Lamport, Shostak &amp; Pease 1982 ·
+    <div class="entry">
+      <p><a href="books/mercenaries-and-bandits/index.html"><b>Book IV · The Limits of Agreement</b></a></p>
+      <p>
+      Can machines always agree when some of them may fail? What if one may stop silently
+      while messages take any time at all, and what if messages are prompt but some machines
+      lie?</p>
+      <p>
+      We find out by exploring how mercenaries at the foot of a hill, and the bandits
+      holding its summit, each had to agree on a plan without being able to see one another.<br>
+      <span class="paper">Fischer, Lynch &amp; Paterson 1985 · Lamport, Shostak &amp; Pease 1982 ·
     Pease, Shostak &amp; Lamport 1980</span></p>
+    </div>
 
-    <p><b class="planned">The Empty Row</b> <span class="unwritten">Not yet written</span>
-    — Consensus is impossible in an asynchronous system with a single crash, yet a failure
-    detector that is often wrong can be enough to escape that result. It may suspect processes
-    that are alive, provided it eventually suspects every crashed one and eventually stops
-    suspecting some live one, and provided a majority never crash. This is explored in the
-    same four mercenary camps, each keeping a board of which camps' ravens have stopped
-    arriving, never sure whether an empty row means a dead commander or a bird still in the
-    folds.<br>
-    <span class="paper">Chandra &amp; Toueg 1996</span></p>
+    <div class="entry">
+      <p><b class="planned">Consensus with Unreliable Failure Detectors</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      If a crashed machine looks exactly like a slow one, agreement is impossible. How good
+      must our guesses about who has crashed be before agreement becomes possible again?</p>
+      <p>
+      We find out by exploring how the mercenary camps kept a board of which comrades had
+      fallen silent, knowing any mark on it might be wrong.<br>
+      <span class="paper">Chandra &amp; Toueg 1996</span></p>
+    </div>
 
-    <p><b class="planned">The Standing Orders</b> <span class="unwritten">Not yet written</span>
-    — Replication can keep working even when some machines lie, the leader included, and even
-    when messages take arbitrarily long. With 3f + 1 replicas for f liars, every step waits for
-    a quorum of 2f + 1, so any two quorums share an honest member, and a leader that stalls or
-    contradicts itself is replaced. This is explored in the same four mercenary camps later in
-    the siege, when one of the four may have been bought: each was hired alone and paid alone.
-    The trading houses that hired them are traders and keep no ravens: each sends a runner to
-    its nearest camp, risking the next camp along the foot only if its own falls silent, and
-    accepts an answer only when two camps' seals agree on it. The camps keep the orders in one
-    numbered sequence:
-    one camp numbers each order, the others echo it twice before it stands, and a camp whose
-    numbering stalls or contradicts itself loses the right to number. Four camps is exactly
-    3f + 1 for a single liar, and the ravens' unbounded flights are the model this answer was
-    built for.<br>
-    <span class="paper">Castro &amp; Liskov 1999</span></p>
+    <div class="entry">
+      <p><b class="planned">Replication Despite Liars</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      Can a replicated service keep working when some of its machines lie, the leader
+      included, and messages take arbitrarily long?</p>
+      <p>
+      We find out by exploring how the mercenary camps kept their orders in one sequence
+      after one of them may have been bought.<br>
+      <span class="paper">Castro &amp; Liskov 1999</span></p>
+    </div>
   </div>
 </section>
 
@@ -120,25 +129,27 @@
 <section>
   <div class="issue"><span class="no">Paxos</span><h2>Consensus &amp; Replicated State Machines</h2></div>
   <div class="prose">
-    <p><b class="planned">The Part-Time Parliament</b> <span class="unwritten">Not yet written</span>
-    — A group of machines can agree on a sequence of commands, with no fixed leader, as long as
-    any two majorities overlap. Whatever one majority has chosen, the next is bound to learn.
-    The algorithm is always safe, but it is not guaranteed to finish: two proposers competing
-    can block each other forever. This book is not retold. It is Lamport's paper in its original
-    form, enhanced with visuals: the legislators of Paxos, their ballots and their ledgers, the
-    allegory that every other book here borrows. Its plainer restatement, <i>Paxos Made
-    Simple</i>, stands beside it, and later books return to its Chamber. The paper says that a
-    foreign invasion destroyed Paxos, but for convenience we assume it didn't.<br>
-    <span class="paper">Lamport 1998 · Lamport 2001</span></p>
+    <div class="entry">
+      <p><b class="planned">Consensus by Overlapping Majorities</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      How can a group of machines agree on a sequence of commands when any of them may
+      wander off at any time, and no one is in charge for long?</p>
+      <p>
+      Lamport answered this himself, with the part-time legislators of the Greek island of
+      Paxos. We present his paper as he wrote it, with pictures.<br>
+      <span class="paper">Lamport 1998 · Lamport 2001</span></p>
+    </div>
 
-    <p><b class="planned">The Ledgers</b> <span class="unwritten">Not yet written</span>
-    — An algorithm correct on paper has to be repaired before it can run for years. What
-    <i>The Part-Time Parliament</i> passes over quickly is told as later repairs to the Paxon
-    parliament, in Lamport's Chamber: the president holding a lease so as to answer readers
-    without a ballot while keeping the rule of <i>The Last Jar</i>, ledgers damaged unnoticed,
-    presidencies that must be numbered, changes to who sits, law books too large to copy, and
-    testing.<br>
-    <span class="paper">Chandra, Griesemer &amp; Redstone 2007</span></p>
+    <div class="entry">
+      <p><b class="planned">Consensus in Practice</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      An algorithm can be proven correct on paper and still fail in production. What does it
+      take to keep consensus running for years on real machines?</p>
+      <p>
+      We find out by exploring the repairs the Paxon parliament needed to keep sitting:
+      leases, damaged ledgers, changing membership and more.<br>
+      <span class="paper">Chandra, Griesemer &amp; Redstone 2007</span></p>
+    </div>
 
   </div>
 </section>
@@ -148,22 +159,16 @@
 <section>
   <div class="issue"><span class="no">Skene</span><h2>Leader-Driven Consensus</h2></div>
   <div class="prose">
-    <p><b class="planned">The Odeon</b> <span class="unwritten">Not yet written</span>
-    — Most practical replication puts one leader in charge, and the hard part is replacing it
-    without losing anything it committed. Viewstamped replication numbers each leader's reign as
-    a view, and changes view in a way that keeps every committed operation. It was developed
-    independently of Paxos and published before it: a genuine alternative, not a descendant.
-    So it is explored on an island of its own, Skene, whose legislators govern from a theatre.
-    Where the Chamber on Paxos makes oratory impossible, the Odeon is built so that a single
-    voice reaches every seat: one legislator speaks from the stage, the others keep their law
-    books in the front row, and the public in the seats behind learn the law. When the speaker
-    falls silent, business stops until another legislator takes the stage under a higher
-    number. The book has two parts. The second, <i>The Rehearsal</i>, takes up Raft: the same
-    lineage, designed to be taught and tested on students who had to learn it, told as the same
-    business rehearsed. Its refinements are stage directions: a random wait before claiming the
-    stage, so that two legislators rarely claim it at once, and no stage for a legislator whose
-    law book is less complete.<br>
-    <span class="paper">Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 · Ongaro &amp; Ousterhout 2014</span></p>
+    <div class="entry">
+      <p><b class="planned">Leader-Driven Replication</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      Most practical systems put one leader in charge. How do you replace a leader without
+      losing anything it promised, and can such an algorithm be made easy to understand?</p>
+      <p>
+      We find out by exploring how the legislators of another island governed from a
+      theatre, one voice on the stage at a time.<br>
+      <span class="paper">Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 · Ongaro &amp; Ousterhout 2014</span></p>
+    </div>
 
   </div>
 </section>
@@ -173,60 +178,62 @@
 <section>
   <div class="issue"><span class="no">Homonoia</span><h2>Replication Without Assembly</h2></div>
   <div class="prose">
-    <p><b class="planned">The Stoa and the Festival</b> <span class="unwritten">Not yet written</span>
-    — Updates can spread through a large system the way rumours spread through a crowd: each
-    node passes news to a few random others, and loses interest once most of those it tells
-    have already heard. Periodic full comparisons catch what the rumours miss. Homonoia is an
-    island of scholars and copyists. On Arche, trading from a stale
-    book is an emergency measure, since a jar promised to two buyers is a real loss; the
-    scholars answer from whatever copy they hold as a matter of course, as long as every copy
-    agrees in the end. This book, together with a survey of every
-    optimistic replication practice in use, is explored as a colonnade where travelling
-    scholars pass on new learnings on scraps of papyrus, such as that the Earth goes round the
-    Sun, each passing a scrap to a few others until most of those they meet already have it,
-    and a yearly festival where copyists compare their whole collections, scraps included, to
-    catch whatever the talk missed.<br>
-    <span class="paper">Demers et al. 1987 · Saito &amp; Shapiro 2005</span></p>
+    <div class="entry">
+      <p><b class="planned">Spreading Updates by Gossip</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      How can an update reach every machine in a large system without anyone organising the
+      spread?</p>
+      <p>
+      We find out by exploring how Greek scholars passed on new learning like rumours in a
+      colonnade, and compared whole collections once a year to catch what the rumours
+      missed.<br>
+      <span class="paper">Demers et al. 1987 · Saito &amp; Shapiro 2005</span></p>
+    </div>
 
-    <p><b class="planned">The Ring of Libraries</b> <span class="unwritten">Not yet written</span>
-    — A store that must always accept writes can spread keys around a ring by hashing, let a
-    neighbour stand in for a node that is down, and reconcile conflicting versions afterwards.
-    How often such a store returns stale data can then be measured rather than guessed. This is
-    explored as a ring of libraries around a lagoon, each holding the scrolls whose catalogue
-    marks fall between it and its neighbour. When a library is closed, its copies are made next
-    door with a note to return them, and a reader is sometimes handed an out-of-date copy.<br>
-    <span class="paper">DeCandia et al. 2007 · Bailis et al. 2012</span></p>
+    <div class="entry">
+      <p><b class="planned">Always-Writable Storage</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      How can a store accept every write even when some of its machines are down? And how
+      often will it then hand back stale data?</p>
+      <p>
+      We find out by exploring a ring of libraries around a lagoon, where a closed library's
+      copies are made next door.<br>
+      <span class="paper">DeCandia et al. 2007 · Bailis et al. 2012</span></p>
+    </div>
 
-    <p><b class="planned">The Wax Scriptorium</b> <span class="unwritten">Not yet written</span>
-    — Letting every replica accept updates anywhere and reconcile them later becomes unstable
-    as a system grows: conflicts and deadlocks rise with the cube of the number of replicas.
-    The remedy is two tiers. Replicas that are often disconnected make tentative updates, each
-    carrying its own check for conflicts and its own way of resolving them, and a primary later
-    fixes their place in one order. This is explored as a scriptorium on the beach where scribes
-    draft their changes in wax, used at once but only provisionally, and copied fair in ink when
-    the head library has fixed their order. Nobody waits for the head library: it confirms the
-    order afterwards, and until then the wax stands.<br>
-    <span class="paper">Gray, Helland, O'Neil &amp; Shasha 1996 · Terry et al. 1995</span></p>
+    <div class="entry">
+      <p><b class="planned">Update Anywhere, Order Later</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      Why does letting every replica accept updates and reconcile them later break down as a
+      system grows, and what can replace it?</p>
+      <p>
+      We find out by exploring a scriptorium where scribes draft their changes in wax, use
+      them at once, and copy them fair in ink once their order is fixed.<br>
+      <span class="paper">Gray, Helland, O'Neil &amp; Shasha 1996 · Terry et al. 1995</span></p>
+    </div>
 
-    <p><b class="planned">The Far Terraces</b> <span class="unwritten">Not yet written</span>
-    — Some data types can be merged in any order, any number of times, and every replica still
-    ends in the same state, so no coordination is ever needed. This is explored as the island's
-    count of how many copies of each work have been made, kept in voting pebbles on remote
-    terraces. Each
-    library adds pebbles only to its own column, and merging two counts takes the larger in each
-    column.<br>
-    <span class="paper">Shapiro, Preguiça, Baquero &amp; Zawirski 2011 · the same authors' comprehensive study, 2011</span></p>
+    <div class="entry">
+      <p><b class="planned">Conflict-Free Replicated Data Types</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      Can some data be merged in any order, any number of times, and still end the same
+      everywhere, so that no coordination is ever needed?</p>
+      <p>
+      We find out by exploring how scholars on remote terraces kept count of copies with
+      voting pebbles.<br>
+      <span class="paper">Shapiro, Preguiça, Baquero &amp; Zawirski 2011 · the same authors' comprehensive study, 2011</span></p>
+    </div>
 
-    <p><b class="planned">The Shelf and the Reading Room</b> <span class="unwritten">Not yet written</span>
-    — Two things that can be promised without coordinating on every write, and one that cannot,
-    in two parts told in every library. First, a system spread across data centres can promise
-    that no one sees a reply before the message it answers, by having each write name the writes
-    it depends on: a sorting shelf in every library holds each letter back until every letter it
-    answers has arrived there. Second, some transactional guarantees can be kept while the
-    network is split, and others provably cannot. In the reading room beside the shelf, a
-    librarian asks what can still be promised a reader while the couriers are stopped: never to
-    see half of a revision, yes; that two readers will not both take the last copy, no.<br>
-    <span class="paper">Lloyd et al. 2011 · Bailis et al. 2014</span></p>
+    <div class="entry">
+      <p><b class="planned">Promises Without Coordination</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      Without coordinating on every write, what can a system still promise? That no one sees
+      a reply before the message it answers? That no one sees a change half made? That two
+      people never take the last item?</p>
+      <p>
+      We find out by exploring how libraries sorted their letters and served their readers
+      while the couriers were stopped.<br>
+      <span class="paper">Lloyd et al. 2011 · Bailis et al. 2014</span></p>
+    </div>
   </div>
 </section>
 
@@ -235,14 +242,16 @@
 <section>
   <div class="issue"><span class="no">The Council Ground</span><h2>When Coordination Is Needed</h2></div>
   <div class="prose">
-    <p><b class="planned">The Hall of Two Doors</b> <span class="unwritten">Not yet written</span>
-    — A program needs coordination exactly when it is not monotonic, that is, when a
-    conclusion may have to be withdrawn as more information arrives. A question like "has at least
-    one copy of this work been made?" can be answered as soon as it becomes true; "is this every
-    copy that has been made?" cannot be answered without everyone. This is explored as a hall with one door
-    facing the islands that assemble, Paxos and Skene, and one facing Homonoia, where each
-    question leaves by the door its own shape decides.<br>
-    <span class="paper">Hellerstein 2010 · Ameloot, Neven &amp; Van den Bussche 2011</span></p>
+    <div class="entry">
+      <p><b class="planned">Coordination and Monotonicity</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      Which problems can be solved without machines ever waiting for one another, and which
+      cannot?</p>
+      <p>
+      We find out by exploring a hall between the islands, where each question leaves by the
+      door its own shape decides.<br>
+      <span class="paper">Hellerstein 2010 · Ameloot, Neven &amp; Van den Bussche 2011</span></p>
+    </div>
   </div>
 </section>
 
