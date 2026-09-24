@@ -834,6 +834,8 @@
     // looks right: 104 m per unit, ~190 m across.
     let islandSeparation = 260;
     const ARCHE_SCALE = 95;
+    // Arche's model has the Vine off towards its -X, +Z corner; a 20 degree turn puts it due north.
+    const ARCHE_YAW = 20 * Math.PI / 180;
     const PAXOS_SCALE = 104;
     // The model's arms point along its +Z; a quarter turn points them north (-X), as canon has it.
     const PAXOS_YAW = -Math.PI / 2;
@@ -845,6 +847,7 @@
       paxosGroup.position.set(islandSeparation / 2, seaLevelOffset, 36);
 
       archeGroup.scale.setScalar(ARCHE_SCALE);
+      archeGroup.rotation.y = ARCHE_YAW;
       paxosGroup.scale.setScalar(PAXOS_SCALE);
       paxosGroup.rotation.y = PAXOS_YAW;
     }
@@ -869,39 +872,6 @@
           loadingOverlay.classList.add('hidden');
         }, 600);
       }
-    }
-
-    // The mesh's crown is ~1.2 km across; canon's is modest. As in art/previs/render.py's
-    // `crown_shrink`, the summit is pulled toward a point on the crown axis: fully inside
-    // r_in, fading out by r_out. Done here too so a view framed in the explorer is the view
-    // that renders. Worked in the explorer frame at the default spacing (Arche centred at
-    // x = -130), with the base at sea level, as render.py has it.
-    const CROWN_SHRINK = { x: -122.88, z: 2.14, scale: 0.75, r_in: 16.62, r_out: 28.5, base: 14.25 };
-    function shrinkCrown(root) {
-      const cs = CROWN_SHRINK, home = new THREE.Vector3(-130, 0, 0);
-      const c = new THREE.Vector3(cs.x, cs.base, cs.z);
-      archeGroup.updateMatrixWorld(true);
-      const groupInv = archeGroup.matrixWorld.clone().invert();
-      const p = new THREE.Vector3(), q = new THREE.Vector3();
-      root.traverse((m) => {
-        if (!m.isMesh) return;
-        const rel = groupInv.clone().multiply(m.matrixWorld), relInv = rel.clone().invert();
-        const pos = m.geometry.attributes.position;
-        for (let i = 0; i < pos.count; i++) {
-          p.fromBufferAttribute(pos, i).applyMatrix4(rel).multiplyScalar(ARCHE_SCALE).add(home);
-          const d = Math.hypot(p.x - c.x, p.z - c.z);
-          const t = Math.min(Math.max((cs.r_out - d) / (cs.r_out - cs.r_in), 0), 1);
-          const w = t * t * (3 - 2 * t);
-          if (w === 0) continue;
-          q.copy(p).sub(c).multiplyScalar(cs.scale).add(c);
-          p.lerp(q, w).sub(home).divideScalar(ARCHE_SCALE).applyMatrix4(relInv);
-          pos.setXYZ(i, p.x, p.y, p.z);
-        }
-        pos.needsUpdate = true;
-        m.geometry.computeVertexNormals();
-        m.geometry.computeBoundingBox();
-        m.geometry.computeBoundingSphere();
-      });
     }
 
     // Load Arche
@@ -929,7 +899,6 @@
         });
 
         archeGroup.add(root);
-        shrinkCrown(root);
         archeLoaded = true;
         archeProgressPct.textContent = '100%';
         archeProgressBar.style.width = '100%';
@@ -1531,8 +1500,6 @@
         aspect: `${w / g}:${h / g}`,
       };
       if (onPaxos) shot.island = 'paxos';
-      else shot.crown_shrink = { scale: CROWN_SHRINK.scale, r_in: CROWN_SHRINK.r_in,
-                                 r_out: CROWN_SHRINK.r_out, base: CROWN_SHRINK.base };
       const onThis = actors.filter((a) => a.group === group);
       if (onThis.length) {
         const count = {};

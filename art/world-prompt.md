@@ -39,16 +39,61 @@ roof, dome, ceiling, people, humans, person, human figures, crowd, characters, s
 
 ## 2. Island 1: Arche
 
-> **Narrative Setting:** The island of foundations, about 8 km across. A 400 m limestone massif (Mount Phyle) fills the middle of the island, its foot some 5 km across. It stands squarely between every pair of the three trading houses, which sit at ~120° intervals round the coast: the **Dolphin** west-south-west, the **Vine** due north, and the **Anchor** east-south-east. Every straight line between two houses passes through the massif. A coastal ring road of **two stacked single-file cliff cuttings** joins them: the upper cutting runs sunwise only, the lower against the sun only, and there are no passing places. Reefs and tide-races off the headlands mean no small boat coasts from one cove to the next. On the mountain, four mercenary tents sit in the gullies at its foot and a ruined bandit wall crowns the peak. The books are set in the winter trading season, under low overcast. The island plate is nonetheless rendered in clear sunlight, because crisp directional shadows help the 3D generator read the geometry. Winter weather belongs in the scene prompts.
+> **Narrative Setting:** The island of foundations, about 8 km across. A 400 m limestone massif (Mount Phyle) fills the middle of the island, its foot some 5 km across. It stands squarely between every pair of the three trading houses, which sit at ~120° intervals round the coast: the **Dolphin** west-south-west, the **Vine** due north, and the **Anchor** east-south-east. Every straight line between two houses passes through the massif. A coastal ring road of **two stacked single-file cliff cuttings** joins them: the upper cutting runs sunwise only, the lower against the sun only, and there are no passing places. Reefs and tide-races off the headlands mean no small boat coasts from one cove to the next. On the mountain, four gullies at its foot hold the mercenaries' camps (their tents are props, added to scenes) and a ruined bandit wall crowns the peak. The books are set in the winter trading season, under low overcast. The island plate is nonetheless rendered in clear sunlight, because crisp directional shadows help the 3D generator read the geometry. Winter weather belongs in the scene prompts.
 >
 > **Why the island plate shows habitation.** It carries every book location in place, so the geography can be checked against the books in one image: a narrow coastal road rather than an inland one, ports spread round the coast, a steep broad mountain, and a walled summit.
 >
 > **No people, no animals.** At island scale a person or a mule is a blob of a few pixels, and the 3D conversion turns each one into wasted polygons. The island plate shows habitation and activity **only through objects**: laden carts, stacked cargo, moored ships, drying nets, tents and lofts. People and animals are added later, in the **scene prompts**, which are generated from renders of the island's 3D model at chosen camera positions.
 
 ### 2.1 Island Plate Prompt (Geography, Habitation & Book Locations)
+The Arche plate is made from a top-down map, so the layout can be checked before any picture is made. The model `art/arche-3d.glb` is the Meshy conversion of the result.
+
+**Step 1 — map** (text-to-image, `banana_pro`, square, with `art/refs/arche-model-top.png`, a straight-down render of the previous model, attached for proportions). Gemini keeps the ports at the model's diorama scale but draws the road as an inland loop:
+```text
+A clean top-down cartographic map of the Greek island Arche, drawn straight down from directly above with north at the top of the frame: contour lines for the terrain and solid building blocks for everything built. A plan for architects, not a picture: no perspective, no shading, no textures, no trees drawn as trees.
+
+The attached image is a straight-down render of the island as it exists now. Take the overall proportions from it: how big each port is against the whole island (each port's buildings, quays and piers take up roughly a third of the coast on its side of the island), how big the buildings are, the width of the coastal road, and the naturally irregular shoreline round each harbour. The map corrects its layout as described below.
+
+Style:
+- White or very pale paper background; the sea a flat pale blue.
+- Coastline: one crisp dark line, jagged and broken like a real Aegean island: narrow rocky points of uneven length, small coves and inlets, and irregular natural harbour shorelines at the three ports, never a smooth curve.
+- Terrain: thin brown contour lines at even height intervals, closer together where the slope is steeper. No hill shading, no colour tints.
+- Buildings: solid terracotta-red blocks seen from above, each its own simple footprint (rectangles, L-shapes, courtyard squares). Quays, piers and slipways: solid grey. The road: a dark red double line.
+- Terraces: a light hatch. Goat paths: thin dashed lines.
+- No text, no labels, no legend, no scale bar, no north arrow, no compass rose, no border.
+
+Terrain (Mount Phyle):
+- One broad limestone mountain fills the middle of the island, leaving a coastal strip all round for the road and the ports. Its single small summit is in the exact centre of the island.
+- Eight spurs radiate from the summit like the spokes of a wheel, drawn as contour lines bulging outward; between them eight gullies, drawn as contour lines bending inward toward the summit. Four of the gullies point exactly north, east, south and west. The spurs are natural and uneven, each a different length and width, not a perfect star.
+- The slopes are continuous natural hillsides: no terraces on the mountain, no plateaus, no cliff rings, no craters.
+- The mountain stands between every pair of ports: a straight line from any port to any other crosses the mountain's upper slopes.
+- The four gullies at north, east, south and west are empty: nothing built in them.
+
+The crown: a small ruined ring wall round a few crags on the very summit, about the size of the largest building in the ports, with a narrow gap on its north side and a wider gap on its south side. Three tiny separate blocks sit just below the wall on different sides, and one tiny block in the middle of the ring. Two faint dashed goat paths climb two different spurs to the two gaps and fade out halfway down the mountain.
+
+Coastal road: two parallel single-file cuttings drawn as a dark red double line, running right round the island close to the coast, with no branches, no inland roads and no road over the mountain.
+
+The three ports, each on its own side of the island so that no two share a side:
+1. The Dolphin, WEST-SOUTH-WEST: a rocky inlet with a long stone quay along the waterfront, one slipway, a large trade depot and a colonnaded tally hall facing the quay, and a village of small house blocks behind them.
+2. The Vine, due NORTH: a sheltered cove with a short stone dock and one slipway, a large wine and oil compound with a press house, a village of small house blocks, and hatched vine and olive terraces on the lower slopes to either side of the village (not directly behind it, where the north gully is). Just along the road east of the village, one small block cut into the cliff beside the road: the rock-cut granary.
+3. The Anchor, EAST-SOUTH-EAST, the largest: a crescent bay with a sandy beach, a long stone pier running straight out into the bay, two slipways, a large customs house built round a courtyard, a long granary block, and a village of small house blocks.
+On the southern cape, between the Dolphin and the Anchor, one small square block beside the road: the sundial platform.
+
+THE ROAD REACHES EVERY PORT. At each port the double line comes down to the waterfront and runs straight along it, past the quay or pier. Every quay, pier and slipway touches the road on its landward end; every building block stands on or directly beside the road, or within its village, whose lanes lead to the road. No block, quay or pier stands apart from the road or is cut off from it by cliff, slope or water.
+```
+
+**Step 2 — road fix.** `python3 art/refs/arche_map_fix_road.py art/refs/arche-map-gemini.png art/refs/arche-map.png` erases Gemini's road and draws the two cuttings a short, even distance inside the coast, keeping Gemini's line through the three ports. It removes stray blocks outside the ports, adds the rock-cut granary and the sundial platform, and checks that the road crosses no building and that every quay meets it. Gemini will not move the road in an edit.
+
+**Step 3 — plate** (image-to-image, `banana_pro`, square, with `art/refs/arche-map.png` attached). Gemini follows the map's viewpoint, so the result is straight down:
 ```text
 Detailed 3D isometric environment asset of the Greek island Arche, Hellenistic Mediterranean period (~3rd century BC), inhabited and working, as in the winter trading season.
-High-angle orthographic axonometric projection, hyperfocal deep focus across all planes, crisp fine geometry, 8k resolution.
+A high oblique aerial view from the south, looking north and down at about 55 degrees, so the whole island fits the frame and the mountain's relief reads clearly; hyperfocal deep focus across all planes, crisp fine geometry, 8k resolution.
+
+The attached map is the island's plan, drawn from directly above with north at the top. Follow it exactly: the jagged coastline and the irregular harbour shores; the brown contour lines, which give the mountain's shape (lines close together are steep, and the summit ring is the top); the position, size and footprint of every terracotta building block (buildings) and grey block (quays, piers, slipways); the hatched areas (vine and olive terraces); and the dark red double line (the ring road's two cuttings). The contour lines show height only: the slopes are continuous and natural, with no terraces, steps or rings except where the map is hatched.
+
+THE ROAD REACHES EVERY PORT, as on the map: at each of the three ports it runs along the waterfront, and every quay, pier and building stands on or directly beside it. No port, building, pier or quay stands apart from the road or is cut off from it by cliff or water.
+
+The summit crown is exactly the size of the ring on the map: small, about the size of the largest building in the ports, a ruined wall round a few crags on the very top. The map has no text; add none.
 
 REMOVE ALL PEOPLE AND ANIMALS: zero people, zero human figures, zero sailors, zero soldiers, zero silhouettes, zero mules, zero horses, zero livestock, zero birds in flight. Show that the island is lived in and busy only through buildings, objects, vehicles at rest, cargo and ships.
 
@@ -70,7 +115,7 @@ Mount Phyle (natural massif with book locations):
 - A broad, climbable mountain, not a tower. Its profile is a wide, irregular cone. The slopes rise continuously from the coastal strip to the peak: gentle lower flanks of about 15–20°, steepening to about 30–35° near the top. Nowhere is there a sheer vertical face encircling the summit, and nowhere a cliff band that would stop a man on foot. A determined climber could walk up any spur.
 - Organic natural karst geomorphology: eight radiating wooded spurs separated by gullies. Rough limestone outcrops, broken crags, ledges and scree break through the scrub on the upper third, as scattered rocks on a slope, not as walls. Maritime pine, cypress and maquis cover the lower slopes. NO concentric rings, NO stepped tiers, NO artificial plateaus, NO mesa or tabletop, NO crater or caldera, NO switchback roads.
 - The mountain is not a thoroughfare. There is no road over it and no made trail. Only two faint, rough goat paths climb two spurs to the wall's north slot and south gap, vanishing into scrub and scree lower down.
-- Four mercenary camps at the foot, one at each quarter-point (N, E, S, W), each deep in its own wooded gully with two wooded spurs between any two camps, so none can see another. Each camp is exactly ONE small one-man linen tent in a tiny clearing, and nothing else: no second tent, no tower, no loft, no stilted structure, no palisade, no fire, no smoke. Four camps, four tents in total, spread evenly round the mountain.
+- Four deep wooded gullies at the foot, one at each quarter-point (N, E, S, W), each between two wooded spurs, with two spurs between any two of these gullies. The gullies are empty wooded clefts with nothing built in them.
 - The summit crown: a modest rounded rocky top, an irregular jumble of pale limestone crags and clefts sitting on the slope rather than raised on a cliff, circled by a ruined cyclopean polygonal dry-stone wall with jagged tops and two breaches: a narrow rock slot on the north side and a wider timber-framed gap on the south. On the highest point sits the chief's hollow: a rock shelter with a few strongboxes and a bronze water-jar. Below the rim, three small separate lookout posts are tucked into three different crags, each facing a different approach and each hidden from the others and from the peak by rock, each with a small bronze water-jar. No council ring, no buildings, no roofs.
 
 Coastal Ring Road (two stacked one-way cliff cuttings):
@@ -89,6 +134,19 @@ Compact organic clusters of Hellenistic vernacular buildings: dry-stone and ashl
 Vegetation & Palette:
 Maritime pine, dark slender cypress, gnarled olive groves and vine terraces near the Vine, silver-green maquis, bare pale limestone higher up. Photorealistic PBR stone, timber, terracotta and water materials; muted, cool winter palette.
 ```
+
+**Step 4 — tilt** (image-to-image on the step 3 image, `banana_pro`, square). Meshy reads heights far better from an oblique view; the result is `art/refs/arche-plate.png`:
+```text
+Re-render [image 1] from a different camera, changing nothing about the island itself.
+
+Camera: a high oblique aerial view from the south, looking north across the island and down at about 45 degrees, like a photograph from a low-flying aircraft. The southern coast is nearest, the northern port farthest; north stays at the top of the frame. The whole island fits the frame with a margin of sea all round, and the sea reaches every edge of the frame. No pedestal, no cutaway, no diorama base.
+
+Because the view is now at an angle, show the island's height truthfully: the sheer limestone sea-cliffs along the coast with the road cut into them, the mountain rising in continuous slopes from the coastal strip to the small walled summit, the spurs as ridges and the gullies as clefts between them, and every building and quay seen in three-quarter view with walls as well as roofs.
+
+Keep everything exactly as it is in [image 1]: the coastline and its rocky points, the three ports with every building, quay, pier and ship in place, the road running along the coast and through each port, the terraces, the woods and scrub, the summit ring, the rock-cut granary and the sundial platform. Same bright, clear sunlight and crisp air. Zero people, zero animals, no text.
+```
+
+**Step 5 — 3D.** A Meshy image-to-3D conversion of the tilted plate, downloaded without resizing, is `art/arche-3d.glb`. `explorer.html` and `art/previs/render.py` place it at 95 m per model unit, a scale set by eye from a person beside the Dolphin's depot, and turn it 20° so the Vine is due north.
 
 #### Island Plate Negative Prompt
 (Used instead of the universal negative for the Arche plate, because the plate deliberately puts a ruined wall and tents on the mountain.)
