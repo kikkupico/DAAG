@@ -306,6 +306,15 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       padding-bottom: 6px;
     }
+    .side-panel select {
+      background: rgba(255, 255, 255, 0.06);
+      color: inherit;
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 5px 8px;
+      font: inherit;
+      font-size: 0.8rem;
+    }
     .setting-row {
       display: flex;
       flex-direction: column;
@@ -388,7 +397,7 @@
     <div style="pointer-events: auto; display:flex; gap:8px;">
       <button class="btn" id="btn-top-camera" style="display:flex; align-items:center; gap:8px; padding: 9px 18px; font-weight:600; background:rgba(18,28,42,0.92); border: 1px solid rgba(56,189,248,0.4); border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.45); cursor:pointer;">
         <span style="font-size:1.15em">🎥</span>
-        <span>Copy Camera</span>
+        <span>Copy Scene</span>
       </button>
       <button class="btn" id="btn-top-screenshot" style="display:flex; align-items:center; gap:8px; padding: 9px 18px; font-weight:600; background:rgba(18,28,42,0.92); border: 1px solid rgba(56,189,248,0.4); border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.45); cursor:pointer;">
         <span style="font-size:1.15em">📸</span>
@@ -405,12 +414,36 @@
       <li><strong>Fly Mode:</strong> Mouse Drag to Look, <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> to fly, <kbd>Q</kbd>/<kbd>E</kbd> for altitude, <kbd>Shift</kbd> for boost.</li>
       <li><strong>Focal Length:</strong> Select below or drag the slider.</li>
       <li><strong>Screenshot:</strong> Click "Copy Screenshot" or press <kbd>P</kbd>.</li>
-      <li><strong>Camera:</strong> Click "Copy Camera" or press <kbd>C</kbd> to copy a previs shot (eye, look, lens, aspect).</li>
+      <li><strong>Cast:</strong> Turn on <em>Drop</em>, then click the island to place the chosen character; drag before letting go to face them. Click a character to select or move it; <kbd>Delete</kbd> removes it, <kbd>[</kbd> <kbd>]</kbd> turn it.</li>
+      <li><strong>Scene:</strong> Click "Copy Scene" or press <kbd>C</kbd> to copy a previs shot (camera and cast).</li>
     </ul>
   </div>
 
   <!-- Side Settings Panel -->
   <div class="side-panel">
+    <h3>Cast</h3>
+    <div class="setting-row">
+      <div class="setting-header"><span>Character</span></div>
+      <select id="cast-who"></select>
+    </div>
+    <div class="setting-row">
+      <div class="setting-header"><span>Pose</span></div>
+      <!-- the poses art/previs/render.py knows; the explorer shows every figure standing -->
+      <select id="cast-pose">
+        <option value="stand">stand</option>
+        <option value="glass">glass (sandglass in both hands)</option>
+        <option value="word">word (arm raised)</option>
+        <option value="shade">shade (hand at brow)</option>
+        <option value="kneel">kneel</option>
+      </select>
+    </div>
+    <div style="display:flex; gap:6px;">
+      <button class="btn btn-pill" id="btn-cast-drop" style="flex:1;">Drop</button>
+      <button class="btn btn-pill" id="btn-cast-delete" style="flex:1;">Delete</button>
+      <button class="btn btn-pill" id="btn-cast-clear" style="flex:1;">Clear</button>
+    </div>
+    <div class="setting-header" id="cast-status">No one placed</div>
+
     <h3>World Settings</h3>
 
     <!-- Time of Day / Sun -->
@@ -567,6 +600,7 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 
     // -------------------------------------------------------------------------
     // Procedural Water Normal Texture (Self-contained, no external JPG dependency)
@@ -1270,33 +1304,191 @@
     });
 
     // -------------------------------------------------------------------------
-    // Copy Camera: the current view as a shot for art/previs/render.py
+    // Cast: rigged characters dropped on the islands (art/cast/cast.json)
+    // -------------------------------------------------------------------------
+    // Each figure is parented to its island's group, so it rides along with the spacing and
+    // sea level sliders. Figures stand in their rest pose here; the pose is a label that
+    // art/previs/render.py acts on.
+    const castWho = document.getElementById('cast-who');
+    const castPose = document.getElementById('cast-pose');
+    const castStatus = document.getElementById('cast-status');
+    const btnCastDrop = document.getElementById('btn-cast-drop');
+    let castDefs = {};
+    const castTemplates = {};
+    const actors = [];          // { who, pose, root, model, group }
+    let selected = null, dropMode = false, drag = null;
+
+    fetch('./art/cast/cast.json').then((r) => r.json()).then((defs) => {
+      castDefs = Object.fromEntries(Object.entries(defs).filter(([k]) => !k.startsWith('_')));
+      castWho.innerHTML = Object.entries(castDefs)
+        .map(([k, v]) => `<option value="${k}">${v.label || k}</option>`).join('');
+    });
+
+    function castTemplate(who) {
+      if (!castTemplates[who]) {
+        castTemplates[who] = new Promise((resolve, reject) => loader.load(castDefs[who].glb, (g) => {
+          const junk = [];
+          g.scene.traverse((o) => { if (o.isMesh && !o.isSkinnedMesh) junk.push(o); });  // stray icosphere
+          junk.forEach((o) => o.parent.remove(o));
+          resolve(g.scene);
+        }, undefined, reject));
+      }
+      return castTemplates[who];
+    }
+
+    const selRing = new THREE.Mesh(new THREE.RingGeometry(0.45, 0.6, 32),
+      new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide, depthTest: false }));
+    selRing.rotation.x = -Math.PI / 2;
+    selRing.renderOrder = 10;
+    selRing.raycast = () => {};   // never picked as terrain or as a figure
+
+    function updateCastStatus() {
+      castStatus.textContent = actors.length
+        ? `${actors.length} placed` + (selected ? ` · selected: ${selected.who}, ${selected.pose}` : '')
+        : 'No one placed';
+    }
+
+    function select(a) {
+      selected = a;
+      if (a) { a.root.add(selRing); selRing.position.set(0, 0.03, 0); castWho.value = a.who; castPose.value = a.pose; }
+      else if (selRing.parent) selRing.parent.remove(selRing);
+      updateCastStatus();
+    }
+
+    async function setModel(a) {
+      const tmpl = await castTemplate(a.who);
+      if (a.model) a.root.remove(a.model);
+      a.model = SkeletonUtils.clone(tmpl);
+      a.model.scale.setScalar(castDefs[a.who].scale);
+      a.model.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.userData.actor = a; } });
+      a.root.add(a.model);
+    }
+
+    function islandAt(point) {
+      return point.distanceTo(paxosGroup.position) < point.distanceTo(archeGroup.position) ? paxosGroup : archeGroup;
+    }
+
+    function placeAt(a, worldPoint) {
+      const group = islandAt(worldPoint);
+      if (a.group !== group) {
+        group.add(a.root);
+        a.root.scale.setScalar(1 / group.scale.x);   // metres inside the scaled group
+        a.group = group;
+      }
+      a.root.position.copy(group.worldToLocal(worldPoint.clone()));
+    }
+
+    function faceToward(a, worldPoint) {
+      const p = a.root.getWorldPosition(new THREE.Vector3());
+      const dx = worldPoint.x - p.x, dz = worldPoint.z - p.z;
+      if (Math.hypot(dx, dz) > 0.2) a.root.rotation.y = Math.atan2(dx, dz);   // models face +Z
+    }
+
+    const castRay = new THREE.Raycaster();
+    const ndc = new THREE.Vector2();
+    function pick(e, objects) {
+      const r = renderer.domElement.getBoundingClientRect();
+      ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+      castRay.setFromCamera(ndc, camera);
+      return castRay.intersectObjects(objects, true);
+    }
+    const terrainHit = (e) => pick(e, [archeGroup, paxosGroup]).find((h) => !h.object.userData.actor);
+
+    // Capture phase on the container, so in drop mode a left click never reaches the orbit
+    // or fly controls; right-drag panning and wheel zoom still do.
+    container.addEventListener('pointerdown', async (e) => {
+      if (!dropMode || e.button !== 0 || !castDefs[castWho.value]) return;
+      e.stopPropagation();
+      const actorHit = pick(e, actors.map((a) => a.root))[0];
+      if (actorHit) {
+        select(actorHit.object.userData.actor);
+        drag = { mode: 'move', actor: selected };
+        return;
+      }
+      const hit = terrainHit(e);
+      if (!hit) return;
+      const a = { who: castWho.value, pose: castPose.value, root: new THREE.Group(), model: null, group: null };
+      placeAt(a, hit.point);
+      faceToward(a, camera.position);
+      actors.push(a);
+      select(a);
+      drag = { mode: 'face', actor: a };
+      setModel(a);
+    }, true);
+    container.addEventListener('pointermove', (e) => {
+      if (!drag) return;
+      const hit = terrainHit(e);
+      if (!hit) return;
+      if (drag.mode === 'move') placeAt(drag.actor, hit.point);
+      else faceToward(drag.actor, hit.point);
+    }, true);
+    window.addEventListener('pointerup', () => { drag = null; });
+
+    function deleteSelected() {
+      if (!selected) return;
+      const a = selected;
+      select(null);
+      a.root.parent.remove(a.root);
+      actors.splice(actors.indexOf(a), 1);
+      updateCastStatus();
+    }
+
+    btnCastDrop.addEventListener('click', () => {
+      dropMode = !dropMode;
+      btnCastDrop.classList.toggle('active', dropMode);
+      btnCastDrop.textContent = dropMode ? 'Dropping…' : 'Drop';
+    });
+    document.getElementById('btn-cast-delete').addEventListener('click', deleteSelected);
+    document.getElementById('btn-cast-clear').addEventListener('click', () => {
+      select(null);
+      actors.forEach((a) => a.root.parent.remove(a.root));
+      actors.length = 0;
+      updateCastStatus();
+    });
+    castWho.addEventListener('change', () => {
+      if (selected && selected.who !== castWho.value) { selected.who = castWho.value; setModel(selected); updateCastStatus(); }
+    });
+    castPose.addEventListener('change', () => {
+      if (selected) { selected.pose = castPose.value; updateCastStatus(); }
+    });
+    window.addEventListener('keydown', (e) => {
+      if (!selected || ['INPUT', 'SELECT'].includes(e.target.tagName)) return;
+      if (e.key === 'Delete' || e.key === 'Backspace') deleteSelected();
+      if (e.key === '[') selected.root.rotation.y += Math.PI / 12;
+      if (e.key === ']') selected.root.rotation.y -= Math.PI / 12;
+    });
+
+    // -------------------------------------------------------------------------
+    // Copy Scene: the current view and cast as a shot for art/previs/render.py
     // -------------------------------------------------------------------------
     // render.py places the islands at the default spacing and sea level (Arche centred at
-    // x = -130, Paxos at (130, 36)), so the pose is reported in that frame whatever the
+    // x = -130, Paxos at (130, 36)), so everything is reported in that frame whatever the
     // sliders say. three.js measures focal length against a 35 mm film width; Blender
     // uses 36 mm, so the lens is rescaled to keep the horizontal field of view.
-    function cameraShot() {
+    function sceneShot() {
       const dir = new THREE.Vector3();
       camera.getWorldDirection(dir);
       const look = controlMode === 'orbit'
         ? orbitControls.target.clone()
         : camera.position.clone().addScaledVector(dir, 10);
-      const onPaxos = look.distanceTo(paxosGroup.position) < look.distanceTo(archeGroup.position);
-      const group = onPaxos ? paxosGroup : archeGroup;
+      const group = islandAt(look);
+      const onPaxos = group === paxosGroup;
       const home = onPaxos ? new THREE.Vector3(130, 0, 36) : new THREE.Vector3(-130, 0, 0);
       const shift = home.sub(group.position);
       // Heights go out as "+h", metres above the terrain below, as the shots write them,
       // so the sea level slider doesn't shift them.
       const ray = new THREE.Raycaster();
+      const top = (x, z) => {
+        ray.set(new THREE.Vector3(x, 20000, z), new THREE.Vector3(0, -1, 0));
+        const hit = ray.intersectObject(group, true).find((h) => !h.object.userData.actor);
+        return hit ? Math.max(hit.point.y, seaLevelOffset) : seaLevelOffset;
+      };
       const above = (v) => {
-        ray.set(new THREE.Vector3(v.x, 20000, v.z), new THREE.Vector3(0, -1, 0));
-        const hit = ray.intersectObject(group, true)[0];
-        const gy = hit ? Math.max(hit.point.y, seaLevelOffset) : seaLevelOffset;
-        const h = v.y - gy;
+        const h = v.y - top(v.x, v.z);
         return (h >= 0 ? '+' : '') + h.toFixed(1);
       };
       const r = (v) => [+(v.x + shift.x).toFixed(1), above(v), +(v.z + shift.z).toFixed(1)];
+      const xz = (v) => [+(v.x + shift.x).toFixed(2), +(v.z + shift.z).toFixed(2)];
       const w = renderer.domElement.width, h = renderer.domElement.height;
       const gcd = (a, b) => (b ? gcd(b, a % b) : a);
       const g = gcd(w, h);
@@ -1309,26 +1501,40 @@
       if (onPaxos) shot.island = 'paxos';
       else shot.crown_shrink = { scale: CROWN_SHRINK.scale, r_in: CROWN_SHRINK.r_in,
                                  r_out: CROWN_SHRINK.r_out, base: CROWN_SHRINK.base };
+      const onThis = actors.filter((a) => a.group === group);
+      if (onThis.length) {
+        const count = {};
+        shot.cast = onThis.map((a) => {
+          const p = a.root.getWorldPosition(new THREE.Vector3());
+          const f = p.clone().add(new THREE.Vector3(Math.sin(a.root.rotation.y), 0, Math.cos(a.root.rotation.y)).multiplyScalar(2));
+          count[a.who] = (count[a.who] || 0) + 1;
+          const item = { name: count[a.who] > 1 ? `${a.who}-${count[a.who]}` : a.who,
+                         who: a.who, at: xz(p), face: xz(f), pose: a.pose };
+          // Under an overhang render.py's downward ray would land on the roof: start it lower.
+          if (top(p.x, p.z) > p.y + 0.5) item.under = +(p.y - seaLevelOffset + 1.5).toFixed(2);
+          return item;
+        });
+      }
       return shot;
     }
 
-    async function copyCamera() {
-      const text = JSON.stringify(cameraShot());
+    async function copyScene() {
+      const text = JSON.stringify(sceneShot());
       try {
         await navigator.clipboard.writeText(text);
-        showToast('🎥 Camera copied: ' + text);
+        showToast('🎥 Scene copied: ' + text);
       } catch (err) {
         console.log(text);
-        showToast('⚠️ Clipboard blocked; camera logged to console');
+        showToast('⚠️ Clipboard blocked; scene logged to console');
       }
     }
 
     const btnTopCamera = document.getElementById('btn-top-camera');
-    if (btnTopCamera) btnTopCamera.addEventListener('click', copyCamera);
+    if (btnTopCamera) btnTopCamera.addEventListener('click', copyScene);
     window.addEventListener('keydown', (e) => {
       if ((e.key === 'c' || e.key === 'C') && !e.ctrlKey && !e.metaKey && !e.altKey
-          && e.target.tagName !== 'INPUT') {
-        copyCamera();
+          && !['INPUT', 'SELECT'].includes(e.target.tagName)) {
+        copyScene();
       }
     });
 
