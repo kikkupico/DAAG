@@ -13,17 +13,17 @@ A shot is {"eye": [x,y,z], "look": [x,y,z], "lens": mm, "aspect": "4:3",
            "island": "arche", "vscale": 1.0, "sun": [elev_deg, azim_deg]}.
 `eye`/`look` y may be given as "+h" strings meaning h metres above the terrain there.
 Optional: "cast" (rigged characters from art/cast/cast.json, posed from art/previs/poses.py),
-"props", "light": "dusk" | "night", "under" and "crown_shrink"; each is described where it is
+"props", "light": "dusk" | "night" and "under"; each is described where it is
 handled below. The explorer's Copy Scene button writes the camera and cast in this form.
 """
 import bpy, json, sys, math
 from mathutils import Vector
 
 # glb, metres per model unit, explorer centre (x, z), sink below sea level in model units,
-# yaw about the vertical in degrees, as the explorer's group rotation.y (Paxos's arms point
-# along the model's +Z; a quarter turn points them north)
+# yaw about the vertical in degrees, as the explorer's group rotation.y (Arche's Vine and
+# Paxos's arms both come out of Meshy pointing away from north)
 ISLANDS = {
-    "arche": ("art/arche-3d.glb", 95.0, (-130.0, 0.0), 0.0, 0.0),
+    "arche": ("art/arche-3d.glb", 95.0, (-130.0, 0.0), 0.0, 20.0),
     "paxos": ("art/paxos-3d.glb", 104.0, (130.0, 36.0), 0.0, -90.0),
 }
 LONG_EDGE = 1600
@@ -55,32 +55,6 @@ island.location = (X0 - (ox * math.cos(t) - oy * math.sin(t)),
                    -Z0 - (ox * math.sin(t) + oy * math.cos(t)),
                    -SCALE * vs * (zmin + SINK))
 bpy.context.view_layer.update()
-
-# The mesh's crown is ~120 m across; canon's is modest. `crown_shrink` pulls the
-# summit toward a point on the crown axis, fully inside r_in and fading out by r_out,
-# so every later stage inherits a smaller crown. Explorer coords, as elsewhere.
-CROWN = (-122.88, 2.14)
-cs = shot.get("crown_shrink") if shot.get("island", "arche") == "arche" else None
-if cs:
-    import numpy as np
-    s, r_in, r_out, base = cs["scale"], cs["r_in"], cs["r_out"], cs["base"]
-    me = island.data
-    co = np.empty(len(me.vertices) * 3, np.float32)
-    me.vertices.foreach_get("co", co)
-    co = co.reshape(-1, 3)
-    M = np.array(island.matrix_world)
-    w_co = co @ M[:3, :3].T + M[:3, 3]
-    c = np.array([CROWN[0], -CROWN[1], base])
-    d = np.hypot(w_co[:, 0] - c[0], w_co[:, 1] - c[1])
-    t = np.clip((r_out - d) / (r_out - r_in), 0, 1)
-    wgt = (t * t * (3 - 2 * t))[:, None]
-    shrunk = c + (w_co - c) * s
-    w_co = w_co * (1 - wgt) + shrunk * wgt
-    Minv = np.linalg.inv(M)
-    co = w_co @ Minv[:3, :3].T + Minv[:3, 3]
-    me.vertices.foreach_set("co", co.astype(np.float32).ravel())
-    me.update()
-    bpy.context.view_layer.update()
 
 def to_bl(p):  # explorer (x, y, z) -> blender
     return Vector((p[0], -p[2], p[1]))
