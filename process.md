@@ -81,7 +81,7 @@ candidate against three questions:
   no more? A device that can do something the model object cannot will quietly break a proof.
 - **Is it mundane?** Could it be built from wood, stone, rope, water and birds?
 - **Does it earn its place?** A device that merely renames the concept is decoration. The good
-  ones do work — the sandglasses on the crown *are* the synchronous round; the tally board's empty row *is*
+  ones do work — the sandglasses on the crown *are* the synchronous round; the slate's chalk mark *is*
   the indistinguishability of a crash from a delay.
 
 Then write the **must not exist** list: the things that would be natural to add and would
@@ -211,8 +211,8 @@ establish.
 
 | Building | Paper(s) | Note |
 |---|---|---|
-| The counters | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Builds on *Ordering Without Clocks* Ch. VI: the goatherd is the path the houses cannot see, and the rule is judged by the sun no one can read. It says what the houses owe their buyers, not how they could know it. The object is a jar's line (a read/write register), one line per jar, for locality; not a running count. Must not contradict *Answering While Cut Off*, which already states the rule of the counters and its vocabulary. Must not give Arche a readable hour in the trading season. |
-| The camps | Chandra &amp; Toueg 1996 | *Telling the Dead from the Slow.* Shares the camps with FLP. The camps may decide; nothing follows from it. The tally board's guarantees are granted, not earned — see `settings.md`. |
+| The counters | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Builds on *Ordering Without Clocks* Ch. VI: the goatherd is the path the houses cannot see, and the rule is judged by the sun no one can read. It says what the houses owe their buyers, not how they could know it. The object is a jar's line (a read/write register), one line per jar, for locality; not a running count. Must not contradict *Answering While Cut Off*, which already states the rule of the counters and its vocabulary. The paper's queue and proof method (§4) at the Anchor's loading berths. Must not give Arche a readable hour in the trading season. |
+| The camps | Chandra &amp; Toueg 1996 | *Telling the Dead from the Slow.* Shares the camps with FLP. The camps may decide; nothing follows from it. The slate's guarantees are granted, not earned — see `settings.md`. With a majority alive, a turn to propose, not a leader; point to *Agreeing When Messages Run Late* for it and stay on the detector. |
 | The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, enhanced with visuals: it is the paper the whole project borrows its allegory from. Listed in the index under its own title, unlinked until our rendition exists. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
 | The Odeon, Skene | Oki &amp; Liskov 1988 | *One Leader at a Time.* VR, a genuine alternative to Paxos, found independently and published first, on its own island. |
 | The crown | Castro &amp; Liskov 1999 | *Keeping Order Among Liars.* Needs the Byzantine book's vocabulary and must not contradict *The Limits of Agreement*. A later, windy night: the loot book, each man both replica and client (two agreeing seals, f + 1), the chief's job numbering entries and passing in a fixed order when suspected. Safe in any wind; progress once the wind drops. Nothing follows from any entry. |

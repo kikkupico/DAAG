@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Telling the Dead from the Slow — Mount Phyle</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">Arche · Mount Phyle</span>
+  </div>
+</nav>
+<div class="page">
+
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · Mount Phyle</div>
+  <h1 class="display" style="margin:18px 0 6px">Telling the Dead from the Slow</h1>
+  <p class="sub">A machine that has crashed looks exactly like one that is merely slow, and that alone makes agreement impossible. How well must we tell the dead from the slow before agreement becomes possible again?</p>
+  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the paper's idea, the
+  allegory, the chapters and the decisions taken so far. It will be replaced by the book.
+  <br><span class="paper">Chandra &amp; Toueg 1996 · the four camps, Mount Phyle</span></p>
+</header>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>The idea</h2></div>
+  <div class="prose">
+<p>FLP fails because a dead process cannot be told from a slow one. Chandra and Toueg add an <b>unreliable failure detector</b>, a module at each process that suspects others and can be wrong, and ask how good it must be. They define eight classes by <b>completeness</b> (every crashed process is eventually suspected, by some or by every correct process) and <b>accuracy</b> (correct processes are not suspected: never, or eventually; all of them, or at least one). The results:</p>
+<ul><li>Weak completeness can be turned into strong by gossiping suspicions, so four classes suffice.</li><li>With <b>S</b> (some correct process is never suspected), consensus tolerates any number of crashes, n − 1, with an algorithm that has no coordinator.</li><li>With <b>◇S</b> (eventually some correct process is never suspected), consensus needs a majority of correct processes and uses a <b>rotating coordinator</b>.</li><li>Every "eventually" class needs a majority; that bound is tight.</li><li>Consensus and <b>atomic broadcast</b> are equivalent. (That ◇W is the <i>weakest</i> detector is the companion paper, not this one.)</li></ul>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>The allegory</h2></div>
+  <div class="prose">
+<ul><li><b>The camps</b>, as in <i>The Limits of Agreement</i> and <i>Agreeing by Chance</i>: ravens, no longest flight, one or more tents may fall silent, no one lies.</li><li><b>The slate:</b> in each tent, a slate with a row per other tent, where a man chalks a mark against a tent he suspects and rubs it out when a bird comes. Its guarantees are <b>granted, not earned</b>, as <code>settings.md</code> says: ravens with unbounded flights cannot build such a slate, and the paper treats the detector as given in the same way.</li><li><b>The eight classes</b> as ways a slate can be wrong, and the reduction as men copying each other's marks.</li><li><b>The two algorithms.</b> Relaying estimates round by round (S); a rotating turn to propose (◇S).</li></ul>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>Planned chapters</h2></div>
+  <div class="prose">
+<ol><li>The camps again, and what they lack.</li><li>The slate, and how it may be wrong.</li><li>Eight kinds of slate.</li><li>Copying marks: weak completeness made strong.</li><li>One man never wrongly marked: agreement despite n − 1 dead.</li><li>Eventually one man: agreement with a majority alive.</li><li>Why a majority is needed then.</li><li>What the slate does not say: how it could be built; atomic broadcast.</li><li>In the Book, In the Paper.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>Must not exist</h2></div>
+  <div class="prose">
+<p>a slate that is ever certain; a raven that is lost; a liar; any fact that makes the slate reliable which the camps could observe; anything following from the decision.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>Decisions taken</h2></div>
+  <div class="prose">
+<ol><li><b>A turn to propose</b>, passing round the tents in shield order and fixed by the round number, not by anyone's command. The book names the rotating coordinator of <i>Agreeing When Messages Run Late</i> as the same device.</li><li><b>The prop is the slate</b>: a slate in each tent with a row per other tent, chalked against a tent he suspects and rubbed out when a bird comes. "Tally" stays with the ring road.</li><li><b>The book stays on the detector</b> and points to the DLS book for the rotating turn.</li><li><b>Names:</b> Chandraios and Touegos at two tents, two ordinary names at the others.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+</div>
+</body>
+</html>
