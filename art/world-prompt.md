@@ -206,18 +206,18 @@ NO council ring, NO circle of seats, NO roofs, NO banners, NO fire. Windswept sc
 ### 3.1 Island Plate Prompt (Geography, Habitation & Book Locations)
 Like Arche's, the Paxos plate carries its buildings in place. It is made in three steps.
 
-**Step 1 — plate** (text-to-image, `banana_pro`, aspect 16:9):
+**Step 1 — plate** (text-to-image, `banana_pro`, aspect 16:9, with `art/refs/paxos-outline-sketch.png` attached as the outline reference; without it the Y comes out as a V with no stem):
 ```text
 Detailed 3D isometric diorama of the Greek island Paxos, Hellenistic Greece, 3rd century BC.
 True orthographic axonometric view, deep focus, warm directional sunlight, zero people.
-A limestone island shaped like the letter Y: two high rocky arms reach north, side by side, enclosing a sheltered bay of turquoise water between them; they join at a fork, and below it a short stem widens into a broad, lower body that fills the south of the island. Calm deep Aegean blue sea reaches every frame edge, turquoise shoals and white surf at the shore; no pedestal, no cutaway.
+The island's outline follows the attached sketch: a limestone island shaped like the letter Y. Two slender high rocky arms reach north, side by side, enclosing a sheltered bay of turquoise water between them. They join at a fork, and below the fork a distinct narrow stem, clearly narrower than either arm is long, runs south and then widens into a broad, lower body. The body is by far the largest part of the island, larger than both arms together, and fills the whole southern half of the frame. Calm deep Aegean blue sea reaches every frame edge, turquoise shoals and white surf at the shore; no pedestal, no cutaway.
 Outer coasts of both arms: sheer white limestone sea-cliffs with sea-caves. Inner slopes facing the bay: terraced olive groves, cypresses and maquis.
 The western arm: on a level civic terrace above the bay stands a single circular domed rotunda of white ashlar limestone ringed by a Doric colonnade, with evenly spaced doorways and statues round it; a paved road crosses the terrace past it and runs on to the arm's tip, where a small harbour town of red-tiled stone houses, a market square, quays and moored merchant ships sits on a cove.
-The eastern arm, directly across the bay from the rotunda: a small town of red-tiled stone houses above a cove, and above it, built into a hillside bowl facing the bay, a large near-square roofed theatre hall of limestone with a single oxblood tiled roof and a colonnaded porch facing the water.
+The eastern arm, directly across the bay from the rotunda: a small town of red-tiled stone houses above a cove, and above it, set into the hillside facing the bay, a large near-square roofed theatre hall of limestone with a single oxblood tiled roof and a colonnaded porch facing the water. All its seating is inside the roofed building; no seats, tiers or semicircular bowl are visible outside it.
 The fork, where the two arms meet: one small symmetrical gabled hall of pale limestone with a door in each end wall, one facing north up the bay, one facing south down the stem.
-The body of the island: lower rolling hills and valleys with a deeply indented coast of coves and pebble beaches. On an eastern harbour, a long colonnaded stoa facing an open ground set with rows of long tables. About a dozen small porched library buildings scattered in clearings among olive trees across the valleys and hill shoulders, linked by footpaths of differing length. A small rocky cove on the southwest shore with timber piers and small boats. At the remote southern tip, narrow stepped terraces with long stone tables on steep slopes facing the open sea.
+The body of the island, well south of the stem: lower rolling hills and valleys with a deeply indented coast of coves and pebble beaches. On a harbour on the body's eastern shore, far down from the fork, a long colonnaded stoa facing an open ground set with rows of long tables. About a dozen small porched library buildings scattered in clearings among olive trees across the valleys and hill shoulders, linked by footpaths of differing length. A small rocky cove on the southwest shore with timber piers and small boats. At the remote southern tip, the farthest point from the fork, narrow stepped terraces with long stone tables on steep slopes facing the open sea.
 Farmsteads along one road running from the southern body up the stem, forking at the hall, one branch along each arm.
-No open-air theatre, no citadel, no quarry, no ruins.
+No open-air theatre or exposed seating bowl anywhere, no citadel, no quarry, no ruins.
 ```
 
 **Step 2 — town pass** (image-to-image on the step 1 image, `banana_pro`, aspect 16:9). Small, tightly packed houses reconstruct in 3D as tall blocks, so the town is redrawn as low courtyard houses before conversion:
@@ -228,7 +228,7 @@ No multi-storey buildings anywhere.
 Zero people.
 ```
 
-**Step 3 — 3D.** A Meshy image-to-3D conversion of this plate is the island model, `art/paxos-3d.glb`, loaded by `explorer.html`. The live model is a plain island carrying only the Chamber; the Y shape, Schedia, the scholars' coast and the hall of two doors are not yet in it.
+**Step 3 — 3D.** A Meshy image-to-3D conversion of this plate, downloaded without resizing, is the island model, `art/paxos-3d.glb`; the plate it was made from is `art/refs/paxos-plate.jpeg`. `explorer.html` and `art/previs/render.py` place it at 104 m per model unit, a scale set by eye so that a person beside the rotunda looks right, and give it a quarter turn, since the model's arms point along its +Z and canon's point north. Meshy lost the stoa's shoreline, so the stoa and festival ground stand in the sea off the east coast.
 
 ### 3.2 Architectural Features Prompts
 
