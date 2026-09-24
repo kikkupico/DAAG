@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Many Copies, Acting as One — Arche</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">Arche · The Ring Road</span>
+  </div>
+</nav>
+<div class="page">
+
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · The Ring Road</div>
+  <h1 class="display" style="margin:18px 0 6px">Many Copies, Acting as One</h1>
+  <p class="sub">When data is kept in several copies, what does it take for them to act as one? And who could ever tell the difference?</p>
+  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the paper's idea, the
+  allegory, the chapters and the decisions taken so far. It will be replaced by the book.
+  <br><span class="paper">Herlihy &amp; Wing 1990 · the counters, Arche's ring road</span></p>
+</header>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>The idea</h2></div>
+  <div class="prose">
+<p>A correctness condition, not an algorithm. An object shared by many callers is <i>linearizable</i> if every operation seems to take effect at one instant between its call and its answer, so the answers fit one sequential order that respects real time. Two properties set it apart. It is <b>local</b>: a system is linearizable exactly when each object in it is (Theorem 1). It is <b>nonblocking</b>: a pending call on a total operation can always be completed (Theorem 2). Sequential consistency and serializability have neither property. The second half of the paper is a <b>proof method</b>: an abstraction function that maps a representation to a <i>set</i> of possible abstract values, shown on a highly concurrent FIFO queue built from <code>INC</code> and <code>SWAP</code>.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>The allegory</h2></div>
+  <div class="prose">
+<ul><li><b>The counters and the jar lines</b>, as <i>Answering While Cut Off</i> fixed them: a jar's line holds the buyer's name or nothing, a purchase writes it, a question reads it. The rule of the counters is already stated in that book; this one owns it.</li><li><b>Judged by the sun</b>, which no one can read in the trading season; <b>the goatherd</b> of <i>Ordering Without Clocks</i> Ch. VI is the witness who could catch the houses out.</li><li><b>Locality:</b> each jar's line keeps the rule on its own, so the whole trade does.</li><li><b>Sequential consistency is not enough:</b> two jar lines, each answered consistently with some order, whose orders cannot be joined. It is the paper's two-queue history (H8), redone with lines.</li><li><b>The keeper</b> of <i>Answering While Cut Off</i> as a linearizable implementation, with the moment the keeper handles a slip as each operation's instant.</li></ul>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>Planned chapters</h2></div>
+  <div class="prose">
+<ol><li>The counters and what a buyer can see.</li><li>Calls and answers: a history.</li><li>The rule, made exact.</li><li>One line at a time: locality.</li><li>A call never waits on another: nonblocking.</li><li>Weaker rules and why they fail (sequential consistency, serializability).</li><li>Proving an arrangement keeps the rule.</li><li>What the rule does not say: it is judged by the sun, not checked by any clerk.</li><li>In the Book, In the Paper.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>Must not exist</h2></div>
+  <div class="prose">
+<p>a readable hour in the trading season; any house that checks the rule; the goatherd used as a channel; a way round the road.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>Decisions taken</h2></div>
+  <div class="prose">
+<ol><li><b>The queue:</b> the Anchor's <b>loading berths</b> carry the paper's queue and Section 4. A board of numbered berths and a take-a-number peg (<code>INC</code>); a porter who takes a cargo empties its berth (<code>SWAP</code>). Several porters work at once at one house, which is shared memory, the paper's own model, and nothing crosses the road.</li><li><b>The title stays.</b> The book says the rule holds whether the object is one board or three books.</li><li><b>Names:</b> Herlios and Wingaia, at two houses.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+</div>
+</body>
+</html>

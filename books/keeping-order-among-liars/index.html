@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keeping Order Among Liars — Mount Phyle</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">Arche · Mount Phyle</span>
+  </div>
+</nav>
+<div class="page">
+
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · Mount Phyle</div>
+  <h1 class="display" style="margin:18px 0 6px">Keeping Order Among Liars</h1>
+  <p class="sub">Can a replicated service keep its commands in order when some of its machines lie, the leader included, and messages take arbitrarily long?</p>
+  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the paper's idea, the
+  allegory, the chapters and the decisions taken so far. It will be replaced by the book.
+  <br><span class="paper">Castro &amp; Liskov 1999 · the crown on a later night, Mount Phyle</span></p>
+</header>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>The idea</h2></div>
+  <div class="prose">
+<p>State machine replication that tolerates f Byzantine replicas out of 3f + 1, safe with no timing assumptions and live once delays stop growing without bound. In each <b>view</b> one replica is the <b>primary</b>. It assigns sequence numbers (pre-prepare), and the replicas echo twice: <i>prepare</i>, until 2f + 1 agree, which fixes the order within the view, then <i>commit</i>, until 2f + 1 agree, which fixes it across views. A client accepts a result on f + 1 matching replies. A suspected primary is replaced by a <b>view change</b> carrying proof of what was prepared. <b>Checkpoints</b> let the logs be trimmed. MACs replace signatures in the fast version.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>The allegory</h2></div>
+  <div class="prose">
+<ul><li><b>The crown</b> of <i>The Limits of Agreement</i>: the chief's hollow and three crag posts, out of sight of one another, with ravens and seal rings. It is a later night, so there is no synchronous glass.</li><li><b>Wind on the peak</b> pins the ravens down while it blows. Entries are safe in any wind, and progress returns once the wind drops for long enough.</li><li><b>The loot book</b>, a copy at each post: where each strongbox lies and whose share it is. An entry is a request.</li><li><b>The chief's job</b>, numbering entries, starts with the man on the peak and passes round the four in a fixed order when the others suspect its holder. <i>The Limits of Agreement</i> already says "the chief is a job, not a rank."</li><li><b>Each man's sandglass</b> is only a timer for suspecting the chief, doubling at each change.</li><li><b>Two echoes before an entry stands</b>, each needing three seals.</li></ul>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>Planned chapters</h2></div>
+  <div class="prose">
+<ol><li>The crown on a windy night.</li><li>The loot book and its entries.</li><li>The chief's job.</li><li>Two echoes.</li><li>Why three seals, and why four men.</li><li>When the chief stalls or lies: the change of job.</li><li>Trimming the book: checkpoints.</li><li>What it does not say: no progress while the wind blows; a lying man can still file nonsense entries.</li><li>In the Book, In the Paper.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>Must not exist</h2></div>
+  <div class="prose">
+<p>a shout, signal or meeting on the crown; any synchronous glass; a man leaving his post; anyone learning who lies; any consequence of an entry; bandits from off the hill.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>Decisions taken</h2></div>
+  <div class="prose">
+<ol><li><b>The client rule is stated</b> and the book shows it is redundant for an honest man, whose own copy already tells him an entry stands; it is what a client who is not one of the four would need.</li><li><b>Names:</b> Kastros and Liskovia at two places, two ordinary names at the others. Whoever sits on the peak holds the job first.</li><li><b>MACs</b> go in the mapping table only; the seal rings are signatures.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+</div>
+</body>
+</html>

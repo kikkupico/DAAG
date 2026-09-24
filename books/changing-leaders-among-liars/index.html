@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Changing Leaders Among Liars — Mount Phyle</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">Arche · Mount Phyle</span>
+  </div>
+</nav>
+<div class="page">
+
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · Mount Phyle</div>
+  <h1 class="display" style="margin:18px 0 6px">Changing Leaders Among Liars</h1>
+  <p class="sub">When some machines may lie, replacing a leader has been slow and costly. Can a new leader take over as cheaply as any ordinary step, and at the pace of the messages rather than of a timer?</p>
+  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the paper's idea, the
+  allegory, the chapters and the decisions taken so far. It will be replaced by the book.
+  <br><span class="paper">Yin, Malkhi, Reiter, Gueta &amp; Abraham 2019 (HotStuff) · the same crown and loot book</span></p>
+</header>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>The idea</h2></div>
+  <div class="prose">
+<p>A leader-based Byzantine protocol in the DLS partial-synchrony model, with n = 3f + 1. Each vote goes to the leader, who combines n − f of them into one <b>quorum certificate</b> (a threshold signature), so each phase costs a linear number of messages. Three phases (prepare, pre-commit, commit) where earlier protocols used two, and that third phase is what buys:</p>
+<ul><li><b>Linear view change</b>, a new leader costing no more than an ordinary step;</li><li><b>Optimistic responsiveness</b>, moving at the pace of actual message delay after GST instead of waiting out a maximum.</li></ul>
+<p>Safety comes from <b>locks</b> (a replica locks on a certificate) and the <b>safeNode</b> rule: accept a proposal that extends your lock, or that carries a certificate from a later view. A separate <b>pacemaker</b> handles liveness. <b>Chained HotStuff</b> pipelines the phases, so every view proposes a new entry and the leader rotates each view.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>The allegory</h2></div>
+  <div class="prose">
+<ul><li><b>The same crown, loot book and wind</b> as <i>Keeping Order Among Liars</i>. It must not contradict it.</li><li><b>The job passes with every entry</b>, whether or not anyone suspects its holder.</li><li><b>The bundle:</b> the holder ties three sealed votes into one bundle and sends it on. A real threshold signature makes the bundle the size of one seal, and the book says so plainly.</li><li><b>A lock</b> is a bundle a man keeps and will not act against, unless shown a later bundle.</li><li><b>The pacemaker</b> is each man's sandglass, which moves the job on when a view runs long.</li></ul>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>Planned chapters</h2></div>
+  <div class="prose">
+<ol><li>What the change of job cost in the earlier book.</li><li>Votes to one man, bundles to all.</li><li>Three stages, not two: the hidden lock.</li><li>The rule for accepting a proposal.</li><li>Safety in any wind.</li><li>Moving at the pace of the ravens.</li><li>The chain: every entry a new holder.</li><li>What it does not say: no progress before the wind drops; the bundle's size.</li><li>In the Book, In the Paper.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>Must not exist</h2></div>
+  <div class="prose">
+<p>as for <i>Keeping Order Among Liars</i>, and any procedure that contradicts it.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>Decisions taken</h2></div>
+  <div class="prose">
+<ol><li><b>Names:</b> four seats for five authors: Yinos, Malkhia, Reiteros and Guetaia; the footnote credits all five, Abraham included.</li><li><b>The hidden lock is shown</b> on the crown: a two-stage procedure that must wait out a full glass after each change of holder, set against the three-stage one that need not.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+</div>
+</body>
+</html>
