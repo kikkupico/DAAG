@@ -20,7 +20,7 @@ Seven shares below cover **seventeen papers in seven buildings**. Everything els
 own, which comes to **15 buildings for 25 papers**.
 
 **A book is not a building.** A book may walk between two adjacent buildings when the
-difference between them is best read in one sitting: *The Tally and the Column* covers the
+difference between them is best read in one sitting: *Ordering Without Clocks* covers the
 tally house and the column room. The buildings stay separate because the claims do.
 
 ---
@@ -33,12 +33,12 @@ tally house and the column room. The buildings stay separate because the claims 
 | **The column room** | Fidge 1988 · Mattern 1988 <span title="shared">◆</span> | Next door to the tally house, and the difference between them is the whole point: one column per house instead of one number. Two clerks can now tell whether their orders were placed in ignorance of each other, which the tally house can only fail to rule out. |
 | **The customs seat and the storehouses** | Chandy &amp; Lamport 1985 | Scribes record each house's storehouse; a runner in a red sash goes down every stretch of road as the marker, and each house keeps a slate for each incoming stretch until the sash arrives. The total is a state the island could have been in, though no one ever saw it. |
 | **The slipways and the Needle** | DLS 1988 | Each house's merchantmen at their slipways; if the fleet sails, it gathers at the Needle, a sea-stack off the southern cape. Winter gales make runners' delays unbounded; when the storm breaks they fall within a bound. A rotating coordinator and majority locks decide whether the fleet sails, safe in any gale and live once the calm comes. |
-| **The counters** (one per house) | Herlihy &amp; Wing 1990 | A repeated type: the counter in each house's front room where a buyer asks for jars and is told what the house can do. A request is called when the buyer asks and returns when he is answered, and the rule is that every answer must fit one order of sales, the same at all three counters, in which anything answered before another was asked comes first. *Before* is judged by the sun, which no one on Arche can read in the trading season, and by paths the houses cannot see: the goatherd of Book I Ch. VI, who carries word over the mountain, is how a buyer at one counter learns what a buyer at another was told. So the rule says what the houses owe their buyers, not how they could know it — the gap *The Tally and the Column* Ch. VI opened, turned into a correctness condition. The houses keep one count per kind of goods, oil, wine and grain apart; if each count keeps the rule, the whole trade keeps it, which is locality. Next door to the closed road, which proves the rule cannot be kept while the road is shut. |
+| **The counters** (one per house) | Herlihy &amp; Wing 1990 | A repeated type: the counter in each house's front room where a buyer asks for jars and is told what the house can do. A request is called when the buyer asks and returns when he is answered, and the rule is that every answer must fit one order of sales, the same at all three counters, in which anything answered before another was asked comes first. *Before* is judged by the sun, which no one on Arche can read in the trading season, and by paths the houses cannot see: the goatherd of Book I Ch. VI, who carries word over the mountain, is how a buyer at one counter learns what a buyer at another was told. So the rule says what the houses owe their buyers, not how they could know it — the gap *Ordering Without Clocks* Ch. VI opened, turned into a correctness condition. The houses keep one count per kind of goods, oil, wine and grain apart; if each count keeps the rule, the whole trade keeps it, which is locality. Next door to the closed road, which proves the rule cannot be kept while the road is shut. |
 | **The closed road** | Brewer 2000 · Gilbert &amp; Lynch 2002 <span title="shared">◆</span> <span class="m">(+ their 2012 retrospective)</span> | The ring road, closed on both stretches beside the Vine because bandits are reported there. The danger is a condition, never a raid: no bandit is seen and nothing happens to a runner. Closing both stretches is what cuts the Vine off; one closed stretch would leave the third house to pass slips on. The road reopens when the danger passes. Meanwhile each side refuses to trade or trades from a book it knows may be stale — a deliberate degradation of service on an island where that is never the usual way. Consistency here is the rule of the counters next door (*every house answers as if there were one book*, made precise), which is the consistency Gilbert &amp; Lynch prove cannot be kept. Which band the road's bandits belong to is never said. |
 
 ## Arche — Mount Phyle
 
-Built, and fixed by *Mercenaries and Bandits*: nothing here may contradict that book.
+Built, and fixed by *The Limits of Agreement*: nothing here may contradict that book.
 
 | Building | Papers | What it is |
 |---|---|---|
@@ -115,9 +115,7 @@ happens in the colonnades, which is the island's argument.
 
 ## Sources
 
-**`sources/` holds 34 verified PDFs: 23 of the 25 papers this file assigns, 3 companions, and
-8 systems papers that `settings.md` puts out of scope.** Ben-Or 1983 and HotStuff 2019 are
-assigned but not yet on disk. No
+**`sources/` holds 28 verified PDFs: the 25 papers this file assigns, plus 3 companions.** No
 duplicates (checked by MD5), and every filename's lead surname appears on page 1 of its own
 file. `demers-1989` is a byte-identical copy of `demers-1987`, so there is one Demers paper.
 `sources/_misfiled/` holds files that carried a paper's name but not its content.
@@ -135,7 +133,3 @@ Not assigned a building of their own; they sit with the paper they accompany.
 | `hellerstein-alvaro-2020_keeping-calm.pdf` | The hall of two doors — the clearest statement of the theorem, and the one to draft from |
 | `gilbert-lynch-2012_perspectives-on-cap.pdf` | The closed road — the authors' own retrospective on what the proof did and did not say |
 | `zinn-green-ludascher-2012_win-move-coordination-free.pdf` | Background for the hall of two doors. Optional; it settles a narrower question than CALM itself |
-
-## Open
-
-1. **Fetch Ben-Or 1983 and HotStuff 2019** into `sources/`, and verify each by opening it.

@@ -12,11 +12,10 @@ Verified against `ls sources/`, not asserted:
 
 | | |
 |---|---|
-| Verified PDFs in `sources/` | **34** |
-| Papers the settings require | **25** — 23 present |
-| Missing | `ben-or-1983`, `yin-2019_hotstuff` |
+| Verified PDFs in `sources/` | **28** |
+| Papers the settings require | **25** — all present |
 | Duplicates (by MD5) | none |
-| On disk beyond the 25 | 11 — 3 companions, 8 out of scope (see *Out of scope*) |
+| Companions beyond the 25 | 3 |
 
 | Island | Papers |
 |---|--:|
@@ -26,8 +25,8 @@ Verified against `ls sources/`, not asserted:
 | Homonoia | 5 |
 | The council ground | 2 |
 
-Every paper on disk that the islands name has been verified by opening it. Ben-Or and HotStuff
-are named but not yet on disk.
+No PDF is unassigned and nothing is blocked. Every paper the islands name is on disk and has
+been verified by opening it.
 
 **The series is theory.** Every paper carries an algorithm, a proof or a model. A systems
 paper whose contribution is engineering is out of scope: practical considerations are better
@@ -68,19 +67,19 @@ Together these give **one FIFO channel per ordered pair of houses: six in all**.
 the northern terraced slopes, and the **Anchor** on the sheltered eastern bay — act as an
 island-wide distribution network.
 
-- *Book I: The Tally and the Column* (`lamport-1978_time-clocks`, `fidge-1988_timestamps`,
+- *Book I: Ordering Without Clocks* (`lamport-1978_time-clocks`, `fidge-1988_timestamps`,
   `mattern-1988_virtual-time`). When overcast winter skies silence the headland sundials,
   houses serve distribution orders on a strict first-come basis using logical tallies (Lamport
   scalar clocks), resolve ties via door signs (total order), coordinate mutual exclusion for a
   shared storehouse (§5), and use multi-house column rooms (vector clocks) to detect true
   causal independence.
-- *Book II: The Census of the Ring Road* (`chandy-lamport-1985_distributed-snapshots`).
+- *Book II: Taking Stock Without Stopping* (`chandy-lamport-1985_distributed-snapshots`).
   Taking an inventory of the entire distribution network without halting trade. Goods exist
   both in the 3 house storehouses and in transit along the 6 directed road tracks. A runner
   wearing a **red sash** serves as the marker dividing pre-recording shipments from
   post-recording shipments. Proves cut consistency, reachability ($S_\iota \to S^* \to S_\phi$),
   and stable property detection.
-- *Book III: The Convoy of Arche* (`dwork-lynch-stockmeyer-1988`). Deciding whether the
+- *Book III: Agreeing When Messages Run Late* (`dwork-lynch-stockmeyer-1988`). Deciding whether the
   island's merchant fleet should sail together across the Mediterranean (each house's ships
   then leave when it learns the decision and gather at the Needle, a sea-stack off the
   southern cape). Winter gales spraying the cliff road cause **unbounded delays
@@ -88,22 +87,22 @@ island-wide distribution network.
   after which delays are bounded by $\Delta$. A rotating coordinator protocol with majority
   quorum locks ($N \ge 2t + 1$, $N = 3, t = 1$) guarantees safety during the wildest gale via
   quorum intersection, and ensures swift termination once the calm arrives.
-- *The Last Jar* (`herlihy-wing-1990_linearizability`). What the houses owe the buyers at
+- *Many Copies, Acting as One* (`herlihy-wing-1990_linearizability`). What the houses owe the buyers at
   their counters: every answer must fit one order of sales, the same at all three houses, in
   which anything answered before another was asked comes first (linearizability). One count
   per kind of goods; if each keeps the rule, the whole trade does (locality). See *Why
   linearizability is on Arche* below.
-- *The Closed Road* (`brewer-2000`, `gilbert-lynch-2002`). Bandits are reported on both
+- *Answering While Cut Off* (`brewer-2000`, `gilbert-lynch-2002`). Bandits are reported on both
   stretches beside the Vine, so no runner will go and the Vine is cut off until the road is
   safe. Each side refuses to trade or trades from a book it knows may be stale — a deliberate
-  degradation of service, never the usual way on Arche. Consistency is *The Last Jar*'s rule
+  degradation of service, never the usual way on Arche. Consistency is *Many Copies, Acting as One*'s rule
   (*every house answers as if there were one book*, made precise), which is the consistency
   Gilbert & Lynch prove cannot be kept while the road is shut.
 
 **Why linearizability is on Arche.** It is defined by real time: one operation finished before
 another began. Arche has real time — the sun rises over it whether or not a dial can be read —
 but in the trading season no one can read it, and no house can learn of another's trade except
-by slip. That is not an objection but the point. *The Tally and the Column* Ch. VI already
+by slip. That is not an objection but the point. *Ordering Without Clocks* Ch. VI already
 showed a causal path the houses cannot see: the goatherd who carries word over the mountain.
 Linearizability turns that gap into a correctness condition: the houses must answer so that no
 goatherd could ever catch them out, though they can never see one coming. It is judged by the
@@ -131,8 +130,8 @@ an outcome is plot.
 
 | Paper | In the world |
 |---|---|
-| `fischer-lynch-paterson-1985_flp-impossibility` | In an asynchronous gorge with one silent crash, commanders stay trapped in bivalence: an overrun camp cannot be told from a delayed raven. (*Mercenaries and Bandits*, Part One) |
-| `pease-shostak-lamport-1980`, `lamport-shostak-pease-1982` | In synchronous rounds with traitors sending conflicting scrolls, loyal commanders agree iff N ≥ 3m + 1 — or, **with unforgeable wax signets, for any number of generals at all**. (*Mercenaries and Bandits*, Part Two) |
+| `fischer-lynch-paterson-1985_flp-impossibility` | In an asynchronous gorge with one silent crash, commanders stay trapped in bivalence: an overrun camp cannot be told from a delayed raven. (*The Limits of Agreement*, Part One) |
+| `pease-shostak-lamport-1980`, `lamport-shostak-pease-1982` | In synchronous rounds with traitors sending conflicting scrolls, loyal commanders agree iff N ≥ 3m + 1 — or, **with unforgeable wax signets, for any number of generals at all**. (*The Limits of Agreement*, Part Two) |
 | `chandra-toueg-1996` | Each camp keeps a tally board and marks the rows that stay empty. The suspicion is often wrong — an empty perch is a dead commander or a raven still in the folds — but if it satisfies weak completeness and eventual weak accuracy (◇W), **and a majority of camps are correct**, that is enough to break the FLP deadlock, and the camps may decide; as always on the hill, nothing follows from the decision. The board's two guarantees are **granted, not earned**: ravens with unbounded flights cannot build such a board, and the paper treats it as given in the same way. |
 | `ben-or-1983` | The camps below, deadlocked as FLP says they may be forever, let chance break the tie: a camp that cannot settle on a gate throws the knucklebones. With probability 1 the throws eventually agree and the camps decide; no run is guaranteed to end, but a run that never ends has probability 0. As always on the hill, nothing follows from the decision. |
 | `castro-liskov-1999` | The same four camps later in the siege, when one mercenary may have been bought (each was hired alone and paid alone). The recruiters are the trading houses, and they are the clients. Each house sends a runner to its nearest camp, who waits for the answer, and risks a runner to the next camp along the foot only if its own falls silent — as a client turns to other replicas when its usual one stops answering. The other camps' replies come by raven under each man's own signet, and the house accepts an answer when two seals agree (f + 1). The camps keep the orders in one numbered sequence; one camp numbers, the others echo twice with 2f + 1 before an order stands, and a stalling or equivocating camp loses the right to number. Four is exactly 3f + 1 for f = 1, and the unbounded ravens are PBFT's own asynchronous model, so no jars are involved. Nothing follows from any order. |
@@ -156,7 +155,7 @@ houses.
   bounded bird flight, and the four jars are filled together at dusk, before the posts are
   manned. Byzantine Generals lives here.
 
-In **Book IV: Mercenaries and Bandits** the contrast is held in stark relief: below, honest
+In **Book IV: The Limits of Agreement** the contrast is held in stark relief: below, honest
 men can die and messages take arbitrary time, yielding impossibility; above, nobody dies and
 time is bounded, but men lie, yielding the 3m + 1 threshold.
 
@@ -226,7 +225,7 @@ has an island of its own.
 
 | Paper | In the world |
 |---|---|
-| `oki-liskov-1988` | **The Odeon.** Roofed, raked, aimed at one stage so a single voice reaches every seat. The nodes are legislators, as on Paxos: one speaks from the stage, the others keep their law books in the front row, and the public in the seats behind are the ones who need to learn the law. When the speaker falls silent, business stops until another legislator takes the stage under a higher number, and gathers what a majority of the front row holds before speaking. *The Odeon* |
+| `oki-liskov-1988` | **The Odeon.** Roofed, raked, aimed at one stage so a single voice reaches every seat. The nodes are legislators, as on Paxos: one speaks from the stage, the others keep their law books in the front row, and the public in the seats behind are the ones who need to learn the law. When the speaker falls silent, business stops until another legislator takes the stage under a higher number, and gathers what a majority of the front row holds before speaking. *One Leader at a Time* |
 
 **The ground must provide:** a natural hillside bowl facing a sheltered bay, for the Odeon.
 
@@ -259,7 +258,7 @@ and spreading the epics by rhapsode.
 | `demers-1987` <span>(`demers-1989` is the same file)</span> | Travelling scholars pass on new learnings on scraps of papyrus in the stoa — that the Earth goes round the Sun, say — rumour-fashion, each losing interest once most of those they meet have the scrap; once a year the copyists compare whole collections, scraps included, at the festival, catching what the talk missed |
 | `bailis-2012_pbs` | Each work is kept at several libraries. A new edition goes to some of them, and a reader asks only a few; how likely the copy handed over is out of date, and by how much, measured |
 | `shapiro-2011_crdt`, `shapiro-2011_crdt-comprehensive` | The count of copies made of each work, kept in voting pebbles, one column per library; merging takes the larger in each column, so it is associative, commutative and idempotent |
-| `bailis-2014_hats` | What a librarian can promise a reader while the couriers are stopped: that no reply is read before the letter it answers, that no change is seen half made; and what no librarian alone can promise, that two readers never take the last copy. *The Reading Room* |
+| `bailis-2014_hats` | What a librarian can promise a reader while the couriers are stopped: that no reply is read before the letter it answers, that no change is seen half made; and what no librarian alone can promise, that two readers never take the last copy. *What You Can Promise Alone* |
 
 **The ground must provide:** many libraries within casual reach of one another, courier routes
 of differing length, and a far coast out of reach of any assembly for the terraces.
@@ -280,7 +279,7 @@ The settings cover 25 papers. Not covered: Flexible Paxos · Attiya, Bar-Noy & D
 1994 session guarantees · Gray & Lamport 2006 (Paxos Commit) · Schneider 1990 · Burrows
 (Chubby) · Abadi (PACELC) · Bailis *Coordination Avoidance*.
 
-**Systems papers, out of scope by the rule above**, though some are on disk: Liskov & Cowling
+**Systems papers, out of scope by the rule above:** Liskov & Cowling
 2012 (VR Revisited) · Ongaro & Ousterhout 2014 (Raft) · Chandra, Griesemer & Redstone 2007
 (Paxos Made Live) · DeCandia et al. 2007 (Dynamo) · Lloyd et al. 2011 (COPS) · Gray et al.
 1996 · Terry et al. 1995 (Bayou) · Saito & Shapiro 2005 (a survey) · Carbone et al. 2015 (Flink

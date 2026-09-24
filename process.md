@@ -160,15 +160,15 @@ The primitives are defined in `assets/css/books.css` — `.d-lifeline`, `.d-ev`,
 what makes every diagram in the series read as one hand. Do not introduce new colours.
 
 **Draw a diagram when the argument has a shape**, and not otherwise. The four books have
-ten between them, and each one does a job prose could not:
+eleven between them, and each one does a job prose could not:
 
 | Kind | What it does | Seen in |
 |---|---|---|
-| **Space–time** | Lifelines down, messages as arrows. The workhorse: any argument about order, causality or cuts. | The tally, the census |
-| **The same picture annotated twice** | Draw one scene, then redraw it with the numbers, then with the vectors. The reader compares like with like. | The tally |
-| **Two panels, sound and impossible** | Put the legal case beside the illegal one with a divider. Far clearer than describing the illegal one. | The census, the ring |
-| **Commuting diamond** | For any argument that two things may be done in either order. | The camps |
-| **A chain of cases** | For arguments that walk from one extreme to another one step at a time. | The camps |
+| **Space–time** | Lifelines down, messages as arrows. The workhorse: any argument about order, causality or cuts. | *Ordering Without Clocks*, *Taking Stock Without Stopping* |
+| **The same picture annotated twice** | Draw one scene, then redraw it with the numbers, then with the vectors. The reader compares like with like. | *Ordering Without Clocks* |
+| **Two panels, sound and impossible** | Put the legal case beside the illegal one with a divider. Far clearer than describing the illegal one. | *Taking Stock Without Stopping* |
+| **Commuting diamond** | For any argument that two things may be done in either order. | *The Limits of Agreement* |
+| **A chain of cases** | For arguments that walk from one extreme to another one step at a time. | *The Limits of Agreement* |
 
 Always give the SVG a real `aria-label` describing what it shows. The caption should state the
 *conclusion*, not describe the picture.
@@ -211,18 +211,18 @@ establish.
 
 | Building | Paper(s) | Note |
 |---|---|---|
-| The counters | Herlihy &amp; Wing 1990 | *The Last Jar.* Builds on *The Tally and the Column* Ch. VI: the goatherd is the path the houses cannot see, and the rule is judged by the sun no one can read. It says what the houses owe their buyers, not how they could know it. One count per kind of goods for locality. Must not give Arche a readable hour in the trading season. |
-| The closed road | Brewer 2000 · Gilbert &amp; Lynch 2002 | Bandits reported on both stretches beside the Vine: a condition, never a raid. Bandits roam the island; they need not be the crown's band, and which band is never said. Consistency is *The Last Jar*'s rule; state it in that book's vocabulary. Stale trading is a deliberate emergency measure on Arche. |
-| The camps *(second book)* | Ben-Or 1983 | Shares the camps with FLP; the one change is a coin, thrown as knucklebones. Termination with probability 1, never a guaranteed end: say so plainly. The camps may decide; nothing follows from it. Not yet on disk. |
-| The camps *(third book)* | Chandra &amp; Toueg 1996 | *The Empty Row.* Shares the camps with FLP. The camps may decide; nothing follows from it. The tally board's guarantees are granted, not earned — see `settings.md`. |
+| The counters | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Builds on *Ordering Without Clocks* Ch. VI: the goatherd is the path the houses cannot see, and the rule is judged by the sun no one can read. It says what the houses owe their buyers, not how they could know it. One count per kind of goods for locality. Must not give Arche a readable hour in the trading season. |
+| The closed road | Brewer 2000 · Gilbert &amp; Lynch 2002 | Bandits reported on both stretches beside the Vine: a condition, never a raid. Bandits roam the island; they need not be the crown's band, and which band is never said. Consistency is *Many Copies, Acting as One*'s rule; state it in that book's vocabulary. Stale trading is a deliberate emergency measure on Arche. |
+| The camps *(second book)* | Ben-Or 1983 | Shares the camps with FLP; the one change is a coin, thrown as knucklebones. Termination with probability 1, never a guaranteed end: say so plainly. The camps may decide; nothing follows from it. |
+| The camps *(third book)* | Chandra &amp; Toueg 1996 | *Telling the Dead from the Slow.* Shares the camps with FLP. The camps may decide; nothing follows from it. The tally board's guarantees are granted, not earned — see `settings.md`. |
 | The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, enhanced with visuals: it is the paper the whole project borrows its allegory from. Listed in the index under its own title, unlinked until our rendition exists. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
-| The Odeon, Skene | Oki &amp; Liskov 1988 | *The Odeon.* VR, a genuine alternative to Paxos, found independently and published first, on its own island. |
-| The camps *(fourth book)* | Castro &amp; Liskov 1999 | *The Standing Orders.* Needs the Byzantine book's vocabulary. One mercenary may have been bought; the trading houses are the recruiters and the clients. Runners to the nearest camp, and to the next along the foot only if it falls silent; replies under each man's signet, and a camp carries nothing between houses. Must not contradict Book IV. Nothing follows from any order. |
-| The camps *(fifth book)* | Yin et al. 2019 (HotStuff) | Needs the fourth book's vocabulary and must not contradict it. Tell only what changes: the right to number passes in turn, and one camp bundles the others' seals instead of every camp writing to every other. Nothing follows from any order. Not yet on disk. |
+| The Odeon, Skene | Oki &amp; Liskov 1988 | *One Leader at a Time.* VR, a genuine alternative to Paxos, found independently and published first, on its own island. |
+| The camps *(fourth book)* | Castro &amp; Liskov 1999 | *Keeping Order Among Liars.* Needs the Byzantine book's vocabulary. One mercenary may have been bought; the trading houses are the recruiters and the clients. Runners to the nearest camp, and to the next along the foot only if it falls silent; replies under each man's signet, and a camp carries nothing between houses. Must not contradict Book IV. Nothing follows from any order. |
+| The camps *(fifth book)* | Yin et al. 2019 (HotStuff) | Needs the fourth book's vocabulary and must not contradict it. Tell only what changes: the right to number passes in turn, and one camp bundles the others' seals instead of every camp writing to every other. Nothing follows from any order. |
 | The stoa and festival ground | Demers 1987 | |
 | The libraries | PBS 2012 | *Probably Up to Date.* The model, not a store: how likely a reader who asks only a few libraries is handed an out-of-date copy, and by how much. |
 | The far terraces | Shapiro et al. 2011 (both) | |
-| The reading room | HATS 2014 | *The Reading Room.* What a librarian can promise while the couriers are stopped, and what no librarian alone can. |
+| The reading room | HATS 2014 | *What You Can Promise Alone.* What a librarian can promise while the couriers are stopped, and what no librarian alone can. |
 | The hall of two doors | Hellerstein 2010 · Ameloot 2011 · Hellerstein &amp; Alvaro 2020 | Draft from the 2020 paper; it is the clearest. |
 
 ### Standing constraints on future books
@@ -237,7 +237,7 @@ never as a faction.
 **What the rest of Arche knows about the bandits.** Only the bandits know how many of them
 there are, which band each belongs to, and what they plan. Everyone else knows two things:
 there are bandits about the island, and their loot is on the hilltop. So the constraints that
-govern the bandits inside *Mercenaries and Bandits* — four men on the crown, the jars, who may
+govern the bandits inside *The Limits of Agreement* — four men on the crown, the jars, who may
 lie — bind only that book. Another book need not respect them; it must only not contradict
 those two facts. The crown's four are not confined (they stay because the loot cannot be
 left), and bandits met elsewhere need not be of their band; no one outside can tell.
