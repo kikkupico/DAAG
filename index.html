@@ -12,7 +12,7 @@
 
 <header class="cover">
   <h1 class="display" style="margin:18px 0 6px">Distributed Algorithms of Ancient Greece</h1>
-  <p class="pub">An exploration of 31 papers in distributed computing employing the polarising
+  <p class="pub">An exploration of 25 papers in distributed computing employing the polarising
   ancient Greece allegory introduced by Leslie Lamport in his seminal paper,
   <i>The Part-Time Parliament</i>.</p>
 </header>
@@ -58,7 +58,6 @@
       <span class="paper">Dwork, Lynch &amp; Stockmeyer 1988</span></p>
     </div>
 
-
     <div class="entry">
       <p><b class="planned">Many Copies, Acting as One</b> <span class="unwritten">Not yet written</span></p>
       <p>
@@ -102,6 +101,18 @@
     </div>
 
     <div class="entry">
+      <p><b class="planned">Agreeing by Chance</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      If no plan can guarantee agreement when a machine may stop without warning, can
+      chance succeed where planning cannot? What if a machine that is stuck simply
+      tosses a coin?</p>
+      <p>
+      We find out by exploring how Greek mercenary camps, deadlocked over a plan, let a
+      throw of the knucklebones break the tie.<br>
+      <span class="paper">Ben-Or 1983</span></p>
+    </div>
+
+    <div class="entry">
       <p><b class="planned">Telling the Dead from the Slow</b> <span class="unwritten">Not yet written</span></p>
       <p>
       A machine that has crashed looks exactly like one that is merely slow, and that
@@ -123,6 +134,19 @@
       orders when one of them may have been bribed.<br>
       <span class="paper">Castro &amp; Liskov 1999</span></p>
     </div>
+
+    <div class="entry">
+      <p><b class="planned">Changing Leaders Among Liars</b> <span class="unwritten">Not yet written</span></p>
+      <p>
+      When some machines may lie, replacing a leader has been slow and costly. Can a new
+      leader take over as cheaply as any ordinary step, and at the pace of the messages
+      rather than of a timer?</p>
+      <p>
+      We find out by exploring how four Greek mercenary camps took turns giving the orders,
+      each gathering the others' seals into one bundle instead of every camp writing to
+      every other.<br>
+      <span class="paper">Yin, Malkhi, Reiter, Gueta &amp; Abraham 2019</span></p>
+    </div>
   </div>
 </section>
 
@@ -142,18 +166,6 @@
       inspired this entire project.<br>
       <span class="paper">Lamport 1998 · Lamport 2001</span></p>
     </div>
-
-    <div class="entry">
-      <p><b class="planned">Keeping Agreement Running</b> <span class="unwritten">Not yet written</span></p>
-      <p>
-      An algorithm can be proven correct on paper and still fail in production. What
-      does it take to keep agreement running for years on real machines?</p>
-      <p>
-      We find out by exploring what it took an ancient Greek parliament to keep working for
-      years, through lost records, changing members and impatient citizens.<br>
-      <span class="paper">Chandra, Griesemer &amp; Redstone 2007</span></p>
-    </div>
-
   </div>
 </section>
 
@@ -165,15 +177,13 @@
     <div class="entry">
       <p><b class="planned">One Leader at a Time</b> <span class="unwritten">Not yet written</span></p>
       <p>
-      Most practical systems put one leader in charge at a time. How do you replace a
-      leader without losing anything it promised, and can such an algorithm be made
-      easy to understand?</p>
+      Many systems put one leader in charge at a time. When the leader falls silent, how
+      does another take over without losing anything the last one promised?</p>
       <p>
       We find out by exploring how a Greek island was governed by one speaker at a time, and
       how a new speaker took over when the last one fell silent.<br>
-      <span class="paper">Oki &amp; Liskov 1988 · Liskov &amp; Cowling 2012 · Ongaro &amp; Ousterhout 2014</span></p>
+      <span class="paper">Oki &amp; Liskov 1988</span></p>
     </div>
-
   </div>
 </section>
 
@@ -190,29 +200,18 @@
       <p>
       We find out by exploring how news spread among ancient Greek scholars by word of
       mouth, and how they caught whatever the gossip missed.<br>
-      <span class="paper">Demers et al. 1987 · Saito &amp; Shapiro 2005</span></p>
+      <span class="paper">Demers et al. 1987</span></p>
     </div>
 
     <div class="entry">
-      <p><b class="planned">Never Turning Away a Change</b> <span class="unwritten">Not yet written</span></p>
+      <p><b class="planned">Probably Up to Date</b> <span class="unwritten">Not yet written</span></p>
       <p>
-      How can a store accept every change, even when some of its machines are down?
-      And how often will it then hand back stale data?</p>
+      When a store reads from only some of its copies, how likely is an answer to be out
+      of date, and by how much? Can we promise that it is probably not?</p>
       <p>
-      We find out by exploring how ancient Greek libraries kept accepting new books even
-      when some of them were closed.<br>
-      <span class="paper">DeCandia et al. 2007 · Bailis et al. 2012</span></p>
-    </div>
-
-    <div class="entry">
-      <p><b class="planned">Act Now, Agree Later</b> <span class="unwritten">Not yet written</span></p>
-      <p>
-      Letting every copy act on changes at once and agree on their order later seems
-      simple. Why does it break down as a system grows, and what can replace it?</p>
-      <p>
-      We find out by exploring how ancient Greek scribes used their draft changes right
-      away, and made fair copies only once everyone agreed on the order of the changes.<br>
-      <span class="paper">Gray, Helland, O'Neil &amp; Shasha 1996 · Terry et al. 1995</span></p>
+      We find out by exploring how ancient Greek libraries, each consulting only a few of
+      the others, judged how likely a copy was to be out of date.<br>
+      <span class="paper">Bailis et al. 2012</span></p>
     </div>
 
     <div class="entry">
@@ -235,9 +234,9 @@
       answers? That no one sees a change half made? That two people never take the
       last item?</p>
       <p>
-      We find out by exploring how ancient Greek libraries kept their correspondence in
-      order and went on serving readers when the couriers between them stopped running.<br>
-      <span class="paper">Lloyd et al. 2011 · Bailis et al. 2014</span></p>
+      We find out by exploring what ancient Greek librarians could still promise their
+      readers when the couriers between the libraries stopped running.<br>
+      <span class="paper">Bailis et al. 2014</span></p>
     </div>
   </div>
 </section>
