@@ -107,3 +107,13 @@ figure.diagram figcaption b{color:var(--ink)}
   font-size:clamp(2rem,6vw,3.1rem); line-height:1.05; letter-spacing:.01em;
   color:var(--ink); text-transform:uppercase;
 }
+
+/* a book's cover beside its entry in the index */
+.prose p.has-cover{display:flow-root}
+img.book-cover{
+  float:right; width:150px; height:auto; margin:4px 0 10px 20px;
+  border:3px solid var(--ink); box-shadow:4px 4px 0 var(--shadow);
+}
+@media (max-width:520px){ img.book-cover{width:108px; margin-left:14px} }
+/* a book's portrait cover in its own header */
+.frame-cover.portrait{max-width:380px; margin-bottom:22px}

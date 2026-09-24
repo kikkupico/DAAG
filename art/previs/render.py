@@ -1,28 +1,32 @@
-"""Stage 1 previs: render art/arche-3d.glb from a camera given in explorer.html world coords.
+"""Stage 1 previs: render an island model from a camera given in explorer.html world coords.
 
 Explorer coords (three.js, +Y up): North = -X, East = -Z, South = +X, West = +Z.
-World units are metres. The island is placed exactly as explorer.html places it (centred at
-x=-1300, 950 m per model unit, its base at sea level), so a pose read off the explorer can be
-pasted here and vice versa.
+World units are metres. Each island is placed as explorer.html places it, so a pose read off
+the explorer can be pasted here and vice versa: Arche (the default) centred at x=-1300, 950 m
+per model unit, base at sea level; Paxos (`"island": "paxos"`) centred at (x, z) = (1300, 360),
+950 x 1.31 m per model unit, sunk 0.02 model units as in the explorer.
 
     blender -b -P art/previs/render.py -- shots.json <shot-id> [out.png]
 
 A shot is {"eye": [x,y,z], "look": [x,y,z], "lens": mm, "aspect": "4:3",
-           "vscale": 1.0, "sun": [elev_deg, azim_deg]}.
+           "island": "arche", "vscale": 1.0, "sun": [elev_deg, azim_deg]}.
 `eye`/`look` y may be given as "+h" strings meaning h metres above the terrain there.
 """
 import bpy, json, sys, math
 from mathutils import Vector
 
-GLB = "art/arche-3d.glb"
-SCALE = 950.0            # metres per model unit, as in explorer.html
-X0 = -1300.0             # where explorer.html centres Arche
+# glb, metres per model unit, explorer centre (x, z), sink in model units
+ISLANDS = {
+    "arche": ("art/arche-3d.glb", 950.0, (-1300.0, 0.0), 0.0),
+    "paxos": ("art/paxos-3d.glb", 950.0 * 1.31, (1300.0, 360.0), 0.02),
+}
 LONG_EDGE = 1600
 
 argv = sys.argv[sys.argv.index("--") + 1:]
 shots_path, shot_id = argv[0], argv[1]
 shot = json.load(open(shots_path))[shot_id]
 out = argv[2] if len(argv) > 2 else f"art/previs/renders/{shot_id}.png"
+GLB, SCALE, (X0, Z0), SINK = ISLANDS[shot.get("island", "arche")]
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=GLB)
@@ -35,14 +39,14 @@ cx = (min(v.x for v in bb) + max(v.x for v in bb)) / 2
 cy = (min(v.y for v in bb) + max(v.y for v in bb)) / 2
 zmin = min(v.z for v in bb)
 island.scale = (SCALE, SCALE, SCALE * vs)
-island.location = (X0 - SCALE * cx, -SCALE * cy, -SCALE * vs * zmin)
+island.location = (X0 - SCALE * cx, -Z0 - SCALE * cy, -SCALE * vs * (zmin + SINK))
 bpy.context.view_layer.update()
 
 # The mesh's crown is ~1.2 km across; canon's is modest. `crown_shrink` pulls the
 # summit toward a point on the crown axis, fully inside r_in and fading out by r_out,
 # so every later stage inherits a smaller crown. Explorer coords, as elsewhere.
 CROWN = (-1228.8, 21.4)
-cs = shot.get("crown_shrink")
+cs = shot.get("crown_shrink") if shot.get("island", "arche") == "arche" else None
 if cs:
     import numpy as np
     s, r_in, r_out, base = cs["scale"], cs["r_in"], cs["r_out"], cs["base"]

@@ -3,7 +3,7 @@
 
     python3 art/panels/pipeline.py sheet <sheet>          # generate a sheet, then split it
     python3 art/panels/pipeline.py split <sheet>          # re-split an existing sheet
-    python3 art/panels/pipeline.py <render|scene|all> <book> <shot-id>
+    python3 art/panels/pipeline.py <render|scene|comic|all> <book> <shot-id>
 
 Sheets are defined in art/refs/sheets.json: a prompt, seed images, an aspect and a
 `grid` of item names, row by row, in the order the sheet draws them. The sheet is
@@ -14,6 +14,9 @@ plus "scene": {"prompt": ..., "refs": ["mercenaries/patersonos", "props/tent", .
 [image 1] is always the previs; the refs are combined into one board, [image 2]
 (set "board": false to pass them separately as [image 2], [image 3]...).
 Output: art/panels/<book>/<shot-id>/{previs,scene}.png
+`comic` (run on its own, not part of `all`) redraws scene.png as a ligne claire
+illustration, comic.png; a shot's "comic" prompt overrides COMIC_PROMPT. Book covers
+use it; panels inside the books stay realistic.
 
 Generation runs on the tripo CLI (image-to-image). Prompts are capped at 1024
 characters, so appearance travels as reference crops rather than words.
@@ -26,6 +29,14 @@ REFS = ROOT / "art/refs"
 MODEL = "banana_pro"   # Nano Banana Pro; tripo rejects "gemini-3-pro"
 LONG_EDGE = 1200       # tripo ignores image_size and returns ~2400px; panels need 1K
 PROMPT_MAX = 1024
+COMIC_PROMPT = (
+    "Redraw [image 1] as a Franco-Belgian ligne claire comic illustration in the manner of "
+    "Hergé and Edgar P. Jacobs: clean black ink outlines of even weight, flat areas of clear "
+    "colour with no gradients, no hatching and very little shading, detailed accurate "
+    "architecture, readable figures. Keep the composition, the camera, and every person, "
+    "animal, object and building exactly where they are, with the same faces, costumes and "
+    "colours. One single illustration. No lettering, no title, no speech balloons, no "
+    "captions, no logos, no signature, no panel border.")
 
 
 def run(cmd):
@@ -200,6 +211,10 @@ def main():
         generate([d / "previs.png"] + refs, sc["prompt"], shot.get("aspect", "4:3"),
                  d / "scene.png", shot_id)
         downscale(d / "scene.png")
+    if stage == "comic":
+        generate([d / "scene.png"], shot.get("comic", COMIC_PROMPT), shot.get("aspect", "4:3"),
+                 d / "comic.png", shot_id + "-comic")
+        downscale(d / "comic.png")
 
 
 if __name__ == "__main__":
