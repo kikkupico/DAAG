@@ -54,7 +54,7 @@ Together these give **one FIFO channel per ordered pair of houses: six in all**.
 - **The summit** is visible from every shore. In the trading season it is capped by the same
   cloud that silences the sundials, and in any season it is held by the siege, so the houses
   light no beacon there.
-- **The mountain paths** are the siege's ground. The goatherd of Book I Ch. VI is a rare
+- **The mountain paths** are the siege's ground. The goatherd of *Ordering Without Clocks* Ch. VI is a rare
   smuggler, with no bound on his crossing time.
 - **The sea**: reefs and tide-races off every headland stop small boats coasting between
   coves. Big ships go out to sea, not round the island.
@@ -67,22 +67,28 @@ Together these give **one FIFO channel per ordered pair of houses: six in all**.
 the northern terraced slopes, and the **Anchor** on the sheltered eastern bay — act as an
 island-wide distribution network.
 
-- *Book I: Ordering Without Clocks* (`lamport-1978_time-clocks`, `fidge-1988_timestamps`,
+- *Ordering Without Clocks* (`lamport-1978_time-clocks`, `fidge-1988_timestamps`,
   `mattern-1988_virtual-time`). When overcast winter skies silence the headland sundials,
   houses serve distribution orders on a strict first-come basis using logical tallies (Lamport
   scalar clocks), resolve ties via door signs (total order), coordinate mutual exclusion for a
   shared storehouse (§5), and use multi-house column rooms (vector clocks) to detect true
   causal independence.
-- *Book II: Taking Stock Without Stopping* (`chandy-lamport-1985_distributed-snapshots`).
+- *Taking Stock Without Stopping* (`chandy-lamport-1985_distributed-snapshots`).
   Taking an inventory of the entire distribution network without halting trade. Goods exist
   both in the 3 house storehouses and in transit along the 6 directed road tracks. A runner
   wearing a **red sash** serves as the marker dividing pre-recording shipments from
   post-recording shipments. Proves cut consistency, reachability ($S_\iota \to S^* \to S_\phi$),
   and stable property detection.
-- *Book III: Agreeing When Messages Run Late* (`dwork-lynch-stockmeyer-1988`). Deciding whether the
-  island's merchant fleet should sail together across the Mediterranean (each house's ships
-  then leave when it learns the decision and gather at the Needle, a sea-stack off the
-  southern cape). Winter gales spraying the cliff road cause **unbounded delays
+- *Agreeing When Messages Run Late* (`dwork-lynch-stockmeyer-1988`). Settling the
+  winter price of oil. Under the compact of the ring road every house posts the same price,
+  cut into the price board at its gate and never changed, because goods passed between the
+  houses are reckoned at it and two prices would leave no house's books able to balance.
+  Each house proposes a price from its own storehouse and counter; any proposal will serve,
+  but never two (the paper's arbitrary value domain, with strong unanimity). A lock is chalk
+  on a slate, a decision is cut into the board. **Must not exist:** averaging, haggling or
+  splitting the difference; any provisional price or trading before the board is cut; any
+  deadline; any carrier of price news but runners; any house gaining by whose price wins.
+  Winter gales spraying the cliff road cause **unbounded delays
   (asynchrony)**. The breaking of the storm represents **Global Stabilization Time (GST)**,
   after which delays are bounded by $\Delta$. A rotating coordinator protocol with majority
   quorum locks ($N \ge 2t + 1$, $N = 3, t = 1$) guarantees safety during the wildest gale via
@@ -155,7 +161,7 @@ houses.
   bounded bird flight, and the four jars are filled together at dusk, before the posts are
   manned. Byzantine Generals lives here.
 
-In **Book IV: The Limits of Agreement** the contrast is held in stark relief: below, honest
+In *The Limits of Agreement* the contrast is held in stark relief: below, honest
 men can die and messages take arbitrary time, yielding impossibility; above, nobody dies and
 time is bounded, but men lie, yielding the 3m + 1 threshold.
 
@@ -300,7 +306,7 @@ snapshots) · Corbett et al. 2012 (Spanner) · Thomson et al. 2012 (Calvin).
 ## Open
 
 1. **How many books per island.** The grounds and buildings are fixed; the book count is not.
-   Current plan: one paper per book except Book I (Lamport with Fidge and Mattern), Book IV
+   Current plan: one paper per book except *Ordering Without Clocks* (Lamport with Fidge and Mattern), *The Limits of Agreement*
    (FLP with Byzantine Generals) and the paired papers (Lamport 1998 with 2001, Brewer with Gilbert & Lynch, Shapiro's two, Hellerstein
-   with Ameloot). The camps keep five books: Book IV, then Ben-Or, Chandra & Toueg, Castro &
+   with Ameloot). The camps keep five books: *The Limits of Agreement*, then Ben-Or, Chandra & Toueg, Castro &
    Liskov and HotStuff.
