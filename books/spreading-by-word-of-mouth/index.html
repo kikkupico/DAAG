@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spreading by Word of Mouth — Paxos</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">Paxos · The Scholars' Coast</span>
+  </div>
+</nav>
+<div class="page">
+
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Paxos · The Scholars' Coast</div>
+  <h1 class="display" style="margin:18px 0 6px">Spreading by Word of Mouth</h1>
+  <p class="sub">Can an update reach every machine in a large system just by each passing it on to a few others, with no one organising the spread?</p>
+  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the allegorical
+  devices it will use, what each stands for in the paper, and where each meets the other books.
+  It will be replaced by the book.
+  <br><span class="paper">Demers et al. 1987 · the stoa and the festival ground, Paxos</span></p>
+</header>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>The idea</h2></div>
+  <div class="prose">
+<p>Keeping many replicas of a database consistent by random exchange, analysed as epidemics. <b>Direct mail</b> sends each update to every site at once and is unreliable. <b>Anti-entropy</b>, sites comparing whole databases with a random partner, is a simple epidemic that reaches everyone, slowly. <b>Rumour mongering</b> spreads a hot update until the carrier loses interest: cheaper, but it leaves a <b>residue</b> who never hear. Deleting needs <b>death certificates</b>. <b>Spatial distributions</b>, preferring near partners, cut the traffic on long links. The measures are residue, traffic and delay.</p>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>The devices</h2></div>
+  <div class="prose">
+<div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In this book</th><th>In the paper</th><th>Also in</th></tr></thead>
+      <tbody>
+        <tr><td><b>the libraries along the coast, each holding copies of the works</b></td><td>Sites, each with a replica of the database.</td><td></td></tr>
+        <tr><td><b>a work's text, carrying the tally of its edition; the newer edition wins</b></td><td>A database entry with its timestamp.</td><td>The tallies of the tally house (<i>Ordering Without Clocks</i>)</td></tr>
+        <tr><td><b>a scrap of papyrus with a new learning</b></td><td>An update.</td><td></td></tr>
+        <tr><td><b>letters to every library at once</b></td><td>Direct mail: n messages, some lost, and the sender may not know every site.</td><td>Slips on Arche's road</td></tr>
+        <tr><td><b>the scholar in the stoa telling whoever he meets while the news is fresh</b></td><td>Rumour mongering: an infective site.</td><td></td></tr>
+        <tr><td><b>losing interest: after meeting k who already knew, or at a toss</b></td><td>Loss of interest: feedback or blind, counter or coin.</td><td>The coin of <i>Agreeing by Chance</i>, used differently</td></tr>
+        <tr><td><b>telling, asking, or both</b></td><td>Push, pull, push-pull.</td><td></td></tr>
+        <tr><td><b>the libraries the news never reached</b></td><td>The residue.</td><td></td></tr>
+        <tr><td><b>the festival: pairs of copyists compare whole collections and keep the newer edition of each work</b></td><td>Anti-entropy, a simple epidemic that reaches everyone.</td><td></td></tr>
+        <tr><td><b>comparing catalogues first, and the list of recent editions</b></td><td>Checksums and recent-update lists, which make anti-entropy cheap.</td><td></td></tr>
+        <tr><td><b>a notice of withdrawal: "this work is withdrawn, as of tally t"</b></td><td>A death certificate: a deletion must travel like an update, or an old copy brings the work back.</td><td></td></tr>
+        <tr><td><b>the old notice kept by only a few libraries, woken when a stale copy turns up</b></td><td>Dormant death certificates and reactivation.</td><td></td></tr>
+        <tr><td><b>preferring partners close by</b></td><td>Spatial distributions.</td><td>The courier routes of differing length, which the ground provides</td></tr>
+        <tr><td><b>the traffic on the one long route</b></td><td>Traffic on critical links.</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Planned chapters</h2></div>
+  <div class="prose">
+<ol><li>The libraries and the news.</li><li>Letters to everyone.</li><li>The festival: comparing whole collections.</li><li>Word of mouth, and losing interest.</li><li>Who never hears.</li><li>Withdrawing a work.</li><li>Near partners and the long route.</li><li>In the Book, In the Paper.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Must not exist</h2></div>
+  <div class="prose">
+<p>anyone organising the spread; an assembly or a vote; a register of who knows what; a promise that word of mouth alone reaches everyone.</p>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Open questions</h2></div>
+  <div class="prose">
+<ol><li><b>How often the festival meets.</b> <code>settings.md</code> makes it yearly; the paper runs anti-entropy regularly, as the backstop to rumour. Keep it yearly (slow and sure), or make it a regular meeting?</li><li><b>What a scrap carries.</b> "The Earth goes round the Sun" is a rumour, but the paper's updates are entries in a database. Proposal: a scrap carries a new edition of an entry in the shared catalogue, and the Sun is the first example.</li><li><b>Names.</b> Nine authors. Demerios and two or three others; the footnote credits all nine.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+</div>
+</body>
+</html>

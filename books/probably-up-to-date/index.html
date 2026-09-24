@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Probably Up to Date — Paxos</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">Paxos · The Scholars' Coast</span>
+  </div>
+</nav>
+<div class="page">
+
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Paxos · The Scholars' Coast</div>
+  <h1 class="display" style="margin:18px 0 6px">Probably Up to Date</h1>
+  <p class="sub">When a store reads from only some of its copies, how likely is an answer to be out of date, and by how much? Can we promise that it is probably not?</p>
+  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the allegorical
+  devices it will use, what each stands for in the paper, and where each meets the other books.
+  It will be replaced by the book.
+  <br><span class="paper">Bailis et al. 2012 · the libraries, Paxos</span></p>
+</header>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>The idea</h2></div>
+  <div class="prose">
+<p>In a Dynamo-style store each item lives on N replicas; a write waits for W acknowledgements and a read for R replies. With R + W ≤ N the two sets may not overlap, so a read can miss the latest write. <b>PBS</b> measures how often and by how much: <b>k-staleness</b>, the chance of reading one of the last k versions, falls exponentially in k; <b>t-visibility</b>, the chance of reading a write t seconds after it returns, is modelled by <b>WARS</b> and evaluated with measured latencies; <b>monotonic reads</b> follows from k-staleness. Writes keep spreading to all N after they return (expanding quorums).</p>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>The devices</h2></div>
+  <div class="prose">
+<div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In this book</th><th>In the paper</th><th>Also in</th></tr></thead>
+      <tbody>
+        <tr><td><b>a work's keepers: the same N libraries hold every copy of it</b></td><td>The replication factor N.</td><td></td></tr>
+        <tr><td><b>a new edition sent to all N keepers, announced as done once W have acknowledged it</b></td><td>The write quorum W.</td><td></td></tr>
+        <tr><td><b>a reader who asks R keepers and takes the newest copy handed over</b></td><td>The read quorum R.</td><td></td></tr>
+        <tr><td><b>the Chamber's rule: R + W &gt; N, so the two groups always share a library</b></td><td>A strict quorum; intersection.</td><td>The Chamber's majorities; the price boards' locks (<i>Agreeing When Messages Run Late</i>)</td></tr>
+        <tr><td><b>the scholars' rule: R + W ≤ N, quicker, and the groups may miss</b></td><td>A partial quorum.</td><td></td></tr>
+        <tr><td><b>the edition still on its way to the other keepers after it is announced</b></td><td>Expanding quorums; anti-entropy.</td><td>The festival (<i>Spreading by Word of Mouth</i>)</td></tr>
+        <tr><td><b>"one of the last k editions"</b></td><td>k-staleness.</td><td></td></tr>
+        <tr><td><b>"t hours after it was announced"</b></td><td>t-visibility.</td><td></td></tr>
+        <tr><td><b>the four legs: the edition out, the acknowledgement back, the reader's request out, the copy back</b></td><td>WARS: the four message delays.</td><td></td></tr>
+        <tr><td><b>the couriers' logbook of journey times</b></td><td>The latency distributions, measured in production.</td><td></td></tr>
+        <tr><td><b>the reader who is never handed an older copy than last time</b></td><td>Monotonic reads.</td><td></td></tr>
+        <tr><td><b>a promise with odds: "nine chances in ten it is current after a day"</b></td><td>PBS consistency: an expected bound, not a guarantee.</td><td>The promise of the span t (<i>Answering While Cut Off</i>): a bound held for certain</td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Planned chapters</h2></div>
+  <div class="prose">
+<ol><li>A work and its keepers.</li><li>How many to wait for.</li><li>When the groups miss each other.</li><li>How many editions behind.</li><li>How long until it shows.</li><li>The four legs.</li><li>Never going backwards.</li><li>What it does not say: a probability, not a promise.</li><li>In the Book, In the Paper.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Must not exist</h2></div>
+  <div class="prose">
+<p>any certainty that a copy is current; a reader who asks every keeper; a store in the book (the paper is a model); an assembly.</p>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Open questions</h2></div>
+  <div class="prose">
+<ol><li><b>Clocks.</b> t-visibility is in hours. Paxos tells time by the sun (the Chamber's meridian), so the scholars can read an hour; confirm that the scholars' coast is not under Arche's cloud.</li><li><b>Names.</b> Bailios and four others for five authors, or two names and the footnote.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+</div>
+</body>
+</html>

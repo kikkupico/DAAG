@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One Leader at a Time — AntiPaxos</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">AntiPaxos</span>
+  </div>
+</nav>
+<div class="page">
+
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · AntiPaxos</div>
+  <h1 class="display" style="margin:18px 0 6px">One Leader at a Time</h1>
+  <p class="sub">Many systems put one leader in charge at a time. When the leader falls silent, how does another take over without losing anything the last one promised?</p>
+  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the allegorical
+  devices it will use, what each stands for in the paper, and where each meets the other books.
+  It will be replaced by the book.
+  <br><span class="paper">Oki &amp; Liskov 1988 · the Odeon, AntiPaxos</span></p>
+</header>
+
+<hr class="rule">
+
+<section>
+  <div class="issue"><h2>The idea</h2></div>
+  <div class="prose">
+<p>Primary-copy replication that survives crashes and partitions. One cohort, the <b>primary</b>, does all the work and passes every event to the <b>backups</b> in order; an event is safe once a majority of cohorts know it. When the primary is lost, a <b>view change</b> forms a new view from a majority and starts it from the most complete record, so everything a majority knew survives. The paper builds this for <b>transactions</b>: one-copy serializability, with two-phase commit across groups.</p>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>The devices</h2></div>
+  <div class="prose">
+<div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In this book</th><th>In the paper</th><th>Also in</th></tr></thead>
+      <tbody>
+        <tr><td><b>the front row (<i>proedria</i>): one throne per legislator, each with a law book</b></td><td>The module group's cohorts; the fixed set of thrones is the configuration.</td><td>The Chamber, where every legislator keeps a ledger</td></tr>
+        <tr><td><b>the speaker on the stage</b></td><td>The primary: runs every call and settles every measure.</td><td>The crown's chief's job in <i>Keeping Order Among Liars</i>, which borrows VR's views</td></tr>
+        <tr><td><b>the rest of the front row, writing down what the speaker says</b></td><td>Backups, passive: they only record.</td><td></td></tr>
+        <tr><td><b>the public in the seats behind</b></td><td>Clients, who deal only with the speaker.</td><td>The buyers at Arche's counters</td></tr>
+        <tr><td><b>the board on the stage wall: a count and the name of the legislator who raised it</b></td><td>The viewid ⟨cnt, mid⟩, totally ordered, unique to its caller.</td><td>Ties broken by name, as in the tally house's middle room (<i>Ordering Without Clocks</i>); the Chamber's ballot numbers</td></tr>
+        <tr><td><b>the line number in the speaker's record, starting again at each new board</b></td><td>A timestamp, meaningful only within its view.</td><td></td></tr>
+        <tr><td><b>"board 7, line 12"</b></td><td>A viewstamp ⟨viewid, ts⟩.</td><td></td></tr>
+        <tr><td><b>each legislator's note of the last line he holds under each board</b></td><td>The cohort's history.</td><td></td></tr>
+        <tr><td><b>the dictation: the speaker's record read out line by line, taken down in order</b></td><td>The communication buffer: event records delivered to the backups in timestamp order.</td><td>The one-way roads of Arche, where nothing overtakes</td></tr>
+        <tr><td><b>the speaker's pause until enough of the row has written up to a line that, with him, they are a majority</b></td><td>force-to: waiting for a sub-majority of backups.</td><td>Majorities that must overlap, as on the Chamber and the price boards (<i>Agreeing When Messages Run Late</i>)</td></tr>
+        <tr><td><b>the roll: legislators glance along the row for someone gone, or someone back</b></td><td>"I'm alive" messages, and the events that start a view change.</td><td>The slate of <i>Telling the Dead from the Slow</i>: an empty throne is a man gone or a man slow</td></tr>
+        <tr><td><b>the caller: any legislator who notices, raising a higher board</b></td><td>The view manager, sending invitations; the others are underlings.</td><td></td></tr>
+        <tr><td><b>the answer to a call: "I hold up to board 6, line 40", or "I have lost my book"</b></td><td>A normal acceptance with its viewstamp, or a crash-accept.</td><td></td></tr>
+        <tr><td><b>the rule for a new board: a majority answered, and among them someone sure to hold every settled line</b></td><td>The view-formation conditions (1)–(3).</td><td></td></tr>
+        <tr><td><b>the new speaker: whoever holds the latest line, the old speaker if he can</b></td><td>New primary = the cohort with the highest viewstamp.</td><td></td></tr>
+        <tr><td><b>the old speaker who has not noticed</b></td><td>Several active primaries: the old one cannot force, so settles nothing.</td><td></td></tr>
+        <tr><td><b>a legislator who returns without his book; a majority who lose theirs at once</b></td><td>A crashed cohort's volatile state; a catastrophe, after which no new view can ever form.</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Planned chapters</h2></div>
+  <div class="prose">
+<ol><li>The Odeon and its front row.</li><li>The dictation.</li><li>Board and line: viewstamps.</li><li>When a line is settled.</li><li>An empty throne: calling a new board.</li><li>Who takes the stage.</li><li>The speaker who has not noticed.</li><li>Measures that touch several rows (transactions), if kept.</li><li>Against the Chamber: one voice, or anyone may propose.</li><li>In the Book, In the Paper.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Must not exist</h2></div>
+  <div class="prose">
+<p>a law settled without a majority of the front row; a speaker chosen for his views; a second legislature on Paxos; anything named after the algorithm; oratory used as a broadcast that no one can miss.</p>
+  </div>
+</section>
+
+<hr class="rule">
+<section>
+  <div class="issue"><h2>Open questions</h2></div>
+  <div class="prose">
+<ol><li><b>Transactions.</b> The paper's case is transactions that call several module groups, with psets and two-phase commit. Carry it (several committees in the Odeon, each with its own front row and speaker, and a measure that touches more than one), or keep to one group and leave transactions to the paper column?</li><li><b>Partitions in a theatre.</b> A voice reaches every seat, so how is the row split? Proposal: legislators come and go by the side doors, as on Paxos, and those out on the porch cannot hear.</li><li><b>Two on the stage.</b> <code>settings.md</code> says nothing proceeds if two claim the stage. The paper says the old speaker may still answer but cannot settle anything. Reword the settings to match.</li><li><b>Names.</b> Okios and Liskovia. Liskov also names Liskovia on the crown; the footnote says names follow papers.</li></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+</div>
+</body>
+</html>
