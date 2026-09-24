@@ -92,6 +92,10 @@ eye, look = to_bl(resolve(shot["eye"])), to_bl(resolve(shot["look"]))
 # in explorer coords; "props" likewise, e.g. {"kind": "strongbox", "at": [x, z]}. `tint` reskins the model's pale cloth (tunic, sleeves) so the
 # figures can be told apart; everything else keeps the model's own texture.
 CAST = {"warrior": ("art/cast/warrior.glb", 1.12)}   # glb, scale to a ~1.75 m man
+# The island models are diorama-scale (the summit crags stand ~35 m), so true-size people
+# look like ants against them. A shot's "figure_scale" enlarges every figure and prop by
+# the same factor to match; place them and the camera with it in mind.
+FS = shot.get("figure_scale", 1.0)
 # Hand targets per pose, in metres in the figure's own frame: (to his left, forward, up).
 # "glass" holds a sandglass in both hands at the chest; "word" holds it in the left hand
 # and raises the right, giving the word.
@@ -144,6 +148,7 @@ def tint_cloth(mesh_obj, rgb):
 
 def add_actor(a, i):
     glb, k = CAST[a.get("who", "warrior")]
+    k *= FS
     before = set(bpy.data.objects)
     bpy.ops.import_scene.gltf(filepath=glb)
     new = [o for o in bpy.data.objects if o not in before]
@@ -172,8 +177,8 @@ def add_actor(a, i):
         for e in (tgt, pole):
             bpy.context.scene.collection.objects.link(e)
             e.parent = arm
-        tgt.location = Vector((l, -fwd, up)) / k
-        pole.location = Vector((l * 2.5 + (0.3 if l > 0 else -0.3), 0.4, 1.0)) / k  # elbows out and back
+        tgt.location = Vector((l, -fwd, up)) * FS / k
+        pole.location = Vector((l * 2.5 + (0.3 if l > 0 else -0.3), 0.4, 1.0)) * FS / k  # elbows out and back
         c = arm.pose.bones[f"mixamorig:{sgn}ForeArm"].constraints.new("IK")
         c.target, c.pole_target, c.chain_count = tgt, pole, 2
         c.pole_angle = math.radians(-90)
@@ -181,8 +186,8 @@ def add_actor(a, i):
         l, fwd, up = pose["glass"]
         g = sandglass(f"glass{i}")
         g.parent = arm
-        g.location = Vector((l, -fwd, up - 0.1)) / k
-        g.scale = Vector((1, 1, 1)) / k
+        g.location = Vector((l, -fwd, up - 0.1)) * FS / k
+        g.scale = Vector((1, 1, 1)) * FS / k
 
 def sandglass(name):
     """A 20 cm sandglass: two glass cones point to point between wooden end plates."""
@@ -234,6 +239,7 @@ def add_prop(p):
         q.select_set(True)
     bpy.ops.object.transform_apply(scale=True)
     o = join(parts, "strongbox")
+    o.scale = (FS, FS, FS)
     o.location = ground_bl(*p["at"])
     f = ground_bl(*p.get("face", p["at"])) - o.location
     o.rotation_euler = (0, 0, math.atan2(f.y, f.x) + math.pi / 2 if f.length else 0)
