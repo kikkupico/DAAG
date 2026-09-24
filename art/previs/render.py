@@ -3,8 +3,8 @@
 Explorer coords (three.js, +Y up): North = -X, East = -Z, South = +X, West = +Z.
 World units are metres. Each island is placed as explorer.html places it, so a pose read off
 the explorer can be pasted here and vice versa: Arche (the default) centred at x=-1300, 950 m
-per model unit, base at sea level; Paxos (`"island": "paxos"`) centred at (x, z) = (1300, 360),
-950 x 1.31 m per model unit, sunk 0.02 model units as in the explorer.
+per model unit; Paxos (`"island": "paxos"`) centred at (x, z) = (1300, 360), 950 x 1.31 m
+per model unit. Both sit with their base at sea level.
 
     blender -b -P art/previs/render.py -- shots.json <shot-id> [out.png]
 
@@ -15,10 +15,10 @@ A shot is {"eye": [x,y,z], "look": [x,y,z], "lens": mm, "aspect": "4:3",
 import bpy, json, sys, math
 from mathutils import Vector
 
-# glb, metres per model unit, explorer centre (x, z), sink in model units
+# glb, metres per model unit, explorer centre (x, z), sink below sea level in model units
 ISLANDS = {
     "arche": ("art/arche-3d.glb", 950.0, (-1300.0, 0.0), 0.0),
-    "paxos": ("art/paxos-3d.glb", 950.0 * 1.31, (1300.0, 360.0), 0.02),
+    "paxos": ("art/paxos-3d.glb", 950.0 * 1.31, (1300.0, 360.0), 0.0),
 }
 LONG_EDGE = 1600
 
