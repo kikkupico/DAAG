@@ -200,7 +200,7 @@ Before calling a book done:
 - [ ] The *must not exist* list is checked against the finished draft.
 - [ ] Nothing contradicts a book that shares the setting.
 - [ ] Every claim traceable to the paper has been checked against the PDF.
-- [ ] Added to `books/index.html`.
+- [ ] Added to the home page, `index.html`.
 
 ---
 

@@ -19,10 +19,13 @@ Output: art/panels/<book>/<shot-id>/{previs,scene}.png
 illustration, comic.png; a shot's "comic" prompt overrides COMIC_PROMPT. Book covers
 use it; panels inside the books stay realistic.
 
-Generation runs on the tripo CLI (image-to-image). Prompts are capped at 1024
-characters, so appearance travels as reference crops rather than words.
+Generation runs on Nano Banana Pro through the Meshy API (MESHY_API_KEY, 9 credits an
+image), or through the tripo CLI with GEN=tripo. Prompts are capped at 1024 characters,
+so appearance travels as reference crops rather than words. A sheet's seeds are laid
+on one white board of the sheet's aspect; Meshy takes `aspect_ratio` for image-to-image
+too, and without it returns a crowded 1024 square.
 """
-import json, shutil, subprocess, sys, tempfile
+import base64, json, os, shutil, subprocess, sys, tempfile, time, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -49,9 +52,43 @@ def upload(path):
     return json.loads(run(["tripo", "files", "upload", str(path), "--json"]))["file_token"]
 
 
+def meshy(path, body):
+    req = urllib.request.Request(
+        "https://api.meshy.ai/openapi/v1/" + path, method="POST" if body else "GET",
+        data=json.dumps(body).encode() if body else None,
+        headers={"Authorization": "Bearer " + os.environ["MESHY_API_KEY"],
+                 "Content-Type": "application/json"})
+    return json.load(urllib.request.urlopen(req))
+
+
+def generate_meshy(inputs, prompt, aspect, dest):
+    body = {"ai_model": "nano-banana-pro", "prompt": prompt}
+    if inputs:
+        kind = "image-to-image"
+        body["reference_image_urls"] = [
+            "data:image/png;base64," + base64.b64encode(Path(p).read_bytes()).decode()
+            for p in inputs]
+    else:
+        kind = "text-to-image"
+    body["aspect_ratio"] = aspect
+    tid = meshy(kind, body)["result"]
+    print(f"  meshy {kind} {tid}", flush=True)
+    while True:
+        time.sleep(5)
+        t = meshy(f"{kind}/{tid}", None)
+        if t["status"] in ("SUCCEEDED", "FAILED", "CANCELED"):
+            break
+    if t["status"] != "SUCCEEDED":
+        sys.exit(f"meshy {kind} {tid}: {t['status']} {t.get('task_error')}")
+    urllib.request.urlretrieve(t["image_urls"][0], dest)
+    print(f"  {dest.relative_to(ROOT)}  task={tid}")
+
+
 def generate(inputs, prompt, aspect, dest, name):
     if len(prompt) > PROMPT_MAX:
         sys.exit(f"prompt is {len(prompt)} chars (max {PROMPT_MAX})")
+    if os.environ.get("GEN", "meshy") == "meshy":
+        return generate_meshy(inputs, prompt, aspect, dest)
     tokens = [upload(p) for p in inputs]
     common = ["--model", MODEL, "-p", f"aspect_ratio={aspect}", "--name", name,
               "--json", "--yes", "--no-open", "--quiet"]
@@ -158,11 +195,34 @@ def split_sheet(sheet):
     json.dump({"size": [W, H], "boxes": placed}, open(out / "boxes.json", "w"), indent=1)
 
 
+def seed_board(seeds, aspect, dest, height=1000):
+    """The seed crops side by side, centred on a white board of the sheet's aspect."""
+    from PIL import Image
+    ims = [Image.open(p).convert("RGB") for p in seeds]
+    ims = [im.resize((round(im.width * height / im.height), height), Image.LANCZOS) for im in ims]
+    gap = 60
+    w = sum(im.width for im in ims) + gap * (len(ims) + 1)
+    aw, ah = map(int, aspect.split(":"))
+    W, H = max(w, round((height + 2 * gap) * aw / ah)), height + 2 * gap
+    H = max(H, round(W * ah / aw))
+    board = Image.new("RGB", (W, H), "white")
+    x, y = (W - w) // 2 + gap, (H - height) // 2
+    for im in ims:
+        board.paste(im, (x, y))
+        x += im.width + gap
+    board.save(dest)
+    return dest
+
+
 def make_sheet(sheet):
     spec = json.load(open(REFS / "sheets.json"))[sheet]
     seeds = [ROOT / p for p in spec["seeds"]]
-    generate(seeds, spec["prompt"], spec.get("aspect", "16:9"),
-             REFS / f"{sheet}-sheet.png", f"{sheet}-sheet")
+    aspect = spec.get("aspect", "16:9")
+    with tempfile.TemporaryDirectory() as tmp:
+        if seeds:
+            seeds = [seed_board(seeds, aspect, Path(tmp) / "seeds.png")]
+        generate(seeds, spec["prompt"], aspect,
+                 REFS / f"{sheet}-sheet.png", f"{sheet}-sheet")
     split_sheet(sheet)
 
 
