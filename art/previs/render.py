@@ -13,8 +13,12 @@ A shot is {"eye": [x,y,z], "look": [x,y,z], "lens": mm, "aspect": "4:3",
            "island": "arche", "vscale": 1.0, "sun": [elev_deg, azim_deg]}.
 `eye`/`look` y may be given as "+h" strings meaning h metres above the terrain there.
 Optional: "cast" (rigged characters from art/cast/cast.json, posed from art/previs/poses.py),
-"props", "light": "dusk" | "night" and "under"; each is described where it is
-handled below. The explorer's Copy Scene button writes the camera and cast in this form.
+"props" (art/cast/props.json's kinds, or "strongbox"; props stand on desks and other
+furniture, people only on floors), "light": "dusk" | "night" and "under"; "set": an interior
+set from art/sets/sets.json (e.g. "chamber"), which replaces the island model's own building
+at its site, with "hide": ["shell"] for a cutaway and "sky_strength" / "sun_energy" to
+relight the inside. Each is described where it is handled below. The explorer's Copy Scene
+button writes the camera, cast and set in this form.
 """
 import bpy, json, sys, math
 from mathutils import Vector
@@ -59,11 +63,45 @@ bpy.context.view_layer.update()
 def to_bl(p):  # explorer (x, y, z) -> blender
     return Vector((p[0], -p[2], p[1]))
 
-def ground(x, z, top=5000.0):  # terrain height only, so props and actors never stack on each other
-    Mi = island.matrix_world.inverted()
-    o, d = Mi @ Vector((x, -z, top)), Mi.to_3x3() @ Vector((0, 0, -1))
-    ok, loc, *_ = island.ray_cast(o, d.normalized())
-    return (island.matrix_world @ loc).z if ok else 0.0
+# An interior set ("set": name in art/sets/sets.json) stands at its site, and the island
+# model's own building there is cut away so the set's doorways look out on the island.
+FLOORS, SURFACES = [island], []   # what people stand on; what props may also stand on
+if shot.get("set"):
+    import bmesh
+    SET = json.load(open("art/sets/sets.json"))[shot["set"]]
+    before = set(bpy.data.objects)
+    bpy.ops.import_scene.gltf(filepath=SET["glb"])
+    at = Vector((SET["at"][0], -SET["at"][2], SET["at"][1]))
+    for o in set(bpy.data.objects) - before:
+        if o.parent is None:
+            o.location += at
+        if any(o.name.startswith(h) for h in shot.get("hide", [])):  # e.g. "shell", for a cutaway
+            o.hide_render = True
+        if o.name.startswith("floor"):
+            FLOORS.append(o)
+        elif o.name.startswith("furniture"):
+            SURFACES.append(o)
+    bm = bmesh.new(); bm.from_mesh(island.data)
+    M = island.matrix_world
+    cut = [f for f in bm.faces
+           if any((lambda w: (w.xy - at.xy).length < SET["carve"] and w.z > at.z + SET["carve_above"])(M @ v.co)
+                  for v in f.verts)]
+    bmesh.ops.delete(bm, geom=cut, context="FACES")
+    bm.to_mesh(island.data); bm.free()
+    bpy.context.view_layer.update()
+
+def ground(x, z, top=5000.0, props=False):
+    """Height of the highest floor under (x, z) below `top`: the terrain, a set's floor, and
+    for props also its furniture. People never stand on each other or on desks."""
+    best = None
+    for ob in FLOORS + (SURFACES if props else []):
+        Mi = ob.matrix_world.inverted()
+        o, d = Mi @ Vector((x, -z, top)), Mi.to_3x3() @ Vector((0, 0, -1))
+        ok, loc, *_ = ob.ray_cast(o, d.normalized())
+        if ok:
+            h = (ob.matrix_world @ loc).z
+            best = h if best is None else max(best, h)
+    return best if best is not None else 0.0
 
 def resolve(p):
     x, y, z = p
@@ -96,10 +134,10 @@ def material(name, rgb, rough=0.8, metal=0.0):
     b.inputs["Metallic"].default_value = metal
     return m
 
-def ground_bl(x, z, under=None):  # explorer (x, z) -> blender point on the terrain
+def ground_bl(x, z, under=None, props=False):  # explorer (x, z) -> blender point on the ground
     # "under" (metres above sea; per item, else the shot's) starts the ray below overhangs,
     # so things stand on a cleft floor rather than on the rock roof above it.
-    return Vector((x, -z, ground(x, z, under or shot.get("under", 5000.0))))
+    return Vector((x, -z, ground(x, z, under or shot.get("under", 5000.0), props)))
 
 def tint_cloth(mesh_obj, rgb):
     """Recolour near-white, unsaturated texels of the base colour (the cloth) to rgb,
@@ -132,7 +170,7 @@ def tint_cloth(mesh_obj, rgb):
 def add_actor(a, i):
     glb, k = CAST[a["who"]]
     before = set(bpy.data.objects)
-    bpy.ops.import_scene.gltf(filepath=glb)
+    bpy.ops.import_scene.gltf(filepath=glb, bone_heuristic="TEMPERANCE")  # tails on the child, for IK
     new = [o for o in bpy.data.objects if o not in before]
     arm = next(o for o in new if o.type == "ARMATURE")
     for o in new:  # Meshy exports carry a stray icosphere
@@ -143,6 +181,7 @@ def add_actor(a, i):
         arm.animation_data.action = None
     for pb in arm.pose.bones:
         pb.rotation_quaternion, pb.location = (1, 0, 0, 0), (0, 0, 0)
+    k *= arm.scale.x  # newer Meshy rigs import at 0.01, with their bones in cm
     arm.scale = (k, k, k)
     arm.location = ground_bl(*a["at"], a.get("under"))
     f = ground_bl(*a["face"]) - arm.location
@@ -190,9 +229,24 @@ def join(parts, name):
     o = bpy.context.object; o.name = name
     return o
 
+# Meshy props, one GLB each: kind -> (glb, size), from art/cast/props.json.
+PROPS = {k: (f"art/cast/props/{v['sheet']}/{k}.glb", v.get("yaw", 0))
+         for k, v in json.load(open("art/cast/props.json")).items() if not k.startswith("_")}
+
 def add_prop(p):
-    """{"kind": "strongbox", "at": [x, z], "face": [x, z]}: an iron-bound wooden chest,
-    70 x 45 x 45 cm."""
+    """{"kind": ..., "at": [x, z], "face": [x, z], "under": h}: a prop from art/cast/props.json
+    (ledger, statue, black-goat...), or the procedural strongbox. Props stand on the highest
+    surface under them, so a ledger given a desk's position lies on the desk."""
+    if p["kind"] in PROPS:
+        before = set(bpy.data.objects)
+        glb, yaw = PROPS[p["kind"]]
+        bpy.ops.import_scene.gltf(filepath=glb)
+        o = next(o for o in set(bpy.data.objects) - before if o.type == "MESH")
+        o.rotation_mode = "XYZ"
+        o.location = ground_bl(*p["at"], p.get("under"), props=True)
+        f = ground_bl(*p.get("face", p["at"])) - o.location
+        o.rotation_euler = (0, 0, (math.atan2(f.y, f.x) + math.pi / 2 if f.xy.length else 0) + math.radians(yaw))
+        return
     if p["kind"] != "strongbox":
         raise ValueError(p["kind"])
     wood = material("boxwood", (0.28, 0.16, 0.08))
@@ -267,6 +321,13 @@ elif shot.get("light") == "night":
     b = sea.data.materials[0].node_tree.nodes["Principled BSDF"]
     b.inputs["Base Color"].default_value = (0.004, 0.012, 0.03, 1)
     b.inputs["Roughness"].default_value = 0.15
+
+if shot.get("set"):
+    # Inside, the sky must not light every surface: a dim fill, and ray-traced light so the
+    # sun falls in through the oculus and the doorways and the dome's underside stays dark.
+    world.node_tree.nodes["Background"].inputs[1].default_value = shot.get("sky_strength", 0.3)
+    bpy.context.scene.eevee.use_raytracing = True
+    sun_data.energy = shot.get("sun_energy", 5.0)
 
 for i, a in enumerate(shot.get("cast", [])):
     add_actor(a, i)

@@ -76,8 +76,22 @@ def _empty(name, arm, loc):
     return e
 
 
+# Meshy's newer rigs drop the "mixamorig:" prefix and number the spine from the hips
+# up the other way round: their Spine02, Spine01, Spine are Mixamo's Spine, Spine1, Spine2.
+MESHY_BONES = {"Spine": "Spine02", "Spine1": "Spine01", "Spine2": "Spine", "Neck": "neck"}
+
+
+def pbone(arm, name):
+    """The pose bone for Mixamo bone `name` ("mixamorig:LeftForeArm") in either rig."""
+    bones = arm.pose.bones
+    if name in bones:
+        return bones[name]
+    short = name.split(":")[-1]
+    return bones[MESHY_BONES.get(short, short)]
+
+
 def _ik(arm, bone, tgt, pole):
-    c = arm.pose.bones[bone].constraints.new("IK")
+    c = pbone(arm, bone).constraints.new("IK")
     c.target, c.pole_target, c.chain_count = tgt, pole, 2
     c.pole_angle = math.radians(-90)
 
@@ -89,13 +103,13 @@ def apply_pose(arm, k, name, tag):
     fig = lambda p: Vector((p[0], -p[1], p[2])) / k   # figure frame -> armature space
     bpy.context.view_layer.update()
     if "hips" in pose:
-        hb = arm.pose.bones["mixamorig:Hips"]
+        hb = pbone(arm, "mixamorig:Hips")
         M = hb.matrix.copy()
         M.translation = fig(pose["hips"])
         hb.matrix = M
         bpy.context.view_layer.update()
     for bone, deg in pose.get("bend", {}).items():
-        pb = arm.pose.bones[bone]
+        pb = pbone(arm, bone)
         h = pb.head.copy()
         pb.matrix = (Matrix.Translation(h) @ Matrix.Rotation(math.radians(deg), 4, "X")
                      @ Matrix.Translation(-h) @ pb.matrix)

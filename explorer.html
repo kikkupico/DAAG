@@ -415,6 +415,7 @@
       <li><strong>Focal Length:</strong> Select below or drag the slider.</li>
       <li><strong>Screenshot:</strong> Click "Copy Screenshot" or press <kbd>P</kbd>.</li>
       <li><strong>Cast:</strong> Turn on <em>Drop</em>, then click the island to place the chosen character in the chosen pose; drag before letting go to face them. Click a character to select or move it; <kbd>Delete</kbd> removes it, <kbd>[</kbd> <kbd>]</kbd> turn it.</li>
+      <li><strong>Set:</strong> Pick an interior set (the Chamber) in the side panel; it replaces the island's own building, and Flycam takes you inside.</li>
       <li><strong>Scene:</strong> Click "Copy Scene" or press <kbd>C</kbd> to copy a previs shot (camera and cast).</li>
     </ul>
   </div>
@@ -437,6 +438,13 @@
       <button class="btn btn-pill" id="btn-cast-clear" style="flex:1;">Clear</button>
     </div>
     <div class="setting-header" id="cast-status">No one placed</div>
+
+    <h3>Set</h3>
+    <div class="setting-row">
+      <div class="setting-header"><span>Interior set</span></div>
+      <!-- filled from art/sets/sets.json; built by art/sets/<name>.py -->
+      <select id="set-select"><option value="">None</option></select>
+    </div>
 
     <h3>World Settings</h3>
 
@@ -850,6 +858,7 @@
       archeGroup.rotation.y = ARCHE_YAW;
       paxosGroup.scale.setScalar(PAXOS_SCALE);
       paxosGroup.rotation.y = PAXOS_YAW;
+      if (typeof placeSet === 'function' && typeof activeSet !== 'undefined') placeSet();
     }
     applyTransforms();
 
@@ -932,10 +941,14 @@
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
+            child.userData.island = true;
             if (child.material) {
               child.material.roughness = 0.85;
               child.material.metalness = 0.05;
+              carveMaterial(child.material);
             }
+            // and in the shadow pass, so the carved building casts no shadow either
+            child.customDepthMaterial = carveMaterial(new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking }));
           }
         });
 
@@ -1270,6 +1283,89 @@
     });
 
     // -------------------------------------------------------------------------
+    // Interior sets (art/sets/sets.json), e.g. the Chamber on Paxos
+    // -------------------------------------------------------------------------
+    // A set stands at its site on its island, in metres and with the world's axes. Inside
+    // its `carve` cylinder, from `carve_above` over its floor up, the island model's own
+    // building is not drawn (render.py deletes those faces), so the doorways look out on the
+    // island. Figures stand on the set's floor, never on its desks or its dome.
+    var carveU = { uCarveOn: { value: 0 }, uCarveC: { value: new THREE.Vector3() },
+                   uCarveR: { value: 0 }, uCarveAbove: { value: 0 } };
+    function carveMaterial(m) {
+      m.onBeforeCompile = (shader) => {
+        Object.assign(shader.uniforms, carveU);
+        shader.vertexShader = shader.vertexShader
+          .replace('#include <common>', '#include <common>\nvarying vec3 vCarveW;')
+          .replace('#include <project_vertex>', '#include <project_vertex>\nvCarveW = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+        shader.fragmentShader = shader.fragmentShader
+          .replace('#include <common>', '#include <common>\nvarying vec3 vCarveW;\nuniform float uCarveOn; uniform vec3 uCarveC; uniform float uCarveR; uniform float uCarveAbove;')
+          .replace('void main() {', 'void main() {\n  if (uCarveOn > 0.5 && length(vCarveW.xz - uCarveC.xz) < uCarveR && vCarveW.y > uCarveC.y + uCarveAbove) discard;');
+      };
+      m.needsUpdate = true;
+      return m;
+    }
+    const setSelect = document.getElementById('set-select');
+    var setDefs = {}, activeSet = null;   // var: applyTransforms() runs before this line
+    const setModels = {};
+    fetch('./art/sets/sets.json').then((r) => r.json()).then((defs) => {
+      setDefs = Object.fromEntries(Object.entries(defs).filter(([k]) => !k.startsWith('_')));
+      setSelect.innerHTML = '<option value="">None</option>' + Object.keys(setDefs)
+        .map((k) => `<option value="${k}">${k}</option>`).join('');
+    }).catch(() => {});
+    const setGroup = (def) => (def.island === 'paxos' ? paxosGroup : archeGroup);
+    function placeSet() {
+      if (!activeSet) { carveU.uCarveOn.value = 0; return; }
+      const { def, root } = activeSet;
+      const group = setGroup(def);
+      const home = def.island === 'paxos' ? new THREE.Vector3(130, 0, 36) : new THREE.Vector3(-130, 0, 0);
+      group.updateMatrixWorld(true);
+      const world = new THREE.Vector3(...def.at).add(group.position.clone().sub(home));
+      root.position.copy(group.worldToLocal(world.clone()));
+      root.rotation.y = -group.rotation.y;
+      root.scale.setScalar(1 / group.scale.x);
+      root.updateMatrixWorld(true);   // picks and height rays can come before the next frame
+      carveU.uCarveOn.value = 1;
+      carveU.uCarveC.value.copy(world);
+      carveU.uCarveR.value = def.carve;
+      carveU.uCarveAbove.value = def.carve_above;
+    }
+    function showSet(name) {
+      if (activeSet) activeSet.root.parent.remove(activeSet.root);
+      activeSet = null;
+      if (!name) { placeSet(); return; }
+      const def = setDefs[name];
+      const use = (root) => {
+        activeSet = { name, def, root };
+        setGroup(def).add(root);
+        placeSet();
+      };
+      if (setModels[name]) return use(setModels[name]);
+      loader.load('./' + def.glb, (gltf) => {
+        const root = gltf.scene;
+        root.traverse((o) => {
+          if (!o.isMesh) return;
+          o.castShadow = o.receiveShadow = true;
+          // the GLB's objects are shell, floor and furniture
+          let p = o; while (p && !/^(shell|floor|furniture)/.test(p.name)) p = p.parent;
+          o.userData.setPart = p ? p.name.match(/^(shell|floor|furniture)/)[1] : 'shell';
+        });
+        setModels[name] = root;
+        if (setSelect.value === name) use(root);
+      }, undefined, (err) => { console.error('Error loading set:', err); showToast('⚠️ No ' + def.glb + ': build it with blender'); });
+    }
+    setSelect.addEventListener('change', () => showSet(setSelect.value));
+    // Surfaces that can't be stood on: a set's walls, dome and desks, and the island model's
+    // own building where a set replaces it.
+    function unstandable(h) {
+      const part = h.object.userData.setPart;
+      if (part) return part !== 'floor';
+      if (!h.object.userData.island || !carveU.uCarveOn.value) return false;
+      const c = carveU.uCarveC.value;
+      return Math.hypot(h.point.x - c.x, h.point.z - c.z) < carveU.uCarveR.value
+        && h.point.y > c.y + carveU.uCarveAbove.value;
+    }
+
+    // -------------------------------------------------------------------------
     // Cast: rigged characters dropped on the islands (art/cast/cast.json)
     // -------------------------------------------------------------------------
     // Each figure is parented to its island's group, so it rides along with the spacing and
@@ -1393,7 +1489,7 @@
       castRay.setFromCamera(ndc, camera);
       return castRay.intersectObjects(objects, true);
     }
-    const terrainHit = (e) => pick(e, [archeGroup, paxosGroup]).find((h) => !h.object.userData.actor);
+    const terrainHit = (e) => pick(e, [archeGroup, paxosGroup]).find((h) => !h.object.userData.actor && !unstandable(h));
 
     // Capture phase on the container, so in drop mode a left click never reaches the orbit
     // or fly controls; right-drag panning and wheel zoom still do.
@@ -1481,7 +1577,7 @@
       const ray = new THREE.Raycaster();
       const top = (x, z) => {
         ray.set(new THREE.Vector3(x, 20000, z), new THREE.Vector3(0, -1, 0));
-        const hit = ray.intersectObject(group, true).find((h) => !h.object.userData.actor);
+        const hit = ray.intersectObject(group, true).find((h) => !h.object.userData.actor && !unstandable(h));
         return hit ? Math.max(hit.point.y, seaLevelOffset) : seaLevelOffset;
       };
       const above = (v) => {
@@ -1500,6 +1596,7 @@
         aspect: `${w / g}:${h / g}`,
       };
       if (onPaxos) shot.island = 'paxos';
+      if (activeSet && setGroup(activeSet.def) === group) shot.set = activeSet.name;
       const onThis = actors.filter((a) => a.group === group);
       if (onThis.length) {
         const count = {};
