@@ -27,49 +27,7 @@ Written: `books/telling-the-dead-from-the-slow/`. FLP's four men; see `settings.
 
 **Castro & Liskov 1999 · the crown on a later night, Mount Phyle**
 
-**The idea.** State machine replication that tolerates f Byzantine replicas out of 3f + 1, safe
-with no timing assumptions and live once delays stop growing without bound. In each **view** one
-replica is the **primary**. It assigns sequence numbers (pre-prepare), and the replicas echo twice:
-*prepare*, until 2f + 1 agree, which fixes the order within the view, then *commit*, until 2f + 1
-agree, which fixes it across views. A client accepts a result on f + 1 matching replies. A
-suspected primary is replaced by a **view change** carrying proof of what was prepared.
-**Checkpoints** let the logs be trimmed. MACs replace signatures in the fast version.
-
-**The allegory.**
-- **The crown** of *The Limits of Agreement*: the chief's hollow and three crag posts, out of sight
-  of one another, with ravens and seal rings. It is a later night, so there is no synchronous
-  glass.
-- **Wind on the peak** pins the ravens down while it blows. Entries are safe in any wind, and
-  progress returns once the wind drops for long enough.
-- **The loot book**, a copy at each post: where each strongbox lies and whose share it is. An entry
-  is a request.
-- **The chief's job**, numbering entries, starts with the man on the peak and passes round the four
-  in a fixed order when the others suspect its holder. *The Limits of Agreement* already says "the
-  chief is a job, not a rank."
-- **Each man's sandglass** is only a timer for suspecting the chief, doubling at each change.
-- **Two echoes before an entry stands**, each needing three seals.
-
-**Chapters.**
-1. The crown on a windy night.
-2. The loot book and its entries.
-3. The chief's job.
-4. Two echoes.
-5. Why three seals, and why four men.
-6. When the chief stalls or lies: the change of job.
-7. Trimming the book: checkpoints.
-8. What it does not say: no progress while the wind blows; a lying man can still file nonsense
-   entries.
-9. In the Book, In the Paper.
-
-**Must not exist:** a shout, signal or meeting on the crown; any synchronous glass; a man leaving
-his post; anyone learning who lies; any consequence of an entry; bandits from off the hill.
-
-**Decided.**
-1. **The client rule is stated** and the book shows it is redundant for an honest man, whose own copy
-   already tells him an entry stands; it is what a client who is not one of the four would need.
-2. **Names:** Kastros and Liskovia at two places, two ordinary names at the others. Whoever sits on
-   the peak holds the job first.
-3. **MACs** go in the mapping table only; the seal rings are signatures.
+Written: `books/keeping-order-among-liars/`. The crown's four bandits; see `settings.md`.
 
 ---
 
