@@ -89,21 +89,6 @@ island-wide distribution network.
   entering claims (Glaukos, Mikon) and a loader serving (Sosias) with `SWAP`, all at one house. The
   rule holds whether the board is one board or copies acting as one. Herlios keeps the board;
   Wingaia is of the Vine.
-- *Answering While Cut Off* (`brewer-2000`, `gilbert-lynch-2002`). Bandits are reported on both
-  stretches beside the Vine, so no runner will go and the Vine is cut off until the road is
-  safe. Each side refuses to trade or trades from a book it knows may be stale — a deliberate
-  degradation of service, never the usual way on Arche. Consistency is *Many Copies, Acting as One*'s rule
-  (*every house answers as if there were one book*, made precise), which is the consistency
-  Gilbert & Lynch prove cannot be kept while the road is shut. Set later in the trading season,
-  after the winter gales; a **crossing** is the bound on a runner once the storm has broken, three
-  turns of the customs sandglass, so Gilbert & Lynch's partially synchronous model (§4) is the one
-  used, and the gale is the asynchronous model of Corollary 1.1. The harbour dues, fixed by old
-  law and cut at every gate, are its trivial service. A slip for a closed stretch is not
-  carried and not held for later (a lost message). Devices: the house that **keeps the book** for a
-  cargo (the centralized algorithm), the **gate-glass** (timeout of two crossings and a clerk's
-  reply), the **promise of the span t** (Delayed-t). Breweros keeps the Vine's counter, Gilbertos
-  is of the Dolphin, Lynchaia of the Anchor.
-
 **Why linearizability is on Arche.** It is defined by real time: one operation finished before
 another began. Arche has real time — the sun rises over it whether or not a dial can be read —
 but in the trading season no one can read it, and no house can learn of another's claim except
@@ -137,6 +122,7 @@ an outcome is plot.
 |---|---|
 | `fischer-lynch-paterson-1985_flp-impossibility` | In an asynchronous gorge with one silent crash, commanders stay trapped in bivalence: an overrun camp cannot be told from a delayed raven. (*The Limits of Agreement*, Part One) |
 | `dwork-lynch-stockmeyer-1988` | **The camps on windy nights.** The one change from *The Limits of Agreement* is the **wind**: while it blows, a raven goes down among the crows of the folds and sits it out, for any time and even past the drop, so no one can say how long a bird will take; it always drops in the end and stays down, and a bird let go in still air is at its perch within a **glass** (Δ holds eventually; the drop is GST, which no man can see). The **glasses** were turned together as the last light left the crown, which every tent can see on a clear evening, and run alike; a pebble per glass gives a common count (synchronous processors, Φ = 1, §4). A strip taken in during a later glass than it was written in is set aside. Four glasses make a **turn**, owned in shield order by the count (Algorithm 1's phases): the **asking glass** (acceptable gates to the owner), the **calling glass** (the owner calls a gate three men can accept), the **answering glass** (**pledges** tied to the tent pole, *pledged* back; the owner goes on two), the **untying glass** (lock release). **The gates seen at dusk** are the PROPER set. Every man who goes sends a **going bird** to each tent before he goes (Remark 2; birds are never lost). Safe in any wind; once it drops all go, within twenty glasses if no one went while it blew, otherwise when the first going birds arrive, with no bound; four men bear one death and no arrangement bears two (Theorem 4.3). The book's Chapter VII gives the liar bounds (3t + 1, sealed or not) and points up to the crown. The men are FLP's four, Fischeros, Lynchaia, Patersonos and Kallias, by exception to the naming rule: Lynch wrote both papers. The turn's owner is not a leader. Nothing follows from going. (*Agreeing When Messages Run Late*) |
+| `brewer-2000`, `gilbert-lynch-2002` (+ the 2012 retrospective) | **The camps on nights of lost birds.** The one change: a raven can be **lost** (a hawk takes it in the folds, unseen); when every bird between one tent and the rest is lost, that tent is **cut off**. There is no wind: a bird that arrives does so within a known **flight**, and each tent's glass runs alike (G&L's partially synchronous model, §4). The object is the **standing gate**, north at dusk, which any man may move and any may ask after: a read/write register over the camps' own two answers. **Answering as one** is linearizability (the rule of *Many Copies*, restated); **every man is answered** is availability. The cut-off stag (Kallias) cannot do both (Theorem 2). One tent **keeps** the gate (the bull; the centralized algorithm); **waiting a glass** is the timeout; the **promise of the span t** is Delayed-t, with every bird to the keeper carrying the sender's unacknowledged moves, since ravens are not FIFO. On a windy night even nights with no loss cannot answer as one (Corollary 1.1). FLP's four men, as in DLS. Nobody goes; nothing follows from which gate stands. (*Answering While Cut Off*) |
 | `pease-shostak-lamport-1980`, `lamport-shostak-pease-1982` | In synchronous rounds with traitors sending conflicting scrolls, loyal commanders agree iff N ≥ 3m + 1 — or, **with unforgeable wax signets, for any number of generals at all**. (*The Limits of Agreement*, Part Two) |
 | `chandra-toueg-1996` | Each tent keeps **the slate**: a row per other tent, chalked against a tent the man suspects and rubbed out when a bird comes from it. The suspicion is often wrong — an empty perch is a dead man or a raven still in the folds. The paper's classes are ways a slate may be wrong (completeness, accuracy; perpetual or eventual), and men copying one another's chalk turns weak completeness into strong. With **S** (one live man never wrongly chalked) the camps can agree with any number silent, relaying estimates round by round and no coordinator; with **◇S** they need a majority alive and use **a turn to propose**, passing round the tents in shield order by round number, not by anyone's command (the turn of *Agreeing When Messages Run Late*, at the same tents, which the book points to). The slate's guarantees are **granted, not earned**: ravens with unbounded flights cannot build such a slate, and the paper treats the detector as given in the same way. Chandraios and Touegos at two tents, two ordinary names at the others. As always on the hill, nothing follows from the decision. (*Telling the Dead from the Slow*) |
 | `ben-or-1983` | The camps below, deadlocked as FLP says they may be forever, let chance break the tie. The choice is binary, the north slot or the south gap, which is exactly Ben-Or's model. The one change from *The Limits of Agreement* is lifting its "they may not draw lots": each man was paid in Attic silver, and a man who cannot settle spins his own coin on his chest lid, alone in his tent (a local coin); **owl for north, goddess for south**, fixed in advance. The camps send ravens in numbered **rounds**: a **report** (the gate held), then a second bird, **sure of** a gate (more than half of all four reports seen) or **unsure**. Every wait is for three birds (N − t). Hold a gate on one *sure* bird, be **settled** on two, toss on none. **The rule of going**: a settled man at once sends both birds of the next round, then goes, since going is silence; this is not in Ben-Or's paper (decided processes keep running there) and changes nothing the others see. Four camps bear one silent man (N > 2t); with half silent, no arrangement works. With probability 1 the tosses eventually line up and all go; no night can be named, and courses that never end exist with probability 0. The paper gives no proofs; the full one is Aguilera & Toueg 2012. Ben-Or's version for liars (N > 5t) does not belong below: the mercenaries do not lie. The men are Benorios at the bull, Menon at the boar, Eudoros at the trident, Hagnon at the stag. As always on the hill, nothing follows from the decision. (*Agreeing by Chance*) |
@@ -151,8 +137,9 @@ houses.
 ### The synchrony split on Mount Phyle
 
 - **The camps at the base carry the asynchronous model and its ways out.** Ravens, unbounded
-  delay, no fire or signal. FLP, DLS, Ben-Or and Chandra & Toueg live here, each changing one
-  assumption of FLP: nothing, a wind that drops, a coin, a failure detector. The mercenaries have
+  delay, no fire or signal. FLP, DLS, Brewer / Gilbert & Lynch, Ben-Or and Chandra & Toueg live
+  here, each changing one assumption of FLP: nothing, a wind that drops, lost birds, a coin, a
+  failure detector. The mercenaries have
   no leader and do not lie. On the windy nights of DLS each tent has a glass, turned together as
   the last light left the crown; no other common moment exists below.
 - **The summit carries the synchronous model.** The chief sits on the peak, and three posts
@@ -284,9 +271,10 @@ the works in its keeping. Letters, corrections and fresh copies travel by courie
 of mouth; couriers are delayed or stopped, and libraries close.
 
 **The line between the scholars and Arche is how much disagreement each can live with**, not
-what is recorded: both keep records, and on Arche it is the count of jars that is ordered
-and snapshotted, never the jars themselves. On Arche, trading from a stale book is an
-emergency measure, taken knowingly, because a jar promised to two buyers is a real loss. The
+what is recorded: both keep records, and on Arche it is the stock of the storehouses that is
+snapshotted and the claims on its grain that are ordered. At the camps, answering from a stale
+note is done knowingly and only while birds are lost, because two men told different gates is a
+real harm. The
 scholars answer from whatever copy they hold as a matter of course, and live with copies that
 differ for a while, because an out-of-date line is put right at the next collation, as long as
 every copy agrees in the end — strong consistency against eventual consistency. Greek
@@ -344,5 +332,5 @@ snapshots) · Corbett et al. 2012 (Spanner) · Thomson et al. 2012 (Calvin).
 1. **How many books per island.** The grounds and buildings are fixed; the book count is not.
    Current plan: one paper per book except *Ordering Without Clocks* (Lamport with Fidge and Mattern), *The Limits of Agreement*
    (FLP with Byzantine Generals) and the paired papers (Lamport 1998 with 2001, Brewer with Gilbert & Lynch, Shapiro's two, Hellerstein
-   with Ameloot). The camps keep four books (*The Limits of Agreement*, DLS, Ben-Or, Chandra & Toueg) and the crown
+   with Ameloot). The camps keep five books (*The Limits of Agreement*, DLS, CAP, Ben-Or, Chandra & Toueg) and the crown
    three (*The Limits of Agreement*, Castro & Liskov, HotStuff).
