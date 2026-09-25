@@ -14,7 +14,7 @@ import bpy, json, math, sys
 from mathutils import Matrix, Vector
 
 sys.path.insert(0, "art/previs")
-from poses import POSES, apply_pose
+from poses import POSES, apply_pose, pbone
 
 CAST = {k: v for k, v in json.load(open("art/cast/cast.json")).items() if not k.startswith("_")}
 # Blender vectors from glTF ones: x -> x, y (up) -> z, z (forward) -> -y
@@ -25,7 +25,7 @@ THUMB = 360
 
 def load(glb):
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    bpy.ops.import_scene.gltf(filepath=glb)
+    bpy.ops.import_scene.gltf(filepath=glb, bone_heuristic="TEMPERANCE")  # tails on the child, for IK
     for o in list(bpy.data.objects):  # Meshy exports carry a stray icosphere
         if o.type == "MESH" and o.parent is None:
             bpy.data.objects.remove(o)
@@ -66,7 +66,7 @@ for who, spec in CAST.items():
     baked[who] = {}
     for name in POSES:
         arm = load(spec["glb"])
-        k = spec["scale"]
+        k = spec["scale"] * arm.scale.x  # newer Meshy rigs import at 0.01 (bones in cm)
         arm.scale = (k, k, k)
         apply_pose(arm, k, name, "")
         bpy.context.view_layer.update()
@@ -75,7 +75,7 @@ for who, spec in CAST.items():
             d = pb.matrix.to_quaternion() @ pb.bone.matrix_local.to_quaternion().inverted()
             g = BQ.inverted() @ d @ BQ
             bones[pb.name] = [round(g.x, 5), round(g.y, 5), round(g.z, 5), round(g.w, 5)]
-        hb = arm.pose.bones["mixamorig:Hips"]
+        hb = pbone(arm, "mixamorig:Hips")
         hips = B.inverted() @ (hb.head - hb.bone.head_local)
         baked[who][name] = {"bones": bones, "hips": [round(c, 5) for c in hips]}
         path = f"art/cast/pose-thumbs/{who}-{name}.png"

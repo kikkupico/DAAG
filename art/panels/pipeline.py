@@ -7,7 +7,8 @@
 
 Sheets are defined in art/refs/sheets.json: a prompt, seed images, an aspect and a
 `grid` of item names, row by row, in the order the sheet draws them. The sheet is
-saved as art/refs/<sheet>-sheet.png and split into art/refs/<sheet>/<item>.png.
+saved as art/refs/<sheet>-sheet.png and split into art/refs/<sheet>/<item>.png, with
+each item's box on the sheet in art/refs/<sheet>/boxes.json.
 
 Shots live in art/panels/<book>/shots.json: the camera (read by art/previs/render.py)
 plus "scene": {"prompt": ..., "refs": ["mercenaries/patersonos", "props/tent", ...]}.
@@ -136,6 +137,7 @@ def split_sheet(sheet):
         print(f"  ! found {len(rows)} rows, grid has {len(names)}")
     out = REFS / sheet
     out.mkdir(exist_ok=True)
+    placed = {}
     for r, row in enumerate(rows):
         row.sort(key=lambda b: b[0])
         row_names = names[r] if r < len(names) else []
@@ -150,7 +152,10 @@ def split_sheet(sheet):
             box = (max(x0 - pad, 0), max(y0 - pad, 0), min(x1 + pad, W), min(y1 + pad, H))
             name = row_names[c] if c < len(row_names) else f"unnamed-{r}-{c}"
             im.crop(box).save(out / f"{name}.png")
+            placed[name] = [int(v) for v in (x0, y0, x1, y1)]
             print(f"  {sheet}/{name}.png {box[2] - box[0]}x{box[3] - box[1]}")
+    # where each item sits on the sheet, for splitting a 3D model of the whole sheet
+    json.dump({"size": [W, H], "boxes": placed}, open(out / "boxes.json", "w"), indent=1)
 
 
 def make_sheet(sheet):
