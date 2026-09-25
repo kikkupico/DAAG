@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Agreeing When Messages Run Late — Arche</title>
+<title>Agreeing When Messages Run Late — Mount Phyle</title>
 <link rel="stylesheet" href="../../assets/css/daag.css">
 <link rel="stylesheet" href="../../assets/css/books.css">
 </head>
@@ -11,37 +11,38 @@
 <nav class="series-nav">
   <div class="series-nav-inner">
     <a href="../../index.html" class="nav-back">← The Books</a>
-    <span class="nav-current">Arche · The Ring Road</span>
+    <span class="nav-current">Arche · Mount Phyle</span>
   </div>
 </nav>
 <div class="page">
 
 <!-- ================= COVER ================= -->
 <header class="cover">
-  <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · The Ring Road</div>
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · Mount Phyle</div>
   <h1 class="display" style="margin:18px 0 6px">Agreeing When Messages Run Late</h1>
   <p class="sub">If messages can run late without limit, agreement cannot be guaranteed; yet real networks
   are prompt most of the time. Can a protocol stay safe however late messages run, and still
   decide once they arrive on time again?</p>
-  <p class="pub">Three trading houses must post one price for oil for the whole winter, the same
-  at every gate. While winter gales batter the cliff road, runners face unbounded delays and no
-  agreement can be forced. But when the storm breaks and transit times fall within a bound, a
-  rotating coordinator and the rule of majority locks settle the price, and no two boards ever
-  disagree.</p>
+  <p class="pub">The four mercenaries at the foot of the hill must go in at one gate, and any one of
+  them may fall silent. While the wind blows, no one can say how long a raven will take, and no
+  arrangement can make any of them go. But the wind always drops in the end, and in still air every
+  bird is at its perch within a glass. Change only that, and the four never go to different gates,
+  whatever the wind does, and once it has dropped they all go, though none of them can tell when it
+  dropped.</p>
   <p class="lineage"><span class="lbl">Builds on</span> <a href="../the-limits-of-agreement/index.html">The Limits of Agreement</a></p>
 </header>
 
 <nav class="toc">
   <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
   <ol>
-    <li><a href="#s1">I · The Winter Price</a></li>
-    <li><a href="#s2">II · The Storm and the Shadow of the Mercenaries</a></li>
-    <li><a href="#s3">III · The Breaking of the Storm</a></li>
-    <li><a href="#s4">IV · The Rotating Coordinator and the Quorum</a></li>
-    <li><a href="#s5">V · The Four Phases of a Round</a></li>
-    <li><a href="#s6">VI · Safety in the Wildest Gale</a></li>
-    <li><a href="#s7">VII · Liveness When the Calm Arrives</a></li>
-    <li><a href="#s8">VIII · The Bounds of Faults and Liars</a></li>
+    <li><a href="#s1">I · A Windy Night</a></li>
+    <li><a href="#s2">II · Glasses and Late Birds</a></li>
+    <li><a href="#s3">III · Turns and Pledges</a></li>
+    <li><a href="#s4">IV · Never Two Gates, in Any Wind</a></li>
+    <li><a href="#s5">V · Going Once the Wind Drops</a></li>
+    <li><a href="#s6">VI · Two Against Two</a></li>
+    <li><a href="#s7">VII · Liars and Seals</a></li>
+    <li><a href="#s8">VIII · What the Wind Does Not Say</a></li>
     <li><a href="#s9">IX · In the Book, In the Paper</a></li>
     <li><a href="#refs">The Paper Behind This Book</a></li>
   </ol>
@@ -51,61 +52,69 @@
 
 <!-- ================= I ================= -->
 <section id="s1">
-  <div class="issue"><span class="no">Chapter I</span><h2>The Winter Price</h2></div>
+  <div class="issue"><span class="no">Chapter I</span><h2>A Windy Night</h2></div>
 
   <div class="prose">
-    <p>When the winter trade opens, each of the three trading houses of Arche, the
-    <span class="coin">Dolphin</span> on the western shelf, the <span class="coin">Vine</span> on
-    the northern terraces and the <span class="coin">Anchor</span> in the eastern bay, posts the
-    price of oil for the season: so many drachmas the amphora. The price is cut into a slab of
-    limestone beside the house's gate, the <span class="coin">price board</span>, and it stands
-    until the next winter. No house sells a jar until its board is cut.</p>
+    <p>Bandits hold the crown of Mount Phyle, where the loot is. At the foot, at the four quarters,
+    four mercenaries keep four small tents, one man to a tent, hired separately and paid separately,
+    under nobody's command. Their shields name the tents<sup class="xref"><a href="../the-limits-of-agreement/index.html#p1" title="The Limits of Agreement, Part One">*</a></sup>: <span class="coin">Fischeros</span> at the bull,
+    <span class="coin">Lynchaia</span> at the boar, <span class="coin">Patersonos</span> at the
+    trident and <span class="coin">Kallias</span> at the stag. Between any two tents stand two wooded
+    spurs, so no man can see another. They light no fires and sound no horns, and no man leaves his
+    quarter to carry word, since leaving it is the very thing that must be agreed.</p>
 
-    <p>The houses keep one rule about the boards, older than any scribe now cutting them:
-    <span class="coin">the compact of the ring road</span>. There is one price on Arche for the
-    season, the same on all three boards. The reason lies in the houses' own books. The three act
-    as a single distribution network, and goods pass between them along the road all winter: oil
-    from the Vine's presses goes round to the Anchor, and grain landed at the Anchor goes out to
-    the Dolphin. Every jar that moves from one house to another is reckoned at the season's price.
-    The sender writes it in, the receiver writes it out, and with one price the three books balance
-    when the winter ends. With two, the same jar is worth twelve drachmas where it leaves and
-    fourteen where it arrives, and no house's accounts will ever close.</p>
+    <p>They must go in at one gate, the narrow slot on the north side of the crown or the
+    timber-framed gap on the south, and all four at the same one. Each formed his own opinion at dusk
+    from what he could see of his quarter: his <span class="coin">sighting</span>, north or south.
+    Going is a definite act. A man goes by striking his tent and taking the path round the slope to
+    his gate; once he has done it his quarter is open behind him and he will not be back before
+    dawn. What he thinks before that does not count. Then he does one thing, and it counts for
+    good.</p>
 
-    <p>Which price is posted matters far less. Each house forms its own proposal from what it can
-    see for itself: the oil in its storehouse after the pressing, and what its counter took last
-    winter. The Dolphin may think twelve drachmas right, the Vine fourteen, the Anchor thirteen.
-    Any of the three will serve. What cannot be borne is two.</p>
-
-    <p>Nor is there a price to trade at while the houses settle it. Until its board is cut, a
-    house's counter stays shut. A jar sold at a price later changed would be reckoned at two
-    values, which is the very thing the compact forbids.</p>
-
-    <p>Between their proposals, the houses must reach an agreement that satisfies three exact
-    demands, established by the archons of the island:</p>
+    <p>Word passes by raven. A man writes on a strip, rolls it into a bronze tube, and ties it to a
+    bird belonging to the tent he is writing to. The birds always arrive, and what they carry is
+    what was written. Nobody lies. Any one of the four may be killed. It has not happened, and no
+    one is killed in this book; what matters is that it may. A dead man's tent falls silent and stays
+    silent.</p>
   </div>
 
   <div class="aside-formal">
-    <span class="lbl">The three demands of consensus</span>
-    <span class="stmt">(1) Agreement.</span> No two honest houses ever post different prices. It
-    cannot happen that the Dolphin's board says twelve while the Vine's says fourteen.<br>
-    <span class="stmt">(2) Validity.</span> If every house proposes the same price, that price is
-    posted.<br>
-    <span class="stmt">(3) Termination.</span> Every house that does not suffer catastrophe must
-    eventually cut its board.
+    <span class="lbl">The three demands</span>
+    <span class="stmt">First.</span> No two of them go to different gates.<br>
+    <span class="stmt">Second.</span> If all four sighted the same gate, that is the gate they go
+    to.<br>
+    <span class="stmt">Third.</span> Every man who is not killed eventually goes.
   </div>
 
   <div class="prose">
-    <p>The second demand is what rules out the easy answers. The houses cannot simply carry last
-    winter's price forward: when all three propose thirteen, the boards must say thirteen. In the
-    scheme that follows, the posted price is always one that some house proposed.</p>
+    <p>With no promise about the birds, no arrangement the four could make guarantees that any of
+    them ever goes<sup class="xref"><a href="../the-limits-of-agreement/index.html#s9" title="The Limits of Agreement, Chapter IX">*</a></sup>. The trouble is two things together: there is no longest flight, and a
+    dead man looks exactly like a slow bird. A longest flight would change that. If it were known
+    truly that no bird had ever taken more than five hours, silence of six hours would mean
+    something<sup class="xref"><a href="../the-limits-of-agreement/index.html#s9" title="The Limits of Agreement, Chapter IX">*</a></sup>. No such promise is made at the foot of the hill.</p>
 
-    <p>Nothing obliges the three boards to be cut on the same day. A house that learns the price a
-    day after another cuts its board a day later and opens its counter a day later, and the
-    accounts are none the worse. The houses must share a price, not a moment.</p>
+    <p>This book offers less than a longest flight, and it turns out to be enough.</p>
 
-    <p>The houses cannot shout to each other across Mount Phyle. They communicate solely through
-    runners along the narrow ring road cut into the cliffs above the surf. And when the winter trade
-    opens, the weather on the cliff road makes mockery of all simple plans.</p>
+    <p>What keeps a raven in the folds is the <span class="coin">wind</span>. While it blows, a bird
+    let go into the gullies goes down among the hill's crows and sits it out in the pines, for an hour
+    or for the night, and nobody can say for how long; a bird that has gone down among them may stay
+    there as long as it likes, even after the wind has dropped. A bird let go in still air comes
+    straight. On the nights
+    of this book the wind blows over the whole hill, and while it blows the four can arrange nothing that
+    makes anyone go<sup class="xref"><a href="../the-limits-of-agreement/index.html#s9" title="The Limits of Agreement, Chapter IX">*</a></sup>. But it always drops in the end, and once it has
+    dropped it stays down, and no bird let go in still air takes longer than a short span that every
+    man knows.</p>
+
+    <p>That is the whole change. Without it, nobody could count on the wind dropping, and that is
+    the whole of the trouble. Here the four can count on it. What they cannot do is see it. A lull at one tent says nothing about the
+    folds two spurs away, where a bird may still be sitting in a pine, and a lull that ends in a
+    fresh gust looks exactly like the end of the wind. No man ever knows that the wind has dropped
+    over the whole hill. He knows only that it will.</p>
+
+    <p>The question of this book is what four men can arrange on that footing: an arrangement that
+    never sends two men to different gates however long the wind blows, since no one can tell when it
+    stops, and that sends everyone once it has stopped, since that is the only thing the wind
+    promises.</p>
   </div>
 </section>
 
@@ -113,35 +122,60 @@
 
 <!-- ================= II ================= -->
 <section id="s2">
-  <div class="issue"><span class="no">Chapter II</span><h2>The Storm and the Shadow of the Mercenaries</h2></div>
+  <div class="issue"><span class="no">Chapter II</span><h2>Glasses and Late Birds</h2></div>
 
   <div class="prose">
-    <p>When the winter gales strike Arche, the sea smashes against the base of the cliffs. Spray
-    washes over the ring road, and loose shale tumbles down the slopes of Mount Phyle. A runner
-    dispatched between houses cannot maintain a steady pace. He may be forced to shelter under a
-    rocky ledge for six hours while breakers clear the road; a sudden rockslide may block a bend,
-    forcing him to scramble over rubble on his hands and knees.</p>
+    <p>A bound on flights is useless unless a man can measure a span. Each tent has a sandglass, and
+    the glasses run alike. On the evenings of this book the crown stands clear at sunset, and the
+    last light leaves the top of the hill at one moment, seen from every tent at the foot. At that
+    moment each man turned his glass. He turns it again the moment it runs out, and each time he
+    drops a pebble into a bowl. The pebbles count the <span class="coin">glasses</span>, and since
+    the four glasses started together and run alike, the four bowls always hold the same count. The
+    glasses drift apart over a night, as any sand does, but by less than a flight, which is all that
+    is needed.</p>
 
-    <p>No runner is lost — the island's messengers are tough and stubborn, and every message
-    eventually arrives. But <em>how long</em> a runner will take is completely unpredictable. A
-    journey that takes a runner half a day in clear weather may take two days, or five, in a
-    howling gale.</p>
+    <p>This is the only common moment the four have, and it is not a signal. Nobody made it; the
+    sun did, once, at dusk, and nothing like it happens again until morning. The bandits cannot use
+    it on the crown. Their posts are tucked below the rim of the crags, and none can see the peak;
+    the last light on the peak is seen only from away from it.</p>
 
-    <p>Furthermore, a house itself may suffer a localized cliff collapse that crushes its gates,
-    silencing it permanently. Up to <var>t</var> houses may fail in this manner. On Arche, with
-    three houses in total (<var>N</var> = 3), the network must endure the silencing of at most
-    one house (<var>t</var> = 1).</p>
+    <p>A glass is long enough for a man to write and tie a strip for every tent, and for any bird let
+    go in still air to reach its perch before the sand runs out. That is what the known span buys:
+    once the wind is down, a bird let go in a glass is taken in within the same glass.</p>
 
-    <p>The houses are familiar with the famous theorem proved by the mercenaries on the lower
-    slopes of Mount Phyle — the impossibility demonstrated by Fischer, Lynch, and Paterson.
-    Where message delays are unbounded and a participant may die without warning, <b>no protocol
-    can guarantee both safety and termination</b>. If the houses set a fixed sandglass deadline
-    and decide upon its expiry, they cannot distinguish a dead neighbor from a runner delayed by
-    spray. A premature decision risks two prices on two boards; perpetual waiting keeps every
-    counter on the island shut all winter.</p>
+    <p>Every strip carries the count of the glass in which it was written. A man who takes in a bird
+    in a later glass than the one on its strip reads it, and sets it aside. Nothing in it counts: not
+    what it asks, not what it answers, not what it says was seen at dusk. Only a bird of one kind is
+    taken whenever it comes, and Chapter V describes it. Setting birds aside loses nothing that
+    matters, and it makes every glass stand alone. What a man does in a glass depends only on the
+    birds written in that glass, and while the wind blows, a glass's birds may simply fail to come.</p>
+  </div>
 
-    <p>If the storm were perpetual, consensus would be unattainable. But storms in the Aegean,
-    however violent, do not rage forever.</p>
+  <div class="aside-formal">
+    <span class="lbl">The hill, as this book uses it</span>
+    <span class="stmt">(1) While the wind blows,</span> a bird may take any time. None is lost.<br>
+    <span class="stmt">(2) The wind drops</span> at some moment and stays down. From then on, a bird
+    let go in a glass reaches its perch within the same glass. A bird let go before the drop may
+    still be in the pines.<br>
+    <span class="stmt">(3) No man knows</span> when the wind has dropped.<br>
+    <span class="stmt">(4) The glasses</span> were turned together at last light and run alike, so
+    every tent's pebbles give the same count.<br>
+    <span class="stmt">(5) Late birds:</span> a strip taken in during a later glass than the one it
+    was written in is set aside, except a going bird.<br>
+    <span class="stmt">(6) At most one</span> of the four is killed. No one lies.<br>
+    <span class="paper">Communication is partially synchronous, &ldquo;Δ holds eventually&rdquo;:
+    the bound Δ is known and holds from an unknown global stabilization time (GST) on, §2.3.
+    Processors are synchronous, Φ = 1, §4. Each processor simulates a round of the basic round
+    model in a group of <var>N</var> + Δ steps, and a message that arrives in a later round is
+    ignored, §4.1. Fail-stop faults, <var>N</var> = 4, <var>t</var> = 1.</span>
+  </div>
+
+  <div class="prose">
+    <p>Without line (2), these are the camps on a night when nothing can be arranged<sup class="xref"><a href="../the-limits-of-agreement/index.html#s3" title="The Limits of Agreement, Chapter III">*</a></sup>.
+    The glasses on their own would not help. With no
+    longest flight, a glass that runs out with no bird tells a man nothing, however many glasses he
+    counts. What gives the glasses their meaning is the wind's dropping, and the wind's dropping is
+    something no man sees.</p>
   </div>
 </section>
 
@@ -149,42 +183,70 @@
 
 <!-- ================= III ================= -->
 <section id="s3">
-  <div class="issue"><span class="no">Chapter III</span><h2>The Breaking of the Storm</h2></div>
+  <div class="issue"><span class="no">Chapter III</span><h2>Turns and Pledges</h2></div>
 
   <div class="prose">
-    <p>The insight that rescues the compact was formulated by three scribes: Dworkia of the Dolphin,
-    Lynchaia of the Vine, and Stockmeros of the Anchor. They recognized that Arche does not inhabit
-    a world of permanent chaos, nor a world of permanent clockwork. It inhabits
-    <span class="coin">partial synchrony</span>.</p>
+    <p>The glasses are grouped in fours, and each four is a <span class="coin">turn</span>. The
+    first turn is glasses one to four, the second five to eight, and so on through the night. Each
+    turn belongs to one man, in the order of the shields: the first to the bull, the second to the
+    boar, the third to the trident, the fourth to the stag, the fifth to the bull again. A turn's man
+    is its <span class="coin">owner</span>.</p>
 
-    <p>The model rests on a physical fact of the island's climate:</p>
+    <p>The owner is not a leader. Nobody chose him; the pebbles in his bowl did, and they would have
+    chosen him if he were dead. He gives no orders. He may only put forward a gate that three men,
+    himself included, have already told him they could accept, and his turn passes when its fourth
+    glass runs out, whatever has happened in it.</p>
+
+    <p>Each man keeps two things besides his sighting.</p>
+
+    <p>The first is <span class="coin">the gates seen at dusk</span>: the gates he knows someone
+    sighted. It starts as his own sighting. Every strip he sends carries it, and when a strip he does
+    not set aside names a gate as seen, he adds it. So if all four sighted north, the gates seen at
+    dusk are only ever north, in every tent.</p>
+
+    <p>The second is his <span class="coin">pledges</span>. A pledge is a strip tied to his tent
+    pole, naming a gate and a turn: <em>north, turn five</em>. It means: <em>in turn five, the owner
+    may have gone north</em>. A man may hold pledges on both gates at once. He can
+    <span class="coin">accept</span> a gate if he holds no pledge on the other.</p>
   </div>
 
   <div class="aside-formal">
-    <span class="lbl">Partial synchrony (Model 2 of DLS 1988)</span>
-    There exists an unknown moment in time, <span class="stmt">GST</span> (the
-    <span class="stmt">Global Stabilization Time</span>, which the scribes call
-    <i>the breaking of the storm</i>), such that:
-    <br><span class="stmt">(1) Before GST:</span> Message delivery along the ring road is
-    arbitrarily and unpredictably delayed. Communication is purely asynchronous.
-    <br><span class="stmt">(2) After GST:</span> The storm clears, the cliff path dries, and every
-    runner dispatched between any two houses arrives within a known upper bound of time,
-    <span class="stmt">Δ</span> (measured by three turns of a standard customs sandglass).
-    <br><span class="stmt">(3) Unannounced arrival:</span> The houses do <em>not</em> know when
-    GST has arrived. A brief lull in the gale looks identical to the final clearing of the sky.
+    <span class="lbl">The four glasses of a turn</span>
+    <span class="stmt">The asking glass.</span> Every man, the owner included, sends the owner the
+    gates he can accept that are among the gates seen at dusk.<br>
+    <span class="stmt">The calling glass.</span> If at least three men, himself included, named the
+    same gate, the owner calls it: he sends <em>pledge to north, turn five</em>, say, to every tent,
+    his own included. If both gates qualify he calls either; if neither, he calls nothing.<br>
+    <span class="stmt">The answering glass.</span> A man who took in the call in the calling glass
+    ties a pledge for that gate and turn, unties any earlier pledge on the <em>same</em> gate, and
+    sends the owner <em>pledged</em>. A pledge on the other gate stays where it is. If the owner
+    takes in <em>pledged</em> from at least two men, himself possibly among them, he goes to the
+    gate he called.<br>
+    <span class="stmt">The untying glass.</span> Every man sends every tent all his pledges, gate and
+    turn. A man holding a pledge on one gate who learns of a pledge on the other gate at a turn as
+    late as his own, or later, unties his.<br>
+    <span class="paper">Algorithm 1, §3.2.1: trying phase <var>k</var> of three rounds and
+    lock-release phase <var>k</var> of one; phase <var>k</var> belongs to <var>p</var><sub>i</sub>
+    when <var>k</var> ≡ <var>i</var> (mod <var>N</var>). A proposal needs <var>N</var> − <var>t</var>
+    = 3 processors finding the value acceptable and proper; a decision needs acknowledgments from
+    <var>t</var> + 1 = 2. The gates seen at dusk are the PROPER set.</span>
   </div>
 
   <div class="prose">
-    <p>This formulation captures reality with dry precision. The algorithm cannot wait for an
-    angel to blow a trumpet announcing GST. It must run continuously through the storm, never
-    violating safety (never letting two boards say different things), and then,
-    when the storm finally breaks, swiftly reach a common decision.</p>
+    <p>Three numbers in this are worth fixing before the proofs. Four men, of whom one may be dead:
+    so an owner can never count on hearing from more than three, and he never waits for a fourth. A
+    call needs three men who can accept its gate. And an owner goes on two <em>pledged</em>, not
+    three or four. Two is enough, and the next chapter shows why: two pledges on a gate leave only
+    two men who could accept the other, and the other would need three.</p>
 
-    <p>Nor does the clearing of the sky open another road. A beacon on Mount Phyle would be seen
-    from every cove once the cloud lifts, but the summit belongs to the siege and no one from the
-    houses goes up. The swell goes on breaking over the reefs between the coves for days after the
-    wind has dropped, so no skiff coasts from one house to the next. The ring road is still the
-    only way word travels. What the calm changes is how long it takes.</p>
+    <p>Nothing here is chosen by anyone's judgment of which gate is better. Which gate the four go
+    to is not the subject of this book and is settled nowhere in it. An owner who may call either
+    gate calls either; the arrangement is indifferent to which.</p>
+
+    <p>The gates seen at dusk keep the second demand. An owner calls only a gate that three men
+    named from among the gates they know were sighted, and a gate enters that list only because
+    someone sighted it. If all four sighted north, south is never on anyone's list, and nothing but
+    north can ever be called.</p>
   </div>
 </section>
 
@@ -192,52 +254,74 @@
 
 <!-- ================= IV ================= -->
 <section id="s4">
-  <div class="issue"><span class="no">Chapter IV</span><h2>The Rotating Coordinator and the Quorum</h2></div>
+  <div class="issue"><span class="no">Chapter IV</span><h2>Never Two Gates, in Any Wind</h2></div>
 
   <div class="prose">
-    <p>To organize the decision without a common clock, the scribes divided time into successive
-    <span class="coin">rounds</span>: <var>r</var> = 1, 2, 3, …</p>
+    <p>The first demand must hold whatever the wind does, because nobody can tell when it drops. If
+    it held only in still air, the four would never know whether it held. So the arrangement is
+    built so that the first demand needs nothing from the wind at all.</p>
 
-    <p>Each round is governed by a designated <span class="coin">coordinator</span> chosen in
-    unbroken rotation:
-    <br>— Round 1 is directed by <b>Dworkia</b> at the Dolphin.
-    <br>— Round 2 is directed by <b>Lynchaia</b> at the Vine.
-    <br>— Round 3 is directed by <b>Stockmeros</b> at the Anchor.
-    <br>— Round 4 returns to Dworkia at the Dolphin, and the cycle repeats (<var>r</var> mod 3).</p>
+    <p>It rests on two facts. The first is small. In any turn only the owner calls, and he calls at
+    most one gate, so no two men ever tie pledges on different gates for the same turn.</p>
 
-    <p>Each house maintains a local sandglass timer of fixed duration <var>T</var> = 5Δ. When a
-    house's sand runs out for round <var>r</var>, it advances its ledger to round <var>r</var> + 1,
-    regardless of whether round <var>r</var> reached a conclusion.</p>
-
-    <p>Three sandglasses on three sides of a mountain do not stay together. A house cut off for a
-    week of storm turns its glass as often as the others, but it started at a different moment. It
-    may come out of the storm in round 7 while its neighbours are in round 9, and since all three
-    glasses run at the same rate, it would stay two rounds behind for ever. So the scribes added
-    <span class="coin">the rule of catching up</span>. At the start of every round a house sends
-    its status slip to <em>all</em> the houses, not only to the coordinator. A house that
-    receives any slip bearing a round higher than its own drops its round at once, advances its
-    ledger to the higher number, and turns its glass afresh. Slips bearing a lower round are set
-    aside, except a commit slip, which is honoured whenever it comes.</p>
-
-    <p>Before the storm breaks, the rule of catching up changes nothing that matters. After it,
-    the house furthest ahead drags the others level within one runner's transit, so every round
-    begins at the three houses within Δ of one another. That is why <var>T</var> is 5Δ and not
-    4Δ: four transits for the round's business, and one more for the houses that started
-    late.</p>
-
-    <p>The second pillar of the arrangement is the <span class="coin">majority quorum</span>.
-    On Arche, there are three houses (<var>N</var> = 3), and at most one may be crushed by
-    rockfall (<var>t</var> = 1). Therefore, no coordinator can ever wait to hear from all three
-    houses, for the third house may be buried under stone. Every action must proceed upon hearing
-    from a majority of <var>N</var> − <var>t</var> = 2 houses.</p>
+    <p>The second is the heart of it. Suppose some man goes, and take the earliest turn in which
+    anyone went, say north in turn five. The owner of turn five had <em>pledged</em> from two men,
+    so two men tied <em>north, turn five</em>. Those two will hold a pledge on north, for turn five or
+    later, from then on. To lose it, one of them would have to untie it without tying a later north,
+    and he unties only on hearing of a pledge on south at a turn as late as five. There was none in
+    turn five, so it would have to be a later turn, say turn eight. But for south to be called in
+    turn eight, three men had to be able to accept south in turn eight's asking glass, which means
+    three men holding no pledge on north. Two of the four still held one. That leaves two.</p>
   </div>
 
   <div class="result">
-    <span class="name">The Quorum Intersection</span>
-    <p>Any two majorities of size 2 out of 3 houses must share at least one house:</p>
-    <p style="text-align:center;font-weight:700">|Q<sub>1</sub>| = 2, |Q<sub>2</sub>| = 2, N = 3 ⟹ |Q<sub>1</sub> ∩ Q<sub>2</sub>| ≥ 1</p>
-    <p>That single overlapping house is the <span class="coin">witness</span> that prevents the
-    island from ever contradicting itself across rounds.</p>
+    <span class="name">Never Two Gates</span>
+    <p>However long the wind blows and however the birds are delayed, no two men ever go to
+    different gates; and if all four sighted the same gate, no man goes to the other.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that no two men go to different gates, in any wind</summary>
+    <ol class="proofsteps">
+      <li><b>One gate per turn.</b> Only a turn's owner calls, and he calls at most one gate in it.
+      A pledge for turn <var>k</var> is tied only on taking in the call of turn <var>k</var>. So all
+      pledges for turn <var>k</var> are on one gate.</li>
+      <li>Suppose some man goes to a gate, and let turn <var>k</var> be the earliest turn in which
+      an owner went; say he went north. He had <em>pledged</em> from two men, so two men tied
+      <em>north, turn k</em>. Men who go on a going bird (Chapter V) go to a gate some owner went to
+      earlier, so it is enough to show that no owner in a later turn goes south.</li>
+      <li><b>The two keep a pledge on north.</b> Suppose not, and take the first untying glass in
+      which one of the two unties a pledge on north for turn <var>k</var> or later without holding a
+      later one. He unties it on learning of a pledge on south for some turn <var>h</var> at least
+      as late. By step 1, <var>h</var> is not <var>k</var>, so <var>h</var> is later than
+      <var>k</var>, and no later than this untying glass.</li>
+      <li>A pledge on south for turn <var>h</var> means south was called in turn <var>h</var>, so
+      three men could accept south in turn <var>h</var>'s asking glass: three men with no pledge on
+      north. But both of the two held a pledge on north from turn <var>k</var> until this untying
+      glass, which is no earlier than turn <var>h</var>'s own. There are four men; at most two held
+      no pledge on north. This contradicts the three.</li>
+      <li>So from turn <var>k</var> on, two men always hold a pledge on north, or have gone north
+      and send nothing. In no later asking glass can three men name south, south is never called,
+      no man ties a pledge on south for a later turn, and no owner goes south.</li>
+      <li><b>The second demand.</b> A gate is named in an asking glass only if it is among the gates
+      seen at dusk, and a gate enters that list only through someone's sighting. If all four
+      sighted north, only north can be named, called or gone to.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>The proof never mentions the wind. It uses only the counting: two pledges that cannot be
+    untied, and three men needed to accept the other gate, among four. Birds may arrive late, be set
+    aside, or not come at all in the glass they were meant for; each of those only makes a call or a
+    <em>pledged</em> fail to happen, and failing to happen is always safe. That is why the
+    arrangement can run straight through the wind without anyone knowing when it ends.</p>
+
+    <p>The untying glass is what keeps a pledge from being permanent. A pledge from a turn in which
+    nobody went, because the owner's <em>pledged</em> birds were in the pines, would otherwise sit on
+    its tent pole all night and forbid its holder to accept the other gate for ever. The untying
+    glass lets a later call, which knew more, override it. What it can never override is a pledge
+    held by the two men of a turn in which someone went, because no later call against that gate can
+    gather three.</p>
   </div>
 </section>
 
@@ -245,301 +329,361 @@
 
 <!-- ================= V ================= -->
 <section id="s5">
-  <div class="issue"><span class="no">Chapter V</span><h2>The Four Phases of a Round</h2></div>
+  <div class="issue"><span class="no">Chapter V</span><h2>Going Once the Wind Drops</h2></div>
 
   <div class="prose">
-    <p>Each house <var>i</var> keeps three entries inked on its decision tablet:
-    <br>— <var>v</var><sub>i</sub>: the price it currently proposes, initially the one it formed
-    from its own storehouse and counter.
-    <br>— <var>lock_round</var><sub>i</sub>: the round number in which it last locked a price
-    (initially 0).
-    <br>— <var>decided</var><sub>i</sub>: whether it has cut its board.</p>
+    <p>Going is silence. A man who has struck his tent sends no more birds and ties no more
+    pledges, and his quarter is open behind him. So a man who goes must first say so. Before he
+    strikes his tent, he sends each of the other tents a <span class="coin">going bird</span>:
+    <em>going, north</em>. A going bird carries no turn and is never set aside. A man who takes one in,
+    at any glass, whenever it comes, sends going birds of his own to every tent, and then goes to
+    the gate it names.</p>
 
-    <p>A lock is chalk, not stone. A house that locks a price chalks it on its slate beside the
-    round number, and a proposal from a later round may wipe the chalk and replace it. Only the
-    decision is cut into the board, and nothing ever changes the board.</p>
+    <p>Every man who goes sends his own going birds first, not only the first to go. A man may be
+    killed halfway through tying them, with two sent and one not. Whoever received one of his will
+    send a full set. Since at most one man is killed, the birds of the others reach every tent in
+    the end, and every man left alive goes, whenever the birds come.</p>
 
-    <p>Every round <var>r</var> proceeds through four strictly ordered phases:</p>
-  </div>
+    <p>This is the paper's own device and not an addition. The paper has a man who decides send the
+    decision to everyone, lets anyone who receives it decide at once, and, where messages are
+    delayed but never lost, lets a man who has sent it stop. On this hill no bird is ever lost.</p>
 
-  <div class="decree rules">
-    <div class="rhead">The Four Phases of Round r</div>
-    <ol>
-      <li><b>Phase 1 · Status.</b> On entering round <var>r</var>, each house <var>i</var>
-      dispatches runners to every house carrying a slip
-      <br><span class="paper">STATUS(<var>v</var><sub>i</sub>, <var>lock_round</var><sub>i</sub>, <var>r</var>)</span>.
-      <br>The coordinator of round <var>r</var> uses it. The other houses use only its round
-      number, to catch up.</li>
-
-      <li><b>Phase 2 · Proposal.</b> The coordinator waits until she receives status slips from a
-      majority of houses (2 houses). She inspects the reported <var>lock_round</var> numbers.
-      She chooses the value <var>v</var> associated with the <em>highest</em> reported
-      <var>lock_round</var>. (If all report 0, she proposes her own initial preference). She
-      dispatches to all houses:
-      <br><span class="paper">PROPOSE(<var>v</var>, <var>r</var>)</span>.</li>
-
-      <li><b>Phase 3 · Lock &amp; Acknowledgment.</b> When house <var>i</var> receives
-      <span class="paper">PROPOSE(<var>v</var>, <var>r</var>)</span> before its round timer
-      expires: if <var>r</var> ≥ <var>lock_round</var><sub>i</sub>, the house adopts <var>v</var>,
-      sets its <var>lock_round</var><sub>i</sub> ← <var>r</var>, and sends back to the coordinator:
-      <br><span class="paper">ACK(<var>r</var>)</span>.</li>
-
-      <li><b>Phase 4 · Commit.</b> If the coordinator receives <span class="paper">ACK(<var>r</var>)</span>
-      from a majority of houses (2 houses) before her timer expires, she decides <var>v</var>,
-      cuts it into her house's board as the season's price, and dispatches to all houses:
-      <br><span class="paper">COMMIT(<var>v</var>, <var>r</var>)</span>.
-      Any house receiving a <span class="paper">COMMIT</span> slip immediately decides <var>v</var>
-      and cuts it into its own board.</li>
-    </ol>
-  </div>
-
-  <div class="prose">
-    <p>If a house's local sandglass runs out before a phase completes, the house abandons that
-    round and advances to round <var>r</var> + 1. It keeps its <var>lock_round</var> and locked
-    value intact. A house that has decided goes on taking part in the rounds, so that a house
-    whose commit slip went astray is not left alone to finish.</p>
+    <p>That settles the third demand once one man goes. It remains to show that some man goes
+    once the wind has dropped.</p>
   </div>
 
   <figure class="diagram">
     <div class="board">
-      <svg viewBox="0 0 660 480" role="img" aria-label="Spacetime diagram of two rounds. Round 1 during the storm: runner delayed by rockfall, timeout expires, round aborts without decision. Round 2 after the storm clears (GST): messages arrive within bound Delta, the Vine's coordinator collects a quorum, proposes a price of fourteen, gathers locks, and commits it; every house decides fourteen.">
+      <svg viewBox="0 0 660 440" role="img" aria-label="A space-time diagram of one turn in still air, owned by Patersonos at the trident. Four lifelines: bull, boar, trident, stag. Horizontal bands mark the asking, calling and answering glasses. In the asking glass every man sends the owner the gates he can accept. In the calling glass the owner calls north to every tent. In the answering glass the others send pledged back. The owner, holding two or more pledged birds, sends going birds and goes north.">
         <defs>
-          <marker id="arr" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+          <marker id="awb" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
           </marker>
-          <marker id="arr-red" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+          <marker id="awr" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
-          </marker>
-          <marker id="arr-grn" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#4d7c0f"/>
           </marker>
         </defs>
 
-        <!-- Lifelines -->
-        <text class="d-house" x="110" y="28" text-anchor="middle">DOLPHIN (c₁)</text>
-        <text class="d-house" x="330" y="28" text-anchor="middle">VINE (c₂)</text>
-        <text class="d-house" x="550" y="28" text-anchor="middle">ANCHOR</text>
+        <!-- glass bands -->
+        <rect class="d-band-o" x="20" y="60" width="620" height="100"/>
+        <rect class="d-band-o" x="20" y="260" width="620" height="100"/>
+        <text class="d-key" x="28" y="76">asking glass</text>
+        <text class="d-key" x="28" y="176">calling glass</text>
+        <text class="d-key" x="28" y="276">answering glass</text>
 
-        <line class="d-lifeline" x1="110" y1="40" x2="110" y2="450"/>
-        <line class="d-lifeline" x1="330" y1="40" x2="330" y2="450"/>
-        <line class="d-lifeline" x1="550" y1="40" x2="550" y2="450"/>
+        <text class="d-house" x="160" y="44" text-anchor="middle" font-size="11">BULL</text>
+        <text class="d-house" x="290" y="44" text-anchor="middle" font-size="11">BOAR</text>
+        <text class="d-house" x="420" y="44" text-anchor="middle" font-size="11" fill="#bf4a26">TRIDENT · OWNER</text>
+        <text class="d-house" x="550" y="44" text-anchor="middle" font-size="11">STAG</text>
+        <line class="d-lifeline" x1="160" y1="56" x2="160" y2="410"/>
+        <line class="d-lifeline" x1="290" y1="56" x2="290" y2="410"/>
+        <line class="d-lifeline" x1="420" y1="56" x2="420" y2="410"/>
+        <line class="d-lifeline" x1="550" y1="56" x2="550" y2="410"/>
 
-        <!-- ============ ROUND 1: THE STORM ============ -->
-        <rect class="d-band" x="20" y="48" width="620" height="150" rx="4" fill="#f8f4ee" opacity="0.6"/>
-        <text class="d-key" x="30" y="66" fill="#bf4a26" font-weight="700">ROUND 1 · In the Storm (delays unbounded)</text>
+        <!-- asking: all to owner -->
+        <circle class="d-ev" cx="160" cy="88" r="4"/>
+        <circle class="d-ev" cx="290" cy="88" r="4"/>
+        <circle class="d-ev" cx="550" cy="88" r="4"/>
+        <path class="d-msg" marker-end="url(#awb)" d="M160,88 L412,146"/>
+        <path class="d-msg" marker-end="url(#awb)" d="M290,88 L412,144"/>
+        <path class="d-msg" marker-end="url(#awb)" d="M550,88 L428,144"/>
+        <text class="d-note" x="225" y="154" text-anchor="middle">&ldquo;I can accept north&rdquo;</text>
 
-        <!-- Status msgs -->
-        <path class="d-msg" marker-end="url(#arr)" d="M330,76 L110,98"/>
-        <text class="d-num" x="220" y="84" text-anchor="middle">STATUS(14, 0)</text>
+        <!-- calling: owner to all -->
+        <circle class="d-ev-hi" cx="420" cy="190" r="5"/>
+        <text class="d-lbl" x="430" y="186">calls north</text>
+        <path class="d-msg-hi" marker-end="url(#awr)" d="M420,192 L168,246"/>
+        <path class="d-msg-hi" marker-end="url(#awr)" d="M420,192 L298,244"/>
+        <path class="d-msg-hi" marker-end="url(#awr)" d="M420,192 L542,244"/>
 
-        <!-- Delayed msg from Anchor -->
-        <path class="d-msg-hi" marker-end="url(#arr-red)" stroke-dasharray="4 4" d="M550,76 L280,185"/>
-        <text class="d-note" x="430" y="120" text-anchor="middle" fill="#bf4a26">delayed by rockfall</text>
+        <!-- answering: pledged back -->
+        <circle class="d-ev" cx="160" cy="288" r="4"/>
+        <text class="d-lbl" x="152" y="306" text-anchor="end">pledges</text>
+        <circle class="d-ev" cx="290" cy="288" r="4"/>
+        <circle class="d-ev" cx="550" cy="288" r="4"/>
+        <text class="d-lbl" x="558" y="306">pledges</text>
+        <path class="d-msg" marker-end="url(#awb)" d="M160,288 L412,346"/>
+        <path class="d-msg" marker-end="url(#awb)" d="M290,288 L412,344"/>
+        <path class="d-msg" marker-end="url(#awb)" d="M550,288 L428,344"/>
+        <text class="d-note" x="225" y="354" text-anchor="middle">&ldquo;pledged&rdquo;</text>
 
-        <!-- Timeout at Dolphin -->
-        <line x1="90" y1="185" x2="130" y2="185" stroke="#bf4a26" stroke-width="2"/>
-        <text class="d-lbl" x="136" y="189" fill="#bf4a26">timer expires (no quorum)</text>
-
-        <!-- ============ GST DIVIDER ============ -->
-        <line x1="20" y1="216" x2="640" y2="216" stroke="#4d7c0f" stroke-width="2" stroke-dasharray="6 3"/>
-        <text class="d-key" x="330" y="210" text-anchor="middle" fill="#4d7c0f" font-weight="700">THE STORM BREAKS (GST) · runner delays bounded by Δ</text>
-
-        <!-- ============ ROUND 2: THE CALM ============ -->
-        <rect class="d-band" x="20" y="226" width="620" height="214" rx="4" fill="#f4f7ee" opacity="0.6"/>
-        <text class="d-key" x="30" y="244" fill="#4d7c0f" font-weight="700">ROUND 2 · Coordinator: Lynchaia (Vine)</text>
-
-        <!-- Phase 1: Status -->
-        <path class="d-msg" marker-end="url(#arr)" d="M110,252 L330,272"/>
-        <text class="d-num" x="200" y="258" text-anchor="middle">STATUS(12, 0)</text>
-        <path class="d-msg" marker-end="url(#arr)" d="M550,252 L330,272"/>
-        <text class="d-num" x="460" y="258" text-anchor="middle">STATUS(13, 0)</text>
-
-        <!-- Phase 2: Propose -->
-        <circle class="d-ev-hi" cx="330" cy="286" r="5"/>
-        <text class="d-lbl" x="336" y="298" font-size="10">proposes v=14</text>
-        <path class="d-msg" marker-end="url(#arr)" d="M330,300 L110,324"/>
-        <path class="d-msg" marker-end="url(#arr)" d="M330,300 L550,324"/>
-        <text class="d-num" x="210" y="310" text-anchor="middle">PROPOSE(14, 2)</text>
-        <text class="d-num" x="450" y="310" text-anchor="middle">PROPOSE(14, 2)</text>
-
-        <!-- Phase 3: Lock & Ack -->
-        <circle class="d-ev" cx="110" cy="324" r="4"/>
-        <circle class="d-ev" cx="550" cy="324" r="4"/>
-        <path class="d-msg" marker-end="url(#arr)" d="M110,336 L330,360"/>
-        <path class="d-msg" marker-end="url(#arr)" d="M550,336 L330,360"/>
-        <text class="d-num" x="210" y="354" text-anchor="middle">ACK(2)</text>
-        <text class="d-num" x="450" y="354" text-anchor="middle">ACK(2)</text>
-
-        <!-- Phase 4: Commit -->
-        <circle class="d-ev-hi" cx="330" cy="374" r="6" fill="#4d7c0f"/>
-        <text class="d-lbl" x="340" y="378" fill="#4d7c0f" font-weight="700">DECIDES v=14</text>
-        <path class="d-msg-hi" marker-end="url(#arr-grn)" stroke="#4d7c0f" d="M330,390 L110,414"/>
-        <path class="d-msg-hi" marker-end="url(#arr-grn)" stroke="#4d7c0f" d="M330,390 L550,414"/>
-        <text class="d-note" x="200" y="400" text-anchor="middle" fill="#4d7c0f">COMMIT(14, 2)</text>
-        <text class="d-note" x="460" y="400" text-anchor="middle" fill="#4d7c0f">COMMIT(14, 2)</text>
-
-        <circle class="d-ev-hi" cx="110" cy="414" r="5" fill="#4d7c0f"/>
-        <circle class="d-ev-hi" cx="550" cy="414" r="5" fill="#4d7c0f"/>
-        <text class="d-lbl" x="44" y="432" fill="#4d7c0f">decides v=14</text>
-        <text class="d-lbl" x="480" y="432" fill="#4d7c0f">decides v=14</text>
+        <!-- going -->
+        <circle class="d-ev-hi" cx="420" cy="382" r="5"/>
+        <text class="d-lbl" x="430" y="386" fill="#bf4a26">going birds; goes north</text>
       </svg>
     </div>
-    <figcaption><b>The execution across the storm.</b> In Round 1, before GST, rockfalls delay
-    messages; Dworkia's timer expires without hearing from the Anchor, and the round aborts safely.
-    Once the storm breaks (GST), runner delays fall below Δ. In Round 2, Lynchaia collects status
-    slips within time. No house holds a lock, so she proposes her own fourteen drachmas, secures
-    majority locks and commits it, and the commit slips carry it to both other boards.</figcaption>
+    <figcaption><b>In still air, a turn owned by a live man ends with someone going.</b> Every bird
+    arrives within its glass: the owner hears from every live man, calls a gate they can all accept,
+    and has his two <em>pledged</em> birds before the answering glass runs out. The untying glass
+    that follows is not drawn.</figcaption>
   </figure>
+
+  <div class="prose">
+    <p>While the wind blows, a turn can fail at every step. The asking birds are in the pines, so the
+    owner hears from two men and calls nothing; or he calls, and the call reaches one man in time; or
+    three men pledge, and their <em>pledged</em> birds come in the next glass and are set aside. Each
+    failure leaves pledges tied that nobody went on. In still air the untying glass clears them up.
+    Every man then hears every live man's pledges within the glass, and any pledge on one gate that is
+    no later than some pledge on the other is untied. What is left is on one gate at most.</p>
+
+    <p>Now take the next turn owned by a live man. In its asking glass every live man hears from
+    every other; at least three are alive; the gates seen at dusk have gone round, so every man's
+    list holds the same gates; and all the pledges still tied are on one gate, which every live man
+    can therefore accept. So all the live men name a common gate, the owner calls it, every live man
+    pledges, and the owner has his two <em>pledged</em> before the answering glass runs out.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">Going After the Wind</span>
+    <p>If the wind drops, every man who is not killed goes. If nobody had gone when it dropped, all
+    go within twenty glasses of the drop. If someone had, they go when his going birds arrive, which
+    is certain but bounded by no count of glasses.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that the four go once the wind has dropped</summary>
+    <ol class="proofsteps">
+      <li>From the glass after the wind drops, every bird let go by a live man is taken in within its
+      own glass, so no bird between live men is set aside.</li>
+      <li><b>After a still untying glass, pledges are on one gate at most.</b> In it every live man
+      hears all the pledges of every live man. If live men hold pledges on both gates, take the
+      latest turn among them, say turn <var>h</var> on north; by Chapter IV's first step there is no
+      pledge on south for turn <var>h</var>. Every pledge on south is for a turn no later than
+      <var>h</var>, and its holder, hearing of <em>north, turn h</em>, unties it.</li>
+      <li><b>Every man knows the same gates seen at dusk.</b> Every strip carries its sender's list,
+      and in a still untying glass every live man hears from every other. After it, a gate that any
+      live man knows was seen is known to all of them. A gate still pledged was called by some
+      owner, who called it from a list, so it is among them.</li>
+      <li>If some man had already gone when the wind dropped, his going birds are never lost, so
+      they reach every tent in the end and every man left alive goes. A going bird let go while the
+      wind blew may still be in the pines, so no count of glasses bounds this. So suppose no one had
+      gone when the wind dropped. From then on a man who goes sends his going birds in still air,
+      and they arrive within the glass.</li>
+      <li>The wind drops during some turn. The untying glass of the turn after it is wholly still. Of
+      the two turns after that, at least one is owned by a live man, since only one man may be dead.
+      Take the first of them owned by a live man: it begins within three turns of the drop and ends
+      within four, sixteen glasses.</li>
+      <li>In its asking glass, each of the live men, at least three, names every gate on the common
+      list that he can accept. If some gate is still pledged, every live man can accept it, since no
+      pledge on the other gate remains; and it is on the list. If none is pledged, every live man can
+      accept every gate on the list. Either way at least three men name a common gate, and the owner
+      hears them all within the glass and calls it.</li>
+      <li>Every live man takes in the call within the calling glass, pledges and sends
+      <em>pledged</em>; the owner takes in at least two within the answering glass and goes, sending
+      his going birds, within sixteen glasses of the wind's dropping.</li>
+      <li>By the going birds, every man left alive then goes, and by Chapter IV they all go to the
+      same gate.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>The number twenty is the paper's: four glasses to a turn, and <var>N</var> + 1 = 5 turns
+    after the wind drops. The proof above is a little tighter, but nothing depends on it. The paper's
+    men earn it by never stopping: a man who has decided there goes on taking part. On the hill a man
+    who goes is gone. If one goes while the wind blows, and another is dead, the two left cannot
+    gather three names for a call, and they wait for his going birds, which will come, but at no
+    glass anyone can count. What
+    matters is that the bound counts glasses after an event no man sees. There is no glass of the
+    night of which anyone can say <em>by now we will have gone</em>, because nobody knows from
+    which glass to count.</p>
+  </div>
+
+  <aside class="leak">
+    <span class="lbl">Where the allegory leaks</span>
+    <p>A night ends. The paper's rounds do not: it lets the wind blow for as long as it likes before
+    dropping, and then promises a decision within a fixed number of rounds after. On the hill, if the
+    wind drops late, dawn may come first. The model has no dawn, and nothing in this book turns on
+    one: the first demand holds at every glass of the night, and the third is a promise about glasses
+    after the drop, however many there are.</p>
+  </aside>
 </section>
 
 <hr class="rule">
 
 <!-- ================= VI ================= -->
 <section id="s6">
-  <div class="issue"><span class="no">Chapter VI</span><h2>Safety in the Wildest Gale</h2></div>
+  <div class="issue"><span class="no">Chapter VI</span><h2>Two Against Two</h2></div>
 
   <div class="prose">
-    <p>The first necessity of the compact is that <b>the boards must never disagree</b>. Even if
-    the gale rages for three weeks, and runners shelter for days under the rocks, and timers expire
-    out of order, it must be impossible for the Dolphin to cut twelve while the Vine later cuts
-    fourteen.</p>
+    <p>The arrangement bears one death among four. It would not bear two, and no arrangement
+    would. The reason is the wind again, now working against the four.</p>
 
-    <p>This safety guarantee does not depend on the weather. It holds during the height of the
-    storm, under unbounded delay, by virtue of the majority lock.</p>
-  </div>
-
-  <div class="result">
-    <span class="name">Theorem 1 · Unconditional Agreement (DLS 1988)</span>
-    <p>No two houses ever decide different values, regardless of runner delays or the time of
-    GST.</p>
+    <p>Suppose any two of the four might be killed. Then a pair of men who have heard nothing from
+    the other pair cannot wait for them: the other two may be dead, and the third demand says the
+    living must go. But the other two may be alive, with every bird between the pairs in the pines,
+    and the wind will drop only after the living pair has gone.</p>
   </div>
 
   <figure class="diagram">
     <div class="board">
-      <svg viewBox="0 0 660 280" role="img" aria-label="Quorum intersection diagram. Round r commits value v using Quorum Q1 consisting of Dolphin and Vine. Later Round r prime gathers status reports from Quorum Q2 consisting of Vine and Anchor. The Vine belongs to both quorums and forces the coordinator to propose v.">
-        <!-- Quorum 1: Dolphin & Vine -->
-        <rect class="d-band" x="40" y="40" width="340" height="190" rx="8" fill="#eaf2f8" stroke="#136f9e" stroke-width="1.5"/>
-        <text class="d-key" x="56" y="66" fill="#136f9e" font-weight="700">QUORUM Q₁ (Round r Commit: v)</text>
-        <circle class="d-ev-hi" cx="120" cy="140" r="14" fill="#136f9e"/>
-        <text class="d-num" x="120" y="145" text-anchor="middle" fill="#fff" font-weight="700">D</text>
-        <text class="d-lbl" x="120" y="172" text-anchor="middle">Dolphin</text>
-        <text class="d-note" x="120" y="188" text-anchor="middle">locked v at r</text>
+      <svg viewBox="0 0 660 330" role="img" aria-label="Three panels, each with two pairs of tents: Fischeros and Lynchaia on the left, Patersonos and Kallias on the right. First panel: all sighted north, Patersonos and Kallias are dead; Fischeros and Lynchaia must go north. Second panel: all sighted south, Fischeros and Lynchaia are dead; Patersonos and Kallias must go south. Third panel: all alive, the left pair sighted north and the right pair south, and every bird between the pairs is held by the wind; each pair sees exactly what it saw before and goes to different gates.">
+        <!-- panel headers -->
+        <text class="d-house" x="110" y="24" text-anchor="middle">FIRST</text>
+        <text class="d-house" x="330" y="24" text-anchor="middle">SECOND</text>
+        <text class="d-house" x="550" y="24" text-anchor="middle" fill="#bf4a26">THIRD</text>
+        <line x1="220" y1="10" x2="220" y2="320" stroke="#b9a77e" stroke-width="1.5"/>
+        <line x1="440" y1="10" x2="440" y2="320" stroke="#b9a77e" stroke-width="1.5"/>
 
-        <!-- Quorum 2: Vine & Anchor -->
-        <rect class="d-band" x="280" y="40" width="340" height="190" rx="8" fill="#fdf2e9" stroke="#bf4a26" stroke-width="1.5" opacity="0.85"/>
-        <text class="d-key" x="604" y="66" text-anchor="end" fill="#bf4a26" font-weight="700">QUORUM Q₂ (Round r' Status)</text>
-        <circle class="d-ev-hi" cx="540" cy="140" r="14" fill="#bf4a26"/>
-        <text class="d-num" x="540" y="145" text-anchor="middle" fill="#fff" font-weight="700">A</text>
-        <text class="d-lbl" x="540" y="172" text-anchor="middle">Anchor</text>
-        <text class="d-note" x="540" y="188" text-anchor="middle">status reported</text>
+        <!-- panel 1 -->
+        <text class="d-key" x="60" y="54" text-anchor="middle">F · L</text>
+        <text class="d-key" x="160" y="54" text-anchor="middle">P · K</text>
+        <rect x="30" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
+        <rect x="130" y="66" width="60" height="150" rx="4" fill="none" stroke="#b9a77e" stroke-width="1.4" stroke-dasharray="4 4"/>
+        <text class="d-lbl" x="60" y="100" text-anchor="middle">sighted</text>
+        <text class="d-lbl" x="60" y="116" text-anchor="middle">north</text>
+        <text class="d-note" x="160" y="108" text-anchor="middle">dead</text>
+        <text class="d-note" x="160" y="122" text-anchor="middle">at dusk</text>
+        <text class="d-lbl" x="60" y="196" text-anchor="middle" fill="#bf4a26">go north</text>
+        <text class="d-note" x="110" y="258" text-anchor="middle">they cannot wait:</text>
+        <text class="d-note" x="110" y="272" text-anchor="middle">two may be dead</text>
 
-        <!-- Intersection: The Vine -->
-        <circle class="d-ev-hi" cx="330" cy="140" r="18" fill="#4d7c0f"/>
-        <text class="d-num" x="330" y="146" text-anchor="middle" fill="#fff" font-weight="700">V</text>
-        <text class="d-lbl" x="330" y="176" text-anchor="middle" font-weight="700" fill="#4d7c0f">THE VINE (Witness)</text>
-        <text class="d-note" x="330" y="194" text-anchor="middle">in Q₁ ∩ Q₂</text>
-        <text class="d-note" x="330" y="210" text-anchor="middle" font-weight="700" fill="#4d7c0f">reports lock (v, r)</text>
+        <!-- panel 2 -->
+        <text class="d-key" x="280" y="54" text-anchor="middle">F · L</text>
+        <text class="d-key" x="380" y="54" text-anchor="middle">P · K</text>
+        <rect x="250" y="66" width="60" height="150" rx="4" fill="none" stroke="#b9a77e" stroke-width="1.4" stroke-dasharray="4 4"/>
+        <rect x="350" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
+        <text class="d-note" x="280" y="108" text-anchor="middle">dead</text>
+        <text class="d-note" x="280" y="122" text-anchor="middle">at dusk</text>
+        <text class="d-lbl" x="380" y="100" text-anchor="middle">sighted</text>
+        <text class="d-lbl" x="380" y="116" text-anchor="middle">south</text>
+        <text class="d-lbl" x="380" y="196" text-anchor="middle" fill="#bf4a26">go south</text>
+        <text class="d-note" x="330" y="258" text-anchor="middle">the same, with the</text>
+        <text class="d-note" x="330" y="272" text-anchor="middle">pairs and gates swapped</text>
 
-        <!-- Explanation banner -->
-        <text class="d-key" x="330" y="258" text-anchor="middle">Because Vine is in both quorums, coordinator of r' cannot choose any value other than v</text>
+        <!-- panel 3 -->
+        <text class="d-key" x="500" y="54" text-anchor="middle">F · L</text>
+        <text class="d-key" x="600" y="54" text-anchor="middle">P · K</text>
+        <rect x="470" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
+        <rect x="570" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
+        <rect class="d-band" x="534" y="66" width="32" height="150"/>
+        <text class="d-lbl" x="500" y="100" text-anchor="middle">sighted</text>
+        <text class="d-lbl" x="500" y="116" text-anchor="middle">north</text>
+        <text class="d-lbl" x="600" y="100" text-anchor="middle">sighted</text>
+        <text class="d-lbl" x="600" y="116" text-anchor="middle">south</text>
+        <text class="d-lbl" x="500" y="196" text-anchor="middle" fill="#bf4a26">go north</text>
+        <text class="d-lbl" x="600" y="196" text-anchor="middle" fill="#bf4a26">go south</text>
+        <text class="d-note" x="550" y="238" text-anchor="middle">wind</text>
+        <text class="d-note" x="550" y="258" text-anchor="middle" fill="#bf4a26">each pair sees just what</text>
+        <text class="d-note" x="550" y="272" text-anchor="middle" fill="#bf4a26">it saw before</text>
       </svg>
     </div>
-    <figcaption><b>The lock that binds the future.</b> If Round <var>r</var> commits value
-    <var>v</var>, a majority <var>Q</var><sub>1</sub> locked <var>v</var> at round <var>r</var>.
-    Any coordinator in a later round <var>r'</var> must collect status reports from a majority
-    <var>Q</var><sub>2</sub>. Because the two majorities overlap at the Vine, the coordinator is
-    informed of the lock at round <var>r</var>, and is compelled to propose <var>v</var>.</figcaption>
+    <figcaption><b>If two may die, the wind can split the four.</b> Each live pair must go without
+    the other, since the other may be dead. In the third night nobody is dead, and the wind holds
+    every bird between the pairs until both have gone; each pair's night is identical to one in which
+    the other pair was dead, so they go to different gates.</figcaption>
   </figure>
 
+  <div class="result">
+    <span class="name">More Than Half</span>
+    <p>If two of the four may be killed, no arrangement meets the three demands, even with glasses,
+    even if the wind always drops, and even if all that is asked of the second demand is that four
+    live men who sighted the same gate go to it.</p>
+  </div>
+
   <details class="proof">
-    <summary>Proof — that no two rounds can commit different values</summary>
+    <summary>Proof — that four men cannot bear two deaths</summary>
     <ol class="proofsteps">
-      <li>Suppose some round <var>r</var> is the <em>earliest</em> round in which a coordinator
-      decides a value, and let that value be <var>v</var>.</li>
-      <li>To decide <var>v</var> at round <var>r</var>, the coordinator received
-      <span class="paper">ACK(<var>r</var>)</span> from a majority of houses
-      <var>Q</var><sub>1</sub>. By Phase 3, every house in <var>Q</var><sub>1</sub> set its
-      <var>lock_round</var> to <var>r</var> and locked value <var>v</var>.</li>
-      <li>Now consider any subsequent round <var>r'</var> > <var>r</var>. We show by induction
-      on <var>r'</var> that the coordinator of round <var>r'</var> can propose no value other
-      than <var>v</var>.</li>
-      <li>To form a proposal in Phase 2, the coordinator of <var>r'</var> must receive status
-      reports from a majority <var>Q</var><sub>2</sub>.</li>
-      <li>Because <var>N</var> = 3 and each quorum contains 2 houses,
-      |<var>Q</var><sub>1</sub> ∩ <var>Q</var><sub>2</sub>| ≥ 1. Let <var>w</var> be a house
-      in the intersection.</li>
-      <li>Because <var>w</var> ∈ <var>Q</var><sub>1</sub>, <var>w</var> locked <var>v</var> at
-      round <var>r</var>. Thus, when <var>w</var> reports its status to round <var>r'</var>, its
-      reported <var>lock_round</var><sub>w</sub> is at least <var>r</var>.</li>
-      <li>By the induction hypothesis, no coordinator in any intermediate round between
-      <var>r</var> and <var>r'</var> could have proposed or locked any value other than <var>v</var>.
-      Therefore, any lock held by any house at or above round <var>r</var> must be on value
-      <var>v</var>.</li>
-      <li>The rule of Phase 2 compels the coordinator of <var>r'</var> to choose the value with
-      the highest reported <var>lock_round</var>. Since <var>w</var> reports a lock at round
-      <var>r</var> or higher, the highest reported lock cannot be 0, and must belong to some round
-      ≥ <var>r</var>.</li>
-      <li>Hence the coordinator of <var>r'</var> is forced to choose value <var>v</var>. No
-      conflicting value can ever be proposed, acknowledged, or committed in any round.<span class="qed">∎</span></li>
+      <li>Suppose some arrangement does. Divide the four into two pairs, Fischeros and Lynchaia on one
+      side, Patersonos and Kallias on the other.</li>
+      <li><b>The first night.</b> All four sighted north. Patersonos and Kallias are dead from dusk,
+      and every bird between Fischeros and Lynchaia is taken in within its glass. Two deaths are
+      allowed, so by the third demand Fischeros and Lynchaia go, within some number of glasses, say
+      <var>A</var>. They go north. For if they went south, take a night the same for them in every
+      respect, except that Patersonos and Kallias are alive and sighted north, and the wind holds every
+      bird from them for more than <var>A</var> glasses before dropping. Fischeros and Lynchaia cannot
+      tell that night from this one, so they go south, though all four were alive and sighted north.</li>
+      <li><b>The second night.</b> All four sighted south; Fischeros and Lynchaia are dead from dusk;
+      by the same argument Patersonos and Kallias go south within some <var>B</var> glasses.</li>
+      <li><b>The third night.</b> Fischeros and Lynchaia sighted north, Patersonos and Kallias south.
+      Nobody dies. Birds within each pair are taken in within their glass, and the wind holds every
+      bird between the pairs for more than <var>A</var> and more than <var>B</var> glasses, and then
+      drops. That is a night the wind allows.</li>
+      <li>Fischeros and Lynchaia cannot tell the third night from the first until more than
+      <var>A</var> glasses have passed, and by then they have gone north. Patersonos and Kallias
+      cannot tell it from the second, and have gone south. Two men went to different gates, which
+      contradicts the first demand.<span class="qed">∎</span></li>
     </ol>
   </details>
+
+  <div class="prose">
+    <p>Nothing in the proof used the number four, beyond there being two sides each small enough to
+    be dead. Any number of men of whom half or more may die can be split in the same way. So the
+    arrangement's ratio is the right one: it bears <var>t</var> deaths among <var>N</var> men when
+    <var>N</var> is at least 2<var>t</var> + 1, and no arrangement bears more.</p>
+
+    <p>The argument is the camps' own. A dead man looks exactly like a slow bird<sup class="xref"><a href="../the-limits-of-agreement/index.html#s4" title="The Limits of Agreement, Chapter IV">*</a></sup>, and
+    here the likeness is used once, for a fixed length of time, rather than
+    for ever. That is the difference the wind's dropping makes. It cannot make silence mean death,
+    but it limits how long the confusion can last, and an arrangement that waits for more than half
+    can outlast it.</p>
+  </div>
 </section>
 
 <hr class="rule">
 
 <!-- ================= VII ================= -->
 <section id="s7">
-  <div class="issue"><span class="no">Chapter VII</span><h2>Liveness When the Calm Arrives</h2></div>
+  <div class="issue"><span class="no">Chapter VII</span><h2>Liars and Seals</h2></div>
 
   <div class="prose">
-    <p>Safety prevents two prices, but safety alone is not enough: the counters cannot stay shut
-    all winter. The protocol must guarantee that once the weather relents, a decision is
-    reached.</p>
+    <p>The mercenaries do not lie. On the crown some of the bandits do<sup class="xref"><a href="../the-limits-of-agreement/index.html#p2" title="The Limits of Agreement, Part Two">*</a></sup>, and on the later nights of the siege the same wind blows there, pinning the
+    ravens between the posts for as long as it lasts. The paper answers for liars too, and its answer
+    belongs to the crown, not to the camps. It is set down here because it is the same wind.</p>
+
+    <p>On the crown's first night there was no wind, and the flights were short. There, with sealed
+    orders that no one can forge, the chief's word can be carried to any number of posts with any
+    number of liars among them<sup class="xref"><a href="../the-limits-of-agreement/index.html#s15" title="The Limits of Agreement, Chapter XV">*</a></sup>. Under the wind that is lost.</p>
   </div>
 
-  <div class="result">
-    <span class="name">Theorem 2 · Guaranteed Termination after GST (DLS 1988)</span>
-    <p>Once the storm breaks (after GST), every house that has not suffered catastrophe reaches
-    a final decision within a bounded number of rounds.</p>
+  <div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>Who may fail, and how</th><th>No wind</th><th>Wind that drops</th><th>Wind for ever</th></tr></thead>
+      <tbody>
+        <tr><td>men who may die</td><td>any number</td><td>more than twice as many as may die: 2<var>t</var> + 1</td><td>no arrangement</td></tr>
+        <tr><td>men who may drop birds, or fail to take them in</td><td>any number</td><td>2<var>t</var> + 1</td><td>no arrangement</td></tr>
+        <tr><td>men who may lie, with seals no one can forge</td><td>any number</td><td>more than three times as many as may lie: 3<var>t</var> + 1</td><td>no arrangement</td></tr>
+        <tr><td>men who may lie, without seals</td><td>3<var>t</var> + 1</td><td>3<var>t</var> + 1</td><td>no arrangement</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <div class="prose">
-    <p>The proof relies on the synchrony that sets in once the sky clears:</p>
+    <p>The table is the paper's first. The middle column is this book's: glasses that run alike and a
+    wind that drops. In it, seals change nothing. Four posts bear one liar, sealed or not, and three
+    posts bear none.</p>
+
+    <p>Why seals stop helping is the wind again. On the crown's first night a post that heard nothing
+    within the glass knew that nothing was sent, and could treat silence as a message. Under the wind
+    a man can never wait for everyone, since one of them may be a man whose birds are in the pines and
+    another a liar keeping quiet. He can wait only for all but <var>t</var>, and among the ones he
+    hears from, <var>t</var> may be liars answering promptly. A seal stops a liar forging another
+    man's word. It does not stop him answering promptly while an honest man's bird is still in a
+    pine, and from his own mouth he may tell two men two different things.</p>
   </div>
 
   <details class="proof">
-    <summary>Proof — that consensus is reached after GST</summary>
+    <summary>Proof — that sealed or not, three posts cannot bear one liar under a wind that drops</summary>
     <ol class="proofsteps">
-      <li>After GST, every runner between any two functioning houses completes his transit within
-      time Δ.</li>
-      <li>Because coordinators rotate cyclically among the houses, there must eventually begin a
-      round <var>r</var>, first entered by some house at a time <var>t</var>₀ after GST, whose
-      designated coordinator <var>c</var>(<var>r</var>) is a non-faulty house.</li>
-      <li>The first house to enter <var>r</var> sends its status slip to every house. By the rule
-      of catching up, every non-faulty house is in round <var>r</var> by
-      <var>t</var>₀ + Δ. No house can leave <var>r</var> before <var>t</var>₀ + 5Δ, when the
-      earliest glass runs out, and slips from the storm carry no round above <var>r</var>, so none
-      can pull a house past it.</li>
-      <li>Each non-faulty house sends its status slip on entering <var>r</var>, so the coordinator
-      holds status from every functioning house (at least 2, a majority) by <var>t</var>₀ + 2Δ.
-      She selects the value of the highest reported lock and dispatches
-      <span class="paper">PROPOSE(<var>v</var>, <var>r</var>)</span> to all houses.</li>
-      <li>These proposal slips arrive at all houses by <var>t</var>₀ + 3Δ, while every house is
-      still in round <var>r</var>. Because <var>r</var> is at least as high as any lock yet taken,
-      each functioning house locks <var>v</var> and dispatches
-      <span class="paper">ACK(<var>r</var>)</span> to the coordinator.</li>
-      <li>The acknowledgments reach the coordinator by <var>t</var>₀ + 4Δ, still within the
-      round. She decides <var>v</var> and dispatches
-      <span class="paper">COMMIT(<var>v</var>, <var>r</var>)</span> to all houses.</li>
-      <li>The commit slips arrive by <var>t</var>₀ + 5Δ. A commit is honoured whatever round the
-      receiver is in, so every non-faulty house decides <var>v</var>.<span class="qed">∎</span></li>
+      <li>Take three posts, <var>P</var>, <var>Q</var> and <var>R</var>, of whom one may lie, and
+      suppose some arrangement meets the three demands.</li>
+      <li><b>The first night.</b> All sighted hold. <var>R</var> is silent from dusk, which a liar may
+      be. <var>P</var> and <var>Q</var> must act without him, within some number of glasses, and, as
+      in Chapter VI, they must choose hold.</li>
+      <li><b>The second night.</b> All sighted scatter. <var>P</var> is silent from dusk.
+      <var>Q</var> and <var>R</var> choose scatter, within some number of glasses.</li>
+      <li><b>The third night.</b> <var>P</var> sighted hold, <var>R</var> scatter, and <var>Q</var> is
+      the liar. To <var>P</var> he behaves exactly as on the first night, to <var>R</var> exactly as on
+      the second, sealing every strip honestly with his own seal. The wind holds every bird between
+      <var>P</var> and <var>R</var> until both have acted. <var>P</var> cannot tell this night from
+      the first, nor <var>R</var> from the second, so they choose differently.<span class="qed">∎</span></li>
     </ol>
   </details>
 
   <div class="prose">
-    <p>Notice how neatly the boundary is navigated: during the storm, rounds may abort harmlessly
-    because sandglasses expire before runners arrive; but the moment the calm arrives, the very
-    next honest round drives the decision home.</p>
+    <p>The crown has four men and bears one liar, exactly 3<var>t</var> + 1. On a windy night those
+    four keep a loot book together, with seals and a chief's job that passes from man to
+    man<sup class="xref"><a href="../keeping-order-among-liars/index.html" title="Keeping Order Among Liars">*</a></sup>. That is the crown's matter; this book is the camps'. The
+    wind and this table belong to both.</p>
   </div>
 </section>
 
@@ -547,50 +691,58 @@
 
 <!-- ================= VIII ================= -->
 <section id="s8">
-  <div class="issue"><span class="no">Chapter VIII</span><h2>The Bounds of Faults and Liars</h2></div>
+  <div class="issue"><span class="no">Chapter VIII</span><h2>What the Wind Does Not Say</h2></div>
 
   <div class="prose">
-    <p>It remains to explain why three houses are sufficient for Arche, and what would happen if
-    the houses did not merely crash, but lied.</p>
+    <p><b>No one learns when the wind dropped.</b> Nothing in the arrangement detects the calm. The
+    four run the same turns in the wind and after it, and the proofs of Chapters IV and V do the
+    knowing on their behalf. A man who goes knows only that the two <em>pledged</em> birds came in
+    time, not that the wind has dropped; a man who is still waiting cannot tell whether the wind is
+    still up or his owner is dead.</p>
 
-    <p>In Arche's price problem, houses may be crushed by rockfalls (crash failures), but runners
-    do not forge signatures or alter numbers. Under crash failures in partial synchrony, DLS
-    proved that consensus requires strictly more than double the number of failures:</p>
-    <p style="text-align:center;font-weight:700;font-size:1.1rem">N ≥ 2t + 1</p>
-    <p>With <var>N</var> = 3 houses, Arche can endure <var>t</var> = 1 failure. If two houses
-    could fail simultaneously (<var>t</var> = 2), three houses would be helpless: a solitary
-    surviving house cannot distinguish two silent neighbors from two runners delayed by the gale.</p>
+    <p><b>The glasses alone give nothing.</b> Glasses that run alike, turned together, with no bound on
+    flights, would leave the four able to arrange nothing<sup class="xref"><a href="../the-limits-of-agreement/index.html#s9" title="The Limits of Agreement, Chapter IX">*</a></sup>. A glass that runs
+    out with nothing at the perch tells a man only that a glass has run out. What makes the
+    glasses count is the promise about the wind. Take either away, the common count or the dropping
+    wind, and nothing can be arranged.</p>
 
-    <p>What if the houses could act maliciously — forging status reports or proposing different
-    values to different neighbors, as the bandits did atop Mount Phyle?</p>
+    <p><b>If the glasses had not been turned together.</b> The four here have one common moment,
+    the last light on the crown. The paper also answers for men who have none, whose glasses may run
+    at somewhat different rates. They can make a common count by birds alone: each man sends the
+    others the count he has reached, and moves his own count on only when enough others show they
+    have passed it, never so far that the dead or the slow could not catch up. This is a clock
+    kept by ravens, and it needs the same more-than-half as the rest. Its proof is long, and the paper
+    says so. The resiliency comes out the same.</p>
 
-    <p>DLS established the exact boundaries for Byzantine failures in partial synchrony:</p>
-  </div>
+    <p><b>If nobody knew how long a still flight takes.</b> Here every man knows the span of a
+    still-air flight, and a glass is made to fit it. The paper also answers for men who know only that
+    some such span exists. Then each round is given a little more time than the one before, so
+    that in the end the rounds are longer than any flight, whatever it is, and from then on the
+    arrangement works as before.</p>
 
-  <div class="table-wrap">
-    <table class="chron">
-      <thead><tr><th>Failure Type</th><th>Authentication</th><th>Resilience Bound</th><th>Tolerated on Arche (N = 3)</th></tr></thead>
-      <tbody>
-        <tr><td><b>Crash (fail-stop)</b></td><td>Plain ink</td><td><var>N</var> ≥ 2<var>t</var> + 1</td><td><var>t</var> = 1</td></tr>
-        <tr><td><b>Byzantine (malicious)</b></td><td>Wax seals (signed)</td><td><var>N</var> ≥ 3<var>t</var> + 1</td><td><var>t</var> = 0 (needs <var>N</var> ≥ 4)</td></tr>
-        <tr><td><b>Byzantine (malicious)</b></td><td>Plain ink (unsigned)</td><td><var>N</var> ≥ 3<var>t</var> + 1</td><td><var>t</var> = 0 (needs <var>N</var> ≥ 4)</td></tr>
-      </tbody>
-    </table>
-  </div>
+    <p><b>There is no bound before the wind drops.</b> The twenty glasses are counted from a moment
+    nobody sees. How long the wind blows is up to the wind. On a night when it never drops, nobody can
+    be made to go<sup class="xref"><a href="../the-limits-of-agreement/index.html#s9" title="The Limits of Agreement, Chapter IX">*</a></sup>. Nobody goes to a wrong gate either.</p>
 
-  <div class="prose">
-    <p>Against rockslides, three houses suffice. Against treachery under partial synchrony, the
-    houses would need a fourth house on the southern cape — and seals would not spare them it.</p>
+    <p><b>No bird is lost, and that matters for stopping.</b> The four can strike their tents and go
+    because a going bird, once let go, always arrives. If birds could be lost while the wind blew, the
+    paper observes that some man would have to go on sending for ever, however the arrangement was made,
+    since no one could be sure his going bird had reached the others. On this hill that never
+    arises.</p>
 
-    <p>That is a sharp contrast with the summit, where the bandits' seal rings dissolved the
-    bound altogether. The difference is the storm. On the summit a jar measures every flight, so
-    a man who hears nothing knows nothing was sent. On the ring road before GST, a house can
-    never wait for every other house, since one may be buried. It can wait only for all but
-    <var>t</var>, and <var>t</var> of the ones it does hear from may be liars. A seal stops a liar
-    from forging another house's word. It does not stop him answering promptly while an honest
-    house's runner is still under a ledge, so the honest must outnumber the liars in every set of
-    replies a house can be made to act on. That needs <var>N</var> ≥ 3<var>t</var> + 1, sealed or
-    not.</p>
+    <p><b>Not a coin and not a slate.</b> There are other ways out at these tents, each changing
+    one thing. Men who may each toss a coin, alone in his tent, go with probability one, on no night
+    anyone can name<sup class="xref"><a href="../agreeing-by-chance/index.html#s6" title="Agreeing by Chance, Chapter VI">*</a></sup>. Men each given a slate that eventually stops naming
+    the living as dead can agree while a majority is alive<sup class="xref"><a href="../telling-the-dead-from-the-slow/index.html" title="Telling the Dead from the Slow">*</a></sup>. Here nothing is given to
+    the men at all; the change is in the wind. The three answers are different in kind. The coin needs
+    no promise about time and gives none; the slate is granted, not built; the wind is a fact about the
+    hill, and the arrangement makes use of it without ever observing it. The turn that passes round
+    the tents in shield order, fixed by the count and not by anyone's command, is also how men with
+    such slates take turns to propose<sup class="xref"><a href="../telling-the-dead-from-the-slow/index.html" title="Telling the Dead from the Slow">*</a></sup>.</p>
+
+    <p><b>Nothing follows from going.</b> The four go in at one gate. What happens at the gate is not
+    the subject of this book or any other: no assault is made, no wall is carried, and nobody
+    surrenders.</p>
   </div>
 </section>
 
@@ -601,52 +753,74 @@
   <div class="issue"><span class="no">Chapter IX</span><h2>In the Book, In the Paper</h2></div>
 
   <div class="prose">
-    <p>So that the reader may verify the correspondence between the winter price of Arche and the
-    classic paper of Dwork, Lynch, and Stockmeyer.</p>
+    <p>So that the reader may check the windy nights at the camps against the paper of Dwork, Lynch
+    and Stockmeyer.</p>
   </div>
 
   <div class="table-wrap">
     <table class="chron">
       <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
       <tbody>
-        <tr><td><span class="term">trading house</span></td><td>A distributed node maintaining local state and communicating solely via messages. <span class="paper">A processor.</span></td></tr>
-        <tr><td><span class="term">winter gale</span></td><td>Arbitrary, unbounded communication delay before stabilization. <span class="paper">Asynchronous phase before GST.</span></td></tr>
-        <tr><td><span class="term">the breaking of the storm</span></td><td>The unknown future moment after which delays become bounded. <span class="paper">Global Stabilization Time (GST).</span></td></tr>
-        <tr><td><span class="term">three sandglass turns (Δ)</span></td><td>The upper bound on message transit time holding after GST. <span class="paper">Message delay bound Δ.</span></td></tr>
-        <tr><td><span class="term">the rule of catching up</span></td><td>Status broadcast at the start of each round; a house seeing a higher round jumps to it. Keeps round starts within Δ of each other after GST. <span class="paper">A stand-in for DLS's common round numbering, which the paper obtains from a distributed clock.</span></td></tr>
-        <tr><td><span class="term">the winter price</span></td><td>The value agreed on, drawn from any set of possible prices. <span class="paper">Consensus over an arbitrary value domain V.</span></td></tr>
-        <tr><td><span class="term">the compact of the ring road</span></td><td>No two houses post different prices. <span class="paper">Consistency (agreement).</span></td></tr>
-        <tr><td><span class="term">a price all three propose must be posted</span></td><td>If every initial value is <var>v</var>, the decision is <var>v</var>. <span class="paper">Strong unanimity.</span></td></tr>
-        <tr><td><span class="term">cutting the price board</span></td><td>A house's final, irrevocable decision. <span class="paper">Decision.</span></td></tr>
-        <tr><td><span class="term">boards cut on different days</span></td><td>Consensus fixes a value, not a common moment of action. <span class="paper">Agreement without simultaneity.</span></td></tr>
-        <tr><td><span class="term">rotating coordinator</span></td><td>A deterministic round-robin mapping from round number to designated coordinator. <span class="paper">Coordinator c(r) = r mod N.</span></td></tr>
-        <tr><td><span class="term">status slip</span></td><td>A message reporting current preference and the round in which it was locked. <span class="paper">Status message (v, val_round).</span></td></tr>
-        <tr><td><span class="term">highest locked round</span></td><td>Selecting the value from the status report with maximum timestamp/round. <span class="paper">Value from max round in Phase 2.</span></td></tr>
-        <tr><td><span class="term">majority lock (ACK); the chalked slate</span></td><td>Adopting a proposal and locking it with the round number; a later round's proposal may replace it. <span class="paper">Locking / voting phase.</span></td></tr>
-        <tr><td><span class="term">quorum intersection (2 of 3)</span></td><td>Any two majorities overlap in at least one processor, transferring the lock to subsequent rounds. <span class="paper">Quorum intersection property (N ≥ 2t + 1).</span></td></tr>
-        <tr><td><span class="term">commit slip</span></td><td>Broadcasting the final decision once a quorum of locks is secured. <span class="paper">Commit / decision message.</span></td></tr>
+        <tr><td><span class="term">the four mercenaries</span></td><td>The processors, <var>N</var> = 4. <span class="paper">§2.1.</span></td></tr>
+        <tr><td><span class="term">a sighting, north or south</span></td><td>A processor's initial value, from a binary domain. <span class="paper">The protocols work for any domain <var>V</var>; the lower bounds hold already for |<var>V</var>| = 2. Technical Remark 3.</span></td></tr>
+        <tr><td><span class="term">going to a gate</span></td><td>An irrevocable decision. <span class="paper">§2.1.</span></td></tr>
+        <tr><td><span class="term">the three demands</span></td><td>Consistency; strong unanimity; termination. <span class="paper">§2.4.</span></td></tr>
+        <tr><td><span class="term">a man who may be killed; at most one</span></td><td>A fail-stop fault; <var>t</var> = 1. <span class="paper">§2.2.</span></td></tr>
+        <tr><td><span class="term">ravens, never lost</span></td><td>Messages that are delayed but not lost. <span class="paper">The strengthened model of §4.2, Remark 2.</span></td></tr>
+        <tr><td><span class="term">the wind; its dropping; a still flight within a glass</span></td><td>Unbounded delay before an unknown time, and a known bound after it. <span class="paper">&ldquo;Δ holds eventually&rdquo;; GST; §2.3.</span></td></tr>
+        <tr><td><span class="term">no man knows when the wind dropped</span></td><td>GST is unknown to the processors. <span class="paper">§1.2.</span></td></tr>
+        <tr><td><span class="term">glasses turned together at last light, run alike; the pebbles</span></td><td>Completely synchronous processors with a common step count. <span class="paper">Φ = 1, §4.</span></td></tr>
+        <tr><td><span class="term">a glass</span></td><td>A round of the basic round model, simulated by <var>N</var> + Δ steps. <span class="paper">§3.1, §4.1.</span></td></tr>
+        <tr><td><span class="term">a late bird, set aside</span></td><td>A message arriving in a later round than it was sent is ignored, so rounds are independent. <span class="paper">§4.1.</span></td></tr>
+        <tr><td><span class="term">a turn; its owner, in shield order</span></td><td>A trying phase of three rounds and a lock-release phase of one; phase <var>k</var> belongs to <var>p</var><sub>i</sub> when <var>k</var> ≡ <var>i</var> mod <var>N</var>. <span class="paper">Algorithm 1, §3.2.1. The same rotation as the coordinator of Chandra and Toueg's ◇S algorithm.</span></td></tr>
+        <tr><td><span class="term">the gates seen at dusk</span></td><td>The set of values a processor knows to be proper, piggybacked on every message. <span class="paper">PROPER, §3.2.</span></td></tr>
+        <tr><td><span class="term">a pledge on the tent pole; accepting a gate</span></td><td>A lock with its phase number; a value is acceptable if the processor holds no lock on another value. <span class="paper">§3.2.1.</span></td></tr>
+        <tr><td><span class="term">the asking glass</span></td><td>Each processor sends the phase's owner its acceptable, proper values. <span class="paper">Round <var>s</var> = 4<var>k</var> − 3.</span></td></tr>
+        <tr><td><span class="term">the calling glass</span></td><td>The owner proposes a value that <var>N</var> − <var>t</var> processors found acceptable and proper: (lock <var>v</var>, <var>k</var>). <span class="paper">Round <var>s</var> + 1.</span></td></tr>
+        <tr><td><span class="term">the answering glass; going on two <em>pledged</em></span></td><td>Receivers lock <var>v</var>, releasing only earlier locks on <var>v</var>, and acknowledge; the owner decides on <var>t</var> + 1 acknowledgments. <span class="paper">Round <var>s</var> + 2.</span></td></tr>
+        <tr><td><span class="term">the untying glass</span></td><td>All locks are broadcast; a lock on <var>v</var> at phase <var>h</var> is released on learning of a lock on <var>w</var> ≠ <var>v</var> at phase <var>h</var>′ ≥ <var>h</var>. <span class="paper">Lock-release phase, round 4<var>k</var>.</span></td></tr>
+        <tr><td><span class="term">one gate per turn</span></td><td><span class="paper">Lemma 3.1.</span></td></tr>
+        <tr><td><span class="term">the two keep a pledge on the gate</span></td><td>After the first decision, at least <var>t</var> + 1 processors keep a lock on its value at that phase or later. <span class="paper">Lemma 3.2.</span></td></tr>
+        <tr><td><span class="term">Never Two Gates</span></td><td>Consistency and strong unanimity hold however messages are delayed. <span class="paper">Theorem 3.1; Theorem 4.1(a).</span></td></tr>
+        <tr><td><span class="term">after a still untying glass, one gate at most</span></td><td><span class="paper">Lemma 3.3.</span></td></tr>
+        <tr><td><span class="term">Going After the Wind; twenty glasses</span></td><td>Termination; all correct processors decide by round GST + 4(<var>N</var> + 1). <span class="paper">Theorem 3.1; §3.2.1; time bound 4(<var>N</var> + 1)(<var>N</var> + Δ) after GST in Theorem 4.1. The paper's processors keep participating after deciding; with halting (Remark 2), a decision made before GST gives termination without that bound.</span></td></tr>
+        <tr><td><span class="term">a going bird, sent by every man who goes</span></td><td>&ldquo;Decide <var>v</var>&rdquo;, untagged, accepted at any time; a receiver decides at once; with fail-stop faults a processor may halt after sending it. <span class="paper">Remarks 1 and 2 (§3, §4.2). Each send is a separate step: there is no atomic broadcast, Technical Remark 1.</span></td></tr>
+        <tr><td><span class="term">More Than Half; the three nights</span></td><td>No <var>t</var>-resilient consensus for fail-stop faults when <var>N</var> ≤ 2<var>t</var>, even for weak unanimity and binary values. <span class="paper">Theorem 4.3, Scenarios A, B, C.</span></td></tr>
+        <tr><td><span class="term">the table of Chapter VII</span></td><td>The smallest <var>N</var> for a <var>t</var>-resilient protocol. <span class="paper">Table I; the middle column is its third, the one for partially synchronous communication and synchronous processors.</span></td></tr>
+        <tr><td><span class="term">men who may drop birds, or fail to take them in</span></td><td>Omission faults. <span class="paper">§2.2; Algorithm 1 also covers them.</span></td></tr>
+        <tr><td><span class="term">liars; seals</span></td><td>Byzantine faults; authentication. <span class="paper">§2.2; Algorithms 2 and 3.</span></td></tr>
+        <tr><td><span class="term">three posts cannot bear one liar</span></td><td>No <var>t</var>-resilient consensus for authenticated Byzantine faults when <var>N</var> ≤ 3<var>t</var>. <span class="paper">Theorem 4.4.</span></td></tr>
+        <tr><td><span class="term">a clock kept by ravens</span></td><td>Distributed clocks for partially synchronous processors. <span class="paper">§5; for fail-stop faults the authenticated clock of §5.2, simplified, with <var>N</var> ≥ 2<var>t</var> + 1.</span></td></tr>
+        <tr><td><span class="term">rounds given more time each time</span></td><td>&ldquo;Δ unknown&rdquo;: round <var>r</var> is simulated by <var>N</var> + <var>r</var> steps. <span class="paper">§4.2, Theorem 4.2.</span></td></tr>
+        <tr><td><span class="term">some man sending for ever</span></td><td>If messages can be lost before GST, some correct processor cannot halt. <span class="paper">§2.4; Remark 2.</span></td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="ideas-box">
     <span class="lbl">The ideas, plainly</span>
-    <p>The FLP impossibility theorem demonstrated that consensus is impossible in an asynchronous
-    network if even one crash failure can occur. Yet real-world networks are not adversarial in
-    perpetuity: periods of severe packet delay or network partition are eventually followed by
-    relative calm.</p>
-    <p>Dwork, Lynch, and Stockmeyer introduced <i>partial synchrony</i>: systems where message
-    delays are unbounded before an unknown Global Stabilization Time (GST), but strictly bounded
-    by Δ thereafter. They showed that consensus is entirely achievable in such systems, requiring
-    only a majority of functioning nodes (<var>N</var> ≥ 2<var>t</var> + 1 for crash failures).</p>
-    <p>The core mechanism is a round-based rotating coordinator protocol with quorum locks. In each
-    round, the coordinator proposes a value chosen from the highest-round lock reported by a
-    majority quorum. If a majority acknowledges and locks the proposal, the coordinator commits.
-    Because any two majority quorums must intersect, any future coordinator is guaranteed to see
-    the locked value, preserving safety unconditionally even if the network is chaotic. Once GST
-    arrives, messages arrive within Δ, allowing the protocol to terminate cleanly.</p>
-    <p>The same structure — numbered rounds, a coordinator for each round, and locks carried
-    forward by overlapping majorities — is the one later consensus protocols are built on.</p>
+    <p>Fischer, Lynch and Paterson showed that consensus is impossible in an asynchronous system if
+    even one process may crash, because a crashed process cannot be told from a slow one. Dwork,
+    Lynch and Stockmeyer asked how much synchrony is enough. Their answer is partial synchrony:
+    either a bound on message delay exists but is unknown, or it is known but holds only from some
+    unknown global stabilization time (GST) on.</p>
+
+    <p>In both models consensus is possible, and they determine exactly how many faults can be
+    tolerated: with crash or omission faults, more than half the processes must be correct
+    (<var>N</var> ≥ 2<var>t</var> + 1); with Byzantine faults, more than two thirds
+    (<var>N</var> ≥ 3<var>t</var> + 1), whether or not messages are signed. The lower bounds are
+    partition arguments: if half may fail, the network can delay every message between two halves
+    until each has decided alone.</p>
+
+    <p>The protocols run in rounds grouped into phases, each phase belonging to one process in
+    rotation. A phase's owner proposes a value that enough processes find acceptable; processes lock
+    it and acknowledge; the owner decides on enough acknowledgments; a lock-release round lets a later
+    lock override an earlier one. Safety holds under any delay, because the processes that locked a
+    decided value can never all be outvoted. Termination follows once delays are bounded, because the
+    first phase owned by a correct process after stabilization succeeds.</p>
+
+    <p>The separation between safety in all conditions and progress in good conditions, and
+    rotating phases with locks carried forward, became the shape of later consensus protocols.</p>
   </div>
 </section>
 
@@ -655,24 +829,24 @@
 <section id="refs" class="refs">
   <h3 class="sect">The Paper Behind This Book</h3>
   <ul>
-    <li>Cynthia Dwork, Nancy Lynch, and Larry Stockmeyer, <i>Consensus in the Presence of Partial
-    Synchrony</i>. Journal of the ACM <b>35</b>, 2 (April 1988), 288–323. — The formulation of
-    partial synchrony (Models 1 and 2), the rotating coordinator consensus protocols, the tight
-    bounds for crash failures (<var>N</var> ≥ 2<var>t</var> + 1) and Byzantine failures
-    (<var>N</var> ≥ 3<var>t</var> + 1, with or without signatures).</li>
+    <li>Cynthia Dwork, Nancy Lynch and Larry Stockmeyer, <i>Consensus in the Presence of Partial
+    Synchrony</i>. Journal of the ACM <b>35</b>, 2 (April 1988), 288–323. — The two models of
+    partially synchronous communication, the basic round model and Algorithms 1–3, the lower
+    bounds (Theorems 4.3 and 4.4), and the distributed clocks for partially synchronous
+    processors.</li>
   </ul>
-  <aside class="fn">Dworkia, Lynchaia, and Stockmeros are Hellenised from the paper's authors.
-  Nancy Lynch is also an author of the impossibility paper and of the proof of Brewer's
-  conjecture, so a Lynchaia appears as a mercenary at the boar in <i>The Limits of Agreement</i>
-  and as a scribe of the Anchor in <i>Answering While Cut Off</i>. They are three people: the name
-  belongs to the paper, not to the island.
-  The setting of Arche, Mount Phyle, and the coastal ring road unites this book with <i>Ordering Without Clocks</i> (logical time) and <i>Taking Stock Without Stopping</i> (distributed state).</aside>
+  <aside class="fn">The four men are the mercenaries of <i>The Limits of Agreement</i>, at the same
+  tents. The series names its figures after the authors of each book's own paper; this book keeps
+  the earlier book's four instead, so that the camps' first two books are about the same men.
+  Lynchaia at the boar is named for Nancy Lynch, who wrote both papers. Fischeros and Patersonos are
+  named for the other authors of the impossibility result, and Kallias for nobody. Cynthia Dwork and
+  Larry Stockmeyer are credited here.</aside>
 </section>
 
 <hr class="rule">
 
-<p class="lineage"><span class="lbl">Leads to</span> <a href="../answering-while-cut-off/index.html">Answering While Cut Off</a> · <span class="unwritten-link" title="Not yet written">Telling the Dead from the Slow</span> · <span class="unwritten-link" title="Not yet written">Keeping Order Among Liars</span><br>
-  <span class="outside"><span class="tag">Outside this series</span> Buchman, Kwon &amp; Milosevic 2018, <i>Tendermint</i></span></p>
+<p class="lineage"><span class="lbl">Leads to</span> <span class="unwritten-link" title="Not yet written">Telling the Dead from the Slow</span> · <span class="unwritten-link" title="Not yet written">Keeping Order Among Liars</span> · <a href="../answering-while-cut-off/index.html">Answering While Cut Off</a><br>
+  <span class="outside"><span class="tag">Outside this series</span> Dolev, Dwork &amp; Stockmeyer 1987, <i>minimal synchronism</i> · Attiya, Dwork, Lynch &amp; Stockmeyer 1994, <i>bounds on consensus time</i> · Buchman, Kwon &amp; Milosevic 2018, <i>Tendermint</i></span></p>
 
 </div>
 </body>

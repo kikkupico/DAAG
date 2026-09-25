@@ -43,7 +43,9 @@ These are correctness constraints, not preferences.
    it.
 5. **Named figures are Hellenised authors** of that book's own papers, following Lamport's
    practice with the Paxon legislators. Where a setting needs a seat no author fills, use an
-   ordinary Greek name.
+   ordinary Greek name. A later book at an existing place may instead keep that place's cast, as
+   *Agreeing When Messages Run Late* keeps the four mercenaries of *The Limits of Agreement*, and
+   says so in its footnote.
 6. **Read the paper, not your memory of it.** Open the PDF. Quote the theorem. See
    *Verification* below.
 7. **Close with the mapping.** Every book ends with an *In the book / In the paper* table and
@@ -113,6 +115,13 @@ Concretely:
 - State results as results. Use `<div class="result"><span class="name">…</span>` and give the
   result a name a reader can refer back to.
 - When you first coin a device, mark it with `<span class="coin">`.
+- **Never refer to another volume in the prose.** No "as *Ordering Without Clocks* relates", no
+  "the four of *The Limits of Agreement*", no "the earlier book". A fact established elsewhere is
+  restated in this book's own words, as a fact of the island, and linked to the book that
+  established it by a superscript:
+  `<sup class="xref"><a href="../ordering-without-clocks/index.html#s3" title="Ordering Without Clocks, Chapter III">*</a></sup>`,
+  placed after the fact. The apparatus may name books: the lineage lines, the *In the book / In the
+  paper* table, and the footnotes.
 - Say what is *not* claimed, out loud, immediately after saying what is. The gap between a
   theorem and its converse is where readers go wrong, and it is cheap to close in prose.
 
@@ -211,7 +220,7 @@ establish.
 
 | Building | Paper(s) | Note |
 |---|---|---|
-| The counters | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Builds on *Ordering Without Clocks* Ch. VI: the goatherd is the path the houses cannot see, and the rule is judged by the sun no one can read. It says what the houses owe their buyers, not how they could know it. The object is a jar's line (a read/write register), one line per jar, for locality; not a running count. Must not contradict *Answering While Cut Off*, which already states the rule of the counters and its vocabulary. The paper's queue and proof method (§4) at the Anchor's loading berths. Must not give Arche a readable hour in the trading season. |
+| The claims board | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Shares the claims premise of *Ordering Without Clocks*: the tallies order claims by slips, this book by the sun. The object is the Anchor's board of claims, a FIFO queue; Herlios' board with its slots and peg is the paper's §4 queue. Must not give Arche a readable hour in the trading season. Written: `books/many-copies-acting-as-one/`. |
 | The camps | Chandra &amp; Toueg 1996 | *Telling the Dead from the Slow.* Shares the camps with FLP. The camps may decide; nothing follows from it. The slate's guarantees are granted, not earned — see `settings.md`. With a majority alive, a turn to propose, not a leader; point to *Agreeing When Messages Run Late* for it and stay on the detector. |
 | The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, with interactive figures and no illustrations: it is the paper the whole project borrows its allegory from. Written: `books/the-part-time-parliament/`. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
 | The Odeon, Schedia | Oki &amp; Liskov 1988 | *One Leader at a Time.* VR, a genuine alternative to Paxos, found independently and published first, in Schedia, the city on Paxos's eastern arm with laws of its own. |
@@ -242,8 +251,10 @@ left), and bandits met elsewhere need not be of their band; no one outside can t
 
 **Mount Phyle is built.** Its geometry, cast and architecture are fixed by *The Limits of
 Agreement* and `buildings.md`. Nothing may contradict them: four camps that cannot see each other,
-ravens only, no fire or signal below the crown, uncounted nights at the base, and one single
-synchronous night on the crown: the sandglasses are turned together once, before the posts are first
-manned, and since no man may leave his post they are never turned together again. The siege
-itself may last any number of days; later nights on the crown are not synchronous, and on them
-wind on the peak can pin the ravens down for as long as it blows.
+ravens only, no fire or signal below the crown, and one single synchronous night on the crown: the
+sandglasses there are turned together once, before the posts are first manned, and since no man
+may leave his post they are never turned together again. The siege itself may last any number of
+days. On later nights a wind can blow over the whole hill and pin the ravens down for as long as it
+blows; it always drops in the end. The camps have no common moment but one: on the windy nights of
+*Agreeing When Messages Run Late* each man turned his glass as the last light left the crown, which
+every tent sees and no crag post does.

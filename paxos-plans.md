@@ -25,7 +25,7 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 | "board 7, line 12" | A viewstamp ⟨viewid, ts⟩. |  |
 | each legislator's note of the last line he holds under each board | The cohort's history. |  |
 | the dictation: the speaker's record read out line by line, taken down in order | The communication buffer: event records delivered to the backups in timestamp order. | The one-way roads of Arche, where nothing overtakes |
-| the speaker's pause until enough of the row has written up to a line that, with him, they are a majority | force-to: waiting for a sub-majority of backups. | Majorities that must overlap, as on the Chamber and the price boards (*Agreeing When Messages Run Late*) |
+| the speaker's pause until enough of the row has written up to a line that, with him, they are a majority | force-to: waiting for a sub-majority of backups. | Majorities that must overlap, as in the Chamber; at the camps a pledge and a call cannot both miss, 2 + 3 > 4 (*Agreeing When Messages Run Late*) |
 | the roll: legislators glance along the row for someone gone, or someone back | "I'm alive" messages, and the events that start a view change. | The slate of *Telling the Dead from the Slow*: an empty throne is a man gone or a man slow |
 | the caller: any legislator who notices, raising a higher board | The view manager, sending invitations; the others are underlings. |  |
 | the answer to a call: "I hold up to board 6, line 40", or "I have lost my book" | A normal acceptance with its viewstamp, or a crash-accept. |  |
@@ -113,7 +113,7 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 | a work's keepers: the same N libraries hold every copy of it | The replication factor N. |  |
 | a new edition sent to all N keepers, announced as done once W have acknowledged it | The write quorum W. |  |
 | a reader who asks R keepers and takes the newest copy handed over | The read quorum R. |  |
-| the Chamber's rule: R + W > N, so the two groups always share a library | A strict quorum; intersection. | The Chamber's majorities; the price boards' locks (*Agreeing When Messages Run Late*) |
+| the Chamber's rule: R + W > N, so the two groups always share a library | A strict quorum; intersection. | The Chamber's majorities; the camps' pledges, where two pledged and three needed to call the other gate exceed four (*Agreeing When Messages Run Late*) |
 | the scholars' rule: R + W ≤ N, quicker, and the groups may miss | A partial quorum. |  |
 | the edition still on its way to the other keepers after it is announced | Expanding quorums; anti-entropy. | The festival (*Spreading by Word of Mouth*) |
 | "one of the last k editions" | k-staleness. |  |
