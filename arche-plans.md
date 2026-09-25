@@ -35,46 +35,7 @@ Written: `books/keeping-order-among-liars/`. The crown's four bandits; see `sett
 
 **Yin, Malkhi, Reiter, Gueta & Abraham 2019 (HotStuff) · the same crown and loot book**
 
-**The idea.** A leader-based Byzantine protocol in the DLS partial-synchrony model, with n = 3f + 1.
-Each vote goes to the leader, who combines n − f of them into one **quorum certificate** (a
-threshold signature), so each phase costs a linear number of messages. Three phases (prepare,
-pre-commit, commit) where earlier protocols used two, and that third phase is what buys:
-- **Linear view change**, a new leader costing no more than an ordinary step;
-- **Optimistic responsiveness**, moving at the pace of actual message delay after GST instead of
-  waiting out a maximum.
-
-Safety comes from **locks** (a replica locks on a certificate) and the **safeNode** rule: accept a
-proposal that extends your lock, or that carries a certificate from a later view. A separate
-**pacemaker** handles liveness. **Chained HotStuff** pipelines the phases, so every view proposes
-a new entry and the leader rotates each view.
-
-**The allegory.**
-- **The same crown, loot book and wind** as *Keeping Order Among Liars*. It must not contradict it.
-- **The job passes with every entry**, whether or not anyone suspects its holder.
-- **The bundle:** the holder ties three sealed votes into one bundle and sends it on. A real
-  threshold signature makes the bundle the size of one seal, and the book says so plainly.
-- **A lock** is a bundle a man keeps and will not act against, unless shown a later bundle.
-- **The pacemaker** is each man's sandglass, which moves the job on when a view runs long.
-
-**Chapters.**
-1. What the change of job cost in the earlier book.
-2. Votes to one man, bundles to all.
-3. Three stages, not two: the hidden lock.
-4. The rule for accepting a proposal.
-5. Safety in any wind.
-6. Moving at the pace of the ravens.
-7. The chain: every entry a new holder.
-8. What it does not say: no progress before the wind drops; the bundle's size.
-9. In the Book, In the Paper.
-
-**Must not exist:** as for *Keeping Order Among Liars*, and any procedure that contradicts it.
-
-**Decided.**
-1. **Names:** four seats for five authors: Yinos, Malkhia, Reiteros and Guetaia; the footnote credits
-   all five, Abraham included.
-2. **The hidden lock is shown** on the crown: a two-stage procedure that must wait out a full glass
-   after each change of holder, set against the three-stage one that need not.
-
+Written: `books/changing-leaders-among-liars/`. The crown's four bandits; see `settings.md`.
 
 ---
 
