@@ -16,61 +16,772 @@
 </nav>
 <div class="page">
 
+<!-- ================= COVER ================= -->
 <header class="cover">
   <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · The Ring Road</div>
   <h1 class="display" style="margin:18px 0 6px">Many Copies, Acting as One</h1>
-  <p class="sub">When data is kept in several copies, what does it take for them to act as one? And who could ever tell the difference?</p>
-  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the paper's idea, the
-  allegory, the chapters and the decisions taken so far. It will be replaced by the book.
-  <br><span class="paper">Herlihy &amp; Wing 1990 · the counters, Arche's ring road</span></p>
+  <p class="sub">When data is kept in several copies, what does it take for them to act as one?
+  And who could ever tell the difference?</p>
+  <p class="pub">Grain lands at the Anchor and the three houses claim it, first come, first served.
+  The tallies put the claims in an order every house can work out from its slips. But a claim that
+  was entered and confirmed in the morning can still be served after one made at noon. This book asks
+  for first come judged by the sun: every claim served as though one keeper had entered them all on
+  one board, in the order they really came.</p>
+  <p class="lineage"><span class="lbl">Builds on</span> <a href="../ordering-without-clocks/index.html">Ordering Without Clocks</a></p>
 </header>
 
+<nav class="toc">
+  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
+  <ol>
+    <li><a href="#s1">I · First Come</a></li>
+    <li><a href="#s2">II · The Rule of the Board</a></li>
+    <li><a href="#s3">III · Two Kinds of First</a></li>
+    <li><a href="#s4">IV · One Board at a Time</a></li>
+    <li><a href="#s5">V · No Claim Waits on Another</a></li>
+    <li><a href="#s6">VI · Weaker Rules</a></li>
+    <li><a href="#s7">VII · The Board Itself</a></li>
+    <li><a href="#s8">VIII · What the Rule Does Not Say</a></li>
+    <li><a href="#s9">IX · In the Book, In the Paper</a></li>
+    <li><a href="#refs">The Paper Behind This Book</a></li>
+  </ol>
+</nav>
+
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>The idea</h2></div>
+<!-- ================= I ================= -->
+<section id="s1">
+  <div class="issue"><span class="no">Chapter I</span><h2>First Come</h2></div>
+
   <div class="prose">
-<p>A correctness condition, not an algorithm. An object shared by many callers is <i>linearizable</i> if every operation seems to take effect at one instant between its call and its answer, so the answers fit one sequential order that respects real time. Two properties set it apart. It is <b>local</b>: a system is linearizable exactly when each object in it is (Theorem 1). It is <b>nonblocking</b>: a pending call on a total operation can always be completed (Theorem 2). Sequential consistency and serializability have neither property. The second half of the paper is a <b>proof method</b>: an abstraction function that maps a representation to a <i>set</i> of possible abstract values, shown on a highly concurrent FIFO queue built from <code>INC</code> and <code>SWAP</code>.</p>
+    <p>The three trading houses of Arche, the <span class="coin">Dolphin</span> on the western
+    shelf, the <span class="coin">Vine</span> on the northern terraces and the
+    <span class="coin">Anchor</span> in the eastern bay, stand round the foot of Mount Phyle. Word
+    passes between them only by runners on the ring road, and in the trading season the cloud lies
+    so low that no sundial can be read and nobody on the island knows the
+    hour<sup class="xref"><a href="../ordering-without-clocks/index.html#s1" title="Ordering Without Clocks, Chapter I">*</a></sup>.</p>
+
+    <p>Foreign grain lands at the Anchor, and every house needs it. A house that wants a cargo sends
+    a <span class="coin">claim</span> by runner, and cargoes go out <em>first come, first served</em>.
+    But which claim came first, when no one can read the hour? The houses settled it with tallies,
+    numbers written on every slip and raised on every arrival, with the signs over the doors to
+    break ties. Claims are served in the order of their tallies. That order never puts a claim
+    ahead of one that led to it, and no house can win by keeping a quicker
+    runner<sup class="xref"><a href="../ordering-without-clocks/index.html#s4" title="Ordering Without Clocks, Chapter IV">*</a></sup>.</p>
+
+    <p>Here is what the tallies allow. In the morning the Dolphin claims a cargo; the Anchor enters
+    the claim and sends back word that it is entered. A goatherd crossing the mountain by the
+    smugglers' tracks brings the news to the Vine, which has had a quiet
+    morning<sup class="xref"><a href="../ordering-without-clocks/index.html#s6" title="Ordering Without Clocks, Chapter VI">*</a></sup>.
+    At noon the Vine sends a claim of its own. Its tally is low, because no slip has reached it for
+    hours, lower than the Dolphin's. So the Vine's claim is served first.</p>
+
+    <p>The Dolphin, and anyone who talked to the goatherd, knows what happened by the sun: the
+    Dolphin's claim was entered and confirmed before the Vine had even asked. First come, as the sun
+    would judge it, was the Dolphin. The tallies could not see that, because no slip joined the two
+    claims; the path that joined them went over the mountain.</p>
+
+    <p>This book asks what it would take to serve claims first come by the sun, and what such a
+    promise gives. The claims are kept on a <span class="coin">board</span>, and it does not matter
+    yet where the board is or how many copies of it there are. What matters is what the houses can
+    see: when they sent each claim, when they heard it was entered, and which claims were served in
+    what order.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>The allegory</h2></div>
+<!-- ================= II ================= -->
+<section id="s2">
+  <div class="issue"><span class="no">Chapter II</span><h2>The Rule of the Board</h2></div>
+
   <div class="prose">
-<ul><li><b>The counters and the jar lines</b>, as <i>Answering While Cut Off</i> fixed them: a jar's line holds the buyer's name or nothing, a purchase writes it, a question reads it. The rule of the counters is already stated in that book; this one owns it.</li><li><b>Judged by the sun</b>, which no one can read in the trading season; <b>the goatherd</b> of <i>Ordering Without Clocks</i> Ch. VI is the witness who could catch the houses out.</li><li><b>Locality:</b> each jar's line keeps the rule on its own, so the whole trade does.</li><li><b>Sequential consistency is not enough:</b> two jar lines, each answered consistently with some order, whose orders cannot be joined. It is the paper's two-queue history (H8), redone with lines.</li><li><b>The keeper</b> of <i>Answering While Cut Off</i> as a linearizable implementation, with the moment the keeper handles a slip as each operation's instant.</li></ul>
+    <p>A claim takes time. The house sends it; somewhere it is put on the board; then the house hears
+    that it is entered. Serving takes time too: a loader at the Anchor goes to the board, takes the
+    next claim, and loads the cargo for that house. Each house and each loader does one thing at a
+    time, but different ones may be in the middle of their business at once.</p>
+
+    <p>So two pieces of business stand in one of two relations. If one was finished before the other
+    began, the first came <span class="coin">before</span> the second. The Dolphin's claim came
+    before the Vine's. Otherwise the two <span class="coin">overlap</span>, and neither came before
+    the other.</p>
+
+    <p><em>Before</em> here is judged by the sun, by what actually happened first, whether anyone saw
+    it or not. Nobody on Arche can see that order. It is not something a clerk checks. It is a
+    promise about what anyone comparing notes will find.</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">The rule of the board</span>
+    All the claims and all the servings can be set in a single order such that:
+    <br><span class="stmt">(1)</span> every serving takes the claim that a single keeper, with a
+    single board, taking everything in that order, would have served;
+    <br><span class="stmt">(2)</span> each piece of business takes its place in the order at some
+    moment between its beginning and its end; so that
+    <br><span class="stmt">(3)</span> anything finished before another began comes before it.
+    <br><span class="paper">Linearizability, §2.2: a history is linearizable if, after adding
+    responses to some pending invocations and dropping the rest, it is equivalent to a legal
+    sequential history that respects the real-time order &lt;<sub>H</sub>. The board is a FIFO
+    queue: a claim is <code>Enq</code>, a serving is <code>Deq</code>.</span>
+  </div>
+
+  <div class="prose">
+    <p>Clause (2) is the heart of it. Each claim must seem to land on the board all at once, at a
+    single moment between its sending and its confirmation, and each serving must seem to take its
+    claim at a single moment too. Clause (3) follows: if the Dolphin's claim was confirmed before the
+    Vine's was sent, the Dolphin's moment came first, and a single keeper would serve the Dolphin
+    first. The morning of Chapter I breaks the rule.</p>
+
+    <p>Three smaller cases show the rule's edges.</p>
+
+    <p><b>Claims made at the same time may go either way.</b> The Dolphin and the Vine send claims at
+    the same time, and neither is confirmed before the other is sent. A loader serves the Vine, then
+    the Dolphin. That is allowed: the two claims overlap, and the Vine's moment may have come
+    first.</p>
+
+    <p><b>A claim can be served before its confirmation arrives.</b> The Dolphin's claim is entered;
+    before the Dolphin has heard so, a loader serves it. That is allowed too. The claim's moment came
+    when it was entered, and the word of it was simply still on the road.</p>
+
+    <p><b>A claim is served once.</b> Two loaders each take the Vine's single claim and load a cargo
+    for it. No single keeper serves one claim twice, so that is forbidden, however the times
+    fall.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 380" role="img" aria-label="Two panels with three lifelines: the Dolphin, the Vine and a loader at the Anchor. Left: the Dolphin's and the Vine's claims overlap; the loader serves the Vine, then the Dolphin, which is allowed. Right: the Dolphin's claim is entered and confirmed before the Vine's claim is sent; the loader serves the Vine first, which the rule forbids.">
+        <!-- ============ left panel ============ -->
+        <text class="d-house" x="160" y="22" text-anchor="middle">ALLOWED</text>
+        <text class="d-house" x="50" y="48" text-anchor="middle" font-size="11">DOLPHIN</text>
+        <text class="d-house" x="160" y="48" text-anchor="middle" font-size="11">VINE</text>
+        <text class="d-house" x="270" y="48" text-anchor="middle" font-size="11">LOADER</text>
+        <line class="d-lifeline" x1="50" y1="58" x2="50" y2="300"/>
+        <line class="d-lifeline" x1="160" y1="58" x2="160" y2="300"/>
+        <line class="d-lifeline" x1="270" y1="58" x2="270" y2="300"/>
+
+        <rect class="d-ev" x="46" y="88" width="8" height="112"/>
+        <text class="d-lbl" x="60" y="98">claims</text>
+        <text class="d-lbl" x="60" y="198">entered</text>
+        <rect class="d-ev" x="156" y="110" width="8" height="112"/>
+        <text class="d-lbl" x="170" y="120">claims</text>
+        <text class="d-lbl" x="170" y="220">entered</text>
+
+        <circle class="d-ev" cx="270" cy="248" r="5"/>
+        <text class="d-lbl" x="262" y="252" text-anchor="end">serves Vine</text>
+        <circle class="d-ev" cx="270" cy="276" r="5"/>
+        <text class="d-lbl" x="262" y="280" text-anchor="end">serves Dolphin</text>
+
+        <text class="d-note" x="160" y="330" text-anchor="middle">the two claims overlap,</text>
+        <text class="d-note" x="160" y="346" text-anchor="middle">so either may come first</text>
+
+        <!-- divider -->
+        <line x1="330" y1="10" x2="330" y2="370" stroke="#b9a77e" stroke-width="1.5"/>
+
+        <!-- ============ right panel ============ -->
+        <text class="d-house" x="500" y="22" text-anchor="middle" fill="#bf4a26">NOT ALLOWED</text>
+        <text class="d-house" x="390" y="48" text-anchor="middle" font-size="11">DOLPHIN</text>
+        <text class="d-house" x="500" y="48" text-anchor="middle" font-size="11">VINE</text>
+        <text class="d-house" x="610" y="48" text-anchor="middle" font-size="11">LOADER</text>
+        <line class="d-lifeline" x1="390" y1="58" x2="390" y2="300"/>
+        <line class="d-lifeline" x1="500" y1="58" x2="500" y2="300"/>
+        <line class="d-lifeline" x1="610" y1="58" x2="610" y2="300"/>
+
+        <rect class="d-ev" x="386" y="88" width="8" height="52"/>
+        <text class="d-lbl" x="400" y="98">claims</text>
+        <text class="d-lbl" x="400" y="138">entered</text>
+        <line class="d-faint" x1="394" y1="140" x2="640" y2="140"/>
+        <rect class="d-ev" x="496" y="170" width="8" height="52"/>
+        <text class="d-lbl" x="510" y="180">claims</text>
+        <text class="d-lbl" x="510" y="220">entered</text>
+
+        <circle class="d-ev-hi" cx="610" cy="248" r="5"/>
+        <text class="d-lbl" x="602" y="252" text-anchor="end" fill="#bf4a26">serves Vine</text>
+        <circle class="d-ev" cx="610" cy="276" r="5"/>
+        <text class="d-lbl" x="602" y="280" text-anchor="end">serves Dolphin</text>
+
+        <text class="d-note" x="500" y="330" text-anchor="middle" fill="#bf4a26">the Dolphin's claim was entered</text>
+        <text class="d-note" x="500" y="346" text-anchor="middle" fill="#bf4a26">before the Vine's was sent</text>
+      </svg>
+    </div>
+    <figcaption><b>Overlapping claims may be served in either order; claims one after the other may
+    not.</b> On the right the Dolphin's claim was finished before the Vine's began, so a single
+    keeper would have served the Dolphin first.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p>Business still unfinished when we look may be counted either way. A claim sent but not yet
+    confirmed may already be on the board, or not; the rule lets the houses decide, as long as what
+    happens next agrees with the choice.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>Planned chapters</h2></div>
+<!-- ================= III ================= -->
+<section id="s3">
+  <div class="issue"><span class="no">Chapter III</span><h2>Two Kinds of First</h2></div>
+
   <div class="prose">
-<ol><li>The counters and what a buyer can see.</li><li>Calls and answers: a history.</li><li>The rule, made exact.</li><li>One line at a time: locality.</li><li>A call never waits on another: nonblocking.</li><li>Weaker rules and why they fail (sequential consistency, serializability).</li><li>Proving an arrangement keeps the rule.</li><li>What the rule does not say: it is judged by the sun, not checked by any clerk.</li><li>In the Book, In the Paper.</li></ol>
+    <p>The tallies and the rule of the board both answer <em>which came first</em>, and they answer
+    differently.</p>
+
+    <p><b>The tallies' first.</b> One claim comes before another if a chain of slips leads from the
+    first to the second: the Anchor could only have heard of the second after hearing of the first.
+    Claims with no chain between them are ordered by tally and sign, which is fair but
+    arbitrary<sup class="xref"><a href="../ordering-without-clocks/index.html#s2" title="Ordering Without Clocks, Chapter II">*</a></sup>.</p>
+
+    <p><b>The sun's first.</b> One claim comes before another if it was finished before the other
+    began, whether or not any slip joined them. Claims that overlap may go either way.</p>
+
+    <p>Neither contains the other. The morning of Chapter I has no chain of slips from the Dolphin's
+    claim to the Vine's, so the tallies were free to put the Vine first, and they did; but by the sun
+    the Dolphin came first. And the other way round: suppose the Dolphin sends a claim, and before it
+    is confirmed sends the Vine a slip about it, and the Vine then claims. There is a chain of slips
+    from the Dolphin's claim to the Vine's, so the tallies put the Dolphin first. But the Dolphin's
+    claim was not finished when the Vine's began. By the sun the two overlap, and the rule of the
+    board would let the Vine be served first.</p>
+
+    <p>There is a simple way to keep the rule of the board, and it is the one the tallies were
+    invented to avoid. Let the Anchor keep the only board, and enter each claim when its slip
+    reaches the gate. The claim's moment is its entry. That is after the house sent it, since the
+    slip was written first, and before the house hears it is entered, since that word goes out after
+    the entry. Serve in order of entry, and the rule is kept.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">Two Kinds of First</span>
+    <p>Serving claims in the order they reach the Anchor's gate keeps the rule of the board. Serving
+    them in the order of their tallies need not. And the tallies' order can put one claim before
+    another where the rule of the board would allow either.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that serving by entry keeps the rule</summary>
+    <ol class="proofsteps">
+      <li>Order all claims and servings by the moment each is done at the board: a claim when the
+      keeper enters it, a serving when a loader takes a claim. This is one order.</li>
+      <li>Each serving takes the earliest claim entered and not yet served, which is what a single
+      keeper with a single board would serve, so clause (1) holds.</li>
+      <li>A claim is entered after its slip was written and before word of its entry leaves, so its
+      moment lies within it. A serving's moment lies within the loader's business. That is clause
+      (2), and clause (3) follows: whatever was finished before another began had its moment
+      first.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>The trouble with serving by arrival was never the rule of the board. It was fairness between
+    claims that overlap: the house with the shorter road wins them. The rule does not mind that,
+    because it says nothing about claims that overlap. The tallies mind it, and pay for it by
+    sometimes serving a later claim first. The two orders protect different things.</p>
+
+    <p>A single board at the Anchor is not the only way. The houses could keep copies of the board,
+    one at each house, and still keep the rule, if the copies answer as though they were one. That
+    is the sense of this book's title, and Chapter VIII returns to it.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>Must not exist</h2></div>
+<!-- ================= IV ================= -->
+<section id="s4">
+  <div class="issue"><span class="no">Chapter IV</span><h2>One Board at a Time</h2></div>
+
   <div class="prose">
-<p>a readable hour in the trading season; any house that checks the rule; the goatherd used as a channel; a way round the road.</p>
+    <p>Grain is not the only thing claimed. Oil from the Vine's presses goes out to the other houses
+    the same way, on a board of its own. Must the houses check the rule over both boards at once? If
+    so, every change in how one board is kept would have to be weighed against the other.</p>
+
+    <p>They need not. It is enough that each board keeps the rule by itself.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">One Board at a Time</span>
+    <p>All the business keeps the rule if and only if, for every board, the business on that board,
+    taken by itself, keeps it.</p>
+  </div>
+
+  <div class="prose">
+    <p>So the grain board can be kept one way and the oil board another, and each need only be shown
+    to keep the rule for itself. Why should two boards fit together without anyone arranging it?
+    Because the sun ties them together, and the sun never contradicts itself. The only way two
+    boards' orders could fail to fit is a loop: this claim before that one on the grain board, that
+    one before another by the sun, and so round to the start. The proof shows such a loop would need
+    the sun to put something before itself.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that if every board keeps the rule, all the business does</summary>
+    <ol class="proofsteps">
+      <li>For each board, choose an order and moments that show it keeps the rule. Say one piece of
+      business <em>must go before</em> another if they are on the same board and its order puts the
+      first earlier, or if the sun does: the first finished before the second began. Follow chains of
+      these.</li>
+      <li>If no chain leads from a piece of business back to itself, set everything in any single
+      order that keeps every <em>must go before</em>. It keeps each board's own order, so every
+      serving is what a single keeper would do; and it keeps the sun's order, which is clause (3),
+      and clause (2) with it. So it remains to show there is no loop.</li>
+      <li>Suppose there is one, <var>e</var>₁, …, <var>e</var><sub>n</sub>, back to <var>e</var>₁,
+      as short as any loop can be.</li>
+      <li><b>All on one board.</b> A board's order puts any two of its pieces one way or the other,
+      so some step of the loop runs against it, and that step must be the sun's: <var>b</var>
+      finished before <var>a</var> began, though the board put <var>a</var> first. Then that board
+      did not keep clause (3). So the loop touches at least two boards.</li>
+      <li>Number it so that <var>e</var>₁ is on board <var>x</var> and <var>e</var>₂ on another. The
+      step between them crosses boards, so it is the sun's: <var>e</var>₁ finished before
+      <var>e</var>₂ began.</li>
+      <li><b>Nothing else in the loop is on board <var>x</var>.</b> Suppose something is, and let
+      <var>e</var><sub>i</sub> be the first after <var>e</var>₂. The step into it crosses boards, so
+      <var>e</var><sub>i−1</sub> finished before <var>e</var><sub>i</sub> began. And <var>e</var>₂
+      began before <var>e</var><sub>i−1</sub> finished, or else <var>e</var>₂, …,
+      <var>e</var><sub>i−1</sub> would be a shorter loop. So <var>e</var>₁ finished before
+      <var>e</var>₂ began, before <var>e</var><sub>i−1</sub> finished, before <var>e</var><sub>i</sub>
+      began: <var>e</var>₁ came before <var>e</var><sub>i</sub> by the sun, and <var>e</var>₁,
+      <var>e</var><sub>i</sub>, …, <var>e</var><sub>n</sub> is a shorter loop.</li>
+      <li>So the last step, into <var>e</var>₁, also crosses boards: <var>e</var><sub>n</sub>
+      finished before <var>e</var>₁ began, and therefore before <var>e</var>₂ began, making
+      <var>e</var>₂, …, <var>e</var><sub>n</sub> a shorter loop. Every case contradicts the choice of
+      a shortest loop.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>This should not be taken for granted. Chapter VI shows a reasonable rule under which it
+    fails.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>Decisions taken</h2></div>
+<!-- ================= V ================= -->
+<section id="s5">
+  <div class="issue"><span class="no">Chapter V</span><h2>No Claim Waits on Another</h2></div>
+
   <div class="prose">
-<ol><li><b>The queue:</b> the Anchor's <b>loading berths</b> carry the paper's queue and Section 4. A board of numbered berths and a take-a-number peg (<code>INC</code>); a porter who takes a cargo empties its berth (<code>SWAP</code>). Several porters work at once at one house, which is shared memory, the paper's own model, and nothing crosses the road.</li><li><b>The title stays.</b> The book says the rule holds whether the object is one board or three books.</li><li><b>Names:</b> Herlios and Wingaia, at two houses.</li></ol>
+    <p>A claim can always be entered: whatever is on the board, a single keeper would put the new
+    claim at the end. Could the rule ever force a house to wait for its claim to be entered until
+    someone else's business finished, because entering it now would break the rule? It could
+    not.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">No Claim Waits on Another</span>
+    <p>If the business so far keeps the rule, a waiting claim can be entered now and the rule still
+    kept.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that a waiting claim can always be entered</summary>
+    <ol class="proofsteps">
+      <li>Take a single order that shows the business so far keeps the rule.</li>
+      <li>If it already counts the claim as entered, confirm it now; the same order still works.</li>
+      <li>If not, put the claim at the end of the order and confirm it now. Nothing earlier changes,
+      so clause (1) holds. Its moment is now, within its span, which is clause (2). Nothing began
+      after it finished, so putting it last breaks no <em>before</em>, which is clause
+      (3).<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>So if a house waits to hear its claim is entered, it is because of how the board is kept, a
+    slip still on the road, and not because the rule demands it.</p>
+
+    <p>Serving is different. A loader who comes to an empty board has nothing to take, and a single
+    keeper with an empty board would make him wait until a claim arrives. When he waits, it is
+    because <em>serve the next claim</em> has no answer while there are no claims. The result above
+    is about business that always has an answer.</p>
   </div>
 </section>
 
 <hr class="rule">
+
+<!-- ================= VI ================= -->
+<section id="s6">
+  <div class="issue"><span class="no">Chapter VI</span><h2>Weaker Rules</h2></div>
+
+  <div class="prose">
+    <p><b>The rule without the sun.</b> Drop clause (3). Ask only that everything can be set in one
+    order that a single keeper would have followed, with each house's own business in the order it
+    did it. Call it <span class="coin">the rule without the sun</span>. Under it the morning of
+    Chapter I is no fault at all: put the Vine's claim first, then the Dolphin's, and a single keeper
+    serves exactly as the loader did. Only the sun's clause forbids serving the Vine first.</p>
+
+    <p>And the rule without the sun cannot be checked one board at a time. The Dolphin claims grain
+    and then oil. The Vine claims oil and then grain. The grain loader serves the Vine first; the oil
+    loader serves the Dolphin first.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 560 330" role="img" aria-label="Two lifelines, the Dolphin and the Vine. The Dolphin claims grain and then oil; the Vine claims oil and then grain. The oil board serves the Dolphin first and the grain board serves the Vine first. Arrows show what that forces: each house's first claim before its second, the Dolphin's oil claim before the Vine's, and the Vine's grain claim before the Dolphin's. The four arrows form a loop.">
+        <defs>
+          <marker id="mcb" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
+          </marker>
+          <marker id="mcr" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
+          </marker>
+        </defs>
+        <text class="d-house" x="170" y="28" text-anchor="middle">DOLPHIN</text>
+        <text class="d-house" x="390" y="28" text-anchor="middle">VINE</text>
+        <text class="d-note" x="280" y="52" text-anchor="middle">each board served the other</text>
+        <text class="d-note" x="280" y="66" text-anchor="middle">house first</text>
+        <line class="d-lifeline" x1="170" y1="42" x2="170" y2="270"/>
+        <line class="d-lifeline" x1="390" y1="42" x2="390" y2="270"/>
+
+        <rect class="d-ev" x="166" y="74" width="8" height="40"/>
+        <text class="d-lbl" x="158" y="98" text-anchor="end">claims grain</text>
+        <rect class="d-ev" x="166" y="196" width="8" height="40"/>
+        <text class="d-lbl" x="158" y="214" text-anchor="end">claims oil</text>
+        <text class="d-lbl" x="158" y="228" text-anchor="end" fill="#bf4a26">served first</text>
+
+        <rect class="d-ev" x="386" y="74" width="8" height="40"/>
+        <text class="d-lbl" x="402" y="98">claims oil</text>
+        <rect class="d-ev" x="386" y="196" width="8" height="40"/>
+        <text class="d-lbl" x="402" y="214">claims grain</text>
+        <text class="d-lbl" x="402" y="228" fill="#bf4a26">served first</text>
+
+        <path class="d-msg" marker-end="url(#mcb)" d="M150,120 L150,190"/>
+        <text class="d-key" x="142" y="159" text-anchor="end">its own order</text>
+        <path class="d-msg" marker-end="url(#mcb)" d="M410,120 L410,190"/>
+        <text class="d-key" x="418" y="159">its own order</text>
+
+        <path class="d-msg-hi" marker-end="url(#mcr)" d="M180,208 L378,104"/>
+        <path class="d-msg-hi" marker-end="url(#mcr)" d="M380,208 L182,104"/>
+
+        <text class="d-note" x="280" y="300" text-anchor="middle" fill="#bf4a26">Dolphin grain → Dolphin oil → Vine oil → Vine grain → Dolphin grain</text>
+      </svg>
+    </div>
+    <figcaption><b>Each board can be explained, and the two together cannot.</b> The oil board
+    alone is kept without the sun by putting the Dolphin's claim first; the grain board alone by
+    putting the Vine's first. Both at once would need each house's second claim before the other's
+    first, which is a loop.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p>Each board kept the rule without the sun, and the two together did not. Houses keeping that
+    rule would need one arrangement spanning every board. Under the rule of the board this cannot
+    happen, by Chapter IV.</p>
+
+    <p><b>Bargains.</b> Some houses want several things done as one: <em>look at the oil board, and
+    if it is empty, claim grain</em>, with nobody else's business in between. Call that a
+    <span class="coin">bargain</span>. A rule that all bargains can be set in one order, each done
+    whole, is the rule databases keep. For a bargain of one claim or one serving, its strict form is
+    exactly the rule of the board. The trouble is in the longer bargains. If the Dolphin's bargain
+    looks at the oil board and then claims grain, while the Vine's looks at the grain board and then
+    claims oil, and both look first and find their boards empty, then each bargain must come before
+    the other's claim. Neither claim can be confirmed without breaking the rule, and one bargain must
+    be called off. The rule of bargains fails one board at a time as well. So houses that promise
+    bargains need a way to call one off; the rule of the board, whose business is always single,
+    needs none.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VII ================= -->
+<section id="s7">
+  <div class="issue"><span class="no">Chapter VII</span><h2>The Board Itself</h2></div>
+
+  <div class="prose">
+    <p>A rule nobody can check by looking has to be kept by arrangement, and the arrangement shown to
+    keep it. Chapter III did that for one keeper at one board: point to the moment of entry, and the
+    rule is shown. The Anchor's real board is busier. Several clerks enter claims as their slips come
+    in, and several loaders serve at once, and Herlios, who keeps the board, arranged it so that none
+    of them ever stands aside for another. Then there is no single moment to point to.</p>
+
+    <p>The board has numbered <span class="coin">slots</span>, each holding one claim tablet or
+    nothing, and a single <span class="coin">peg</span> standing at the first slot nobody has been
+    given yet.</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">Herlios' board</span>
+    <span class="stmt">To enter a claim:</span> note the peg's number and move the peg on one, in a
+    single movement. Put the claim tablet in that slot.<br>
+    <span class="stmt">To serve:</span> look at the peg. Go along the slots from 1 up to the one
+    before the peg, and take the first tablet you find, emptying its slot in a single movement. If
+    you find none, go back to the peg and start again.<br>
+    <span class="paper">The queue of §4.2: <code>Enq</code> is <code>INC(back)</code> then
+    <code>STORE</code>; <code>Deq</code> is <code>READ(back)</code> then <code>SWAP</code> along the
+    array. Slots are never reused.</span>
+  </div>
+
+  <div class="prose">
+    <p>Nobody holds anything another needs: no key, no queue at the board. A clerk who stops halfway
+    to his slot stops no one else. All of this happens at one house, before one board; no slip
+    crosses the road.</p>
+
+    <p><b>The race.</b> Glaukos is entering the Dolphin's claim and Mikon the Vine's, at the same
+    time. The peg stands at 1. Glaukos takes slot 1, Mikon slot 2, and the peg moves to 3. Mikon puts
+    the Vine's tablet in slot 2 and is done. Glaukos has not yet reached slot 1.</p>
+
+    <p>Is the Dolphin's claim on the board yet? Either answer fails. If it counts as first, then
+    Sosias, a loader who comes now, finds slot 1 still empty and serves the Vine from slot 2, which is
+    wrong. If it does not count yet, or counts behind the Vine's, then let Glaukos put it in slot 1;
+    now Sosias comes, finds the Dolphin's tablet in slot 1 and serves it, while the Vine's was first.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 380" role="img" aria-label="Two panels with three lifelines: Glaukos and Mikon, clerks entering the Dolphin's and the Vine's claims, and Sosias, a loader. In both, Glaukos takes slot 1, Mikon slot 2, and Mikon puts the Vine's tablet in slot 2. Left: Sosias looks at the peg, finds slot 1 empty and serves the Vine from slot 2; afterwards Glaukos puts the Dolphin's tablet in slot 1. Right: Glaukos puts the Dolphin's tablet in slot 1 first; then Sosias serves the Dolphin from slot 1.">
+        <!-- ============ left panel ============ -->
+        <text class="d-house" x="160" y="22" text-anchor="middle">SOSIAS FIRST</text>
+        <text class="d-house" x="50" y="48" text-anchor="middle" font-size="11">GLAUKOS</text>
+        <text class="d-house" x="160" y="48" text-anchor="middle" font-size="11">MIKON</text>
+        <text class="d-house" x="260" y="48" text-anchor="middle" font-size="11">SOSIAS</text>
+        <line class="d-lifeline" x1="50" y1="58" x2="50" y2="300"/>
+        <line class="d-lifeline" x1="160" y1="58" x2="160" y2="300"/>
+        <line class="d-lifeline" x1="260" y1="58" x2="260" y2="300"/>
+
+        <circle class="d-ev" cx="50" cy="80" r="4.5"/>
+        <text class="d-lbl" x="58" y="84" font-size="11">no. 1</text>
+        <circle class="d-ev" cx="160" cy="98" r="4.5"/>
+        <text class="d-lbl" x="168" y="102" font-size="11">no. 2</text>
+        <circle class="d-ev" cx="160" cy="126" r="4.5"/>
+        <text class="d-lbl" x="168" y="130" font-size="11">Vine → 2</text>
+        <circle class="d-ev" cx="160" cy="150" r="4.5"/>
+        <text class="d-lbl" x="168" y="154" font-size="11">done</text>
+
+        <circle class="d-ev" cx="260" cy="180" r="4.5"/>
+        <text class="d-lbl" x="268" y="184" font-size="11">peg: 3</text>
+        <circle class="d-ev" cx="260" cy="204" r="4.5"/>
+        <text class="d-lbl" x="268" y="208" font-size="11">1: empty</text>
+        <circle class="d-ev-hi" cx="260" cy="228" r="5"/>
+        <text class="d-lbl" x="268" y="232" font-size="11" fill="#bf4a26">2: Vine</text>
+
+        <circle class="d-ev" cx="50" cy="262" r="4.5"/>
+        <text class="d-lbl" x="58" y="266" font-size="11">Dolphin → 1</text>
+
+        <text class="d-note" x="160" y="330" text-anchor="middle">the Vine's claim counts first</text>
+
+        <!-- divider -->
+        <line x1="330" y1="10" x2="330" y2="370" stroke="#b9a77e" stroke-width="1.5"/>
+
+        <!-- ============ right panel ============ -->
+        <text class="d-house" x="500" y="22" text-anchor="middle">GLAUKOS FIRST</text>
+        <text class="d-house" x="390" y="48" text-anchor="middle" font-size="11">GLAUKOS</text>
+        <text class="d-house" x="500" y="48" text-anchor="middle" font-size="11">MIKON</text>
+        <text class="d-house" x="600" y="48" text-anchor="middle" font-size="11">SOSIAS</text>
+        <line class="d-lifeline" x1="390" y1="58" x2="390" y2="300"/>
+        <line class="d-lifeline" x1="500" y1="58" x2="500" y2="300"/>
+        <line class="d-lifeline" x1="600" y1="58" x2="600" y2="300"/>
+
+        <circle class="d-ev" cx="390" cy="80" r="4.5"/>
+        <text class="d-lbl" x="398" y="84" font-size="11">no. 1</text>
+        <circle class="d-ev" cx="500" cy="98" r="4.5"/>
+        <text class="d-lbl" x="508" y="102" font-size="11">no. 2</text>
+        <circle class="d-ev" cx="500" cy="126" r="4.5"/>
+        <text class="d-lbl" x="508" y="130" font-size="11">Vine → 2</text>
+        <circle class="d-ev" cx="500" cy="150" r="4.5"/>
+        <text class="d-lbl" x="508" y="154" font-size="11">done</text>
+
+        <circle class="d-ev" cx="390" cy="180" r="4.5"/>
+        <text class="d-lbl" x="398" y="184" font-size="11">Dolphin → 1</text>
+
+        <circle class="d-ev" cx="600" cy="210" r="4.5"/>
+        <text class="d-lbl" x="608" y="214" font-size="11">peg: 3</text>
+        <circle class="d-ev-hi" cx="600" cy="234" r="5"/>
+        <text class="d-lbl" x="592" y="238" font-size="11" fill="#bf4a26" text-anchor="end">1: Dolphin</text>
+
+        <text class="d-note" x="500" y="330" text-anchor="middle">the Dolphin's claim counts first</text>
+      </svg>
+    </div>
+    <figcaption><b>Which claim is first is settled by a race run later.</b> When Mikon is done,
+    the board is the same in both panels. Whether the Dolphin's claim counts as ahead of the Vine's
+    depends on whether Glaukos reaches slot 1 before Sosias looks there, so no step Glaukos has taken so
+    far can be the moment his claim joined the board.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p>Nothing has gone wrong. The two claims were entered at the same time, so the rule is happy
+    either way. The trouble is only that when Mikon is done, nobody can yet say which it will be. A
+    race still to be run will settle it.</p>
+
+    <p><b>Many possible orders.</b> So Herlios and Wingaia of the Vine stopped asking what the board
+    <em>means</em> and asked what it <em>could</em> mean. Once Glaukos has put in the Dolphin's
+    tablet, the board could mean <em>Vine, then Dolphin</em> or <em>Dolphin, then Vine</em>. A claim
+    put in its slot before another clerk even took his number must come first; any two not so
+    ordered may go either way.</p>
+
+    <p>The proof shows one thing, at every moment and not only when the board is quiet: every order
+    the board could mean is one the business so far could honestly have produced. Two facts carry
+    it. A tablet just put in never has to stand ahead of anything already waiting. And a loader
+    going up from slot 1 always takes a tablet that could be first.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">The Board Keeps the Rule</span>
+    <p>At every moment, every order of waiting claims the board could stand for is one the business
+    so far could have produced, so Herlios' board keeps the rule.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that the board keeps the rule, in outline</summary>
+    <ol class="proofsteps">
+      <li>An empty board stands only for no claims, which is what no business produces. It is enough
+      to show that every single movement, and every beginning and end of a clerk's or loader's
+      business, keeps it so.</li>
+      <li><b>Beginnings and ends</b> put nothing in a slot and take nothing out. A beginning adds
+      business that may or may not have had its moment yet; an end settles one such choice. Neither
+      removes an order the board could stand for.</li>
+      <li><b>Moving the peg and looking at it</b> move no tablet, so they change nothing.</li>
+      <li><b>Putting a tablet in.</b> For a waiting tablet to have to stand behind this one, its
+      clerk would have taken his number after this one was put in, and this one is only now being put
+      in. So the new tablet may go last in every order, and the business agrees: an entry may have
+      its moment now, at the back.</li>
+      <li><b>Emptying a slot.</b> Say Sosias, going up from slot 1, empties slot <var>i</var> and finds
+      tablet <var>x</var>, and some waiting tablet <var>z</var> must come before <var>x</var> because
+      <var>z</var> was put in before <var>x</var>'s clerk took his number. Then <var>z</var>'s slot is
+      lower, so Sosias has already passed it. He went only as far as the peg showed when he looked,
+      so <var>x</var>'s number was taken before he looked, and <var>z</var> was put in before that. So
+      <var>z</var> was in its slot when he passed it, and he would have taken it. Hence <var>x</var>
+      could be first, and a serving may have its moment now, with <var>x</var>.</li>
+      <li>Every movement keeps the claim, so it holds at every moment.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>This is an outline, and so is the paper's. Herlihy and Wing give the two facts of steps 4 and 5
+    and the shape of the argument; the lemmas that make it airtight are proved in their technical
+    report.</p>
+
+    <p>Once the board is known to keep the rule, the houses can rely on everything a single keeper
+    would guarantee: claims are served in the order they came by the sun, none vanishes, and none is
+    served that nobody made. The obvious one-line promise, <em>no later claim is served before an
+    earlier one</em>, would not have guaranteed the last two; a board that lost tablets would keep
+    it.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VIII ================= -->
+<section id="s8">
+  <div class="issue"><span class="no">Chapter VIII</span><h2>What the Rule Does Not Say</h2></div>
+
+  <div class="prose">
+    <p><b>Nobody checks it.</b> It is judged by the sun, which nobody on Arche can read in the trading
+    season. A house knows the rule is kept only because its arrangement has been shown to keep it,
+    as the single keeper and Herlios' board were. The rule gives the island no hour and needs
+    none.</p>
+
+    <p><b>It forbids; it does not require.</b> Every clause says what must not happen. A board that
+    never served anyone would break none of them. A loader may even be overtaken on every round,
+    finding each tablet taken just before he reaches it, and go round for ever while the rule is kept
+    throughout. That every claim is served in the end is a separate promise.</p>
+
+    <p><b>It does not care how many copies there are.</b> One board at the Anchor keeps it. So could
+    three copies, one at each house, kept in step by slips, if they answered as though they were one.
+    The rule cannot tell the difference, and that is its purpose: a house owed one board is owed that
+    whatever stands behind it. Many copies act as one exactly when no house comparing notes could
+    tell that there are many.</p>
+
+    <p><b>It is not the only reading of <em>before</em>.</b> On Paxos, Lamport tells of a farmer who got
+    the parliament to permit the sale of black goats, and a merchant who asked a legislator whose
+    ledger stopped a decree short and was told the sale was
+    illegal<sup class="xref"><a href="../the-part-time-parliament/index.html" title="The Part-Time Parliament">*</a></sup>.
+    The Paxons' remedy was that if one inquiry precedes a second, the second cannot reveal an older
+    state of the law. At first they read <em>precedes</em> as <em>finished before the other
+    began</em>, the sun's reading, and met it by passing a decree for every inquiry. That was too
+    cumbersome, and they weakened it to <em>could have affected it</em>, the tallies' reading. The
+    two kinds of first of Chapter III are the same two readings.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= IX ================= -->
+<section id="s9">
+  <div class="issue"><span class="no">Chapter IX</span><h2>In the Book, In the Paper</h2></div>
+
+  <div class="prose">
+    <p>So that the reader may check the rule of the board against Herlihy and Wing's definition.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td><span class="term">the houses; the loaders; the clerks</span></td><td>Sequential processes, each waiting for one operation's response before issuing the next. <span class="paper">Processes, §2.1.</span></td></tr>
+        <tr><td><span class="term">the board of claims; first come, first served</span></td><td>A FIFO queue. <span class="paper">The paper's running example, Fig. 1 and Fig. 3.</span></td></tr>
+        <tr><td><span class="term">a claim; a serving</span></td><td><code>Enq</code>; <code>Deq</code>, which returns the oldest item. <span class="paper">Axioms E and D, Fig. 3. <code>Enq</code> is total; <code>Deq</code> is partial.</span></td></tr>
+        <tr><td><span class="term">sending a claim; hearing it is entered</span></td><td>An invocation and its matching response. <span class="paper">§2.1.</span></td></tr>
+        <tr><td><span class="term">before; overlap</span></td><td>One operation's response precedes the other's invocation; otherwise concurrent. <span class="paper">The real-time partial order &lt;<sub>H</sub>, §2.2.</span></td></tr>
+        <tr><td><span class="term">judged by the sun</span></td><td>&lt;<sub>H</sub> is real time, which no process observes.</td></tr>
+        <tr><td><span class="term">the rule of the board</span></td><td>Extend the history with responses to some pending invocations, drop the rest; the result is equivalent to a legal sequential history that respects &lt;<sub>H</sub>. <span class="paper">Linearizability, L1 and L2, §2.2.</span></td></tr>
+        <tr><td><span class="term">a single keeper with a single board</span></td><td>The object's sequential specification. <span class="paper">A legal sequential history.</span></td></tr>
+        <tr><td><span class="term">each piece of business's moment</span></td><td>The instant between invocation and response at which the operation appears to take effect. <span class="paper">§1, §6.2.</span></td></tr>
+        <tr><td><span class="term">the morning of Chapter I</span></td><td>An enqueue completes before another begins, and the later item is dequeued first. <span class="paper">Sequentially consistent but not linearizable: <var>H</var>₇; with overlap, <var>H</var>₂ (Fig. 1b).</span></td></tr>
+        <tr><td><span class="term">claims at the same time; served before confirmed; served twice</span></td><td><span class="paper"><var>H</var>₁ (acceptable), <var>H</var>₃ (an operation takes effect before its response), <var>H</var>₄ (one item dequeued twice, not acceptable), Fig. 1.</span></td></tr>
+        <tr><td><span class="term">the tallies' first</span></td><td>Lamport's happened-before, extended to a total order by process identifiers. <span class="paper">Not in this paper; neither it nor &lt;<sub>H</sub> contains the other.</span></td></tr>
+        <tr><td><span class="term">serving by entry at the Anchor's gate</span></td><td>A single-copy implementation whose linearization point is the step at which the request is applied. <span class="paper">The single-valued abstraction function of §4.2, in the easy case.</span></td></tr>
+        <tr><td><span class="term">One Board at a Time</span></td><td>A history is linearizable if and only if each object's subhistory is. <span class="paper">Locality, Theorem 1, §3.1.</span></td></tr>
+        <tr><td><span class="term">No Claim Waits on Another</span></td><td>A pending invocation of a total operation can always be completed without breaking linearizability. <span class="paper">Nonblocking, Theorem 2, §3.2.</span></td></tr>
+        <tr><td><span class="term">a loader at an empty board</span></td><td>Blocking on a partial operation, which the nonblocking property allows. <span class="paper"><code>Deq</code> on the empty queue, §3.2.</span></td></tr>
+        <tr><td><span class="term">the rule without the sun</span></td><td>Equivalence to a legal sequential history without respecting real time between processes. <span class="paper">Sequential consistency (Lamport 1979), §3.3.</span></td></tr>
+        <tr><td><span class="term">grain and oil, each served the other house first</span></td><td>Each queue's subhistory is sequentially consistent, and the whole is not. <span class="paper"><var>H</var>₈, §3.3. Taken as transactions, each is strictly serializable and the whole is not.</span></td></tr>
+        <tr><td><span class="term">a bargain; two bargains that must be called off</span></td><td>A transaction; serializability is neither local nor nonblocking. <span class="paper">§3.3. The paper's blocking example, <var>H</var>₉, uses two registers; footnote 1: there is no counterpart to aborting for linearizability.</span></td></tr>
+        <tr><td><span class="term">Herlios' board; slots; the peg</span></td><td>The lock-free queue: the array <code>items</code> and the index <code>back</code>. <span class="paper">§4.2.</span></td></tr>
+        <tr><td><span class="term">taking a number; putting a tablet in; looking at the peg; emptying a slot</span></td><td><code>INC</code> (returning the old value); <code>STORE</code>; <code>READ</code>; <code>SWAP</code> with null. <span class="paper">§4.2.</span></td></tr>
+        <tr><td><span class="term">Glaukos, Mikon and Sosias</span></td><td>Two concurrent enqueues and a dequeue whose order depends on a later race, so no single-valued abstraction function exists. <span class="paper">§4.2. The paper's trace shows <code>READ(q.back)</code> returning 2 after two <code>INC</code>s from 1; with <code>INC</code> returning the old value it would be 3, giving the two slots the trace walks.</span></td></tr>
+        <tr><td><span class="term">what the board could mean</span></td><td>An abstraction function to sets of queue values, with the representation invariant kept between every step. <span class="paper"><var>A</var>: REP → 2<sup>ABS</sup>, §4.2–4.3.3.</span></td></tr>
+        <tr><td><span class="term">put in before another's number was taken</span></td><td><var>x</var>'s <code>STORE</code> precedes <var>y</var>'s <code>INC</code>. <span class="paper">The partial order &lt;<sub>r</sub>.</span></td></tr>
+        <tr><td><span class="term">orders the business could have produced</span></td><td>Linearized values. <span class="paper">Lin(<var>H</var>), §4.3.1.</span></td></tr>
+        <tr><td><span class="term">The Board Keeps the Rule</span></td><td><var>A</var>(<var>r</var>) ⊆ Lin(<var>H</var>|ABS) for every linearized representation value. <span class="paper">§4.3.2; Theorem 17, Appendix II, using Lemmas 15 and 16. Supporting lemmas are proved in the technical report [45].</span></td></tr>
+        <tr><td><span class="term">in order, none vanishes, none invented</span></td><td><span class="paper">Theorems 6–8, §5.2. Theorem 6 alone was Gottlieb, Lubachevsky and Rudolph's condition.</span></td></tr>
+        <tr><td><span class="term">a loader overtaken for ever; a board that never serves</span></td><td>Linearizability is a safety property only. <span class="paper">§4.2; §6.2.</span></td></tr>
+        <tr><td><span class="term">copies of the board acting as one</span></td><td>The condition is stated on invocations and responses and does not see the implementation.</td></tr>
+        <tr><td><span class="term">the black goats of Paxos</span></td><td>Lamport's monotonicity condition, first with real-time precedence, then causal. <span class="paper">Lamport 1998, §3.3.4; not in this paper.</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="ideas-box">
+    <span class="lbl">The ideas, plainly</span>
+    <p>A shared object is correct, Herlihy and Wing propose, if every operation appears to take effect
+    at a single instant somewhere between its call and its return. Then the results are those of some
+    one-at-a-time execution, and that execution respects real time: an operation that finished before
+    another started comes first. This is linearizability. It lets a concurrent queue be specified as
+    an ordinary queue.</p>
+
+    <p>Real-time order is not Lamport's causal order. An operation can finish before another starts
+    with no message between them, and operations joined by messages can still overlap. Neither order
+    contains the other, and linearizability is the one an outside observer comparing notes would
+    expect.</p>
+
+    <p>Linearizability is local: a system is linearizable exactly when each object is. And it is
+    nonblocking: a pending call of an operation that is always defined can always be completed.
+    Sequential consistency drops real time and loses locality; serializability, over multi-operation
+    transactions, loses both and needs a way to abort.</p>
+
+    <p>When no single step of an implementation can be named as an operation's instant, Herlihy and
+    Wing map each state to the set of abstract values it could stand for, and show that set is always
+    among the values the history could have produced. Their example is a lock-free queue built from
+    fetch-and-increment and swap.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="refs" class="refs">
+  <h3 class="sect">The Paper Behind This Book</h3>
+  <ul>
+    <li>Maurice P. Herlihy and Jeannette M. Wing, <i>Linearizability: A Correctness Condition for
+    Concurrent Objects</i>. ACM Transactions on Programming Languages and Systems <b>12</b>, 3
+    (July 1990), 463–492. — The definition, locality (Theorem 1), the nonblocking property
+    (Theorem 2), the comparison with sequential consistency and serializability, the proof method
+    with set-valued abstraction functions, and the concurrent queue.</li>
+  </ul>
+  <aside class="fn">Herlios and Wingaia are Hellenised from the paper's authors. Glaukos and Mikon,
+  the clerks, and Sosias, the loader, are ordinary Greek names and nobody's authors. Lamport's black
+  goats are in his <i>The Part-Time Parliament</i>, §3.3.4.</aside>
+</section>
+
+<hr class="rule">
+
+<p class="lineage"><span class="lbl">Leads to</span> <a href="../taking-stock-without-stopping/index.html">Taking Stock Without Stopping</a> · <span class="unwritten-link" title="Not yet written">Probably Up to Date</span> · <span class="unwritten-link" title="Not yet written">What You Can Promise Alone</span><br>
+  <span class="outside"><span class="tag">Outside this series</span> Lamport 1979, <i>sequential consistency</i> · Papadimitriou 1979, <i>serializability</i> · Herlihy 1988, <i>wait-free synchronization</i></span></p>
 
 </div>
 </body>

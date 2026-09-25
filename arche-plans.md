@@ -10,50 +10,8 @@ Four books remain: one on the ring road, three on Mount Phyle.
 
 ## Many Copies, Acting as One
 
-**Herlihy & Wing 1990 · the counters, Arche's ring road**
-
-**The idea.** A correctness condition, not an algorithm. An object shared by many callers is
-*linearizable* if every operation seems to take effect at one instant between its call and its
-answer, so the answers fit one sequential order that respects real time. Two properties set it
-apart. It is **local**: a system is linearizable exactly when each object in it is (Theorem 1).
-It is **nonblocking**: a pending call on a total operation can always be completed (Theorem 2).
-Sequential consistency and serializability have neither property. The second half of the paper is
-a **proof method**: an abstraction function that maps a representation to a *set* of possible
-abstract values, shown on a highly concurrent FIFO queue built from `INC` and `SWAP`.
-
-**The allegory.**
-- **The counters and the jar lines**, as *Answering While Cut Off* fixed them: a jar's line holds
-  the buyer's name or nothing, a purchase writes it, a question reads it. The rule of the counters is
-  already stated in that book; this one owns it.
-- **Judged by the sun**, which no one can read in the trading season; **the goatherd** of
-  *Ordering Without Clocks* Ch. VI is the witness who could catch the houses out.
-- **Locality:** each jar's line keeps the rule on its own, so the whole trade does.
-- **Sequential consistency is not enough:** two jar lines, each answered consistently with some
-  order, whose orders cannot be joined. It is the paper's two-queue history (H8), redone with lines.
-- **The keeper** of *Answering While Cut Off* as a linearizable implementation, with the moment the
-  keeper handles a slip as each operation's instant.
-
-**Chapters.**
-1. The counters and what a buyer can see.
-2. Calls and answers: a history.
-3. The rule, made exact.
-4. One line at a time: locality.
-5. A call never waits on another: nonblocking.
-6. Weaker rules and why they fail (sequential consistency, serializability).
-7. Proving an arrangement keeps the rule.
-8. What the rule does not say: it is judged by the sun, not checked by any clerk.
-9. In the Book, In the Paper.
-
-**Must not exist:** a readable hour in the trading season; any house that checks the rule; the
-goatherd used as a channel; a way round the road.
-
-**Decided.**
-1. **The queue:** the Anchor's **loading berths** carry the paper's queue and Section 4. A board of
-   numbered berths and a take-a-number peg (`INC`); a porter who takes a cargo empties its berth
-   (`SWAP`). Several porters work at once at one house, which is shared memory, the paper's own
-   model, and nothing crosses the road.
-2. **The title stays.** The book says the rule holds whether the object is one board or three books.
-3. **Names:** Herlios and Wingaia, at two houses.
+Written: `books/many-copies-acting-as-one/`. The claims board at the Anchor, sharing the premise
+of *Ordering Without Clocks*; see `settings.md`.
 
 ---
 
@@ -102,8 +60,8 @@ the slate reliable which the camps could observe; anything following from the de
 
 **Decided.**
 1. **A turn to propose**, passing round the tents in shield order and fixed by the round number,
-   not by anyone's command. The book names the rotating coordinator of *Agreeing When Messages Run
-   Late* as the same device.
+   not by anyone's command. It is the turn of *Agreeing When Messages Run Late*, at the same
+   tents, and the book says so.
 2. **The prop is the slate**: a slate in each tent with a row per other tent, chalked against a tent
    he suspects and rubbed out when a bird comes. "Tally" stays with the ring road.
 3. **The book stays on the detector** and points to the DLS book for the rotating turn.
@@ -212,7 +170,7 @@ a new entry and the leader rotates each view.
 
 - **Names follow papers**, with a footnote in every book. The crown's first-night men (Lamportos,
   Shostakos, Peasios, Dolevios) are not the men of the two crown books.
-- **The rotating turn** appears in three places: the DLS price rounds, the ◇S algorithm, and the
+- **The rotating turn** appears in three places: the DLS turns at the camps, the ◇S algorithm, and the
   crown's job. It is the same idea told three ways, which suits "later papers reuse existing rooms".
   Each book should name the others.
 - **Sandglasses** are the only timers on the hill; water-clocks stay in the counting rooms.
