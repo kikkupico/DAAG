@@ -49,6 +49,13 @@ for p in parts:
     u, v = to_sheet(c)
     groups[min(BOXES, key=lambda k: gap(BOXES[k], u, v))].append(p)
 
+# Meshy names its texture Image_0, as the island models do, and Blender's glTF importer
+# reuses an image already loaded under the same name: give the atlas and material their own.
+for img in bpy.data.images:
+    img.name = f"{sheet}-{img.name}"
+for m in bpy.data.materials:
+    m.name = f"{sheet}-{m.name}"
+
 out = f"art/cast/props/{sheet}"
 import os; os.makedirs(out, exist_ok=True)
 for kind, ps in groups.items():
