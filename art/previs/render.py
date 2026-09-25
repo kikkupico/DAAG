@@ -235,7 +235,8 @@ PROPS = {k: (f"art/cast/props/{v['sheet']}/{k}.glb", v.get("yaw", 0))
 
 def add_prop(p):
     """{"kind": ..., "at": [x, z], "face": [x, z], "under": h}: a prop from art/cast/props.json
-    (ledger, statue, black-goat...), or the procedural strongbox. Props stand on the highest
+    (ledger, statue, black-goat...), or a procedural one (PROCEDURAL below: strongbox, tent,
+    shield, chest, basket, perch, raven). Props stand on the highest
     surface under them, so a ledger given a desk's position lies on the desk."""
     if p["kind"] in PROPS:
         before = set(bpy.data.objects)
@@ -247,26 +248,93 @@ def add_prop(p):
         f = ground_bl(*p.get("face", p["at"])) - o.location
         o.rotation_euler = (0, 0, (math.atan2(f.y, f.x) + math.pi / 2 if f.xy.length else 0) + math.radians(yaw))
         return
-    if p["kind"] != "strongbox":
-        raise ValueError(p["kind"])
-    wood = material("boxwood", (0.28, 0.16, 0.08))
-    iron = material("iron", (0.12, 0.12, 0.12), rough=0.5, metal=0.8)
-    parts = []
-    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0, 0.225)); b = bpy.context.object
-    b.scale = (0.7, 0.45, 0.45); b.data.materials.append(wood); parts.append(b)
-    for x in (-0.25, 0.25):
-        bpy.ops.mesh.primitive_cube_add(size=1, location=(x, 0, 0.226)); s = bpy.context.object
-        s.scale = (0.05, 0.46, 0.46); s.data.materials.append(iron); parts.append(s)
-    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0, 0.36)); s = bpy.context.object
-    s.scale = (0.71, 0.46, 0.02); s.data.materials.append(iron); parts.append(s)
+    build = PROCEDURAL[p["kind"]]
+    parts = build(p)
     bpy.ops.object.select_all(action="DESELECT")
     for q in parts:
         q.select_set(True)
-    bpy.ops.object.transform_apply(scale=True)
-    o = join(parts, "strongbox")
-    o.location = ground_bl(*p["at"], p.get("under"))
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+    o = join(parts, p["kind"])
+    o.rotation_mode = "XYZ"
+    o.location = ground_bl(*p["at"], p.get("under")) + Vector((0, 0, p.get("lift", 0.0)))
     f = ground_bl(*p.get("face", p["at"])) - o.location
-    o.rotation_euler = (0, 0, math.atan2(f.y, f.x) + math.pi / 2 if f.length else 0)
+    o.rotation_euler = (0, 0, math.atan2(f.y, f.x) + math.pi / 2 if f.xy.length else 0)
+
+# Procedural props, each built at the origin facing -Y (the way `face` points) and joined:
+# kind -> function(prop) -> parts. "lift" raises a prop off the ground (a raven held at
+# chest height, or on a perch at 1.3 m); a shield takes "blazon" [r, g, b] for its device.
+def cube(loc, size, mat):
+    bpy.ops.mesh.primitive_cube_add(size=1, location=loc); o = bpy.context.object
+    o.scale = size; o.data.materials.append(mat); return o
+
+def cyl(loc, r, depth, mat, rot=(0, 0, 0), verts=24):
+    bpy.ops.mesh.primitive_cylinder_add(vertices=verts, radius=r, depth=depth, location=loc, rotation=rot)
+    o = bpy.context.object; o.data.materials.append(mat); return o
+
+def ball(loc, size, mat):
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=1, location=loc); o = bpy.context.object
+    o.scale = size; o.data.materials.append(mat); return o
+
+def strongbox(p):
+    wood = material("boxwood", (0.28, 0.16, 0.08))
+    iron = material("iron", (0.12, 0.12, 0.12), rough=0.5, metal=0.8)
+    return [cube((0, 0, 0.225), (0.7, 0.45, 0.45), wood),
+            *[cube((x, 0, 0.226), (0.05, 0.46, 0.46), iron) for x in (-0.25, 0.25)],
+            cube((0, 0, 0.36), (0.71, 0.46, 0.02), iron)]
+
+def tent(p):
+    """A one-man ridge tent, 2.2 m deep, 1.1 m high and 1.3 m across, its open mouth
+    (a dark triangle just inside the front) facing -Y."""
+    linen = material("linen", (0.78, 0.74, 0.64), rough=0.95)
+    dark = material("tent-mouth", (0.05, 0.04, 0.03))
+    pole = material("pole", (0.3, 0.2, 0.1))
+    w, d, h = 0.65, 1.1, 1.1
+    def mesh(name, verts, faces, mat):
+        me = bpy.data.meshes.new(name); me.from_pydata(verts, [], faces); me.update()
+        o = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(o)
+        o.data.materials.append(mat); return o
+    body = mesh("tent", [(-w, -d, 0), (w, -d, 0), (0, -d, h), (-w, d, 0), (w, d, 0), (0, d, h)],
+                [(0, 2, 5, 3), (1, 4, 5, 2), (3, 5, 4)], linen)
+    mouth = mesh("tent-mouth", [(-w * 0.95, -d + 0.05, 0.01), (w * 0.95, -d + 0.05, 0.01), (0, -d + 0.05, h * 0.95)],
+                 [(0, 1, 2)], dark)
+    return [body, mouth, *[cyl((0, y, 0.6), 0.025, 1.2, pole) for y in (-1.13, 1.13)]]
+
+def shield(p):
+    """A round bronze hoplite shield, 0.9 m across, leaning back on its rim, device to -Y."""
+    bronze = material("bronze", (0.72, 0.5, 0.25), rough=0.35, metal=0.9)
+    dev = material("device", tuple(p.get("blazon", (0.03, 0.03, 0.03))))
+    tilt = math.radians(75)
+    parts = [cyl((0, 0, 0), 0.45, 0.05, bronze, rot=(tilt, 0, 0)),
+             cyl((0, -0.03, 0), 0.2, 0.02, dev, rot=(tilt, 0, 0))]
+    for q in parts:
+        q.location.z += 0.45 * math.sin(tilt)
+        q.location.y += 0.45 * math.cos(tilt) * 0.5
+    return parts
+
+def chest(p):
+    wood = material("chestwood", (0.42, 0.28, 0.15))
+    return [cube((0, 0, 0.2), (0.75, 0.42, 0.4), wood), cube((0, 0, 0.41), (0.78, 0.45, 0.04), wood)]
+
+def basket(p):
+    wicker = material("wicker", (0.6, 0.45, 0.25), rough=0.95)
+    return [cyl((0, 0, 0.15), 0.25, 0.3, wicker)]
+
+def perch(p):
+    wood = material("perchwood", (0.35, 0.24, 0.13))
+    return [cyl((0, 0, 0.65), 0.03, 1.3, wood), cyl((0, 0, 1.3), 0.025, 0.55, wood, rot=(0, math.pi / 2, 0))]
+
+def raven(p):
+    """A raven, 0.6 m from beak to tail, standing and facing -Y."""
+    black = material("raven", (0.02, 0.02, 0.025), rough=0.4)
+    beak = material("beak", (0.05, 0.05, 0.05))
+    return [ball((0, 0, 0.2), (0.09, 0.2, 0.1), black),
+            ball((0, -0.17, 0.3), (0.06, 0.07, 0.06), black),
+            cube((0, -0.25, 0.3), (0.025, 0.07, 0.025), beak),
+            cube((0, 0.22, 0.17), (0.08, 0.16, 0.02), black),
+            *[cyl((x, 0, 0.06), 0.008, 0.12, beak) for x in (-0.03, 0.03)]]
+
+PROCEDURAL = {"strongbox": strongbox, "tent": tent, "shield": shield, "chest": chest,
+              "basket": basket, "perch": perch, "raven": raven}
 
 # Sea plane at y=0, like the explorer.
 bpy.ops.mesh.primitive_plane_add(size=400000, location=(0, 0, 0.3))
