@@ -16,61 +16,515 @@
 </nav>
 <div class="page">
 
+<!-- ================= COVER ================= -->
 <header class="cover">
   <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · Mount Phyle</div>
   <h1 class="display" style="margin:18px 0 6px">Keeping Order Among Liars</h1>
-  <p class="sub">Can a replicated service keep its commands in order when some of its machines lie, the leader included, and messages take arbitrarily long?</p>
-  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the paper's idea, the
-  allegory, the chapters and the decisions taken so far. It will be replaced by the book.
-  <br><span class="paper">Castro &amp; Liskov 1999 · the crown on a later night, Mount Phyle</span></p>
+  <p class="sub">Can a replicated service keep its commands in order when some of its machines lie,
+  the leader included, and messages take arbitrarily long?</p>
+  <p class="pub">On the crown, the four bandits keep a book of the loot, one copy at each post. One of
+  them may lie, and on these nights a wind can pin the ravens down for as long as it blows. The book's
+  entries must stand in the same order in every honest copy, whatever the wind and whoever lies,
+  and must go on standing once the wind drops. A job that passes from man to man, and two rounds of
+  sealed echoes, are enough.</p>
+  <p class="lineage"><span class="lbl">Builds on</span> <a href="../the-limits-of-agreement/index.html">The Limits of Agreement</a> · <a href="../agreeing-when-messages-run-late/index.html">Agreeing When Messages Run Late</a></p>
 </header>
 
+<nav class="toc">
+  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
+  <ol>
+    <li><a href="#s1">I · The Loot Book</a></li>
+    <li><a href="#s2">II · The Chief's Job</a></li>
+    <li><a href="#s3">III · Two Echoes</a></li>
+    <li><a href="#s4">IV · Why Three Seals, and Four Men</a></li>
+    <li><a href="#s5">V · Changing the Job</a></li>
+    <li><a href="#s6">VI · Going On Once the Wind Drops</a></li>
+    <li><a href="#s7">VII · Settling Pages</a></li>
+    <li><a href="#s8">VIII · What It Does Not Say</a></li>
+    <li><a href="#s9">IX · In the Book, In the Paper</a></li>
+    <li><a href="#refs">The Paper Behind This Book</a></li>
+  </ol>
+</nav>
+
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>The idea</h2></div>
+<!-- ================= I ================= -->
+<section id="s1">
+  <div class="issue"><span class="no">Chapter I</span><h2>The Loot Book</h2></div>
+
   <div class="prose">
-<p>State machine replication that tolerates f Byzantine replicas out of 3f + 1, safe with no timing assumptions and live once delays stop growing without bound. In each <b>view</b> one replica is the <b>primary</b>. It assigns sequence numbers (pre-prepare), and the replicas echo twice: <i>prepare</i>, until 2f + 1 agree, which fixes the order within the view, then <i>commit</i>, until 2f + 1 agree, which fixes it across views. A client accepts a result on f + 1 matching replies. A suspected primary is replaced by a <b>view change</b> carrying proof of what was prepared. <b>Checkpoints</b> let the logs be trimmed. MACs replace signatures in the fast version.</p>
+    <p>Bandits hold the crown of Mount Phyle, with the loot. <span class="coin">Lamportos</span> sits
+    on the peak; <span class="coin">Shostakos</span>, <span class="coin">Peasios</span> and
+    <span class="coin">Dolevios</span> hold three posts in the crags below the rim. No post can see
+    another or the peak, nobody shouts or lights a brand, and no man leaves his place, because the
+    loot cannot be
+    left<sup class="xref"><a href="../the-limits-of-agreement/index.html#p2" title="The Limits of Agreement, Part Two">*</a></sup>.
+    Word passes by raven. Each man has a seal ring, the owl, the wolf, the ship and the key, and an
+    honest man's seal cannot be
+    counterfeited<sup class="xref"><a href="../the-limits-of-agreement/index.html#s15" title="The Limits of Agreement, Chapter XV">*</a></sup>.
+    Some of them may lie. With four men, this book allows one.</p>
+
+    <p>These are later nights of the siege. The sandglasses were turned together once, on the first
+    night, and never
+    again<sup class="xref"><a href="../the-limits-of-agreement/index.html#s11" title="The Limits of Agreement, Chapter XI">*</a></sup>.
+    On these nights a wind can blow over the peak and pin the ravens down for as long as it blows; when
+    it drops, flights are short
+    again<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s1" title="Agreeing When Messages Run Late, Chapter I">*</a></sup>.
+    Nobody can tell when it has dropped.</p>
+
+    <p>The four keep a <span class="coin">loot book</span>, one copy at each post: where each strongbox
+    lies, and whose share it is. The book grows by <span class="coin">entries</span>, each an order
+    about the loot, <em>move the third strongbox to the north cleft</em> or <em>the silver cups are
+    Peasios's share</em>. Any man may file one. An entry's effect depends on what the book already
+    says, so every copy must take the same entries in the same order.</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">What the four owe each other</span>
+    <span class="stmt">Order.</span> Every honest copy takes the same entries in the same order, and
+    the book behaves as though one keeper wrote every entry at a single moment between its filing and
+    its standing<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One, Chapter II">*</a></sup>.<br>
+    <span class="stmt">Going on.</span> Every entry an honest man files stands in the end, once the
+    wind has dropped for long enough.<br>
+    <span class="paper">Safety: the service is linearizable. Liveness: clients eventually receive
+    replies, provided at most ⌊(<var>n</var> − 1)/3⌋ replicas are faulty and delay(<var>t</var>) does
+    not grow faster than <var>t</var> indefinitely. §2–3.</span>
+  </div>
+
+  <div class="prose">
+    <p>Order must hold in any wind, since nobody can see the wind drop. Going on cannot be promised
+    while the wind blows: if four men could promise to agree on anything with the birds pinned for any
+    time, the mercenaries at the foot could agree on a
+    gate<sup class="xref"><a href="../the-limits-of-agreement/index.html#s9" title="The Limits of Agreement, Chapter IX">*</a></sup>.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>The allegory</h2></div>
+<!-- ================= II ================= -->
+<section id="s2">
+  <div class="issue"><span class="no">Chapter II</span><h2>The Chief's Job</h2></div>
+
   <div class="prose">
-<ul><li><b>The crown</b> of <i>The Limits of Agreement</i>: the chief's hollow and three crag posts, out of sight of one another, with ravens and seal rings. It is a later night, so there is no synchronous glass.</li><li><b>Wind on the peak</b> pins the ravens down while it blows. Entries are safe in any wind, and progress returns once the wind drops for long enough.</li><li><b>The loot book</b>, a copy at each post: where each strongbox lies and whose share it is. An entry is a request.</li><li><b>The chief's job</b>, numbering entries, starts with the man on the peak and passes round the four in a fixed order when the others suspect its holder. <i>The Limits of Agreement</i> already says "the chief is a job, not a rank."</li><li><b>Each man's sandglass</b> is only a timer for suspecting the chief, doubling at each change.</li><li><b>Two echoes before an entry stands</b>, each needing three seals.</li></ul>
+    <p>Entries need numbers, so that every copy can take them in one order. Numbering is a
+    <span class="coin">job</span>, held by one man at a time. The chief is a job, not a
+    rank<sup class="xref"><a href="../the-limits-of-agreement/index.html#s10" title="The Limits of Agreement, Chapter X">*</a></sup>.
+    It starts with the man on the peak, Lamportos, and when it passes, it passes in a fixed order:
+    Lamportos, Shostakos, Peasios, Dolevios, Lamportos again. Each spell in the job is a
+    <span class="coin">term</span>, and terms are counted, so the count says who holds the job.</p>
+
+    <p>A man who wants an entry seals it and sends it to the holder. The holder gives it the next
+    number. What the others do next is the subject of the next chapter; at the end of it, every honest
+    man writes the entry into his copy, in number order, and sends the man who filed it a sealed
+    word that it stands.</p>
+
+    <p>Anyone may hold the job, including the liar. So nothing the holder says is trusted on its own.
+    He may give two entries the same number, give one entry to some men and another to others, or
+    simply sit on an entry and number nothing. Everything below is built against that.</p>
+
+    <p><b>How a man knows his entry stands.</b> The paper's rule for someone who files and is not one
+    of the keepers is to wait for two matching sealed words, from different men: with one liar, two
+    matching words include an honest one. For the four themselves the rule is not needed. An honest man
+    keeps a copy; when the entry stands in his own copy, he knows it stands. The rule is what a filer
+    from outside the four would need, and there is none.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>Planned chapters</h2></div>
+<!-- ================= III ================= -->
+<section id="s3">
+  <div class="issue"><span class="no">Chapter III</span><h2>Two Echoes</h2></div>
+
   <div class="prose">
-<ol><li>The crown on a windy night.</li><li>The loot book and its entries.</li><li>The chief's job.</li><li>Two echoes.</li><li>Why three seals, and why four men.</li><li>When the chief stalls or lies: the change of job.</li><li>Trimming the book: checkpoints.</li><li>What it does not say: no progress while the wind blows; a lying man can still file nonsense entries.</li><li>In the Book, In the Paper.</li></ol>
+    <p>An entry stands only after the holder has numbered it and the men have echoed it twice. Every
+    bird in this chapter is sealed, and every man keeps every sealed bird he takes in.</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">An entry, from numbering to standing</span>
+    <span class="stmt">Numbering.</span> The holder sends every man <em>in this term, entry 7 is X</em>.<br>
+    <span class="stmt">First echo.</span> A man accepts the numbering if it is from this term's holder,
+    he has not accepted a different entry for number 7 in this term, and 7 is within the numbers now
+    allowed (Chapter VII). He sends every man <em>in this term, I heard entry 7 is X</em>. When he holds
+    the numbering and two matching first echoes from men other than the holder, his own possibly among
+    them, three seals on the same entry and number, the entry is <span class="coin">readied</span> at his post.<br>
+    <span class="stmt">Second echo.</span> Once it is readied, he sends every man <em>in this term, entry
+    7 is X is readied here</em>. When he holds three matching second echoes, his own among them, the
+    entry <span class="coin">stands</span> at his post.<br>
+    <span class="stmt">Carrying out.</span> He writes a standing entry into his copy as soon as every
+    lower number has been written, and sends the filer word that it stands.<br>
+    <span class="paper">§4.2: pre-prepare; prepare, and prepared (pre-prepare + 2<var>f</var> matching
+    prepares); commit, and committed-local (prepared + 2<var>f</var> + 1 matching commits); execution
+    in sequence-number order.</span>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 370" role="img" aria-label="Space-time diagram of the four posts. Shostakos files an entry with Lamportos, who holds the job. Lamportos numbers it 7 and sends the numbering to all. Shostakos and Peasios send first echoes to everyone. Lamportos, Shostakos and Peasios send second echoes to everyone, and the entry stands at those three posts. Dolevios's birds are pinned by the wind and nobody waits for him.">
+        <defs>
+          <marker id="kob" markerWidth="8" markerHeight="8" refX="6.5" refY="2.8" orient="auto"><path d="M0,0 L6.5,2.8 L0,5.6 z" fill="#136f9e"/></marker>
+          <marker id="kor" markerWidth="8" markerHeight="8" refX="6.5" refY="2.8" orient="auto"><path d="M0,0 L6.5,2.8 L0,5.6 z" fill="#bf4a26"/></marker>
+        </defs>
+        <text class="d-house" x="110" y="30" text-anchor="middle" font-size="11">LAMPORTOS · JOB</text>
+        <text class="d-house" x="250" y="30" text-anchor="middle" font-size="11">SHOSTAKOS</text>
+        <text class="d-house" x="390" y="30" text-anchor="middle" font-size="11">PEASIOS</text>
+        <text class="d-house" x="530" y="30" text-anchor="middle" font-size="11">DOLEVIOS</text>
+        <line class="d-lifeline" x1="110" y1="42" x2="110" y2="330"/>
+        <line class="d-lifeline" x1="250" y1="42" x2="250" y2="330"/>
+        <line class="d-lifeline" x1="390" y1="42" x2="390" y2="330"/>
+        <line class="d-lifeline" x1="530" y1="42" x2="530" y2="330"/>
+        <rect class="d-band-o" x="20" y="100" width="620" height="60"/>
+        <rect class="d-band-o" x="20" y="220" width="620" height="60"/>
+        <text class="d-key" x="26" y="66">filing</text>
+        <text class="d-key" x="26" y="116">numbering</text>
+        <text class="d-key" x="26" y="176">first echo</text>
+        <text class="d-key" x="26" y="236">second echo</text>
+        <circle class="d-ev" cx="250" cy="60" r="4"/>
+        <text class="d-lbl" x="258" y="58">files an entry</text>
+        <path class="d-msg" marker-end="url(#kob)" d="M250,62 L116,90"/>
+        <circle class="d-ev-hi" cx="110" cy="110" r="5"/>
+        <path class="d-msg-hi" marker-end="url(#kor)" d="M110,112 L244,152"/>
+        <path class="d-msg-hi" marker-end="url(#kor)" d="M110,112 L384,152"/>
+        <path class="d-msg-hi" marker-end="url(#kor)" d="M110,112 L524,152"/>
+        <text class="d-lbl" x="122" y="104">no. 7</text>
+        <circle class="d-ev" cx="250" cy="170" r="4"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M250,172 L116,210"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M250,172 L384,210"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M250,172 L524,210"/>
+        <circle class="d-ev" cx="390" cy="170" r="4"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M390,172 L116,210"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M390,172 L256,210"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M390,172 L524,210"/>
+        <circle class="d-ev" cx="110" cy="230" r="4"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M110,232 L244,270"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M110,232 L384,270"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M110,232 L524,270"/>
+        <circle class="d-ev" cx="250" cy="230" r="4"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M250,232 L116,270"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M250,232 L384,270"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M250,232 L524,270"/>
+        <circle class="d-ev" cx="390" cy="230" r="4"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M390,232 L116,270"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M390,232 L256,270"/>
+        <path class="d-msg" marker-end="url(#kob)" d="M390,232 L524,270"/>
+        <circle class="d-ev-hi" cx="110" cy="296" r="5"/>
+        <text class="d-lbl" x="119" y="300" fill="#bf4a26">stands</text>
+        <circle class="d-ev-hi" cx="250" cy="296" r="5"/>
+        <text class="d-lbl" x="259" y="300" fill="#bf4a26">stands</text>
+        <circle class="d-ev-hi" cx="390" cy="296" r="5"/>
+        <text class="d-lbl" x="399" y="300" fill="#bf4a26">stands</text>
+        <text class="d-note" x="538" y="190">birds</text>
+        <text class="d-note" x="538" y="204">pinned</text>
+        <text class="d-note" x="330" y="352" text-anchor="middle">three seals ready an entry; three second echoes make it stand; the fourth post is not waited for</text>
+      </svg>
+    </div>
+    <figcaption><b>An entry stands without waiting for everyone.</b> The holder numbers it, the others
+    echo it twice, and each echo needs three matching seals out of four. A post whose birds are pinned
+    by the wind, or a liar who says nothing, cannot hold the others up.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p>The two echoes do different work. The first settles order <em>within</em> a term: once an entry
+    is readied anywhere honest, no honest man can ready a different entry under the same number in
+    that term, even if the holder lies. The second settles it <em>across</em> terms: once an entry
+    stands at an honest post, enough honest men have it readied that any later holder will be made to
+    keep it. The next two chapters show why.</p>
+
+    <p>Birds may come in any order, so a man may find entry 9 standing before entry 8. He keeps it
+    and waits; he writes nothing past a gap.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>Must not exist</h2></div>
+<!-- ================= IV ================= -->
+<section id="s4">
+  <div class="issue"><span class="no">Chapter IV</span><h2>Why Three Seals, and Four Men</h2></div>
+
   <div class="prose">
-<p>a shout, signal or meeting on the crown; any synchronous glass; a man leaving his post; anyone learning who lies; any consequence of an entry; bandits from off the hill.</p>
+    <p>Any two sets of three men, out of four, share two men. At most one of those two lies, so they
+    share an honest man. That is the whole trick.</p>
+
+    <p>Suppose a lying holder tells two men that entry 7 is X and the others that it is Y. For X to be
+    readied at an honest post, three men sealed X for number 7 in this term. For Y to be readied at an
+    honest post, three men sealed Y. The two threes share an honest man, and an honest man seals only
+    one entry for a number in a term.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">One Entry to a Number</span>
+    <p>In any term, no two different entries are readied under the same number at honest posts.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that the three seals of readiness cannot be split</summary>
+    <ol class="proofsteps">
+      <li>An entry readied at a post carries the seals of three different men for it, under that
+      number and term: the holder's numbering and two first echoes.</li>
+      <li>If X and Y were both readied for number 7 in one term, the two sets of three would share at
+      least two men among four, and at least one of them is honest.</li>
+      <li>That honest man sealed both X and Y for number 7 in the same term. But an honest man accepts
+      only one numbering for a number in a term, and seals only what he accepted. Contradiction. His seal
+      cannot be counterfeited, so the liar cannot have made it for him.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p><b>Why four men.</b> A man can never wait to hear from everyone, since one may be a liar who
+    keeps quiet. So he acts on hearing from all but one: three. But the one he did not hear from may be
+    an honest man whose bird is pinned, and then the liar may be among the three he did hear. The
+    honest must still outnumber the liars among those three: two honest against one liar. That needs
+    four men for one liar, and in general more than three times as many men as may
+    lie<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s7" title="Agreeing When Messages Run Late, Chapter VII">*</a></sup>.
+    Seals do not lower it. They stop a liar forging another man's word, not answering promptly with
+    his own.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>Decisions taken</h2></div>
+<!-- ================= V ================= -->
+<section id="s5">
+  <div class="issue"><span class="no">Chapter V</span><h2>Changing the Job</h2></div>
+
   <div class="prose">
-<ol><li><b>The client rule is stated</b> and the book shows it is redundant for an honest man, whose own copy already tells him an entry stands; it is what a client who is not one of the four would need.</li><li><b>Names:</b> Kastros and Liskovia at two places, two ordinary names at the others. Whoever sits on the peak holds the job first.</li><li><b>MACs</b> go in the mapping table only; the seal rings are signatures.</li></ol>
+    <p>If the holder sits on entries, or numbers them two ways, nothing stands, and the job must pass.
+    Nobody can tell a holder who stalls from one whose birds are pinned by the wind. So the men do not
+    judge. Each simply stops waiting.</p>
+
+    <p>A man who has an entry filed that has not yet stood turns his glass. If it runs out first, he
+    <span class="coin">asks for a change</span>: he stops taking part in this term and sends every man
+    a sealed request for the next term, carrying the proof of every entry readied at his post, each a
+    numbering and two first echoes.</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">Changing the job</span>
+    <span class="stmt">(1)</span> The next holder waits for requests for the new term from three men,
+    his own among them.<br>
+    <span class="stmt">(2)</span> He sends every man the three requests and a new numbering. For each
+    number, if some request shows an entry readied there, he numbers the one readied in the latest term;
+    if none does, he numbers a <span class="coin">blank entry</span>, which does nothing.<br>
+    <span class="stmt">(3)</span> Each man checks that the requests are sealed and that the new
+    numbering is what they call for, then echoes it as in Chapter III, in the new term.<br>
+    <span class="paper">§4.4: view-change with the set <var>P</var> of prepared certificates;
+    new-view with 2<var>f</var> + 1 view-changes and the set <var>O</var> of pre-prepares; null
+    requests fill gaps.</span>
+  </div>
+
+  <div class="prose">
+    <p>Suppose an entry X stands at some honest post as number 7. Then three men sent second echoes for
+    it, of whom at least two are honest, and X is readied at those two. The new holder must show three
+    requests. Two honest men who have X readied, and three requesters, among four men: they share at
+    least one, and he is honest. His request carries X readied under number 7. Nobody can have readied a
+    different entry under 7 in a later term without the same argument applying, so X is the one readied
+    in the latest term, and the new holder must number X again under 7.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">Order Across Terms</span>
+    <p>If an entry stands under a number at any honest post, every honest post that ever has an entry
+    stand under that number has the same one, whatever terms they stood in.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that a new holder must keep what stood before</summary>
+    <ol class="proofsteps">
+      <li>Let X stand as number 7 at an honest post in term <var>v</var>. Then three second echoes for X
+      were sealed, so X is readied, in term <var>v</var>, at at least two honest posts.</li>
+      <li>The holder of any later term shows three requests, which share an honest man with the two.
+      That man's request shows X readied under 7 in term <var>v</var>, or some entry readied under 7 in a
+      later term. The holder must number the entry readied in the latest term shown.</li>
+      <li>By induction over the terms after <var>v</var>, every entry that can be shown readied under 7
+      in such a term is X, so every later holder must number X under 7, honest men check that he does,
+      and only X is readied or stands under 7 at honest posts. The induction, which must also handle
+      requests from the liar, is carried out in full in Castro's thesis; this is the paper's
+      sketch.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>The paper's proof is a sketch, with the full argument in Castro's thesis; the version above is
+    the same sketch, and it leaves out the settled pages of Chapter VII, which let a request show a
+    settled page in place of the entries below it.</p>
+
+    <p>Two more rules keep the job from being passed too easily or too late. A man who sees requests
+    from two others for a later term joins them, even before his own glass runs out, so an honest
+    minority is not left behind. And no single man can force a change: a change needs three requests,
+    and a liar alone can send only one. The liar can make his own term fail, by stalling, but the job
+    then passes, and with four men he holds it for at most one term in a row.</p>
   </div>
 </section>
 
 <hr class="rule">
+
+<!-- ================= VI ================= -->
+<section id="s6">
+  <div class="issue"><span class="no">Chapter VI</span><h2>Going On Once the Wind Drops</h2></div>
+
+  <div class="prose">
+    <p>While the wind blows, glasses run out on honest holders whose birds are merely pinned, and the
+    job passes again and again. Nothing stands, and nothing wrong stands either.</p>
+
+    <p>So that the changes do not go on for ever once the wind has dropped, each man doubles his glass
+    at every change: a man who asked for a change and does not see the new term work within his glass
+    asks for the next one, but waits twice as long before asking for the one after. In the end the
+    glasses are longer than a whole term's worth of short flights. Then the first honest holder of a
+    term that begins in still air numbers the waiting entries, the echoes come back in time, and the
+    entries stand.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">Going On</span>
+    <p>If the wind, once it drops, stays down long enough, every entry an honest man files in the end
+    stands.</p>
+  </div>
+
+  <div class="prose">
+    <p>The paper puts the condition precisely: the time a bird takes, counted from its first sending and
+    with resending, does not grow faster than time itself for ever. The doubling glass outgrows any
+    delay that does not keep outgrowing it. The paper argues this in outline; its full proof is in
+    Castro's thesis.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VII ================= -->
+<section id="s7">
+  <div class="issue"><span class="no">Chapter VII</span><h2>Settling Pages</h2></div>
+
+  <div class="prose">
+    <p>Every man keeps every sealed bird, since a change of job may call for them. Without a way to
+    throw them out, the keeping grows without end.</p>
+
+    <p>Every hundred entries, each man seals a short summary of his copy up to that number and sends it
+    to everyone. When a man holds three matching summaries for the same number, that page is
+    <span class="coin">settled</span>: at least two honest men have the same book up to there. He
+    throws away every echo for numbers up to it. A man whose copy fell behind can take the settled page
+    from any of the three and trust it.</p>
+
+    <p>The settled page also bounds the numbering. A holder may use only numbers from the last settled
+    page up to some fixed distance beyond it, so a lying holder cannot use up the numbers by jumping to
+    an enormous one.</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">Settling a page</span>
+    Every hundred entries, send a sealed summary of your copy. Three matching summaries settle the page;
+    discard what lies below it. Numbers are allowed only between the last settled page and a fixed
+    distance above it.<br>
+    <span class="paper">§4.3: checkpoints every <var>K</var> requests; a stable checkpoint needs 2<var>f</var> + 1
+    matching checkpoint messages; low and high water marks <var>h</var> and <var>H</var> = <var>h</var> + <var>k</var>.</span>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VIII ================= -->
+<section id="s8">
+  <div class="issue"><span class="no">Chapter VIII</span><h2>What It Does Not Say</h2></div>
+
+  <div class="prose">
+    <p><b>Nothing stands while the wind blows.</b> Order holds in any wind. Going on waits for the wind to
+    drop and stay down. That is not a weakness of this arrangement; no arrangement could do better.</p>
+
+    <p><b>A liar can still file nonsense.</b> The book keeps order among entries, not good sense in them.
+    A liar may file <em>give me every strongbox</em>, and if he may file it, it stands, in the same place in
+    every honest copy. What the four protect against that is which entries a man is allowed to file,
+    and they must arrange it themselves.</p>
+
+    <p><b>Nobody learns who lies.</b> The arrangement never needs to know. It works if any one of the four
+    lies, and it never names him. A stalled term might be a liar or the wind.</p>
+
+    <p><b>It keeps nothing secret.</b> Every man holds the whole book. A liar can show it to anyone he
+    likes.</p>
+
+    <p><b>The seals are costly, and the paper spends them sparingly.</b> Every bird here is sealed. The
+    paper's fast version seals only the requests for a change of job and the new numbering, and marks
+    everything else with cheaper marks that the receiver alone can check. The order kept is the same.</p>
+
+    <p><b>Nothing follows from any entry.</b> The book says where the loot lies and whose it is. What the
+    four do with it is not the subject of this book.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= IX ================= -->
+<section id="s9">
+  <div class="issue"><span class="no">Chapter IX</span><h2>In the Book, In the Paper</h2></div>
+
+  <div class="prose">
+    <p>So that the reader may check the loot book against the paper of Castro and Liskov.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td><span class="term">the four men; one may lie</span></td><td>Replicas, <var>n</var> = 3<var>f</var> + 1 = 4, <var>f</var> = 1 Byzantine. <span class="paper">§2, §4.</span></td></tr>
+        <tr><td><span class="term">the wind; its dropping</span></td><td>An asynchronous network; liveness needs delay(<var>t</var>) not to outgrow <var>t</var> for ever. <span class="paper">§2.</span></td></tr>
+        <tr><td><span class="term">seal rings</span></td><td>Public-key signatures; the adversary cannot forge an honest node's signature. <span class="paper">§2. Message digests are folded into the seal here.</span></td></tr>
+        <tr><td><span class="term">the loot book; an entry</span></td><td>A deterministic replicated state machine; an operation request. <span class="paper">§3–4.</span></td></tr>
+        <tr><td><span class="term">order; going on</span></td><td>Safety (linearizability) and liveness. <span class="paper">§3.</span></td></tr>
+        <tr><td><span class="term">the job; a term; the fixed order of holders</span></td><td>The primary; a view; primary = <var>v</var> mod |<var>R</var>|. <span class="paper">§4.</span></td></tr>
+        <tr><td><span class="term">two matching sealed words to trust an entry</span></td><td>The client waits for <var>f</var> + 1 matching replies. <span class="paper">§4.1. Redundant for a replica acting as its own client.</span></td></tr>
+        <tr><td><span class="term">numbering; first echo; readied</span></td><td>Pre-prepare; prepare; prepared = pre-prepare + 2<var>f</var> matching prepares. <span class="paper">§4.2.</span></td></tr>
+        <tr><td><span class="term">second echo; stands</span></td><td>Commit; committed-local = prepared + 2<var>f</var> + 1 matching commits. <span class="paper">§4.2.</span></td></tr>
+        <tr><td><span class="term">One Entry to a Number</span></td><td>If prepared(<var>m</var>, <var>v</var>, <var>n</var>, <var>i</var>) then not prepared(<var>m</var>′, <var>v</var>, <var>n</var>, <var>j</var>) for non-faulty <var>j</var> and <var>m</var>′ ≠ <var>m</var>. <span class="paper">The invariant of §4.2.</span></td></tr>
+        <tr><td><span class="term">why four men</span></td><td>3<var>f</var> + 1 is optimal for asynchronous safety and liveness. <span class="paper">§2, citing Bracha and Toueg.</span></td></tr>
+        <tr><td><span class="term">asking for a change; the three requests; the new numbering; blank entries</span></td><td>View-change; new-view with 2<var>f</var> + 1 view-changes; the set <var>O</var>; null requests. <span class="paper">§4.4.</span></td></tr>
+        <tr><td><span class="term">Order Across Terms</span></td><td>Non-faulty replicas agree on the sequence numbers of requests that commit locally, even in different views. <span class="paper">§4.5.1, a sketch; full proof in Castro's thesis [4].</span></td></tr>
+        <tr><td><span class="term">joining on two requests; no man forces a change; the liar's single term</span></td><td>Join a view change on <var>f</var> + 1 view-changes; a change needs <var>f</var> + 1; a faulty primary for at most <var>f</var> consecutive views. <span class="paper">§4.5.2.</span></td></tr>
+        <tr><td><span class="term">doubling the glass</span></td><td>The view-change timeout doubles. <span class="paper">§4.5.2.</span></td></tr>
+        <tr><td><span class="term">settled pages; the allowed numbers</span></td><td>Stable checkpoints with 2<var>f</var> + 1 matching messages; low and high water marks. <span class="paper">§4.3.</span></td></tr>
+        <tr><td><span class="term">a liar's nonsense entry</span></td><td>Faulty clients are observed consistently but can write garbage; access control limits them. <span class="paper">§3.</span></td></tr>
+        <tr><td><span class="term">keeps nothing secret</span></td><td>No fault-tolerant privacy. <span class="paper">§2.</span></td></tr>
+        <tr><td><span class="term">cheaper marks only the receiver can check</span></td><td>Message authentication codes and authenticators, with signatures kept for view changes. <span class="paper">§5.2.</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="ideas-box">
+    <span class="lbl">The ideas, plainly</span>
+    <p>Castro and Liskov give a state machine replication protocol that tolerates <var>f</var> Byzantine
+    replicas out of 3<var>f</var> + 1, keeps safety with no timing assumptions at all, and makes progress
+    once message delays stop growing without bound.</p>
+
+    <p>In each view one replica is the primary and assigns sequence numbers. Replicas then echo twice.
+    The prepare phase, completed when 2<var>f</var> + 1 replicas vouch for the same request and number,
+    fixes the order within a view even if the primary lies, because any two quorums of 2<var>f</var> + 1
+    share an honest replica. The commit phase, also 2<var>f</var> + 1, ensures that a request committed
+    anywhere was prepared at enough honest replicas that every later view must carry it forward.</p>
+
+    <p>When the primary seems stuck, replicas time out and move to the next view, sending proof of what
+    they prepared; the new primary must re-propose it. Doubling timeouts and joining view changes on
+    <var>f</var> + 1 requests keep the system from changing views forever once delays are bounded.
+    Checkpoints bound the log. In practice, cheap message authentication codes replace most
+    signatures.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="refs" class="refs">
+  <h3 class="sect">The Paper Behind This Book</h3>
+  <ul>
+    <li>Miguel Castro and Barbara Liskov, <i>Practical Byzantine Fault Tolerance</i>. Proceedings of the
+    Third Symposium on Operating Systems Design and Implementation (OSDI), New Orleans, February 1999.
+    — The three-phase protocol, view changes, checkpoints, the liveness argument and the MAC-based
+    optimization.</li>
+  </ul>
+  <aside class="fn">The four men are the bandits of <i>The Limits of Agreement</i>, at the same places.
+  Miguel Castro and Barbara Liskov are credited here.</aside>
+</section>
+
+<hr class="rule">
+
+<p class="lineage"><span class="lbl">Leads to</span> <span class="unwritten-link" title="Not yet written">Changing Leaders Among Liars</span><br>
+  <span class="outside"><span class="tag">Outside this series</span> Castro 2001, <i>thesis: the full proofs</i> · Bracha &amp; Toueg 1985, <i>resilient consensus</i></span></p>
 
 </div>
 </body>
