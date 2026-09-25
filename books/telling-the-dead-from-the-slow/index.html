@@ -16,62 +16,572 @@
 </nav>
 <div class="page">
 
+<!-- ================= COVER ================= -->
 <header class="cover">
   <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · Mount Phyle</div>
   <h1 class="display" style="margin:18px 0 6px">Telling the Dead from the Slow</h1>
-  <p class="sub">A machine that has crashed looks exactly like one that is merely slow, and that alone makes agreement impossible. How well must we tell the dead from the slow before agreement becomes possible again?</p>
-  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the paper's idea, the
-  allegory, the chapters and the decisions taken so far. It will be replaced by the book.
-  <br><span class="paper">Chandra &amp; Toueg 1996 · the four camps, Mount Phyle</span></p>
+  <p class="sub">A machine that has crashed looks exactly like one that is merely slow, and that alone
+  makes agreement impossible. How well must we tell the dead from the slow before agreement becomes
+  possible again?</p>
+  <p class="pub">The four mercenaries at the foot of the hill must go in at one gate, and any of them
+  may fall silent while no bird has a longest flight. Give each tent a slate on which a man chalks
+  the tents he thinks are dead. The slate may be wrong, often. It turns out to need very little:
+  if one living man is never chalked, the four can agree however many die; if that holds only in the
+  end, they can agree while more than half live.</p>
+  <p class="lineage"><span class="lbl">Builds on</span> <a href="../the-limits-of-agreement/index.html">The Limits of Agreement</a> · <a href="../agreeing-when-messages-run-late/index.html">Agreeing When Messages Run Late</a></p>
 </header>
 
+<nav class="toc">
+  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
+  <ol>
+    <li><a href="#s1">I · The Slate</a></li>
+    <li><a href="#s2">II · How a Slate May Be Wrong</a></li>
+    <li><a href="#s3">III · Copying Marks</a></li>
+    <li><a href="#s4">IV · One Man Never Chalked</a></li>
+    <li><a href="#s5">V · In the End, One Man Spared</a></li>
+    <li><a href="#s6">VI · Why More Than Half, Then</a></li>
+    <li><a href="#s7">VII · What the Slate Does Not Say</a></li>
+    <li><a href="#s8">VIII · In the Book, In the Paper</a></li>
+    <li><a href="#refs">The Paper Behind This Book</a></li>
+  </ol>
+</nav>
+
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>The idea</h2></div>
+<!-- ================= I ================= -->
+<section id="s1">
+  <div class="issue"><span class="no">Chapter I</span><h2>The Slate</h2></div>
+
   <div class="prose">
-<p>FLP fails because a dead process cannot be told from a slow one. Chandra and Toueg add an <b>unreliable failure detector</b>, a module at each process that suspects others and can be wrong, and ask how good it must be. They define eight classes by <b>completeness</b> (every crashed process is eventually suspected, by some or by every correct process) and <b>accuracy</b> (correct processes are not suspected: never, or eventually; all of them, or at least one). The results:</p>
-<ul><li>Weak completeness can be turned into strong by gossiping suspicions, so four classes suffice.</li><li>With <b>S</b> (some correct process is never suspected), consensus tolerates any number of crashes, n − 1, with an algorithm that has no coordinator.</li><li>With <b>◇S</b> (eventually some correct process is never suspected), consensus needs a majority of correct processes and uses a <b>rotating coordinator</b>.</li><li>Every "eventually" class needs a majority; that bound is tight.</li><li>Consensus and <b>atomic broadcast</b> are equivalent. (That ◇W is the <i>weakest</i> detector is the companion paper, not this one.)</li></ul>
+    <p>Bandits hold the crown of Mount Phyle. At the foot, at the four quarters, four mercenaries
+    keep four small tents, one man to a tent, under nobody's command, and no man can see
+    another<sup class="xref"><a href="../the-limits-of-agreement/index.html#p1" title="The Limits of Agreement, Part One">*</a></sup>:
+    <span class="coin">Fischeros</span> at the bull, <span class="coin">Lynchaia</span> at the boar,
+    <span class="coin">Patersonos</span> at the trident and <span class="coin">Kallias</span> at the
+    stag. They must all go in at one gate, north or south. Each formed an opinion at dusk, his
+    <span class="coin">sighting</span>. Word passes only by raven. A bird always arrives, but there is
+    no longest flight. Nobody lies. Any man may be killed, and a dead man's tent simply falls
+    silent.</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">The three demands</span>
+    <span class="stmt">First.</span> No two of them go to different gates.<br>
+    <span class="stmt">Second.</span> A man goes only to a gate someone sighted.<br>
+    <span class="stmt">Third.</span> Every man who is not killed eventually goes.
+  </div>
+
+  <div class="prose">
+    <p>On such a night no arrangement guarantees that anyone goes, because a man waiting on a silent
+    tent cannot tell whether the man there is dead or his bird is still in the
+    pines<sup class="xref"><a href="../the-limits-of-agreement/index.html#s4" title="The Limits of Agreement, Chapter IV">*</a></sup>.
+    If he waits, he may wait for ever on a dead man. If he stops waiting, he may leave out a live man
+    whose bird was about to arrive.</p>
+
+    <p>The one change in this book: each tent has a <span class="coin">slate</span>, with a row for
+    every other tent. A man <span class="coin">chalks</span> a tent he thinks is dead and rubs the mark
+    out when he thinks again. How he decides is not the question here. The slate may be wrong, and
+    often is: a mark may stand against a live man whose bird is merely slow, and a dead man's row may
+    stay clean for a while. The question is how good a slate must be for the four to agree.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>The allegory</h2></div>
+<!-- ================= II ================= -->
+<section id="s2">
+  <div class="issue"><span class="no">Chapter II</span><h2>How a Slate May Be Wrong</h2></div>
+
   <div class="prose">
-<ul><li><b>The camps</b>, as in <i>The Limits of Agreement</i> and <i>Agreeing by Chance</i>: ravens, no longest flight, one or more tents may fall silent, no one lies.</li><li><b>The slate:</b> in each tent, a slate with a row per other tent, where a man chalks a mark against a tent he suspects and rubs it out when a bird comes. Its guarantees are <b>granted, not earned</b>, as <code>settings.md</code> says: ravens with unbounded flights cannot build such a slate, and the paper treats the detector as given in the same way.</li><li><b>The eight classes</b> as ways a slate can be wrong, and the reduction as men copying each other's marks.</li><li><b>The two algorithms.</b> Relaying estimates round by round (S); a rotating turn to propose (◇S).</li></ul>
+    <p>A slate can go wrong in two ways. It can fail to chalk the dead, or it can chalk the living. So
+    two things are asked of it.</p>
+
+    <p><b>Chalking the dead.</b> Every man who is killed is, in the end, chalked for good. Either by
+    <em>every</em> living man, or at least by <em>some</em> living man.</p>
+
+    <p><b>Sparing the living.</b> Four strengths, from strongest to weakest:</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">Four ways of sparing the living</span>
+    <span class="stmt">Never chalked:</span> no man is chalked while he lives.<br>
+    <span class="stmt">One never chalked:</span> some man who lives through the night is never
+    chalked by anyone.<br>
+    <span class="stmt">In the end, never chalked:</span> there comes a time after which no living man
+    is chalked.<br>
+    <span class="stmt">In the end, one never chalked:</span> there comes a time after which some man
+    who lives through the night is chalked by no one.<br>
+    <span class="paper">Completeness, strong and weak; accuracy, strong, weak, eventual strong and
+    eventual weak, §2.3.</span>
+  </div>
+
+  <div class="prose">
+    <p>Two ways of chalking the dead and four of sparing the living make eight kinds of slate.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th></th><th>never chalked</th><th>one never chalked</th><th>in the end, never chalked</th><th>in the end, one never chalked</th></tr></thead>
+      <tbody>
+        <tr><td><b>every living man chalks the dead</b></td><td>perfect <span class="paper">P</span></td><td>strong <span class="paper">S</span></td><td>in the end perfect <span class="paper">◇P</span></td><td>in the end strong <span class="paper">◇S</span></td></tr>
+        <tr><td><b>some living man chalks the dead</b></td><td><span class="paper">Q</span></td><td>weak <span class="paper">W</span></td><td><span class="paper">◇Q</span></td><td>in the end weak <span class="paper">◇W</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <p>The last column is the weakest thing a slate can promise and still promise anything. Every
+    living man may be chalked at one time or another, over and over, by everyone. All that is asked is
+    that, from some moment nobody can see, one man who lives is left alone. No man ever knows that
+    the moment has come, or who that man is.</p>
+
+    <p>Chalking the dead on its own is worth nothing. A slate that chalks every tent all night chalks
+    every dead man, and tells nobody anything. It is the sparing of the living that makes a slate
+    useful.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>Planned chapters</h2></div>
+<!-- ================= III ================= -->
+<section id="s3">
+  <div class="issue"><span class="no">Chapter III</span><h2>Copying Marks</h2></div>
+
   <div class="prose">
-<ol><li>The camps again, and what they lack.</li><li>The slate, and how it may be wrong.</li><li>Eight kinds of slate.</li><li>Copying marks: weak completeness made strong.</li><li>One man never wrongly marked: agreement despite n − 1 dead.</li><li>Eventually one man: agreement with a majority alive.</li><li>Why a majority is needed then.</li><li>What the slate does not say: how it could be built; atomic broadcast.</li><li>In the Book, In the Paper.</li></ol>
+    <p>The two rows of the table are really one. If only <em>some</em> living man chalks the dead,
+    the men can make every living man do so by copying one another's marks.</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">Copying marks</span>
+    Every man keeps a second slate, his copy. Again and again he sends every tent the marks on his
+    own slate. When a bird comes from a tent, he adds its marks to his copy, and rubs out the mark
+    against the tent the bird came from.<br>
+    <span class="paper">The reduction <var>T</var><sub>D→D′</sub>, Fig. 3, §3.</span>
+  </div>
+
+  <div class="result">
+    <span class="name">Copying Marks</span>
+    <p>If some living man in the end chalks every dead man for good, then with copying every living
+    man does. And the copy spares the living exactly as well as the slate it was copied from.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that copying makes every living man chalk the dead, and spares the living as before</summary>
+    <ol class="proofsteps">
+      <li><b>The dead.</b> A dead man sends no more birds, so after his last bird arrives nobody rubs
+      him out. The living man who in the end chalks him for good goes on sending his marks, and every
+      living man adds them to his copy. So in the end every living man's copy chalks him for
+      good.</li>
+      <li><b>Never chalked, or one never chalked.</b> A man that nobody's slate has chalked is on
+      nobody's list of marks, so nobody copies a mark against him.</li>
+      <li><b>In the end.</b> Suppose from some time no living man's slate chalks a certain living man.
+      The dead stop sending, so in the end no bird carries a mark against him. He goes on sending, and
+      each bird from him rubs him out of every copy. So in the end no copy chalks
+      him.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>So only the top row matters: perfect, strong, in the end perfect, and in the end strong.
+    The next two chapters use the two middle ones, <em>strong</em> and <em>in the end strong</em>. A
+    perfect slate is also strong, and one in the end perfect is also in the end strong, so whatever
+    works with the weaker works with the stronger.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>Must not exist</h2></div>
+<!-- ================= IV ================= -->
+<section id="s4">
+  <div class="issue"><span class="no">Chapter IV</span><h2>One Man Never Chalked</h2></div>
+
   <div class="prose">
-<p>a slate that is ever certain; a raven that is lost; a liar; any fact that makes the slate reliable which the camps could observe; anything following from the decision.</p>
+    <p>Suppose the slates are strong: every living man in the end chalks the dead, and one man who
+    lives, say Lynchaia, is never chalked by anyone. Nobody knows it is Lynchaia. Then the four can
+    agree however many of them die, even three.</p>
+
+    <p>Each man keeps a <span class="coin">tally of sightings</span>: a row for each tent, holding
+    that tent's sighting if he has learned it, and blank if not. At first it holds only his own.</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">The arrangement for a strong slate</span>
+    <span class="stmt">Spreading, three rounds.</span> In each round, a man sends every tent the
+    sightings he learned for the first time in the round before (in the first round, his own). He
+    waits for that round's bird from every tent, except a tent he has chalked; if he chalks a tent
+    while waiting, he stops waiting for it. He writes any new sightings into his tally.<br>
+    <span class="stmt">Comparing.</span> He sends every tent his whole tally, and waits in the same
+    way. Any row that is blank in any tally he receives, he blanks in his own.<br>
+    <span class="stmt">Going.</span> He goes to the gate in the first row of his tally that is not
+    blank, taking the rows in shield order.<br>
+    <span class="paper">The algorithm of Fig. 5, §6.1: <var>n</var> − 1 = 3 asynchronous rounds of
+    Phase 1, Phase 2, Phase 3.</span>
+  </div>
+
+  <div class="prose">
+    <p>The whole thing turns on Lynchaia. Nobody ever chalks her, so everybody waits for every one of
+    her birds. Whatever she has learned by a round, everyone who finishes the next round has learned
+    too. By the end of spreading, every tally that finishes holds everything Lynchaia's holds. In
+    comparing, everyone waits for her tally, and blanks every row that is blank in hers; and every
+    row filled in hers is filled in every tally, so nobody blanks it. So everyone who reaches the end
+    holds exactly Lynchaia's tally, which is not empty, since it has her own sighting. They all go to
+    the same gate, a gate someone sighted.</p>
+
+    <p>Nobody waits for ever: a dead man is chalked in the end, and a live man's bird comes in the
+    end. So everyone who lives goes.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">One Man Never Chalked</span>
+    <p>With strong slates, the four meet all three demands however many of them are killed.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that with a strong slate everyone who finishes holds the same tally</summary>
+    <ol class="proofsteps">
+      <li>Every row of every tally is either blank or that tent's true sighting, since sightings are
+      only ever copied.</li>
+      <li>Let <var>c</var> be the man never chalked. Everyone who finishes a round received
+      <var>c</var>'s bird for that round, since he waited for it.</li>
+      <li><b>After spreading, every finished tally holds all of <var>c</var>'s.</b> Take a sighting
+      <var>c</var> first learned in round <var>r</var>. If <var>r</var> is before the last round,
+      <var>c</var> sends it in round <var>r</var> + 1 and everyone who finishes that round has it. If
+      <var>r</var> is the last round, three rounds among four men means the sighting reached
+      <var>c</var> through every other man, each of whom wrote it into his tally before passing it
+      on.</li>
+      <li><b>After comparing, every finished tally equals <var>c</var>'s.</b> A row filled in
+      <var>c</var>'s tally is filled in every tally sent in comparing, by the last step, so nobody
+      blanks it. A row blank in <var>c</var>'s is blanked by everyone, since everyone waits for
+      <var>c</var>'s tally.</li>
+      <li><var>c</var>'s own row is filled in <var>c</var>'s tally and so in everyone's, so every
+      finished tally has a first filled row, the same in all. Everyone who goes, goes to that tent's
+      sighting.</li>
+      <li>Nobody waits for ever, since a dead man is in the end chalked by every living man and a live
+      man's birds all arrive. So every living man goes.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>No man in this arrangement is in charge of anything. Everybody sends everything to everybody,
+    and the man who holds it together is one nobody can name.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>Decisions taken</h2></div>
+<!-- ================= V ================= -->
+<section id="s5">
+  <div class="issue"><span class="no">Chapter V</span><h2>In the End, One Man Spared</h2></div>
+
   <div class="prose">
-<ol><li><b>A turn to propose</b>, passing round the tents in shield order and fixed by the round number, not by anyone's command. It is the turn of <i>Agreeing When Messages Run Late</i>, at the same tents, and the book says so.</li><li><b>The prop is the slate</b>: a slate in each tent with a row per other tent, chalked against a tent he suspects and rubbed out when a bird comes. "Tally" stays with the ring road.</li><li><b>The book stays on the detector</b> and points to the DLS book for the rotating turn.</li><li><b>Names:</b> Chandraios and Touegos at two tents, two ordinary names at the others.</li></ol>
+    <p>Now suppose less: the slates are only <em>in the end</em> strong. For as long as the slates
+    like, every man may be chalked by everyone. Only from some moment nobody sees is one living man
+    left alone. Then the four can still agree, provided more than half of them live. With four men,
+    one may die.</p>
+
+    <p>They take <span class="coin">turns</span>. Each round belongs to one tent, in shield order:
+    bull, boar, trident, stag, bull again. The round number decides whose turn it is, not anyone's
+    command, as on the windy
+    nights<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s3" title="Agreeing When Messages Run Late, Chapter III">*</a></sup>.
+    Each man carries an <span class="coin">estimate</span>, a gate, which starts as his sighting, and
+    beside it the round in which he last took it up.</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">A round, for slates in the end strong</span>
+    <span class="stmt">(1)</span> Every man sends the round's owner his estimate and the round he took
+    it up.<br>
+    <span class="stmt">(2)</span> The owner waits for three of these, himself included, and takes
+    the estimate taken up most recently. He sends it to every tent.<br>
+    <span class="stmt">(3)</span> Every man waits for the owner's estimate, or until he chalks the
+    owner. If the estimate comes, he takes it up, notes this round, and sends the owner
+    <em>agreed</em>. If he chalks the owner first, he sends <em>not agreed</em>.<br>
+    <span class="stmt">(4)</span> The owner waits for three answers. If all three say
+    <em>agreed</em>, he sends every tent a <span class="coin">going bird</span> naming his estimate.<br>
+    <span class="stmt">Going.</span> A man who takes in a going bird for the first time sends it on to
+    every tent, then goes to its gate.<br>
+    <span class="paper">The rotating-coordinator algorithm of Fig. 6, §6.2; three is ⌈(<var>n</var> + 1)/2⌉ for
+    <var>n</var> = 4. The going bird is Reliable Broadcast of the decision, Fig. 4.</span>
+  </div>
+
+  <div class="prose">
+    <p><b>Why they never go to two gates.</b> Take the first round in which three men sent
+    <em>agreed</em>, say on north. Those three took up north in that round. Any later owner waits for
+    three estimates, and any three out of four share a man with those three, so the owner sees at least
+    one north taken up that recently or later. Take the estimate taken up most recently, and by the
+    same argument round after round, it is north. So every later owner sends north, and every going
+    bird names north.</p>
+
+    <p><b>Why they go.</b> Nobody waits for ever: a dead owner is in the end chalked, and three men
+    live to answer. From some moment one living man is never chalked. When his turn next comes, he
+    gathers three estimates, everyone waits for his, nobody chalks him, all say <em>agreed</em>, and
+    his going bird goes out.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">In the End, One Man Spared</span>
+    <p>With slates that are only in the end strong, the four meet all three demands provided more
+    than half of them live.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that the turns never send two gates, and in the end send one</summary>
+    <ol class="proofsteps">
+      <li><b>No two gates.</b> Let <var>r</var> be the first round in which three men sent
+      <em>agreed</em> to its owner, on estimate <var>e</var>. Each of them took up <var>e</var> in
+      round <var>r</var>. Show by induction that every owner of a round <var>k</var> ≥ <var>r</var>
+      who sends an estimate sends <var>e</var>. For <var>k</var> = <var>r</var> it is so. For later
+      <var>k</var>, the owner heard from three men; one of them is among the three of round
+      <var>r</var>, and reported an estimate taken up in round <var>r</var> or later. So the most
+      recent round <var>t</var> among the three satisfies <var>r</var> ≤ <var>t</var> &lt;
+      <var>k</var>, and the estimate taken up in round <var>t</var> was sent by that round's owner,
+      which by induction was <var>e</var>.</li>
+      <li>Every going bird was first sent by an owner who had three <em>agreed</em> in a round no
+      earlier than <var>r</var>, so every going bird names <var>e</var>, and everyone who goes, goes to
+      <var>e</var>. Every estimate is someone's sighting, so <var>e</var> was sighted.</li>
+      <li><b>Going.</b> If anyone living takes in a going bird, he sends it on before going, so every
+      living man takes it in and goes. Suppose instead nobody living ever goes. No living man is stuck
+      for ever in any round: three men live to send estimates and answers, and a man waiting on an
+      owner either gets his estimate or, if the owner is dead, in the end chalks him.</li>
+      <li>From some time, one living man <var>q</var> is chalked by nobody, and the dead are all dead.
+      Take a later round whose owner is <var>q</var>. He gathers three estimates and sends one;
+      everyone waits for it, since nobody chalks him; three answer <em>agreed</em>; he sends a going
+      bird. That contradicts the supposition.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>While the slates are still chalking the living, rounds fail: a man chalks a live owner whose
+    bird is slow, says <em>not agreed</em>, and the round comes to nothing. Failing is always safe.
+    The chalk can cost time; it can never cost agreement.</p>
   </div>
 </section>
 
 <hr class="rule">
+
+<!-- ================= VI ================= -->
+<section id="s6">
+  <div class="issue"><span class="no">Chapter VI</span><h2>Why More Than Half, Then</h2></div>
+
+  <div class="prose">
+    <p>With a strong slate the four bear any number of deaths. With one that is only in the end
+    strong, they need more than half alive. The need is real, and it holds even for slates in the end
+    <em>perfect</em>, which in the end chalk the dead and nobody else.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 330" role="img" aria-label="Three panels, each with two pairs of tents: Fischeros and Lynchaia on the left, Patersonos and Kallias on the right. First panel: all sighted north, Patersonos and Kallias are dead and chalked; Fischeros and Lynchaia go north. Second panel: all sighted south, Fischeros and Lynchaia are dead and chalked; Patersonos and Kallias go south. Third panel: all alive, the left pair sighted north and the right pair south; every bird between the pairs is slow, each pair chalks the other, and each goes to a different gate.">
+        <!-- panel headers -->
+        <text class="d-house" x="110" y="24" text-anchor="middle">FIRST</text>
+        <text class="d-house" x="330" y="24" text-anchor="middle">SECOND</text>
+        <text class="d-house" x="550" y="24" text-anchor="middle" fill="#bf4a26">THIRD</text>
+        <line x1="220" y1="10" x2="220" y2="320" stroke="#b9a77e" stroke-width="1.5"/>
+        <line x1="440" y1="10" x2="440" y2="320" stroke="#b9a77e" stroke-width="1.5"/>
+
+        <!-- panel 1 -->
+        <text class="d-key" x="60" y="54" text-anchor="middle">F · L</text>
+        <text class="d-key" x="160" y="54" text-anchor="middle">P · K</text>
+        <rect x="30" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
+        <rect x="130" y="66" width="60" height="150" rx="4" fill="none" stroke="#b9a77e" stroke-width="1.4" stroke-dasharray="4 4"/>
+        <text class="d-lbl" x="60" y="100" text-anchor="middle">sighted</text>
+        <text class="d-lbl" x="60" y="116" text-anchor="middle">north</text>
+        <text class="d-note" x="160" y="108" text-anchor="middle">dead</text>
+        <text class="d-note" x="160" y="122" text-anchor="middle">at dusk</text>
+        <text class="d-lbl" x="60" y="196" text-anchor="middle" fill="#bf4a26">go north</text>
+        <text class="d-note" x="110" y="258" text-anchor="middle">they chalk the dead pair</text>
+        <text class="d-note" x="110" y="272" text-anchor="middle">and go without them</text>
+
+        <!-- panel 2 -->
+        <text class="d-key" x="280" y="54" text-anchor="middle">F · L</text>
+        <text class="d-key" x="380" y="54" text-anchor="middle">P · K</text>
+        <rect x="250" y="66" width="60" height="150" rx="4" fill="none" stroke="#b9a77e" stroke-width="1.4" stroke-dasharray="4 4"/>
+        <rect x="350" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
+        <text class="d-note" x="280" y="108" text-anchor="middle">dead</text>
+        <text class="d-note" x="280" y="122" text-anchor="middle">at dusk</text>
+        <text class="d-lbl" x="380" y="100" text-anchor="middle">sighted</text>
+        <text class="d-lbl" x="380" y="116" text-anchor="middle">south</text>
+        <text class="d-lbl" x="380" y="196" text-anchor="middle" fill="#bf4a26">go south</text>
+        <text class="d-note" x="330" y="258" text-anchor="middle">the same, with the</text>
+        <text class="d-note" x="330" y="272" text-anchor="middle">pairs and gates swapped</text>
+
+        <!-- panel 3 -->
+        <text class="d-key" x="500" y="54" text-anchor="middle">F · L</text>
+        <text class="d-key" x="600" y="54" text-anchor="middle">P · K</text>
+        <rect x="470" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
+        <rect x="570" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
+        <rect class="d-band" x="534" y="66" width="32" height="150"/>
+        <text class="d-lbl" x="500" y="100" text-anchor="middle">sighted</text>
+        <text class="d-lbl" x="500" y="116" text-anchor="middle">north</text>
+        <text class="d-lbl" x="600" y="100" text-anchor="middle">sighted</text>
+        <text class="d-lbl" x="600" y="116" text-anchor="middle">south</text>
+        <text class="d-lbl" x="500" y="196" text-anchor="middle" fill="#bf4a26">go north</text>
+        <text class="d-lbl" x="600" y="196" text-anchor="middle" fill="#bf4a26">go south</text>
+        <text class="d-note" x="550" y="238" text-anchor="middle">chalk</text>
+        <text class="d-note" x="550" y="258" text-anchor="middle" fill="#bf4a26">each pair sees just what</text>
+        <text class="d-note" x="550" y="272" text-anchor="middle" fill="#bf4a26">it saw before</text>
+      </svg>
+    </div>
+    <figcaption><b>If two may die, a slate that is right only in the end can split the four.</b>
+    On the third night nobody is dead, but each pair's birds to the other are slow and each pair
+    chalks the other, exactly as on a night when the other pair was dead. The slates are rubbed clean
+    afterwards, too late.</figcaption>
+  </figure>
+
+
+  <div class="result">
+    <span class="name">More Than Half</span>
+    <p>If two of the four may die, no arrangement meets the three demands, even with slates in the end
+    perfect.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that slates in the end perfect cannot carry the four past two deaths</summary>
+    <ol class="proofsteps">
+      <li>Suppose some arrangement does. Divide the four into pairs: Fischeros and Lynchaia, Patersonos
+      and Kallias.</li>
+      <li><b>The first night.</b> All sighted north. Patersonos and Kallias are dead from dusk, and
+      the other two chalk them all night. That slate is in the end perfect. Fischeros and Lynchaia go,
+      within some time <var>A</var>, and to north, since only north was sighted.</li>
+      <li><b>The second night.</b> The same with pairs and gates swapped: Patersonos and Kallias go
+      south within some time <var>B</var>.</li>
+      <li><b>The third night.</b> Fischeros and Lynchaia sighted north, Patersonos and Kallias south.
+      Nobody dies. Every bird between the pairs sits in the pines until after <var>A</var> and
+      <var>B</var>, and until then each pair chalks the other; after that, all birds arrive and all
+      chalk is rubbed out. That slate is in the end perfect too.</li>
+      <li>Until then each pair sees exactly what it saw on its own night, and goes: one pair north,
+      the other south. That contradicts the first demand.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>The difference from Chapter IV is <em>when</em> the slate is right. A strong slate never chalks
+    one living man, from dusk; that man holds the four together from the start. A slate that is right
+    only in the end may be wrong about everyone for as long as the arrangement needs it to be right,
+    and while it is, the four are two pairs, each able to believe the other dead.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VII ================= -->
+<section id="s7">
+  <div class="issue"><span class="no">Chapter VII</span><h2>What the Slate Does Not Say</h2></div>
+
+  <div class="prose">
+    <p><b>It does not say how to keep one.</b> The slate's promises are granted, not earned. On a
+    night when no bird has a longest flight, and nothing more is known, no man can keep a slate that
+    is even in the end weak: if he could, the four could agree on that night, and they
+    cannot<sup class="xref"><a href="../the-limits-of-agreement/index.html#s9" title="The Limits of Agreement, Chapter IX">*</a></sup>.
+    The slates of this book are an assumption about the hill, stated as a promise about chalk.</p>
+
+    <p><b>On a windy night, a slate can be kept.</b> Where a wind blows for a while and then drops, and
+    in still air every bird comes within a
+    glass<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s2" title="Agreeing When Messages Run Late, Chapter II">*</a></sup>,
+    a man can keep a slate in the end perfect. Every man sends a bird to every tent, again and again,
+    to say he is alive. A man chalks a tent when a glass has run out with no bird from it; when a bird
+    from it comes after all, he rubs out the mark and waits longer for that tent next time. A dead
+    man's birds stop, so he is chalked for good. Once the wind has dropped, a live man's birds come in
+    time once the waiting is long enough, so in the end nobody living is chalked. The slate is a way
+    of saying what the wind gives, without saying anything about wind.</p>
+
+    <p><b>It does not have to be right to be safe.</b> If the slates break every promise, chalking the
+    living for ever and never chalking the dead, the arrangements of Chapters IV and V may never send
+    anyone. They never send two men to different gates. Only going is lost.</p>
+
+    <p><b>The weakest slate that will do.</b> In the end weak, with more than half alive, is enough.
+    It is also necessary: any slate with which the four could agree can be made into one in the end
+    weak. That was proved separately, and is not proved here.</p>
+
+    <p><b>Agreeing once is agreeing on an order.</b> If the four had many things to decide, one after
+    another, and had to take them in the same order, the same slates would do, and nothing weaker:
+    each can be turned into the other.</p>
+
+    <p><b>Nothing follows from going.</b> The four go in at one gate. What happens there is not the
+    subject of this book.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VIII ================= -->
+<section id="s8">
+  <div class="issue"><span class="no">Chapter VIII</span><h2>In the Book, In the Paper</h2></div>
+
+  <div class="prose">
+    <p>So that the reader may check the slates against the paper of Chandra and Toueg.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td><span class="term">the four men; no longest flight; nobody lies; any may be killed</span></td><td>Asynchronous processes with reliable channels and crash failures. <span class="paper">§2, <var>n</var> = 4.</span></td></tr>
+        <tr><td><span class="term">a sighting; going to a gate</span></td><td>A proposed value; a decision. <span class="paper">§5.</span></td></tr>
+        <tr><td><span class="term">the three demands</span></td><td>Agreement; uniform validity; termination. <span class="paper">§5. The algorithms give uniform agreement: no two processes, correct or not, decide differently.</span></td></tr>
+        <tr><td><span class="term">the slate; chalking a tent; rubbing it out</span></td><td>A local failure detector module; suspecting a process; ceasing to suspect it. <span class="paper">§2.2.</span></td></tr>
+        <tr><td><span class="term">chalking the dead, by every or by some living man</span></td><td>Strong and weak completeness. <span class="paper">§2.3.</span></td></tr>
+        <tr><td><span class="term">the four ways of sparing the living</span></td><td>Strong, weak, eventual strong and eventual weak accuracy. <span class="paper">§2.3.</span></td></tr>
+        <tr><td><span class="term">the eight kinds of slate</span></td><td><span class="paper">P, S, ◇P, ◇S, Q, W, ◇Q, ◇W, Fig. 1.</span></td></tr>
+        <tr><td><span class="term">copying marks</span></td><td>The reduction from weak to strong completeness, preserving accuracy. <span class="paper">Fig. 3, Theorem 1, Corollary 1.</span></td></tr>
+        <tr><td><span class="term">the tally of sightings; spreading; comparing</span></td><td>The vector <var>V</var><sub>p</sub>; Phase 1's <var>n</var> − 1 rounds; Phase 2. <span class="paper">Fig. 5.</span></td></tr>
+        <tr><td><span class="term">One Man Never Chalked</span></td><td>Consensus is solvable with S, tolerating up to <var>n</var> − 1 crashes. <span class="paper">Theorem 2; Corollary 2 for W.</span></td></tr>
+        <tr><td><span class="term">turns in shield order; the owner</span></td><td>The rotating coordinator, <var>c</var> = (<var>r</var> mod <var>n</var>) + 1. <span class="paper">§6.2.</span></td></tr>
+        <tr><td><span class="term">an estimate and the round it was taken up</span></td><td>estimate<sub>p</sub> and its timestamp ts<sub>p</sub>. <span class="paper">Fig. 6.</span></td></tr>
+        <tr><td><span class="term">agreed; not agreed</span></td><td>ack; nack. <span class="paper">Fig. 6, Phase 3.</span></td></tr>
+        <tr><td><span class="term">the going bird, sent on before going</span></td><td>R-broadcast of the decision, relayed on first receipt. <span class="paper">Fig. 4. Here a process halts after relaying, since going is silence; the paper's processes keep running.</span></td></tr>
+        <tr><td><span class="term">In the End, One Man Spared</span></td><td>Consensus is solvable with ◇S when fewer than half crash. <span class="paper">Theorem 3; Corollary 3 for ◇W.</span></td></tr>
+        <tr><td><span class="term">More Than Half; the three nights</span></td><td>Consensus cannot be solved with ◇P when <var>f</var> ≥ <var>n</var>/2. <span class="paper">Theorem 5, runs <var>R</var>₀, <var>R</var>₁, <var>R</var><sub>A</sub>.</span></td></tr>
+        <tr><td><span class="term">granted, not earned</span></td><td>Failure detectors are specified by properties, not implementations; none with ◇W's properties can be implemented in a purely asynchronous system. <span class="paper">§1, footnote 6.</span></td></tr>
+        <tr><td><span class="term">a slate kept on a windy night</span></td><td>Timeouts that grow after each premature suspicion implement ◇P when bounds hold after an unknown time. <span class="paper">Theorem 9, §9.1, Fig. 10.</span></td></tr>
+        <tr><td><span class="term">the weakest slate that will do</span></td><td>◇W<sub>0</sub> is the weakest failure detector for consensus with a majority correct. <span class="paper">Theorem 4 and Corollary 4, from Chandra, Hadzilacos and Toueg; not proved in this paper.</span></td></tr>
+        <tr><td><span class="term">agreeing on an order</span></td><td>Consensus and Atomic Broadcast are equivalent. <span class="paper">§7, Corollary 5.</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="ideas-box">
+    <span class="lbl">The ideas, plainly</span>
+    <p>Consensus is impossible in an asynchronous system with even one crash, because a crashed
+    process cannot be told from a slow one. Chandra and Toueg add an unreliable failure detector: a
+    module at each process that lists the processes it suspects, and may be wrong. They classify
+    detectors by completeness (crashed processes are eventually suspected, by every or by some correct
+    process) and accuracy (correct processes are not suspected: never, or eventually; all of them, or
+    at least one).</p>
+
+    <p>Weak completeness can be turned into strong by gossiping suspicions, so four classes matter.
+    With S, where some correct process is never suspected, consensus tolerates any number of crashes,
+    by relaying proposals for <var>n</var> − 1 rounds. With ◇S, where some correct process is
+    eventually never suspected, consensus needs a majority of correct processes and uses a rotating
+    coordinator; safety holds however badly the detector behaves, and progress returns once it behaves.
+    The majority is necessary even with ◇P, by a partition argument.</p>
+
+    <p>A failure detector packages timing assumptions as a statement about suspicions. In partially
+    synchronous systems, growing timeouts implement ◇P; the detector lets algorithms be written
+    without mentioning time at all. ◇W is the weakest detector for consensus, and consensus is
+    equivalent to atomic broadcast.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="refs" class="refs">
+  <h3 class="sect">The Paper Behind This Book</h3>
+  <ul>
+    <li>Tushar Deepak Chandra and Sam Toueg, <i>Unreliable Failure Detectors for Reliable
+    Distributed Systems</i>. Journal of the ACM <b>43</b>, 2 (March 1996), 225–267. — The eight
+    classes, the reduction from weak to strong completeness, consensus with S and with ◇S, the
+    majority lower bound, and the equivalence with atomic broadcast.</li>
+  </ul>
+  <aside class="fn">The four men are the mercenaries of <i>The Limits of Agreement</i>, kept for this
+  book as for the camps' other books. Tushar Chandra and Sam Toueg are credited here.</aside>
+</section>
+
+<hr class="rule">
+
+<p class="lineage"><span class="lbl">Leads to</span> <span class="unwritten-link" title="Not yet written">Keeping Order Among Liars</span><br>
+  <span class="outside"><span class="tag">Outside this series</span> Chandra, Hadzilacos &amp; Toueg 1996, <i>the weakest failure detector</i> · Aguilera, Chen &amp; Toueg 2000, <i>failure detection and consensus in the crash-recovery model</i></span></p>
 
 </div>
 </body>

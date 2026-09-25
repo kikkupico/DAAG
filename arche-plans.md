@@ -19,53 +19,7 @@ of *Ordering Without Clocks*; see `settings.md`.
 
 **Chandra & Toueg 1996 · the four camps, Mount Phyle**
 
-**The idea.** FLP fails because a dead process cannot be told from a slow one. Chandra and Toueg
-add an **unreliable failure detector**, a module at each process that suspects others and can be
-wrong, and ask how good it must be. They define eight classes by **completeness** (every crashed
-process is eventually suspected, by some or by every correct process) and **accuracy** (correct
-processes are not suspected: never, or eventually; all of them, or at least one). The results:
-- Weak completeness can be turned into strong by gossiping suspicions, so four classes suffice.
-- With **S** (some correct process is never suspected), consensus tolerates any number of crashes,
-  n − 1, with an algorithm that has no coordinator.
-- With **◇S** (eventually some correct process is never suspected), consensus needs a majority of
-  correct processes and uses a **rotating coordinator**.
-- Every "eventually" class needs a majority; that bound is tight.
-- Consensus and **atomic broadcast** are equivalent. (That ◇W is the *weakest* detector is the
-  companion paper, not this one.)
-
-**The allegory.**
-- **The camps**, as in *The Limits of Agreement* and *Agreeing by Chance*: ravens, no longest
-  flight, one or more tents may fall silent, no one lies.
-- **The slate:** in each tent, a slate with a row per other tent, where a man chalks a mark against
-  a tent he suspects and rubs it out when a bird comes. Its guarantees are **granted, not earned**,
-  as `settings.md` says: ravens with unbounded flights cannot build such a slate, and the paper
-  treats the detector as given in the same way.
-- **The eight classes** as ways a slate can be wrong, and the reduction as men copying each other's
-  marks.
-- **The two algorithms.** Relaying estimates round by round (S); a rotating turn to propose (◇S).
-
-**Chapters.**
-1. The camps again, and what they lack.
-2. The slate, and how it may be wrong.
-3. Eight kinds of slate.
-4. Copying marks: weak completeness made strong.
-5. One man never wrongly marked: agreement despite n − 1 dead.
-6. Eventually one man: agreement with a majority alive.
-7. Why a majority is needed then.
-8. What the slate does not say: how it could be built; atomic broadcast.
-9. In the Book, In the Paper.
-
-**Must not exist:** a slate that is ever certain; a raven that is lost; a liar; any fact that makes
-the slate reliable which the camps could observe; anything following from the decision.
-
-**Decided.**
-1. **A turn to propose**, passing round the tents in shield order and fixed by the round number,
-   not by anyone's command. It is the turn of *Agreeing When Messages Run Late*, at the same
-   tents, and the book says so.
-2. **The prop is the slate**: a slate in each tent with a row per other tent, chalked against a tent
-   he suspects and rubbed out when a bird comes. "Tally" stays with the ring road.
-3. **The book stays on the detector** and points to the DLS book for the rotating turn.
-4. **Names:** Chandraios and Touegos at two tents, two ordinary names at the others.
+Written: `books/telling-the-dead-from-the-slow/`. FLP's four men; see `settings.md`.
 
 ---
 
