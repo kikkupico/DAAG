@@ -16,63 +16,440 @@
 </nav>
 <div class="page">
 
+<!-- ================= COVER ================= -->
 <header class="cover">
   <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · Mount Phyle</div>
   <h1 class="display" style="margin:18px 0 6px">Changing Leaders Among Liars</h1>
-  <p class="sub">When some machines may lie, replacing a leader has been slow and costly. Can a new leader take over as cheaply as any ordinary step, and at the pace of the messages rather than of a timer?</p>
-  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the paper's idea, the
-  allegory, the chapters and the decisions taken so far. It will be replaced by the book.
-  <br><span class="paper">Yin, Malkhi, Reiter, Gueta &amp; Abraham 2019 (HotStuff) · the same crown and loot book</span></p>
+  <p class="sub">When some machines may lie, replacing a leader has been slow and costly. Can a new
+  leader take over as cheaply as any ordinary step, and at the pace of the messages rather than of a
+  timer?</p>
+  <p class="pub">The same four bandits keep the same loot book on the same windy crown. This time the
+  job passes at every entry. Each man sends his sealed vote to the holder alone, who ties three into a
+  bundle and sends the bundle on. One more stage than before lets a new holder take over as cheaply
+  as an old one, and go as fast as the ravens once the wind drops.</p>
+  <p class="lineage"><span class="lbl">Builds on</span> <a href="../keeping-order-among-liars/index.html">Keeping Order Among Liars</a></p>
 </header>
 
+<nav class="toc">
+  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
+  <ol>
+    <li><a href="#s1">I · What a Change Cost</a></li>
+    <li><a href="#s2">II · Votes to One Man, Bundles to All</a></li>
+    <li><a href="#s3">III · Three Stages and a Lock</a></li>
+    <li><a href="#s4">IV · Never Two Entries</a></li>
+    <li><a href="#s5">V · The Hidden Lock</a></li>
+    <li><a href="#s6">VI · A New Holder Every Entry</a></li>
+    <li><a href="#s7">VII · What It Does Not Say</a></li>
+    <li><a href="#s8">VIII · In the Book, In the Paper</a></li>
+    <li><a href="#refs">The Paper Behind This Book</a></li>
+  </ol>
+</nav>
+
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>The idea</h2></div>
+<!-- ================= I ================= -->
+<section id="s1">
+  <div class="issue"><span class="no">Chapter I</span><h2>What a Change Cost</h2></div>
+
   <div class="prose">
-<p>A leader-based Byzantine protocol in the DLS partial-synchrony model, with n = 3f + 1. Each vote goes to the leader, who combines n − f of them into one <b>quorum certificate</b> (a threshold signature), so each phase costs a linear number of messages. Three phases (prepare, pre-commit, commit) where earlier protocols used two, and that third phase is what buys:</p>
-<ul><li><b>Linear view change</b>, a new leader costing no more than an ordinary step;</li><li><b>Optimistic responsiveness</b>, moving at the pace of actual message delay after GST instead of waiting out a maximum.</li></ul>
-<p>Safety comes from <b>locks</b> (a replica locks on a certificate) and the <b>safeNode</b> rule: accept a proposal that extends your lock, or that carries a certificate from a later view. A separate <b>pacemaker</b> handles liveness. <b>Chained HotStuff</b> pipelines the phases, so every view proposes a new entry and the leader rotates each view.</p>
+    <p>On the crown of Mount Phyle, Lamportos on the peak and Shostakos, Peasios and Dolevios at their
+    posts keep one loot book, a copy at each post. One of them may lie. Every bird is sealed with an
+    unforgeable ring, and a wind can pin the ravens down for as long as it blows. Entries are numbered
+    by whoever holds the job, echoed twice, and stand in the same order in every honest copy; when the
+    holder stalls, the job
+    passes<sup class="xref"><a href="../keeping-order-among-liars/index.html#s3" title="Keeping Order Among Liars, Chapter III">*</a></sup>.</p>
+
+    <p>That arrangement pays for two things.</p>
+
+    <p><b>Every man writes to every man.</b> Each echo goes from each man to all the others. With four
+    men that is a dozen birds a stage. With forty it would be over fifteen hundred.</p>
+
+    <p><b>A change of job is heavy.</b> The new holder must gather requests from three men, each carrying
+    sealed proof of every entry readied at his post, and send all of it on, so that each man can check
+    his new numbering<sup class="xref"><a href="../keeping-order-among-liars/index.html#s5" title="Keeping Order Among Liars, Chapter V">*</a></sup>.
+    A change costs far more than an ordinary entry, and the more often the job passes, the more that
+    matters.</p>
+
+    <p>This book keeps the crown, the book, the seals, the wind and the four men. It changes the
+    procedure. The job passes at every entry, whether or not anyone suspects its holder, and a change
+    of holder costs no more than an entry.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>The allegory</h2></div>
+<!-- ================= II ================= -->
+<section id="s2">
+  <div class="issue"><span class="no">Chapter II</span><h2>Votes to One Man, Bundles to All</h2></div>
+
   <div class="prose">
-<ul><li><b>The same crown, loot book and wind</b> as <i>Keeping Order Among Liars</i>. It must not contradict it.</li><li><b>The job passes with every entry</b>, whether or not anyone suspects its holder.</li><li><b>The bundle:</b> the holder ties three sealed votes into one bundle and sends it on. A real threshold signature makes the bundle the size of one seal, and the book says so plainly.</li><li><b>A lock</b> is a bundle a man keeps and will not act against, unless shown a later bundle.</li><li><b>The pacemaker</b> is each man's sandglass, which moves the job on when a view runs long.</li></ul>
+    <p>Instead of every man echoing to every man, each man sends his sealed <span class="coin">vote</span>
+    to the holder alone. When the holder has three matching votes, he ties them into a
+    <span class="coin">bundle</span> and sends the bundle to everyone. A bundle of three seals proves
+    that three men voted, and so, with one liar, that at least two honest men did.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 300" role="img" aria-label="Two panels with the four posts as lifelines. Left: in one stage every man sends to every other man, twelve birds. Right: the three other men send their votes to the holder, who ties three into a bundle and sends it to the other three.">
+        <defs>
+          <marker id="clb" markerWidth="8" markerHeight="8" refX="6.5" refY="2.8" orient="auto"><path d="M0,0 L6.5,2.8 L0,5.6 z" fill="#136f9e"/></marker>
+          <marker id="clr" markerWidth="8" markerHeight="8" refX="6.5" refY="2.8" orient="auto"><path d="M0,0 L6.5,2.8 L0,5.6 z" fill="#bf4a26"/></marker>
+        </defs>
+        <text class="d-house" x="160" y="22" text-anchor="middle">EVERY MAN TO EVERY MAN</text>
+        <text class="d-house" x="500" y="22" text-anchor="middle">VOTES TO ONE, BUNDLE TO ALL</text>
+        <line x1="330" y1="10" x2="330" y2="300" stroke="#b9a77e" stroke-width="1.5"/>
+        <text class="d-key" x="70" y="46" text-anchor="middle">L</text>
+        <line class="d-lifeline" x1="70" y1="54" x2="70" y2="250"/>
+        <text class="d-key" x="130" y="46" text-anchor="middle">S</text>
+        <line class="d-lifeline" x1="130" y1="54" x2="130" y2="250"/>
+        <text class="d-key" x="190" y="46" text-anchor="middle">P</text>
+        <line class="d-lifeline" x1="190" y1="54" x2="190" y2="250"/>
+        <text class="d-key" x="250" y="46" text-anchor="middle">D</text>
+        <line class="d-lifeline" x1="250" y1="54" x2="250" y2="250"/>
+        <text class="d-key" x="410" y="46" text-anchor="middle">L</text>
+        <line class="d-lifeline" x1="410" y1="54" x2="410" y2="250"/>
+        <text class="d-key" x="470" y="46" text-anchor="middle">S</text>
+        <line class="d-lifeline" x1="470" y1="54" x2="470" y2="250"/>
+        <text class="d-key" x="530" y="46" text-anchor="middle">P</text>
+        <line class="d-lifeline" x1="530" y1="54" x2="530" y2="250"/>
+        <text class="d-key" x="590" y="46" text-anchor="middle">D</text>
+        <line class="d-lifeline" x1="590" y1="54" x2="590" y2="250"/>
+        <path class="d-msg" marker-end="url(#clb)" d="M70,90 L125,170"/>
+        <path class="d-msg" marker-end="url(#clb)" d="M70,90 L185,170"/>
+        <path class="d-msg" marker-end="url(#clb)" d="M70,90 L245,170"/>
+        <path class="d-msg" marker-end="url(#clb)" d="M130,90 L75,170"/>
+        <path class="d-msg" marker-end="url(#clb)" d="M130,90 L185,170"/>
+        <path class="d-msg" marker-end="url(#clb)" d="M130,90 L245,170"/>
+        <path class="d-msg" marker-end="url(#clb)" d="M190,90 L75,170"/>
+        <path class="d-msg" marker-end="url(#clb)" d="M190,90 L135,170"/>
+        <path class="d-msg" marker-end="url(#clb)" d="M190,90 L245,170"/>
+        <path class="d-msg" marker-end="url(#clb)" d="M250,90 L75,170"/>
+        <path class="d-msg" marker-end="url(#clb)" d="M250,90 L135,170"/>
+        <path class="d-msg" marker-end="url(#clb)" d="M250,90 L195,170"/>
+        <text class="d-note" x="160" y="276" text-anchor="middle">twelve birds a stage</text>
+        <text class="d-lbl" x="400" y="84" text-anchor="end" font-size="11">holder</text>
+        <path class="d-msg" marker-end="url(#clb)" d="M470,80 L415,140"/>
+        <path class="d-msg" marker-end="url(#clb)" d="M530,80 L415,140"/>
+        <path class="d-msg" marker-end="url(#clb)" d="M590,80 L415,140"/>
+        <circle class="d-ev-hi" cx="410" cy="150" r="5"/>
+        <text class="d-lbl" x="400" y="154" font-size="11" fill="#bf4a26" text-anchor="end">ties three</text>
+        <path class="d-msg-hi" marker-end="url(#clr)" d="M410,158 L465,226"/>
+        <path class="d-msg-hi" marker-end="url(#clr)" d="M410,158 L525,226"/>
+        <path class="d-msg-hi" marker-end="url(#clr)" d="M410,158 L585,226"/>
+        <text class="d-note" x="500" y="276" text-anchor="middle">three votes in, three bundles out</text>
+      </svg>
+    </div>
+    <figcaption><b>A stage costs birds in step with the number of men, not its square.</b> Each man
+    writes only to the holder, and the holder's bundle carries proof of all three votes.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p>On the crown the bundle is three birds' worth of seals, tied together. The paper does better:
+    with a <em>threshold</em> seal, where each man holds a piece and any three pieces combine into one
+    seal that anyone can check, the bundle is the size of a single seal however many men there are. The
+    crown's rings cannot do that; they are ordinary seals. So the saving here is in birds, not in the
+    size of what they carry. With the threshold seal, each stage costs a number of seals that grows only
+    in step with the number of men.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>Planned chapters</h2></div>
+<!-- ================= III ================= -->
+<section id="s3">
+  <div class="issue"><span class="no">Chapter III</span><h2>Three Stages and a Lock</h2></div>
+
   <div class="prose">
-<ol><li>What the change of job cost in the earlier book.</li><li>Votes to one man, bundles to all.</li><li>Three stages, not two: the hidden lock.</li><li>The rule for accepting a proposal.</li><li>Safety in any wind.</li><li>Moving at the pace of the ravens.</li><li>The chain: every entry a new holder.</li><li>What it does not say: no progress before the wind drops; the bundle's size.</li><li>In the Book, In the Paper.</li></ol>
+    <p>Entries now form a chain: each entry names the one before it, so an entry stands only with
+    everything behind it. Two entries <span class="coin">conflict</span> if neither lies on the other's
+    chain.</p>
+
+    <p>Each man keeps two bundles: the latest <em>first bundle</em> he has seen, and his
+    <span class="coin">lock</span>, the latest <em>second bundle</em> he has voted on. A term goes like
+    this.</p>
+  </div>
+
+  <div class="aside-formal">
+    <span class="lbl">A term</span>
+    <span class="stmt">Starting.</span> Every man sends the term's holder his latest first bundle. The
+    holder waits for three, takes the latest of them, and proposes a new entry on top of the entry it
+    names, sending the proposal and that bundle to all.<br>
+    <span class="stmt">First vote.</span> A man votes for the proposal if it lies on the chain of the
+    entry he is locked on, <em>or</em> if the bundle it carries is from a later term than his lock.<br>
+    <span class="stmt">Second vote.</span> The holder ties three first votes into a first bundle and sends
+    it; every man keeps it and votes again.<br>
+    <span class="stmt">Third vote.</span> The holder ties three second votes into a second bundle and
+    sends it; every man locks on it and votes again.<br>
+    <span class="stmt">Standing.</span> The holder ties three third votes into a third bundle and sends it;
+    every man writes the entry and everything behind it into his copy.<br>
+    <span class="stmt">Moving on.</span> If a man's glass runs out before the term ends, he moves to the
+    next term and sends its holder his latest first bundle.<br>
+    <span class="paper">Basic HotStuff, Algorithm 2: new-view, prepare, pre-commit, commit, decide;
+    highQC; lockedQC; safeNode, Algorithm 1; nextView.</span>
+  </div>
+
+  <div class="prose">
+    <p>The rule for the first vote has two halves, and each has its own job. <em>Lies on my locked
+    entry's chain</em> keeps the book safe: a locked man will not help a conflicting entry forward.
+    <em>Carries a later bundle than my lock</em> keeps the book moving: a man locked on something the
+    rest have gone past can be shown that they have, and let go.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>Must not exist</h2></div>
+<!-- ================= IV ================= -->
+<section id="s4">
+  <div class="issue"><span class="no">Chapter IV</span><h2>Never Two Entries</h2></div>
+
   <div class="prose">
-<p>as for <i>Keeping Order Among Liars</i>, and any procedure that contradicts it.</p>
+    <p>Within a term, two bundles of the same stage cannot vouch for conflicting entries: each needs three
+    seals out of four, the two threes share an honest man, and an honest man votes once a stage a
+    term<sup class="xref"><a href="../keeping-order-among-liars/index.html#s4" title="Keeping Order Among Liars, Chapter IV">*</a></sup>.
+    Across terms, the lock does the work.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">Never Two Entries</span>
+    <p>However the wind blows and whoever lies, no two conflicting entries both stand at honest
+    posts.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that the locks keep conflicting entries from both standing</summary>
+    <ol class="proofsteps">
+      <li>Suppose W stands on a third bundle from term <var>a</var>, and a conflicting B on one from term
+      <var>b</var>. They are not the same term, so say <var>a</var> is earlier.</li>
+      <li>B's standing needed a first bundle for B, or for something on B's chain, in term <var>b</var>.
+      Among all first bundles from terms after <var>a</var>, up to <var>b</var>, for entries that
+      conflict with W, take the one from the earliest term, <var>s</var>.</li>
+      <li>W's second bundle in term <var>a</var> and that first bundle in term <var>s</var> each carry three
+      seals, so they share an honest man, <var>r</var>. In term <var>a</var>, <var>r</var> locked on W's
+      second bundle. Nothing between <var>a</var> and <var>s</var> can have moved his lock off W's chain,
+      since that would need a first bundle for a conflicting entry earlier than <var>s</var>.</li>
+      <li>So in term <var>s</var>, <var>r</var> was locked on W, and the proposal conflicted with W. It
+      carried a bundle from no later than term <var>a</var>, again because <var>s</var> is the earliest.
+      Neither half of the rule lets <var>r</var> vote for it. But he did vote, since his seal is in the
+      term-<var>s</var> bundle. Contradiction.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+</section>
+
+<hr class="rule">
+
+<!-- ================= V ================= -->
+<section id="s5">
+  <div class="issue"><span class="no">Chapter V</span><h2>The Hidden Lock</h2></div>
+
+  <div class="prose">
+    <p>Why three stages, when the earlier arrangement made do with two echoes? Try two. A man locks as
+    soon as he sees a first bundle, and an entry stands on the next.</p>
+
+    <p>In some term an entry reaches its first bundle, and only one man, say Peasios, sees it before the
+    others' glasses run out; he locks on it. The next holder hears from the three others, not Peasios,
+    since he need only wait for three. None of them has that bundle, so he proposes an entry that
+    conflicts with Peasios's lock. The two other honest men vote for it. Peasios refuses: it conflicts
+    with his lock and carries no later bundle. That is two votes, not three. The glasses run out, and
+    just then a liar adds his vote, so the holder forms a first bundle that one man sees and locks on.
+    The next term begins the same way. It can go on for ever.</p>
+
+    <p>The two-stage remedy is to make each new holder wait out a full glass before proposing, long
+    enough, once the wind drops, to be sure of hearing every man's latest bundle. That works, but it ties
+    every change of holder to the length of a glass rather than to the flight of a raven.</p>
+
+    <p>With three stages the lock cannot hide. A man locks only on a second bundle, and a second bundle
+    exists only because three men voted on a first bundle and kept it. So a lock at any honest post means
+    at least two honest men hold the matching first bundle. A new holder who hears from any three men
+    hears from at least one of them. He learns the latest bundle without waiting out anything.</p>
+  </div>
+
+  <div class="result">
+    <span class="name">Going at the Ravens' Pace</span>
+    <p>Once the wind has dropped, a term whose holder is honest, with every honest man in it long
+    enough, ends with an entry standing, and it needs to wait only for the first three answers at each
+    stage, never for a full glass.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that an honest holder after the wind drops gets his entry through</summary>
+    <ol class="proofsteps">
+      <li>Take the latest lock held by any honest man: a second bundle. It exists because three men voted
+      on its first bundle, at least two of them honest, and each keeps it.</li>
+      <li>The holder hears the latest first bundles of three men, which include at least one of those two.
+      So he takes a bundle at least as late as every honest lock.</li>
+      <li>Every honest man then votes for the proposal. A man whose lock is from the same term as the
+      bundle the holder took is locked on that very entry, since one term has only one second bundle, and
+      the proposal lies on its chain. Every other honest man's lock is earlier, and the proposal carries a
+      later bundle. In still air all votes and bundles arrive, and each stage completes on three answers.
+      So the entry stands.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>For every honest man to be in the same term for long enough once the wind drops, the holders pass
+    in a fixed order by term number, and each man doubles his glass whenever a term ends with nothing
+    standing, as
+    before<sup class="xref"><a href="../keeping-order-among-liars/index.html#s6" title="Keeping Order Among Liars, Chapter VI">*</a></sup>.
+    In the end the glasses overlap for long enough under an honest holder. The paper keeps this part,
+    which it calls the pacemaker, apart from the rest: it affects only whether entries stand, never which.</p>
   </div>
 </section>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>Decisions taken</h2></div>
+<!-- ================= VI ================= -->
+<section id="s6">
+  <div class="issue"><span class="no">Chapter VI</span><h2>A New Holder Every Entry</h2></div>
+
   <div class="prose">
-<ol><li><b>Names:</b> four seats for five authors: Yinos, Malkhia, Reiteros and Guetaia; the footnote credits all five, Abraham included.</li><li><b>The hidden lock is shown</b> on the crown: a two-stage procedure that must wait out a full glass after each change of holder, set against the three-stage one that need not.</li></ol>
+    <p>The three stages all look alike: the holder sends something, the men vote, the holder bundles the
+    votes. So they can be run on top of one another. Each term the job passes to the next man, who
+    proposes a new entry carrying the latest first bundle. A vote for it is also a second vote for the
+    entry before it, and a third vote for the one before that.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 200" role="img" aria-label="A chain of four entries from terms 5 to 8, each carrying a bundle for the entry directly before it. With the proposal of term 8, the entry of term 7 has its first bundle, term 6's is locked on, and term 5's stands.">
+        <defs>
+          <marker id="chb" markerWidth="8" markerHeight="8" refX="6.5" refY="2.8" orient="auto"><path d="M0,0 L6.5,2.8 L0,5.6 z" fill="#136f9e"/></marker>
+        </defs>
+        <rect x="50" y="60" width="100" height="56" rx="4" fill="none" stroke="#bf4a26" stroke-width="1.6"/>
+        <text class="d-lbl" x="100" y="84" text-anchor="middle">term 5</text>
+        <text class="d-key" x="100" y="102" text-anchor="middle">entry</text>
+        <text class="d-note" x="100" y="142" text-anchor="middle" fill="#bf4a26">stands</text>
+        <rect x="205" y="60" width="100" height="56" rx="4" fill="none" stroke="#1c1512" stroke-width="1.6"/>
+        <text class="d-lbl" x="255" y="84" text-anchor="middle">term 6</text>
+        <text class="d-key" x="255" y="102" text-anchor="middle">entry</text>
+        <text class="d-note" x="255" y="142" text-anchor="middle">locked on</text>
+        <rect x="360" y="60" width="100" height="56" rx="4" fill="none" stroke="#1c1512" stroke-width="1.6"/>
+        <text class="d-lbl" x="410" y="84" text-anchor="middle">term 7</text>
+        <text class="d-key" x="410" y="102" text-anchor="middle">entry</text>
+        <text class="d-note" x="410" y="142" text-anchor="middle">first bundle</text>
+        <rect x="515" y="60" width="100" height="56" rx="4" fill="none" stroke="#1c1512" stroke-width="1.6"/>
+        <text class="d-lbl" x="565" y="84" text-anchor="middle">term 8</text>
+        <text class="d-key" x="565" y="102" text-anchor="middle">entry</text>
+        <text class="d-note" x="565" y="142" text-anchor="middle">new proposal</text>
+        <path class="d-msg" marker-end="url(#chb)" d="M205,88 L154,88"/>
+        <path class="d-msg" marker-end="url(#chb)" d="M360,88 L309,88"/>
+        <path class="d-msg" marker-end="url(#chb)" d="M515,88 L464,88"/>
+        <text class="d-note" x="330" y="176" text-anchor="middle">each arrow is the bundle an entry carries for the one directly before it</text>
+      </svg>
+    </div>
+    <figcaption><b>Each new proposal moves the three before it one stage on.</b> Three entries in a
+    row, each carrying a bundle for the one directly before, and the first of them stands: one vote a
+    term does the work of three stages, spread over three entries.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p>So a man reads the chain behind each new proposal. If it carries a bundle for its direct
+    parent, the parent has its first bundle. If that parent carries one for its own direct parent, the
+    grandparent is ready to lock on. If three in a row each carry a bundle for the one directly before,
+    the first of the three stands. Where a holder failed and a term left nothing, the chain has a gap, and
+    counting starts again.</p>
+
+    <p>The job now passes at every entry, suspected or not. That is cheap for the same reason a
+    change of holder is: a new holder only proposes on the latest bundle he hears of, like any other.</p>
   </div>
 </section>
 
 <hr class="rule">
+
+<!-- ================= VII ================= -->
+<section id="s7">
+  <div class="issue"><span class="no">Chapter VII</span><h2>What It Does Not Say</h2></div>
+
+  <div class="prose">
+    <p><b>Nothing stands before the wind drops.</b> Order holds in any wind. Entries stand only once
+    it has dropped, as for any arrangement.</p>
+
+    <p><b>The bundle is small only with a threshold seal.</b> The crown's rings make a bundle of three
+    seals. The paper's saving in the size of what is carried needs seals that combine, which the rings are
+    not.</p>
+
+    <p><b>A stage more.</b> An entry takes one more stage than before to stand. Chained, the stages
+    overlap, so a new entry still stands at every term.</p>
+
+    <p><b>Nobody learns who lies</b>, and a liar may still file nonsense that stands in order.</p>
+
+    <p><b>Nothing follows from any entry.</b></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VIII ================= -->
+<section id="s8">
+  <div class="issue"><span class="no">Chapter VIII</span><h2>In the Book, In the Paper</h2></div>
+
+  <div class="prose">
+    <p>So that the reader may check the bundles against the paper of Yin, Malkhi, Reiter, Gueta and
+    Abraham.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td><span class="term">the four men; one may lie; the wind</span></td><td><var>n</var> = 3<var>f</var> + 1 = 4; Byzantine faults; partial synchrony with GST. <span class="paper">§3.</span></td></tr>
+        <tr><td><span class="term">the loot book; entries forming a chain</span></td><td>State machine replication; a tree of nodes with parent links; a branch. <span class="paper">§4, §4.2.</span></td></tr>
+        <tr><td><span class="term">conflicting entries</span></td><td>Neither branch extends the other. <span class="paper">§4.2.</span></td></tr>
+        <tr><td><span class="term">a term; its holder</span></td><td>A view; its leader. <span class="paper">§4.</span></td></tr>
+        <tr><td><span class="term">a vote; a bundle of three</span></td><td>A partially signed vote; a quorum certificate of <var>n</var> − <var>f</var> votes. <span class="paper">§4.1–4.2.</span></td></tr>
+        <tr><td><span class="term">a threshold seal</span></td><td>A (2<var>f</var> + 1, <var>n</var>)-threshold signature, combining partial signatures into one. <span class="paper">§3.</span></td></tr>
+        <tr><td><span class="term">first, second, third votes and bundles</span></td><td>prepare, pre-commit, commit votes; prepareQC, precommitQC, commitQC. <span class="paper">§4.1.</span></td></tr>
+        <tr><td><span class="term">the latest first bundle a man sends a new holder</span></td><td>new-view carrying prepareQC; highQC. <span class="paper">§4.1.</span></td></tr>
+        <tr><td><span class="term">the lock</span></td><td>lockedQC, set on the precommitQC. <span class="paper">Algorithm 2, line 25.</span></td></tr>
+        <tr><td><span class="term">the rule for the first vote, its two halves</span></td><td>safeNode: the safety rule (extends the locked node) or the liveness rule (a higher view than the lock). <span class="paper">Algorithm 1.</span></td></tr>
+        <tr><td><span class="term">Never Two Entries</span></td><td>Conflicting nodes cannot both be committed by correct replicas. <span class="paper">Lemma 1, Theorem 2.</span></td></tr>
+        <tr><td><span class="term">the hidden lock; two stages and a full glass</span></td><td>The livelessness of two-phase HotStuff; Tendermint and Casper's wait for Δ. <span class="paper">§4.4; §7.3.</span></td></tr>
+        <tr><td><span class="term">Going at the Ravens' Pace</span></td><td>Optimistic responsiveness; after GST a correct leader decides within a bounded time. <span class="paper">Lemma 3, Theorem 4.</span></td></tr>
+        <tr><td><span class="term">holders in fixed order; doubling glasses</span></td><td>The leader function and nextView with exponential back-off: the Pacemaker. <span class="paper">§4.4, §6.</span></td></tr>
+        <tr><td><span class="term">a new holder every entry; three in a row</span></td><td>Chained HotStuff; One-, Two- and Three-Chains. <span class="paper">§5, Algorithm 3, Theorem 5.</span></td></tr>
+        <tr><td><span class="term">every man to every man; a heavy change</span></td><td>PBFT's quadratic normal case and cubic view change in authenticators. <span class="paper">Table 1.</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="ideas-box">
+    <span class="lbl">The ideas, plainly</span>
+    <p>HotStuff is a Byzantine state machine replication protocol for <var>n</var> = 3<var>f</var> + 1
+    replicas under partial synchrony, like PBFT, with two properties together: a new leader costs no more
+    than an ordinary step (linear view change), and after the network stabilizes a correct leader proceeds
+    at the speed of actual messages rather than a timeout (optimistic responsiveness).</p>
+
+    <p>Votes go only to the leader, who combines <var>n</var> − <var>f</var> of them into a quorum
+    certificate, one threshold signature, so each phase is linear. There are three phases where PBFT had
+    two. Replicas lock on the second certificate, and vote for a proposal if it extends their lock or
+    carries a certificate from a later view. Because a lock implies that <var>f</var> + 1 correct replicas
+    hold the matching first certificate, a new leader hearing from any <var>n</var> − <var>f</var>
+    replicas learns it without waiting; with two phases a lock can hide, and progress needs a wait for the
+    maximum delay.</p>
+
+    <p>Because the phases are identical, they pipeline: every view proposes a new block, the leader rotates
+    every view, and a block commits when three consecutive views extend it.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="refs" class="refs">
+  <h3 class="sect">The Paper Behind This Book</h3>
+  <ul>
+    <li>Maofan Yin, Dahlia Malkhi, Michael K. Reiter, Guy Golan Gueta and Ittai Abraham, <i>HotStuff: BFT
+    Consensus with Linearity and Responsiveness</i>. Proceedings of the 38th ACM Symposium on Principles
+    of Distributed Computing (PODC), 2019. — Basic and Chained HotStuff, the safety and liveness
+    arguments, the two-phase liveness failure, and the comparison with PBFT, Tendermint and Casper.</li>
+  </ul>
+  <aside class="fn">The four men are the bandits of <i>The Limits of Agreement</i>, at the same places.
+  Maofan Yin, Dahlia Malkhi, Michael Reiter, Guy Golan Gueta and Ittai Abraham are credited here.</aside>
+</section>
+
+<hr class="rule">
+
+<p class="lineage"><span class="lbl">Leads to</span> <a href="../the-part-time-parliament/index.html">The Part-Time Parliament</a> · <span class="unwritten-link" title="Not yet written">One Leader at a Time</span><br>
+  <span class="outside"><span class="tag">Outside this series</span> Buchman, Kwon &amp; Milosevic 2018, <i>Tendermint</i> · Buterin &amp; Griffith 2017, <i>Casper</i> · Gueta et al. 2019, <i>SBFT</i></span></p>
 
 </div>
 </body>
