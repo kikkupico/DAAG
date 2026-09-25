@@ -198,7 +198,7 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 | Device | In the paper | Also in |
 |---|---|---|
 | a reader's business at one visit: several works asked for, or several corrections made | A transaction. |  |
-| the couriers stopped | A partition. | Bandits on the road (*Answering While Cut Off*) |
+| the couriers stopped | A partition. | Lost birds at the camps (*Answering While Cut Off*) |
 | the librarian who answers from his own shelves | High availability. | The gate-glass: answering from one's own book |
 | a reader who keeps to his own library | Sticky availability. |  |
 | never shown a correction abandoned or half written | Read committed. |  |
@@ -206,7 +206,7 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 | asking twice in one visit, and getting the same answer | Item cut isolation; predicate cut for "every work on the stars". |  |
 | a reader who always finds his own corrections | Read your writes. |  |
 | never a reply read before the letter it answers | Causal consistency. | The column room (*Ordering Without Clocks*) |
-| two readers borrowing the last copy at two libraries | Lost update: cannot be prevented. | A jar promised to two buyers (*Answering While Cut Off*) |
+| two readers borrowing the last copy at two libraries | Lost update: cannot be prevented. | Two men told different gates (*Answering While Cut Off*) |
 | two readers each borrowing one of the last two copies, when one must stay on the shelf | Write skew. |  |
 | "this is the latest edition" | Recency: cannot be promised. | *Probably Up to Date*: only probably |
 
