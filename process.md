@@ -200,8 +200,10 @@ Check things by content, never by name.
 - **Confirm every constant and bound against the PDF.** Grep for the theorem and read it.
   Signed-message Byzantine agreement works *for any number of generals*; the widely repeated
   &ldquo;N ≥ m + 2&rdquo; is a remark about when the problem is vacuous.
-- **Confirm any number you put in prose.** If a book says two places are thirty kilometres
-  apart, measure it against `settings.md`.
+- **Confirm any number you put in prose.** Places carry no dimensions: no island's width, no
+  hill's height, no distance in kilometres. The settings fix constraints (the massif blocks every
+  line of sight; no messenger passes another), never measurements, so the pictures can't
+  contradict them.
 
 ---
 

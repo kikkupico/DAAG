@@ -35,12 +35,12 @@ understood in real terms, and an allegory only gets in their way.
 
 *The central mountain and the coastal ring road.*
 
-**Core geography & physics.** Arche is about 8 km across. It rises from the sea around a single
-400-metre limestone massif, Mount Phyle, whose foot is some 5 km across and fills the interior.
-The three houses sit at ~120° round the coast, so every line
-between two houses passes through rock at least ~80 m high. With evenly spaced houses, each
-sightline passes about half the island's radius from the centre, so a small cone would not
-block them. That is why the massif must be broad.
+**Core geography & physics.** Arche rises from the sea around a single limestone massif, Mount
+Phyle, which fills the interior and leaves only a coastal strip. The three houses are evenly
+spaced round the coast, so every line between two houses must pass through high rock. With
+evenly spaced houses those lines pass well away from the centre, so a small cone would not block
+them. That is why the massif must be broad. The settings give no dimensions: they fix constraints,
+not measurements, and the pictures need not match any number.
 
 The ring road is **two stacked single-file cliff cuttings**: the upper runs sunwise only, the
 lower against the sun only, with no passing places. So there is no overtaking and no oncoming
@@ -131,8 +131,7 @@ an outcome is plot.
 | `castro-liskov-1999` | **The crown, on a later night of the siege.** The four keep one **loot book**, a copy at each post: where each strongbox lies and whose share it is. Each man is also a client: he files an entry and trusts it only when two sealed replies agree (f + 1). One man holds the chief's job and numbers the entries; the others echo twice, each time waiting for three seals (2f + 1), before an entry stands. The job starts with Number 1, the chief, and passes in number order (view change) when the others suspect its holder of stalling or of numbering two ways. *The Limits of Agreement* already says the chief is a job, not a rank. Four is exactly 3f + 1 for one liar, and the seal rings are that book's. On these nights **wind on the peak** pins the ravens down for as long as it blows, so a flight has no bound; the entries stay safe in any wind, and progress returns once the wind drops for long enough (PBFT's delay(t) assumption). Each man's sandglass is only a timer for suspecting the chief, doubling at each change. The two-seal rule for clients is stated and shown redundant for an honest man, whose own copy already tells him an entry stands. MACs appear only in the mapping table. The men are the crown's four of *The Limits of Agreement* (Number 1, the chief on the peak, holds the job first, then Numbers 2, 3 and 4). An entry is **readied** on three seals (numbering and two first echoes) and **stands** on three second echoes; a job change needs three **requests**, and a man joins on two; **settled pages** are the checkpoints. The wind that blows over the whole hill is the same wind as the camps'. Nothing follows from any entry. (*Keeping Order Among Liars*) |
 | `yin-2019_hotstuff` | **The same crown and loot book, later again.** The chief's job passes to the next man with every entry, whether or not anyone suspects its holder. Each man sends his sealed vote only to the man who holds the job, who ties three of them into one **bundle** and sends the bundle on, instead of every man writing to every other. After the wind drops (GST), a new holder proceeds as fast as the ravens fly, not when a glass runs out (optimistic responsiveness), and a change of holder costs no more than an ordinary entry (linear view change). The bundle is three seals, not one: say plainly that the paper's threshold signature makes it the size of a single seal. The case for three stages (the hidden lock) is shown on the crown as a two-stage procedure that must wait out a full glass after each change of holder. The men are the crown's four of *The Limits of Agreement*; the footnote credits all five authors. Devices: **votes** to the holder alone, **bundles** of three; a man's **lock** is the latest second bundle he voted on; the rule for the first vote (extends your lock, or carries a later bundle); the **hidden lock** of two stages; the chain in which three in a row make the first stand. Must not contradict *Keeping Order Among Liars*; nothing follows from any entry. (*Changing Leaders Among Liars*) |
 
-**The ground:** a 400 m massif about 5 km across at its foot, broad lower slopes and a steep
-cragged crown, eight spurs and gullies, and four camps at the quarter points with no pair able
+**The ground:** a broad massif with broad lower slopes and a steep cragged crown, eight spurs and gullies, and four camps at the quarter points with no pair able
 to see each other. It fills the centre of Arche and blocks every line of sight between the
 houses.
 
@@ -320,8 +319,7 @@ snapshots) · Corbett et al. 2012 (Spanner) · Thomson et al. 2012 (Calvin).
 ## What this means for the map
 
 - **Mount Phyle must block every sightline between the three houses.** It fills Arche's
-  interior, a ~5 km massif on an ~8 km island; a small cone would leave the lines between
-  evenly spaced houses clear.
+  interior; a small cone would leave the lines between evenly spaced houses clear.
 - **Paxos is a Y, and its shape groups its papers.** Two arms reach north and face each
   other across a bay: the Chamber on the western arm, on the road to the harbour town at its
   tip; Schedia and its Odeon on the eastern arm. The hall of two doors stands at the fork. The

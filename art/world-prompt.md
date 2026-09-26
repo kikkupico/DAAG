@@ -39,7 +39,7 @@ roof, dome, ceiling, people, humans, person, human figures, crowd, characters, s
 
 ## 2. Island 1: Arche
 
-> **Narrative Setting:** The island of foundations, about 8 km across. A 400 m limestone massif (Mount Phyle) fills the middle of the island, its foot some 5 km across. It stands squarely between every pair of the three trading houses, which sit at ~120° intervals round the coast: west-south-west, due north and east-south-east. Every straight line between two houses passes through the massif. A coastal ring road of **two stacked single-file cliff cuttings** joins them: the upper cutting runs sunwise only, the lower against the sun only, and there are no passing places. Reefs and tide-races off the headlands mean no small boat coasts from one cove to the next. On the mountain, four gullies at its foot hold the mercenaries' camps (their tents are props, added to scenes) and a ruined bandit wall crowns the peak. The books are set in the winter trading season, under low overcast. The island plate is nonetheless rendered in clear sunlight, because crisp directional shadows help the 3D generator read the geometry. Winter weather belongs in the scene prompts.
+> **Narrative Setting:** The island of foundations. A broad limestone massif (Mount Phyle) fills the middle of the island. It stands squarely between every pair of the three trading houses, which sit evenly spaced round the coast: west-south-west, due north and east-south-east. Every straight line between two houses passes through the massif. A coastal ring road of **two stacked single-file cliff cuttings** joins them: the upper cutting runs sunwise only, the lower against the sun only, and there are no passing places. Reefs and tide-races off the headlands mean no small boat coasts from one cove to the next. On the mountain, four gullies at its foot hold the mercenaries' camps (their tents are props, added to scenes) and a ruined bandit wall crowns the peak. The books are set in the winter trading season, under low overcast. The island plate is nonetheless rendered in clear sunlight, because crisp directional shadows help the 3D generator read the geometry. Winter weather belongs in the scene prompts.
 >
 > **Why the island plate shows habitation.** It carries every book location in place, so the geography can be checked against the books in one image: a narrow coastal road rather than an inland one, ports spread round the coast, a steep broad mountain, and a walled summit.
 >
@@ -107,8 +107,8 @@ The island rests inside an expansive, continuous stretch of Aegean sea extending
 - Between the three coves, every headland is fringed with jagged reefs, submerged rocks and bands of white breaking surf and tide-rip, clearly impassable to small boats hugging the coast. Inside each cove the water is sheltered and calm.
 
 Overall Layout & Scale:
-- The island is roughly round, about 8 km across. Mount Phyle, a single 400 m limestone massif, fills the centre; its foot covers most of the island's interior, leaving only a narrow coastal strip.
-- The three port villages sit at equal ~120-degree intervals round the coast: WEST-SOUTH-WEST, due NORTH and EAST-SOUTH-EAST. No two ports are on the same side of the mountain. The massif stands squarely between every pair, so no port can see another.
+- The island is roughly round. Mount Phyle, a single broad limestone massif, fills the centre; its foot covers most of the island's interior, leaving only a narrow coastal strip.
+- The three port villages sit evenly spaced round the coast: WEST-SOUTH-WEST, due NORTH and EAST-SOUTH-EAST. No two ports are on the same side of the mountain. The massif stands squarely between every pair, so no port can see another.
 - The long southern arc of coast between the west-south-west and east-south-east ports ends in a bold southern cape with a small ruined sundial platform on it.
 
 Mount Phyle (natural massif with book locations):
@@ -119,7 +119,7 @@ Mount Phyle (natural massif with book locations):
 - The summit crown: a modest rounded rocky top, an irregular jumble of pale limestone crags and clefts sitting on the slope rather than raised on a cliff, circled by a ruined cyclopean polygonal dry-stone wall with jagged tops and two breaches: a narrow rock slot on the north side and a wider timber-framed gap on the south. On the highest point sits the chief's hollow: a rock shelter with a few strongboxes and a bronze water-jar. Below the rim, three small separate lookout posts are tucked into three different crags, each facing a different approach and each hidden from the others and from the peak by rock, each with a small bronze water-jar. No council ring, no buildings, no roofs.
 
 Coastal Ring Road (two stacked one-way cliff cuttings):
-- Everywhere between the ports the road is a pair of narrow, single-file shelves cut one above the other into the face of pale limestone sea-cliffs, with the surf 20–40 m below. The upper and lower cuttings run parallel, a few metres apart vertically, joined only at the three ports.
+- Everywhere between the ports the road is a pair of narrow, single-file shelves cut one above the other into the face of pale limestone sea-cliffs, with the surf far below. The upper and lower cuttings run parallel, one just above the other, joined only at the three ports.
 - Each cutting is just wide enough for one cart. There are NO turnouts, NO passing bays and NO widenings anywhere between ports, and no inland shortcuts. The road hugs the coast the whole way round.
 - Signs of traffic without people or animals: a few laden two-wheeled carts and handcarts standing in single file on the cuttings, all facing the same way on each shelf (upper shelf sunwise, lower shelf against the sun); loaded packsaddles and amphora racks waiting at cutting mouths; worn cart ruts.
 - On the headlands above the road, small weathered stone sundials on plinths.
@@ -197,7 +197,7 @@ people, humans, person, human figures, crowd, pedestrians, bystanders, sailors, 
 Detailed 3D isometric architectural asset of the Coastal Ring Road of Arche, Hellenistic Ancient Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated environment, zero people.
 Two narrow, single-file crushed-limestone roadways carved one above the other, a few metres apart, into the sheer face of a towering white limestone sea-cliff. The upper cutting carries traffic one way round the island and the lower the other way; each is exactly one cart wide.
-The road is bounded on the seaward side by a low, dry-stone rubble retaining parapet, with crashing turquoise surf 30 metres below.
+The road is bounded on the seaward side by a low, dry-stone rubble retaining parapet, with crashing turquoise surf far below.
 Clear stone cartwheel ruts worn into each roadbed; NO passing turnouts or widenings anywhere; natural rock overhangs sheltering the track; a few laden carts standing in single file, all facing the same way on each cutting. No people, no animals.
 Pristine empty roadbed, dry earth and limestone dust, sparse tufts of wild thyme and caper bushes clinging to rock crevices.
 ```
@@ -244,7 +244,7 @@ Completely hidden from view of any other camp, concealed by the mountain spurs. 
 ```text
 Detailed 3D isometric architectural asset of the Summit Crown of Mount Phyle, Hellenistic Ancient Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated summit redoubt, zero people.
-Situated on the flattened limestone peak 400 metres above the sea.
+Situated on the flattened limestone peak, high above the sea.
 An ancient, ruined cyclopean polygonal dry-stone circuit wall with weathered, jagged top edges, featuring two distinct breaches: a narrow rock slot on the north side and a wider timber-framed opening on the south.
 The crown inside the wall is not a court but a jumble of pale limestone crags and clefts. On the highest point is the chief's hollow: a rock shelter holding a few iron-bound strongboxes and one bronze water-jar (klepsydra) on a stone.
 Below the rim, three small lookout posts are tucked into three separate crags, each facing a different approach (north slot, south gap, and the eastern cliffs), each with a low dry-stone breastwork, a bird perch and its own small bronze water-jar. Rock hides every post from the other two and from the peak.
@@ -329,7 +329,7 @@ The dome is lifted away. The room carries Lamport's Chamber exactly: no point fr
 Isometric 3D interior model of the Chamber on Paxos, a Hellenistic Greek parliament hall.
 Orthographic axonometric view, deep focus, zero people.
 The dome is lifted away to show the whole interior.
-A circular hall about 30 m across; bare dressed white limestone walls, hard and echoing, no hangings or panelling.
+A large circular hall; bare dressed white limestone walls, hard and echoing, no hangings or panelling.
 Identical open doorways spaced evenly round the wall: no front, no podium, no head of the room, nothing at the centre.
 Concentric flagstone floor with a bronze meridian line inlaid where sunlight from the oculus falls, marked with hours.
 Round the wall, a ring of identical low stone benches, each with a small wooden writing desk, an inkpot and a closed leather-bound ledger.
