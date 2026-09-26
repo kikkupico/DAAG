@@ -37,7 +37,7 @@ understood in real terms, and an allegory only gets in their way.
 
 **Core geography & physics.** Arche is about 8 km across. It rises from the sea around a single
 400-metre limestone massif, Mount Phyle, whose foot is some 5 km across and fills the interior.
-The three houses sit at ~120° round the coast (House 1 WSW, House 2 N, House 3 ESE), so every line
+The three houses sit at ~120° round the coast, so every line
 between two houses passes through rock at least ~80 m high. With evenly spaced houses, each
 sightline passes about half the island's radius from the centre, so a small cone would not
 block them. That is why the massif must be broad.
@@ -58,8 +58,7 @@ Together these give **one FIFO channel per ordered pair of houses: six in all**.
 - **The camps** carry nothing from one house to another, so they are never a channel between
   houses. Traders keep no ravens.
 
-**The ring road.** Three houses, known by number — **House 1** on the western rocky shelf, **House 2** on
-the northern terraced slopes, and **House 3** on the sheltered eastern bay — act as an
+**The ring road.** Three houses, known by number, **House 1**, **House 2** and **House 3**, act as an
 island-wide distribution network.
 
 - *Ordering Without Clocks* (`lamport-1978_time-clocks`, `fidge-1988_timestamps`,
