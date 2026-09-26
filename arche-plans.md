@@ -10,7 +10,7 @@ All four are written: one on the ring road, three on Mount Phyle.
 
 ## Many Copies, Acting as One
 
-Written: `books/many-copies-acting-as-one/`. The claims board at the Anchor, sharing the premise
+Written: `books/many-copies-acting-as-one/`. The claims board at House 3, sharing the premise
 of *Ordering Without Clocks*; see `settings.md`.
 
 ---
@@ -19,7 +19,7 @@ of *Ordering Without Clocks*; see `settings.md`.
 
 **Chandra & Toueg 1996 · the four camps, Mount Phyle**
 
-Written: `books/telling-the-dead-from-the-slow/`. FLP's four men; see `settings.md`.
+Written: `books/telling-the-dead-from-the-slow/`. the four numbered mercenaries; see `settings.md`.
 
 ---
 
@@ -41,9 +41,9 @@ Written: `books/changing-leaders-among-liars/`. The crown's four bandits; see `s
 
 ## Across the four
 
-- **Names follow papers**, with a footnote in every book, except where a later book keeps a
-  place's cast. The crown's four (Lamportos, Shostakos, Peasios, Dolevios) are the men of both crown
-  books; FLP's four keep the camps in every camp book but *Agreeing by Chance*.
+- **Houses, mercenaries and bandits go by number.** Houses 1–3; the mercenaries Numbers 1–4 by
+  their tents; the bandits Numbers 1–4, Number 1 the chief. The same numbered four keep the camps in
+  every camp book and the crown in both crown books. Other figures (clerks, scribes) follow papers.
 - **The rotating turn** appears in three places: the DLS turns at the camps, the ◇S algorithm, and the
   crown's job. It is the same idea told three ways, which suits "later papers reuse existing rooms".
   Each book should name the others.

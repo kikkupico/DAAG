@@ -19,7 +19,7 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 | the front row (*proedria*): one throne per legislator, each with a law book | The module group's cohorts; the fixed set of thrones is the configuration. | The Chamber, where every legislator keeps a ledger |
 | the speaker on the stage | The primary: runs every call and settles every measure. | The crown's chief's job in *Keeping Order Among Liars*, which borrows VR's views |
 | the rest of the front row, writing down what the speaker says | Backups, passive: they only record. |  |
-| the public in the seats behind | Clients, who deal only with the speaker. | The buyers at Arche's counters |
+| the public in the seats behind | Clients, who deal only with the speaker. | The houses claiming at Arche's claims board |
 | the board on the stage wall: a count and the name of the legislator who raised it | The viewid ⟨cnt, mid⟩, totally ordered, unique to its caller. | Ties broken by name, as in the tally house's middle room (*Ordering Without Clocks*); the Chamber's ballot numbers |
 | the line number in the speaker's record, starting again at each new board | A timestamp, meaningful only within its view. |  |
 | "board 7, line 12" | A viewstamp ⟨viewid, ts⟩. |  |
@@ -52,7 +52,7 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 1. **Transactions.** The paper's case is transactions that call several module groups, with psets and two-phase commit. Carry it (several committees in the Odeon, each with its own front row and speaker, and a measure that touches more than one), or keep to one group and leave transactions to the paper column?
 2. **Partitions in a theatre.** A voice reaches every seat, so how is the row split? Proposal: legislators come and go by the side doors, as on Paxos, and those out on the porch cannot hear.
 3. **Two on the stage.** `settings.md` says nothing proceeds if two claim the stage. The paper says the old speaker may still answer but cannot settle anything. Reword the settings to match.
-4. **Names.** Okios and Liskovia. Liskov also names Liskovia on the crown; the footnote says names follow papers.
+4. **Names.** Okios and Liskovia. Liskov is credited, not named, on the crown, where the bandits go by number.
 
 ---
 

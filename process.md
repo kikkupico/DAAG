@@ -1,7 +1,7 @@
 # How a paper becomes a book
 
 A working procedure, written so that someone who has not been part of the conversation so far
-can pick up the next paper and produce a book that sits beside the six already written
+can pick up the next paper and produce a book that sits beside those already written
 without looking like a different series.
 
 **Read first:** `buildings.md` (which paper lives in which building), `settings.md` (the
@@ -43,9 +43,11 @@ These are correctness constraints, not preferences.
    it.
 5. **Named figures are Hellenised authors** of that book's own papers, following Lamport's
    practice with the Paxon legislators. Where a setting needs a seat no author fills, use an
-   ordinary Greek name. A later book at an existing place may instead keep that place's cast, as
-   *Agreeing When Messages Run Late* keeps the four mercenaries of *The Limits of Agreement*, and
-   says so in its footnote.
+   ordinary Greek name. **On Arche the houses, the mercenaries and the bandits have no names or
+   emblems; they go by number**: Houses 1–3 (WSW, N, ESE), the mercenaries by their tents'
+   numbers, Number 1 to Number 4, and the bandits Number 1 to Number 4, Number 1 being the chief
+   on the peak. Every book at a place keeps that place's numbered cast. Ties between houses are
+   broken by number.
 6. **Read the paper, not your memory of it.** Open the PDF. Quote the theorem. See
    *Verification* below.
 7. **Close with the mapping.** Every book ends with an *In the book / In the paper* table and
@@ -151,8 +153,8 @@ Rules for the proofs themselves:
   convention carries the technical term where it is needed.
 - **One summary line per proof, naming what is proved.** &ldquo;Proof — that nothing comes
   before itself&rdquo;, not &ldquo;Proof of Lemma 1&rdquo;.
-- **Where the paper's own proof is long or hard, say so** and give the sketch. `The Tally and
-  the Column` does this for the physical-clock theorem; the Byzantine book does it for the
+- **Where the paper's own proof is long or hard, say so** and give the sketch. *Many Copies,
+  Acting as One* does this for the board's proof; *The Limits of Agreement* does it for the
   three-general impossibility. Honesty about a gap is fine; pretending there is none is not.
 
 Formal statements that are not proofs — model definitions, conditions, bounds — go inline in
@@ -168,8 +170,8 @@ The primitives are defined in `assets/css/books.css` — `.d-lifeline`, `.d-ev`,
 `.d-msg`, `.d-msg-hi`, `.d-lbl`, `.d-num`, `.d-note`, `.d-key`, `.d-band` — and using them is
 what makes every diagram in the series read as one hand. Do not introduce new colours.
 
-**Draw a diagram when the argument has a shape**, and not otherwise. The six books have
-fourteen between them, and each one does a job prose could not:
+**Draw a diagram when the argument has a shape**, and not otherwise. The finished books
+have many between them, and each one does a job prose could not:
 
 | Kind | What it does | Seen in |
 |---|---|---|
@@ -220,11 +222,11 @@ establish.
 
 | Building | Paper(s) | Note |
 |---|---|---|
-| The claims board | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Shares the claims premise of *Ordering Without Clocks*: the tallies order claims by slips, this book by the sun. The object is the Anchor's board of claims, a FIFO queue; Herlios' board with its slots and peg is the paper's §4 queue. Must not give Arche a readable hour in the trading season. Written: `books/many-copies-acting-as-one/`. |
+| The claims board | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Shares the claims premise of *Ordering Without Clocks*: the tallies order claims by slips, this book by the sun. The object is House 3's board of claims, a FIFO queue; Herlios' board with its slots and peg is the paper's §4 queue. Must not give Arche a readable hour in the trading season. Written: `books/many-copies-acting-as-one/`. |
 | The camps | Chandra &amp; Toueg 1996 | *Telling the Dead from the Slow.* Shares the camps with FLP. The camps may decide; nothing follows from it. The slate's guarantees are granted, not earned — see `settings.md`. With a majority alive, a turn to propose, not a leader; point to *Agreeing When Messages Run Late* for it and stay on the detector. Written: `books/telling-the-dead-from-the-slow/`. |
 | The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, with interactive figures and no illustrations: it is the paper the whole project borrows its allegory from. Written: `books/the-part-time-parliament/`. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
 | The Odeon, Schedia | Oki &amp; Liskov 1988 | *One Leader at a Time.* VR, a genuine alternative to Paxos, found independently and published first, in Schedia, the city on Paxos's eastern arm with laws of its own. |
-| The crown | Castro &amp; Liskov 1999 | *Keeping Order Among Liars.* Needs the Byzantine book's vocabulary and must not contradict *The Limits of Agreement*. A later, windy night: the loot book, each man both replica and client (two agreeing seals, f + 1), the chief's job numbering entries and passing in a fixed order when suspected. Safe in any wind; progress once the wind drops. Nothing follows from any entry. Written: `books/keeping-order-among-liars/`. |
+| The crown | Castro &amp; Liskov 1999 | *Keeping Order Among Liars.* Needs the vocabulary of *The Limits of Agreement* and must not contradict *The Limits of Agreement*. A later, windy night: the loot book, each man both replica and client (the client's rule of two agreeing seals, f + 1, stated and shown redundant for the four), the chief's job numbering entries and passing in a fixed order when suspected. Safe in any wind; progress once the wind drops. Nothing follows from any entry. Written: `books/keeping-order-among-liars/`. |
 | The crown | Yin et al. 2019 (HotStuff) | *Changing Leaders Among Liars.* Needs the vocabulary of *Keeping Order Among Liars* and must not contradict it. Tell only what changes: the chief's job passes with every entry, and its holder bundles the others' seals instead of every man writing to every other. Say plainly that a threshold signature makes the bundle one seal's size. Nothing follows from any entry. Written: `books/changing-leaders-among-liars/`. |
 | The stoa and festival ground | Demers 1987 | |
 | The libraries | PBS 2012 | *Probably Up to Date.* The model, not a store: how likely a reader who asks only a few libraries is handed an out-of-date copy, and by how much. |
@@ -237,9 +239,8 @@ establish.
 **The bandits.** On Arche, an unknown number of those writing in the houses' books do not
 follow the houses' practice. Four rules govern this and all four are load-bearing: no
 infiltration ever *happens* (an event would be a plot); no one is ever identified; no motive is
-given; and no one can tell whether they belong to the band on the crown. *The Tally and the
-Column* Chapter VIII shows how to use it — as the honest-participant assumption made visible,
-never as a faction.
+given; and no one can tell whether they belong to the band on the crown. No ring-road book uses it yet. A book that does uses it only as the honest-participant
+assumption made visible, never as a faction.
 
 **What the rest of Arche knows about the bandits.** Only the bandits know how many of them
 there are, which band each belongs to, and what they plan. Everyone else knows two things:

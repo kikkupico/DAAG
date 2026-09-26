@@ -39,7 +39,7 @@ roof, dome, ceiling, people, humans, person, human figures, crowd, characters, s
 
 ## 2. Island 1: Arche
 
-> **Narrative Setting:** The island of foundations, about 8 km across. A 400 m limestone massif (Mount Phyle) fills the middle of the island, its foot some 5 km across. It stands squarely between every pair of the three trading houses, which sit at ~120° intervals round the coast: the **Dolphin** west-south-west, the **Vine** due north, and the **Anchor** east-south-east. Every straight line between two houses passes through the massif. A coastal ring road of **two stacked single-file cliff cuttings** joins them: the upper cutting runs sunwise only, the lower against the sun only, and there are no passing places. Reefs and tide-races off the headlands mean no small boat coasts from one cove to the next. On the mountain, four gullies at its foot hold the mercenaries' camps (their tents are props, added to scenes) and a ruined bandit wall crowns the peak. The books are set in the winter trading season, under low overcast. The island plate is nonetheless rendered in clear sunlight, because crisp directional shadows help the 3D generator read the geometry. Winter weather belongs in the scene prompts.
+> **Narrative Setting:** The island of foundations, about 8 km across. A 400 m limestone massif (Mount Phyle) fills the middle of the island, its foot some 5 km across. It stands squarely between every pair of the three trading houses, which sit at ~120° intervals round the coast: the **House 1** west-south-west, the **House 2** due north, and the **House 3** east-south-east. Every straight line between two houses passes through the massif. A coastal ring road of **two stacked single-file cliff cuttings** joins them: the upper cutting runs sunwise only, the lower against the sun only, and there are no passing places. Reefs and tide-races off the headlands mean no small boat coasts from one cove to the next. On the mountain, four gullies at its foot hold the mercenaries' camps (their tents are props, added to scenes) and a ruined bandit wall crowns the peak. The books are set in the winter trading season, under low overcast. The island plate is nonetheless rendered in clear sunlight, because crisp directional shadows help the 3D generator read the geometry. Winter weather belongs in the scene prompts.
 >
 > **Why the island plate shows habitation.** It carries every book location in place, so the geography can be checked against the books in one image: a narrow coastal road rather than an inland one, ports spread round the coast, a steep broad mountain, and a walled summit.
 >
@@ -74,10 +74,10 @@ The crown: a small ruined ring wall round a few crags on the very summit, about 
 Coastal road: two parallel single-file cuttings drawn as a dark red double line, running right round the island close to the coast, with no branches, no inland roads and no road over the mountain.
 
 The three ports, each on its own side of the island so that no two share a side:
-1. The Dolphin, WEST-SOUTH-WEST: a rocky inlet with a long stone quay along the waterfront, one slipway, a large trade depot and a colonnaded tally hall facing the quay, and a village of small house blocks behind them.
-2. The Vine, due NORTH: a sheltered cove with a short stone dock and one slipway, a large wine and oil compound with a press house, a village of small house blocks, and hatched vine and olive terraces on the lower slopes to either side of the village (not directly behind it, where the north gully is). Just along the road east of the village, one small block cut into the cliff beside the road: the rock-cut granary.
-3. The Anchor, EAST-SOUTH-EAST, the largest: a crescent bay with a sandy beach, a long stone pier running straight out into the bay, two slipways, a large customs house built round a courtyard, a long granary block, and a village of small house blocks.
-On the southern cape, between the Dolphin and the Anchor, one small square block beside the road: the sundial platform.
+1. House 1, WEST-SOUTH-WEST: a rocky inlet with a long stone quay along the waterfront, one slipway, a large trade depot and a colonnaded tally hall facing the quay, and a village of small house blocks behind them.
+2. House 2, due NORTH: a sheltered cove with a short stone dock and one slipway, a large wine and oil compound with a press house, a village of small house blocks, and hatched vine and olive terraces on the lower slopes to either side of the village (not directly behind it, where the north gully is). Just along the road east of the village, one small block cut into the cliff beside the road: the rock-cut granary.
+3. House 3, EAST-SOUTH-EAST, the largest: a crescent bay with a sandy beach, a long stone pier running straight out into the bay, two slipways, a large customs house built round a courtyard, a long granary block, and a village of small house blocks.
+On the southern cape, between House 1 and House 3, one small square block beside the road: the sundial platform.
 
 THE ROAD REACHES EVERY PORT. At each port the double line comes down to the waterfront and runs straight along it, past the quay or pier. Every quay, pier and slipway touches the road on its landward end; every building block stands on or directly beside the road, or within its village, whose lanes lead to the road. No block, quay or pier stands apart from the road or is cut off from it by cliff, slope or water.
 ```
@@ -108,8 +108,8 @@ The island rests inside an expansive, continuous stretch of Aegean sea extending
 
 Overall Layout & Scale:
 - The island is roughly round, about 8 km across. Mount Phyle, a single 400 m limestone massif, fills the centre; its foot covers most of the island's interior, leaving only a narrow coastal strip.
-- The three port villages sit at equal ~120-degree intervals round the coast: WEST-SOUTH-WEST (Dolphin), due NORTH (Vine), EAST-SOUTH-EAST (Anchor). No two ports are on the same side of the mountain. The massif stands squarely between every pair, so no port can see another.
-- The long southern arc of coast between the Dolphin and the Anchor ends in a bold southern cape with a small ruined sundial platform on it.
+- The three port villages sit at equal ~120-degree intervals round the coast: WEST-SOUTH-WEST (House 1), due NORTH (House 2), EAST-SOUTH-EAST (House 3). No two ports are on the same side of the mountain. The massif stands squarely between every pair, so no port can see another.
+- The long southern arc of coast between House 1 and House 3 ends in a bold southern cape with a small ruined sundial platform on it.
 
 Mount Phyle (natural massif with book locations):
 - A broad, climbable mountain, not a tower. Its profile is a wide, irregular cone. The slopes rise continuously from the coastal strip to the peak: gentle lower flanks of about 15–20°, steepening to about 30–35° near the top. Nowhere is there a sheer vertical face encircling the summit, and nowhere a cliff band that would stop a man on foot. A determined climber could walk up any spur.
@@ -127,12 +127,12 @@ Coastal Ring Road (two stacked one-way cliff cuttings):
 
 Three Port Villages (inhabited, working, no people):
 Compact organic clusters of Hellenistic vernacular buildings: dry-stone and ashlar cottages, boat sheds, pergolas, walled yards, oxblood terracotta roofs (no smoke, steam or haze anywhere). Evidence of work everywhere: stacked crates, sacks, amphorae and pithoi on the quays, fishing nets drying on frames, hauled-up boats, carts parked in yards, laundry lines, tethering posts, water cisterns, small kitchen gardens.
-1. House of the Dolphin (WEST-SOUTH-WEST): a rugged fishing and trading haven on a rocky inlet with a stone quay and small boat basin. At its heart is the Dolphin's trade depot and tally station: an ashlar building with an open colonnaded loggia sheltering slate tally tables. Fishing skiffs and a small coastal sloop are moored; timber slipways hold one broad-beamed merchantman on a cradle.
-2. House of the Vine (due NORTH): a wine and oil compound on terraces above a sheltered northern cove, with cellar vaults, timber cart-loading platforms and a beam press, and terraced vineyards and olive groves behind. A stone dock and slipway hold one broad-beamed merchantman. Just along the road from the Vine, cut into the cliff beside the cuttings, is the island's common dry storehouse: a rock-cut granary with a heavy timber door.
-3. House of the Anchor (EAST-SOUTH-EAST): the largest harbour, on a crescent bay with a sandy beach and a long stone pier. At its heart is the customs house: broad colonnaded porticos, a records courtyard with slate tablets on stone pillars, and vaulted granaries. A large merchantman is tied at the pier, two more stand on timber slipways, and grain sacks, crates and sealed ingots are stacked on the wharf.
+1. House 1 (WEST-SOUTH-WEST): a rugged fishing and trading haven on a rocky inlet with a stone quay and small boat basin. At its heart is House 1's trade depot and tally station: an ashlar building with an open colonnaded loggia sheltering slate tally tables. Fishing skiffs and a small coastal sloop are moored; timber slipways hold one broad-beamed merchantman on a cradle.
+2. House 2 (due NORTH): a wine and oil compound on terraces above a sheltered northern cove, with cellar vaults, timber cart-loading platforms and a beam press, and terraced vineyards and olive groves behind. A stone dock and slipway hold one broad-beamed merchantman. Just along the road from House 2, cut into the cliff beside the cuttings, is the island's common dry storehouse: a rock-cut granary with a heavy timber door.
+3. House 3 (EAST-SOUTH-EAST): the largest harbour, on a crescent bay with a sandy beach and a long stone pier. At its heart is the customs house: broad colonnaded porticos, a records courtyard with slate tablets on stone pillars, and vaulted granaries. A large merchantman is tied at the pier, two more stand on timber slipways, and grain sacks, crates and sealed ingots are stacked on the wharf.
 
 Vegetation & Palette:
-Maritime pine, dark slender cypress, gnarled olive groves and vine terraces near the Vine, silver-green maquis, bare pale limestone higher up. Photorealistic PBR stone, timber, terracotta and water materials; muted, cool winter palette.
+Maritime pine, dark slender cypress, gnarled olive groves and vine terraces near House 2, silver-green maquis, bare pale limestone higher up. Photorealistic PBR stone, timber, terracotta and water materials; muted, cool winter palette.
 ```
 
 **Step 4 — tilt** (image-to-image on the step 3 image, `banana_pro`, square). Meshy reads heights far better from an oblique view; the result is `art/refs/arche-plate.png`:
@@ -146,7 +146,7 @@ Because the view is now at an angle, show the island's height truthfully: the sh
 Keep everything exactly as it is in [image 1]: the coastline and its rocky points, the three ports with every building, quay, pier and ship in place, the road running along the coast and through each port, the terraces, the woods and scrub, the summit ring, the rock-cut granary and the sundial platform. Same bright, clear sunlight and crisp air. Zero people, zero animals, no text.
 ```
 
-**Step 5 — 3D.** A Meshy image-to-3D conversion of the tilted plate, downloaded without resizing, is `art/arche-3d.glb`. `explorer.html` and `art/previs/render.py` place it at 95 m per model unit, a scale set by eye from a person beside the Dolphin's depot, and turn it 20° so the Vine is due north.
+**Step 5 — 3D.** A Meshy image-to-3D conversion of the tilted plate, downloaded without resizing, is `art/arche-3d.glb`. `explorer.html` and `art/previs/render.py` place it at 95 m per model unit, a scale set by eye from a person beside House 1's depot, and turn it 20° so House 2 is due north.
 
 #### Island Plate Negative Prompt
 (Used instead of the universal negative for the Arche plate, because the plate deliberately puts a ruined wall and tents on the mountain.)
@@ -168,19 +168,19 @@ Maintain the exact camera perspective, island coastline, ring road, mountain con
 
 Populate the three coastal port sites with their canonical Hellenistic hero trading architecture and ancient Greek merchant ships, fitting their exact geographic footprints:
 
-1. West-South-West Port (Harbour of the Dolphin):
+1. West-South-West Port (Harbour of House 1):
 - Sited in the rectangular stone-lined harbour basin and open waterfront terrace from the reference image.
-- Architecture: The House of the Dolphin—a sturdy, weathered ashlar limestone trade depot and tally station with low-pitched oxblood terracotta roofs, open exterior colonnaded loggia sheltering wide slate tally tables with bronze pegs and inkpots.
+- Architecture: House 1—a sturdy, weathered ashlar limestone trade depot and tally station with low-pitched oxblood terracotta roofs, open exterior colonnaded loggia sheltering wide slate tally tables with bronze pegs and inkpots.
 - Ships & Water: Moored inside the rectangular stone basin are 2-3 ancient Greek wooden fishing skiffs and a small coastal cargo sloop with timber mast and furled linen sail, tied with hemp ropes to stone mooring bollards; timber hauling slipways with greased log rollers leading into the water; drying linen nets and stacked wooden crates on the quays.
 
-2. Northern Port (Harbour of the Vine):
+2. Northern Port (Harbour of House 2):
 - Sited along the L-shaped stone pier and cleared waterfront terrace beneath the terraced olive groves from the reference image.
-- Architecture: The House of the Vine—an agricultural distribution wine compound with arched semi-subterranean limestone cellar vaults, heavy timber cart loading platforms, wooden ramps, and an outdoor timber beam olive/wine press.
+- Architecture: House 2—an agricultural distribution wine compound with arched semi-subterranean limestone cellar vaults, heavy timber cart loading platforms, wooden ramps, and an outdoor timber beam olive/wine press.
 - Ships & Water: 2 ancient Greek coastal wine transport barges with broad curved hulls and a round-hulled merchant galley tied alongside the L-shaped stone pier, rigged with furled sails and steering oars, loading wooden crates and rows of terracotta wine amphorae and oil pithoi directly from the stone dock.
 
-3. East-South-East Port (Harbour of the Anchor):
+3. East-South-East Port (Harbour of House 3):
 - Sited along the wide crescent beach, long stone pier, and open flagstone esplanade from the reference image.
-- Architecture: The House of the Anchor—a grand ashlar limestone customs house with broad colonnaded porticos, open records courtyard with slate tablets on stone pillars, and vaulted granary warehouses.
+- Architecture: House 3—a grand ashlar limestone customs house with broad colonnaded porticos, open records courtyard with slate tablets on stone pillars, and vaulted granary warehouses.
 - Ships & Water: The main merchant harbour: a large, broad-beamed Hellenistic merchant sailing galley (holkas) with double steering oars and rigging tied alongside the outer end of the long stone pier; 2 smaller wooden cargo skiffs and sailing dinghies pulled up onto the sandy beach on timber hauling cradles; stacks of grain sacks, cargo crates, and sealed silver ingots arranged neatly on the stone wharf.
 
 Cohesion:
@@ -202,9 +202,9 @@ Clear stone cartwheel ruts worn into each roadbed; NO passing turnouts or wideni
 Pristine empty roadbed, dry earth and limestone dust, sparse tufts of wild thyme and caper bushes clinging to rock crevices.
 ```
 
-#### Feature 2: The House of the Dolphin
+#### Feature 2: House 1
 ```text
-Detailed 3D isometric architectural diorama of the House of the Dolphin on Arche, Hellenistic Ancient Greece.
+Detailed 3D isometric architectural diorama of House 1 on Arche, Hellenistic Ancient Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated trade station, zero people.
 Sited on a rugged, wave-battered western limestone shelf directly beside the sea.
 A low-slung, sturdy commercial trade depot constructed of weathered ashlar limestone blocks with a low-pitched oxblood terracotta tiled roof and heavy cedar roof timbers.
@@ -212,18 +212,18 @@ Features timber hauling slipways with wooden greased log rollers leading into a 
 Sea spray glistening on wet stone slipways, turquoise shallow water lapping at the quay, continuous flat sea plane.
 ```
 
-#### Feature 3: The House of the Vine
+#### Feature 3: House 2
 ```text
-Detailed 3D isometric architectural diorama of the House of the Vine on Arche, Hellenistic Ancient Greece.
+Detailed 3D isometric architectural diorama of House 2 on Arche, Hellenistic Ancient Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated estate, zero people.
 Sited on the northern terraced slopes of Mount Phyle overlooking the coastal cliff road.
 A multi-level Hellenistic agricultural and distribution compound built of dry-stacked limestone retaining walls and dressed stone buildings with terracotta roofs.
 Includes heavy timber loading platforms equipped with wooden ramps for carts; cool semi-subterranean cellars with arched limestone doorways filled with rows of large earthenware oil amphorae and wine pithoi; an outdoor timber beam lever-press for olives; stone paved courtyards; wooden cartwheel repair racks; stepped terraces planted with ancient gnarled olive trees and grape trellises.
 ```
 
-#### Feature 4: The House of the Anchor & Customs Slipways
+#### Feature 4: House 3 & Customs Slipways
 ```text
-Detailed 3D isometric architectural diorama of the House of the Anchor on Arche, Hellenistic Ancient Greece.
+Detailed 3D isometric architectural diorama of House 3 on Arche, Hellenistic Ancient Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated harbour facility, zero people.
 Sited on the sheltered eastern bay of Arche where foreign merchantmen land.
 A substantial ashlar limestone customs house and distribution depot with broad open colonnades and deep overhanging tiled eaves.

@@ -24,7 +24,7 @@ import bpy, json, sys, math
 from mathutils import Vector
 
 # glb, metres per model unit, explorer centre (x, z), sink below sea level in model units,
-# yaw about the vertical in degrees, as the explorer's group rotation.y (Arche's Vine and
+# yaw about the vertical in degrees, as the explorer's group rotation.y (Arche's House 2 and
 # Paxos's arms both come out of Meshy pointing away from north)
 ISLANDS = {
     "arche": ("art/arche-3d.glb", 95.0, (-130.0, 0.0), 0.0, 20.0),
@@ -114,7 +114,7 @@ eye, look = to_bl(resolve(shot["eye"])), to_bl(resolve(shot["look"]))
 # --- cast and props ---------------------------------------------------------
 # Rigged reference characters (Meshy GLBs, Mixamo skeleton, A-pose rest) stood on the
 # terrain. The shot's "cast" is a list of
-#   {"who": "shostakos", "at": [x, z], "face": [x, z], "pose": "glass", "tint": [r, g, b],
+#   {"who": "bandit-2", "at": [x, z], "face": [x, z], "pose": "glass", "tint": [r, g, b],
 #    "under": h}
 # in explorer coords; "props" likewise, e.g. {"kind": "strongbox", "at": [x, z]}. `tint`
 # reskins the model's pale cloth (tunic, sleeves) so the figures can be told apart;
