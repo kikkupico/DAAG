@@ -49,7 +49,7 @@ These are correctness constraints, not preferences.
    on the peak. Every book at a place keeps that place's numbered cast. Ties between houses are
    broken by number. **Nodes are alike.** No house, tent or post has a direction, landmark or
    character of its own; one is set apart only when the paper gives it a role, as the chief is a
-   leader and House 3 is where cargo lands. An example may give one node a part to play (the oil
+   leader. Ships land at every house; an example may land a cargo at one of them. An example may give one node a part to play (the oil
    board at House 2) without making it a fixture of the place.
 6. **Read the paper, not your memory of it.** Open the PDF. Quote the theorem. See
    *Verification* below.

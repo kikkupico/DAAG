@@ -77,7 +77,7 @@ island-wide distribution network.
   with landings and sales set aside; the census is taken at no one moment, so the book counts no
   hours.
 - *Many Copies, Acting as One* (`herlihy-wing-1990_linearizability`). The same premise as
-  *Ordering Without Clocks*: grain lands at House 3 and the houses **claim** cargoes, first come,
+  *Ordering Without Clocks*: grain lands at every house; in the running example a cargo lands at House 3 and the houses **claim** it, first come,
   first served. The tallies order claims by chains of slips; this book orders them by the sun (one
   piece of business came **before** another if it finished before the other began), which is
   linearizability. The object is House 3's **board** of claims, a FIFO queue: a claim is `Enq`, a
