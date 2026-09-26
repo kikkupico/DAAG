@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Hall of Two Doors — Paxos</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">Paxos · The Hall of Two Doors</span>
+  </div>
+</nav>
+<div class="page">
+
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Paxos · The Setting</div>
+  <h1 class="display" style="margin:18px 0 6px">The Hall of Two Doors</h1>
+  <p class="sub">A hall at the fork of the island that rules on nothing, and only sorts every question into one of two doors.</p>
+  <p class="pub">Read this first, and the book set in the hall can be read on its own. It describes the island of Paxos and the hall at its fork, between the assemblies and the scholars.</p>
+</header>
+
+<nav class="toc">
+  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Contents</a></h6>
+  <ol>
+    <li><a href="#s1">I · The Island of Paxos</a></li>
+    <li><a href="#s2">II · The Hall</a></li>
+    <li><a href="#s3">III · Two Kinds of Question</a></li>
+    <li><a href="#terms">The Setting and the Papers</a></li>
+    <li><a href="#books">The Books Set Here</a></li>
+  </ol>
+</nav>
+
+<hr class="rule">
+
+<section id="s1">
+  <div class="issue"><span class="no">I</span><h2>The Island of Paxos</h2></div>
+  <div class="prose">
+    <figure class="panel">
+      <img src="../../assets/img/places/paxos-island.jpg" width="1200" height="900" loading="lazy"
+           alt="Paxos from the air: a Y-shaped island whose two arms face each other across a bay, a domed rotunda on one arm and a town with a large roofed hall on the other, the arms joining at a fork above the broad body of the island.">
+    </figure>
+
+    <p>Paxos is shaped like a Y. Two arms reach north and face each other across a bay: the western
+    arm holds the <b>Chamber</b> of the Paxon Parliament, the eastern arm the city of
+    <b>Schedia</b> and its Odeon. The arms join at a fork, where the <b>hall of two doors</b>
+    stands, and below the fork the stem widens into the body of the island, the
+    <b>scholars' coast</b>. The island road runs up the stem, forks, and runs out along both
+    arms.</p>
+
+    <p>Paxos can read the sun. Unlike Arche in its trading season, the island tells time by day,
+    and the Chamber has a meridian line. Word goes by messenger and by courier along the island's
+    roads, and takes as long as it takes.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="s2">
+  <div class="issue"><span class="no">II</span><h2>The Hall</h2></div>
+  <div class="prose">
+    <figure class="panel">
+      <img src="../../assets/img/places/hall.jpg" width="1200" height="900" loading="lazy"
+           alt="The hall of two doors: a plain stone building with a pediment at the fork of the island road, the domed rotunda beyond it on the western arm.">
+    </figure>
+
+    <p>The <b>hall of two doors</b> stands at the fork of the island, on common ground that belongs
+    to neither city, as the Messon on Lesbos was the common sanctuary of that island's cities. It has
+    two doors and no more. One faces north, up the bay between the arms, towards the Chamber and the
+    Odeon: the two bodies on Paxos that assemble. The other faces south, down the stem, towards the
+    scholars' coast, which does not.</p>
+
+    <p>The hall does not rule on anything. It sorts. Every question brought to it leaves by the door
+    its own shape decides.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="s3">
+  <div class="issue"><span class="no">III</span><h2>Two Kinds of Question</h2></div>
+  <div class="prose">
+    <p>Some questions only grow. <i>Has at least one copy of this work been made?</i> can be answered
+    yes as soon as it is true, and once it is yes it is yes for ever, whatever news comes later. A
+    question of that kind needs no assembly, and it leaves by the scholars' door.</p>
+
+    <p>Other questions rest on absence. <i>Is this every copy that has been made?</i> or <i>Has no one
+    claimed this?</i> can be answered only by hearing from everyone, since a single late letter could
+    overturn the answer. A question of that kind needs everyone to wait on everyone, and it leaves by
+    the door of the assemblies.</p>
+
+    <p>Putting both cities and the scholars on one island makes the difference a walk: the scholars
+    could take any question to an assembly, and the hall shows which questions need one.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="terms">
+  <div class="issue"><span class="no">Reference</span><h2>The Setting and the Papers</h2></div>
+  <div class="prose">
+    <p>What each part of the place stands for, so that a reader coming to any book here knows the
+    model before the first chapter begins.</p>
+  </div>
+  <div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In the setting</th><th>What it stands for</th></tr></thead>
+      <tbody>
+        <tr><td><span class="term">a question brought to the hall</span></td><td>A program or query.</td></tr>
+        <tr><td><span class="term">a question that only grows</span></td><td>A monotonic query.</td></tr>
+        <tr><td><span class="term">a question that rests on absence</span></td><td>A non-monotonic query.</td></tr>
+        <tr><td><span class="term">the scholars' door</span></td><td>No coordination needed.</td></tr>
+        <tr><td><span class="term">the door of the assemblies</span></td><td>Coordination needed.</td></tr>
+        <tr><td><span class="term">the hall sorting and never ruling</span></td><td>The CALM theorem: coordination is needed exactly when a program is not monotonic.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="books">
+  <div class="issue"><span class="no">Reference</span><h2>The Books Set Here</h2></div>
+  <div class="prose">
+    <p><a href="../../books/knowing-when-to-wait/index.html"><i>Knowing When to Wait</i></a> (plan only): which questions need an
+    assembly and which do not, and why the answer is the question's shape.
+    <span class="paper">Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020</span></p>
+  </div>
+</section>
+
+</div>
+</body>
+</html>

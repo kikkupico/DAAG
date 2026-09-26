@@ -217,6 +217,10 @@ Before calling a book done:
 - [ ] Nothing contradicts a book that shares the setting.
 - [ ] Every claim traceable to the paper has been checked against the PDF.
 - [ ] Added to the home page, `index.html`.
+- [ ] The place's setting article, `places/<place>/index.html`, lists the book and still
+  describes the place truly. Each home-page section opens with its setting article, the brief a
+  reader needs before reading that section's books in any order. Its pictures are Blender previs
+  renders (shots in `art/panels/places/shots.json`, published to `assets/img/places/`).
 
 ---
 

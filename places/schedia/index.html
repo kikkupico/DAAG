@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schedia and the Odeon — Paxos</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">Paxos · Schedia</span>
+  </div>
+</nav>
+<div class="page">
+
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Paxos · The Setting</div>
+  <h1 class="display" style="margin:18px 0 6px">Schedia and the Odeon</h1>
+  <p class="sub">A city with laws of its own, governed from one theatre in which one voice reaches every seat.</p>
+  <p class="pub">Read this first, and the book set in Schedia can be read on its own. It describes the island of Paxos, the city on its eastern arm, and the Odeon where its law is made.</p>
+</header>
+
+<nav class="toc">
+  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Contents</a></h6>
+  <ol>
+    <li><a href="#s1">I · The Island of Paxos</a></li>
+    <li><a href="#s2">II · A City of Its Own</a></li>
+    <li><a href="#s3">III · The Odeon</a></li>
+    <li><a href="#terms">The Setting and the Papers</a></li>
+    <li><a href="#books">The Books Set Here</a></li>
+  </ol>
+</nav>
+
+<hr class="rule">
+
+<section id="s1">
+  <div class="issue"><span class="no">I</span><h2>The Island of Paxos</h2></div>
+  <div class="prose">
+    <figure class="panel">
+      <img src="../../assets/img/places/paxos-island.jpg" width="1200" height="900" loading="lazy"
+           alt="Paxos from the air: a Y-shaped island whose two arms face each other across a bay, a domed rotunda on one arm and a town with a large roofed hall on the other, the arms joining at a fork above the broad body of the island.">
+    </figure>
+
+    <p>Paxos is shaped like a Y. Two arms reach north and face each other across a bay: the western
+    arm holds the <b>Chamber</b> of the Paxon Parliament, the eastern arm the city of
+    <b>Schedia</b> and its Odeon. The arms join at a fork, where the <b>hall of two doors</b>
+    stands, and below the fork the stem widens into the body of the island, the
+    <b>scholars' coast</b>. The island road runs up the stem, forks, and runs out along both
+    arms.</p>
+
+    <p>Paxos can read the sun. Unlike Arche in its trading season, the island tells time by day,
+    and the Chamber has a meridian line. Word goes by messenger and by courier along the island's
+    roads, and takes as long as it takes.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="s2">
+  <div class="issue"><span class="no">II</span><h2>A City of Its Own</h2></div>
+  <div class="prose">
+    <figure class="panel">
+      <img src="../../assets/img/places/schedia.jpg" width="1200" height="900" loading="lazy"
+           alt="Schedia on the eastern arm: a town of red-roofed houses and a large roofed hall above it, with the bay beyond and the domed rotunda on the far arm.">
+    </figure>
+
+    <p><b>Schedia</b> is a small city on the eastern arm, above a sheltered cove on the bay. Its
+    name means <i>raft</i>. It was founded by settlers from a different mother city, who came by sea
+    and brought their founders' laws with them, and the Parliament's decrees have never run on the
+    eastern arm. That was ordinary Greek practice: the small island of Amorgos held three
+    independent cities, each settled from elsewhere and each with its own laws.</p>
+
+    <p>So Paxos has two cities and two law books. Each covers its own city, and the two never
+    contradict each other. There is no quarrel between them for either to settle; Schedia simply
+    keeps its law another way.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="s3">
+  <div class="issue"><span class="no">III</span><h2>The Odeon</h2></div>
+  <div class="prose">
+    <p>Schedia is governed from its <b>Odeon</b>, which stands above the town and faces the Chamber
+    across the water. It is the Chamber's opposite. Where the rotunda makes oratory impossible, the
+    Odeon is roofed, raked and aimed at one stage, so that a single voice reaches every seat.</p>
+
+    <p>Schedia's legislators keep their law books in the front row of the Odeon, one throne each.
+    One of them at a time speaks from the stage; the others write down what the speaker says; the
+    public, in the seats behind, deal only with the speaker and learn the law from him. The speaker
+    is set apart by the building itself, and that is the one role that distinguishes a legislator
+    here.</p>
+
+    <p>When the speaker falls silent, business stops. It starts again only when another legislator
+    takes the stage under a higher number and first gathers what a majority of the front row holds,
+    so that nothing a majority knew is lost. If two claimed the stage at once, nothing could
+    proceed, and that is why every turn on the stage is numbered.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="terms">
+  <div class="issue"><span class="no">Reference</span><h2>The Setting and the Papers</h2></div>
+  <div class="prose">
+    <p>What each part of the place stands for, so that a reader coming to any book here knows the
+    model before the first chapter begins.</p>
+  </div>
+  <div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In the setting</th><th>What it stands for</th></tr></thead>
+      <tbody>
+        <tr><td><span class="term">the front row, one throne and law book each</span></td><td>The replicas (cohorts) of one group.</td></tr>
+        <tr><td><span class="term">the speaker on the stage</span></td><td>The primary, the leader.</td></tr>
+        <tr><td><span class="term">the others writing down what he says</span></td><td>Backups.</td></tr>
+        <tr><td><span class="term">the public in the seats behind</span></td><td>Clients, who deal only with the primary.</td></tr>
+        <tr><td><span class="term">a new speaker under a higher number</span></td><td>A view change with a new, higher view number.</td></tr>
+        <tr><td><span class="term">gathering what a majority of the front row holds</span></td><td>Recovering state from a majority, so committed work survives.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="books">
+  <div class="issue"><span class="no">Reference</span><h2>The Books Set Here</h2></div>
+  <div class="prose">
+    <p><a href="../../books/one-leader-at-a-time/index.html"><i>One Leader at a Time</i></a> (plan only): how Schedia's Odeon keeps
+    one law book with one speaker at a time, and how a new speaker takes over without losing
+    anything the last one promised. <span class="paper">Oki &amp; Liskov 1988</span></p>
+  </div>
+</section>
+
+</div>
+</body>
+</html>
