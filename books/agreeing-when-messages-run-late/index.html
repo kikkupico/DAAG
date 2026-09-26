@@ -128,9 +128,9 @@
     <p>A bound on flights is useless unless a man can measure a span. Each tent has a sandglass, and
     the glasses run alike. On the evenings of this book the crown stands clear at sunset, and the
     last light leaves the top of the hill at one moment, seen from every tent at the foot. At that
-    moment each man turned his glass. He turns it again the moment it runs out, and each time he
-    drops a pebble into a bowl. The pebbles count the <span class="coin">glasses</span>, and since
-    the four glasses started together and run alike, the four bowls always hold the same count. The
+    moment each man turned his glass. He turns it again the moment it runs out and keeps count of the
+    <span class="coin">glasses</span>, and since the four glasses started together and run alike,
+    all four men always have the same count. The
     glasses drift apart over a night, as any sand does, but by less than a flight, which is all that
     is needed.</p>
 
@@ -159,7 +159,7 @@
     still be in the pines.<br>
     <span class="stmt">(3) No man knows</span> when the wind has dropped.<br>
     <span class="stmt">(4) The glasses</span> were turned together at last light and run alike, so
-    every tent's pebbles give the same count.<br>
+    every man's count of glasses is the same.<br>
     <span class="stmt">(5) Late birds:</span> a strip taken in during a later glass than the one it
     was written in is set aside, except a going bird.<br>
     <span class="stmt">(6) At most one</span> of the four is killed. No one lies.<br>
@@ -192,14 +192,14 @@
     boar, the third to the trident, the fourth to the stag, the fifth to the bull again. A turn's man
     is its <span class="coin">owner</span>.</p>
 
-    <p>The owner is not a leader. Nobody chose him; the pebbles in his bowl did, and they would have
+    <p>The owner is not a leader. Nobody chose him; the count of glasses did, and they would have
     chosen him if he were dead. He gives no orders. He may only put forward a gate that three men,
     himself included, have already told him they could accept, and his turn passes when its fourth
     glass runs out, whatever has happened in it.</p>
 
     <p>Each man keeps two things besides his sighting.</p>
 
-    <p>The first is <span class="coin">the gates seen at dusk</span>: the gates he knows someone
+    <p>The first is <span class="coin">the sighted gates</span>: the gates he knows someone
     sighted. It starts as his own sighting. Every strip he sends carries it, and when a strip he does
     not set aside names a gate as seen, he adds it. So if all four sighted north, the gates seen at
     dusk are only ever north, in every tent.</p>
@@ -213,7 +213,7 @@
   <div class="aside-formal">
     <span class="lbl">The four glasses of a turn</span>
     <span class="stmt">The asking glass.</span> Every man, the owner included, sends the owner the
-    gates he can accept that are among the gates seen at dusk.<br>
+    gates he can accept that are among the sighted gates.<br>
     <span class="stmt">The calling glass.</span> If at least three men, himself included, named the
     same gate, the owner calls it: he sends <em>pledge to north, turn five</em>, say, to every tent,
     his own included. If both gates qualify he calls either; if neither, he calls nothing.<br>
@@ -229,7 +229,7 @@
     lock-release phase <var>k</var> of one; phase <var>k</var> belongs to <var>p</var><sub>i</sub>
     when <var>k</var> ≡ <var>i</var> (mod <var>N</var>). A proposal needs <var>N</var> − <var>t</var>
     = 3 processors finding the value acceptable and proper; a decision needs acknowledgments from
-    <var>t</var> + 1 = 2. The gates seen at dusk are the PROPER set.</span>
+    <var>t</var> + 1 = 2. The sighted gates are the PROPER set.</span>
   </div>
 
   <div class="prose">
@@ -243,7 +243,7 @@
     to is not the subject of this book and is settled nowhere in it. An owner who may call either
     gate calls either; the arrangement is indifferent to which.</p>
 
-    <p>The gates seen at dusk keep the second demand. An owner calls only a gate that three men
+    <p>The sighted gates keep the second demand. An owner calls only a gate that three men
     named from among the gates they know were sighted, and a gate enters that list only because
     someone sighted it. If all four sighted north, south is never on anyone's list, and nothing but
     north can ever be called.</p>
@@ -303,8 +303,8 @@
       <li>So from turn <var>k</var> on, two men always hold a pledge on north, or have gone north
       and send nothing. In no later asking glass can three men name south, south is never called,
       no man ties a pledge on south for a later turn, and no owner goes south.</li>
-      <li><b>The second demand.</b> A gate is named in an asking glass only if it is among the gates
-      seen at dusk, and a gate enters that list only through someone's sighting. If all four
+      <li><b>The second demand.</b> A gate is named in an asking glass only if it is among the sighted
+      gates, and a gate enters that list only through someone's sighting. If all four
       sighted north, only north can be named, called or gone to.<span class="qed">∎</span></li>
     </ol>
   </details>
@@ -427,7 +427,7 @@
     no later than some pledge on the other is untied. What is left is on one gate at most.</p>
 
     <p>Now take the next turn owned by a live man. In its asking glass every live man hears from
-    every other; at least three are alive; the gates seen at dusk have gone round, so every man's
+    every other; at least three are alive; the sighted gates have gone round, so every man's
     list holds the same gates; and all the pledges still tied are on one gate, which every live man
     can therefore accept. So all the live men name a common gate, the owner calls it, every live man
     pledges, and the owner has his two <em>pledged</em> before the answering glass runs out.</p>
@@ -450,7 +450,7 @@
       latest turn among them, say turn <var>h</var> on north; by Chapter IV's first step there is no
       pledge on south for turn <var>h</var>. Every pledge on south is for a turn no later than
       <var>h</var>, and its holder, hearing of <em>north, turn h</em>, unties it.</li>
-      <li><b>Every man knows the same gates seen at dusk.</b> Every strip carries its sender's list,
+      <li><b>Every man knows the same sighted gates.</b> Every strip carries its sender's list,
       and in a still untying glass every live man hears from every other. After it, a gate that any
       live man knows was seen is known to all of them. A gate still pledged was called by some
       owner, who called it from a list, so it is among them.</li>
@@ -769,11 +769,11 @@
         <tr><td><span class="term">ravens, never lost</span></td><td>Messages that are delayed but not lost. <span class="paper">The strengthened model of §4.2, Remark 2.</span></td></tr>
         <tr><td><span class="term">the wind; its dropping; a still flight within a glass</span></td><td>Unbounded delay before an unknown time, and a known bound after it. <span class="paper">&ldquo;Δ holds eventually&rdquo;; GST; §2.3.</span></td></tr>
         <tr><td><span class="term">no man knows when the wind dropped</span></td><td>GST is unknown to the processors. <span class="paper">§1.2.</span></td></tr>
-        <tr><td><span class="term">glasses turned together at last light, run alike; the pebbles</span></td><td>Completely synchronous processors with a common step count. <span class="paper">Φ = 1, §4.</span></td></tr>
+        <tr><td><span class="term">glasses turned together at last light, run alike; the count</span></td><td>Completely synchronous processors with a common step count. <span class="paper">Φ = 1, §4.</span></td></tr>
         <tr><td><span class="term">a glass</span></td><td>A round of the basic round model, simulated by <var>N</var> + Δ steps. <span class="paper">§3.1, §4.1.</span></td></tr>
         <tr><td><span class="term">a late bird, set aside</span></td><td>A message arriving in a later round than it was sent is ignored, so rounds are independent. <span class="paper">§4.1.</span></td></tr>
         <tr><td><span class="term">a turn; its owner, in shield order</span></td><td>A trying phase of three rounds and a lock-release phase of one; phase <var>k</var> belongs to <var>p</var><sub>i</sub> when <var>k</var> ≡ <var>i</var> mod <var>N</var>. <span class="paper">Algorithm 1, §3.2.1. The same rotation as the coordinator of Chandra and Toueg's ◇S algorithm.</span></td></tr>
-        <tr><td><span class="term">the gates seen at dusk</span></td><td>The set of values a processor knows to be proper, piggybacked on every message. <span class="paper">PROPER, §3.2.</span></td></tr>
+        <tr><td><span class="term">the sighted gates</span></td><td>The set of values a processor knows to be proper, piggybacked on every message. <span class="paper">PROPER, §3.2.</span></td></tr>
         <tr><td><span class="term">a pledge on the tent pole; accepting a gate</span></td><td>A lock with its phase number; a value is acceptable if the processor holds no lock on another value. <span class="paper">§3.2.1.</span></td></tr>
         <tr><td><span class="term">the asking glass</span></td><td>Each processor sends the phase's owner its acceptable, proper values. <span class="paper">Round <var>s</var> = 4<var>k</var> − 3.</span></td></tr>
         <tr><td><span class="term">the calling glass</span></td><td>The owner proposes a value that <var>N</var> − <var>t</var> processors found acceptable and proper: (lock <var>v</var>, <var>k</var>). <span class="paper">Round <var>s</var> + 1.</span></td></tr>
