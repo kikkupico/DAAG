@@ -63,7 +63,7 @@ island-wide distribution network.
 
 - *Ordering Without Clocks* (`lamport-1978_time-clocks`, `fidge-1988_timestamps`,
   `mattern-1988_virtual-time`). When overcast winter skies silence the headland sundials,
-  houses serve distribution orders on a strict first-come basis using logical tallies (Lamport
+  houses serve distribution orders strictly in the sequence they were placed using logical tallies (Lamport
   scalar clocks), resolve ties by house number (total order), coordinate mutual exclusion for a
   shared storehouse (§5), and use multi-house column rooms (vector clocks) to detect true
   causal independence. Lamport's physical clocks (§6) are described and not kept: they need a
@@ -77,8 +77,7 @@ island-wide distribution network.
   with the port towns' buying and selling set aside; the census is taken at no one moment, so the book counts no
   hours.
 - *Many Copies, Acting as One* (`herlihy-wing-1990_linearizability`). The same premise as
-  *Ordering Without Clocks*: the houses send one another **orders**, and House 3 fills orders for its grain first come,
-  first served. The tallies put orders in sequence by chains of slips; this book by the sun (one
+  *Ordering Without Clocks*: the houses send one another **orders**, and House 3 fills first the order for its grain placed first. The tallies put orders in sequence by chains of slips; this book by the sun (one
   piece of business came **before** another if it finished before the other began), which is
   linearizability. The object is House 3's **board** of orders, a FIFO queue: an order is `Enq`, a
   loader's **serving** is `Deq`. The running example is the goatherd's morning: House 1's order is
