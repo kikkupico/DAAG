@@ -101,7 +101,7 @@ The shape that has worked before:
 
 | | |
 |---|---|
-| **I** | The place, and the problem it has. Concrete, physical, no formalism. |
+| **I** | The problem, set in the place. Gloss the place in a sentence or two and link its setting article (`places/<place>/`) with a superscript; do not describe it again. State the paper's model in the setting's words, and the one thing this book changes. |
 | **II–III** | The model, built up one device at a time. The reader should not notice they are being handed a formal system. |
 | **IV–VII** | The paper's results, one per chapter, each stated in the setting's own vocabulary and then proved in a collapsed section. |
 | **VIII** | What the result does *not* say, or what it costs, or what it assumes and never verifies. It is often the best chapter in a book. |
