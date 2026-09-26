@@ -224,8 +224,11 @@ Before calling a book done:
 - [ ] Added to the home page, `index.html`.
 - [ ] The place's setting article, `places/<place>/index.html`, lists the book and still
   describes the place truly. Each home-page section opens with its setting article, the brief a
-  reader needs before reading that section's books in any order. Its pictures are Blender previs
-  renders (shots in `art/panels/places/shots.json`, published to `assets/img/places/`).
+  reader needs before reading that section's books in any order. Its opening picture is a
+  photorealistic establishing shot: a Blender previs render put through `pipeline.py scene` with a
+  crop of the island plate (`art/refs/places/`) and any people refs on the board, with no comic
+  pass. Its other pictures are previs renders. Shots are in `art/panels/places/shots.json`,
+  published to `assets/img/places/`.
 
 ---
 
