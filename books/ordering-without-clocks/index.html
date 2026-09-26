@@ -54,50 +54,22 @@
   <div class="issue"><span class="no">Chapter I</span><h2>The Ring Road</h2></div>
 
   <div class="prose">
-    <p>The island of Arche rises from the sea around a single four-hundred-metre massif of grey
-    limestone, Mount Phyle, whose foot fills most of the island's interior and leaves only a narrow strip of coast. Because the
-    mountain stands directly in the centre, no two houses on the coast can see each other: every
-    line drawn between them runs through rock, and no horn or fire-beacon can carry word
-    across it.</p>
+    <p>Three trading houses stand on the coast of Arche, passing goods and orders between them:
+    the house of the <span class="coin">Dolphin</span> on the western shore, the house of the
+    <span class="coin">Vine</span> on the northern, and the house of the
+    <span class="coin">Anchor</span> on the eastern bay, where merchantmen from foreign lands unload.
+    Mount Phyle fills the middle of the island, so no house can see another, and word goes between
+    them only on written slips carried by runners.</p>
 
-    <p>Nor can word be carried <em>over</em> it. The mountain's summit can be seen from every
-    shore, and a fire there would be seen from all three houses at once. But in the trading season
-    the same low cloud that silences the sundials sits on the crown for days together, and in any
-    season the mountain is not the houses' to use: its gullies are held by hired men and its crown
-    by the men they were hired against<sup class="xref"><a href="../the-limits-of-agreement/index.html#s1" title="The Limits of Agreement, Chapter I">*</a></sup>. No clerk of
-    the coast goes up, and no beacon of the coast is lit there.</p>
+    <p>The runners use the coastal ring road: two cliff cuttings, one walked only sunwise and one
+    only against the sun, each too narrow for one runner to pass another, and a slip always goes by
+    the direct stretch between two houses. So slips from one house to another arrive in the order
+    they were sent. A runner may be fast or slow, but he cannot be passed.</p>
 
-    <p>The island's commerce is carried on by three trading houses built on the coastal shelf:
-    the house of the <span class="coin">Dolphin</span> on the western rocky shore; the house of
-    the <span class="coin">Vine</span> on the northern terraced slopes; and the house of the
-    <span class="coin">Anchor</span> on the eastern bay where merchantmen from foreign lands
-    unload. Together, the three houses act as a distribution network for the island, passing
-    goods and orders between them.</p>
-
-    <p>Connecting them is the coastal ring road, cut into the cliff above the surf — or rather
-    two roads, one above the other. The upper cutting is walked only sunwise, the lower only
-    against the sun, and each is so narrow that one runner or cart cannot pass another. No runner
-    ever meets anyone coming the other way, and no runner ever overtakes. Word travels by runners
-    carrying written slips, and the law of the road is that a slip goes by the direct stretch
-    between two houses, never the long way round past the third house's gate. So slips sent from
-    one house to another arrive in the exact order they were dispatched. A runner may be fast or
-    slow, but he cannot be passed.</p>
-
-    <p>The sea does not offer a way round. Each house has its own cove, and ships leave from it
-    for the open sea; but the headlands between the coves stand in reefs and tide-races that no
-    small boat will coast in the trading season, and nothing goes from one cove to the next by
-    water.</p>
-
-    <p>There were sundials once, carved on the headlands above the water. They are useless. Under
-    Arche's winter trade skies, the clouds hang low for days, and at dusk the shadow vanishes
-    entirely. A dial does not run slow under cloud; it says nothing at all. So the houses may not
-    order their transactions by the hour, because on the days of heavy trade there is no hour to
-    be read.</p>
-
-    <p>Each counting room has a water-clock, and it is no substitute. A water-clock measures how
-    long something took — a watch, a weighing — but not what hour it is, since it knows only when
-    it was last filled. Three water-clocks filled on three sides of a mountain, by clerks who
-    cannot see one another, drift apart from the first day and keep no common hour.</p>
+    <p>Nothing else carries word. The mountain is held by a siege<sup class="xref"><a href="../the-limits-of-agreement/index.html#s1" title="The Limits of Agreement, Chapter I">*</a></sup>
+    and capped by cloud, reefs stop small boats coasting from cove to cove, and the houses keep no
+    signal-fires or flags. The same cloud silences the sundials, and the water-clocks in the three
+    counting rooms, filled by clerks who cannot see one another, keep no common hour.</p>
 
     <p>The trouble this causes has a definite shape. Foreign grain lands at the Anchor, and both
     the Vine and the Dolphin need it. The Vine sends a runner to the Anchor with a
@@ -140,8 +112,8 @@
     <p>If none of the three rules connects two events, Lamportios called them
     <span class="coin">unrelated</span> (or concurrent, written <var>a</var> ∥ <var>b</var>).
     Unrelated does not mean simultaneous. It means that neither event could have known of the
-    other: they lie across the mountain from each other, outside each other's reach, and no runner
-    could have carried word between them in time. The sun may have seen one of two unrelated events
+    other: no chain of slips joins them, whether or not a runner could have been sent in
+    time. The sun may have seen one of two unrelated events
     before the other, but nothing the houses hold can tell them which: no slip joins the two, and in
     the trading season the sun cannot be read.</p>
   </div>
@@ -217,7 +189,7 @@
     <span class="stmt">(1)</span> A house advances its tally by at least one between any two
     entries in its own book.<br>
     <span class="stmt">(2)</span> When dispatching a slip, a house writes its current tally on it.
-    When receiving a slip, a house sets its own tally higher than the number on the slip before
+    When receiving a slip, a house sets its own tally higher than the number on the slip, and never lowers it, before
     entering the arrival in its book.
   </div>
 
@@ -488,12 +460,12 @@
       <tbody>
         <tr><td>The island of Arche, Mount Phyle in the centre</td><td>A distributed network where nodes cannot communicate by broadcast; line of sight is obstructed.</td></tr>
         <tr><td>The narrow coastal ring road: two one-way cuttings, direct stretch only</td><td>FIFO channels, one per ordered pair of houses: runners on a single-file shelf cannot pass one another, never meet oncoming traffic, and never take the long way round.</td></tr>
-        <tr><td>Cloud on the crown; a mountain held by others; reefs between the coves</td><td>No broadcast medium and no second channel: every message goes by the road.</td></tr>
+        <tr><td>Cloud on the crown; a mountain held by others; reefs between the coves; no signals</td><td>No broadcast medium and no second channel: every message goes by the road.</td></tr>
         <tr><td>Water-clocks that keep no common hour</td><td>Local timers without synchronised clocks.</td></tr>
         <tr><td>Three trading houses: Dolphin, Vine, Anchor</td><td>Processes <var>P</var>₁, <var>P</var>₂, <var>P</var>₃.</td></tr>
         <tr><td>Slips carried by runners</td><td>Point-to-point asynchronous messages.</td></tr>
         <tr><td>Coming-before (<var>a</var> → <var>b</var>)</td><td>The causal partial order (Lamport happened-before relation).</td></tr>
-        <tr><td>Unrelated events (<var>a</var> ∥ <var>b</var>)</td><td>Concurrent events (space-like separation in Minkowski spacetime).</td></tr>
+        <tr><td>Unrelated events (<var>a</var> ∥ <var>b</var>)</td><td>Concurrent events: no causal chain joins them in either direction.</td></tr>
         <tr><td>The scalar tally</td><td>Lamport logical clock <var>C</var>(<var>e</var>).</td></tr>
         <tr><td>Precedence (<var>a</var> ⇒ <var>b</var>)</td><td>Total ordering extending partial order by process ID tie-breaking.</td></tr>
         <tr><td>The shared storehouse rules</td><td>Lamport's distributed mutual exclusion algorithm (§5).</td></tr>
