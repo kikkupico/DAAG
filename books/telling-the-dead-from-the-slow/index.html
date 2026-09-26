@@ -55,10 +55,9 @@
   <div class="prose">
     <p>Bandits hold the crown of Mount Phyle. At the foot, at the four quarters, four mercenaries
     keep four small tents, one man to a tent, under nobody's command, and no man can see
-    another<sup class="xref"><a href="../the-limits-of-agreement/index.html#p1" title="The Limits of Agreement, Part One">*</a></sup>:
-    <span class="coin">Fischeros</span> at the bull, <span class="coin">Lynchaia</span> at the boar,
-    <span class="coin">Patersonos</span> at the trident and <span class="coin">Kallias</span> at the
-    stag. They must all go in at one gate, north or south. Each formed an opinion at dusk, his
+    another<sup class="xref"><a href="../the-limits-of-agreement/index.html#p1" title="The Limits of Agreement, Part One">*</a></sup>.
+    The tents are numbered 1 to 4, and each man goes by his tent's number,
+    <span class="coin">Number 1</span> to <span class="coin">Number 4</span>. They must all go in at one gate, north or south. Each formed an opinion at dusk, his
     <span class="coin">sighting</span>. Word passes only by raven. A bird always arrives, but there is
     no longest flight. Nobody lies. Any man may be killed, and a dead man's tent simply falls
     silent.</p>
@@ -198,7 +197,7 @@
 
   <div class="prose">
     <p>Suppose the slates are strong: every living man in the end chalks the dead, and one man who
-    lives, say Lynchaia, is never chalked by anyone. Nobody knows it is Lynchaia. Then the four can
+    lives, say Number 2, is never chalked by anyone. Nobody knows it is Number 2. Then the four can
     agree however many of them die, even three.</p>
 
     <p>Each man keeps a <span class="coin">tally of sightings</span>: a row for each tent, holding
@@ -214,18 +213,18 @@
     <span class="stmt">Comparing.</span> He sends every tent his whole tally, and waits in the same
     way. Any row that is blank in any tally he receives, he blanks in his own.<br>
     <span class="stmt">Going.</span> He goes to the gate in the first row of his tally that is not
-    blank, taking the rows in shield order.<br>
+    blank, taking the rows in number order.<br>
     <span class="paper">The algorithm of Fig. 5, §6.1: <var>n</var> − 1 = 3 asynchronous rounds of
     Phase 1, Phase 2, Phase 3.</span>
   </div>
 
   <div class="prose">
-    <p>The whole thing turns on Lynchaia. Nobody ever chalks her, so everybody waits for every one of
+    <p>The whole thing turns on Number 2. Nobody ever chalks her, so everybody waits for every one of
     her birds. Whatever she has learned by a round, everyone who finishes the next round has learned
-    too. By the end of spreading, every tally that finishes holds everything Lynchaia's holds. In
+    too. By the end of spreading, every tally that finishes holds everything Number 2's holds. In
     comparing, everyone waits for her tally, and blanks every row that is blank in hers; and every
     row filled in hers is filled in every tally, so nobody blanks it. So everyone who reaches the end
-    holds exactly Lynchaia's tally, which is not empty, since it has her own sighting. They all go to
+    holds exactly Number 2's tally, which is not empty, since it has her own sighting. They all go to
     the same gate, a gate someone sighted.</p>
 
     <p>Nobody waits for ever: a dead man is chalked in the end, and a live man's bird comes in the
@@ -280,8 +279,8 @@
     left alone. Then the four can still agree, provided more than half of them live. With four men,
     one may die.</p>
 
-    <p>They take <span class="coin">turns</span>. Each round belongs to one tent, in shield order:
-    bull, boar, trident, stag, bull again. The round number decides whose turn it is, not anyone's
+    <p>They take <span class="coin">turns</span>. Each round belongs to one tent, in number order:
+    1, 2, 3, 4, then 1 again. The round number decides whose turn it is, not anyone's
     command, as on the windy
     nights<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s3" title="Agreeing When Messages Run Late, Chapter III">*</a></sup>.
     Each man carries an <span class="coin">estimate</span>, a gate, which starts as his sighting, and
@@ -372,7 +371,7 @@
 
   <figure class="diagram">
     <div class="board">
-      <svg viewBox="0 0 660 330" role="img" aria-label="Three panels, each with two pairs of tents: Fischeros and Lynchaia on the left, Patersonos and Kallias on the right. First panel: all sighted north, Patersonos and Kallias are dead and chalked; Fischeros and Lynchaia go north. Second panel: all sighted south, Fischeros and Lynchaia are dead and chalked; Patersonos and Kallias go south. Third panel: all alive, the left pair sighted north and the right pair south; every bird between the pairs is slow, each pair chalks the other, and each goes to a different gate.">
+      <svg viewBox="0 0 660 330" role="img" aria-label="Three panels, each with two pairs of tents: Numbers 1 and 2 on the left, Numbers 3 and 4 on the right. First panel: all sighted north, Numbers 3 and 4 are dead and chalked; Numbers 1 and 2 go north. Second panel: all sighted south, Numbers 1 and 2 are dead and chalked; Numbers 3 and 4 go south. Third panel: all alive, the left pair sighted north and the right pair south; every bird between the pairs is slow, each pair chalks the other, and each goes to a different gate.">
         <!-- panel headers -->
         <text class="d-house" x="110" y="24" text-anchor="middle">FIRST</text>
         <text class="d-house" x="330" y="24" text-anchor="middle">SECOND</text>
@@ -381,8 +380,8 @@
         <line x1="440" y1="10" x2="440" y2="320" stroke="#b9a77e" stroke-width="1.5"/>
 
         <!-- panel 1 -->
-        <text class="d-key" x="60" y="54" text-anchor="middle">F · L</text>
-        <text class="d-key" x="160" y="54" text-anchor="middle">P · K</text>
+        <text class="d-key" x="60" y="54" text-anchor="middle">1 · 2</text>
+        <text class="d-key" x="160" y="54" text-anchor="middle">3 · 4</text>
         <rect x="30" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
         <rect x="130" y="66" width="60" height="150" rx="4" fill="none" stroke="#b9a77e" stroke-width="1.4" stroke-dasharray="4 4"/>
         <text class="d-lbl" x="60" y="100" text-anchor="middle">sighted</text>
@@ -394,8 +393,8 @@
         <text class="d-note" x="110" y="272" text-anchor="middle">and go without them</text>
 
         <!-- panel 2 -->
-        <text class="d-key" x="280" y="54" text-anchor="middle">F · L</text>
-        <text class="d-key" x="380" y="54" text-anchor="middle">P · K</text>
+        <text class="d-key" x="280" y="54" text-anchor="middle">1 · 2</text>
+        <text class="d-key" x="380" y="54" text-anchor="middle">3 · 4</text>
         <rect x="250" y="66" width="60" height="150" rx="4" fill="none" stroke="#b9a77e" stroke-width="1.4" stroke-dasharray="4 4"/>
         <rect x="350" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
         <text class="d-note" x="280" y="108" text-anchor="middle">dead</text>
@@ -407,8 +406,8 @@
         <text class="d-note" x="330" y="272" text-anchor="middle">pairs and gates swapped</text>
 
         <!-- panel 3 -->
-        <text class="d-key" x="500" y="54" text-anchor="middle">F · L</text>
-        <text class="d-key" x="600" y="54" text-anchor="middle">P · K</text>
+        <text class="d-key" x="500" y="54" text-anchor="middle">1 · 2</text>
+        <text class="d-key" x="600" y="54" text-anchor="middle">3 · 4</text>
         <rect x="470" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
         <rect x="570" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
         <rect class="d-band" x="534" y="66" width="32" height="150"/>
@@ -439,14 +438,14 @@
   <details class="proof">
     <summary>Proof — that slates in the end perfect cannot carry the four past two deaths</summary>
     <ol class="proofsteps">
-      <li>Suppose some arrangement does. Divide the four into pairs: Fischeros and Lynchaia, Patersonos
-      and Kallias.</li>
-      <li><b>The first night.</b> All sighted north. Patersonos and Kallias are dead from dusk, and
-      the other two chalk them all night. That slate is in the end perfect. Fischeros and Lynchaia go,
+      <li>Suppose some arrangement does. Divide the four into pairs: Numbers 1 and 2, Numbers 3
+      and 4.</li>
+      <li><b>The first night.</b> All sighted north. Numbers 3 and 4 are dead from dusk, and
+      the other two chalk them all night. That slate is in the end perfect. Numbers 1 and 2 go,
       within some time <var>A</var>, and to north, since only north was sighted.</li>
-      <li><b>The second night.</b> The same with pairs and gates swapped: Patersonos and Kallias go
+      <li><b>The second night.</b> The same with pairs and gates swapped: Numbers 3 and 4 go
       south within some time <var>B</var>.</li>
-      <li><b>The third night.</b> Fischeros and Lynchaia sighted north, Patersonos and Kallias south.
+      <li><b>The third night.</b> Numbers 1 and 2 sighted north, Numbers 3 and 4 south.
       Nobody dies. Every bird between the pairs sits in the pines until after <var>A</var> and
       <var>B</var>, and until then each pair chalks the other; after that, all birds arrive and all
       chalk is rubbed out. That slate is in the end perfect too.</li>
@@ -527,7 +526,7 @@
         <tr><td><span class="term">copying marks</span></td><td>The reduction from weak to strong completeness, preserving accuracy. <span class="paper">Fig. 3, Theorem 1, Corollary 1.</span></td></tr>
         <tr><td><span class="term">the tally of sightings; spreading; comparing</span></td><td>The vector <var>V</var><sub>p</sub>; Phase 1's <var>n</var> − 1 rounds; Phase 2. <span class="paper">Fig. 5.</span></td></tr>
         <tr><td><span class="term">One Man Never Chalked</span></td><td>Consensus is solvable with S, tolerating up to <var>n</var> − 1 crashes. <span class="paper">Theorem 2; Corollary 2 for W.</span></td></tr>
-        <tr><td><span class="term">turns in shield order; the owner</span></td><td>The rotating coordinator, <var>c</var> = (<var>r</var> mod <var>n</var>) + 1. <span class="paper">§6.2.</span></td></tr>
+        <tr><td><span class="term">turns in number order; the owner</span></td><td>The rotating coordinator, <var>c</var> = (<var>r</var> mod <var>n</var>) + 1. <span class="paper">§6.2.</span></td></tr>
         <tr><td><span class="term">an estimate and the round it was taken up</span></td><td>estimate<sub>p</sub> and its timestamp ts<sub>p</sub>. <span class="paper">Fig. 6.</span></td></tr>
         <tr><td><span class="term">agreed; not agreed</span></td><td>ack; nack. <span class="paper">Fig. 6, Phase 3.</span></td></tr>
         <tr><td><span class="term">the going bird, sent on before going</span></td><td>R-broadcast of the decision, relayed on first receipt. <span class="paper">Fig. 4. Here a process halts after relaying, since going is silence; the paper's processes keep running.</span></td></tr>
@@ -574,8 +573,8 @@
     classes, the reduction from weak to strong completeness, consensus with S and with ◇S, the
     majority lower bound, and the equivalence with atomic broadcast.</li>
   </ul>
-  <aside class="fn">The four men are the mercenaries of <i>The Limits of Agreement</i>, kept for this
-  book as for <i>Agreeing When Messages Run Late</i> and <i>Answering While Cut Off</i>. Tushar Chandra and Sam Toueg are credited here.</aside>
+  <aside class="fn">The four are the mercenaries of <i>The Limits of Agreement</i>, at the same
+  tents and known by their tents' numbers, as in every book at the camps. Tushar Chandra and Sam Toueg are credited here.</aside>
 </section>
 
 <hr class="rule">
