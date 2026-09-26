@@ -10,7 +10,7 @@ All four are written: one on the ring road, three on Mount Phyle.
 
 ## Many Copies, Acting as One
 
-Written: `books/many-copies-acting-as-one/`. The claims board at House 3, sharing the premise
+Written: `books/many-copies-acting-as-one/`. The order board at House 3, sharing the premise
 of *Ordering Without Clocks*; see `settings.md`.
 
 ---

@@ -19,7 +19,7 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 | the front row (*proedria*): one throne per legislator, each with a law book | The module group's cohorts; the fixed set of thrones is the configuration. | The Chamber, where every legislator keeps a ledger |
 | the speaker on the stage | The primary: runs every call and settles every measure. | The crown's chief's job in *Keeping Order Among Liars*, which borrows VR's views |
 | the rest of the front row, writing down what the speaker says | Backups, passive: they only record. |  |
-| the public in the seats behind | Clients, who deal only with the speaker. | The houses claiming at Arche's claims board |
+| the public in the seats behind | Clients, who deal only with the speaker. | The houses ordering at Arche's order board |
 | the board on the stage wall: a count and the name of the legislator who raised it | The viewid ⟨cnt, mid⟩, totally ordered, unique to its caller. | Ties broken by name, as the tally house's middle room breaks them by house number (*Ordering Without Clocks*); the Chamber's ballot numbers |
 | the line number in the speaker's record, starting again at each new board | A timestamp, meaningful only within its view. |  |
 | "board 7, line 12" | A viewstamp ⟨viewid, ts⟩. |  |
