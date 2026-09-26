@@ -119,7 +119,9 @@ Concretely:
   *the message is transmitted*.
 - State results as results. Use `<div class="result"><span class="name">…</span>` and give the
   result a name a reader can refer back to.
-- When you first coin a device, mark it with `<span class="coin">`.
+- When you first coin a device, mark it with `<span class="coin">` (bold, never underlined: an
+  underline reads as a link). Node labels such as *House 1* or *Number 2* are not coinages and
+  take no mark.
 - **Never refer to another volume in the prose.** No "as *Ordering Without Clocks* relates", no
   "the four of *The Limits of Agreement*", no "the earlier book". A fact established elsewhere is
   restated in this book's own words, as a fact of the island, and linked to the book that
