@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Chamber — Paxos</title>
+<link rel="stylesheet" href="../../assets/css/daag.css">
+<link rel="stylesheet" href="../../assets/css/books.css">
+</head>
+<body>
+<nav class="series-nav">
+  <div class="series-nav-inner">
+    <a href="../../index.html" class="nav-back">← The Books</a>
+    <span class="nav-current">Paxos · The Chamber</span>
+  </div>
+</nav>
+<div class="page">
+
+<header class="cover">
+  <div class="kicker">Distributed Algorithms of Ancient Greece · Paxos · The Setting</div>
+  <h1 class="display" style="margin:18px 0 6px">The Chamber</h1>
+  <p class="sub">A parliament whose members wander in and out as they please, which still passes laws that never contradict one another.</p>
+  <p class="pub">Read this first, and the book set in the Chamber can be read on its own. It describes the island of Paxos and the Chamber, where Lamport set his parliament.</p>
+</header>
+
+<nav class="toc">
+  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Contents</a></h6>
+  <ol>
+    <li><a href="#s1">I · The Island of Paxos</a></li>
+    <li><a href="#s2">II · The Chamber</a></li>
+    <li><a href="#s3">III · The Parliament Is Still Sitting</a></li>
+    <li><a href="#terms">The Setting and the Papers</a></li>
+    <li><a href="#books">The Books Set Here</a></li>
+  </ol>
+</nav>
+
+<hr class="rule">
+
+<section id="s1">
+  <div class="issue"><span class="no">I</span><h2>The Island of Paxos</h2></div>
+  <div class="prose">
+    <figure class="panel">
+      <img src="../../assets/img/places/paxos-island.jpg" width="1200" height="900" loading="lazy"
+           alt="Paxos from the air: a Y-shaped island whose two arms face each other across a bay, a domed rotunda on one arm and a town with a large roofed hall on the other, the arms joining at a fork above the broad body of the island.">
+    </figure>
+
+    <p>Paxos is shaped like a Y. Two arms reach north and face each other across a bay: the western
+    arm holds the <b>Chamber</b> of the Paxon Parliament, the eastern arm the city of
+    <b>Schedia</b> and its Odeon. The arms join at a fork, where the <b>hall of two doors</b>
+    stands, and below the fork the stem widens into the body of the island, the
+    <b>scholars' coast</b>. The island road runs up the stem, forks, and runs out along both
+    arms.</p>
+
+    <p>Paxos can read the sun. Unlike Arche in its trading season, the island tells time by day,
+    and the Chamber has a meridian line. Word goes by messenger and by courier along the island's
+    roads, and takes as long as it takes.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="s2">
+  <div class="issue"><span class="no">II</span><h2>The Chamber</h2></div>
+  <div class="prose">
+    <figure class="panel">
+      <img src="../../assets/img/places/chamber.jpg" width="1200" height="900" loading="lazy"
+           alt="The Chamber: a white domed rotunda ringed by columns, on the western arm of Paxos above the sea, a path climbing to it between cypresses.">
+    </figure>
+
+    <p>The Chamber is Lamport's, not ours, and it is not retold. It stands on the western arm, on
+    the road to the harbour town at the arm's tip, looking across the bay at the Odeon of Schedia.
+    It is drawn as a rotunda because Lamport gives it one physical property: its acoustics were
+    poor, making oratory impossible, so legislators could communicate only by messenger. A round
+    hall under a hard stone dome, with no podium and no head of the room, fits that description,
+    and open doorways round the drum let legislators and messengers come and go.</p>
+
+    <p>The legislators are part-time. They wander in and out of the Chamber whenever they like,
+    and any of them may be away for any length of time. Each keeps a <b>ledger</b> in which he
+    writes the decrees that have passed, in order. Messengers carry word between them and take as
+    long as they take; a messenger may even leave on a long voyage and never deliver his message.
+    Nobody lies. The one thing the Parliament guarantees is that no two ledgers ever record
+    different decrees under the same number, because any two majorities of legislators share a
+    member.</p>
+
+    <p>The Parliament makes the law of Paxos: the western arm, the stem and the scholars' coast.
+    Schedia, on the eastern arm, keeps its own laws, and the Parliament's decrees have never run
+    there.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="s3">
+  <div class="issue"><span class="no">III</span><h2>The Parliament Is Still Sitting</h2></div>
+  <div class="prose">
+    <p>Lamport ends his paper with the Parliament's fall: a scribe's error names drowned sailors as
+    the only legislators, government halts, and a coup and an invasion follow. Every other book in
+    this series sets that ending aside, as a matter of convenience. In them the Parliament is still
+    sitting, the Chamber still stands on the western arm, and the scholars of the island's coast
+    still walk up to it.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="terms">
+  <div class="issue"><span class="no">Reference</span><h2>The Setting and the Papers</h2></div>
+  <div class="prose">
+    <p>What each part of the place stands for, so that a reader coming to any book here knows the
+    model before the first chapter begins.</p>
+  </div>
+  <div class="table-wrap">
+    <table class="chron">
+      <thead><tr><th>In the setting</th><th>What it stands for</th></tr></thead>
+      <tbody>
+        <tr><td><span class="term">the legislators, wandering in and out</span></td><td>Processes that may stop and restart at any time.</td></tr>
+        <tr><td><span class="term">a legislator's ledger</span></td><td>Stable storage that survives a process's absence.</td></tr>
+        <tr><td><span class="term">messengers, slow or lost</span></td><td>Asynchronous messages that may be delayed, duplicated or lost.</td></tr>
+        <tr><td><span class="term">a decree and its number</span></td><td>A command at a position in a replicated log.</td></tr>
+        <tr><td><span class="term">any two majorities share a legislator</span></td><td>Quorum intersection, which preserves past decisions.</td></tr>
+        <tr><td><span class="term">the Chamber's poor acoustics</span></td><td>No broadcast: legislators communicate only by messenger.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="books">
+  <div class="issue"><span class="no">Reference</span><h2>The Books Set Here</h2></div>
+  <div class="prose">
+    <p><a href="../../books/the-part-time-parliament/index.html"><i>The Part-Time Parliament</i></a>: Lamport's paper as he wrote
+    it, with interactive figures. <span class="paper">Lamport 1998 · Lamport 2001</span></p>
+  </div>
+</section>
+
+</div>
+</body>
+</html>
