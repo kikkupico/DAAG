@@ -253,6 +253,27 @@ NO council ring, NO circle of seats, NO roofs, NO banners, NO fire. Windswept sc
 
 ---
 
+### 2.3 Characters: told apart by colour
+
+The mercenaries and the bandits are each one kind of figure. Several models of a kind are fine for
+visual interest, but a figure is told apart only by the colour of its tunic and cloak, never by a
+face, build, age, sex, hair, pelt or other defining feature. The sheets in `art/refs/sheets.json`
+use these colours, and previs shots pass the same RGB as a figure's `tint`.
+
+| Figure | Colour | Tint |
+|---|---|---|
+| Mercenary 1 | ochre yellow | [0.72, 0.52, 0.16] |
+| Mercenary 2 | deep blue | [0.12, 0.22, 0.52] |
+| Mercenary 3 | oxblood red | [0.45, 0.08, 0.08] |
+| Mercenary 4 | olive green | [0.33, 0.38, 0.14] |
+| Bandit 1, the chief | purple | [0.36, 0.14, 0.40] |
+| Bandit 2 | slate grey | [0.38, 0.40, 0.43] |
+| Bandit 3 | saffron orange | [0.88, 0.50, 0.10] |
+| Bandit 4 | chestnut brown | [0.40, 0.22, 0.12] |
+
+The existing cast models (`art/cast/wolf-bearer.glb`, `bronze-shepherd.glb`) and reference crops
+predate this rule; use them with a tint, and build new ones to it.
+
 ## 3. Island 2: Paxos
 
 > **Narrative Setting:** One island shaped like a Y, and its shape groups the papers. Two arms reach north and face each other across a sheltered bay; they join at a fork, and below it a short stem widens into the broad, lower body of the island. Two cities: Paxos, whose parliament governs the western arm, the stem and the body; and Schedia on the eastern arm, founded from a different mother city, which keeps its own laws. Four districts:
