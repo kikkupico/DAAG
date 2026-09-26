@@ -13,8 +13,7 @@ Two papers share a building when they are **one idea at two resolutions** — an
 rediscovery, a conjecture and its proof, a general result and its famous framing, a short and
 a long version — or when a later paper is best told as a change of procedure in an existing room.
 They get separate buildings when they make **different claims about the same subject**, and
-then the buildings stand next to each other so the difference is a walk of a few hundred
-metres rather than a footnote.
+then the buildings stand next to each other so the difference is a short walk rather than a footnote.
 
 Seven shares below cover **seventeen papers in seven buildings**. Everything else gets its
 own, which comes to **15 buildings for 25 papers**.
