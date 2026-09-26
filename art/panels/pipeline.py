@@ -11,7 +11,7 @@ saved as art/refs/<sheet>-sheet.png and split into art/refs/<sheet>/<item>.png, 
 each item's box on the sheet in art/refs/<sheet>/boxes.json.
 
 Shots live in art/panels/<book>/shots.json: the camera (read by art/previs/render.py)
-plus "scene": {"prompt": ..., "refs": ["mercenaries/patersonos", "props/tent", ...]}.
+plus "scene": {"prompt": ..., "refs": ["mercenaries/merc-3", "props/tent", ...]}.
 [image 1] is always the previs; the refs are combined into one board, [image 2]
 (set "board": false to pass them separately as [image 2], [image 3]...).
 Output: art/panels/<book>/<shot-id>/{previs,scene}.png
