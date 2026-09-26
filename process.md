@@ -122,6 +122,9 @@ Concretely:
 - When you first coin a device, mark it with `<span class="coin">` (bold, never underlined:
   only links are underlined). Node labels such as *House 1* or *Number 2* take the same mark where
   they are introduced.
+- **Never refer to a chapter by its number or place in the prose.** No "as Chapter IV showed", no
+  "the fifth chapter asked". Say "as we saw", "below", or name the result ("by Never Two Gates",
+  "the rules of the tally"). Chapter headings and the table of contents carry the numbers.
 - **Never refer to another volume in the prose.** No "as *Ordering Without Clocks* relates", no
   "the four of *The Limits of Agreement*", no "the earlier book". A fact established elsewhere is
   restated in this book's own words, as a fact of the island, and linked to the book that

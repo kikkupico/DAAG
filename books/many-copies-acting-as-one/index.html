@@ -127,7 +127,7 @@
     single moment between its sending and its confirmation, and each serving must seem to take its
     order at a single moment too. Clause (3) follows: if House 1's order was confirmed before
     House 2's was sent, House 1's moment came first, and a single keeper would serve House 1
-    first. The morning of Chapter I breaks the rule.</p>
+    first. The goatherd's morning breaks the rule.</p>
 
     <p>Three smaller cases show the rule's edges.</p>
 
@@ -231,7 +231,7 @@
     <p><b>The sun's first.</b> One order comes before another if it was finished before the other
     began, whether or not any slip joined them. Orders that overlap may go either way.</p>
 
-    <p>Neither contains the other. The morning of Chapter I has no chain of slips from House 1's
+    <p>Neither contains the other. The goatherd's morning has no chain of slips from House 1's
     order to House 2's, so the tallies were free to put House 2 first, and they did; but by the sun
     House 1 came first. And the other way round: suppose House 1 sends an order, and before it
     is confirmed sends House 2 a slip about it, and House 2 then orders. There is a chain of slips
@@ -274,7 +274,7 @@
 
     <p>A single board at House 3 is not the only way. The houses could keep copies of the board,
     one at each house, and still keep the rule, if the copies answer as though they were one. That
-    is the sense of this book's title, and Chapter VIII returns to it.</p>
+    is the sense of this book's title, and we return to it at the end.</p>
   </div>
 </section>
 
@@ -342,8 +342,7 @@
   </details>
 
   <div class="prose">
-    <p>This should not be taken for granted. Chapter VI shows a reasonable rule under which it
-    fails.</p>
+    <p>This should not be taken for granted. A reasonable rule under which it fails comes later.</p>
   </div>
 </section>
 
@@ -396,8 +395,7 @@
   <div class="issue"><span class="no">Chapter VI</span><h2>Weaker Rules</h2></div>
 
   <div class="prose">
-    <p><b>The rule without the sun.</b> Drop clause (3). Ask only that everything can be set in one sequence that a single keeper would have followed, with each house's own business in the sequence it did it. Call it <span class="coin">the rule without the sun</span>. Under it the morning of
-    Chapter I is no fault at all: put House 2's order first, then House 1's, and a single keeper
+    <p><b>The rule without the sun.</b> Drop clause (3). Ask only that everything can be set in one sequence that a single keeper would have followed, with each house's own business in the sequence it did it. Call it <span class="coin">the rule without the sun</span>. Under it the goatherd's morning is no fault at all: put House 2's order first, then House 1's, and a single keeper
     serves exactly as the loader did. Only the sun's clause forbids serving House 2 first.</p>
 
     <p>And the rule without the sun cannot be checked one board at a time. House 1 orders grain
@@ -454,8 +452,7 @@
 
   <div class="prose">
     <p>Each board kept the rule without the sun, and the two together did not. Houses keeping that
-    rule would need one arrangement spanning every board. Under the rule of the board this cannot
-    happen, by Chapter IV.</p>
+    rule would need one arrangement spanning every board. Under the rule of the board this cannot happen, by One Board at a Time.</p>
 
     <p><b>Bargains.</b> Some houses want several things done as one: <em>look at the oil board, and
     if it is empty, order grain</em>, with nobody else's business in between. Call that a
@@ -478,7 +475,7 @@
 
   <div class="prose">
     <p>A rule nobody can check by looking has to be kept by arrangement, and the arrangement shown to
-    keep it. Chapter III did that for one keeper at one board: point to the moment of entry, and the
+    keep it. We did that earlier for one keeper at one board: point to the moment of entry, and the
     rule is shown. House 3's real board is busier. Several clerks enter orders as their slips come
     in, and several loaders serve at once, and Herlios, who keeps the board, arranged it so that none
     of them ever stands aside for another. Then there is no single moment to point to.</p>
@@ -675,8 +672,7 @@
     The Paxons' remedy was that if one inquiry precedes a second, the second cannot reveal an older
     state of the law. At first they read <em>precedes</em> as <em>finished before the other
     began</em>, the sun's reading, and met it by passing a decree for every inquiry. That was too
-    cumbersome, and they weakened it to <em>could have affected it</em>, the tallies' reading. The
-    two kinds of first of Chapter III are the same two readings.</p>
+    cumbersome, and they weakened it to <em>could have affected it</em>, the tallies' reading. The two kinds of first are the same two readings.</p>
   </div>
 </section>
 
@@ -703,7 +699,7 @@
         <tr><td><span class="term">the rule of the board</span></td><td>Extend the history with responses to some pending invocations, drop the rest; the result is equivalent to a legal sequential history that respects &lt;<sub>H</sub>. <span class="paper">Linearizability, L1 and L2, §2.2.</span></td></tr>
         <tr><td><span class="term">a single keeper with a single board</span></td><td>The object's sequential specification. <span class="paper">A legal sequential history.</span></td></tr>
         <tr><td><span class="term">each piece of business's moment</span></td><td>The instant between invocation and response at which the operation appears to take effect. <span class="paper">§1, §6.2.</span></td></tr>
-        <tr><td><span class="term">the morning of Chapter I</span></td><td>An enqueue completes before another begins, and the later item is dequeued first. <span class="paper">Sequentially consistent but not linearizable: <var>H</var>₇; with overlap, <var>H</var>₂ (Fig. 1b).</span></td></tr>
+        <tr><td><span class="term">the goatherd's morning</span></td><td>An enqueue completes before another begins, and the later item is dequeued first. <span class="paper">Sequentially consistent but not linearizable: <var>H</var>₇; with overlap, <var>H</var>₂ (Fig. 1b).</span></td></tr>
         <tr><td><span class="term">orders at the same time; served before confirmed; served twice</span></td><td><span class="paper"><var>H</var>₁ (acceptable), <var>H</var>₃ (an operation takes effect before its response), <var>H</var>₄ (one item dequeued twice, not acceptable), Fig. 1.</span></td></tr>
         <tr><td><span class="term">the tallies' first</span></td><td>Lamport's happened-before, extended to a total order by process identifiers. <span class="paper">Not in this paper; neither it nor &lt;<sub>H</sub> contains the other.</span></td></tr>
         <tr><td><span class="term">serving by entry at House 3's gate</span></td><td>A single-copy implementation whose linearization point is the step at which the request is applied. <span class="paper">The single-valued abstraction function of §4.2, in the easy case.</span></td></tr>
