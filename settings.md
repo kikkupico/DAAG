@@ -74,31 +74,31 @@ island-wide distribution network.
   wearing a **red sash** serves as the marker dividing pre-recording shipments from
   post-recording shipments. Proves cut consistency, reachability ($S_\iota \to S^* \to S_\phi$),
   and stable property detection. Stable properties are those of the trade between the houses,
-  with landings and sales set aside; the census is taken at no one moment, so the book counts no
+  with the port towns' buying and selling set aside; the census is taken at no one moment, so the book counts no
   hours.
 - *Many Copies, Acting as One* (`herlihy-wing-1990_linearizability`). The same premise as
-  *Ordering Without Clocks*: grain lands at every house; in the running example a cargo lands at House 3 and the houses **claim** it, first come,
-  first served. The tallies order claims by chains of slips; this book orders them by the sun (one
+  *Ordering Without Clocks*: the houses send one another **orders**, and House 3 fills orders for its grain first come,
+  first served. The tallies put orders in sequence by chains of slips; this book by the sun (one
   piece of business came **before** another if it finished before the other began), which is
-  linearizability. The object is House 3's **board** of claims, a FIFO queue: a claim is `Enq`, a
-  loader's **serving** is `Deq`. The running example is the goatherd's morning: House 1's claim is
-  entered and confirmed, the goatherd tells House 2, House 2 claims at noon with a lower tally and
+  linearizability. The object is House 3's **board** of orders, a FIFO queue: an order is `Enq`, a
+  loader's **serving** is `Deq`. The running example is the goatherd's morning: House 1's order is
+  entered and confirmed, the goatherd tells House 2, House 2 orders at noon with a lower tally and
   is served first (the paper's H7). **Two kinds of first:** serving by entry at House 3's gate keeps
-  the rule; serving by tally need not; neither order contains the other. Locality is shown with two
-  boards, grain at House 3 and oil at House 2, claimed by all three houses (H8 for the looser rule). The looser rules are
+  the rule; serving by tally need not; neither sequence contains the other. Locality is shown with two
+  boards, grain at House 3 and oil at House 2, ordered by all three houses (H8 for the looser rule). The looser rules are
   **the rule without the sun** (sequential consistency) and **bargains** (serializability). The
   paper's §4 queue is **Herlios' board** itself: numbered **slots**, a **peg** (`INC`), clerks
-  entering claims (Glaukos, Mikon) and a loader serving (Sosias) with `SWAP`, all at one house. The
+  entering orders (Glaukos, Mikon) and a loader serving (Sosias) with `SWAP`, all at one house. The
   rule holds whether the board is one board or copies acting as one. Herlios keeps the board;
   Wingaia is of House 2.
 **Why linearizability is on Arche.** It is defined by real time: one operation finished before
 another began. Arche has real time — the sun rises over it whether or not a dial can be read —
-but in the trading season no one can read it, and no house can learn of another's claim except
-by slip. That is not an objection but the point. The tallies of *Ordering Without Clocks* order
-claims by chains of slips, and its Ch. VI shows a causal path they cannot see: the goatherd who
-carries word over the mountain. Linearizability orders the same claims by the sun, so that no
+but in the trading season no one can read it, and no house can learn of another's order except
+by slip. That is not an objection but the point. The tallies of *Ordering Without Clocks* put
+orders in sequence by chains of slips, and its Ch. VI shows a causal path they cannot see: the goatherd who
+carries word over the mountain. Linearizability puts the same orders in sequence by the sun, so that no
 goatherd could ever catch the houses out, though they can never see one coming. It is judged by
-the sun, not computed from it. The two books share the claims premise the way the camps' books
+the sun, not computed from it. The two books share the orders premise the way the camps' books
 share the mercenaries. On Paxos, Lamport's black-goat story (§3.3.4) states both readings of
 *precedes* for the parliament.
 
@@ -274,7 +274,7 @@ of mouth; couriers are delayed or stopped, and libraries close.
 
 **The line between the scholars and Arche is how much disagreement each can live with**, not
 what is recorded: both keep records, and on Arche it is the stock of the storehouses that is
-snapshotted and the claims on its grain that are ordered. At the camps, answering from a stale
+snapshotted and the orders on its grain that are put in sequence. At the camps, answering from a stale
 note is done knowingly and only while birds are lost, because two men told different gates is a
 real harm. The
 scholars answer from whatever copy they hold as a matter of course, and live with copies that
