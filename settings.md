@@ -67,10 +67,10 @@ island-wide distribution network.
   scalar clocks), resolve ties by house number (total order), coordinate mutual exclusion for a
   shared storehouse (§5), and use multi-house column rooms (vector clocks) to detect true
   causal independence. Lamport's physical clocks (§6) are described and not kept: they need a
-  longest crossing and runners at regular hours, and the houses have no common hour.
+  longest crossing and messengers at regular hours, and the houses have no common hour.
 - *Taking Stock Without Stopping* (`chandy-lamport-1985_distributed-snapshots`).
   Taking an inventory of the entire distribution network without halting trade. Goods exist
-  both in the 3 house storehouses and in transit along the 6 directed road tracks. A runner
+  both in the 3 house storehouses and in transit along the 6 directed road tracks. A messenger
   wearing a **red sash** serves as the marker dividing pre-recording shipments from
   post-recording shipments. Proves cut consistency, reachability ($S_\iota \to S^* \to S_\phi$),
   and stable property detection. Stable properties are those of the trade between the houses,
