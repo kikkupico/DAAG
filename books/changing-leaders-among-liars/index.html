@@ -224,9 +224,9 @@
       <li>B's standing needed a first bundle for B, or for something on B's chain, in term <var>b</var>.
       Among all first bundles from terms after <var>a</var>, up to <var>b</var>, for entries that
       conflict with W, take the one from the earliest term, <var>s</var>.</li>
-      <li>W's second bundle in term <var>a</var> and that first bundle in term <var>s</var> each carry three
-      seals, so they share an honest man, <var>r</var>. In term <var>a</var>, <var>r</var> locked on W's
-      second bundle. Nothing between <var>a</var> and <var>s</var> can have moved his lock off W's chain,
+      <li>W's third bundle in term <var>a</var> and that first bundle in term <var>s</var> each carry three
+      seals, so they share an honest man, <var>r</var>. A man casts his third vote only after locking, so
+      in term <var>a</var>, <var>r</var> locked on W's second bundle. Nothing between <var>a</var> and <var>s</var> can have moved his lock off W's chain,
       since that would need a first bundle for a conflicting entry earlier than <var>s</var>.</li>
       <li>So in term <var>s</var>, <var>r</var> was locked on W, and the proposal conflicted with W. It
       carried a bundle from no later than term <var>a</var>, again because <var>s</var> is the earliest.
@@ -337,16 +337,16 @@
         <text class="d-note" x="330" y="176" text-anchor="middle">each arrow is the bundle an entry carries for the one directly before it</text>
       </svg>
     </div>
-    <figcaption><b>Each new proposal moves the three before it one stage on.</b> Three entries in a
-    row, each carrying a bundle for the one directly before, and the first of them stands: one vote a
-    term does the work of three stages, spread over three entries.</figcaption>
+    <figcaption><b>Each new proposal moves the three before it one stage on.</b> When three entries in a
+    row each carry a bundle for the one directly before, the entry behind all three stands: one vote a
+    term does the work of three stages, spread over three terms.</figcaption>
   </figure>
 
   <div class="prose">
     <p>So a man reads the chain behind each new proposal. If it carries a bundle for its direct
     parent, the parent has its first bundle. If that parent carries one for its own direct parent, the
-    grandparent is ready to lock on. If three in a row each carry a bundle for the one directly before,
-    the first of the three stands. Where a holder failed and a term left nothing, the chain has a gap, and
+    grandparent is ready to lock on. If the grandparent carries one for its own direct parent too, that
+    entry, the one behind all three, stands. Where a holder failed and a term left nothing, the chain has a gap, and
     counting starts again.</p>
 
     <p>The job now passes at every entry, suspected or not. That is cheap for the same reason a
