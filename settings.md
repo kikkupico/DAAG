@@ -54,8 +54,7 @@ Together these give **one FIFO channel per ordered pair of houses: six in all**.
 - **The mountain paths** are the siege's ground. The goatherd of *Ordering Without Clocks* Ch. VI is a rare
   smuggler, with no bound on his crossing time.
 - **The sea**: reefs and tide-races off every headland stop small boats coasting between
-  coves. Big ships go out to sea, not round the island. The houses keep no signal-fires or flags, so a ship
-  seen from two coves carries no word between them.
+  coves. Big ships go out to sea, not round the island.
 - **The camps** carry nothing from one house to another, so they are never a channel between
   houses. Traders keep no ravens.
 
