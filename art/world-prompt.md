@@ -277,9 +277,9 @@ predate this rule; use them with a tint, and build new ones to it.
 ## 3. Island 2: Paxos
 
 > **Narrative Setting:** One island shaped like a Y, and its shape groups the papers. Two arms reach north and face each other across a sheltered bay; they join at a fork, and below it a short stem widens into the broad, lower body of the island. Two cities: Paxos, whose parliament governs the western arm, the stem and the body; and Schedia on the eastern arm, founded from a different mother city, which keeps its own laws. Four districts:
-> - **The Chamber** (the western arm): a circular domed rotunda on a terrace above the bay, where the parliament sits, looking across the water at the Odeon. The island road runs up the stem, forks, and runs out along the western arm past the Chamber to the harbour town at the arm's tip, so the Chamber is on a through route.
-> - **Schedia and the Odeon** (the eastern arm): a small unwalled city of its own above a cove on the bay, with the Odeon, a roofed theatre hall, built into a hillside bowl facing the Chamber across the bay.
-> - **The hall of two doors** (the fork): on common ground belonging to neither city; one door faces north up the bay to the Chamber and the Odeon, one south down the stem to the scholars' coast.
+> - **The Chamber** (the western arm): a circular domed rotunda on a terrace above the bay, where the parliament sits, looking across the water at the Tholos. The island road runs up the stem, forks, and runs out along the western arm past the Chamber to the harbour town at the arm's tip, so the Chamber is on a through route.
+> - **Schedia and the Tholos** (the eastern arm): a small unwalled city of its own above a cove on the bay, with the Tholos, a round hall with a conical tiled roof and a podium at its centre, on a terrace facing the Chamber across the bay.
+> - **The hall of two doors** (the fork): on common ground belonging to neither city; one door faces north up the bay to the Chamber and the Tholos, one south down the stem to the scholars' coast.
 > - **The scholars' coast** (the body of the island), which the scholars call Homonoia: lower, deeply indented country of coves and valleys, with the stoa and festival ground on an eastern harbour, about a dozen small libraries within casual reach of one another along footpaths of differing length, a courier cove on the rocky southwest shore, and the far terraces on remote slopes at the southern tip, as far from the assemblies as the island goes. The scholars hold no assembly.
 
 ### 3.1 Island Plate Prompt (Geography, Habitation & Book Locations)
@@ -292,7 +292,7 @@ True orthographic axonometric view, deep focus, warm directional sunlight, zero 
 The island's outline follows the attached sketch: a limestone island shaped like the letter Y. Two slender high rocky arms reach north, side by side, enclosing a sheltered bay of turquoise water between them. They join at a fork, and below the fork a distinct narrow stem, clearly narrower than either arm is long, runs south and then widens into a broad, lower body. The body is by far the largest part of the island, larger than both arms together, and fills the whole southern half of the frame. Calm deep Aegean blue sea reaches every frame edge, turquoise shoals and white surf at the shore; no pedestal, no cutaway.
 Outer coasts of both arms: sheer white limestone sea-cliffs with sea-caves. Inner slopes facing the bay: terraced olive groves, cypresses and maquis.
 The western arm: on a level civic terrace above the bay stands a single circular domed rotunda of white ashlar limestone ringed by a Doric colonnade, with evenly spaced doorways and statues round it; a paved road crosses the terrace past it and runs on to the arm's tip, where a small harbour town of red-tiled stone houses, a market square, quays and moored merchant ships sits on a cove.
-The eastern arm, directly across the bay from the rotunda: a small town of red-tiled stone houses above a cove, and above it, set into the hillside facing the bay, a large near-square roofed theatre hall of limestone with a single oxblood tiled roof and a colonnaded porch facing the water. All its seating is inside the roofed building; no seats, tiers or semicircular bowl are visible outside it.
+The eastern arm, directly across the bay from the rotunda: a small town of red-tiled stone houses above a cove, and above it, on a level terrace facing the bay, a round hall of warm honey-coloured limestone with plain walls, several doorways round it and no colonnade, under a single low conical roof of oxblood terracotta tiles rising to a small louvred lantern, and a small columned porch facing the water. It is clearly unlike the white domed rotunda across the bay.
 The fork, where the two arms meet: one small symmetrical gabled hall of pale limestone with a door in each end wall, one facing north up the bay, one facing south down the stem.
 The body of the island, well south of the stem: lower rolling hills and valleys with a deeply indented coast of coves and pebble beaches. On a harbour on the body's eastern shore, far down from the fork, a long colonnaded stoa facing an open ground set with rows of long tables. About a dozen small porched library buildings scattered in clearings among olive trees across the valleys and hill shoulders, linked by footpaths of differing length. A small rocky cove on the southwest shore with timber piers and small boats. At the remote southern tip, the farthest point from the fork, narrow stepped terraces with long stone tables on steep slopes facing the open sea.
 Farmsteads along one road running from the southern body up the stem, forking at the hall, one branch along each arm.
@@ -301,7 +301,7 @@ No open-air theatre or exposed seating bowl anywhere, no citadel, no quarry, no 
 
 **Step 2 — town pass** (image-to-image on the step 1 image, `banana_pro`, aspect 16:9). Small, tightly packed houses reconstruct in 3D as tall blocks, so the town is redrawn as low courtyard houses before conversion:
 ```text
-Keep [image 1] exactly as it is: the same Y-shaped island, arms, bay, cliffs, sea, rotunda, theatre hall, hall at the fork, stoa, libraries, terraces, road, olive terraces, trees, farmsteads, quays, ships, camera and lighting.
+Keep [image 1] exactly as it is: the same Y-shaped island, arms, bay, cliffs, sea, rotunda, round tiled hall, hall at the fork, stoa, libraries, terraces, road, olive terraces, trees, farmsteads, quays, ships, camera and lighting.
 Change only the two towns: replace their houses with low single-storey Hellenistic courtyard houses of rough limestone, each a squat box with a shallow red-tiled roof and a small open courtyard, spaced a little apart with narrow lanes between them, clearly no taller than they are wide.
 No multi-storey buildings anywhere.
 Zero people.
@@ -385,33 +385,32 @@ Standing at the fork of the Y-shaped island, where the two northern arms meet th
 An elegant, perfectly symmetrical Hellenistic temple-like hall built of pale dressed ashlar limestone with an oxblood terracotta tiled gabled roof.
 The defining architectural feature is two prominent, opposing monumental portal doorways on opposite facades:
 - The Southern Portal: facing south down the stem toward the scholars' coast, framed with simple, unadorned rustic stone lintels.
-- The Northern Portal: facing north up the bay toward the Chamber and the Odeon, the bodies that assemble, framed with classical fluted pilasters and a carved pediment.
+- The Northern Portal: facing north up the bay toward the Chamber and the Tholos, the bodies that assemble, framed with classical fluted pilasters and a carved pediment.
 Both massive bronze doors stand wide open, revealing an open, sunlit stone interior hall paved with alternating white and black marble tiles.
 Surrounded by low stone parapets, gnarled wild olive trees and maquis.
 ```
 
 
-#### Feature 7: The Odeon
+#### Feature 7: The Tholos
 ```text
-Detailed 3D isometric architectural diorama of The Odeon of Schedia, on Paxos, Hellenistic Greece.
-Axonometric orthographic projection, hyperfocal focus, clean unpopulated theatre hall, zero people.
-Built into a natural hillside bowl on the eastern arm of Paxos, above a cove on the bay, facing the Chamber across the water.
-A roofed theatre hall: a large near-square limestone building whose single timber-trussed, oxblood terracotta-tiled roof covers both the semicircular raked seating inside and the raised stage, with a row of tall clerestory windows along each side wall.
-A colonnaded Doric porch runs across the front facing the bay, with broad doors into the hall; the rear of the building is set into the slope, following the rake of the seats within.
-Surrounded by dry-stone retaining terraces, paved stone ramps, and silver-green olive trees.
+Detailed 3D isometric architectural diorama of The Tholos of Schedia, on Paxos, Hellenistic Greece.
+Axonometric orthographic projection, hyperfocal focus, clean unpopulated round hall, zero people.
+On a level terrace on the eastern arm of Paxos, above a cove on the bay, facing the Chamber across the water.
+A round hall of warm honey-coloured limestone with plain walls and no surrounding colonnade, under a single low conical roof of oxblood terracotta tiles that rises to a small louvred lantern; several plain doorways evenly spaced round the drum, and a small columned porch on the side facing the bay.
+Surrounded by a paved terrace with low stone parapets, stone benches by the doors, and silver-green olive trees.
 ```
 
-#### Feature 7a: The Odeon — Interior
-The roof is lifted away. Everything faces one stage: the legislators' thrones in the front row, each with its law book, and the public's benches behind. The board on the stage wall is for the number of the current speaker's term.
+#### Feature 7a: The Tholos — Interior
+The roof is lifted away. The legislators' benches run round the wall, each with its law book, facing a podium at the centre, which every bench is the same distance from. The board on the podium is for the number of the current holder's board.
 ```text
-Isometric 3D interior model of the Odeon of Schedia, on Paxos, a roofed Hellenistic Greek theatre hall.
+Isometric 3D interior model of the Tholos of Schedia, on Paxos, a round Hellenistic Greek hall.
 Orthographic axonometric view, deep focus, zero people.
-The timber roof is lifted away to show the whole interior.
-Semicircular raked stone benches for the public rise from a flat semicircular orchestra floor to the back wall; every seat faces one raised stone stage.
-The front row is a single curve of identical carved marble thrones with backs (proedria) for the legislators, each with a small stone reading stand holding a closed law book.
-The stage is a plain raised platform with one marked speaking spot at its centre, side steps up from the orchestra at both ends, and a blank painted wooden board on its back wall for a number.
-Tall clerestory windows in the side walls.
-Warm daylight, photorealistic PBR stone, marble and timber.
+The conical tiled roof is lifted away to show the whole interior.
+A single ring of identical stone benches with backs runs round the inside of the wall, broken only by the doorways; each bench has a small stone reading stand holding a closed law book, and every bench faces the centre.
+Six plain columns stand in a ring between the benches and the centre, which carry the roof.
+At the exact centre, a low round stone podium with two steps, a single stone seat and a writing desk on it, and a blank painted wooden board on a post beside the desk for a number. The podium has no lectern and is not raised for speaking.
+A paved stone floor with clear paths from the podium to every doorway.
+Warm daylight through the doorways, photorealistic PBR stone, marble and timber.
 ```
 
 ---

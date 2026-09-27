@@ -195,16 +195,16 @@ is bounded, but men lie, yielding the 3m + 1 threshold.
 
 ---
 
-## Paxos · *The Island of the Parliament, the Stage and the Scholars*
+## Paxos · *The Island of the Parliament, the Podium and the Scholars*
 
 *One island, two ways of keeping records.* Paxos holds two assemblies, each keeping one
 append-only law book across absent members and changing leaders — Lamport's parliament and
-the Odeon of Schedia — and the scholars and copyists, who keep many copies and hold no assembly.
+the Tholos of Schedia — and the scholars and copyists, who keep many copies and hold no assembly.
 Putting them on one island makes the difference a walk: the scholars could take any question
 to an assembly, and the hall of two doors shows which questions need one.
 
 **The island is a Y, and its shape groups the papers.** Two arms reach north: the western arm
-holds the Chamber, the eastern arm the city of **Schedia** and its Odeon, and the two face each
+holds the Chamber, the eastern arm the city of **Schedia** and its Tholos, and the two face each
 other across the bay between the arms. The two ways of keeping one law book share the top of
 the island. The arms join at a fork, and below it the stem widens into the body of the island,
 the scholars' coast, which eventual consistency has to itself. The hall of two doors stands at
@@ -221,7 +221,7 @@ on the scholars' coast waits for a vote, although the Chamber is a morning's wal
 | `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and not retold, drawn as a domed rotunda because its acoustics make oratory impossible. Legislators wander in and out, each keeps a ledger, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved |
 
 **The ground must provide:** the **Chamber** on the western arm, looking across the bay at
-the Odeon, and on a route rather than at a dead end (legislators wander in and out): the
+the Tholos, and on a route rather than at a dead end (legislators wander in and out): the
 island road runs up the stem, forks, and runs out along the western arm past the Chamber to
 the harbour town at the arm's tip.
 
@@ -253,22 +253,38 @@ of the Chamber were poor, making oratory impossible. Legislators could communica
 messenger."* A circular hall under a hard stone dome, with no podium and no head of the room,
 illustrates that faithfully, and open doorways round the drum show legislators and messengers
 coming and going. The dome illustrates Lamport's text and carries no meaning of its own; in
-Lamport nobody speaks aloud at all. The Odeon of Schedia is its opposite, built so that one
-voice reaches every seat.
+Lamport nobody speaks aloud at all. The Tholos of Schedia is the same kind of hall with the one
+thing the Chamber lacks: a podium at the centre.
 
-### Schedia and the Odeon
+### Schedia and the Tholos
 
-*A city on the eastern arm, with its own laws, governed from one theatre.*
+*A city on the eastern arm, with its own laws, governed from a round hall with a podium.*
 
 | Paper | In the world |
 |---|---|
-| `oki-liskov-1988` | **The Odeon.** Roofed, raked, aimed at one stage so a single voice reaches every seat. The nodes are legislators, as in the Chamber: one speaks from the stage, the others keep their law books in the front row, and the public in the seats behind are the ones who need to learn the law. When the speaker falls silent, business stops until another legislator takes the stage under a higher number, and gathers what a majority of the front row holds before speaking. *One Leader at a Time* |
+| `oki-liskov-1988` | **The Tholos.** A rotunda like the Chamber, with the same poor acoustics, messengers and legislators on part-time duty, and one difference: a podium at the centre. Only the legislator who holds the podium may propose; the others write down what its messengers bring. When the podium falls silent, another legislator raises a higher board, and the new holder first gathers what a majority hold, so nothing a majority knew is lost. *One Leader at a Time* |
 
-**The ground must provide:** a natural hillside bowl on the eastern arm, above a sheltered
-cove on the bay, so the Odeon faces the Chamber across the water.
+**The podium is an office, not a pulpit.** Nobody can be heard from it either. It stands where
+every bench is the same distance away, the current board hangs on it, and the podium's
+messengers all leave from it, so where messengers in the Chamber cross the floor in every
+direction, in the Tholos they run out from the centre. Authority rides on the board number that
+every note carries, not on standing at the podium, which is only where the holder sits when
+present. A holder who has stepped out and not noticed a new board can go on sending under the
+old one, and settles nothing, since any majority they reach includes a legislator who has taken
+the new board and refuses the old number. That is why boards are numbered.
 
-If two claim the Odeon's stage at once, nothing proceeds. That is why views and terms are
-numbered.
+**Wax, not ink.** Lamport's legislators write in indelible ink; Schedia's keep the law on wax
+tablets that stay on their bench and are smoothed when their holder goes home, while the bench's
+name and the last board it served under are cut into its stone. A legislator who steps out
+comes back to their tablets; one who goes home comes back to smooth wax and must be brought up
+to date; if a majority go home at once, the law is lost. VR keeps its group state in volatile
+memory, and a majority remembering is what makes that safe.
+
+**Why a Tholos.** In Athens the Tholos was the round building of the prytaneis, the committee
+on duty in turn, with one member presiding: a round civic hall with a head, on part-time duty.
+
+**The ground must provide:** a terrace on the eastern arm, above a sheltered cove on the bay,
+so the Tholos faces the Chamber across the water.
 
 ### The scholars' coast
 
@@ -305,7 +321,7 @@ as the island goes, for the terraces.
 
 | Paper | In the world |
 |---|---|
-| `hellerstein-2010`, `ameloot-2011` | **The hall of two doors**, at the fork, on common ground that belongs to neither city, as the Messon on Lesbos was the common sanctuary of that island's cities. A question needs coordination exactly when it is not monotonic. The examples come from the scholars: "has at least one copy of this work been made?" can be answered as soon as it is true; "is this every copy that has been made?" needs everyone. Each question leaves by the door its own shape decides — one facing north up the bay between the arms, to the Chamber and the Odeon, the two bodies that assemble; one facing south down the stem, to the scholars' coast, which does not |
+| `hellerstein-2010`, `ameloot-2011` | **The hall of two doors**, at the fork, on common ground that belongs to neither city, as the Messon on Lesbos was the common sanctuary of that island's cities. A question needs coordination exactly when it is not monotonic. The examples come from the scholars: "has at least one copy of this work been made?" can be answered as soon as it is true; "is this every copy that has been made?" needs everyone. Each question leaves by the door its own shape decides — one facing north up the bay between the arms, to the Chamber and the Tholos, the two bodies that assemble; one facing south down the stem, to the scholars' coast, which does not |
 
 ---
 
@@ -329,7 +345,7 @@ snapshots) · Corbett et al. 2012 (Spanner) · Thomson et al. 2012 (Calvin).
   interior; a small cone would leave the lines between evenly spaced houses clear.
 - **Paxos is a Y, and its shape groups its papers.** Two arms reach north and face each
   other across a bay: the Chamber on the western arm, on the road to the harbour town at its
-  tip; Schedia and its Odeon on the eastern arm. The hall of two doors stands at the fork. The
+  tip; Schedia and its Tholos on the eastern arm. The hall of two doors stands at the fork. The
   stem widens into the scholars' coast, with many libraries within casual reach, courier
   routes of different length and a far shore at the southern tip for the terraces.
 
