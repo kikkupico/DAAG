@@ -143,7 +143,7 @@ Concretely:
   name the idea ("by Never Two Gates", "the rules of the tally"). Chapter headings and the table
   of contents carry the numbers; a superscript's `title` gives the book and the chapter's title.
 - **Never refer to another volume in the prose.** No "as *Ordering Without Clocks* relates", no
-  "the four of *The Limits of Agreement*", no "the earlier book". A fact established elsewhere is
+  "the four of *Agreeing Among Liars*", no "the earlier book". A fact established elsewhere is
   restated in this book's own words, as a fact of the island, and linked to the book that
   established it by a superscript:
   `<sup class="xref"><a href="../ordering-without-clocks/index.html#s3" title="Ordering Without Clocks: Breaking Ties">*</a></sup>`,
@@ -179,7 +179,7 @@ Rules for the proofs themselves:
 - **One summary line per proof, naming what is proved.** &ldquo;Proof — that nothing comes
   before itself&rdquo;, not &ldquo;Proof of Lemma 1&rdquo;.
 - **Where the paper's own proof is long or hard, say so** and give the sketch. *Many Copies,
-  Acting as One* does this for the board's proof; *The Limits of Agreement* does it for the
+  Acting as One* does this for the board's proof; *Agreeing Among Liars* does it for the
   three-general impossibility. Honesty about a gap is fine; pretending there is none is not.
 
 Formal statements that are not proofs — model definitions, conditions, bounds — go inline in
@@ -260,7 +260,7 @@ establish.
 | The camps | Chandra &amp; Toueg 1996 | *Telling the Dead from the Slow.* Shares the camps with FLP. The camps may decide; nothing follows from it. The slate's guarantees are granted, not earned — see `settings.md`. With a majority alive, a turn to propose, not a leader; point to *Agreeing When Messages Run Late* for it and stay on the detector. Written: `books/telling-the-dead-from-the-slow/`. |
 | The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, with interactive figures and no illustrations: it is the paper the whole project borrows its allegory from. Written: `books/the-part-time-parliament/`. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
 | The Odeon, Schedia | Oki &amp; Liskov 1988 | *One Leader at a Time.* VR, a genuine alternative to Paxos, found independently and published first, in Schedia, the city on Paxos's eastern arm with laws of its own. |
-| The crown | Castro &amp; Liskov 1999 | *Keeping Order Among Liars.* Needs the vocabulary of *The Limits of Agreement* and must not contradict *The Limits of Agreement*. A later, windy night: the loot book, each man both replica and client (the client's rule of two agreeing seals, f + 1, stated and shown redundant for the four), the chief's job numbering entries and passing in a fixed order when suspected. Safe in any wind; progress once the wind drops. Nothing follows from any entry. Written: `books/keeping-order-among-liars/`. |
+| The crown | Castro &amp; Liskov 1999 | *Keeping Order Among Liars.* Needs the vocabulary of *Agreeing Among Liars* and must not contradict it. A later, windy night: the loot book, each man both replica and client (the client's rule of two agreeing seals, f + 1, stated and shown redundant for the four), the chief's job numbering entries and passing in a fixed order when suspected. Safe in any wind; progress once the wind drops. Nothing follows from any entry. Written: `books/keeping-order-among-liars/`. |
 | The crown | Yin et al. 2019 (HotStuff) | *Changing Leaders Among Liars.* Needs the vocabulary of *Keeping Order Among Liars* and must not contradict it. Tell only what changes: the chief's job passes with every entry, and its holder bundles the others' seals instead of every man writing to every other. Say plainly that a threshold signature makes the bundle one seal's size. Nothing follows from any entry. Written: `books/changing-leaders-among-liars/`. |
 | The stoa and festival ground | Demers 1987 | |
 | The libraries | PBS 2012 | *Probably Up to Date.* The model, not a store: how likely a reader who asks only a few libraries is handed an out-of-date copy, and by how much. |
@@ -279,13 +279,13 @@ assumption made visible, never as a faction.
 **What the rest of Arche knows about the bandits.** Only the bandits know how many of them
 there are, which band each belongs to, and what they plan. Everyone else knows two things:
 there are bandits about the island, and their loot is on the hilltop. So the constraints that
-govern the bandits inside *The Limits of Agreement* — four men on the crown, the sandglasses, who may
-lie — bind only that book. Another book need not respect them; it must only not contradict
+govern the bandits inside the crown's books — four men on the crown, the sandglasses, who may
+lie — bind only those books. Another book need not respect them; it must only not contradict
 those two facts. The crown's four are not confined (they stay because the loot cannot be
 left), and bandits met elsewhere need not be of their band; no one outside can tell.
 
 **Mount Phyle is built.** Its geometry, cast and architecture are fixed by *The Limits of
-Agreement* and `buildings.md`. Nothing may contradict them: four camps that cannot see each other,
+Agreement* (the foot), *Agreeing Among Liars* (the crown) and `buildings.md`. Nothing may contradict them: four camps that cannot see each other,
 ravens only, no fire or signal below the crown, and one single synchronous night on the crown: the
 sandglasses there are turned together once, before the posts are first manned, and since no man
 may leave his post they are never turned together again. The siege itself may last any number of
