@@ -205,7 +205,7 @@ Check things by content, never by name.
   &ldquo;N ≥ m + 2&rdquo; is a remark about when the problem is vacuous.
 - **Confirm any number you put in prose.** Places carry no dimensions: no island's width, no
   hill's height, no distance in kilometres. The settings fix constraints (the massif blocks every
-  line of sight; no messenger passes another), never measurements, so the pictures can't
+  line of sight; no messenger overtakes another), never measurements, so the pictures can't
   contradict them.
 
 ---

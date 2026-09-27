@@ -24,7 +24,7 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 | the line number in the speaker's record, starting again at each new board | A timestamp, meaningful only within its view. |  |
 | "board 7, line 12" | A viewstamp ⟨viewid, ts⟩. |  |
 | each legislator's note of the last line he holds under each board | The cohort's history. |  |
-| the dictation: the speaker's record read out line by line, taken down in order | The communication buffer: event records delivered to the backups in timestamp order. | The one-way roads of Arche, where nothing overtakes |
+| the dictation: the speaker's record read out line by line, taken down in order | The communication buffer: event records delivered to the backups in timestamp order. | The roads of Arche, where nothing overtakes |
 | the speaker's pause until enough of the row has written up to a line that, with him, they are a majority | force-to: waiting for a sub-majority of backups. | Majorities that must overlap, as in the Chamber; at the camps a pledge and a call cannot both miss, 2 + 3 > 4 (*Agreeing When Messages Run Late*) |
 | the roll: legislators glance along the row for someone gone, or someone back | "I'm alive" messages, and the events that start a view change. | The slate of *Telling the Dead from the Slow*: an empty throne is a man gone or a man slow |
 | the caller: any legislator who notices, raising a higher board | The view manager, sending invitations; the others are underlings. |  |
