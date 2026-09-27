@@ -4,10 +4,13 @@
 
 Reads the untouched Meshy conversion (the set's `bake.source`), never art/paxos-3d.glb
 itself, so running it again never flattens twice, and writes art/paxos-3d.glb. For each
-baked set (the Tholos, which replaces the Odeon Meshy drew on the eastern arm):
-- every vertex inside the `footprint` quadrilateral, grown by `margin` metres, is lowered to
-  the `pad` height, and the faces lying wholly inside are dropped;
-- a paving slab covers the footprint, its top a little over the pad;
+baked set (the Tholos, which replaces the Odeon Meshy drew on the eastern arm, and the
+Chamber, which replaces Meshy's rotunda):
+- every vertex inside the site is lowered to the `pad` height. The site is either the
+  `footprint` quadrilateral grown by `margin` metres, whose faces lying wholly inside are
+  then dropped and covered by a paving slab a little over the pad; or a `circle` of that
+  radius round the set, which brings its own paving, so the pad sits just under it and
+  nothing is dropped;
 - the set's GLB is placed at its site and joined in.
 The result is one mesh, as render.py and explorer.html expect, in the source's own model
 units and frame, so the bounding box and every camera framed on the model stay put.
@@ -77,27 +80,12 @@ def inside(p, poly):
     return True
 
 
-bm = bmesh.new()
-bm.from_mesh(island.data)
-parts = []
-for name, S in SETS.items():
-    bk = S["bake"]
-    poly = [tuple(p) for p in grown(bk["footprint"], bk["margin"])]
-    moved = set()
-    for v in bm.verts:
-        w = M @ v.co                               # blender world: (x, -z, y)
-        if inside((w.x, -w.y), poly):
-            v.co = Mi @ Vector((w.x, w.y, bk["pad"]))
-            moved.add(v)
-    gone = [f for f in bm.faces if all(v in moved for v in f.verts)]
-    bmesh.ops.delete(bm, geom=gone, context="FACES")
-    print("BAKE", name, len(moved), "vertices flattened,", len(gone), "faces dropped")
-
-    # the paving slab over the footprint
+def paving(name, poly, pad):
+    """A paving slab over the polygon (explorer [x, z]), its top a little over the pad."""
     pm = bpy.data.meshes.new(name + "-paving")
     pb = bmesh.new()
-    top = [pb.verts.new((x, -z, bk["pad"] + 0.06)) for x, z in poly]
-    low = [pb.verts.new((x, -z, bk["pad"] - 0.4)) for x, z in poly]
+    top = [pb.verts.new((x, -z, pad + 0.06)) for x, z in poly]
+    low = [pb.verts.new((x, -z, pad - 0.4)) for x, z in poly]
     pb.faces.new(top)
     pb.faces.new(low[::-1])
     n = len(poly)
@@ -112,7 +100,33 @@ for name, S in SETS.items():
     pm.materials.append(mat)
     po = bpy.data.objects.new(name + "-paving", pm)
     bpy.context.scene.collection.objects.link(po)
-    parts.append(po)
+    return po
+
+
+bm = bmesh.new()
+bm.from_mesh(island.data)
+parts = []
+for name, S in SETS.items():
+    bk = S["bake"]
+    if "circle" in bk:
+        n = 48
+        poly = [(S["at"][0] + bk["circle"] * math.cos(2 * math.pi * k / n),
+                 S["at"][2] + bk["circle"] * math.sin(2 * math.pi * k / n)) for k in range(n)]
+    else:
+        poly = [tuple(p) for p in grown(bk["footprint"], bk["margin"])]
+    moved = set()
+    for v in bm.verts:
+        w = M @ v.co                               # blender world: (x, -z, y)
+        if inside((w.x, -w.y), poly):
+            v.co = Mi @ Vector((w.x, w.y, bk["pad"]))
+            moved.add(v)
+    if "circle" in bk:
+        print("BAKE", name, len(moved), "vertices flattened")
+    else:
+        gone = [f for f in bm.faces if all(v in moved for v in f.verts)]
+        bmesh.ops.delete(bm, geom=gone, context="FACES")
+        print("BAKE", name, len(moved), "vertices flattened,", len(gone), "faces dropped")
+        parts.append(paving(name, poly, bk["pad"]))
 
     # the set itself, at its site
     before = set(bpy.data.objects)
@@ -139,7 +153,9 @@ bpy.context.view_layer.update()
 
 bb = [island.matrix_world @ Vector(c) for c in island.bound_box]
 bb1 = box(bb)
-assert bb1 == bb0, ("bounding box moved", bb0, bb1)
+# The explorer and render.py centre the island on its horizontal extent and stand it on its
+# lowest point; its top (blender z max) may change, as the Chamber's dome was the highest point.
+assert [bb1[i] for i in (0, 1, 2, 3, 4)] == [bb0[i] for i in (0, 1, 2, 3, 4)], ("bounding box moved", bb0, bb1)
 for o in list(bpy.data.objects):
     if o is not island:
         bpy.data.objects.remove(o)

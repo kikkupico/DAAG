@@ -1,46 +1,54 @@
-"""The Chamber of Paxos, inside: a parametric set for the previs.
+"""The Chamber of Paxos: a parametric set for the island model and the previs.
 
-    blender -b -P art/sets/chamber.py [-- key=value ...]      # e.g. -- desks=18 doors=10
+    blender -b -P art/sets/chamber.py [-- key=value ...]      # e.g. -- desks=8 doors=8
 
 Writes art/sets/chamber.glb and art/sets/chamber.json. A round hall under a hard stone
 dome (Lamport: "the acoustics of the Chamber were poor, making oratory impossible"), with
 no podium, no head of the room and nothing aimed at a speaker:
-- a drum with open doorways all round, since legislators and messengers come and go;
-- a ring of free-standing columns carrying an entablature;
-- a coffered hemispherical dome with an oculus;
-- a marble floor with inlaid rings and a bronze meridian line running north-south under
-  the oculus (Paxos tells time by the sun);
+- a white marble drum ringed outside by a Doric colonnade on a stepped base, the colonnade's
+  flat roof running round the drum below the dome;
+- open doorways all round the drum, since legislators and messengers come and go;
+- a shallow coffered dome with an oculus, and a bronze meridian line running north-south
+  under it on the floor (Paxos tells time by the sun);
 - writing desks with stools, scattered and facing every which way;
-- stone benches along the wall between the doorways, where messengers wait.
+- stone benches along the wall between the doorways, where messengers wait;
+- statues on pedestals round the terrace outside, one of which, in Lamport, falls.
 
-The GLB is in the set's own frame: metres, the centre of the floor at the origin, axes as
-explorer.html's (north = -X), so render.py and the explorer place it at the rotunda's site
-given in art/sets/sets.json. Its objects are `shell` (walls, columns, dome), `floor` (what
-people stand on) and `furniture` (desks, stools and benches, which props can stand on).
-chamber.json lists each desk, its stool and its facing, in the set's frame, for placing
-the cast and props.
+It is the size of the rotunda Meshy drew on the island model (about as wide as the Tholos
+across the bay), so inside it is small: a handful of desks. The GLB is in the set's own
+frame: metres, the centre of the floor at the origin, axes as explorer.html's (north = -X).
+Its objects are `shell` (drum, colonnade, dome, statues), `floor` (floor, steps, terrace
+paving, what people stand on) and `furniture` (desks, stools and benches, which props can
+stand on). chamber.json lists each desk, its stool and its facing, in the set's frame, for
+placing the cast and props. art/sets/bake_paxos.py joins it into the island model at its
+site in sets.json.
 """
 import bpy, bmesh, json, math, random, sys
 from mathutils import Vector, Matrix
 
 P = dict(
-    radius=9.0,        # inside of the drum
-    wall=1.0,          # drum wall thickness
-    drum_h=7.0,        # floor to the dome's springing
+    radius=4.3,        # inside of the drum
+    wall=0.6,          # drum wall thickness
+    base=0.35,         # the stepped base the floor stands on
+    drum_h=6.95,       # floor to the dome's springing
+    dome_rise=2.75,    # the dome's rise above its springing (shallow, as on the island model)
     doors=8,           # open doorways round the drum
-    door_w=2.2, door_h=4.2,
-    columns=16,        # free-standing ring, two per doorway, flanking it
-    col_d=0.62, col_h=5.4, entab_h=0.9, col_gap=0.9,   # col_gap: column axis to the wall
-    coffer_rings=5, coffer_ribs=24, oculus=1.6,          # oculus radius
-    desks=14, seed=7, desk_gap=2.6,                      # desk_gap: least distance between desks
+    door_w=1.5, door_h=3.1,
+    columns=20, col_r=6.0, col_d=0.52, col_h=4.35,   # the colonnade outside
+    entab_h=0.8, peri_r=6.45,                        # its entablature and roof's outer edge
+    coffer_rings=4, coffer_ribs=20, oculus=0.8,
+    desks=8, seed=3, desk_gap=1.6,                   # desk_gap: least distance between desks
     meridian=1, benches=1,
+    statues=8, statue_r=8.1, terrace=9.0,            # pedestals round the terrace; its paving
 )
 for arg in sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []:
     k, v = arg.split("=")
     P[k] = type(P[k])(float(v)) if isinstance(P[k], float) else int(v)
 
-R, T = P["radius"], P["wall"]
+R, T, B = P["radius"], P["wall"], P["base"]
+RO = R + T
 SEG = 96
+FULL = 2 * math.pi
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 
@@ -55,10 +63,11 @@ def material(name, rgb, rough=0.7, metal=0.0):
     return m
 
 
-MARBLE = material("marble", (0.82, 0.79, 0.72), 0.45)
-STONE = material("stone", (0.72, 0.68, 0.6), 0.8)
-COFFER = material("coffer", (0.6, 0.57, 0.52), 0.85)
+MARBLE = material("marble", (0.86, 0.84, 0.8), 0.45)
+STONE = material("stone", (0.78, 0.75, 0.69), 0.8)
+COFFER = material("coffer", (0.66, 0.63, 0.58), 0.85)
 FLOOR = material("floor", (0.86, 0.84, 0.8), 0.3)
+PAVING = material("terrace", (0.7, 0.67, 0.6), 0.9)
 INLAY = material("inlay", (0.42, 0.44, 0.46), 0.3)
 RED = material("porphyry", (0.4, 0.14, 0.12), 0.3)
 BRONZE = material("bronze", (0.62, 0.42, 0.2), 0.35, 0.9)
@@ -76,8 +85,7 @@ class Part:
         return self.mats.index(mat)
 
     def grid(self, pts, mat, closed_u=False, cap=True):
-        """pts[i][j]: a solid swept as rows i (e.g. inner/outer or bottom/top) of rings j.
-        Faces join neighbouring points; rows wrap into a closed tube."""
+        """pts[i][j]: a solid swept as rows i of rings j; rows wrap into a closed tube."""
         s = self.slot(mat)
         vs = [[self.bm.verts.new(p) for p in row] for row in pts]
         n, m = len(vs), len(vs[0])
@@ -105,6 +113,13 @@ class Part:
         for f in {f for v in g["verts"] for f in v.link_faces}:
             f.material_index = s
 
+    def sphere(self, c, r, mat, squash=1.0):
+        g = bmesh.ops.create_uvsphere(self.bm, u_segments=16, v_segments=10, radius=r,
+                                      matrix=Matrix.Translation(Vector(c)) @ Matrix.Diagonal((1, 1, squash, 1)))
+        s = self.slot(mat)
+        for f in {f for v in g["verts"] for f in v.link_faces}:
+            f.material_index = s
+
     def finish(self):
         me = bpy.data.meshes.new(self.name)
         bmesh.ops.recalc_face_normals(self.bm, faces=self.bm.faces)
@@ -119,118 +134,138 @@ class Part:
 def arc(r_in, r_out, a0, a1, z0, z1, segs=None):
     """Points of a curved wall piece between angles a0..a1: rows inner-bottom, outer-bottom,
     outer-top, inner-top."""
-    n = segs or max(2, int(abs(a1 - a0) / (2 * math.pi) * SEG) + 1)
+    n = segs or max(2, int(abs(a1 - a0) / FULL * SEG) + 1)
     ang = [a0 + (a1 - a0) * j / (n - 1) for j in range(n)]
     ring = lambda r, z: [(r * math.cos(a), r * math.sin(a), z) for a in ang]
     return [ring(r_in, z0), ring(r_out, z0), ring(r_out, z1), ring(r_in, z1)]
 
 
-def shell_patch(r_in, r_out, a0, a1, e0, e1, na, ne, z0):
-    """Points of a piece of spherical shell (centre at height z0): azimuth a0..a1, elevation
-    e0..e1, as rows inner/outer x elevation, closed round in azimuth when a full turn."""
-    full = abs(a1 - a0) >= 2 * math.pi - 1e-6
+# The dome is a spherical cap: base radius `a` at the springing, rise `h`.
+def cap_point(r_base, rise, frac, ang, zs, grow=0.0):
+    """A point on the cap (frac 0 at the springing, 1 at the crown), pushed out by `grow`."""
+    Rs = (r_base ** 2 + rise ** 2) / (2 * rise)            # sphere radius
+    e0 = math.asin(r_base / Rs)                             # half-angle of the cap
+    e = e0 * (1 - frac)
+    zc = zs + rise - Rs                                     # sphere centre height
+    rr = Rs + grow
+    return (rr * math.sin(e) * math.cos(ang), rr * math.sin(e) * math.sin(ang), zc + rr * math.cos(e))
+
+
+def cap_band(r_base, rise, f0, f1, g0, g1, zs, a0=0.0, a1=FULL, na=SEG, nf=12):
+    """Points of a band of the cap between fractions f0..f1 and growths g0..g1 (inner/outer),
+    as rows for Part.grid."""
+    full = abs(a1 - a0) >= FULL - 1e-6
     ang = [a0 + (a1 - a0) * j / (na if full else na - 1) for j in range(na)]
-    pts = lambda r, e: [(r * math.cos(e) * math.cos(a), r * math.cos(e) * math.sin(a), z0 + r * math.sin(e)) for a in ang]
-    els = [e0 + (e1 - e0) * i / (ne - 1) for i in range(ne)]
-    return [pts(r_in, e) for e in els] + [pts(r_out, e) for e in reversed(els)], full
+    fr = [f0 + (f1 - f0) * i / (nf - 1) for i in range(nf)]
+    rows = [[cap_point(r_base, rise, f, a, zs, g0) for a in ang] for f in fr]
+    rows += [[cap_point(r_base, rise, f, a, zs, g1) for a in ang] for f in reversed(fr)]
+    return rows, full
 
 
 shell, floor, furn = Part("shell"), Part("floor"), Part("furniture")
 
+# --- base and terrace paving; the terrace is at -B ------------------------------------------
+floor.grid(arc(0.0, P["terrace"], 0, FULL, -B - 0.3, -B, SEG + 1), PAVING)
+floor.grid(arc(0.0, P["peri_r"] + 0.55, 0, FULL, -B, -B / 2, SEG + 1), MARBLE)
+floor.grid(arc(0.0, P["peri_r"] + 0.25, 0, FULL, -B / 2, 0.0, SEG + 1), MARBLE)
+
 # --- drum, with doorways -----------------------------------------------------------------
 N = P["doors"]
-half = (P["door_w"] / 2) / R            # a doorway's half-angle at the inner face
-doors = [2 * math.pi * i / N for i in range(N)]
-for i, d in enumerate(doors):
-    nxt = d + 2 * math.pi / N
-    shell.grid(arc(R, R + T, d + half, nxt - half, 0, P["drum_h"]), STONE)           # pier
-    shell.grid(arc(R, R + T, d - half, d + half, P["door_h"], P["drum_h"], 4), STONE)  # over the door
-    # door frame: a projecting architrave round each opening
-    for s in (-1, 1):
-        a = d + s * (half + 0.12 / R)
-        shell.box((math.cos(a) * (R - 0.04), math.sin(a) * (R - 0.04), P["door_h"] / 2),
-                  (0.12, 0.24, P["door_h"]), MARBLE, yaw=a)
-    shell.box((math.cos(d) * (R - 0.04), math.sin(d) * (R - 0.04), P["door_h"] + 0.1),
-              (0.12, P["door_w"] + 0.48, 0.2), MARBLE, yaw=d)
-# cornice at the springing, and a plinth course
-shell.grid(arc(R - 0.35, R, 0, 2 * math.pi, P["drum_h"] - 0.35, P["drum_h"], SEG + 1), MARBLE)
+H = P["drum_h"]
+half = (P["door_w"] / 2) / R
+doors = [FULL * i / N for i in range(N)]
 for d in doors:
-    nxt = d + 2 * math.pi / N
-    shell.grid(arc(R - 0.08, R, d + half, nxt - half, 0, 0.3), MARBLE)
+    nxt = d + FULL / N
+    shell.grid(arc(R, RO, d + half, nxt - half, 0, H), STONE)                         # pier
+    shell.grid(arc(R, RO, d - half, d + half, P["door_h"], H, 4), STONE)              # over the door
+    for s in (-1, 1):                                                                  # architraves
+        a = d + s * (half + 0.1 / R)
+        for rr in (R - 0.03, RO + 0.03):
+            shell.box((math.cos(a) * rr, math.sin(a) * rr, P["door_h"] / 2), (0.1, 0.2, P["door_h"]), MARBLE, yaw=a)
+    for rr in (R - 0.03, RO + 0.03):
+        shell.box((math.cos(d) * rr, math.sin(d) * rr, P["door_h"] + 0.1), (0.1, P["door_w"] + 0.4, 0.2), MARBLE, yaw=d)
+    floor.box((math.cos(d) * (R + T / 2), math.sin(d) * (R + T / 2), 0.002), (T + 0.2, P["door_w"], 0.004), INLAY, yaw=d)
+# inside: a cornice at the springing and a plinth course; outside: a cornice under the dome
+shell.grid(arc(R - 0.3, R, 0, FULL, H - 0.3, H, SEG + 1), MARBLE)
+shell.grid(arc(RO, RO + 0.25, 0, FULL, H - 0.3, H, SEG + 1), MARBLE)
+for d in doors:
+    nxt = d + FULL / N
+    shell.grid(arc(R - 0.06, R, d + half, nxt - half, 0, 0.3), MARBLE)
 
-# --- columns and entablature -----------------------------------------------------------
-rc = R - P["col_gap"]
-cd, ch = P["col_d"], P["col_h"]
+# --- the colonnade outside, its entablature and roof -----------------------------------------
+cr, cd, ch = P["col_r"], P["col_d"], P["col_h"]
 for j in range(P["columns"]):
-    a = 2 * math.pi * (j + 0.5) / P["columns"]
-    c = Vector((rc * math.cos(a), rc * math.sin(a), 0))
-    shell.box(c + Vector((0, 0, 0.12)), (cd * 1.35, cd * 1.35, 0.24), MARBLE, yaw=a)        # plinth
-    shell.cyl(c + Vector((0, 0, 0.24)), cd * 0.62, cd * 0.62, 0.14, MARBLE)                  # torus
-    shell.cyl(c + Vector((0, 0, 0.38)), cd / 2, cd * 0.42, ch - 0.38 - 0.55, MARBLE)        # tapering shaft
-    shell.cyl(c + Vector((0, 0, ch - 0.55)), cd * 0.42, cd * 0.62, 0.3, MARBLE)             # echinus
-    shell.box(c + Vector((0, 0, ch - 0.125)), (cd * 1.4, cd * 1.4, 0.25), MARBLE, yaw=a)    # abacus
-shell.grid(arc(rc - cd * 0.75, R, 0, 2 * math.pi, ch, ch + P["entab_h"], SEG + 1), MARBLE)
+    a = FULL * (j + 0.5) / P["columns"]
+    c = Vector((cr * math.cos(a), cr * math.sin(a), 0))
+    shell.cyl(c, cd / 2, cd * 0.4, ch - 0.35, MARBLE, 16)                               # fluted-less Doric shaft
+    shell.cyl(c + Vector((0, 0, ch - 0.35)), cd * 0.4, cd * 0.62, 0.2, MARBLE, 16)      # echinus
+    shell.box(c + Vector((0, 0, ch - 0.075)), (cd * 1.3, cd * 1.3, 0.15), MARBLE, yaw=a)  # abacus
+eb = cr - cd * 0.7
+shell.grid(arc(eb, P["peri_r"], 0, FULL, ch, ch + P["entab_h"] * 0.45, SEG + 1), MARBLE)       # architrave
+shell.grid(arc(eb, P["peri_r"] + 0.05, 0, FULL, ch + P["entab_h"] * 0.45, ch + P["entab_h"], SEG + 1), MARBLE)  # frieze
+for k in range(P["columns"] * 2):                                                              # triglyphs
+    a = FULL * k / (P["columns"] * 2)
+    shell.box(((P["peri_r"] + 0.07) * math.cos(a), (P["peri_r"] + 0.07) * math.sin(a), ch + P["entab_h"] * 0.72),
+              (0.05, 0.22, P["entab_h"] * 0.5), STONE, yaw=a)
+zr = ch + P["entab_h"]
+shell.grid(arc(RO, P["peri_r"] + 0.2, 0, FULL, zr, zr + 0.3, SEG + 1), MARBLE)                  # the flat roof and cornice
+shell.grid(arc(RO, eb, 0, FULL, ch - 0.05, ch + 0.05, SEG + 1), COFFER)                         # the colonnade's ceiling
 
 # --- dome: shell, coffer ribs and rings, oculus ------------------------------------------
-zs = P["drum_h"]
-e_top = math.acos(P["oculus"] / R)
-pts, full = shell_patch(R, R + 0.7, 0, 2 * math.pi, 0, e_top, SEG, 24, zs)
-shell.grid(pts, COFFER, closed_u=True)
-depth, rib = 0.28, 0.16
-e_ring_top = e_top * 0.78                  # the coffered band stops short of a smooth crown
+rise, zs = P["dome_rise"], H
+ocf = 1 - P["oculus"] / R                 # the fraction at which the oculus opens (approximately)
+pts, full = cap_band(RO + 0.05, rise, 0.0, ocf, -0.6, 0.0, zs)
+shell.grid(pts, MARBLE, closed_u=True)
+depth, rib = 0.22, 0.14
+top_band = ocf * 0.8
 for k in range(P["coffer_ribs"]):
-    a = 2 * math.pi * k / P["coffer_ribs"]
+    a = FULL * k / P["coffer_ribs"]
     w = rib / R
-    p, _ = shell_patch(R - depth, R, a - w, a + w, 0, e_ring_top, 2, 16, zs)
+    p, _ = cap_band(RO + 0.05, rise, 0.0, top_band, -0.6 - depth, -0.6, zs, a - w, a + w, 2, 10)
     shell.grid(p, STONE)
 for k in range(P["coffer_rings"] + 1):
-    e = e_ring_top * k / P["coffer_rings"]
-    w = rib / R
-    p, _ = shell_patch(R - depth, R, 0, 2 * math.pi, max(e - w, 0), e + w, SEG, 2, zs)
+    f = top_band * k / P["coffer_rings"]
+    p, _ = cap_band(RO + 0.05, rise, max(f - 0.02, 0), f + 0.02, -0.6 - depth, -0.6, zs, 0, FULL, SEG, 2)
     shell.grid(p, STONE, closed_u=True)
-# the oculus rim
-p, _ = shell_patch(R - 0.1, R + 0.8, 0, 2 * math.pi, e_top - 0.04, e_top, 48, 2, zs)
+p, _ = cap_band(RO + 0.05, rise, ocf - 0.03, ocf, -0.7, 0.1, zs, 0, FULL, 48, 2)             # the oculus rim
 shell.grid(p, MARBLE, closed_u=True)
 
 # --- floor -----------------------------------------------------------------------------
-floor.grid(arc(0.0, R + T + 0.6, 0, 2 * math.pi, -0.3, 0.0, SEG + 1), FLOOR)
-for r0, r1, m in ((1.6, 1.75, INLAY), (1.75, 1.95, RED), (1.95, 2.1, INLAY),
-                  (R - 1.55, R - 1.4, INLAY)):
-    floor.grid(arc(r0, r1, 0, 2 * math.pi, 0.0, 0.004, SEG + 1), m)
-for d in doors:  # a threshold slab in each doorway
-    floor.box((math.cos(d) * (R + T / 2), math.sin(d) * (R + T / 2), 0.002), (T + 0.2, P["door_w"], 0.004), INLAY, yaw=d)
+for r0, r1, m in ((1.0, 1.1, INLAY), (1.1, 1.25, RED), (1.25, 1.35, INLAY), (R - 0.9, R - 0.8, INLAY)):
+    floor.grid(arc(r0, r1, 0, FULL, 0.0, 0.004, SEG + 1), m)
 if P["meridian"]:
     # north-south along x, under the oculus; a cross-bar every metre
-    floor.box((0, 0, 0.005), (2 * (R - 0.6), 0.06, 0.006), BRONZE)
-    for x in range(-int(R - 1), int(R - 1) + 1):
-        floor.box((x, 0, 0.005), (0.03, 0.3 if x % 5 else 0.5, 0.006), BRONZE)
+    floor.box((0, 0, 0.005), (2 * (R - 0.4), 0.05, 0.006), BRONZE)
+    for x in range(-int(R - 0.5), int(R - 0.5) + 1):
+        floor.box((x, 0, 0.005), (0.03, 0.25 if x % 5 else 0.4, 0.006), BRONZE)
 
 # --- desks, stools and benches ---------------------------------------------------------
 rng = random.Random(P["seed"])
 desks = []
 tries = 0
-while len(desks) < P["desks"] and tries < 20000:
+bench_depth = 0.45
+while len(desks) < P["desks"] and tries < 50000:
     tries += 1
-    r = math.sqrt(rng.uniform(2.6 ** 2, (rc - 1.6) ** 2))
-    a = rng.uniform(0, 2 * math.pi)
+    r = math.sqrt(rng.uniform(1.4 ** 2, (R - bench_depth - 0.75) ** 2))
+    a = rng.uniform(0, FULL)
     c = Vector((r * math.cos(a), r * math.sin(a), 0))
-    if abs(c.y) < 1.2 and P["meridian"]:
+    if abs(c.y) < 0.8 and P["meridian"]:
         continue                     # keep the meridian line clear
-    if any(abs(math.atan2(math.sin(a - d), math.cos(a - d))) * r < P["door_w"] / 2 + 0.6 and r > rc - 3
+    if any(abs(math.atan2(math.sin(a - d), math.cos(a - d))) * r < P["door_w"] / 2 + 0.4 and r > R - 1.9
            for d in doors):
         continue                     # and the ways in from the doorways
     if all((c - q["c"]).length >= P["desk_gap"] for q in desks):
-        desks.append({"c": c, "yaw": rng.uniform(0, 2 * math.pi)})
+        desks.append({"c": c, "yaw": rng.uniform(0, FULL)})
 
 DESK_TOP = 0.76
 for q in desks:
     c, yaw = q["c"], q["yaw"]
     f = Vector((math.cos(yaw), math.sin(yaw), 0))          # the way the writer faces
     side = Vector((-f.y, f.x, 0))
-    furn.box(c + Vector((0, 0, DESK_TOP - 0.04)), (0.62, 1.15, 0.08), MARBLE, yaw=yaw)
+    furn.box(c + Vector((0, 0, DESK_TOP - 0.04)), (0.55, 1.0, 0.08), MARBLE, yaw=yaw)
     for s in (-1, 1):
-        furn.box(c + side * 0.46 * s + Vector((0, 0, (DESK_TOP - 0.08) / 2)), (0.5, 0.1, DESK_TOP - 0.08), STONE, yaw=yaw)
-    st = c - f * 0.62
+        furn.box(c + side * 0.4 * s + Vector((0, 0, (DESK_TOP - 0.08) / 2)), (0.45, 0.1, DESK_TOP - 0.08), STONE, yaw=yaw)
+    st = c - f * 0.58
     furn.box(st + Vector((0, 0, 0.42)), (0.36, 0.42, 0.06), WOOD, yaw=yaw)
     for dx in (-0.14, 0.14):
         for dy in (-0.17, 0.17):
@@ -240,9 +275,18 @@ for q in desks:
 
 if P["benches"]:
     for d in doors:
-        nxt = d + 2 * math.pi / N
-        pad = (P["door_w"] / 2 + 0.7) / R
-        furn.grid(arc(R - 0.48, R, d + pad, nxt - pad, 0, 0.45), STONE)
+        nxt = d + FULL / N
+        pad = (P["door_w"] / 2 + 0.35) / R
+        furn.grid(arc(R - bench_depth, R, d + pad, nxt - pad, 0, 0.45), STONE)
+
+# --- statues round the terrace, on the pier axes so the ways to the doors stay clear --------
+for k in range(P["statues"]):
+    a = FULL * (k + 0.5) / P["statues"]
+    c = Vector((P["statue_r"] * math.cos(a), P["statue_r"] * math.sin(a), -B))
+    shell.box(c + Vector((0, 0, 0.6)), (0.8, 0.8, 1.2), MARBLE, yaw=a)                   # pedestal
+    shell.box(c + Vector((0, 0, 1.25)), (0.9, 0.9, 0.1), MARBLE, yaw=a)
+    shell.cyl(c + Vector((0, 0, 1.3)), 0.26, 0.2, 1.25, MARBLE, 12)                        # a draped figure
+    shell.sphere(c + Vector((0, 0, 2.7)), 0.13, MARBLE, 1.2)
 
 objs = [shell.finish(), floor.finish(), furn.finish()]
 
@@ -250,8 +294,9 @@ objs = [shell.finish(), floor.finish(), furn.finish()]
 ex = lambda v: [round(v.x, 3), round(-v.y, 3)]
 info = {
     "_note": "Written by art/sets/chamber.py; set-frame explorer coords [x, z] in metres, "
-             "centre of the floor at [0, 0]. `desk`: the desk's centre, top at `top` m; "
-             "`stool`: where the writer sits (pose sit-high); `face`: a point the writer faces.",
+             "centre of the floor at [0, 0], the terrace at y = -base. `desk`: the desk's "
+             "centre, top at `top` m; `stool`: where the writer sits (pose sit-high); `face`: "
+             "a point the writer faces.",
     "params": P,
     "top": DESK_TOP,
     "desks": [{"desk": ex(q["c"]), "stool": ex(q["stool"]), "face": ex(q["c"] + q["f"])} for q in desks],
