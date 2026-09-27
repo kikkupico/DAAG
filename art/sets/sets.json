@@ -1,5 +1,5 @@
 {
- "_note": "Interior sets for the previs, read by art/previs/render.py (a shot's \"set\") and explorer.html. `at`: where the set's origin (the centre of its floor) sits in explorer coords [x, y, z]; `carve`: the radius (m) round it within which the island model's own building is cut away, from `carve_above` m over the floor up. Build a set with blender -b -P art/sets/<name>.py; the GLBs are local only.",
+ "_note": "Interior sets for the previs, read by art/previs/render.py (a shot's \"set\") and explorer.html. `at`: where the set's origin (the centre of its floor) sits in explorer coords [x, y, z]; `carve`: the radius (m) round it within which the island model's own building is cut away, from `carve_above` m over the floor up. Build a set with blender -b -P art/sets/<name>.py; the GLBs are local only. A set with `bake` is also joined into its island model by art/sets/bake_paxos.py, which flattens the `bake` footprint (explorer [x, z] corners) to the set's pad and paves it.",
  "chamber": {
   "glb": "art/sets/chamber.glb",
   "island": "paxos",
@@ -10,5 +10,39 @@
   ],
   "carve": 10.5,
   "carve_above": 0.02
+ },
+ "tholos": {
+  "glb": "art/sets/tholos.glb",
+  "island": "paxos",
+  "at": [
+   79.0,
+   8.0,
+   -29.5
+  ],
+  "carve": 11.0,
+  "carve_above": 0.02,
+  "bake": {
+   "source": "art/archive/paxos-meshy-2026-09-24/paxos-3d.glb",
+   "pad": 7.6,
+   "margin": 1.2,
+   "footprint": [
+    [
+     66.0,
+     -31.0
+    ],
+    [
+     76.5,
+     -42.05
+    ],
+    [
+     91.57,
+     -27.75
+    ],
+    [
+     81.07,
+     -16.69
+    ]
+   ]
+  }
  }
 }
