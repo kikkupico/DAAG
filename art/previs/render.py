@@ -346,7 +346,8 @@ sea.data.materials.append(m)
 cam_data = bpy.data.cameras.new("cam")
 cam_data.lens = shot.get("lens", 35)
 cam_data.sensor_width = 36
-cam_data.clip_start, cam_data.clip_end = 0.1, 200000
+# a far shot sets "clip_start" (metres) so low quays do not fight the sea plane for depth
+cam_data.clip_start, cam_data.clip_end = shot.get("clip_start", 0.1), 200000
 cam = bpy.data.objects.new("cam", cam_data)
 bpy.context.scene.collection.objects.link(cam)
 cam.location = eye
