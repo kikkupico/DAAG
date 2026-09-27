@@ -27,7 +27,7 @@
   <div class="frame-cover portrait planned"><span class="lbl">Planned cover</span>
     <p>A bearded clerk counts in his wax tablet on the rocks above House 3's harbour; below, an oil cart and a messenger in a red sash go along the road.</p></div>
   <p class="pub">The scribes produce a total that is certainly correct, that
-  answers the question the archon asked, and that describes a morning nobody in Arche
+  tells the houses whether the bandits have robbed them, and that describes a morning nobody in Arche
   ever lived through.</p>
   <p class="lineage"><span class="lbl">Builds on</span> <a href="../ordering-without-clocks/index.html">Ordering Without Clocks</a></p>
   <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/ring-road/index.html">The Ring Road</a></p>
@@ -36,7 +36,7 @@
 <nav class="toc">
   <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
   <ol>
-    <li><a href="#s1">I · The Archon's Question</a></li>
+    <li><a href="#s1">I · The Houses' Question</a></li>
     <li><a href="#s2">II · Why the Road Is Not Stopped</a></li>
     <li><a href="#s3">III · What the Road Is Holding</a></li>
     <li><a href="#s4">IV · The Red Sash</a></li>
@@ -52,18 +52,20 @@
 
 <!-- ================= I ================= -->
 <section id="s1">
-  <div class="issue"><span class="no">Chapter I</span><h2>The Archon's Question</h2></div>
+  <div class="issue"><span class="no">Chapter I</span><h2>The Houses' Question</h2></div>
 
   <div class="prose">
-    <p>Kleitos, archon of Arche in a winter when trade across the island multiplied, asked the
-    trading houses a question that sounded simple: how much grain and oil does the island hold?
-    Not how much the houses had bought from and sold into their three port towns, which the house
-    ledgers recorded, but how much was <em>there</em>, at one moment, everywhere at once.</p>
-
-    <p>Where is it? In two kinds of place. Some sits in the storehouses of the three houses,
+    <p>In a winter when trade across Arche multiplied, the three trading houses,
     <span class="coin">House 1</span>, <span class="coin">House 2</span> and
-    <span class="coin">House 3</span>. The rest is on the ring road between them, in carts and
-    pack-trains that take as long as they take<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup>.</p>
+    <span class="coin">House 3</span>, kept hearing that their goods had been stolen. There are
+    bandits about the island, and a cart that left one house and had not come in at the next was
+    said to have been taken on the cliff road. Was it taken, or only late? The houses asked a
+    question that sounded simple: how much grain and oil do we hold between us? Not how much the
+    ledgers said they should hold, but how much was <em>there</em>, at one moment, everywhere at
+    once. Whatever fell short of the ledgers was what the bandits had taken.</p>
+
+    <p>Where is it? In two kinds of place. Some sits in the three houses' storehouses. The rest
+    is on the ring road between them, in carts and pack-trains that take as long as they take<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup>.</p>
 
     <p>Why not send an auditor to each house, count each storehouse, and add the three counts?
     That was the scribes' first proposal. Chandyos, who kept the island's customs rolls, sent the
@@ -81,7 +83,7 @@
     <p>Now reverse the cart. The counts are taken as before, but in between a cart carries two
     hundred jars from House 2 to House 3. They had left House 2's storehouse before its auditor
     looked, and had not reached House 3 when its auditor closed his slate. Nobody counted them.
-    Two hundred jars have vanished, and there is no thief.</p>
+    Two hundred jars have vanished, and no bandit took them.</p>
   </div>
 
   <div class="result">
@@ -106,7 +108,7 @@
   <div class="issue"><span class="no">Chapter II</span><h2>Why the Road Is Not Stopped</h2></div>
 
   <div class="prose">
-    <p>The archon proposed exactly that: from a given morning no cart moves, every storehouse is
+    <p>The houses' first thought was exactly that: from a given morning no cart moves, every storehouse is
     counted while everything stands still, and then the trains move again. With nothing in transit,
     the three counts add up. What is wrong with it?</p>
 
@@ -134,18 +136,18 @@
     <span class="lbl">Stated formally</span>
     The system is a set of <span class="stmt">processes</span> (the houses) connected by
     directed <span class="stmt">channels</span> (the one-way tracks of the ring road). A channel
-    delivers messages and goods in the order sent (FIFO), without loss or corruption, after an
-    arbitrary but finite delay. There is no shared clock, and no process can directly observe
+    delivers messages in the order sent (FIFO), without corruption, after an arbitrary but
+    finite delay, and never loses a marker. There is no shared clock, and no process can directly observe
     another's state. A <span class="stmt">global state</span> consists of the local state of every
     process together with the state of every channel.
   </div>
 
   <div class="prose">
     <p>Lamportios, who had come across from House 1 with his tallies, asked a different question.
-    Must the census catch the island at one instant? What the archon needs is a total that is
+    Must the census catch the island at one instant? What the houses need is a total that is
     <em>sound</em>: one into which no cart has been counted twice, and from which none has gone
     missing. Whether that total was ever true of the island at a single moment is a separate
-    question, and one the archon has no practical need to ask.</p>
+    question, and one the houses have no practical need to ask.</p>
   </div>
 
   <div class="prose">
@@ -250,8 +252,14 @@
     <p>What does the method rely on? Two properties of the ring road<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup>:
     <br><b>(1) Strict FIFO ordering.</b> Nothing overtakes on a track. A red sash dispatched after a cart cannot pass that cart, and a cart dispatched after
     the sash cannot pass the sash.
-    <br><b>(2) Reliable delivery.</b> No cart or messenger falls off the cliff into the sea.
+    <br><b>(2) Reliable delivery.</b> Every red sash messenger arrives. A man with a sash and
+    nothing on his back is not worth a bandit's while, and none falls off the cliff into the sea.
     If either property fails, the census fails.</p>
+
+    <p>Carts are another matter: bandits do take them. A taken cart does not spoil the census.
+    Its jars leave the island's goods as surely as jars sold into a port town, and the census
+    counts what is left. A taken messenger would spoil it, because the slate he was to close
+    would never be closed.</p>
   </div>
 
   <figure class="diagram">
@@ -447,7 +455,7 @@
   <div class="issue"><span class="no">Chapter VI</span><h2>A Morning Nobody Lived Through</h2></div>
 
   <div class="prose">
-    <p>At none. The nine numbers came in, Chandyos summed them for the archon, and then showed that
+    <p>At none. The nine numbers came in, Chandyos summed them for the houses, and then showed that
     the total described a morning the island had never had.</p>
 
     <p>House 1 recorded first and House 2 some while later. Soon after House 1 recorded, it sold
@@ -519,13 +527,13 @@
   </details>
 
   <div class="prose">
-    <p>Chandyos put it to the archon in words the customs house remembered: <em>&ldquo;You asked
+    <p>Chandyos put it to the houses in words the customs house remembered: <em>&ldquo;You asked
     for a morning, and I have given you a morning; it is only not the particular morning you lived
     through.&rdquo;</em></p>
   </div>
 
   <div class="prose">
-    <p class="hook"><em>A morning that could have happened and did not. What can the archon do with
+    <p class="hook"><em>A morning that could have happened and did not. What can the houses do with
     a total like that?</em></p>
   </div>
 </section>
@@ -557,7 +565,8 @@
     <br>— <b>Deadlock:</b> every house is blocked waiting for carts from another.
     <br>— <b>Exhaustion of supply:</b> a vintage has run out, and no trade between the houses can bring it
     back.
-    <br>— <b>Deficit:</b> an accounting imbalance exists that no internal trade can restore.</p>
+    <br>— <b>Deficit:</b> jars are gone that no trade between the houses can bring back, as jars
+    taken by bandits are.</p>
   </div>
 
   <div class="prose">
@@ -580,15 +589,19 @@
     recorded state itself never happened does not matter, because a settled property cannot tell
     the path the island took from a path it could have taken.</p>
 
-    <p>And the archon's own question, how much is there? The census gave a sound inventory, with no
-    jar lost and none counted twice.</p>
+    <p>And the houses' own question: have the bandits robbed us? The census gave a sound
+    inventory, with no jar lost and none counted twice. A cart that was only late turns up on a
+    road slate and is counted. A cart that was taken turns up nowhere.</p>
 
-    <p>Is it ever better than sound? On a day when nothing is bought from or sold into the port
-    towns, goods only move between the houses, and every move takes jars from one of the nine
-    quantities and adds the same jars to another. The total is then the same at every moment of the
-    day. The recorded state has that same total, so on such a day the census gives the exact figure
-    for any moment the archon cares to name. On a day of buying and selling, the recorded total is
-    true of the recorded state and of no moment anyone lived through.</p>
+    <p>So the houses take their census on a day when nothing is bought from or sold into the port
+    towns. Then goods only move between the houses, and every move takes jars from one of the nine
+    quantities and adds the same jars to another. Only the bandits can change the total. The
+    ledgers say what the houses should hold between them, and the houses set the census against
+    it. A shortfall is a deficit, and a deficit is settled. If the census shows one, the houses
+    have been robbed, and the shortfall is what the bandits hold now. If it shows none, nothing
+    had been taken when the census began. On a day of buying and selling, the ledgers move with
+    every sale, and the recorded total is true of the recorded state and of no moment anyone
+    lived through.</p>
 
     <p>What was true at one particular moment, nothing on an island without a common hour will ever
     tell.</p>
@@ -611,7 +624,7 @@
       <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
       <tbody>
         <tr><td><span class="term">a trading house</span></td><td>House 1, House 2, House 3 — independent nodes holding local inventory and acting only on local events and incoming arrivals. <span class="paper">A process.</span></td></tr>
-        <tr><td><span class="term">a road segment</span></td><td>A narrow cliff track between two houses, delivering carts in the exact order dispatched, without loss, taking arbitrary finite time. <span class="paper">A channel: FIFO, reliable, unbounded delay.</span></td></tr>
+        <tr><td><span class="term">a road segment</span></td><td>A narrow cliff track between two houses, delivering carts and messengers in the exact order dispatched, taking arbitrary finite time; every messenger arrives, and a cart taken by bandits leaves the island's goods like a sale. <span class="paper">A channel: FIFO, reliable, unbounded delay.</span></td></tr>
         <tr><td><span class="term">what the road is holding</span></td><td>Carts in transit: dispatched by the sender but not yet received by the destination. <span class="paper">Channel state.</span></td></tr>
         <tr><td><span class="term">the nine quantities</span></td><td>Three storehouses and six road segments combined. <span class="paper">A global state: process states plus channel states.</span></td></tr>
         <tr><td><span class="term">the red sash messenger</span></td><td>A control messenger carrying no freight, whose arrival marks the boundary between pre-recording and post-recording shipments. <span class="paper">A marker message.</span></td></tr>
