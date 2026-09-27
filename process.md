@@ -14,14 +14,20 @@ this document and a finished book disagree, the book is right.
 ## The two phases
 
 **Phase 1 — text.** Complete prose, with SVG or HTML diagrams where a diagram carries the
-argument better than a sentence. Every formal argument in a collapsed section. **No art, no
-image tags, no placeholders for art.** A phase-1 book must read as a finished document on its
-own; nothing in it may be waiting for a picture.
+argument better than a sentence. Every formal argument in a collapsed section. **No image
+tags.** Where a picture is planned, leave a slot that describes it:
 
-**Phase 2 — art.** Happens later, separately, and is not your concern. Do not leave gaps for
-it, do not write captions that refer to images, and do not describe what a panel would show.
-The allegorical devices must nevertheless be **fully in place in the prose**, because phase 2
-will be built from what you write.
+```html
+<figure class="panel"><div class="planned"><span class="lbl">Planned picture</span>
+  <p>What the picture shows: place, time of day, figures by colour, props.</p></div></figure>
+```
+
+and on the cover, `<div class="frame-cover portrait planned">` with the label *Planned cover*.
+The prose never refers to a picture, so the book reads as finished with every slot left empty.
+
+**Phase 2 — art.** Happens later, separately, from the slots' descriptions. It replaces each slot
+with the picture. The allegorical devices must nevertheless be **fully in place in the prose**,
+because phase 2 will be built from what you write.
 
 ---
 
