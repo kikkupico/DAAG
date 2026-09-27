@@ -8,10 +8,12 @@ art/sets/bake.py clears of Meshy's buildings before joining this in. The set's o
 explorer's origin, so every building stands at its own place with no further placing.
 
 Three kinds of building, all of rubble stone under terracotta tiles, told apart by size:
-- `house`: a town house, one storey, a hipped or gabled roof, a door and small windows;
+- `house`: a town house, one storey, a gabled roof, a street door and a few small high windows;
 - `court`: a courtyard house, four ranges round an open court, roofs sloping inwards;
 - `hall`: a long storehouse on the waterfront, gabled, with wide doors in its long side.
-Each varies a little by a seed: wall tone, roof pitch, which side the door is on. A house on a
+Walls are lime-plastered, off-white or pale ochre, on a low base of bare rubble; houses face
+inwards, so the street side is mostly blank. Each varies a little by a seed: plaster tone, roof
+pitch, which side the door is on. A house on a
 slope stands on a terrace with a rubble retaining wall. `town.clear` lists ground to clear and
 pave where a Meshy block is only partly replaced. The towns are
 alike, as the houses are: nothing sets one apart.
@@ -35,8 +37,9 @@ def material(name, rgb, rough=0.85):
     return m
 
 
-WALLS = [material(f"stone-{k}", c) for k, c in enumerate(
-    [(0.5, 0.46, 0.4), (0.56, 0.52, 0.45), (0.47, 0.44, 0.39), (0.62, 0.59, 0.53)])]
+WALLS = [material(f"plaster-{k}", c, 0.9) for k, c in enumerate(
+    [(0.88, 0.85, 0.78), (0.84, 0.78, 0.64), (0.9, 0.87, 0.81), (0.82, 0.74, 0.6)])]
+SOCLE = material("rubble-base", (0.5, 0.46, 0.4), 0.95)
 DRESSED = material("dressed-stone", (0.6, 0.56, 0.49), 0.8)
 TILES = [material(f"tile-{k}", c, 0.8) for k, c in enumerate(
     [(0.5, 0.2, 0.12), (0.55, 0.25, 0.15), (0.45, 0.18, 0.11)])]
@@ -112,7 +115,7 @@ def roof_hip(hx, hy, z, pitch, ov, mat, M, ridge_along_x=True):
 
 
 def openings(hx, hy, wh, rng, M, door_side, windows=2):
-    """A door and small windows on the building's faces, as dark insets with stone frames."""
+    """A street door and a few small high windows, as dark insets with timber lintels."""
     for side in range(4):
         # side 0: -Y face, 1: +X, 2: +Y, 3: -X
         along = hx if side % 2 == 0 else hy
@@ -120,8 +123,8 @@ def openings(hx, hy, wh, rng, M, door_side, windows=2):
         for k in range(n):
             u = -along + (k + 0.5) * 2 * along / n
             is_door = side == door_side and k == n // 2
-            w, z0, z1 = (1.1, 0.0, 2.2) if is_door else (0.55, 1.4, 2.1)
-            if not is_door and rng.random() < 0.35:
+            w, z0, z1 = (1.1, 0.0, 2.2) if is_door else (0.35, 2.3, 2.75)
+            if not is_door and rng.random() < 0.7:
                 continue
             if side == 0:
                 lo, hi = (u - w / 2, -hy - 0.04, z0), (u + w / 2, -hy + 0.02, z1)
@@ -135,10 +138,10 @@ def openings(hx, hy, wh, rng, M, door_side, windows=2):
             # a lintel over it
             if side in (0, 2):
                 y = lo[1] if side == 0 else hi[1]
-                shell.box((lo[0] - 0.12, y - 0.04, z1), (hi[0] + 0.12, y + 0.04, z1 + 0.2), DRESSED, M)
+                shell.box((lo[0] - 0.12, y - 0.04, z1), (hi[0] + 0.12, y + 0.04, z1 + 0.14), TIMBER, M)
             else:
                 x = lo[0] if side == 3 else hi[0]
-                shell.box((x - 0.04, lo[1] - 0.12, z1), (x + 0.04, hi[1] + 0.12, z1 + 0.2), DRESSED, M)
+                shell.box((x - 0.04, lo[1] - 0.12, z1), (x + 0.04, hi[1] + 0.12, z1 + 0.14), TIMBER, M)
 
 
 strips = []
@@ -156,6 +159,7 @@ for n, b in enumerate(PLAN):
     # a plinth down into the slope, and the walls
     # a terrace, never below sea level (the island stands on its lowest point, which must not move)
     floor.box((-hx - 0.7, -hy - 0.7, max(-4.5, 0.05 - g)), (hx + 0.7, hy + 0.7, 0.08), TERRACE, M)
+    shell.box((-hx - 0.05, -hy - 0.05, 0.0), (hx + 0.05, hy + 0.05, 0.6), SOCLE, M)   # the rubble base under the plaster
     if kind == "court":
         cw = min(hx, hy) * 0.42                 # half-width of the open court
         rw_x, rw_y = hx - cw, hy - cw           # range depths
@@ -176,13 +180,9 @@ for n, b in enumerate(PLAN):
         openings(hx, hy, wh, rng, M, door_side=rng.randrange(4), windows=2)
     else:
         shell.box((-hx, -hy, 0), (hx, hy, wh), wall, M)
-        for x in (-hx, hx - 0.35):                                  # dressed quoins
-            for y in (-hy, hy - 0.35):
-                for k in range(int(wh / 0.6)):
-                    shell.box((x - 0.03, y - 0.03, k * 0.6), (x + 0.38, y + 0.38, k * 0.6 + 0.3), DRESSED, M)
         along_x = hx >= hy
         pitch = rng.uniform(20, 26)
-        if kind == "hall" or rng.random() < 0.5:
+        if True:                      # gabled: hipped roofs were rare in Greek building
             # a gable roof, ridge along the long side
             t = math.tan(math.radians(pitch))
             ov = 0.45
@@ -239,7 +239,7 @@ for n, b in enumerate(PLAN):
 
 # Ground cleared of a Meshy building the town's own buildings do not fully cover (the rest of a
 # block the trading house replaces): flattened to its pad and paved over.
-PAVE = material("paving", (0.47, 0.45, 0.41), 0.9)
+PAVE = material("gravel", (0.58, 0.53, 0.44), 1.0)   # beaten earth and gravel, as most streets were
 for c in SITE["town"].get("clear", []):
     (cx, cz), (hx, hz), rot = c["at"], c["half"], math.radians(c["rot"])
     M = Matrix.Translation((cx, -cz, c["pad"])) @ Matrix.Rotation(-rot, 4, "Z")
