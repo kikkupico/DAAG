@@ -35,7 +35,7 @@ tally house and the column room. The buildings stay separate because the claims 
 
 ## Arche — Mount Phyle
 
-Built, and fixed by *The Limits of Agreement*: nothing here may contradict that book.
+Built, and fixed by *The Limits of Agreement* (the camps) and *Agreeing Among Liars* (the crown): nothing here may contradict them.
 
 | Building | Papers | What it is |
 |---|---|---|
