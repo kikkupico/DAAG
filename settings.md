@@ -42,10 +42,9 @@ evenly spaced houses those lines pass well away from the centre, so a small cone
 them. That is why the massif must be broad. The settings give no dimensions: they fix constraints,
 not measurements, and the pictures need not match any number.
 
-The ring road is **two stacked single-file cliff cuttings**: the upper runs sunwise only, the
-lower against the sun only, with no passing places. So there is no overtaking and no oncoming
-traffic, and by the law of the road a slip takes the direct stretch, never the long way round.
-Together these give **one FIFO channel per ordered pair of houses: six in all**.
+The ring road is **one cliff road with a lane each way**. By the law of the road nobody
+overtakes, and a slip takes the direct stretch, never the long way round. Three stretches, each
+travelled both ways, give **one FIFO channel per ordered pair of houses: six in all**.
 
 **What closes the other channels:**
 - **The summit** is visible from every shore. In the trading season it is capped by the same
