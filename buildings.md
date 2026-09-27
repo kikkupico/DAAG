@@ -4,7 +4,7 @@ A building for each paper, and a shared building where sharing is right. The isl
 described in `settings.md`; this file is the next resolution down.
 
 **Map pins are districts, not buildings.** A pin called *the libraries* is twelve
-buildings; a pin called *Odeon* is one. Keeping the maps at district resolution is what stops
+buildings; a pin called *the Tholos* is one. Keeping the maps at district resolution is what stops
 them turning into floor plans.
 
 ## The rule for sharing
@@ -45,7 +45,7 @@ Built, and fixed by *The Limits of Agreement* (the camps) and *Agreeing Among Li
 ## Paxos — the Chamber
 
 One island shaped like a Y, and its shape groups the papers. Two arms reach north and face
-each other across a bay: the Chamber on the western arm, the city of Schedia and its Odeon on the
+each other across a bay: the Chamber on the western arm, the city of Schedia and its Tholos on the
 eastern. The hall of two doors stands at the fork, and the stem widens into the scholars'
 coast. The parliament passes decrees, the law of Paxos; Schedia keeps its own laws; the
 scholars' copies are not law, and no decree settles which copy is right.
@@ -56,14 +56,14 @@ scholars' copies are not law, and no decree settles which copy is right.
 
 ## Paxos — Schedia
 
-A city on the eastern arm, governed from one theatre, with laws of its own: its founders came
+A city on the eastern arm, governed from a round hall with a podium, with laws of its own: its founders came
 from a different mother city and brought their laws with them, and the Parliament's decrees
 have never run there. Each law book covers its own city, so the two never contradict each
 other.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The Odeon** | Oki &amp; Liskov 1988 | Roofed, raked, aimed at one stage. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has a city of its own, and the two law books never conflict. Its legislators govern from a theatre: one speaks from the stage, the others keep their law books in the front row (the *proedria*), and the public in the seats behind learn the law. The speaker is distinguished by the architecture, and when they fall silent business stops until another legislator takes the stage under a higher number, and gathers what a majority of the front row holds before speaking. |
+| **The Tholos** | Oki &amp; Liskov 1988 | A rotunda like the Chamber, with its poor acoustics, messengers and legislators on part-time duty, and one difference: a podium at the centre. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has a city of its own, and the two law books never conflict. The podium is an office, not a pulpit: only its holder may propose, the others write down what its messengers bring, and those messengers all leave from the centre. Authority rides on the board number every note carries. The law is kept on wax tablets left on the benches and smoothed when their holder goes home, against the Chamber's indelible ink. When the podium falls silent, another legislator raises a higher board, and the new holder gathers what a majority hold before proposing anything. The name is Athenian: the round building of the prytaneis, the committee on duty in turn, with one member presiding. |
 
 ## Paxos — the scholars' coast
 
@@ -88,7 +88,7 @@ argument.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The hall of two doors** | Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020 <span title="shared">◆</span> | At the fork of the island, on common ground that belongs to neither city. One door facing north up the bay to the bodies that assemble, the Chamber and the Odeon; one facing south down the stem to the scholars' coast. Every question brought here leaves by the door its own shape decides: those that only ever add leave by the scholars' door and need no assembly, and those resting on absence — *no one has claimed this* — leave by the door of the assemblies. The building does not rule; it sorts. |
+| **The hall of two doors** | Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020 <span title="shared">◆</span> | At the fork of the island, on common ground that belongs to neither city. One door facing north up the bay to the bodies that assemble, the Chamber and the Tholos; one facing south down the stem to the scholars' coast. Every question brought here leaves by the door its own shape decides: those that only ever add leave by the scholars' door and need no assembly, and those resting on absence — *no one has claimed this* — leave by the door of the assemblies. The building does not rule; it sorts. |
 
 ---
 
@@ -111,10 +111,11 @@ argument.
 - **Order board / cut-off tent.** Both are about answering as one. But one states the rule for
   House 3's board and the other proves it cannot be kept while birds are lost. Different
   places, one rule, restated in each.
-- **Chamber / Odeon.** Both keep a law book by majority. But VR was found independently and
-  is a genuine alternative, not a variant; the whole point is that they are different rooms, on
-  either arm of the island, facing each other across the bay — one where no voice carries, one built so that a single voice reaches
-  every seat.
+- **Chamber / Tholos.** Both keep a law book by majority, in the same kind of hall. But VR was
+  found independently and is a genuine alternative, not a variant, so they are different halls,
+  on either arm of the island, facing each other across the bay: one with no head of the room,
+  where whoever thinks themselves president may start a ballot, and one with a podium, whose
+  holder is named on the board.
 
 ---
 

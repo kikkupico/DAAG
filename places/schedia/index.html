@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Schedia and the Odeon — Paxos</title>
+<title>Schedia and the Tholos — Paxos</title>
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <link rel="stylesheet" href="../../assets/css/daag.css">
 <link rel="stylesheet" href="../../assets/css/books.css">
@@ -19,9 +19,9 @@
 
 <header class="cover">
   <div class="kicker">Distributed Algorithms of Ancient Greece · Paxos · The Setting</div>
-  <h1 class="display">Schedia and the Odeon</h1>
-  <p class="sub">A city with laws of its own, governed from one theatre in which one voice reaches every seat.</p>
-  <p class="pub">Read this first, and the book set in Schedia can be read on its own. It describes the island of Paxos, the city on its eastern arm, and the Odeon where its law is made.</p>
+  <h1 class="display">Schedia and the Tholos</h1>
+  <p class="sub">A city with laws of its own, governed from a round hall like the Chamber's, with a podium at its centre.</p>
+  <p class="pub">Read this first, and the book set in Schedia can be read on its own. It describes the island of Paxos, the city on its eastern arm, and the Tholos where its law is made.</p>
 </header>
 
 <nav class="toc">
@@ -29,7 +29,7 @@
   <ol>
     <li><a href="#s1">I · The Island of Paxos</a></li>
     <li><a href="#s2">II · A City of Its Own</a></li>
-    <li><a href="#s3">III · The Odeon</a></li>
+    <li><a href="#s3">III · The Tholos</a></li>
     <li><a href="#terms">The Setting and the Papers</a></li>
     <li><a href="#books">The Books Set Here</a></li>
   </ol>
@@ -47,7 +47,7 @@
 
     <p>Paxos is shaped like a Y. Two arms reach north and face each other across a bay: the western
     arm holds the <b>Chamber</b> of the Paxon Parliament, the eastern arm the city of
-    <b>Schedia</b> and its Odeon. The arms join at a fork, where the <b>hall of two doors</b>
+    <b>Schedia</b> and its Tholos. The arms join at a fork, where the <b>hall of two doors</b>
     stands, and below the fork the stem widens into the body of the island, the
     <b>scholars' coast</b>. The island road runs up the stem, forks, and runs out along both
     arms.</p>
@@ -83,22 +83,36 @@
 <hr class="rule">
 
 <section id="s3">
-  <div class="issue"><span class="no">III</span><h2>The Odeon</h2></div>
+  <div class="issue"><span class="no">III</span><h2>The Tholos</h2></div>
   <div class="prose">
-    <p>Schedia is governed from its <b>Odeon</b>, which stands above the town and faces the Chamber
-    across the water. It is the Chamber's opposite. Where the rotunda makes oratory impossible, the
-    Odeon is roofed, raked and aimed at one stage, so that a single voice reaches every seat.</p>
+    <p>Schedia is governed from its <b>Tholos</b>, a round hall on a terrace above the town that
+    faces the Chamber across the water. It is the same kind of hall. Its acoustics are just as poor,
+    so nobody can be heard across it and everything goes by messenger, and its legislators serve
+    part time, coming and going by its many doors. The Tholos has one thing the Chamber lacks: a
+    podium at the centre.</p>
 
-    <p>Schedia's legislators keep their law books in the front row of the Odeon, one throne each.
-    One of them at a time speaks from the stage; the others write down what the speaker says; the
-    public, in the seats behind, deal only with the speaker and learn the law from him. The speaker
-    is set apart by the building itself, and that is the one role that distinguishes a legislator
-    here.</p>
+    <p>Nobody can be heard from the podium either. It is an office, not a pulpit. Only the
+    legislator who holds it may propose; the others keep their law books on the benches round the
+    drum and write down what the podium's messengers bring. Citizens at the doors send their
+    petitions to the podium, and a petition that reaches a bench instead is sent back with the name
+    of the holder. The podium stands where every bench is the same distance away, so its messengers
+    run out from the centre, where in the Chamber they cross the floor in every direction.</p>
 
-    <p>When the speaker falls silent, business stops. It starts again only when another legislator
-    takes the stage under a higher number and first gathers what a majority of the front row holds,
-    so that nothing a majority knew is lost. If two claimed the stage at once, nothing could
-    proceed, and that is why every turn on the stage is numbered.</p>
+    <p>A board hangs on the podium with a number and the name of the legislator who raised it, and
+    every note the podium sends carries that number. When the podium falls silent, any legislator
+    who notices may raise a higher board. Its new holder first gathers what a majority of the benches
+    hold, so that nothing a majority knew is lost. A holder who stepped out and missed the new board
+    can go on sending notes under the old one, but settles nothing: any majority they reach includes
+    a legislator who has taken the new board and refuses the old number.</p>
+
+    <p>The law is kept in wax, not ink. Each legislator's tablets stay on their bench and are
+    smoothed when they go home; only the bench's name and the last board it served under are cut
+    into its stone. A legislator who steps out comes back to their tablets. One who goes home comes
+    back to smooth wax and must be brought up to date from the others. If a majority went home at
+    once, the law would be lost.</p>
+
+    <p>The name is Athenian. In Athens the Tholos was the round building of the prytaneis, the
+    committee on duty in turn, with one member presiding.</p>
   </div>
 </section>
 
@@ -114,12 +128,13 @@
     <table class="chron">
       <thead><tr><th>In the setting</th><th>What it stands for</th></tr></thead>
       <tbody>
-        <tr><td><span class="term">the front row, one throne and law book each</span></td><td>The replicas (cohorts) of one group.</td></tr>
-        <tr><td><span class="term">the speaker on the stage</span></td><td>The primary, the leader.</td></tr>
-        <tr><td><span class="term">the others writing down what he says</span></td><td>Backups.</td></tr>
-        <tr><td><span class="term">the public in the seats behind</span></td><td>Clients, who deal only with the primary.</td></tr>
-        <tr><td><span class="term">a new speaker under a higher number</span></td><td>A view change with a new, higher view number.</td></tr>
-        <tr><td><span class="term">gathering what a majority of the front row holds</span></td><td>Recovering state from a majority, so committed work survives.</td></tr>
+        <tr><td><span class="term">the benches round the drum, one law book each</span></td><td>The replicas (cohorts) of one group.</td></tr>
+        <tr><td><span class="term">the holder of the podium</span></td><td>The primary, the leader.</td></tr>
+        <tr><td><span class="term">the others writing down what the podium sends</span></td><td>Backups.</td></tr>
+        <tr><td><span class="term">citizens at the doors, petitioning the podium</span></td><td>Clients, who deal only with the primary.</td></tr>
+        <tr><td><span class="term">a higher board on the podium</span></td><td>A view change with a new, higher view number.</td></tr>
+        <tr><td><span class="term">gathering what a majority of the benches hold</span></td><td>Recovering state from a majority, so committed work survives.</td></tr>
+        <tr><td><span class="term">wax tablets, smoothed when their holder goes home</span></td><td>Volatile state, lost in a crash; a majority remembering is what keeps it safe.</td></tr>
       </tbody>
     </table>
   </div>
@@ -130,8 +145,8 @@
 <section id="books">
   <div class="issue"><span class="no">Reference</span><h2>The Books Set Here</h2></div>
   <div class="prose">
-    <p><a href="../../books/one-leader-at-a-time/index.html"><i>One Leader at a Time</i></a> (plan only): how Schedia's Odeon keeps
-    one law book with one speaker at a time, and how a new speaker takes over without losing
+    <p><a href="../../books/one-leader-at-a-time/index.html"><i>One Leader at a Time</i></a> (plan only): how Schedia's Tholos keeps
+    one law book with one holder of the podium at a time, and how a new holder takes over without losing
     anything the last one promised. <span class="paper">Oki &amp; Liskov 1988</span></p>
   </div>
 </section>
