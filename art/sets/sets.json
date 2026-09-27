@@ -1,5 +1,5 @@
 {
- "_note": "Interior sets for the previs, read by art/previs/render.py (a shot's \"set\") and explorer.html. `at`: where the set's origin (the centre of its floor) sits in explorer coords [x, y, z]; `carve`: the radius (m) round it within which the island model's own building is cut away, from `carve_above` m over the floor up. Build a set with blender -b -P art/sets/<name>.py; the GLBs are local only. A set with `bake` is also joined into its island model by art/sets/bake_paxos.py, which flattens the `bake` site (a `footprint` of explorer [x, z] corners, which it paves, or a `circle` round the set, which brings its own paving) to the `pad` height.",
+ "_note": "Interior sets for the previs, read by art/previs/render.py (a shot's \"set\") and explorer.html. `at`: where the set's origin (the centre of its floor) sits in explorer coords [x, y, z]; `carve`: the radius (m) round it within which the island model's own building is cut away, from `carve_above` m over the floor up. Build a set with blender -b -P art/sets/<name>.py; the GLBs are local only. A set with `bake` is also joined into its island model by art/sets/bake.py, which flattens the `bake` site (a `footprint` of explorer [x, z] corners, which it paves, or a `circle` round the set, which brings its own paving) to the `pad` height.",
  "chamber": {
   "glb": "art/sets/chamber.glb",
   "island": "paxos",
@@ -48,6 +48,320 @@
      -16.69
     ]
    ]
+  }
+ },
+ "house3": {
+  "glb": "art/sets/house3.glb",
+  "island": "arche",
+  "at": [
+   -101.0,
+   2.5,
+   -54.0
+  ],
+  "carve": 0,
+  "carve_above": 0.02,
+  "house": {
+   "x0": -11.0,
+   "x1": 10.5,
+   "depth": 5.0,
+   "yaw": 110.56
+  },
+  "bake": {
+   "source": "art/archive/arche-meshy-2026-09-25/arche-3d.glb",
+   "strips": "art/sets/house3-strips.json"
+  }
+ },
+ "town3": {
+  "glb": "art/sets/town3.glb",
+  "island": "arche",
+  "at": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "carve": 0,
+  "carve_above": 0.02,
+  "town": {
+   "plan": "art/sets/town3-plan.json",
+   "region": [
+    -116,
+    -54,
+    -90,
+    -10
+   ],
+   "exclude": [
+    [
+     -101,
+     -54
+    ],
+    [
+     -97,
+     -45
+    ],
+    [
+     -104.8,
+     -60.6
+    ],
+    [
+     -114.5,
+     -71.25
+    ],
+    [
+     -114.5,
+     -52.25
+    ],
+    [
+     -113.5,
+     -18.25
+    ],
+    [
+     -54.5,
+     -35.0
+    ]
+   ],
+   "extra": [
+    {
+     "at": [
+      -68.0,
+      -58.6
+     ],
+     "half": [
+      2.8,
+      8.0
+     ],
+     "rot": 0.0,
+     "kind": "hall"
+    },
+    {
+     "at": [
+      -66.6,
+      -45.8
+     ],
+     "half": [
+      2.2,
+      4.8
+     ],
+     "rot": 0.0,
+     "kind": "hall"
+    },
+    {
+     "at": [
+      -70.4,
+      -45.8
+     ],
+     "half": [
+      1.6,
+      2.8
+     ],
+     "rot": 0.0,
+     "kind": "house"
+    },
+    {
+     "at": [
+      -108.3,
+      -45.9
+     ],
+     "half": [
+      4.6,
+      1.9
+     ],
+     "rot": 41.0,
+     "kind": "house"
+    }
+   ]
+  },
+  "bake": {
+   "source": "art/archive/arche-meshy-2026-09-25/arche-3d.glb",
+   "strips": "art/sets/town3-strips.json"
+  }
+ },
+ "house1": {
+  "glb": "art/sets/house1.glb",
+  "island": "arche",
+  "at": [
+   -116.5,
+   1.9,
+   67.0
+  ],
+  "carve": 0,
+  "carve_above": 0.02,
+  "house": {
+   "x0": -9.0,
+   "x1": 9.0,
+   "depth": 5.0,
+   "yaw": 90.0
+  },
+  "bake": {
+   "source": "art/archive/arche-meshy-2026-09-25/arche-3d.glb",
+   "strips": "art/sets/house1-strips.json"
+  }
+ },
+ "house2": {
+  "glb": "art/sets/house2.glb",
+  "island": "arche",
+  "at": [
+   -205.0,
+   4.0,
+   9.5
+  ],
+  "carve": 0,
+  "carve_above": 0.02,
+  "house": {
+   "x0": -8.0,
+   "x1": 8.0,
+   "depth": 5.0,
+   "yaw": 180.0
+  },
+  "bake": {
+   "source": "art/archive/arche-meshy-2026-09-25/arche-3d.glb",
+   "strips": "art/sets/house2-strips.json"
+  }
+ },
+ "town1": {
+  "glb": "art/sets/town1.glb",
+  "island": "arche",
+  "at": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "carve": 0,
+  "carve_above": 0.02,
+  "town": {
+   "plan": "art/sets/town1-plan.json",
+   "region": [
+    -150,
+    -85,
+    25,
+    85
+   ],
+   "exclude": [
+    [
+     -119,
+     67
+    ],
+    [
+     -117.5,
+     33.0
+    ],
+    [
+     -147.25,
+     46.0
+    ],
+    [
+     -147.25,
+     74.5
+    ],
+    [
+     -138.25,
+     44.25
+    ],
+    [
+     -87.75,
+     34.25
+    ]
+   ],
+   "extra": [
+    {
+     "at": [
+      -127.0,
+      73.0
+     ],
+     "half": [
+      5.0,
+      3.0
+     ],
+     "rot": 0.0,
+     "kind": "hall"
+    },
+    {
+     "at": [
+      -125.2,
+      63.0
+     ],
+     "half": [
+      2.8,
+      5.0
+     ],
+     "rot": 0.0,
+     "kind": "hall"
+    }
+   ],
+   "clear": [
+    {
+     "at": [
+      -124.5,
+      67.0
+     ],
+     "half": [
+      8.8,
+      10.5
+     ],
+     "rot": 0.0,
+     "pad": 1.9
+    }
+   ]
+  },
+  "bake": {
+   "source": "art/archive/arche-meshy-2026-09-25/arche-3d.glb",
+   "strips": "art/sets/town1-strips.json"
+  }
+ },
+ "town2": {
+  "glb": "art/sets/town2.glb",
+  "island": "arche",
+  "at": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "carve": 0,
+  "carve_above": 0.02,
+  "town": {
+   "plan": "art/sets/town2-plan.json",
+   "region": [
+    -222,
+    -160,
+    -25,
+    40
+   ],
+   "exclude": [
+    [
+     -205,
+     10
+    ],
+    [
+     -176.75,
+     7.5
+    ],
+    [
+     -171.75,
+     -11.75
+    ],
+    [
+     -171.0,
+     -6.0
+    ]
+   ],
+   "extra": [],
+   "clear": [
+    {
+     "at": [
+      -205.0,
+      9.4
+     ],
+     "half": [
+      9.0,
+      3.6
+     ],
+     "rot": 0.0,
+     "pad": 4.0
+    }
+   ]
+  },
+  "bake": {
+   "source": "art/archive/arche-meshy-2026-09-25/arche-3d.glb",
+   "strips": "art/sets/town2-strips.json"
   }
  }
 }

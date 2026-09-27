@@ -1,26 +1,33 @@
-"""Bake the sets marked `bake` in art/sets/sets.json into the Paxos island model.
+"""Bake the sets marked `bake` in art/sets/sets.json into an island model.
 
-    blender -b -P art/sets/bake_paxos.py
+    blender -b -P art/sets/bake.py -- <paxos|arche>
 
-Reads the untouched Meshy conversion (the set's `bake.source`), never art/paxos-3d.glb
-itself, so running it again never flattens twice, and writes art/paxos-3d.glb. For each
-baked set (the Tholos, which replaces the Odeon Meshy drew on the eastern arm, and the
-Chamber, which replaces Meshy's rotunda):
+Reads the untouched Meshy conversion (the sets' `bake.source`), never the island's live GLB
+itself, so running it again never flattens twice, and writes art/<island>-3d.glb. For each
+baked set (on Paxos the Tholos, which replaces the Odeon Meshy drew on the eastern arm, and
+the Chamber, which replaces Meshy's rotunda; on Arche the port of House 3):
 - every vertex inside the site is lowered to the `pad` height. The site is either the
   `footprint` quadrilateral grown by `margin` metres, whose faces lying wholly inside are
   then dropped and covered by a paving slab a little over the pad; or a `circle` of that
   radius round the set, which brings its own paving, so the pad sits just under it and
-  nothing is dropped;
+  nothing is dropped; or a list of `strips`, rectangles each with its own pad, for a set of
+  many buildings that each replace one of Meshy's: every vertex inside a strip is lowered to
+  its pad, the faces wholly inside are dropped, and the set's own buildings cover them;
 - the set's GLB is placed at its site and joined in.
 The result is one mesh, as render.py and explorer.html expect, in the source's own model
 units and frame, so the bounding box and every camera framed on the model stay put.
 """
-import bpy, bmesh, json, math
+import bpy, bmesh, json, math, sys
 from mathutils import Vector, Matrix
 
-SCALE, (X0, Z0), YAW = 104.0, (130.0, 36.0), -90.0     # as render.py's ISLANDS["paxos"]
+ISLANDS = {   # metres per model unit, explorer centre (x, z), yaw: as render.py's ISLANDS
+    "arche": (95.0, (-130.0, 0.0), 20.0),
+    "paxos": (104.0, (130.0, 36.0), -90.0),
+}
+NAME = sys.argv[sys.argv.index("--") + 1]
+SCALE, (X0, Z0), YAW = ISLANDS[NAME]
 SETS = {k: v for k, v in json.load(open("art/sets/sets.json")).items()
-        if not k.startswith("_") and v.get("bake") and v["island"] == "paxos"}
+        if not k.startswith("_") and v.get("bake") and v["island"] == NAME}
 source = {s["bake"]["source"] for s in SETS.values()}
 assert len(source) == 1, source
 
@@ -108,19 +115,40 @@ bm.from_mesh(island.data)
 parts = []
 for name, S in SETS.items():
     bk = S["bake"]
-    if "circle" in bk:
+    if "strips" in bk:
+        strips = json.load(open(bk["strips"]))["strips"]
+        moved, gone = 0, 0
+        for st in strips:
+            (cx_, cz_), (hx, hz), rot = st["at"], st["half"], math.radians(st["rot"])
+            c, s_ = math.cos(rot), math.sin(rot)
+            corners = [(cx_ + c * dx - s_ * dz, cz_ + s_ * dx + c * dz)
+                       for dx, dz in ((-hx, -hz), (hx, -hz), (hx, hz), (-hx, hz))]
+            mv = set()
+            for v in bm.verts:
+                w = M @ v.co
+                if inside((w.x, -w.y), corners):
+                    v.co = Mi @ Vector((w.x, w.y, st["pad"]))
+                    mv.add(v)
+            dead = [f for f in bm.faces if all(v in mv for v in f.verts)]
+            bmesh.ops.delete(bm, geom=dead, context="FACES")
+            moved, gone = moved + len(mv), gone + len(dead)
+        print("BAKE", name, len(strips), "strips,", moved, "vertices flattened,", gone, "faces dropped")
+        poly = None
+    elif "circle" in bk:
         n = 48
         poly = [(S["at"][0] + bk["circle"] * math.cos(2 * math.pi * k / n),
                  S["at"][2] + bk["circle"] * math.sin(2 * math.pi * k / n)) for k in range(n)]
     else:
         poly = [tuple(p) for p in grown(bk["footprint"], bk["margin"])]
     moved = set()
-    for v in bm.verts:
+    for v in bm.verts if poly else []:
         w = M @ v.co                               # blender world: (x, -z, y)
         if inside((w.x, -w.y), poly):
             v.co = Mi @ Vector((w.x, w.y, bk["pad"]))
             moved.add(v)
-    if "circle" in bk:
+    if "strips" in bk:
+        pass
+    elif "circle" in bk:
         print("BAKE", name, len(moved), "vertices flattened")
     else:
         gone = [f for f in bm.faces if all(v in moved for v in f.verts)]
@@ -161,5 +189,5 @@ for o in list(bpy.data.objects):
         bpy.data.objects.remove(o)
 bpy.ops.object.select_all(action="DESELECT")
 island.select_set(True)
-bpy.ops.export_scene.gltf(filepath="art/paxos-3d.glb", use_selection=True)
-print("BAKED", ", ".join(SETS), "into art/paxos-3d.glb")
+bpy.ops.export_scene.gltf(filepath=f"art/{NAME}-3d.glb", use_selection=True)
+print("BAKED", ", ".join(SETS), f"into art/{NAME}-3d.glb")
