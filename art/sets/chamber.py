@@ -20,7 +20,7 @@ frame: metres, the centre of the floor at the origin, axes as explorer.html's (n
 Its objects are `shell` (drum, colonnade, dome, statues), `floor` (floor, steps, terrace
 paving, what people stand on) and `furniture` (desks, stools and benches, which props can
 stand on). chamber.json lists each desk, its stool and its facing, in the set's frame, for
-placing the cast and props. art/sets/bake_paxos.py joins it into the island model at its
+placing the cast and props. art/sets/bake.py joins it into the island model at its
 site in sets.json.
 """
 import bpy, bmesh, json, math, random, sys

@@ -22,7 +22,7 @@ set's own frame: metres, the centre of the floor at the origin, axes as explorer
 (north = -X). Its objects are `shell` (walls, columns, roof, porch), `floor` (floor, base
 steps and podium steps, what people stand on) and `furniture` (benches, stands, the podium's
 seat and desk, the board). tholos.json lists each bench, the podium and the doors in the
-set's frame. art/sets/bake_paxos.py joins it into the island model at its site in sets.json.
+set's frame. art/sets/bake.py joins it into the island model at its site in sets.json.
 """
 import bpy, bmesh, json, math, sys
 from mathutils import Vector, Matrix

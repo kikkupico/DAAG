@@ -60,6 +60,15 @@ travelled both ways, give **one FIFO channel per ordered pair of houses: six in 
 **The ring road.** Three houses, known by number, **House 1**, **House 2** and **House 3**, act as an
 island-wide distribution network.
 
+**The houses are built alike.** Each is one long range of rough grey rubble stone under a tiled
+gable roof, on the quay of its port town, its back to the ring road: the clerks' office at one
+end; the **gate**, a passage through the range from the road to the quay, where slips come in;
+the storehouse at the other end, with loading doors onto the quay. A portico of plain Doric
+columns under a lean-to roof runs the length of the range on the quay side, and under it, by the
+gate, hangs the house's **board** of orders, a row of numbered slots with the peg beside it (House
+3's is Herlios' board). Each port town round it is of one-storey rubble houses, courtyard houses
+and long waterfront storehouses, all under terracotta roofs, with nothing to set one town apart.
+
 - *Ordering Without Clocks* (`lamport-1978_time-clocks`, `fidge-1988_timestamps`,
   `mattern-1988_virtual-time`). When overcast winter skies silence the headland sundials,
   houses serve distribution orders strictly in the sequence they were placed using logical tallies (Lamport
