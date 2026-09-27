@@ -68,11 +68,15 @@ island-wide distribution network.
   causal independence. Lamport's physical clocks (§6) are described and not kept: they need a
   longest crossing and messengers at regular hours, and the houses have no common hour.
 - *Taking Stock Without Stopping* (`chandy-lamport-1985_distributed-snapshots`).
-  Taking an inventory of the entire distribution network without halting trade. Goods exist
+  Carts are reported stolen by bandits on the road, and a late cart looks like a taken one; the
+  houses take an inventory of the entire distribution network, without halting trade, to find out.
+  Goods exist
   both in the 3 house storehouses and in transit along the 6 directed road tracks. A messenger
   wearing a **red sash** serves as the marker dividing pre-recording shipments from
   post-recording shipments. Proves cut consistency, reachability ($S_\iota \to S^* \to S_\phi$),
-  and stable property detection. Stable properties are those of the trade between the houses,
+  and stable property detection. Bandits take carts but never a red sash messenger (he carries
+  nothing worth taking); a taken cart's goods leave the count like a sale, so on a day with no
+  port-town trade a shortfall against the ledgers is a deficit, a stable property. Stable properties are those of the trade between the houses,
   with the port towns' buying and selling set aside; the census is taken at no one moment, so the book counts no
   hours.
 - *Many Copies, Acting as One* (`herlihy-wing-1990_linearizability`). The same premise as
