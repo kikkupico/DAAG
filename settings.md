@@ -83,12 +83,13 @@ island-wide distribution network.
   entered and confirmed, the goatherd tells House 2, House 2 orders at noon with a lower tally and
   is served first (the paper's H7). **Two kinds of first:** serving by entry at House 3's gate keeps
   the rule; serving by tally need not; neither sequence contains the other. Locality is shown with two
-  boards, grain at House 3 and oil at House 2, ordered by all three houses (H8 for the looser rule). The looser rules are
-  **the rule without the sun** (sequential consistency) and **bargains** (serializability). The
+  boards, grain at House 3 and oil at House 2, ordered by all three houses (H8 for the looser rule). The **looser rule**
+  (sequential consistency) passes each board and fails both together; several things done as one
+  (serializability) is one plain paragraph, with no device. The
   paper's §4 queue is **Herlios' board** itself: numbered **slots**, a **peg** (`INC`), clerks
   entering orders (Glaukos, Mikon) and a loader serving (Sosias) with `SWAP`, all at one house. The
-  rule holds whether the board is one board or copies acting as one. Herlios keeps the board;
-  Wingaia is of House 2.
+  rule is judged only at the houses' gates, so it cannot tell one board from copies acting as one;
+  no way of keeping copies is described. Herlios keeps the board.
 **Why linearizability is on Arche.** It is defined by real time: one operation finished before
 another began. Arche has real time — the sun rises over it whether or not a dial can be read —
 but in the trading season no one can read it, and no house can learn of another's order except

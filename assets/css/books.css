@@ -132,3 +132,17 @@ figure.diagram figcaption b{color:var(--ink)}
 sup.xref{font-size:.8em; line-height:0; margin-left:1px}
 sup.xref a{color:var(--aegean-d, #136f9e); text-decoration:none; font-weight:600}
 sup.xref a:hover{text-decoration:underline}
+
+/* A slot for a planned picture: its description stands in until the art is made. */
+.planned{
+  display:flex; flex-direction:column; justify-content:center; box-sizing:border-box;
+  aspect-ratio:4/3; padding:24px 28px; text-align:left;
+  border:3px dashed var(--shadow); background:var(--parchment);
+}
+.frame-cover.planned{aspect-ratio:3/4; border:3px dashed var(--shadow); box-shadow:none; transform:none; background:var(--parchment)}
+.planned .lbl{
+  font-family:Optima,'Gill Sans',sans-serif; letter-spacing:.14em; text-transform:uppercase;
+  font-size:.72rem; color:#6b5a3e;
+}
+.planned p{margin:10px 0 0; font-size:.92rem; line-height:1.5; font-style:italic; color:#4a3d2c}
+@media (max-width:520px){ .planned{aspect-ratio:auto; min-height:220px; padding:18px} }
