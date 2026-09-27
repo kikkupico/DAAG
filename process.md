@@ -107,6 +107,16 @@ The shape that has worked before:
 | **VIII** | What the result does *not* say, or what it costs, or what it assumes and never verifies. It is often the best chapter in a book. |
 | **IX** | *In the book / In the paper*, then the ideas plainly. |
 
+**The book is carried by questions.** Write down the questions a careful reader would ask, in
+order, and let them drive the chapters. Each chapter answers the question the one before it closed
+on, and ends on the next question, in a paragraph of its own:
+`<p class="hook"><em>…</em></p>`. Inside a chapter, raise the reader's objection as a question and
+answer it at once: *Does unrelated mean they happened at the same moment? No: it means…* The
+questions are the reader's, never a character's, and nothing is narrated, so rule 1 stands. Keep
+one line of argument: every hook is answered in the chapters that follow, and threads never
+alternate. *Ordering Without Clocks* and
+*The Limits of Agreement* are the models.
+
 ### 5. Register
 
 Plain, specific, unhurried. The voice is a careful antiquarian describing arrangements he has
@@ -122,14 +132,15 @@ Concretely:
 - When you first coin a device, mark it with `<span class="coin">` (bold, never underlined:
   only links are underlined). Node labels such as *House 1* or *Number 2* take the same mark where
   they are introduced.
-- **Never refer to a chapter by its number or place in the prose.** No "as Chapter IV showed", no
-  "the fifth chapter asked". Say "as we saw", "below", or name the result ("by Never Two Gates",
-  "the rules of the tally"). Chapter headings and the table of contents carry the numbers.
+- **Never refer to a chapter by its number or place**, in the prose or in the apparatus. No "as
+  Chapter IV showed", no "the fifth chapter asked", no "Part Two". Say "as we saw", "below", or
+  name the idea ("by Never Two Gates", "the rules of the tally"). Chapter headings and the table
+  of contents carry the numbers; a superscript's `title` gives the book and the chapter's title.
 - **Never refer to another volume in the prose.** No "as *Ordering Without Clocks* relates", no
   "the four of *The Limits of Agreement*", no "the earlier book". A fact established elsewhere is
   restated in this book's own words, as a fact of the island, and linked to the book that
   established it by a superscript:
-  `<sup class="xref"><a href="../ordering-without-clocks/index.html#s3" title="Ordering Without Clocks, Chapter III">*</a></sup>`,
+  `<sup class="xref"><a href="../ordering-without-clocks/index.html#s3" title="Ordering Without Clocks: Breaking Ties">*</a></sup>`,
   placed after the fact. The apparatus may name books: the lineage lines, the *In the book / In the
   paper* table, and the footnotes.
 - Say what is *not* claimed, out loud, immediately after saying what is. The gap between a
