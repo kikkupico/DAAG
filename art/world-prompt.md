@@ -401,12 +401,12 @@ Surrounded by a paved terrace with low stone parapets, stone benches by the door
 ```
 
 #### Feature 7a: The Tholos — Interior
-The roof is lifted away. The legislators' benches run round the wall, each with its law book, facing a podium at the centre, which every bench is the same distance from. The board on the podium is for the number of the current holder's board.
+The roof is lifted away. The legislators' benches run round the wall, each with its wax tablets, facing a podium at the centre, which every bench is the same distance from. The board on the podium is for the number of the current holder's board.
 ```text
 Isometric 3D interior model of the Tholos of Schedia, on Paxos, a round Hellenistic Greek hall.
 Orthographic axonometric view, deep focus, zero people.
 The conical tiled roof is lifted away to show the whole interior.
-A single ring of identical stone benches with backs runs round the inside of the wall, broken only by the doorways; each bench has a small stone reading stand holding a closed law book, and every bench faces the centre.
+A single ring of identical stone benches with backs runs round the inside of the wall, broken only by the doorways; each bench has a small stone stand holding a stack of hinged wooden tablets filled with yellow beeswax (no books, no scrolls), and every bench faces the centre.
 Six plain columns stand in a ring between the benches and the centre, which carry the roof.
 At the exact centre, a low round stone podium with two steps, a single stone seat and a writing desk on it, and a blank painted wooden board on a post beside the desk for a number. The podium has no lectern and is not raised for speaking.
 A paved stone floor with clear paths from the podium to every doorway.
