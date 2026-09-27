@@ -8,54 +8,8 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 
 ## One Leader at a Time
 
-**Oki & Liskov 1988 · the Tholos, Schedia, Paxos**
-
-**The idea.** Primary-copy replication that survives crashes and partitions. One cohort, the **primary**, does all the work and passes every event to the **backups** in order; an event is safe once a majority of cohorts know it. When the primary is lost, a **view change** forms a new view from a majority and starts it from the most complete record, so everything a majority knew survives. The paper builds this for **transactions**: one-copy serializability, with two-phase commit across groups.
-
-**In two sentences.** The Tholos is the Chamber again, with one difference: a podium at the centre, and only the legislator who holds it may propose, while the others write down what its messengers bring. When the podium falls silent, the others raise a higher board, and its new holder first gathers what a majority hold, so nothing a majority knew is lost.
-
-**The hall.** A rotunda with the Chamber's poor acoustics, so everything goes by messenger, and legislators on part-time duty coming and going by its many doors. The podium is an office, not a pulpit: nobody can be heard from it either. It stands where every bench is the same distance away, the current board hangs on it, and every messenger of the podium leaves from it. Authority rides on the board number every note carries, not on standing at the podium, which is only where the holder sits when present. The name is Athenian: the Tholos was the round building of the prytaneis, the committee on duty in turn, with one member presiding. The law is kept in wax, not ink: each legislator's tablets stay on their bench and are smoothed when they go home, while the bench's name and the last board it served under are cut into its stone. A legislator who steps out comes back to their tablets; one who goes home comes back to smooth wax; if a majority go home at once, the law is lost.
-
-**The devices.**
-
-| Device | In the paper | Also in |
-|---|---|---|
-| the benches round the drum, one per legislator, each with a law book | The module group's cohorts; the fixed set of benches is the configuration. | The Chamber, where every legislator keeps a ledger |
-| the holder of the podium | The primary: runs every call and settles every measure. | The crown's chief's job in *Keeping Order Among Liars*, which borrows VR's views |
-| the legislators on the benches, writing down what the podium sends | Backups, passive: they only record. |  |
-| citizens at the doors, sending petitions to the podium; a petition that reaches a bench is sent back with the current board and its holder | Clients, who deal only with the primary; a call to a non-primary is rejected with the current view. | The houses ordering at Arche's order board |
-| the board on the podium: a count and the name of the legislator who raised it | The viewid ⟨cnt, mid⟩, totally ordered, unique to its caller. | Ties broken by name, as the tally house's middle room breaks them by house number (*Ordering Without Clocks*); the Chamber's ballot numbers |
-| the line number in the podium's record, starting again at each new board | A timestamp, meaningful only within its view. |  |
-| "board 7, line 12" | A viewstamp ⟨viewid, ts⟩. |  |
-| each legislator's note of the last line they hold under each board | The cohort's history. |  |
-| the podium's runner to each bench, carrying lines in order and never skipping one | The communication buffer: event records delivered to each backup in timestamp order. | The roads of Arche, where nothing overtakes |
-| the podium's pause until enough benches have written up to a line that, with the podium, they are a majority | force-to: waiting for a sub-majority of backups. | Majorities that must overlap, as in the Chamber; at the camps a pledge and a call cannot both miss, 2 + 3 > 4 (*Agreeing When Messages Run Late*) |
-| the roll: notes asking "are you there?", and an empty podium or bench, which cannot say whether its holder stepped out or went home | "I'm alive" messages, and the events that start a view change. | The slate of *Telling the Dead from the Slow*: an empty seat is a legislator gone or a legislator slow |
-| the caller: any legislator who notices, raising a higher board | The view manager, sending invitations; the others are underlings. |  |
-| the answer to a call: "I hold up to board 6, line 40", or "I have lost my book" | A normal acceptance with its viewstamp, or a crash-accept. |  |
-| the rule for a new board: a majority answered, and among them someone sure to hold every settled line | The view-formation conditions (1)–(3). |  |
-| the new holder: whoever holds the latest line, the old holder if they can | New primary = the cohort with the highest viewstamp. |  |
-| the old holder who has not noticed: out on the porch, still sending under the old board | Several active primaries: the old one cannot force, because any majority it reaches includes a bench that has taken the new board and refuses the old number, so it settles nothing. |  |
-| the wax tablets: a legislator who steps out comes back to them; one who goes home comes back to smooth wax, and only the name and last board cut in the bench's stone; a majority who go home at once | A partitioned cohort, which keeps its state; a crashed cohort, which loses its volatile state but keeps its id and last viewid; a catastrophe, after which no new view can ever form. | Lamport's ledgers in indelible ink, with notes in the back so a legislator who leaves the Chamber does not forget |
-
-**Chapters.**
-1. The Tholos and its podium.
-2. The runners.
-3. Board and line: viewstamps.
-4. When a line is settled.
-5. An empty podium: calling a new board.
-6. Who takes the podium.
-7. The holder who has not noticed.
-8. Stepping out and going home.
-9. Measures that touch several halls (transactions), if kept.
-10. Against the Chamber: one podium, or anyone may propose. Lamport's parliament has a president too, but only for progress: several legislators may think themselves president for a while, which slows business but cannot make two ledgers disagree, and nothing records who holds the office. In the Tholos the holder is named on the board, and changes only with a new board.
-11. In the Book, In the Paper.
-
-**Must not exist:** a law settled without a majority of the benches; a holder chosen for their views; a Paxon decree that binds Schedia; anything named after the algorithm; anyone heard across the hall; a podium that makes two holders physically impossible.
-
-**Open.**
-1. **Transactions.** The paper's case is transactions that call several module groups, with psets and two-phase commit. Carry it (several committees, each with its own benches and podium, and a measure that touches more than one), or keep to one group and leave transactions to the paper column?
-2. **Names.** Okios and Liskovia. Liskov is credited, not named, on the crown, where the bandits go by number.
+Written: `books/one-leader-at-a-time/`. The Tholos of Schedia, its council of five and the podium;
+see `settings.md`.
 
 ---
 
