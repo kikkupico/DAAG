@@ -276,9 +276,20 @@ the new board and refuses the old number. That is why boards are numbered.
 **Wax, not ink.** Lamport's legislators write in indelible ink; Schedia's keep the law on wax
 tablets that stay on their bench and are smoothed when their holder goes home, while the bench's
 name and the last board it served under are cut into its stone. A legislator who steps out
-comes back to their tablets; one who goes home comes back to smooth wax and must be brought up
-to date; if a majority go home at once, the law is lost. VR keeps its group state in volatile
-memory, and a majority remembering is what makes that safe.
+comes back to their tablets; one who goes home comes back to smooth wax, calls for a new board at
+once, and is brought up to date only by that board's opening line. If a majority go home at
+once, no board can ever form again: the council stops for good, but never starts a board missing
+a law that passed. VR keeps its group state in volatile memory, and a majority remembering is
+what makes that safe.
+
+**The council.** Five legislators: Okios and Liskovia (Oki and Liskov), and Kleon, Melissa and
+Theron, ordinary names for seats no author fills. A majority is three, so a law passes when the
+holder and two others hold its line. They are told apart by colour: Okios blue-grey, Liskovia
+saffron, Kleon green, Melissa madder red, Theron grey. The podium's runners are boys in short
+brown tunics, one to each bench, who carry the lines in order and never skip one. Citizens
+petition the podium only; a petition that reaches a bench comes back with the holder's name.
+The Tholos set seats more than five (twelve benches); the book is right and the set may be
+brought down to five.
 
 **Why a Tholos.** In Athens the Tholos was the round building of the prytaneis, the committee
 on duty in turn, with one member presiding: a round civic hall with a head, on part-time duty.
