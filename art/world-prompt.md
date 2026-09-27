@@ -148,6 +148,27 @@ Keep everything exactly as it is in [image 1]: the coastline and its rocky point
 
 **Step 5 — 3D.** A Meshy image-to-3D conversion of the tilted plate, downloaded without resizing, is `art/arche-3d.glb`. `explorer.html` and `art/previs/render.py` place it at 95 m per model unit, a scale set by eye from a person beside the west-south-west depot, and turn it 20° so the north port is due north.
 
+### 2.1a Terrain Plate (bare land, for a model the buildings are added to)
+
+`art/refs/arche-terrain-plate.png` is a bare-terrain plate: the massif, the three harbours with their quays, moles and levelled building terraces, the road and two small platforms (the granary's and the sundial's sites), and nothing built. Buildings are not drawn by the image model; the parametric sets (`art/sets/house.py`, `art/sets/town.py`, the crown) are placed on it after the Meshy conversion, and trees as props. The road loops round the mountain joining the harbours; image models will not keep it to the coast, and the allegory needs only that it links the harbours and never crosses the mountain. Made in Gemini (text-to-image) from:
+```text
+Photorealistic isometric terrain diorama of the Greek island of Arche, Hellenistic Greece, 3rd century BC: the bare land and its earthworks only, made for 3D reconstruction. True orthographic axonometric view from the south, looking north and down at about 45 degrees, north at the top, the whole island in frame with a margin of sea all round. Deep focus, crisp fine geometry.
+
+NO BUILDINGS OF ANY KIND: no houses, no warehouses, no porticoes, no walls, no ruins, no ring wall on the summit, no towers, no roofs, no huts, no tents. No ships, boats, carts, people or animals. No trees: the ground is covered only in low maquis, dry grass and bare rock, so the shape of the land reads clearly.
+
+The island is roughly round, and a single broad limestone massif, Mount Phyle, fills it almost completely. The mountain's foot reaches nearly to the cliff tops all the way round: the coastal land is a narrow strip everywhere, with no lowland plains, plateaus or flat shelves between the harbours. Eight distinct spurs radiate from the summit like the arms of a star, each a clear ridge running down towards the coast, with a deep gully between every pair. The slopes rise continuously from the coast to the top, gentle below and steeper near the peak, with no cliff band round the summit and no concentric terraces, rings, tiers or steps anywhere. The summit is a small, rounded, bare rocky top of pale crags and clefts, sitting on the slope, not raised on a cliff.
+
+Three harbours stand equally spaced round the coast, a third of the way round from each other: due north, west-south-west and east-south-east. The massif is broad and high enough that it stands squarely between every pair, and no harbour can see either of the others. Each is a sheltered cove with calm water, a broad levelled waterfront shelf at the water's edge carrying stone quays, and one long stone pier or mole out into the cove. Behind each shelf, a few flat levelled building terraces are cut into the lower slope, bare and empty.
+
+A single narrow road, one cart wide, joins the three harbours in a loop round the mountain, cut into the slopes as a clear ledge. It goes round the mountain, never over it: no road or track climbs towards the summit, and there are no switchbacks on the upper slopes.
+
+Beside the road near the north harbour, a small flat rock-cut platform. On a southern headland, a small bare levelled platform.
+
+The coast is pale limestone sea-cliffs, with jagged reefs, submerged rocks and white surf off every headland.
+
+Bright, clear sunlight from the upper right, casting crisp, well-defined shadows that model every slope, spur, gully, cliff, road cutting, quay and terrace. Dry, transparent air: no haze, fog, mist or cloud, full sharpness everywhere. Deep blue sea reaching every edge of the frame. No text, no pedestal, no cutaway.
+```
+
 #### Island Plate Negative Prompt
 (Used instead of the universal negative for the Arche plate, because the plate deliberately puts a ruined wall and tents on the mountain.)
 ```text
