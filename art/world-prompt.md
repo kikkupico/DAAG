@@ -423,3 +423,15 @@ When processing these 2D isometric renders through neural 3D generators — Mesh
    - **Target Polycount:** 300,000 – 800,000 triangles for island terrains.
    - **Base Mode:** Plane-clipped at sea level ($Z=0$), eliminating the need to carve away thick vertical resin pedestal walls.
    - **Texture Resolution:** 4096×4096 PBR (Albedo, Roughness, Normal).
+
+## 5. The Home Page Chart
+
+`assets/img/map.jpg` (full size `art/full-map-cartographic.jpeg`) is drawn from the island models, so every building keeps its true size against every other; the Chamber and the Tholos match.
+
+1. **Views:** `blender -b -P art/refs/chart_views.py -- arche art/refs/chart-arche.png 25 230`, and the same for `paxos`. An orthographic camera, north up, tilted 25° from vertical so walls show a little, 230 m across, transparent background.
+2. **Layout:** `python3 art/refs/chart_layout.py` lays both views at one scale along the diagonal, Arche top-left and Paxos bottom-right, leaving the top-right corner for the compass rose (`art/refs/chart-layout.png`). The islands' spacing is not canon. The image model enlarges islands by about a fifth, so the layout draws them smaller than wanted (FACTOR 0.76).
+3. **Engraving** (image-to-image, Nano Banana Pro, square, [image 1] the layout, [image 2] the previous chart for style):
+```text
+Redraw [image 1] as an antique engraved sea chart in exactly the style of [image 2]: brown pen-and-ink engraving on aged cream parchment, fine hatching for relief, concentric ripple lines round each coast, small curled wave marks in the open sea, rhumb lines radiating across the sea, and the same ornate acanthus-leaf border. [image 1] is the layout: keep both islands exactly where they are and exactly as small as they are, with the same wide stretch of open sea between them and a clear margin inside the border; every coastline, harbour, quay, road, hill, terrace and building in the same place and at the same size, drawn from the same slightly raised view. On the Y-shaped island the round domed hall on the western arm and the round tiled hall on the eastern arm are the same size. One large ornate compass rose in the top-right corner, where the sea is empty. Open sea with a few wave marks in the bottom-left. No mainland, no text, no labels, no cartouche, no sea monsters.
+```
+The model keeps the style reference's strip of mainland coast in the bottom-left despite "no mainland"; it fills the corner and is kept.
