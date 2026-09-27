@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Many Copies, Acting as One — Arche</title>
+<link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <link rel="stylesheet" href="../../assets/css/daag.css">
 <link rel="stylesheet" href="../../assets/css/books.css">
 </head>
@@ -19,7 +20,8 @@
 <!-- ================= COVER ================= -->
 <header class="cover">
   <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · The Ring Road</div>
-  <h1 class="display" style="margin:18px 0 6px">Many Copies, Acting as One</h1>
+  <h1 class="display">Many Copies, Acting as One</h1>
+  <p class="basis">Based on “Linearizability: A Correctness Condition for Concurrent Objects” by Maurice Herlihy and Jeannette Wing (1990)</p>
   <p class="sub">When data is kept in several copies, what does it take for them to act as one?
   And who could ever tell the difference?</p>
   <div class="frame-cover portrait"><img src="../../assets/img/covers/many-copies-acting-as-one.jpg" width="896" height="1200"
@@ -88,6 +90,11 @@
     <p>Did anything go wrong? By the tallies, no: no slip joined the two orders, so either could come
     first. But House 2 knows, and so does anyone who talked to the goatherd, that House 1's order had
     been entered and confirmed before House 2 even asked. What the sun saw, House 1 was first.</p>
+    <p>The tallies have always had this gap. They respect every slip, and the goatherd carries none.
+    One answer is to make better clocks: clocks that run true, kept close together by the slips,
+    so that nobody crossing the mountain can arrive before he left<sup class="xref"><a href="../ordering-without-clocks/index.html#s9" title="Ordering Without Clocks: Clocks That Run With the World">*</a></sup>.
+    That is a way of catching the goatherd. The houses want something else: a promise about how
+    orders are filled that no goatherd can ever catch them breaking, whatever clocks they keep or do without.</p>
   </div>
 
   <div class="prose">
@@ -103,7 +110,7 @@
   <div class="issue"><span class="no">Chapter II</span><h2>The Rule of the Board</h2></div>
 
   <div class="prose">
-    <p>It has to be said in terms of what the houses themselves see. What does a house see of its
+    <p>A promise about orders has to be said in terms of what the houses themselves see. What does a house see of its
     order? Two moments: when it sends the order, and when the confirmation comes back. Somewhere in
     between, the order was put on the <span class="coin">board</span> where House 3 keeps its waiting
     orders. And serving? A <span class="coin">loader</span> at House 3 goes to the board, takes an
@@ -252,7 +259,7 @@
   <div class="issue"><span class="no">Chapter IV</span><h2>Two Kinds of First</h2></div>
 
   <div class="prose">
-    <p>They are not. For the tallies, one order is first if a chain of slips leads from it to the
+    <p>The rule and the tallies do not give the same answer. For the tallies, one order is first if a chain of slips leads from it to the
     other; orders no chain joins are put in sequence by tally and house number, fairly but
     arbitrarily<sup class="xref"><a href="../ordering-without-clocks/index.html#s2" title="Ordering Without Clocks: What Came Before">*</a></sup>.
     For the sun, one order is first if it was over before the other began, whether or not any slip

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Changing Leaders Among Liars — Mount Phyle</title>
+<link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <link rel="stylesheet" href="../../assets/css/daag.css">
 <link rel="stylesheet" href="../../assets/css/books.css">
 </head>
@@ -19,7 +20,8 @@
 <!-- ================= COVER ================= -->
 <header class="cover">
   <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · Mount Phyle</div>
-  <h1 class="display" style="margin:18px 0 6px">Changing Leaders Among Liars</h1>
+  <h1 class="display">Changing Leaders Among Liars</h1>
+  <p class="basis">Based on “HotStuff: BFT Consensus with Linearity and Responsiveness” by Maofan Yin, Dahlia Malkhi, Michael Reiter, Guy Golan Gueta and Ittai Abraham (2019)</p>
   <p class="sub">When some machines may lie, replacing a leader has been slow and costly. Can a new
   leader take over as cheaply as any ordinary step, and at the pace of the messages rather than of a
   timer?</p>
@@ -220,7 +222,7 @@
   <div class="issue"><span class="no">Chapter IV</span><h2>Never Two Entries</h2></div>
 
   <div class="prose">
-    <p>It cannot. Within a term, can two bundles of the same stage vouch for conflicting entries? No:
+    <p>Letting a lock go can never let a conflicting entry stand. Within a term, can two bundles of the same stage vouch for conflicting entries? No:
     each needs three seals out of four, the two threes share an honest man, and an honest man votes
     once a stage a
     term<sup class="xref"><a href="../keeping-order-among-liars/index.html#s4" title="Keeping Order Among Liars: Why Three Seals, and Four Men">*</a></sup>.
@@ -331,7 +333,7 @@
   <div class="issue"><span class="no">Chapter VI</span><h2>A New Holder Every Entry</h2></div>
 
   <div class="prose">
-    <p>It need not. Each entry still waits three stages, but the three stages all look alike: the holder sends something, the men
+    <p>The book need not take in entries more slowly. Each entry still waits three stages, but the three stages all look alike: the holder sends something, the men
     vote, the holder bundles the votes. So they can be run on top of one another. Each term the job
     passes to the next man, who proposes a new entry carrying the latest first bundle. A vote for it is
     also a second vote for the entry before it, and a third vote for the one before that.</p>

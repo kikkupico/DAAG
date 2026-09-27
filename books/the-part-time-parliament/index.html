@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Part-Time Parliament — Paxos</title>
+<link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <link rel="stylesheet" href="../../assets/css/daag.css">
 <link rel="stylesheet" href="../../assets/css/books.css">
 <style>
@@ -14,7 +15,7 @@
 }
 
 /* components carried over from the illustrated edition */
-.meander{height:18px; margin:34px auto; max-width:520px; border:0;
+.meander{height:18px; margin:var(--sp-5) auto; max-width:520px; border:0;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>");
   background-repeat:repeat-x; background-size:36px 18px; opacity:.75}
 figure.panel .frame{border:4px solid var(--ink); background:#fff; overflow:hidden;
@@ -24,25 +25,25 @@ figure.panel .frame{border:4px solid var(--ink); background:#fff; overflow:hidde
 .panel.narrow{max-width:560px}
 .panel.mid{max-width:700px}
 .panel.mid .img-placeholder, .panel.narrow .img-placeholder{aspect-ratio:4/3}
-h4.subsect{margin:40px 0 8px; font-family:Optima,'Gill Sans',sans-serif; font-size:1.06rem;
+h4.subsect{margin:var(--sp-4) 0 var(--sp-2); font-family:Optima,'Gill Sans',sans-serif; font-size:1.06rem;
   letter-spacing:.05em; color:var(--olive-d); text-transform:uppercase;}
-.narr{margin:26px auto; max-width:640px; background:var(--caption); border:3px solid var(--ink);
+.narr{margin:var(--sp-3) auto; max-width:640px; background:var(--caption); border:3px solid var(--ink);
   padding:10px 18px; font-family:'Chalkboard SE',Chalkboard,'Comic Sans MS',sans-serif;
   font-size:.9rem; box-shadow:5px 5px 0 var(--shadow); transform:rotate(-.35deg);}
-.editor-note{margin:30px auto; max-width:660px; background:#e7e2d6; border:3px solid var(--ink);
+.editor-note{margin:var(--sp-4) auto; max-width:660px; background:#e7e2d6; border:3px solid var(--ink);
   padding:18px 24px; font-size:.93rem; box-shadow:6px 6px 0 var(--shadow); position:relative;}
 .editor-note .tag{position:absolute; top:-15px; left:18px; background:var(--aegean); color:#fff;
   border:3px solid var(--ink); padding:2px 12px; font-family:Optima,sans-serif;
   font-size:.72rem; letter-spacing:.18em; text-transform:uppercase;}
 .editor-note .sig{text-align:right; font-style:italic; margin-bottom:0}
-.slab{margin:28px auto; max-width:680px; background:linear-gradient(180deg,#fbf9f4,#ece7da);
+.slab{margin:var(--sp-3) auto; max-width:680px; background:linear-gradient(180deg,#fbf9f4,#ece7da);
   border:3px solid var(--ink); box-shadow:6px 6px 0 var(--shadow); padding:4px 24px 10px;}
 .slab .slab-head{font-family:Optima,'Gill Sans',sans-serif; letter-spacing:.22em; text-transform:uppercase;
   font-size:.8rem; color:var(--terra); margin:12px 0 4px;}
 .slab .stmt{font-style:italic}
 .paxon{border-bottom:2px dotted var(--terra); cursor:help; font-style:italic; white-space:nowrap}
 #tip .who{color:var(--caption); font-weight:700; display:block; margin-bottom:2px}
-.paper-card{margin:38px auto; max-width:680px;
+.paper-card{margin:var(--sp-4) auto; max-width:680px;
   background:var(--marble); border:3px solid var(--ink);
   box-shadow:6px 7px 0 var(--shadow); padding:20px 26px;}
 .paper-card h4{margin:0 0 10px; font-family:Optima,'Gill Sans',sans-serif;
@@ -54,7 +55,7 @@ h4.subsect{margin:40px 0 8px; font-family:Optima,'Gill Sans',sans-serif; font-si
   font-family:Optima,'Gill Sans',sans-serif; letter-spacing:.06em; text-decoration:none;
   box-shadow:3px 3px 0 var(--shadow); text-transform:uppercase; font-weight:700;}
 .paper-btn:hover{background:var(--aegean-d); color:#fff; transform:translateY(-1px)}
-footer.colophon{margin-top:70px; text-align:center; font-size:.8rem; color:#6d5c42; font-style:italic}
+footer.colophon{margin-top:var(--sp-5); text-align:center; font-size:.8rem; color:#6d5c42; font-style:italic}
 
 /* the abstract in the book face, not the comic lettering */
 .narr{font-family:inherit; font-style:italic; font-size:.98rem}
@@ -69,28 +70,8 @@ a{color:var(--aegean-d)}
 
 .panel-row figure.panel{flex:1 1 330px; margin-top:20px}
 
-.cover .frame-cover{
-  display:block; margin:0 auto; max-width:620px; width:92%;
-  border:5px solid var(--ink); box-shadow:12px 13px 0 var(--shadow); background:#fff;
-  transform:rotate(-.4deg);
-}
-
-.cover .sub{
-  margin:26px auto 4px; max-width:620px; font-family:Optima,'Gill Sans',sans-serif;
-  font-size:1.02rem; color:#4a3d2c; letter-spacing:.02em;
-}
-
-
-.decree{
-  margin:22px auto; max-width:520px; text-align:center; position:relative;
-  background:linear-gradient(180deg,var(--marble),#eae4d4);
-  border:3px solid var(--ink); border-radius:4px;
-  padding:13px 26px 12px; font-style:italic; font-size:1.02rem;
-  box-shadow:5px 5px 0 var(--shadow), inset 0 0 0 4px rgba(193,145,43,.28);
-}
-
 .widget{
-  margin:40px auto; max-width:860px; border:4px solid var(--ink);
+  margin:var(--sp-4) auto; max-width:860px; border:4px solid var(--ink);
   background:linear-gradient(180deg,#efe6cf,#e4d5b0);
   box-shadow:9px 10px 0 var(--shadow);
 }
@@ -394,7 +375,7 @@ select.gk{border:3px solid var(--ink); background:#fdf6e4; padding:6px 8px; box-
 
 nav.toc li{margin:3px 0; -webkit-column-break-inside:avoid; break-inside:avoid}
 
-@media (max-width:640px){ nav.toc ol{columns:1} .panel-row{flex-direction:column} }
+@media (max-width:640px){ nav.toc ol{columns:1} .panel-row{flex-direction:column} .widget .wbody{padding:14px 12px 16px} .widget>.whead{padding:8px 12px} .editor-note, .paper-card{padding:16px} .slab{padding:4px 16px 10px} }
 </style>
 </head>
 <body>
@@ -410,7 +391,8 @@ nav.toc li{margin:3px 0; -webkit-column-break-inside:avoid; break-inside:avoid}
 <!-- ================= COVER ================= -->
 <header class="cover">
   <div class="kicker">Distributed Algorithms of Ancient Greece · Paxos · The Chamber</div>
-  <h1 class="display" style="margin:18px 0 6px">The Part-Time Parliament</h1>
+  <h1 class="display">The Part‑Time Parliament</h1>
+  <p class="basis">Leslie Lamport’s “The Part‑Time Parliament” (1998), verbatim</p>
   <p class="sub">The chronicle of the Paxon Parliament — the ancient legislative
   system whose protocol became <strong>Paxos</strong>, the foundation of modern fault-tolerant
   distributed computing.</p>
