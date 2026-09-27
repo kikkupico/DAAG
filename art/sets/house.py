@@ -7,10 +7,11 @@ building's extent) and writes art/sets/<name>.glb, art/sets/<name>.json (what th
 the book need to know: the board, the gate, the doors) and art/sets/<name>-strips.json (the
 ground art/sets/bake.py clears of Meshy's buildings before joining this in).
 
-The three houses are alike, so one builder serves all three. A house is one long stone range
+The three houses are alike, so one builder serves all three. A house is one long range, its
+walls lime-plastered over rubble on a bare rubble base,
 on the strip of land between the ring road and the quay, with its back to the road:
 - the clerks' office at one end, where the tallies and columns are kept, with a door and
-  shuttered windows onto the quay;
+  small high windows onto the quay;
 - the gate, a passage through the range from the road to the quay, where slips come in;
 - the storehouse at the other end, with loading doors onto the quay and slit windows high up;
 - a Doric portico the length of the range, on the quay, with a lean-to tiled roof;
@@ -59,7 +60,8 @@ def material(name, rgb, rough=0.8, metal=0.0):
     return m
 
 
-STONE = material("rubble-stone", (0.5, 0.46, 0.4), 0.9)
+STONE = material("plaster", (0.86, 0.82, 0.72), 0.9)          # lime plaster over rubble
+SOCLE = material("rubble-base", (0.5, 0.46, 0.4), 0.95)
 DRESSED = material("dressed-stone", (0.6, 0.56, 0.49), 0.8)
 TILE = material("terracotta", (0.5, 0.2, 0.12), 0.8)
 TIMBER = material("timber", (0.3, 0.19, 0.1), 0.75)
@@ -149,9 +151,9 @@ def wall_x(y0, y1, spans, z1=WH, sill=0.0):
 g0, g1 = P["gate"]
 sd0, sd1 = P["store_door"]
 od = (-7.8, -6.6)
-windows = [(-10.0, -9.2), (-5.4, -4.9)]
+windows = [(-10.0, -9.5), (-5.4, -5.0)]     # small and high: Greek buildings showed little to the street
 front = [(g0, g1, 0.0, 3.3), (sd0, sd1, 0.0, 2.7), (od[0], od[1], 0.0, 2.3)] + \
-        [(a, b, 1.3, 2.3) for a, b in windows] + \
+        [(a, b, 2.3, 2.9) for a, b in windows] + \
         [(x, x + 0.25, 3.1, 3.6) for x in (1.0, 3.2, 5.9)]     # slit windows high on the storehouse
 wall_x(0.0, W, front)
 wall_x(D - W, D, [(g0, g1, 0.0, 3.3)])
@@ -159,23 +161,18 @@ for x in (X0, X1 - W):
     shell.box((x, W, 0), (x + W, D - W, WH), STONE)
 for x in (g0 - W, g1):                                              # the gate passage's side walls
     shell.box((x, W, 0), (x + W, D - W, WH), STONE)
-# dressed quoins at the corners and a plinth course
-for x in (X0, X1 - 0.35):
-    for y in (0.0, D - 0.35):
-        for k in range(0, int(WH / 0.6)):
-            z = k * 0.6
-            shell.box((x - 0.03, y - 0.03, z), (x + 0.38, y + 0.38, z + 0.3), DRESSED)
-shell.box((X0 - 0.05, -0.08, 0), (X1 + 0.05, 0.0, 0.35), DRESSED)
+# the bare rubble base under the plaster, all round
+shell.box((X0 - 0.05, -0.08, 0), (X1 + 0.05, 0.0, 0.6), SOCLE)
+shell.box((X0 - 0.05, D, 0), (X1 + 0.05, D + 0.08, 0.6), SOCLE)
+for x in (X0 - 0.08, X1):
+    shell.box((x, 0, 0), (x + 0.08, D, 0.6), SOCLE)
 # door frames, lintels, and dark voids so openings read as openings
 for a, b, zt in ((g0, g1, 3.3), (sd0, sd1, 2.7), (od[0], od[1], 2.3)):
     shell.box((a - 0.18, -0.12, 0), (a, 0.0, zt + 0.15), DRESSED)
     shell.box((b, -0.12, 0), (b + 0.18, 0.0, zt + 0.15), DRESSED)
     shell.box((a - 0.3, -0.14, zt), (b + 0.3, 0.02, zt + 0.35), DRESSED)
 for a, b in windows:
-    shell.box((a - 0.1, -0.12, 1.2), (b + 0.1, 0.0, 1.3), DRESSED)
-    shell.box((a - 0.1, -0.12, 2.3), (b + 0.1, 0.0, 2.42), DRESSED)
-    for s, x in ((-1, a), (1, b)):                                   # shutters folded back
-        shell.box((x + (0 if s > 0 else -0.4), -0.1, 1.3), (x + (0.4 if s > 0 else 0), -0.06, 2.3), TIMBER)
+    shell.box((a - 0.1, -0.12, 2.9), (b + 0.1, 0.0, 3.02), TIMBER)                # a timber lintel
 # the storehouse's double doors, one leaf open
 shell.box((sd0, 0.1, 0.02), ((sd0 + sd1) / 2, 0.18, 2.66), TIMBER)
 shell.box((sd1 - 0.06, -0.8, 0.02), (sd1, 0.1, 2.66), TIMBER)
