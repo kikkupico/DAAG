@@ -680,7 +680,7 @@
     container.appendChild(renderer.domElement);
 
     // Initial camera position (overview looking at both islands)
-    camera.position.set(-25, 560, 980);
+    camera.position.set(30, 620, 1080);
 
     // -------------------------------------------------------------------------
     // Controls: Orbit + Freecam
@@ -691,7 +691,7 @@
     orbitControls.maxPolarAngle = Math.PI / 2 - 0.02; // prevent dipping under water
     orbitControls.minDistance = 0.5;
     orbitControls.maxDistance = 2000;
-    orbitControls.target.set(-25, 0, 20);
+    orbitControls.target.set(30, 0, 20);
 
     let controlMode = 'orbit'; // 'orbit' or 'fly'
     const keys = { w: false, a: false, s: false, d: false, q: false, e: false, shift: false };
@@ -840,13 +840,16 @@
     // models are ~2 units across; their buildings set the size, so that a 1.75 m person fits
     // the harbour's quays and terraces: Arche is ~280 m across (150 m per model unit), far
     // smaller than canon's island. Paxos is set by eye so that a person beside the rotunda
-    // looks right: 104 m per unit, ~190 m across. The same numbers are in art/islands.json,
+    // looks right: 175 m per unit (its road matches Arche's), ~330 m long. The same numbers are in art/islands.json,
     // which render.py and the set scripts read; keep the two in step.
     let islandSeparation = 260;
     const ARCHE_SCALE = 150;
     // Arche's model has its north harbour towards its -Z; a quarter turn puts it due north (-X).
     const ARCHE_YAW = Math.PI / 2;
-    const PAXOS_SCALE = 104;
+    const PAXOS_SCALE = 175;
+    // Paxos, scaled so its roads and harbours match Arche's, lies further east than the separation
+    // alone would put it; art/islands.json has its centre at x = 220.
+    const PAXOS_EAST = 90;
     // The model's arms point along its +Z; a quarter turn points them north (-X), as canon has it.
     const PAXOS_YAW = -Math.PI / 2;
     let seaLevelOffset = 0.0;
@@ -854,7 +857,7 @@
     function applyTransforms() {
       // Arche on West (-X), Paxos on East (+X)
       archeGroup.position.set(-islandSeparation / 2, seaLevelOffset, 0);
-      paxosGroup.position.set(islandSeparation / 2, seaLevelOffset, 36);
+      paxosGroup.position.set(islandSeparation / 2 + PAXOS_EAST, seaLevelOffset, 36);
 
       archeGroup.scale.setScalar(ARCHE_SCALE);
       archeGroup.rotation.y = ARCHE_YAW;
@@ -1030,7 +1033,7 @@
 
     btnOverview.addEventListener('click', () => {
       setActiveViewBtn(btnOverview);
-      transitionTo(new THREE.Vector3(-25, 560, 980), new THREE.Vector3(-25, 0, 20));
+      transitionTo(new THREE.Vector3(30, 620, 1080), new THREE.Vector3(30, 0, 20));
     });
 
     btnArche.addEventListener('click', () => {
@@ -1040,7 +1043,7 @@
 
     btnPaxos.addEventListener('click', () => {
       setActiveViewBtn(btnPaxos);
-      transitionTo(new THREE.Vector3(islandSeparation / 2, 190, 380), new THREE.Vector3(islandSeparation / 2, 10, 36));
+      transitionTo(new THREE.Vector3(islandSeparation / 2 + PAXOS_EAST, 300, 560), new THREE.Vector3(islandSeparation / 2 + PAXOS_EAST, 10, 36));
     });
 
     btnSeaLevel.addEventListener('click', () => {
@@ -1319,7 +1322,7 @@
       if (!activeSet) { carveU.uCarveOn.value = 0; return; }
       const { def, root } = activeSet;
       const group = setGroup(def);
-      const home = def.island === 'paxos' ? new THREE.Vector3(130, 0, 36) : new THREE.Vector3(-130, 0, 0);
+      const home = def.island === 'paxos' ? new THREE.Vector3(220, 0, 36) : new THREE.Vector3(-130, 0, 0);
       group.updateMatrixWorld(true);
       const world = new THREE.Vector3(...def.at).add(group.position.clone().sub(home));
       root.position.copy(group.worldToLocal(world.clone()));

@@ -143,13 +143,13 @@ else:                                                                           
         M = Matrix.Translation((fx, -fz, fl)) @ Matrix.Rotation(fyaw, 4, "Z")
         for r in range(fg.get("rows", 3)):
             for c in range(fg.get("per_row", 2)):
-                x, y = -4.0 + c * 5.0, -3.0 + r * 3.0
+                x, y = (c - (fg.get("per_row", 2) - 1) / 2) * 5.0, -3.0 + r * 3.0
                 box((x - 1.8, y - 0.4, 0.72), (x + 1.8, y + 0.4, 0.8), ASHLAR)
                 for sx in (-1.4, 1.4):
                     box((x + sx - 0.15, y - 0.3, 0.0), (x + sx + 0.15, y + 0.3, 0.72), ASHLAR)
                 for sy in (-0.8, 0.8):                                              # benches either side
                     box((x - 1.8, y + sy - 0.15, 0.0), (x + 1.8, y + sy + 0.15, 0.45), ASHLAR)
-        strips.append({"at": fg["at"], "half": [7.5, 5.5], "rot": math.degrees(-fyaw), "pad": fl - 0.05})
+        strips.append({"at": fg["at"], "half": [2.5 * fg.get("per_row", 2) + 2.5, 5.5], "rot": math.degrees(-fyaw), "pad": fl - 0.05})
 
 me = bpy.data.meshes.new("shell")
 bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
