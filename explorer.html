@@ -680,7 +680,7 @@
     container.appendChild(renderer.domElement);
 
     // Initial camera position (overview looking at both islands)
-    camera.position.set(0, 330, 580);
+    camera.position.set(-25, 560, 980);
 
     // -------------------------------------------------------------------------
     // Controls: Orbit + Freecam
@@ -691,7 +691,7 @@
     orbitControls.maxPolarAngle = Math.PI / 2 - 0.02; // prevent dipping under water
     orbitControls.minDistance = 0.5;
     orbitControls.maxDistance = 2000;
-    orbitControls.target.set(0, 0, 20);
+    orbitControls.target.set(-25, 0, 20);
 
     let controlMode = 'orbit'; // 'orbit' or 'fly'
     const keys = { w: false, a: false, s: false, d: false, q: false, e: false, shift: false };
@@ -1030,12 +1030,12 @@
 
     btnOverview.addEventListener('click', () => {
       setActiveViewBtn(btnOverview);
-      transitionTo(new THREE.Vector3(0, 330, 580), new THREE.Vector3(0, 0, 20));
+      transitionTo(new THREE.Vector3(-25, 560, 980), new THREE.Vector3(-25, 0, 20));
     });
 
     btnArche.addEventListener('click', () => {
       setActiveViewBtn(btnArche);
-      transitionTo(new THREE.Vector3(-islandSeparation / 2, 150, 270), new THREE.Vector3(-islandSeparation / 2, 10, 0));
+      transitionTo(new THREE.Vector3(-islandSeparation / 2, 240, 380), new THREE.Vector3(-islandSeparation / 2, 10, 0));
     });
 
     btnPaxos.addEventListener('click', () => {
