@@ -90,50 +90,62 @@
   </div>
   <figure class="diagram">
     <div class="board">
-      <svg viewBox="0 0 660 380" role="img" aria-label="Space-time diagram of three trading houses. Time runs downward. Events are dots on each house's lifeline; slips carried by messengers are arrows. Events p2 and r3 are unrelated.">
+      <svg viewBox="0 0 600 560" role="img" aria-label="Space-time diagram of three trading houses drawn in the round. H1, H2 and H3 each have a line running outward, the house at one moment after another; each ring outward is a later moment. Events are dots on each house's spoke; slips carried by messengers are arcs running round the circle and outward. Events p2 and r3 are unrelated.">
+        <!-- polar:owc-spacetime -->
         <defs>
-          <marker id="ah1" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+          <marker id="owc-spacetime-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
           </marker>
+          <marker id="owc-spacetime-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
+          </marker>
         </defs>
-
-        <text class="d-house" x="120" y="30" text-anchor="middle">HOUSE 1</text>
-        <text class="d-house" x="330" y="30" text-anchor="middle">HOUSE 2</text>
-        <text class="d-house" x="540" y="30" text-anchor="middle">HOUSE 3</text>
-        <line class="d-lifeline" x1="120" y1="46" x2="120" y2="350"/>
-        <line class="d-lifeline" x1="330" y1="46" x2="330" y2="350"/>
-        <line class="d-lifeline" x1="540" y1="46" x2="540" y2="350"/>
-
-        <line class="d-faint" x1="34" y1="60" x2="34" y2="340"/>
-        <text class="d-note" x="30" y="200" text-anchor="middle" transform="rotate(-90 30 200)">time, later downward</text>
-
-        <!-- messages -->
-        <path class="d-msg" marker-end="url(#ah1)" d="M120,80 L330,165"/>
-        <path class="d-msg" marker-end="url(#ah1)" d="M330,105 L540,160"/>
-        <path class="d-msg" marker-end="url(#ah1)" d="M540,88 L120,220"/>
-        <path class="d-msg" marker-end="url(#ah1)" d="M330,245 L540,305"/>
-
-        <!-- events -->
-        <circle class="d-ev" cx="120" cy="80" r="5"/><text class="d-lbl" x="106" y="78" text-anchor="end">p₁</text>
-        <circle class="d-ev-hi" cx="120" cy="145" r="5.5"/><text class="d-lbl" x="106" y="143" text-anchor="end">p₂</text>
-        <circle class="d-ev" cx="120" cy="220" r="5"/><text class="d-lbl" x="106" y="218" text-anchor="end">p₃</text>
-        <circle class="d-ev" cx="120" cy="295" r="5"/><text class="d-lbl" x="106" y="293" text-anchor="end">p₄</text>
-
-        <circle class="d-ev" cx="330" cy="105" r="5"/><text class="d-lbl" x="316" y="103" text-anchor="end">q₁</text>
-        <circle class="d-ev" cx="330" cy="165" r="5"/><text class="d-lbl" x="316" y="163" text-anchor="end">q₂</text>
-        <circle class="d-ev" cx="330" cy="245" r="5"/><text class="d-lbl" x="316" y="243" text-anchor="end">q₃</text>
-        <circle class="d-ev" cx="330" cy="315" r="5"/><text class="d-lbl" x="316" y="313" text-anchor="end">q₄</text>
-
-        <circle class="d-ev" cx="540" cy="88" r="5"/><text class="d-lbl" x="554" y="86">r₁</text>
-        <circle class="d-ev" cx="540" cy="160" r="5"/><text class="d-lbl" x="554" y="158">r₂</text>
-        <circle class="d-ev-hi" cx="540" cy="235" r="5.5"/><text class="d-lbl" x="554" y="233">r₃</text>
-        <circle class="d-ev" cx="540" cy="305" r="5"/><text class="d-lbl" x="554" y="303">r₄</text>
-
-        <text class="d-note" x="330" y="365" text-anchor="middle">p₂ and r₃ are unrelated: no path of messengers joins them in either direction</text>
+        
+        <circle cx="300" cy="282" r="108" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="300" cy="282" r="150" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="300" cy="282" r="192" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="300" cy="282" r="234" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <path id="owc-spacetime-time" fill="none" d="M62.4,218.3 A246,246 0 0 1 236.3,44.4"/>
+        <text class="d-note"><textPath href="#owc-spacetime-time" startOffset="50%" text-anchor="middle">time, later outward</textPath></text>
+        <line class="d-lifeline" x1="300" y1="216" x2="300" y2="34.1"/>
+        <line class="d-lifeline" x1="357.2" y1="315" x2="514.7" y2="405.9"/>
+        <line class="d-lifeline" x1="242.8" y1="315" x2="85.3" y2="405.9"/>
+        <rect class="d-node" x="285" y="205" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="300" y="220.5" text-anchor="middle" fill="#1c1512">H1</text>
+        <rect class="d-node" x="342.2" y="304" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="357.2" y="319.5" text-anchor="middle" fill="#1c1512">H2</text>
+        <rect class="d-node" x="227.8" y="304" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="242.8" y="319.5" text-anchor="middle" fill="#1c1512">H3</text>
+        <path class="d-msg" marker-end="url(#owc-spacetime-b)" d="M300,174 L305.7,173.1 L311.5,172.5 L317.4,172.2 L323.3,172.3 L329.3,172.6 L335.3,173.3 L341.3,174.3 L347.3,175.7 L353.3,177.4 L359.2,179.4 L365.1,181.7 L370.9,184.4 L376.6,187.5 L382.1,190.8 L387.5,194.5 L392.7,198.5 L397.8,202.8 L402.7,207.4 L407.3,212.3 L411.7,217.5 L415.9,223 L419.8,228.7 L423.4,234.6 L426.7,240.8 L429.7,247.3 L432.3,253.9 L434.7,260.7 L436.6,267.6 L438.3,274.8 L439.5,282 L440.4,289.4 L440.8,296.8 L440.9,304.3 L440.6,311.9 L439.8,319.5 L438.7,327.1 L437.1,334.6 L435.1,342.2 L432.7,349.6"/>
+        <path class="d-msg" marker-end="url(#owc-spacetime-b)" d="M393.5,336 L391.5,341.4 L389.1,346.7 L386.4,351.9 L383.4,357.1 L380.1,362.1 L376.5,366.9 L372.6,371.6 L368.4,376.2 L364,380.5 L359.2,384.6 L354.3,388.5 L349.1,392.2 L343.6,395.6 L337.9,398.7 L332,401.5 L325.9,404.1 L319.7,406.3 L313.3,408.2 L306.7,409.8 L300,411 L293.2,411.9 L286.3,412.4 L279.3,412.5 L272.3,412.3 L265.3,411.7 L258.2,410.7 L251.1,409.3 L244.1,407.5 L237.1,405.4 L230.3,402.8 L223.5,399.9 L216.8,396.6 L210.2,392.9 L203.8,388.8 L197.6,384.4 L191.6,379.6 L185.9,374.4 L180.3,368.9 L175.1,363.1"/>
+        <path class="d-msg" marker-end="url(#owc-spacetime-b)" d="M206.5,336 L201.9,332 L197.5,327.6 L193.3,323 L189.3,318 L185.5,312.7 L182,307.1 L178.8,301.2 L175.9,295 L173.3,288.6 L171,282 L169.1,275.1 L167.5,268.1 L166.4,260.8 L165.6,253.4 L165.3,245.9 L165.3,238.2 L165.8,230.5 L166.8,222.7 L168.2,214.9 L170.1,207 L172.4,199.2 L175.2,191.4 L178.5,183.6 L182.3,176 L186.5,168.5 L191.2,161.2 L196.4,154 L202,147.1 L208,140.3 L214.5,133.9 L221.4,127.8 L228.7,121.9 L236.5,116.5 L244.6,111.4 L253,106.7 L261.8,102.4 L271,98.6 L280.4,95.2 L290.1,92.4"/>
+        <path class="d-msg" marker-end="url(#owc-spacetime-b)" d="M466.3,378 L461.9,387.1 L457,396.1 L451.7,404.8 L445.8,413.3 L439.5,421.5 L432.7,429.4 L425.5,436.9 L417.8,444.1 L409.7,451 L401.2,457.4 L392.4,463.4 L383.2,468.9 L373.7,474 L363.9,478.6 L353.8,482.7 L343.4,486.2 L332.8,489.3 L322,491.7 L311.1,493.7 L300,495 L288.8,495.8 L277.5,495.9 L266.2,495.5 L254.8,494.5 L243.5,492.8 L232.2,490.6 L221,487.7 L209.9,484.3 L199,480.2 L188.3,475.6 L177.7,470.3 L167.4,464.5 L157.4,458.1 L147.6,451.2 L138.2,443.8 L129.2,435.8 L120.6,427.3 L112.4,418.3 L104.6,408.9"/>
+        <circle class="d-ev" cx="300" cy="174" r="5"/>
+        <text class="d-lbl d-halo" x="287" y="178" text-anchor="end">p₁</text>
+        <circle class="d-ev-hi" cx="300" cy="132" r="5.5"/>
+        <text class="d-lbl d-halo" x="287" y="136" text-anchor="end">p₂</text>
+        <circle class="d-ev" cx="300" cy="90" r="5"/>
+        <text class="d-lbl d-halo" x="313" y="94" text-anchor="start">p₃</text>
+        <circle class="d-ev" cx="300" cy="48" r="5"/>
+        <text class="d-lbl d-halo" x="287" y="52" text-anchor="end">p₄</text>
+        <circle class="d-ev" cx="393.5" cy="336" r="5"/>
+        <text class="d-lbl d-halo" x="400" y="328.7" text-anchor="start">q₁</text>
+        <circle class="d-ev" cx="429.9" cy="357" r="5"/>
+        <text class="d-lbl d-halo" x="423.4" y="372.3" text-anchor="end">q₂</text>
+        <circle class="d-ev" cx="466.3" cy="378" r="5"/>
+        <text class="d-lbl d-halo" x="472.8" y="370.7" text-anchor="start">q₃</text>
+        <circle class="d-ev" cx="502.6" cy="399" r="5"/>
+        <text class="d-lbl d-halo" x="509.1" y="391.7" text-anchor="start">q₄</text>
+        <circle class="d-ev" cx="206.5" cy="336" r="5"/>
+        <text class="d-lbl d-halo" x="213" y="351.3" text-anchor="start">r₁</text>
+        <circle class="d-ev" cx="170.1" cy="357" r="5"/>
+        <text class="d-lbl d-halo" x="163.6" y="349.7" text-anchor="end">r₂</text>
+        <circle class="d-ev-hi" cx="133.7" cy="378" r="5.5"/>
+        <text class="d-lbl d-halo" x="140.2" y="393.3" text-anchor="start">r₃</text>
+        <circle class="d-ev" cx="97.4" cy="399" r="5"/>
+        <text class="d-lbl d-halo" x="90.9" y="391.7" text-anchor="end">r₄</text>
+        <text class="d-note" x="300" y="548" text-anchor="middle">p₂ and r₃ are unrelated: no path of messengers joins them in either direction</text>
       </svg>
     </div>
-    <figcaption><b>The space-time diagram of Arche.</b> Lifelines run downward. Slips carried along
-    the ring road run diagonally. Two events with no connecting path are unrelated.</figcaption>
+    <figcaption><b>The space-time diagram of Arche.</b> Each line is one house, H1, H2 or H3, at
+    one moment after another; each ring further out is later. Slips curve round from house to house. Two events with no connecting path are unrelated.</figcaption>
   </figure>
   <div class="prose">
     <p>How is a clerk to calculate with this? Lamportios gave every house a <span class="coin">tally</span>: a number kept in the counting room, written on every slip sent out, and raised by two mechanical rules.</p>
