@@ -6,6 +6,8 @@ The terrain plates are drawn bare, so Meshy reads the land's true shape; this pl
 reads the set's `flora` entry in art/sets/sets.json and writes art/sets/<name>.glb in explorer
 coords (origin at the world's origin), which art/sets/bake.py joins without levelling ground.
 
+The plants are Meshy models of real species (art/flora/, one sheet cut apart by
+art/flora/split.py), scattered as copies, each turned, leaned and sized a little differently.
 Planting follows the setting: olive groves on the gentle ground round each town, maritime pine,
 holm oak and cypress on the lower spurs, maquis thickening upslope, and bare limestone round the
 crown. Nothing grows in the sea, on cliffs too steep to hold soil, within `road_clear` metres of
@@ -13,7 +15,7 @@ the road (`road_loop`, waypoints traced from a top view, plus each town's traced
 quays (flat ground near the water), on any building's ground (`avoid_sets`' strips), or within
 `crown.r` of the summit. Plants clump, by a smoothed random field, as scrub and woods do.
 """
-import bpy, bmesh, json, math, random, sys
+import bpy, json, math, random, sys
 import numpy as np
 from mathutils import Vector, Matrix
 from mathutils.bvhtree import BVHTree
@@ -120,70 +122,56 @@ town_d = np.min([np.hypot(XX - tx, ZZ - tz) for tx, tz in F["towns"]], axis=0)
 alt = np.clip(H / top, 0, 1)
 
 
-def material(name, rgb, rough=0.85):
-    m = bpy.data.materials.new(name)
-    m.use_nodes = True
-    b = m.node_tree.nodes["Principled BSDF"]
-    b.inputs["Base Color"].default_value = (*rgb, 1)
-    b.inputs["Roughness"].default_value = rough
-    return m
-
-
-MATS = {"trunk": material("bark", (0.24, 0.18, 0.12)), "pine": material("pine-needles", (0.13, 0.2, 0.1)),
-        "oak": material("holm-oak-leaves", (0.15, 0.21, 0.11)), "olive": material("olive-leaves", (0.36, 0.41, 0.3)),
-        "cypress": material("cypress", (0.09, 0.15, 0.08)), "maquis": material("maquis", (0.26, 0.29, 0.16)),
-        "maquis2": material("maquis-dry", (0.36, 0.34, 0.2))}
-ORDER = list(MATS)
-bm = bmesh.new()
-
-
-def blob(c, size, mat, sub=1, jitter=0.12):
-    M = Matrix.Translation(c) @ Matrix.Rotation(rng.uniform(0, 6.3), 4, "Z") @ Matrix.Diagonal((*size, 1))
-    vs = bmesh.ops.create_icosphere(bm, subdivisions=sub, radius=0.5, matrix=Matrix())["verts"]
-    for v in vs:
-        v.co = M @ (v.co * (1 + rng.uniform(-jitter, jitter)))
-    k = ORDER.index(mat)
-    for f in {f for v in vs for f in v.link_faces}:
-        f.material_index = k
-
-
-def trunk(c, h, r, lean=0.0):
-    M = (Matrix.Translation(c) @ Matrix.Rotation(rng.uniform(0, 6.3), 4, "Z") @ Matrix.Rotation(lean, 4, "X")
-         @ Matrix.Translation((0, 0, h / 2)))
-    g = bmesh.ops.create_cone(bm, cap_ends=True, segments=6, radius1=r, radius2=r * 0.7, depth=h, matrix=M)
-    k = ORDER.index("trunk")
-    for f in {f for v in g["verts"] for f in v.link_faces}:
-        f.material_index = k
+# The plants: Meshy models of a sheet of real species (art/flora/, made by art/flora/split.py),
+# all cut from one model, so they share one texture and one material.
+ASSETS = {"pine": ["pine-1", "pine-2", "pine-3"], "oak": ["oak-1", "oak-2"], "olive": ["olive-1", "olive-2"],
+          "cypress": ["cypress-1", "cypress-2"], "maquis": ["shrub-1", "shrub-2", "shrub-3"]}
+SIZE = {"pine": (0.55, 0.85), "oak": (0.7, 1.05), "olive": (0.8, 1.1), "cypress": (0.6, 0.9), "maquis": (0.8, 1.4)}
+TEMPLATES = {}
+shared = None
+for names in ASSETS.values():
+    for n in names:
+        before = set(bpy.data.objects)
+        bpy.ops.import_scene.gltf(filepath=f"art/flora/{n}.glb")
+        o = next(x for x in set(bpy.data.objects) - before if x.type == "MESH")
+        o.data.transform(o.matrix_world)
+        o.matrix_world.identity()
+        if shared is None:
+            # Meshy's texture is grey-green and cold; warm and green it, as sunlit Mediterranean
+            # foliage is, by multiplying the base colour
+            shared = o.data.materials[0]
+            nt = shared.node_tree
+            bsdf = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
+            link = next((l for l in nt.links if l.to_socket == bsdf.inputs["Base Color"]), None)
+            if link:
+                mix = nt.nodes.new("ShaderNodeMix")
+                mix.data_type = "RGBA"
+                mix.blend_type = "MULTIPLY"
+                mix.inputs["Factor"].default_value = 1.0
+                mix.inputs["B"].default_value = (0.95, 1.1, 0.62, 1)
+                nt.links.new(link.from_socket, mix.inputs["A"])
+                nt.links.new(mix.outputs["Result"], bsdf.inputs["Base Color"])
+        o.data.materials[0] = shared
+        bpy.context.scene.collection.objects.unlink(o) if o.name in bpy.context.scene.collection.objects else None
+        for c in o.users_collection:
+            c.objects.unlink(o)
+        TEMPLATES[n] = o
+placed = []
 
 
 def plant(kind, c, s):
-    """One plant of `kind` standing at c (blender coords), scaled by s."""
-    if kind == "pine":                       # maritime pine: tall bare trunk, a spread umbrella crown
-        h = 6.5 * s
-        trunk(c, h, 0.2 * s, rng.uniform(-0.15, 0.15))
-        for _ in range(3):
-            blob(c + Vector((rng.uniform(-1, 1) * s, rng.uniform(-1, 1) * s, h + rng.uniform(-0.3, 0.4) * s)),
-                 (3.2 * s, 3.0 * s, 1.3 * s), "pine")
-    elif kind == "oak":                      # holm oak: short trunk, a dense round crown
-        trunk(c, 1.6 * s, 0.22 * s)
-        for _ in range(3):
-            blob(c + Vector((rng.uniform(-1, 1) * s, rng.uniform(-1, 1) * s, (2.6 + rng.uniform(0, 1)) * s)),
-                 (3.0 * s, 2.8 * s, 2.4 * s), "oak")
-    elif kind == "olive":                    # olive: gnarled low trunk, a loose silvery crown
-        trunk(c, 1.2 * s, 0.2 * s, rng.uniform(-0.25, 0.25))
-        for _ in range(2):
-            blob(c + Vector((rng.uniform(-0.6, 0.6) * s, rng.uniform(-0.6, 0.6) * s, 2.0 * s)),
-                 (2.6 * s, 2.4 * s, 1.7 * s), "olive", jitter=0.2)
-    elif kind == "cypress":                  # cypress: a tall dark flame
-        trunk(c, 0.8 * s, 0.15 * s)
-        blob(c + Vector((0, 0, 4.2 * s)), (1.4 * s, 1.4 * s, 8.0 * s), "cypress", jitter=0.06)
-    else:                                    # maquis: low rounded shrubs
-        blob(c + Vector((0, 0, 0.45 * s)), (1.6 * s, 1.4 * s, 1.0 * s), rng.choice(["maquis", "maquis", "maquis2"]),
-             sub=1, jitter=0.2)
+    """One plant of `kind` standing at c (blender coords), scaled by s: a linked copy of one
+    of the species' models, turned at random and leaning a little."""
+    o = rng.choice([TEMPLATES[n] for n in ASSETS[kind]]).copy()
+    o.location = c
+    o.rotation_euler = (rng.uniform(-0.06, 0.06), rng.uniform(-0.06, 0.06), rng.uniform(0, 2 * math.pi))
+    o.scale = (s * rng.uniform(0.9, 1.1), s * rng.uniform(0.9, 1.1), s)
+    bpy.context.scene.collection.objects.link(o)
+    placed.append(o)
 
 
 counts = {}
-step = F.get("step", 2.6)
+step = F.get("step", 3.2)
 gx0 = xmin + step / 2
 x = gx0
 while x < xmax:
@@ -209,16 +197,20 @@ while x < xmax:
         if rng.random() > p:
             continue
         # the base sits a little into the ground so slopes show no gap
-        plant(kind, Vector((px, -pz, float(H[i, j]) - 0.15)), rng.uniform(0.75, 1.2))
+        plant(kind, Vector((px, -pz, float(H[i, j]) - 0.15)), rng.uniform(*SIZE[kind]))
         counts[kind] = counts.get(kind, 0) + 1
     x += step
 
-me = bpy.data.meshes.new("shell")
-bm.to_mesh(me)
-for k in ORDER:
-    me.materials.append(MATS[k])
-o = bpy.data.objects.new("shell", me)
-bpy.context.scene.collection.objects.link(o)
-bpy.ops.object.select_all(action="SELECT")
+# join every plant into one object (the linked copies become real geometry)
+bpy.ops.object.select_all(action="DESELECT")
+for o in placed:
+    o.select_set(True)
+bpy.context.view_layer.objects.active = placed[0]
+bpy.ops.object.make_single_user(object=True, obdata=True)
+bpy.ops.object.join()
+joined = bpy.context.view_layer.objects.active
+joined.name = "shell"
+bpy.ops.object.select_all(action="DESELECT")
+joined.select_set(True)
 bpy.ops.export_scene.gltf(filepath=f"art/sets/{NAME}.glb", use_selection=True)
-print("FLORA", NAME, counts, len(me.polygons), "faces")
+print("FLORA", NAME, counts, len(joined.data.polygons), "faces")
