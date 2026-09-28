@@ -10,7 +10,7 @@ Reads the set's `town` entry in art/sets/sets.json:
   several into one blob; a found building over any extra's centre is dropped in its favour;
 - `plan`: where to write the plan.
 
-It casts rays down on the untouched Meshy model (the set's `bake.source`), placed as the
+It casts rays down on the untouched Meshy model (the island's `source` in art/islands.json), placed as the
 explorer places it, and takes as a building every patch that stands well above the ground
 round it. Each patch gets the smallest rectangle that holds it, the ground height from a high
 point of the ring just outside it (so on a slope the building stands at its uphill ground), and a kind: `hall` if long and narrow, `court` if broad, and
@@ -24,13 +24,14 @@ from mathutils.bvhtree import BVHTree
 NAME = sys.argv[sys.argv.index("--") + 1]
 SITE = json.load(open("art/sets/sets.json"))[NAME]
 T = SITE["town"]
-ISLANDS = {"arche": (95.0, (-130.0, 0.0), 20.0), "paxos": (104.0, (130.0, 36.0), -90.0)}
+ISLANDS = {k: (v["scale"], tuple(v["centre"]), v["yaw"])    # from art/islands.json
+           for k, v in json.load(open("art/islands.json")).items() if not k.startswith("_")}
 SCALE, (X0, Z0), YAW = ISLANDS[SITE["island"]]
 D = 0.5
 xmin, xmax, zmin, zmax = T["region"]
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
-bpy.ops.import_scene.gltf(filepath=SITE["bake"]["source"])
+bpy.ops.import_scene.gltf(filepath=json.load(open("art/islands.json"))[SITE["island"]]["source"])
 island = [o for o in bpy.context.scene.objects if o.type == "MESH"][0]
 bb = [island.matrix_world @ Vector(c) for c in island.bound_box]
 cx = (min(v.x for v in bb) + max(v.x for v in bb)) / 2

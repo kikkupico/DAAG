@@ -2,7 +2,7 @@
 
     blender -b -P art/sets/bake.py -- <paxos|arche>
 
-Reads the untouched Meshy conversion (the sets' `bake.source`), never the island's live GLB
+Reads the untouched Meshy conversion (the island's `source` in art/islands.json), never its live GLB
 itself, so running it again never flattens twice, and writes art/<island>-3d.glb. For each
 baked set (on Paxos the Tholos, which replaces the Odeon Meshy drew on the eastern arm, and
 the Chamber, which replaces Meshy's rotunda; on Arche the port of House 3):
@@ -20,19 +20,16 @@ units and frame, so the bounding box and every camera framed on the model stay p
 import bpy, bmesh, json, math, sys
 from mathutils import Vector, Matrix
 
-ISLANDS = {   # metres per model unit, explorer centre (x, z), yaw: as render.py's ISLANDS
-    "arche": (95.0, (-130.0, 0.0), 20.0),
-    "paxos": (104.0, (130.0, 36.0), -90.0),
-}
+ISLANDS = {k: (v["scale"], tuple(v["centre"]), v["yaw"])    # from art/islands.json
+           for k, v in json.load(open("art/islands.json")).items() if not k.startswith("_")}
 NAME = sys.argv[sys.argv.index("--") + 1]
 SCALE, (X0, Z0), YAW = ISLANDS[NAME]
 SETS = {k: v for k, v in json.load(open("art/sets/sets.json")).items()
         if not k.startswith("_") and v.get("bake") and v["island"] == NAME}
-source = {s["bake"]["source"] for s in SETS.values()}
-assert len(source) == 1, source
+ISLAND = json.load(open("art/islands.json"))[NAME]
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
-bpy.ops.import_scene.gltf(filepath=source.pop())
+bpy.ops.import_scene.gltf(filepath=ISLAND["source"])
 island = [o for o in bpy.context.scene.objects if o.type == "MESH"][0]
 M0 = island.matrix_world.copy()
 
@@ -189,5 +186,5 @@ for o in list(bpy.data.objects):
         bpy.data.objects.remove(o)
 bpy.ops.object.select_all(action="DESELECT")
 island.select_set(True)
-bpy.ops.export_scene.gltf(filepath=f"art/{NAME}-3d.glb", use_selection=True)
-print("BAKED", ", ".join(SETS), f"into art/{NAME}-3d.glb")
+bpy.ops.export_scene.gltf(filepath=ISLAND["glb"], use_selection=True)
+print("BAKED", ", ".join(SETS), "into", ISLAND["glb"])
