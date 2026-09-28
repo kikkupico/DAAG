@@ -214,9 +214,9 @@ the Tholos of Schedia — and the scholars and copyists, who keep many copies an
 Putting them on one island makes the difference a walk: the scholars could take any question
 to an assembly, and the hall of two doors shows which questions need one.
 
-**The island is a Y, and its shape groups the papers.** Two arms reach north: the western arm
-holds the Chamber, the eastern arm the city of **Schedia** and its Tholos, and the two face each
-other across the bay between the arms. The two ways of keeping one law book share the top of
+**The island is a Y, and its shape groups the papers.** Two arms reach north, spreading a little as
+natural arms do: the western arm holds the Chamber, the eastern arm the city of **Schedia** and
+its Tholos, and the two look at each other across the bay between the arms. The two ways of keeping one law book share the top of
 the island. The arms join at a fork, and below it the stem widens into the body of the island,
 the scholars' coast, which eventual consistency has to itself. The hall of two doors stands at
 the fork.

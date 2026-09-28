@@ -330,6 +330,27 @@ Zero people.
 
 **Step 3 — 3D.** A Meshy image-to-3D conversion of this plate, downloaded without resizing, is the island model, `art/paxos-3d.glb`; the plate it was made from is `art/refs/paxos-plate.jpeg`. `explorer.html` and `art/previs/render.py` place it at 104 m per model unit, a scale set by eye so that a person beside the rotunda looks right, and give it a quarter turn, since the model's arms point along its +Z and canon's point north. Meshy lost the stoa's shoreline, so the stoa and festival ground stand in the sea off the east coast.
 
+### 3.1a Terrain Plate (bare land, for a model the buildings are added to)
+
+`art/refs/paxos-terrain-plate.png` is a bare-terrain plate, like Arche's (§2.1a): the two arms round the bay, the fork and the broad body, with the earthworks for every site and nothing built. The round terrace on the western arm is the Chamber's; the terrace above the eastern cove, with Schedia's terraces below it, is the Tholos's (square: the Tholos stands on a paved court); the platform at the fork is the hall of two doors'; on the body, the eastern harbour's quay and flat ground are the stoa's and the festival ground's, the scattered clearings the libraries', the south-west landing the couriers', and the stepped terraces at the southern tip the far terraces. The Y is imperfect, its arms spreading rather than parallel, which looks more natural and keeps what the setting needs: two arms round a bay, the Chamber and the Tholos looking at each other across the water, a fork and a broad body. Made in Gemini (text-to-image) from:
+```text
+Photorealistic isometric terrain diorama of the Greek island of Paxos, Hellenistic Greece, 3rd century BC: the bare land and its earthworks only, made for 3D reconstruction. True orthographic axonometric view from the south, looking north and down at about 45 degrees, north at the top, the whole island in frame with a margin of sea all round. Deep focus, crisp fine geometry.
+
+NO BUILDINGS OF ANY KIND: no houses, no halls, no temples, no rotundas, no porticoes, no stoas, no walls, no ruins, no towers, no roofs. No ships, boats, carts, people or animals. No trees: the ground is covered only in low maquis, dry grass and bare rock, so the shape of the land reads clearly.
+
+The island is shaped like the letter Y, following the attached sketch. Two slender, high rocky arms reach north side by side, enclosing a sheltered bay of calm turquoise water between them. They join at a fork. Below the fork a distinct narrow stem, clearly narrower than either arm is long, runs south and then widens into a broad, lower body. The body is by far the largest part of the island, larger than both arms together, and fills the whole southern half of the frame.
+
+The arms: sheer white limestone sea-cliffs with sea-caves on their outer coasts, and steep slopes down to the bay on their inner sides. On the western arm, halfway along, a broad round levelled terrace high above the bay, bare and empty. At the western arm's tip, a small cove with a levelled waterfront shelf, stone quays and a short mole, and a few bare levelled building terraces behind it. On the eastern arm, directly across the bay from the round terrace: a sheltered cove with a small shingle beach and a stone quay, bare levelled terraces climbing the slope above it for a small town, and above them one broad levelled terrace facing the bay across the water, bare and empty.
+
+The fork, where the two arms meet the stem: a small, flat, levelled open platform on common ground, bare.
+
+The body of the island: lower rolling hills and small valleys, and a deeply indented coast of coves and pebble beaches. On a harbour on the body's eastern shore, far down from the fork, a long straight levelled waterfront terrace with a stone quay, and a broad flat open ground beside it. Scattered across the valleys and hill shoulders, about a dozen small separate levelled clearings, bare, linked by footpaths of differing length. A small rocky cove on the south-west shore with short timber-free stone landing stages. At the remote southern tip, the farthest point from the fork, narrow stepped dry-stone terraces on steep slopes facing the open sea, bare.
+
+One narrow road, one cart wide, runs from the southern body up the stem to the fork, where it forks: one branch runs out along the western arm past the round terrace to the cove at its tip, the other along the eastern arm to the cove on the bay. Faint footpaths only elsewhere.
+
+Bright, clear sunlight from the upper right, casting crisp, well-defined shadows that model every cliff, slope, valley, terrace, quay and road cutting. Dry, transparent air: no haze, fog, mist or cloud, full sharpness everywhere. Calm deep Aegean blue sea reaching every edge of the frame, turquoise shoals and white surf at the shore. No text, no pedestal, no cutaway.
+```
+
 ### 3.2 Architectural Features Prompts
 
 #### Feature 1: The Chamber (a rotunda)
