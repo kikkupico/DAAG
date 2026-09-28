@@ -838,13 +838,14 @@
 
     // World units are metres, so the camera's focal lengths behave as real lenses. The Meshy
     // models are ~2 units across; their buildings set the size, so that a 1.75 m person fits
-    // the harbour's doorways and bales: Arche is ~180 m across (95 m per model unit), far
+    // the harbour's quays and terraces: Arche is ~280 m across (150 m per model unit), far
     // smaller than canon's island. Paxos is set by eye so that a person beside the rotunda
-    // looks right: 104 m per unit, ~190 m across.
+    // looks right: 104 m per unit, ~190 m across. The same numbers are in art/islands.json,
+    // which render.py and the set scripts read; keep the two in step.
     let islandSeparation = 260;
-    const ARCHE_SCALE = 95;
-    // Arche's model has its north port off towards its -X, +Z corner; a 20 degree turn puts it due north.
-    const ARCHE_YAW = 20 * Math.PI / 180;
+    const ARCHE_SCALE = 150;
+    // Arche's model has its north harbour towards its -Z; a quarter turn puts it due north (-X).
+    const ARCHE_YAW = Math.PI / 2;
     const PAXOS_SCALE = 104;
     // The model's arms point along its +Z; a quarter turn points them north (-X), as canon has it.
     const PAXOS_YAW = -Math.PI / 2;
