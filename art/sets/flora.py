@@ -11,9 +11,9 @@ art/flora/split.py), scattered as copies, each turned, leaned and sized a little
 Planting follows the setting: olive groves on the gentle ground round each town, maritime pine,
 holm oak and cypress on the lower spurs, maquis thickening upslope, and bare limestone round the
 crown. Nothing grows in the sea, on cliffs too steep to hold soil, within `road_clear` metres of
-the road (`road_loop`, waypoints traced from a top view, plus each town's traced road), on the
+a road (art/islands.json `roads`, traced from a top view, plus each town's traced road), on the
 quays (flat ground near the water), on any building's ground (`avoid_sets`' strips), or within
-`crown.r` of the summit. Plants clump, by a smoothed random field, as scrub and woods do.
+`crown.r` of the summit or any of `avoid_circles`. Plants clump, by a smoothed random field, as scrub and woods do.
 """
 import bpy, json, math, random, sys
 import numpy as np
@@ -91,7 +91,7 @@ flat = (win.max(axis=(2, 3)) - win.min(axis=(2, 3))) < 0.5
 bare = sea | grow(sea, 1) | (slope > 1.4)
 bare |= grow(sea, 10) & flat                                    # quays and waterfront shelves
 bare |= grow(sea, 14) & (H < 3.4)                              # piers and moles: quay level near the water
-lines = [F["road_loop"]] + [s["fill"]["road"] for s in SITES.values()
+lines = I.get("roads", []) + [s["fill"]["road"] for s in SITES.values()
                             if isinstance(s, dict) and s.get("island") == SITE["island"] and "road" in s.get("fill", {})]
 for pts in lines:
     for (ax, az), (bx, bz) in zip(pts, pts[1:]):
@@ -112,8 +112,15 @@ def rect(at, half, rot, grow_m):
 for other in F.get("avoid_sets", []):
     for st in json.load(open(f"art/sets/{other}-strips.json"))["strips"]:
         bare |= rect(st["at"], st["half"], st["rot"], 2.0)
-cr = F["crown"]
-bare |= np.hypot(XX - cr["top"][0], ZZ - cr["top"][1]) < cr["r"]
+circles = F.get("avoid_circles", [])                # [x, z, r]: e.g. the crown, a rotunda's terrace
+if "crown" in F:
+    circles = circles + [[*F["crown"]["top"], F["crown"]["r"]]]
+for cx_, cz_, r_ in circles:
+    bare |= np.hypot(XX - cx_, ZZ - cz_) < r_
+# keep every crown inside the island's own extent: the island is centred on its outline, so a
+# tree overhanging it would move the island and every camera framed on it
+edge = F.get("edge", 7.0) + 2.0
+bare |= (XX < xmin + edge) | (XX > xmax - edge) | (ZZ < zmin + edge) | (ZZ > zmax - edge)
 
 # clumping: a smoothed random field, high where woods and scrub gather
 clump = blur(nrng.random(H.shape), 6)
@@ -183,11 +190,11 @@ while x < xmax:
         if not (0 <= i < nx and 0 <= j < nz) or bare[i, j]:
             continue
         a, cl, td, sl = alt[i, j], clump[i, j], town_d[i, j], slope[i, j]
-        if a > 0.82:                                  # bare limestone round the top: a little scrub
+        if a > F.get("bare_above", 0.82):             # bare limestone round the top: a little scrub
             kind, p = "maquis", 0.08
         elif td < 55 and sl < 0.35 and a < 0.4:       # olive groves on the gentle ground by the towns
             kind, p = ("olive", 0.55) if rng.random() < 0.85 else ("cypress", 0.4)
-        elif a < 0.55:                                # lower slopes: woods of pine and holm oak in clumps
+        elif a < F.get("woods_below", 0.55):          # lower slopes: woods of pine and holm oak in clumps
             r = rng.random()
             kind = "pine" if r < 0.4 else "oak" if r < 0.7 else "cypress" if r < 0.76 else "maquis"
             p = 0.15 + 0.75 * cl ** 1.5
