@@ -9,7 +9,8 @@ art/sets/sets.json:
 - `harbour`: explorer [x, z] in the harbour's water; the town grows outwards from it;
 - `count`: how many buildings at most;
 - `keep_clear`: sets whose strips (their `-strips.json`) no building may touch, e.g. the
-  trading house;
+  trading house; `keep_clear_circles`: [x, z, r] rings no building may enter, e.g. a
+  rotunda's round terrace;
 - `plan`: where to write the plan.
 
 It casts rays down on the island's untouched Meshy model (art/islands.json `source`), placed
@@ -92,8 +93,8 @@ def flat(w, tol):
 
 # The road, traced by hand as waypoints: no building within `road_clear` metres of its line.
 road = np.zeros_like(sea)
-pts = F.get("road", [])
-for (ax, az), (bx, bz) in zip(pts, pts[1:]):
+for pts in [F.get("road", [])] + I.get("roads", []):
+  for (ax, az), (bx, bz) in zip(pts, pts[1:]):
     vx, vz = bx - ax, bz - az
     L2 = vx * vx + vz * vz or 1e-9
     tt = np.clip(((XX - ax) * vx + (ZZ - az) * vz) / L2, 0, 1)
@@ -118,6 +119,8 @@ def cells(at, half, rot, grow=0.0):
 
 
 taken = road.copy()
+for cx_, cz_, r_ in F.get("keep_clear_circles", []):     # e.g. the round terrace of a rotunda
+    taken |= np.hypot(XX - cx_, ZZ - cz_) < r_
 for other in F.get("keep_clear", []):
     for st in json.load(open(f"art/sets/{other}-strips.json"))["strips"]:
         taken |= cells(st["at"], st["half"], st["rot"], grow=1.5)
