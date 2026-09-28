@@ -24,12 +24,9 @@ import bpy, json, sys, math
 from mathutils import Vector
 
 # glb, metres per model unit, explorer centre (x, z), sink below sea level in model units,
-# yaw about the vertical in degrees, as the explorer's group rotation.y (Arche's north port and
-# Paxos's arms both come out of Meshy pointing away from north)
-ISLANDS = {
-    "arche": ("art/arche-3d.glb", 95.0, (-130.0, 0.0), 0.0, 20.0),
-    "paxos": ("art/paxos-3d.glb", 104.0, (130.0, 36.0), 0.0, -90.0),
-}
+# yaw about the vertical in degrees, as the explorer's group rotation.y: from art/islands.json
+ISLANDS = {k: (v["glb"], v["scale"], tuple(v["centre"]), 0.0, v["yaw"])
+           for k, v in json.load(open("art/islands.json")).items() if not k.startswith("_")}
 LONG_EDGE = 1600
 
 argv = sys.argv[sys.argv.index("--") + 1:]
