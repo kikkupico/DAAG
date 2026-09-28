@@ -42,7 +42,8 @@ evenly spaced houses those lines pass well away from the centre, so a small cone
 them. That is why the massif must be broad. The settings give no dimensions: they fix constraints,
 not measurements, and the pictures need not match any number.
 
-The ring road is **one cliff road with a lane each way**. By the law of the road nobody
+The ring road is **one road with a lane each way**, looping round the foot of the mountain from
+harbour to harbour and never over it. By the law of the road nobody
 overtakes, and a slip takes the direct stretch, never the long way round. Three stretches, each
 travelled both ways, give **one FIFO channel per ordered pair of houses: six in all**.
 
@@ -61,13 +62,14 @@ travelled both ways, give **one FIFO channel per ordered pair of houses: six in 
 island-wide distribution network.
 
 **The houses are built alike.** Each is one long range under a tiled gable roof, its walls
-lime-plastered over rubble on a low bare-rubble base, as Hellenistic walls were, on the quay of its port town, its back to the ring road: the clerks' office at one
-end; the **gate**, a passage through the range from the road to the quay, where slips come in;
-the storehouse at the other end, with loading doors onto the quay. A portico of plain Doric
-columns under a lean-to roof runs the length of the range on the quay side, and under it, by the
+lime-plastered over rubble on a low bare-rubble base, as Hellenistic walls were, on a terrace
+cut into the slope above its harbour, facing the quay across the waterfront road: the clerks'
+office at one end; the **gate**, a deep entrance opening onto the road, where slips come in;
+the storehouse at the other end, with loading doors onto the road. A portico of plain Doric
+columns under a lean-to roof runs the length of the range along the road's edge, and under it, by the
 gate, hangs the house's **board** of orders, a row of numbered slots with the peg beside it (House
-3's is Herlios' board). Each port town round it is of one-storey houses, courtyard houses and long
-waterfront storehouses, plastered off-white or pale ochre under gabled terracotta roofs. Houses
+3's is Herlios' board). Each port town round it is a compact cluster on terraces cut into the slopes round the
+harbour, of one-storey houses, courtyard houses and long storehouses, plastered off-white or pale ochre under gabled terracotta roofs. Houses
 face inwards, so the streets, of beaten earth, see mostly blank walls with a door and a few
 small high windows. Nothing sets one town apart.
 
