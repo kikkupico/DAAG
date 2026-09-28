@@ -19,7 +19,7 @@ Output: art/panels/<book>/<shot-id>/{previs,scene}.png
 illustration, comic.png; a shot's "comic" prompt overrides COMIC_PROMPT. Book covers
 use it; panels inside the books stay realistic.
 
-Generation runs on Nano Banana Pro through the Meshy API (MESHY_API_KEY, 9 credits an
+Generation runs on Nano Banana 2 through the Meshy API (MESHY_API_KEY, 3 credits an
 image), or through the tripo CLI with GEN=tripo. Prompts are capped at 1024 characters,
 so appearance travels as reference crops rather than words. A sheet's seeds are laid
 on one white board of the sheet's aspect; Meshy takes `aspect_ratio` for image-to-image
@@ -62,7 +62,7 @@ def meshy(path, body):
 
 
 def generate_meshy(inputs, prompt, aspect, dest):
-    body = {"ai_model": "nano-banana-pro", "prompt": prompt}
+    body = {"ai_model": os.environ.get("MESHY_IMAGE_MODEL", "nano-banana-2"), "prompt": prompt}   # "nano-banana-pro": 9 credits
     if inputs:
         kind = "image-to-image"
         body["reference_image_urls"] = [
