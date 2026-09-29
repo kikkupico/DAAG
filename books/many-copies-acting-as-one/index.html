@@ -184,6 +184,15 @@
           <marker id="mcao-overlap-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
           </marker>
+          <marker id="mcao-overlap-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
+          </marker>
+          <marker id="mcao-overlap-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
+          </marker>
+          <marker id="mcao-overlap-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
+          </marker>
         </defs>
         <text class="d-house" x="165" y="24" text-anchor="middle">ALLOWED</text>
         <circle cx="165" cy="200" r="49.5" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
@@ -429,7 +438,7 @@
 
   <figure class="diagram">
     <div class="board">
-      <svg viewBox="0 0 640 590" role="img" aria-label="Three houses drawn in the round: H1 on top, H2 lower right with the oil board, H3 lower left with the grain board; later moments further out. House 1 sends a grain order to H3 and gets it confirmed, then sends an oil order to H2 and gets it confirmed. House 2 enters an oil order on its own board, then sends a grain order to H3. The oil board serves House 1 first and the grain board serves House 2 first, though each of those orders began after the other house's had finished.">
+      <svg viewBox="0 0 640 610" role="img" aria-label="Two houses drawn in the round, House 1 on the left and House 2 on the right, later moments further out. House 1 orders grain, then oil; House 2 orders oil, then grain. Top half, the oil board at House 2: House 1's oil order arrives by slip and is entered before House 2 places its own, so the oil board puts House 1 first. Bottom half, the grain board at House 3 (not drawn): it puts House 2's grain first, though House 1's grain order was finished long before. Each board alone can be explained; together, with each house's own order, they run House 1 grain, House 1 oil, House 2 oil, House 2 grain, House 1 grain: a loop.">
         <!-- polar:mcao-loop -->
         <defs>
           <marker id="mcao-loop-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
@@ -438,62 +447,58 @@
           <marker id="mcao-loop-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
           </marker>
+          <marker id="mcao-loop-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
+          </marker>
+          <marker id="mcao-loop-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
+          </marker>
+          <marker id="mcao-loop-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
+          </marker>
         </defs>
-        <circle cx="320" cy="290" r="80.5" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="320" cy="290" r="105" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="320" cy="290" r="129.5" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="320" cy="290" r="154" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="320" cy="290" r="178.5" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="320" cy="290" r="203" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="320" cy="290" r="227.5" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="320" cy="290" r="252" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <path id="mcao-loop-time" fill="none" d="M65,221.7 A264,264 0 0 1 251.7,35"/>
-        <text class="d-note"><textPath href="#mcao-loop-time" startOffset="50%" text-anchor="middle">time, later outward</textPath></text>
-        <path d="M449.5,290 A129.5,129.5 0 1 0 190.5,290 A129.5,129.5 0 1 0 449.5,290 Z M400.5,290 A80.5,80.5 0 1 0 239.5,290 A80.5,80.5 0 1 0 400.5,290 Z" fill-rule="evenodd" style="fill:#5f6e28; fill-opacity:0.12; stroke:#5f6e28; stroke-opacity:.5; stroke-width:.8"/>
-        <path d="M523,290 A203,203 0 1 0 117,290 A203,203 0 1 0 523,290 Z M478.9,290 A158.9,158.9 0 1 0 161.1,290 A158.9,158.9 0 1 0 478.9,290 Z" fill-rule="evenodd" style="fill:#5f6e28; fill-opacity:0.12; stroke:#5f6e28; stroke-opacity:.5; stroke-width:.8"/>
-        <path d="M425,290 A105,105 0 1 0 215,290 A105,105 0 1 0 425,290 Z M400.5,290 A80.5,80.5 0 1 0 239.5,290 A80.5,80.5 0 1 0 400.5,290 Z" fill-rule="evenodd" style="fill:#a8741a; fill-opacity:0.12; stroke:#a8741a; stroke-opacity:.5; stroke-width:.8"/>
-        <path d="M513.2,290 A193.2,193.2 0 1 0 126.8,290 A193.2,193.2 0 1 0 513.2,290 Z M474,290 A154,154 0 1 0 166,290 A154,154 0 1 0 474,290 Z" fill-rule="evenodd" style="fill:#a8741a; fill-opacity:0.12; stroke:#a8741a; stroke-opacity:.5; stroke-width:.8"/>
-        <line class="d-lifeline" x1="320" y1="234" x2="320" y2="33.1"/>
-        <line class="d-lifeline" x1="368.5" y1="318" x2="542.5" y2="418.4"/>
-        <line class="d-lifeline" x1="271.5" y1="318" x2="97.5" y2="418.4"/>
-        <line x1="320" y1="209.5" x2="320" y2="160.5" stroke="#5f6e28" stroke-width="8"/>
-        <line x1="320" y1="131.1" x2="320" y2="87" stroke="#5f6e28" stroke-width="8"/>
-        <line x1="389.7" y1="330.2" x2="410.9" y2="342.5" stroke="#a8741a" stroke-width="8"/>
-        <line x1="453.4" y1="367" x2="487.3" y2="386.6" stroke="#a8741a" stroke-width="8"/>
-        <rect class="d-node" x="305" y="223" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="320" y="238.5" text-anchor="middle" fill="#1c1512">H1</text>
-        <rect class="d-node" x="353.5" y="307" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="368.5" y="322.5" text-anchor="middle" fill="#1c1512">H2</text>
-        <rect class="d-node" x="256.5" y="307" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="271.5" y="322.5" text-anchor="middle" fill="#1c1512">H3</text>
-        <path class="d-msg" marker-end="url(#mcao-loop-b)" d="M320,209.5 L315.8,209 L311.5,208.7 L307.1,208.7 L302.8,208.9 L298.4,209.3 L294,209.9 L289.6,210.8 L285.3,212 L281,213.4 L276.7,215 L272.5,216.8 L268.4,218.9 L264.3,221.3 L260.4,223.8 L256.6,226.6 L252.9,229.6 L249.3,232.8 L246,236.2 L242.7,239.8 L239.7,243.6 L236.8,247.6 L234.1,251.8 L231.7,256.1 L229.5,260.6 L227.5,265.2 L225.7,270 L224.2,274.8 L222.9,279.8 L221.9,284.9 L221.1,290 L220.6,295.2 L220.4,300.5 L220.5,305.8 L220.9,311.1 L221.5,316.4 L222.5,321.7 L223.7,327 L225.2,332.2"/>
-        <path class="d-msg" marker-end="url(#mcao-loop-b)" d="M229.1,342.5 L225.9,337.9 L223,333.2 L220.3,328.3 L217.8,323.2 L215.6,318 L213.7,312.6 L212.1,307.1 L210.7,301.5 L209.6,295.8 L208.9,290 L208.4,284.2 L208.3,278.3 L208.4,272.3 L208.9,266.4 L209.7,260.4 L210.8,254.5 L212.3,248.6 L214,242.8 L216.1,237 L218.5,231.4 L221.2,225.8 L224.2,220.4 L227.5,215.1 L231,209.9 L234.9,204.9 L239.1,200.1 L243.5,195.5 L248.2,191.2 L253.1,187 L258.3,183.2 L263.7,179.5 L269.3,176.2 L275.1,173.1 L281.1,170.3 L287.3,167.9 L293.6,165.7 L300,163.9 L306.6,162.4 L313.3,161.3"/>
-        <circle class="d-ev" cx="229.1" cy="342.5" r="3.5"/>
-        <path class="d-msg" marker-end="url(#mcao-loop-b)" d="M320,131.1 L328.3,130.8 L336.7,130.9 L345.1,131.4 L353.5,132.4 L361.8,133.9 L370.1,135.7 L378.3,138.1 L386.4,140.8 L394.4,144 L402.2,147.6 L409.8,151.6 L417.3,156.1 L424.5,160.9 L431.5,166.2 L438.2,171.8 L444.6,177.8 L450.8,184.1 L456.6,190.8 L462,197.8 L467.2,205 L471.9,212.6 L476.2,220.4 L480.2,228.5 L483.7,236.8 L486.8,245.3 L489.4,254 L491.6,262.8 L493.4,271.8 L494.6,280.8 L495.4,290 L495.7,299.2 L495.6,308.5 L494.9,317.7 L493.8,326.9 L492.1,336.1 L490,345.2 L487.4,354.3 L484.3,363.2 L480.7,371.9"/>
-        <path class="d-msg" marker-end="url(#mcao-loop-b)" d="M476.7,380.5 L481.7,372.4 L486.3,364 L490.5,355.4 L494.2,346.6 L497.4,337.5 L500.2,328.3 L502.5,318.9 L504.3,309.4 L505.7,299.7 L506.5,290 L506.8,280.2 L506.5,270.4 L505.8,260.6 L504.5,250.8 L502.8,241 L500.5,231.4 L497.7,221.8 L494.4,212.4 L490.6,203.1 L486.3,194 L481.5,185.1 L476.2,176.5 L470.5,168.1 L464.3,160.1 L457.7,152.3 L450.7,144.9 L443.2,137.8 L435.4,131.1 L427.3,124.8 L418.7,119 L409.9,113.5 L400.8,108.6 L391.4,104.1 L381.7,100.1 L371.8,96.6 L361.7,93.6 L351.5,91.1 L341.1,89.2 L330.6,87.8"/>
-        <circle class="d-ev" cx="476.7" cy="380.5" r="3.5"/>
-        <path class="d-msg" marker-end="url(#mcao-loop-b)" d="M453.4,367 L449.6,374.1 L445.4,381.1 L440.8,387.8 L435.9,394.4 L430.6,400.6 L425,406.6 L419.1,412.3 L412.8,417.8 L406.3,422.9 L399.5,427.6 L392.4,432 L385,436.1 L377.5,439.7 L369.7,443 L361.8,445.9 L353.6,448.3 L345.4,450.3 L337,451.9 L328.5,453.1 L320,453.8 L311.4,454.1 L302.8,453.9 L294.1,453.2 L285.5,452.1 L277,450.6 L268.5,448.6 L260.1,446.1 L251.8,443.2 L243.6,439.9 L235.7,436.1 L227.9,431.9 L220.3,427.3 L212.9,422.2 L205.8,416.8 L199,411 L192.4,404.8 L186.2,398.3 L180.3,391.5 L174.8,384.3"/>
-        <path class="d-msg" marker-end="url(#mcao-loop-b)" d="M169.7,376.8 L174,384.8 L178.8,392.6 L183.9,400.2 L189.5,407.5 L195.5,414.5 L201.9,421.2 L208.6,427.6 L215.7,433.6 L223,439.3 L230.8,444.6 L238.7,449.5 L247,454 L255.5,458 L264.2,461.6 L273.2,464.8 L282.3,467.5 L291.5,469.7 L300.9,471.4 L310.4,472.7 L320,473.4 L329.6,473.6 L339.3,473.4 L348.9,472.6 L358.5,471.3 L368.1,469.5 L377.6,467.2 L387,464.4 L396.2,461.1 L405.3,457.3 L414.1,453.1 L422.8,448.3 L431.3,443.1 L439.4,437.5 L447.3,431.4 L454.9,424.9 L462.1,418 L469,410.7 L475.5,403 L481.6,395"/>
-        <circle class="d-ev" cx="169.7" cy="376.8" r="3.5"/>
-        <text class="d-lbl d-halo" x="333" y="189" text-anchor="start">grain</text>
-        <text class="d-lbl d-halo" x="307" y="113.1" text-anchor="end">oil</text>
-        <text class="d-lbl d-halo" x="393.8" y="351.6" text-anchor="end">oil</text>
-        <text class="d-lbl d-halo" x="463.8" y="392.1" text-anchor="end">grain</text>
-        <circle class="d-ev-hi" cx="504.3" cy="396.4" r="5.5"/>
-        <text class="d-lbl d-halo" x="509.8" y="390.9" text-anchor="start" style="fill:#bf4a26">serves H1's oil</text>
-        <circle class="d-ev" cx="525.5" cy="408.6" r="5"/>
-        <text class="d-lbl d-halo" x="531" y="403.1" text-anchor="start">serves H2's oil</text>
-        <circle class="d-ev-hi" cx="135.7" cy="396.4" r="5.5"/>
-        <text class="d-lbl d-halo" x="130.2" y="390.9" text-anchor="end" style="fill:#bf4a26">serves H2's grain</text>
-        <circle class="d-ev" cx="114.5" cy="408.6" r="5"/>
-        <text class="d-lbl d-halo" x="109" y="403.1" text-anchor="end">serves H1's grain</text>
-        <text class="d-note" x="320" y="556" text-anchor="middle" style="fill:#bf4a26">each board served first the order that began after the other house's had finished:</text>
-        <text class="d-note" x="320" y="574" text-anchor="middle" style="fill:#bf4a26">House 1 grain → House 1 oil → House 2 oil → House 2 grain → House 1 grain</text>
+        <path d="M61.8,290 A258.2,258.2 0 0 1 578.2,290 Z" style="fill:#a8741a; fill-opacity:0.08; stroke:none"/>
+        <path d="M61.8,290 A258.2,258.2 0 0 0 578.2,290 Z" style="fill:#5f6e28; fill-opacity:0.08; stroke:none"/>
+        <circle cx="320" cy="290" r="78" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="320" cy="290" r="112" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="320" cy="290" r="146" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="320" cy="290" r="180" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="320" cy="290" r="214" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="320" cy="290" r="248" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <line class="d-lifeline" x1="276" y1="290" x2="68.6" y2="290"/>
+        <line class="d-lifeline" x1="364" y1="290" x2="571.4" y2="290"/>
+        <line x1="255.6" y1="290" x2="228.4" y2="290" stroke="#5f6e28" stroke-width="8"/>
+        <line x1="201.2" y1="290" x2="133.2" y2="290" stroke="#a8741a" stroke-width="8"/>
+        <line x1="486.4" y1="290" x2="503.4" y2="290" stroke="#a8741a" stroke-width="8"/>
+        <line x1="530.6" y1="290" x2="561.2" y2="290" stroke="#5f6e28" stroke-width="8"/>
+        <rect class="d-node" x="261" y="279" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="276" y="294.5" text-anchor="middle" fill="#1c1512">H1</text>
+        <rect class="d-node" x="349" y="279" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="364" y="294.5" text-anchor="middle" fill="#1c1512">H2</text>
+        <path class="d-msg" marker-end="url(#mcao-loop-b)" d="M201.2,290 L200.9,283.8 L200.8,277.5 L201.2,271.2 L201.8,264.9 L202.8,258.6 L204.1,252.3 L205.8,246.1 L207.7,240 L210.1,234 L212.7,228 L215.7,222.2 L218.9,216.6 L222.5,211.1 L226.4,205.7 L230.6,200.6 L235,195.7 L239.8,190.9 L244.8,186.5 L250,182.2 L255.5,178.3 L261.2,174.6 L267.1,171.2 L273.2,168.1 L279.5,165.4 L286,162.9 L292.5,160.8 L299.3,159.1 L306.1,157.6 L313,156.6 L320,155.9 L327,155.6 L334.1,155.6 L341.2,156 L348.3,156.8 L355.4,158 L362.4,159.6 L369.3,161.5 L376.2,163.8 L383,166.4 L389.6,169.4 L396.1,172.8 L402.4,176.6 L408.6,180.6 L414.5,185 L420.2,189.8 L425.7,194.8 L431,200.2 L435.9,205.8 L440.6,211.7 L445,217.8 L449,224.3 L452.8,230.9 L456.1,237.7 L459.2,244.8 L461.8,252 L464.1,259.4 L466,266.9 L467.6,274.5 L468.7,282.2"/>
+        <path class="d-msg" marker-end="url(#mcao-loop-b)" d="M469.4,290 L469.8,282.1 L469.8,274.3 L469.4,266.3 L468.6,258.4 L467.3,250.5 L465.6,242.7 L463.6,234.9 L461,227.2 L458.1,219.6 L454.8,212.2 L451,204.9 L446.9,197.8 L442.4,190.9 L437.5,184.2 L432.3,177.7 L426.6,171.6 L420.7,165.7 L414.4,160.1 L407.8,154.8 L400.9,149.8 L393.8,145.2 L386.3,141 L378.7,137.1 L370.8,133.7 L362.7,130.6 L354.4,128 L346,125.8 L337.4,124.1 L328.8,122.8 L320,121.9 L311.2,121.5 L302.3,121.6 L293.4,122.1 L284.5,123.1 L275.7,124.6 L266.9,126.6 L258.2,129 L249.6,131.9 L241.1,135.2 L232.8,139 L224.7,143.3 L216.8,148 L209.1,153.1 L201.7,158.6 L194.5,164.5 L187.7,170.8 L181.1,177.5 L174.9,184.6 L169.1,192 L163.6,199.7 L158.6,207.7 L153.9,216 L149.7,224.6 L145.9,233.4 L142.6,242.5 L139.7,251.7 L137.3,261.1 L135.5,270.6 L134.1,280.3"/>
+        <circle class="d-ev" cx="469.4" cy="290" r="3.5"/>
+        <path marker-end="url(#mcao-loop-k)" d="M225,290 L204.6,290" style="stroke:#1c1512; stroke-width:1.6; fill:none"/>
+        <path marker-end="url(#mcao-loop-k)" d="M506.8,290 L527.2,290" style="stroke:#1c1512; stroke-width:1.6; fill:none"/>
+        <circle cx="167.2" cy="272" r="8.5" style="fill:#a8741a; stroke:#f6eed6; stroke-width:1.5"/><text x="167.2" y="276" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">1</text>
+        <text class="d-lbl d-halo" x="167.2" y="257" text-anchor="middle">oil</text>
+        <circle cx="494.9" cy="272" r="8.5" style="fill:#a8741a; stroke:#f6eed6; stroke-width:1.5"/><text x="494.9" y="276" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">2</text>
+        <text class="d-lbl d-halo" x="494.9" y="257" text-anchor="middle">oil</text>
+        <circle cx="545.9" cy="308" r="8.5" style="fill:#5f6e28; stroke:#f6eed6; stroke-width:1.5"/><text x="545.9" y="312" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">1</text>
+        <text class="d-lbl d-halo" x="545.9" y="331" text-anchor="middle">grain</text>
+        <circle cx="242" cy="308" r="8.5" style="fill:#5f6e28; stroke:#f6eed6; stroke-width:1.5"/><text x="242" y="312" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">2</text>
+        <text class="d-lbl d-halo" x="242" y="331" text-anchor="middle">grain</text>
+        <text class="d-house" x="320" y="24" text-anchor="middle" style="fill:#a8741a">OIL BOARD, AT HOUSE 2</text>
+        <text class="d-note" x="320" y="42" text-anchor="middle">House 1's oil arrives and is entered first: 1 House 1's oil, 2 House 2's oil</text>
+        <text class="d-house" x="320" y="548" text-anchor="middle" style="fill:#5f6e28">GRAIN BOARD, AT HOUSE 3 (NOT DRAWN)</text>
+        <text class="d-note" x="320" y="566" text-anchor="middle">it puts House 2's grain first, though House 1's was finished long before</text>
+        <text class="d-note" x="320" y="596" text-anchor="middle" style="fill:#bf4a26">together: House 1 grain → House 1 oil → House 2 oil → House 2 grain → House 1 grain</text>
       </svg>
     </div>
-    <figcaption><b>Each board can be explained, and the two together cannot.</b> The oil board
-    alone is kept without the sun by putting House 1's order first; the grain board alone by
-    putting House 2's first. Both at once would need each house's second order before the other's
-    first, which is a loop. The grain board is at H3 and the oil board at H2, so House 2 orders its
-    oil at home. Each order's ring runs from sending to confirmation, green for House 1 and ochre
-    for House 2: both inner orders were finished before either outer one began.</figcaption>
+    <figcaption><b>Each board can be explained, and the two together cannot.</b> House 1 orders grain, then
+    oil; House 2 orders oil, then grain. Above, House 1's oil reaches the oil board at House 2
+    before House 2 places its own, so that board puts House 1 first. Below, the grain board at
+    House 3 puts House 2's grain first, though House 1's was finished long before: without the sun,
+    that is allowed. Each board alone can be explained. Together, with each house's own order, they
+    run from House 1's grain back round to itself: a loop.</figcaption>
   </figure>
 
   <div class="prose">

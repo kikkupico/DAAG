@@ -37,7 +37,7 @@ class Fig:
         self.out = []
         self.head = (f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="{esc(aria)}">\n'
                      f'  <!-- polar:{name} -->\n  <defs>')
-        for key, col in (("b", BLUE), ("r", RED)):
+        for key, col in (("b", BLUE), ("r", RED), ("o", OCHRE), ("g", OLIVE), ("k", INK)):
             self.head += (f'\n    <marker id="{name}-{key}" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">'
                           f'\n      <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="{col}"/>\n    </marker>')
         self.head += "\n  </defs>"
@@ -174,8 +174,43 @@ class Polar:
         d = "M" + " L".join(f"{f(x)},{f(y)}" for x, y in pts)
         self.fig.add(f'<path class="{cls}" marker-end="url(#{self.fig.name}-{m})" d="{d}"/>')
 
-    def radial_arrow(self, key, t1, t2, dth, hi=False):
+    def order_arc(self, a, ta, b, tb, color, marker, cw=True, trim=9, start_trim=6):
+        """A dashed arc for 'this comes first' in some sequence: an ordering, not a slip."""
+        pts = self.spiral_pts(self.ang(a), self.r(ta), self.ang(b), self.r(tb), cw)
+        end, start = pts[-1], pts[0]
+        while math.dist(pts[-1], end) < trim:
+            pts.pop()
+        while math.dist(pts[0], start) < start_trim:
+            pts.pop(0)
+        d = "M" + " L".join(f"{f(x)},{f(y)}" for x, y in pts)
+        self.fig.add(f'<path d="{d}" fill="none" marker-end="url(#{self.fig.name}-{marker})" '
+                     f'style="stroke:{color}; stroke-width:2; stroke-dasharray:7 4"/>')
+
+    def badge(self, key, t, num, color, side, dist=18, word=None):
+        """A numbered disc beside an event: its place in some sequence. The word goes beyond it."""
+        x, y = self.pt(key, t)
+        a = math.radians(self.ang(key) + 90 * side)
+        bx, by = x + dist * math.cos(a), y + dist * math.sin(a)
+        self.fig.add(f'<circle cx="{f(bx)}" cy="{f(by)}" r="8.5" style="fill:{color}; stroke:{PAPER}; stroke-width:1.5"/>'
+                     f'<text x="{f(bx)}" y="{f(by + 4)}" text-anchor="middle" '
+                     f'style="font:700 11.5px Optima,\'Gill Sans\',sans-serif; fill:{PAPER}">{num}</text>')
+        if word:
+            wx, wy = x + (dist + 19) * math.cos(a), y + (dist + 19) * math.sin(a)
+            self.fig.text(wx, wy + 4, word, cls="d-lbl d-halo")
+
+    def half(self, top, t, color, opacity=.08):
+        """Tint the top or bottom half of the diagram out to time t."""
+        rr, cx, cy = self.r(t), self.cx, self.cy
+        sweep = 1 if top else 0
+        d = f"M{f(cx - rr)},{f(cy)} A{f(rr)},{f(rr)} 0 0 {sweep} {f(cx + rr)},{f(cy)} Z"
+        self.fig.add(f'<path d="{d}" style="fill:{color}; fill-opacity:{opacity}; stroke:none"/>')
+
+    def radial_arrow(self, key, t1, t2, dth, hi=False, ink=False):
         (x1, y1), (x2, y2) = self.pt(key, t1, dth=dth), self.pt(key, t2, dth=dth)
+        if ink:
+            self.fig.add(f'<path marker-end="url(#{self.fig.name}-k)" d="M{f(x1)},{f(y1)} L{f(x2)},{f(y2)}" '
+                         f'style="stroke:{INK}; stroke-width:1.6; fill:none"/>')
+            return
         cls, m = ("d-msg-hi", "r") if hi else ("d-msg", "b")
         self.fig.add(f'<path class="{cls}" marker-end="url(#{self.fig.name}-{m})" d="M{f(x1)},{f(y1)} L{f(x2)},{f(y2)}"/>')
 
@@ -366,45 +401,43 @@ def copies_overlap():
 
 
 def copies_loop():
-    F = Fig("mcao-loop", 640, 590,
-            "Three houses drawn in the round: H1 on top, H2 lower right with the oil board, H3 lower left with the "
-            "grain board; later moments further out. House 1 sends a grain order to H3 and gets it confirmed, then "
-            "sends an oil order to H2 and gets it confirmed. House 2 enters an oil order on its own board, then sends a "
-            "grain order to H3. The oil board serves House 1 first and the grain board serves House 2 first, though "
-            "each of those orders began after the other house's had finished.")
-    P = Polar(F, 320, 290, 56, 24.5, {"1": (-90, "H1"), "2": (30, "H2"), "3": (150, "H3")})
-    P.rings(8)
-    P.time_note(8)
-    grain1, oil1 = (1, 2, 3), (4.2, 5.1, 6)      # House 1: send, entered, confirmed
-    oil2, grain2 = (1, 2), (4, 4.8, 5.6)          # House 2: its own board, then grain from H3
-    for (t1, t2), col in (((grain1[0], grain1[2]), OLIVE), ((oil1[0], oil1[2]), OLIVE),
-                          (oil2, OCHRE), ((grain2[0], grain2[2]), OCHRE)):
-        P.span(t1, t2, col, opacity=.12)
-    P.road(8.2)
-    P.bar("1", grain1[0], grain1[2], OLIVE)
-    P.bar("1", oil1[0], oil1[2], OLIVE)
+    F = Fig("mcao-loop", 640, 610,
+            "Two houses drawn in the round, House 1 on the left and House 2 on the right, later moments further out. "
+            "House 1 orders grain, then oil; House 2 orders oil, then grain. Top half, the oil board at House 2: "
+            "House 1's oil order arrives by slip and is entered before House 2 places its own, so the oil board puts "
+            "House 1 first. Bottom half, the grain board at House 3 (not drawn): it puts House 2's grain first, though "
+            "House 1's grain order was finished long before. Each board alone can be explained; together, with each "
+            "house's own order, they run House 1 grain, House 1 oil, House 2 oil, House 2 grain, House 1 grain: a loop.")
+    P = Polar(F, 320, 290, 44, 34, {"1": (180, "H1"), "2": (0, "H2")})
+    T = 6.3
+    P.half(True, T, OCHRE)
+    P.half(False, T, OLIVE)
+    P.rings(6)
+    P.road(6.1)
+    grain1, oil1 = (0.6, 1.4), (2.2, 4.2)      # House 1: grain, then oil (sent, confirmed)
+    oil2, grain2 = (3.6, 4.1), (4.9, 5.8)      # House 2: oil at home, then grain
+    P.bar("1", *grain1, OLIVE)
+    P.bar("1", *oil1, OCHRE)
     P.bar("2", *oil2, OCHRE)
-    P.bar("2", grain2[0], grain2[2], OCHRE)
+    P.bar("2", *grain2, OLIVE)
     P.node_boxes()
-    for (a, b, (ts, te, tc)) in (("1", "3", grain1), ("1", "2", oil1), ("2", "3", grain2)):
-        P.msg(a, ts, b, te, short=True)
-        P.msg(b, te, a, tc, short=True, trim=5)
-        P.event(b, te, rad=3.5)
-    P.label("1", 2, "grain", side=1, dist=13)
-    P.label("1", 5.1, "oil", side=-1, dist=13)
-    P.label("2", 1.5, "oil", side=1, dist=13)
-    P.label("2", 4.8, "grain", side=1, dist=13)
-    # the servings
-    P.event("2", 6.4, hi=True)
-    P.label("2", 6.4, "serves H1's oil", side=-1, dist=11, fill=RED)
-    P.event("2", 7.4)
-    P.label("2", 7.4, "serves H2's oil", side=-1, dist=11)
-    P.event("3", 6.4, hi=True)
-    P.label("3", 6.4, "serves H2's grain", side=1, dist=11, fill=RED)
-    P.event("3", 7.4)
-    P.label("3", 7.4, "serves H1's grain", side=1, dist=11)
-    F.text(320, 556, "each board served first the order that began after the other house's had finished:", fill=RED)
-    F.text(320, 574, "House 1 grain → House 1 oil → House 2 oil → House 2 grain → House 1 grain", fill=RED)
+    # House 1's oil order travels to the board at House 2 and word of its entry comes back
+    P.msg("1", 2.2, "2", 3.1, cw=True)
+    P.msg("2", 3.1, "1", 4.2, cw=False, trim=6)
+    P.event("2", 3.1, rad=3.5)
+    # each house's own order
+    P.radial_arrow("1", 1.5, 2.1, dth=0, ink=True)
+    P.radial_arrow("2", 4.2, 4.8, dth=0, ink=True)
+    # each board's sequence: oil above the line, grain below
+    P.badge("1", 3.2, "1", OCHRE, side=1, word="oil")
+    P.badge("2", 3.85, "2", OCHRE, side=-1, word="oil")
+    P.badge("2", 5.35, "1", OLIVE, side=1, word="grain")
+    P.badge("1", 1.0, "2", OLIVE, side=-1, word="grain")
+    F.text(320, 24, "OIL BOARD, AT HOUSE 2", cls="d-house", fill=OCHRE)
+    F.text(320, 42, "House 1's oil arrives and is entered first: 1 House 1's oil, 2 House 2's oil")
+    F.text(320, 548, "GRAIN BOARD, AT HOUSE 3 (NOT DRAWN)", cls="d-house", fill=OLIVE)
+    F.text(320, 566, "it puts House 2's grain first, though House 1's was finished long before")
+    F.text(320, 596, "together: House 1 grain → House 1 oil → House 2 oil → House 2 grain → House 1 grain", fill=RED)
     return F
 
 
