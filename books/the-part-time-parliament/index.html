@@ -164,197 +164,7 @@ select.gk{border:3px solid var(--ink); background:#fdf6e4; padding:6px 8px; box-
 
 .laurel{font-size:.95em}
 
-#sim .stage{display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin-bottom:14px}
-
-.priest{
-  width:152px; border:3px solid var(--ink); background:linear-gradient(180deg,#fdfaf1,#efe6cf);
-  box-shadow:4px 4px 0 var(--shadow); font-size:.78rem; position:relative;
-}
-
-.priest .phead{
-  display:flex; align-items:center; gap:8px; padding:5px 8px; border-bottom:2px solid var(--ink);
-  background:linear-gradient(180deg,#e8ddc0,#dbcba2); cursor:pointer;
-}
-
-.priest .avatar{
-  width:34px; height:34px; border-radius:50%; border:2.5px solid var(--ink);
-  display:flex; align-items:center; justify-content:center;
-  font-family:Optima,sans-serif; font-weight:700; font-size:1.05rem; color:#fff;
-  text-shadow:1px 1px 0 rgba(0,0,0,.4); flex:none;
-}
-
-.priest .pname{font-family:Optima,sans-serif; font-weight:700; font-size:.9rem}
-
-.priest .loc{margin-left:auto; font-size:1.05rem}
-
-.priest .pbody{padding:7px 9px 9px}
-
-.priest .outcome{
-  min-height:34px; border:2px solid rgba(28,21,18,.6); background:#fffdf4; border-radius:2px;
-  padding:3px 6px; font-style:italic; font-size:.75rem; line-height:1.3;
-}
-
-.priest .outcome.written{background:#e6efd3; border-color:var(--olive-d)}
-
-.priest .vars{margin-top:6px; color:#4d4030; line-height:1.55}
-
-.priest .vars b{font-family:Optima,sans-serif}
-
-.priest .stat{
-  position:absolute; top:-13px; right:-9px; border:2.5px solid var(--ink); background:var(--caption);
-  font-family:'Chalkboard SE',Chalkboard,'Comic Sans MS',sans-serif; font-size:.62rem; padding:1px 8px;
-  transform:rotate(3deg); display:none;
-}
-
-.priest.away{filter:grayscale(.75) opacity(.62)}
-
-.priest.away .phead{background:#cbbf9f}
-
-#sim .controls{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; margin:10px 0 4px}
-
-#sim .tray{
-  margin:14px 0 10px; min-height:52px; border:3px dashed rgba(28,21,18,.5); background:rgba(255,255,255,.35);
-  padding:8px 10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;
-}
-
-#sim .tray .tray-label{font-family:Optima,sans-serif; font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:#5a4a33; margin-right:6px}
-
-.scroll-chip{
-  border:2.5px solid var(--ink); background:linear-gradient(180deg,#fff8e0,#f3e2b3);
-  font-size:.72rem; font-family:Optima,sans-serif; padding:4px 8px; cursor:pointer;
-  box-shadow:2px 2px 0 var(--shadow); display:inline-flex; gap:6px; align-items:center;
-  animation:pop .18s ease;
-}
-
-.scroll-chip:hover{background:#fff}
-
-.scroll-chip .lose{color:var(--blood); font-weight:700; cursor:pointer; padding:0 2px}
-
 @keyframes pop{from{transform:scale(.7); opacity:0}to{transform:scale(1); opacity:1}}
-
-#sim .banner{
-  margin:8px 0 10px; text-align:center; font-family:Optima,sans-serif; letter-spacing:.08em;
-  font-size:.9rem; padding:7px 10px; border:3px solid var(--ink);
-}
-
-#sim .banner.ok{background:#dfe8d0; color:var(--olive-d)}
-
-#sim .banner.warn{background:#f6ecc8; color:#7a5b12}
-
-#sim .log{
-  height:240px; overflow-y:auto; background:#241c14; color:#efe2c2; padding:10px 14px;
-  font-family:Menlo,Consolas,monospace; font-size:.72rem; line-height:1.7;
-  border:3px solid var(--ink); box-shadow:inset 0 0 18px rgba(0,0,0,.6);
-}
-
-#sim .log .t-sys{color:#9fb4c7}
-
-#sim .log .t-msg{color:#e8c96a}
-
-#sim .log .t-act{color:#a8c77f}
-
-#sim .log .t-bad{color:#e08d6d}
-
-#sim .log .t-big{color:#ffd76e; font-weight:700}
-
-#sim .scenarios{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:12px}
-
-#stepsw .stepper{display:flex; gap:6px; flex-wrap:wrap; justify-content:center; margin:4px 0 16px}
-
-#stepsw .stepper button{
-  font-family:Optima,'Gill Sans',sans-serif; font-size:.78rem; letter-spacing:.04em;
-  border:2.5px solid var(--ink); background:#f6eed6; padding:5px 10px; cursor:pointer;
-  box-shadow:2px 2px 0 var(--shadow); color:#5a4a33;
-}
-
-#stepsw .stepper button.done{background:#dfe8d0}
-
-#stepsw .stepper button.on{
-  background:var(--caption); color:var(--ink); font-weight:700;
-  transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--shadow);
-}
-
-#stepsw .stage{display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-bottom:14px}
-
-#stepsw .priest{width:150px}
-
-#stepsw .priest .phead{cursor:default}
-
-#stepsw .priest .stat{display:block}
-
-#stepsw .mail{
-  min-height:44px; margin-top:6px; border:2px dashed rgba(28,21,18,.45); border-radius:2px;
-  background:rgba(255,255,255,.5); padding:3px 6px; font-size:.71rem; line-height:1.4;
-}
-
-#stepsw .mail .out{color:var(--aegean-d)}
-
-#stepsw .mail .in{color:var(--olive-d)}
-
-#stepsw .mail .zzz{color:#8a7a5e; font-style:italic}
-
-#stepsw .vars .note{display:block}
-
-#stepsw .vars .note.new{background:var(--caption); outline:2px solid var(--ink); padding:0 3px; animation:pop .18s ease}
-
-#stepsw .gods{
-  margin:2px 0 12px; border:3px solid var(--ink); background:#241c14; color:#efe2c2;
-  padding:8px 14px; font-family:Menlo,Consolas,monospace; font-size:.72rem; line-height:1.7;
-  box-shadow:inset 0 0 18px rgba(0,0,0,.6);
-}
-
-#stepsw .gods .glabel{
-  color:#9fb4c7; font-family:Optima,'Gill Sans',sans-serif; letter-spacing:.14em;
-  font-size:.66rem; text-transform:uppercase; display:block;
-}
-
-#stepsw .gods .bnew{color:#ffd76e; font-weight:700}
-
-#stepsw .gods .gdim{color:#8a7a5e; font-style:italic}
-
-#stepsw .commentary{
-  background:#fff9e6; border:3px solid var(--ink); padding:12px 16px; font-size:.92rem;
-  min-height:84px; box-shadow:4px 4px 0 var(--shadow);
-}
-
-#stepsw .commentary .stepname{
-  font-family:Optima,'Gill Sans',sans-serif; letter-spacing:.1em; text-transform:uppercase;
-  font-size:.78rem; color:var(--terra); display:block; margin-bottom:4px;
-}
-
-#stepsw .conds{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 0}
-
-#stepsw .conds .cond{border:2.5px solid var(--ink); padding:3px 10px; font-family:Optima,sans-serif; font-size:.76rem; background:#dfe8d0}
-
-#stepsw .conds .cond.info{background:#dce8f0}
-
-#stepsw .controls{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px}
-
-#ledgerw .book{
-  max-width:520px; margin:0 auto; background:linear-gradient(180deg,#fdfaf1,#f1e8cf);
-  border:3px solid var(--ink); box-shadow:5px 5px 0 var(--shadow); padding:14px 18px;
-}
-
-#ledgerw .entry{
-  display:flex; gap:10px; align-items:baseline; padding:6px 4px; border-bottom:1px dotted rgba(28,21,18,.4);
-  font-size:.9rem;
-}
-
-#ledgerw .entry .no{font-family:Optima,sans-serif; font-weight:700; width:44px; text-align:right; flex:none}
-
-#ledgerw .entry .txt{font-style:italic}
-
-#ledgerw .entry.gap{background:rgba(191,74,38,.1)}
-
-#ledgerw .entry.gap .txt{color:var(--blood); font-style:normal; font-family:'Chalkboard SE',Chalkboard,'Comic Sans MS',sans-serif; font-size:.78rem}
-
-#ledgerw .entry.gap.fillable{cursor:pointer; outline:2px dashed var(--blood)}
-
-#ledgerw .entry.gap.fillable:hover{background:rgba(191,74,38,.2)}
-
-#ledgerw .entry.new .txt{color:var(--aegean-d)}
-
-#ledgerw .msg{min-height:44px; margin-top:12px; font-size:.88rem; text-align:center; font-style:italic; color:#5a4a33}
 
 #names .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px}
 
@@ -858,26 +668,96 @@ people that the protocol was correct if, in their proof, they allowed any priest
 
   <aside class="fn"><b>10.</b> Priests <var>p</var> and <var>q</var> could be the same. For simplicity, the protocol is described with <var>p</var> sending messages to himself in this case. In reality, a priest could talk to himself without the use of messengers.</aside>
 
-  <!-- ========= WIDGET: THE SIX STEPS ========= -->
-  <div class="widget" id="w-steps">
-    <div class="whead"><h5 id="the-six-steps-one-ballot-move-by-move"><a href="#the-six-steps-one-ballot-move-by-move" class="hlink">⚱ The Six Steps — One Ballot, Move by Move</a></h5><span class="badge">GUIDED PROCESSION</span></div>
-    <div class="wbody" id="stepsw">
-      <p class="hint">Priest Γ dreams of passing his own decree <var>δ</var>. Follow a single ballot
-      of the preliminary protocol from beginning to end: <b>press “Next step”</b> (or click a
-      numbered step) and watch the messengers, the notes in each ledger, and the set <var>ℬ</var>
-      that only the gods can see. Pay attention to who chooses the decree in step&nbsp;3.
-      <em>Hint: it is not Γ.</em></p>
-      <div class="stepper" id="steps-tabs"></div>
-      <div class="stage" id="steps-stage"></div>
-      <div class="gods" id="steps-gods"></div>
-      <div class="commentary" id="steps-explain"></div>
-      <div class="controls">
-        <button class="gk" id="steps-back">← Back</button>
-        <button class="gk primary" id="steps-next">Next step →</button>
-        <button class="gk" id="steps-reset">Restart the ballot</button>
-      </div>
+  <figure class="diagram">
+    <div class="board">
+      <svg class="flow" viewBox="0 0 660 600" role="img" aria-label="One ballot of the basic protocol, drawn in the round: the five priests Α, Β, Γ, Δ, Ε, later moments further out. Γ begins a ballot and sends NextBallot to the others; Ε's scroll is lost. Α, Β and Δ promise and send LastVote back. Γ, having a majority of replies, fixes the decree by condition B3 and sends BeginBallot to the quorum Α, Β, Δ. They vote and send Voted back. With every quorum member's vote in, Γ writes the decree and sends Success to all, and each priest writes it.">
+        <!-- polar:ptp-steps -->
+        <defs>
+          <marker id="ptp-steps-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
+          </marker>
+          <marker id="ptp-steps-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
+          </marker>
+          <marker id="ptp-steps-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
+          </marker>
+          <marker id="ptp-steps-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
+          </marker>
+          <marker id="ptp-steps-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
+          </marker>
+        </defs>
+        <circle cx="330" cy="305" r="84" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="106" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="128" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="150" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="172" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="194" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="216" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="238" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="260" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="282" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <clipPath id="ptp-steps-clip0"><circle class="tclip" cx="330" cy="305" r="293.2" data-r0="62" data-r1="273.2"/></clipPath>
+        <g class="tflow" clip-path="url(#ptp-steps-clip0)">
+        <path d="M475.6,305 A145.6,145.6 0 1 0 184.4,305 A145.6,145.6 0 1 0 475.6,305 Z M414,305 A84,84 0 1 0 246,305 A84,84 0 1 0 414,305 Z" fill-rule="evenodd" style="fill:#a8741a; fill-opacity:0.16; stroke:#a8741a; stroke-opacity:.5; stroke-width:.8"/>
+        <path d="M552.6,305 A222.6,222.6 0 1 0 107.4,305 A222.6,222.6 0 1 0 552.6,305 Z M480,305 A150,150 0 1 0 180,305 A150,150 0 1 0 480,305 Z" fill-rule="evenodd" style="fill:#5f6e28; fill-opacity:0.16; stroke:#5f6e28; stroke-opacity:.5; stroke-width:.8"/>
+        </g>
+        <line class="d-lifeline" x1="330" y1="243" x2="330" y2="31.8"/>
+        <line class="d-lifeline" x1="389" y1="285.8" x2="589.8" y2="220.6"/>
+        <line class="d-lifeline" x1="366.4" y1="355.2" x2="490.6" y2="526"/>
+        <line class="d-lifeline" x1="293.6" y1="355.2" x2="169.4" y2="526"/>
+        <line class="d-lifeline" x1="271" y1="285.8" x2="70.2" y2="220.6"/>
+        <rect class="d-node" x="315" y="232" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="330" y="247.5" text-anchor="middle" fill="#1c1512">Α</text>
+        <rect class="d-node" x="374" y="274.8" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="389" y="290.3" text-anchor="middle" fill="#1c1512">Β</text>
+        <rect class="d-node" x="351.4" y="344.2" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="366.4" y="359.7" text-anchor="middle" fill="#1c1512">Γ</text>
+        <rect class="d-node" x="278.6" y="344.2" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="293.6" y="359.7" text-anchor="middle" fill="#1c1512">Δ</text>
+        <rect class="d-node" x="256" y="274.8" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="271" y="290.3" text-anchor="middle" fill="#1c1512">Ε</text>
+        <text class="d-key" x="20" y="30" text-anchor="start" style="fill:#a8741a">steps 1–2: promises</text>
+        <text class="d-key" x="20" y="48" text-anchor="start" style="fill:#5f6e28">steps 3–5: the vote</text>
+        <g class="tflow" clip-path="url(#ptp-steps-clip0)">
+        <circle class="d-ev" cx="382" cy="376.5" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-steps-b)" d="M382,376.5 L385.9,374.1 L389.8,371.4 L393.5,368.5 L397.1,365.4 L400.5,362.1 L403.7,358.6 L406.8,354.9 L409.7,351 L412.4,347 L414.9,342.8 L417.2,338.5 L419.3,334 L421.1,329.4 L422.7,324.7 L424.1,319.9 L425.2,315 L426.1,310 L426.6,305 L427,299.9 L427,294.8 L426.8,289.7 L426.3,284.5 L425.6,279.4 L424.5,274.3 L423.2,269.2 L421.6,264.2 L419.8,259.2 L417.7,254.4 L415.3,249.6 L412.6,245 L409.7,240.4 L406.6,236 L403.2,231.8 L399.6,227.7 L395.7,223.8 L391.7,220.1 L387.4,216.6 L382.9,213.4 L378.2,210.3 L373.4,207.5 L368.4,204.9 L363.3,202.6 L358,200.6 L352.6,198.8 L347.1,197.3 L341.4,196.1"/>
+        <path class="d-msg" marker-end="url(#ptp-steps-b)" d="M382,376.5 L386.2,374.4 L390.4,372.1 L394.5,369.5 L398.4,366.6 L402.3,363.5 L406,360.2 L409.5,356.6 L412.9,352.9 L416.1,348.9 L419.1,344.7 L421.9,340.3 L424.5,335.7 L426.9,331 L429,326 L430.9,321 L432.5,315.8 L433.8,310.4 L434.9,305 L435.7,299.5 L436.1,293.8 L436.3,288.2 L436.2,282.4"/>
+        <path class="d-msg" marker-end="url(#ptp-steps-b)" d="M382,376.5 L378.6,379.9 L375.1,383.1 L371.4,386.2 L367.4,389.1 L363.3,391.8 L359,394.3 L354.5,396.6 L349.9,398.6 L345.1,400.5 L340.2,402 L335.2,403.3 L330,404.4 L324.7,405.2 L319.4,405.7 L314,405.9 L308.6,405.8 L303.1,405.4 L297.6,404.8 L292.1,403.8 L286.6,402.5 L281.1,400.9 L275.7,399"/>
+        <path class="d-msg" d="M382,376.5 L378.4,379.5 L374.7,382.4 L370.8,385 L366.7,387.4 L362.5,389.7 L358.2,391.7 L353.7,393.5 L349.1,395.1 L344.5,396.4 L339.7,397.5 L334.9,398.3 L330,398.9 L325.1,399.2 L320.1,399.3 L315.1,399.1 L310.1,398.6 L305.1,397.9 L300.1,396.9 L295.2,395.7 L290.3,394.1 L285.5,392.3 L280.8,390.3 L276.1,388 L271.6,385.4 L267.2,382.6 L262.9,379.5 L258.7,376.3 L254.8,372.7"/>
+        <path d="M249.8,367.7 L259.8,377.7 M249.8,377.7 L259.8,367.7" style="stroke:#bf4a26; stroke-width:2.2; fill:none"/>
+        <circle class="d-ev" cx="330" cy="194.6" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-steps-b)" d="M330,194.6 L335.8,194.3 L341.6,194.3 L347.5,194.6 L353.3,195.2 L359.2,196.1 L365,197.4 L370.7,198.9 L376.4,200.8 L382,203 L387.5,205.4 L392.9,208.2 L398.1,211.2 L403.2,214.6 L408.2,218.2 L412.9,222.1 L417.5,226.2 L421.9,230.6 L426,235.3 L429.9,240.1 L433.5,245.2 L436.9,250.5 L440.1,256 L442.9,261.7 L445.5,267.5 L447.7,273.5 L449.6,279.6 L451.3,285.8 L452.6,292.1 L453.5,298.5 L454.1,305 L454.4,311.5 L454.4,318.1 L454,324.6 L453.2,331.2 L452.1,337.7 L450.7,344.2 L448.9,350.6 L446.8,357 L444.3,363.2 L441.5,369.4 L438.3,375.4 L434.9,381.2 L431.1,386.9 L427,392.4 L422.6,397.6 L418,402.7"/>
+        <circle class="d-ev" cx="435" cy="270.9" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-steps-b)" d="M435,270.9 L437.6,276.2 L440,281.6 L442.1,287.2 L443.9,293 L445.4,299 L446.6,305 L447.4,311.2 L448,317.4 L448.2,323.7 L448,330.1 L447.5,336.5 L446.7,342.9 L445.5,349.3 L444,355.7 L442.1,362.1 L439.8,368.4 L437.2,374.6 L434.3,380.8 L431,386.8 L427.3,392.6 L423.3,398.3 L419,403.8 L414.3,409.1"/>
+        <circle class="d-ev" cx="265.1" cy="394.3" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-steps-b)" d="M265.1,394.3 L269.3,398.5 L273.7,402.6 L278.3,406.4 L283.2,410 L288.4,413.4 L293.8,416.5 L299.4,419.3 L305.2,421.9 L311.1,424.1 L317.3,426.1 L323.6,427.7 L330,429 L336.6,430 L343.2,430.6 L349.9,430.9 L356.7,430.8 L363.6,430.3 L370.4,429.5 L377.3,428.2 L384.2,426.6 L391,424.6 L397.7,422.3 L404.4,419.5"/>
+        <circle class="d-ev-hi" cx="418.9" cy="427.4" r="5.5"/>
+        <path class="d-msg" marker-end="url(#ptp-steps-b)" d="M418.9,427.4 L425.5,423 L431.9,418.1 L438,413 L443.8,407.5 L449.4,401.7 L454.6,395.6 L459.6,389.2 L464.2,382.5 L468.5,375.6 L472.4,368.4 L476,361 L479.1,353.5 L481.9,345.7 L484.3,337.8 L486.2,329.7 L487.8,321.6 L488.9,313.3 L489.6,305 L489.8,296.6 L489.6,288.2 L489,279.8 L487.9,271.4 L486.3,263.1 L484.4,254.8 L482,246.7 L479.1,238.6 L475.9,230.7 L472.2,222.9 L468.1,215.3 L463.5,208 L458.6,200.8 L453.4,193.9 L447.7,187.3 L441.7,181 L435.3,174.9 L428.6,169.2 L421.7,163.9 L414.4,158.9 L406.8,154.2 L399,150 L391,146.2 L382.7,142.8 L374.3,139.8 L365.7,137.3 L356.9,135.2 L348,133.5 L339,132.4"/>
+        <path class="d-msg" marker-end="url(#ptp-steps-b)" d="M418.9,427.4 L425.8,423.3 L432.5,418.8 L438.9,413.9 L445.2,408.7 L451.2,403.1 L456.9,397.2 L462.3,390.9 L467.4,384.3 L472.2,377.4 L476.6,370.3 L480.7,362.8 L484.4,355.2 L487.7,347.2 L490.6,339.1 L493,330.8 L495.1,322.4 L496.7,313.7 L497.8,305 L498.5,296.2 L498.7,287.3 L498.5,278.3 L497.7,269.3 L496.5,260.4"/>
+        <path class="d-msg" marker-end="url(#ptp-steps-b)" d="M418.9,427.4 L412.9,432.7 L406.6,437.6 L399.9,442.3 L393,446.6 L385.9,450.5 L378.5,454.1 L370.8,457.4 L363,460.2 L355,462.6 L346.8,464.6 L338.4,466.2 L330,467.3 L321.5,468 L312.8,468.3 L304.2,468 L295.5,467.4 L286.8,466.2 L278.1,464.6 L269.5,462.5 L261,460 L252.6,457 L244.3,453.5 L236.1,449.6"/>
+        <circle class="d-ev" cx="330" cy="131.7" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-steps-b)" d="M330,131.7 L339.1,131.5 L348.2,131.7 L357.3,132.5 L366.4,133.7 L375.5,135.4 L384.4,137.5 L393.3,140.2 L402,143.3 L410.6,146.9 L419,150.9 L427.1,155.4 L435.1,160.3 L442.8,165.7 L450.3,171.4 L457.4,177.6 L464.3,184.1 L470.8,191 L476.9,198.3 L482.7,205.9 L488,213.8 L493,221.9 L497.5,230.4 L501.6,239.1 L505.3,248 L508.5,257.2 L511.2,266.5 L513.4,276 L515.1,285.5 L516.4,295.2 L517.1,305 L517.3,314.8 L517,324.6 L516.1,334.5 L514.8,344.3 L512.9,354 L510.5,363.7 L507.6,373.2 L504.2,382.6 L500.4,391.8 L496,400.8 L491.1,409.6 L485.8,418.2 L480,426.5 L473.8,434.5 L467.1,442.1 L460.1,449.5 L452.6,456.4"/>
+        <circle class="d-ev" cx="494.8" cy="251.4" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-steps-b)" d="M494.8,251.4 L498.4,259.9 L501.5,268.5 L504.2,277.4 L506.5,286.5 L508.2,295.7 L509.5,305 L510.3,314.4 L510.5,324 L510.3,333.6 L509.6,343.2 L508.3,352.8 L506.6,362.4 L504.3,371.9 L501.5,381.3 L498.2,390.7 L494.3,399.9 L490,408.9 L485.2,417.7 L479.9,426.3 L474.1,434.7 L467.8,442.8 L461.1,450.6 L453.9,458"/>
+        <circle class="d-ev" cx="228.1" cy="445.2" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-steps-b)" d="M228.1,445.2 L235,451.3 L242.2,457.1 L249.8,462.5 L257.7,467.5 L265.9,472.1 L274.3,476.3 L283.1,480.1 L292.1,483.4 L301.3,486.3 L310.7,488.7 L320.3,490.6 L330,492 L339.8,492.8 L349.8,493.2 L359.8,493 L369.8,492.3 L379.9,491.1 L389.9,489.3 L399.9,487 L409.7,484.1 L419.5,480.7 L429.2,476.8 L438.6,472.3"/>
+        <circle class="d-ev-hi" cx="455.9" cy="478.3" r="5.5"/>
+        <path class="d-msg-hi" marker-end="url(#ptp-steps-r)" d="M455.9,478.3 L465.1,471.9 L474,464.9 L482.5,457.5 L490.6,449.6 L498.3,441.3 L505.5,432.5 L512.4,423.4 L518.7,414 L524.6,404.1 L529.9,394 L534.7,383.6 L539,372.9 L542.7,362 L545.8,350.9 L548.4,339.6 L550.4,328.2 L551.7,316.6 L552.5,305 L552.6,293.3 L552.2,281.6 L551.1,270 L549.4,258.4 L547.1,246.8 L544.2,235.4 L540.7,224.1 L536.6,213 L531.9,202.1 L526.7,191.5 L520.8,181.1 L514.4,171 L507.5,161.2 L500.1,151.8 L492.2,142.8 L483.8,134.2 L474.9,126 L465.6,118.3 L455.9,111.1 L445.8,104.4 L435.4,98.2 L424.6,92.5 L413.5,87.4 L402.2,82.9 L390.6,79 L378.7,75.7 L366.7,73 L354.6,71 L342.3,69.5"/>
+        <circle class="d-ev-hi" cx="330" cy="68.8" r="5.5"/>
+        <path class="d-msg-hi" marker-end="url(#ptp-steps-r)" d="M455.9,478.3 L465.4,472.2 L474.6,465.6 L483.4,458.4 L491.9,450.8 L500.1,442.7 L507.8,434.2 L515.1,425.2 L521.9,415.8 L528.2,406 L534.1,395.9 L539.4,385.4 L544.2,374.6 L548.5,363.5 L552.1,352.2 L555.2,340.7 L557.7,328.9 L559.5,317 L560.7,305 L561.3,292.9 L561.3,280.7 L560.6,268.5 L559.3,256.3 L557.3,244.1"/>
+        <circle class="d-ev-hi" cx="554.7" cy="232" r="5.5"/>
+        <path class="d-msg-hi" marker-end="url(#ptp-steps-r)" d="M455.9,478.3 L447.2,485.4 L438,492.1 L428.5,498.3 L418.6,504.1 L408.4,509.3 L397.9,514 L387.1,518.1 L376.1,521.7 L364.8,524.8 L353.4,527.2 L341.7,529 L330,530.2 L318.2,530.8 L306.3,530.8 L294.3,530.2 L282.4,528.9 L270.5,527 L258.7,524.4 L247,521.3 L235.4,517.5 L224,513 L212.8,508 L201.8,502.4"/>
+        <circle class="d-ev-hi" cx="191.1" cy="496.1" r="5.5"/>
+        <text class="d-lbl d-halo" x="391.7" y="373.5" text-anchor="start" font-size="11">1</text>
+        <circle cx="398.1" cy="364.8" r="8.5" style="fill:#1c1512; stroke:#f6eed6; stroke-width:1.5"/><text x="398.1" y="368.8" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">1</text>
+        <circle cx="350" cy="194.6" r="8.5" style="fill:#1c1512; stroke:#f6eed6; stroke-width:1.5"/><text x="350" y="198.6" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">2</text>
+        <circle cx="435.1" cy="415.7" r="8.5" style="fill:#bf4a26; stroke:#f6eed6; stroke-width:1.5"/><text x="435.1" y="419.7" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">3</text>
+        <circle cx="488.7" cy="232.4" r="8.5" style="fill:#1c1512; stroke:#f6eed6; stroke-width:1.5"/><text x="488.7" y="236.4" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">4</text>
+        <circle cx="472.1" cy="466.6" r="8.5" style="fill:#bf4a26; stroke:#f6eed6; stroke-width:1.5"/><text x="472.1" y="470.6" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">5</text>
+        <circle cx="310" cy="68.8" r="8.5" style="fill:#bf4a26; stroke:#f6eed6; stroke-width:1.5"/><text x="310" y="72.8" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">6</text>
+        </g>
+      </svg>
     </div>
-  </div>
+    <figcaption><b>One ballot, move by move.</b> Γ begins it (1) and sends NextBallot to the others; Ε's scroll is lost. Α, Β and Δ promise and reply (2). With a majority of replies Γ fixes the decree by <var>B</var>3, which need not be his own, and sends BeginBallot to the quorum (3). They vote and reply (4); Γ writes the decree (5) and sends Success to all (6). Ε, whose scroll was lost, still hears the result.</figcaption>
+  </figure>
 
   <h3 id="2-3-the-basic-protocol" class="sect"><a href="#2-3-the-basic-protocol" class="hlink">2.3 · The Basic Protocol</a></h3>
   <div class="prose">
@@ -957,50 +837,250 @@ people that the protocol was correct if, in their proof, they allowed any priest
     Their Paxon mathematicians’ proof that the protocol satisfies the consistency con<span style="display:none">-</span>dition is reproduced in the appendix.</p>
   </div>
 
-  <!-- ========= WIDGET 2: SIMULATOR ========= -->
-  <div class="widget" id="w-sim">
-    <div class="whead"><h5 id="the-chamber-conduct-a-ballot-yourself"><a href="#the-chamber-conduct-a-ballot-yourself" class="hlink">⚱ The Chamber — Conduct a Ballot Yourself</a></h5><span class="badge">HANDS-ON ORACLE</span></div>
-    <div class="wbody" id="sim">
-      <p class="hint">Five priests, one Chamber, and you. <b>Click a priest’s head-bar</b> to send
-      him wandering out of the Chamber (or bring him back — if he was mid-ballot, his slip of paper
-      is lost). Pick an initiator and a decree, start a ballot, then deliver the scrolls one at a
-      time — or lose them (✕) to test the gods’ patience. Messages to absent priests vanish. See if
-      you can make two ledgers disagree. <em>You cannot.</em></p>
-      <div class="banner warn" id="sim-banner">No decree has yet been written in any ledger.</div>
-      <div class="stage" id="sim-stage"></div>
-      <div class="controls">
-        <label class="display" style="font-size:.8rem">INITIATOR
-          <select class="gk" id="sim-priest"></select>
-        </label>
-        <label class="display" style="font-size:.8rem">PROPOSES
-          <select class="gk" id="sim-decree">
-            <option>The olive tax is 3 drachmas per ton</option>
-            <option>Lamps must use only olive oil</option>
-            <option>Painting on temple walls is forbidden</option>
-            <option>Freedom of artistic expression is guaranteed</option>
-            <option>The sale of black goats is permitted</option>
-            <option>Ships must carry lanterns at night</option>
-          </select>
-        </label>
-        <button class="gk primary" id="sim-start">Start ballot (step 1)</button>
-      </div>
-      <div class="tray" id="sim-tray"><span class="tray-label">In the messengers’ hands →</span><span id="sim-tray-items" style="display:contents"></span></div>
-      <div class="controls">
-        <button class="gk" id="sim-next">Deliver next scroll</button>
-        <button class="gk" id="sim-all">Deliver all scrolls</button>
-        <button class="gk danger" id="sim-lose">A messenger sails away (lose one)</button>
-        <button class="gk" id="sim-reset">Reset the Chamber</button>
-      </div>
-      <div class="log" id="sim-log"></div>
-      <div class="scenarios">
-        <span class="display" style="font-size:.72rem; letter-spacing:.12em; align-self:center">TRY A LEGEND:</span>
-        <button class="gk" data-scn="quiet">Ⅰ · A quiet day</button>
-        <button class="gk" data-scn="wander">Ⅱ · The wanderers</button>
-        <button class="gk" data-scn="duel">Ⅲ · Two would-be presidents</button>
-        <button class="gk" data-scn="theorem">Ⅳ · Theorem 1, live</button>
-      </div>
+  <figure class="diagram">
+    <div class="board">
+      <svg class="flow" viewBox="0 0 660 560" role="img" aria-label="The wanderers, drawn in the round: Δ and Ε have left for a banquet, so their lines end in crosses. Β begins a ballot; the scrolls to Δ and Ε are lost. Α and Γ, with Β, are a majority; they promise, vote, and the decree passes and is written by Α, Β and Γ. Δ and Ε learn nothing.">
+        <!-- polar:ptp-wander -->
+        <defs>
+          <marker id="ptp-wander-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
+          </marker>
+          <marker id="ptp-wander-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
+          </marker>
+          <marker id="ptp-wander-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
+          </marker>
+          <marker id="ptp-wander-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
+          </marker>
+          <marker id="ptp-wander-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
+          </marker>
+        </defs>
+        <circle cx="330" cy="290" r="86" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="290" r="110" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="290" r="134" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="290" r="158" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="290" r="182" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="290" r="206" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="290" r="230" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="290" r="254" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="290" r="278" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <line class="d-lifeline" x1="330" y1="228" x2="330" y2="21.6"/>
+        <line class="d-lifeline" x1="389" y1="270.8" x2="585.3" y2="207.1"/>
+        <line class="d-lifeline" x1="366.4" y1="340.2" x2="487.8" y2="507.1"/>
+        <line class="d-lifeline" x1="293.6" y1="340.2" x2="279.5" y2="359.6"/>
+        <line class="d-lifeline" x1="271" y1="270.8" x2="248.2" y2="263.4"/>
+        <rect class="d-node" x="315" y="217" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="330" y="232.5" text-anchor="middle" fill="#1c1512">Α</text>
+        <rect class="d-node" x="374" y="259.8" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="389" y="275.3" text-anchor="middle" fill="#1c1512">Β</text>
+        <rect class="d-node" x="351.4" y="329.2" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="366.4" y="344.7" text-anchor="middle" fill="#1c1512">Γ</text>
+        <rect class="d-node" x="278.6" y="329.2" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="293.6" y="344.7" text-anchor="middle" fill="#1c1512">Δ</text>
+        <rect class="d-node" x="256" y="259.8" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="271" y="275.3" text-anchor="middle" fill="#1c1512">Ε</text>
+        <clipPath id="ptp-wander-clip0"><circle class="tclip" cx="330" cy="290" r="288.4" data-r0="62" data-r1="268.4"/></clipPath>
+        <g class="tflow" clip-path="url(#ptp-wander-clip0)">
+        <path d="M274,354.1 L285,365.1 M274,365.1 L285,354.1" style="stroke:#1c1512; stroke-width:2.4; fill:none"/>
+        <path d="M242.7,257.9 L253.7,268.9 M242.7,268.9 L253.7,257.9" style="stroke:#1c1512; stroke-width:2.4; fill:none"/>
+        <circle class="d-ev" cx="416.4" cy="261.9" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-wander-b)" d="M416.4,261.9 L415.8,257.1 L415,252.2 L413.8,247.3 L412.4,242.4 L410.8,237.6 L408.8,232.7 L406.5,228 L404,223.4 L401.2,218.8 L398.1,214.3 L394.8,210 L391.1,205.9 L387.2,201.9 L383.1,198 L378.7,194.4 L374.1,191 L369.2,187.8 L364.2,184.8 L358.9,182.1 L353.5,179.7 L347.8,177.5 L342,175.6"/>
+        <path class="d-msg" marker-end="url(#ptp-wander-b)" d="M416.4,261.9 L418.8,266.2 L421,270.7 L422.9,275.3 L424.7,280 L426.2,285 L427.4,290 L428.4,295.2 L429.1,300.4 L429.5,305.8 L429.6,311.2 L429.4,316.6 L428.9,322.1 L428.1,327.7 L427,333.2 L425.6,338.7 L423.9,344.2 L421.8,349.6 L419.5,355 L416.8,360.3 L413.8,365.5 L410.5,370.5 L407,375.5"/>
+        <path class="d-msg" d="M416.4,261.9 L418.2,266.4 L419.9,270.9 L421.3,275.5 L422.5,280.3 L423.4,285.1 L424.1,290 L424.5,295 L424.7,300 L424.6,305 L424.2,310 L423.5,315.1 L422.6,320.1 L421.4,325.1 L420,330.1 L418.3,335 L416.3,339.8 L414,344.5 L411.5,349.2 L408.7,353.7 L405.7,358.1 L402.4,362.4 L398.9,366.5 L395.1,370.4 L391.1,374.1 L386.9,377.7 L382.6,381 L378,384.1 L373.2,387"/>
+        <path d="M368.2,382 L378.2,392 M368.2,392 L378.2,382" style="stroke:#bf4a26; stroke-width:2.2; fill:none"/>
+        <path class="d-msg" d="M416.4,261.9 L415.3,257.3 L414,252.6 L412.4,248 L410.5,243.5 L408.5,239 L406.1,234.7 L403.6,230.4 L400.7,226.3 L397.7,222.3 L394.4,218.4 L390.9,214.7 L387.3,211.2 L383.3,207.9 L379.2,204.7 L375,201.7 L370.5,199 L365.9,196.5 L361.1,194.2 L356.2,192.2 L351.2,190.4 L346,188.9 L340.8,187.7 L335.4,186.7 L330,186 L324.5,185.6 L319,185.5 L313.5,185.7 L307.9,186.1"/>
+        <path d="M302.9,181.1 L312.9,191.1 M302.9,191.1 L312.9,181.1" style="stroke:#bf4a26; stroke-width:2.2; fill:none"/>
+        <circle class="d-ev" cx="330" cy="172.8" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-wander-b)" d="M330,172.8 L336.2,171.9 L342.5,171.3 L348.9,171 L355.3,171.1 L361.8,171.5 L368.3,172.3 L374.8,173.4 L381.2,174.9 L387.7,176.8 L394.1,179 L400.4,181.6 L406.6,184.5 L412.8,187.8 L418.7,191.5 L424.5,195.5 L430.2,199.8 L435.6,204.5 L440.8,209.5 L445.8,214.8 L450.6,220.4 L455,226.3 L459.2,232.5 L463,238.9"/>
+        <circle class="d-ev" cx="398.9" cy="384.8" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-wander-b)" d="M398.9,384.8 L404.5,382 L410.1,378.9 L415.5,375.5 L420.7,371.7 L425.8,367.6 L430.7,363.2 L435.5,358.5 L440,353.5 L444.2,348.2 L448.2,342.6 L451.9,336.8 L455.4,330.7 L458.5,324.4 L461.3,317.9 L463.8,311.2 L466,304.3 L467.8,297.2 L469.2,290 L470.2,282.7 L470.8,275.2 L471.1,267.7 L470.9,260.1 L470.3,252.4"/>
+        <circle class="d-ev-hi" cx="483.5" cy="240.1" r="5.5"/>
+        <path class="d-msg" marker-end="url(#ptp-wander-b)" d="M483.5,240.1 L481.7,231.8 L479.4,223.5 L476.7,215.2 L473.6,207.1 L469.9,199.1 L465.9,191.3 L461.4,183.6 L456.5,176.1 L451.1,168.9 L445.3,161.9 L439.2,155.2 L432.6,148.8 L425.7,142.7 L418.4,136.9 L410.7,131.5 L402.8,126.5 L394.5,121.9 L386,117.7 L377.2,114 L368.1,110.6 L358.9,107.8 L349.4,105.5 L339.8,103.6"/>
+        <path class="d-msg" marker-end="url(#ptp-wander-b)" d="M483.5,240.1 L486.9,248 L490,256 L492.6,264.2 L494.9,272.7 L496.6,281.3 L498,290 L498.8,298.8 L499.2,307.8 L499.2,316.8 L498.6,325.8 L497.5,334.9 L496,343.9 L494,353 L491.5,361.9 L488.5,370.7 L485,379.5 L481,388.1 L476.6,396.5 L471.6,404.7 L466.3,412.7 L460.4,420.4 L454.2,427.9 L447.5,435.1"/>
+        <circle class="d-ev" cx="330" cy="102.2" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-wander-b)" d="M330,102.2 L339.9,101.4 L349.9,101.1 L359.9,101.3 L370,102 L380,103.3 L390.1,105.2 L400,107.5 L409.9,110.4 L419.7,113.9 L429.4,117.9 L438.9,122.4 L448.1,127.4 L457.2,133 L465.9,139 L474.4,145.6 L482.6,152.6 L490.4,160.1 L497.9,168 L505,176.4 L511.7,185.1 L517.9,194.3 L523.6,203.8 L528.9,213.6"/>
+        <circle class="d-ev" cx="440.4" cy="441.9" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-wander-b)" d="M440.4,441.9 L448.9,436.9 L457.3,431.3 L465.4,425.4 L473.2,418.9 L480.7,412 L487.8,404.7 L494.6,396.9 L501.1,388.8 L507.1,380.2 L512.7,371.3 L517.8,362.1 L522.5,352.5 L526.7,342.7 L530.4,332.6 L533.5,322.2 L536.1,311.7 L538.2,300.9 L539.7,290 L540.7,279 L541,267.8 L540.8,256.6 L539.9,245.4 L538.5,234.1"/>
+        <circle class="d-ev-hi" cx="550.6" cy="218.3" r="5.5"/>
+        <path class="d-msg-hi" marker-end="url(#ptp-wander-r)" d="M550.6,218.3 L547.5,206.5 L543.9,194.8 L539.6,183.2 L534.7,171.8 L529.1,160.7 L523,149.8 L516.2,139.2 L508.9,128.9 L501,119 L492.5,109.5 L483.6,100.4 L474.1,91.7 L464.1,83.5 L453.7,75.8 L442.8,68.7 L431.5,62.1 L419.8,56 L407.8,50.6 L395.4,45.8 L382.8,41.6 L369.9,38.1 L356.8,35.3 L343.5,33.1"/>
+        <circle class="d-ev-hi" cx="330" cy="31.7" r="5.5"/>
+        <path class="d-msg-hi" marker-end="url(#ptp-wander-r)" d="M550.6,218.3 L555.1,229.7 L559,241.3 L562.3,253.2 L565,265.3 L567.1,277.6 L568.5,290 L569.3,302.5 L569.4,315.2 L568.8,327.8 L567.6,340.5 L565.7,353.2 L563.1,365.7 L559.9,378.2 L555.9,390.6 L551.3,402.8 L546.1,414.8 L540.2,426.5 L533.6,438 L526.5,449.1 L518.7,459.9 L510.3,470.3 L501.4,480.3 L491.9,489.9"/>
+        <circle class="d-ev-hi" cx="481.8" cy="499" r="5.5"/>
+        <text class="d-lbl d-halo" x="290.8" y="371.8" text-anchor="start">at the banquet</text>
+        <text class="d-lbl d-halo" x="412.6" y="254.5" text-anchor="end">begins</text>
+        <text class="d-lbl d-halo" x="546.9" y="210.9" text-anchor="end" style="fill:#bf4a26">passes</text>
+        </g>
+      </svg>
     </div>
-  </div>
+    <figcaption><b>The wanderers.</b> Δ and Ε have gone to a banquet. Β begins a ballot; the scrolls to the absent are lost, but Α, Β and Γ are a majority, so the decree passes and business goes on. Δ and Ε learn nothing until someone tells them.</figcaption>
+  </figure>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg class="flow" viewBox="0 0 660 540" role="img" aria-label="Two would-be presidents, drawn in the round. Α begins ballot 1 with Β and Γ, who promise and reply. Before Α can use the replies, Ε begins the higher ballot 2 with everyone, and Β and Γ promise ballot 2. Α then sends BeginBallot for ballot 1, and Β and Γ ignore it, having promised a higher ballot.">
+        <!-- polar:ptp-duel -->
+        <defs>
+          <marker id="ptp-duel-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
+          </marker>
+          <marker id="ptp-duel-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
+          </marker>
+          <marker id="ptp-duel-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
+          </marker>
+          <marker id="ptp-duel-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
+          </marker>
+          <marker id="ptp-duel-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
+          </marker>
+        </defs>
+        <circle cx="330" cy="280" r="86" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="280" r="110" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="280" r="134" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="280" r="158" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="280" r="182" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="280" r="206" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="280" r="230" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="280" r="254" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <line class="d-lifeline" x1="330" y1="218" x2="330" y2="35.6"/>
+        <line class="d-lifeline" x1="389" y1="260.8" x2="562.4" y2="204.5"/>
+        <line class="d-lifeline" x1="366.4" y1="330.2" x2="473.7" y2="477.7"/>
+        <line class="d-lifeline" x1="293.6" y1="330.2" x2="186.3" y2="477.7"/>
+        <line class="d-lifeline" x1="271" y1="260.8" x2="97.6" y2="204.5"/>
+        <rect class="d-node" x="315" y="207" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="330" y="222.5" text-anchor="middle" fill="#1c1512">Α</text>
+        <rect class="d-node" x="374" y="249.8" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="389" y="265.3" text-anchor="middle" fill="#1c1512">Β</text>
+        <rect class="d-node" x="351.4" y="319.2" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="366.4" y="334.7" text-anchor="middle" fill="#1c1512">Γ</text>
+        <rect class="d-node" x="278.6" y="319.2" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="293.6" y="334.7" text-anchor="middle" fill="#1c1512">Δ</text>
+        <rect class="d-node" x="256" y="249.8" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="271" y="265.3" text-anchor="middle" fill="#1c1512">Ε</text>
+        <clipPath id="ptp-duel-clip0"><circle class="tclip" cx="330" cy="280" r="264.4" data-r0="62" data-r1="244.4"/></clipPath>
+        <g class="tflow" clip-path="url(#ptp-duel-clip0)">
+        <circle class="d-ev" cx="330" cy="194" r="5"/>
+        <text class="d-lbl d-halo" x="340" y="198" text-anchor="start">ballot 1</text>
+        <path class="d-msg" marker-end="url(#ptp-duel-b)" d="M330,194 L334.6,192.9 L339.2,192.1 L344,191.5 L348.9,191.2 L353.8,191.1 L358.8,191.4 L363.8,191.9 L368.9,192.7 L373.9,193.8 L379,195.1 L384,196.8 L389,198.8 L393.9,201 L398.8,203.6 L403.5,206.5 L408.2,209.6 L412.7,213 L417.1,216.8 L421.2,220.7 L425.3,225 L429.1,229.5 L432.7,234.3"/>
+        <circle class="d-ev" cx="439.2" cy="244.5" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-duel-b)" d="M439.2,244.5 L438.6,238.3 L437.6,232.1 L436.3,225.8 L434.6,219.6 L432.6,213.4 L430.2,207.2 L427.4,201.1 L424.2,195.2 L420.7,189.3 L416.9,183.5 L412.6,178 L408.1,172.6 L403.1,167.4 L397.9,162.4 L392.3,157.7 L386.5,153.2 L380.3,149 L373.8,145.1 L367.1,141.6 L360.1,138.4 L352.9,135.5 L345.4,133 L337.8,130.9"/>
+        <path class="d-msg" marker-end="url(#ptp-duel-b)" d="M330,194 L334.5,193.5 L339.1,193.3 L343.7,193.3 L348.4,193.5 L353,194 L357.7,194.8 L362.3,195.8 L366.9,197.1 L371.5,198.6 L376,200.3 L380.4,202.3 L384.8,204.6 L389,207.1 L393.2,209.8 L397.2,212.8 L401,216 L404.8,219.5 L408.3,223.1 L411.7,227 L414.9,231 L417.9,235.2 L420.6,239.7 L423.2,244.2 L425.5,249 L427.6,253.9 L429.4,258.9 L430.9,264 L432.2,269.3 L433.3,274.6 L434,280 L434.5,285.5 L434.6,291 L434.5,296.6 L434.1,302.1 L433.4,307.7 L432.3,313.3 L431,318.8 L429.4,324.3 L427.5,329.7 L425.3,335 L422.8,340.2 L420,345.4 L416.9,350.4 L413.5,355.2 L409.9,359.9 L406,364.4"/>
+        <circle class="d-ev" cx="397.5" cy="372.9" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-duel-b)" d="M397.5,372.9 L402.8,369.9 L407.9,366.5 L412.9,362.9 L417.8,359 L422.4,354.8 L426.9,350.4 L431.1,345.7 L435.1,340.7 L438.9,335.5 L442.4,330 L445.6,324.4 L448.6,318.5 L451.2,312.5 L453.6,306.3 L455.6,299.9 L457.3,293.4 L458.6,286.7 L459.6,280 L460.3,273.2 L460.6,266.3 L460.5,259.3 L460,252.4 L459.2,245.4 L458,238.4 L456.4,231.5 L454.5,224.6 L452.1,217.8 L449.4,211.1 L446.3,204.4 L442.9,198 L439.1,191.7 L434.9,185.5 L430.4,179.6 L425.6,173.8 L420.4,168.3 L414.9,163.1 L409.1,158.1 L403.1,153.4 L396.7,149 L390.1,145 L383.3,141.2 L376.2,137.9 L368.9,134.8 L361.4,132.2 L353.8,129.9 L346,128.1 L338,126.6"/>
+        <text class="d-lbl d-halo" x="436.1" y="239" text-anchor="end">promise 1</text>
+        <circle class="d-ev-hi" cx="234.5" cy="249" r="5.5"/>
+        <text class="d-lbl d-halo" x="231.4" y="262.5" text-anchor="end" style="fill:#bf4a26">ballot 2</text>
+        <path class="d-msg-hi" marker-end="url(#ptp-duel-r)" d="M234.5,249 L235.3,243.7 L236.5,238.4 L237.9,233.1 L239.6,227.8 L241.6,222.6 L243.9,217.5 L246.5,212.4 L249.4,207.5 L252.6,202.6 L256.1,198 L259.9,193.4 L263.9,189.1 L268.2,184.9 L272.8,180.9 L277.6,177.2 L282.7,173.7 L287.9,170.4 L293.4,167.4 L299.1,164.7 L305,162.2 L311,160.1 L317.2,158.3"/>
+        <path class="d-msg-hi" marker-end="url(#ptp-duel-r)" d="M234.5,249 L232.1,253.8 L229.8,258.7 L227.9,263.8 L226.2,269.1 L224.7,274.5 L223.6,280 L222.7,285.6 L222.2,291.3 L221.9,297.1 L222,303 L222.4,308.8 L223.1,314.7 L224.1,320.6 L225.5,326.5 L227.2,332.4 L229.2,338.2 L231.5,343.9 L234.2,349.6 L237.2,355.1 L240.5,360.6 L244.2,365.8 L248.1,371"/>
+        <path class="d-msg-hi" marker-end="url(#ptp-duel-r)" d="M234.5,249 L235,243.5 L235.8,238.1 L236.9,232.6 L238.4,227.1 L240.1,221.6 L242.2,216.2 L244.6,210.9 L247.4,205.6 L250.4,200.4 L253.8,195.4 L257.5,190.4 L261.5,185.7 L265.8,181.1 L270.3,176.7 L275.2,172.5 L280.4,168.5 L285.8,164.8 L291.5,161.4 L297.4,158.2 L303.5,155.4 L309.9,152.8 L316.4,150.6 L323.1,148.7 L330,147.2 L337,146 L344.2,145.2 L351.4,144.8 L358.7,144.8 L366.1,145.2 L373.5,146 L381,147.2 L388.4,148.8 L395.8,150.8 L403.1,153.3 L410.4,156.2 L417.6,159.5 L424.6,163.2 L431.5,167.3 L438.2,171.8 L444.7,176.7 L451,182 L457.1,187.7 L462.9,193.7 L468.4,200.1 L473.6,206.8 L478.5,213.9 L483,221.3"/>
+        <path class="d-msg-hi" marker-end="url(#ptp-duel-r)" d="M234.5,249 L231.7,253.7 L229.2,258.6 L226.8,263.7 L224.8,268.9 L223,274.4 L221.5,280 L220.3,285.7 L219.4,291.6 L218.8,297.6 L218.6,303.7 L218.7,309.8 L219.1,316 L219.9,322.3 L221,328.5 L222.5,334.8 L224.3,341 L226.5,347.2 L229.1,353.3 L232,359.3 L235.3,365.2 L239,371 L242.9,376.7 L247.3,382.2 L251.9,387.4 L256.9,392.5 L262.2,397.3 L267.9,401.9 L273.8,406.3 L280,410.3 L286.5,414 L293.2,417.4 L300.1,420.5 L307.3,423.2 L314.7,425.5 L322.3,427.4 L330,429 L337.9,430.1 L345.9,430.9 L353.9,431.2 L362.1,431 L370.3,430.4 L378.5,429.4 L386.8,427.9 L395,426 L403.2,423.6 L411.2,420.7 L419.2,417.4"/>
+        <circle class="d-ev-hi" cx="491.7" cy="227.5" r="5.5"/>
+        <circle class="d-ev-hi" cx="429.9" cy="417.5" r="5.5"/>
+        <text class="d-lbl d-halo" x="421.8" y="427.4" text-anchor="end" style="fill:#bf4a26">promise 2</text>
+        <circle class="d-ev" cx="330" cy="107.6" r="5"/>
+        <text class="d-lbl d-halo" x="340" y="111.6" text-anchor="start">begins ballot 1</text>
+        <path class="d-msg" marker-end="url(#ptp-duel-b)" d="M330,107.6 L339.1,106 L348.4,105 L357.8,104.4 L367.3,104.3 L376.9,104.8 L386.6,105.8 L396.3,107.3 L406,109.3 L415.6,112 L425.2,115.1 L434.7,118.8 L444,123.1 L453.2,127.8 L462.2,133.2 L471,139 L479.5,145.4 L487.8,152.2 L495.7,159.6 L503.3,167.5 L510.5,175.8 L517.3,184.6 L523.7,193.8 L529.6,203.4 L535,213.4"/>
+        <path d="M530,208.4 L540,218.4 M530,218.4 L540,208.4" style="stroke:#bf4a26; stroke-width:2.2; fill:none"/>
+        <path class="d-msg" marker-end="url(#ptp-duel-b)" d="M330,107.6 L339.1,106.9 L348.2,106.8 L357.4,107.1 L366.6,107.8 L375.8,109.1 L384.9,110.9 L394,113.2 L403,115.9 L411.9,119.2 L420.7,122.9 L429.3,127.1 L437.7,131.8 L445.9,136.9 L453.8,142.5 L461.5,148.5 L468.8,155 L475.9,161.9 L482.6,169.1 L488.9,176.8 L494.9,184.8 L500.4,193.2 L505.6,201.8 L510.3,210.8 L514.5,220.1 L518.3,229.6 L521.5,239.3 L524.3,249.2 L526.5,259.3 L528.2,269.6 L529.4,280 L530,290.5 L530.1,301 L529.6,311.6 L528.6,322.2 L527,332.8 L524.8,343.3 L522,353.7 L518.7,364 L514.9,374.2 L510.5,384.2 L505.5,394 L500.1,403.6 L494.1,412.8 L487.5,421.9 L480.5,430.5 L473.1,438.9 L465.1,446.9 L456.7,454.4"/>
+        <path d="M451.7,449.4 L461.7,459.4 M451.7,459.4 L461.7,449.4" style="stroke:#bf4a26; stroke-width:2.2; fill:none"/>
+        <text class="d-lbl d-halo" x="445.4" y="466.7" text-anchor="end">ignored: promised 2</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Two would-be presidents.</b> Α begins ballot 1; before he can use the replies, Ε begins the higher ballot 2. Β and Γ, having promised 2, turn away Α's BeginBallot: higher ballots strangle lower ones.</figcaption>
+  </figure>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg class="flow" viewBox="0 0 660 620" role="img" aria-label="Theorem 1 live, drawn in the round. Γ's ballot passes a decree with the quorum Α, Β, Γ. Later Ε, wanting a different decree, begins a new ballot with Β, Γ and Δ. Β's reply carries his vote for the first decree, because Ε's majority must overlap the first quorum. Condition B3 then forces Ε to propose that decree, and it passes again.">
+        <!-- polar:ptp-theorem -->
+        <defs>
+          <marker id="ptp-theorem-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
+          </marker>
+          <marker id="ptp-theorem-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
+          </marker>
+          <marker id="ptp-theorem-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
+          </marker>
+          <marker id="ptp-theorem-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
+          </marker>
+          <marker id="ptp-theorem-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
+          </marker>
+        </defs>
+        <circle cx="330" cy="305" r="82" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="102" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="122" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="142" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="162" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="182" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="202" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="222" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="242" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="262" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="282" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="302" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <clipPath id="ptp-theorem-clip0"><circle class="tclip" cx="330" cy="305" r="310" data-r0="62" data-r1="290"/></clipPath>
+        <g class="tflow" clip-path="url(#ptp-theorem-clip0)">
+        <path d="M512,305 A182,182 0 1 0 148,305 A182,182 0 1 0 512,305 Z M412,305 A82,82 0 1 0 248,305 A82,82 0 1 0 412,305 Z" fill-rule="evenodd" style="fill:#a8741a; fill-opacity:0.1; stroke:#a8741a; stroke-opacity:.5; stroke-width:.8"/>
+        <path d="M620,305 A290,290 0 1 0 40,305 A290,290 0 1 0 620,305 Z M524,305 A194,194 0 1 0 136,305 A194,194 0 1 0 524,305 Z" fill-rule="evenodd" style="fill:#5f6e28; fill-opacity:0.1; stroke:#5f6e28; stroke-opacity:.5; stroke-width:.8"/>
+        </g>
+        <line class="d-lifeline" x1="330" y1="243" x2="330" y2="15"/>
+        <line class="d-lifeline" x1="389" y1="285.8" x2="605.8" y2="215.4"/>
+        <line class="d-lifeline" x1="366.4" y1="355.2" x2="500.5" y2="539.6"/>
+        <line class="d-lifeline" x1="293.6" y1="355.2" x2="159.5" y2="539.6"/>
+        <line class="d-lifeline" x1="271" y1="285.8" x2="54.2" y2="215.4"/>
+        <rect class="d-node" x="315" y="232" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="330" y="247.5" text-anchor="middle" fill="#1c1512">Α</text>
+        <rect class="d-node" x="374" y="274.8" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="389" y="290.3" text-anchor="middle" fill="#1c1512">Β</text>
+        <rect class="d-node" x="351.4" y="344.2" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="366.4" y="359.7" text-anchor="middle" fill="#1c1512">Γ</text>
+        <rect class="d-node" x="278.6" y="344.2" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="293.6" y="359.7" text-anchor="middle" fill="#1c1512">Δ</text>
+        <rect class="d-node" x="256" y="274.8" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="271" y="290.3" text-anchor="middle" fill="#1c1512">Ε</text>
+        <text class="d-key" x="20" y="30" text-anchor="start" style="fill:#a8741a">the first ballot (Γ's)</text>
+        <text class="d-key" x="20" y="48" text-anchor="start" style="fill:#5f6e28">the second ballot (Ε's)</text>
+        <g class="tflow" clip-path="url(#ptp-theorem-clip0)">
+        <circle class="d-ev" cx="380.5" cy="374.6" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M380.5,374.6 L384.3,372.1 L388,369.4 L391.6,366.6 L395,363.5 L398.2,360.2 L401.3,356.8 L404.2,353.2 L406.9,349.4 L409.5,345.5 L411.8,341.4 L413.9,337.2 L415.8,332.9 L417.5,328.5 L419,323.9 L420.2,319.3 L421.2,314.6 L421.9,309.8 L422.4,305 L422.6,300.1 L422.6,295.3 L422.3,290.4 L421.7,285.5 L420.9,280.6 L419.9,275.8 L418.6,271 L417,266.3 L415.1,261.6 L413.1,257 L410.7,252.6 L408.2,248.2 L405.4,244 L402.3,239.9 L399.1,235.9 L395.6,232.1 L391.9,228.5 L388,225.1 L384,221.9 L379.7,218.9 L375.3,216.1 L370.7,213.5 L366,211.2 L361.2,209.1 L356.2,207.2 L351.1,205.6 L345.9,204.3 L340.7,203.3"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M380.5,374.6 L384.6,372.4 L388.5,370 L392.3,367.3 L396,364.4 L399.6,361.4 L403,358 L406.3,354.5 L409.4,350.8 L412.3,346.9 L415,342.9 L417.6,338.6 L419.9,334.2 L422,329.6 L423.8,324.9 L425.4,320.1 L426.8,315.2 L427.9,310.1 L428.8,305 L429.3,299.8 L429.6,294.5 L429.6,289.2 L429.4,283.9"/>
+        <circle class="d-ev" cx="330" cy="202" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M330,202 L335.4,201.8 L340.8,201.9 L346.3,202.2 L351.7,202.9 L357.1,203.8 L362.5,205 L367.8,206.5 L373,208.3 L378.2,210.4 L383.3,212.7 L388.2,215.3 L393,218.2 L397.7,221.4 L402.2,224.8 L406.6,228.4 L410.8,232.3 L414.7,236.4 L418.5,240.7 L422,245.2 L425.3,250 L428.4,254.9 L431.2,259.9 L433.8,265.2 L436,270.5 L438,276.1 L439.8,281.7 L441.2,287.4 L442.3,293.2 L443.1,299.1 L443.6,305 L443.8,311 L443.7,317 L443.3,322.9 L442.5,328.9 L441.5,334.9 L440.1,340.8 L438.4,346.6 L436.4,352.4 L434.1,358 L431.5,363.6 L428.6,369 L425.4,374.3 L421.9,379.4 L418.1,384.3 L414.1,389.1 L409.8,393.7"/>
+        <circle class="d-ev" cx="428" cy="273.2" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M428,273.2 L430.3,278.1 L432.3,283.2 L434.1,288.5 L435.7,293.9 L436.9,299.4 L437.9,305 L438.5,310.7 L438.9,316.4 L438.9,322.3 L438.7,328.1 L438.1,334 L437.2,339.8 L436,345.7 L434.4,351.5 L432.6,357.3 L430.4,363 L427.9,368.6 L425.1,374.1 L422,379.5 L418.6,384.7 L414.8,389.8 L410.8,394.8"/>
+        <circle class="d-ev-hi" cx="409.2" cy="414.1" r="5.5"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M409.2,414.1 L415.1,410 L420.7,405.7 L426.1,401.1 L431.2,396.1 L436.1,390.9 L440.8,385.5 L445.1,379.8 L449.2,373.8 L452.9,367.6 L456.4,361.3 L459.5,354.7 L462.2,348 L464.7,341.1 L466.7,334.1 L468.4,326.9 L469.7,319.7 L470.6,312.4 L471.2,305 L471.3,297.6 L471.1,290.2 L470.5,282.7 L469.5,275.4 L468.1,268 L466.3,260.7 L464.1,253.5 L461.6,246.4 L458.6,239.5 L455.3,232.6 L451.7,226 L447.7,219.5 L443.3,213.3 L438.6,207.2 L433.6,201.4 L428.3,195.9 L422.6,190.6 L416.7,185.6 L410.6,181 L404.1,176.6 L397.5,172.6 L390.6,168.9 L383.5,165.6 L376.3,162.7 L368.8,160.1 L361.3,157.9 L353.6,156.1 L345.8,154.7 L337.9,153.8"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M409.2,414.1 L415.3,410.3 L421.1,406.2 L426.8,401.8 L432.3,397.1 L437.5,392.1 L442.5,386.7 L447.2,381.1 L451.6,375.2 L455.8,369.1 L459.6,362.7 L463.1,356.1 L466.3,349.3 L469.1,342.3 L471.6,335.1 L473.6,327.7 L475.3,320.3 L476.6,312.7 L477.5,305 L478.1,297.2 L478.2,289.4 L477.8,281.6 L477.1,273.7 L475.9,265.9"/>
+        <circle class="d-ev" cx="330" cy="153.2" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M330,153.2 L338,153.1 L345.9,153.3 L353.9,154 L361.9,155.1 L369.7,156.7 L377.6,158.6 L385.3,161 L392.9,163.7 L400.4,166.9 L407.7,170.5 L414.8,174.4 L421.7,178.8 L428.4,183.5 L434.9,188.5 L441.1,193.9 L447,199.6 L452.6,205.7 L458,212 L463,218.7 L467.6,225.6 L471.9,232.7 L475.8,240.1 L479.3,247.7 L482.5,255.5 L485.2,263.4 L487.5,271.5 L489.4,279.8 L490.8,288.1 L491.8,296.5 L492.4,305 L492.6,313.5 L492.2,322.1 L491.5,330.6 L490.3,339.1 L488.6,347.5 L486.5,355.8 L484,364.1 L481,372.2 L477.6,380.2 L473.7,388 L469.5,395.6 L464.8,403 L459.8,410.1 L454.4,417 L448.6,423.6 L442.5,429.9 L436,435.9"/>
+        <circle class="d-ev" cx="474.4" cy="258.1" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M474.4,258.1 L477.4,265.5 L480.1,273.1 L482.3,280.9 L484.2,288.8 L485.6,296.8 L486.6,305 L487.2,313.2 L487.4,321.5 L487.1,329.9 L486.4,338.2 L485.2,346.6 L483.6,354.9 L481.5,363.2 L479,371.3 L476.1,379.4 L472.7,387.4 L468.8,395.2 L464.6,402.8 L459.9,410.2 L454.8,417.4 L449.3,424.3 L443.5,431 L437.2,437.4"/>
+        <circle class="d-ev-hi" cx="437.9" cy="453.5" r="5.5"/>
+        <text class="d-lbl d-halo" x="447.6" y="450.5" text-anchor="start" style="fill:#bf4a26">goats pass</text>
+        <circle class="d-ev" cx="139.8" cy="243.2" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M139.8,243.2 L143,233.2 L146.6,223.4 L150.9,213.7 L155.6,204.3 L160.8,195.1 L166.5,186.2 L172.6,177.6 L179.3,169.3 L186.3,161.3 L193.8,153.7 L201.7,146.5 L209.9,139.8 L218.6,133.4 L227.5,127.5 L236.8,122.1 L246.3,117.1 L256.2,112.7 L266.2,108.7 L276.5,105.3 L286.9,102.4 L297.5,100.1 L308.3,98.3 L319.1,97.1 L330,96.5 L340.9,96.4 L351.9,96.9 L362.8,98 L373.6,99.7 L384.4,101.9 L395.1,104.7 L405.6,108 L416,111.9 L426.1,116.4 L436,121.4 L445.7,126.9 L455.1,132.9 L464.1,139.4 L472.8,146.4 L481.2,153.8 L489.2,161.7 L496.7,170 L503.8,178.7 L510.5,187.8 L516.7,197.2 L522.4,207 L527.6,217 L532.3,227.4"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M139.8,243.2 L136.5,253.1 L133.7,263.3 L131.4,273.5 L129.7,283.9 L128.5,294.4 L127.9,305 L127.8,315.6 L128.3,326.2 L129.3,336.8 L130.9,347.3 L133.1,357.8 L135.7,368.1 L139,378.3 L142.8,388.4 L147.1,398.2 L151.9,407.8 L157.2,417.2 L163,426.3 L169.3,435.1 L176.1,443.6 L183.3,451.7 L191,459.4 L199,466.8 L207.4,473.7 L216.2,480.2 L225.4,486.2 L234.9,491.7 L244.6,496.8 L254.6,501.3 L264.9,505.3 L275.4,508.8 L286.1,511.7 L296.9,514.1 L307.8,515.9 L318.9,517.1 L330,517.8 L341.2,517.8 L352.3,517.3 L363.4,516.2 L374.5,514.5 L385.5,512.2 L396.4,509.4 L407.1,505.9 L417.7,501.9 L428,497.4 L438.1,492.3 L448,486.7"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M139.8,243.2 L136.1,253.1 L133,263.1 L130.4,273.4 L128.3,283.8 L126.7,294.3 L125.8,305 L125.3,315.7 L125.5,326.5 L126.2,337.3 L127.4,348.1 L129.3,358.8 L131.7,369.4 L134.7,380 L138.2,390.4 L142.3,400.6 L147,410.7 L152.2,420.5 L157.9,430.1 L164.1,439.3 L170.8,448.3 L178.1,456.9 L185.7,465.2 L193.9,473.1"/>
+        <circle class="d-ev" cx="536.4" cy="237.9" r="5"/>
+        <path class="d-msg-hi" marker-end="url(#ptp-theorem-r)" d="M536.4,237.9 L532.9,227.1 L528.9,216.5 L524.3,206 L519.2,195.8 L513.5,185.8 L507.3,176.2 L500.6,166.9 L493.4,157.9 L485.7,149.3 L477.6,141.1 L469,133.3 L460,126 L450.7,119.1 L441,112.8 L430.9,106.9 L420.6,101.6 L409.9,96.8 L399,92.6 L387.9,88.9 L376.6,85.8 L365.1,83.3 L353.5,81.4 L341.8,80.2 L330,79.5 L318.2,79.5 L306.4,80 L294.6,81.2 L282.8,83 L271.2,85.5 L259.7,88.5 L248.3,92.2 L237.1,96.4 L226.2,101.2 L215.5,106.6 L205.1,112.6 L195,119.1 L185.2,126.2 L175.8,133.7 L166.8,141.8 L158.2,150.3 L150.1,159.3 L142.4,168.7 L135.2,178.5 L128.6,188.7 L122.5,199.2 L116.9,210.1 L111.9,221.3"/>
+        <circle class="d-ev" cx="457.5" cy="480.6" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M457.5,480.6 L448.4,487.3 L438.9,493.6 L429.1,499.4 L418.9,504.7 L408.5,509.5 L397.8,513.7 L386.9,517.3 L375.8,520.4 L364.5,522.9 L353.1,524.8 L341.6,526.1 L330,526.9 L318.4,526.9 L306.7,526.4 L295.1,525.3 L283.5,523.6 L272.1,521.2 L260.7,518.3 L249.5,514.8 L238.5,510.6 L227.6,505.9 L217.1,500.6 L206.8,494.8 L196.7,488.4 L187.1,481.5 L177.8,474.1 L168.8,466.2 L160.3,457.8 L152.3,448.9 L144.6,439.7 L137.5,430 L130.9,420 L124.8,409.6 L119.2,398.9 L114.2,387.8 L109.8,376.6 L105.9,365 L102.7,353.3 L100.1,341.4 L98.1,329.4 L96.7,317.2 L96,305 L95.9,292.7 L96.5,280.5 L97.7,268.2 L99.6,256 L102,243.9"/>
+        <circle class="d-ev" cx="202.5" cy="480.6" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M202.5,480.6 L192.9,474.3 L183.6,467.6 L174.6,460.4 L166,452.6 L157.8,444.4 L150,435.8 L142.7,426.6 L135.8,417.1 L129.4,407.2 L123.5,397 L118.1,386.3 L113.3,375.4 L109,364.2 L105.3,352.8 L102.2,341.1 L99.7,329.2 L97.9,317.2 L96.6,305 L96.1,292.7 L96.1,280.4 L96.8,268.1 L98.2,255.7 L100.2,243.4"/>
+        <circle class="d-ev-hi" cx="91.1" cy="227.4" r="5.5"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M91.1,227.4 L95.2,214.9 L99.9,202.5 L105.2,190.5 L111.2,178.7 L117.8,167.2 L125.1,156.1 L132.9,145.4 L141.2,135 L150.1,125.1 L159.5,115.7 L169.5,106.8 L179.9,98.3 L190.7,90.5 L201.9,83.2 L213.5,76.4 L225.5,70.3 L237.8,64.9 L250.4,60 L263.2,55.9 L276.3,52.4 L289.5,49.5 L302.9,47.4 L316.4,46 L330,45.3 L343.6,45.3 L357.2,46 L370.8,47.4 L384.3,49.6 L397.7,52.4 L410.9,56 L424,60.2 L436.8,65.2 L449.3,70.8 L461.6,77 L473.6,83.9 L485.1,91.5 L496.3,99.6 L507.1,108.3 L517.4,117.6 L527.2,127.4 L536.5,137.8 L545.3,148.6 L553.4,159.9 L561,171.6 L568,183.7 L574.4,196.2 L580.1,209"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M91.1,227.4 L87,239.9 L83.6,252.6 L80.8,265.5 L78.8,278.6 L77.4,291.8 L76.7,305 L76.7,318.3 L77.4,331.6 L78.7,344.8 L80.8,358 L83.6,371 L87.1,383.9 L91.2,396.7 L96,409.2 L101.4,421.5 L107.5,433.4 L114.3,445.1 L121.6,456.4 L129.6,467.3 L138.1,477.8 L147.1,487.9 L156.7,497.5 L166.8,506.5 L177.4,515.1 L188.4,523.1 L199.8,530.5 L211.6,537.3 L223.8,543.5 L236.3,549.1 L249.1,554 L262.1,558.2 L275.4,561.8 L288.9,564.7 L302.5,566.8 L316.2,568.2 L330,569 L343.8,568.9 L357.7,568.2 L371.5,566.7 L385.2,564.6 L398.8,561.7 L412.2,558.1 L425.5,553.7 L438.5,548.7 L451.3,543 L463.7,536.7 L475.9,529.6"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M91.1,227.4 L86.7,239.8 L82.9,252.5 L79.8,265.4 L77.4,278.4 L75.6,291.7 L74.6,305 L74.2,318.4 L74.5,331.8 L75.6,345.3 L77.4,358.7 L79.8,372 L83,385.3 L86.9,398.3 L91.5,411.2 L96.7,423.9 L102.6,436.3 L109.2,448.4 L116.5,460.1 L124.3,471.6 L132.8,482.6 L141.9,493.1 L151.5,503.3 L161.7,512.9"/>
+        <circle class="d-ev" cx="585.1" cy="222.1" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M585.1,222.1 L580.7,208.8 L575.7,195.6 L569.9,182.8 L563.5,170.2 L556.4,158 L548.7,146.1 L540.4,134.7 L531.4,123.6 L521.9,113.1 L511.8,103.1 L501.2,93.5 L490.1,84.6 L478.6,76.2 L466.6,68.4 L454.2,61.3 L441.4,54.8 L428.3,49 L414.8,43.9 L401.2,39.4 L387.2,35.7 L373.1,32.8 L358.8,30.5 L344.5,29 L330,28.3 L315.5,28.3 L301,29.1 L286.5,30.7 L272.2,33 L257.9,36 L243.8,39.8 L230,44.4 L216.3,49.6 L202.9,55.6 L189.9,62.3 L177.2,69.7 L164.9,77.7 L153,86.4 L141.5,95.7 L130.6,105.6 L120.2,116.1 L110.3,127.1 L101,138.6 L92.3,150.6 L84.2,163.1 L76.8,176 L70.1,189.3 L64.1,202.9"/>
+        <circle class="d-ev" cx="487.6" cy="522" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M487.6,522 L476.3,530.3 L464.5,538 L452.3,545 L439.7,551.5 L426.8,557.3 L413.6,562.4 L400.1,566.8 L386.4,570.5 L372.5,573.5 L358.5,575.8 L344.3,577.3 L330,578 L315.7,578.1 L301.4,577.4 L287.1,575.9 L272.9,573.7 L258.8,570.7 L244.9,567 L231.1,562.6 L217.6,557.4 L204.4,551.5 L191.5,545 L178.9,537.7 L166.7,529.8 L154.9,521.3 L143.5,512.1 L132.6,502.4 L122.3,492 L112.5,481.2 L103.2,469.8 L94.6,457.9 L86.5,445.6 L79.1,432.8 L72.4,419.7 L66.4,406.2 L61.1,392.4 L56.5,378.3 L52.6,364 L49.5,349.4 L47.2,334.7 L45.6,319.9 L44.8,305 L44.8,290.1 L45.6,275.1 L47.1,260.2 L49.5,245.4 L52.6,230.7"/>
+        <circle class="d-ev" cx="172.4" cy="522" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-theorem-b)" d="M172.4,522 L160.6,514.1 L149.3,505.7 L138.4,496.6 L128,486.9 L118,476.6 L108.6,465.8 L99.7,454.5 L91.4,442.7 L83.7,430.5 L76.7,417.8 L70.3,404.7 L64.6,391.2 L59.5,377.5 L55.2,363.4 L51.6,349.1 L48.8,334.6 L46.7,319.8 L45.4,305 L44.9,290.1 L45.2,275.1 L46.3,260.1 L48.1,245.1 L50.8,230.2"/>
+        <circle class="d-ev-hi" cx="42.4" cy="211.6" r="5.5"/>
+        <text class="d-lbl d-halo" x="533.3" y="232.4" text-anchor="end" style="fill:#bf4a26">carries the goat vote</text>
+        <text class="d-lbl d-halo" x="94.2" y="221.9" text-anchor="start" style="fill:#bf4a26">B3: must propose goats</text>
+        <text class="d-lbl d-halo" x="45.5" y="206" text-anchor="start" style="fill:#bf4a26">goats pass again</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption><b>Theorem 1, live.</b> A decree passes with the quorum Α, Β, Γ. Later Ε, who wanted another decree, begins a ballot whose majority must overlap that quorum. Β's reply carries the old vote, and <var>B</var>3 forces Ε to propose the same decree. The ledgers cannot disagree.</figcaption>
+  </figure>
 
   <h3 id="2-4-the-complete-synod-protocol" class="sect"><a href="#2-4-the-complete-synod-protocol" class="hlink">2.4 · The Complete Synod Protocol</a></h3>
   <div class="prose">
@@ -1142,21 +1222,101 @@ people that the protocol was correct if, in their proof, they allowed any priest
     <p>a traditional decree that made absolutely no difference to anyone in Paxos. In general, a new president would fill any gaps in his ledger by passing the “olive-day” decree.</p>
   </div>
 
-  <!-- ========= WIDGET 3: LEDGER GAPS ========= -->
-  <div class="widget" id="w-ledger">
-    <div class="whead"><h5 id="president-s-monday-morning"><a href="#president-s-monday-morning" class="hlink">⚱ President Δφωρκ’s Monday Morning</a></h5><span class="badge">FILL THE GAPS</span></div>
-    <div class="wbody" id="ledgerw">
-      <p class="hint">You are the newly elected president. Your ledger has gaps — decrees you know
-      nothing about, below decrees you know passed. A citizen is waiting. <b>Click the gaps</b> to
-      deal with them, then pass the citizen’s decree.</p>
-      <div class="book" id="ledger-book"></div>
-      <div class="msg" id="ledger-msg"></div>
-      <p style="text-align:center; margin-top:10px">
-        <button class="gk primary" id="ledger-propose">Pass the citizen’s decree: “Ships must carry lanterns at night”</button>
-        <button class="gk" id="ledger-reset" style="margin-left:8px">Start the morning over</button>
-      </p>
+  <figure class="diagram">
+    <div class="board">
+      <svg class="flow" viewBox="0 0 660 620" role="img" aria-label="The new president's Monday morning, drawn in the round. Δ, newly elected, sends one message about every undecided number to the others. The replies show Α holds decree 126, but nobody reachable knows anything of 125. Δ runs a ballot for 125 with the olive-day decree, and it passes. Only then does he run the ballot for the citizen's decree, 127, which passes after everything already in the book.">
+        <!-- polar:ptp-ledger -->
+        <defs>
+          <marker id="ptp-ledger-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
+          </marker>
+          <marker id="ptp-ledger-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
+          </marker>
+          <marker id="ptp-ledger-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
+          </marker>
+          <marker id="ptp-ledger-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
+          </marker>
+          <marker id="ptp-ledger-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
+          </marker>
+        </defs>
+        <circle cx="330" cy="305" r="82" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="102" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="122" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="142" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="162" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="182" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="202" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="222" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="242" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="262" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="282" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="305" r="302" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <clipPath id="ptp-ledger-clip0"><circle class="tclip" cx="330" cy="305" r="310" data-r0="62" data-r1="290"/></clipPath>
+        <g class="tflow" clip-path="url(#ptp-ledger-clip0)">
+        <path d="M464,305 A134,134 0 1 0 196,305 A134,134 0 1 0 464,305 Z M412,305 A82,82 0 1 0 248,305 A82,82 0 1 0 412,305 Z" fill-rule="evenodd" style="fill:#a8741a; fill-opacity:0.1; stroke:#a8741a; stroke-opacity:.5; stroke-width:.8"/>
+        <path d="M540,305 A210,210 0 1 0 120,305 A210,210 0 1 0 540,305 Z M476,305 A146,146 0 1 0 184,305 A146,146 0 1 0 476,305 Z" fill-rule="evenodd" style="fill:#5f6e28; fill-opacity:0.1; stroke:#5f6e28; stroke-opacity:.5; stroke-width:.8"/>
+        <path d="M616,305 A286,286 0 1 0 44,305 A286,286 0 1 0 616,305 Z M552,305 A222,222 0 1 0 108,305 A222,222 0 1 0 552,305 Z" fill-rule="evenodd" style="fill:#a8741a; fill-opacity:0.1; stroke:#a8741a; stroke-opacity:.5; stroke-width:.8"/>
+        </g>
+        <line class="d-lifeline" x1="330" y1="243" x2="330" y2="15"/>
+        <line class="d-lifeline" x1="389" y1="285.8" x2="605.8" y2="215.4"/>
+        <line class="d-lifeline" x1="366.4" y1="355.2" x2="500.5" y2="539.6"/>
+        <line class="d-lifeline" x1="293.6" y1="355.2" x2="159.5" y2="539.6"/>
+        <line class="d-lifeline" x1="271" y1="285.8" x2="54.2" y2="215.4"/>
+        <rect class="d-node" x="315" y="232" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="330" y="247.5" text-anchor="middle" fill="#1c1512">Α</text>
+        <rect class="d-node" x="374" y="274.8" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="389" y="290.3" text-anchor="middle" fill="#1c1512">Β</text>
+        <rect class="d-node" x="351.4" y="344.2" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="366.4" y="359.7" text-anchor="middle" fill="#1c1512">Γ</text>
+        <rect class="d-node" x="278.6" y="344.2" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="293.6" y="359.7" text-anchor="middle" fill="#1c1512">Δ</text>
+        <rect class="d-node" x="256" y="274.8" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="271" y="290.3" text-anchor="middle" fill="#1c1512">Ε</text>
+        <text class="d-key" x="20" y="30" text-anchor="start" style="fill:#a8741a">the morning's reconciliation</text>
+        <text class="d-key" x="20" y="48" text-anchor="start" style="fill:#5f6e28">decree 125: the olive day</text>
+        <text class="d-key" x="20" y="66" text-anchor="start" style="fill:#a8741a">decree 127: the citizen's</text>
+        <g class="tflow" clip-path="url(#ptp-ledger-clip0)">
+        <circle class="d-ev" cx="281.8" cy="371.3" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M281.8,371.3 L278.1,369 L274.6,366.6 L271.1,363.9 L267.8,361 L264.7,357.9 L261.6,354.7 L258.8,351.2 L256.1,347.7 L253.6,343.9 L251.3,340 L249.2,336 L247.3,331.9 L245.6,327.6 L244.1,323.3 L242.8,318.8 L241.8,314.3 L241,309.7 L240.5,305 L240.2,300.3 L240.2,295.6 L240.4,290.8 L240.8,286 L241.5,281.3 L242.5,276.6 L243.7,271.9 L245.2,267.2 L246.9,262.7 L248.9,258.2 L251.1,253.8 L253.5,249.5 L256.2,245.3 L259.2,241.2 L262.3,237.3 L265.7,233.5 L269.2,229.9 L273,226.5 L276.9,223.3 L281.1,220.3 L285.4,217.5 L289.9,214.9 L294.5,212.5 L299.3,210.4 L304.1,208.5 L309.1,206.9 L314.2,205.5 L319.4,204.4"/>
+        <circle class="d-ev" cx="330" cy="203" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M281.8,371.3 L285.1,374.1 L288.6,376.7 L292.2,379.2 L296,381.4 L299.9,383.5 L303.9,385.4 L308,387 L312.3,388.5 L316.6,389.7 L321,390.7 L325.5,391.5 L330,392 L334.6,392.3 L339.2,392.4 L343.8,392.2 L348.4,391.7 L353.1,391 L357.7,390.1 L362.2,388.9 L366.7,387.5 L371.2,385.9 L375.6,384 L379.9,381.8 L384.1,379.4 L388.2,376.8 L392.1,374 L395.9,370.9 L399.6,367.7 L403.1,364.2 L406.5,360.5 L409.6,356.7 L412.6,352.7 L415.3,348.5 L417.9,344.1 L420.2,339.6 L422.3,335 L424.1,330.2 L425.7,325.3 L427,320.4 L428.1,315.3 L428.9,310.2 L429.5,305 L429.8,299.8 L429.8,294.5 L429.5,289.2 L429,284"/>
+        <circle class="d-ev" cx="427" cy="273.5" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M281.8,371.3 L284.9,374.5 L288.2,377.5 L291.6,380.3 L295.3,383 L299.1,385.4 L303.1,387.7 L307.3,389.8 L311.6,391.7 L316,393.4 L320.6,394.8 L325.2,396 L330,397 L334.9,397.7 L339.8,398.2 L344.8,398.3 L349.8,398.3 L354.9,397.9 L360,397.3 L365.1,396.3 L370.1,395.1 L375.2,393.7 L380.2,391.9"/>
+        <circle class="d-ev" cx="390" cy="387.5" r="5"/>
+        <path class="d-msg-hi" marker-end="url(#ptp-ledger-r)" d="M330,203 L324.6,202.7 L319.2,202.6 L313.8,202.9 L308.4,203.4 L303,204.3 L297.6,205.4 L292.3,206.8 L287,208.5 L281.8,210.4 L276.7,212.7 L271.7,215.2 L266.8,218 L262.1,221.1 L257.5,224.4 L253,228 L248.7,231.8 L244.7,235.9 L240.8,240.2 L237.2,244.7 L233.7,249.4 L230.5,254.3 L227.6,259.4 L224.9,264.7 L222.5,270.1 L220.4,275.6 L218.6,281.3 L217,287.1 L215.8,293 L214.9,299 L214.2,305 L214,311.1 L214,317.2 L214.3,323.3 L215,329.4 L216,335.6 L217.3,341.6 L218.9,347.6 L220.9,353.6 L223.2,359.4 L225.8,365.2 L228.7,370.8 L231.9,376.3 L235.4,381.6 L239.2,386.7 L243.3,391.7 L247.6,396.5"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M427,273.5 L429,278.5 L430.8,283.6 L432.3,288.8 L433.5,294.1 L434.5,299.5 L435.1,305 L435.5,310.5 L435.6,316.1 L435.4,321.7 L434.9,327.3 L434.1,332.9 L433,338.5 L431.5,344 L429.8,349.5 L427.8,354.9 L425.6,360.2 L423,365.4 L420.1,370.5 L417,375.4 L413.5,380.2 L409.9,384.9 L405.9,389.3 L401.7,393.6 L397.3,397.6 L392.6,401.5 L387.8,405.1 L382.7,408.4 L377.4,411.5 L372,414.3 L366.3,416.9 L360.6,419.1 L354.7,421.1 L348.6,422.7 L342.5,424.1 L336.3,425.1 L330,425.8 L323.7,426.1 L317.3,426.1 L310.9,425.8 L304.5,425.1 L298.1,424.2 L291.7,422.8 L285.4,421.1 L279.2,419.1 L273.1,416.8 L267,414.1"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M390,387.5 L386.2,391.5 L382.2,395.4 L377.9,399 L373.4,402.4 L368.6,405.7 L363.7,408.7 L358.5,411.4 L353.1,413.9 L347.6,416.1 L341.9,418 L336,419.7 L330,421 L323.9,422 L317.6,422.7 L311.3,423 L304.9,423 L298.5,422.7 L292,422 L285.5,420.9 L279,419.5 L272.6,417.7 L266.2,415.6"/>
+        <text class="d-lbl d-halo" x="320" y="207" text-anchor="end" style="fill:#bf4a26">holds 126</text>
+        <circle class="d-ev-hi" cx="247.7" cy="418.3" r="5.5"/>
+        <text class="d-lbl d-halo" x="255.8" y="428.1" text-anchor="start" style="fill:#bf4a26">nobody knows 125</text>
+        <circle class="d-ev-hi" cx="239.5" cy="429.6" r="5.5"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M239.5,429.6 L232.9,424.9 L226.5,419.9 L220.4,414.6 L214.6,408.9 L209,403 L203.8,396.7 L198.9,390.1 L194.3,383.3 L190.1,376.3 L186.3,369 L182.8,361.5 L179.7,353.8 L177.1,346 L174.8,338 L173,329.9 L171.5,321.7 L170.6,313.4 L170,305 L169.9,296.6 L170.2,288.2 L171,279.8 L172.2,271.5 L173.8,263.2 L175.9,254.9 L178.4,246.8 L181.4,238.8 L184.8,231 L188.5,223.3 L192.7,215.9 L197.3,208.6 L202.3,201.6 L207.6,194.8 L213.3,188.3 L219.4,182.1 L225.7,176.3 L232.4,170.7 L239.4,165.5 L246.7,160.7 L254.2,156.2 L261.9,152.1 L269.9,148.5 L278.1,145.2 L286.4,142.4 L294.9,140 L303.6,138.1 L312.3,136.6 L321.1,135.6"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M239.5,429.6 L245.9,434.4 L252.7,438.9 L259.6,443.1 L266.8,446.9 L274.2,450.3 L281.8,453.4 L289.5,456 L297.4,458.2 L305.4,460.1 L313.6,461.5 L321.7,462.5 L330,463 L338.3,463.1 L346.6,462.8 L354.9,462 L363.1,460.9 L371.3,459.2 L379.4,457.2 L387.5,454.7 L395.3,451.8 L403.1,448.5 L410.7,444.7 L418,440.6 L425.2,436.1 L432.2,431.2 L438.8,425.9 L445.3,420.3 L451.4,414.3 L457.2,408 L462.7,401.4 L467.8,394.5 L472.6,387.3 L477,379.9 L481,372.2 L484.7,364.4 L487.9,356.3 L490.7,348.1 L493,339.7 L494.9,331.1 L496.4,322.5 L497.4,313.8 L498,305 L498.1,296.2 L497.7,287.4 L496.9,278.6 L495.6,269.8 L493.9,261.1"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M239.5,429.6 L245.8,434.7 L252.3,439.5 L259.2,444 L266.3,448.1 L273.6,451.9 L281.2,455.3 L288.9,458.3 L296.9,460.9 L305,463 L313.2,464.8 L321.6,466.1 L330,467 L338.5,467.4 L347.1,467.4 L355.7,467 L364.2,466.1 L372.8,464.7 L381.3,462.9 L389.7,460.6 L398.1,457.9 L406.3,454.7 L414.3,451.1 L422.2,447"/>
+        <circle class="d-ev" cx="330" cy="135" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M330,135 L321.1,134.9 L312.2,135.3 L303.2,136.1 L294.4,137.4 L285.6,139.2 L276.8,141.4 L268.2,144.1 L259.8,147.3 L251.5,150.9 L243.3,154.9 L235.4,159.4 L227.7,164.2 L220.3,169.5 L213.1,175.2 L206.3,181.3 L199.7,187.7 L193.5,194.4 L187.6,201.5 L182.1,209 L177,216.7 L172.3,224.6 L168,232.9 L164.1,241.3 L160.7,250 L157.7,258.8 L155.2,267.9 L153.2,277 L151.6,286.3 L150.6,295.6 L150,305 L149.9,314.4 L150.3,323.9 L151.2,333.3 L152.6,342.7 L154.5,352 L156.9,361.2 L159.8,370.3 L163.1,379.3 L166.9,388.1 L171.2,396.7 L176,405 L181.1,413.2 L186.7,421 L192.8,428.6 L199.2,435.8 L206,442.7 L213.2,449.3"/>
+        <circle class="d-ev" cx="491.7" cy="252.5" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M491.7,252.5 L494.6,260.9 L497,269.5 L499,278.2 L500.6,287.1 L501.7,296 L502.3,305 L502.4,314 L502.1,323.1 L501.3,332.1 L500,341.1 L498.3,350.1 L496.1,359 L493.4,367.7 L490.2,376.3 L486.6,384.8 L482.5,393.1 L478,401.1 L473.1,409 L467.8,416.6 L462,423.9 L455.9,430.9 L449.4,437.6 L442.5,444 L435.3,450 L427.8,455.6 L420,460.9 L411.9,465.7 L403.5,470.1 L394.9,474.1 L386.1,477.6 L377.1,480.7 L367.9,483.3 L358.6,485.4 L349.1,487 L339.6,488.2 L330,488.8 L320.4,488.9 L310.7,488.6 L301.1,487.7 L291.5,486.3 L281.9,484.4 L272.5,482 L263.2,479.1 L254,475.7 L245,471.8 L236.2,467.5 L227.6,462.7"/>
+        <circle class="d-ev" cx="429.9" cy="442.5" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M429.9,442.5 L423.1,448.3 L415.9,453.7 L408.4,458.8 L400.6,463.5 L392.5,467.8 L384.1,471.6 L375.6,475.1 L366.8,478.1 L357.8,480.6 L348.7,482.7 L339.4,484.3 L330,485.4 L320.5,486 L311,486.1 L301.4,485.7 L291.8,484.8 L282.2,483.4 L272.6,481.5 L263.2,479.1 L253.8,476.1 L244.6,472.7 L235.5,468.7 L226.6,464.3"/>
+        <circle class="d-ev-hi" cx="210.6" cy="469.4" r="5.5"/>
+        <text class="d-lbl d-halo" x="218.7" y="479.3" text-anchor="start" style="fill:#bf4a26">125 passes</text>
+        <circle class="d-ev-hi" cx="197.2" cy="487.8" r="5.5"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M197.2,487.8 L187.6,480.9 L178.3,473.4 L169.5,465.5 L161.1,457.1 L153.1,448.3 L145.5,439 L138.5,429.4 L132,419.3 L126,409 L120.5,398.3 L115.6,387.3 L111.3,376.1 L107.5,364.6 L104.4,353 L101.8,341.1 L99.9,329.2 L98.7,317.1 L98,305 L98,292.8 L98.6,280.7 L99.9,268.6 L101.8,256.5 L104.3,244.5 L107.5,232.7 L111.2,221 L115.6,209.6 L120.6,198.3 L126.2,187.3 L132.4,176.6 L139.1,166.3 L146.3,156.3 L154.1,146.6 L162.4,137.4 L171.2,128.6 L180.4,120.3 L190.1,112.5 L200.2,105.1 L210.7,98.3 L221.5,92 L232.7,86.4 L244.1,81.3 L255.8,76.7 L267.8,72.9 L280,69.6 L292.3,67 L304.8,65 L317.4,63.7"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M197.2,487.8 L206.7,494.8 L216.7,501.3 L226.9,507.3 L237.5,512.7 L248.4,517.5 L259.5,521.8 L270.9,525.6 L282.5,528.7 L294.2,531.2 L306,533.1 L318,534.4 L330,535 L342.1,535 L354.1,534.4 L366.1,533.2 L378.1,531.3 L390,528.8 L401.7,525.6 L413.3,521.9 L424.6,517.6 L435.8,512.6 L446.7,507.1 L457.3,501 L467.5,494.3 L477.5,487.1 L487,479.4 L496.2,471.2 L504.9,462.5 L513.1,453.3 L520.9,443.7 L528.2,433.7 L535,423.3 L541.2,412.6 L546.8,401.5 L551.9,390.2 L556.4,378.5 L560.2,366.7 L563.5,354.6 L566.1,342.4 L568,330 L569.3,317.5 L570,305 L570,292.4 L569.3,279.8 L568,267.3 L566.1,254.8 L563.4,242.5"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M197.2,487.8 L206.5,495.1 L216.3,501.9 L226.5,508.1 L237,513.9 L247.8,519.1 L258.9,523.7 L270.3,527.8 L281.9,531.3 L293.7,534.1 L305.7,536.4 L317.8,538 L330,539 L342.3,539.3 L354.6,539 L366.9,538.1 L379.2,536.5 L391.4,534.2 L403.5,531.4 L415.5,527.8 L427.3,523.6 L439,518.8 L450.3,513.4 L461.4,507.4"/>
+        <circle class="d-ev" cx="330" cy="63" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M330,63 L317.3,63 L304.6,63.7 L292,65 L279.4,67 L266.9,69.6 L254.6,72.9 L242.4,76.9 L230.5,81.5 L218.8,86.7 L207.3,92.5 L196.2,99 L185.4,106 L175,113.6 L164.9,121.7 L155.3,130.3 L146.2,139.5 L137.5,149.1 L129.4,159.2 L121.7,169.7 L114.6,180.7 L108.1,192 L102.2,203.6 L96.9,215.5 L92.2,227.7 L88.2,240.2 L84.8,252.9 L82.1,265.7 L80,278.7 L78.7,291.8 L78,305 L78,318.2 L78.7,331.4 L80.1,344.6 L82.2,357.7 L85,370.7 L88.4,383.5 L92.6,396.1 L97.4,408.6 L102.8,420.8 L108.9,432.7 L115.6,444.2 L122.9,455.5 L130.8,466.3 L139.3,476.7 L148.3,486.7 L157.8,496.2 L167.8,505.2"/>
+        <circle class="d-ev" cx="560.2" cy="230.2" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M560.2,230.2 L564.1,242.3 L567.5,254.5 L570.2,267 L572.2,279.5 L573.6,292.2 L574.3,305 L574.3,317.8 L573.7,330.6 L572.4,343.4 L570.5,356.1 L567.8,368.7 L564.5,381.2 L560.6,393.5 L556,405.6 L550.7,417.5 L544.9,429.1 L538.4,440.4 L531.4,451.3 L523.7,461.9 L515.5,472.1 L506.8,481.8 L497.6,491.1 L487.8,499.9 L477.7,508.2 L467,516 L456,523.2 L444.6,529.8 L432.8,535.9 L420.7,541.3 L408.3,546.1 L395.7,550.2 L382.9,553.7 L369.8,556.5 L356.7,558.6 L343.4,560.1 L330,560.8 L316.6,560.8 L303.2,560.2 L289.8,558.8 L276.5,556.7 L263.3,553.9 L250.2,550.5 L237.4,546.3 L224.7,541.5 L212.3,536 L200.2,529.8 L188.4,523.1"/>
+        <circle class="d-ev" cx="472.2" cy="500.8" r="5"/>
+        <path class="d-msg" marker-end="url(#ptp-ledger-b)" d="M472.2,500.8 L462.3,508.7 L451.9,516.1 L441,522.9 L429.8,529.2 L418.3,535 L406.4,540.1 L394.2,544.6 L381.8,548.5 L369.1,551.7 L356.2,554.3 L343.2,556.2 L330,557.4 L316.7,557.9 L303.4,557.7 L290.1,556.9 L276.8,555.3 L263.6,553 L250.4,550 L237.4,546.3 L224.5,541.9 L211.9,536.8 L199.5,531.1 L187.3,524.7"/>
+        <circle class="d-ev-hi" cx="168.2" cy="527.6" r="5.5"/>
+        <text class="d-lbl d-halo" x="176.3" y="537.5" text-anchor="start" style="fill:#bf4a26">127 passes, in order</text>
+        </g>
+      </svg>
     </div>
-  </div>
+    <figcaption><b>The president's Monday morning.</b> One round of questions about every open number turns up decree 126 but nothing of 125. Δ fills the gap with the olive-day decree, and only then passes the citizen's decree as 127, in order after everything already in the book.</figcaption>
+  </figure>
 
   <div class="prose">
     <p>The consistency and progress properties of the parliamentary protocol follow immediately from the corresponding properties of the Synod protocol from which it was derived. To our knowledge, the Paxons never bothered writing a precise description of the parliamentary protocol because it was so easily derived from the Synod protocol.</p>
@@ -1789,468 +1949,6 @@ people that the protocol was correct if, in their proof, they allowed any priest
   ballots = clone(); render();
 })();
 
-/* ================= WIDGET: The six steps, move by move ================= */
-(function(){
-  const P = ['Γ','Α','Β','Δ','Ε'];
-  const COLOR = {Α:'#136f9e', Β:'#bf4a26', Γ:'#66722c', Δ:'#8e5aa0', Ε:'#b8860b'};
-  const BASE_NOTES = {
-    Γ: [], Δ: [], Ε: [],
-    Α: ['✍ cast vote ⟨14, α⟩'],
-    Β: ['✍ cast vote ⟨5, β⟩']
-  };
-  const OLD_B = '⟨#5,&nbsp;β⟩ quorum {…} voters {Β}\n⟨#14,&nbsp;α⟩ quorum {…} voters {Α}';
-
-  const STEPS = [
-    { tab:'⚑ the cast',
-      name:'Before the ballot',
-      mail:{},
-      add:{}, stamp:{}, loc:{},
-      gods: OLD_B + '\n<span class="gdim">…ballot 16 does not exist yet.</span>',
-      conds: [['a Synod of five — any 3 priests form a majority','info']],
-      html: 'Five priests are in the Chamber. <b>Γ</b> wants to get a decree passed — ideally his '+
-        'own pet decree <i>δ</i>. The cards show what each priest has scribbled in the <em>back</em> '+
-        'of his ledger: Α once voted for <i>α</i> in ballot 14, Β voted for <i>β</i> long ago in '+
-        'ballot 5, and Δ and Ε have never voted at all. Step through the six steps and watch '+
-        'conditions <var>B</var>1–<var>B</var>3 quietly steer everything.' },
-    { tab:'1 · NextBallot',
-      name:'Step 1 — NextBallot(b)',
-      mail:{ Γ:'<span class="out">📤 NextBallot(16) → Α, Β, Δ, Ε</span>',
-             Α:'<span class="in">📥 NextBallot(16)</span>', Β:'<span class="in">📥 NextBallot(16)</span>',
-             Δ:'<span class="in">📥 NextBallot(16)</span>', Ε:'<span class="in">📥 NextBallot(16)</span>' },
-      add:{ Γ:['✍ tried ballot 16'] }, stamp:{Γ:'b := 16'}, loc:{},
-      gods: OLD_B + '\n<span class="gdim">…still no ballot 16. Sending NextBallot changes nothing in ℬ.</span>',
-      conds: [['B1: ballot numbers can never collide ✓',''],['every step is optional','info']],
-      html: '<b>(1)</b> Γ chooses a new ballot number — <b>16</b>, from the unbounded set of numbers '+
-        'reserved for him alone — notes it in his ledger so he never reuses it, and his messengers '+
-        'fan out with <i>NextBallot(16)</i> scrolls. Because the possible numbers are partitioned '+
-        'among the priests and each remembers what he has used, no two ballots ever share a number: '+
-        'condition <var>B</var>1 is maintained by bookkeeping alone.' },
-    { tab:'2 · LastVote',
-      name:'Step 2 — LastVote(b, v): report… and promise',
-      mail:{ Α:'<span class="out">📤 LastVote(16, ⟨14, α⟩)</span>', Β:'<span class="out">📤 LastVote(16, ⟨5, β⟩)</span>',
-             Δ:'<span class="out">📤 LastVote(16, null<sub>Δ</sub>)</span>',
-             Ε:'<span class="zzz">💤 ignores the scroll</span>',
-             Γ:'<span class="in">📥 three LastVote scrolls</span>' },
-      add:{ Α:['🤝 no new vote inside (14…16)'], Β:['🤝 no new vote inside (5…16)'], Δ:['🤝 no new vote below 16'] },
-      stamp:{Α:'PROMISED!', Β:'PROMISED!', Δ:'PROMISED!', Ε:'ASLEEP'}, loc:{Ε:'😴'},
-      gods: OLD_B + '\n<span class="gdim">…the promises freeze MaxVote(16, q, ℬ) for Α, Β, Δ.</span>',
-      conds: [['LastVote = MaxVote, frozen by a promise','info'],['Ε ignores it — consistency unharmed ✓','']],
-      html: '<b>(2)</b> Each priest who cares to respond looks in the <em>back of his ledger</em> for '+
-        'the last vote he cast before ballot 16 and reports it: Α answers ⟨14, <i>α</i>⟩, Β answers '+
-        '⟨5, <i>β</i>⟩, Δ answers his null vote. Each <i>LastVote(16, v)</i> is more than a report — '+
-        'it is a <b>promise to cast no new vote between <var>v</var><sub>bal</sub> and 16</b>, written '+
-        'down so it will be kept. Without that promise, the value Γ is about to use could go stale '+
-        'and <var>B</var>3 could not be enforced. Ε simply ignores the message — allowed! Skipping a '+
-        'step can stall progress but can never make the ledgers disagree.' },
-    { tab:'3 · BeginBallot',
-      name:'Step 3 — BeginBallot(b, d): the decree is forced',
-      mail:{ Γ:'<span class="out">📤 BeginBallot(16, α) → Α, Β, Δ</span>',
-             Α:'<span class="in">📥 BeginBallot(16, α)</span>', Β:'<span class="in">📥 BeginBallot(16, α)</span>',
-             Δ:'<span class="in">📥 BeginBallot(16, α)</span>', Ε:'<span class="zzz">💤</span>' },
-      add:{ Γ:['✍ ballot 16: α, quorum {Α, Β, Δ}'] },
-      stamp:{Γ:'d := α, not δ!'}, loc:{Ε:'😴'},
-      gods: OLD_B + '\n<span class="bnew">⟨#16,&nbsp;α⟩ quorum {Α,Β,Δ} voters { } ← just added to ℬ</span>',
-      conds: [['B2: quorum is a majority ✓',''],['B3: decree forced to α ✓','']],
-      html: '<b>(3)</b> Γ now holds <i>LastVote</i> scrolls from {Α, Β, Δ} — a majority, so any two '+
-        'quorums must share a priest (<var>B</var>2). Then comes the heart of the protocol: among the '+
-        'reported votes ⟨14, <i>α</i>⟩, ⟨5, <i>β</i>⟩, <i>null</i><sub>Δ</sub>, the one with the '+
-        '<b>highest ballot number</b> is ⟨14, <i>α</i>⟩. It is not <span style="font-variant:small-caps">'+
-        'blank</span>, so <var>B</var>3 leaves Γ no choice: <b>the decree must be <i>α</i></b>. His '+
-        'beloved <i>δ</i> must wait for some future ballot (where, alas, <var>B</var>3 will force '+
-        '<i>α</i> again). He records the ballot and sends <i>BeginBallot(16, α)</i> to the quorum — '+
-        'and only now, say the gods, does ballot 16 join the set ℬ.' },
-    { tab:'4 · Voted',
-      name:'Step 4 — Voted(b, q): the quorum votes',
-      mail:{ Α:'<span class="out">📤 Voted(16, Α)</span>', Β:'<span class="out">📤 Voted(16, Β)</span>',
-             Δ:'<span class="out">📤 Voted(16, Δ)</span>', Ε:'<span class="zzz">💤</span>',
-             Γ:'<span class="in">📥 Voted ×3 — the whole quorum!</span>' },
-      add:{ Α:['✍ cast vote ⟨16, α⟩'], Β:['✍ cast vote ⟨16, α⟩'], Δ:['✍ cast vote ⟨16, α⟩'] },
-      stamp:{Α:'VOTED!', Β:'VOTED!', Δ:'VOTED!', Ε:'ASLEEP'}, loc:{Ε:'😴'},
-      gods: OLD_B + '\n<span class="bnew">⟨#16,&nbsp;α⟩ quorum {Α,Β,Δ} voters {Α,Β,Δ} ← votes cast</span>',
-      conds: [['each priest checks his promises — none broken ✓',''],['voting is never compulsory','info']],
-      html: '<b>(4)</b> Each quorum priest consults the promises in his ledger before voting. Α '+
-        'promised no new vote <em>strictly between</em> 14 and 16 — voting in ballot 16 itself is '+
-        'fine. No promise is violated, so all three choose to cast their vote: each records '+
-        '⟨16, <i>α</i>⟩ in the back of his ledger and sends <i>Voted(16, q)</i> to Γ. Any of them '+
-        'could also have declined — a lost or refused vote leaves the ballot unfinished, never '+
-        'inconsistent. In the gods’ ledger each vote adds a priest to <var>B</var><sub>vot</sub>.' },
-    { tab:'5 · Success',
-      name:'Step 5 — Success(d): tally and proclaim',
-      mail:{ Γ:'<span class="out">📤 Success(α) → every priest</span>',
-             Α:'<span class="zzz">scroll on its way…</span>', Β:'<span class="zzz">scroll on its way…</span>',
-             Δ:'<span class="zzz">scroll on its way…</span>', Ε:'<span class="zzz">scroll on its way… 💤</span>' },
-      add:{}, stamp:{Γ:'SUCCESS! 🏆'}, loc:{Ε:'😴'}, outcome:{Γ:'α'},
-      gods: OLD_B + '\n<span class="bnew">⟨#16,&nbsp;α⟩ quorum {Α,Β,Δ} voters {Α,Β,Δ} 🏆 quorum ⊆ voters: successful!</span>',
-      conds: [['successful ballot: every quorum member voted 🏆','']],
-      html: '<b>(5)</b> Γ has a <i>Voted</i> scroll from <em>every</em> priest in the quorum — ballot '+
-        '16 is <b>successful</b>, and its decree is the one the Synod has chosen. Γ writes <i>α</i> '+
-        'in his ledger (the front pages now, where decrees live) and sends <i>Success(α)</i> to '+
-        'every priest on the island.' },
-    { tab:'6 · Ledgers',
-      name:'Step 6 — every ledger agrees',
-      mail:{ Α:'<span class="in">📥 Success(α) ✒ enters α</span>', Β:'<span class="in">📥 Success(α) ✒ enters α</span>',
-             Δ:'<span class="in">📥 Success(α) ✒ enters α</span>', Ε:'<span class="in">📥 Success(α) ✒ enters α</span>',
-             Γ:'<span class="zzz">his work is done</span>' },
-      add:{}, stamp:{Γ:'AGREED ✓', Α:'AGREED ✓', Β:'AGREED ✓', Δ:'AGREED ✓', Ε:'AGREED ✓'}, loc:{},
-      outcome:{Γ:'α', Α:'α', Β:'α', Δ:'α', Ε:'α'},
-      gods: OLD_B + '\n⟨#16,&nbsp;α⟩ quorum {Α,Β,Δ} voters {Α,Β,Δ} 🏆\n<span class="gdim">any later ballot’s quorum must overlap {Α,Β,Δ} — so B3 will force α forever after.</span>',
-      conds: [['Theorem 1 ⇒ all ledgers consistent ✓',''],['progress? see Ε — and Section 2.4','info']],
-      html: '<b>(6)</b> On receiving <i>Success(α)</i>, each priest enters decree <i>α</i> in his '+
-        'ledger — even sleepy Ε, who ignored the whole affair and agrees anyway. A decree is entered '+
-        '<em>only</em> when a ballot succeeds, so by Theorem&nbsp;1 no ballot, past or future, can '+
-        'ever put anything but <i>α</i> in a ledger. Consistency is guaranteed even with lost '+
-        'messages and dozing priests. <em>Progress</em>, as Ε just demonstrated, is a different '+
-        'battle — fought in Section&nbsp;2.4.' }
-  ];
-
-  let cur = 0;
-  const tabsEl = document.getElementById('steps-tabs');
-  const stageEl = document.getElementById('steps-stage');
-  const godsEl = document.getElementById('steps-gods');
-  const explainEl = document.getElementById('steps-explain');
-  const backBtn = document.getElementById('steps-back');
-  const nextBtn = document.getElementById('steps-next');
-
-  function render(){
-    const s = STEPS[cur];
-    tabsEl.innerHTML = '';
-    STEPS.forEach((st, i)=>{
-      const b = document.createElement('button');
-      b.innerHTML = st.tab;
-      b.className = i===cur ? 'on' : (i<cur ? 'done' : '');
-      b.addEventListener('click', ()=>{ cur = i; render(); });
-      tabsEl.appendChild(b);
-    });
-    stageEl.innerHTML = P.map(p=>{
-      const notes = [...BASE_NOTES[p]];
-      const newNotes = [];
-      for(let i=1; i<=cur; i++){
-        for(const n of (STEPS[i].add[p]||[])){
-          notes.push(n);
-          if(i===cur) newNotes.push(n);
-        }
-      }
-      const dec = (s.outcome||{})[p];
-      const stamp = s.stamp[p];
-      return '<div class="priest">' +
-        (stamp ? '<div class="stat" style="display:block">'+stamp+'</div>' : '') +
-        '<div class="phead"><span class="avatar" style="background:'+COLOR[p]+'">'+p+'</span>' +
-        '<span class="pname">'+p+(p==='Γ'?'<span style="font-weight:400;font-size:.68rem"> · initiator</span>':'')+'</span>' +
-        '<span class="loc">'+(s.loc[p]||'🏛')+'</span></div>' +
-        '<div class="pbody">' +
-        '<div class="outcome'+(dec?' written':'')+'">'+(dec ? 'decree: <b>'+dec+'</b>' : 'decree page: <i>empty</i>')+'</div>' +
-        '<div class="mail">'+(s.mail[p]||'<span class="zzz">—</span>')+'</div>' +
-        '<div class="vars"><b>back of ledger:</b>' +
-        (notes.length ? notes.map(n=>'<span class="note'+(newNotes.includes(n)?' new':'')+'">'+n+'</span>').join('')
-                      : '<span class="note"><i>(blank)</i></span>') +
-        '</div></div></div>';
-    }).join('');
-    godsEl.innerHTML = '<span class="glabel">ℬ — the set of ballots, observed only by the gods</span>' +
-      s.gods.split('\n').join('<br>');
-    explainEl.innerHTML = '<span class="stepname">'+s.name+'</span>' + s.html +
-      '<div class="conds">'+s.conds.map(c=>'<span class="cond'+(c[1]?' '+c[1]:'')+'">'+c[0]+'</span>').join('')+'</div>';
-    backBtn.disabled = cur===0;
-    nextBtn.disabled = cur===STEPS.length-1;
-    nextBtn.textContent = cur===STEPS.length-1 ? 'The Synod has chosen ✓' : 'Next step →';
-  }
-  backBtn.addEventListener('click', ()=>{ if(cur>0){ cur--; render(); } });
-  nextBtn.addEventListener('click', ()=>{ if(cur<STEPS.length-1){ cur++; render(); } });
-  document.getElementById('steps-reset').addEventListener('click', ()=>{ cur = 0; render(); });
-  render();
-})();
-
-/* ================= WIDGET 2: Chamber simulator ================= */
-(function(){
-  const NAMES = ['Α','Β','Γ','Δ','Ε'];
-  const COLORS = ['#136f9e','#bf4a26','#66722c','#8e5aa0','#b8860b'];
-  const MAJ = 3;
-  const NEG = {n:-1, p:-1}; // -infinity ballot
-  let priests, msgs, msgSeq, ballotCeil, log;
-
-  const stageEl = document.getElementById('sim-stage');
-  const trayEl = document.getElementById('sim-tray-items');
-  const logEl = document.getElementById('sim-log');
-  const bannerEl = document.getElementById('sim-banner');
-  const selPriest = document.getElementById('sim-priest');
-  const selDecree = document.getElementById('sim-decree');
-  NAMES.forEach((n,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent='Priest '+n; selPriest.appendChild(o); });
-
-  function bcmp(a,b){ return a.n!==b.n ? a.n-b.n : a.p-b.p; }
-  function bshow(b){ return b.n<0 ? '−∞' : '('+b.n+','+NAMES[b.p]+')'; }
-
-  function reset(){
-    priests = NAMES.map((n,i)=>({i, name:n, in:true,
-      lastTried:NEG, prevBal:NEG, prevDec:null, nextBal:NEG, outcome:null,
-      status:'idle', prevVotes:null, quorum:null, voters:null, decree:null}));
-    msgs = []; msgSeq = 0; ballotCeil = 0; log = [];
-    logEl.innerHTML='';
-    say('sys','The Chamber is opened. Five priests take their seats, ledgers in hand.');
-    render();
-  }
-  function say(cls, txt){
-    const d = document.createElement('div');
-    d.className = 't-'+cls; d.innerHTML = txt;
-    logEl.appendChild(d); logEl.scrollTop = logEl.scrollHeight;
-  }
-  function render(){
-    stageEl.innerHTML='';
-    priests.forEach(p=>{
-      const d = document.createElement('div');
-      d.className = 'priest' + (p.in?'':' away');
-      const stat = p.status!=='idle' ? '<span class="stat" style="display:block">'+p.status+' '+bshow(p.lastTried)+'</span>' : '';
-      d.innerHTML = stat +
-        '<div class="phead" title="click to send '+p.name+' in/out of the Chamber">' +
-          '<span class="avatar" style="background:'+COLORS[p.i]+'">'+p.name+'</span>' +
-          '<span class="pname">'+p.name+'</span><span class="loc">'+(p.in?'🏛️':'🫒')+'</span></div>' +
-        '<div class="pbody">' +
-          '<div class="outcome'+(p.outcome?' written':'')+'">'+(p.outcome ? 'LEDGER: “'+p.outcome+'”' : 'ledger: no decree yet')+'</div>' +
-          '<div class="vars">back of ledger:<br><b>lastTried</b> '+bshow(p.lastTried)+'<br><b>prevVote</b> '+
-            (p.prevBal.n<0?'−∞':bshow(p.prevBal)+' “'+trunc(p.prevDec)+'”')+'<br><b>nextBal</b> '+bshow(p.nextBal)+'</div>' +
-        '</div>';
-      d.querySelector('.phead').addEventListener('click', ()=>toggle(p));
-      stageEl.appendChild(d);
-    });
-    trayEl.innerHTML='';
-    msgs.forEach(m=>{
-      const c = document.createElement('span');
-      c.className='scroll-chip';
-      c.innerHTML = '📜 '+m.label+' → '+NAMES[m.to]+' <span class="lose" title="the messenger sails away">✕</span>';
-      c.addEventListener('click',(e)=>{ if(e.target.classList.contains('lose')){ lose(m); } else { deliver(m); } });
-      trayEl.appendChild(c);
-    });
-    const outs = priests.filter(p=>p.outcome!==null).map(p=>p.outcome);
-    if(outs.length===0){ bannerEl.className='banner warn'; bannerEl.textContent='No decree has yet been written in any ledger.'; }
-    else{
-      const agree = outs.every(o=>o===outs[0]);
-      bannerEl.className='banner '+(agree?'ok':'warn');
-      bannerEl.textContent = agree
-        ? '⚖️ CONSISTENCY HOLDS — every written ledger says: “'+outs[0]+'” ('+outs.length+' of 5 ledgers written)'
-        : 'THE GODS ARE ANGRY: ledgers disagree?! (This should be impossible — please report this bug to the Synod.)';
-    }
-  }
-  function trunc(s){ return s && s.length>24 ? s.slice(0,22)+'…' : (s||''); }
-  function toggle(p){
-    p.in = !p.in;
-    if(!p.in){
-      let extra='';
-      if(p.status!=='idle'){ p.status='idle'; p.prevVotes=null; p.quorum=null; p.voters=null; p.decree=null;
-        extra=' His slip of paper flutters away — ballot '+bshow(p.lastTried)+' is abandoned.'; }
-      say('sys','Priest '+p.name+' wanders out of the Chamber. 🫒'+extra);
-    }else{
-      say('sys','Priest '+p.name+' strolls back into the Chamber. 🏛️ (His ledger, as always, is with him.)');
-    }
-    render();
-  }
-  function send(from, to, type, label, data){
-    msgs.push(Object.assign({id:msgSeq++, from, to, type, label}, data));
-  }
-  function lose(m){
-    msgs = msgs.filter(x=>x!==m);
-    say('bad','🌊 The messenger carrying '+m.label+' (for '+NAMES[m.to]+') boards a ship for a six-month voyage. The scroll is never delivered.');
-    render();
-  }
-  function deliver(m){
-    msgs = msgs.filter(x=>x!==m);
-    const q = priests[m.to];
-    if(!q.in){
-      say('bad','📪 The messenger finds priest '+q.name+'’s seat empty ('+m.label+' is lost — he is out of the Chamber).');
-      render(); return;
-    }
-    switch(m.type){
-      case 'NextBallot': {
-        if(bcmp(m.b, q.nextBal) > 0){
-          q.nextBal = m.b;
-          const v = {pst:q.i, bal:q.prevBal, dec:q.prevDec};
-          say('act','Priest '+q.name+' reads NextBallot'+bshow(m.b)+', notes it in the back of his ledger, and replies LastVote'+
-            (v.bal.n<0 ? ' — “I have never voted.”' : ' — “my last vote below that: ballot '+bshow(v.bal)+', for “'+trunc(v.dec)+'”.”') +
-            ' He hereby PROMISES to cast no new vote in any ballot below '+bshow(m.b)+'.');
-          send(q.i, m.from, 'LastVote', 'LastVote'+bshow(m.b), {b:m.b, v});
-        } else {
-          say('sys','Priest '+q.name+' ignores NextBallot'+bshow(m.b)+' — he has already promised himself to '+bshow(q.nextBal)+'.');
-        }
-        break;
-      }
-      case 'LastVote': {
-        const p = q;
-        if(p.status==='trying' && bcmp(m.b, p.lastTried)===0){
-          p.prevVotes.push(m.v);
-          say('act','Priest '+p.name+' receives LastVote'+bshow(m.b)+' from '+NAMES[m.v.pst]+' ('+(p.prevVotes.length)+' of '+MAJ+' needed).');
-          if(p.prevVotes.length===MAJ && p.status==='trying'){
-            // step 3
-            p.status='polling';
-            p.quorum = p.prevVotes.map(v=>v.pst);
-            p.voters = [];
-            let best = p.prevVotes.reduce((a,v)=> bcmp(v.bal,a.bal)>0?v:a, {bal:NEG, dec:null});
-            if(best.bal.n<0){
-              p.decree = p.wanted;
-              say('big','⭐ STEP 3 — a majority set {'+p.quorum.map(i=>NAMES[i]).join(', ')+'} has answered, and none has ever voted. Priest '+p.name+' is FREE to choose his own decree: “'+p.decree+'”.');
-            } else {
-              p.decree = best.dec;
-              const forced = p.wanted !== best.dec;
-              say('big','⭐ STEP 3 — a majority set {'+p.quorum.map(i=>NAMES[i]).join(', ')+'} has answered. The latest vote among them is '+NAMES[best.pst]+'’s, in ballot '+bshow(best.bal)+', for “'+best.dec+'”. Condition B3 COMPELS priest '+p.name+' to propose that same decree'+(forced?' — his own “'+trunc(p.wanted)+'” must wait for another ballot!':'.'));
-            }
-            p.quorum.forEach(i=>send(p.i, i, 'BeginBallot', 'BeginBallot'+bshow(m.b), {b:m.b, d:p.decree}));
-          }
-        }
-        break;
-      }
-      case 'BeginBallot': {
-        if(bcmp(m.b, q.nextBal)===0 && bcmp(m.b, q.prevBal)>0){
-          q.prevBal = m.b; q.prevDec = m.d;
-          say('act','🗳️ Priest '+q.name+' CASTS HIS VOTE in ballot '+bshow(m.b)+' for “'+trunc(m.d)+'”, records it in the back of his ledger, and sends Voted back.');
-          send(q.i, m.from, 'Voted', 'Voted'+bshow(m.b), {b:m.b, voter:q.i});
-        } else {
-          say('sys','Priest '+q.name+' declines to vote in ballot '+bshow(m.b)+' — it would break the promise of a later LastVote (nextBal = '+bshow(q.nextBal)+').');
-        }
-        break;
-      }
-      case 'Voted': {
-        const p = q;
-        if(p.status==='polling' && bcmp(m.b, p.lastTried)===0){
-          if(!p.voters.includes(m.voter)) p.voters.push(m.voter);
-          say('act','Priest '+p.name+' tallies Voted from '+NAMES[m.voter]+' ('+p.voters.length+' of '+p.quorum.length+' quorum votes in).');
-          if(p.quorum.every(i=>p.voters.includes(i))){
-            if(p.outcome===null) p.outcome = p.decree;
-            p.status='idle';
-            say('big','🏆 SUCCESS! Every quorum member has voted in ballot '+bshow(m.b)+'. Priest '+p.name+' writes “'+p.decree+'” in his ledger IN INDELIBLE INK and sends Success to every priest.');
-            priests.forEach(o=>{ if(o.i!==p.i) send(p.i, o.i, 'Success', 'Success', {d:p.decree}); });
-          }
-        }
-        break;
-      }
-      case 'Success': {
-        if(q.outcome===null){
-          q.outcome = m.d;
-          say('act','Priest '+q.name+' receives the glad tidings and writes “'+trunc(m.d)+'” in his ledger. ✒️');
-        }
-        break;
-      }
-    }
-    render();
-  }
-  function start(pi, decree, quiet){
-    const p = priests[pi];
-    if(!p.in){ say('bad','Priest '+p.name+' is out of the Chamber and can initiate nothing.'); render(); return; }
-    ballotCeil++;
-    p.lastTried = {n:ballotCeil, p:pi};
-    p.status='trying'; p.prevVotes=[]; p.wanted = decree;
-    say('big','📯 STEP 1 — Priest '+p.name+' takes a fresh slip of paper and begins ballot '+bshow(p.lastTried)+', hoping to pass: “'+decree+'”. NextBallot scrolls go out to all five priests.');
-    priests.forEach(o=>send(pi, o.i, 'NextBallot', 'NextBallot'+bshow(p.lastTried), {b:p.lastTried}));
-    if(!quiet) render();
-  }
-  function deliverNext(){ if(msgs.length===0){ say('sys','No scrolls are in transit.'); render(); return;} deliver(msgs[0]); }
-  function deliverAll(){ let guard=0; while(msgs.length>0 && guard++<500) deliver(msgs[0]); }
-
-  document.getElementById('sim-start').addEventListener('click', ()=>start(+selPriest.value, selDecree.value));
-  document.getElementById('sim-next').addEventListener('click', deliverNext);
-  document.getElementById('sim-all').addEventListener('click', deliverAll);
-  document.getElementById('sim-lose').addEventListener('click', ()=>{ if(msgs.length) lose(msgs[0]); });
-  document.getElementById('sim-reset').addEventListener('click', reset);
-
-  /* scenarios */
-  const scenarios = {
-    quiet(){
-      reset();
-      say('sys','— LEGEND Ⅰ: A QUIET DAY. Everyone stays put; priest Α passes the olive tax unopposed. —');
-      start(0, 'The olive tax is 3 drachmas per ton');
-      deliverAll();
-      say('sys','A perfect session: 1 ballot, every ledger written. Try losing scrolls next time.');
-    },
-    wander(){
-      reset();
-      say('sys','— LEGEND Ⅱ: THE WANDERERS. Δ and Ε leave for a banquet; the remaining three ARE a majority, so business continues. —');
-      priests[3].in=false; priests[4].in=false;
-      say('sys','Priests Δ and Ε head to a banquet. 🫒🫒');
-      start(1, 'Lamps must use only olive oil');
-      deliverAll();
-      say('sys','A majority (Α, Β, Γ) sufficed — the two absentees’ scrolls were lost, and nobody cared. When Δ and Ε return, bring them back and let someone run a new ballot: Success messages (or B3) will catch them up.');
-    },
-    duel(){
-      reset();
-      say('sys','— LEGEND Ⅲ: TWO WOULD-BE PRESIDENTS. Α and Ε each believe themselves president. Watch higher ballots strangle lower ones. —');
-      start(0, 'Painting on temple walls is forbidden', true);
-      // deliver only the NextBallots, not the rest
-      let guard=0;
-      while(msgs.length && msgs[0].type==='NextBallot' && guard++<20) deliver(msgs[0]);
-      say('sys','…but before Α can collect his LastVotes into a quorum—');
-      start(4, 'Freedom of artistic expression is guaranteed', true);
-      guard=0;
-      while(msgs.length && guard++<200){
-        // deliver Ε's NextBallots first (they arrive fresh), leaving Α's stale LastVotes
-        const i = msgs.findIndex(m=>m.type==='NextBallot');
-        deliver(i>=0 ? msgs[i] : msgs[0]);
-      }
-      say('bad','Every priest has now promised ballot '+bshow(priests[4].lastTried)+' — the LastVote replies still in flight for Α’s ballot are stale, and if Α ever gets a BeginBallot out, it will be politely ignored. If Α retaliates with a still-higher ballot before Ε finishes, NO ballot ever succeeds. This is why the complete protocol elects ONE president (the alphabetically last: Ε, as it happens).');
-    },
-    theorem(){
-      reset();
-      say('sys','— LEGEND Ⅳ: THEOREM 1, LIVE. First a decree is chosen; then a different priest, wanting a DIFFERENT decree, runs a new ballot… and passes the old decree instead. —');
-      start(2, 'The sale of black goats is permitted');
-      deliverAll();
-      say('sys','Decree chosen. Now priest Ε — who missed everything and dearly wants a lantern law — starts his own ballot:');
-      priests.forEach(p=>{ if(p.outcome) return; });
-      start(4, 'Ships must carry lanterns at night');
-      deliverAll();
-      say('sys','Ε’s majority necessarily overlapped the earlier quorum (B2), so some LastVote carried the goat decree, and B3 forced Ε to propose it. THE LEDGERS CANNOT DISAGREE. Ε’s lantern law must wait for the multi-decree Parliament.');
-    }
-  };
-  document.querySelectorAll('#sim .scenarios button').forEach(b=>{
-    b.addEventListener('click', ()=>scenarios[b.dataset.scn]());
-  });
-  reset();
-})();
-
-/* ================= WIDGET 3: ledger gaps ================= */
-(function(){
-  const bookEl = document.getElementById('ledger-book');
-  const msgEl = document.getElementById('ledger-msg');
-  let entries, passed127;
-  function reset(){
-    entries = [
-      {no:122, txt:'The tariff on imported wool is 2 drachmas per bale', kind:'old'},
-      {no:123, txt:'Goat sacrifices are limited to festival days', kind:'old'},
-      {no:124, txt:'The harbor master shall keep a lamp lit till midnight', kind:'old'},
-      {no:125, txt:null, kind:'gap'},
-      {no:126, txt:'Wine may not be sold before the spring festival', kind:'learned'},
-    ];
-    passed127 = false;
-    msgEl.innerHTML = 'Your ledger, freshly reconciled with a majority of legislators. Decree 126 you learned from Λ˘ινχ∂’s ledger — but of 125, no legislator you can reach knows anything. The old president is on a fishing trip.';
-    render();
-  }
-  function render(){
-    bookEl.innerHTML = '<div style="text-align:center; font-family:Optima,sans-serif; letter-spacing:.18em; font-size:.72rem; color:#8a7550; margin-bottom:8px">LEDGER OF PRESIDENT Δφωρκ — MONDAY, BEFORE BREAKFAST</div>';
-    for(const e of entries){
-      const d = document.createElement('div');
-      d.className = 'entry ' + (e.kind==='gap' ? 'gap fillable' : '') + (e.kind==='new' ? 'new' : '');
-      d.innerHTML = '<span class="no">'+e.no+':</span><span class="txt">'+
-        (e.kind==='gap' ? '??? — nobody reachable knows what decree '+e.no+' was (click to deal with it)' : e.txt)+'</span>'+
-        (e.kind==='learned' ? ' <span title="learned from another ledger">👁</span>':'');
-      if(e.kind==='gap') d.addEventListener('click', ()=>fill(e));
-      bookEl.appendChild(d);
-    }
-  }
-  function fill(e){
-    e.kind='new';
-    e.txt='The ides of February is national olive day 🫒';
-    msgEl.innerHTML='You run a ballot for decree '+e.no+' proposing the traditional <i>olive-day</i> decree. <b>Note what B3 protects you from:</b> if decree '+e.no+' actually HAD been passed while you were away, some member of your majority set would have voted for it, and the ballot would pass <i>that</i> decree instead of olive day. Either way — no gap, no harm.';
-    render();
-  }
-  document.getElementById('ledger-propose').addEventListener('click', ()=>{
-    if(passed127){ msgEl.innerHTML='Already passed. The citizen has sailed off happily, lantern aglow.'; return; }
-    const gap = entries.find(e=>e.kind==='gap');
-    if(gap){
-      msgEl.innerHTML='<b style="color:var(--blood)">Not so fast, President.</b> Assigning the lantern law a number below your gap would make an <i>important</i> decree appear earlier in the books than decree 126, passed last week — and a citizen who requested it <i>because</i> 126 passed would be very confused. Fill your gaps with olive-day decrees first.';
-      return;
-    }
-    entries.push({no:127, txt:'Ships must carry lanterns at night', kind:'new'});
-    passed127 = true;
-    msgEl.innerHTML='🏆 Decree <b>127</b> is proposed, balloted, and passed — in order, after everything already in the books. The decree-ordering property sleeps soundly tonight.';
-    render();
-  });
-  document.getElementById('ledger-reset').addEventListener('click', reset);
-  reset();
-})();
-
 /* ================= WIDGET 4: hidden names ================= */
 (function(){
   const names = [
@@ -2289,5 +1987,6 @@ people that the protocol was correct if, in their proof, they allowed any priest
 })();
 </script>
 
+<script src="../../assets/js/flow.js" defer></script>
 </body>
 </html>

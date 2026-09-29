@@ -160,61 +160,73 @@
 
   <figure class="diagram">
     <div class="board">
-      <svg viewBox="0 0 660 400" role="img" aria-label="Two panels. In each, one lifeline stands for tents 1, 2 and 3 together, and one for tent 4, with lost birds between them. Left: Number 2 moves the standing gate to south and his birds to tent 4 are lost; later Number 4 asks which gate stands and answers north, which breaks answering as one. Right: nobody moves the gate; Number 4 asks and answers north, which is right. Tent 4's lifeline is identical in both panels.">
+      <svg class="flow" viewBox="0 0 660 400" role="img" aria-label="Two panels drawn in the round. In each, one line stands for tents 1, 2 and 3 together and one for tent 4, with lost birds between them; later moments further out. Left, the first night: a man among tents 1 to 3 moves the standing gate to south and his birds to tent 4 are lost; later tent 4 asks which gate stands and answers north, which breaks answering as one. Right, the second night: nobody moves the gate; tent 4 asks and answers north, which is right. Tent 4's line is identical in both panels.">
+        <!-- polar:awco-nights -->
         <defs>
-          <marker id="ahl" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+          <marker id="awco-nights-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
+          </marker>
+          <marker id="awco-nights-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
           </marker>
+          <marker id="awco-nights-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
+          </marker>
+          <marker id="awco-nights-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
+          </marker>
+          <marker id="awco-nights-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
+          </marker>
         </defs>
-
-        <!-- ============ left panel ============ -->
-        <text class="d-house" x="165" y="24" text-anchor="middle" fill="#bf4a26">THE FIRST NIGHT</text>
-        <text class="d-house" x="70" y="42" text-anchor="middle" font-size="11">TENTS 1, 2</text>
-        <text class="d-house" x="70" y="56" text-anchor="middle" font-size="11">&amp; 3</text>
-        <text class="d-house" x="260" y="56" text-anchor="middle" font-size="11">TENT 4</text>
-        <rect class="d-band" x="125" y="66" width="80" height="264"/>
-        <text class="d-key" x="165" y="82" text-anchor="middle">birds lost</text>
-        <line class="d-lifeline" x1="70" y1="66" x2="70" y2="330"/>
-        <line class="d-lifeline" x1="260" y1="66" x2="260" y2="330"/>
-
-        <circle class="d-ev-hi" cx="70" cy="110" r="5"/>
-        <text class="d-lbl" x="62" y="104" text-anchor="end">moved to</text>
-        <text class="d-lbl" x="62" y="118" text-anchor="end">south</text>
-        <path class="d-msg-hi" marker-end="url(#ahl)" d="M70,120 L150,140"/>
-        <text class="d-note" x="165" y="158" text-anchor="middle">lost</text>
-
-        <line class="d-faint" x1="70" y1="110" x2="260" y2="110"/>
-
-        <circle class="d-ev" cx="260" cy="240" r="5"/>
-        <text class="d-lbl" x="270" y="238">asks</text>
-        <circle class="d-ev-hi" cx="260" cy="275" r="5"/>
-        <text class="d-lbl" x="270" y="273">&ldquo;north&rdquo;</text>
-
-        <text class="d-note" x="165" y="355" text-anchor="middle" fill="#bf4a26">the move was finished first;</text>
-        <text class="d-note" x="165" y="371" text-anchor="middle" fill="#bf4a26">answering as one requires south</text>
-
-        <!-- divider -->
-        <line x1="330" y1="36" x2="330" y2="380" stroke="#b9a77e" stroke-width="1.5"/>
-
-        <!-- ============ right panel ============ -->
+        <text class="d-house" x="165" y="24" text-anchor="middle" style="fill:#bf4a26">THE FIRST NIGHT</text>
+        <circle cx="165" cy="205" r="57" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="165" cy="205" r="74" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="165" cy="205" r="91" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="165" cy="205" r="108" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="165" cy="205" r="125" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="165" cy="205" r="142" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <line class="d-lifeline" x1="165" y1="165" x2="165" y2="56.2"/>
+        <line class="d-lifeline" x1="165" y1="245" x2="165" y2="353.8"/>
+        <rect class="d-node" x="143" y="154" width="44" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="165" y="169.5" text-anchor="middle" fill="#1c1512">T1–3</text>
+        <rect class="d-node" x="143" y="234" width="44" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="165" y="249.5" text-anchor="middle" fill="#1c1512">T4</text>
+        <clipPath id="awco-nights-clip0"><circle class="tclip" cx="165" cy="205" r="168.8" data-r0="40" data-r1="148.8"/></clipPath>
+        <g class="tflow" clip-path="url(#awco-nights-clip0)">
+        <circle class="d-ev-hi" cx="165" cy="141.2" r="7.5"/>
+        <text x="165" y="144.6" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">S</text>
+        <text class="d-lbl d-halo" x="179" y="145.2" text-anchor="start" style="fill:#bf4a26">moves gate to south</text>
+        <path class="d-msg" d="M165,141.2 L161.6,140.7 L158.2,140.4 L154.8,140.3 L151.3,140.4 L147.8,140.6 L144.2,141.1 L140.7,141.7 L137.2,142.6 L133.7,143.6 L130.3,144.8 L126.9,146.3 L123.5,147.9 L120.2,149.7 L117,151.7 L113.9,153.9 L110.8,156.2 L107.9,158.8 L105.1,161.5 L102.5,164.4 L99.9,167.4 L97.6,170.6 L95.3,174 L93.3,177.5 L91.4,181.1 L89.7,184.8 L88.2,188.7 L86.9,192.6 L85.8,196.7 L84.9,200.8 L84.2,205 L83.7,209.3 L83.5,213.6 L83.5,217.9 L83.7,222.3 L84.2,226.6 L84.9,231"/>
+        <path d="M79.9,226 L89.9,236 M79.9,236 L89.9,226" style="stroke:#bf4a26; stroke-width:2.2; fill:none"/>
+        <text class="d-lbl d-halo" x="72.9" y="235" text-anchor="end">birds lost</text>
+        <circle class="d-ev" cx="165" cy="326.6" r="7.5"/>
+        <text x="165" y="330" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">N</text>
+        <text class="d-lbl d-halo" x="177" y="330.6" text-anchor="start">asks; says “north”</text>
+        </g>
+        <text class="d-note" x="165" y="366" text-anchor="middle" style="fill:#bf4a26">the move was finished first;</text>
+        <text class="d-note" x="165" y="382" text-anchor="middle" style="fill:#bf4a26">answering as one requires south</text>
         <text class="d-house" x="495" y="24" text-anchor="middle">THE SECOND NIGHT</text>
-        <text class="d-house" x="400" y="42" text-anchor="middle" font-size="11">TENTS 1, 2</text>
-        <text class="d-house" x="400" y="56" text-anchor="middle" font-size="11">&amp; 3</text>
-        <text class="d-house" x="590" y="56" text-anchor="middle" font-size="11">TENT 4</text>
-        <rect class="d-band" x="455" y="66" width="80" height="264"/>
-        <text class="d-key" x="495" y="82" text-anchor="middle">birds lost</text>
-        <line class="d-lifeline" x1="400" y1="66" x2="400" y2="330"/>
-        <line class="d-lifeline" x1="590" y1="66" x2="590" y2="330"/>
-
-        <text class="d-note" x="392" y="114" text-anchor="end">no move</text>
-
-        <circle class="d-ev" cx="590" cy="240" r="5"/>
-        <text class="d-lbl" x="600" y="238">asks</text>
-        <circle class="d-ev" cx="590" cy="275" r="5"/>
-        <text class="d-lbl" x="600" y="273">&ldquo;north&rdquo;</text>
-
-        <text class="d-note" x="495" y="355" text-anchor="middle">&ldquo;north&rdquo; is right</text>
-        <text class="d-note" x="495" y="371" text-anchor="middle">tent 4's side is the same</text>
+        <circle cx="495" cy="205" r="57" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="495" cy="205" r="74" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="495" cy="205" r="91" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="495" cy="205" r="108" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="495" cy="205" r="125" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="495" cy="205" r="142" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <line class="d-lifeline" x1="495" y1="165" x2="495" y2="56.2"/>
+        <line class="d-lifeline" x1="495" y1="245" x2="495" y2="353.8"/>
+        <rect class="d-node" x="473" y="154" width="44" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="495" y="169.5" text-anchor="middle" fill="#1c1512">T1–3</text>
+        <rect class="d-node" x="473" y="234" width="44" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="495" y="249.5" text-anchor="middle" fill="#1c1512">T4</text>
+        <clipPath id="awco-nights-clip1"><circle class="tclip" cx="495" cy="205" r="168.8" data-r0="40" data-r1="148.8"/></clipPath>
+        <g class="tflow" clip-path="url(#awco-nights-clip1)">
+        <path class="d-msg" d="M495,141.2 L491.6,140.7 L488.2,140.4 L484.8,140.3 L481.3,140.4 L477.8,140.6 L474.2,141.1 L470.7,141.7 L467.2,142.6 L463.7,143.6 L460.3,144.8 L456.9,146.3 L453.5,147.9 L450.2,149.7 L447,151.7 L443.9,153.9 L440.8,156.2 L437.9,158.8 L435.1,161.5 L432.5,164.4 L429.9,167.4 L427.6,170.6 L425.3,174 L423.3,177.5 L421.4,181.1 L419.7,184.8 L418.2,188.7 L416.9,192.6 L415.8,196.7 L414.9,200.8 L414.2,205 L413.7,209.3 L413.5,213.6 L413.5,217.9 L413.7,222.3 L414.2,226.6 L414.9,231"/>
+        <path d="M409.9,226 L419.9,236 M409.9,236 L419.9,226" style="stroke:#bf4a26; stroke-width:2.2; fill:none"/>
+        <text class="d-lbl d-halo" x="402.9" y="235" text-anchor="end">birds lost</text>
+        <circle class="d-ev" cx="495" cy="326.6" r="7.5"/>
+        <text x="495" y="330" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">N</text>
+        <text class="d-lbl d-halo" x="507" y="330.6" text-anchor="start">asks; says “north”</text>
+        </g>
+        <text class="d-note" x="495" y="366" text-anchor="middle">“north” is right;</text>
+        <text class="d-note" x="495" y="382" text-anchor="middle">tent 4's side is the same</text>
+        <line x1="330" y1="10" x2="330" y2="390" stroke="#b9a77e" stroke-width="1.5"/>
       </svg>
     </div>
     <figcaption><b>Number 4 cannot tell the two nights apart.</b> Everything on his side of the lost
@@ -433,56 +445,71 @@
 
   <figure class="diagram">
     <div class="board">
-      <svg viewBox="0 0 660 400" role="img" aria-label="Space-time diagram of tent 4, tent 1, which keeps the standing gate, and tent 2, over one loss of birds around tent 4; birds between tents 1 and 2 arrive. Number 4 moves the gate to south during the loss and is told it stands when his glass runs out; his birds are lost. After the loss ends his move is sent again, tent 1 numbers it and sends it to every tent, and a question at tent 2 after a span longer than t with no bird lost hears south.">
+      <svg class="flow" viewBox="0 0 660 520" role="img" aria-label="Tent 4, tent 1 (the keeper of the standing gate) and tent 2, drawn in the round, later moments further out. A shaded ring marks the loss of birds around tent 4; birds between tents 1 and 2 still arrive. Number 4 moves the gate to south during the loss and is told it stands when his glass runs out; his birds are lost. After the loss ends his move is sent again, tent 1 numbers it and sends it to every tent, and a question at tent 2 after a span longer than t with no loss hears south.">
+        <!-- polar:awco-recovery -->
         <defs>
-          <marker id="ahs" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+          <marker id="awco-recovery-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
           </marker>
-          <marker id="ahs2" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+          <marker id="awco-recovery-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
           </marker>
+          <marker id="awco-recovery-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
+          </marker>
+          <marker id="awco-recovery-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
+          </marker>
+          <marker id="awco-recovery-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
+          </marker>
         </defs>
-
-        <text class="d-house" x="130" y="30" text-anchor="middle">TENT 4</text>
-        <text class="d-house" x="330" y="30" text-anchor="middle">TENT 1 · KEEPER</text>
-        <text class="d-house" x="530" y="30" text-anchor="middle">TENT 2</text>
-
-        <rect class="d-band" x="130" y="70" width="200" height="110"/>
-        <text class="d-key" x="230" y="86" text-anchor="middle">birds lost</text>
-        <text class="d-note" x="430" y="120" text-anchor="middle">these birds arrive</text>
-
-        <line class="d-lifeline" x1="130" y1="46" x2="130" y2="370"/>
-        <line class="d-lifeline" x1="330" y1="46" x2="330" y2="370"/>
-        <line class="d-lifeline" x1="530" y1="46" x2="530" y2="370"/>
-
-        <!-- a move at tent 2 during the loss -->
-        <circle class="d-ev" cx="130" cy="100" r="5"/>
-        <text class="d-lbl" x="120" y="98" text-anchor="end">moves to south</text>
-        <path class="d-msg-hi" marker-end="url(#ahs2)" d="M130,104 L200,118"/>
-        <circle class="d-ev-hi" cx="130" cy="140" r="5"/>
-        <text class="d-lbl" x="120" y="138" text-anchor="end">glass out:</text>
-        <text class="d-lbl" x="120" y="152" text-anchor="end">&ldquo;it stands&rdquo;</text>
-        <path class="d-msg-hi" marker-end="url(#ahs2)" d="M130,160 L200,172"/>
-        <text class="d-note" x="215" y="148">lost</text>
-
-        <!-- after reopening: resend -->
-        <path class="d-msg" marker-end="url(#ahs)" d="M130,195 L330,225"/>
-        <text class="d-lbl" x="120" y="198" text-anchor="end">sent again</text>
-        <circle class="d-ev" cx="330" cy="225" r="5"/>
-        <text class="d-num" x="342" y="222">No. 7</text>
-        <path class="d-msg" marker-end="url(#ahs)" d="M330,232 L130,262"/>
-        <path class="d-msg" marker-end="url(#ahs)" d="M330,232 L530,258"/>
-        <circle class="d-ev" cx="530" cy="258" r="5"/>
-        <text class="d-lbl" x="540" y="256">move No. 7</text>
-
-        <!-- the span t -->
-        <line class="d-faint" x1="40" y1="180" x2="40" y2="310"/>
-        <text class="d-note" x="34" y="245" text-anchor="middle" transform="rotate(-90 34 245)">no loss for longer than t</text>
-
-        <circle class="d-ev" cx="530" cy="325" r="5"/>
-        <text class="d-lbl" x="540" y="323">asks: hears south</text>
-
-        <text class="d-note" x="330" y="392" text-anchor="middle">a move finished while birds were lost is heard by every question after a span of t with none lost</text>
+        <circle cx="330" cy="262" r="58" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="262" r="80" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="262" r="102" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="262" r="124" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="262" r="146" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="262" r="168" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="262" r="190" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="262" r="212" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="262" r="234" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <clipPath id="awco-recovery-clip0"><circle class="tclip" cx="330" cy="262" r="249.6" data-r0="36" data-r1="229.6"/></clipPath>
+        <g class="tflow" clip-path="url(#awco-recovery-clip0)">
+        <path d="M445.2,262 A115.2,115.2 0 1 0 214.8,262 A115.2,115.2 0 1 0 445.2,262 Z M392.4,262 A62.4,62.4 0 1 0 267.6,262 A62.4,62.4 0 1 0 392.4,262 Z" fill-rule="evenodd" style="fill:#bf4a26; fill-opacity:0.1; stroke:#bf4a26; stroke-opacity:.5; stroke-width:.8"/>
+        <path d="M533.2,262 A203.2,203.2 0 1 0 126.8,262 A203.2,203.2 0 1 0 533.2,262 Z M445.2,262 A115.2,115.2 0 1 0 214.8,262 A115.2,115.2 0 1 0 445.2,262 Z" fill-rule="evenodd" style="fill:#5f6e28; fill-opacity:0.08; stroke:#5f6e28; stroke-opacity:.5; stroke-width:.8"/>
+        </g>
+        <line class="d-lifeline" x1="330" y1="226" x2="330" y2="32.4"/>
+        <line class="d-lifeline" x1="361.2" y1="280" x2="528.8" y2="376.8"/>
+        <line class="d-lifeline" x1="298.8" y1="280" x2="131.2" y2="376.8"/>
+        <rect class="d-node" x="315" y="215" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="330" y="230.5" text-anchor="middle" fill="#1c1512">T4</text>
+        <rect class="d-node" x="346.2" y="269" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="361.2" y="284.5" text-anchor="middle" fill="#1c1512">T1</text>
+        <rect class="d-node" x="283.8" y="269" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="298.8" y="284.5" text-anchor="middle" fill="#1c1512">T2</text>
+        <text class="d-lbl d-halo" x="378.2" y="262.6" text-anchor="start" style="fill:#5f6e28">keeper</text>
+        <text class="d-key" x="20" y="30" text-anchor="start" style="fill:#bf4a26">birds lost around tent 4</text>
+        <text class="d-key" x="20" y="48" text-anchor="start" style="fill:#5f6e28">a span t with no loss</text>
+        <g class="tflow" clip-path="url(#awco-recovery-clip0)">
+        <path class="d-msg" marker-end="url(#awco-recovery-b)" d="M387.9,295.4 L386.5,298.7 L384.9,301.9 L383.2,305.1 L381.3,308.2 L379.2,311.2 L376.9,314.1 L374.5,316.9 L371.9,319.6 L369.1,322.2 L366.1,324.6 L363.1,326.9 L359.9,329.1 L356.5,331 L353,332.9 L349.4,334.5 L345.7,335.9 L341.9,337.2 L338,338.3 L334,339.1 L330,339.8 L325.9,340.2 L321.8,340.5 L317.6,340.5 L313.4,340.3 L309.2,339.8 L304.9,339.1 L300.7,338.2 L296.6,337.1 L292.4,335.7 L288.4,334.1 L284.3,332.3 L280.4,330.3 L276.5,328 L272.8,325.5 L269.2,322.8 L265.6,319.9 L262.3,316.8 L259,313.5"/>
+        <path class="d-msg" marker-end="url(#awco-recovery-b)" d="M249.3,308.6 L251.5,313 L253.9,317.3 L256.5,321.5 L259.4,325.5 L262.5,329.5 L265.9,333.2 L269.4,336.8 L273.1,340.2 L277.1,343.5 L281.2,346.5 L285.5,349.4 L289.9,352 L294.6,354.3 L299.3,356.5 L304.2,358.4 L309.2,360 L314.3,361.4 L319.4,362.6 L324.7,363.4 L330,364 L335.4,364.3 L340.8,364.3 L346.2,364 L351.6,363.5 L357,362.6 L362.3,361.5 L367.7,360.1 L372.9,358.4 L378.1,356.4 L383.2,354.1 L388.2,351.6 L393.1,348.8 L397.8,345.7 L402.4,342.4 L406.8,338.8 L411,335 L415.1,330.9 L418.9,326.6"/>
+        <circle class="d-ev-hi" cx="330" cy="186.4" r="7.5"/>
+        <text x="330" y="189.8" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">S</text>
+        <text class="d-lbl d-halo" x="344" y="190.4" text-anchor="start" style="fill:#bf4a26">moves to south</text>
+        <path class="d-msg" d="M330,186.4 L334,185.6 L338.1,185.1 L342.2,184.7 L346.4,184.6 L350.7,184.7 L355,185.1 L359.3,185.7 L363.6,186.5 L367.9,187.6 L372.2,188.9 L376.4,190.5 L380.6,192.3 L384.8,194.4 L388.8,196.7 L392.8,199.2 L396.6,202 L400.4,205 L404,208.3 L407.4,211.7"/>
+        <path d="M402.4,206.7 L412.4,216.7 M402.4,216.7 L412.4,206.7" style="stroke:#bf4a26; stroke-width:2.2; fill:none"/>
+        <path class="d-msg" d="M330,186.4 L326,185.6 L321.9,185.1 L317.8,184.7 L313.6,184.6 L309.3,184.7 L305,185.1 L300.7,185.7 L296.4,186.5 L292.1,187.6 L287.8,188.9 L283.6,190.5 L279.4,192.3 L275.2,194.4 L271.2,196.7 L267.2,199.2 L263.4,202 L259.6,205 L256,208.3 L252.6,211.7"/>
+        <path d="M247.6,206.7 L257.6,216.7 M247.6,216.7 L257.6,206.7" style="stroke:#bf4a26; stroke-width:2.2; fill:none"/>
+        <circle class="d-ev" cx="330" cy="153.4" r="5"/>
+        <text class="d-lbl d-halo" x="318" y="157.4" text-anchor="end">glass out: “it stands”</text>
+        <path class="d-msg-hi" marker-end="url(#awco-recovery-r)" d="M330,138 L336.5,137.5 L343.1,137.4 L349.7,137.6 L356.3,138.1 L362.9,139 L369.5,140.3 L376.1,141.9 L382.6,143.9 L389,146.2 L395.3,148.9 L401.5,151.9 L407.5,155.3 L413.4,159 L419.2,163 L424.7,167.3 L430,172 L435.1,176.9 L439.9,182.1 L444.5,187.6 L448.8,193.4 L452.8,199.4 L456.5,205.7 L459.9,212.1 L463,218.8 L465.7,225.6 L468.1,232.7 L470.1,239.8 L471.7,247.1 L472.9,254.5 L473.8,262 L474.3,269.6 L474.3,277.2 L474,284.8 L473.2,292.4 L472.1,300.1 L470.5,307.7 L468.6,315.2 L466.2,322.6 L463.4,330"/>
+        <circle class="d-ev-hi" cx="464.1" cy="339.4" r="5.5"/>
+        <text class="d-lbl d-halo" x="464.1" y="349" text-anchor="start" style="fill:#bf4a26">numbers it: No. 7</text>
+        <path class="d-msg-hi" marker-end="url(#awco-recovery-r)" d="M464.1,339.4 L460.4,346.7 L456.3,353.8 L451.8,360.7 L447,367.3 L441.8,373.8 L436.2,380 L430.3,385.9 L424.1,391.5 L417.5,396.8 L410.7,401.8 L403.6,406.4 L396.2,410.7 L388.6,414.5 L380.7,418 L372.6,421.1 L364.4,423.7 L356,426 L347.4,427.8 L338.8,429.1 L330,430 L321.2,430.4 L312.3,430.4 L303.4,429.9 L294.5,428.9 L285.7,427.5 L276.9,425.5 L268.1,423.2 L259.5,420.3 L251,417 L242.7,413.2 L234.5,409 L226.6,404.3 L218.9,399.2 L211.4,393.7 L204.2,387.8 L197.3,381.5 L190.7,374.8 L184.5,367.7 L178.6,360.3"/>
+        <path class="d-msg-hi" marker-end="url(#awco-recovery-r)" d="M464.1,339.4 L468.5,332.6 L472.6,325.5 L476.4,318.2 L479.7,310.7 L482.7,302.9 L485.3,295 L487.5,286.9 L489.2,278.7 L490.5,270.4 L491.4,262 L491.8,253.5 L491.8,245 L491.4,236.4 L490.5,227.9 L489.1,219.4 L487.3,210.9 L485,202.5 L482.3,194.2 L479.1,186 L475.5,178 L471.5,170.1 L467,162.5 L462.1,155 L456.8,147.8 L451.1,140.9 L445.1,134.2 L438.6,127.8 L431.9,121.8 L424.7,116.1 L417.3,110.8 L409.6,105.8 L401.6,101.3 L393.3,97.1 L384.8,93.4 L376,90.2 L367.1,87.3 L358,85 L348.8,83.1 L339.4,81.7"/>
+        <circle class="d-ev-hi" cx="173.1" cy="352.6" r="5.5"/>
+        <circle class="d-ev-hi" cx="330" cy="80.8" r="5.5"/>
+        <circle class="d-ev" cx="142.6" cy="370.2" r="7.5"/>
+        <text x="142.6" y="373.6" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">S</text>
+        <text class="d-lbl d-halo" x="136.6" y="363.8" text-anchor="end">asks: hears south</text>
+        </g>
       </svg>
     </div>
     <figcaption><b>The damage lasts only as long as the loss and a span <var>t</var> after.</b>
@@ -683,5 +710,6 @@
   <span class="outside"><span class="tag">Outside this series</span> Yu &amp; Vahdat 2002, <i>continuous consistency</i> · DeCandia et al. 2007, <i>Dynamo</i> · Abadi 2012, <i>PACELC</i></span></p>
 
 </div>
+<script src="../../assets/js/flow.js" defer></script>
 </body>
 </html>
