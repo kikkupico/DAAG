@@ -476,10 +476,92 @@ def copies_loop():
     return F
 
 
+# ---------------------------------------------------------------------------
+# The Limits of Agreement
+# ---------------------------------------------------------------------------
+
+def limits_fold():
+    F = Fig("tloa-fold", 660, 420,
+            "Two panels drawn in the round, tents 1 and 2 on the left of each and tents 3 and 4 on the right, later moments "
+            "further out. Each tent is a line of the things that happen there, one after another. Tents 1 and 2, olive, trade ravens: one flies from tent 1 to tent 2 and one back. "
+            "Tents 3 and 4, ochre, do the same. No raven flies between the two pairs. Left: 1 and 2 trade ravens first, then 3 and 4. "
+            "Right: 3 and 4 first, then 1 and 2. The ravens and the tents they reach are identical; only the moments swap, and the night "
+            "ends at the same standing.")
+    nodes = {"1": (225, "T1"), "2": (135, "T2"), "3": (315, "T3"), "4": (45, "T4")}
+    panels = ((165, "1 AND 2 TRADE RAVENS, THEN 3 AND 4", 1.0, 3.6, "1 and 2 trade ravens", "3 and 4 trade ravens"),
+              (495, "3 AND 4 TRADE RAVENS, THEN 1 AND 2", 3.6, 1.0, "1 and 2 trade ravens", "3 and 4 trade ravens"))
+    for cx, title, b1, b2, n1, n2 in panels:
+        F.text(cx, 24, title, cls="d-house")
+        F.text(cx - 82, 46, n1, cls="d-lbl", fill=OLIVE)
+        F.text(cx + 82, 46, n2, cls="d-lbl", fill=OCHRE)
+        P = Polar(F, cx, 200, 50, 15, nodes)
+        P.rings(7)
+        P.road(6.8)
+        P.node_boxes()
+        P.flow_open(6.8)
+        P.moment(6.6)
+        for a, b, base, col, name in (("1", "2", b1, OLIVE, n1), ("3", "4", b2, OCHRE, n2)):
+            P.bar(a, base, base + 2, col)
+            P.bar(b, base + 1, base + 1.01, col)
+            P.msg(a, base, b, base + 1, short=True)
+            P.msg(b, base + 1, a, base + 2, short=True, trim=6)
+            for k, t in ((a, base), (b, base + 1), (a, base + 2)):
+                P.event(k, t, rad=4)
+        (x1, y1), (x2, y2) = P.pt("1", 0), P.pt("3", 0)
+        # the only thing that differs: which course comes first
+        if b1 < b2:
+            P.order_arc("1", 3, "3", 3.6, INK, "k", cw=True, trim=7, start_trim=5)
+        else:
+            P.order_arc("3", 3, "1", 3.6, INK, "k", cw=False, trim=7, start_trim=5)
+        P.flow_close()
+        F.text(cx, 372, "no raven flies between the halves,")
+        F.text(cx, 388, "so nothing sets which comes first")
+        F.text(cx, 408, "the same standing at the end", fill=INK)
+    F.divider(330, 10, 415)
+    return F
+
+
+def limits_silent():
+    F = Fig("tloa-silent", 660, 410,
+            "Two panels drawn in the round, four tents at north, east, south and west, later moments further out. Tent 1, at the top, "
+            "is the one man p: in both panels he never stirs. Tents 2, 3 and 4 see the same ravens in the same order in both. "
+            "Left: p saw north, and the other three go north. Right: p saw south, the beginning fated south, and the other three "
+            "still go north, because they cannot tell the two beginnings apart.")
+    nodes = {"1": (-90, "T1"), "2": (0, "T2"), "3": (90, "T3"), "4": (180, "T4")}
+    panels = ((165, "p SAW NORTH: FATED NORTH", "saw north", None, ("all three go north", "as they must")),
+              (495, "p SAW SOUTH: FATED SOUTH", "saw south", RED, ("the same ravens, the same order:", "they go north here too")))
+    for cx, title, sight, fill, note in panels:
+        F.text(cx, 24, title, cls="d-house", fill=fill)
+        P = Polar(F, cx, 200, 40, 12, nodes)
+        P.rings(7)
+        P.road(6.8)
+        P.node_boxes()
+        x, y = P.pt("1", 0)
+        F.text(x + 22, y + 4, sight, cls="d-lbl d-halo", anchor="start", fill=fill)
+        P.flow_open(6.8)
+        P.msg("2", 1, "3", 2, short=True)
+        P.msg("3", 2.5, "4", 3.5, short=True)
+        P.msg("4", 4, "3", 5, short=True)
+        for k, t in (("2", 1), ("3", 2), ("3", 2.5), ("4", 3.5), ("4", 4), ("3", 5)):
+            P.event(k, t, rad=4)
+        for k in "234":
+            P.event(k, 6.2, hi=bool(fill))
+        P.label("2", 6.2, "goes north", side=-1, dist=10, fill=fill)
+        P.label("3", 6.2, "goes north", side=1, dist=10, fill=fill)
+        P.label("4", 6.2, "goes north", side=-1, dist=10, fill=fill)
+        P.label("1", 3.5, "p never stirs", side=1, dist=10, anchor="start")
+        P.flow_close()
+        F.text(cx, 366, note[0], fill=fill)
+        F.text(cx, 382, note[1], fill=fill)
+    F.divider(330, 10, 400)
+    return F
+
+
 FIGURES = {
     "books/ordering-without-clocks/index.html": [ordering_spacetime],
     "books/taking-stock-without-stopping/index.html": [stock_sash, stock_cuts],
     "books/many-copies-acting-as-one/index.html": [copies_overlap, copies_loop],
+    "books/the-limits-of-agreement/index.html": [limits_fold, limits_silent],
 }
 
 
