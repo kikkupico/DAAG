@@ -173,14 +173,30 @@ Rules for the proofs themselves:
 - **The prose above must stand without it.** A reader who never opens a single proof should
   finish the book understanding the result and why it is true. The collapsed section is for
   the reader who wants it airtight, not for the reader who wants it at all.
-- **Prove it in the setting's vocabulary,** not in the paper's. *Courses that touch no camp in
-  common commute*, not *disjoint schedules commute*. The `<span class="paper">` inline
-  convention carries the technical term where it is needed.
+- **Prove it in the paper's abstractions, not the setting's.** The proof is the mathematics:
+  it uses the paper's own objects and notation (schedules σ₁ and σ₂, sets *A* and *B*,
+  configurations, events, messages), and its summary line does too: *Proof — that disjoint
+  schedules commute*. The allegory never enters a proof, and mathematical symbols never enter
+  the prose or the diagrams (see *Two registers* below).
 - **One summary line per proof, naming what is proved.** &ldquo;Proof — that nothing comes
   before itself&rdquo;, not &ldquo;Proof of Lemma 1&rdquo;.
 - **Where the paper's own proof is long or hard, say so** and give the sketch. *Many Copies,
   Acting as One* does this for the board's proof; *Agreeing Among Liars* does it for the
   three-general impossibility. Honesty about a gap is fine; pretending there is none is not.
+
+### Two registers, never mixed
+
+A book speaks in two registers, and each belongs to its own places.
+
+- **Proofs use the math.** Everything inside `<details class="proof">` is written in the
+  paper's abstractions, as the paper states them.
+- **Prose, tables' plain-language column, captions and diagrams use the allegory.** No σ, no
+  *A* and *B*, no set notation: tents, ravens, standings, courses, houses, slips. A diagram
+  labels what the setting's people do (*tents 1 and 2 trade ravens*), and the *In the paper*
+  column of the closing table is where the technical term meets the device.
+
+Never blend them: no allegorical figures inside a proof, no Greek letters in a figure or its
+caption.
 
 Formal statements that are not proofs — model definitions, conditions, bounds — go inline in
 `<div class="aside-formal">` or `<div class="mathblock">`, *not* collapsed. The reader should
@@ -233,6 +249,7 @@ Before calling a book done:
 
 - [ ] `grep -c '<img'` returns **0**.
 - [ ] Every formal argument is inside `<details class="proof">`.
+- [ ] Proofs use only the paper's abstractions; prose, captions and diagrams use only the allegory.
 - [ ] The prose stands with every proof closed.
 - [ ] Every device in the book appears in the *In the book / In the paper* table.
 - [ ] The *must not exist* list is checked against the finished draft.
