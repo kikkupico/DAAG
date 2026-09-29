@@ -557,11 +557,58 @@ def limits_silent():
     return F
 
 
+def limits_defer():
+    F = Fig("tloa-defer", 660, 420,
+            "Two panels drawn in the round, four tents at north, east, south and west, later moments further out. "
+            "A telling raven, in red, is held back and then flies while another raven is in the air. Left: the other raven "
+            "is bound for a different tent, so the two are in flight together and either may land first; the standing after both is the "
+            "same, so it cannot be settled both ways. Right: both ravens are bound for tent 1. Tent 1 then goes quiet, and the other three "
+            "trade ravens that cannot tell whether the other raven landed before the telling one, so they go the same way either way.")
+    nodes = {"1": (-90, "T1"), "2": (0, "T2"), "3": (90, "T3"), "4": (180, "T4")}
+    panels = ((165, "ANOTHER TENT'S BUSINESS", None), (495, "THE SAME TENT'S BUSINESS", RED))
+    for cx, title, fill in panels:
+        F.text(cx, 24, title, cls="d-house", fill=fill)
+        P = Polar(F, cx, 205, 40, 12, nodes)
+        P.rings(7)
+        P.road(6.8)
+        P.node_boxes()
+        P.flow_open(6.8)
+        if fill is None:
+            P.msg("4", 1, "3", 4, hi=True, short=True)
+            P.msg("1", 1.5, "2", 3.5, short=True)
+            for k, t in (("4", 1), ("1", 1.5), ("2", 3.5)):
+                P.event(k, t, rad=4)
+            P.event("3", 4, hi=True)
+            P.label("3", 4, "telling raven lands", side=-1, dist=10, fill=RED)
+            P.label("2", 3.5, "another raven lands", side=1, dist=17)
+        else:
+            P.msg("4", 1.5, "1", 4.5, hi=True, short=True)
+            P.msg("2", 1, "1", 2.5, short=True)
+            P.msg("3", 2, "2", 3, short=True)
+            P.msg("3", 4.5, "4", 5.5, short=True)
+            for k, t in (("4", 1.5), ("2", 1), ("3", 2), ("3", 4.5), ("2", 3), ("4", 5.5)):
+                P.event(k, t, rad=4)
+            P.event("1", 2.5)
+            P.event("1", 4.5, hi=True)
+            P.label("1", 2.5, "another raven lands", side=1, dist=10, anchor="start")
+            P.label("1", 4.5, "telling raven lands", side=1, dist=10, fill=RED, anchor="start")
+            P.label("1", 6.3, "goes quiet", side=1, dist=10, anchor="start")
+        P.flow_close()
+        if fill is None:
+            F.text(cx, 372, "either may land first: the standing after both is the same,", fill=fill)
+            F.text(cx, 388, "so it cannot be settled both ways", fill=fill)
+        else:
+            F.text(cx, 372, "the other three cannot tell which landed first,", fill=fill)
+            F.text(cx, 388, "so they go the same way either way", fill=fill)
+    F.divider(330, 10, 410)
+    return F
+
+
 FIGURES = {
     "books/ordering-without-clocks/index.html": [ordering_spacetime],
     "books/taking-stock-without-stopping/index.html": [stock_sash, stock_cuts],
     "books/many-copies-acting-as-one/index.html": [copies_overlap, copies_loop],
-    "books/the-limits-of-agreement/index.html": [limits_fold, limits_silent],
+    "books/the-limits-of-agreement/index.html": [limits_fold, limits_silent, limits_defer],
 }
 
 
