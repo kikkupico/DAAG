@@ -1,12 +1,12 @@
 /* Time flowing outward through a round space-time diagram (svg.flow, built by art/diagrams/polar.py).
    A wavefront ring sweeps out from the houses at a steady pace.
    Marks inside <g class="tflow"> appear as it passes; labels fade in beside them, and each event
-   sends out a small ripple. The sweep plays once, then rests with a Replay button.
+   drops in, swelling to size. The sweep plays once, then rests with a Replay button.
    Without JS, or with reduced motion, the whole diagram simply shows. */
 (function () {
   var NS = "http://www.w3.org/2000/svg";
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var SWEEP = 9000;                                   // ms
+  var SWEEP = 9000, DROP = 450;                       // ms
   var INK = "#1c1512";
 
   function mk(tag, attrs, parent) {
@@ -38,9 +38,7 @@
         });
         gr.querySelectorAll("circle.d-ev, circle.d-ev-hi").forEach(function (c) {
           var d = Math.hypot(+c.getAttribute("cx") - cx, +c.getAttribute("cy") - cy);
-          var p = mk("circle", { cx: c.getAttribute("cx"), cy: c.getAttribute("cy"), r: 0, "stroke-opacity": 0,
-                                 stroke: c.classList.contains("d-ev-hi") ? "#bf4a26" : INK, "stroke-width": 1.4 }, g);
-          events.push({ d: d, el: p, at: null });
+          events.push({ d: d, el: c, r: +c.getAttribute("r"), at: null });
         });
       });
       panels.push({ clip: clip, r0: r0, r1: r1, waves: waves, events: events, labels: labels, groups: groups });
@@ -62,12 +60,11 @@
         w.setAttribute("r", rr);
         w.setAttribute("stroke-opacity", live * 0.75 * (1 - sweep * sweep));
       });
-      P.events.forEach(function (ev) {
+      P.events.forEach(function (ev) {                        // each event drops in as time reaches it
         if (ev.at === null && rr >= ev.d) ev.at = elapsed;
-        var age = ev.at === null ? -1 : (elapsed - ev.at) / 1100;
-        if (age < 0 || age > 1) { ev.el.setAttribute("stroke-opacity", 0); return; }
-        ev.el.setAttribute("r", 4 + 22 * age);
-        ev.el.setAttribute("stroke-opacity", 0.7 * (1 - age));
+        var x = ev.at === null ? 0 : Math.min((elapsed - ev.at) / DROP, 1);
+        var k = x === 1 ? 1 : 1 + 2.70158 * Math.pow(x - 1, 3) + 1.70158 * Math.pow(x - 1, 2);   // ease-out-back
+        ev.el.setAttribute("r", ev.r * k);
       });
     });
   }
