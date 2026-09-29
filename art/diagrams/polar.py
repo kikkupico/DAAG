@@ -35,6 +35,7 @@ class Fig:
     def __init__(self, name, w, h, aria):
         self.name, self.w, self.h = name, w, h
         self.out = []
+        self.clips = []
         self.head = (f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="{esc(aria)}">\n'
                      f'  <!-- polar:{name} -->\n  <defs>')
         for key, col in (("b", BLUE), ("r", RED), ("o", OCHRE), ("g", OLIVE), ("k", INK)):
@@ -53,7 +54,8 @@ class Fig:
         self.add(f'<line x1="{f(x)}" y1="{f(y1)}" x2="{f(x)}" y2="{f(y2)}" stroke="#b9a77e" stroke-width="1.5"/>')
 
     def svg(self):
-        return self.head + "\n" + "\n".join(self.out) + "\n</svg>"
+        head = self.head.replace("<svg ", '<svg class="flow" ', 1) if self.clips else self.head
+        return head + "\n" + "\n".join(self.out) + "\n</svg>"
 
 
 class Polar:
@@ -233,6 +235,19 @@ class Polar:
         self.fig.add(f'<path d="{d}{hole}" fill-rule="evenodd" style="fill:{color}; fill-opacity:.13; stroke:none"/>')
         self.fig.add(f'<path d="{d}" fill="none" stroke="{color}" stroke-width="2" stroke-dasharray="7 4"/>')
 
+    def flow_open(self, t_end):
+        """Start a group of marks that appear as time reaches them (see assets/js/flow.js)."""
+        F = self.fig
+        if not hasattr(self, "clip"):
+            self.clip = f"{F.name}-clip{len(F.clips)}"
+            F.clips.append(self.clip)
+            F.add(f'<clipPath id="{self.clip}"><circle class="tclip" cx="{f(self.cx)}" cy="{f(self.cy)}" r="{f(self.r(t_end) + 20)}" '
+                  f'data-r0="{f(self.r0)}" data-r1="{f(self.r(t_end))}"/></clipPath>')
+        F.add(f'<g class="tflow" clip-path="url(#{self.clip})">')
+
+    def flow_close(self):
+        self.fig.add('</g>')
+
     def at(self, a, t, dr=0):
         return self.xy(a, self.r(t) + dr)
 
@@ -378,14 +393,19 @@ def copies_overlap():
         F.text(cx, 24, title, cls="d-house", fill=fill)
         P = Polar(F, cx, 200, 36, 13.5, nodes)
         P.rings(8)
+        P.flow_open(8.4)
         for (ts, te, tc), col in ((o1, OLIVE), (o2, OCHRE)):
             P.span(ts, tc, col)
         if moment:
             P.moment(moment)
+        P.flow_close()
         P.road(8.4)
+        P.flow_open(8.4)
         for k, (ts, te, tc), col in (("1", o1, OLIVE), ("2", o2, OCHRE)):
             P.bar(k, ts, tc, col)
+        P.flow_close()
         P.node_boxes()
+        P.flow_open(8.4)
         for k, (ts, te, tc) in (("1", o1), ("2", o2)):
             P.msg(k, ts, "3", te, short=True)
             P.msg("3", te, k, tc, short=True, trim=5)
@@ -394,6 +414,7 @@ def copies_overlap():
         P.label("3", 6.6, "serves House 2", side=-1, dist=10, fill=fill)
         P.event("3", 7.6)
         P.label("3", 7.6, "serves House 1", side=-1, dist=10)
+        P.flow_close()
         F.text(cx, 382, note[0], fill=fill)
         F.text(cx, 398, note[1], fill=fill)
     F.divider(330, 10, 410)
