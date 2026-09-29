@@ -1,5 +1,5 @@
 /* Time flowing outward through a round space-time diagram (svg.flow, built by art/diagrams/polar.py).
-   A wavefront ring sweeps out from the houses at a steady pace, with echoes rippling behind it.
+   A wavefront ring sweeps out from the houses at a steady pace.
    Marks inside <g class="tflow"> appear as it passes; labels fade in beside them, and each event
    sends out a small ripple. The sweep plays once, then rests with a Replay button.
    Without JS, or with reduced motion, the whole diagram simply shows. */
@@ -23,7 +23,7 @@
       var r0 = +clip.getAttribute("data-r0"), r1 = +clip.getAttribute("data-r1");
       var groups = svg.querySelectorAll('g.tflow[clip-path="url(#' + clip.parentNode.id + ')"]');
       var g = mk("g", { "pointer-events": "none", fill: "none" }, svg);
-      var waves = [0, 1, 2].map(function (i) {
+      var waves = [0].map(function (i) {
         return mk("circle", { cx: cx, cy: cy, r: r0, stroke: INK, "stroke-width": i ? 1 : 1.6,
                               "stroke-opacity": 0, "stroke-linecap": "round" }, g);
       });
@@ -59,10 +59,8 @@
       });
       var live = sweep < 1 ? 1 : 0;
       P.waves.forEach(function (w, i) {
-        var lag = i * 9, r = Math.max(P.r0, rr - lag);
-        var wob = Math.sin(elapsed / 140 - i * 1.4) * 1.2 * live;     // the ripple's shimmer
-        w.setAttribute("r", r + wob);
-        w.setAttribute("stroke-opacity", live * (0.75 - i * 0.28) * (1 - sweep * sweep));
+        w.setAttribute("r", rr);
+        w.setAttribute("stroke-opacity", live * 0.75 * (1 - sweep * sweep));
       });
       P.events.forEach(function (ev) {
         if (ev.at === null && rr >= ev.d) ev.at = elapsed;
