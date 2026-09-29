@@ -358,62 +358,75 @@
 
   <figure class="diagram">
     <div class="board">
-      <svg viewBox="0 0 660 440" role="img" aria-label="A space-time diagram of one turn in still air, owned by Number 3 at tent 3. Four lifelines: tents 1 to 4. Horizontal bands mark the asking, calling and answering glasses. In the asking glass every man sends the owner the gates he can accept. In the calling glass the owner calls north to every tent. In the answering glass the others send pledged back. The owner, holding two or more pledged birds, sends going birds and goes north.">
+      <svg class="flow" viewBox="0 0 660 500" role="img" aria-label="One turn in still air, owned by tent 3, drawn in the round: four tents, later moments further out. Three shaded rings are the asking, calling and answering glasses. In the asking glass every man sends the owner the gates he can accept. In the calling glass the owner calls north to every tent. In the answering glass the others send pledged birds back. The owner, holding two or more pledged birds, sends going birds and goes north.">
+        <!-- polar:awl-turn -->
         <defs>
-          <marker id="awb" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+          <marker id="awl-turn-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
           </marker>
-          <marker id="awr" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+          <marker id="awl-turn-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
           </marker>
+          <marker id="awl-turn-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
+          </marker>
+          <marker id="awl-turn-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
+          </marker>
+          <marker id="awl-turn-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
+          </marker>
         </defs>
-
-        <!-- glass bands -->
-        <rect class="d-band-o" x="20" y="60" width="620" height="100"/>
-        <rect class="d-band-o" x="20" y="260" width="620" height="100"/>
-        <text class="d-key" x="28" y="76">asking glass</text>
-        <text class="d-key" x="28" y="176">calling glass</text>
-        <text class="d-key" x="28" y="276">answering glass</text>
-
-        <text class="d-house" x="160" y="44" text-anchor="middle" font-size="11">TENT 1</text>
-        <text class="d-house" x="290" y="44" text-anchor="middle" font-size="11">TENT 2</text>
-        <text class="d-house" x="420" y="44" text-anchor="middle" font-size="11" fill="#bf4a26">TENT 3 · OWNER</text>
-        <text class="d-house" x="550" y="44" text-anchor="middle" font-size="11">TENT 4</text>
-        <line class="d-lifeline" x1="160" y1="56" x2="160" y2="410"/>
-        <line class="d-lifeline" x1="290" y1="56" x2="290" y2="410"/>
-        <line class="d-lifeline" x1="420" y1="56" x2="420" y2="410"/>
-        <line class="d-lifeline" x1="550" y1="56" x2="550" y2="410"/>
-
-        <!-- asking: all to owner -->
-        <circle class="d-ev" cx="160" cy="88" r="4"/>
-        <circle class="d-ev" cx="290" cy="88" r="4"/>
-        <circle class="d-ev" cx="550" cy="88" r="4"/>
-        <path class="d-msg" marker-end="url(#awb)" d="M160,88 L412,146"/>
-        <path class="d-msg" marker-end="url(#awb)" d="M290,88 L412,144"/>
-        <path class="d-msg" marker-end="url(#awb)" d="M550,88 L428,144"/>
-        <text class="d-note" x="225" y="154" text-anchor="middle">&ldquo;I can accept north&rdquo;</text>
-
-        <!-- calling: owner to all -->
-        <circle class="d-ev-hi" cx="420" cy="190" r="5"/>
-        <text class="d-lbl" x="430" y="186">calls north</text>
-        <path class="d-msg-hi" marker-end="url(#awr)" d="M420,192 L168,246"/>
-        <path class="d-msg-hi" marker-end="url(#awr)" d="M420,192 L298,244"/>
-        <path class="d-msg-hi" marker-end="url(#awr)" d="M420,192 L542,244"/>
-
-        <!-- answering: pledged back -->
-        <circle class="d-ev" cx="160" cy="288" r="4"/>
-        <text class="d-lbl" x="152" y="306" text-anchor="end">pledges</text>
-        <circle class="d-ev" cx="290" cy="288" r="4"/>
-        <circle class="d-ev" cx="550" cy="288" r="4"/>
-        <text class="d-lbl" x="558" y="306">pledges</text>
-        <path class="d-msg" marker-end="url(#awb)" d="M160,288 L412,346"/>
-        <path class="d-msg" marker-end="url(#awb)" d="M290,288 L412,344"/>
-        <path class="d-msg" marker-end="url(#awb)" d="M550,288 L428,344"/>
-        <text class="d-note" x="225" y="354" text-anchor="middle">&ldquo;pledged&rdquo;</text>
-
-        <!-- going -->
-        <circle class="d-ev-hi" cx="420" cy="382" r="5"/>
-        <text class="d-lbl" x="430" y="386" fill="#bf4a26">going birds; goes north</text>
+        <circle cx="330" cy="250" r="66" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="250" r="92" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="250" r="118" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="250" r="144" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="250" r="170" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="250" r="196" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="250" r="222" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <clipPath id="awl-turn-clip0"><circle class="tclip" cx="330" cy="250" r="231.6" data-r0="40" data-r1="211.6"/></clipPath>
+        <g class="tflow" clip-path="url(#awl-turn-clip0)">
+        <path d="M427.2,250 A97.2,97.2 0 1 0 232.8,250 A97.2,97.2 0 1 0 427.2,250 Z M377.8,250 A47.8,47.8 0 1 0 282.2,250 A47.8,47.8 0 1 0 377.8,250 Z" fill-rule="evenodd" style="fill:#a8741a; fill-opacity:0.16; stroke:#a8741a; stroke-opacity:.5; stroke-width:.8"/>
+        <path d="M479.2,250 A149.2,149.2 0 1 0 180.8,250 A149.2,149.2 0 1 0 479.2,250 Z M427.2,250 A97.2,97.2 0 1 0 232.8,250 A97.2,97.2 0 1 0 427.2,250 Z" fill-rule="evenodd" style="fill:#5f6e28; fill-opacity:0.16; stroke:#5f6e28; stroke-opacity:.5; stroke-width:.8"/>
+        <path d="M531.2,250 A201.2,201.2 0 1 0 128.8,250 A201.2,201.2 0 1 0 531.2,250 Z M479.2,250 A149.2,149.2 0 1 0 180.8,250 A149.2,149.2 0 1 0 479.2,250 Z" fill-rule="evenodd" style="fill:#a8741a; fill-opacity:0.16; stroke:#a8741a; stroke-opacity:.5; stroke-width:.8"/>
+        </g>
+        <line class="d-lifeline" x1="290" y1="250" x2="118.4" y2="250"/>
+        <line class="d-lifeline" x1="330" y1="210" x2="330" y2="38.4"/>
+        <line class="d-lifeline" x1="330" y1="290" x2="330" y2="461.6"/>
+        <line class="d-lifeline" x1="370" y1="250" x2="541.6" y2="250"/>
+        <rect class="d-node" x="275" y="239" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="290" y="254.5" text-anchor="middle" fill="#1c1512">T1</text>
+        <rect class="d-node" x="315" y="199" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="330" y="214.5" text-anchor="middle" fill="#1c1512">T2</text>
+        <rect class="d-node" x="315" y="279" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="330" y="294.5" text-anchor="middle" fill="#1c1512">T3</text>
+        <rect class="d-node" x="355" y="239" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="370" y="254.5" text-anchor="middle" fill="#1c1512">T4</text>
+        <text class="d-lbl d-halo" x="362" y="294" text-anchor="start" style="fill:#bf4a26">owner</text>
+        <text class="d-key" x="20" y="30" text-anchor="start" style="fill:#a8741a">asking glass</text>
+        <text class="d-key" x="20" y="48" text-anchor="start" style="fill:#5f6e28">calling glass</text>
+        <text class="d-key" x="20" y="66" text-anchor="start" style="fill:#a8741a">answering glass</text>
+        <g class="tflow" clip-path="url(#awl-turn-clip0)">
+        <path class="d-msg" marker-end="url(#awl-turn-b)" d="M274.4,250 L273.3,253 L272.3,256.1 L271.5,259.3 L270.9,262.6 L270.4,266 L270.2,269.4 L270.2,273 L270.3,276.6 L270.7,280.2 L271.3,283.9 L272.2,287.6 L273.2,291.2 L274.5,294.9 L276.1,298.6 L277.8,302.2 L279.8,305.7 L282,309.2 L284.5,312.7 L287.2,316 L290.1,319.2 L293.2,322.2 L296.5,325.2 L300.1,328 L303.8,330.6 L307.8,333 L311.9,335.2 L316.2,337.3 L320.6,339.1"/>
+        <circle class="d-ev" cx="274.4" cy="250" r="5"/>
+        <path class="d-msg-hi" marker-end="url(#awl-turn-r)" d="M330,355 L324.4,356.1 L318.8,356.8 L313,357.3 L307.2,357.5 L301.3,357.3 L295.3,356.8 L289.3,356 L283.3,354.8 L277.4,353.3 L271.4,351.4 L265.5,349.3 L259.7,346.7 L254,343.9 L248.4,340.7 L242.9,337.1 L237.5,333.2 L232.4,329.1 L227.4,324.6 L222.6,319.7 L218.1,314.6 L213.7,309.2 L209.7,303.6 L205.9,297.6 L202.4,291.4 L199.3,285 L196.4,278.4 L193.9,271.6 L191.8,264.5 L190,257.3"/>
+        <circle class="d-ev" cx="175.6" cy="250" r="5"/>
+        <path class="d-msg" marker-end="url(#awl-turn-b)" d="M175.6,250 L174.5,258.1 L173.9,266.4 L173.6,274.8 L173.9,283.2 L174.6,291.6 L175.7,300.1 L177.4,308.6 L179.4,317 L182,325.4 L185,333.7 L188.5,341.9 L192.5,349.9 L196.9,357.8 L201.7,365.5 L207,373 L212.8,380.2 L218.9,387.2 L225.5,393.8 L232.5,400.2 L239.8,406.2 L247.5,411.9 L255.6,417.2 L264,422.1 L272.6,426.5 L281.6,430.5 L290.9,434.1 L300.4,437.2 L310.1,439.8 L319.9,441.8"/>
+        <path class="d-msg" marker-end="url(#awl-turn-b)" d="M330,194.4 L327.1,193.9 L324.1,193.5 L321,193.3 L317.9,193.2 L314.8,193.4 L311.7,193.7 L308.6,194.1 L305.4,194.8 L302.3,195.6 L299.2,196.6 L296.1,197.8 L293,199.1 L290,200.7 L287.1,202.4 L284.3,204.3 L281.5,206.3 L278.8,208.5 L276.2,210.9 L273.7,213.4 L271.3,216.1 L269.1,219 L267,222 L265.1,225.1 L263.3,228.3 L261.6,231.7 L260.2,235.2 L258.9,238.7 L257.8,242.4 L256.9,246.2 L256.2,250 L255.7,253.9 L255.4,257.8 L255.3,261.8 L255.4,265.8 L255.8,269.9 L256.4,273.9 L257.1,278 L258.1,282 L259.4,286 L260.8,289.9 L262.5,293.8 L264.4,297.7 L266.5,301.4 L268.8,305.1 L271.4,308.6 L274.1,312.1 L277.1,315.4 L280.2,318.5 L283.5,321.6 L287,324.4 L290.7,327.1 L294.6,329.6 L298.6,331.9 L302.7,334 L307,335.9 L311.4,337.6 L315.9,339.1 L320.5,340.3"/>
+        <circle class="d-ev" cx="330" cy="194.4" r="5"/>
+        <path class="d-msg-hi" marker-end="url(#awl-turn-r)" d="M330,355 L335.5,355.5 L341.1,355.6 L346.7,355.5 L352.3,355.1 L358,354.4 L363.6,353.3 L369.2,352 L374.7,350.4 L380.1,348.4 L385.5,346.2 L390.8,343.7 L396,340.8 L401,337.7 L405.9,334.3 L410.7,330.7 L415.2,326.8 L419.6,322.6 L423.8,318.1 L427.7,313.5 L431.4,308.6 L434.9,303.5 L438.1,298.1 L441.1,292.6 L443.7,286.9 L446.1,281.1 L448.1,275.1 L449.9,269 L451.3,262.8 L452.4,256.4 L453.2,250 L453.6,243.5 L453.7,237 L453.5,230.4 L452.9,223.9 L451.9,217.3 L450.6,210.8 L449,204.3 L447,197.9 L444.6,191.6 L441.9,185.4 L438.9,179.3 L435.6,173.3 L431.9,167.5 L427.9,161.9 L423.6,156.4 L418.9,151.2 L414,146.2 L408.8,141.5 L403.4,137 L397.7,132.8 L391.7,128.9 L385.5,125.3 L379.2,122 L372.6,119 L365.8,116.3 L358.9,114.1 L351.8,112.1 L344.7,110.6 L337.4,109.4"/>
+        <circle class="d-ev" cx="330" cy="95.6" r="5"/>
+        <path class="d-msg" marker-end="url(#awl-turn-b)" d="M330,95.6 L321.9,95.2 L313.7,95.2 L305.5,95.6 L297.4,96.4 L289.2,97.7 L281.1,99.4 L273,101.6 L265.1,104.2 L257.2,107.2 L249.6,110.7 L242,114.5 L234.7,118.8 L227.5,123.4 L220.6,128.5 L213.9,133.9 L207.5,139.7 L201.4,145.9 L195.6,152.4 L190.2,159.2 L185,166.3 L180.3,173.7 L175.9,181.4 L171.9,189.3 L168.3,197.5 L165.2,205.8 L162.4,214.4 L160.2,223.1 L158.3,232 L157,240.9 L156.1,250 L155.7,259.1 L155.8,268.3 L156.3,277.5 L157.4,286.7 L158.9,295.8 L160.9,304.9 L163.4,314 L166.4,322.8 L169.8,331.6 L173.8,340.2 L178.2,348.6 L183,356.8 L188.3,364.8 L194,372.5 L200.1,379.9 L206.7,387 L213.6,393.7 L220.9,400.2 L228.6,406.2 L236.5,411.9 L244.9,417.1 L253.5,421.9 L262.3,426.3 L271.4,430.2 L280.8,433.7 L290.3,436.6 L300.1,439.1 L309.9,441 L319.9,442.5"/>
+        <path class="d-msg" marker-end="url(#awl-turn-b)" d="M385.6,250 L386.7,253 L387.7,256.1 L388.5,259.3 L389.1,262.6 L389.6,266 L389.8,269.4 L389.8,273 L389.7,276.6 L389.3,280.2 L388.7,283.9 L387.8,287.6 L386.8,291.2 L385.5,294.9 L383.9,298.6 L382.2,302.2 L380.2,305.7 L378,309.2 L375.5,312.7 L372.8,316 L369.9,319.2 L366.8,322.2 L363.5,325.2 L359.9,328 L356.2,330.6 L352.2,333 L348.1,335.2 L343.8,337.3 L339.4,339.1"/>
+        <circle class="d-ev" cx="385.6" cy="250" r="5"/>
+        <path class="d-msg-hi" marker-end="url(#awl-turn-r)" d="M330,355 L335.6,356.1 L341.2,356.8 L347,357.3 L352.8,357.5 L358.7,357.3 L364.7,356.8 L370.7,356 L376.7,354.8 L382.6,353.3 L388.6,351.4 L394.5,349.3 L400.3,346.7 L406,343.9 L411.6,340.7 L417.1,337.1 L422.5,333.2 L427.6,329.1 L432.6,324.6 L437.4,319.7 L441.9,314.6 L446.3,309.2 L450.3,303.6 L454.1,297.6 L457.6,291.4 L460.7,285 L463.6,278.4 L466.1,271.6 L468.2,264.5 L470,257.3"/>
+        <circle class="d-ev" cx="484.4" cy="250" r="5"/>
+        <path class="d-msg" marker-end="url(#awl-turn-b)" d="M484.4,250 L485.5,258.1 L486.1,266.4 L486.4,274.8 L486.1,283.2 L485.4,291.6 L484.3,300.1 L482.6,308.6 L480.6,317 L478,325.4 L475,333.7 L471.5,341.9 L467.5,349.9 L463.1,357.8 L458.3,365.5 L453,373 L447.2,380.2 L441.1,387.2 L434.5,393.8 L427.5,400.2 L420.2,406.2 L412.5,411.9 L404.4,417.2 L396,422.1 L387.4,426.5 L378.4,430.5 L369.1,434.1 L359.6,437.2 L349.9,439.8 L340.1,441.8"/>
+        <text class="d-lbl d-halo" x="340" y="198.4" text-anchor="start">“I can accept north”</text>
+        <circle class="d-ev-hi" cx="330" cy="355" r="5.5"/>
+        <text class="d-lbl d-halo" x="340" y="359" text-anchor="start" style="fill:#bf4a26">calls north</text>
+        <text class="d-lbl d-halo" x="175.6" y="240" text-anchor="middle">pledges</text>
+        <text class="d-lbl d-halo" x="484.4" y="240" text-anchor="middle">pledges</text>
+        <circle class="d-ev-hi" cx="330" cy="448.6" r="7.5"/>
+        <text x="330" y="452" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">N</text>
+        <text class="d-lbl d-halo" x="344" y="452.6" text-anchor="start" style="fill:#bf4a26">going birds; goes north</text>
+        </g>
       </svg>
     </div>
     <figcaption><b>In still air, a turn owned by a live man ends with someone going.</b> Every bird
@@ -522,55 +535,145 @@
 
   <figure class="diagram">
     <div class="board">
-      <svg viewBox="0 0 660 330" role="img" aria-label="Three panels, each with two pairs of tents: Numbers 1 and 2 on the left, Numbers 3 and 4 on the right. First panel: all sighted north, Numbers 3 and 4 are dead; Numbers 1 and 2 must go north. Second panel: all sighted south, Numbers 1 and 2 are dead; Numbers 3 and 4 must go south. Third panel: all alive, the left pair sighted north and the right pair south, and every bird between the pairs is held by the wind; each pair sees exactly what it saw before and goes to different gates.">
-        <!-- panel headers -->
-        <text class="d-house" x="110" y="24" text-anchor="middle">FIRST</text>
+      <svg class="flow" viewBox="0 0 660 400" role="img" aria-label="Three panels, each with two pairs of tents: T1 and T2 on the left, T3 and T4 on the right, later moments further out. First: all sighted north, T3 and T4 are dead; T1 and T2 must go north. Second: all sighted south, T1 and T2 are dead; T3 and T4 must go south. Third: all alive, the left pair sighted north and the right pair south, and every bird between the pairs is held by the wind until both pairs have gone; each pair sees exactly what it saw before and goes to a different gate.">
+        <!-- polar:awl-split -->
+        <defs>
+          <marker id="awl-split-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
+          </marker>
+          <marker id="awl-split-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
+          </marker>
+          <marker id="awl-split-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
+          </marker>
+          <marker id="awl-split-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
+          </marker>
+          <marker id="awl-split-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
+          </marker>
+        </defs>
+        <text class="d-house" x="112" y="24" text-anchor="middle">FIRST</text>
+        <circle cx="112" cy="175" r="51.6" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="112" cy="175" r="59.2" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="112" cy="175" r="66.8" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="112" cy="175" r="74.4" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="112" cy="175" r="82" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="112" cy="175" r="89.6" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="112" cy="175" r="97.2" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="112" cy="175" r="104.8" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <line class="d-lifeline" x1="80.9" y1="143.9" x2="36.8" y2="99.8"/>
+        <line class="d-lifeline" x1="80.9" y1="206.1" x2="36.8" y2="250.2"/>
+        <line class="d-lifeline" x1="143.1" y1="143.9" x2="158.2" y2="128.8"/>
+        <line class="d-lifeline" x1="143.1" y1="206.1" x2="158.2" y2="221.2"/>
+        <rect class="d-node" x="65.9" y="132.9" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="80.9" y="148.4" text-anchor="middle" fill="#1c1512">T1</text>
+        <rect class="d-node" x="65.9" y="195.1" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="80.9" y="210.6" text-anchor="middle" fill="#1c1512">T2</text>
+        <rect class="d-node" x="128.1" y="132.9" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="143.1" y="148.4" text-anchor="middle" fill="#1c1512">T3</text>
+        <rect class="d-node" x="128.1" y="195.1" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="143.1" y="210.6" text-anchor="middle" fill="#1c1512">T4</text>
+        <clipPath id="awl-split-clip0"><circle class="tclip" cx="112" cy="175" r="126.3" data-r0="44" data-r1="106.3"/></clipPath>
+        <g class="tflow" clip-path="url(#awl-split-clip0)">
+        <path d="M152.7,123.3 L163.7,134.3 M152.7,134.3 L163.7,123.3" style="stroke:#1c1512; stroke-width:2.4; fill:none"/>
+        <path d="M152.7,215.7 L163.7,226.7 M152.7,226.7 L163.7,215.7" style="stroke:#1c1512; stroke-width:2.4; fill:none"/>
+        <path class="d-msg" marker-end="url(#awl-split-b)" d="M65.8,128.8 L63.3,131.2 L60.9,133.6 L58.6,136.2 L56.5,138.9 L54.5,141.8 L52.6,144.7 L50.9,147.8 L49.4,151 L48,154.2 L46.7,157.5 L45.7,160.9 L44.8,164.4 L44.1,167.9 L43.6,171.4 L43.3,175 L43.2,178.6 L43.2,182.2 L43.5,185.9 L43.9,189.5 L44.5,193.1 L45.4,196.7 L46.4,200.2 L47.6,203.7 L49,207.1 L50.5,210.5 L52.3,213.8 L54.2,217 L56.3,220.1"/>
+        <path class="d-msg" marker-end="url(#awl-split-b)" d="M58.3,228.7 L55.4,226 L52.6,223.1 L50,220 L47.6,216.8 L45.3,213.5 L43.1,210.1 L41.2,206.5 L39.4,202.9 L37.8,199.1 L36.5,195.2 L35.3,191.3 L34.3,187.3 L33.5,183.2 L33,179.1 L32.7,175 L32.5,170.8 L32.6,166.7 L33,162.5 L33.5,158.3 L34.3,154.2 L35.2,150.1 L36.4,146 L37.9,142 L39.5,138 L41.3,134.2 L43.4,130.4 L45.6,126.8 L48,123.2"/>
+        <circle class="d-ev" cx="65.8" cy="128.8" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev" cx="61" cy="226" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev" cx="58.3" cy="228.7" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev" cx="53.5" cy="116.5" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev" cx="46.5" cy="109.5" r="7.5"/>
+        <text x="46.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">N</text>
+        <circle class="d-ev" cx="46.5" cy="240.5" r="7.5"/>
+        <text x="46.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">N</text>
+        </g>
+        <text class="d-note" x="112" y="306" text-anchor="middle">1 and 2 sighted north; 3 and 4</text>
+        <text class="d-note" x="112" y="322" text-anchor="middle">dead at dusk. 1 and 2 go north:</text>
+        <text class="d-note" x="112" y="338" text-anchor="middle">they cannot wait, two may be dead</text>
         <text class="d-house" x="330" y="24" text-anchor="middle">SECOND</text>
-        <text class="d-house" x="550" y="24" text-anchor="middle" fill="#bf4a26">THIRD</text>
-        <line x1="220" y1="10" x2="220" y2="320" stroke="#b9a77e" stroke-width="1.5"/>
-        <line x1="440" y1="10" x2="440" y2="320" stroke="#b9a77e" stroke-width="1.5"/>
-
-        <!-- panel 1 -->
-        <text class="d-key" x="60" y="54" text-anchor="middle">1 · 2</text>
-        <text class="d-key" x="160" y="54" text-anchor="middle">3 · 4</text>
-        <rect x="30" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
-        <rect x="130" y="66" width="60" height="150" rx="4" fill="none" stroke="#b9a77e" stroke-width="1.4" stroke-dasharray="4 4"/>
-        <text class="d-lbl" x="60" y="100" text-anchor="middle">sighted</text>
-        <text class="d-lbl" x="60" y="116" text-anchor="middle">north</text>
-        <text class="d-note" x="160" y="108" text-anchor="middle">dead</text>
-        <text class="d-note" x="160" y="122" text-anchor="middle">at dusk</text>
-        <text class="d-lbl" x="60" y="196" text-anchor="middle" fill="#bf4a26">go north</text>
-        <text class="d-note" x="110" y="258" text-anchor="middle">they cannot wait:</text>
-        <text class="d-note" x="110" y="272" text-anchor="middle">two may be dead</text>
-
-        <!-- panel 2 -->
-        <text class="d-key" x="280" y="54" text-anchor="middle">1 · 2</text>
-        <text class="d-key" x="380" y="54" text-anchor="middle">3 · 4</text>
-        <rect x="250" y="66" width="60" height="150" rx="4" fill="none" stroke="#b9a77e" stroke-width="1.4" stroke-dasharray="4 4"/>
-        <rect x="350" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
-        <text class="d-note" x="280" y="108" text-anchor="middle">dead</text>
-        <text class="d-note" x="280" y="122" text-anchor="middle">at dusk</text>
-        <text class="d-lbl" x="380" y="100" text-anchor="middle">sighted</text>
-        <text class="d-lbl" x="380" y="116" text-anchor="middle">south</text>
-        <text class="d-lbl" x="380" y="196" text-anchor="middle" fill="#bf4a26">go south</text>
-        <text class="d-note" x="330" y="258" text-anchor="middle">the same, with the</text>
-        <text class="d-note" x="330" y="272" text-anchor="middle">pairs and gates swapped</text>
-
-        <!-- panel 3 -->
-        <text class="d-key" x="500" y="54" text-anchor="middle">1 · 2</text>
-        <text class="d-key" x="600" y="54" text-anchor="middle">3 · 4</text>
-        <rect x="470" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
-        <rect x="570" y="66" width="60" height="150" rx="4" fill="none" stroke="#1c1512" stroke-width="1.4"/>
-        <rect class="d-band" x="534" y="66" width="32" height="150"/>
-        <text class="d-lbl" x="500" y="100" text-anchor="middle">sighted</text>
-        <text class="d-lbl" x="500" y="116" text-anchor="middle">north</text>
-        <text class="d-lbl" x="600" y="100" text-anchor="middle">sighted</text>
-        <text class="d-lbl" x="600" y="116" text-anchor="middle">south</text>
-        <text class="d-lbl" x="500" y="196" text-anchor="middle" fill="#bf4a26">go north</text>
-        <text class="d-lbl" x="600" y="196" text-anchor="middle" fill="#bf4a26">go south</text>
-        <text class="d-note" x="550" y="238" text-anchor="middle">wind</text>
-        <text class="d-note" x="550" y="258" text-anchor="middle" fill="#bf4a26">each pair sees just what</text>
-        <text class="d-note" x="550" y="272" text-anchor="middle" fill="#bf4a26">it saw before</text>
+        <circle cx="330" cy="175" r="51.6" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="175" r="59.2" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="175" r="66.8" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="175" r="74.4" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="175" r="82" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="175" r="89.6" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="175" r="97.2" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="175" r="104.8" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <line class="d-lifeline" x1="298.9" y1="143.9" x2="283.8" y2="128.8"/>
+        <line class="d-lifeline" x1="298.9" y1="206.1" x2="283.8" y2="221.2"/>
+        <line class="d-lifeline" x1="361.1" y1="143.9" x2="405.2" y2="99.8"/>
+        <line class="d-lifeline" x1="361.1" y1="206.1" x2="405.2" y2="250.2"/>
+        <rect class="d-node" x="283.9" y="132.9" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="298.9" y="148.4" text-anchor="middle" fill="#1c1512">T1</text>
+        <rect class="d-node" x="283.9" y="195.1" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="298.9" y="210.6" text-anchor="middle" fill="#1c1512">T2</text>
+        <rect class="d-node" x="346.1" y="132.9" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="361.1" y="148.4" text-anchor="middle" fill="#1c1512">T3</text>
+        <rect class="d-node" x="346.1" y="195.1" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="361.1" y="210.6" text-anchor="middle" fill="#1c1512">T4</text>
+        <clipPath id="awl-split-clip1"><circle class="tclip" cx="330" cy="175" r="126.3" data-r0="44" data-r1="106.3"/></clipPath>
+        <g class="tflow" clip-path="url(#awl-split-clip1)">
+        <path d="M278.3,123.3 L289.3,134.3 M278.3,134.3 L289.3,123.3" style="stroke:#1c1512; stroke-width:2.4; fill:none"/>
+        <path d="M278.3,215.7 L289.3,226.7 M278.3,226.7 L289.3,215.7" style="stroke:#1c1512; stroke-width:2.4; fill:none"/>
+        <path class="d-msg" marker-end="url(#awl-split-b)" d="M376.2,128.8 L378.7,131.2 L381.1,133.6 L383.4,136.2 L385.5,138.9 L387.5,141.8 L389.4,144.7 L391.1,147.8 L392.6,151 L394,154.2 L395.3,157.5 L396.3,160.9 L397.2,164.4 L397.9,167.9 L398.4,171.4 L398.7,175 L398.8,178.6 L398.8,182.2 L398.5,185.9 L398.1,189.5 L397.5,193.1 L396.6,196.7 L395.6,200.2 L394.4,203.7 L393,207.1 L391.5,210.5 L389.7,213.8 L387.8,217 L385.7,220.1"/>
+        <path class="d-msg" marker-end="url(#awl-split-b)" d="M383.7,228.7 L386.6,226 L389.4,223.1 L392,220 L394.4,216.8 L396.7,213.5 L398.9,210.1 L400.8,206.5 L402.6,202.9 L404.2,199.1 L405.5,195.2 L406.7,191.3 L407.7,187.3 L408.5,183.2 L409,179.1 L409.3,175 L409.5,170.8 L409.4,166.7 L409,162.5 L408.5,158.3 L407.7,154.2 L406.8,150.1 L405.6,146 L404.1,142 L402.5,138 L400.7,134.2 L398.6,130.4 L396.4,126.8 L394,123.2"/>
+        <circle class="d-ev" cx="376.2" cy="128.8" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev" cx="381" cy="226" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev" cx="383.7" cy="228.7" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev" cx="388.5" cy="116.5" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev" cx="395.5" cy="109.5" r="7.5"/>
+        <text x="395.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">S</text>
+        <circle class="d-ev" cx="395.5" cy="240.5" r="7.5"/>
+        <text x="395.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">S</text>
+        </g>
+        <text class="d-note" x="330" y="306" text-anchor="middle">3 and 4 sighted south; 1 and 2</text>
+        <text class="d-note" x="330" y="322" text-anchor="middle">dead at dusk. 3 and 4 go south:</text>
+        <text class="d-note" x="330" y="338" text-anchor="middle">the same, pairs and gates swapped</text>
+        <text class="d-house" x="548" y="24" text-anchor="middle" style="fill:#bf4a26">THIRD</text>
+        <circle cx="548" cy="175" r="51.6" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="548" cy="175" r="59.2" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="548" cy="175" r="66.8" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="548" cy="175" r="74.4" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="548" cy="175" r="82" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="548" cy="175" r="89.6" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="548" cy="175" r="97.2" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="548" cy="175" r="104.8" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <line class="d-lifeline" x1="516.9" y1="143.9" x2="472.8" y2="99.8"/>
+        <line class="d-lifeline" x1="516.9" y1="206.1" x2="472.8" y2="250.2"/>
+        <line class="d-lifeline" x1="579.1" y1="143.9" x2="623.2" y2="99.8"/>
+        <line class="d-lifeline" x1="579.1" y1="206.1" x2="623.2" y2="250.2"/>
+        <rect class="d-node" x="501.9" y="132.9" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="516.9" y="148.4" text-anchor="middle" fill="#1c1512">T1</text>
+        <rect class="d-node" x="501.9" y="195.1" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="516.9" y="210.6" text-anchor="middle" fill="#1c1512">T2</text>
+        <rect class="d-node" x="564.1" y="132.9" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="579.1" y="148.4" text-anchor="middle" fill="#1c1512">T3</text>
+        <rect class="d-node" x="564.1" y="195.1" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="579.1" y="210.6" text-anchor="middle" fill="#1c1512">T4</text>
+        <clipPath id="awl-split-clip2"><circle class="tclip" cx="548" cy="175" r="126.3" data-r0="44" data-r1="106.3"/></clipPath>
+        <g class="tflow" clip-path="url(#awl-split-clip2)">
+        <path class="d-msg" marker-end="url(#awl-split-b)" d="M501.8,128.8 L499.3,131.2 L496.9,133.6 L494.6,136.2 L492.5,138.9 L490.5,141.8 L488.6,144.7 L486.9,147.8 L485.4,151 L484,154.2 L482.7,157.5 L481.7,160.9 L480.8,164.4 L480.1,167.9 L479.6,171.4 L479.3,175 L479.2,178.6 L479.2,182.2 L479.5,185.9 L479.9,189.5 L480.5,193.1 L481.4,196.7 L482.4,200.2 L483.6,203.7 L485,207.1 L486.5,210.5 L488.3,213.8 L490.2,217 L492.3,220.1"/>
+        <path class="d-msg" marker-end="url(#awl-split-b)" d="M494.3,228.7 L491.4,226 L488.6,223.1 L486,220 L483.6,216.8 L481.3,213.5 L479.1,210.1 L477.2,206.5 L475.4,202.9 L473.8,199.1 L472.5,195.2 L471.3,191.3 L470.3,187.3 L469.5,183.2 L469,179.1 L468.7,175 L468.5,170.8 L468.6,166.7 L469,162.5 L469.5,158.3 L470.3,154.2 L471.2,150.1 L472.4,146 L473.9,142 L475.5,138 L477.3,134.2 L479.4,130.4 L481.6,126.8 L484,123.2"/>
+        <circle class="d-ev" cx="501.8" cy="128.8" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev" cx="497" cy="226" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev" cx="494.3" cy="228.7" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev" cx="489.5" cy="116.5" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev-hi" cx="482.5" cy="109.5" r="7.5"/>
+        <text x="482.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">N</text>
+        <circle class="d-ev-hi" cx="482.5" cy="240.5" r="7.5"/>
+        <text x="482.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">N</text>
+        <path class="d-msg" marker-end="url(#awl-split-b)" d="M594.2,128.8 L596.7,131.2 L599.1,133.6 L601.4,136.2 L603.5,138.9 L605.5,141.8 L607.4,144.7 L609.1,147.8 L610.6,151 L612,154.2 L613.3,157.5 L614.3,160.9 L615.2,164.4 L615.9,167.9 L616.4,171.4 L616.7,175 L616.8,178.6 L616.8,182.2 L616.5,185.9 L616.1,189.5 L615.5,193.1 L614.6,196.7 L613.6,200.2 L612.4,203.7 L611,207.1 L609.5,210.5 L607.7,213.8 L605.8,217 L603.7,220.1"/>
+        <path class="d-msg" marker-end="url(#awl-split-b)" d="M601.7,228.7 L604.6,226 L607.4,223.1 L610,220 L612.4,216.8 L614.7,213.5 L616.9,210.1 L618.8,206.5 L620.6,202.9 L622.2,199.1 L623.5,195.2 L624.7,191.3 L625.7,187.3 L626.5,183.2 L627,179.1 L627.3,175 L627.5,170.8 L627.4,166.7 L627,162.5 L626.5,158.3 L625.7,154.2 L624.8,150.1 L623.6,146 L622.1,142 L620.5,138 L618.7,134.2 L616.6,130.4 L614.4,126.8 L612,123.2"/>
+        <circle class="d-ev" cx="594.2" cy="128.8" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev" cx="599" cy="226" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev" cx="601.7" cy="228.7" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev" cx="606.5" cy="116.5" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
+        <circle class="d-ev-hi" cx="613.5" cy="109.5" r="7.5"/>
+        <text x="613.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">S</text>
+        <circle class="d-ev-hi" cx="613.5" cy="240.5" r="7.5"/>
+        <text x="613.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">S</text>
+        <path class="d-msg-hi" marker-end="url(#awl-split-r)" d="M500.8,222.2 L502.5,225.6 L504.4,228.9 L506.5,232.1 L508.9,235.3 L511.4,238.3 L514.2,241.3 L517.2,244.1 L520.4,246.8 L523.8,249.4 L527.4,251.8 L531.2,254 L535.2,256 L539.3,257.8 L543.6,259.4 L548,260.8 L552.6,261.9 L557.2,262.8 L562,263.5 L566.9,263.9 L571.8,264 L576.9,263.8 L581.9,263.4 L587,262.6 L592.1,261.6 L597.2,260.3 L602.3,258.6 L607.4,256.7 L612.4,254.5" style="stroke-dasharray:6 4"/>
+        <path class="d-msg-hi" marker-end="url(#awl-split-r)" d="M595.2,222.2 L593.5,225.6 L591.6,228.9 L589.5,232.1 L587.1,235.3 L584.6,238.3 L581.8,241.3 L578.8,244.1 L575.6,246.8 L572.2,249.4 L568.6,251.8 L564.8,254 L560.8,256 L556.7,257.8 L552.4,259.4 L548,260.8 L543.4,261.9 L538.8,262.8 L534,263.5 L529.1,263.9 L524.2,264 L519.1,263.8 L514.1,263.4 L509,262.6 L503.9,261.6 L498.8,260.3 L493.7,258.6 L488.6,256.7 L483.6,254.5" style="stroke-dasharray:6 4"/>
+        <path class="d-msg-hi" marker-end="url(#awl-split-r)" d="M500.8,127.8 L502.5,124.4 L504.4,121.1 L506.5,117.9 L508.9,114.7 L511.4,111.7 L514.2,108.7 L517.2,105.9 L520.4,103.2 L523.8,100.6 L527.4,98.2 L531.2,96 L535.2,94 L539.3,92.2 L543.6,90.6 L548,89.2 L552.6,88.1 L557.2,87.2 L562,86.5 L566.9,86.1 L571.8,86 L576.9,86.2 L581.9,86.6 L587,87.4 L592.1,88.4 L597.2,89.7 L602.3,91.4 L607.4,93.3 L612.4,95.5" style="stroke-dasharray:6 4"/>
+        <path class="d-msg-hi" marker-end="url(#awl-split-r)" d="M595.2,127.8 L593.5,124.4 L591.6,121.1 L589.5,117.9 L587.1,114.7 L584.6,111.7 L581.8,108.7 L578.8,105.9 L575.6,103.2 L572.2,100.6 L568.6,98.2 L564.8,96 L560.8,94 L556.7,92.2 L552.4,90.6 L548,89.2 L543.4,88.1 L538.8,87.2 L534,86.5 L529.1,86.1 L524.2,86 L519.1,86.2 L514.1,86.6 L509,87.4 L503.9,88.4 L498.8,89.7 L493.7,91.4 L488.6,93.3 L483.6,95.5" style="stroke-dasharray:6 4"/>
+        <text class="d-lbl d-halo" x="548" y="262.5" text-anchor="middle" style="fill:#bf4a26">held by the wind</text>
+        </g>
+        <text class="d-note" x="548" y="306" text-anchor="middle" style="fill:#bf4a26">nobody dead, but the wind holds every</text>
+        <text class="d-note" x="548" y="322" text-anchor="middle" style="fill:#bf4a26">bird between the pairs: each pair sees</text>
+        <text class="d-note" x="548" y="338" text-anchor="middle" style="fill:#bf4a26">just what it saw before, and goes</text>
+        <line x1="221" y1="10" x2="221" y2="390" stroke="#b9a77e" stroke-width="1.5"/>
+        <line x1="439" y1="10" x2="439" y2="390" stroke="#b9a77e" stroke-width="1.5"/>
       </svg>
     </div>
     <figcaption><b>If two may die, the wind can split the four.</b> Each live pair must go without
@@ -859,5 +962,6 @@
   <span class="outside"><span class="tag">Outside this series</span> Dolev, Dwork &amp; Stockmeyer 1987, <i>minimal synchronism</i> · Attiya, Dwork, Lynch &amp; Stockmeyer 1994, <i>bounds on consensus time</i> · Buchman, Kwon &amp; Milosevic 2018, <i>Tendermint</i></span></p>
 
 </div>
+<script src="../../assets/js/flow.js" defer></script>
 </body>
 </html>

@@ -95,11 +95,12 @@ class Polar:
         self.fig.add(f'<path id="{pid}" fill="none" d="M{f(x0)},{f(y0)} A{f(rr)},{f(rr)} 0 0 1 {f(x1)},{f(y1)}"/>')
         self.fig.add(f'<text class="d-note"><textPath href="#{pid}" startOffset="50%" text-anchor="middle">time, later outward</textPath></text>')
 
-    def road(self, t_end):
-        """Each house's line: the house itself at one moment after another."""
+    def road(self, t_end, ends=None):
+        """Each house's line: the house itself at one moment after another. `ends` cuts
+        chosen lines short (key -> time), for a man who has died."""
         F = self.fig
         for k in self.nodes:
-            (x1, y1), (x2, y2) = self.pt(k, 0), self.pt(k, t_end)
+            (x1, y1), (x2, y2) = self.pt(k, 0), self.pt(k, (ends or {}).get(k, t_end))
             F.add(f'<line class="d-lifeline" x1="{f(x1)}" y1="{f(y1)}" x2="{f(x2)}" y2="{f(y2)}"/>')
 
     def node_boxes(self):
@@ -111,11 +112,24 @@ class Polar:
                          f'<text class="d-house" x="{f(x)}" y="{f(y + 4.5)}" text-anchor="middle" fill="{INK}">{esc(label)}</text>')
 
     # marks ------------------------------------------------------------------
-    def event(self, key, t, hi=False, rad=None):
+    def event(self, key, t, hi=False, rad=None, state=None):
+        """A dot on a spoke. With `state`, it shows what the man has done by then: "none" is a hollow
+        dot (he has not gone), "N" or "S" a dot carrying that letter (he has gone to that gate)."""
         x, y = self.pt(key, t)
         cls = "d-ev-hi" if hi else "d-ev"
-        rad = rad or (5.5 if hi else 5)
-        self.fig.add(f'<circle class="{cls}" cx="{f(x)}" cy="{f(y)}" r="{rad}"/>')
+        col = RED if hi else INK
+        if state is None:
+            rad = rad or (5.5 if hi else 5)
+            self.fig.add(f'<circle class="{cls}" cx="{f(x)}" cy="{f(y)}" r="{rad}"/>')
+        elif state == "none":
+            rad = rad or 4.5
+            self.fig.add(f'<circle class="{cls}" cx="{f(x)}" cy="{f(y)}" r="{rad}" '
+                         f'style="fill:{PAPER}; stroke:{col}; stroke-width:1.6"/>')
+        else:
+            rad = rad or 7.5
+            self.fig.add(f'<circle class="{cls}" cx="{f(x)}" cy="{f(y)}" r="{rad}"/>')
+            self.fig.add(f'<text x="{f(x)}" y="{f(y + 3.4)}" text-anchor="middle" '
+                         f'style="font:700 10px Optima,\'Gill Sans\',sans-serif; fill:{PAPER}">{state}</text>')
 
     def label(self, key, t, s, side=-1, dist=13, fill=None, size=None, anchor=None, dx=0, dy=0, cls="d-lbl d-halo"):
         """Text beside the spoke at time t; side -1 is anticlockwise of it, +1 clockwise."""
@@ -163,7 +177,8 @@ class Polar:
         n = max(12, int(abs(a1 - a0) / 3))
         return [self.xy(a0 + (a1 - a0) * i / n, r0 + (r1 - r0) * i / n) for i in range(n + 1)]
 
-    def msg(self, a, ta, b, tb, hi=False, cw=True, trim=7, start_trim=0, short=False):
+    def msg(self, a, ta, b, tb, hi=False, cw=True, trim=7, start_trim=0, short=False, dashed=False):
+        """A slip (raven, bird) from a at ta to b at tb. `dashed` is one held back on the way."""
         if short:                      # the direct stretch: whichever way round is shorter
             cw = (self.ang(b) - self.ang(a)) % 360 < 180
         pts = self.spiral_pts(self.ang(a), self.r(ta), self.ang(b), self.r(tb), cw)
@@ -174,7 +189,34 @@ class Polar:
             pts.pop(0)
         cls, m = ("d-msg-hi", "r") if hi else ("d-msg", "b")
         d = "M" + " L".join(f"{f(x)},{f(y)}" for x, y in pts)
-        self.fig.add(f'<path class="{cls}" marker-end="url(#{self.fig.name}-{m})" d="{d}"/>')
+        dash = ' style="stroke-dasharray:6 4"' if dashed else ""
+        self.fig.add(f'<path class="{cls}" marker-end="url(#{self.fig.name}-{m})" d="{d}"{dash}/>')
+
+    def lost(self, a, ta, b, tb, frac=.55, short=True, cw=True):
+        """A slip that never arrives: it starts out, then ends in a cross."""
+        if short:
+            cw = (self.ang(b) - self.ang(a)) % 360 < 180
+        pts = self.spiral_pts(self.ang(a), self.r(ta), self.ang(b), self.r(tb), cw)
+        pts = pts[:max(2, int(len(pts) * frac))]
+        d = "M" + " L".join(f"{f(x)},{f(y)}" for x, y in pts)
+        self.fig.add(f'<path class="d-msg" d="{d}"/>')
+        x, y = pts[-1]
+        self.fig.add(f'<path d="M{f(x - 5)},{f(y - 5)} L{f(x + 5)},{f(y + 5)} M{f(x - 5)},{f(y + 5)} L{f(x + 5)},{f(y - 5)}" '
+                     f'style="stroke:{RED}; stroke-width:2.2; fill:none"/>')
+        return x, y
+
+    def dead(self, key, t):
+        """A man who has died: his line stops at t with a cross."""
+        x, y = self.pt(key, t)
+        self.fig.add(f'<path d="M{f(x - 5.5)},{f(y - 5.5)} L{f(x + 5.5)},{f(y + 5.5)} M{f(x - 5.5)},{f(y + 5.5)} L{f(x + 5.5)},{f(y - 5.5)}" '
+                     f'style="stroke:{INK}; stroke-width:2.4; fill:none"/>')
+
+    def refused(self, a, ta, b, tb):
+        """A slip that arrives and is turned away: it ends in a cross on the receiver's line."""
+        self.msg(a, ta, b, tb, short=True, trim=0)
+        x, y = self.pt(b, tb)
+        self.fig.add(f'<path d="M{f(x - 5)},{f(y - 5)} L{f(x + 5)},{f(y + 5)} M{f(x - 5)},{f(y + 5)} L{f(x + 5)},{f(y - 5)}" '
+                     f'style="stroke:{RED}; stroke-width:2.2; fill:none"/>')
 
     def order_arc(self, a, ta, b, tb, color, marker, cw=True, trim=9, start_trim=6):
         """A dashed arc for 'this comes first' in some sequence: an ordering, not a slip."""
@@ -506,7 +548,7 @@ def limits_fold():
             P.msg(a, base, b, base + 1, short=True)
             P.msg(b, base + 1, a, base + 2, short=True, trim=6)
             for k, t in ((a, base), (b, base + 1), (a, base + 2)):
-                P.event(k, t, rad=4)
+                P.event(k, t, state="none")
         (x1, y1), (x2, y2) = P.pt("1", 0), P.pt("3", 0)
         # the only thing that differs: which course comes first
         if b1 < b2:
@@ -543,9 +585,9 @@ def limits_silent():
         P.msg("3", 2.5, "4", 3.5, short=True)
         P.msg("4", 4, "3", 5, short=True)
         for k, t in (("2", 1), ("3", 2), ("3", 2.5), ("4", 3.5), ("4", 4), ("3", 5)):
-            P.event(k, t, rad=4)
+            P.event(k, t, state="none")
         for k in "234":
-            P.event(k, 6.2, hi=bool(fill))
+            P.event(k, 6.2, hi=bool(fill), state="N")
         P.label("2", 6.2, "goes north", side=-1, dist=10, fill=fill)
         P.label("3", 6.2, "goes north", side=1, dist=10, fill=fill)
         P.label("4", 6.2, "goes north", side=-1, dist=10, fill=fill)
@@ -577,8 +619,8 @@ def limits_defer():
             P.msg("4", 1, "3", 4, hi=True, short=True)
             P.msg("1", 1.5, "2", 3.5, short=True)
             for k, t in (("4", 1), ("1", 1.5), ("2", 3.5)):
-                P.event(k, t, rad=4)
-            P.event("3", 4, hi=True)
+                P.event(k, t, state="none")
+            P.event("3", 4, hi=True, state="none")
             P.label("3", 4, "telling raven lands", side=-1, dist=10, fill=RED)
             P.label("2", 3.5, "another raven lands", side=1, dist=17)
         else:
@@ -587,9 +629,9 @@ def limits_defer():
             P.msg("3", 2, "2", 3, short=True)
             P.msg("3", 4.5, "4", 5.5, short=True)
             for k, t in (("4", 1.5), ("2", 1), ("3", 2), ("3", 4.5), ("2", 3), ("4", 5.5)):
-                P.event(k, t, rad=4)
-            P.event("1", 2.5)
-            P.event("1", 4.5, hi=True)
+                P.event(k, t, state="none")
+            P.event("1", 2.5, state="none")
+            P.event("1", 4.5, hi=True, state="none")
             P.label("1", 2.5, "another raven lands", side=1, dist=10, anchor="start")
             P.label("1", 4.5, "telling raven lands", side=1, dist=10, fill=RED, anchor="start")
             P.label("1", 6.3, "goes quiet", side=1, dist=10, anchor="start")
@@ -604,18 +646,527 @@ def limits_defer():
     return F
 
 
+# ---------------------------------------------------------------------------
+# Agreeing When Messages Run Late
+# ---------------------------------------------------------------------------
+
+def late_turn():
+    F = Fig("awl-turn", 660, 500,
+            "One turn in still air, owned by tent 3, drawn in the round: four tents, later moments further out. "
+            "Three shaded rings are the asking, calling and answering glasses. In the asking glass every man sends the owner "
+            "the gates he can accept. In the calling glass the owner calls north to every tent. In the answering glass the "
+            "others send pledged birds back. The owner, holding two or more pledged birds, sends going birds and goes north.")
+    nodes = {"1": (180, "T1"), "2": (-90, "T2"), "3": (90, "T3"), "4": (0, "T4")}
+    P = Polar(F, 330, 250, 40, 26, nodes)
+    T = 6.6
+    asking, calling, answering = (0.3, 2.2), (2.2, 4.2), (4.2, 6.2)
+    P.rings(7)
+    P.flow_open(T)
+    P.span(*asking, OCHRE)
+    P.span(*calling, OLIVE)
+    P.span(*answering, OCHRE)
+    P.flow_close()
+    P.road(T)
+    P.node_boxes()
+    P.label("3", 0, "owner", side=-1, dist=32, fill=RED)
+    F.text(20, 30, "asking glass", cls="d-key", anchor="start", fill=OCHRE)
+    F.text(20, 48, "calling glass", cls="d-key", anchor="start", fill=OLIVE)
+    F.text(20, 66, "answering glass", cls="d-key", anchor="start", fill=OCHRE)
+    P.flow_open(T)
+    for k in "124":
+        P.msg(k, 0.6, "3", 2.0, short=True)
+        P.event(k, 0.6)
+        P.msg("3", 2.5, k, 3.9, hi=True, short=True)
+        P.event(k, 4.4)
+        P.msg(k, 4.4, "3", 5.9, short=True)
+    P.label("2", 0.6, "“I can accept north”", side=1, dist=10)
+    P.event("3", 2.5, hi=True)
+    P.label("3", 2.5, "calls north", side=-1, dist=10, fill=RED)
+    P.label("1", 4.4, "pledges", side=1, dist=10)
+    P.label("4", 4.4, "pledges", side=-1, dist=10)
+    P.event("3", 6.1, hi=True, state="N")
+    P.label("3", 6.1, "going birds; goes north", side=-1, dist=14, fill=RED)
+    P.flow_close()
+    return F
+
+
+def _split(name, aria, notes, held):
+    F = Fig(name, 660, 400, aria)
+    nodes = {"1": (225, "T1"), "2": (135, "T2"), "3": (315, "T3"), "4": (45, "T4")}
+    panels = (
+        # cx, title, dead pair, gate of the left pair, gate of the right pair
+        (112, "FIRST", "34", "N", None),
+        (330, "SECOND", "12", None, "S"),
+        (548, "THIRD", "", "N", "S"))
+    for (cx, title, dead, gl, gr), note in zip(panels, notes):
+        F.text(cx, 24, title, cls="d-house", fill=RED if not dead else None)
+        P = Polar(F, cx, 175, 44, 7.6, nodes)
+        P.rings(8)
+        P.road(8.2, ends={k: 2.8 for k in dead})
+        P.node_boxes()
+        P.flow_open(8.2)
+        for k in dead:
+            P.dead(k, 2.8)
+        for pair, gate in (("12", gl), ("34", gr)):
+            if gate is None:
+                continue
+            a, b = pair
+            P.msg(a, 2.8, b, 3.7, short=True)
+            P.msg(b, 4.2, a, 5.1, short=True)
+            for k, t in ((a, 2.8), (b, 3.7), (b, 4.2), (a, 5.1)):
+                P.event(k, t, state="none")
+            for k in pair:
+                P.event(k, 6.4, hi=not dead, state=gate)
+        if not dead:
+            for a, b in (("2", "4"), ("4", "2"), ("1", "3"), ("3", "1")):
+                P.msg(a, 3.0, b, 8.0, hi=True, short=True, dashed=True)
+            x, y = P.at(90, 5.2)
+            F.text(x, y + 4, held, cls="d-lbl d-halo", fill=RED)
+        P.flow_close()
+        for i, line in enumerate(note):
+            F.text(cx, 306 + 16 * i, line, fill=RED if not dead else None)
+    F.divider(221, 10, 390)
+    F.divider(439, 10, 390)
+    return F
+
+
+def late_split():
+    return _split(
+        "awl-split",
+        "Three panels, each with two pairs of tents: T1 and T2 on the left, T3 and T4 on the right, later moments further out. "
+        "First: all sighted north, T3 and T4 are dead; T1 and T2 must go north. Second: all sighted south, T1 and T2 are dead; "
+        "T3 and T4 must go south. Third: all alive, the left pair sighted north and the right pair south, and every bird between "
+        "the pairs is held by the wind until both pairs have gone; each pair sees exactly what it saw before and goes to a different gate.",
+        (("1 and 2 sighted north; 3 and 4", "dead at dusk. 1 and 2 go north:", "they cannot wait, two may be dead"),
+         ("3 and 4 sighted south; 1 and 2", "dead at dusk. 3 and 4 go south:", "the same, pairs and gates swapped"),
+         ("nobody dead, but the wind holds every", "bird between the pairs: each pair sees", "just what it saw before, and goes")),
+        "held by the wind")
+
+
+# ---------------------------------------------------------------------------
+# Answering While Cut Off
+# ---------------------------------------------------------------------------
+
+def cutoff_nights():
+    F = Fig("awco-nights", 660, 400,
+            "Two panels drawn in the round. In each, one line stands for tents 1, 2 and 3 together and one for tent 4, with lost birds "
+            "between them; later moments further out. Left, the first night: a man among tents 1 to 3 moves the standing gate to "
+            "south and his birds to tent 4 are lost; later tent 4 asks which gate stands and answers north, which breaks answering as one. "
+            "Right, the second night: nobody moves the gate; tent 4 asks and answers north, which is right. Tent 4's line is identical in both panels.")
+    nodes = {"A": (-90, "T1–3"), "4": (90, "T4")}
+    panels = ((165, "THE FIRST NIGHT", True), (495, "THE SECOND NIGHT", False))
+    for cx, title, moved in panels:
+        F.text(cx, 24, title, cls="d-house", fill=RED if moved else None)
+        P = Polar(F, cx, 205, 40, 17, nodes, box=44)
+        P.rings(6)
+        P.road(6.4)
+        P.node_boxes()
+        P.flow_open(6.4)
+        if moved:
+            P.event("A", 1.4, hi=True, state="S")
+            P.label("A", 1.4, "moves gate to south", side=1, dist=14, fill=RED)
+        x, y = P.lost("A", 1.4, "4", 3.4, frac=.62, short=False, cw=False)
+        F.text(x - 12, y + 4, "birds lost", cls="d-lbl d-halo", anchor="end")
+        P.event("4", 4.8, state="N")
+        P.label("4", 4.8, "asks; says “north”", side=-1, dist=12)
+        P.flow_close()
+        if moved:
+            F.text(cx, 366, "the move was finished first;", fill=RED)
+            F.text(cx, 382, "answering as one requires south", fill=RED)
+        else:
+            F.text(cx, 366, "“north” is right;")
+            F.text(cx, 382, "tent 4's side is the same")
+    F.divider(330, 10, 390)
+    return F
+
+
+def cutoff_recovery():
+    F = Fig("awco-recovery", 660, 520,
+            "Tent 4, tent 1 (the keeper of the standing gate) and tent 2, drawn in the round, later moments further out. "
+            "A shaded ring marks the loss of birds around tent 4; birds between tents 1 and 2 still arrive. Number 4 moves the "
+            "gate to south during the loss and is told it stands when his glass runs out; his birds are lost. After the loss ends his "
+            "move is sent again, tent 1 numbers it and sends it to every tent, and a question at tent 2 after a span longer than t "
+            "with no loss hears south.")
+    nodes = {"4": (-90, "T4"), "1": (30, "T1"), "2": (150, "T2")}
+    P = Polar(F, 330, 262, 36, 22, nodes)
+    T = 8.8
+    loss, quiet = (1.2, 3.6), (3.6, 7.6)
+    P.rings(9)
+    P.flow_open(T)
+    P.span(*loss, RED, .10)
+    P.span(*quiet, OLIVE, .08)
+    P.flow_close()
+    P.road(T)
+    P.node_boxes()
+    P.label("1", 0, "keeper", side=-1, dist=34, fill=OLIVE, dy=8)
+    F.text(20, 30, "birds lost around tent 4", cls="d-key", anchor="start", fill=RED)
+    F.text(20, 48, "a span t with no loss", cls="d-key", anchor="start", fill=OLIVE)
+    P.flow_open(T)
+    # birds between tents 1 and 2 arrive throughout
+    P.msg("1", 1.4, "2", 2.4, short=True)
+    P.msg("2", 2.6, "1", 3.4, short=True)
+    # tent 4 moves the gate; every bird from it is lost
+    P.event("4", 1.8, hi=True, state="S")
+    P.label("4", 1.8, "moves to south", side=1, dist=14, anchor="start", fill=RED)
+    P.lost("4", 1.8, "1", 3.4, frac=.5)
+    P.lost("4", 1.8, "2", 3.4, frac=.5)
+    P.event("4", 3.3)
+    P.label("4", 3.3, "glass out: “it stands”", side=-1, dist=12)
+    # the loss ends: the move is sent again
+    P.msg("4", 4.0, "1", 5.2, hi=True, short=True)
+    P.event("1", 5.4, hi=True)
+    P.label("1", 5.4, "numbers it: No. 7", side=-1, dist=12, fill=RED, dx=-6, dy=16)
+    P.msg("1", 5.4, "2", 6.6, hi=True, short=True)
+    P.msg("1", 5.4, "4", 6.6, hi=True, short=True)
+    P.event("2", 6.6, hi=True)
+    P.event("4", 6.6, hi=True)
+    # a question after the span with no loss
+    P.event("2", 8.2, state="S")
+    P.label("2", 8.2, "asks: hears south", side=1, dist=12)
+    P.flow_close()
+    return F
+
+
+# ---------------------------------------------------------------------------
+# Keeping Order Among Liars
+# ---------------------------------------------------------------------------
+
+def order_entry():
+    F = Fig("kol-entry", 660, 560,
+            "The four posts drawn in the round, later moments further out. Number 2 files an entry with Number 1, who holds the job. "
+            "Number 1 numbers it 7 and sends the numbering to all. Two shaded rings mark the echoes: Numbers 2 and 3 send first echoes to "
+            "the others, then Numbers 1, 2 and 3 send second echoes to the others, and the entry stands at those three posts. "
+            "Number 4's birds are pinned by the wind, and nobody waits for him.")
+    nodes = {"1": (-90, "P1"), "2": (0, "P2"), "3": (90, "P3"), "4": (180, "P4")}
+    P = Polar(F, 330, 280, 40, 26, nodes)
+    T = 8.6
+    first, second = (3.6, 5.2), (5.3, 6.9)
+    P.rings(9)
+    P.flow_open(T)
+    P.span(*first, OCHRE)
+    P.span(*second, OLIVE)
+    P.flow_close()
+    P.road(T)
+    P.node_boxes()
+    P.label("1", 0, "holds the job", side=-1, dist=28, dy=-4)
+    F.text(20, 30, "first echoes", cls="d-key", anchor="start", fill=OCHRE)
+    F.text(20, 48, "second echoes", cls="d-key", anchor="start", fill=OLIVE)
+    P.flow_open(T)
+    # Number 2 files an entry; Number 1 numbers it and sends the numbering to all
+    P.msg("2", 1.1, "1", 2.0, short=True)
+    P.event("2", 1.1)
+    P.label("2", 1.1, "files an entry", side=1, dist=12, anchor="start", dx=-6)
+    P.event("1", 2.4, hi=True)
+    P.label("1", 2.4, "no. 7", side=1, dist=0, fill=RED, anchor="middle", dy=20)
+    P.msg("1", 2.4, "2", 3.4, hi=True, short=True)
+    P.msg("1", 2.4, "3", 3.5, hi=True, short=True)
+    P.msg("1", 2.4, "4", 8.4, hi=True, short=True, dashed=True)
+    # first echoes from Numbers 2 and 3, second echoes from Numbers 1, 2 and 3
+    for a in "23":
+        P.event(a, 3.8)
+        for b in "123":
+            if b != a:
+                P.msg(a, 3.8, b, 5.1, short=True)
+    for a in "123":
+        P.event(a, 5.5)
+        for b in "123":
+            if b != a:
+                P.msg(a, 5.5, b, 6.8, short=True)
+    for a in "123":
+        P.event(a, 7.1, hi=True)
+    P.label("1", 7.1, "stands", side=-1, dist=10, fill=RED)
+    P.label("2", 7.1, "stands", side=-1, dist=10, fill=RED)
+    P.label("3", 7.1, "stands", side=1, dist=10, fill=RED)
+    P.label("4", 4.6, "birds pinned by the wind", side=-1, dist=10)
+    P.flow_close()
+    return F
+
+
+# ---------------------------------------------------------------------------
+# Telling the Dead from the Slow
+# ---------------------------------------------------------------------------
+
+def slate_split():
+    return _split(
+        "tdts-split",
+        "Three panels, each with two pairs of tents: T1 and T2 on the left, T3 and T4 on the right, later moments further out. "
+        "First: all sighted north, T3 and T4 are dead and chalked; T1 and T2 go north. Second: all sighted south, T1 and T2 are "
+        "dead and chalked; T3 and T4 go south. Third: all alive, the left pair sighted north and the right pair south; every bird "
+        "between the pairs is slow, each pair chalks the other, and each goes to a different gate.",
+        (("1 and 2 sighted north; 3 and 4", "dead at dusk, chalked. 1 and 2", "go north without them"),
+         ("3 and 4 sighted south; 1 and 2", "dead at dusk, chalked. 3 and 4", "go south without them"),
+         ("nobody dead, but every bird between the", "pairs is slow: each pair chalks the", "other, and goes to a different gate")),
+        "slow birds")
+
+
+# ---------------------------------------------------------------------------
+# One Leader at a Time
+# ---------------------------------------------------------------------------
+
+def board_passes():
+    F = Fig("olt-board", 660, 560,
+            "The five legislators under one board, drawn in the round, later moments further out. Okios holds the podium and writes "
+            "lines 11 and 12. Runners carry them in order to Liskovia and Kleon, who both answer that they hold everything up to "
+            "line 12; when the second answer reaches Okios, line 12 passes and he answers the petitioner. Melissa's runner arrives "
+            "long afterwards. Theron has stepped out and his runner is still waiting.")
+    nodes = {"O": (-90, "OKIOS"), "L": (-18, "LISK."), "K": (54, "KLEON"), "M": (126, "MEL."), "T": (198, "THERON")}
+    P = Polar(F, 330, 290, 72, 20, nodes, box=54)
+    T = 8.4
+    P.rings(8)
+    P.road(T)
+    P.node_boxes()
+    P.flow_open(T)
+    # Okios writes lines 11 and 12; runners carry them in order
+    P.event("O", 1.0)
+    P.label("O", 1.0, "line 11", side=-1, dist=10)
+    P.event("O", 1.6)
+    P.label("O", 1.6, "line 12", side=-1, dist=10)
+    P.msg("O", 1.0, "L", 2.4, short=True)
+    P.msg("O", 1.6, "L", 3.0, short=True)
+    P.msg("O", 1.0, "K", 3.0, short=True)
+    P.msg("O", 1.6, "K", 3.6, short=True)
+    # Liskovia and Kleon answer: they hold everything up to line 12
+    P.event("L", 3.1)
+    P.label("L", 3.1, "holds to 12", side=1, dist=10)
+    P.event("K", 3.7)
+    P.label("K", 3.7, "holds to 12", side=1, dist=10)
+    P.msg("L", 3.1, "O", 4.6, short=True)
+    P.msg("K", 3.7, "O", 5.6, short=True)
+    # the second answer arrives: line 12 passes
+    P.event("O", 5.8, hi=True)
+    P.label("O", 5.8, "line 12 passes", side=-1, dist=10, fill=RED)
+    P.radial_arrow("O", 6.2, 7.8, 4, hi=True)
+    P.label("O", 7.0, "to the petitioner", side=1, dist=22, fill=RED, anchor="start")
+    # the slow ones
+    P.msg("O", 1.6, "M", 7.4, short=True)
+    P.event("M", 7.6)
+    P.label("M", 7.6, "lines 11–12, late", side=-1, dist=10)
+    P.msg("O", 1.6, "T", 8.3, short=True, dashed=True)
+    P.label("T", 3.0, "stepped out", side=-1, dist=10)
+    P.label("T", 8.3, "runner waits", side=1, dist=10)
+    P.flow_close()
+    return F
+
+
+# ---------------------------------------------------------------------------
+# The Part-Time Parliament
+# ---------------------------------------------------------------------------
+
+PRIESTS = {"A": (-90, "Α"), "B": (-18, "Β"), "G": (54, "Γ"), "D": (126, "Δ"), "E": (198, "Ε")}
+
+
+def _ballot(P, init, t0, targets, quorum, lost=(), carry=None, gap=1.2, ask=True, success=True):
+    """One ballot, steps 1 to 6: NextBallot out, LastVote back, BeginBallot to the quorum, Voted back, Success to all.
+    `ask=False` starts at step 3 (the promises are already in), `success=False` stops when the initiator writes the decree."""
+    others = [k for k in "ABGDE" if k != init]
+    t1 = t0 + gap
+    live = [k for k in others if k in targets and k not in lost]
+    if ask:
+        P.event(init, t0)
+        for k in others:
+            if k in targets:
+                if k in lost:
+                    P.lost(init, t0, k, t1, frac=.6, short=True)
+                else:
+                    P.msg(init, t0, k, t1, short=True)
+        for i, k in enumerate(live):
+            P.event(k, t1)
+            P.msg(k, t1, init, t1 + gap + .12 * i, hi=(k == carry), short=True)
+        t2 = t1 + gap + .12 * len(live) + .5
+    else:
+        t2 = t0
+    P.event(init, t2, hi=True)
+    q = [k for k in quorum if k != init]
+    for k in q:
+        P.msg(init, t2, k, t2 + gap, short=True)
+    t3 = t2 + gap
+    for i, k in enumerate(q):
+        P.event(k, t3)
+        P.msg(k, t3, init, t3 + gap + .12 * i, short=True)
+    t4 = t3 + gap + .12 * len(q) + .5
+    P.event(init, t4, hi=True)
+    if success:
+        for k in [k for k in others if k not in lost]:
+            P.msg(init, t4, k, t4 + gap, hi=True, short=True)
+            P.event(k, t4 + gap, hi=True)
+    return dict(t0=t0, t1=t1, t2=t2, t3=t3, t4=t4, end=t4 + gap)
+
+
+def parl_steps():
+    F = Fig("ptp-steps", 660, 600,
+            "One ballot of the basic protocol, drawn in the round: the five priests Α, Β, Γ, Δ, Ε, later moments further out. "
+            "Γ begins a ballot and sends NextBallot to the others; Ε's scroll is lost. Α, Β and Δ promise and send LastVote back. "
+            "Γ, having a majority of replies, fixes the decree by condition B3 and sends BeginBallot to the quorum Α, Β, Δ. They vote and "
+            "send Voted back. With every quorum member's vote in, Γ writes the decree and sends Success to all, and each priest writes it.")
+    P = Polar(F, 330, 305, 62, 22, PRIESTS, box=30)
+    T = 9.6
+    P.rings(10)
+    P.flow_open(T)
+    P.span(1.0, 3.8, OCHRE)
+    P.span(4.0, 7.3, OLIVE)
+    P.flow_close()
+    P.road(T)
+    P.node_boxes()
+    F.text(20, 30, "steps 1–2: promises", cls="d-key", anchor="start", fill=OCHRE)
+    F.text(20, 48, "steps 3–5: the vote", cls="d-key", anchor="start", fill=OLIVE)
+    P.flow_open(T)
+    r = _ballot(P, "G", 1.2, "ABDE", "ABD", lost="E", gap=1.0)
+    P.label("G", r["t0"], "1", side=-1, dist=12, size=11)
+    P.badge("G", r["t0"], 1, INK, -1, dist=20)
+    P.badge("A", r["t1"], 2, INK, 1, dist=20)
+    P.badge("G", r["t2"], 3, RED, -1, dist=20)
+    P.badge("B", r["t3"], 4, INK, -1, dist=20)
+    P.badge("G", r["t4"], 5, RED, -1, dist=20)
+    P.badge("A", r["end"], 6, RED, -1, dist=20)
+    P.flow_close()
+    return F
+
+
+def parl_wander():
+    F = Fig("ptp-wander", 660, 560,
+            "The wanderers, drawn in the round: Δ and Ε have left for a banquet, so their lines end in crosses. Β begins a ballot; "
+            "the scrolls to Δ and Ε are lost. Α and Γ, with Β, are a majority; they promise, vote, and the decree passes and is "
+            "written by Α, Β and Γ. Δ and Ε learn nothing.")
+    P = Polar(F, 330, 290, 62, 24, PRIESTS, box=30)
+    T = 8.6
+    P.rings(9)
+    P.road(T, ends={"D": 1.0, "E": 1.0})
+    P.node_boxes()
+    P.flow_open(T)
+    P.dead("D", 1.0)
+    P.dead("E", 1.0)
+    r = _ballot(P, "B", 1.2, "ACGDE".replace("C", ""), "AG", lost="DE", gap=1.1)
+    P.label("D", 1.0, "at the banquet", side=-1, dist=14)
+    P.label("B", r["t0"], "begins", side=-1, dist=12)
+    P.label("B", r["t4"], "passes", side=-1, dist=12, fill=RED)
+    P.flow_close()
+    return F
+
+
+def parl_duel():
+    F = Fig("ptp-duel", 660, 540,
+            "Two would-be presidents, drawn in the round. Α begins ballot 1 with Β and Γ, who promise and reply. Before Α can use the replies, "
+            "Ε begins the higher ballot 2 with everyone, and Β and Γ promise ballot 2. Α then sends BeginBallot for ballot 1, and Β and Γ ignore it, "
+            "having promised a higher ballot.")
+    P = Polar(F, 330, 280, 62, 24, PRIESTS, box=30)
+    T = 7.6
+    P.rings(8)
+    P.road(T)
+    P.node_boxes()
+    P.flow_open(T)
+    P.event("A", 1.0)
+    P.label("A", 1.0, "ballot 1", side=1, dist=10)
+    for k in "BG":
+        P.msg("A", 1.0, k, 2.2, short=True)
+        P.event(k, 2.2)
+        P.msg(k, 2.2, "A", 3.7 + (.15 if k == "G" else 0), short=True)
+    P.label("B", 2.2, "promise 1", side=-1, dist=10)
+    P.event("E", 1.6, hi=True)
+    P.label("E", 1.6, "ballot 2", side=-1, dist=10, fill=RED)
+    for k in "ADBG":
+        P.msg("E", 1.6, k, 2.6 if k in "AD" else 4.3, hi=True, short=True)
+    for k in "BG":
+        P.event(k, 4.5, hi=True)
+    P.label("G", 4.5, "promise 2", side=1, dist=10, fill=RED)
+    P.event("A", 4.6)
+    P.label("A", 4.6, "begins ballot 1", side=1, dist=10)
+    for k in "BG":
+        P.refused("A", 4.6, k, 6.4)
+    P.label("G", 6.4, "ignored: promised 2", side=1, dist=14)
+    P.flow_close()
+    return F
+
+
+def parl_theorem():
+    F = Fig("ptp-theorem", 660, 620,
+            "Theorem 1 live, drawn in the round. Γ's ballot passes a decree with the quorum Α, Β, Γ. Later Ε, wanting a different decree, "
+            "begins a new ballot with Β, Γ and Δ. Β's reply carries his vote for the first decree, because Ε's majority must overlap the "
+            "first quorum. Condition B3 then forces Ε to propose that decree, and it passes again.")
+    P = Polar(F, 330, 305, 62, 20, PRIESTS, box=30)
+    T = 11.4
+    P.rings(12)
+    P.flow_open(T)
+    P.span(1.0, 6.0, OCHRE, .10)
+    P.span(6.6, 11.4, OLIVE, .10)
+    P.flow_close()
+    P.road(T)
+    P.node_boxes()
+    F.text(20, 30, "the first ballot (Γ's)", cls="d-key", anchor="start", fill=OCHRE)
+    F.text(20, 48, "the second ballot (Ε's)", cls="d-key", anchor="start", fill=OLIVE)
+    P.flow_open(T)
+    r1 = _ballot(P, "G", 1.2, "AB", "AB", gap=.85, success=False)
+    P.label("G", r1["t4"], "goats pass", side=-1, dist=12, fill=RED)
+    r2 = _ballot(P, "E", 6.9, "BGD", "BGD", carry="B", gap=.85, success=False)
+    P.label("B", r2["t1"], "carries the goat vote", side=-1, dist=10, fill=RED)
+    P.label("E", r2["t2"], "B3: must propose goats", side=1, dist=10, fill=RED)
+    P.label("E", r2["t4"], "goats pass again", side=1, dist=10, fill=RED)
+    P.flow_close()
+    return F
+
+
+def parl_ledger():
+    F = Fig("ptp-ledger", 660, 620,
+            "The new president's Monday morning, drawn in the round. Δ, newly elected, sends one message about every undecided number to the others. "
+            "The replies show Α holds decree 126, but nobody reachable knows anything of 125. Δ runs a ballot for 125 with the olive-day decree, and it passes. "
+            "Only then does he run the ballot for the citizen's decree, 127, which passes after everything already in the book.")
+    P = Polar(F, 330, 305, 62, 20, PRIESTS, box=30)
+    T = 11.4
+    P.rings(12)
+    P.flow_open(T)
+    P.span(1.0, 3.6, OCHRE, .10)
+    P.span(4.2, 7.4, OLIVE, .10)
+    P.span(8.0, 11.2, OCHRE, .10)
+    P.flow_close()
+    P.road(T)
+    P.node_boxes()
+    F.text(20, 30, "the morning's reconciliation", cls="d-key", anchor="start", fill=OCHRE)
+    F.text(20, 48, "decree 125: the olive day", cls="d-key", anchor="start", fill=OLIVE)
+    F.text(20, 66, "decree 127: the citizen's", cls="d-key", anchor="start", fill=OCHRE)
+    P.flow_open(T)
+    P.event("D", 1.0)
+    for k in "ABG":
+        P.msg("D", 1.0, k, 2.0, short=True)
+        P.event(k, 2.0)
+    for i, k in enumerate("ABG"):
+        P.msg(k, 2.0, "D", 3.1 + .15 * i, hi=(k == "A"), short=True)
+    P.label("A", 2.0, "holds 126", side=-1, dist=10, fill=RED)
+    P.event("D", 3.9, hi=True)
+    P.label("D", 3.9, "nobody knows 125", side=-1, dist=10, fill=RED)
+    r = _ballot(P, "D", 4.6, "ABG", "ABG", gap=.8, ask=False, success=False)
+    P.label("D", r["t4"], "125 passes", side=-1, dist=10, fill=RED)
+    r2 = _ballot(P, "D", 8.2, "ABG", "ABG", gap=.8, ask=False, success=False)
+    P.label("D", r2["t4"], "127 passes, in order", side=-1, dist=10, fill=RED)
+    P.flow_close()
+    return F
+
+
 FIGURES = {
     "books/ordering-without-clocks/index.html": [ordering_spacetime],
     "books/taking-stock-without-stopping/index.html": [stock_sash, stock_cuts],
     "books/many-copies-acting-as-one/index.html": [copies_overlap, copies_loop],
     "books/the-limits-of-agreement/index.html": [limits_fold, limits_silent, limits_defer],
+    "books/agreeing-when-messages-run-late/index.html": [late_turn, late_split],
+    "books/answering-while-cut-off/index.html": [cutoff_nights, cutoff_recovery],
+    "books/keeping-order-among-liars/index.html": [order_entry],
+    "books/telling-the-dead-from-the-slow/index.html": [slate_split],
+    "books/one-leader-at-a-time/index.html": [board_passes],
+    "books/the-part-time-parliament/index.html": [parl_steps, parl_wander, parl_duel, parl_theorem, parl_ledger],
 }
+
+# A figure not yet in its book takes the place of the nth flat <figure class="diagram">.
+LEGACY = {"awl-turn": 0, "awl-split": 1, "awco-nights": 0, "awco-recovery": 1, "kol-entry": 0, "tdts-split": 0, "olt-board": 0}
+SCRIPT = '<script src="../../assets/js/flow.js" defer></script>\n'
 
 
 def splice(html, fig):
     body = "\n".join("      " + l if l else "" for l in fig.svg().split("\n"))
     pat = re.compile(r"      <svg [^>]*>\s*<!-- polar:" + re.escape(fig.name) + r" -->.*?</svg>", re.S)
     html, n = pat.subn(lambda m: body, html, count=1)
+    if n == 0 and fig.name in LEGACY:
+        figs = [m.start() for m in re.finditer(r'<figure class="diagram">', html)]
+        start = figs[LEGACY[fig.name]]
+        old = re.compile(r"      <svg .*?</svg>", re.S).search(html, start)
+        html, n = html[:old.start()] + body + html[old.end():], 1
     if n != 1:
         raise SystemExit(f"no <svg> marked polar:{fig.name}")
     return html
@@ -627,6 +1178,8 @@ def main():
         html = p.read_text()
         for make in figs:
             html = splice(html, make())
+        if "flow.js" not in html:
+            html = html.replace("</body>", SCRIPT + "</body>", 1)
         p.write_text(html)
         print(rel, len(figs))
 
