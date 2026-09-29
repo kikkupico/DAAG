@@ -87,6 +87,7 @@
     if (getComputedStyle(host).position === "static") host.style.position = "relative";
     var btn = document.createElement("button");
     btn.type = "button"; btn.className = "flow-replay"; btn.textContent = "\u21BB Replay";
+    host.classList.add("flow-board");
     host.appendChild(btn);
 
     function tick(now) {

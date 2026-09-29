@@ -267,6 +267,7 @@ def ordering_spacetime():
     P.time_note(4)
     P.road(4.33)
     P.node_boxes()
+    P.flow_open(4.33)
     msgs = [(("1", 1), ("2", 2)), (("2", 1), ("3", 2)), (("3", 1), ("1", 3)), (("2", 3), ("3", 4))]
     for (a, ta), (b, tb) in msgs:
         P.msg(a, ta, b, tb)
@@ -276,6 +277,7 @@ def ordering_spacetime():
             hi = (h, t) in {("1", 2), ("3", 3)}
             P.event(h, t, hi)
             P.label(h, t, f"{s}{str(t).translate(SUBS)}", side=1 if (h, t) in recv else -1)
+    P.flow_close()
     F.text(300, 548, "p₂ and r₃ are unrelated: no path of messengers joins them in either direction")
     return F
 
@@ -293,8 +295,9 @@ def stock_sash():
     P = Polar(F, 330, 262, 58, 30, {"1": (180, "H1"), "2": (0, "H2")})
     P.rings(6)
     P.road(6.6)
-    P.band("2", 2.2, 4.1)
     P.node_boxes()
+    P.flow_open(6.6)
+    P.band("2", 2.2, 4.1)
     P.msg("1", 1, "2", 2.5)
     P.msg("1", 2, "2", 3.8)
     P.msg("1", 3.5, "2", 5.2, hi=True)
@@ -320,6 +323,7 @@ def stock_sash():
     F.text(x, y + 14, "the red sash:", cls="d-key", fill=RED)
     F.text(x, y + 32, "40 + 25 = 65", cls="d-key", fill=RED, extra=' font-weight="700"')
     F.text(x, y + 46, "= road holding", cls="d-key", fill=RED)
+    P.flow_close()
     F.text(330, 530, "the 18 jars dispatched after the sash belong to the island's future, not to this census")
     return F
 
@@ -336,9 +340,10 @@ def stock_cuts():
     F.text(165, 26, "SOUND (CONSISTENT)", cls="d-house")
     L = Polar(F, 165, 204, 26, 22, nodes)
     L.rings(5)
-    L.cut({"1": 3.6, "2": 2.7}, OLIVE)
     L.road(5.5)
     L.node_boxes()
+    L.flow_open(5.5)
+    L.cut({"1": 3.6, "2": 2.7}, OLIVE)
     L.msg("1", 1, "2", 2)
     L.msg("1", 3, "2", 4.5)
     L.msg("2", 3.3, "1", 5)
@@ -348,6 +353,7 @@ def stock_cuts():
     L.event("2", 2.7, hi=True)
     x, y = L.at(90, 3.15, -9)
     F.text(x, y, "the cut", cls="d-key d-halo", fill=OLIVE)
+    L.flow_close()
     F.text(165, 376, "every cart crosses outward")
     F.text(165, 392, "or does not cross at all")
     F.divider(330, 40, 360)
@@ -355,9 +361,10 @@ def stock_cuts():
     F.text(495, 26, "IMPOSSIBLE (INCONSISTENT)", cls="d-house", fill=RED)
     R = Polar(F, 495, 204, 26, 22, nodes)
     R.rings(5)
-    R.cut({"1": 5, "2": 2.4}, RED)
     R.road(5.5)
     R.node_boxes()
+    R.flow_open(5.5)
+    R.cut({"1": 5, "2": 2.4}, RED)
     R.msg("1", 1, "2", 1.6)
     R.msg("2", 3, "1", 4, hi=True)
     R.event("1", 1, rad=4)
@@ -366,6 +373,7 @@ def stock_cuts():
         R.event(k, t, hi=True)
     x, y = R.at(-90, 3.7, -10)
     F.text(x, y + 4, "the cut", cls="d-key d-halo", fill=RED)
+    R.flow_close()
     F.text(495, 376, "this arrow crosses inward: House 1 has", fill=RED)
     F.text(495, 392, "goods House 2 has not yet dispatched", fill=RED)
     return F
@@ -431,17 +439,22 @@ def copies_loop():
             "house's own order, they run House 1 grain, House 1 oil, House 2 oil, House 2 grain, House 1 grain: a loop.")
     P = Polar(F, 320, 290, 44, 34, {"1": (180, "H1"), "2": (0, "H2")})
     T = 6.3
+    P.rings(6)
+    P.flow_open(T)
     P.half(True, T, OCHRE)
     P.half(False, T, OLIVE)
-    P.rings(6)
+    P.flow_close()
     P.road(6.1)
     grain1, oil1 = (0.6, 1.4), (2.2, 4.2)      # House 1: grain, then oil (sent, confirmed)
     oil2, grain2 = (3.6, 4.1), (4.9, 5.8)      # House 2: oil at home, then grain
+    P.flow_open(T)
     P.bar("1", *grain1, OLIVE)
     P.bar("1", *oil1, OCHRE)
     P.bar("2", *oil2, OCHRE)
     P.bar("2", *grain2, OLIVE)
+    P.flow_close()
     P.node_boxes()
+    P.flow_open(T)
     # House 1's oil order travels to the board at House 2 and word of its entry comes back
     P.msg("1", 2.2, "2", 3.1, cw=True)
     P.msg("2", 3.1, "1", 4.2, cw=False, trim=6)
@@ -454,6 +467,7 @@ def copies_loop():
     P.badge("2", 3.85, "2", OCHRE, side=-1, word="oil")
     P.badge("2", 5.35, "1", OLIVE, side=1, word="grain")
     P.badge("1", 1.0, "2", OLIVE, side=-1, word="grain")
+    P.flow_close()
     F.text(320, 24, "OIL BOARD, AT HOUSE 2", cls="d-house", fill=OCHRE)
     F.text(320, 42, "House 1's oil arrives and is entered first: 1 House 1's oil, 2 House 2's oil")
     F.text(320, 548, "GRAIN BOARD, AT HOUSE 3 (NOT DRAWN)", cls="d-house", fill=OLIVE)

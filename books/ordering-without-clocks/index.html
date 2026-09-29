@@ -90,7 +90,7 @@
   </div>
   <figure class="diagram">
     <div class="board">
-      <svg viewBox="0 0 600 560" role="img" aria-label="Space-time diagram of three trading houses drawn in the round. H1, H2 and H3 each have a line running outward, the house at one moment after another; each ring outward is a later moment. Events are dots on each house's spoke; slips carried by messengers are arcs running round the circle and outward. Events p2 and r3 are unrelated.">
+      <svg class="flow" viewBox="0 0 600 560" role="img" aria-label="Space-time diagram of three trading houses drawn in the round. H1, H2 and H3 each have a line running outward, the house at one moment after another; each ring outward is a later moment. Events are dots on each house's spoke; slips carried by messengers are arcs running round the circle and outward. Events p2 and r3 are unrelated.">
         <!-- polar:owc-spacetime -->
         <defs>
           <marker id="owc-spacetime-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
@@ -122,6 +122,8 @@
         <rect class="d-node" x="285" y="205" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="300" y="220.5" text-anchor="middle" fill="#1c1512">H1</text>
         <rect class="d-node" x="342.2" y="304" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="357.2" y="319.5" text-anchor="middle" fill="#1c1512">H2</text>
         <rect class="d-node" x="227.8" y="304" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="242.8" y="319.5" text-anchor="middle" fill="#1c1512">H3</text>
+        <clipPath id="owc-spacetime-clip0"><circle class="tclip" cx="300" cy="282" r="267.9" data-r0="66" data-r1="247.9"/></clipPath>
+        <g class="tflow" clip-path="url(#owc-spacetime-clip0)">
         <path class="d-msg" marker-end="url(#owc-spacetime-b)" d="M300,174 L305.7,173.1 L311.5,172.5 L317.4,172.2 L323.3,172.3 L329.3,172.6 L335.3,173.3 L341.3,174.3 L347.3,175.7 L353.3,177.4 L359.2,179.4 L365.1,181.7 L370.9,184.4 L376.6,187.5 L382.1,190.8 L387.5,194.5 L392.7,198.5 L397.8,202.8 L402.7,207.4 L407.3,212.3 L411.7,217.5 L415.9,223 L419.8,228.7 L423.4,234.6 L426.7,240.8 L429.7,247.3 L432.3,253.9 L434.7,260.7 L436.6,267.6 L438.3,274.8 L439.5,282 L440.4,289.4 L440.8,296.8 L440.9,304.3 L440.6,311.9 L439.8,319.5 L438.7,327.1 L437.1,334.6 L435.1,342.2 L432.7,349.6"/>
         <path class="d-msg" marker-end="url(#owc-spacetime-b)" d="M393.5,336 L391.5,341.4 L389.1,346.7 L386.4,351.9 L383.4,357.1 L380.1,362.1 L376.5,366.9 L372.6,371.6 L368.4,376.2 L364,380.5 L359.2,384.6 L354.3,388.5 L349.1,392.2 L343.6,395.6 L337.9,398.7 L332,401.5 L325.9,404.1 L319.7,406.3 L313.3,408.2 L306.7,409.8 L300,411 L293.2,411.9 L286.3,412.4 L279.3,412.5 L272.3,412.3 L265.3,411.7 L258.2,410.7 L251.1,409.3 L244.1,407.5 L237.1,405.4 L230.3,402.8 L223.5,399.9 L216.8,396.6 L210.2,392.9 L203.8,388.8 L197.6,384.4 L191.6,379.6 L185.9,374.4 L180.3,368.9 L175.1,363.1"/>
         <path class="d-msg" marker-end="url(#owc-spacetime-b)" d="M206.5,336 L201.9,332 L197.5,327.6 L193.3,323 L189.3,318 L185.5,312.7 L182,307.1 L178.8,301.2 L175.9,295 L173.3,288.6 L171,282 L169.1,275.1 L167.5,268.1 L166.4,260.8 L165.6,253.4 L165.3,245.9 L165.3,238.2 L165.8,230.5 L166.8,222.7 L168.2,214.9 L170.1,207 L172.4,199.2 L175.2,191.4 L178.5,183.6 L182.3,176 L186.5,168.5 L191.2,161.2 L196.4,154 L202,147.1 L208,140.3 L214.5,133.9 L221.4,127.8 L228.7,121.9 L236.5,116.5 L244.6,111.4 L253,106.7 L261.8,102.4 L271,98.6 L280.4,95.2 L290.1,92.4"/>
@@ -150,6 +152,7 @@
         <text class="d-lbl d-halo" x="140.2" y="393.3" text-anchor="start">r₃</text>
         <circle class="d-ev" cx="97.4" cy="399" r="5"/>
         <text class="d-lbl d-halo" x="90.9" y="391.7" text-anchor="end">r₄</text>
+        </g>
         <text class="d-note" x="300" y="548" text-anchor="middle">p₂ and r₃ are unrelated: no path of messengers joins them in either direction</text>
       </svg>
     </div>
@@ -462,5 +465,6 @@
   <span class="outside"><span class="tag">Outside this series</span> Ricart &amp; Agrawala 1981, <i>mutual exclusion</i> · Birman &amp; Joseph 1987, <i>causal broadcast</i> · Schneider 1990, <i>the state machine approach</i> · Terry et al. 1995, <i>Bayou</i> · DeCandia et al. 2007, <i>Dynamo</i> · Lloyd et al. 2011, <i>COPS</i></span></p>
 
 </div>
+<script src="../../assets/js/flow.js" defer></script>
 </body>
 </html>
