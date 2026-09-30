@@ -261,14 +261,14 @@ A tiny natural clearing among the trees holds a single small one-man tent of coa
 Completely hidden from view of any other camp, concealed by the mountain spurs. Austere and solitary.
 ```
 
-#### Feature 6: The Bandit Crown, the Chief's Hollow & the Three Posts
+#### Feature 6: The Bandit Crown, the Chief's Hall & the Three Posts
 ```text
 Detailed 3D isometric architectural asset of the Summit Crown of Mount Phyle, Hellenistic Ancient Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated summit redoubt, zero people.
-Situated on the flattened limestone peak, high above the sea.
-An ancient, ruined cyclopean polygonal dry-stone circuit wall with weathered, jagged top edges, featuring two distinct breaches: a narrow rock slot on the north side and a wider timber-framed opening on the south.
-The crown inside the wall is not a court but a jumble of pale limestone crags and clefts. On the highest point is the chief's hollow: a rock shelter holding a few iron-bound strongboxes and one bronze water-jar (klepsydra) on a stone.
-Below the rim, three small lookout posts are tucked into three separate crags, each facing a different approach (north slot, south gap, and the eastern cliffs), each with a low dry-stone breastwork, a bird perch and its own small bronze water-jar. Rock hides every post from the other two and from the peak.
+Situated on the levelled limestone summit, high above the sea, like the citadel of Tiryns.
+An ancient, ruined cyclopean polygonal dry-stone ring wall, thick enough to hold casemate rooms, dropping as a high revetment down the slope outside, with weathered, jagged top edges and solid towers dividing it into quarters, featuring two distinct breaches: a narrow slot on the north side and a wider timber-framed opening on the south. One quarter of the wall has fallen.
+Inside the wall, a paved court, and at its centre the chief's hall, a roofless Mycenaean megaron: a porch with two columns, a hall with a round hearth, four broken column stumps, a stone chair, and a few iron-bound strongboxes on a stone shelf against the back wall.
+In the thickness of each of the three standing quarters, a corbel-roofed cell with a low door onto the court, a stair up the inner face to a flat wall-walk with a parapet, a narrow slit looking out, a small hole at floor level for rats and its own small bronze water-jar. Stone gutters run across the court from the hall to each cell. Towers hide every post from the other two.
 NO council ring, NO circle of seats, NO roofs, NO banners, NO fire. Windswept scrub, wild grasses and weathered pale limestone.
 ```
 

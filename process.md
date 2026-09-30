@@ -52,7 +52,7 @@ These are correctness constraints, not preferences.
    ordinary Greek name. **On Arche the houses, the mercenaries and the bandits have no names or
    emblems; they go by number**: Houses 1–3, the mercenaries by their tents'
    numbers, Number 1 to Number 4, and the bandits Number 1 to Number 4, Number 1 being the chief
-   on the peak. Every book at a place keeps that place's numbered cast. Ties between houses are
+   in the hall. Every book at a place keeps that place's numbered cast. Ties between houses are
    broken by number. **Nodes are alike.** No house, tent or post has a direction, landmark or
    character of its own; one is set apart only when the paper gives it a role, as the chief is a
    leader. An example may give one node a part to play (the oil
@@ -303,10 +303,10 @@ left), and bandits met elsewhere need not be of their band; no one outside can t
 
 **Mount Phyle is built.** Its geometry, cast and architecture are fixed by *The Limits of
 Agreement* (the foot), *Agreeing Among Liars* (the crown) and `buildings.md`. Nothing may contradict them: four camps that cannot see each other,
-ravens only, no fire or signal below the crown, and one single synchronous night on the crown: the
+ravens below and rats on the crown, no fire or signal below the crown, and one single synchronous night on the crown: the
 sandglasses there are turned together once, before the posts are first manned, and since no man
 may leave his post they are never turned together again. The siege itself may last any number of
-days. On later nights a wind can blow over the whole hill and pin the ravens down for as long as it
+days. On later nights a wind can blow over the whole hill and keep the camps' ravens and the crown's rats from moving for as long as it
 blows; it always drops in the end. The camps have no common moment but one: on the windy nights of
 *Agreeing When Messages Run Late* each man turned his glass as the last light left the crown, which
-every tent sees and no crag post does.
+every tent sees and no post on the crown does.
