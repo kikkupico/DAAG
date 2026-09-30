@@ -268,54 +268,69 @@
 
   <figure class="diagram">
     <div class="board">
-      <svg viewBox="0 0 660 360" role="img" aria-label="One road segment between House 1 and House 2. House 1 records its storehouse and dispatches a red sash messenger. Cargo already on the road arrives at House 2 before the sash and is recorded as the road's holding. Cargo dispatched after the sash arrives later and is not included.">
+      <svg class="flow" viewBox="0 0 660 540" role="img" aria-label="One road track from House 1 to House 2, drawn in the round: H1 on the left, H2 on the right, later moments further out, slips as arcs over the top. House 1 records its storehouse and dispatches a red sash messenger. Cargo already on the road arrives at House 2 before the sash and is recorded as the road's holding. Cargo dispatched after the sash arrives later and is not included.">
+        <!-- polar:tsws-sash -->
         <defs>
-          <marker id="ahg" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+          <marker id="tsws-sash-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
           </marker>
-          <marker id="ahr" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+          <marker id="tsws-sash-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
           </marker>
+          <marker id="tsws-sash-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
+          </marker>
+          <marker id="tsws-sash-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
+          </marker>
+          <marker id="tsws-sash-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
+          </marker>
         </defs>
-
-        <text class="d-house" x="130" y="30" text-anchor="middle">HOUSE 1</text>
-        <text class="d-house" x="530" y="30" text-anchor="middle">HOUSE 2</text>
-        <line class="d-lifeline" x1="130" y1="46" x2="130" y2="330"/>
-        <line class="d-lifeline" x1="530" y1="46" x2="530" y2="330"/>
-
-        <!-- cargo already on the road -->
-        <path class="d-msg" marker-end="url(#ahg)" d="M130,80 L530,150"/>
-        <text class="d-num" x="300" y="104" text-anchor="middle">40 jars</text>
-        <path class="d-msg" marker-end="url(#ahg)" d="M130,120 L530,205"/>
-        <text class="d-num" x="300" y="176" text-anchor="middle">25 jars</text>
-
-        <!-- the recording moment -->
-        <circle class="d-ev-hi" cx="130" cy="160" r="6"/>
-        <text class="d-lbl" x="116" y="152" text-anchor="end">House 1 records</text>
-        <text class="d-lbl" x="116" y="168" text-anchor="end">storehouse</text>
-
-        <!-- the red sash marker -->
-        <path class="d-msg-hi" marker-end="url(#ahr)" d="M130,178 L530,262"/>
-        <text class="d-note" x="316" y="236" text-anchor="middle" fill="#bf4a26">the red sash</text>
-
-        <!-- cargo sent after -->
-        <path class="d-msg" marker-end="url(#ahg)" d="M130,230 L530,312"/>
-        <text class="d-num" x="300" y="290" text-anchor="middle">18 jars</text>
-
-        <circle class="d-ev-hi" cx="530" cy="262" r="6"/>
-        <text class="d-lbl" x="546" y="258">House 2 closes</text>
-        <text class="d-lbl" x="546" y="274">the road slate</text>
-
-        <rect class="d-band" x="536" y="140" width="112" height="76" rx="4"/>
-        <text class="d-key" x="546" y="158">arrived before</text>
-        <text class="d-key" x="546" y="172">the red sash:</text>
-        <text class="d-key" x="546" y="192" font-weight="700">40 + 25 = 65</text>
-        <text class="d-key" x="546" y="208">= road holding</text>
-
-        <text class="d-note" x="330" y="350" text-anchor="middle">the 18 jars dispatched after the sash belong to the island's future, not to this census</text>
+        <circle cx="330" cy="262" r="88" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="262" r="118" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="262" r="148" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="262" r="178" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="262" r="208" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="330" cy="262" r="238" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <line class="d-lifeline" x1="272" y1="262" x2="74" y2="262"/>
+        <line class="d-lifeline" x1="388" y1="262" x2="586" y2="262"/>
+        <rect class="d-node" x="257" y="251" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="272" y="266.5" text-anchor="middle" fill="#1c1512">H1</text>
+        <rect class="d-node" x="373" y="251" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="388" y="266.5" text-anchor="middle" fill="#1c1512">H2</text>
+        <clipPath id="tsws-sash-clip0"><circle class="tclip" cx="330" cy="262" r="276" data-r0="58" data-r1="256"/></clipPath>
+        <g class="tflow" clip-path="url(#tsws-sash-clip0)">
+        <line x1="454" y1="262" x2="511" y2="262" stroke="#bf4a26" stroke-opacity=".18" stroke-width="24" stroke-linecap="round"/>
+        <path class="d-msg" marker-end="url(#tsws-sash-b)" d="M242,262 L241.4,257.4 L241,252.6 L240.9,247.9 L241,243.1 L241.4,238.3 L242,233.4 L242.9,228.6 L244.1,223.8 L245.6,219 L247.3,214.2 L249.3,209.6 L251.5,205 L254,200.5 L256.8,196.1 L259.8,191.8 L263.1,187.7 L266.6,183.7 L270.3,179.9 L274.3,176.2 L278.5,172.8 L282.9,169.6 L287.5,166.5 L292.3,163.7 L297.2,161.2 L302.4,158.9 L307.6,156.8 L313.1,155.1 L318.6,153.6 L324.3,152.4 L330,151.5 L335.8,150.9 L341.7,150.6 L347.6,150.6 L353.6,151 L359.6,151.6 L365.5,152.6 L371.5,153.9 L377.4,155.6 L383.2,157.5 L389,159.8 L394.7,162.4 L400.2,165.3 L405.7,168.5 L411,172.1 L416.1,175.9 L421,180 L425.8,184.4 L430.3,189.1 L434.6,194.1 L438.7,199.2 L442.5,204.7 L446,210.3 L449.3,216.2 L452.2,222.3 L454.8,228.5 L457.2,235 L459.1,241.5 L460.8,248.3"/>
+        <path class="d-msg" marker-end="url(#tsws-sash-b)" d="M212,262 L211.3,255.8 L210.9,249.5 L210.8,243.1 L211.1,236.7 L211.7,230.3 L212.6,223.9 L214,217.5 L215.6,211.1 L217.6,204.8 L220,198.5 L222.7,192.3 L225.8,186.3 L229.2,180.4 L232.9,174.6 L237,169 L241.4,163.6 L246.1,158.4 L251.1,153.4 L256.4,148.7 L262,144.2 L267.8,140 L274,136.1 L280.3,132.5 L286.9,129.2 L293.6,126.3 L300.6,123.7 L307.7,121.5 L315,119.6 L322.5,118.1 L330,117 L337.6,116.3 L345.3,116 L353.1,116.1 L360.9,116.6 L368.7,117.6 L376.5,119 L384.2,120.7 L391.9,123 L399.5,125.6 L407,128.6 L414.4,132.1 L421.6,136 L428.6,140.2 L435.5,144.9 L442.1,149.9 L448.5,155.3 L454.6,161.1 L460.4,167.2 L465.9,173.7 L471.2,180.5 L476,187.6 L480.6,195 L484.7,202.6 L488.4,210.5 L491.8,218.6 L494.7,227 L497.2,235.5 L499.3,244.2 L500.9,253"/>
+        <path class="d-msg-hi" marker-end="url(#tsws-sash-r)" d="M167,262 L166.4,253.4 L166.2,244.8 L166.5,236.1 L167.2,227.4 L168.4,218.7 L170.1,210.1 L172.3,201.5 L174.9,192.9 L177.9,184.5 L181.5,176.2 L185.5,168.1 L189.9,160.2 L194.7,152.5 L200,145 L205.7,137.7 L211.8,130.8 L218.3,124.1 L225.2,117.8 L232.4,111.8 L240,106.1 L247.9,100.9 L256.1,96 L264.6,91.6 L273.3,87.6 L282.3,84 L291.5,80.9 L300.9,78.3 L310.5,76.2 L320.2,74.6 L330,73.5 L339.9,72.9 L349.9,72.8 L359.9,73.3 L369.9,74.3 L379.9,75.8 L389.8,77.9 L399.7,80.5 L409.4,83.6 L419.1,87.2 L428.5,91.4 L437.8,96.1 L446.8,101.2 L455.6,106.9 L464.1,113.1 L472.3,119.7 L480.2,126.8 L487.7,134.3 L494.9,142.2 L501.6,150.5 L508,159.2 L513.9,168.3 L519.3,177.7 L524.2,187.4 L528.7,197.4 L532.6,207.7 L536,218.2 L538.8,228.9 L541.1,239.8 L542.9,250.8"/>
+        <path class="d-msg" marker-end="url(#tsws-sash-b)" d="M137,262 L136.4,251.9 L136.4,241.6 L136.9,231.4 L137.9,221.2 L139.5,210.9 L141.6,200.8 L144.3,190.7 L147.5,180.7 L151.2,170.9 L155.5,161.2 L160.3,151.8 L165.6,142.6 L171.4,133.6 L177.7,124.9 L184.5,116.5 L191.8,108.5 L199.4,100.8 L207.6,93.5 L216.1,86.6 L225,80.1 L234.3,74.1 L243.9,68.6 L253.8,63.6 L264.1,59 L274.5,55.1 L285.3,51.6 L296.2,48.7 L307.3,46.4 L318.6,44.6 L330,43.5 L341.5,43 L353,43 L364.6,43.7 L376.1,44.9 L387.7,46.8 L399.1,49.3 L410.4,52.5 L421.6,56.2 L432.7,60.5 L443.5,65.4 L454.1,70.9 L464.4,77 L474.5,83.6 L484.2,90.8 L493.5,98.5 L502.5,106.7 L511,115.4 L519.1,124.6 L526.8,134.2 L533.9,144.2 L540.6,154.7 L546.7,165.5 L552.2,176.7 L557.2,188.2 L561.6,199.9 L565.3,212 L568.5,224.2 L571,236.7 L572.8,249.3"/>
+        <circle class="d-ev" cx="242" cy="262" r="4.5"/>
+        <circle class="d-ev" cx="212" cy="262" r="4.5"/>
+        <circle class="d-ev" cx="167" cy="262" r="4.5"/>
+        <circle class="d-ev" cx="137" cy="262" r="4.5"/>
+        <circle class="d-ev-hi" cx="182" cy="262" r="6"/>
+        <circle class="d-ev" cx="463" cy="262" r="4.5"/>
+        <circle class="d-ev" cx="502" cy="262" r="4.5"/>
+        <circle class="d-ev" cx="574" cy="262" r="4.5"/>
+        <circle class="d-ev-hi" cx="544" cy="262" r="6"/>
+        <text class="d-num d-halo" x="330" y="159.5" text-anchor="middle">40 jars</text>
+        <text class="d-num d-halo" x="330" y="125" text-anchor="middle">25 jars</text>
+        <text class="d-note d-halo" x="330" y="81.5" text-anchor="middle" style="fill:#bf4a26">the red sash</text>
+        <text class="d-num d-halo" x="330" y="51.5" text-anchor="middle">18 jars</text>
+        <text class="d-lbl d-halo" x="182" y="288" text-anchor="middle" style="fill:#bf4a26">House 1 records</text>
+        <text class="d-lbl d-halo" x="182" y="302" text-anchor="middle" style="fill:#bf4a26">its storehouse</text>
+        <text class="d-lbl d-halo" x="544" y="288" text-anchor="middle">House 2 closes</text>
+        <text class="d-lbl d-halo" x="544" y="302" text-anchor="middle">the road slate</text>
+        <text class="d-key" x="482.5" y="320" text-anchor="middle" style="fill:#bf4a26">arrived before</text>
+        <text class="d-key" x="482.5" y="334" text-anchor="middle" style="fill:#bf4a26">the red sash:</text>
+        <text class="d-key" x="482.5" y="352" text-anchor="middle" style="fill:#bf4a26" font-weight="700">40 + 25 = 65</text>
+        <text class="d-key" x="482.5" y="366" text-anchor="middle" style="fill:#bf4a26">= road holding</text>
+        </g>
+        <text class="d-note" x="330" y="530" text-anchor="middle">the 18 jars dispatched after the sash belong to the island's future, not to this census</text>
       </svg>
     </div>
-    <figcaption><b>One road segment, counted without pausing traffic.</b> House 1 records its
+    <figcaption><b>One road segment, counted without pausing traffic.</b> Later moments lie
+    further out, and carts from H1 to H2 run over the top. House 1 records its
     storehouse, then dispatches the red sash messenger. Everything House 2 receives along that track
     <b>before</b> the sash arrived was on the road at the moment of recording, and is set down as
     the road's holding. Any cart arriving after the sash belongs to the future.</figcaption>
@@ -349,64 +364,87 @@
 
   <figure class="diagram">
     <div class="board">
-      <svg viewBox="0 0 660 380" role="img" aria-label="Two panels comparing cuts. Left panel: Sound cut, where every cart arrow crosses downward or not at all. Right panel: Impossible cut, where an arrow crosses upward, representing goods received before they were loaded.">
+      <svg class="flow" viewBox="0 0 660 410" role="img" aria-label="Two panels comparing cuts, each drawn in the round with H1 on the left and H2 on the right, later moments further out, carts from H1 to H2 as arcs over the top and from H2 to H1 as arcs underneath. The cut is the shaded area inside a dashed loop: what each house recorded lies inside it. Left panel: a sound cut, where every cart arc crosses the loop outward or not at all. Right panel: an impossible cut, where an arc crosses inward, representing goods received before they were loaded.">
+        <!-- polar:tsws-cuts -->
         <defs>
-          <marker id="ahc" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+          <marker id="tsws-cuts-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
           </marker>
-          <marker id="ahx" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+          <marker id="tsws-cuts-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
             <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
           </marker>
+          <marker id="tsws-cuts-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
+          </marker>
+          <marker id="tsws-cuts-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
+          </marker>
+          <marker id="tsws-cuts-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
+            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
+          </marker>
         </defs>
-
-        <!-- ============ left panel: sound ============ -->
-        <text class="d-house" x="150" y="28" text-anchor="middle">SOUND (CONSISTENT)</text>
-        <text class="d-house" x="70" y="52" text-anchor="middle" font-size="11">HOUSE 1</text>
-        <text class="d-house" x="230" y="52" text-anchor="middle" font-size="11">HOUSE 2</text>
-        <line class="d-lifeline" x1="70" y1="62" x2="70" y2="330"/>
-        <line class="d-lifeline" x1="230" y1="62" x2="230" y2="330"/>
-
-        <path class="d-faint" d="M34,212 L70,212 L230,170 L266,170" stroke="#5f6e28" stroke-width="2" stroke-dasharray="7 4"/>
-        <text class="d-key" x="150" y="196" text-anchor="middle" fill="#5f6e28">the cut</text>
-
-        <path class="d-msg" marker-end="url(#ahc)" d="M70,100 L230,140"/>
-        <path class="d-msg" marker-end="url(#ahc)" d="M70,180 L230,250"/>
-        <path class="d-msg" marker-end="url(#ahc)" d="M230,200 L70,280"/>
-
-        <circle class="d-ev" cx="70" cy="100" r="4"/><circle class="d-ev" cx="230" cy="140" r="4"/>
-        <circle class="d-ev" cx="70" cy="180" r="4"/><circle class="d-ev" cx="230" cy="250" r="4"/>
-        <circle class="d-ev" cx="230" cy="200" r="4"/><circle class="d-ev" cx="70" cy="280" r="4"/>
-        <circle class="d-ev-hi" cx="70" cy="212" r="5"/><circle class="d-ev-hi" cx="230" cy="170" r="5"/>
-
-        <text class="d-note" x="150" y="352" text-anchor="middle">every cart crosses downward</text>
-        <text class="d-note" x="150" y="368" text-anchor="middle">or does not cross at all</text>
-
-        <!-- divider -->
-        <line x1="330" y1="40" x2="330" y2="340" stroke="#b9a77e" stroke-width="1.5"/>
-
-        <!-- ============ right panel: impossible ============ -->
-        <text class="d-house" x="510" y="28" text-anchor="middle" fill="#bf4a26">IMPOSSIBLE (INCONSISTENT)</text>
-        <text class="d-house" x="430" y="52" text-anchor="middle" font-size="11">HOUSE 1</text>
-        <text class="d-house" x="590" y="52" text-anchor="middle" font-size="11">HOUSE 2</text>
-        <line class="d-lifeline" x1="430" y1="62" x2="430" y2="330"/>
-        <line class="d-lifeline" x1="590" y1="62" x2="590" y2="330"/>
-
-        <path class="d-faint" d="M394,290 L430,290 L590,150 L626,150" stroke="#bf4a26" stroke-width="2" stroke-dasharray="7 4"/>
-        <text class="d-key" x="510" y="206" text-anchor="middle" fill="#bf4a26">the cut</text>
-
-        <path class="d-msg" marker-end="url(#ahc)" d="M430,100 L590,128"/>
-        <path class="d-msg-hi" marker-end="url(#ahx)" d="M590,182 L430,252"/>
-
-        <circle class="d-ev" cx="430" cy="100" r="4"/><circle class="d-ev" cx="590" cy="128" r="4"/>
-        <circle class="d-ev-hi" cx="590" cy="182" r="5"/><circle class="d-ev-hi" cx="430" cy="252" r="5"/>
-        <circle class="d-ev-hi" cx="430" cy="290" r="5"/><circle class="d-ev-hi" cx="590" cy="150" r="5"/>
-
-        <text class="d-note" x="510" y="352" text-anchor="middle" fill="#bf4a26">this arrow crosses upward: House 1 has</text>
-        <text class="d-note" x="510" y="368" text-anchor="middle" fill="#bf4a26">goods House 2 has not yet dispatched</text>
+        <text class="d-house" x="165" y="26" text-anchor="middle">SOUND (CONSISTENT)</text>
+        <circle cx="165" cy="204" r="48" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="165" cy="204" r="70" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="165" cy="204" r="92" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="165" cy="204" r="114" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="165" cy="204" r="136" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <line class="d-lifeline" x1="139" y1="204" x2="18" y2="204"/>
+        <line class="d-lifeline" x1="191" y1="204" x2="312" y2="204"/>
+        <rect class="d-node" x="124" y="193" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="139" y="208.5" text-anchor="middle" fill="#1c1512">H1</text>
+        <rect class="d-node" x="176" y="193" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="191" y="208.5" text-anchor="middle" fill="#1c1512">H2</text>
+        <clipPath id="tsws-cuts-clip0"><circle class="tclip" cx="165" cy="204" r="167" data-r0="26" data-r1="147"/></clipPath>
+        <g class="tflow" clip-path="url(#tsws-cuts-clip0)">
+        <path d="M250.4,204 L250.6,208.5 L250.6,213 L250.3,217.5 L249.8,222 L249.1,226.5 L248.1,231 L246.9,235.4 L245.4,239.8 L243.7,244.1 L241.8,248.3 L239.7,252.5 L237.3,256.5 L234.7,260.4 L231.9,264.2 L228.9,267.9 L225.7,271.4 L222.3,274.7 L218.7,277.9 L214.9,280.9 L211,283.7 L206.9,286.3 L202.7,288.6 L198.3,290.8 L193.8,292.8 L189.2,294.5 L184.5,295.9 L179.8,297.1 L174.9,298.1 L170,298.8 L165,299.3 L160,299.5 L155,299.4 L149.9,299.1 L144.9,298.5 L139.9,297.6 L134.9,296.5 L130,295.1 L125.2,293.5 L120.4,291.6 L115.7,289.4 L111.1,287 L106.7,284.3 L102.3,281.4 L98.1,278.3 L94.1,274.9 L90.3,271.3 L86.6,267.5 L83.1,263.5 L79.8,259.3 L76.8,254.9 L73.9,250.4 L71.3,245.7 L68.9,240.9 L66.8,235.9 L65,230.8 L63.4,225.6 L62.1,220.3 L61,214.9 L60.3,209.5 L59.8,204 L60.3,198.5 L61,193.1 L62.1,187.7 L63.4,182.4 L65,177.2 L66.8,172.1 L68.9,167.1 L71.3,162.3 L73.9,157.6 L76.8,153 L79.8,148.7 L83.1,144.5 L86.6,140.5 L90.3,136.7 L94.1,133.1 L98.1,129.7 L102.3,126.6 L106.7,123.7 L111.1,121 L115.7,118.6 L120.4,116.4 L125.2,114.5 L130,112.9 L134.9,111.5 L139.9,110.4 L144.9,109.5 L149.9,108.9 L155,108.6 L160,108.5 L165,108.7 L170,109.2 L174.9,109.9 L179.8,110.9 L184.5,112.1 L189.2,113.5 L193.8,115.2 L198.3,117.2 L202.7,119.4 L206.9,121.7 L211,124.3 L214.9,127.1 L218.7,130.1 L222.3,133.3 L225.7,136.6 L228.9,140.1 L231.9,143.8 L234.7,147.6 L237.3,151.5 L239.7,155.5 L241.8,159.6 L243.7,163.9 L245.4,168.2 L246.9,172.6 L248.1,177 L249.1,181.5 L249.8,186 L250.3,190.5 L250.6,195 L250.6,199.5 Z M191,204 A26,26 0 1 0 139,204 A26,26 0 1 0 191,204 Z" fill-rule="evenodd" style="fill:#5f6e28; fill-opacity:.13; stroke:none"/>
+        <path d="M250.4,204 L250.6,208.5 L250.6,213 L250.3,217.5 L249.8,222 L249.1,226.5 L248.1,231 L246.9,235.4 L245.4,239.8 L243.7,244.1 L241.8,248.3 L239.7,252.5 L237.3,256.5 L234.7,260.4 L231.9,264.2 L228.9,267.9 L225.7,271.4 L222.3,274.7 L218.7,277.9 L214.9,280.9 L211,283.7 L206.9,286.3 L202.7,288.6 L198.3,290.8 L193.8,292.8 L189.2,294.5 L184.5,295.9 L179.8,297.1 L174.9,298.1 L170,298.8 L165,299.3 L160,299.5 L155,299.4 L149.9,299.1 L144.9,298.5 L139.9,297.6 L134.9,296.5 L130,295.1 L125.2,293.5 L120.4,291.6 L115.7,289.4 L111.1,287 L106.7,284.3 L102.3,281.4 L98.1,278.3 L94.1,274.9 L90.3,271.3 L86.6,267.5 L83.1,263.5 L79.8,259.3 L76.8,254.9 L73.9,250.4 L71.3,245.7 L68.9,240.9 L66.8,235.9 L65,230.8 L63.4,225.6 L62.1,220.3 L61,214.9 L60.3,209.5 L59.8,204 L60.3,198.5 L61,193.1 L62.1,187.7 L63.4,182.4 L65,177.2 L66.8,172.1 L68.9,167.1 L71.3,162.3 L73.9,157.6 L76.8,153 L79.8,148.7 L83.1,144.5 L86.6,140.5 L90.3,136.7 L94.1,133.1 L98.1,129.7 L102.3,126.6 L106.7,123.7 L111.1,121 L115.7,118.6 L120.4,116.4 L125.2,114.5 L130,112.9 L134.9,111.5 L139.9,110.4 L144.9,109.5 L149.9,108.9 L155,108.6 L160,108.5 L165,108.7 L170,109.2 L174.9,109.9 L179.8,110.9 L184.5,112.1 L189.2,113.5 L193.8,115.2 L198.3,117.2 L202.7,119.4 L206.9,121.7 L211,124.3 L214.9,127.1 L218.7,130.1 L222.3,133.3 L225.7,136.6 L228.9,140.1 L231.9,143.8 L234.7,147.6 L237.3,151.5 L239.7,155.5 L241.8,159.6 L243.7,163.9 L245.4,168.2 L246.9,172.6 L248.1,177 L249.1,181.5 L249.8,186 L250.3,190.5 L250.6,195 L250.6,199.5 Z" fill="none" stroke="#5f6e28" stroke-width="2" stroke-dasharray="7 4"/>
+        <path class="d-msg" marker-end="url(#tsws-cuts-b)" d="M117,204 L116.7,201.5 L116.5,198.9 L116.5,196.3 L116.6,193.7 L116.9,191.1 L117.3,188.5 L117.8,185.9 L118.5,183.3 L119.3,180.7 L120.3,178.2 L121.4,175.7 L122.6,173.2 L124,170.8 L125.5,168.4 L127.2,166.2 L129,164 L130.9,161.9 L132.9,159.8 L135.1,157.9 L137.3,156.1 L139.7,154.4 L142.2,152.8 L144.8,151.3 L147.4,150 L150.2,148.8 L153,147.7 L155.9,146.8 L158.9,146.1 L161.9,145.4 L165,145 L168.1,144.7 L171.2,144.6 L174.4,144.6 L177.6,144.9 L180.7,145.2 L183.9,145.8 L187.1,146.5 L190.2,147.4 L193.3,148.5 L196.3,149.7 L199.3,151.1 L202.3,152.7 L205.1,154.4 L207.9,156.3 L210.6,158.4 L213.2,160.6 L215.7,162.9 L218.1,165.4 L220.3,168.1 L222.4,170.8 L224.4,173.7 L226.3,176.7 L228,179.8 L229.5,183 L230.8,186.4 L232,189.8 L233.1,193.2 L233.9,196.8"/>
+        <path class="d-msg" marker-end="url(#tsws-cuts-b)" d="M73,204 L72.6,199.2 L72.4,194.3 L72.5,189.3 L72.9,184.4 L73.5,179.5 L74.4,174.6 L75.5,169.7 L76.9,164.8 L78.6,160 L80.6,155.2 L82.8,150.6 L85.2,146 L87.9,141.6 L90.9,137.3 L94.1,133.1 L97.6,129.1 L101.2,125.2 L105.1,121.6 L109.2,118.1 L113.5,114.8 L118,111.7 L122.7,108.9 L127.5,106.3 L132.5,103.9 L137.6,101.9 L142.9,100 L148.3,98.5 L153.8,97.2 L159.4,96.2 L165,95.5 L170.7,95.1 L176.5,95 L182.2,95.2 L188,95.7 L193.8,96.5 L199.5,97.7 L205.3,99.1 L210.9,100.9 L216.5,102.9 L222,105.3 L227.4,107.9 L232.7,110.9 L237.8,114.1 L242.8,117.6 L247.6,121.4 L252.2,125.5 L256.6,129.8 L260.8,134.4 L264.8,139.2 L268.5,144.2 L272,149.5 L275.2,154.9 L278.1,160.6 L280.7,166.4 L283.1,172.4 L285.1,178.5 L286.8,184.7 L288.2,191"/>
+        <path class="d-msg" marker-end="url(#tsws-cuts-b)" d="M263.6,204 L264.1,209.2 L264.3,214.4 L264.2,219.7 L263.9,225 L263.3,230.3 L262.3,235.6 L261.1,240.9 L259.6,246.1 L257.9,251.3 L255.8,256.4 L253.4,261.4 L250.8,266.4 L247.9,271.2 L244.8,275.8 L241.3,280.3 L237.6,284.7 L233.7,288.9 L229.6,292.8 L225.2,296.6 L220.5,300.2 L215.7,303.5 L210.7,306.6 L205.5,309.4 L200.1,312 L194.6,314.3 L188.9,316.3 L183.1,318 L177.1,319.4 L171.1,320.5 L165,321.3 L158.8,321.8 L152.6,321.9 L146.4,321.7 L140.1,321.2 L133.8,320.3 L127.6,319.1 L121.4,317.6 L115.3,315.7 L109.2,313.5 L103.2,311 L97.4,308.1 L91.7,304.9 L86.1,301.5 L80.7,297.7 L75.4,293.6 L70.4,289.2 L65.6,284.5 L61,279.5 L56.7,274.3 L52.6,268.9 L48.8,263.2 L45.3,257.3 L42.1,251.2 L39.2,244.9 L36.6,238.4 L34.4,231.8 L32.5,225 L31,218.1 L29.8,211.1"/>
+        <circle class="d-ev" cx="117" cy="204" r="4"/>
+        <circle class="d-ev" cx="73" cy="204" r="4"/>
+        <circle class="d-ev" cx="29" cy="204" r="4"/>
+        <circle class="d-ev" cx="235" cy="204" r="4"/>
+        <circle class="d-ev" cx="263.6" cy="204" r="4"/>
+        <circle class="d-ev" cx="290" cy="204" r="4"/>
+        <circle class="d-ev-hi" cx="59.8" cy="204" r="5.5"/>
+        <circle class="d-ev-hi" cx="250.4" cy="204" r="5.5"/>
+        <text class="d-key d-halo" x="165" y="290.3" text-anchor="middle" style="fill:#5f6e28">the cut</text>
+        </g>
+        <text class="d-note" x="165" y="376" text-anchor="middle">every cart crosses outward</text>
+        <text class="d-note" x="165" y="392" text-anchor="middle">or does not cross at all</text>
+        <line x1="330" y1="40" x2="330" y2="360" stroke="#b9a77e" stroke-width="1.5"/>
+        <text class="d-house" x="495" y="26" text-anchor="middle" style="fill:#bf4a26">IMPOSSIBLE (INCONSISTENT)</text>
+        <circle cx="495" cy="204" r="48" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="495" cy="204" r="70" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="495" cy="204" r="92" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="495" cy="204" r="114" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <circle cx="495" cy="204" r="136" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
+        <line class="d-lifeline" x1="469" y1="204" x2="348" y2="204"/>
+        <line class="d-lifeline" x1="521" y1="204" x2="642" y2="204"/>
+        <rect class="d-node" x="454" y="193" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="469" y="208.5" text-anchor="middle" fill="#1c1512">H1</text>
+        <rect class="d-node" x="506" y="193" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="521" y="208.5" text-anchor="middle" fill="#1c1512">H2</text>
+        <clipPath id="tsws-cuts-clip1"><circle class="tclip" cx="495" cy="204" r="167" data-r0="26" data-r1="147"/></clipPath>
+        <g class="tflow" clip-path="url(#tsws-cuts-clip1)">
+        <path d="M573.8,204 L574.6,208.2 L575.3,212.4 L575.7,216.8 L575.8,221.2 L575.7,225.6 L575.4,230.1 L574.8,234.6 L574,239.2 L572.9,243.7 L571.5,248.2 L569.9,252.6 L568,257 L565.9,261.4 L563.5,265.7 L560.8,269.8 L557.9,273.9 L554.8,277.8 L551.4,281.6 L547.8,285.3 L543.9,288.8 L539.9,292 L535.6,295.1 L531.1,298 L526.4,300.7 L521.6,303.1 L516.5,305.3 L511.4,307.3 L506,308.9 L500.6,310.3 L495,311.4 L489.3,312.2 L483.6,312.7 L477.8,312.9 L471.9,312.8 L466,312.3 L460,311.6 L454.1,310.5 L448.2,309.1 L442.3,307.3 L436.5,305.3 L430.8,302.9 L425.1,300.1 L419.6,297.1 L414.2,293.7 L408.9,290.1 L403.9,286.1 L398.9,281.8 L394.2,277.2 L389.7,272.4 L385.5,267.2 L381.5,261.8 L377.7,256.2 L374.3,250.3 L371.1,244.3 L368.2,238 L365.7,231.5 L363.5,224.8 L361.6,218 L360.1,211.1 L359,204 L360.1,196.9 L361.6,190 L363.5,183.2 L365.7,176.5 L368.2,170 L371.1,163.7 L374.3,157.7 L377.7,151.8 L381.5,146.2 L385.5,140.8 L389.7,135.6 L394.2,130.8 L398.9,126.2 L403.9,121.9 L408.9,117.9 L414.2,114.3 L419.6,110.9 L425.1,107.9 L430.8,105.1 L436.5,102.7 L442.3,100.7 L448.2,98.9 L454.1,97.5 L460,96.4 L466,95.7 L471.9,95.2 L477.8,95.1 L483.6,95.3 L489.3,95.8 L495,96.6 L500.6,97.7 L506,99.1 L511.4,100.7 L516.5,102.7 L521.6,104.9 L526.4,107.3 L531.1,110 L535.6,112.9 L539.9,116 L543.9,119.2 L547.8,122.7 L551.4,126.4 L554.8,130.2 L557.9,134.1 L560.8,138.2 L563.5,142.3 L565.9,146.6 L568,151 L569.9,155.4 L571.5,159.8 L572.9,164.3 L574,168.8 L574.8,173.4 L575.4,177.9 L575.7,182.4 L575.8,186.8 L575.7,191.2 L575.3,195.6 L574.6,199.8 Z M521,204 A26,26 0 1 0 469,204 A26,26 0 1 0 521,204 Z" fill-rule="evenodd" style="fill:#bf4a26; fill-opacity:.13; stroke:none"/>
+        <path d="M573.8,204 L574.6,208.2 L575.3,212.4 L575.7,216.8 L575.8,221.2 L575.7,225.6 L575.4,230.1 L574.8,234.6 L574,239.2 L572.9,243.7 L571.5,248.2 L569.9,252.6 L568,257 L565.9,261.4 L563.5,265.7 L560.8,269.8 L557.9,273.9 L554.8,277.8 L551.4,281.6 L547.8,285.3 L543.9,288.8 L539.9,292 L535.6,295.1 L531.1,298 L526.4,300.7 L521.6,303.1 L516.5,305.3 L511.4,307.3 L506,308.9 L500.6,310.3 L495,311.4 L489.3,312.2 L483.6,312.7 L477.8,312.9 L471.9,312.8 L466,312.3 L460,311.6 L454.1,310.5 L448.2,309.1 L442.3,307.3 L436.5,305.3 L430.8,302.9 L425.1,300.1 L419.6,297.1 L414.2,293.7 L408.9,290.1 L403.9,286.1 L398.9,281.8 L394.2,277.2 L389.7,272.4 L385.5,267.2 L381.5,261.8 L377.7,256.2 L374.3,250.3 L371.1,244.3 L368.2,238 L365.7,231.5 L363.5,224.8 L361.6,218 L360.1,211.1 L359,204 L360.1,196.9 L361.6,190 L363.5,183.2 L365.7,176.5 L368.2,170 L371.1,163.7 L374.3,157.7 L377.7,151.8 L381.5,146.2 L385.5,140.8 L389.7,135.6 L394.2,130.8 L398.9,126.2 L403.9,121.9 L408.9,117.9 L414.2,114.3 L419.6,110.9 L425.1,107.9 L430.8,105.1 L436.5,102.7 L442.3,100.7 L448.2,98.9 L454.1,97.5 L460,96.4 L466,95.7 L471.9,95.2 L477.8,95.1 L483.6,95.3 L489.3,95.8 L495,96.6 L500.6,97.7 L506,99.1 L511.4,100.7 L516.5,102.7 L521.6,104.9 L526.4,107.3 L531.1,110 L535.6,112.9 L539.9,116 L543.9,119.2 L547.8,122.7 L551.4,126.4 L554.8,130.2 L557.9,134.1 L560.8,138.2 L563.5,142.3 L565.9,146.6 L568,151 L569.9,155.4 L571.5,159.8 L572.9,164.3 L574,168.8 L574.8,173.4 L575.4,177.9 L575.7,182.4 L575.8,186.8 L575.7,191.2 L575.3,195.6 L574.6,199.8 Z" fill="none" stroke="#bf4a26" stroke-width="2" stroke-dasharray="7 4"/>
+        <path class="d-msg" marker-end="url(#tsws-cuts-b)" d="M447,204 L446.8,201.5 L446.8,198.9 L446.9,196.4 L447.2,193.8 L447.6,191.3 L448.1,188.8 L448.8,186.2 L449.5,183.8 L450.5,181.3 L451.5,178.9 L452.7,176.5 L454,174.2 L455.5,172 L457,169.8 L458.7,167.7 L460.5,165.7 L462.4,163.8 L464.5,162 L466.6,160.2 L468.8,158.6 L471.1,157.1 L473.5,155.7 L476,154.5 L478.5,153.3 L481.2,152.3 L483.8,151.5 L486.6,150.7 L489.3,150.1 L492.2,149.7 L495,149.4 L497.9,149.3 L500.8,149.3 L503.6,149.4 L506.5,149.7 L509.4,150.2 L512.3,150.8 L515.1,151.6 L517.9,152.5 L520.7,153.6 L523.4,154.8 L526.1,156.2 L528.6,157.7 L531.2,159.3 L533.6,161.1 L535.9,163.1 L538.2,165.1 L540.3,167.3 L542.4,169.6 L544.3,172 L546.1,174.5 L547.8,177.1 L549.3,179.8 L550.7,182.6 L551.9,185.5 L553.1,188.4 L554,191.5 L554.8,194.5"/>
+        <path class="d-msg-hi" marker-end="url(#tsws-cuts-r)" d="M587,204 L587.2,208.8 L587.2,213.7 L587,218.6 L586.4,223.4 L585.6,228.3 L584.6,233.1 L583.3,237.9 L581.7,242.6 L579.9,247.3 L577.8,251.8 L575.5,256.3 L573,260.7 L570.2,264.9 L567.2,269 L563.9,272.9 L560.5,276.7 L556.8,280.3 L553,283.8 L548.9,287 L544.7,290 L540.3,292.8 L535.7,295.4 L531,297.8 L526.1,299.9 L521.2,301.7 L516.1,303.3 L510.9,304.6 L505.7,305.7 L500.4,306.5 L495,307 L489.6,307.2 L484.2,307.2 L478.7,306.8 L473.3,306.2 L467.9,305.3 L462.5,304.1 L457.2,302.6 L451.9,300.8 L446.7,298.7 L441.7,296.4 L436.7,293.8 L431.9,290.9 L427.2,287.8 L422.6,284.4 L418.3,280.7 L414.1,276.8 L410.1,272.7 L406.3,268.4 L402.8,263.9 L399.4,259.2 L396.4,254.3 L393.5,249.2 L391,243.9 L388.7,238.5 L386.7,233 L384.9,227.4 L383.5,221.7 L382.4,215.8"/>
+        <circle class="d-ev" cx="447" cy="204" r="4"/>
+        <circle class="d-ev" cx="556.2" cy="204" r="4"/>
+        <circle class="d-ev-hi" cx="587" cy="204" r="5.5"/>
+        <circle class="d-ev-hi" cx="381" cy="204" r="5.5"/>
+        <circle class="d-ev-hi" cx="359" cy="204" r="5.5"/>
+        <circle class="d-ev-hi" cx="573.8" cy="204" r="5.5"/>
+        <text class="d-key d-halo" x="495" y="110.6" text-anchor="middle" style="fill:#bf4a26">the cut</text>
+        </g>
+        <text class="d-note" x="495" y="376" text-anchor="middle" style="fill:#bf4a26">this arrow crosses inward: House 1 has</text>
+        <text class="d-note" x="495" y="392" text-anchor="middle" style="fill:#bf4a26">goods House 2 has not yet dispatched</text>
       </svg>
     </div>
-    <figcaption><b>The one thing a cut must never permit.</b> On the left, every cart arrow crosses
-    downward: the recorded state is consistent. On the right, an arrow crosses upward: the recorded
+    <figcaption><b>The one thing a cut must never permit.</b> The cut is everything inside the
+    dashed loop: each house up to the moment it recorded. A cart may cross the loop outward,
+    never inward. On the left, every cart arrow crosses outward or not at all: the recorded state
+    is consistent. On the right, an arrow crosses inward: the recorded
     total counts cargo as <i>arrived</i> at House 1 while House 2's record shows it <i>still in
     its shed</i>. Such an island never existed and never could.</figcaption>
   </figure>
@@ -682,5 +720,6 @@
 <p class="lineage"><span class="lbl">Leads to</span> <span class="outside"><span class="tag">Outside this series</span> Koo &amp; Toueg 1987, <i>checkpointing and recovery</i> · Lai &amp; Yang 1987, <i>snapshots without FIFO channels</i> · Cooper &amp; Marzullo 1991, <i>detecting global predicates</i> · Carbone et al. 2015, <i>snapshots in Apache Flink</i></span></p>
 
 </div>
+<script src="../../assets/js/flow.js" defer></script>
 </body>
 </html>
