@@ -52,7 +52,7 @@ These are correctness constraints, not preferences.
    ordinary Greek name. **On Arche the houses, the mercenaries and the bandits have no names or
    emblems; they go by number**: Houses 1–3, the mercenaries by their tents'
    numbers, Number 1 to Number 4, and the bandits Number 1 to Number 4, Number 1 being the chief
-   in the hall. Every book at a place keeps that place's numbered cast. Ties between houses are
+   inside the ring wall. Every book at a place keeps that place's numbered cast. Ties between houses are
    broken by number. **Nodes are alike.** No house, tent or post has a direction, landmark or
    character of its own; one is set apart only when the paper gives it a role, as the chief is a
    leader. An example may give one node a part to play (the oil
