@@ -56,7 +56,7 @@ travelled both ways, give **one FIFO channel per ordered pair of houses: six in 
 - **The sea**: reefs and tide-races off every headland stop small boats coasting between
   coves. Big ships go out to sea, not round the island.
 - **The camps** carry nothing from one house to another, so they are never a channel between
-  houses. Traders keep no ravens.
+  houses. The houses hired the four mercenaries, each man separately, which is why none commands another. Traders keep no ravens.
 
 **The ring road.** Three houses, known by number, **House 1**, **House 2** and **House 3**, act as an
 island-wide distribution network.
@@ -123,7 +123,8 @@ there are, which band each belongs to, and what they plan. Everyone else knows t
 there are bandits about the island, and their loot is on the hilltop. The crown's four stay
 there by choice, because the loot cannot be left; bandits met elsewhere need not be of their
 band, and no one outside can tell. The crown's four, in turn, know the camps are below and nothing
-of what the mercenaries mean to do.
+of what the mercenaries mean to do. Why a liar on the crown lies is never given, in any book: the
+liars' motives stay hidden, and nobody ever learns which man lied.
 
 ---
 
@@ -139,7 +140,7 @@ section. Both pages restate the hill and the messengers (ravens below, rats abov
 **No ambush, and no outcome.** Each side has one binary question, and *nothing follows from either
 decision*. The mercenaries must all **attack** or all **hold**. They do not know where the bandits' posts
 lie; all they have seen is that the bandits are scattered and cannot help one another, so an attack means
-the four meeting at the one way up and beating them one at a time, all together (defeat in detail); a hold
+the four meeting at a place agreed beforehand and beating them one at a time, all together (defeat in detail); a hold
 means each man lies by the path down his own gully, and since the folds between the camps end in crags
 nobody can climb down, all four holding means no one breaks out unseen. Half attacking while half hold is worse than either (too few to climb, a gully
 left open). Committing to either takes a man from his tent and its birds until dawn, so committing is
