@@ -233,7 +233,7 @@ PROPS = {k: (f"art/cast/props/{v['sheet']}/{k}.glb", v.get("yaw", 0))
 def add_prop(p):
     """{"kind": ..., "at": [x, z], "face": [x, z], "under": h}: a prop from art/cast/props.json
     (ledger, statue, black-goat...), or a procedural one (PROCEDURAL below: strongbox, tent,
-    shield, chest, basket, perch, raven). Props stand on the highest
+    shield, chest, basket, perch, raven, lamp). Props stand on the highest
     surface under them, so a ledger given a desk's position lies on the desk."""
     if p["kind"] in PROPS:
         before = set(bpy.data.objects)
@@ -330,8 +330,20 @@ def raven(p):
             cube((0, 0.22, 0.17), (0.08, 0.16, 0.02), black),
             *[cyl((x, 0, 0.06), 0.008, 0.12, beak) for x in (-0.03, 0.03)]]
 
+def lamp(p):
+    """A small clay oil lamp with its flame glowing. "size" scales the whole lamp up, so a far shot
+    (where a real 10 cm lamp would vanish) can still show where each light is."""
+    k = p.get("size", 1.0)
+    clay = material("clay", (0.45, 0.25, 0.12), rough=0.9)
+    flame = material("flame", (1.0, 0.6, 0.2), rough=0.5)
+    nb = flame.node_tree.nodes["Principled BSDF"]
+    nb.inputs["Emission Color"].default_value = (1.0, 0.55, 0.15, 1)
+    nb.inputs["Emission Strength"].default_value = 25.0
+    return [cyl((0, 0, 0.03 * k), 0.07 * k, 0.06 * k, clay, verts=12),
+            ball((0, 0, 0.1 * k), (0.03 * k, 0.03 * k, 0.06 * k), flame)]
+
 PROCEDURAL = {"strongbox": strongbox, "tent": tent, "shield": shield, "chest": chest,
-              "basket": basket, "perch": perch, "raven": raven}
+              "basket": basket, "perch": perch, "raven": raven, "lamp": lamp}
 
 # Sea plane at y=0, like the explorer.
 bpy.ops.mesh.primitive_plane_add(size=400000, location=(0, 0, 0.3))
