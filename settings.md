@@ -164,7 +164,7 @@ houses.
   no leader and do not lie. On the windy nights of DLS each tent has a glass, turned together as
   the last light left the crown; no other common moment exists below.
 - **The summit carries the synchronous model.** The chief sits inside a small ring wall with no gate, the loot with him, and three posts
-  are makeshift lookouts out on the slopes, each a scrape among crags with loose stones heaped on its downhill side and a hide slung over poles, out of sight of one another and of the wall.
+  are lookouts out on the slopes, each a hollow among crags with a rough, uneven dry-stone breastwork, out of sight of one another and of the wall.
   Nobody shouts, signals or lights a brand, because the tents below are listening — and
   because a shout heard by everyone is a broadcast, and a chief who can broadcast cannot tell
   different men different things, which would dissolve the problem. Every message is a short,

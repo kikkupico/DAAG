@@ -14,8 +14,8 @@ As the setting has it, a ruined Bronze Age ring of cyclopean masonry:
   revetment down the slope. A timber ladder, drawn up inside, is the only way over it;
 - inside, a paved floor and the loot's strongboxes on a low shelf. Nothing
   is roofed and no fire burns. The chief can see only sky;
-- the other three men hold lookout posts out on the slopes, each a makeshift scrape among crags: loose stones heaped on the
-  downhill side, a hide slung over two poles, brushwood lying about, looking out over its own approach. Terrain between the
+- the other three men hold lookout posts out on the slopes, each a hollow among crags with a rough, uneven dry-stone breastwork
+  on the downhill side, looking out over its own approach. Terrain between the
   posts blocks every line between them (scouted by ray cast; no pair sees another).
 Bearings are compass bearings from the top (0 = north = -x, 90 = east = -z).
 """
@@ -212,29 +212,21 @@ for n, (pb, pr) in enumerate(P["posts"]):
     px, pz = bearing(pb, pr)
     gy = ground(px, pz)
     posts.append({"number": n + 2, "bearing": pb, "r": pr, "at": [round(px, 2), round(gy, 2), round(pz, 2)], "watching": pb})
-    # makeshift cover: loose stones heaped on the downhill side, two layers, with gaps, none squared or in courses
-    heap = []
-    for k in range(17):
-        a = pb + rng.uniform(-105, 105)
-        rr = rng.uniform(1.2, 2.3)
-        hx, hz = bearing(a, rr, (px, pz))
-        sz = rng.uniform(0.35, 0.85)
-        lump((hx, ground(hx, hz) + sz * 0.3, hz), (sz * 1.3, sz, sz * 0.8), WALL, jitter=0.3, yaw=rng.uniform(0, 3), tilt=0.45)
-        heap.append((hx, hz, sz))
-    for hx, hz, sz in rng.sample(heap, 8):                 # a few more on top of the first
-        lump((hx + rng.uniform(-0.2, 0.2), ground(hx, hz) + sz * 0.85 + 0.15, hz + rng.uniform(-0.2, 0.2)),
-             (sz * 1.1, sz * 0.9, sz * 0.7), WALL, jitter=0.3, yaw=rng.uniform(0, 3), tilt=0.45)
-    # a hide slung over two poles against the crags, for shade and cover
-    ux, uz = bearing(pb + 180, 1.3, (px, pz))
-    tang = math.radians(90 - pb)
-    lump((ux, ground(ux, uz) + 0.95, uz), (1.9, 0.03, 1.5), HIDE, jitter=0.05, yaw=tang, pitch=-0.95, tilt=0.03)
-    for side in (-0.85, 0.85):
-        ox, oz = ux + side * math.cos(tang), uz - side * math.sin(tang) * -1
-        lump((ox, ground(ox, oz) + 0.95, oz), (0.07, 0.07, 1.9), TIMBER, jitter=0.0, yaw=tang, pitch=-0.45, tilt=0.05)
-    for k in range(10):                                    # brushwood and a few sticks lying about
-        a = pb + 180 + rng.uniform(-70, 70)
-        bx_, bz_ = bearing(a, rng.uniform(0.6, 1.9), (px, pz))
-        lump((bx_, ground(bx_, bz_) + 0.05, bz_), (rng.uniform(0.5, 1.0), 0.05, 0.05), TIMBER, jitter=0.0, yaw=rng.uniform(0, 3), tilt=0.1)
+    # the breastwork: a low dry-stone arc on the downhill side, but rough: uneven radius, spacing and height,
+    # stones tilted, a gap or two, and a few fallen
+    for k in range(10):
+        if k in (3, 7) and rng.random() < 0.7:             # a gap where it has slipped or was never finished
+            continue
+        a = pb + (k - 4.5) * 20.0 + rng.uniform(-6, 6)
+        rr = rng.uniform(1.5, 2.1)
+        ax, az = bearing(a, rr, (px, pz))
+        stack(a, rr, rng.uniform(0.55, 0.9), rng.uniform(0.7, 1.3), ground(ax, az) - 0.5,
+              gy + rng.uniform(0.55, 1.35), WALL, at=(px, pz), jit=0.3, tilt=0.2, hmin=0.4, hmax=0.8)
+    for k in range(5):                                     # stones that have rolled off it
+        a = pb + rng.uniform(-110, 110)
+        fx, fz = bearing(a, rng.uniform(2.0, 3.0), (px, pz))
+        sz = rng.uniform(0.3, 0.7)
+        lump((fx, ground(fx, fz) + sz * 0.3, fz), (sz * 1.3, sz, sz * 0.8), WALL, jitter=0.3, yaw=rng.uniform(0, 3), tilt=0.4)
     for k in range(7):                                     # crags behind and beside, on the uphill side
         a = pb + 180 + (k - 3) * 30.0
         rr = rng.uniform(2.3, 3.2)
