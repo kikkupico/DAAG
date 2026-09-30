@@ -18,7 +18,7 @@ As the setting has it, a ruined Bronze Age citadel like Tiryns, on the summit:
 - two breaks only: a narrow slot on the north, and a wider gap on the south framed in timber;
 - inside, a paved court, and at the centre a roofless megaron: a porch with two columns, a hall
   with a round hearth, four column stumps, the chief's stone chair and the loot against the back
-  wall. Stone kerbs run like gutters from the hall to each post's door: the rodents' runs.
+  wall. A small hole at the foot of each cell's door and of the hall's back wall is where the trained rats come and go.
 Bearings are compass bearings from the top (0 = north = -x, 90 = east = -z).
 """
 import bpy, bmesh, json, math, random, sys
@@ -387,27 +387,10 @@ lump((bx, Y0 + 0.65, bz), (0.14, 1.2, 0.9), ASHLAR, jitter=0.02, yaw=0.0)
 for e, n, w in ((-2.0, 3.45, 1.1), (0.0, 3.45, 1.1), (2.0, 3.45, 1.1)):                     # a low stone shelf for the loot
     x, z = loc(e, n)
     lump((x, Y0 + 0.12, z), (0.9, w, 0.24), WALL, jitter=0.04, yaw=0.0)
-# the rodents' runs: paired stone kerbs from the hall's porch to each post's door, and the holes
-runs = []
-for p in POSTS:
-    a_door = p
-    start = loc(0.0, HN0 - 4.4)
-    end = bearing(a_door, RI - 0.3)
-    runs.append([[round(start[0], 2), round(Y0, 2), round(start[1], 2)], [round(end[0], 2), round(Y0, 2), round(end[1], 2)]])
-    dx, dz = end[0] - start[0], end[1] - start[1]
-    L = math.hypot(dx, dz)
-    nx, nz = -dz / L, dx / L
-    for side in (-1, 1):
-        for k in range(int(L / 0.9)):
-            t = (k + 0.5) * 0.9 / L
-            x = start[0] + dx * t + nx * 0.13 * side
-            z = start[1] + dz * t + nz * 0.13 * side
-            lump((x, Y0 + 0.08, z), (0.85, 0.1, 0.1), WALL, jitter=0.03, yaw=math.atan2(-dz, dx))
-hx_, hz_ = loc(1.0, HN0 - 4.4)
+# the hall's rat hole, at the foot of the back wall (the cells have theirs, at their doors)
+hx_, hz_ = loc(-1.0, HN1 - 0.03)
 holes.append([round(hx_, 2), round(Y0 + 0.1, 2), round(hz_, 2)])
-lump((hx_, Y0 + 0.1, hz_), (0.2, 0.2, 0.05), DARK, jitter=0.0, yaw=0.0)
-hx_, hz_ = loc(0.0, HN1 - 0.1)
-holes.append([round(hx_, 2), round(Y0 + 0.1, 2), round(hz_, 2)])
+lump((hx_, Y0 + 0.1, hz_), (0.05, 0.2, 0.2), DARK, jitter=0.0, yaw=0.0)
 
 me = bpy.data.meshes.new("shell")
 bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
@@ -427,7 +410,7 @@ json.dump({"_note": "Written by art/sets/crown.py; explorer coords [x, y, z], me
            "chief": {"seat": C(0.0, 2.45, 0.5), "facing": 180, "loot": [C(e, 3.45, 0.24) for e in (-2.0, 0.0, 2.0)], "hearth": C(0.0, 0.3, 0.28),
                      "door": C(0.0, HN0, 0.0)},
            "slot": [round(v, 2) for v in bearing(0, RO)], "gap": [round(v, 2) for v in bearing(180, RO)],
-           "runs": runs, "holes": holes},
+           "holes": holes},
           open(f"art/sets/{NAME}.json", "w"), indent=1)
 bpy.ops.object.select_all(action="SELECT")
 bpy.ops.export_scene.gltf(filepath=f"art/sets/{NAME}.glb", use_selection=True)
