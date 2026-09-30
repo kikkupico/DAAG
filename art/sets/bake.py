@@ -13,7 +13,8 @@ the Chamber, which replaces Meshy's rotunda; on Arche the port of House 3):
   nothing is dropped; or a list of `strips`, rectangles each with its own pad, for a set of
   many buildings that each replace one of Meshy's: every vertex inside a strip is lowered to
   its pad, the faces wholly inside are dropped, and the set's own buildings cover them; or
-  `join_only`, for a set seated on the ground as it is (the crown);
+  `join_only`, for a set seated on the ground as it is; a `circle` may carry a `centre` [x, z], for a set
+  built in place (the crown, whose GLB is in world coordinates, is levelled to a disc this way);
 - the set's GLB is placed at its site and joined in.
 The result is one mesh, as render.py and explorer.html expect, in the source's own model
 units and frame, so the bounding box and every camera framed on the model stay put.
@@ -138,8 +139,9 @@ for name, S in SETS.items():
         poly = None
     elif "circle" in bk:
         n = 48
-        poly = [(S["at"][0] + bk["circle"] * math.cos(2 * math.pi * k / n),
-                 S["at"][2] + bk["circle"] * math.sin(2 * math.pi * k / n)) for k in range(n)]
+        c0 = bk.get("centre", [S["at"][0], S["at"][2]])      # where the disc is, if not at the set's origin
+        poly = [(c0[0] + bk["circle"] * math.cos(2 * math.pi * k / n),
+                 c0[1] + bk["circle"] * math.sin(2 * math.pi * k / n)) for k in range(n)]
     else:
         poly = [tuple(p) for p in grown(bk["footprint"], bk["margin"])]
     moved = set()
