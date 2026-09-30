@@ -19,13 +19,13 @@ Output: art/panels/<book>/<shot-id>/{previs,scene}.png
 illustration, comic.png; a shot's "comic" prompt overrides COMIC_PROMPT. Book covers
 use it; panels inside the books stay realistic.
 
-Generation runs on Nano Banana Pro through the Meshy API (MESHY_API_KEY, 9 credits an
+Generation runs on Nano Banana 2 through the Meshy API (MESHY_API_KEY, 3 credits an
 image), or through the tripo CLI with GEN=tripo. Prompts are capped at 1024 characters,
 so appearance travels as reference crops rather than words. A sheet's seeds are laid
 on one white board of the sheet's aspect; Meshy takes `aspect_ratio` for image-to-image
 too, and without it returns a crowded 1024 square.
 """
-import base64, json, os, shutil, subprocess, sys, tempfile, time, urllib.request
+import base64, json, os, shutil, subprocess, sys, tempfile, time, urllib.error, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -62,7 +62,7 @@ def meshy(path, body):
 
 
 def generate_meshy(inputs, prompt, aspect, dest):
-    body = {"ai_model": "nano-banana-pro", "prompt": prompt}
+    body = {"ai_model": os.environ.get("MESHY_IMAGE_MODEL", "nano-banana-2"), "prompt": prompt}   # "nano-banana-pro": 9 credits
     if inputs:
         kind = "image-to-image"
         body["reference_image_urls"] = [
@@ -71,8 +71,15 @@ def generate_meshy(inputs, prompt, aspect, dest):
     else:
         kind = "text-to-image"
     body["aspect_ratio"] = aspect
-    tid = meshy(kind, body)["result"]
-    print(f"  meshy {kind} {tid}", flush=True)
+    try:
+        tid = meshy(kind, body)["result"]
+    except urllib.error.HTTPError as e:
+        if body["ai_model"] != "nano-banana-2" or e.code not in (400, 422):
+            raise
+        print(f"  nano-banana-2 refused ({e.code}); using nano-banana, also 3 credits", flush=True)
+        body["ai_model"] = "nano-banana"
+        tid = meshy(kind, body)["result"]
+    print(f"  meshy {kind} {body['ai_model']} {tid}", flush=True)
     while True:
         time.sleep(5)
         t = meshy(f"{kind}/{tid}", None)

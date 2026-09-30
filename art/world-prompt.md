@@ -148,6 +148,27 @@ Keep everything exactly as it is in [image 1]: the coastline and its rocky point
 
 **Step 5 — 3D.** A Meshy image-to-3D conversion of the tilted plate, downloaded without resizing, is `art/arche-3d.glb`. `explorer.html` and `art/previs/render.py` place it at 95 m per model unit, a scale set by eye from a person beside the west-south-west depot, and turn it 20° so the north port is due north.
 
+### 2.1a Terrain Plate (bare land, for a model the buildings are added to)
+
+`art/refs/arche-terrain-plate.jpeg` is a bare-terrain plate: the massif, the three harbours with their quays, moles and levelled building terraces, the road and two small platforms (the granary's and the sundial's sites), and nothing built. Buildings are not drawn by the image model; the parametric sets (`art/sets/house.py`, `art/sets/town.py`, the crown) are placed on it after the Meshy conversion, and trees as props. The road loops round the mountain joining the harbours; image models will not keep it to the coast, and the allegory needs only that it links the harbours and never crosses the mountain. Its Meshy conversion (2026-09-28) is `art/archive/arche-meshy-2026-09-28/arche-3d.glb`, the untouched source the bake reads. Made in Gemini (text-to-image) from:
+```text
+Photorealistic isometric terrain diorama of the Greek island of Arche, Hellenistic Greece, 3rd century BC: the bare land and its earthworks only, made for 3D reconstruction. True orthographic axonometric view from the south, looking north and down at about 45 degrees, north at the top, the whole island in frame with a margin of sea all round. Deep focus, crisp fine geometry.
+
+NO BUILDINGS OF ANY KIND: no houses, no warehouses, no porticoes, no walls, no ruins, no ring wall on the summit, no towers, no roofs, no huts, no tents. No ships, boats, carts, people or animals. No trees: the ground is covered only in low maquis, dry grass and bare rock, so the shape of the land reads clearly.
+
+The island is roughly round, and a single broad limestone massif, Mount Phyle, fills it almost completely. The mountain's foot reaches nearly to the cliff tops all the way round: the coastal land is a narrow strip everywhere, with no lowland plains, plateaus or flat shelves between the harbours. Eight distinct spurs radiate from the summit like the arms of a star, each a clear ridge running down towards the coast, with a deep gully between every pair. The slopes rise continuously from the coast to the top, gentle below and steeper near the peak, with no cliff band round the summit and no concentric terraces, rings, tiers or steps anywhere. The summit is a small, rounded, bare rocky top of pale crags and clefts, sitting on the slope, not raised on a cliff.
+
+Three harbours stand equally spaced round the coast, a third of the way round from each other: due north, west-south-west and east-south-east. The massif is broad and high enough that it stands squarely between every pair, and no harbour can see either of the others. Each is a sheltered cove with calm water, a broad levelled waterfront shelf at the water's edge carrying stone quays, and one long stone pier or mole out into the cove. Behind each shelf, a few flat levelled building terraces are cut into the lower slope, bare and empty.
+
+A single narrow road, one cart wide, joins the three harbours in a loop round the mountain, cut into the slopes as a clear ledge. It goes round the mountain, never over it: no road or track climbs towards the summit, and there are no switchbacks on the upper slopes.
+
+Beside the road near the north harbour, a small flat rock-cut platform. On a southern headland, a small bare levelled platform.
+
+The coast is pale limestone sea-cliffs, with jagged reefs, submerged rocks and white surf off every headland.
+
+Bright, clear sunlight from the upper right, casting crisp, well-defined shadows that model every slope, spur, gully, cliff, road cutting, quay and terrace. Dry, transparent air: no haze, fog, mist or cloud, full sharpness everywhere. Deep blue sea reaching every edge of the frame. No text, no pedestal, no cutaway.
+```
+
 #### Island Plate Negative Prompt
 (Used instead of the universal negative for the Arche plate, because the plate deliberately puts a ruined wall and tents on the mountain.)
 ```text
@@ -309,6 +330,27 @@ Zero people.
 
 **Step 3 — 3D.** A Meshy image-to-3D conversion of this plate, downloaded without resizing, is the island model, `art/paxos-3d.glb`; the plate it was made from is `art/refs/paxos-plate.jpeg`. `explorer.html` and `art/previs/render.py` place it at 104 m per model unit, a scale set by eye so that a person beside the rotunda looks right, and give it a quarter turn, since the model's arms point along its +Z and canon's point north. Meshy lost the stoa's shoreline, so the stoa and festival ground stand in the sea off the east coast.
 
+### 3.1a Terrain Plate (bare land, for a model the buildings are added to)
+
+`art/refs/paxos-terrain-plate.jpeg` is a bare-terrain plate, like Arche's (§2.1a): the two arms round the bay, the fork and the broad body, with the earthworks for every site and nothing built. The round terrace on the western arm is the Chamber's; the terrace above the eastern cove, with Schedia's terraces below it, is the Tholos's (square: the Tholos stands on a paved court); the platform at the fork is the hall of two doors'; on the body, the eastern harbour's quay and flat ground are the stoa's and the festival ground's, the scattered clearings the libraries', the south-west landing the couriers', and the stepped terraces at the southern tip the far terraces. The Y is imperfect, its arms spreading rather than parallel, which looks more natural and keeps what the setting needs: two arms round a bay, the Chamber and the Tholos looking at each other across the water from round terraces, a fork for the hall of two doors, a short stem, and the scholars' coast in the body with every site joined to the road. Its Meshy conversion (2026-09-28) is `art/archive/paxos-meshy-2026-09-28/paxos-3d.glb`, the untouched source the bake reads. Made in Gemini (text-to-image) from:
+```text
+Photorealistic isometric terrain diorama of the Greek island of Paxos, Hellenistic Greece, 3rd century BC: the bare land and its earthworks only, made for 3D reconstruction. True orthographic axonometric view from the south, looking north and down at about 45 degrees, north at the top, the whole island in frame with a margin of sea all round. Deep focus, crisp fine geometry.
+
+NO BUILDINGS OF ANY KIND: no houses, no halls, no temples, no rotundas, no porticoes, no stoas, no walls, no ruins, no towers, no roofs. No ships, boats, carts, people or animals. No trees: the ground is covered only in low maquis, dry grass and bare rock, so the shape of the land reads clearly.
+
+The island is shaped like the letter Y, following the attached sketch. Two slender, high rocky arms reach north side by side, enclosing a sheltered bay of calm turquoise water between them. They join at a fork. Below the fork a distinct narrow stem, clearly narrower than either arm is long, runs south and then widens into a broad, lower body. The body is by far the largest part of the island, larger than both arms together, and fills the whole southern half of the frame.
+
+The arms: sheer white limestone sea-cliffs with sea-caves on their outer coasts, and steep slopes down to the bay on their inner sides. On the western arm, halfway along, a broad round levelled terrace high above the bay, bare and empty. At the western arm's tip, a small cove with a levelled waterfront shelf, stone quays and a short mole, and a few bare levelled building terraces behind it. On the eastern arm, directly across the bay from the round terrace: a sheltered cove with a small shingle beach and a stone quay, bare levelled terraces climbing the slope above it for a small town, and above them one broad levelled terrace facing the bay across the water, bare and empty.
+
+The fork, where the two arms meet the stem: a small, flat, levelled open platform on common ground, bare.
+
+The body of the island: lower rolling hills and small valleys, and a deeply indented coast of coves and pebble beaches. On a harbour on the body's eastern shore, far down from the fork, a long straight levelled waterfront terrace with a stone quay, and a broad flat open ground beside it. Scattered across the valleys and hill shoulders, about a dozen small separate levelled clearings, bare. A small rocky cove on the south-west shore with short stone landing stages. At the remote southern tip, the farthest point from the fork, narrow stepped dry-stone terraces on steep slopes facing the open sea, bare.
+
+One narrow road, one cart wide, runs from the southern body up the stem to the fork, where it forks: one branch runs out along the western arm past the round terrace to the cove at its tip, the other along the eastern arm to the cove on the bay and up through the terraces above it. Every harbour and landing is joined to the road: from the main road a branch road, one cart wide, descends by a cut ramp to the long quay on the body's eastern shore and its flat ground, and another descends to the landing cove on the south-west shore. Tracks of differing length link every clearing and the stepped terraces at the southern tip to the road. No quay, terrace, clearing or platform stands cut off by slope or cliff.
+
+Bright, clear sunlight from the upper right, casting crisp, well-defined shadows that model every cliff, slope, valley, terrace, quay and road cutting. Dry, transparent air: no haze, fog, mist or cloud, full sharpness everywhere. Calm deep Aegean blue sea reaching every edge of the frame, turquoise shoals and white surf at the shore. No text, no pedestal, no cutaway.
+```
+
 ### 3.2 Architectural Features Prompts
 
 #### Feature 1: The Chamber (a rotunda)
@@ -414,6 +456,13 @@ Warm daylight through the doorways, photorealistic PBR stone, marble and timber.
 ```
 
 ---
+
+## 3.3 The Home Page Chart
+
+`assets/img/map.jpg` comes from a render of the two island models, never from editing an old chart.
+1. **Views:** `blender -b -P art/refs/chart_views.py -- <arche|paxos> out.png 25 560 <yaw>` renders one island, placed from art/islands.json, from directly above tilted 25° south, north up, on a transparent ground (frame 560 m so a turned island isn't clipped; resolution scales with it). Both islands turn together 15° anticlockwise from the explorer's placement so the pair lies along the diagonal: Arche yaw 15, Paxos yaw 37 (22° more, so its stem runs down the diagonal and its two arms open towards Arche).
+2. **Layout:** `python3 art/refs/chart_layout.py` sets the two views at one scale on a 2048² canvas, Arche top-left tucked in the crook of Paxos's Y, and centres the pair as a group. The top-right and bottom-left corners stay empty. Result: art/refs/chart-layout.png.
+3. **Home page:** the user converts the layout to the final chart themselves in Gemini (AI engravings made here were rejected). The result, a sepia copperplate chart with a compass rose top-right and rhumb lines, is `art/full-map-cartographic.jpeg` (2048²) and, resized to 1240², `assets/img/map.jpg`.
 
 ## 4. Image-to-3D Reconstruction Guidelines
 
