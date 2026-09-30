@@ -25,7 +25,7 @@
   <p class="sub">A machine that has crashed looks exactly like one that is merely slow, and that alone
   makes agreement impossible. How well must we tell the dead from the slow before agreement becomes
   possible again?</p>
-  <p class="pub">The four mercenaries at the foot of the hill must go in at one gate, and any of them
+  <p class="pub">The four mercenaries at the foot of the hill must go up by one approach, and any of them
   may fall silent while no bird has a longest flight. Give each tent a slate on which a man chalks
   the tents he thinks are dead. The slate may be wrong, often. It turns out to need very little:
   if one living man is never chalked, the four can agree however many die; if that holds only in the
@@ -58,7 +58,7 @@
   <div class="prose">
     <p>At the foot of Mount Phyle four mercenaries, <span class="coin">Number 1</span> to
     <span class="coin">Number 4</span>, keep four tents out of sight of one another and
-    send word only by raven<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup>. They must all go in at one gate, north or south. Each formed an opinion
+    send word only by raven<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup>. They must all go up by one approach, north or south. Each formed an opinion
     at dusk, his <span class="coin">sighting</span>. A bird always arrives, but there is no
     longest flight. Nobody lies. Any man may be killed, and a dead man's tent simply falls
     silent.</p>
@@ -66,8 +66,8 @@
 
   <div class="aside-formal">
     <span class="lbl">The three demands</span>
-    <span class="stmt">First.</span> No two of them go to different gates.<br>
-    <span class="stmt">Second.</span> A man goes only to a gate someone sighted.<br>
+    <span class="stmt">First.</span> No two of them take different approaches.<br>
+    <span class="stmt">Second.</span> A man takes only an approach someone sighted.<br>
     <span class="stmt">Third.</span> Every man who is not killed eventually goes.
   </div>
 
@@ -230,7 +230,7 @@
     while waiting, he stops waiting for it. He writes any new sightings into his tally.<br>
     <span class="stmt">Comparing.</span> He sends every tent his whole tally, and waits in the same
     way. Any row that is blank in any tally he receives, he blanks in his own.<br>
-    <span class="stmt">Going.</span> He goes to the gate in the first row of his tally that is not
+    <span class="stmt">Going.</span> He takes the approach in the first row of his tally that is not
     blank, taking the rows in number order.<br>
     <span class="paper">The algorithm of Fig. 5, §6.1: <var>n</var> − 1 = 3 asynchronous rounds of
     Phase 1, Phase 2, Phase 3.</span>
@@ -243,7 +243,7 @@
     2's holds. In comparing, everyone waits for his tally, and blanks every row that is blank in his;
     and every row filled in his is filled in every tally, so nobody blanks it. So everyone who reaches
     the end holds exactly Number 2's tally, which is not empty, since it has his own sighting. They
-    all go to the same gate, a gate someone sighted.</p>
+    all take the same approach, an approach someone sighted.</p>
 
     <p>Could anyone wait for ever? No: a dead man is chalked in the end, and a live man's bird comes in
     the end. So everyone who lives goes.</p>
@@ -306,7 +306,7 @@
     order: 1, 2, 3, 4, then 1 again. The round number decides whose turn it is, not anyone's
     command, as on the windy
     nights<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s3" title="Agreeing When Messages Run Late: Turns and Pledges">*</a></sup>.
-    Each man carries an <span class="coin">estimate</span>, a gate, which starts as his sighting, and
+    Each man carries an <span class="coin">estimate</span>, an approach, which starts as his sighting, and
     beside it the round in which he last took it up.</p>
   </div>
 
@@ -322,13 +322,13 @@
     <span class="stmt">(4)</span> The owner waits for three answers. If all three say
     <em>agreed</em>, he sends every tent a <span class="coin">going bird</span> naming his estimate.<br>
     <span class="stmt">Going.</span> A man who takes in a going bird for the first time sends it on to
-    every tent, then goes to its gate.<br>
+    every tent, then takes its approach.<br>
     <span class="paper">The rotating-coordinator algorithm of Fig. 6, §6.2; three is ⌈(<var>n</var> + 1)/2⌉ for
     <var>n</var> = 4. The going bird is Reliable Broadcast of the decision, Fig. 4.</span>
   </div>
 
   <div class="prose">
-    <p><b>Why do they never go to two gates?</b> Take the first round in which three men sent
+    <p><b>Why do they never take two approaches?</b> Take the first round in which three men sent
     <em>agreed</em>, say on north. Those three took up north in that round. Any later owner waits for
     three estimates, and any three out of four share a man with those three, so the owner sees at
     least one north taken up that recently or later. Take the estimate taken up most recently, and by
@@ -348,9 +348,9 @@
   </div>
 
   <details class="proof">
-    <summary>Proof — that the turns never send two gates, and in the end send one</summary>
+    <summary>Proof — that the turns never send two approaches, and in the end send one</summary>
     <ol class="proofsteps">
-      <li><b>No two gates.</b> Let <var>r</var> be the first round in which three men sent
+      <li><b>No two approaches.</b> Let <var>r</var> be the first round in which three men sent
       <em>agreed</em> to its owner, on estimate <var>e</var>. Each of them took up <var>e</var> in
       round <var>r</var>. Show by induction that every owner of a round <var>k</var> ≥ <var>r</var>
       who sends an estimate sends <var>e</var>. For <var>k</var> = <var>r</var> it is so. For later
@@ -398,7 +398,7 @@
 
   <figure class="diagram">
     <div class="board">
-      <svg class="flow" viewBox="0 0 660 400" role="img" aria-label="Three panels, each with two pairs of tents: T1 and T2 on the left, T3 and T4 on the right, later moments further out. First: all sighted north, T3 and T4 are dead and chalked; T1 and T2 go north. Second: all sighted south, T1 and T2 are dead and chalked; T3 and T4 go south. Third: all alive, the left pair sighted north and the right pair south; every bird between the pairs is slow, each pair chalks the other, and each goes to a different gate.">
+      <svg class="flow" viewBox="0 0 660 400" role="img" aria-label="Three panels, each with two pairs of tents: T1 and T2 on the left, T3 and T4 on the right, later moments further out. First: all sighted north, T3 and T4 are dead and chalked; T1 and T2 go north. Second: all sighted south, T1 and T2 are dead and chalked; T3 and T4 go south. Third: all alive, the left pair sighted north and the right pair south; every bird between the pairs is slow, each pair chalks the other, and each takes a different approach.">
         <!-- polar:tdts-split -->
         <defs>
           <marker id="tdts-split-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
@@ -534,7 +534,7 @@
         </g>
         <text class="d-note" x="548" y="306" text-anchor="middle" style="fill:#bf4a26">nobody dead, but every bird between the</text>
         <text class="d-note" x="548" y="322" text-anchor="middle" style="fill:#bf4a26">pairs is slow: each pair chalks the</text>
-        <text class="d-note" x="548" y="338" text-anchor="middle" style="fill:#bf4a26">other, and goes to a different gate</text>
+        <text class="d-note" x="548" y="338" text-anchor="middle" style="fill:#bf4a26">other, and takes a different approach</text>
         <line x1="221" y1="10" x2="221" y2="390" stroke="#b9a77e" stroke-width="1.5"/>
         <line x1="439" y1="10" x2="439" y2="390" stroke="#b9a77e" stroke-width="1.5"/>
       </svg>
@@ -560,7 +560,7 @@
       <li><b>The first night.</b> All sighted north. Numbers 3 and 4 are dead from dusk, and
       the other two chalk them all night. That slate is in the end perfect. Numbers 1 and 2 go,
       within some time <var>A</var>, and to north, since only north was sighted.</li>
-      <li><b>The second night.</b> The same with pairs and gates swapped: Numbers 3 and 4 go
+      <li><b>The second night.</b> The same with pairs and approaches swapped: Numbers 3 and 4 go
       south within some time <var>B</var>.</li>
       <li><b>The third night.</b> Numbers 1 and 2 sighted north, Numbers 3 and 4 south.
       Nobody dies. Every bird between the pairs sits in the pines until after <var>A</var> and
@@ -609,7 +609,7 @@
 
     <p><b>Must it be right to be safe?</b> No. If the slates break every promise, chalking the living
     for ever and never chalking the dead, the two arrangements may never send anyone. They never send
-    two men to different gates. Only going is lost.</p>
+    two men to different approaches. Only going is lost.</p>
 
     <p><b>What is the weakest slate that will do?</b> In the end weak, with more than half alive, is
     enough. It is also necessary: any slate with which the four could agree can be made into one in
@@ -619,7 +619,7 @@
     take them in the same order, the same slates would do, and nothing weaker: agreeing once and
     agreeing on an order can each be turned into the other.</p>
 
-    <p><b>What follows from going?</b> Nothing. The four go in at one gate. What happens there is not
+    <p><b>What follows from going?</b> Nothing. The four go up by one approach. What happens there is not
     the subject of this book.</p>
   </div>
 </section>
@@ -639,7 +639,7 @@
       <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
       <tbody>
         <tr><td><span class="term">the four men; no longest flight; nobody lies; any may be killed</span></td><td>Asynchronous processes with reliable channels and crash failures. <span class="paper">§2, <var>n</var> = 4.</span></td></tr>
-        <tr><td><span class="term">a sighting; going to a gate</span></td><td>A proposed value; a decision. <span class="paper">§5.</span></td></tr>
+        <tr><td><span class="term">a sighting; taking an approach</span></td><td>A proposed value; a decision. <span class="paper">§5.</span></td></tr>
         <tr><td><span class="term">the three demands</span></td><td>Agreement; uniform validity; termination. <span class="paper">§5. The algorithms give uniform agreement: no two processes, correct or not, decide differently.</span></td></tr>
         <tr><td><span class="term">the slate; chalking a tent; rubbing it out</span></td><td>A local failure detector module; suspecting a process; ceasing to suspect it. <span class="paper">§2.2.</span></td></tr>
         <tr><td><span class="term">chalking the dead, by every or by some living man</span></td><td>Strong and weak completeness. <span class="paper">§2.3.</span></td></tr>
