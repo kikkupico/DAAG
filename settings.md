@@ -136,7 +136,9 @@ crown (`places/the-crown`, the bandits: liars) each have their own setting page 
 section. Both pages restate the hill and the messengers (ravens below, rats above); each describes only its own end in full.
 
 **No ambush, and no outcome.** The mercenaries must commit to one approach or the other, and
-*nothing follows from the decision*. The siege has no resolution in any book: no assault
+*nothing follows from the decision*. They do not know where the bandits' posts lie; they know only that
+the bandits are scattered and cannot help one another, so they mean to beat them one at a time, all four
+together (defeat in detail), and two pairs on two approaches would each risk meeting too many. The siege has no resolution in any book: no assault
 happens, no wall is carried, no one surrenders. An all-or-nothing ambush is an outcome, and
 an outcome is plot.
 
