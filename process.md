@@ -295,7 +295,8 @@ assumption made visible, never as a faction.
 
 **What the rest of Arche knows about the bandits.** Only the bandits know how many of them
 there are, which band each belongs to, and what they plan. Everyone else knows two things:
-there are bandits about the island, and their loot is on the hilltop. So the constraints that
+there are bandits about the island, and their loot is on the hilltop. The crown's four, in turn,
+know the camps are below and nothing of what the mercenaries mean to do. So the constraints that
 govern the bandits inside the crown's books — four men on the crown, the sandglasses, who may
 lie — bind only those books. Another book need not respect them; it must only not contradict
 those two facts. The crown's four are not confined (they stay because the loot cannot be

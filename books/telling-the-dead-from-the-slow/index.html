@@ -25,7 +25,7 @@
   <p class="sub">A machine that has crashed looks exactly like one that is merely slow, and that alone
   makes agreement impossible. How well must we tell the dead from the slow before agreement becomes
   possible again?</p>
-  <p class="pub">The four mercenaries at the foot of the hill must go up by one approach, and any of them
+  <p class="pub">The four mercenaries at the foot of the hill must all attack or all hold, and any of them
   may fall silent while no bird has a longest flight. Give each tent a slate on which a man chalks
   the tents he thinks are dead. The slate may be wrong, often. It turns out to need very little:
   if one living man is never chalked, the four can agree however many die; if that holds only in the
@@ -58,7 +58,7 @@
   <div class="prose">
     <p>At the foot of Mount Phyle four mercenaries, <span class="coin">Number 1</span> to
     <span class="coin">Number 4</span>, keep four tents out of sight of one another and
-    send word only by raven<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup>. They must all go up by one approach, north or south. Each formed an opinion
+    send word only by raven<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup>. They must all attack or all hold, and committing to either takes a man from his tent and its birds for the night. Each formed an opinion
     at dusk, his <span class="coin">sighting</span>. A bird always arrives, but there is no
     longest flight. Nobody lies. Any man may be killed, and a dead man's tent simply falls
     silent.</p>
@@ -66,14 +66,14 @@
 
   <div class="aside-formal">
     <span class="lbl">The three demands</span>
-    <span class="stmt">First.</span> No two of them take different approaches.<br>
-    <span class="stmt">Second.</span> A man takes only an approach someone sighted.<br>
-    <span class="stmt">Third.</span> Every man who is not killed eventually goes.
+    <span class="stmt">First.</span> No two of them commit to different answers.<br>
+    <span class="stmt">Second.</span> A man commits only to an answer someone sighted.<br>
+    <span class="stmt">Third.</span> Every man who is not killed eventually commits.
   </div>
 
   <div class="prose">
     <p>Can they be sure of meeting all three? On such a night no arrangement guarantees that anyone
-    goes, because a man waiting on a silent tent cannot tell whether the man there is dead or his
+    commits, because a man waiting on a silent tent cannot tell whether the man there is dead or his
     bird is still in the
     pines<sup class="xref"><a href="../the-limits-of-agreement/index.html#s3" title="The Limits of Agreement: A Tent That Does Not Answer">*</a></sup>.
     If he waits, he may wait for ever on a dead man. If he stops waiting, he may leave out a live man
@@ -230,7 +230,7 @@
     while waiting, he stops waiting for it. He writes any new sightings into his tally.<br>
     <span class="stmt">Comparing.</span> He sends every tent his whole tally, and waits in the same
     way. Any row that is blank in any tally he receives, he blanks in his own.<br>
-    <span class="stmt">Going.</span> He takes the approach in the first row of his tally that is not
+    <span class="stmt">Committing.</span> He commits to the answer in the first row of his tally that is not
     blank, taking the rows in number order.<br>
     <span class="paper">The algorithm of Fig. 5, §6.1: <var>n</var> − 1 = 3 asynchronous rounds of
     Phase 1, Phase 2, Phase 3.</span>
@@ -243,10 +243,10 @@
     2's holds. In comparing, everyone waits for his tally, and blanks every row that is blank in his;
     and every row filled in his is filled in every tally, so nobody blanks it. So everyone who reaches
     the end holds exactly Number 2's tally, which is not empty, since it has his own sighting. They
-    all take the same approach, an approach someone sighted.</p>
+    all commit to the same answer, an answer someone sighted.</p>
 
     <p>Could anyone wait for ever? No: a dead man is chalked in the end, and a live man's bird comes in
-    the end. So everyone who lives goes.</p>
+    the end. So everyone who lives commits.</p>
   </div>
 
   <div class="result">
@@ -272,10 +272,10 @@
       blanks it. A row blank in <var>c</var>'s is blanked by everyone, since everyone waits for
       <var>c</var>'s tally.</li>
       <li><var>c</var>'s own row is filled in <var>c</var>'s tally and so in everyone's, so every
-      finished tally has a first filled row, the same in all. Everyone who goes, goes to that tent's
+      finished tally has a first filled row, the same in all. Everyone who commits, commits to that tent's
       sighting.</li>
       <li>Nobody waits for ever, since a dead man is in the end chalked by every living man and a live
-      man's birds all arrive. So every living man goes.<span class="qed">∎</span></li>
+      man's birds all arrive. So every living man commits.<span class="qed">∎</span></li>
     </ol>
   </details>
 
@@ -306,7 +306,7 @@
     order: 1, 2, 3, 4, then 1 again. The round number decides whose turn it is, not anyone's
     command, as on the windy
     nights<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s3" title="Agreeing When Messages Run Late: Turns and Pledges">*</a></sup>.
-    Each man carries an <span class="coin">estimate</span>, an approach, which starts as his sighting, and
+    Each man carries an <span class="coin">estimate</span>, an answer, which starts as his sighting, and
     beside it the round in which he last took it up.</p>
   </div>
 
@@ -319,26 +319,26 @@
     <span class="stmt">(3)</span> Every man waits for the owner's estimate, or until he chalks the
     owner. If the estimate comes, he takes it up, notes this round, and sends the owner
     <em>agreed</em>. If he chalks the owner first, he sends <em>not agreed</em>.<br>
-    <span class="stmt">(4)</span> The owner waits for three answers. If all three say
-    <em>agreed</em>, he sends every tent a <span class="coin">going bird</span> naming his estimate.<br>
-    <span class="stmt">Going.</span> A man who takes in a going bird for the first time sends it on to
-    every tent, then takes its approach.<br>
+    <span class="stmt">(4)</span> The owner waits for three replies. If all three say
+    <em>agreed</em>, he sends every tent a <span class="coin">parting bird</span> naming his estimate.<br>
+    <span class="stmt">Committing.</span> A man who takes in a parting bird for the first time sends it on to
+    every tent, then commits to its answer.<br>
     <span class="paper">The rotating-coordinator algorithm of Fig. 6, §6.2; three is ⌈(<var>n</var> + 1)/2⌉ for
-    <var>n</var> = 4. The going bird is Reliable Broadcast of the decision, Fig. 4.</span>
+    <var>n</var> = 4. The parting bird is Reliable Broadcast of the decision, Fig. 4.</span>
   </div>
 
   <div class="prose">
-    <p><b>Why do they never take two approaches?</b> Take the first round in which three men sent
-    <em>agreed</em>, say on north. Those three took up north in that round. Any later owner waits for
+    <p><b>Why do they never commit to two answers?</b> Take the first round in which three men sent
+    <em>agreed</em>, say on hold. Those three took up hold in that round. Any later owner waits for
     three estimates, and any three out of four share a man with those three, so the owner sees at
-    least one north taken up that recently or later. Take the estimate taken up most recently, and by
-    the same argument round after round, it is north. So every later owner sends north, and every
-    going bird names north.</p>
+    least one hold taken up that recently or later. Take the estimate taken up most recently, and by
+    the same argument round after round, it is hold. So every later owner sends hold, and every
+    parting bird names hold.</p>
 
-    <p><b>Why do they go?</b> Nobody waits for ever: a dead owner is in the end chalked, and three men
-    live to answer. From some moment one living man is never chalked. When his turn next comes, he
+    <p><b>Why do they commit?</b> Nobody waits for ever: a dead owner is in the end chalked, and three men
+    live to reply. From some moment one living man is never chalked. When his turn next comes, he
     gathers three estimates, everyone waits for his, nobody chalks him, all say <em>agreed</em>, and
-    his going bird goes out.</p>
+    his parting bird goes out.</p>
   </div>
 
   <div class="result">
@@ -348,9 +348,9 @@
   </div>
 
   <details class="proof">
-    <summary>Proof — that the turns never send two approaches, and in the end send one</summary>
+    <summary>Proof — that the turns never commit anyone to two answers, and in the end commit everyone to one</summary>
     <ol class="proofsteps">
-      <li><b>No two approaches.</b> Let <var>r</var> be the first round in which three men sent
+      <li><b>No two answers.</b> Let <var>r</var> be the first round in which three men sent
       <em>agreed</em> to its owner, on estimate <var>e</var>. Each of them took up <var>e</var> in
       round <var>r</var>. Show by induction that every owner of a round <var>k</var> ≥ <var>r</var>
       who sends an estimate sends <var>e</var>. For <var>k</var> = <var>r</var> it is so. For later
@@ -359,16 +359,16 @@
       recent round <var>t</var> among the three satisfies <var>r</var> ≤ <var>t</var> &lt;
       <var>k</var>, and the estimate taken up in round <var>t</var> was sent by that round's owner,
       which by induction was <var>e</var>.</li>
-      <li>Every going bird was first sent by an owner who had three <em>agreed</em> in a round no
-      earlier than <var>r</var>, so every going bird names <var>e</var>, and everyone who goes, goes to
+      <li>Every parting bird was first sent by an owner who had three <em>agreed</em> in a round no
+      earlier than <var>r</var>, so every parting bird names <var>e</var>, and everyone who commits, commits to
       <var>e</var>. Every estimate is someone's sighting, so <var>e</var> was sighted.</li>
-      <li><b>Going.</b> If anyone living takes in a going bird, he sends it on before going, so every
-      living man takes it in and goes. Suppose instead nobody living ever goes. No living man is stuck
-      for ever in any round: three men live to send estimates and answers, and a man waiting on an
+      <li><b>Committing.</b> If anyone living takes in a parting bird, he sends it on before committing, so every
+      living man takes it in and commits. Suppose instead nobody living ever commits. No living man is stuck
+      for ever in any round: three men live to send estimates and replies, and a man waiting on an
       owner either gets his estimate or, if the owner is dead, in the end chalks him.</li>
       <li>From some time, one living man <var>q</var> is chalked by nobody, and the dead are all dead.
       Take a later round whose owner is <var>q</var>. He gathers three estimates and sends one;
-      everyone waits for it, since nobody chalks him; three answer <em>agreed</em>; he sends a going
+      everyone waits for it, since nobody chalks him; three reply <em>agreed</em>; he sends a parting
       bird. That contradicts the supposition.<span class="qed">∎</span></li>
     </ol>
   </details>
@@ -398,7 +398,7 @@
 
   <figure class="diagram">
     <div class="board">
-      <svg class="flow" viewBox="0 0 660 400" role="img" aria-label="Three panels, each with two pairs of tents: T1 and T2 on the left, T3 and T4 on the right, later moments further out. First: all sighted north, T3 and T4 are dead and chalked; T1 and T2 go north. Second: all sighted south, T1 and T2 are dead and chalked; T3 and T4 go south. Third: all alive, the left pair sighted north and the right pair south; every bird between the pairs is slow, each pair chalks the other, and each takes a different approach.">
+      <svg class="flow" viewBox="0 0 660 400" role="img" aria-label="Three panels, each with two pairs of tents: T1 and T2 on the left, T3 and T4 on the right, later moments further out. First: all sighted hold, T3 and T4 are dead and chalked; T1 and T2 hold. Second: all sighted attack, T1 and T2 are dead and chalked; T3 and T4 attack. Third: all alive, the left pair sighted hold and the right pair attack; every bird between the pairs is slow, each pair chalks the other, and each commits to a different answer.">
         <!-- polar:tdts-split -->
         <defs>
           <marker id="tdts-split-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
@@ -445,13 +445,13 @@
         <circle class="d-ev" cx="58.3" cy="228.7" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
         <circle class="d-ev" cx="53.5" cy="116.5" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
         <circle class="d-ev" cx="46.5" cy="109.5" r="7.5"/>
-        <text x="46.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">N</text>
+        <text x="46.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">H</text>
         <circle class="d-ev" cx="46.5" cy="240.5" r="7.5"/>
-        <text x="46.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">N</text>
+        <text x="46.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">H</text>
         </g>
-        <text class="d-note" x="112" y="306" text-anchor="middle">1 and 2 sighted north; 3 and 4</text>
+        <text class="d-note" x="112" y="306" text-anchor="middle">1 and 2 sighted hold; 3 and 4</text>
         <text class="d-note" x="112" y="322" text-anchor="middle">dead at dusk, chalked. 1 and 2</text>
-        <text class="d-note" x="112" y="338" text-anchor="middle">go north without them</text>
+        <text class="d-note" x="112" y="338" text-anchor="middle">hold without them</text>
         <text class="d-house" x="330" y="24" text-anchor="middle">SECOND</text>
         <circle cx="330" cy="175" r="51.6" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
         <circle cx="330" cy="175" r="59.2" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
@@ -480,13 +480,13 @@
         <circle class="d-ev" cx="383.7" cy="228.7" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
         <circle class="d-ev" cx="388.5" cy="116.5" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
         <circle class="d-ev" cx="395.5" cy="109.5" r="7.5"/>
-        <text x="395.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">S</text>
+        <text x="395.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">A</text>
         <circle class="d-ev" cx="395.5" cy="240.5" r="7.5"/>
-        <text x="395.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">S</text>
+        <text x="395.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">A</text>
         </g>
-        <text class="d-note" x="330" y="306" text-anchor="middle">3 and 4 sighted south; 1 and 2</text>
+        <text class="d-note" x="330" y="306" text-anchor="middle">3 and 4 sighted attack; 1 and 2</text>
         <text class="d-note" x="330" y="322" text-anchor="middle">dead at dusk, chalked. 3 and 4</text>
-        <text class="d-note" x="330" y="338" text-anchor="middle">go south without them</text>
+        <text class="d-note" x="330" y="338" text-anchor="middle">attack without them</text>
         <text class="d-house" x="548" y="24" text-anchor="middle" style="fill:#bf4a26">THIRD</text>
         <circle cx="548" cy="175" r="51.6" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
         <circle cx="548" cy="175" r="59.2" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
@@ -513,9 +513,9 @@
         <circle class="d-ev" cx="494.3" cy="228.7" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
         <circle class="d-ev" cx="489.5" cy="116.5" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
         <circle class="d-ev-hi" cx="482.5" cy="109.5" r="7.5"/>
-        <text x="482.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">N</text>
+        <text x="482.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">H</text>
         <circle class="d-ev-hi" cx="482.5" cy="240.5" r="7.5"/>
-        <text x="482.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">N</text>
+        <text x="482.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">H</text>
         <path class="d-msg" marker-end="url(#tdts-split-b)" d="M594.2,128.8 L596.7,131.2 L599.1,133.6 L601.4,136.2 L603.5,138.9 L605.5,141.8 L607.4,144.7 L609.1,147.8 L610.6,151 L612,154.2 L613.3,157.5 L614.3,160.9 L615.2,164.4 L615.9,167.9 L616.4,171.4 L616.7,175 L616.8,178.6 L616.8,182.2 L616.5,185.9 L616.1,189.5 L615.5,193.1 L614.6,196.7 L613.6,200.2 L612.4,203.7 L611,207.1 L609.5,210.5 L607.7,213.8 L605.8,217 L603.7,220.1"/>
         <path class="d-msg" marker-end="url(#tdts-split-b)" d="M601.7,228.7 L604.6,226 L607.4,223.1 L610,220 L612.4,216.8 L614.7,213.5 L616.9,210.1 L618.8,206.5 L620.6,202.9 L622.2,199.1 L623.5,195.2 L624.7,191.3 L625.7,187.3 L626.5,183.2 L627,179.1 L627.3,175 L627.5,170.8 L627.4,166.7 L627,162.5 L626.5,158.3 L625.7,154.2 L624.8,150.1 L623.6,146 L622.1,142 L620.5,138 L618.7,134.2 L616.6,130.4 L614.4,126.8 L612,123.2"/>
         <circle class="d-ev" cx="594.2" cy="128.8" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
@@ -523,9 +523,9 @@
         <circle class="d-ev" cx="601.7" cy="228.7" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
         <circle class="d-ev" cx="606.5" cy="116.5" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
         <circle class="d-ev-hi" cx="613.5" cy="109.5" r="7.5"/>
-        <text x="613.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">S</text>
+        <text x="613.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">A</text>
         <circle class="d-ev-hi" cx="613.5" cy="240.5" r="7.5"/>
-        <text x="613.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">S</text>
+        <text x="613.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">A</text>
         <path class="d-msg-hi" marker-end="url(#tdts-split-r)" d="M500.8,222.2 L502.5,225.6 L504.4,228.9 L506.5,232.1 L508.9,235.3 L511.4,238.3 L514.2,241.3 L517.2,244.1 L520.4,246.8 L523.8,249.4 L527.4,251.8 L531.2,254 L535.2,256 L539.3,257.8 L543.6,259.4 L548,260.8 L552.6,261.9 L557.2,262.8 L562,263.5 L566.9,263.9 L571.8,264 L576.9,263.8 L581.9,263.4 L587,262.6 L592.1,261.6 L597.2,260.3 L602.3,258.6 L607.4,256.7 L612.4,254.5" style="stroke-dasharray:6 4"/>
         <path class="d-msg-hi" marker-end="url(#tdts-split-r)" d="M595.2,222.2 L593.5,225.6 L591.6,228.9 L589.5,232.1 L587.1,235.3 L584.6,238.3 L581.8,241.3 L578.8,244.1 L575.6,246.8 L572.2,249.4 L568.6,251.8 L564.8,254 L560.8,256 L556.7,257.8 L552.4,259.4 L548,260.8 L543.4,261.9 L538.8,262.8 L534,263.5 L529.1,263.9 L524.2,264 L519.1,263.8 L514.1,263.4 L509,262.6 L503.9,261.6 L498.8,260.3 L493.7,258.6 L488.6,256.7 L483.6,254.5" style="stroke-dasharray:6 4"/>
         <path class="d-msg-hi" marker-end="url(#tdts-split-r)" d="M500.8,127.8 L502.5,124.4 L504.4,121.1 L506.5,117.9 L508.9,114.7 L511.4,111.7 L514.2,108.7 L517.2,105.9 L520.4,103.2 L523.8,100.6 L527.4,98.2 L531.2,96 L535.2,94 L539.3,92.2 L543.6,90.6 L548,89.2 L552.6,88.1 L557.2,87.2 L562,86.5 L566.9,86.1 L571.8,86 L576.9,86.2 L581.9,86.6 L587,87.4 L592.1,88.4 L597.2,89.7 L602.3,91.4 L607.4,93.3 L612.4,95.5" style="stroke-dasharray:6 4"/>
@@ -534,7 +534,7 @@
         </g>
         <text class="d-note" x="548" y="306" text-anchor="middle" style="fill:#bf4a26">nobody dead, but every bird between the</text>
         <text class="d-note" x="548" y="322" text-anchor="middle" style="fill:#bf4a26">pairs is slow: each pair chalks the</text>
-        <text class="d-note" x="548" y="338" text-anchor="middle" style="fill:#bf4a26">other, and takes a different approach</text>
+        <text class="d-note" x="548" y="338" text-anchor="middle" style="fill:#bf4a26">other, and commits to a different answer</text>
         <line x1="221" y1="10" x2="221" y2="390" stroke="#b9a77e" stroke-width="1.5"/>
         <line x1="439" y1="10" x2="439" y2="390" stroke="#b9a77e" stroke-width="1.5"/>
       </svg>
@@ -557,17 +557,17 @@
     <ol class="proofsteps">
       <li>Suppose some arrangement does. Divide the four into pairs: Numbers 1 and 2, Numbers 3
       and 4.</li>
-      <li><b>The first night.</b> All sighted north. Numbers 3 and 4 are dead from dusk, and
-      the other two chalk them all night. That slate is in the end perfect. Numbers 1 and 2 go,
-      within some time <var>A</var>, and to north, since only north was sighted.</li>
-      <li><b>The second night.</b> The same with pairs and approaches swapped: Numbers 3 and 4 go
-      south within some time <var>B</var>.</li>
-      <li><b>The third night.</b> Numbers 1 and 2 sighted north, Numbers 3 and 4 south.
+      <li><b>The first night.</b> All sighted hold. Numbers 3 and 4 are dead from dusk, and
+      the other two chalk them all night. That slate is in the end perfect. Numbers 1 and 2 commit,
+      within some time <var>A</var>, and to hold, since only hold was sighted.</li>
+      <li><b>The second night.</b> The same with pairs and answers swapped: Numbers 3 and 4 commit
+      to attack within some time <var>B</var>.</li>
+      <li><b>The third night.</b> Numbers 1 and 2 sighted hold, Numbers 3 and 4 attack.
       Nobody dies. Every bird between the pairs sits in the pines until after <var>A</var> and
       <var>B</var>, and until then each pair chalks the other; after that, all birds arrive and all
       chalk is rubbed out. That slate is in the end perfect too.</li>
-      <li>Until then each pair sees exactly what it saw on its own night, and goes: one pair north,
-      the other south. That contradicts the first demand.<span class="qed">∎</span></li>
+      <li>Until then each pair sees exactly what it saw on its own night, and commits: one pair to hold,
+      the other to attack. That contradicts the first demand.<span class="qed">∎</span></li>
     </ol>
   </details>
 
@@ -608,8 +608,8 @@
     of saying what the wind gives, without saying anything about wind.</p>
 
     <p><b>Must it be right to be safe?</b> No. If the slates break every promise, chalking the living
-    for ever and never chalking the dead, the two arrangements may never send anyone. They never send
-    two men to different approaches. Only going is lost.</p>
+    for ever and never chalking the dead, the two arrangements may never commit anyone. They never commit
+    two men to different answers. Only committing is lost.</p>
 
     <p><b>What is the weakest slate that will do?</b> In the end weak, with more than half alive, is
     enough. It is also necessary: any slate with which the four could agree can be made into one in
@@ -619,7 +619,7 @@
     take them in the same order, the same slates would do, and nothing weaker: agreeing once and
     agreeing on an order can each be turned into the other.</p>
 
-    <p><b>What follows from going?</b> Nothing. The four go up by one approach. What happens there is not
+    <p><b>What follows from committing?</b> Nothing. The four attack together or hold together. What happens then is not
     the subject of this book.</p>
   </div>
 </section>
@@ -639,7 +639,7 @@
       <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
       <tbody>
         <tr><td><span class="term">the four men; no longest flight; nobody lies; any may be killed</span></td><td>Asynchronous processes with reliable channels and crash failures. <span class="paper">§2, <var>n</var> = 4.</span></td></tr>
-        <tr><td><span class="term">a sighting; taking an approach</span></td><td>A proposed value; a decision. <span class="paper">§5.</span></td></tr>
+        <tr><td><span class="term">a sighting; committing</span></td><td>A proposed value; a decision. <span class="paper">§5.</span></td></tr>
         <tr><td><span class="term">the three demands</span></td><td>Agreement; uniform validity; termination. <span class="paper">§5. The algorithms give uniform agreement: no two processes, correct or not, decide differently.</span></td></tr>
         <tr><td><span class="term">the slate; chalking a tent; rubbing it out</span></td><td>A local failure detector module; suspecting a process; ceasing to suspect it. <span class="paper">§2.2.</span></td></tr>
         <tr><td><span class="term">chalking the dead, by every or by some living man</span></td><td>Strong and weak completeness. <span class="paper">§2.3.</span></td></tr>
@@ -651,7 +651,7 @@
         <tr><td><span class="term">turns in number order; the owner</span></td><td>The rotating coordinator, <var>c</var> = (<var>r</var> mod <var>n</var>) + 1. <span class="paper">§6.2.</span></td></tr>
         <tr><td><span class="term">an estimate and the round it was taken up</span></td><td>estimate<sub>p</sub> and its timestamp ts<sub>p</sub>. <span class="paper">Fig. 6.</span></td></tr>
         <tr><td><span class="term">agreed; not agreed</span></td><td>ack; nack. <span class="paper">Fig. 6, Phase 3.</span></td></tr>
-        <tr><td><span class="term">the going bird, sent on before going</span></td><td>R-broadcast of the decision, relayed on first receipt. <span class="paper">Fig. 4. Here a process halts after relaying, since going is silence; the paper's processes keep running.</span></td></tr>
+        <tr><td><span class="term">the parting bird, sent on before committing</span></td><td>R-broadcast of the decision, relayed on first receipt. <span class="paper">Fig. 4. Here a process halts after relaying, since committing is silence; the paper's processes keep running.</span></td></tr>
         <tr><td><span class="term">In the End, One Man Spared</span></td><td>Consensus is solvable with ◇S when fewer than half crash. <span class="paper">Theorem 3; Corollary 3 for ◇W.</span></td></tr>
         <tr><td><span class="term">More Than Half; the three nights</span></td><td>Consensus cannot be solved with ◇P when <var>f</var> ≥ <var>n</var>/2. <span class="paper">Theorem 5, runs <var>R</var>₀, <var>R</var>₁, <var>R</var><sub>A</sub>.</span></td></tr>
         <tr><td><span class="term">granted, not earned</span></td><td>Failure detectors are specified by properties, not implementations; none with ◇W's properties can be implemented in a purely asynchronous system. <span class="paper">§1, footnote 6.</span></td></tr>

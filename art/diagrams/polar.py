@@ -114,7 +114,7 @@ class Polar:
     # marks ------------------------------------------------------------------
     def event(self, key, t, hi=False, rad=None, state=None):
         """A dot on a spoke. With `state`, it shows what the man has done by then: "none" is a hollow
-        dot (he has not gone), "N" or "S" a dot carrying that letter (he has taken that approach)."""
+        dot (he has not committed), "H" or "A" a dot carrying that letter (he has committed to hold or attack)."""
         x, y = self.pt(key, t)
         cls = "d-ev-hi" if hi else "d-ev"
         col = RED if hi else INK
@@ -567,11 +567,11 @@ def limits_silent():
     F = Fig("tloa-silent", 660, 410,
             "Two panels drawn in the round, four tents at north, east, south and west, later moments further out. Tent 1, at the top, "
             "is the one man p: in both panels he never stirs. Tents 2, 3 and 4 see the same ravens in the same order in both. "
-            "Left: p saw north, and the other three go north. Right: p saw south, the beginning fated south, and the other three "
-            "still go north, because they cannot tell the two beginnings apart.")
+            "Left: p saw hold, and the other three hold. Right: p saw attack, the beginning fated to attack, and the other three "
+            "still hold, because they cannot tell the two beginnings apart.")
     nodes = {"1": (-90, "T1"), "2": (0, "T2"), "3": (90, "T3"), "4": (180, "T4")}
-    panels = ((165, "p SAW NORTH: FATED NORTH", "saw north", None, ("all three go north", "as they must")),
-              (495, "p SAW SOUTH: FATED SOUTH", "saw south", RED, ("the same ravens, the same order:", "they go north here too")))
+    panels = ((165, "p SAW HOLD: FATED HOLD", "saw hold", None, ("all three hold", "as they must")),
+              (495, "p SAW ATTACK: FATED ATTACK", "saw attack", RED, ("the same ravens, the same order:", "they hold here too")))
     for cx, title, sight, fill, note in panels:
         F.text(cx, 24, title, cls="d-house", fill=fill)
         P = Polar(F, cx, 200, 40, 12, nodes)
@@ -587,10 +587,10 @@ def limits_silent():
         for k, t in (("2", 1), ("3", 2), ("3", 2.5), ("4", 3.5), ("4", 4), ("3", 5)):
             P.event(k, t, state="none")
         for k in "234":
-            P.event(k, 6.2, hi=bool(fill), state="N")
-        P.label("2", 6.2, "goes north", side=-1, dist=10, fill=fill)
-        P.label("3", 6.2, "goes north", side=1, dist=10, fill=fill)
-        P.label("4", 6.2, "goes north", side=-1, dist=10, fill=fill)
+            P.event(k, 6.2, hi=bool(fill), state="H")
+        P.label("2", 6.2, "holds", side=-1, dist=10, fill=fill)
+        P.label("3", 6.2, "holds", side=1, dist=10, fill=fill)
+        P.label("4", 6.2, "holds", side=-1, dist=10, fill=fill)
         P.label("1", 3.5, "p never stirs", side=1, dist=10, anchor="start")
         P.flow_close()
         F.text(cx, 366, note[0], fill=fill)
@@ -654,8 +654,8 @@ def late_turn():
     F = Fig("awl-turn", 660, 500,
             "One turn in still air, owned by tent 3, drawn in the round: four tents, later moments further out. "
             "Three shaded rings are the asking, calling and answering glasses. In the asking glass every man sends the owner "
-            "the approaches he can accept. In the calling glass the owner calls north to every tent. In the answering glass the "
-            "others send pledged birds back. The owner, holding two or more pledged birds, sends going birds and goes north.")
+            "the answers he can accept. In the calling glass the owner calls hold to every tent. In the answering glass the "
+            "others send pledged birds back. The owner, with two or more pledged birds, sends parting birds and commits to hold.")
     nodes = {"1": (180, "T1"), "2": (-90, "T2"), "3": (90, "T3"), "4": (0, "T4")}
     P = Polar(F, 330, 250, 40, 26, nodes)
     T = 6.6
@@ -679,13 +679,13 @@ def late_turn():
         P.msg("3", 2.5, k, 3.9, hi=True, short=True)
         P.event(k, 4.4)
         P.msg(k, 4.4, "3", 5.9, short=True)
-    P.label("2", 0.6, "“I can accept north”", side=1, dist=10)
+    P.label("2", 0.6, "“I can accept hold”", side=1, dist=10)
     P.event("3", 2.5, hi=True)
-    P.label("3", 2.5, "calls north", side=-1, dist=10, fill=RED)
+    P.label("3", 2.5, "calls hold", side=-1, dist=10, fill=RED)
     P.label("1", 4.4, "pledges", side=1, dist=10)
     P.label("4", 4.4, "pledges", side=-1, dist=10)
-    P.event("3", 6.1, hi=True, state="N")
-    P.label("3", 6.1, "going birds; goes north", side=-1, dist=14, fill=RED)
+    P.event("3", 6.1, hi=True, state="H")
+    P.label("3", 6.1, "parting birds; holds", side=-1, dist=14, fill=RED)
     P.flow_close()
     return F
 
@@ -695,9 +695,9 @@ def _split(name, aria, notes, held):
     nodes = {"1": (225, "T1"), "2": (135, "T2"), "3": (315, "T3"), "4": (45, "T4")}
     panels = (
         # cx, title, dead pair, gate of the left pair, gate of the right pair
-        (112, "FIRST", "34", "N", None),
-        (330, "SECOND", "12", None, "S"),
-        (548, "THIRD", "", "N", "S"))
+        (112, "FIRST", "34", "H", None),
+        (330, "SECOND", "12", None, "A"),
+        (548, "THIRD", "", "H", "A"))
     for (cx, title, dead, gl, gr), note in zip(panels, notes):
         F.text(cx, 24, title, cls="d-house", fill=RED if not dead else None)
         P = Polar(F, cx, 175, 44, 7.6, nodes)
@@ -734,12 +734,12 @@ def late_split():
     return _split(
         "awl-split",
         "Three panels, each with two pairs of tents: T1 and T2 on the left, T3 and T4 on the right, later moments further out. "
-        "First: all sighted north, T3 and T4 are dead; T1 and T2 must go north. Second: all sighted south, T1 and T2 are dead; "
-        "T3 and T4 must go south. Third: all alive, the left pair sighted north and the right pair south, and every bird between "
-        "the pairs is held by the wind until both pairs have gone; each pair sees exactly what it saw before and takes a different approach.",
-        (("1 and 2 sighted north; 3 and 4", "dead at dusk. 1 and 2 go north:", "they cannot wait, two may be dead"),
-         ("3 and 4 sighted south; 1 and 2", "dead at dusk. 3 and 4 go south:", "the same, pairs and approaches swapped"),
-         ("nobody dead, but the wind holds every", "bird between the pairs: each pair sees", "just what it saw before, and goes")),
+        "First: all sighted hold, T3 and T4 are dead; T1 and T2 must hold. Second: all sighted attack, T1 and T2 are dead; "
+        "T3 and T4 must attack. Third: all alive, the left pair sighted hold and the right pair attack, and every bird between "
+        "the pairs is held by the wind until both pairs have committed; each pair sees exactly what it saw before and commits to a different answer.",
+        (("1 and 2 sighted hold; 3 and 4", "dead at dusk. 1 and 2 hold:", "they cannot wait, two may be dead"),
+         ("3 and 4 sighted attack; 1 and 2", "dead at dusk. 3 and 4 attack:", "the same, pairs and answers swapped"),
+         ("nobody dead, but the wind holds every", "bird between the pairs: each pair sees", "just what it saw before, and commits")),
         "held by the wind")
 
 
@@ -750,9 +750,9 @@ def late_split():
 def cutoff_nights():
     F = Fig("awco-nights", 660, 400,
             "Two panels drawn in the round. In each, one line stands for tents 1, 2 and 3 together and one for tent 4, with lost birds "
-            "between them; later moments further out. Left, the first night: a man among tents 1 to 3 moves the standing approach to "
-            "south and his birds to tent 4 are lost; later tent 4 asks which approach stands and answers north, which breaks answering as one. "
-            "Right, the second night: nobody moves the approach; tent 4 asks and answers north, which is right. Tent 4's line is identical in both panels.")
+            "between them; later moments further out. Left, the first night: a man among tents 1 to 3 moves the standing plan to "
+            "attack and his birds to tent 4 are lost; later tent 4 asks which plan stands and answers hold, which breaks answering as one. "
+            "Right, the second night: nobody moves the plan; tent 4 asks and answers hold, which is right. Tent 4's line is identical in both panels.")
     nodes = {"A": (-90, "T1–3"), "4": (90, "T4")}
     panels = ((165, "THE FIRST NIGHT", True), (495, "THE SECOND NIGHT", False))
     for cx, title, moved in panels:
@@ -763,18 +763,18 @@ def cutoff_nights():
         P.node_boxes()
         P.flow_open(6.4)
         if moved:
-            P.event("A", 1.4, hi=True, state="S")
-            P.label("A", 1.4, "moves approach to south", side=1, dist=14, fill=RED)
+            P.event("A", 1.4, hi=True, state="A")
+            P.label("A", 1.4, "moves plan to attack", side=1, dist=14, fill=RED)
         x, y = P.lost("A", 1.4, "4", 3.4, frac=.62, short=False, cw=False)
         F.text(x - 12, y + 4, "birds lost", cls="d-lbl d-halo", anchor="end")
-        P.event("4", 4.8, state="N")
-        P.label("4", 4.8, "asks; says “north”", side=-1, dist=12)
+        P.event("4", 4.8, state="H")
+        P.label("4", 4.8, "asks; says “hold”", side=-1, dist=12)
         P.flow_close()
         if moved:
             F.text(cx, 366, "the move was finished first;", fill=RED)
-            F.text(cx, 382, "answering as one requires south", fill=RED)
+            F.text(cx, 382, "answering as one requires attack", fill=RED)
         else:
-            F.text(cx, 366, "“north” is right;")
+            F.text(cx, 366, "“hold” is right;")
             F.text(cx, 382, "tent 4's side is the same")
     F.divider(330, 10, 390)
     return F
@@ -782,11 +782,11 @@ def cutoff_nights():
 
 def cutoff_recovery():
     F = Fig("awco-recovery", 660, 520,
-            "Tent 4, tent 1 (the keeper of the standing approach) and tent 2, drawn in the round, later moments further out. "
+            "Tent 4, tent 1 (the keeper of the standing plan) and tent 2, drawn in the round, later moments further out. "
             "A shaded ring marks the loss of birds around tent 4; birds between tents 1 and 2 still arrive. Number 4 moves the "
-            "approach to south during the loss and is told it stands when his glass runs out; his birds are lost. After the loss ends his "
+            "plan to attack during the loss and is told it stands when his glass runs out; his birds are lost. After the loss ends his "
             "move is sent again, tent 1 numbers it and sends it to every tent, and a question at tent 2 after a span longer than t "
-            "with no loss hears south.")
+            "with no loss hears attack.")
     nodes = {"4": (-90, "T4"), "1": (30, "T1"), "2": (150, "T2")}
     P = Polar(F, 330, 262, 36, 22, nodes)
     T = 8.8
@@ -805,9 +805,9 @@ def cutoff_recovery():
     # birds between tents 1 and 2 arrive throughout
     P.msg("1", 1.4, "2", 2.4, short=True)
     P.msg("2", 2.6, "1", 3.4, short=True)
-    # tent 4 moves the approach; every bird from it is lost
-    P.event("4", 1.8, hi=True, state="S")
-    P.label("4", 1.8, "moves to south", side=1, dist=14, anchor="start", fill=RED)
+    # tent 4 moves the plan; every bird from it is lost
+    P.event("4", 1.8, hi=True, state="A")
+    P.label("4", 1.8, "moves to attack", side=1, dist=14, anchor="start", fill=RED)
     P.lost("4", 1.8, "1", 3.4, frac=.5)
     P.lost("4", 1.8, "2", 3.4, frac=.5)
     P.event("4", 3.3)
@@ -821,8 +821,8 @@ def cutoff_recovery():
     P.event("2", 6.6, hi=True)
     P.event("4", 6.6, hi=True)
     # a question after the span with no loss
-    P.event("2", 8.2, state="S")
-    P.label("2", 8.2, "asks: hears south", side=1, dist=12)
+    P.event("2", 8.2, state="A")
+    P.label("2", 8.2, "asks: hears attack", side=1, dist=12)
     P.flow_close()
     return F
 
@@ -890,12 +890,12 @@ def slate_split():
     return _split(
         "tdts-split",
         "Three panels, each with two pairs of tents: T1 and T2 on the left, T3 and T4 on the right, later moments further out. "
-        "First: all sighted north, T3 and T4 are dead and chalked; T1 and T2 go north. Second: all sighted south, T1 and T2 are "
-        "dead and chalked; T3 and T4 go south. Third: all alive, the left pair sighted north and the right pair south; every bird "
-        "between the pairs is slow, each pair chalks the other, and each takes a different approach.",
-        (("1 and 2 sighted north; 3 and 4", "dead at dusk, chalked. 1 and 2", "go north without them"),
-         ("3 and 4 sighted south; 1 and 2", "dead at dusk, chalked. 3 and 4", "go south without them"),
-         ("nobody dead, but every bird between the", "pairs is slow: each pair chalks the", "other, and takes a different approach")),
+        "First: all sighted hold, T3 and T4 are dead and chalked; T1 and T2 hold. Second: all sighted attack, T1 and T2 are "
+        "dead and chalked; T3 and T4 attack. Third: all alive, the left pair sighted hold and the right pair attack; every bird "
+        "between the pairs is slow, each pair chalks the other, and each commits to a different answer.",
+        (("1 and 2 sighted hold; 3 and 4", "dead at dusk, chalked. 1 and 2", "hold without them"),
+         ("3 and 4 sighted attack; 1 and 2", "dead at dusk, chalked. 3 and 4", "attack without them"),
+         ("nobody dead, but every bird between the", "pairs is slow: each pair chalks the", "other, and commits to a different answer")),
         "slow birds")
 
 
