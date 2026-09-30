@@ -8,8 +8,9 @@ in explorer coords (origin at the world's origin). art/sets/bake.py levels the s
 (its `circle`, `centre` and `pad`, a little under this set's floor) and joins the set in.
 
 As the setting has it, a ruined Bronze Age ring of cyclopean masonry:
-- a small ring wall on the summit, solid all round: no gate, no gap, no stair. It stands to about
-  a man and a half above a man's head, its top jagged, never broken through. Its outer face drops as a
+- a small ring wall on the summit, solid all round: no gate, no gap, no stair. It is a ruin: out of true,
+  uneven in height with stretches where the top has tumbled and a spill of fallen stones round its foot, but
+  one skin always stands at least 2.4 m, so it is never breached. Its outer face drops as a
   revetment down the slope. A timber ladder, drawn up inside, is the only way over it;
 - inside, a paved floor and the loot's strongboxes on a low shelf. Nothing
   is roofed and no fire burns. The chief can see only sky;
@@ -86,10 +87,11 @@ mats = [WALL, ROCK, ASHLAR, PAVE, TIMBER]
 bm = bmesh.new()
 
 
-def lump(c, size, mat, jitter=0.12, yaw=None, sub=0):
+def lump(c, size, mat, jitter=0.12, yaw=None, sub=0, tilt=0.0):
     """A squared block (sub = 0) or a faceted rock (sub > 0), corners pushed about, at explorer centre
     c (x, y, z), size (along, across, up) on a blender yaw (radians about the vertical)."""
     M = (Matrix.Translation((c[0], -c[2], c[1])) @ Matrix.Rotation(yaw if yaw is not None else 0.0, 4, "Z")
+         @ Matrix.Rotation(rng.uniform(-tilt, tilt), 4, "X") @ Matrix.Rotation(rng.uniform(-tilt, tilt), 4, "Y")
          @ Matrix.Diagonal((*size, 1)))
     vs = (bmesh.ops.create_icosphere(bm, subdivisions=sub, radius=0.5, matrix=Matrix())["verts"] if sub else
           bmesh.ops.create_cube(bm, size=1.0, matrix=Matrix())["verts"])
@@ -118,40 +120,68 @@ SKIN = 1.0
 R_OUT_C, R_IN_C = RO - SKIN / 2, RI + SKIN / 2
 
 
-def stack(a, r, thick, blen, y0, top, mat, at=None, jit=0.12):
+def stack(a, r, thick, blen, y0, top, mat, at=None, jit=0.12, tilt=0.0, hmin=0.55, hmax=1.0):
     """One column of blocks from y0 up to top at bearing a, radius r, radial thickness thick."""
     x, z = bearing(a, r, at)
     y = y0
     while y < top - 0.02:
-        h = rng.uniform(0.55, 1.0)
+        h = rng.uniform(hmin, hmax)
         if top - (y + h) < 0.4:
             h = top - y
-        lump((x, y + h / 2, z), (blen * 0.97, thick * rng.uniform(0.95, 1.08), h), mat, jitter=jit,
-             yaw=math.radians(90 - a) + rng.uniform(-0.04, 0.04))
+        lump((x, y + h / 2, z), (blen * 0.97, thick * rng.uniform(0.95, 1.08), h), mat, jitter=jit, tilt=tilt,
+             yaw=math.radians(90 - a) + rng.uniform(-0.06, 0.06))
         y += h * 0.93 if h > 0.45 else h
+
+
+def wob(a):
+    """The ring is not a true circle: its radius wanders a little with the bearing."""
+    return 1.0 + 0.05 * math.sin(math.radians(2 * a) + 0.7) + 0.035 * math.sin(math.radians(3 * a) + 2.0)
+
+
+def wall_top(a):
+    """Standing height above the floor: uneven, with stretches where the top has tumbled. Returns (outer, inner);
+    one skin always stands at least 2.4 m, so the wall is never breached."""
+    h = 3.15 + 0.45 * math.sin(math.radians(2.3 * a) + 1.0) + 0.3 * math.sin(math.radians(5.1 * a))
+    out, inn = h, h
+    for c0, w, which in ((40, 26, "out"), (150, 22, "in"), (232, 30, "out"), (318, 20, "in")):      # the tumbled stretches
+        d = abs((a - c0 + 180) % 360 - 180)
+        if d < w:
+            drop = (1.0 + 0.9 * math.cos(math.pi / 2 * d / w)) * (0.6 + 0.4 * math.cos(math.pi / 2 * d / w))
+            if which == "out":
+                out = max(1.5, out - drop)
+            else:
+                inn = max(1.7, inn - drop)
+    return max(out, 2.4) if out >= inn else out, max(inn, 2.4) if inn > out else inn
 
 
 # --- the ring wall: solid all round, its top jagged but never broken ------------------------------
 deg = 0.0
 while deg < 360.0:
-    blen = rng.uniform(1.0, 1.9)
+    blen = rng.uniform(1.2, 2.4)
     step = arc(blen, (RI + RO) / 2)
     a = deg + step / 2
     deg += step
-    top = Y0 + rng.uniform(P["wall_min"], P["wall_max"])
-    base = min(ground(*bearing(a + da, RO + dr)) for da in (-4, 0, 4) for dr in (0.4, 1.4, 2.6)) - 2.0
-    stack(a, R_OUT_C, SKIN, blen, min(base, Y0), top, WALL)
-    stack(a, R_IN_C, SKIN, blen, Y0 - 0.4, top, WALL)
-# a few fallen stones, inside and out
-for _ in range(10):
+    w = wob(a)
+    ho, hi = wall_top(a)
+    base = min(ground(*bearing(a + da, (RO + dr) * w)) for da in (-4, 0, 4) for dr in (0.4, 1.4, 2.6)) - 2.0
+    stack(a, R_OUT_C * w, SKIN, blen, min(base, Y0), Y0 + ho, WALL, tilt=0.06, hmin=0.6, hmax=1.3)
+    stack(a, R_IN_C * w, SKIN, blen, Y0 - 0.4, Y0 + hi, WALL, tilt=0.06, hmin=0.6, hmax=1.3)
+# fallen stones: a spill of blocks round the outer foot and a few inside, big ones near the wall
+for _ in range(55):
     a = rng.uniform(0, 360)
-    r = rng.choice((rng.uniform(RI - 1.0, RI - 0.3), rng.uniform(RO + 0.3, RO + 1.8)))
+    r = (RO + 0.3 + abs(rng.gauss(0, 1.6))) * wob(a)
     x, z = bearing(a, r)
-    s = rng.uniform(0.4, 0.9)
-    lump((x, (Y0 if r < RO else ground(x, z)) + s * 0.3, z), (s * 1.3, s, s * 0.7), WALL, jitter=0.25, yaw=rng.uniform(0, 3))
+    s_ = rng.uniform(0.35, 1.3) * (1.3 if r < RO + 1.2 else 0.8)
+    lump((x, ground(x, z) + s_ * 0.3, z), (s_ * 1.4, s_, s_ * 0.8), WALL, jitter=0.25, yaw=rng.uniform(0, 3), tilt=0.4)
+for _ in range(14):
+    a = rng.uniform(0, 360)
+    r = (RI - 0.4 - abs(rng.gauss(0, 0.7))) * wob(a)
+    x, z = bearing(a, max(r, 1.4))
+    s_ = rng.uniform(0.3, 0.8)
+    lump((x, Y0 + s_ * 0.3, z), (s_ * 1.3, s_, s_ * 0.7), WALL, jitter=0.25, yaw=rng.uniform(0, 3), tilt=0.4)
 
 # --- inside: paving, the chief's chair, the loot ------------------------------------------------
-floor = bmesh.ops.create_circle(bm, cap_ends=True, radius=RI + 0.2, segments=48)
+floor = bmesh.ops.create_circle(bm, cap_ends=True, radius=RI * 1.08, segments=48)
 for f in {f for v in floor["verts"] for f in v.link_faces}:
     f.material_index = mats.index(PAVE)
 for v in floor["verts"]:
