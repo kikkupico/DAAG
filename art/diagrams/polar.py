@@ -1183,8 +1183,8 @@ def liars_worlds():
 
 def liars_repeat():
     F = Fig("aal-repeat", 660, 560,
-            "The chief at B1 and three guards at B2, B3 and B4, drawn in the round, later moments further out. In the first glass "
-            "(shaded ochre) the chief sends a slip to each guard. In the second glass (shaded olive) each guard repeats to the other two "
+            "The chief at B1 and three guards at B2, B3 and B4, drawn in the round, later moments further out. In the first round "
+            "(shaded ochre) the chief sends a slip to each guard. In the second round (shaded olive) each guard repeats to the other two "
             "what the chief sent him. Each guard then holds three accounts and takes the greater count of them.")
     nodes = {"1": (-90, "B1"), "2": (0, "B2"), "3": (90, "B3"), "4": (180, "B4")}
     P = Polar(F, 330, 280, 40, 26, nodes)
@@ -1198,8 +1198,8 @@ def liars_repeat():
     P.road(T)
     P.node_boxes()
     P.label("1", 0, "the chief", side=-1, dist=28, dy=-4)
-    F.text(20, 30, "first glass", cls="d-key", anchor="start", fill=OCHRE)
-    F.text(20, 48, "second glass", cls="d-key", anchor="start", fill=OLIVE)
+    F.text(20, 30, "first round", cls="d-key", anchor="start", fill=OCHRE)
+    F.text(20, 48, "second round", cls="d-key", anchor="start", fill=OLIVE)
     P.flow_open(T)
     P.event("1", 1.0)
     for k in "234":
