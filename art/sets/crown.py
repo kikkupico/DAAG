@@ -11,7 +11,7 @@ As the setting has it, a ruined Bronze Age ring of cyclopean masonry:
 - a small ring wall on the summit, solid all round: no gate, no gap, no stair. It stands to about
   a man and a half above a man's head, its top jagged, never broken through. Its outer face drops as a
   revetment down the slope. A timber ladder, drawn up inside, is the only way over it;
-- inside, a paved floor, the chief's stone chair, and the loot's strongboxes on a low shelf. Nothing
+- inside, a paved floor and the loot's strongboxes on a low shelf. Nothing
   is roofed and no fire burns. The chief can see only sky;
 - the other three men hold lookout posts out on the slopes, each a hollow among crags with a low
   dry-stone breastwork on the downhill side, looking out over its own approach. Terrain between the
@@ -162,10 +162,6 @@ def loc(e, n):
     return CX - n, CZ - e
 
 
-sx, sz = loc(0.0, 0.6)                                                      # the chief's stone chair, facing south
-lump((sx, Y0 + 0.25, sz), (0.7, 1.2, 0.5), ASHLAR, jitter=0.03)
-bx, bz = loc(0.0, 0.95)
-lump((bx, Y0 + 0.65, bz), (0.14, 1.2, 0.9), ASHLAR, jitter=0.02)
 for e in (-1.6, 0.0, 1.6):                                                  # a low stone shelf for the loot
     x, z = loc(e, 3.0)
     lump((x, Y0 + 0.12, z), (0.9, 1.1, 0.24), WALL, jitter=0.04)
@@ -208,7 +204,7 @@ bpy.context.scene.collection.objects.link(o)
 C = lambda e, n, y: [round(loc(e, n)[0], 2), round(Y0 + y, 2), round(loc(e, n)[1], 2)]
 json.dump({"_note": "Written by art/sets/crown.py; explorer coords [x, y, z], metres. Bearings: 0 north (-x), 90 east (-z).",
            "params": P, "top": [CX, round(ground(CX, CZ), 2), CZ], "floor": Y0,
-           "chief": {"seat": C(0.0, 0.6, 0.5), "facing": 180, "loot": [C(e, 3.0, 0.24) for e in (-1.6, 0.0, 1.6)],
+           "chief": {"stands": C(0.0, 0.6, 0.0), "loot": [C(e, 3.0, 0.24) for e in (-1.6, 0.0, 1.6)],
                      "sandglass": C(1.9, 0.0, 0.6), "ladder": C(0.0, -RI + 0.35, 0.0)},
            "posts": posts},
           open(f"art/sets/{NAME}.json", "w"), indent=1)

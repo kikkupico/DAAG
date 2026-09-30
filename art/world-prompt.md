@@ -266,7 +266,7 @@ Completely hidden from view of any other camp, concealed by the mountain spurs. 
 Detailed 3D isometric architectural asset of the Summit Crown of Mount Phyle, Hellenistic Ancient Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated summit redoubt, zero people.
 Situated on the very top of a limestone mountain, high above the sea.
-A small ruined cyclopean polygonal dry-stone ring wall with weathered, jagged top edges, solid all round: no gate, no gap, no stair, no opening of any kind. Inside it, a paved floor, a single stone chair and a few iron-bound strongboxes on a low stone shelf, and a timber ladder drawn up against the inner face; nothing roofed.
+A small ruined cyclopean polygonal dry-stone ring wall with weathered, jagged top edges, solid all round: no gate, no gap, no stair, no opening of any kind. Inside it, a paved floor and a few iron-bound strongboxes on a low stone shelf, and a timber ladder drawn up against the inner face; nothing roofed.
 Out on the slopes around it, far apart, three lookout posts, each a hollow among pale crags with a low dry-stone breastwork on its downhill side. Terrain hides every post from the others.
 NO gate, NO council ring, NO circle of seats, NO roofs, NO banners, NO fire. Windswept scrub, wild grasses and weathered pale limestone.
 ```
