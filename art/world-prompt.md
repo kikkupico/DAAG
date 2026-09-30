@@ -69,7 +69,7 @@ Terrain (Mount Phyle):
 - The mountain stands between every pair of ports: a straight line from any port to any other crosses the mountain's upper slopes.
 - The four gullies at north, east, south and west are empty: nothing built in them.
 
-The crown: a small ruined ring wall round a few crags on the very summit, about the size of the largest building in the ports, with a narrow gap on its north side and a wider gap on its south side. Three tiny separate blocks sit just below the wall on different sides, and one tiny block in the middle of the ring. Two faint dashed goat paths climb two different spurs to the two gaps and fade out halfway down the mountain.
+The crown: a small ruined ring wall on the very summit, about the size of the largest building in the ports, closed all round with no gap at all. Three tiny separate marks sit well down the slopes on three different sides, far from the wall and hidden from one another. No path climbs to the wall.
 
 Coastal road: one cliff road with a lane each way, drawn as a dark red double line, running right round the island close to the coast, with no branches, no inland roads and no road over the mountain.
 
@@ -93,7 +93,7 @@ The attached map is the island's plan, drawn from directly above with north at t
 
 THE ROAD REACHES EVERY PORT, as on the map: at each of the three ports it runs along the waterfront, and every quay, pier and building stands on or directly beside it. No port, building, pier or quay stands apart from the road or is cut off from it by cliff or water.
 
-The summit crown is exactly the size of the ring on the map: small, about the size of the largest building in the ports, a ruined wall round a few crags on the very top. The map has no text; add none.
+The summit crown is exactly the size of the ring on the map: small, about the size of the largest building in the ports, a small closed ruined ring on the very top. The map has no text; add none.
 
 REMOVE ALL PEOPLE AND ANIMALS: zero people, zero human figures, zero sailors, zero soldiers, zero silhouettes, zero mules, zero horses, zero livestock, zero birds in flight. Show that the island is lived in and busy only through buildings, objects, vehicles at rest, cargo and ships.
 
@@ -116,7 +116,7 @@ Mount Phyle (natural massif with book locations):
 - Organic natural karst geomorphology: eight radiating wooded spurs separated by gullies. Rough limestone outcrops, broken crags, ledges and scree break through the scrub on the upper third, as scattered rocks on a slope, not as walls. Maritime pine, cypress and maquis cover the lower slopes. NO concentric rings, NO stepped tiers, NO artificial plateaus, NO mesa or tabletop, NO crater or caldera, NO switchback roads.
 - The mountain is not a thoroughfare. There is no road over it and no made trail. Only two faint, rough goat paths climb two spurs to the wall's north slot and south gap, vanishing into scrub and scree lower down.
 - Four deep wooded gullies at the foot, one at each quarter-point (N, E, S, W), each between two wooded spurs, with two spurs between any two of these gullies. The gullies are empty wooded clefts with nothing built in them.
-- The summit crown: a modest rounded rocky top, an irregular jumble of pale limestone crags and clefts sitting on the slope rather than raised on a cliff, circled by a ruined cyclopean polygonal dry-stone wall with jagged tops and two breaches: a narrow rock slot on the north side and a wider timber-framed gap on the south. On the highest point sits the chief's hollow: a rock shelter with a few strongboxes and a bronze water-jar. Below the rim, three small separate lookout posts are tucked into three different crags, each facing a different approach and each hidden from the others and from the peak by rock, each with a small bronze water-jar. No council ring, no buildings, no roofs.
+- The summit crown: a modest rounded rocky top, levelled a little, crowned by a small ruined cyclopean polygonal dry-stone ring wall with jagged, uneven tops, solid all round with no opening of any kind. Out on the slopes, far apart, three small separate lookout posts, each a hollow among crags with a rough low dry-stone breastwork, each hidden from the others and from the wall by rock. No council ring, no roofs.
 
 Coastal Ring Road (one cliff road, a lane each way):
 - Everywhere between the ports the road is a single shelf cut into the face of pale limestone sea-cliffs, with the surf far below.

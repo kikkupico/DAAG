@@ -133,7 +133,7 @@ synchrony assumption, against which adversary.
 
 **Two settings, two sections.** The foot (`places/the-foot`, the camps: crash faults) and the
 crown (`places/the-crown`, the bandits: liars) each have their own setting page and home-page
-section. Both pages restate the hill and the ravens; each describes only its own end in full.
+section. Both pages restate the hill and the messengers (ravens below, rats above); each describes only its own end in full.
 
 **No ambush, and no outcome.** The mercenaries must commit to one gate or the other, and
 *nothing follows from the decision*. The siege has no resolution in any book: no assault
@@ -151,7 +151,7 @@ an outcome is plot.
 | `castro-liskov-1999` | **The crown, on a later night of the siege.** The four keep one **loot book**, a copy at each post: where each strongbox lies and whose share it is. Each man is also a client: he files an entry and trusts it only when two sealed replies agree (f + 1). One man holds the chief's job and numbers the entries; the others echo twice, each time waiting for three seals (2f + 1), before an entry stands. The job starts with Number 1, the chief, and passes in number order (view change) when the others suspect its holder of stalling or of numbering two ways. *Agreeing Among Liars* already says the chief is a job, not a rank. Four is exactly 3f + 1 for one liar, and the seal rings are that book's. On these nights **wind over the crown** holds the rats in their holes for as long as it blows, so a run has no bound; the entries stay safe in any wind, and progress returns once the wind drops for long enough (PBFT's delay(t) assumption). Each man's sandglass is only a timer for suspecting the chief, doubling at each change. The two-seal rule for clients is stated and shown redundant for an honest man, whose own copy already tells him an entry stands. MACs appear only in the mapping table. The men are the crown's four of *Agreeing Among Liars* (Number 1, the chief inside the wall, holds the job first, then Numbers 2, 3 and 4). An entry is **readied** on three seals (numbering and two first echoes) and **stands** on three second echoes; a job change needs three **requests**, and a man joins on two; **settled pages** are the checkpoints. The wind that blows over the whole hill is the same wind as the camps'. Nothing follows from any entry. (*Keeping Order Among Liars*) |
 | `yin-2019_hotstuff` | **The same crown and loot book, later again.** The chief's job passes to the next man with every entry, whether or not anyone suspects its holder. Each man sends his sealed vote only to the man who holds the job, who ties three of them into one **bundle** and sends the bundle on, instead of every man writing to every other. After the wind drops (GST), a new holder proceeds as fast as the rats run, not when a sandglass runs out (optimistic responsiveness), and a change of holder costs no more than an ordinary entry (linear view change). The bundle is three seals, not one: say plainly that the paper's threshold signature makes it the size of a single seal. The case for three stages (the hidden lock) is shown on the crown as a two-stage procedure that must wait out a full sandglass after each change of holder. The men are the crown's four of *Agreeing Among Liars*; the footnote credits all five authors. Devices: **votes** to the holder alone, **bundles** of three; a man's **lock** is the latest second bundle he voted on; the rule for the first vote (extends your lock, or carries a later bundle); the **hidden lock** of two stages; the chain in which three in a row make the first stand. Must not contradict *Keeping Order Among Liars*; nothing follows from any entry. (*Changing Leaders Among Liars*) |
 
-**The ground:** a broad massif with broad lower slopes and a steep cragged crown, eight spurs and gullies, and four camps at the quarter points with no pair able
+**The ground:** a broad massif with broad lower slopes and a steep cragged top crowned by a small ruined ring wall, eight spurs and gullies, and four camps at the quarter points with no pair able
 to see each other. It fills the centre of Arche and blocks every line of sight between the
 houses.
 
@@ -163,17 +163,27 @@ houses.
   failure detector. The mercenaries have
   no leader and do not lie. On the windy nights of DLS each tent has a glass, turned together as
   the last light left the crown; no other common moment exists below.
-- **The summit carries the synchronous model.** The chief sits inside a small ring wall with no gate, the loot with him, and three posts
-  are lookouts out on the slopes, each a hollow among crags with a rough, uneven dry-stone breastwork, out of sight of one another and of the wall.
-  Nobody shouts, signals or lights a brand, because the tents below are listening — and
-  because a shout heard by everyone is a broadcast, and a chief who can broadcast cannot tell
-  different men different things, which would dissolve the problem. Every message is a short,
-  bounded rat run over the rocks and through the chinks of the wall, and the four sandglasses are turned together at dusk, before the posts are
-  manned. One running of a sandglass is a **round**, the unit of *Agreeing Among Liars*. Byzantine Generals lives here.
+- **The summit carries the synchronous model.** On the very top stands a small ruined ring wall of rough
+  cyclopean stones, solid all round: no gate, no gap, no stair, its top jagged but never broken through. Inside,
+  open to the sky, are the loot and the chief, who climbed in by a timber ladder and drew it up after him, and who
+  can see only sky. The other three men hold lookout posts out on the slopes, each a hollow among crags with a
+  rough, uneven dry-stone breastwork on its downhill side, each watching one approach; the hill's shoulders hide
+  every post from the others, and the wall hides the chief from all of them. Nobody shouts, signals or lights a
+  brand, because the tents below are listening — and because a shout heard by everyone is a broadcast, and a chief
+  who can broadcast cannot tell different men different things, which would dissolve the problem. Every message
+  is carried by a trained rat, running over the rocks and through the chinks between the wall's stones. Each rat
+  wears a cord knotted with its sender's number, which names the sender (the paper's second assumption); a
+  trained rat always arrives (the first); silence within a round is detectable (the third). The four
+  sandglasses are turned together at dusk, before the posts are manned. One running of a sandglass is a
+  **round**, the unit of *Agreeing Among Liars*. Byzantine Generals lives here.
+- **Why rats.** No army ever sent messages by rat; the crown page says so. No animal fits a distance this
+  small except a runner, and a runner or a homing bird would be seen and heard. The rats stand for any private,
+  bounded message from one post to one other, which is all the paper asks of a messenger, and the wind can still
+  hold them back.
 - **The crown on later nights carries partial synchrony with liars.** The sandglasses were turned
   together once, on the first night, and never again: the hill's shoulders take the light from each post at a
   different moment, and the chief inside his wall sees only sky, so the last light that the tents below turn their glasses by is not theirs to use. On later nights the wind that blows over the whole hill holds the crown's rats in their holes for
-  as long as it blows; once it drops, every flight is short again (GST, then Δ). The same wind
+  as long as it blows; once it drops, every run is short again (GST, then Δ). The same wind
   carries crashes below (DLS) and liars above (PBFT, HotStuff). The bandits have what the mercenaries lack, a chief and reason to distrust one another,
   so the leader-based papers live here: PBFT, then HotStuff.
 
