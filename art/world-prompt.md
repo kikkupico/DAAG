@@ -457,6 +457,13 @@ Warm daylight through the doorways, photorealistic PBR stone, marble and timber.
 
 ---
 
+## 3.3 The Home Page Chart
+
+`assets/img/map.jpg` comes from a render of the two island models, never from editing an old chart.
+1. **Views:** `blender -b -P art/refs/chart_views.py -- <arche|paxos> out.png 25 560 <yaw>` renders one island, placed from art/islands.json, from directly above tilted 25° south, north up, on a transparent ground (frame 560 m so a turned island isn't clipped; resolution scales with it). Both islands turn together 15° anticlockwise from the explorer's placement so the pair lies along the diagonal: Arche yaw 15, Paxos yaw 37 (22° more, so its stem runs down the diagonal and its two arms open towards Arche).
+2. **Layout:** `python3 art/refs/chart_layout.py` sets the two views at one scale on a 2048² canvas, Arche top-left tucked in the crook of Paxos's Y, and centres the pair as a group. The top-right and bottom-left corners stay empty. Result: art/refs/chart-layout.png.
+3. **Home page:** the user converts the layout to the final chart themselves in Gemini (AI engravings made here were rejected). The result, a sepia copperplate chart with a compass rose top-right and rhumb lines, is `art/full-map-cartographic.jpeg` (2048²) and, resized to 1240², `assets/img/map.jpg`.
+
 ## 4. Image-to-3D Reconstruction Guidelines
 
 When processing these 2D isometric renders through neural 3D generators — Meshy (web UI) is the one to use; Tripo's conversions are far worse:
