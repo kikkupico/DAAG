@@ -1140,6 +1140,190 @@ def parl_ledger():
     return F
 
 
+# ---------------------------------------------------------------------------
+# Agreeing Among Liars
+# ---------------------------------------------------------------------------
+
+def liars_worlds():
+    F = Fig("aal-worlds", 660, 420,
+            "Two panels, each with the chief at P1 and two guards at P2 and P3, later moments further out. Left: the chief is honest "
+            "and sends hold to both guards; P3 lies and tells P2 he was sent scatter. Right: the chief lies and sends hold to P2 and "
+            "scatter to P3; P3 is honest and tells P2, truthfully, that he was sent scatter. P2 receives exactly the same two slips in both.")
+    nodes = {"1": (-90, "P1"), "2": (150, "P2"), "3": (30, "P3")}
+    for cx, title, liar, second in ((165, "CHIEF HONEST", "3", "hold"), (495, "CHIEF LIES", "1", "scatter")):
+        F.text(cx, 24, title, cls="d-house")
+        P = Polar(F, cx, 200, 44, 14, nodes)
+        P.rings(7)
+        P.road(7.4)
+        P.node_boxes()
+        P.flow_open(7.4)
+        P.msg("1", 0.8, "2", 2.2, short=True)
+        P.msg("1", 0.8, "3", 2.3, hi=False, short=True)
+        P.event("1", 0.8)
+        P.event("3", 2.3)
+        P.msg("3", 3.0, "2", 4.6, short=True)
+        P.event("3", 3.0)
+        P.event("2", 2.2, hi=True)
+        P.event("2", 4.6, hi=True)
+        if liar == "1":
+            P.label("1", 0, "liar", side=-1, dist=30, fill=RED, dy=-4)
+        else:
+            P.label("3", 0, "liar", side=1, dist=30, fill=RED, dy=-4)
+        P.label("2", 2.2, "hold", side=-1, dist=10, anchor="end", cls="d-num d-halo")
+        P.label("3", 2.3, second, side=1, dist=10, anchor="start", cls="d-num d-halo")
+        P.flow_close()
+        x, y = P.at(90, 5.6)
+        F.text(cx, y + 18, "“he sent me scatter”", cls="d-lbl d-halo", anchor="middle", fill=BLUE)
+    F.text(165, 372, "so this guard must hold", fill=RED)
+    F.text(495, 372, "so he holds, and the other scatters", fill=RED)
+    F.text(330, 404, "the same two slips reach him in both: nothing tells him which hill he is on")
+    F.divider(330, 10, 386)
+    return F
+
+
+def liars_repeat():
+    F = Fig("aal-repeat", 660, 560,
+            "The chief at P1 and three guards at P2, P3 and P4, drawn in the round, later moments further out. In the first glass "
+            "(shaded ochre) the chief sends a slip to each guard. In the second glass (shaded olive) each guard repeats to the other two "
+            "what the chief sent him. Each guard then holds three accounts and takes the greater count of them.")
+    nodes = {"1": (-90, "P1"), "2": (0, "P2"), "3": (90, "P3"), "4": (180, "P4")}
+    P = Polar(F, 330, 280, 40, 26, nodes)
+    T = 8.6
+    first, second = (0.7, 3.0), (3.3, 6.3)
+    P.rings(9)
+    P.flow_open(T)
+    P.span(*first, OCHRE)
+    P.span(*second, OLIVE)
+    P.flow_close()
+    P.road(T)
+    P.node_boxes()
+    P.label("1", 0, "the chief", side=-1, dist=28, dy=-4)
+    F.text(20, 30, "first glass", cls="d-key", anchor="start", fill=OCHRE)
+    F.text(20, 48, "second glass", cls="d-key", anchor="start", fill=OLIVE)
+    P.flow_open(T)
+    P.event("1", 1.0)
+    for k in "234":
+        P.msg("1", 1.0, k, 2.6, short=True)
+    for k in "234":
+        P.event(k, 3.5)
+        for o in "234":
+            if o != k:
+                P.msg(k, 3.5, o, 5.9, short=True)
+    for k in "234":
+        P.event(k, 6.7, hi=True)
+    P.label("2", 6.7, "same", side=1, dist=10, fill=RED)
+    P.label("3", 6.7, "count", side=1, dist=10, fill=RED)
+    P.label("4", 6.7, "greater", side=-1, dist=10, fill=RED)
+    P.flow_close()
+    F.text(330, 526, "each guard then holds three accounts and takes the greater count of them", fill=RED)
+    F.text(330, 546, "a liar in the chief's place may send something different to each guard", cls="d-note")
+    return F
+
+
+def liars_sealed():
+    F = Fig("aal-sealed", 660, 500,
+            "The chief at P1 and two guards at P2 and P3, drawn in the round, later moments further out. The chief lies: he seals hold "
+            "to P2 and scatter to P3. Each guard adds his seal and passes the order across to the other. Both guards then hold the same "
+            "two orders, both under the chief's seal, so both go the same way, and the chief has convicted himself.")
+    nodes = {"1": (-90, "P1"), "2": (150, "P2"), "3": (30, "P3")}
+    P = Polar(F, 330, 250, 44, 26, nodes)
+    T = 7.4
+    P.rings(8)
+    P.road(T)
+    P.node_boxes()
+    P.label("1", 0, "the chief lies", side=1, dist=26, fill=RED, anchor="start", dy=-6)
+    P.flow_open(T)
+    P.event("1", 1.0, hi=True)
+    P.msg("1", 1.0, "2", 2.6, hi=True, short=True)
+    P.msg("1", 1.0, "3", 2.8, hi=True, short=True)
+    P.label("2", 2.6, "hold : 1", side=-1, dist=12, fill=BLUE, anchor="end", dy=8, cls="d-num d-halo")
+    P.label("3", 2.8, "scatter : 1", side=1, dist=12, fill=BLUE, anchor="start", dy=8, cls="d-num d-halo")
+    P.event("2", 3.3)
+    P.event("3", 3.4)
+    P.msg("2", 3.3, "3", 5.2, short=True)
+    P.msg("3", 3.4, "2", 5.3, short=True)
+    P.label("3", 5.2, "hold : 1 : 2", side=-1, dist=10, fill=BLUE, anchor="start", cls="d-num d-halo")
+    P.label("2", 5.3, "scatter : 1 : 3", side=1, dist=10, fill=BLUE, anchor="end", cls="d-num d-halo")
+    P.event("2", 5.8, hi=True)
+    P.event("3", 5.9, hi=True)
+    P.flow_close()
+    F.text(330, 456, "both sheaves hold the same two orders, so both men go the same way")
+    F.text(330, 476, "and the chief's seal on two orders convicts him, of lying and of nothing else", fill=RED)
+    return F
+
+
+# ---------------------------------------------------------------------------
+# Changing Leaders Among Liars
+# ---------------------------------------------------------------------------
+
+def leaders_stage():
+    F = Fig("cla-stage", 660, 420,
+            "Two panels with the four posts P1 to P4 drawn in the round, later moments further out. Left: in one stage every man sends "
+            "to every other man, twelve birds. Right: the three other men send their sealed votes to the holder, P1, who ties three into "
+            "a bundle and sends it to the other three.")
+    nodes = {"1": (225, "P1"), "2": (135, "P2"), "3": (315, "P3"), "4": (45, "P4")}
+    for cx, title in ((165, "EVERY MAN TO EVERY MAN"), (495, "VOTES TO ONE, BUNDLE TO ALL")):
+        F.text(cx, 24, title, cls="d-house")
+    P = Polar(F, 165, 205, 46, 14, nodes)
+    P.rings(6)
+    P.road(6.2)
+    P.node_boxes()
+    P.flow_open(6.2)
+    for a in "1234":
+        P.event(a, 1.0)
+        for b in "1234":
+            if b != a:
+                P.msg(a, 1.0, b, 4.6, short=True)
+    P.flow_close()
+    Q = Polar(F, 495, 205, 46, 14, nodes)
+    Q.rings(6)
+    Q.road(6.2)
+    Q.node_boxes()
+    Q.flow_open(6.2)
+    Q.label("1", 0, "holder", side=-1, dist=30, fill=RED, dy=-6)
+    for a in "234":
+        Q.event(a, 1.0)
+        Q.msg(a, 1.0, "1", 2.6, short=True)
+    Q.event("1", 3.2, hi=True)
+    Q.label("1", 3.2, "ties three", side=1, dist=10, fill=RED, dy=-6)
+    for b in "234":
+        Q.msg("1", 3.2, b, 5.6, hi=True, short=True)
+    Q.flow_close()
+    F.text(165, 376, "twelve birds a stage")
+    F.text(495, 376, "three votes in, three bundles out")
+    F.divider(330, 10, 396)
+    return F
+
+
+def leaders_chain():
+    F = Fig("cla-chain", 660, 560,
+            "The four posts drawn in the round, later moments further out. The job passes to the next man with every entry: term 5 at P1, "
+            "term 6 at P2, term 7 at P3, term 8 at P4, each proposal carrying the bundle for the entry directly before it, so the chain "
+            "winds outward round the circle. With the proposal of term 8, the entry of term 7 has its first bundle, term 6's is locked on, "
+            "and term 5's stands.")
+    nodes = {"1": (-90, "P1"), "2": (0, "P2"), "3": (90, "P3"), "4": (180, "P4")}
+    P = Polar(F, 330, 280, 40, 26, nodes)
+    T = 8.6
+    terms = (("1", 1.2, "5", "stands", RED), ("2", 3.0, "6", "locked on", INK),
+             ("3", 4.8, "7", "first bundle", INK), ("4", 6.6, "8", "new proposal", INK))
+    P.rings(9)
+    P.road(T)
+    P.node_boxes()
+    P.flow_open(T)
+    for (a, ta, *_), (b, tb, *_) in zip(terms, terms[1:]):
+        P.msg(a, ta, b, tb, short=False)
+    for k, t, n, word, col in terms:
+        P.event(k, t, hi=(col == RED))
+        P.badge(k, t, n, col, side=-1 if k in "14" else 1, dist=17)
+    P.label("1", 1.2, "stands", side=-1, dist=38, fill=RED)
+    P.label("2", 3.0, "locked on", side=-1, dist=38)
+    P.label("3", 4.8, "first bundle", side=-1, dist=38)
+    P.label("4", 6.6, "new proposal", side=1, dist=38)
+    P.flow_close()
+    F.text(330, 536, "each arc is the bundle an entry carries for the one directly before it", cls="d-note")
+    return F
+
+
 FIGURES = {
     "books/ordering-without-clocks/index.html": [ordering_spacetime],
     "books/taking-stock-without-stopping/index.html": [stock_sash, stock_cuts],
@@ -1150,11 +1334,14 @@ FIGURES = {
     "books/keeping-order-among-liars/index.html": [order_entry],
     "books/telling-the-dead-from-the-slow/index.html": [slate_split],
     "books/one-leader-at-a-time/index.html": [board_passes],
+    "books/agreeing-among-liars/index.html": [liars_worlds, liars_repeat, liars_sealed],
+    "books/changing-leaders-among-liars/index.html": [leaders_stage, leaders_chain],
     "books/the-part-time-parliament/index.html": [parl_steps, parl_wander, parl_duel, parl_theorem, parl_ledger],
 }
 
 # A figure not yet in its book takes the place of the nth flat <figure class="diagram">.
-LEGACY = {"awl-turn": 0, "awl-split": 1, "awco-nights": 0, "awco-recovery": 1, "kol-entry": 0, "tdts-split": 0, "olt-board": 0}
+LEGACY = {"awl-turn": 0, "awl-split": 1, "awco-nights": 0, "awco-recovery": 1, "kol-entry": 0, "tdts-split": 0, "olt-board": 0,
+          "aal-worlds": 0, "aal-repeat": 1, "aal-sealed": 2, "cla-stage": 0, "cla-chain": 1}
 SCRIPT = '<script src="../../assets/js/flow.js" defer></script>\n'
 
 
