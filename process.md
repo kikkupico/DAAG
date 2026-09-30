@@ -303,7 +303,7 @@ left), and bandits met elsewhere need not be of their band; no one outside can t
 
 **Mount Phyle is built.** Its geometry, cast and architecture are fixed by *The Limits of
 Agreement* (the foot), *Agreeing Among Liars* (the crown) and `buildings.md`. Nothing may contradict them: four camps that cannot see each other,
-ravens below and rats on the crown, no fire or signal below the crown, and one single synchronous night on the crown: the
+ravens below and rats on the crown, a small sealed ring wall on the crown holding the chief and the loot with the other three men at posts out on the slopes, no pair in sight of another, no fire or signal below the crown, and one single synchronous night on the crown: the
 sandglasses there are turned together once, before the posts are first manned, and since no man
 may leave his post they are never turned together again. The siege itself may last any number of
 days. On later nights a wind can blow over the whole hill and keep the camps' ravens and the crown's rats from moving for as long as it
