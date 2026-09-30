@@ -836,7 +836,7 @@ def order_entry():
             "The four posts drawn in the round, later moments further out. Number 2 files an entry with Number 1, who holds the job. "
             "Number 1 numbers it 7 and sends the numbering to all. Two shaded rings mark the echoes: Numbers 2 and 3 send first echoes to "
             "the others, then Numbers 1, 2 and 3 send second echoes to the others, and the entry stands at those three posts. "
-            "Number 4's birds are pinned by the wind, and nobody waits for him.")
+            "Number 4's rats are held in their holes by the wind, and nobody waits for him.")
     nodes = {"1": (-90, "B1"), "2": (0, "B2"), "3": (90, "B3"), "4": (180, "B4")}
     P = Polar(F, 330, 280, 40, 26, nodes)
     T = 8.6
@@ -877,7 +877,7 @@ def order_entry():
     P.label("1", 7.1, "stands", side=-1, dist=10, fill=RED)
     P.label("2", 7.1, "stands", side=-1, dist=10, fill=RED)
     P.label("3", 7.1, "stands", side=1, dist=10, fill=RED)
-    P.label("4", 4.6, "birds pinned by the wind", side=-1, dist=10)
+    P.label("4", 4.6, "rats held in by the wind", side=-1, dist=10)
     P.flow_close()
     return F
 
@@ -1259,7 +1259,7 @@ def liars_sealed():
 def leaders_stage():
     F = Fig("cla-stage", 660, 420,
             "Two panels with the four bandits B1 to B4 drawn in the round, later moments further out. Left: in one stage every man sends "
-            "to every other man, twelve birds. Right: the three other men send their sealed votes to the holder, B1, who ties three into "
+            "to every other man, twelve rats. Right: the three other men send their sealed votes to the holder, B1, who ties three into "
             "a bundle and sends it to the other three.")
     nodes = {"1": (225, "B1"), "2": (135, "B2"), "3": (315, "B3"), "4": (45, "B4")}
     for cx, title in ((165, "EVERY MAN TO EVERY MAN"), (495, "VOTES TO ONE, BUNDLE TO ALL")):
@@ -1289,7 +1289,7 @@ def leaders_stage():
     for b in "234":
         Q.msg("1", 3.2, b, 5.6, hi=True, short=True)
     Q.flow_close()
-    F.text(165, 376, "twelve birds a stage")
+    F.text(165, 376, "twelve rats a stage")
     F.text(495, 376, "three votes in, three bundles out")
     F.divider(330, 10, 396)
     return F
