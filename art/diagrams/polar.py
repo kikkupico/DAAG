@@ -837,7 +837,7 @@ def order_entry():
             "Number 1 numbers it 7 and sends the numbering to all. Two shaded rings mark the echoes: Numbers 2 and 3 send first echoes to "
             "the others, then Numbers 1, 2 and 3 send second echoes to the others, and the entry stands at those three posts. "
             "Number 4's birds are pinned by the wind, and nobody waits for him.")
-    nodes = {"1": (-90, "P1"), "2": (0, "P2"), "3": (90, "P3"), "4": (180, "P4")}
+    nodes = {"1": (-90, "B1"), "2": (0, "B2"), "3": (90, "B3"), "4": (180, "B4")}
     P = Polar(F, 330, 280, 40, 26, nodes)
     T = 8.6
     first, second = (3.6, 5.2), (5.3, 6.9)
@@ -1146,10 +1146,10 @@ def parl_ledger():
 
 def liars_worlds():
     F = Fig("aal-worlds", 660, 420,
-            "Two panels, each with the chief at P1 and two guards at P2 and P3, later moments further out. Left: the chief is honest "
-            "and sends hold to both guards; P3 lies and tells P2 he was sent scatter. Right: the chief lies and sends hold to P2 and "
-            "scatter to P3; P3 is honest and tells P2, truthfully, that he was sent scatter. P2 receives exactly the same two slips in both.")
-    nodes = {"1": (-90, "P1"), "2": (150, "P2"), "3": (30, "P3")}
+            "Two panels, each with the chief at B1 and two guards at B2 and B3, later moments further out. Left: the chief is honest "
+            "and sends hold to both guards; B3 lies and tells B2 he was sent scatter. Right: the chief lies and sends hold to B2 and "
+            "scatter to B3; B3 is honest and tells B2, truthfully, that he was sent scatter. B2 receives exactly the same two slips in both.")
+    nodes = {"1": (-90, "B1"), "2": (150, "B2"), "3": (30, "B3")}
     for cx, title, liar, second in ((165, "CHIEF HONEST", "3", "hold"), (495, "CHIEF LIES", "1", "scatter")):
         F.text(cx, 24, title, cls="d-house")
         P = Polar(F, cx, 200, 44, 14, nodes)
@@ -1183,10 +1183,10 @@ def liars_worlds():
 
 def liars_repeat():
     F = Fig("aal-repeat", 660, 560,
-            "The chief at P1 and three guards at P2, P3 and P4, drawn in the round, later moments further out. In the first glass "
+            "The chief at B1 and three guards at B2, B3 and B4, drawn in the round, later moments further out. In the first glass "
             "(shaded ochre) the chief sends a slip to each guard. In the second glass (shaded olive) each guard repeats to the other two "
             "what the chief sent him. Each guard then holds three accounts and takes the greater count of them.")
-    nodes = {"1": (-90, "P1"), "2": (0, "P2"), "3": (90, "P3"), "4": (180, "P4")}
+    nodes = {"1": (-90, "B1"), "2": (0, "B2"), "3": (90, "B3"), "4": (180, "B4")}
     P = Polar(F, 330, 280, 40, 26, nodes)
     T = 8.6
     first, second = (0.7, 3.0), (3.3, 6.3)
@@ -1222,10 +1222,10 @@ def liars_repeat():
 
 def liars_sealed():
     F = Fig("aal-sealed", 660, 500,
-            "The chief at P1 and two guards at P2 and P3, drawn in the round, later moments further out. The chief lies: he seals hold "
-            "to P2 and scatter to P3. Each guard adds his seal and passes the order across to the other. Both guards then hold the same "
+            "The chief at B1 and two guards at B2 and B3, drawn in the round, later moments further out. The chief lies: he seals hold "
+            "to B2 and scatter to B3. Each guard adds his seal and passes the order across to the other. Both guards then hold the same "
             "two orders, both under the chief's seal, so both go the same way, and the chief has convicted himself.")
-    nodes = {"1": (-90, "P1"), "2": (150, "P2"), "3": (30, "P3")}
+    nodes = {"1": (-90, "B1"), "2": (150, "B2"), "3": (30, "B3")}
     P = Polar(F, 330, 250, 44, 26, nodes)
     T = 7.4
     P.rings(8)
@@ -1258,10 +1258,10 @@ def liars_sealed():
 
 def leaders_stage():
     F = Fig("cla-stage", 660, 420,
-            "Two panels with the four posts P1 to P4 drawn in the round, later moments further out. Left: in one stage every man sends "
-            "to every other man, twelve birds. Right: the three other men send their sealed votes to the holder, P1, who ties three into "
+            "Two panels with the four bandits B1 to B4 drawn in the round, later moments further out. Left: in one stage every man sends "
+            "to every other man, twelve birds. Right: the three other men send their sealed votes to the holder, B1, who ties three into "
             "a bundle and sends it to the other three.")
-    nodes = {"1": (225, "P1"), "2": (135, "P2"), "3": (315, "P3"), "4": (45, "P4")}
+    nodes = {"1": (225, "B1"), "2": (135, "B2"), "3": (315, "B3"), "4": (45, "B4")}
     for cx, title in ((165, "EVERY MAN TO EVERY MAN"), (495, "VOTES TO ONE, BUNDLE TO ALL")):
         F.text(cx, 24, title, cls="d-house")
     P = Polar(F, 165, 205, 46, 14, nodes)
@@ -1297,11 +1297,11 @@ def leaders_stage():
 
 def leaders_chain():
     F = Fig("cla-chain", 660, 560,
-            "The four posts drawn in the round, later moments further out. The job passes to the next man with every entry: term 5 at P1, "
-            "term 6 at P2, term 7 at P3, term 8 at P4, each proposal carrying the bundle for the entry directly before it, so the chain "
+            "The four posts drawn in the round, later moments further out. The job passes to the next man with every entry: term 5 at B1, "
+            "term 6 at B2, term 7 at B3, term 8 at B4, each proposal carrying the bundle for the entry directly before it, so the chain "
             "winds outward round the circle. With the proposal of term 8, the entry of term 7 has its first bundle, term 6's is locked on, "
             "and term 5's stands.")
-    nodes = {"1": (-90, "P1"), "2": (0, "P2"), "3": (90, "P3"), "4": (180, "P4")}
+    nodes = {"1": (-90, "B1"), "2": (0, "B2"), "3": (90, "B3"), "4": (180, "B4")}
     P = Polar(F, 330, 280, 40, 26, nodes)
     T = 8.6
     terms = (("1", 1.2, "5", "stands", RED), ("2", 3.0, "6", "locked on", INK),
