@@ -1,26 +1,26 @@
-"""A trading house of Arche on its quay: a parametric set for the island model and the previs.
+"""A trading house of Arche above its harbour: a parametric set for the island model and the previs.
 
     blender -b -P art/sets/house.py -- <set name>        # e.g. house3
 
-Reads its site from art/sets/sets.json (`at`, and `house`: the quay edge's direction and the
-building's extent) and writes art/sets/<name>.glb, art/sets/<name>.json (what the previs and
+Reads its site from art/sets/sets.json (`at`, and `house`: the building's front line, its
+direction and its extent) and writes art/sets/<name>.glb, art/sets/<name>.json (what the previs and
 the book need to know: the board, the gate, the doors) and art/sets/<name>-strips.json (the
 ground art/sets/bake.py clears of Meshy's buildings before joining this in).
 
 The three houses are alike, so one builder serves all three. A house is one long range, its
-walls lime-plastered over rubble on a bare rubble base,
-on the strip of land between the ring road and the quay, with its back to the road:
+walls lime-plastered over rubble on a bare rubble base, on a level pad cut into the lowest
+terraces above the harbour, facing the quay across the waterfront road:
 - the clerks' office at one end, where the tallies and columns are kept, with a door and
-  small high windows onto the quay;
-- the gate, a passage through the range from the road to the quay, where slips come in;
-- the storehouse at the other end, with loading doors onto the quay and slit windows high up;
-- a Doric portico the length of the range, on the quay, with a lean-to tiled roof;
+  small high windows onto the road;
+- the gate, a deep entrance passage opening onto the road, where slips come in;
+- the storehouse at the other end, with loading doors onto the road and slit windows high up;
+- a Doric portico the length of the range, along the road's edge, with a lean-to tiled roof;
 - under the portico, beside the gate, the board of orders: a long timber board at chest height
   with a row of numbered slots, and the peg beside it;
 - grain sacks stacked by the storehouse door.
 
-The set's frame is local: X runs along the quay edge, the quay is towards -Y, the land and the
-road towards +Y, and the edge itself is Y = 0, at quay level. The GLB is written already
+The set's frame is local: X runs along the range's front, the portico and the road beyond it
+are towards -Y, the slope towards +Y, and the range's front wall is Y = 0, at pad level. The GLB is written already
 turned to the site's yaw, so render.py and explorer.html place it with no rotation, and its
 objects are `shell`, `floor` and `furniture`, as for the other sets.
 """
@@ -156,7 +156,7 @@ front = [(g0, g1, 0.0, 3.3), (sd0, sd1, 0.0, 2.7), (od[0], od[1], 0.0, 2.3)] + \
         [(a, b, 2.3, 2.9) for a, b in windows] + \
         [(x, x + 0.25, 3.1, 3.6) for x in (1.0, 3.2, 5.9)]     # slit windows high on the storehouse
 wall_x(0.0, W, front)
-wall_x(D - W, D, [(g0, g1, 0.0, 3.3)])
+wall_x(D - W, D, [])                     # the back wall is against the cut slope: no way through
 for x in (X0, X1 - W):
     shell.box((x, W, 0), (x + W, D - W, WH), STONE)
 for x in (g0 - W, g1):                                              # the gate passage's side walls

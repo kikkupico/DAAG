@@ -8,7 +8,8 @@ character: image-to-3D on Meshy T2 (smart topology, textured, A-pose), then
 auto-rigging; saves art/cast/<name>.glb (rigged) and <name>-mesh.glb (unrigged).
 props: image-to-3D only; saves art/cast/props/<name>.glb, one mesh holding every
 object on the sheet, to be split into loose parts in Blender.
-Task ids are logged in art/cast/meshy-tasks.json so a step can be resumed.
+Task ids are logged in art/cast/meshy-tasks.json so a step can be resumed. POLYCOUNT=<n> sets
+smart topology's face budget (a sheet of many objects shares it).
 Needs MESHY_API_KEY.
 """
 import base64, json, os, sys, time, urllib.request
@@ -53,6 +54,8 @@ def mesh(name, image, rigged):
     uri = "data:image/png;base64," + base64.b64encode(Path(image).read_bytes()).decode()
     body = {"image_url": uri, "ai_model": "meshy-t2", "model_type": "smart-topology",
             "should_texture": True, "texture_resolution": "2k", "target_formats": ["glb"]}
+    if os.environ.get("POLYCOUNT"):          # smart topology's budget for the whole image
+        body["target_polycount"] = int(os.environ["POLYCOUNT"])
     if rigged:
         body["pose_mode"] = "a-pose"
     tid = call("POST", "image-to-3d", body)["result"]
