@@ -226,8 +226,7 @@ ch = P["col_h"]
 xs = [X0 + 0.6 + k * (X1 - X0 - 1.2) / (P["columns"] - 1) for k in range(P["columns"])]
 for x in xs:
     c = Vector((x, PY, cz))
-    shell.box((x - 0.34, PY - 0.34, cz), (x + 0.34, PY + 0.34, cz + 0.12), DRESSED)       # plinth
-    shell.cyl(c + Vector((0, 0, 0.12)), P["col_d"] / 2, P["col_d"] * 0.4, ch - 0.5, DRESSED)
+    shell.cyl(c, P["col_d"] / 2, P["col_d"] * 0.4, ch - 0.38, DRESSED)                    # no base: the shaft stands on the floor
     shell.cyl(c + Vector((0, 0, ch - 0.38)), P["col_d"] * 0.4, P["col_d"] * 0.62, 0.16, DRESSED)
     shell.box((x - 0.33, PY - 0.33, cz + ch - 0.22), (x + 0.33, PY + 0.33, cz + ch - 0.08), DRESSED)
 az = cz + ch - 0.08
