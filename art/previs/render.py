@@ -233,7 +233,7 @@ PROPS = {k: (f"art/cast/props/{v['sheet']}/{k}.glb", v.get("yaw", 0))
 def add_prop(p):
     """{"kind": ..., "at": [x, z], "face": [x, z], "under": h}: a prop from art/cast/props.json
     (ledger, statue, black-goat...), or a procedural one (PROCEDURAL below: strongbox, tent,
-    shield, chest, basket, perch, raven, lamp). Props stand on the highest
+    shield, chest, basket, perch, raven, lamp, sandglass). Props stand on the highest
     surface under them, so a ledger given a desk's position lies on the desk."""
     if p["kind"] in PROPS:
         before = set(bpy.data.objects)
@@ -342,8 +342,11 @@ def lamp(p):
     return [cyl((0, 0, 0.03 * k), 0.07 * k, 0.06 * k, clay, verts=12),
             ball((0, 0, 0.1 * k), (0.03 * k, 0.03 * k, 0.06 * k), flame)]
 
+def glass(p):
+    return [sandglass("sandglass")]
+
 PROCEDURAL = {"strongbox": strongbox, "tent": tent, "shield": shield, "chest": chest,
-              "basket": basket, "perch": perch, "raven": raven, "lamp": lamp}
+              "basket": basket, "perch": perch, "raven": raven, "lamp": lamp, "sandglass": glass}
 
 # Sea plane at y=0, like the explorer.
 bpy.ops.mesh.primitive_plane_add(size=400000, location=(0, 0, 0.3))
