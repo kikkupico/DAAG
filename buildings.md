@@ -1,7 +1,8 @@
 # Buildings
 
 A building for each paper, and a shared building where sharing is right. The islands are
-described in `settings.md`; this file is the next resolution down.
+described in `settings.md`; this file is the next resolution down. What each building is
+modelled on in the real Greek world is in `reality.md`.
 
 **Map pins are districts, not buildings.** A pin called *the libraries* is twelve
 buildings; a pin called *the Tholos* is one. Keeping the maps at district resolution is what stops
