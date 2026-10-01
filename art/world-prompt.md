@@ -292,8 +292,7 @@ use these colours, and previs shots pass the same RGB as a figure's `tint`.
 | Bandit 4 | chestnut brown | [0.40, 0.22, 0.12] |
 
 **Costume canon (ring road).** Everything worn is a Hellenistic loom-woven rectangle, never tailored.
-Messengers wear a low round-crowned *petasos* with a wide brim and a chin cord, with no pinched
-crown and no hatband; a plain *exōmis*, a short tunic of one rectangle, sleeveless and bare at one
+Messengers go bare-headed, with no hat of any kind; they wear a plain *exōmis*, a short tunic of one rectangle, sleeveless and bare at one
 shoulder, with no set-in sleeves, sewn collar or trim; simple strapped sandals, with no buckles, or
 bare feet; and a soft hide sack on a cord (a *pera*), with no stitched seams, tailored flap or belt
 buckle. Lamportios wears a draped, pinned chiton or himation. Slips are strips of papyrus, with visible
