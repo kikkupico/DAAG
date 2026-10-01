@@ -2,7 +2,8 @@
 
 The **analysis** behind the world: what each paper needs from its ground, and the
 constraints that cannot be broken. The paper-to-place assignment at building resolution is in
-`buildings.md`. Source papers are in `sources/`.
+`buildings.md`. The real geography, history and literature behind each place, building, character,
+prop and practice, and how close each is, are in `reality.md`. Source papers are in `sources/`.
 
 ---
 
@@ -61,12 +62,12 @@ travelled both ways, give **one FIFO channel per ordered pair of houses: six in 
 **The ring road.** Three houses, known by number, **House 1**, **House 2** and **House 3**, act as an
 island-wide distribution network.
 
-**The houses are built alike.** Each is one long range under a tiled gable roof, its walls
+**The houses are built alike.** Each is one long range under a tiled gable roof, of flat terracotta pan tiles with narrow cover tiles over the joints and a decorated tile at each eave end, on hand-hewn timbers, its walls
 lime-plastered over rubble on a low bare-rubble base, as Hellenistic walls were, on a terrace
 cut into the slope above its harbour, facing the quay across the waterfront road: the clerks'
 office at one end; the **gate**, a deep entrance opening onto the road, where slips come in;
 the storehouse at the other end, with loading doors onto the road. A portico of plain Doric
-columns under a lean-to roof runs the length of the range along the road's edge, and under it, by the
+columns, standing straight on the paving with no bases, under a lean-to roof runs the length of the range along the road's edge, and under it, by the
 gate, hangs the house's **board** of orders, a row of numbered slots with the peg beside it (House
 3's is Herlios' board). Each port town round it is a compact cluster on terraces cut into the slopes round the
 harbour, of one-storey houses, courtyard houses and long storehouses, plastered off-white or pale ochre under gabled terracotta roofs. Houses

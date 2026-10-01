@@ -5,7 +5,8 @@ can pick up the next paper and produce a book that sits beside those already wri
 without looking like a different series.
 
 **Read first:** `buildings.md` (which paper lives in which building), `settings.md` (the
-analysis, the constraints that cannot be broken, and the islands themselves).
+analysis, the constraints that cannot be broken, and the islands themselves), `reality.md`
+(the real Greek precedent for each device, and how close it is).
 **Read as models:** the finished books in `books/`. They are the specification. Where
 this document and a finished book disagree, the book is right.
 
@@ -28,6 +29,13 @@ The prose never refers to a picture, so the book reads as finished with every sl
 **Phase 2 — art.** Happens later, separately, from the slots' descriptions. It replaces each slot
 with the picture. The allegorical devices must nevertheless be **fully in place in the prose**,
 because phase 2 will be built from what you write.
+
+**Reality checks.** A new setting, or a device added to an existing one (a place, building,
+character, prop or practice), gets its entries in `reality.md` and in the *Reality Checks* table on
+its setting page, in the same pass as the book. Each entry names a real Greek precedent in
+geography, history or literature, with a checkable citation, and says whether it is close, loose,
+invented or an anachronism. Mark a citation from memory with a dagger until it has been checked.
+Where the setting is wrong for the period, say so; do not defend it.
 
 ---
 

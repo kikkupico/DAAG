@@ -291,6 +291,15 @@ use these colours, and previs shots pass the same RGB as a figure's `tint`.
 | Bandit 3 | saffron orange | [0.88, 0.50, 0.10] |
 | Bandit 4 | chestnut brown | [0.40, 0.22, 0.12] |
 
+**Costume canon (ring road).** Everything worn is a Hellenistic loom-woven rectangle, never tailored.
+Messengers wear a low round-crowned *petasos* with a wide brim and a chin cord, with no pinched
+crown and no hatband; a plain *exōmis*, a short tunic of one rectangle, sleeveless and bare at one
+shoulder, with no set-in sleeves, sewn collar or trim; simple strapped sandals, with no buckles, or
+bare feet; and a soft hide sack on a cord (a *pera*), with no stitched seams, tailored flap or belt
+buckle. Lamportios wears a draped, pinned chiton or himation. Slips are strips of papyrus, with visible
+fibres and ragged edges. Columns are Doric: no bases, standing on the paving. Roofs are flat terracotta
+pan tiles with narrow cover tiles and eave-end tiles; timbers are hand-hewn, uneven, never square-milled.
+
 The existing cast models (`art/cast/wolf-bearer.glb`, `bronze-shepherd.glb`) and reference crops
 predate this rule; use them with a tint, and build new ones to it.
 
