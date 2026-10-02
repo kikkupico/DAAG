@@ -55,7 +55,7 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - stands at 9376ef3 (2026-10-02) · last guide change 9376ef3 (2026-10-02) Setting docs: bound books and ledgers become scrolls (loot scroll, law scroll, account scrolls); reality checks re-graded
     - direct: 2 book · 1 spec · 11 image
     - inherited: 16 spec · 6 image
-    - stale: 2 image (behind 9376ef3)
+    - stale: 1 image (behind 9376ef3)
   - `sandglass-timers` Four men start together by turning a sandglass (a deliberate anachronism for narrative convenience; the Greek timer was the water clock)
     - stands at - · last guide change 28f753a (2026-10-02) Scrolls through the Arche books and home page (loot scroll, account scrolls, settled columns); Keeping Order cover redone with a papyrus scroll; the sandglass recorded as a deliberate anachronism for narrative convenience
     - direct: 5 world guide · 2 book guide · 6 book · 5 spec · 12 image
@@ -64,7 +64,7 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - stands at 9376ef3 (2026-10-02) · last guide change de96834 (2026-10-02) Paxos place images redone on the redesigned Chamber: aerial, terrace and interior (nano-banana-2), the hall of two doors and the Paxos aerial re-framed on the current model; alt texts follow · **REVIEW**
     - direct: 11 world guide · 3 book guide · 8 book · 24 spec · 25 image
     - inherited: 11 book · 31 spec · 27 image
-    - stale: 1 book guide · 1 book · 5 image (behind 9376ef3)
+    - stale: 1 book guide · 1 book · 4 image (behind 9376ef3)
 - **5 Weapons and war: pike, oval shield, torsion engine and ram** (`hellenistic-reference.html#weapons`)
   - `camp-kit` A mercenary's camp is one linen tent, a plain shield, a chest and a wicker basket
     - stands at - · last guide change c45b69e (2026-10-01) Reality checks added and ring-road costume and roof canon: petasos, exōmis, pera, unbased Doric columns, pan and cover tiles
@@ -77,29 +77,28 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - inherited: 1 book · 16 spec · 10 image
   - `loom-woven-dress` Everything worn is a loom-woven rectangle, draped and pinned, never tailored
     - stands at - · last guide change e547e60 (2026-10-02) Paxos cast redressed in loom-woven rectangles (pinned chitons, cord belts, exomis, hide sacks) and the messengers made men: new reference sheet, Part-Time Parliament prompts and alt texts, Paxos dress table in the world prompt
-    - direct: 3 world guide · 1 book · 7 spec · 21 image
-    - inherited: 2 book · 22 spec · 8 image
+    - direct: 3 world guide · 1 book · 9 spec · 21 image
+    - inherited: 2 book · 20 spec · 8 image
   - `messenger-kit` Messengers are bare-headed in an exomis, strapped sandals and a hide pera
     - stands at da00e36 (2026-10-01) · last guide change e547e60 (2026-10-02) Paxos cast redressed in loom-woven rectangles (pinned chitons, cord belts, exomis, hide sacks) and the messengers made men: new reference sheet, Part-Time Parliament prompts and alt texts, Paxos dress table in the world prompt · **REVIEW**
-    - direct: 3 world guide · 2 book · 9 spec · 24 image
-    - inherited: 1 book · 20 spec · 5 image
-    - stale: 1 image (behind da00e36)
+    - direct: 3 world guide · 2 book · 10 spec · 24 image
+    - inherited: 1 book · 19 spec · 5 image
   - `paxos-cast-dress` Paxos cast wear loom-woven rectangles: pinned white chitons with purple cord belts and hem bands, cord belts, hide sacks; no sewn sleeves, satchels or buckles
     - stands at e547e60 (2026-10-02) · last guide change e547e60 (2026-10-02) Paxos cast redressed in loom-woven rectangles (pinned chitons, cord belts, exomis, hide sacks) and the messengers made men: new reference sheet, Part-Time Parliament prompts and alt texts, Paxos dress table in the world prompt
     - direct: 1 world guide · 1 book · 6 spec · 11 image
     - inherited: 5 spec
-    - stale: 11 image (behind e547e60)
+    - stale: 1 image (behind e547e60)
   - `paxos-messengers-male` Paxos messengers are all men, bare-headed, in a blue exomis
     - stands at e547e60 (2026-10-02) · last guide change c194f0c (2026-09-27) The Chamber rebuilt in Blender at the map's scale and baked into the Paxos model; Chamber page gets new establishing, terrace and interior images; Part-Time Parliament interior shots reframed on the new room
-    - direct: 1 book · 5 spec · 11 image
-    - inherited: 6 spec
-    - stale: 11 image (behind e547e60)
+    - direct: 1 book · 6 spec · 11 image
+    - inherited: 5 spec
+    - stale: 1 image (behind e547e60)
 - **7 Transport: round ships, mule tracks and signal fires** (`hellenistic-reference.html#transport`)
   - `merchant-ships` Merchant ships are round-hulled Kyrenia-type sailing ships with steering oars; no galleys, sloops or barges
     - stands at 1dd23fb (2026-10-02) · last guide change 592cae4 (2026-10-02) The Chamber redesigned as a Greek round hall: Doric peristyle, one conical roof of pan and cover tiles on rafters held up by six inner columns, a lantern at the apex; set rebuilt and Paxos re-baked; docs, reality checks and the setting page follow · **REVIEW**
     - direct: 4 world guide · 1 book · 5 spec · 13 image
     - inherited: 7 book · 18 spec · 9 image
-    - stale: 1 world guide · 1 spec · 2 image (behind 1dd23fb)
+    - stale: 1 world guide · 1 spec · 1 image (behind 1dd23fb)
   - `ring-road-carts` Carts and pack animals carry goods; two-wheeled carts and handcarts, no stirrups, no wagons on the cliff shelf
     - stands at - · last guide change 4cb83b2 (2026-10-02) Hellenistic Greece art reference: standalone HTML with public-domain images and SVG schematics
     - direct: 1 world guide · 1 spec · 1 image
