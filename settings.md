@@ -251,7 +251,7 @@ on the scholars' coast waits for a vote, although the Chamber is a morning's wal
 
 | Paper | In the world |
 |---|---|
-| `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and not retold, drawn as a domed rotunda because its acoustics make oratory impossible. Legislators wander in and out, each keeps a scroll, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved |
+| `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and not retold, drawn as a round hall, a tholos ringed by a colonnade, because its acoustics make oratory impossible. Legislators wander in and out, each keeps a scroll, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved |
 
 **The ground must provide:** the **Chamber** on the western arm, looking across the bay at
 the Tholos, and on a route rather than at a dead end (legislators wander in and out): the
@@ -283,9 +283,9 @@ same place is a rule of procedure, not a building.
 
 **The Chamber is drawn as a rotunda.** Lamport gives it one physical property: *"The acoustics
 of the Chamber were poor, making oratory impossible. Legislators could communicate only by
-messenger."* A circular hall under a hard stone dome, with no podium and no head of the room,
+messenger."* A circular hall with hard stone walls under one conical roof held up by columns inside, with no podium and no head of the room,
 illustrates that faithfully, and open doorways round the drum show legislators and messengers
-coming and going. The dome illustrates Lamport's text and carries no meaning of its own; in
+coming and going. The round plan illustrates Lamport's text and carries no meaning of its own; in
 Lamport nobody speaks aloud at all. The Tholos of Schedia is the same kind of hall with the one
 thing the Chamber lacks: a podium at the centre.
 
