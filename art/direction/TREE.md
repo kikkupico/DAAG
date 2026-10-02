@@ -49,7 +49,7 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - stands at 9376ef3 (2026-10-02) · last guide change 9376ef3 (2026-10-02) Setting docs: bound books and ledgers become scrolls (loot scroll, law scroll, account scrolls); reality checks re-graded
     - direct: 7 book · 9 spec · 13 image
     - inherited: 17 spec · 13 image
-    - stale: 7 book · 9 spec · 13 image (behind 9376ef3)
+    - stale: 6 book · 9 spec · 13 image (behind 9376ef3)
   - `sandglass-timers` Four men start together by turning a sandglass (kept departure: the Greek timer was the water clock)
     - stands at - · last guide change 9376ef3 (2026-10-02) Setting docs: bound books and ledgers become scrolls (loot scroll, law scroll, account scrolls); reality checks re-graded
     - direct: 5 world guide · 2 book guide · 6 book · 5 spec · 12 image
@@ -58,7 +58,7 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - stands at 9376ef3 (2026-10-02) · last guide change dd033f7 (2026-10-02) Hellenistic reference: dimensions tables per section, modelling cheat sheet and scale diagrams · **REVIEW**
     - direct: 11 world guide · 3 book guide · 4 book · 17 spec · 22 image
     - inherited: 14 book · 40 spec · 31 image
-    - stale: 3 world guide · 1 book guide · 4 book · 11 spec · 17 image (behind 9376ef3)
+    - stale: 3 world guide · 1 book guide · 3 book · 11 spec · 17 image (behind 9376ef3)
 - **5 Weapons and war: pike, oval shield, torsion engine and ram** (`hellenistic-reference.html#weapons`)
   - `camp-kit` A mercenary's camp is one linen tent, a plain shield, a chest and a wicker basket
     - stands at - · last guide change c45b69e (2026-10-01) Reality checks added and ring-road costume and roof canon: petasos, exōmis, pera, unbased Doric columns, pan and cover tiles
