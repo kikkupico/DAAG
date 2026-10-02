@@ -23,7 +23,7 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - stands at 0754785 (2026-10-02) · last guide change 0754785 (2026-10-02) Chamber setting page and decision registry follow the redesign
     - direct: 8 world guide · 2 book guide · 4 book · 22 spec · 24 image
     - inherited: 4 book · 5 spec
-    - stale: 7 world guide · 2 book guide · 4 book · 22 spec · 24 image (behind 0754785)
+    - stale: 7 world guide · 2 book guide · 3 book · 17 spec · 18 image (behind 0754785)
   - `courtyard-houses` Houses are plastered rubble, blind to the street, open onto a court or portico
     - stands at - · last guide change 592cae4 (2026-10-02) The Chamber redesigned as a Greek round hall: Doric peristyle, one conical roof of pan and cover tiles on rafters held up by six inner columns, a lantern at the apex; set rebuilt and Paxos re-baked; docs, reality checks and the setting page follow
     - direct: 5 world guide · 10 spec · 6 image
@@ -34,9 +34,9 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - inherited: 3 book · 2 spec · 2 image
   - `retired-dome` RETIRED: the stone dome, coffers and oculus of the old Chamber · RETIRED wording, fix leftovers
     - stands at 0754785 (2026-10-02) · last guide change 0754785 (2026-10-02) Chamber setting page and decision registry follow the redesign
-    - direct: 6 world guide · 1 book · 13 spec · 11 image
-    - inherited: 6 book · 12 spec · 12 image
-    - stale: 5 world guide · 1 book · 13 spec · 11 image (behind 0754785)
+    - direct: 6 world guide · 13 spec · 11 image
+    - inherited: 7 book · 12 spec · 12 image
+    - stale: 5 world guide · 7 spec · 5 image (behind 0754785)
   - `unbased-doric` Doric columns have no bases and stand on the paving
     - stands at - · last guide change 0754785 (2026-10-02) Chamber setting page and decision registry follow the redesign
     - direct: 5 world guide · 13 spec · 18 image
@@ -55,16 +55,16 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - stands at 9376ef3 (2026-10-02) · last guide change 9376ef3 (2026-10-02) Setting docs: bound books and ledgers become scrolls (loot scroll, law scroll, account scrolls); reality checks re-graded
     - direct: 2 book · 7 spec · 11 image
     - inherited: 10 spec · 6 image
-    - stale: 2 book · 7 spec · 11 image (behind 9376ef3)
+    - stale: 1 book · 1 spec · 5 image (behind 9376ef3)
   - `sandglass-timers` Four men start together by turning a sandglass (a deliberate anachronism for narrative convenience; the Greek timer was the water clock)
     - stands at - · last guide change 28f753a (2026-10-02) Scrolls through the Arche books and home page (loot scroll, account scrolls, settled columns); Keeping Order cover redone with a papyrus scroll; the sandglass recorded as a deliberate anachronism for narrative convenience
     - direct: 5 world guide · 2 book guide · 6 book · 5 spec · 12 image
     - inherited: 3 book · 25 spec · 15 image
   - `scrolls-not-bound-books` In-world records are papyrus scrolls and wax tablets; no codex or bound ledger
     - stands at 9376ef3 (2026-10-02) · last guide change 592cae4 (2026-10-02) The Chamber redesigned as a Greek round hall: Doric peristyle, one conical roof of pan and cover tiles on rafters held up by six inner columns, a lantern at the apex; set rebuilt and Paxos re-baked; docs, reality checks and the setting page follow · **REVIEW**
-    - direct: 11 world guide · 3 book guide · 8 book · 18 spec · 23 image
-    - inherited: 11 book · 37 spec · 29 image
-    - stale: 2 world guide · 1 book guide · 3 book · 10 spec · 18 image (behind 9376ef3)
+    - direct: 11 world guide · 3 book guide · 8 book · 21 spec · 23 image
+    - inherited: 11 book · 34 spec · 29 image
+    - stale: 2 world guide · 1 book guide · 2 book · 8 spec · 12 image (behind 9376ef3)
 - **5 Weapons and war: pike, oval shield, torsion engine and ram** (`hellenistic-reference.html#weapons`)
   - `camp-kit` A mercenary's camp is one linen tent, a plain shield, a chest and a wicker basket
     - stands at - · last guide change c45b69e (2026-10-01) Reality checks added and ring-road costume and roof canon: petasos, exōmis, pera, unbased Doric columns, pan and cover tiles
@@ -88,7 +88,7 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - stands at 1dd23fb (2026-10-02) · last guide change 592cae4 (2026-10-02) The Chamber redesigned as a Greek round hall: Doric peristyle, one conical roof of pan and cover tiles on rafters held up by six inner columns, a lantern at the apex; set rebuilt and Paxos re-baked; docs, reality checks and the setting page follow · **REVIEW**
     - direct: 4 world guide · 1 book · 5 spec · 13 image
     - inherited: 7 book · 18 spec · 9 image
-    - stale: 2 world guide · 1 book · 3 spec · 11 image (behind 1dd23fb)
+    - stale: 2 world guide · 2 spec · 5 image (behind 1dd23fb)
   - `ring-road-carts` Carts and pack animals carry goods; two-wheeled carts and handcarts, no stirrups, no wagons on the cliff shelf
     - stands at - · last guide change 4cb83b2 (2026-10-02) Hellenistic Greece art reference: standalone HTML with public-domain images and SVG schematics
     - direct: 1 world guide · 1 spec · 1 image
