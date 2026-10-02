@@ -25,7 +25,7 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - inherited: 4 book · 14 spec · 14 image
   - `pan-and-cover-roofs` Roofs are flat terracotta pan tiles under narrow cover tiles, with eave-end tiles
     - stands at - · last guide change dd033f7 (2026-10-02) Hellenistic reference: dimensions tables per section, modelling cheat sheet and scale diagrams
-    - direct: 4 world guide · 11 spec · 10 image
+    - direct: 4 world guide · 12 spec · 10 image
     - inherited: 3 book · 2 spec · 2 image
   - `stone-dome-chamber` The Chamber is a round hall under a stone dome (kept departure: Greek round halls had conical tile roofs)
     - stands at - · last guide change 9376ef3 (2026-10-02) Setting docs: bound books and ledgers become scrolls (loot scroll, law scroll, account scrolls); reality checks re-graded
@@ -58,7 +58,7 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - stands at 9376ef3 (2026-10-02) · last guide change dd033f7 (2026-10-02) Hellenistic reference: dimensions tables per section, modelling cheat sheet and scale diagrams · **REVIEW**
     - direct: 11 world guide · 3 book guide · 8 book · 18 spec · 23 image
     - inherited: 11 book · 37 spec · 29 image
-    - stale: 2 world guide · 1 book guide · 3 book · 11 spec · 18 image (behind 9376ef3)
+    - stale: 2 world guide · 1 book guide · 3 book · 10 spec · 18 image (behind 9376ef3)
 - **5 Weapons and war: pike, oval shield, torsion engine and ram** (`hellenistic-reference.html#weapons`)
   - `camp-kit` A mercenary's camp is one linen tent, a plain shield, a chest and a wicker basket
     - stands at - · last guide change c45b69e (2026-10-01) Reality checks added and ring-road costume and roof canon: petasos, exōmis, pera, unbased Doric columns, pan and cover tiles

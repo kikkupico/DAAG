@@ -2,14 +2,17 @@
 
     blender -b -P art/sets/chamber.py [-- key=value ...]      # e.g. -- desks=8 doors=8
 
-Writes art/sets/chamber.glb and art/sets/chamber.json. A round hall under a hard stone
-dome (Lamport: "the acoustics of the Chamber were poor, making oratory impossible"), with
-no podium, no head of the room and nothing aimed at a speaker:
-- a white marble drum ringed outside by a Doric colonnade on a stepped base, the colonnade's
-  flat roof running round the drum below the dome;
+Writes art/sets/chamber.glb and art/sets/chamber.json. A Greek round hall, a tholos of the
+peripteral kind (Delphi's Marmaria, the Philippeion): a white marble drum ringed outside by an
+unbased Doric colonnade on a stepped base. Lamport: "the acoustics of the Chamber were poor,
+making oratory impossible", so there is no podium, no head of the room and nothing aimed at a
+speaker:
+- the colonnade carries a lean-to roof of pan and cover tiles that runs up to the drum;
+- the drum carries one conical roof of pan and cover tiles on timber rafters, six plain
+  columns inside holding the beams that carry them, and a small lantern at the apex;
 - open doorways all round the drum, since legislators and messengers come and go;
-- a shallow coffered dome with an oculus, and a bronze meridian line running north-south
-  under it on the floor (Paxos tells time by the sun);
+- a bronze meridian line running north-south on the floor, lit through the lantern and the
+  doorways (Paxos tells time by the sun);
 - writing desks with stools, scattered and facing every which way;
 - stone benches along the wall between the doorways, where messengers wait;
 - statues on pedestals round the terrace outside, one of which, in Lamport, falls.
@@ -17,7 +20,7 @@ no podium, no head of the room and nothing aimed at a speaker:
 It is the size of the rotunda Meshy drew on the island model (about as wide as the Tholos
 across the bay), so inside it is small: a handful of desks. The GLB is in the set's own
 frame: metres, the centre of the floor at the origin, axes as explorer.html's (north = -X).
-Its objects are `shell` (drum, colonnade, dome, statues), `floor` (floor, steps, terrace
+Its objects are `shell` (drum, colonnade, roofs, statues), `floor` (floor, steps, terrace
 paving, what people stand on) and `furniture` (desks, stools and benches, which props can
 stand on). chamber.json lists each desk, its stool and its facing, in the set's frame, for
 placing the cast and props. art/sets/bake.py joins it into the island model at its
@@ -30,13 +33,16 @@ P = dict(
     radius=4.3,        # inside of the drum
     wall=0.6,          # drum wall thickness
     base=0.35,         # the stepped base the floor stands on
-    drum_h=6.95,       # floor to the dome's springing
-    dome_rise=2.75,    # the dome's rise above its springing (shallow, as on the island model)
+    drum_h=6.4,        # floor to the eaves of the conical roof
+    roof_rise=3.1,     # the cone's rise above its eaves
+    roof_eave=0.7,     # how far the eaves overhang the drum
+    apex_r=0.75,       # the cone stops at the lantern, this far from the axis
+    tiles=48,          # cover tiles round the roof
+    inner_cols=6, inner_r=2.55, inner_d=0.46,   # the columns inside, holding the roof beams
     doors=8,           # open doorways round the drum
     door_w=1.5, door_h=3.1,
     columns=20, col_r=6.0, col_d=0.52, col_h=4.35,   # the colonnade outside
     entab_h=0.8, peri_r=6.45,                        # its entablature and roof's outer edge
-    coffer_rings=4, coffer_ribs=20, oculus=0.8,
     desks=8, seed=3, desk_gap=1.6,                   # desk_gap: least distance between desks
     meridian=1, benches=1,
     statues=8, statue_r=8.1, terrace=9.0,            # pedestals round the terrace; its paving
@@ -66,6 +72,8 @@ def material(name, rgb, rough=0.7, metal=0.0):
 MARBLE = material("marble", (0.86, 0.84, 0.8), 0.45)
 STONE = material("stone", (0.78, 0.75, 0.69), 0.8)
 COFFER = material("coffer", (0.66, 0.63, 0.58), 0.85)
+TILE = material("tile", (0.52, 0.2, 0.15), 0.8)
+TILE_RIDGE = material("tile_ridge", (0.42, 0.15, 0.11), 0.8)
 FLOOR = material("floor", (0.86, 0.84, 0.8), 0.3)
 PAVING = material("terrace", (0.7, 0.67, 0.6), 0.9)
 INLAY = material("inlay", (0.42, 0.44, 0.46), 0.3)
@@ -106,6 +114,16 @@ class Part:
         for f in {f for v in g["verts"] for f in v.link_faces}:
             f.material_index = s
 
+    def strut(self, p0, p1, w, h, mat):
+        """A beam from p0 to p1, w wide (across the plan) and h deep."""
+        p0, p1 = Vector(p0), Vector(p1)
+        d = p1 - p0
+        M = Matrix.Translation((p0 + p1) / 2) @ d.to_track_quat("X", "Z").to_matrix().to_4x4()
+        g = bmesh.ops.create_cube(self.bm, size=1.0, matrix=M @ Matrix.Diagonal((d.length, w, h, 1)))
+        s = self.slot(mat)
+        for f in {f for v in g["verts"] for f in v.link_faces}:
+            f.material_index = s
+
     def cyl(self, c, r0, r1, h, mat, segs=20):
         g = bmesh.ops.create_cone(self.bm, cap_ends=True, segments=segs, radius1=r0,
                                   radius2=r1, depth=h, matrix=Matrix.Translation(Vector(c) + Vector((0, 0, h / 2))))
@@ -140,26 +158,15 @@ def arc(r_in, r_out, a0, a1, z0, z1, segs=None):
     return [ring(r_in, z0), ring(r_out, z0), ring(r_out, z1), ring(r_in, z1)]
 
 
-# The dome is a spherical cap: base radius `a` at the springing, rise `h`.
-def cap_point(r_base, rise, frac, ang, zs, grow=0.0):
-    """A point on the cap (frac 0 at the springing, 1 at the crown), pushed out by `grow`."""
-    Rs = (r_base ** 2 + rise ** 2) / (2 * rise)            # sphere radius
-    e0 = math.asin(r_base / Rs)                             # half-angle of the cap
-    e = e0 * (1 - frac)
-    zc = zs + rise - Rs                                     # sphere centre height
-    rr = Rs + grow
-    return (rr * math.sin(e) * math.cos(ang), rr * math.sin(e) * math.sin(ang), zc + rr * math.cos(e))
-
-
-def cap_band(r_base, rise, f0, f1, g0, g1, zs, a0=0.0, a1=FULL, na=SEG, nf=12):
-    """Points of a band of the cap between fractions f0..f1 and growths g0..g1 (inner/outer),
-    as rows for Part.grid."""
-    full = abs(a1 - a0) >= FULL - 1e-6
-    ang = [a0 + (a1 - a0) * j / (na if full else na - 1) for j in range(na)]
-    fr = [f0 + (f1 - f0) * i / (nf - 1) for i in range(nf)]
-    rows = [[cap_point(r_base, rise, f, a, zs, g0) for a in ang] for f in fr]
-    rows += [[cap_point(r_base, rise, f, a, zs, g1) for a in ang] for f in reversed(fr)]
-    return rows, full
+def cone(rA, zA, rB, zB, a0, a1, o0, o1, mat, na=None, wrap=False):
+    """A slab on the cone running from (rA, zA) at its foot to (rB, zB) at its head, between
+    angles a0..a1, from o0 to o1 measured out along the cone's normal."""
+    L = math.hypot(rB - rA, zB - zA)
+    nr, nz = (zB - zA) / L, (rA - rB) / L                    # the outward normal in (r, z)
+    n = na or max(2, int(abs(a1 - a0) / FULL * SEG) + 2)
+    ang = [a0 + (a1 - a0) * j / (n if wrap else n - 1) for j in range(n)]
+    ring = lambda r, z, o: [((r + o * nr) * math.cos(a), (r + o * nr) * math.sin(a), z + o * nz) for a in ang]
+    shell.grid([ring(rA, zA, o0), ring(rA, zA, o1), ring(rB, zB, o1), ring(rB, zB, o0)], mat, closed_u=wrap)
 
 
 shell, floor, furn = Part("shell"), Part("floor"), Part("furniture")
@@ -185,7 +192,7 @@ for d in doors:
     for rr in (R - 0.03, RO + 0.03):
         shell.box((math.cos(d) * rr, math.sin(d) * rr, P["door_h"] + 0.1), (0.1, P["door_w"] + 0.4, 0.2), MARBLE, yaw=d)
     floor.box((math.cos(d) * (R + T / 2), math.sin(d) * (R + T / 2), 0.002), (T + 0.2, P["door_w"], 0.004), INLAY, yaw=d)
-# inside: a cornice at the springing and a plinth course; outside: a cornice under the dome
+# inside: a cornice at the eaves and a plinth course; outside: a cornice under the eaves
 shell.grid(arc(R - 0.3, R, 0, FULL, H - 0.3, H, SEG + 1), MARBLE)
 shell.grid(arc(RO, RO + 0.25, 0, FULL, H - 0.3, H, SEG + 1), MARBLE)
 for d in doors:
@@ -208,27 +215,52 @@ for k in range(P["columns"] * 2):                                               
     shell.box(((P["peri_r"] + 0.07) * math.cos(a), (P["peri_r"] + 0.07) * math.sin(a), ch + P["entab_h"] * 0.72),
               (0.05, 0.22, P["entab_h"] * 0.5), STONE, yaw=a)
 zr = ch + P["entab_h"]
-shell.grid(arc(RO, P["peri_r"] + 0.2, 0, FULL, zr, zr + 0.3, SEG + 1), MARBLE)                  # the flat roof and cornice
+shell.grid(arc(eb, P["peri_r"] + 0.2, 0, FULL, zr, zr + 0.18, SEG + 1), MARBLE)                  # the cornice
 shell.grid(arc(RO, eb, 0, FULL, ch - 0.05, ch + 0.05, SEG + 1), COFFER)                         # the colonnade's ceiling
+# its lean-to roof: pan tiles from the cornice up to the drum, a cover tile over each joint
+rl = P["peri_r"] + 0.2
+cone(rl, zr + 0.18, RO + 0.05, zr + 1.35, 0, FULL, 0.0, 0.1, TILE, na=SEG, wrap=True)
+for k in range(P["tiles"] * 2):
+    a = FULL * (k + 0.5) / (P["tiles"] * 2)
+    w = 0.035 / rl
+    cone(rl, zr + 0.18, RO + 0.05, zr + 1.35, a - w, a + w, 0.1, 0.18, TILE_RIDGE, na=2)
 
-# --- dome: shell, coffer ribs and rings, oculus ------------------------------------------
-rise, zs = P["dome_rise"], H
-ocf = 1 - P["oculus"] / R                 # the fraction at which the oculus opens (approximately)
-pts, full = cap_band(RO + 0.05, rise, 0.0, ocf, -0.6, 0.0, zs)
-shell.grid(pts, MARBLE, closed_u=True)
-depth, rib = 0.22, 0.14
-top_band = ocf * 0.8
-for k in range(P["coffer_ribs"]):
-    a = FULL * k / P["coffer_ribs"]
-    w = rib / R
-    p, _ = cap_band(RO + 0.05, rise, 0.0, top_band, -0.6 - depth, -0.6, zs, a - w, a + w, 2, 10)
-    shell.grid(p, STONE)
-for k in range(P["coffer_rings"] + 1):
-    f = top_band * k / P["coffer_rings"]
-    p, _ = cap_band(RO + 0.05, rise, max(f - 0.02, 0), f + 0.02, -0.6 - depth, -0.6, zs, 0, FULL, SEG, 2)
-    shell.grid(p, STONE, closed_u=True)
-p, _ = cap_band(RO + 0.05, rise, ocf - 0.03, ocf, -0.7, 0.1, zs, 0, FULL, 48, 2)             # the oculus rim
-shell.grid(p, MARBLE, closed_u=True)
+# --- the conical roof: pan tiles, a cover tile over each joint, timber rafters beneath -------
+zs = H
+re_, ra_, rise = RO + P["roof_eave"], P["apex_r"], P["roof_rise"]
+cone(re_, zs, ra_, zs + rise, 0, FULL, 0.0, 0.12, TILE, na=SEG, wrap=True)                         # the pan tiles
+for k in range(P["tiles"]):
+    a = FULL * (k + 0.5) / P["tiles"]
+    w = 0.05 / re_
+    cone(re_, zs, ra_, zs + rise, a - w, a + w, 0.12, 0.22, TILE_RIDGE, na=2)                       # a cover tile
+cone(re_ + 0.03, zs - 0.03, re_ - 0.04, zs + 0.22, 0, FULL, 0.0, 0.1, TILE_RIDGE, na=SEG, wrap=True)   # the eaves' edge
+for k in range(P["tiles"] // 2):                                                                    # rafters, seen from inside
+    a = FULL * k / (P["tiles"] // 2)
+    shell.strut((re_ * math.cos(a), re_ * math.sin(a), zs - 0.2), (ra_ * math.cos(a), ra_ * math.sin(a), zs + rise - 0.2),
+                0.14, 0.2, WOOD)
+# the lantern: a ring of posts with louvres, a small tiled cap and a bronze finial
+lz = zs + rise
+shell.cyl(Vector((0, 0, lz - 0.1)), ra_ + 0.05, ra_ + 0.05, 0.25, WOOD, 16)
+for k in range(8):
+    a = FULL * (k + 0.5) / 8
+    shell.box((ra_ * 0.85 * math.cos(a), ra_ * 0.85 * math.sin(a), lz + 0.55), (0.1, 0.1, 0.8), WOOD, yaw=a)
+    for lv in range(3):
+        shell.box((ra_ * 0.85 * math.cos(a), ra_ * 0.85 * math.sin(a), lz + 0.3 + lv * 0.22), (0.05, 0.5, 0.05), WOOD, yaw=a)
+shell.cyl(Vector((0, 0, lz + 0.95)), ra_ + 0.25, 0.1, 0.55, TILE, 16)
+shell.sphere(Vector((0, 0, lz + 1.65)), 0.11, BRONZE)
+# six plain columns inside, each holding a beam to the wall and a ring beam between them
+ic, ir, idm = P["inner_cols"], P["inner_r"], P["inner_d"]
+tops = []
+for j in range(ic):
+    a = FULL * (j + 0.25) / ic
+    c = Vector((ir * math.cos(a), ir * math.sin(a), 0))
+    shell.cyl(c, idm / 2, idm * 0.42, H - 0.55, MARBLE, 16)                      # the shaft, no base
+    shell.cyl(c + Vector((0, 0, H - 0.55)), idm * 0.42, idm * 0.62, 0.18, MARBLE, 16)
+    shell.box(c + Vector((0, 0, H - 0.3)), (idm * 1.5, idm * 1.5, 0.12), MARBLE, yaw=a)
+    tops.append(c + Vector((0, 0, H - 0.12)))
+    shell.strut(tops[-1], (R * math.cos(a), R * math.sin(a), H - 0.12), 0.2, 0.3, WOOD)             # a beam to the wall
+for j in range(ic):
+    shell.strut(tops[j], tops[(j + 1) % ic], 0.2, 0.3, WOOD)                                         # the ring beam
 
 # --- floor -----------------------------------------------------------------------------
 for r0, r1, m in ((1.0, 1.1, INLAY), (1.1, 1.25, RED), (1.25, 1.35, INLAY), (R - 0.9, R - 0.8, INLAY)):
@@ -251,6 +283,10 @@ while len(desks) < P["desks"] and tries < 50000:
     c = Vector((r * math.cos(a), r * math.sin(a), 0))
     if abs(c.y) < 0.8 and P["meridian"]:
         continue                     # keep the meridian line clear
+    if any((c - Vector((P["inner_r"] * math.cos(FULL * (j + 0.25) / P["inner_cols"]),
+                        P["inner_r"] * math.sin(FULL * (j + 0.25) / P["inner_cols"]), 0))).length < 0.85
+           for j in range(P["inner_cols"])):
+        continue                     # and the columns inside
     if any(abs(math.atan2(math.sin(a - d), math.cos(a - d))) * r < P["door_w"] / 2 + 0.4 and r > R - 1.9
            for d in doors):
         continue                     # and the ways in from the doorways
