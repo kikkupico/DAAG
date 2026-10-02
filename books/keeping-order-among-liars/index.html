@@ -25,8 +25,8 @@
   <p class="sub">Can a replicated service keep its commands in order when some of its machines lie,
   the leader included, and messages take arbitrarily long?</p>
   <div class="frame-cover portrait"><img src="../../assets/img/covers/keeping-order-among-liars.jpg" width="896" height="1200"
-    alt="At dusk in a strong wind, a bandit in a saffron cloak sits behind a low dry-stone breastwork on a slope, a small ledger under his hand; on the stones in front of him a rat with a cord and a tiny bronze tube round its neck shelters in a gap."></div>
-  <p class="pub">On the crown, the four bandits keep a book of the loot, one copy at each post. One of
+    alt="At dusk in a strong wind, a bandit in a saffron cloak sits behind a low dry-stone breastwork on a slope, a small scroll under his hand; on the stones in front of him a rat with a cord and a tiny bronze tube round its neck shelters in a gap."></div>
+  <p class="pub">On the crown, the four bandits keep a scroll of the loot, one copy at each post. One of
   them may lie, and on these nights a wind can hold the rats in their holes for as long as it blows. The book's
   entries must stand in the same order in every honest copy, whatever the wind and whoever lies,
   and must go on standing once the wind drops. A job that passes from man to man, and two rounds of
@@ -38,13 +38,13 @@
 <!-- ================= IN A NUTSHELL ================= -->
 <section class="nutshell">
   <h6>In a Nutshell</h6>
-  <p>The four bandits keep a book of the loot, one copy at each post, and one of them may lie, the man holding the job included, while a wind can hold the rats in their holes for as long as it blows. The entries must stand in the same order in every honest copy, whatever the wind and whoever lies, and must go on standing once it drops. A job that passes from man to man, and two rounds of sealed echoes, are enough. In real terms, this is Practical Byzantine Fault Tolerance (Castro and Liskov): state machine replication that survives Byzantine faults, including a faulty leader, with leader changes by view change.</p>
+  <p>The four bandits keep a scroll of the loot, one copy at each post, and one of them may lie, the man holding the job included, while a wind can hold the rats in their holes for as long as it blows. The entries must stand in the same order in every honest copy, whatever the wind and whoever lies, and must go on standing once it drops. A job that passes from man to man, and two rounds of sealed echoes, are enough. In real terms, this is Practical Byzantine Fault Tolerance (Castro and Liskov): state machine replication that survives Byzantine faults, including a faulty leader, with leader changes by view change.</p>
 </section>
 
 <nav class="toc">
   <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
   <ol>
-    <li><a href="#s1">I · The Loot Book</a></li>
+    <li><a href="#s1">I · The Loot Scroll</a></li>
     <li><a href="#s2">II · The Chief's Job</a></li>
     <li><a href="#s3">III · Two Echoes</a></li>
     <li><a href="#s4">IV · Why Three Seals, and Four Men</a></li>
@@ -61,7 +61,7 @@
 
 <!-- ================= I ================= -->
 <section id="s1">
-  <div class="issue"><span class="no">Chapter I</span><h2>The Loot Book</h2></div>
+  <div class="issue"><span class="no">Chapter I</span><h2>The Loot Scroll</h2></div>
 
   <div class="prose">
     <p>On the crown of Mount Phyle, <span class="coin">Number 1</span>, the chief, sits inside the ring wall
@@ -82,7 +82,7 @@
          alt="At dusk in a strong wind, the grass streaming flat at the foot of a ruined ring wall, a rat with a cord knotted round its neck and a tiny bronze tube tucked into a chink between the great stones, waiting out the wind.">
   </figure>
 
-    <p>The four keep a <span class="coin">loot book</span>, one copy at each post: where each strongbox
+    <p>The four keep a <span class="coin">loot scroll</span>, one copy at each post: where each strongbox
     lies, and whose share it is. The book grows by <span class="coin">entries</span>, each a record
     about the loot, <em>the third strongbox lies in the north cleft</em> or <em>the silver cups are
     Number 3's share</em>. Any man may file one. Why must every copy take the entries in the same
@@ -396,8 +396,8 @@
 
   <div class="prose">
     <p>The paper's proof is a sketch, with the full argument in Castro's thesis; the version above is
-    the same sketch, and it leaves out the settled pages we will come to, which let a request show a
-    settled page in place of the entries below it.</p>
+    the same sketch, and it leaves out the settled columns we will come to, which let a request show a
+    settled column in place of the entries below it.</p>
 
     <p>What keeps the job from being passed too easily, or too late? Two more rules. A man who sees
     requests from two others for a later term joins them, even before his own sandglass runs out, so an
@@ -461,17 +461,17 @@
     and sends it to everyone. When a man holds three matching summaries for the same number, that page
     is <span class="coin">settled</span>: at least two honest men have the same book up to there. He
     throws away every echo for numbers up to it. And a man whose copy fell behind? He can take the
-    settled page from any of the three and trust it.</p>
+    settled column from any of the three and trust it.</p>
 
-    <p>Does the settled page do anything else? It bounds the numbering. A holder may use only numbers
-    from the last settled page up to some fixed distance beyond it, so a lying holder cannot use up the
+    <p>Does the settled column do anything else? It bounds the numbering. A holder may use only numbers
+    from the last settled column up to some fixed distance beyond it, so a lying holder cannot use up the
     numbers by jumping to an enormous one.</p>
   </div>
 
   <div class="aside-formal">
     <span class="lbl">Settling a page</span>
     Every hundred entries, send a sealed summary of your copy. Three matching summaries settle the page;
-    discard what lies below it. Numbers are allowed only between the last settled page and a fixed
+    discard what lies below it. Numbers are allowed only between the last settled column and a fixed
     distance above it.<br>
     <span class="paper">§4.3: checkpoints every <var>K</var> requests; a stable checkpoint needs 2<var>f</var> + 1
     matching checkpoint messages; low and high water marks <var>h</var> and <var>H</var> = <var>h</var> + <var>k</var>.</span>
@@ -522,7 +522,7 @@
   <div class="issue"><span class="no">Chapter IX</span><h2>In the Book, In the Paper</h2></div>
 
   <div class="prose">
-    <p>So that the reader may check the loot book against the paper of Castro and Liskov.</p>
+    <p>So that the reader may check the loot scroll against the paper of Castro and Liskov.</p>
   </div>
 
   <div class="table-wrap">
@@ -532,7 +532,7 @@
         <tr><td><span class="term">the four men; one may lie</span></td><td>Replicas, <var>n</var> = 3<var>f</var> + 1 = 4, <var>f</var> = 1 Byzantine. <span class="paper">§2, §4.</span></td></tr>
         <tr><td><span class="term">the wind; its dropping</span></td><td>An asynchronous network; liveness needs delay(<var>t</var>) not to outgrow <var>t</var> for ever. <span class="paper">§2.</span></td></tr>
         <tr><td><span class="term">seal rings</span></td><td>Public-key signatures; the adversary cannot forge an honest node's signature. <span class="paper">§2. Message digests are folded into the seal here.</span></td></tr>
-        <tr><td><span class="term">the loot book; an entry</span></td><td>A deterministic replicated state machine; an operation request. <span class="paper">§3–4.</span></td></tr>
+        <tr><td><span class="term">the loot scroll; an entry</span></td><td>A deterministic replicated state machine; an operation request. <span class="paper">§3–4.</span></td></tr>
         <tr><td><span class="term">order; going on</span></td><td>Safety (linearizability) and liveness. <span class="paper">§3.</span></td></tr>
         <tr><td><span class="term">the job; a term; the fixed order of holders</span></td><td>The primary; a view; primary = <var>v</var> mod |<var>R</var>|. <span class="paper">§4.</span></td></tr>
         <tr><td><span class="term">two matching sealed words to trust an entry</span></td><td>The client waits for <var>f</var> + 1 matching replies. <span class="paper">§4.1. Redundant for a replica acting as its own client.</span></td></tr>
@@ -544,7 +544,7 @@
         <tr><td><span class="term">Order Across Terms</span></td><td>Non-faulty replicas agree on the sequence numbers of requests that commit locally, even in different views. <span class="paper">§4.5.1, a sketch; full proof in Castro's thesis [4].</span></td></tr>
         <tr><td><span class="term">joining on two requests; no man forces a change; the liar's single term</span></td><td>Join a view change on <var>f</var> + 1 view-changes; a change needs <var>f</var> + 1; a faulty primary for at most <var>f</var> consecutive views. <span class="paper">§4.5.2.</span></td></tr>
         <tr><td><span class="term">doubling the sandglass</span></td><td>The view-change timeout doubles. <span class="paper">§4.5.2.</span></td></tr>
-        <tr><td><span class="term">settled pages; the allowed numbers</span></td><td>Stable checkpoints with 2<var>f</var> + 1 matching messages; low and high water marks. <span class="paper">§4.3.</span></td></tr>
+        <tr><td><span class="term">settled columns; the allowed numbers</span></td><td>Stable checkpoints with 2<var>f</var> + 1 matching messages; low and high water marks. <span class="paper">§4.3.</span></td></tr>
         <tr><td><span class="term">a liar's nonsense entry</span></td><td>Faulty clients are observed consistently but can write garbage; access control limits them. <span class="paper">§3.</span></td></tr>
         <tr><td><span class="term">keeps nothing secret</span></td><td>No fault-tolerant privacy. <span class="paper">§2.</span></td></tr>
         <tr><td><span class="term">cheaper marks only the receiver can check</span></td><td>Message authentication codes and authenticators, with signatures kept for view changes. <span class="paper">§5.2.</span></td></tr>
