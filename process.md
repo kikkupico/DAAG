@@ -325,3 +325,15 @@ days. On later nights a wind can blow over the whole hill and keep the camps' ra
 blows; it always drops in the end. The camps have no common moment but one: on the windy nights of
 *Agreeing When Messages Run Late* each man turned his glass as the last light left the crown, which
 every tent sees and no post on the crown does.
+
+---
+
+## Changing art direction
+
+Art direction flows from the Hellenistic reference (`hellenistic-reference.html`) through the world
+guides, the book guides and the books to the images. `art/direction/decisions.json` lists each decision
+with the reference section it comes from and the words that betray it in a file or a prompt. Before
+changing one, run `python3 art/direction/tree.py impact <decision-id>` (or a file path, or a regex) to
+see what mentions it and what lies downstream, with the images to regenerate and their cost. After
+the change, run `tree.py touch <decision-id>`, then `tree.py stale` for what is still behind and
+`tree.py build` to refresh `art/direction/TREE.md`. Add a decision when a new rule is settled.
