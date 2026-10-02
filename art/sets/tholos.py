@@ -4,7 +4,7 @@
 
 Writes art/sets/tholos.glb and art/sets/tholos.json. The Chamber's kind of hall with the one
 thing the Chamber lacks, a podium at the centre; built after the Athenian Tholos so it reads
-apart from the white domed rotunda across the bay:
+apart from the white colonnaded round hall across the bay:
 - a plain drum of honey limestone on a two-step base, no colonnade outside, with doorways
   round it and a small columned porch facing the paved court;
 - a low conical roof of oxblood tiles rising to a small louvred lantern, whose opening lights
@@ -17,7 +17,7 @@ apart from the white domed rotunda across the bay:
   board's number. It has no lectern: nobody speaks from it.
 
 The outside matches the Chamber on the island model: about as wide as its colonnade, the
-cornice and the top at about its entablature's and its dome's heights. The GLB is in the
+cornice and the top at about its entablature's and its roof's heights. The GLB is in the
 set's own frame: metres, the centre of the floor at the origin, axes as explorer.html's
 (north = -X). Its objects are `shell` (walls, columns, roof, porch), `floor` (floor, base
 steps and podium steps, what people stand on) and `furniture` (benches, stands, the podium's

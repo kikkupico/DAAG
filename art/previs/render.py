@@ -405,7 +405,7 @@ elif shot.get("light") == "night":
 
 if shot.get("set"):
     # Inside, the sky must not light every surface: a dim fill, and ray-traced light so the
-    # sun falls in through the oculus and the doorways and the dome's underside stays dark.
+    # sun falls in through the lantern and the doorways and the roof's underside stays dark.
     world.node_tree.nodes["Background"].inputs[1].default_value = shot.get("sky_strength", 0.3)
     bpy.context.scene.eevee.use_raytracing = True
     sun_data.energy = shot.get("sun_energy", 5.0)

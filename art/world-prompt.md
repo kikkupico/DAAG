@@ -306,7 +306,7 @@ predate this rule; use them with a tint, and build new ones to it.
 ## 3. Island 2: Paxos
 
 > **Narrative Setting:** One island shaped like a Y, and its shape groups the papers. Two arms reach north and face each other across a sheltered bay; they join at a fork, and below it a short stem widens into the broad, lower body of the island. Two cities: Paxos, whose parliament governs the western arm, the stem and the body; and Schedia on the eastern arm, founded from a different mother city, which keeps its own laws. Four districts:
-> - **The Chamber** (the western arm): a circular domed rotunda on a terrace above the bay, where the parliament sits, looking across the water at the Tholos. The island road runs up the stem, forks, and runs out along the western arm past the Chamber to the harbour town at the arm's tip, so the Chamber is on a through route.
+> - **The Chamber** (the western arm): a round colonnaded hall under a conical tiled roof, on a terrace above the bay, where the parliament sits, looking across the water at the Tholos. The island road runs up the stem, forks, and runs out along the western arm past the Chamber to the harbour town at the arm's tip, so the Chamber is on a through route.
 > - **Schedia and the Tholos** (the eastern arm): a small unwalled city of its own above a cove on the bay, with the Tholos, a round hall with a conical tiled roof and a podium at its centre, on a terrace facing the Chamber across the bay.
 > - **The hall of two doors** (the fork): on common ground belonging to neither city; one door faces north up the bay to the Chamber and the Tholos, one south down the stem to the scholars' coast.
 > - **The scholars' coast** (the body of the island), which the scholars call Homonoia: lower, deeply indented country of coves and valleys, with the stoa and festival ground on an eastern harbour, about a dozen small libraries within casual reach of one another along footpaths of differing length, a courier cove on the rocky southwest shore, and the far terraces on remote slopes at the southern tip, as far from the assemblies as the island goes. The scholars hold no assembly.
@@ -320,8 +320,8 @@ Detailed 3D isometric diorama of the Greek island Paxos, Hellenistic Greece, 3rd
 True orthographic axonometric view, deep focus, warm directional sunlight, zero people.
 The island's outline follows the attached sketch: a limestone island shaped like the letter Y. Two slender high rocky arms reach north, side by side, enclosing a sheltered bay of turquoise water between them. They join at a fork, and below the fork a distinct narrow stem, clearly narrower than either arm is long, runs south and then widens into a broad, lower body. The body is by far the largest part of the island, larger than both arms together, and fills the whole southern half of the frame. Calm deep Aegean blue sea reaches every frame edge, turquoise shoals and white surf at the shore; no pedestal, no cutaway.
 Outer coasts of both arms: sheer white limestone sea-cliffs with sea-caves. Inner slopes facing the bay: terraced olive groves, cypresses and maquis.
-The western arm: on a level civic terrace above the bay stands a single circular domed rotunda of white ashlar limestone ringed by a Doric colonnade, with evenly spaced doorways and statues round it; a paved road crosses the terrace past it and runs on to the arm's tip, where a small harbour town of red-tiled stone houses, a market square, quays and moored merchant ships sits on a cove.
-The eastern arm, directly across the bay from the rotunda: a small town of red-tiled stone houses above a cove, and above it, on a level terrace facing the bay, a round hall of warm honey-coloured limestone with plain walls, several doorways round it and no colonnade, under a single low conical roof of oxblood terracotta tiles rising to a small louvred lantern, and a small columned porch facing the water. It is clearly unlike the white domed rotunda across the bay.
+The western arm: on a level civic terrace above the bay stands a single round hall of white ashlar limestone ringed by an unbased Doric colonnade, under one conical roof of oxblood terracotta tiles with a small louvred lantern, with evenly spaced doorways and statues round it; a paved road crosses the terrace past it and runs on to the arm's tip, where a small harbour town of red-tiled stone houses, a market square, quays and moored merchant ships sits on a cove.
+The eastern arm, directly across the bay from the rotunda: a small town of red-tiled stone houses above a cove, and above it, on a level terrace facing the bay, a round hall of warm honey-coloured limestone with plain walls, several doorways round it and no colonnade, under a single low conical roof of oxblood terracotta tiles rising to a small louvred lantern, and a small columned porch facing the water. It is clearly unlike the white colonnaded round hall across the bay.
 The fork, where the two arms meet: one small symmetrical gabled hall of pale limestone with a door in each end wall, one facing north up the bay, one facing south down the stem.
 The body of the island, well south of the stem: lower rolling hills and valleys with a deeply indented coast of coves and pebble beaches. On a harbour on the body's eastern shore, far down from the fork, a long colonnaded stoa facing an open ground set with rows of long tables. About a dozen small porched library buildings scattered in clearings among olive trees across the valleys and hill shoulders, linked by footpaths of differing length. A small rocky cove on the southwest shore with timber piers and small boats. At the remote southern tip, the farthest point from the fork, narrow stepped terraces with long stone tables on steep slopes facing the open sea.
 Farmsteads along one road running from the southern body up the stem, forking at the hall, one branch along each arm.
@@ -366,22 +366,22 @@ Bright, clear sunlight from the upper right, casting crisp, well-defined shadows
 Detailed 3D isometric architectural diorama of The Chamber on Paxos, the parliament's assembly hall, Hellenistic Ancient Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated monument, zero people.
 A circular civic assembly hall (a rotunda) built of finely dressed white ashlar limestone.
-Surrounded by an unbroken outer colonnaded peristyle of fluted Doric limestone columns supporting a classical entablature.
-Roofed with a smooth, hard hemispherical ashlar stone dome crowned by an open circular bronze-rimmed oculus at the apex; bare reflective stone surfaces inside, no hangings or wooden panelling.
+Surrounded by an unbroken outer colonnaded peristyle of Doric limestone columns with no bases, supporting a classical entablature and a lean-to roof of pan and cover tiles that runs up to the drum.
+Roofed with one low conical roof of oxblood terracotta pan tiles and narrow cover tiles on timber rafters, crowned by a small louvred lantern and a bronze finial; bare dressed stone walls inside, a ring of six plain stone columns holding the roof beams, no hangings or panelling.
 A stepped circular stone plinth (crepidoma) surrounds the base. Several open doorways spaced evenly around the circular drum, none of them grander than the others, so there is no front entrance.
 Paved concentric circular interior flagstone floor with no podium, no speaker's platform, no head of the room, and no seating facing any single point; low stone benches follow the curve of the wall.
 Set on a paved limestone public terrace crossed by a road, with marble statues on tall pedestals standing just outside the doorways, and slender Italian cypress trees.
 ```
 
 #### Feature 1a: The Chamber — Interior
-The dome is lifted away. The room carries Lamport's Chamber exactly: no point from which anyone could address the room, one scroll per legislator and no shared record, doorways all round because legislators and messengers come and go, and a meridian line because Paxons tell time by the sun.
+The roof is lifted away. The room carries Lamport's Chamber exactly: no point from which anyone could address the room, one scroll per legislator and no shared record, doorways all round because legislators and messengers come and go, and a meridian line because Paxons tell time by the sun.
 ```text
 Isometric 3D interior model of the Chamber on Paxos, a Hellenistic Greek parliament hall.
 Orthographic axonometric view, deep focus, zero people.
-The dome is lifted away to show the whole interior.
+The roof is lifted away to show the whole interior, with a ring of six plain stone columns inside the wall.
 A large circular hall; bare dressed white limestone walls, hard and echoing, no hangings or panelling.
 Identical open doorways spaced evenly round the wall: no front, no podium, no head of the room, nothing at the centre.
-Concentric flagstone floor with a bronze meridian line inlaid where sunlight from the oculus falls, marked with hours.
+Concentric flagstone floor with a bronze meridian line inlaid where sunlight from the lantern falls, marked with hours.
 Round the wall, a ring of identical low stone benches, each with a small wooden writing desk, an inkpot and a closed papyrus scroll with its title tag.
 No shelves, archive or shared record anywhere.
 A plain wooden bench for messengers beside each doorway.
