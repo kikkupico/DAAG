@@ -33,7 +33,7 @@ Written: `books/keeping-order-among-liars/`. The crown's four bandits; see `sett
 
 ## Changing Leaders Among Liars
 
-**Yin, Malkhi, Reiter, Gueta & Abraham 2019 (HotStuff) · the same crown and loot book**
+**Yin, Malkhi, Reiter, Gueta & Abraham 2019 (HotStuff) · the same crown and loot scroll**
 
 Written: `books/changing-leaders-among-liars/`. The crown's four bandits; see `settings.md`.
 
