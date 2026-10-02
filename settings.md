@@ -3,7 +3,7 @@
 The **analysis** behind the world: what each paper needs from its ground, and the
 constraints that cannot be broken. The paper-to-place assignment at building resolution is in
 `buildings.md`. The real geography, history and literature behind each place, building, character,
-prop and practice, and how close each is, are in `reality.md`. Source papers are in `sources/`.
+prop and practice, and how close each is, are in `reality.md`; the period reference is `hellenistic-reference.html`. Source papers are in `sources/`.
 
 ---
 

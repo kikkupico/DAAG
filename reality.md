@@ -1,6 +1,6 @@
 # Reality checks
 
-What each place, building, character, prop and practice of the setting has in common with the real Greek world, and where the setting departs from it. Every entry is shown on the setting page it belongs to (`places/<slug>`), under *Reality Checks*, and this file holds them all.
+What each place, building, character, prop and practice of the setting has in common with the real Greek world, and where the setting departs from it. Every entry is shown on the setting page it belongs to (`places/<slug>`), under *Reality Checks*, and this file holds them all. The wider period reference they draw on is `hellenistic-reference.html`.
 
 **What this is for.** The series is allegory, and an allegory is easier to trust when a reader can see what is borrowed and what is made up. Each entry names a real precedent in geography, history or literature and says how close it is. It does not defend the setting: where the setting is wrong for the period, it says so.
 
