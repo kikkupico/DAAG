@@ -21,9 +21,9 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
 - **2 Buildings: stone orders, tiled roofs and civic ensembles** (`hellenistic-reference.html#buildings`)
   - `chamber-conical-roof` The Chamber is a Greek round hall: a Doric peristyle round the drum, one conical roof of pan and cover tiles on timber rafters held up by six columns inside, a small lantern at the apex
     - stands at 0754785 (2026-10-02) · last guide change de96834 (2026-10-02) Paxos place images redone on the redesigned Chamber: aerial, terrace and interior (nano-banana-2), the hall of two doors and the Paxos aerial re-framed on the current model; alt texts follow · **REVIEW**
-    - direct: 8 world guide · 2 book guide · 4 book · 23 spec · 24 image
-    - inherited: 4 book · 4 spec
-    - stale: 4 world guide · 2 book guide · 3 book · 10 spec · 13 image (behind 0754785)
+    - direct: 8 world guide · 1 book · 4 spec · 2 image
+    - inherited: 6 book · 21 spec · 21 image
+    - stale: 4 world guide · 2 spec (behind 0754785)
   - `courtyard-houses` Houses are plastered rubble, blind to the street, open onto a court or portico
     - stands at - · last guide change 592cae4 (2026-10-02) The Chamber redesigned as a Greek round hall: Doric peristyle, one conical roof of pan and cover tiles on rafters held up by six inner columns, a lantern at the apex; set rebuilt and Paxos re-baked; docs, reality checks and the setting page follow
     - direct: 5 world guide · 10 spec · 6 image
@@ -140,4 +140,4 @@ place -> its books -> their shot specs -> images; sheet -> shot specs that use i
 
 - Images with no shot spec: 1
   - `assets/img/map.jpg`
-- Nodes no decision touches: 27 (a decision is missing, or the node is out of scope)
+- Nodes no decision touches: 29 (a decision is missing, or the node is out of scope)
