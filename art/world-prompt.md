@@ -491,6 +491,19 @@ Defaults for the 3D phase, taken from `hellenistic-reference.html` (its *Modelli
 | Sarissa · doru | about 5.8 m with a 13.5 cm head · about 2.4 m |
 | Horse · donkey | about 1.35 m · about 1.0 m at the withers |
 
+### 3.5 Paxos cast: dress
+
+The ring road's rule holds: every garment is one loom-woven rectangle, pinned or belted, never tailored, with no set-in sleeves, sewn collars, buckles or stitched bags. The reference sheet is `art/refs/paxos-sheet.png`, cut into `art/refs/paxos/`; the Schedia council and its runner boys are on `art/refs/schedia-sheet.png` and `art/refs/schedia2-sheet.png`.
+
+| Who | Dress |
+|---|---|
+| Legislators (men and women) | a long white linen chiton pinned at both shoulders with small bronze pins, a purple cord belt, a purple woven band at the hem |
+| Priests | the same in plain white, an olive wreath, a red cord belt |
+| Messengers, who are all men | bare-headed, a short blue wool *exōmis* bare on one shoulder, a soft hide sack (*pera*) on a cord at the hip, strapped sandals |
+| The merchant | a short cream chiton pinned at both shoulders, an ochre band at the hem, a cord belt, a small hide sack |
+| The goatherd | a rough brown wool *exōmis*, a rope belt |
+| The scholar | a short grey chiton pinned at both shoulders, a cord belt |
+
 ## 4. Image-to-3D Reconstruction Guidelines
 
 When processing these 2D isometric renders through neural 3D generators — Meshy (web UI) is the one to use; Tripo's conversions are far worse:
