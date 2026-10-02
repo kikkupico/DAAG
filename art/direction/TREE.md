@@ -25,8 +25,8 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - inherited: 4 book · 15 spec · 15 image
   - `pan-and-cover-roofs` Roofs are flat terracotta pan tiles under narrow cover tiles, with eave-end tiles
     - stands at - · last guide change dd033f7 (2026-10-02) Hellenistic reference: dimensions tables per section, modelling cheat sheet and scale diagrams
-    - direct: 4 world guide · 7 spec · 6 image
-    - inherited: 3 book · 7 spec · 7 image
+    - direct: 4 world guide · 12 spec · 11 image
+    - inherited: 3 book · 2 spec · 2 image
   - `stone-dome-chamber` The Chamber is a round hall under a stone dome (kept departure: Greek round halls had conical tile roofs)
     - stands at - · last guide change 9376ef3 (2026-10-02) Setting docs: bound books and ledgers become scrolls (loot scroll, law scroll, account scrolls); reality checks re-graded
     - direct: 8 world guide · 2 book guide · 4 book · 24 spec · 19 image
@@ -47,9 +47,9 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
 - **4 Tools and crafts: from quarry to kitchen** (`hellenistic-reference.html#tools`)
   - `retired-bound-books` RETIRED wording: loot book, law book, ledger, leather-bound · RETIRED wording, fix leftovers
     - stands at 9376ef3 (2026-10-02) · last guide change 9376ef3 (2026-10-02) Setting docs: bound books and ledgers become scrolls (loot scroll, law scroll, account scrolls); reality checks re-graded
-    - direct: 7 book · 11 spec · 15 image
-    - inherited: 15 spec · 11 image
-    - stale: 7 book · 11 spec · 15 image (behind 9376ef3)
+    - direct: 7 book · 9 spec · 13 image
+    - inherited: 17 spec · 13 image
+    - stale: 7 book · 9 spec · 13 image (behind 9376ef3)
   - `sandglass-timers` Four men start together by turning a sandglass (kept departure: the Greek timer was the water clock)
     - stands at - · last guide change 9376ef3 (2026-10-02) Setting docs: bound books and ledgers become scrolls (loot scroll, law scroll, account scrolls); reality checks re-graded
     - direct: 5 world guide · 2 book guide · 6 book · 5 spec · 12 image
@@ -58,7 +58,7 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - stands at 9376ef3 (2026-10-02) · last guide change dd033f7 (2026-10-02) Hellenistic reference: dimensions tables per section, modelling cheat sheet and scale diagrams · **REVIEW**
     - direct: 11 world guide · 3 book guide · 4 book · 17 spec · 22 image
     - inherited: 14 book · 40 spec · 31 image
-    - stale: 3 world guide · 1 book guide · 4 book · 14 spec · 20 image (behind 9376ef3)
+    - stale: 3 world guide · 1 book guide · 4 book · 11 spec · 17 image (behind 9376ef3)
 - **5 Weapons and war: pike, oval shield, torsion engine and ram** (`hellenistic-reference.html#weapons`)
   - `camp-kit` A mercenary's camp is one linen tent, a plain shield, a chest and a wicker basket
     - stands at - · last guide change c45b69e (2026-10-01) Reality checks added and ring-road costume and roof canon: petasos, exōmis, pera, unbased Doric columns, pan and cover tiles
@@ -75,15 +75,14 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - inherited: 2 book · 17 spec · 8 image
   - `messenger-kit` Messengers are bare-headed in an exomis, strapped sandals and a hide pera
     - stands at da00e36 (2026-10-01) · last guide change dd033f7 (2026-10-02) Hellenistic reference: dimensions tables per section, modelling cheat sheet and scale diagrams · **REVIEW**
-    - direct: 3 world guide · 2 book · 4 spec · 4 image
-    - inherited: 1 book · 7 spec · 7 image
-    - stale: 1 spec · 1 image (behind da00e36)
+    - direct: 3 world guide · 2 book · 5 spec · 5 image
+    - inherited: 1 book · 6 spec · 6 image
 - **7 Transport: round ships, mule tracks and signal fires** (`hellenistic-reference.html#transport`)
   - `merchant-ships` Merchant ships are round-hulled Kyrenia-type sailing ships with steering oars; no galleys, sloops or barges
     - stands at 1dd23fb (2026-10-02) · last guide change 1dd23fb (2026-10-02) World prompt: last sloop becomes a coastal cargo ship
     - direct: 4 world guide · 1 book · 6 spec · 14 image
     - inherited: 7 book · 18 spec · 9 image
-    - stale: 3 world guide · 1 book · 6 spec · 14 image (behind 1dd23fb)
+    - stale: 3 world guide · 1 book · 3 spec · 11 image (behind 1dd23fb)
   - `ring-road-carts` Carts and pack animals carry goods; two-wheeled carts and handcarts, no stirrups, no wagons on the cliff shelf
     - stands at - · last guide change 4cb83b2 (2026-10-02) Hellenistic Greece art reference: standalone HTML with public-domain images and SVG schematics
     - direct: 1 world guide · 1 spec · 1 image
@@ -135,4 +134,4 @@ place -> its books -> their shot specs -> images; sheet -> shot specs that use i
 
 - Images with no shot spec: 1
   - `assets/img/map.jpg`
-- Nodes no decision touches: 28 (a decision is missing, or the node is out of scope)
+- Nodes no decision touches: 27 (a decision is missing, or the node is out of scope)
