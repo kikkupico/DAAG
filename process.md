@@ -70,6 +70,10 @@ These are correctness constraints, not preferences.
 7. **Close with the mapping.** Every book ends with an *In the book / In the paper* table and
    a plain-prose statement of the ideas, so a reader can check the allegory rather than trust
    it.
+8. **Records are scrolls and tablets.** Nothing in the setting is a bound book. Lasting
+   records (the houses' accounts, the loot scroll, a legislator's scroll) are papyrus scrolls,
+   written in columns and added to at the end; temporary ones are wax tablets or slips of
+   papyrus. The word *book* in prose names a book of this series, never an object in the setting.
 
 ---
 
@@ -284,8 +288,8 @@ establish.
 | The order board | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Shares the orders premise of *Ordering Without Clocks*: the tallies order orders by slips, this book by the sun. The object is House 3's board of orders, a FIFO queue; Herlios' board with its slots and peg is the paper's §4 queue. Must not give Arche a readable hour in the trading season. Written: `books/many-copies-acting-as-one/`. |
 | The camps | Chandra &amp; Toueg 1996 | *Telling the Dead from the Slow.* Shares the camps with FLP. The camps may decide; nothing follows from it. The slate's guarantees are granted, not earned — see `settings.md`. With a majority alive, a turn to propose, not a leader; point to *Agreeing When Messages Run Late* for it and stay on the detector. Written: `books/telling-the-dead-from-the-slow/`. |
 | The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, with interactive figures and no illustrations: it is the paper the whole project borrows its allegory from. Written: `books/the-part-time-parliament/`. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
-| The Tholos, Schedia | Oki &amp; Liskov 1988 | *One Leader at a Time.* VR, a genuine alternative to Paxos, found independently and published first, in Schedia, the city on Paxos's eastern arm with laws of its own. One council of five and one law book; the paper's transactions are stated, not carried. Written: `books/one-leader-at-a-time/`. |
-| The crown | Castro &amp; Liskov 1999 | *Keeping Order Among Liars.* Needs the vocabulary of *Agreeing Among Liars* and must not contradict it. A later, windy night: the loot book, each man both replica and client (the client's rule of two agreeing seals, f + 1, stated and shown redundant for the four), the chief's job numbering entries and passing in a fixed order when suspected. Safe in any wind; progress once the wind drops. Nothing follows from any entry. Written: `books/keeping-order-among-liars/`. |
+| The Tholos, Schedia | Oki &amp; Liskov 1988 | *One Leader at a Time.* VR, a genuine alternative to Paxos, found independently and published first, in Schedia, the city on Paxos's eastern arm with laws of its own. One council of five and one law scroll; the paper's transactions are stated, not carried. Written: `books/one-leader-at-a-time/`. |
+| The crown | Castro &amp; Liskov 1999 | *Keeping Order Among Liars.* Needs the vocabulary of *Agreeing Among Liars* and must not contradict it. A later, windy night: the loot scroll, each man both replica and client (the client's rule of two agreeing seals, f + 1, stated and shown redundant for the four), the chief's job numbering entries and passing in a fixed order when suspected. Safe in any wind; progress once the wind drops. Nothing follows from any entry. Written: `books/keeping-order-among-liars/`. |
 | The crown | Yin et al. 2019 (HotStuff) | *Changing Leaders Among Liars.* Needs the vocabulary of *Keeping Order Among Liars* and must not contradict it. Tell only what changes: the chief's job passes with every entry, and its holder bundles the others' seals instead of every man writing to every other. Say plainly that a threshold signature makes the bundle one seal's size. Nothing follows from any entry. Written: `books/changing-leaders-among-liars/`. |
 | The stoa and festival ground | Demers 1987 | |
 | The libraries | PBS 2012 | *Probably Up to Date.* The model, not a store: how likely a reader who asks only a few libraries is handed an out-of-date copy, and by how much. |
@@ -295,7 +299,7 @@ establish.
 
 ### Standing constraints on future books
 
-**The bandits.** On Arche, an unknown number of those writing in the houses' books do not
+**The bandits.** On Arche, an unknown number of those writing in the houses' account scrolls do not
 follow the houses' practice. Four rules govern this and all four are load-bearing: no
 infiltration ever *happens* (an event would be a plot); no one is ever identified; no motive is
 given; and no one can tell whether they belong to the band on the crown. No ring-road book uses it yet. A book that does uses it only as the honest-participant

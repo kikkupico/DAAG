@@ -61,7 +61,7 @@ What each place, building, character, prop and practice of the setting has in co
 | water-clocks that disagree; a sundial dead under cloud | Athenian courts timed speeches with the *klepsydra* (Aristotle, Constitution of Athens 67), and the Tower of the Winds in Athens combined sundials with a water-clock. Greek hours also varied in length with the season†, so there really was no common hour. | Close |
 | the red sash on the messenger who carries the marker | Heralds were sacrosanct under Hermes, and killing them was thought to bring a curse: the Spartans' killing of Persian heralds is the famous case (Herodotus 7.133–137)†. A red sash itself is the setting's own. | Loose |
 | carts, mules, oil jars, merchant ships | The Kyrenia ship, a fourth-century BC merchantman found off Cyprus, carried wine jars, millstones and almonds†; mule and ox carts took goods on land. | Close |
-| the houses' books and ledgers | A bound book (codex) is a Roman invention that took over from the roll only after the first century AD; Hellenistic accounts were rolls and wax tablets. | Anachronism |
+| the houses' account scrolls | Hellenistic accounts were kept on papyrus rolls and sheets and on wax tablets; the Zenon papyri are the surviving archive of one such manager†. | Close |
 | the tally kept in a counting room | Greek reckoning used pebbles on a counting board; the marble Salamis tablet is an example†. | Close |
 
 ### Practices
@@ -109,7 +109,7 @@ What each place, building, character, prop and practice of the setting has in co
 | rats as messengers, a cord knotted with the sender's number | No Greek army used rats; the setting says so. Apollo was “Smintheus”, lord of mice (Iliad 1.39)†, but that is a cult title, not a postal service. A knotted cord as a message is real: Darius left the Ionians a thong with sixty knots to undo one a day (Herodotus 4.98). | Invented |
 | the sandglasses turned together at dusk | The hourglass is not attested before the fourteenth century AD (its earliest evidence is Lorenzetti's fresco of 1338), and the Greek instrument is the water-clock. The setting keeps the sandglass because it can be turned over at a stroke, so that four men start together. | Anachronism |
 | seal rings cut with each man's number | Signet rings were the Greek proof of sender and of an unopened message: Polycrates' ring (Herodotus 3.41)†, and the seals Aeneas Tacticus describes for messages (31)†. | Close |
-| the loot book, a copy at each post | Hellenistic accounts were rolls and wax tablets. A bound book is a Roman invention, taking over from the roll only after the first century AD. | Anachronism |
+| the loot scroll, a copy at each post | Papyrus rolls were the ordinary Hellenistic form for lists and accounts, written in columns with new entries added at the end†. | Close |
 | a timber ladder drawn up after the chief | Ladders and walls: the Plataeans' breakout used ladders over the besiegers' wall (Thucydides 3.20–24)†. | Close |
 | strongboxes on a stone shelf | Treasure was kept in chests (*kibōtoi*) and temple treasuries†. | Close |
 
@@ -151,7 +151,7 @@ What each place, building, character, prop and practice of the setting has in co
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| a legislator's ledger in indelible ink | Greek ink was soot in gum and could be wiped off with a sponge†, so indelible ink is the story's own, and the ledger as a bound book is Roman. | Anachronism |
+| a legislator's scroll in indelible ink | Greek ink was soot in gum and could be wiped off with a sponge†, so indelible ink is the story's own; the scroll itself is the ordinary Hellenistic form of a record. | Loose |
 | a decree and its number | Athenian decrees were dated by the year's chief magistrate and the number of the prytany, and cut in stone†. | Close |
 
 ### Practices
