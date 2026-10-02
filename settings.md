@@ -284,7 +284,7 @@ same place is a rule of procedure, not a building.
 **The Chamber is drawn as a rotunda.** Lamport gives it one physical property: *"The acoustics
 of the Chamber were poor, making oratory impossible. Legislators could communicate only by
 messenger."* A circular hall with hard stone walls under one conical roof held up by columns inside, with no podium and no head of the room,
-illustrates that faithfully, and open doorways round the drum show legislators and messengers
+illustrates that faithfully, and its one doorway, with a door that can be locked, shows legislators and messengers
 coming and going. The round plan illustrates Lamport's text and carries no meaning of its own; in
 Lamport nobody speaks aloud at all. The Tholos of Schedia is the same kind of hall with the one
 thing the Chamber lacks: a podium at the centre.
