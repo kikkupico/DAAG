@@ -21,7 +21,7 @@ inside a Doric colonnade with a coffered ceiling, this is the plainer round hall
   board on a post for the board's number. It has no lectern: nobody speaks from it.
 
 The GLB is in the set's frame: metres, the centre of the floor at the origin, axes as explorer.html's
-(north = -X), the porch on the +x axis; objects `shell`, `floor`, `furniture` and `door`.
+(north = -X), the porch facing `porch` degrees (0 is +x); objects `shell`, `floor`, `furniture` and `door`.
 """
 import bpy, bmesh, json, math, sys
 from mathutils import Vector, Matrix
@@ -31,7 +31,8 @@ P = dict(
     wall=0.95,         # drum wall thickness
     drum_h=6.4,        # floor to the top of the cornice
     base=0.45,         # the two-step base the floor stands on
-    door_w=2.2, door_h=3.9, door_open=70.0,   # the one doorway, behind the porch, on the +x axis
+    porch=-41.0,       # the porch's facing, degrees in the set's frame (the court, to the SW); 0 is +x
+    door_w=2.2, door_h=3.9, door_open=70.0,   # the one doorway, behind the porch
     porch_d=2.8, porch_w=5.0,
     pitch=24.0,        # roof pitch, degrees
     eaves=0.55,        # the roof's overhang beyond the drum
@@ -338,8 +339,11 @@ for d in doors:
                         "stand": c})
 
 objs = [shell.finish(), floor.finish(), furn.finish(), door.finish()]
+PROT = Matrix.Rotation(math.radians(P["porch"]), 4, "Z")      # the model is built with its porch on +x
+for o in objs:
+    o.rotation_euler = (0, 0, math.radians(P["porch"]))
 
-ex = lambda v: [round(v.x, 3), round(-v.y, 3)]
+ex = lambda v: [round((PROT @ v).x, 3), round(-(PROT @ v).y, 3)]
 info = {
     "_note": "Written by art/sets/schedia_tholos.py; set-frame explorer coords [x, z] in metres, "
              "centre of the floor at [0, 0], the pad (ground outside the base) at y = -base. "
