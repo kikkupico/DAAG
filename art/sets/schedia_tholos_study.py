@@ -18,7 +18,11 @@ cam=bpy.data.objects.new("cam",bpy.data.cameras.new("cam")); sc.collection.objec
 bpy.ops.mesh.primitive_plane_add(size=200,location=(0,0,-0.95)); g=bpy.context.object
 gm=bpy.data.materials.new("g"); gm.use_nodes=True; gm.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value=(0.42,0.46,0.3,1); g.data.materials.append(gm)
 shell=[o for o in bpy.data.objects if o.name.startswith("shell")][0]
+import json
+PORCH=math.radians(json.load(open("/Users/kikkupico/Projects/DAAG/art/sets/schedia-tholos.json"))["params"]["porch"])
+def rot(p): return Vector((p[0]*math.cos(PORCH)-p[1]*math.sin(PORCH), p[0]*math.sin(PORCH)+p[1]*math.cos(PORCH), p[2]))
 def look(loc,tgt,lens=35,ortho=None):
+    loc=rot(loc); tgt=rot(tgt)
     cam.location=loc
     cam.rotation_euler=(Vector(tgt)-Vector(loc)).to_track_quat("-Z","Y").to_euler()
     cam.data.lens=lens
