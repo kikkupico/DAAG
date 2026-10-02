@@ -4,7 +4,7 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
 
 | Layer | Nodes |
 |---|---|
-| 0 reference | 29 |
+| 0 reference | 31 |
 | 1 world guide | 11 |
 | 2 book guide | 3 |
 | 3 book | 19 |
@@ -23,7 +23,7 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - stands at 0754785 (2026-10-02) · last guide change de96834 (2026-10-02) Paxos place images redone on the redesigned Chamber: aerial, terrace and interior (nano-banana-2), the hall of two doors and the Paxos aerial re-framed on the current model; alt texts follow · **REVIEW**
     - direct: 8 world guide · 1 book · 10 spec · 8 image
     - inherited: 6 book · 15 spec · 15 image
-    - stale: 4 world guide · 2 spec (behind 0754785)
+    - stale: 3 world guide · 2 spec (behind 0754785)
   - `courtyard-houses` Houses are plastered rubble, blind to the street, open onto a court or portico
     - stands at - · last guide change 592cae4 (2026-10-02) The Chamber redesigned as a Greek round hall: Doric peristyle, one conical roof of pan and cover tiles on rafters held up by six inner columns, a lantern at the apex; set rebuilt and Paxos re-baked; docs, reality checks and the setting page follow
     - direct: 5 world guide · 10 spec · 6 image
@@ -36,7 +36,7 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - stands at 0754785 (2026-10-02) · last guide change de96834 (2026-10-02) Paxos place images redone on the redesigned Chamber: aerial, terrace and interior (nano-banana-2), the hall of two doors and the Paxos aerial re-framed on the current model; alt texts follow · **REVIEW**
     - direct: 3 world guide · 3 spec · 1 image
     - inherited: 2 book · 18 spec · 18 image
-    - stale: 2 world guide · 2 spec · 1 image (behind 0754785)
+    - stale: 1 world guide · 2 spec · 1 image (behind 0754785)
   - `unbased-doric` Doric columns have no bases and stand on the paving
     - stands at - · last guide change de96834 (2026-10-02) Paxos place images redone on the redesigned Chamber: aerial, terrace and interior (nano-banana-2), the hall of two doors and the Paxos aerial re-framed on the current model; alt texts follow
     - direct: 5 world guide · 14 spec · 18 image
@@ -47,7 +47,7 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - direct: 6 world guide · 1 book guide · 4 book · 15 spec · 12 image
     - inherited: 4 book · 8 spec · 7 image
   - `ring-road-plan` One cliff road with a lane each way joins terraced harbour towns; agora and stoa frame the quay
-    - stands at - · last guide change de96834 (2026-10-02) Paxos place images redone on the redesigned Chamber: aerial, terrace and interior (nano-banana-2), the hall of two doors and the Paxos aerial re-framed on the current model; alt texts follow
+    - stands at - · last guide change e547e60 (2026-10-02) Paxos cast redressed in loom-woven rectangles (pinned chitons, cord belts, exomis, hide sacks) and the messengers made men: new reference sheet, Part-Time Parliament prompts and alt texts, Paxos dress table in the world prompt
     - direct: 11 world guide · 3 book guide · 10 book · 29 spec · 20 image
     - inherited: 9 book · 33 spec · 31 image
 - **4 Tools and crafts: from quarry to kitchen** (`hellenistic-reference.html#tools`)
@@ -76,13 +76,24 @@ Built by `python3 art/direction/tree.py build`. Layers run from the historic ref
     - direct: 4 world guide · 1 book guide · 6 spec · 10 image
     - inherited: 1 book · 16 spec · 10 image
   - `loom-woven-dress` Everything worn is a loom-woven rectangle, draped and pinned, never tailored
-    - stands at - · last guide change e8ec907 (2026-10-02) Docs follow the Hellenistic reference: ship terms, cloth sizes, modelling scale canon and pointers to the reference
+    - stands at - · last guide change e547e60 (2026-10-02) Paxos cast redressed in loom-woven rectangles (pinned chitons, cord belts, exomis, hide sacks) and the messengers made men: new reference sheet, Part-Time Parliament prompts and alt texts, Paxos dress table in the world prompt
     - direct: 3 world guide · 1 book · 7 spec · 21 image
     - inherited: 2 book · 22 spec · 8 image
   - `messenger-kit` Messengers are bare-headed in an exomis, strapped sandals and a hide pera
-    - stands at da00e36 (2026-10-01) · last guide change dd033f7 (2026-10-02) Hellenistic reference: dimensions tables per section, modelling cheat sheet and scale diagrams · **REVIEW**
-    - direct: 3 world guide · 2 book · 7 spec · 13 image
-    - inherited: 1 book · 11 spec · 5 image
+    - stands at da00e36 (2026-10-01) · last guide change e547e60 (2026-10-02) Paxos cast redressed in loom-woven rectangles (pinned chitons, cord belts, exomis, hide sacks) and the messengers made men: new reference sheet, Part-Time Parliament prompts and alt texts, Paxos dress table in the world prompt · **REVIEW**
+    - direct: 3 world guide · 2 book · 9 spec · 24 image
+    - inherited: 1 book · 20 spec · 5 image
+    - stale: 1 image (behind da00e36)
+  - `paxos-cast-dress` Paxos cast wear loom-woven rectangles: pinned white chitons with purple cord belts and hem bands, cord belts, hide sacks; no sewn sleeves, satchels or buckles
+    - stands at e547e60 (2026-10-02) · last guide change e547e60 (2026-10-02) Paxos cast redressed in loom-woven rectangles (pinned chitons, cord belts, exomis, hide sacks) and the messengers made men: new reference sheet, Part-Time Parliament prompts and alt texts, Paxos dress table in the world prompt
+    - direct: 1 world guide · 1 book · 6 spec · 11 image
+    - inherited: 5 spec
+    - stale: 11 image (behind e547e60)
+  - `paxos-messengers-male` Paxos messengers are all men, bare-headed, in a blue exomis
+    - stands at e547e60 (2026-10-02) · last guide change c194f0c (2026-09-27) The Chamber rebuilt in Blender at the map's scale and baked into the Paxos model; Chamber page gets new establishing, terrace and interior images; Part-Time Parliament interior shots reframed on the new room
+    - direct: 1 book · 5 spec · 11 image
+    - inherited: 6 spec
+    - stale: 11 image (behind e547e60)
 - **7 Transport: round ships, mule tracks and signal fires** (`hellenistic-reference.html#transport`)
   - `merchant-ships` Merchant ships are round-hulled Kyrenia-type sailing ships with steering oars; no galleys, sloops or barges
     - stands at 1dd23fb (2026-10-02) · last guide change 592cae4 (2026-10-02) The Chamber redesigned as a Greek round hall: Doric peristyle, one conical roof of pan and cover tiles on rafters held up by six inner columns, a lantern at the apex; set rebuilt and Paxos re-baked; docs, reality checks and the setting page follow · **REVIEW**
