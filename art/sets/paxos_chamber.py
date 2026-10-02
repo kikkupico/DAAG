@@ -36,7 +36,7 @@ P = dict(
     columns=26, col_r=9.8, col_d=0.9, col_h=5.5,     # the colonnade outside
     entab_h=1.05, peri_r=10.4,                       # its entablature and roof's outer edge
     bench_d=0.55, checker=1, meridian=1,              # the stone seating against the wall: its depth
-    statues=10, statue_r=12.9, terrace=14.5,         # pedestals round the terrace; its paving
+    statues=10, statue_r=11.7, terrace=12.5,         # pedestals round the terrace; its paving
 )
 for arg in sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []:
     k, v = arg.split("=")
