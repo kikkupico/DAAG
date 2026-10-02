@@ -47,4 +47,4 @@ Written: `books/changing-leaders-among-liars/`. The crown's four bandits; see `s
 - **The rotating turn** appears in three places: the DLS turns at the camps, the ◇S algorithm, and the
   crown's job. It is the same idea told three ways, which suits "later papers reuse existing rooms".
   Each book should name the others.
-- **Sandglasses** are the only timers on the hill; water-clocks stay in the counting rooms.
+- **Sandglasses** are the only timers on the hill; water-clocks stay in the counting rooms. The sandglass is a deliberate anachronism kept for narrative convenience: it can be turned over at a stroke, so four men out of sight of one another start together (see `reality.md`).
