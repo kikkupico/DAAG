@@ -192,17 +192,17 @@ Populate the three coastal port sites with their canonical Hellenistic hero trad
 1. West-South-West Port (harbour of the west-south-west house):
 - Sited in the rectangular stone-lined harbour basin and open waterfront terrace from the reference image.
 - Architecture: the house—a sturdy, weathered ashlar limestone trade depot and tally station with low-pitched oxblood terracotta roofs, open exterior colonnaded loggia sheltering wide slate tally tables with bronze pegs and inkpots.
-- Ships & Water: Moored inside the rectangular stone basin are 2-3 ancient Greek wooden fishing skiffs and a small coastal cargo sloop with timber mast and furled linen sail, tied with hemp ropes to stone mooring bollards; timber hauling slipways with greased log rollers leading into the water; drying linen nets and stacked wooden crates on the quays.
+- Ships & Water: Moored inside the rectangular stone basin are 2-3 ancient Greek wooden fishing skiffs and a small coastal cargo ship with timber mast and furled linen sail, tied with hemp ropes to stone mooring bollards; timber hauling slipways with greased log rollers leading into the water; drying linen nets and stacked wooden crates on the quays.
 
 2. Northern Port (harbour of the north house):
 - Sited along the L-shaped stone pier and cleared waterfront terrace beneath the terraced olive groves from the reference image.
 - Architecture: the house—an agricultural distribution wine compound with arched semi-subterranean limestone cellar vaults, heavy timber cart loading platforms, wooden ramps, and an outdoor timber beam olive/wine press.
-- Ships & Water: 2 ancient Greek coastal wine transport barges with broad curved hulls and a round-hulled merchant galley tied alongside the L-shaped stone pier, rigged with furled sails and steering oars, loading wooden crates and rows of terracotta wine amphorae and oil pithoi directly from the stone dock.
+- Ships & Water: 2 ancient Greek coastal wine transport ships with broad curved hulls and a round-hulled merchant ship tied alongside the L-shaped stone pier, rigged with furled sails and steering oars, loading wooden crates and rows of terracotta wine amphorae and oil pithoi directly from the stone dock.
 
 3. East-South-East Port (harbour of the east-south-east house):
 - Sited along the wide crescent beach, long stone pier, and open flagstone esplanade from the reference image.
 - Architecture: the house—a grand ashlar limestone customs house with broad colonnaded porticos, open records courtyard with slate tablets on stone pillars, and vaulted granary warehouses.
-- Ships & Water: The main merchant harbour: a large, broad-beamed Hellenistic merchant sailing galley (holkas) with double steering oars and rigging tied alongside the outer end of the long stone pier; 2 smaller wooden cargo skiffs and sailing dinghies pulled up onto the sandy beach on timber hauling cradles; stacks of grain sacks, cargo crates, and sealed silver ingots arranged neatly on the stone wharf.
+- Ships & Water: The main merchant harbour: a large, broad-beamed Hellenistic merchant sailing ship (holkas) with double steering oars and rigging tied alongside the outer end of the long stone pier; 2 smaller wooden cargo skiffs and sailing dinghies pulled up onto the sandy beach on timber hauling cradles; stacks of grain sacks, cargo crates, and sealed silver ingots arranged neatly on the stone wharf.
 
 Cohesion:
 All architecture and ships integrate seamlessly into the existing terrain, stone quays, and beaches of the attached image. Weathered limestone masonry, oxblood roof tiles, aged timber, calm turquoise shoals, continuous deep Aegean sea plane (Z = 0).
@@ -248,7 +248,7 @@ Detailed 3D isometric architectural diorama of the east-south-east trading house
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated harbour facility, zero people.
 Sited on the sheltered eastern bay of Arche where foreign merchantmen land.
 A substantial ashlar limestone customs house and distribution depot with broad open colonnades and deep overhanging tiled eaves.
-Features a massive squared-stone quay extending into deep azure water; large timber ship slipways holding two broad-beamed Hellenistic merchant sailing galleys drydocked on timber cradles; an open customs record courtyard containing large slate slates mounted on stone pillars; vaulted dry granary storehouses with raised timber floors; neatly stacked rows of cargo crates, grain sacks, and sealed silver ingots.
+Features a massive squared-stone quay extending into deep azure water; large timber ship slipways holding two broad-beamed Hellenistic merchant sailing ships drydocked on timber cradles; an open customs record courtyard containing large slate slates mounted on stone pillars; vaulted dry granary storehouses with raised timber floors; neatly stacked rows of cargo crates, grain sacks, and sealed silver ingots.
 Calm turquoise harbor water, wooden mooring bollards, iron chains, and continuous open sea.
 ```
 
@@ -298,6 +298,7 @@ bare feet; and a soft hide sack on a cord (a *pera*), with no stitched seams, ta
 buckle. Lamportios wears a draped, pinned chiton or himation. Slips are strips of papyrus, with visible
 fibres and ragged edges. Columns are Doric: no bases, standing on the paving. Roofs are flat terracotta
 pan tiles with narrow cover tiles and eave-end tiles; timbers are hand-hewn, uneven, never square-milled.
+Cloth, as modelling estimates: a himation about 1.3 × 2.8 m, a chlamys about 1.1 × 2 m, worn by a man about 1.7 m and a woman about 1.5 m tall.
 
 The existing cast models (`art/cast/wolf-bearer.glb`, `bronze-shepherd.glb`) and reference crops
 predate this rule; use them with a tint, and build new ones to it.
@@ -470,6 +471,25 @@ Warm daylight through the doorways, photorealistic PBR stone, marble and timber.
 1. **Views:** `blender -b -P art/refs/chart_views.py -- <arche|paxos> out.png 25 560 <yaw>` renders one island, placed from art/islands.json, from directly above tilted 25° south, north up, on a transparent ground (frame 560 m so a turned island isn't clipped; resolution scales with it). Both islands turn together 15° anticlockwise from the explorer's placement so the pair lies along the diagonal: Arche yaw 15, Paxos yaw 37 (22° more, so its stem runs down the diagonal and its two arms open towards Arche).
 2. **Layout:** `python3 art/refs/chart_layout.py` sets the two views at one scale on a 2048² canvas, Arche top-left tucked in the crook of Paxos's Y, and centres the pair as a group. The top-right and bottom-left corners stay empty. Result: art/refs/chart-layout.png.
 3. **Home page:** the user converts the layout to the final chart themselves in Gemini (AI engravings made here were rejected). The result, a sepia copperplate chart with a compass rose top-right and rhumb lines, is `art/full-map-cartographic.jpeg` (2048²) and, resized to 1240², `assets/img/map.jpg`.
+
+## 3.4 Scale canon for modelling
+
+Defaults for the 3D phase, taken from `hellenistic-reference.html` (its *Modelling cheat sheet* gives each figure's source, period and certainty). They are assumptions where the reference has no measurement, and a model may depart from them when a prop's own source says otherwise.
+
+| Thing | Default |
+|---|---|
+| Man · woman | 1.7 m · 1.5 m |
+| House door · storey height | 2.0 × 0.9 m · 3.5 m |
+| Doric column | shaft height about 7 lower diameters, no base |
+| Ionic column | height about 8–9 lower diameters |
+| Stoa bay (Doric outer · Ionic inner) | about 2.3 m · 4.65 m between axes (Priene) |
+| Ring-road town streets | main about 4.5 m, cross about 3.5 m, wider at gates and the agora |
+| Theatre seat | height about 0.4 m |
+| Kline | 2.0 × 0.9 × 0.7 m |
+| Rhodian amphora | about 0.9 m tall |
+| Merchant ship | Kyrenia type, about 14 m long and 4.4 m in the beam |
+| Sarissa · doru | about 5.8 m with a 13.5 cm head · about 2.4 m |
+| Horse · donkey | about 1.35 m · about 1.0 m at the withers |
 
 ## 4. Image-to-3D Reconstruction Guidelines
 

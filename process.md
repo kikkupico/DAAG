@@ -6,7 +6,9 @@ without looking like a different series.
 
 **Read first:** `buildings.md` (which paper lives in which building), `settings.md` (the
 analysis, the constraints that cannot be broken, and the islands themselves), `reality.md`
-(the real Greek precedent for each device, and how close it is).
+(the real Greek precedent for each device, and how close it is), and `hellenistic-reference.html`
+(buildings, tools, weapons, dress, transport, town planning and civic procedure of the period, with
+measurements for modelling).
 **Read as models:** the finished books in `books/`. They are the specification. Where
 this document and a finished book disagree, the book is right.
 
