@@ -4,7 +4,10 @@
     python3 art/direction/tree.py build              # write tree.json, TREE.md, tree.html
     python3 art/direction/tree.py impact <what>      # blast radius of a decision id, a file, or a regex
     python3 art/direction/tree.py stale [<id>]       # nodes older than the decision that touches them
-    python3 art/direction/tree.py touch <id>         # mark a decision as changed today
+    python3 art/direction/tree.py touch <id>         # the decision now stands at HEAD
+    python3 art/direction/tree.py log <id>           # git history of the lines it matches in the guides
+    python3 art/direction/tree.py review             # decisions changed in git since they were touched
+    python3 art/direction/tree.py stamp <path>...    # record HEAD as the commit these images were built at
     python3 art/direction/tree.py decisions          # the registry, with counts
 
 Layers, top to bottom:
@@ -21,8 +24,13 @@ spec, or a reference sheet its spec uses, matches. The blast radius of a decisio
   direct     nodes that mention it
   inherited  nodes downstream of a direct hit by a real dependency (place -> its books -> their
              specs -> images; sheet -> the specs that use it), which may need review
-A node is stale when it is older than the `updated` date of a decision that touches it. Text files
-are dated by their last commit (or their mtime when they have uncommitted changes), images by mtime.
+A decision stands at a commit (`since`, set by `touch`). A node is stale when it is older than that
+commit and a decision touches it. Text files are dated by their last commit (or their mtime when they
+have uncommitted changes); images, which git does not track, by the commit they were built at: the one
+recorded by `stamp` in provenance.json, else the last commit before the file's mtime. Every listing
+shows each node's commit and date and how many commits it is behind. `log` and `review` read the git
+history of the reference and the guides for lines a decision's words match, so a change made without
+`touch` still shows up.
 Standard library only.
 """
 import datetime, html, json, re, subprocess, sys
@@ -47,13 +55,17 @@ def read(p):
         return ""
 
 
+def git(*a):
+    return subprocess.run(["git", *a], cwd=ROOT, capture_output=True, text=True).stdout
+
+
 def git_times():
-    out = subprocess.run(["git", "log", "--name-only", "--format=@%ct"], cwd=ROOT, capture_output=True,
-                         text=True).stdout
-    t, cur = {}, 0
+    out = git("log", "--name-only", "--format=@%ct %h")
+    t, cur = {}, None
     for line in out.splitlines():
         if line.startswith("@"):
-            cur = int(line[1:])
+            c, h = line[1:].split()
+            cur = (int(c), h)
         elif line and line not in t:
             t[line] = cur
     dirty = {l[3:].strip('"') for l in subprocess.run(["git", "status", "--porcelain"], cwd=ROOT,
@@ -62,6 +74,22 @@ def git_times():
 
 
 GIT, DIRTY = git_times()
+COMMITS = [(int(c), h) for c, h in (l.split() for l in git("log", "--format=%ct %h").splitlines())]
+PROV = DIR / "provenance.json"
+
+
+def commit_time(ref):
+    out = git("show", "-s", "--format=%ct", ref).strip()
+    return int(out) if out.isdigit() else None
+
+
+def commit_at(t):
+    """The last commit made at or before time t."""
+    return next((h for c, h in COMMITS if c <= t), None)
+
+
+def behind(t):
+    return sum(1 for c, _ in COMMITS if c > t)
 
 
 def stamp(path):
@@ -69,8 +97,18 @@ def stamp(path):
     if not f.exists():
         return None
     if path in GIT and path not in DIRTY:
-        return GIT[path]
+        return GIT[path][0]
     return int(f.stat().st_mtime)
+
+
+def rev(path, t):
+    """Short hash a node stands at: its last commit, or for an untracked file the commit it was built at."""
+    prov = json.loads(PROV.read_text()) if PROV.exists() else {}
+    if path in prov:
+        return prov[path]
+    if path in GIT and path not in DIRTY:
+        return GIT[path][1]
+    return commit_at(t) if t else None
 
 
 class Graph:
@@ -81,6 +119,7 @@ class Graph:
         if nid not in self.nodes:
             self.nodes[nid] = dict(id=nid, layer=layer, label=label or nid, path=path or nid.split("#")[0],
                                    text=text, time=stamp(path or nid.split("#")[0]), **kw)
+            self.nodes[nid]["rev"] = rev(path or nid.split("#")[0], self.nodes[nid]["time"])
         return self.nodes[nid]
 
     def edge(self, a, b):
@@ -99,7 +138,38 @@ class Graph:
 
 
 def load_decisions():
-    return json.loads((DIR / "decisions.json").read_text())["decisions"]
+    ds = json.loads((DIR / "decisions.json").read_text())["decisions"]
+    hist = guide_history(ds)
+    for d in ds:
+        d["history"] = hist[d["id"]]
+        if d.get("since"):
+            d["cut"] = commit_time(d["since"])
+        elif d.get("updated"):
+            d["cut"] = int(datetime.datetime.fromisoformat(d["updated"]).timestamp())
+        else:
+            d["cut"] = None
+        d["last"] = d["history"][0] if d["history"] else None
+        d["review"] = bool(d["last"] and d["cut"] and d["last"][1] > d["cut"])
+    return ds
+
+
+def guide_history(ds):
+    """Commits that added or removed a line matching a decision, in the reference and the guides."""
+    paths = ["hellenistic-reference.html", *WORLD, *GUIDES, "places"]
+    out = git("log", "-p", "-U0", "--no-color", "--format=COMMIT:%h\t%ct\t%s", "--", *paths)
+    pats = {d["id"]: [re.compile(t, re.I) for t in d["terms"]] for d in ds}
+    hist, commit, f = {d["id"]: {} for d in ds}, None, None
+    for line in out.splitlines():
+        if line.startswith("COMMIT:"):
+            h, c, subj = line[7:].split("\t", 2)
+            commit = (h, int(c), subj)
+        elif line.startswith("+++ "):
+            f = line[6:] if line.startswith("+++ b/") else f
+        elif line[:1] in "+-" and not line.startswith(("+++", "---")) and commit:
+            for i, ps in pats.items():
+                if any(p.search(line[1:]) for p in ps):
+                    hist[i].setdefault(commit[0], [*commit, set()])[3].add(f)
+    return {i: sorted(v.values(), key=lambda x: -x[1]) for i, v in hist.items()}
 
 
 def build():
@@ -236,12 +306,35 @@ def radius(g, d):
 
 
 def stale(g, d):
-    if not d.get("updated"):
+    cut = d.get("cut")
+    if not cut:
         return set()
-    cut = int(datetime.datetime.fromisoformat(d["updated"]).timestamp())
     direct, _ = radius(g, d)
     return {i for i in direct if g.nodes[i]["layer"] >= 1 and g.nodes[i]["time"] is not None
             and g.nodes[i]["time"] < cut}
+
+
+def fmt_date(t):
+    return datetime.datetime.fromtimestamp(t).strftime("%Y-%m-%d") if t else "?"
+
+
+def tag(g, i):
+    n = g.nodes[i]
+    if not n.get("time"):
+        return ""
+    b = behind(n["time"])
+    return f"  [{n.get('rev') or '-'} {fmt_date(n['time'])}" + (f", {b} behind HEAD" if b else "") + "]"
+
+
+def since(d):
+    if d.get("since"):
+        return f"{d['since']} ({fmt_date(d['cut'])})"
+    return d.get("updated") or "-"
+
+
+def last_change(d):
+    h = d.get("last")
+    return f"{h[0]} ({fmt_date(h[1])}) {h[2]}" if h else "none in the guides"
 
 
 def by_layer(g, ids):
@@ -260,7 +353,7 @@ def show(g, ids, indent="  "):
     for l, items in sorted(by_layer(g, ids).items()):
         print(f"{indent}{LAYERS[l]} ({len(items)})")
         for i in items:
-            print(f"{indent}  {i}")
+            print(f"{indent}  {i}{tag(g, i)}")
 
 
 def cost(g, ids):
@@ -272,7 +365,8 @@ def md_tree(g, decisions):
     L = ["# Art direction tree", "",
          "Built by `python3 art/direction/tree.py build`. Layers run from the historic reference down to the images; "
          "each art decision lists what mentions it (direct) and what lies downstream of those (inherited). "
-         "Stale means older than the decision's `updated` date.", "",
+         "Each decision stands at a commit (`since`); stale means older than that commit. "
+         "`review` marks a decision whose lines changed in git after it was last touched.", "",
          "| Layer | Nodes |", "|---|---|"]
     for l, name in enumerate(LAYERS):
         L.append(f"| {l} {name} | {sum(1 for n in g.nodes.values() if n['layer'] == l)} |")
@@ -285,10 +379,12 @@ def md_tree(g, decisions):
             st = stale(g, d)
             flag = " · RETIRED wording, fix leftovers" if d.get("retired") else ""
             L.append(f"  - `{d['id']}` {d['title']}{flag}")
+            L.append(f"    - stands at {since(d)} · last guide change {last_change(d)}"
+                     + (" · **REVIEW**" if d["review"] else ""))
             L.append(f"    - direct: {counts(g, direct)}")
             L.append(f"    - inherited: {counts(g, inh)}")
             if st:
-                L.append(f"    - stale: {counts(g, st)} (changed {d['updated']})")
+                L.append(f"    - stale: {counts(g, st)} (behind {d['since'] or d['updated']})")
     L += ["", "## Dependencies", "", "```", "place -> its books -> their shot specs -> images; sheet -> shot specs that use it; "
           "reality.md -> place pages; plans -> the books of their island", "```", ""]
     for s in sorted(i for i in g.nodes if i.startswith("places/")):
@@ -361,6 +457,8 @@ def cmd_impact(what):
     else:
         direct, inh = radius(g, d)
     print(f"{d['title']}")
+    if kind == "decision":
+        print(f"stands at {since(d)}; last guide change {last_change(d)}" + ("  ** REVIEW **" if d["review"] else ""))
     print(f"\nDIRECT: {counts(g, direct)}")
     show(g, direct)
     print(f"\nINHERITED: {counts(g, inh)}")
@@ -369,7 +467,7 @@ def cmd_impact(what):
           f"{cost(g, {i for i in direct if g.nodes[i]['layer'] == 5})} if only images that mention it")
     st = stale(g, d) if kind == "decision" else set()
     if st:
-        print(f"\nSTALE since {d['updated']}: {counts(g, st)}")
+        print(f"\nSTALE, behind {since(d)}: {counts(g, st)}")
 
 
 def main():
@@ -395,24 +493,49 @@ def main():
                 continue
             st = stale(g, d)
             if st:
-                print(f"{d['id']} (changed {d['updated']}): {counts(g, st)}")
+                print(f"{d['id']} (behind {since(d)}): {counts(g, st)}")
                 show(g, st)
     elif cmd == "touch" and len(sys.argv) > 2:
         p = DIR / "decisions.json"
         data = json.loads(p.read_text())
         for d in data["decisions"]:
             if d["id"] == sys.argv[2]:
-                d["updated"] = datetime.date.today().isoformat()
+                d["since"] = git("rev-parse", "--short", "HEAD").strip()
+                d.pop("updated", None)
                 p.write_text(json.dumps(data, indent=1, ensure_ascii=False) + "\n")
-                print(f"{d['id']} updated {d['updated']}")
+                print(f"{d['id']} now stands at {d['since']}; commit the change first if you have not")
                 return
         sys.exit("no such decision")
+    elif cmd == "log" and len(sys.argv) > 2:
+        d = next((x for x in load_decisions() if x["id"] == sys.argv[2]), None)
+        if not d:
+            sys.exit("no such decision")
+        print(f"{d['title']}\nstands at {since(d)}")
+        for h, c, subj, files in d["history"]:
+            mark = "  <- stands here" if h == d.get("since") else ""
+            print(f"  {h} {fmt_date(c)} {subj}{mark}\n      {', '.join(sorted(f or '?' for f in files))}")
+    elif cmd == "review":
+        for d in load_decisions():
+            if d["review"]:
+                new = [h for h in d["history"] if h[1] > d["cut"]]
+                print(f"{d['id']}: stands at {since(d)}; {len(new)} later commit(s) in the guides")
+                for h, c, subj, _ in new:
+                    print(f"  {h} {fmt_date(c)} {subj}")
+    elif cmd == "stamp" and len(sys.argv) > 2:
+        head = git("rev-parse", "--short", "HEAD").strip()
+        prov = json.loads(PROV.read_text()) if PROV.exists() else {}
+        for a in sys.argv[2:]:
+            targets = [x for x in (ROOT / a).rglob("*") if x.is_file()] if (ROOT / a).is_dir() else [ROOT / a]
+            for x in targets:
+                prov[str(x.relative_to(ROOT))] = head
+        PROV.write_text(json.dumps(prov, indent=1, sort_keys=True) + "\n")
+        print(f"stamped {len(prov)} image(s) at {head}")
     elif cmd == "decisions":
         g, decisions = build()
         for d in decisions:
             direct, inh = radius(g, d)
             print(f"{d['id']:<26} direct {len(direct):>3}  inherited {len(inh):>3}  stale {len(stale(g, d)):>3}"
-                  f"  updated {d.get('updated') or '-'}")
+                  f"  since {d.get('since') or d.get('updated') or '-'}" + ("  REVIEW" if d["review"] else ""))
     else:
         print(__doc__)
 
