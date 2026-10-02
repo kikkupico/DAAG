@@ -332,8 +332,18 @@ every tent sees and no post on the crown does.
 
 Art direction flows from the Hellenistic reference (`hellenistic-reference.html`) through the world
 guides, the book guides and the books to the images. `art/direction/decisions.json` lists each decision
-with the reference section it comes from and the words that betray it in a file or a prompt. Before
-changing one, run `python3 art/direction/tree.py impact <decision-id>` (or a file path, or a regex) to
-see what mentions it and what lies downstream, with the images to regenerate and their cost. After
-the change, run `tree.py touch <decision-id>`, then `tree.py stale` for what is still behind and
-`tree.py build` to refresh `art/direction/TREE.md`. Add a decision when a new rule is settled.
+with the reference section it comes from, the words that betray it in a file or a prompt, and the commit
+it stands at (`since`). Everything is tied to git: each node in the tree carries its last commit and how
+many commits it is behind, and an image, which git does not track, carries the commit it was built at.
+
+1. `python3 art/direction/tree.py impact <decision-id | file | regex>`: what mentions it, what lies
+   downstream, the images to regenerate and their cost.
+2. Make the change and commit it.
+3. `tree.py touch <decision-id>`: the decision now stands at HEAD, and everything older that it touches
+   is stale. Commit `decisions.json`.
+4. `tree.py stale` lists what is still behind. After regenerating images, `tree.py stamp <paths>`
+   records the commit they were built at.
+5. `tree.py review` lists decisions whose lines changed in the reference or the guides after they were
+   last touched; `tree.py log <id>` shows that history. `tree.py build` refreshes `art/direction/TREE.md`.
+
+Add a decision when a new rule is settled.
