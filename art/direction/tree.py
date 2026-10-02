@@ -96,6 +96,9 @@ def stamp(path):
     f = ROOT / path
     if not f.exists():
         return None
+    prov = json.loads(PROV.read_text()) if PROV.exists() else {}
+    if path in prov and commit_time(prov[path]):
+        return commit_time(prov[path])
     if path in GIT and path not in DIRTY:
         return GIT[path][0]
     return int(f.stat().st_mtime)
