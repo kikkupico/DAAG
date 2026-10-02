@@ -373,7 +373,7 @@ Set on a paved limestone public terrace crossed by a road, with marble statues o
 ```
 
 #### Feature 1a: The Chamber — Interior
-The dome is lifted away. The room carries Lamport's Chamber exactly: no point from which anyone could address the room, one ledger per legislator and no shared record, doorways all round because legislators and messengers come and go, and a meridian line because Paxons tell time by the sun.
+The dome is lifted away. The room carries Lamport's Chamber exactly: no point from which anyone could address the room, one scroll per legislator and no shared record, doorways all round because legislators and messengers come and go, and a meridian line because Paxons tell time by the sun.
 ```text
 Isometric 3D interior model of the Chamber on Paxos, a Hellenistic Greek parliament hall.
 Orthographic axonometric view, deep focus, zero people.
@@ -381,7 +381,7 @@ The dome is lifted away to show the whole interior.
 A large circular hall; bare dressed white limestone walls, hard and echoing, no hangings or panelling.
 Identical open doorways spaced evenly round the wall: no front, no podium, no head of the room, nothing at the centre.
 Concentric flagstone floor with a bronze meridian line inlaid where sunlight from the oculus falls, marked with hours.
-Round the wall, a ring of identical low stone benches, each with a small wooden writing desk, an inkpot and a closed leather-bound ledger.
+Round the wall, a ring of identical low stone benches, each with a small wooden writing desk, an inkpot and a closed papyrus scroll with its title tag.
 No shelves, archive or shared record anywhere.
 A plain wooden bench for messengers beside each doorway.
 Warm daylight, photorealistic PBR stone, bronze and wood.
