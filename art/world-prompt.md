@@ -296,7 +296,7 @@ Messengers go bare-headed, with no hat of any kind; they wear a plain *exōmis*,
 shoulder, with no set-in sleeves, sewn collar or trim; simple strapped sandals, with no buckles, or
 bare feet; and a soft hide sack on a cord (a *pera*), with no stitched seams, tailored flap or belt
 buckle. Lamportios wears a draped, pinned chiton or himation. Slips are strips of papyrus, with visible
-fibres and ragged edges. Columns are Doric: no bases, standing on the paving. Roofs are flat terracotta
+fibres and ragged edges. Outside columns are Doric: no bases, standing on the paving. The one exception is the ring of columns inside the Chamber, which are slender and Corinthian, with bell capitals of acanthus leaves. Roofs are flat terracotta
 pan tiles with narrow cover tiles and eave-end tiles; timbers are hand-hewn, uneven, never square-milled.
 Cloth, as modelling estimates: a himation about 1.3 × 2.8 m, a chlamys about 1.1 × 2 m, worn by a man about 1.7 m and a woman about 1.5 m tall.
 
@@ -367,7 +367,7 @@ Detailed 3D isometric architectural diorama of The Chamber on Paxos, the parliam
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated monument, zero people.
 A circular civic assembly hall (a rotunda) built of finely dressed white ashlar limestone.
 Surrounded by an unbroken outer colonnaded peristyle of Doric limestone columns with no bases, supporting a classical entablature and a lean-to roof of pan and cover tiles that runs up to the drum.
-Roofed with one low conical roof of oxblood terracotta pan tiles and narrow cover tiles on timber rafters, crowned by a small louvred lantern and a bronze finial; bare dressed stone walls inside, a ring of six plain stone columns holding the roof beams, no hangings or panelling.
+Roofed with one low conical roof of oxblood terracotta pan tiles and narrow cover tiles on timber rafters, crowned by a small louvred lantern and a bronze finial; bare dressed stone walls inside, a ring of ten slender Corinthian columns with acanthus bell capitals holding the roof beams, no hangings or panelling.
 A stepped circular stone plinth (crepidoma) surrounds the base. Several open doorways spaced evenly around the circular drum, none of them grander than the others, so there is no front entrance.
 Paved concentric circular interior flagstone floor with no podium, no speaker's platform, no head of the room, and no seating facing any single point; low stone benches follow the curve of the wall.
 Set on a paved limestone public terrace crossed by a road, with marble statues on tall pedestals standing just outside the doorways, and slender Italian cypress trees.
@@ -378,7 +378,7 @@ The roof is lifted away. The room carries Lamport's Chamber exactly: no point fr
 ```text
 Isometric 3D interior model of the Chamber on Paxos, a Hellenistic Greek parliament hall.
 Orthographic axonometric view, deep focus, zero people.
-The roof is lifted away to show the whole interior, with a ring of six plain stone columns inside the wall.
+The roof is lifted away to show the whole interior, with a ring of ten slender Corinthian columns inside the wall.
 A large circular hall; bare dressed white limestone walls, hard and echoing, no hangings or panelling.
 Identical open doorways spaced evenly round the wall: no front, no podium, no head of the room, nothing at the centre.
 Concentric flagstone floor with a bronze meridian line inlaid where sunlight from the lantern falls, marked with hours.

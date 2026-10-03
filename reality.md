@@ -137,7 +137,7 @@ What each place, building, character, prop and practice of the setting has in co
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| the Chamber, a round hall ringed by a Doric colonnade under a conical tiled roof | Greek round halls were tholoi under conical roofs. The Athenian Tholos, a round building on the west side of the agora, housed the prytaneis (Aristotle, Constitution of Athens 44), and its roof was held up by columns inside†; the tholos at Delphi and the Philippeion at Olympia add a colonnade round the drum†. A true dome belongs to Roman concrete. Like a real tholos, it has one door, which can be locked. | Loose |
+| the Chamber, a round hall ringed by a Doric colonnade under a conical tiled roof | Greek round halls were tholoi under conical roofs. The Athenian Tholos, a round building on the west side of the agora, housed the prytaneis (Aristotle, Constitution of Athens 44), and its roof was held up by columns inside†; the tholos at Delphi and the Philippeion at Olympia add a colonnade round the drum†. The tholos at Epidaurus has a Doric colonnade outside and a ring of Corinthian columns inside the drum†, so the Chamber's inner columns are Corinthian, not Doric. A true dome belongs to Roman concrete. Like a real tholos, it has one door, which can be locked. | Loose |
 | poor acoustics, so legislators send messengers | This is Lamport's own conceit, which the setting follows faithfully. The real Greek councils met in halls built for hearing, such as the bouleuteria of Priene and Miletus†. | Invented |
 
 ### Characters
