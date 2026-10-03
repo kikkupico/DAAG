@@ -214,6 +214,9 @@ What each place, building, character, prop and practice of the setting has in co
 | the libraries | The Library and Museum of Alexandria, and Pergamon's rival library, kept and collated copies of the works of Greek literature†. | Close |
 | the stoa, where scholars pass on news | Zeno taught under the Stoa Poikile in Athens, which gave the Stoics their name†; philosophers and scholars gathered in colonnades. | Close |
 | the festival ground, where copyists compare whole collections once a year | Panhellenic festivals drew poets, rhapsodes and scholars from across the Greek world; the yearly collation itself is the setting's own. | Loose |
+| a stone table grooved in columns, with piles of pebbles | The Salamis Tablet, a marble counting board of the fourth century BC, was used for reckoning with pebbles†; *psēphoi* are pebbles used to count. | Close |
+| white pebbles for copies made, black for copies lost | Jurors voted with pebbles of two kinds, as Athena's casting vote does in Aeschylus' *Eumenides* (734–753)†. Counting made against lost with the two colours is the setting's own. | Loose |
+| a hillside cut into terraces, a scribe at each | Greek sanctuaries were built on terraces cut into slopes, as at Delphi†. | Close |
 | the far terraces, a count kept in voting pebbles | Greek *psēphoi* were pebbles used to vote and to count, and the Greek for “to reckon” (*psēphizein*) comes from them†. | Close |
 | the courier landing | Hellenistic kings ran their own couriers, and merchant ships carried private letters†. | Close |
 | the ferry across the inlet, the one crossing between two parts of the coast | Short sea crossings were ordinary: the strait between the Attic shore and Salamis was crossed by boat†, and the Euripus was bridged only in 411 BC†. | Close |
