@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="../../assets/css/daag.css">
 <link rel="stylesheet" href="../../assets/css/books.css">
 </head>
+
 <body>
 <nav class="series-nav">
   <div class="series-nav-inner">
@@ -17,78 +18,486 @@
 </nav>
 <div class="page">
 
+<!-- ================= COVER ================= -->
 <header class="cover">
   <div class="kicker">Distributed Algorithms of Ancient Greece · Paxos · The Scholars' Coast</div>
   <h1 class="display">Probably Up to Date</h1>
-  <p class="basis">Based on “Probabilistically Bounded Staleness for Practical Partial Quorums” by Peter Bailis et al. (2012)</p>
-  <p class="sub">When a store reads from only some of its copies, how likely is an answer to be out of date, and by how much? Can we promise that it is probably not?</p>
-  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the allegorical
-  devices it will use, what each stands for in the paper, and where each meets the other books.
-  It will be replaced by the book.
-  <br><span class="paper">Bailis et al. 2012 · the libraries, Paxos</span></p>
+  <p class="basis">Based on “Probabilistically Bounded Staleness for Practical Partial Quorums” by Peter Bailis, Shivaram Venkataraman, Michael J. Franklin, Joseph M. Hellerstein and Ion Stoica (2012)</p>
+  <p class="sub">When a reader asks only a few of the libraries that keep a work, how likely is the copy he is handed to be out of date, and by how many editions? Can a library promise that it is probably not?</p>
+  <div class="frame-cover portrait"><img src="../../assets/img/covers/probably-up-to-date.jpg" width="900" height="1200"
+       alt="A small plastered library with a gabled tile roof and a columned porch on a headland, the sea behind it, and a worn path running to its door."></div>
+  <p class="pub">A work on the scholars' coast is kept at three libraries. A new edition is sent to all three by courier and announced as done once enough have answered; a reader asks all three and takes the first replies. If the numbers are small the answers come quickly, and some reader will sometimes be handed an older copy. The book works out how often, by how many editions, for how long, and why that is often good enough.</p>
+  <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/scholars-coast/index.html">The Scholars' Coast</a></p>
 </header>
+
+<!-- ================= IN A NUTSHELL ================= -->
+<section class="nutshell">
+  <h6>In a Nutshell</h6>
+  <p>A work is kept at three libraries. A writer sends a new edition to all three and announces it once some of them have answered; a reader asks all three and takes the newest of the first few replies. When the two numbers are small the groups may miss each other and the reader is handed an old copy. The book finds how likely that is, how fast the chance falls with the number of editions a reader will accept and with the time since the announcement, and why only a probability, never a promise, can be given. In real terms, this covers Dynamo-style partial quorums and Probabilistically Bounded Staleness: k-staleness, t-visibility, the WARS model and monotonic reads.</p>
+</section>
+
+<nav class="toc">
+  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
+  <ol>
+    <li><a href="#s1">I · A Work and Its Keepers</a></li>
+    <li><a href="#s2">II · How Many to Wait For</a></li>
+    <li><a href="#s3">III · When the Groups Miss Each Other</a></li>
+    <li><a href="#s4">IV · How Many Editions Behind</a></li>
+    <li><a href="#s5">V · How Long Until It Shows</a></li>
+    <li><a href="#s6">VI · The Four Legs</a></li>
+    <li><a href="#s7">VII · What the Logbooks Say</a></li>
+    <li><a href="#s8">VIII · Never Going Backwards</a></li>
+    <li><a href="#s9">IX · What It Does Not Say</a></li>
+    <li><a href="#s10">X · In the Book, In the Paper</a></li>
+    <li><a href="#refs">The Paper Behind This Book</a></li>
+  </ol>
+</nav>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>The idea</h2></div>
+<!-- ================= I ================= -->
+<section id="s1">
+  <div class="issue"><span class="no">Chapter I</span><h2>A Work and Its Keepers</h2></div>
   <div class="prose">
-<p>In a Dynamo-style store each item lives on N replicas; a write waits for W acknowledgements and a read for R replies. With R + W ≤ N the two sets may not overlap, so a read can miss the latest write. <b>PBS</b> measures how often and by how much: <b>k-staleness</b>, the chance of reading one of the last k versions, falls exponentially in k; <b>t-visibility</b>, the chance of reading a write t seconds after it returns, is modelled by <b>WARS</b> and evaluated with measured latencies; <b>monotonic reads</b> follows from k-staleness. Writes keep spreading to all N after they return (expanding quorums).</p>
+    <p>On the scholars' coast of Paxos a library answers a reader from whatever copy it holds, and lives with copies that differ for a while<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: The Scholars' Coast">*</a></sup>. Some works are kept at more than one library. Say a work is kept at three: its <span class="coin">keepers</span> are those three libraries and no others, and every copy of the work on the coast is held by one of them. Each copy is an edition with a tally, the day and hour by the sun at which it was written, with the library's number to break a tie, and of two editions the larger tally is the newer.</p>
+
+    <p>What happens when someone writes a new edition? The writer, at his own library, sends a courier to each of the three keepers with the new edition. A keeper that receives it enters it on its copy and sends a courier back to say so. When enough keepers have answered, the writer <span class="coin">announces</span> the edition: from then on he regards it as done. The couriers still on the road keep walking, so a keeper that has not yet answered goes on receiving the edition after the announcement.</p>
+
+    <figure class="panel"><img src="../../assets/img/panels/probably-up-to-date/p01-keeper.jpg" width="1200" height="900" loading="lazy"
+         alt="One of a work's three keepers seen from its porch road: a small plastered library with a gabled tile roof and a columned porch among olive trees and cypresses."></figure>
+
+    <p>And what does a reader do? He writes to all three keepers, asking for the work, and takes the newest copy among the first few replies; he does not wait for the rest. How few? That is the second number, and the whole book is about what the two numbers cost and what they buy: how many keepers a writer waits for, and how many replies a reader takes.</p>
+
+    <p>Is there any rule that makes the reader's copy the newest? Only if the numbers are chosen so. Otherwise the keepers he hears from may all be ones the edition has not yet reached, and nothing in the replies says so. How often that happens, and how bad it is, is a matter of chance and of the couriers' roads. Can that be said exactly?</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>Before asking how likely a stale copy is, which numbers rule it out altogether, and what do they cost?</em></p>
   </div>
 </section>
 
 <hr class="rule">
-<section>
-  <div class="issue"><h2>The devices</h2></div>
+
+<!-- ================= II ================= -->
+<section id="s2">
+  <div class="issue"><span class="no">Chapter II</span><h2>How Many to Wait For</h2></div>
   <div class="prose">
-<div class="table-wrap">
+    <p>Why not wait for all three keepers, and ask all three? Because the slowest courier then decides how soon anything is done. The writer announces only when the last acknowledgment is back, and the reader answers only when the last reply is in, and a single slow road or a stopped courier holds up everyone. Waiting for fewer is quicker: the writer announces after the first acknowledgments, and the reader answers on the first replies.</p>
+
+    <p>What does waiting for fewer risk? That the group the writer waited for and the group the reader asked do not share a library. Suppose the writer waits for one acknowledgment and the reader takes one reply, with three keepers. The edition has certainly reached the keeper that answered the writer; the reader's first reply may come from a different keeper, one the edition has not reached, and he is handed the old copy.</p>
+
+    <p>Is there a pair of numbers for which this cannot happen? Yes, and it is the rule the Chamber has always used. A decree there passes when a majority hold it, and any two majorities of the same legislators must share one<sup class="xref"><a href="../the-part-time-parliament/index.html" title="The Part-Time Parliament">*</a></sup>. The same holds for keepers: when the number the writer waits for and the number the reader takes add up to more than the number of keepers, the two groups cannot help sharing a library. With three keepers, waiting for two and taking two is enough. The reader then always hears from at least one keeper that has the announced edition, and since he takes the newest copy he hears, he is handed it or something newer.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 324" role="img" aria-label="Two panels with three libraries each. Left: the writer waits for one acknowledgment and the reader takes the first reply; the edition is at Library 1 and the reply comes from Library 3, so the reader is handed the old copy. Right: the writer waits for two and the reader takes two; the edition is at Libraries 1 and 2, the replies come from Libraries 2 and 3, and Library 2 is in both groups, so the reader is handed the new edition.">
+      <defs><marker id="g0r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/></marker></defs>
+      <text class="d-house" x="160" y="26" text-anchor="middle">WAIT FOR ONE, ASK ONE</text><circle cx="60" cy="110" r="26" fill="#bf4a26" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="60" y="170" text-anchor="middle">LIBRARY 1</text><circle cx="160" cy="110" r="26" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="160" y="170" text-anchor="middle">LIBRARY 2</text><circle cx="260" cy="110" r="26" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><circle cx="260" cy="110" r="34" fill="none" stroke="#136f9e" stroke-width="2.4"/><text class="d-house" x="260" y="170" text-anchor="middle">LIBRARY 3</text><text class="d-lbl" x="160" y="205" text-anchor="middle">edition announced after one acknowledgment;</text><text class="d-lbl" x="160" y="224" text-anchor="middle">the reader takes the first reply</text><text class="d-num" x="160" y="250" text-anchor="middle">he is handed the old copy</text><text class="d-note" x="160" y="276" text-anchor="middle">the two groups need not meet</text>
+      <text class="d-house" x="490" y="26" text-anchor="middle">WAIT FOR TWO, ASK TWO</text><circle cx="390" cy="110" r="26" fill="#bf4a26" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="390" y="170" text-anchor="middle">LIBRARY 1</text><circle cx="490" cy="110" r="26" fill="#bf4a26" stroke="#1c1512" stroke-width="1.6"/><circle cx="490" cy="110" r="34" fill="none" stroke="#136f9e" stroke-width="2.4"/><text class="d-house" x="490" y="170" text-anchor="middle">LIBRARY 2</text><circle cx="590" cy="110" r="26" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><circle cx="590" cy="110" r="34" fill="none" stroke="#136f9e" stroke-width="2.4"/><text class="d-house" x="590" y="170" text-anchor="middle">LIBRARY 3</text><text class="d-lbl" x="490" y="205" text-anchor="middle">edition announced after two acknowledgments;</text><text class="d-lbl" x="490" y="224" text-anchor="middle">the reader takes the first two replies</text><text class="d-num" x="490" y="250" text-anchor="middle">he hears from Library 2, who has it</text><text class="d-note" x="490" y="276" text-anchor="middle">two and two of three always share one</text>
+      <line class="d-faint" x1="330" y1="14" x2="330" y2="290"/>
+      <text class="d-key" x="330" y="312" text-anchor="middle">red: holds the new edition · blue ring: the reader hears from it</text>
+      </svg>
+    </div>
+    <figcaption><b>Two and two of three always share a keeper; one and one need not.</b> Waiting for more and asking more buys certainty, and costs the time of the slower couriers.</figcaption>
+  </figure>
+
+  <details class="proof">
+    <summary>Proof — that R + W &gt; N forces every read quorum to meet every write quorum</summary>
+    <ol class="proofsteps">
+      <li>This is the standard property of strict quorums, which the paper recalls in §2. Let there be <var>N</var> replicas, a write quorum <var>Q<sub>W</sub></var> of size <var>W</var> and a read quorum <var>Q<sub>R</sub></var> of size <var>R</var>, both subsets of the same <var>N</var> replicas.</li>
+      <li>|<var>Q<sub>W</sub></var> ∪ <var>Q<sub>R</sub></var>| ≤ <var>N</var>, since both are subsets of a set of size <var>N</var>.</li>
+      <li>|<var>Q<sub>W</sub></var> ∩ <var>Q<sub>R</sub></var>| = |<var>Q<sub>W</sub></var>| + |<var>Q<sub>R</sub></var>| − |<var>Q<sub>W</sub></var> ∪ <var>Q<sub>R</sub></var>| ≥ <var>W</var> + <var>R</var> − <var>N</var>.</li>
+      <li>If <var>R</var> + <var>W</var> &gt; <var>N</var>, the right side is at least 1, so the two quorums share a replica. That replica holds the committed write, and a read that returns the value with the greatest version among its responses returns that write or a later one.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>Why would anyone choose numbers that add up to no more than the keepers? For speed. The paper observes that real systems with three copies often wait for one and ask one, and that this is a deliberate choice, made for the quicker answers, which matter more than occasional old copies. On the coast it is the same: waiting for one and asking one is the quick way, and a reader may then be handed an old copy.</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>If the quick way sometimes hands over an old copy, how often is that, and does it get better with more keepers?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= III ================= -->
+<section id="s3">
+  <div class="issue"><span class="no">Chapter III</span><h2>When the Groups Miss Each Other</h2></div>
+  <div class="prose">
+    <p>The chance of an old copy can be worked out in the plainest case, where the keepers that answer the writer, and the keepers the reader hears from, are chosen as if by lot. With three keepers, the writer waiting for one and the reader taking one: the edition is at one keeper, and the reader's keeper is one of the three. He misses it with chance two in three. A reader handed a copy that is out of date is the usual case, not the rare one.</p>
+
+    <p>Does it get better with more keepers? Yes, and quickly, if the numbers grow with them. With ten keepers, the writer waiting for three and the reader taking three, the chance of a miss is under three in ten. With thirty keepers and nine and nine, about one in fifty. With a hundred keepers and thirty and thirty, about two in a million. The reason is the birthday paradox: two groups drawn from a large crowd are very unlikely to share no one. The paper calls such systems probabilistic quorums, and their odds are excellent.</p>
+
+    <p>But for whom? For a coast with a hundred keepers of each work. A work on this coast has three, and the paper notes that real systems keep one to three copies. The odds that are so good for a hundred are poor for three, and nothing about the large case helps the small one. The good news has to come from somewhere else.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 374" role="img" aria-label="Chart on a log scale of the chance a reader is handed an older copy than the announced edition, when about a third of the keepers are waited for and a third asked. With three keepers it is about two in three; with ten keepers about three in ten; with thirty about one in fifty; with a hundred about two in a million.">
+      <line class="d-faint" x1="170" y1="84" x2="650" y2="84"/><text class="d-key" x="162" y="88" text-anchor="end">certain</text>
+      <line class="d-faint" x1="170" y1="122" x2="650" y2="122"/><text class="d-key" x="162" y="126" text-anchor="end">one in ten</text>
+      <line class="d-faint" x1="170" y1="160" x2="650" y2="160"/><text class="d-key" x="162" y="164" text-anchor="end">one in a hundred</text>
+      <line class="d-faint" x1="170" y1="198" x2="650" y2="198"/><text class="d-key" x="162" y="202" text-anchor="end">one in a thousand</text>
+      <line class="d-faint" x1="170" y1="236" x2="650" y2="236"/><text class="d-key" x="162" y="240" text-anchor="end">one in ten thousand</text>
+      <line class="d-faint" x1="170" y1="274" x2="650" y2="274"/><text class="d-key" x="162" y="278" text-anchor="end">one in a hundred thousand</text>
+      <line class="d-faint" x1="170" y1="312" x2="650" y2="312"/><text class="d-key" x="162" y="316" text-anchor="end">one in a million</text>
+      <polyline points="170,90.7 310,104.3 450,148.1 590,301.5" fill="none" stroke="#bf4a26" stroke-width="2"/>
+      <circle cx="170" cy="90.7" r="5" fill="#bf4a26"/><text class="d-lbl" x="182" y="80.7">about two in three</text>
+      <text class="d-key" x="170" y="344" text-anchor="middle">3 keepers</text><text class="d-key" x="170" y="360" text-anchor="middle">wait 1, ask 1</text>
+      <circle cx="310" cy="104.3" r="5" fill="#bf4a26"/><text class="d-lbl" x="322" y="94.3">about three in ten</text>
+      <text class="d-key" x="310" y="344" text-anchor="middle">10 keepers</text><text class="d-key" x="310" y="360" text-anchor="middle">wait 3, ask 3</text>
+      <circle cx="450" cy="148.1" r="5" fill="#bf4a26"/><text class="d-lbl" x="462" y="138.1">about one in fifty</text>
+      <text class="d-key" x="450" y="344" text-anchor="middle">30 keepers</text><text class="d-key" x="450" y="360" text-anchor="middle">wait 9, ask 9</text>
+      <circle cx="590" cy="301.5" r="5" fill="#bf4a26"/><text class="d-lbl" x="600" y="289.5" text-anchor="end">about two in a million</text>
+      <text class="d-key" x="590" y="344" text-anchor="middle">100 keepers</text><text class="d-key" x="590" y="360" text-anchor="middle">wait 30, ask 30</text>
+      <text class="d-note" x="410" y="34" text-anchor="middle">the chance the reader is handed an older copy than the announced one</text>
+      </svg>
+    </div>
+    <figcaption><b>Excellent odds, but only for a crowd.</b> With about a third of the keepers waited for and a third asked, the chance of an old copy falls from two in three with three keepers to about two in a million with a hundred.</figcaption>
+  </figure>
+
+  <details class="proof">
+    <summary>Proof — that the probability of a read missing the last write is C(N − W, R) / C(N, R)</summary>
+    <ol class="proofsteps">
+      <li>This is Equation 1 of §2.1, with the paper's assumption that the <var>W</var> replicas written and the <var>R</var> replicas read are each chosen uniformly at random.</li>
+      <li>The read quorum is one of the C(<var>N</var>, <var>R</var>) subsets of size <var>R</var>, each equally likely.</li>
+      <li>The read misses the write quorum exactly when every one of its <var>R</var> members lies among the <var>N</var> − <var>W</var> replicas not written to. There are C(<var>N</var> − <var>W</var>, <var>R</var>) such subsets.</li>
+      <li>So <var>p<sub>s</sub></var> = C(<var>N</var> − <var>W</var>, <var>R</var>) / C(<var>N</var>, <var>R</var>). For <var>N</var> = 3, <var>R</var> = <var>W</var> = 1 this is 2/3; for <var>N</var> = 100, <var>R</var> = <var>W</var> = 30 it is about 1.88 × 10<sup>−6</sup>, as the paper states.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>So a reader on this coast, with three keepers and the quick way, is likely to be handed an old copy. Is that all there is to say? No, because the reader asked something narrower than <i>is this the newest?</i> Usually he would be content with <i>is this one of the newest?</i> Is an edition or two behind as bad as an old copy of a different age?</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>If a reader will accept one of the newest few editions, how much does the chance of an old copy fall?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= IV ================= -->
+<section id="s4">
+  <div class="issue"><span class="no">Chapter IV</span><h2>How Many Editions Behind</h2></div>
+  <div class="prose">
+    <p>A reader who will take any of the newest few editions is missed only if his keepers lack every one of them. Each announced edition was sent to its own group of keepers, and the reader's group has the same chance of missing each. So the chance of missing the newest two is the chance of missing one, multiplied by itself; of missing the newest three, multiplied again. The chance of being handed an old copy falls <em>exponentially</em> with the number of editions the reader will accept.</p>
+
+    <p>What does that come to? With three keepers, the quick way, the chance of being handed the newest edition is one in three, but the chance of being handed one of the newest two is five in nine, of the newest three about seven in ten, of the newest five about 87 in a hundred, and of the newest ten about 98 in a hundred. If the writer waits for two keepers and the reader still takes one, the chances are better: two in three for the newest, eight in nine for one of the newest two, and over 99 in a hundred for one of the newest five.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 316" role="img" aria-label="Chart of the chance that a reader is handed one of the newest few editions, with three keepers, as the number of editions that will do grows from one to ten. Waiting for one and asking one: two in three of the newest edition alone, rising to about 98 in 100 for the newest ten. Waiting for two and asking one: one in three rising to nearly certain by five.">
+      <line class="d-faint" x1="110" y1="260" x2="640" y2="260"/><text class="d-key" x="102" y="264" text-anchor="end">none</text>
+      <line class="d-faint" x1="110" y1="160.0" x2="640" y2="160.0"/><text class="d-key" x="102" y="164.0" text-anchor="end">half</text>
+      <line class="d-faint" x1="110" y1="60" x2="640" y2="60"/><text class="d-key" x="102" y="64" text-anchor="end">all</text>
+      <text class="d-key" x="130" y="282" text-anchor="middle">1</text>
+      <text class="d-key" x="180" y="282" text-anchor="middle">2</text>
+      <text class="d-key" x="230" y="282" text-anchor="middle">3</text>
+      <text class="d-key" x="280" y="282" text-anchor="middle">4</text>
+      <text class="d-key" x="330" y="282" text-anchor="middle">5</text>
+      <text class="d-key" x="380" y="282" text-anchor="middle">6</text>
+      <text class="d-key" x="430" y="282" text-anchor="middle">7</text>
+      <text class="d-key" x="480" y="282" text-anchor="middle">8</text>
+      <text class="d-key" x="530" y="282" text-anchor="middle">9</text>
+      <text class="d-key" x="580" y="282" text-anchor="middle">10</text>
+      <text class="d-key" x="385" y="302" text-anchor="middle">how many of the newest editions will do</text>
+      <polyline points="130,193.3 180,148.9 230,119.3 280,99.5 330,86.3 380,77.6 430,71.7 480,67.8 530,65.2 580,63.5" fill="none" stroke="#136f9e" stroke-width="2"/><circle cx="130" cy="193.3" r="3.5" fill="#136f9e"/><circle cx="180" cy="148.9" r="3.5" fill="#136f9e"/><circle cx="230" cy="119.3" r="3.5" fill="#136f9e"/><circle cx="280" cy="99.5" r="3.5" fill="#136f9e"/><circle cx="330" cy="86.3" r="3.5" fill="#136f9e"/><circle cx="380" cy="77.6" r="3.5" fill="#136f9e"/><circle cx="430" cy="71.7" r="3.5" fill="#136f9e"/><circle cx="480" cy="67.8" r="3.5" fill="#136f9e"/><circle cx="530" cy="65.2" r="3.5" fill="#136f9e"/><circle cx="580" cy="63.5" r="3.5" fill="#136f9e"/>
+      <text class="d-lbl" x="350" y="139.5" text-anchor="middle" style="fill:#136f9e">wait for one, ask one</text>
+      <polyline points="130,126.7 180,82.2 230,67.4 280,62.5 330,60.8 380,60.3 430,60.1 480,60 530,60 580,60" fill="none" stroke="#bf4a26" stroke-width="2"/><circle cx="130" cy="126.7" r="3.5" fill="#bf4a26"/><circle cx="180" cy="82.2" r="3.5" fill="#bf4a26"/><circle cx="230" cy="67.4" r="3.5" fill="#bf4a26"/><circle cx="280" cy="62.5" r="3.5" fill="#bf4a26"/><circle cx="330" cy="60.8" r="3.5" fill="#bf4a26"/><circle cx="380" cy="60.3" r="3.5" fill="#bf4a26"/><circle cx="430" cy="60.1" r="3.5" fill="#bf4a26"/><circle cx="480" cy="60" r="3.5" fill="#bf4a26"/><circle cx="530" cy="60" r="3.5" fill="#bf4a26"/><circle cx="580" cy="60" r="3.5" fill="#bf4a26"/>
+      <text class="d-lbl" x="370" y="88.5" text-anchor="middle" style="fill:#bf4a26">wait for two, ask one</text>
+      <text class="d-note" x="385" y="34" text-anchor="middle">chance of being handed one of the newest few editions, three keepers</text>
+      </svg>
+    </div>
+    <figcaption><b>Accepting a few editions of leeway makes a stale copy rare.</b> Every extra edition the reader will accept multiplies the chance of a miss by the same fraction, so it falls away fast.</figcaption>
+  </figure>
+
+  <details class="proof">
+    <summary>Proof — that PBS k-staleness is p<sub>sk</sub> = p<sub>s</sub><sup>k</sup></summary>
+    <ol class="proofsteps">
+      <li>This is §3.1 for quorums that do not expand. A read returns a value within <var>k</var> versions of the latest committed version exactly when its read quorum intersects at least one of the write quorums of the last <var>k</var> committed versions.</li>
+      <li>Treat the <var>k</var> write quorums as independent, each missed by the read quorum with probability <var>p<sub>s</sub></var> = C(<var>N</var> − <var>W</var>, <var>R</var>) / C(<var>N</var>, <var>R</var>).</li>
+      <li>The read quorum misses all <var>k</var> with probability <var>p<sub>s</sub></var><sup><var>k</var></sup>, so <var>p<sub>sk</sub></var> = <var>p<sub>s</sub></var><sup><var>k</var></sup> and the read is within <var>k</var> versions with probability 1 − <var>p<sub>s</sub></var><sup><var>k</var></sup>.</li>
+      <li>With <var>N</var> = 3, <var>R</var> = <var>W</var> = 1, <var>p<sub>s</sub></var> = 2/3, so 1 − (2/3)<sup><var>k</var></sup> is 5/9 for <var>k</var> = 2, 0.704 for <var>k</var> = 3, 0.868 for <var>k</var> = 5 and 0.983 for <var>k</var> = 10. With <var>W</var> = 2, <var>p<sub>s</sub></var> = 1/3 and the values are 2/3, 8/9 and 0.996 for <var>k</var> = 1, 2 and 5, as the paper's examples give.</li>
+      <li>For expanding quorums the paper notes this is an upper bound on the probability of staleness, since writes only reach more replicas with time.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>Is there a second gain? Yes. A library that need not return the newest edition need not ask as many of its keepers, so a busy keeper is asked less often. The paper shows that the load on the busiest keeper falls as the number of editions of leeway grows, which means that a coast with such readers can serve more of them with the same libraries.</p>
+
+    <p>The numbers above ignore time altogether. They would be the same whether the edition had been announced a moment ago or a week ago, and yet the edition does not stand still: the couriers still on the road are still arriving. Surely a reader who comes a week later has better odds than one who comes at once?</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>If editions keep arriving after the announcement, how do the odds change with the time since it?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= V ================= -->
+<section id="s5">
+  <div class="issue"><span class="no">Chapter V</span><h2>How Long Until It Shows</h2></div>
+  <div class="prose">
+    <p>The edition was sent to all three keepers at the start, so after the announcement it goes on reaching those that had not answered. A reader who comes a while after the announcement is therefore asking keepers of which more have it than when it was announced. How much better are his odds? The answer is the <span class="coin">visibility</span> of the edition after that while: the chance that a reader coming that long after the announcement is handed the edition or a newer one.</p>
+
+    <p>What decides it? The number of keepers that hold the edition at that moment. If all three do, no reader can miss it. If only the one that answered first does, the odds are as bad as in the quick case. In between, the chance of a miss is the chance that the reader's keepers are all among those that lack it. So to know the odds after a given while, the book needs to know how likely each number of keepers is to hold the edition by then, which depends on how long the couriers take.</p>
+
+    <p>Does the edition's visibility ever lapse? Yes: if a second edition is announced before the first one has finished arriving, the first no longer matters, because a reader handed the second is handed something newer, and the first edition's visibility after that while is no longer asked. And an edition that is written but not yet announced is counted as fresh, not as stale: a reader who is handed it is handed something newer than the announced edition, not older.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that the probability of a stale read t after commit is a sum over how many replicas hold the write</summary>
+    <ol class="proofsteps">
+      <li>This is §3.4. Let <var>q<sub>c</sub></var>(<var>t</var>) be the probability that exactly <var>c</var> replicas hold version <var>v</var> at time <var>t</var> after <var>v</var> commits, for <var>c</var> in [<var>W</var>, <var>N</var>]; at commit exactly <var>W</var> do with certainty, so <var>q<sub>W</sub></var>(0) = 1.</li>
+      <li>Conditional on exactly <var>c</var> replicas holding <var>v</var>, a read quorum chosen uniformly misses all of them with probability C(<var>N</var> − <var>c</var>, <var>R</var>) / C(<var>N</var>, <var>R</var>), by the argument of Equation 1.</li>
+      <li>Summing over the possible <var>c</var>: <var>p<sub>st</sub></var> = Σ<sub><var>c</var>=<var>W</var></sub><sup><var>N</var></sup> <var>q<sub>c</sub></var>(<var>t</var>) · C(<var>N</var> − <var>c</var>, <var>R</var>) / C(<var>N</var>, <var>R</var>). The paper writes this with its distribution <var>P<sub>w</sub></var>(<var>c</var>, <var>t</var>) of the number of replicas reached; its printed Equations 4 and 5 differ from one another in the range of the sum and the sign of the difference, and the sum above is the quantity both mean.</li>
+      <li>The paper notes that this assumes instant reads and instant commitment after the <var>W</var>th copy arrives, so it is a conservative upper bound on the true probability of staleness. When the last <var>k</var> writes all happened at the same time the same argument gives the chance of missing all <var>k</var> as the <var>k</var>th power, the paper's ⟨<var>k</var>, <var>t</var>⟩-staleness.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>The combined question, <i>one of the newest few editions, a while after the announcement</i>, has, as a conservative rule of thumb, the same answer raised to the power of the number of editions, so a reader may trade one kind of leeway for the other. That is why the book studies the odds in editions and in time one at a time. Whatever fixes how many keepers hold the edition at a given moment is the thing left to understand.</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>What decides how many keepers hold an edition a while after it is announced, and when does a reader beat it to a keeper?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VI ================= -->
+<section id="s6">
+  <div class="issue"><span class="no">Chapter VI</span><h2>The Four Legs</h2></div>
+  <div class="prose">
+    <p>Four journeys are in every write and read, and each takes a time that varies from courier to courier. There is <span class="coin">the edition's way out</span> from the writer to a keeper; <span class="coin">the acknowledgment's way back</span>; <span class="coin">the request's way out</span> from a reader to a keeper; and <span class="coin">the copy's way back</span> to the reader. Take one keeper. The writer sends the edition, which arrives after its way out. The writer announces once enough keepers have answered, and some time later a reader sends his request, which arrives at the keeper after its own way out.</p>
+
+    <p>When is the keeper's reply stale? When the reader's request reaches the keeper <em>before</em> the edition does. The keeper then has only the old edition to give, and it sends that back. The edition arrives afterwards and is useless to this reader. The reader is handed an old copy only if this is so for every one of the first replies he takes: if even one of them comes from a keeper that already holds the edition, he is handed it.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 404" role="img" aria-label="Space-time diagram with two lines, the writer and one keeper, time running down. The writer sends the edition by a slow way out. Enough other keepers answer for the writer to announce it. A while passes, then the reader sends a request, whose way out is quick. The request reaches the keeper before the edition does, so the keeper still holds the old edition and its copy goes back; the edition arrives afterwards, too late for this reader.">
+      <defs><marker id="g3r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/></marker><marker id="g3b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/></marker><marker id="g3f" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#b9a77e"/></marker></defs>
+      <text class="d-house" x="210" y="30" text-anchor="middle">THE WRITER</text><text class="d-house" x="430" y="30" text-anchor="middle">ONE KEEPER</text>
+      <line class="d-lifeline" x1="210" y1="42" x2="210" y2="372"/><line class="d-lifeline" x1="430" y1="42" x2="430" y2="372"/>
+      <line x1="210" y1="66" x2="426" y2="262" stroke="#bf4a26" stroke-width="2.2" marker-end="url(#g3r)"/>
+      <circle class="d-ev" cx="210" cy="66" r="5"/><text class="d-lbl" x="200" y="70" text-anchor="end">sends the edition</text>
+      <text class="d-lbl" x="330" y="150" text-anchor="middle" style="fill:#bf4a26" transform="rotate(42 330 150)">the edition's way out: slow</text>
+      <circle class="d-ev-hi" cx="210" cy="130" r="5"/><text class="d-lbl" x="200" y="126" text-anchor="end">announced: enough</text><text class="d-lbl" x="200" y="142" text-anchor="end">other keepers answered</text>
+      <text class="d-note" x="220" y="170">a while passes</text>
+      <line x1="210" y1="196" x2="426" y2="226" stroke="#136f9e" stroke-width="2" marker-end="url(#g3b)"/>
+      <circle class="d-ev" cx="210" cy="196" r="5"/><text class="d-lbl" x="200" y="200" text-anchor="end">the reader sends his request</text>
+      <text class="d-lbl" x="270" y="209" text-anchor="middle" style="fill:#136f9e" transform="rotate(8 270 209)">request's way out</text>
+      <circle class="d-ev-hi" cx="430" cy="226" r="5"/><text class="d-lbl" x="440" y="222">request arrives first:</text><text class="d-num" x="440" y="238" style="fill:#bf4a26">still the old edition</text>
+      <line x1="430" y1="230" x2="214" y2="310" stroke="#136f9e" stroke-width="2" marker-end="url(#g3b)"/>
+      <text class="d-lbl" x="322" y="276" text-anchor="middle" style="fill:#136f9e" transform="rotate(-20 322 276)">the copy's way back</text>
+      <circle class="d-ev-hi" cx="210" cy="312" r="5"/><text class="d-num" x="200" y="316" text-anchor="end" style="fill:#bf4a26">handed the old copy</text>
+      <circle class="d-ev" cx="430" cy="262" r="5"/><text class="d-lbl" x="440" y="266">edition arrives: too late</text>
+      <line x1="430" y1="266" x2="214" y2="346" stroke="#b9a77e" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#g3f)"/>
+      <text class="d-note" x="326" y="332" text-anchor="middle" transform="rotate(-20 326 332)">the acknowledgment's way back</text>
+      <text class="d-note" x="330" y="392" text-anchor="middle">stale when the request outruns the edition</text>
+      </svg>
+    </div>
+    <figcaption><b>A stale reply is a request that outruns the edition.</b> The keeper had not yet received the edition when the request arrived, so it answers from the old copy; the edition arrives afterwards.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p>What makes this likelier? A slow and uneven way out for the edition, and quick requests. When the edition sometimes takes very long, a keeper can lag far behind the announcement; when requests are quick, they reach the keeper before the edition does. The numbers waited for and asked make the other difference: when they add to more than the keepers, the groups share a library, and no read can be stale.</p>
+
+    <p>Can the chance be worked out in closed form, as the chance for editions was? No, and the paper says so. The time of announcement is the time that the writer's chosen number of acknowledgments have come back, which depends on the first few of the combined journeys out and back, and the reader's chosen replies depend on the first few of the combined requests and copies. Each of these depends on the order of many random times, and the two overlap. So the odds are found by playing the situation over many times, drawing each journey's time from what the couriers' logbook records, and counting how often the reader is behind.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that under WARS no read is stale when R + W &gt; N</summary>
+    <ol class="proofsteps">
+      <li>This is the remark of §4.1. Let the write be sent at time 0, reach replica <var>i</var> at <var>w<sub>i</sub></var> (a draw from <var>W</var>) and be acknowledged at <var>w<sub>i</sub></var> + <var>a<sub>i</sub></var> (a draw from <var>A</var>). The write commits at <var>w<sub>t</sub></var>, the <var>W</var>th smallest of these acknowledgment times.</li>
+      <li>The <var>W</var> replicas whose acknowledgments came first each received the write at <var>w<sub>i</sub></var> ≤ <var>w<sub>t</sub></var>.</li>
+      <li>A read begins <var>t</var> ≥ 0 after commit, so its request to replica <var>i</var> arrives at <var>w<sub>t</sub></var> + <var>t</var> + <var>r<sub>i</sub></var> (a draw from <var>R</var>), which is at least <var>w<sub>i</sub></var> for each of those <var>W</var> replicas. Such a replica returns the write.</li>
+      <li>The read takes the first <var>R</var> responses, which are <var>R</var> distinct replicas. If <var>R</var> + <var>W</var> &gt; <var>N</var> they cannot all lie among the <var>N</var> − <var>W</var> other replicas, so at least one is among the <var>W</var> that hold the write, and the read is not stale.<span class="qed">∎</span></li>
+    </ol>
+    <p>The method of §5.1 for the general case: draw <var>N</var> samples from each of <var>W</var>, <var>A</var>, <var>R</var> and <var>S</var>; compute <var>w<sub>t</sub></var>, the <var>W</var>th smallest of the sums <var>W</var>[<var>i</var>] + <var>A</var>[<var>i</var>]; order the replicas by <var>R</var>[<var>i</var>] + <var>S</var>[<var>i</var>]; and count the read stale when each of the first <var>R</var> satisfies <var>w<sub>t</sub></var> + <var>R</var>[<var>i</var>] + <var>t</var> ≤ <var>W</var>[<var>i</var>]. Repeating this many times gives the probability for each <var>t</var>.</p>
+  </details>
+
+  <div class="prose">
+    <p>Is the replay to be trusted? The authors checked it against a working system they set up, with chosen journey times for each leg: across fifty thousand writes, the predicted chance of seeing the edition after each moment differed from the measured by well under one part in a hundred on average. So the replay stands in for the real thing.</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>What do the couriers' real logbooks give when the replay is run on them?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VII ================= -->
+<section id="s7">
+  <div class="issue"><span class="no">Chapter VII</span><h2>What the Logbooks Say</h2></div>
+  <div class="prose">
+    <p>The first finding is about which of the four journeys matters. With three keepers, the quick way, and journey times that are only a little uneven, the paper made the edition's way out slower or quicker than the other three. The slower and more uneven it was, the longer the reader needed to wait for near certainty: when it was very quick and even, a reader was handed the edition nine times in ten the moment it was announced and 999 times in a thousand a little later; when it was ten times slower than the others, only four in ten at once and the same 999 in a thousand only after a long wait. The unevenness of the way out mattered more than its average.</p>
+
+    <p>Then it turned to the real logbooks of two large systems, fitted by the authors from the times the operators gave them. Take four coasts. On the first, roads are quick and copying an edition into a keeper is quick, and a reader hears the new edition about 97 times in a hundred the moment it is announced and almost always a moment later. On the second, the way out has a long tail, now and then taking very long, and the odds at once are about 89 in a hundred; but the tail hampers the climb to near certainty, which takes the longest of the four. On the third, copying an edition onto papyrus is slow, and the odds at once are about 44 in a hundred. On the fourth the keepers are on both sides of a sea, and only about a third of readers are handed the new edition at once, until the long crossing has been made.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 312" role="img" aria-label="Four bars showing the chance a reader hears the new edition at the moment it is announced, with three keepers, waiting for one and asking one. Quick roads and quick copying: 97.4 in 100. Long delays now and then: 89.3 in 100. Slow copying onto papyrus: 43.9 in 100. Keepers across the sea: 33 in 100.">
+      <text class="d-house" x="20" y="28">CHANCE THE READER HEARS THE NEW EDITION, THE MOMENT IT IS ANNOUNCED</text>
+      <text class="d-key" x="222" y="68" text-anchor="end">quick roads, quick copying</text><rect x="232" y="52" width="370.1" height="24" fill="#136f9e" opacity=".85"/><rect x="232" y="52" width="380" height="24" fill="none" stroke="#b9a77e"/><text class="d-num" x="594.1" y="69" text-anchor="end" style="fill:#f6eed6">97.4 in 100</text>
+      <text class="d-key" x="222" y="124" text-anchor="end">long delays now and then</text><rect x="232" y="108" width="339.3" height="24" fill="#136f9e" opacity=".85"/><rect x="232" y="108" width="380" height="24" fill="none" stroke="#b9a77e"/><text class="d-num" x="563.3" y="125" text-anchor="end" style="fill:#f6eed6">89.3 in 100</text>
+      <text class="d-key" x="222" y="180" text-anchor="end">slow copying onto papyrus</text><rect x="232" y="164" width="166.8" height="24" fill="#136f9e" opacity=".85"/><rect x="232" y="164" width="380" height="24" fill="none" stroke="#b9a77e"/><text class="d-num" x="406.8" y="181" style="fill:#1c1512">43.9 in 100</text>
+      <text class="d-key" x="222" y="236" text-anchor="end">keepers across the sea</text><rect x="232" y="220" width="125.4" height="24" fill="#136f9e" opacity=".85"/><rect x="232" y="220" width="380" height="24" fill="none" stroke="#b9a77e"/><text class="d-num" x="365.4" y="237" style="fill:#1c1512">33 in 100</text>
+      <text class="d-note" x="330" y="296" text-anchor="middle">three keepers, wait for one, ask one; each reached near certainty a while later</text>
+      </svg>
+    </div>
+    <figcaption><b>How likely a reader is to be behind depends on the couriers' roads.</b> With the same three keepers and the same quick way, the chance of hearing the new edition the moment it is announced runs from about a third to nearly all.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p>Does adding keepers help? Less than one expects, and in an odd way. With more keepers the chance of a reader hearing the new edition at once falls: on the slow-copying coast, from about 58 in a hundred with two keepers to about 21 in a hundred with ten. But the time needed to reach near certainty barely changes with the number of keepers: from two keepers to ten it rose by about a fifth. Many keepers hurt the first moment and not the end.</p>
+
+    <p>What is bought by taking the quick way, then? On the long-tailed coast, waiting for one and asking one gives the quickest answers and a long wait for near certainty; asking for a second reply cut the wait to about a seventh, and the answers, writer and reader together, were still about four-fifths faster, even at the slowest tenth of one in a hundred, than the fastest way with no chance of a miss. The paper's point is that the price of a small chance of an old copy is small and the saving is large, which is why, in practice, the quick way is so often chosen.</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>A reader may accept an old copy once. Should he ever be handed an older one than he was handed before?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VIII ================= -->
+<section id="s8">
+  <div class="issue"><span class="no">Chapter VIII</span><h2>Never Going Backwards</h2></div>
+  <div class="prose">
+    <p>A reader who comes back to a work may not mind that his copy is not the newest, but he does mind finding that it is older than the one he read last time. He wants to see the work move only forward. This is the guarantee the paper calls <span class="coin">monotonic reads</span>, and it is a special case of leeway in editions: the reader needs a copy at least as new as the one he was handed before, and the editions that will do are the one he saw and every edition announced since.</p>
+
+    <p>How many is that? The number announced between his visits, plus the one he saw. If the work is written to a hundred times as often as the reader visits, a hundred editions will do; if he visits as often as it is written, only two. So the chance of going backwards is the chance of an old copy raised to the power of one plus the ratio of the work's writing rate to the reader's visiting rate. The reader who visits seldom has the widest range and the best odds; the reader who visits all the time has the narrowest.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 312" role="img" aria-label="A line of eight editions in order. The reader's last visit handed him the third. This visit he is back after more editions were announced; any edition from the third onward will do, so the reader never goes backwards. The more editions announced between his visits, the wider the range that will do.">
+      <defs><marker id="g5b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/></marker></defs>
+      <line x1="40" y1="130" x2="640" y2="130" stroke="#1c1512" stroke-width="1.8" marker-end="url(#g5b)" style="marker-end:none"/>
+      <line x1="60" y1="118" x2="60" y2="142" stroke="#1c1512" stroke-width="1.8"/><text class="d-key" x="60" y="160" text-anchor="middle">edition 1</text>
+      <line x1="132" y1="118" x2="132" y2="142" stroke="#1c1512" stroke-width="1.8"/><text class="d-key" x="132" y="160" text-anchor="middle">edition 2</text>
+      <line x1="204" y1="118" x2="204" y2="142" stroke="#1c1512" stroke-width="1.8"/><text class="d-key" x="204" y="160" text-anchor="middle">edition 3</text>
+      <line x1="276" y1="118" x2="276" y2="142" stroke="#1c1512" stroke-width="1.8"/><text class="d-key" x="276" y="160" text-anchor="middle">edition 4</text>
+      <line x1="348" y1="118" x2="348" y2="142" stroke="#1c1512" stroke-width="1.8"/><text class="d-key" x="348" y="160" text-anchor="middle">edition 5</text>
+      <line x1="420" y1="118" x2="420" y2="142" stroke="#1c1512" stroke-width="1.8"/><text class="d-key" x="420" y="160" text-anchor="middle">edition 6</text>
+      <line x1="492" y1="118" x2="492" y2="142" stroke="#1c1512" stroke-width="1.8"/><text class="d-key" x="492" y="160" text-anchor="middle">edition 7</text>
+      <line x1="564" y1="118" x2="564" y2="142" stroke="#1c1512" stroke-width="1.8"/><text class="d-key" x="564" y="160" text-anchor="middle">edition 8</text>
+      <circle cx="204" cy="130" r="7" fill="#bf4a26"/><text class="d-num" x="204" y="86" text-anchor="middle" style="fill:#bf4a26">his last visit:</text><text class="d-lbl" x="204" y="100" text-anchor="middle">handed the third</text>
+      <circle cx="492" cy="130" r="7" fill="none" stroke="#136f9e" stroke-width="2.4"/><text class="d-num" x="492" y="100" text-anchor="middle" style="fill:#136f9e">this visit</text>
+      <path d="M 214 188 L 214 198 L 492 198 L 492 188" fill="none" stroke="#5f6e28" stroke-width="1.6"/><text class="d-note" x="353.0" y="216" text-anchor="middle">editions announced between his visits</text>
+      <rect class="d-band-o" x="196" y="236" width="390" height="30"/><text class="d-lbl" x="391.0" y="256" text-anchor="middle">any of these will do: the third or anything newer</text>
+      <text class="d-note" x="330" y="296" text-anchor="middle">the more editions announced between visits, the wider the range that will do</text>
+      </svg>
+    </div>
+    <figcaption><b>The longer the reader stays away, the less he can go backwards.</b> Editions announced between his visits widen the range that will do; a reader who visits every day has little room.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p>Can a reader be sure of never going backwards? Yes, in one way: if he keeps to the same keeper every time, whose copy only ever moves forward, he can never be handed anything older than before, unless that keeper is lost. This is sticky use of one library. It does not make him see strictly newer editions where there are any; for that the reader would need the keeper to hand over a newer one if it exists, and the paper treats strict monotonic reads separately, with the exponent one less. The odds for the readers who do not stick are the ones the book has worked out; the paper adds that a library may control the rates, by limiting how often a reader may come, to bring the odds where it wants.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that PBS monotonic reads is k-staleness with k = 1 + γ<sub>gw</sub> / γ<sub>cr</sub></summary>
+    <ol class="proofsteps">
+      <li>This is §3.2. Let a client read a data item at rate γ<sub>cr</sub> and let the item be written, by all clients, at rate γ<sub>gw</sub>. Between two successive reads by this client the expected number of versions committed is γ<sub>gw</sub> / γ<sub>cr</sub>.</li>
+      <li>A read satisfies monotonic reads if it returns the version the client last read, or any newer one. If the last read returned version <var>v<sub>i−k</sub></var> and the latest committed is <var>v<sub>i</sub></var>, with γ<sub>gw</sub> / γ<sub>cr</sub> versions in between, the acceptable versions are the newest 1 + γ<sub>gw</sub> / γ<sub>cr</sub>.</li>
+      <li>That is PBS <var>k</var>-staleness with <var>k</var> = 1 + γ<sub>gw</sub> / γ<sub>cr</sub>, so the probability of violating monotonic reads is <var>p<sub>sMR</sub></var> = (C(<var>N</var> − <var>W</var>, <var>R</var>) / C(<var>N</var>, <var>R</var>))<sup>1 + γ<sub>gw</sub> / γ<sub>cr</sub></sup>, Equation 3.</li>
+      <li>For strict monotonic reads, where the client must read strictly newer data if any exists, the exponent is γ<sub>gw</sub> / γ<sub>cr</sub>. The paper uses expected values of the rates, which in practice are measured as distributions.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>So a library can promise a reader a good chance of never going backwards. A chance, not a promise: is there anything the paper does not claim?</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>What can a library say to a reader, and what must it leave unsaid?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= IX ================= -->
+<section id="s9">
+  <div class="issue"><span class="no">Chapter IX</span><h2>What It Does Not Say</h2></div>
+  <div class="prose">
+    <p>Does a library promise a reader that his copy is current? No. What it can say is <i>nine times in ten you are handed the newest, and nearly always one of the newest few</i>, which is a probability and an expectation. In the worst case, with the quick way, a reader can be handed an old copy of any age: nothing in the numbers puts a bound on how old, and the paper says so. The advance is to measure the chance and tell the reader, not to turn it into a guarantee.</p>
+
+    <p>What do the odds assume? The paper says plainly. The odds for editions assume the keepers that answer are chosen as if by lot and the groups for different editions are independent. The odds for time assume the couriers' journeys are independent and alike, drawn afresh each time from the logbook, with the logbook a fair picture of how the couriers will go next, and the logbooks themselves were fitted from summaries and are not complete. They assume the usual state of the coast: no library closed, no courier stopped; where those happen, the paper says they only lengthen the tails of the logbook. And they assume the least help: no festival and no word of mouth, and no reader who finds a keeper behind and puts it right; the paper counts none of these, since they depend on how often they happen, so the real odds are better than the book's.</p>
+
+    <p>Can a reader tell, when he is handed a copy, whether it is stale? Not then. To know he would need to know the newest edition, which is what he lacks. He can find out afterwards: the keepers he did not wait for still answer, and a late reply with a newer tally shows that the copy he was given was behind. That finding can be wrong in a harmless way, since the later reply may carry an edition written after his request, or one not yet announced, which is not staleness; to be rid of those the coast would have to agree on one order of announcement for every work, which it does not do, and the paper notes that it would need changes. A reader has therefore no means in hand of knowing in the moment.</p>
+
+    <p>Does it say anything for readers who need more than recency, such as seeing a letter's reply only after the letter? No. Those are other guarantees, which the paper leaves aside, conjecturing that their odds in the worst case would be low. And it leaves open the choice of keepers' numbers for a stated odds, that a coast could set the two numbers by what it measures, and offer readers the quickest way that still meets a promise of odds. That is the use the authors suggest, not one they build.</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>Which of these ideas stand for which parts of the paper?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= X ================= -->
+<section id="s10">
+  <div class="issue"><span class="no">Chapter X</span><h2>In the Book, In the Paper</h2></div>
+  <div class="table-wrap">
     <table class="chron">
-      <thead><tr><th>In this book</th><th>In the paper</th><th>Also in</th></tr></thead>
+      <thead><tr><th>In the book</th><th>In the paper</th></tr></thead>
       <tbody>
-        <tr><td><b>a work's keepers: the same N libraries hold every copy of it</b></td><td>The replication factor N.</td><td></td></tr>
-        <tr><td><b>a new edition sent to all N keepers, announced as done once W have acknowledged it</b></td><td>The write quorum W.</td><td></td></tr>
-        <tr><td><b>a reader who asks R keepers and takes the newest copy handed over</b></td><td>The read quorum R.</td><td></td></tr>
-        <tr><td><b>the Chamber's rule: R + W &gt; N, so the two groups always share a library</b></td><td>A strict quorum; intersection.</td><td>The Chamber's majorities; the camps' pledges, where two pledged and three needed to call the other gate exceed four (<i>Agreeing When Messages Run Late</i>)</td></tr>
-        <tr><td><b>the scholars' rule: R + W ≤ N, quicker, and the groups may miss</b></td><td>A partial quorum.</td><td></td></tr>
-        <tr><td><b>the edition still on its way to the other keepers after it is announced</b></td><td>Expanding quorums; anti-entropy.</td><td>The festival (<i>Spreading by Word of Mouth</i>)</td></tr>
-        <tr><td><b>"one of the last k editions"</b></td><td>k-staleness.</td><td></td></tr>
-        <tr><td><b>"t hours after it was announced"</b></td><td>t-visibility.</td><td></td></tr>
-        <tr><td><b>the four legs: the edition out, the acknowledgement back, the reader's request out, the copy back</b></td><td>WARS: the four message delays.</td><td></td></tr>
-        <tr><td><b>the couriers' logbook of journey times</b></td><td>The latency distributions, measured in production.</td><td></td></tr>
-        <tr><td><b>the reader who is never handed an older copy than last time</b></td><td>Monotonic reads.</td><td></td></tr>
-        <tr><td><b>a promise with odds: "nine chances in ten it is current after a day"</b></td><td>PBS consistency: an expected bound, not a guarantee.</td><td>The promise of the span t (<i>Answering While Cut Off</i>): a bound held for certain</td></tr>
+        <tr><td><span class="term">a work's keepers: the same few libraries hold every copy of it</span></td><td>The replication factor N; one quorum system per data item. <span class="paper">§2.1, §2.2.</span></td></tr>
+        <tr><td><span class="term">an edition with its tally, the day and hour by the sun</span></td><td>A version with a timestamp giving a total order. <span class="paper">§2.1.</span></td></tr>
+        <tr><td><span class="term">the writer sends the edition to all the keepers</span></td><td>The coordinator sends the write to all N replicas. <span class="paper">§2.2.</span></td></tr>
+        <tr><td><span class="term">announced when enough keepers have answered</span></td><td>The write quorum W: the write commits after W acknowledgments. <span class="paper">§2.2.</span></td></tr>
+        <tr><td><span class="term">a reader asks all keepers and takes the first few replies</span></td><td>The read quorum R: the read returns after R responses. <span class="paper">§2.2.</span></td></tr>
+        <tr><td><span class="term">the edition still on its way to the other keepers after it is announced</span></td><td>Expanding quorums: the write quorum grows by anti-entropy after the write returns. <span class="paper">§2.2.</span></td></tr>
+        <tr><td><span class="term">groups sharing a keeper when the numbers add to more than the keepers</span></td><td>A strict quorum system: R + W &gt; N. <span class="paper">§2.1.</span></td></tr>
+        <tr><td><span class="term">the quick way: wait for one, ask one</span></td><td>A partial quorum, R + W ≤ N, as deployed by operators. <span class="paper">§1.1, §2.3.</span></td></tr>
+        <tr><td><span class="term">the chance the groups miss each other; excellent for a crowd of keepers</span></td><td>Probabilistic quorums: p<sub>s</sub> = C(N − W, R) / C(N, R). <span class="paper">§2.1.</span></td></tr>
+        <tr><td><span class="term">one of the newest few editions; the chance falls by the same fraction each</span></td><td>PBS k-staleness: p<sub>sk</sub> = p<sub>s</sub><sup>k</sup>. <span class="paper">§3.1.</span></td></tr>
+        <tr><td><span class="term">a busy keeper asked less often</span></td><td>Lower quorum load under staleness tolerance. <span class="paper">§3.3.</span></td></tr>
+        <tr><td><span class="term">the odds a while after the announcement</span></td><td>PBS t-visibility; the window of inconsistency. <span class="paper">§3.4.</span></td></tr>
+        <tr><td><span class="term">one of the newest few, a while after</span></td><td>PBS ⟨k, t⟩-staleness. <span class="paper">§3.5.</span></td></tr>
+        <tr><td><span class="term">the four legs: the edition out, the acknowledgment back, the request out, the copy back</span></td><td>The WARS model: the delay distributions W, A, R, S. <span class="paper">§4.1.</span></td></tr>
+        <tr><td><span class="term">stale when the request outruns the edition</span></td><td>A read is stale when the first R responses reached their replicas before the write. <span class="paper">§4.1.</span></td></tr>
+        <tr><td><span class="term">the couriers' logbook; replaying it by lot</span></td><td>Latency distributions; Monte Carlo simulation, validated against Cassandra. <span class="paper">§5.1.</span></td></tr>
+        <tr><td><span class="term">the four coasts</span></td><td>LNKD-SSD, LNKD-DISK, YMMR and WAN latency fits. <span class="paper">§5.4, §5.5.</span></td></tr>
+        <tr><td><span class="term">a reader who never goes backwards</span></td><td>PBS monotonic reads: k = 1 + γ<sub>gw</sub> / γ<sub>cr</sub>. <span class="paper">§3.2.</span></td></tr>
+        <tr><td><span class="term">keeping to one keeper</span></td><td>A sticky replica. <span class="paper">§3.2.</span></td></tr>
+        <tr><td><span class="term">learning afterwards from the late replies</span></td><td>Asynchronous staleness detection, with false positives. <span class="paper">§4.3.</span></td></tr>
+        <tr><td><span class="term">no festival and no word of mouth counted</span></td><td>The conservative assumption: read repair and Merkle-tree exchange never occur. <span class="paper">§4.2.</span></td></tr>
+        <tr><td><span class="term">a promise with odds: nine in ten, and nearly always one of the newest few</span></td><td>PBS consistency: an expected bound, not a guarantee; latency/staleness SLAs. <span class="paper">§1.2, §6.</span></td></tr>
       </tbody>
     </table>
   </div>
+
+  <div class="ideas-box">
+    <span class="lbl">The ideas, plainly</span>
+    <p>Bailis and his co-authors study data kept on several machines, where a write is acknowledged after W of N machines have it and a read returns after R machines have answered. If R + W exceeds N, a read always meets the latest write. Operators often choose smaller numbers, for speed, so that a read may miss it. The paper asks how often, and shows that a read within k versions of the latest has probability 1 minus p to the k, where p is the chance of a plain miss: the chance of being stale falls exponentially with the leeway allowed. Monotonic reads is the same idea with k set by how often a reader returns compared with how often the data is written.</p>
+
+    <p>Staleness in time is harder, because writes keep reaching more machines after they are acknowledged. The paper models the four message delays of a write and a read, W, A, R and S, shows that a read is stale when its request reaches a replica before the write does, and works out the odds by simulation using measured delays. The results are that the delay of the write message, and above all its variance, matters most, and that typically the chance of reading the latest write is high within a short time of its commit, at a latency far below that of a strict quorum.</p>
+
+    <p>What the paper offers is therefore a probability and a way to tune it, not a guarantee: the worst case stays unbounded, and the odds rest on assumptions about independence and about the delays staying as they were measured.</p>
   </div>
 </section>
 
 <hr class="rule">
-<section>
-  <div class="issue"><h2>Planned chapters</h2></div>
-  <div class="prose">
-<ol><li>A work and its keepers.</li><li>How many to wait for.</li><li>When the groups miss each other.</li><li>How many editions behind.</li><li>How long until it shows.</li><li>The four legs.</li><li>Never going backwards.</li><li>What it does not say: a probability, not a promise.</li><li>In the Book, In the Paper.</li></ol>
-  </div>
+<section id="refs" class="refs">
+  <h3 class="sect">The Paper Behind This Book</h3>
+  <ul>
+    <li>Peter Bailis, Shivaram Venkataraman, Michael J. Franklin, Joseph M. Hellerstein and Ion Stoica, <i>Probabilistically Bounded Staleness for Practical Partial Quorums</i>. Proceedings of the VLDB Endowment, Vol. 5, No. 8 (38th International Conference on Very Large Data Bases, Istanbul, August 2012), 776–787. — Partial quorums, PBS k-staleness, t-visibility and monotonic reads, the WARS model, and a Monte Carlo evaluation on production latency data.</li>
+  </ul>
+  <aside class="fn">Bailios stands for Peter Bailis, the first author. The paper has five authors: Peter Bailis, Shivaram Venkataraman, Michael J. Franklin, Joseph M. Hellerstein and Ion Stoica. All are credited here, and only Bailios is named in the book; the writer, the keepers and the reader are told apart by what they do.</aside>
 </section>
 
 <hr class="rule">
-<section>
-  <div class="issue"><h2>Must not exist</h2></div>
-  <div class="prose">
-<p>any certainty that a copy is current; a reader who asks every keeper; a store in the book (the paper is a model); an assembly.</p>
-  </div>
-</section>
 
-<hr class="rule">
-<section>
-  <div class="issue"><h2>Open questions</h2></div>
-  <div class="prose">
-<ol><li><b>Clocks.</b> t-visibility is in hours. Paxos tells time by the sun (the Chamber's meridian), so the scholars can read an hour; confirm that the scholars' coast is not under Arche's cloud.</li><li><b>Names.</b> Bailios and four others for five authors, or two names and the footnote.</li></ol>
-  </div>
-</section>
-
-<hr class="rule">
+<p class="lineage"><span class="lbl">Follows</span> <a href="../spreading-by-word-of-mouth/index.html">Spreading by Word of Mouth</a><br>
+  <span class="outside"><span class="tag">Outside this series</span> DeCandia et al. 2007, <i>Dynamo</i> · Malkhi, Reiter et al. 2001, <i>Probabilistic quorum systems</i> · Aiyer, Alvisi &amp; Bazzi 2005, <i>On the availability of non-strict quorum systems</i></span></p>
 
 </div>
+<script src="../../assets/js/flow.js" defer></script>
 </body>
 </html>
