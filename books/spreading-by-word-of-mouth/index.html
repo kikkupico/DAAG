@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="../../assets/css/daag.css">
 <link rel="stylesheet" href="../../assets/css/books.css">
 </head>
+
 <body>
 <nav class="series-nav">
   <div class="series-nav-inner">
@@ -17,80 +18,544 @@
 </nav>
 <div class="page">
 
+<!-- ================= COVER ================= -->
 <header class="cover">
   <div class="kicker">Distributed Algorithms of Ancient Greece · Paxos · The Scholars' Coast</div>
   <h1 class="display">Spreading by Word of Mouth</h1>
-  <p class="basis">Based on “Epidemic Algorithms for Replicated Database Maintenance” by Alan Demers et al. (1987)</p>
-  <p class="sub">Can an update reach every machine in a large system just by each passing it on to a few others, with no one organising the spread?</p>
-  <p class="pub"><b>Not yet written.</b> This page is the plan for the book: the allegorical
-  devices it will use, what each stands for in the paper, and where each meets the other books.
-  It will be replaced by the book.
-  <br><span class="paper">Demers et al. 1987 · the stoa and the festival ground, Paxos</span></p>
+  <p class="basis">Based on “Epidemic Algorithms for Replicated Database Maintenance” by Alan Demers, Mark Gealy, Dan Greene, Carl Hauser, Wes Irish, John Larson, Sue Manning, Scott Shenker, Howard Sturgis, Dan Swinehart, Doug Terry and Don Woods (1987)</p>
+  <p class="sub">Can news reach every library on a coast just by each scholar passing it on to a few others, with no one organising the spread? And what catches the libraries the gossip misses?</p>
+  <div class="frame-cover portrait"><img src="../../assets/img/covers/spreading-by-word-of-mouth.jpg" width="900" height="1200"
+       alt="The long colonnade of the stoa seen from above and to one side, with rows of plain stone tables on the ground before it, olive trees and cypresses behind, and the sea beyond the festival ground."></div>
+  <p class="pub">On the scholars' coast of Paxos, a correction written at one library has to reach all the others, and nothing orders the others to listen. Letters go astray, so scholars tell each other in the stoa until they tire of it, and once a year pairs of copyists compare whole collections at the festival ground. The telling is quick and leaves some who never hear; the festival is slow and leaves no one out.</p>
+  <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/scholars-coast/index.html">The Scholars' Coast</a></p>
 </header>
+
+<!-- ================= IN A NUTSHELL ================= -->
+<section class="nutshell">
+  <h6>In a Nutshell</h6>
+  <p>A new edition of a work appears at one library of the scholars' coast, and every other library should end up holding it. Letters to everyone are quick but miss libraries; pairs of copyists comparing whole collections at a yearly festival miss no one but take many festivals; scholars passing the news on in the stoa are quick and cheap but some libraries are never told. The book finds how large that last group is, why it can be made small but never empty, how the festival catches it, and how a work can be withdrawn at all when an absence cannot be passed on. In real terms, this covers direct mail, anti-entropy and rumour mongering (epidemic algorithms), death certificates, and spatial distributions, from Demers et al.</p>
+</section>
+
+<nav class="toc">
+  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
+  <ol>
+    <li><a href="#s1">I · One Scrap, Many Shelves</a></li>
+    <li><a href="#s2">II · Letters to Everyone</a></li>
+    <li><a href="#s3">III · The Festival</a></li>
+    <li><a href="#s4">IV · Comparing Marks First</a></li>
+    <li><a href="#s5">V · Word of Mouth</a></li>
+    <li><a href="#s6">VI · Who Never Hears</a></li>
+    <li><a href="#s7">VII · Telling, Asking and Crowded Days</a></li>
+    <li><a href="#s8">VIII · The Festival Behind the Gossip</a></li>
+    <li><a href="#s9">IX · Withdrawing a Work</a></li>
+    <li><a href="#s10">X · Near Partners and the Ferry</a></li>
+    <li><a href="#s11">XI · What It Does Not Say</a></li>
+    <li><a href="#s12">XII · In the Book, In the Paper</a></li>
+    <li><a href="#refs">The Paper Behind This Book</a></li>
+  </ol>
+</nav>
 
 <hr class="rule">
 
-<section>
-  <div class="issue"><h2>The idea</h2></div>
+<!-- ================= I ================= -->
+<section id="s1">
+  <div class="issue"><span class="no">Chapter I</span><h2>One Scrap, Many Shelves</h2></div>
   <div class="prose">
-<p>Keeping many replicas of a database consistent by random exchange, analysed as epidemics. <b>Direct mail</b> sends each update to every site at once and is unreliable. <b>Anti-entropy</b>, sites comparing whole databases with a random partner, is a simple epidemic that reaches everyone, slowly. <b>Rumour mongering</b> spreads a hot update until the carrier loses interest: cheaper, but it leaves a <b>residue</b> who never hear. Deleting needs <b>death certificates</b>. <b>Spatial distributions</b>, preferring near partners, cut the traffic on long links. The measures are residue, traffic and delay.</p>
+    <p>The scholars' coast of Paxos is a string of small libraries, each in its own olive grove, with a stoa where scholars gather and a festival ground beside it. Nothing here waits for a vote, and a library answers its readers from whatever it holds<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: The Scholars' Coast">*</a></sup>. Many libraries keep copies of the same works, and each library's copy of a work is an <span class="coin">edition</span> that carries a <span class="coin">tally</span>. A tally is a number that only rises, with the number of the library that wrote it to break a tie, so that of any two editions of one work, one is newer<sup class="xref"><a href="../ordering-without-clocks/index.html" title="Ordering Without Clocks">*</a></sup>. Whoever holds two editions of a work keeps the one with the larger tally, and has no other way to choose.</p>
+
+    <p>What travels in this book is short: a single learning set down under a title on a scrap of papyrus, as a work is an entry in the coast's common scroll of learnings. Say Demerios, at his own library, corrects the entry <i>The Order of the Heavens</i> to say that the Earth goes round the Sun. He writes a new edition with a tally larger than any he has seen on that entry. That is the one thing a scholar may do: write a new edition at his own library. Nothing else changes a library's shelves except receiving someone else's edition.</p>
+
+    <figure class="panel"><img src="../../assets/img/panels/spreading-by-word-of-mouth/p01-library.jpg" width="1200" height="900" loading="lazy"
+         alt="One of the coast's libraries: a small plastered building with a gabled tile roof and a columned porch, olive trees and cypresses round it, and a worn path to the door."></figure>
+
+    <p>What should happen next? Every library should in the end hold Demerios's edition, or one newer than it, and so all libraries hold the same edition of the entry. Does that mean all of them hold it at once? No. While news is still travelling, some libraries hold the old edition and others the new, and a reader asks whichever library is near. The libraries can agree completely only when no one is writing any more and the news has caught up; until then most of what a library holds is current, and some is not. Nothing here tries to prevent that, only to bring it to an end.</p>
+
+    <p>Is it enough to say <i>send it to everyone</i>? Whoever writes it does not know what every library holds, and no one is in charge of seeing that it arrives. So the question is a narrow one: with no one ordering the others, by what plain habits does a new edition reach every shelf, how quickly, at what cost in walking and carrying, and what is left over?</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>The simplest habit is to write to everyone. Why is that not enough?</em></p>
   </div>
 </section>
 
 <hr class="rule">
-<section>
-  <div class="issue"><h2>The devices</h2></div>
+
+<!-- ================= II ================= -->
+<section id="s2">
+  <div class="issue"><span class="no">Chapter II</span><h2>Letters to Everyone</h2></div>
   <div class="prose">
-<div class="table-wrap">
+    <p>A scholar who has written a new edition can copy it onto a slip for every other library and send a courier to each. Each library that receives the slip compares its tally with the one it holds, and keeps the larger. Nothing could be plainer, and while the coast was small it was enough.</p>
+
+    <p>What goes wrong? Three things. A courier can be lost, or delayed past use, or his slip can be dropped in a ditch, and the library he was bound for never hears. The writer may not know every library: a new one has opened since his list was made, or he has simply forgotten one, and a library he does not know of gets no slip. And all the work falls on one library, which must write and send a slip for every other, however many there are.</p>
+
+    <p>What does it cost? One slip for every library, each carried the whole way from the writer, so the carrying grows with the number of libraries and with how far apart they are on average. Who notices when one slip goes astray? No one. A library that never receives a slip does not know there was one, and the writer does not know it was not received. For a while a clerk was kept to chase up such misses by hand, which a coast of a few dozen libraries could bear and a coast of hundreds could not.</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>If no one can tell which libraries were missed, what could catch them without anyone knowing where to look?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= III ================= -->
+<section id="s3">
+  <div class="issue"><span class="no">Chapter III</span><h2>The Festival</h2></div>
+  <div class="prose">
+    <p>Once a year the copyists of the coast come to the festival ground, below the stoa, where long stone tables stand in rows. Each copyist draws by lot the name of one library from all the libraries of the coast, goes to its copyist, and the two sit down opposite each other with their whole collections of scrolls; some are drawn by two or three, some by none. They go through them together, work by work, and wherever the two hold different editions of a work, the one with the smaller tally takes the other's.</p>
+
+    <figure class="panel"><img src="../../assets/img/panels/spreading-by-word-of-mouth/p02-festival.jpg" width="1200" height="900" loading="lazy"
+         alt="The festival ground below the stoa: rows of long stone tables on the paving, the colonnade rising behind them, olive trees and the sea beyond."></figure>
+
+    <p>There are three ways to do it. The copyist whose edition is newer may <span class="coin">give</span> it to the other and take nothing back; or the copyist whose edition is older may <span class="coin">ask</span> for the newer one; or the two may do both, each giving and each asking, so that after the table both hold the newer edition whichever of them had it. Which is better? That is what the next paragraphs find out.</p>
+
+    <p>First, does it ever fail? No. Every copyist has some chance of being paired with every other, so a library that holds a new edition will in time be paired with any library that does not, and the older edition will give way. This does not wait on couriers or on any list of libraries: the lot needs only the libraries that come. The festival is the habit that misses no one. How long does it take? Not long, in the sense that matters: the number of festivals the news needs grows only with the logarithm of the number of libraries, so doubling the coast adds a fixed handful of festivals to the wait. For the giving way, the paper quotes a result of Pittel's for the exact amount, about the logarithm of the number of libraries to base two plus its natural logarithm; the book takes that on the paper's word.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that anti-entropy with every pair possible reaches every site with probability 1</summary>
+    <ol class="proofsteps">
+      <li>This is the paper's argument of §3.2, set out. Let <var>S</var> be the set of sites, and suppose that for every pair <var>s</var>, <var>s′</var> in <var>S</var> the probability that <var>s</var> chooses <var>s′</var> as partner in a cycle is at least some <var>q</var> &gt; 0.</li>
+      <li>Let <var>s₀</var> be a site holding the entry with the largest timestamp <var>t</var>, and let <var>s</var> be any site holding an older value. In any cycle, the probability that <var>s</var> chooses <var>s₀</var> is at least <var>q</var>.</li>
+      <li>If <var>s</var> chooses <var>s₀</var>, then whichever of push, pull or push-pull is in use, <var>ResolveDifference</var> leaves <var>s</var> with a value of timestamp at least <var>t</var>, since the value with the smaller timestamp is replaced by the one with the larger, and none is larger than <var>t</var>. (With push alone the same holds in the cycle in which <var>s₀</var> chooses <var>s</var>.)</li>
+      <li>The probability that <var>s</var> has not chosen <var>s₀</var> in <var>c</var> cycles is at most (1 − <var>q</var>)<sup><var>c</var></sup>, which tends to 0 as <var>c</var> grows. Since there are finitely many sites, the probability that some site still holds an older value tends to 0.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>Now suppose the news has already reached nearly everyone, say by some other means, and only a few libraries still lack it. Giving or asking? Here the two part company sharply. When a library that lacks the edition is paired with a library that has it, asking brings it the edition at once, but giving brings it only if the one who has it happens to draw its name, which a library holding the edition is unlikely to do for any one of the few who lack it. When only a few still lack the news, asking makes the fraction of libraries without it fall <em>as the square of itself</em>: one in ten becomes one in a hundred, then one in ten thousand, then one in a hundred million. Giving shrinks that fraction only by about the same factor each festival, a little over a third, so it takes many festivals more to finish. Doing both behaves like asking.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 336" role="img" aria-label="Chart on a log scale of how many libraries still lack a new edition after each festival, when copyists meet by lot. With the giver passing the edition on, the fraction falls from one in ten to under one in a thousand over five festivals, each time by about the same factor. With the one who lacks it asking, it falls from one in ten to one in a hundred, one in ten thousand, one in a hundred million, and then off the page.">
+      <defs><marker id="f1b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/></marker><marker id="f1r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/></marker></defs>
+      <line class="d-faint" x1="170" y1="60" x2="650" y2="60"/><text class="d-key" x="162" y="64" text-anchor="end">one in ten</text>
+      <line class="d-faint" x1="170" y1="89" x2="650" y2="89"/><text class="d-key" x="162" y="93" text-anchor="end">one in a hundred</text>
+      <line class="d-faint" x1="170" y1="147" x2="650" y2="147"/><text class="d-key" x="162" y="151" text-anchor="end">one in ten thousand</text>
+      <line class="d-faint" x1="170" y1="263" x2="650" y2="263"/><text class="d-key" x="162" y="267" text-anchor="end">one in a hundred million</text>
+      <text class="d-key" x="190" y="318" text-anchor="middle">start</text>
+      <text class="d-key" x="276" y="318" text-anchor="middle">festival 1</text>
+      <text class="d-key" x="362" y="318" text-anchor="middle">festival 2</text>
+      <text class="d-key" x="448" y="318" text-anchor="middle">festival 3</text>
+      <text class="d-key" x="534" y="318" text-anchor="middle">festival 4</text>
+      <text class="d-key" x="620" y="318" text-anchor="middle">festival 5</text>
+      <polyline points="190,60 276,71.3 362,83.4 448,95.8 534,108.3 620,120.9" fill="none" stroke="#bf4a26" stroke-width="2"/><circle cx="190" cy="60" r="4" fill="#bf4a26"/><circle cx="276" cy="71.3" r="4" fill="#bf4a26"/><circle cx="362" cy="83.4" r="4" fill="#bf4a26"/><circle cx="448" cy="95.8" r="4" fill="#bf4a26"/><circle cx="534" cy="108.3" r="4" fill="#bf4a26"/><circle cx="620" cy="120.9" r="4" fill="#bf4a26"/>
+      <polyline points="190,60 276,89 362,147 448,263" fill="none" stroke="#136f9e" stroke-width="2"/><circle cx="190" cy="60" r="4" fill="#136f9e"/><circle cx="276" cy="89" r="4" fill="#136f9e"/><circle cx="362" cy="147" r="4" fill="#136f9e"/><circle cx="448" cy="263" r="4" fill="#136f9e"/>
+      <line x1="448" y1="263" x2="488" y2="298" stroke="#136f9e" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#f1b)"/>
+      <text class="d-lbl" x="494" y="292" fill="#136f9e" style="fill:#136f9e">asking: off the page</text>
+      <text class="d-lbl" x="616" y="108.9" text-anchor="end" style="fill:#bf4a26">giving</text>
+      <text class="d-note" x="410" y="36" text-anchor="middle">libraries still without the edition, festival after festival</text></svg>
+    </div>
+    <figcaption><b>When few remain, asking beats giving.</b> The same start, one library in ten without the news: a library that asks is told at once by any partner who knows, so the share without it squares at every festival, while giving trims it by about the same factor each time.</figcaption>
+  </figure>
+
+  <details class="proof">
+    <summary>Proof — that pull squares the susceptible fraction and push only scales it</summary>
+    <ol class="proofsteps">
+      <li>This is the paper's deterministic model of §1.3. Let <var>p<sub>i</sub></var> be the probability that a site is still susceptible after the <var>i</var>th cycle, <var>n</var> the number of sites, and partners be chosen uniformly.</li>
+      <li><i>Pull.</i> A site is susceptible after cycle <var>i</var> + 1 exactly when it was susceptible after cycle <var>i</var> and the partner it contacted was also susceptible. The partner is susceptible with probability <var>p<sub>i</sub></var>, independently, so <var>p<sub>i+1</sub></var> = <var>p<sub>i</sub></var>².</li>
+      <li><i>Push.</i> A site is susceptible after cycle <var>i</var> + 1 exactly when it was susceptible after cycle <var>i</var> and none of the infective sites chose it. There are <var>n</var>(1 − <var>p<sub>i</sub></var>) infective sites, each choosing it with probability 1/<var>n</var>, so <var>p<sub>i+1</sub></var> = <var>p<sub>i</sub></var>(1 − 1/<var>n</var>)<sup><var>n</var>(1−<var>p<sub>i</sub></var>)</sup>.</li>
+      <li>For large <var>n</var> the last factor is close to <var>e</var><sup>−(1−<var>p<sub>i</sub></var>)</sup>, and for small <var>p<sub>i</sub></var> close to <var>e</var><sup>−1</sup>. Push therefore multiplies a small <var>p<sub>i</sub></var> by about 1/<var>e</var> each cycle, a geometric decrease, while pull squares it, which falls faster than any geometric decrease once <var>p<sub>i</sub></var> is small.</li>
+      <li>Push-pull makes a site informed if either holds, so it does at least as well as pull; the paper reports that it behaves essentially like pull.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>So the festival is a sure habit, and for the last few libraries asking is the right way to run it. What is wrong with it? Look at what the pair actually do. They go through their <em>whole</em> collections, work by work, and nearly all of it is the same on both sides, since in an ordinary year almost every entry agrees. Almost all the effort is spent finding that nothing needs doing.</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>If nearly everything agrees, must the pair read everything to find the few lines that do not?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= IV ================= -->
+<section id="s4">
+  <div class="issue"><span class="no">Chapter IV</span><h2>Comparing Marks First</h2></div>
+  <div class="prose">
+    <p>Each library keeps, beside its catalogue scroll, a <span class="coin">catalogue mark</span>: a short mark worked out from the whole catalogue, so that two catalogues that agree on every work and edition have the same mark, and two that differ anywhere almost certainly have different ones. The librarian renews it a little at a time as the catalogue changes. A pair at the festival can now begin by comparing marks, which is a glance across the table, and sit down to the long reading only if the marks differ.</p>
+
+    <p>Does that settle it? Not quite, and the reason is worth seeing. A recent edition is almost always known to some libraries and not yet to others, and any library that holds it has a different mark from any that does not. So unless news crosses the coast much faster than new editions are written, the marks of two libraries chosen by lot will usually differ because of something recent, and the long reading is back.</p>
+
+    <p>The remedy is to treat the recent editions separately. Each library keeps a <span class="coin">recent list</span>: the editions whose tallies are newer than a chosen span. The pair first swap recent lists and apply them, each taking whatever is newer, which also brings each catalogue mark up to date. Only then do they compare marks, and the mark no longer differs because of anything recent, so it usually agrees and the reading is not needed. The expected cost of a meeting is then about the length of the recent lists, which is only as long as the editions written in the span.</p>
+
+    <p>What span should be chosen? It has to be longer than the news needs to cross the whole coast. If it is, anything recent is on the list long enough to be swapped before it drops off. If the coast grows until the news takes longer than the span, the marks start to fail, and the work returns to something slightly worse than comparing everything. The span has to be chosen with the coast's size in mind, and the paper warns that it is critical.</p>
+
+    <p>Is there a way that needs no span? Yes: the pair swap editions <span class="coin">newest first</span>, comparing marks after each, and stop the moment the marks agree. For that, a library must keep its catalogue entries in a second scroll ordered by tally, which costs a little to keep in step; the paper calls it <i>peel back</i>.</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>Even a cheap festival comes only once a year. Can news move between festivals, quicker than the calendar, without anyone sending it?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= V ================= -->
+<section id="s5">
+  <div class="issue"><span class="no">Chapter V</span><h2>Word of Mouth</h2></div>
+  <div class="prose">
+    <p>The stoa is the long colonnade beside the festival ground, where scholars from every library of the coast pass in turn and stop to talk. A scholar who has just written, or just heard, a new edition carries a scrap of it, and each day he tells it to whoever the road puts in his way. Whom he meets is a matter of chance, as at the festival: no one arranges who talks to whom, and no one keeps a record of who has been told.</p>
+
+    <figure class="panel"><img src="../../assets/img/panels/spreading-by-word-of-mouth/p03-stoa.jpg" width="1200" height="900" loading="lazy"
+         alt="The stoa from the festival ground side: a long colonnade under a tiled roof, a row of plain columns, the tables in front of it and trees beyond."></figure>
+
+    <p>With respect to one scrap, every scholar is in one of three states. He <span class="coin">has not heard</span> it. Or he is <span class="coin">still telling</span> it: it is on his hot tablet, a wax tablet of the scraps he is currently passing on. Or he has <span class="coin">stopped</span>: the scrap is on his shelf and he holds it as an edition, but he no longer tells it. Does a scholar who stops tell it differently? He no longer tells it at all, and still answers any reader from the scrap he holds.</p>
+
+    <p>Why would a scholar ever stop? Because telling a scrap to someone who already has it is wasted breath, and a scholar who goes on telling after most of the coast knows it is only wearying his hearers. So the rule is <span class="coin">losing interest</span>. A scholar who tells a scrap to someone who already had it may, with some chance, give up; the chance is one in some chosen number, his <span class="coin">allowance</span>. Whoever he tells who has not heard begins to tell it too. So at first the telling grows, because most of those met have not heard it, and later it dies out, because most of those met have.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 296" role="img" aria-label="Three states of a library with respect to one scrap: has not heard, still telling, has stopped. Hearing moves a library from not heard to still telling; telling one who has not heard keeps the teller going; telling one who already knew may make him lose interest and stop.">
+      <defs><marker id="f2k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/></marker><marker id="f2r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/></marker></defs>
+      <rect class="d-node" x="15" y="90" width="160" height="70" rx="4"/><text class="d-house" x="95.0" y="116" text-anchor="middle">HAS NOT HEARD</text><text class="d-lbl" x="95.0" y="138" text-anchor="middle">no scrap on his shelf</text>
+      <rect class="d-node" x="250" y="90" width="160" height="70" rx="4"/><text class="d-house" x="330.0" y="116" text-anchor="middle">STILL TELLING</text><text class="d-lbl" x="330.0" y="138" text-anchor="middle">scrap on his hot tablet</text>
+      <rect class="d-node" x="485" y="90" width="160" height="70" rx="4"/><text class="d-house" x="565.0" y="116" text-anchor="middle">HAS STOPPED</text><text class="d-lbl" x="565.0" y="138" text-anchor="middle">keeps it, tells no more</text>
+      <line x1="175" y1="125" x2="248" y2="125" stroke="#1c1512" stroke-width="1.8" marker-end="url(#f2k)"/>
+      <text class="d-note" x="211" y="112" text-anchor="middle">hears it</text>
+      <line x1="410" y1="125" x2="483" y2="125" stroke="#bf4a26" stroke-width="1.8" marker-end="url(#f2r)"/>
+      <text class="d-note" x="446" y="112" text-anchor="middle" style="fill:#bf4a26">loses interest</text>
+      <path d="M 345 90 C 345 40 315 40 315 88" fill="none" stroke="#1c1512" stroke-width="1.5" marker-end="url(#f2k)"/>
+      <text class="d-note" x="330" y="30" text-anchor="middle">tells one who has not heard: he is now telling too</text>
+      <path d="M 345 160 C 345 205 380 205 380 162" fill="none" stroke="#bf4a26" stroke-width="1.5" marker-end="url(#f2r)"/>
+      <text class="d-note" x="360" y="226" text-anchor="middle">tells one who already knew: may give up</text>
+      <line class="d-faint" x1="20" y1="256" x2="640" y2="256"/>
+      <text class="d-note" x="330" y="280" text-anchor="middle">when no one is still telling, whoever never heard never will</text></svg>
+    </div>
+    <figcaption><b>The telling grows while hearers are new and dies when they are not.</b> A scholar who has not heard becomes a teller on hearing it; a teller who tells someone who already knew may lose interest and stop, keeping the scrap.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p>The same idea comes in several versions, and the paper separates the choices. Does the scholar learn, when he tells, whether the other already knew? In the <span class="coin">attentive</span> version he does, and he loses interest only after an idle telling. In the <span class="coin">blind</span> version he does not: he simply gives up on a toss, whoever he tells. Does he lose interest by chance, or by counting? With a <span class="coin">toss</span> he gives up at the chance of one in his allowance; with a <span class="coin">count</span> he gives up after as many idle tellings as his allowance and not before. Both pairs can be combined, so that a scholar may count blindly.</p>
+
+    <p>Is there anything here that is a plan? No. Nobody decides who tells whom, nobody keeps track of who has heard, and a scholar does not know whether the news has reached everyone; he knows only the last few people he told. If one scholar has the news, a few days later a few have it, and soon many, and then the telling fades. That is quick and cheap. But is every library certain to hear it?</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>When the last scholar stops telling, who is left who never heard?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VI ================= -->
+<section id="s6">
+  <div class="issue"><span class="no">Chapter VI</span><h2>Who Never Hears</h2></div>
+  <div class="prose">
+    <p>The telling runs until no one is still telling, and then it stops for good: a scholar who has stopped does not start again of his own accord. Whoever has not heard by then never will, by this habit. Those libraries are the <span class="coin">residue</span>. How large is it? The paper measures three things, and they pull against each other: the residue, the <span class="coin">tellings</span> per library, which is the traffic, and the delay, both the average days until a library hears and the days until the last one that will hear does.</p>
+
+    <p>Take the plainest version, where a scholar gives up on a toss after an idle telling, at the chance of one in his allowance, and the coast is so large that one library hardly matters. The paper models the telling with two equations for the shares of the coast that have not heard and that are still telling, and solves them. The residue comes out as the share that satisfies a single relation, and it falls <em>exponentially</em> as the allowance grows. With an allowance of one, about a fifth of the coast never hears; with an allowance of two, about a sixteenth. A larger allowance shrinks it further, and no allowance makes it nothing.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that the fraction who never hear satisfies s = e<sup>−(k+1)(1−s)</sup></summary>
+    <ol class="proofsteps">
+      <li>This is the paper's model of §1.4. Let <var>s</var>, <var>i</var>, <var>r</var> be the fractions of the population susceptible, infective and removed, so that <var>s</var> + <var>i</var> + <var>r</var> = 1. A susceptible site becomes infective in proportion to <var>s</var><var>i</var>; an infective site becomes removed at rate (1/<var>k</var>)(1 − <var>s</var>) per unit of <var>i</var>, since it loses interest with probability 1/<var>k</var> when it calls a site that is not susceptible, which happens with probability 1 − <var>s</var>. Hence
+        <div class="mathblock">d<var>s</var>/d<var>t</var> = −<var>s</var><var>i</var>, &emsp; d<var>i</var>/d<var>t</var> = <var>s</var><var>i</var> − (1/<var>k</var>)(1 − <var>s</var>)<var>i</var>.</div></li>
+      <li>Dividing the second by the first removes <var>t</var>: d<var>i</var>/d<var>s</var> = −1 + (1 − <var>s</var>)/(<var>k</var><var>s</var>) = −(<var>k</var> + 1)/<var>k</var> + 1/(<var>k</var><var>s</var>).</li>
+      <li>Integrating, <var>i</var>(<var>s</var>) = −((<var>k</var> + 1)/<var>k</var>)<var>s</var> + (1/<var>k</var>) ln <var>s</var> + <var>c</var>.</li>
+      <li>At the start one site in <var>n</var> is infective, so <var>i</var>(1 − ε) = ε with ε = 1/<var>n</var>. For large <var>n</var>, ε → 0, so <var>i</var>(1) = 0 and <var>c</var> = (<var>k</var> + 1)/<var>k</var>. Hence <var>i</var>(<var>s</var>) = ((<var>k</var> + 1)/<var>k</var>)(1 − <var>s</var>) + (1/<var>k</var>) ln <var>s</var>.</li>
+      <li>The epidemic ends when <var>i</var> = 0, that is when ln <var>s</var> = −(<var>k</var> + 1)(1 − <var>s</var>), so the residue satisfies <var>s</var> = <var>e</var><sup>−(<var>k</var>+1)(1−<var>s</var>)</sup>. For <var>k</var> = 1 the solution is about 0.20 and for <var>k</var> = 2 about 0.06, as the paper states.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>The paper then runs the variants on a coast of a thousand libraries and sets the results side by side. A scholar who is blind and gives up on a toss leaves far more of the coast without the news than one who is attentive and counts idle tellings, for the same allowance, but tells far less; the paper adds that counting matters more to the residue than being attentive does. The picture is the same in every version: the residue falls steeply, and each fall costs more tellings.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 348" role="img" aria-label="Chart on a log scale of the share of libraries that never hear a piece of news, against how long a scholar keeps telling. When a blind scholar gives up on a toss, the share falls from nearly all to under one in a hundred as the allowance grows from one to five, at a cost of up to five tellings per library. When an attentive scholar counts fruitless tellings and gives up at the allowance, the share falls from about one in five to about one in a thousand over the same range, at a cost of up to seven tellings per library.">
+      <line class="d-faint" x1="170" y1="60" x2="650" y2="60"/><text class="d-key" x="162" y="64" text-anchor="end">all of them</text>
+      <line class="d-faint" x1="170" y1="122" x2="650" y2="122"/><text class="d-key" x="162" y="126" text-anchor="end">one in ten</text>
+      <line class="d-faint" x1="170" y1="184" x2="650" y2="184"/><text class="d-key" x="162" y="188" text-anchor="end">one in a hundred</text>
+      <line class="d-faint" x1="170" y1="246" x2="650" y2="246"/><text class="d-key" x="162" y="250" text-anchor="end">one in a thousand</text>
+      <text class="d-key" x="200" y="278" text-anchor="middle">allowance 1</text>
+      <text class="d-key" x="300" y="278" text-anchor="middle">allowance 2</text>
+      <text class="d-key" x="400" y="278" text-anchor="middle">allowance 3</text>
+      <text class="d-key" x="500" y="278" text-anchor="middle">allowance 4</text>
+      <text class="d-key" x="600" y="278" text-anchor="middle">allowance 5</text>
+      <polyline points="200,61.1 300,103.3 400,135.8 500,164 600,190" fill="none" stroke="#136f9e" stroke-width="2"/><circle cx="200" cy="61.1" r="4" fill="#136f9e"/><circle cx="300" cy="103.3" r="4" fill="#136f9e"/><circle cx="400" cy="135.8" r="4" fill="#136f9e"/><circle cx="500" cy="164" r="4" fill="#136f9e"/><circle cx="600" cy="190" r="4" fill="#136f9e"/>
+      <polyline points="200,106.2 300,148.8 400,181.4 500,211.5 600,241.1" fill="none" stroke="#bf4a26" stroke-width="2"/><circle cx="200" cy="106.2" r="4" fill="#bf4a26"/><circle cx="300" cy="148.8" r="4" fill="#bf4a26"/><circle cx="400" cy="181.4" r="4" fill="#bf4a26"/><circle cx="500" cy="211.5" r="4" fill="#bf4a26"/><circle cx="600" cy="241.1" r="4" fill="#bf4a26"/>
+      <text class="d-lbl" x="314" y="89.3" style="fill:#136f9e">blind, tossing</text>
+      <text class="d-lbl" x="500" y="237.5" text-anchor="middle" style="fill:#bf4a26">attentive, counting</text>
+      <text class="d-key" x="20" y="298">tellings per library</text><text class="d-key" x="20" y="316">blind, tossing</text><text class="d-key" x="20" y="334">attentive, counting</text>
+      <text class="d-num" x="200" y="316" text-anchor="middle" style="fill:#136f9e">0.04</text><text class="d-num" x="200" y="334" text-anchor="middle" style="fill:#bf4a26">1.7</text>
+      <text class="d-num" x="300" y="316" text-anchor="middle" style="fill:#136f9e">1.6</text><text class="d-num" x="300" y="334" text-anchor="middle" style="fill:#bf4a26">3.3</text>
+      <text class="d-num" x="400" y="316" text-anchor="middle" style="fill:#136f9e">2.8</text><text class="d-num" x="400" y="334" text-anchor="middle" style="fill:#bf4a26">4.5</text>
+      <text class="d-num" x="500" y="316" text-anchor="middle" style="fill:#136f9e">3.9</text><text class="d-num" x="500" y="334" text-anchor="middle" style="fill:#bf4a26">5.6</text>
+      <text class="d-num" x="600" y="316" text-anchor="middle" style="fill:#136f9e">4.9</text><text class="d-num" x="600" y="334" text-anchor="middle" style="fill:#bf4a26">6.7</text>
+      <text class="d-note" x="410" y="36" text-anchor="middle">libraries that never hear, by how long a scholar keeps telling</text></svg>
+    </div>
+    <figcaption><b>Telling longer shrinks the residue, never to nothing.</b> An attentive scholar who counts leaves far fewer without the news than a blind one who tosses, for the same allowance, and costs more tellings; each step up in the allowance buys a smaller gain than the one before.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p>The rows under the figure are the paper's own measures: with counting, an allowance of one leaves about 18 libraries in a hundred without the news at 1.7 tellings per library, an allowance of three about 1 in a hundred at 4.5, and an allowance of five about 1 in a thousand at 6.7. Delay changes little. On average a library hears in some eleven to thirteen days with counting and in fourteen to nineteen with tosses, and the last library to hear does so in about seventeen days with counting and over thirty with tosses.</p>
+
+    <p>Is that a coincidence, that every version costs the same for the same residue? It is not. In every version, the residue and the number of tellings per library go together in one way, the residue is about <em>one over the exponential of the tellings per library</em>: 1.7 tellings leave a fifth, 3.3 leave about a twenty-seventh, 6.7 about a thousandth. Why? Because the scrap is told to a library about as often as chance picks it, and a library is missed only if chance never picks it in all the tellings there are. So the delay is the only thing that tells the versions apart; the residue is bought with tellings, at the same price in every version.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Argument — that s = e<sup>−m</sup> in every version of rumour mongering</summary>
+    <ol class="proofsteps">
+      <li>The paper gives this argument in §1.4 and says it is not fully proved. Let <var>m</var> be the average number of updates sent from a site, so the epidemic sends <var>n</var><var>m</var> updates in all.</li>
+      <li>Each update is addressed to a site chosen uniformly, so a given site is not chosen by any one with probability 1 − 1/<var>n</var>.</li>
+      <li>If the updates were independent, the probability that a given site is chosen by none of them is (1 − 1/<var>n</var>)<sup><var>n</var><var>m</var></sup>, which tends to <var>e</var><sup>−<var>m</var></sup> as <var>n</var> grows. This probability is the residue <var>s</var>.</li>
+      <li>The step that is not proved is that <var>m</var> may be treated as a constant: it varies from site to site, and the relation holds only if its spread about the mean goes to zero as <var>n</var> → ∞. The authors observe this empirically and have not proved it.</li>
+      <li>Table 1 agrees with the relation: <var>m</var> = 1.7 gives <var>e</var><sup>−1.7</sup> ≈ 0.18 and <var>m</var> = 3.3 gives ≈ 0.037.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>So the residue can be made as small as one likes, at a price, and is never nothing. A scholar can be told he must tell, or asked to tell, in more than one way. Is there a way of running the telling that does better than the price every version here pays?</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>Does it matter whether a scholar tells or asks, as it did at the festival?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VII ================= -->
+<section id="s7">
+  <div class="issue"><span class="no">Chapter VII</span><h2>Telling, Asking and Crowded Days</h2></div>
+  <div class="prose">
+    <p>At the festival, asking beat giving for the last few libraries. In the stoa the same two ways exist. A scholar who is <span class="coin">telling</span> goes to the one he meets and gives him his scraps. A scholar who is <span class="coin">asking</span> goes to the one he meets and says <i>what is new?</i> Whichever of the two meets the other, a scrap changes hands. Does asking do better here too? Yes, and by a good deal: the share who never hear falls much faster than the one-over-exponential price that telling pays. With an attentive scholar who counts, the paper's trials leave about 3 libraries in a hundred without the news at an allowance of one, at 2.7 tellings per library; about 6 in ten thousand at an allowance of two; about 4 in a million at three.</p>
+
+    <p>Why is telling used at all? Because it depends on how many things there are to tell. If many scraps are going round, a scholar who asks is nearly sure to meet someone with something to say, and asking works. If the coast is quiet and there is nothing new, a telling scholar has nothing to say and says nothing, which costs no breath; an asking scholar goes on asking, and every day's asking is wasted. So asking suits a busy coast and telling a quiet one. A scholar can also do both, and meet one who does both: if both already knew the scrap, only the one who has told it fewer times is counted as having wasted a telling, and if both have told it equally, both are. That gives the smallest residue the paper reports, and it costs a scholar telling his count as well as his scrap.</p>
+
+    <p>What if a scholar can speak with only so many people in a day? That changes the two ways in opposite directions. When only one scrap is going round and a scholar can be spoken to by only one at a time, two scholars who both pick the same listener are not both heard: one is turned away. The listener still gets the scrap, with one fewer telling, so telling gets <em>better</em>, since the turned-away telling would have been a wasted one. Asking gets <em>worse</em>, because its strength was that every scholar lacking the news asks every day and is answered, and a limit means some askings are refused, so that a library refused day after day can miss the news. The chance is small with a modest limit, since the chance of a scholar being asked by as many as some given number in a day falls away very fast with that number (the paper gives it as one over e times the number's factorial). What a turned-away scholar can do is to <span class="coin">hunt</span>: choose another listener. Hunting is cheap and helps in every limited case, and with a limit of one speaker a day and hunting without end, every scholar ends up paired with one other, as at the festival, so telling and asking become the same and the residue is very small.</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>However well the telling is run, some libraries may be left. What does the coast do about them?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= VIII ================= -->
+<section id="s8">
+  <div class="issue"><span class="no">Chapter VIII</span><h2>The Festival Behind the Gossip</h2></div>
+  <div class="prose">
+    <p>The two habits cover for each other. The telling is quick and cheap and may leave a few libraries; the festival is slow and dear and leaves none. So the coast does both: the scrap is told in the stoa, and then, at the festival, whichever pairs find a difference put it right. Does the telling ever get so far wrong that the festival cannot catch up? It can fail outright: the last teller can stop while some libraries have not heard, and the scrap is then held by some libraries and not by others for ever, unless something else carries it. The festival is that something else. Run rarely, since it costs so much, it brings every library the scrap with certainty in the end, so that every update reaches every library or is replaced by a newer one.</p>
+
+    <p>When two copyists at the festival find that one holds a scrap the other lacks, what should they do besides put it right? The cautious reply is nothing more: the festival will in time carry it to everyone. The bolder reply is to treat the scrap as news again, and have the pair tell it afresh to others, which is wanted if the telling had failed altogether. If they redistribute by letters, the cost can be very high. In the worst case, news that has reached about half the coast makes every one of those libraries write to every library at the next festival, which is the square of the number of libraries in letters. If they redistribute by word of mouth, the cost is small. Why? Because a scrap already known to nearly everyone is soon dropped by a scholar who tells it, as everyone he meets knew it; and when the scrap is known to half the coast, a great many scholars start telling it at once, which costs less than starting it from one scholar.</p>
+
+    <p>The paper adds a combination that cannot fail. Each library keeps its recent scraps on a list ordered by how lately each was useful, not by tally; a scrap that proves new to the one told moves to the head of the list, and one that proves old slips down. At a meeting the pair swap scraps from the head of their lists in batches until their catalogue marks agree. This keeps the scrap going while it is still news, needs no second scroll of tallies, and since it goes on until the marks agree, has no chance of leaving a library out; and it deals sensibly with a coast that is cut in two for a while and joined again.</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>All of this spreads an edition. How can anyone spread the news that a work is gone?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= IX ================= -->
+<section id="s9">
+  <div class="issue"><span class="no">Chapter IX</span><h2>Withdrawing a Work</h2></div>
+  <div class="prose">
+    <p>Suppose the coast decides a work is wrong and should be struck from every shelf. Can Demerios simply remove it from his own library and let the others follow? No, and the reason is the whole of this chapter. At the next meeting, the pair compare: his library holds nothing of the work, the other holds an edition of it. The rule is that a library takes the other's edition when it has none or an older one, so the meeting gives the work back to him. Every habit so far spreads what is <em>present</em>; none spreads an absence. Left alone, the old edition spreads over the coast again from any library that did not strike it in time.</p>
+
+    <p>The remedy is to make the absence something that can be carried. In place of a struck work, the library writes a <span class="coin">notice of withdrawal</span>: a slip that names the work and carries a tally, like an edition. It is spread by the same habits as an edition, and whenever an old edition meets a notice with a newer tally, the old edition is struck and the notice stays. So a withdrawal is spread as any news is, and cancels every older copy it meets.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 346" role="img" aria-label="Two panels. Without a notice: Library 1 strikes a work off its shelf, Library 2 still holds the old edition, and at the festival Library 2 hands the old edition to Library 1, so the work is back. With a notice: Library 1 keeps a notice of withdrawal with a tally newer than the old edition; at the festival the notice is handed to Library 2, which strikes its old edition, so the work is withdrawn everywhere in the end.">
+      <defs><marker id="f4b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/></marker><marker id="f4r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/></marker></defs>
+      <text class="d-house" x="165" y="26" text-anchor="middle">WITH NO NOTICE</text><text class="d-house" x="60" y="56" text-anchor="middle">LIBRARY 1</text><line class="d-lifeline" x1="60" y1="66" x2="60" y2="300"/><text class="d-house" x="270" y="56" text-anchor="middle">LIBRARY 2</text><line class="d-lifeline" x1="270" y1="66" x2="270" y2="300"/><circle class="d-ev-hi" cx="60" cy="108" r="5"/><text class="d-lbl" x="70" y="104">withdraws the work</text><text class="d-num" x="70" y="124" style="fill:#bf4a26">simply strikes it off</text><circle class="d-ev" cx="270" cy="160" r="5"/><text class="d-lbl" x="260" y="164" text-anchor="end">holds the old edition</text><line class="d-faint" x1="20" y1="200" x2="310" y2="200"/><text class="d-note" x="165" y="194" text-anchor="middle">the festival</text><line x1="266" y1="236" x2="66" y2="244" stroke="#bf4a26" stroke-width="2" marker-end="url(#f4r)"/><text class="d-lbl" x="165" y="228" text-anchor="middle" style="fill:#bf4a26">old edition handed over</text><circle class="d-ev-hi" cx="60" cy="248" r="5"/><text class="d-num" x="70" y="270" style="fill:#bf4a26">the work is back</text><text class="d-note" x="165" y="326" text-anchor="middle">the absence spread nowhere</text>
+      <text class="d-house" x="495" y="26" text-anchor="middle">WITH A NOTICE</text><text class="d-house" x="390" y="56" text-anchor="middle">LIBRARY 1</text><line class="d-lifeline" x1="390" y1="66" x2="390" y2="300"/><text class="d-house" x="600" y="56" text-anchor="middle">LIBRARY 2</text><line class="d-lifeline" x1="600" y1="66" x2="600" y2="300"/><circle class="d-ev-hi" cx="390" cy="108" r="5"/><text class="d-lbl" x="400" y="104">withdraws the work</text><text class="d-num" x="400" y="124">keeps a notice</text><circle class="d-ev" cx="600" cy="160" r="5"/><text class="d-lbl" x="590" y="164" text-anchor="end">holds the old edition</text><line class="d-faint" x1="350" y1="200" x2="640" y2="200"/><text class="d-note" x="495" y="194" text-anchor="middle">the festival</text><line x1="394" y1="236" x2="594" y2="244" stroke="#136f9e" stroke-width="1.8" marker-end="url(#f4b)"/><text class="d-lbl" x="495" y="228" text-anchor="middle" style="fill:#136f9e">notice handed over</text><circle class="d-ev" cx="600" cy="248" r="5"/><text class="d-num" x="590" y="270" text-anchor="end">old edition struck</text><text class="d-note" x="495" y="326" text-anchor="middle">withdrawn everywhere, in the end</text>
+      <line class="d-faint" x1="330" y1="14" x2="330" y2="340"/></svg>
+    </div>
+    <figcaption><b>An absence has to be written down to travel.</b> A library that only strikes a work off its shelf is handed it back at the first meeting; a library that keeps a notice hands the notice on and the old edition is struck.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p>What does that cost? Notices pile up. A library cannot keep every notice for ever, or they will fill its shelves. When can a notice be thrown away? The first answer is: when every library has received it. That is exactly the kind of knowledge nobody on the coast has, since it asks everyone to be heard from; a method for it exists, but it needs every library to answer, and on a coast of hundreds there is nearly always some library closed or cut off for days. The second answer is the plain one: throw a notice away after a fixed span, a month say. But then an old edition older than the span that turns up after the notice is gone is let back in. There is a plain trade: a longer span lessens the risk and uses more shelf.</p>
+
+    <p>Can the span be made far longer without filling the shelves? Yes, by <span class="coin">dormant notices</span>. When a notice is written, it also names a few <span class="coin">keepers</span>, libraries drawn by lot from the coast, and it spreads in the ordinary way. After a first span, most libraries throw the notice away, but the keepers it names keep a copy, <span class="coin">asleep</span>: a sleeping notice is not carried to others at meetings. After a second span the keepers discard it as well. If an old edition older than the notice now turns up at a library that holds a sleeping copy, the notice wakes and is spread afresh to every library, and cancels the old edition. The paper compares it to an immune reaction, with the woken notices as antibodies. The gain is large: for the same shelf space the history that can be kept is longer by a factor that grows with the number of libraries, from a month to years.</p>
+
+    <p>When a notice wakes, what tally does it carry? The obvious answer is a fresh one, but that is wrong. Somewhere on the coast there may be a legitimate later edition, written after the notice to bring the work back, and a notice with a fresh tally would strike that edition too. So a notice carries <em>two</em> tallies. The first never changes: it says when the work was withdrawn, and an edition is cancelled only if its tally is lower than this. The second is the <span class="coin">waking tally</span>: it says when the notice was last awake, and it alone decides whether the notice is asleep and whether it is carried. Waking a notice sets the second tally to now and leaves the first alone, so the notice is spread afresh without cancelling anything written after the work was withdrawn.</p>
+  </div>
+
+  <details class="proof">
+    <summary>Proof — that reactivating by the activation timestamp cancels no later update</summary>
+    <ol class="proofsteps">
+      <li>This is the argument of §2.2, set out. A death certificate carries an ordinary timestamp <var>t</var> and an activation timestamp <var>a</var>, equal when created.</li>
+      <li>The rule of cancellation uses only <var>t</var>: a certificate cancels an item with timestamp <var>u</var> exactly when <var>t</var> &gt; <var>u</var>. The rule of propagation uses only <var>a</var>: the certificate is dormant, and so not propagated by anti-entropy, once <var>a</var> is older than <var>τ₁</var>, and is deleted once <var>a</var> is older than <var>τ₁</var> + <var>τ₂</var>.</li>
+      <li>Suppose a site has a legitimate item with timestamp <var>u</var> &gt; <var>t</var>, an update that reinstated the item after its deletion. The certificate has <var>t</var> &lt; <var>u</var>, so it does not cancel it.</li>
+      <li>Reactivating a certificate sets <var>a</var> to the current time and leaves <var>t</var> unchanged. The cancellation test is unchanged, so the reactivated certificate still fails to cancel any item with <var>u</var> &gt; <var>t</var>, while the new <var>a</var> lets it propagate.</li>
+      <li>By contrast, had reactivation set <var>t</var> to the current time, a certificate with <var>t′</var> &gt; <var>u</var> would cancel the reinstating update, which is incorrect.<span class="qed">∎</span></li>
+    </ol>
+  </details>
+
+  <div class="prose">
+    <p>Does the scheme scale for ever? It does not. The time a new notice takes to reach the coast grows with its size, and the first span does not. While the first span is longer than that time, a notice is almost never needed again once it has been put to sleep, and wakings are rare. When the coast grows until the time exceeds the span, wakings become common, each one adds traffic that slows the next notice further, and the habit breaks down altogether. To avoid it, the first span, and so the shelf space each library gives to notices, has to grow as the logarithm of the size of the coast.</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>All these meetings are by lot, every library as likely as any other. Does that suit a coast that is not an even plain?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= X ================= -->
+<section id="s10">
+  <div class="issue"><span class="no">Chapter X</span><h2>Near Partners and the Ferry</h2></div>
+  <div class="prose">
+    <p>The coast is not an even plain. Most libraries lie along the coast road within walking distance of their neighbours, but an inlet cuts off a few of them from the rest, and the only crossing is a ferry. The few libraries across the ferry draw nearly all their partners from the other side, and each of the many on this side has a small chance of drawing one of them, so that added up the ferry carries far more meetings than any road. What would be better? The paper's answer is to <span class="coin">prefer nearer partners</span>.</p>
+
+    <figure class="panel"><img src="../../assets/img/panels/spreading-by-word-of-mouth/p04-coast.jpg" width="1200" height="900" loading="lazy"
+         alt="The coast seen from above: libraries scattered among olive groves and joined by footpaths, with the stoa and its festival ground beside the water."></figure>
+
+    <p>How much nearer? The paper starts with libraries strung along one road. If every scholar picks only his nearest neighbour, the roads carry little, but the news takes as many days as there are libraries to creep along the road. If he picks anyone by lot, the news is quick, but the traffic through any stretch of road grows with the number of libraries. It tried a chance of picking a library that falls with its distance as some power of the distance, and found a clear pattern: the heavier the preference for the near, the lighter the traffic per stretch of road, and the slower the news. Its analysis, which it calls informal for the time the news takes, suggests the best balance on a line is a chance falling with the square of the distance: the traffic on a stretch of road then grows only with the logarithm of the number of libraries.</p>
+
+    <p>A coast is not a line, so how is "near" measured? Each library makes a list of the others in order of distance and draws partners from the list, with chance falling with the square of a library's <em>place in the list</em>, not of its distance, so that where the coast is thickly settled the near ones get most of the chance and where it is thin the chance spreads further. Libraries at the same distance are given the same chance. This works on lines, on plains and on odd shapes, because "the number of libraries nearer" measures how crowded a place is wherever it is.</p>
+
+    <p>What did it gain, on the real network of the paper? In the paper's trials on a coast with one such crossing, the crossing carried about 76 meetings a round when partners were picked by lot, against about 6 on an average road; with the preference for near partners it carried 2.4. The ferry got more than thirty times less traffic, and the traffic on an average road fell about four times, at the cost of news taking less than twice as long to reach the last library. The coast could therefore meet twice as often for the same load. The authors had the improved habit installed in the system they studied, and the load and the disagreement between copies both fell.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 340" role="img" aria-label="Three pairs of bars comparing partners chosen by lot from the whole coast with partners chosen nearer first. Meetings on the ferry each round fall from 75.7 to 2.4; meetings on an average road fall from 5.9 to 1.4; rounds until the last library hears rise from 7.8 to 13.3.">
+      <text class="d-house" x="20" y="30">MEETINGS ON THE FERRY EACH ROUND</text>
+      <rect x="200" y="44" width="267.86153846153843" height="22" fill="#136f9e" opacity=".85"/><text class="d-num" x="475.86153846153843" y="60" style="fill:#1c1512">75.7</text><text class="d-key" x="192" y="60" text-anchor="end">anyone by lot</text>
+      <rect x="200" y="74" width="8.49230769230769" height="22" fill="#bf4a26" opacity=".85"/><text class="d-num" x="216.4923076923077" y="90" style="fill:#1c1512">2.4</text><text class="d-key" x="192" y="90" text-anchor="end">nearer first</text>
+      <text class="d-house" x="20" y="132">MEETINGS ON AN AVERAGE ROAD EACH ROUND</text>
+      <rect x="200" y="146" width="20.876923076923077" height="22" fill="#136f9e" opacity=".85"/><text class="d-num" x="228.87692307692308" y="162" style="fill:#1c1512">5.9</text><text class="d-key" x="192" y="162" text-anchor="end">anyone by lot</text>
+      <rect x="200" y="176" width="4.953846153846153" height="22" fill="#bf4a26" opacity=".85"/><text class="d-num" x="212.95384615384614" y="192" style="fill:#1c1512">1.4</text><text class="d-key" x="192" y="192" text-anchor="end">nearer first</text>
+      <text class="d-house" x="20" y="234">ROUNDS UNTIL THE LAST LIBRARY HEARS</text>
+      <rect x="200" y="248" width="82.79999999999998" height="22" fill="#136f9e" opacity=".85"/><text class="d-num" x="290.79999999999995" y="264" style="fill:#1c1512">7.8</text><text class="d-key" x="192" y="264" text-anchor="end">anyone by lot</text>
+      <rect x="200" y="278" width="141.18461538461537" height="22" fill="#bf4a26" opacity=".85"/><text class="d-num" x="349.18461538461537" y="294" style="fill:#1c1512">13.3</text><text class="d-key" x="192" y="294" text-anchor="end">nearer first</text>
+      <text class="d-note" x="330" y="326" text-anchor="middle">the ferry gets thirty times less; the news is under twice as slow</text></svg>
+    </div>
+    <figcaption><b>Preferring the near spares the ferry.</b> Picking partners nearer first cuts the ferry's load by more than thirty times and an average road's by about four, and slows the last library's hearing by less than two.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p>Is the preference safe for the festival and for the gossip alike? For the festival, yes: so long as every pair has some chance of being paired, every library will in time meet every other. For word of mouth, no, because the telling runs out. The paper gives two small coasts that show it. In the first, two libraries lie close together and a little further from many others that are all equally far from both. If the allowance is smaller than the number of those others, there is a good chance that the two will pick each other as many times in a row as the allowance, and if the news is born at either of them, it stops there. In the second, one library lies beyond a long stretch from the root of a great branching tree of others. In the tree, few will ever pick the lone library in the time a scrap stays warm, and the news may never reach it before it stops being told. The remedy is to raise the allowance as the preference grows. That works well for telling and asking together; telling alone is far more sensitive, and the paper's trial of it needed an allowance of thirty-six. The plain safeguard is the festival behind the gossip.</p>
+  </div>
+
+  <figure class="diagram">
+    <div class="board">
+      <svg viewBox="0 0 660 316" role="img" aria-label="Two libraries close together, one holding a new scrap, and many libraries a long way off, all alike in distance from the pair. A scholar who prefers near partners keeps choosing his neighbour, and if he does so as many times as his allowance of fruitless tellings, he gives up before the news has left the pair.">
+      <defs><marker id="f5r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto"><path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/></marker></defs>
+      <circle cx="95" cy="150" r="9" fill="#1c1512"/><circle cx="205" cy="150" r="9" fill="#bf4a26"/>
+      <text class="d-lbl" x="95" y="238" text-anchor="middle">near neighbour</text><text class="d-lbl" x="205" y="238" text-anchor="middle" style="fill:#bf4a26">has the news</text>
+      <path d="M 102 140 C 120 90 180 90 198 140" fill="none" stroke="#bf4a26" stroke-width="1.8" marker-end="url(#f5r)"/>
+      <path d="M 198 160 C 180 210 120 210 102 160" fill="none" stroke="#1c1512" stroke-width="1.5" marker-end="url(#f5r)" stroke-dasharray="4 3"/>
+      <line class="d-faint" x1="250" y1="40" x2="250" y2="270"/>
+      <text class="d-note" x="250" y="30" text-anchor="middle">a long way off</text>
+      <circle cx="330" cy="62" r="7" fill="#b9a77e" stroke="#1c1512" stroke-width="1"/>
+      <circle cx="380" cy="94" r="7" fill="#b9a77e" stroke="#1c1512" stroke-width="1"/>
+      <circle cx="330" cy="126" r="7" fill="#b9a77e" stroke="#1c1512" stroke-width="1"/>
+      <circle cx="420" cy="158" r="7" fill="#b9a77e" stroke="#1c1512" stroke-width="1"/>
+      <circle cx="370" cy="190" r="7" fill="#b9a77e" stroke="#1c1512" stroke-width="1"/>
+      <circle cx="320" cy="222" r="7" fill="#b9a77e" stroke="#1c1512" stroke-width="1"/>
+      <circle cx="410" cy="254" r="7" fill="#b9a77e" stroke="#1c1512" stroke-width="1"/>
+      <text class="d-lbl" x="520" y="130">the many</text><text class="d-note" x="520" y="150">each far from both,</text><text class="d-note" x="520" y="166">alike in distance</text>
+      <text class="d-note" x="330" y="296" text-anchor="middle">if the two choose each other as often as the allowance runs, the news stops there</text></svg>
+    </div>
+    <figcaption><b>Telling the neighbour again is how news is lost.</b> If two near libraries keep choosing each other, the scrap is dropped before it leaves the pair; only the festival behind the gossip is certain to carry it on.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p class="hook"><em>What, in the end, does all this promise, and what does it only hope for?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= XI ================= -->
+<section id="s11">
+  <div class="issue"><span class="no">Chapter XI</span><h2>What It Does Not Say</h2></div>
+  <div class="prose">
+    <p>Does the coast promise that news reaches every library within a number of days? No. Because every choice is by lot, nothing can be said such as <i>the news will arrive in so many days</i>. The most that can be said is that, if no one writes any more, the chance that the news has still not reached everyone falls exponentially as time passes. The authors take this as a fair price for habits that are simple to carry out correctly.</p>
+
+    <p>Does telling alone reach everyone? No: it leaves a residue that can be made small and never empty, and a set of small cases where it fails badly. Only the festival behind it guarantees every library in the end, and the guarantee is that every edition arrives or is replaced by a newer one, with probability one, not by a day.</p>
+
+    <p>Does the coast ever agree completely? Only when no one writes any more. While scholars keep writing, there are always libraries behind, and a reader of any one of them may be handed an out-of-date edition. How likely and how far behind is a different question, which the next book on the coast takes up.<sup class="xref"><a href="../probably-up-to-date/index.html" title="Probably Up to Date">*</a></sup></p>
+
+    <p>What does it do when two scholars write different editions of one work? It keeps the one with the larger tally and throws the other away. It does not combine them, and nothing in it considers whether the loser had something the winner lacked. All that the habits spread is the edition whose tally is larger. The habits compare numbers and nothing else. Whether the larger tally is the edition the scholars meant to keep depends on how tallies are given, and the paper warns that its method wants tallies close to the true time of writing: otherwise the habits work as written, and the coast still agrees in the end, but not in the way anyone would want.</p>
+
+    <p>And what is left unsolved? Awkward shapes of the coast, which can ruin the gossip and which the authors say they do not yet understand; whether a fixed span for notices can be avoided; and whether some libraries should be set above others, so that those on high talk to each other across the long distances and those below to their neighbours. The authors leave that open, since the trouble with it is keeping the order in place.</p>
+  </div>
+  <div class="prose">
+    <p class="hook"><em>Which of these ideas stand for which parts of the paper?</em></p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ================= XII ================= -->
+<section id="s12">
+  <div class="issue"><span class="no">Chapter XII</span><h2>In the Book, In the Paper</h2></div>
+  <div class="table-wrap">
     <table class="chron">
-      <thead><tr><th>In this book</th><th>In the paper</th><th>Also in</th></tr></thead>
+      <thead><tr><th>In the book</th><th>In the paper</th></tr></thead>
       <tbody>
-        <tr><td><b>the libraries along the coast, each holding copies of the works</b></td><td>Sites, each with a replica of the database.</td><td></td></tr>
-        <tr><td><b>a work's text, carrying the tally of its edition; the newer edition wins</b></td><td>A database entry with its timestamp.</td><td>The tallies of the tally house (<i>Ordering Without Clocks</i>)</td></tr>
-        <tr><td><b>a scrap of papyrus with a new learning</b></td><td>An update.</td><td></td></tr>
-        <tr><td><b>letters to every library at once</b></td><td>Direct mail: n messages, some lost, and the sender may not know every site.</td><td>Slips on Arche's road</td></tr>
-        <tr><td><b>the scholar in the stoa telling whoever he meets while the news is fresh</b></td><td>Rumour mongering: an infective site.</td><td></td></tr>
-        <tr><td><b>losing interest: after meeting k who already knew, or at a toss</b></td><td>Loss of interest: feedback or blind, counter or coin.</td><td>The coin of <i>Agreeing by Chance</i>, used differently</td></tr>
-        <tr><td><b>telling, asking, or both</b></td><td>Push, pull, push-pull.</td><td></td></tr>
-        <tr><td><b>the libraries the news never reached</b></td><td>The residue.</td><td></td></tr>
-        <tr><td><b>the festival: pairs of copyists compare whole collections and keep the newer edition of each work</b></td><td>Anti-entropy, a simple epidemic that reaches everyone.</td><td></td></tr>
-        <tr><td><b>comparing catalogues first, and the list of recent editions</b></td><td>Checksums and recent-update lists, which make anti-entropy cheap.</td><td></td></tr>
-        <tr><td><b>a notice of withdrawal: "this work is withdrawn, as of tally t"</b></td><td>A death certificate: a deletion must travel like an update, or an old copy brings the work back.</td><td></td></tr>
-        <tr><td><b>the old notice kept by only a few libraries, woken when a stale copy turns up</b></td><td>Dormant death certificates and reactivation.</td><td></td></tr>
-        <tr><td><b>preferring partners close by</b></td><td>Spatial distributions.</td><td>The courier routes of differing length, which the ground provides</td></tr>
-        <tr><td><b>the traffic on the one long route</b></td><td>Traffic on critical links.</td><td></td></tr>
+        <tr><td><span class="term">the libraries along the coast, each holding copies</span></td><td>Sites, each storing a replica of the database. <span class="paper">§1.1.</span></td></tr>
+        <tr><td><span class="term">a work in the common scroll of learnings</span></td><td>A key of the database. <span class="paper">§1.1.</span></td></tr>
+        <tr><td><span class="term">an edition; its tally; the larger tally wins</span></td><td>A value with a timestamp; the larger timestamp supersedes. <span class="paper">§1.1.</span></td></tr>
+        <tr><td><span class="term">writing a new edition at one's own library</span></td><td>Update[v]: the one client operation, at one site. <span class="paper">§1.1.</span></td></tr>
+        <tr><td><span class="term">a scrap of papyrus with a learning</span></td><td>An update. <span class="paper">§0.</span></td></tr>
+        <tr><td><span class="term">letters to every library</span></td><td>Direct mail: n messages per update, unreliable, and the sender may not know every site. <span class="paper">§1.2.</span></td></tr>
+        <tr><td><span class="term">the festival: pairs by lot compare whole collections</span></td><td>Anti-entropy: a simple epidemic that reaches every site with probability 1. <span class="paper">§1.3, §3.2.</span></td></tr>
+        <tr><td><span class="term">giving, asking, or both</span></td><td>Push, pull, push-pull. <span class="paper">§1.3.</span></td></tr>
+        <tr><td><span class="term">asking squares the share still without it; giving scales it</span></td><td>Pull: p<sub>i+1</sub> = p<sub>i</sub>²; push: p<sub>i</sub>(1 − 1/n)<sup>n(1−p<sub>i</sub>)</sup>. <span class="paper">§1.3.</span></td></tr>
+        <tr><td><span class="term">the catalogue mark</span></td><td>A checksum of the database, updated incrementally. <span class="paper">§1.3.</span></td></tr>
+        <tr><td><span class="term">the recent list; a span longer than the news needs</span></td><td>The recent update list and the window T. <span class="paper">§1.3.</span></td></tr>
+        <tr><td><span class="term">newest first until the marks agree</span></td><td>Peel back, with an index by timestamp. <span class="paper">§1.3.</span></td></tr>
+        <tr><td><span class="term">drawing a name by lot</span></td><td>Choosing a partner uniformly at random. <span class="paper">§1.3.</span></td></tr>
+        <tr><td><span class="term">the scholars in the stoa; a day's meeting</span></td><td>Rumor mongering, a complex epidemic, in cycles. <span class="paper">§1.4.</span></td></tr>
+        <tr><td><span class="term">the hot tablet</span></td><td>The infective list of updates a site is sharing. <span class="paper">§1.4.</span></td></tr>
+        <tr><td><span class="term">has not heard; still telling; has stopped</span></td><td>Susceptible, infective, removed. <span class="paper">§1.4.</span></td></tr>
+        <tr><td><span class="term">the allowance; losing interest</span></td><td>The parameter k: loss of interest with probability 1/k, or after k unnecessary contacts. <span class="paper">§1.4.</span></td></tr>
+        <tr><td><span class="term">attentive or blind; toss or count</span></td><td>Feedback or blind; coin or counter. <span class="paper">§1.4.</span></td></tr>
+        <tr><td><span class="term">those who never hear</span></td><td>The residue s. <span class="paper">§1.4.</span></td></tr>
+        <tr><td><span class="term">tellings per library; days to hear</span></td><td>Traffic m; delay t<sub>ave</sub> and t<sub>last</sub>. <span class="paper">§1.4.</span></td></tr>
+        <tr><td><span class="term">the residue is one over the exponential of the tellings</span></td><td>s = e<sup>−m</sup>, shared by the variations; not fully proved. <span class="paper">§1.4.</span></td></tr>
+        <tr><td><span class="term">telling and asking, on busy and quiet coasts</span></td><td>Push versus pull in rumor mongering; pull has s = e<sup>−Θ(m³)</sup>. <span class="paper">§1.4.</span></td></tr>
+        <tr><td><span class="term">both sides' counts, only the lower one added</span></td><td>Minimization. <span class="paper">§1.4.</span></td></tr>
+        <tr><td><span class="term">a limit on speakers per day; hunting for another</span></td><td>Connection limit and hunting. <span class="paper">§1.4.</span></td></tr>
+        <tr><td><span class="term">the festival behind the gossip; telling a found difference afresh</span></td><td>Backing up a complex epidemic with anti-entropy; redistribution. <span class="paper">§1.5.</span></td></tr>
+        <tr><td><span class="term">the list kept in order of use; swapping batches until the marks agree</span></td><td>Peel back combined with rumor mongering by a doubly-linked list. <span class="paper">§1.5.</span></td></tr>
+        <tr><td><span class="term">a notice of withdrawal</span></td><td>A death certificate. <span class="paper">§2.</span></td></tr>
+        <tr><td><span class="term">a fixed span; asking whether everyone has the notice</span></td><td>A fixed threshold; Sarin and Lynch's snapshot-based discarding. <span class="paper">§2.</span></td></tr>
+        <tr><td><span class="term">the keepers named by lot; a sleeping notice; the first and second spans</span></td><td>Dormant death certificates; retention sites; thresholds τ₁ and τ₂. <span class="paper">§2.1.</span></td></tr>
+        <tr><td><span class="term">the two tallies of a notice; waking</span></td><td>Ordinary and activation timestamps; reactivation. <span class="paper">§2.2, §2.3.</span></td></tr>
+        <tr><td><span class="term">preferring near partners; the ferry</span></td><td>Spatial distributions; critical links. <span class="paper">§3, §3.1.</span></td></tr>
+        <tr><td><span class="term">chance falling with a place in the list</span></td><td>A distribution parameterised by Q<sub>s</sub>(d), the number of sites within distance d. <span class="paper">§3.</span></td></tr>
+        <tr><td><span class="term">the two small coasts where telling fails</span></td><td>Figures 1 and 2: spatial distributions can defeat rumor mongering. <span class="paper">§3.2.</span></td></tr>
       </tbody>
     </table>
   </div>
+
+  <div class="ideas-box">
+    <span class="lbl">The ideas, plainly</span>
+    <p>Demers and his co-authors keep a database copied at many sites and ask how an update made at one site can reach all the others with very little help from the network and no one in charge. Each entry carries a timestamp and the larger timestamp wins, so any two sites that meet can settle which entry is newer. Mailing the update to everyone is quick but unreliable, and the sender may not know every site. Anti-entropy, in which each site regularly picks another at random and the two reconcile, always reaches every site, but slowly and at the cost of comparing whole databases; checksums and lists of recent updates make it cheap.</p>
+
+    <p>Rumor mongering passes an update on while it is still news: a site that has it tells others and loses interest after meeting enough who already knew. That is quick and cheap, but it can leave a fraction of sites who never hear, a fraction that shrinks exponentially with the patience allowed and is tied to the traffic by one relation in every version. Pull does much better than push when few sites are left. Anti-entropy run rarely behind it makes certain that nothing is missed.</p>
+
+    <p>Deletions have to be spread too, or an old copy brings the item back, so a deletion is a certificate with a timestamp; certificates cannot be kept for ever, so a few sites keep them asleep and wake them if an old copy turns up, with a second timestamp so that waking does not cancel newer updates. Choosing partners nearer first, with a chance that falls with the number of closer sites, spares the few critical links, at a small cost in delay; but it can defeat rumor mongering in awkward networks, which is another reason for the anti-entropy behind it.</p>
   </div>
 </section>
 
 <hr class="rule">
-<section>
-  <div class="issue"><h2>Planned chapters</h2></div>
-  <div class="prose">
-<ol><li>The libraries and the news.</li><li>Letters to everyone.</li><li>The festival: comparing whole collections.</li><li>Word of mouth, and losing interest.</li><li>Who never hears.</li><li>Withdrawing a work.</li><li>Near partners and the long route.</li><li>In the Book, In the Paper.</li></ol>
-  </div>
+<section id="refs" class="refs">
+  <h3 class="sect">The Paper Behind This Book</h3>
+  <ul>
+    <li>Alan Demers, Mark Gealy, Dan Greene, Carl Hauser, Wes Irish, John Larson, Sue Manning, Scott Shenker, Howard Sturgis, Dan Swinehart, Doug Terry and Don Woods, <i>Epidemic Algorithms for Replicated Database Maintenance</i>. Proceedings of the Sixth Annual ACM Symposium on Principles of Distributed Computing (PODC), Vancouver, August 1987, 1–12; the version used here is Xerox PARC CSL-89-1, January 1989. — Direct mail, anti-entropy with checksums and peel back, rumor mongering, death certificates and spatial distributions, from the Clearinghouse servers of the Xerox Corporate Internet.</li>
+  </ul>
+  <aside class="fn">Demerios stands for Alan Demers, the first author. The paper names twelve authors, Alan Demers, Mark Gealy, Dan Greene, Carl Hauser, Wes Irish, John Larson, Sue Manning, Scott Shenker, Howard Sturgis, Dan Swinehart, Doug Terry and Don Woods, and all are credited here. Only Demerios is named; the scholars of the stoa and the copyists of the festival are not told apart, since no one is in charge of either.</aside>
 </section>
 
 <hr class="rule">
-<section>
-  <div class="issue"><h2>Must not exist</h2></div>
-  <div class="prose">
-<p>anyone organising the spread; an assembly or a vote; a register of who knows what; a promise that word of mouth alone reaches everyone.</p>
-  </div>
-</section>
 
-<hr class="rule">
-<section>
-  <div class="issue"><h2>Open questions</h2></div>
-  <div class="prose">
-<ol><li><b>How often the festival meets.</b> <code>settings.md</code> makes it yearly; the paper runs anti-entropy regularly, as the backstop to rumour. Keep it yearly (slow and sure), or make it a regular meeting?</li><li><b>What a scrap carries.</b> "The Earth goes round the Sun" is a rumour, but the paper's updates are entries in a database. Proposal: a scrap carries a new edition of an entry in the shared catalogue, and the Sun is the first example.</li><li><b>Names.</b> Nine authors. Demerios and two or three others; the footnote credits all nine.</li></ol>
-  </div>
-</section>
-
-<hr class="rule">
+<p class="lineage"><span class="lbl">Leads to</span> <a href="../probably-up-to-date/index.html">Probably Up to Date</a><br>
+  <span class="outside"><span class="tag">Outside this series</span> Birrell et al. 1982, <i>Grapevine</i> · Oppen &amp; Dalal 1981, <i>The Clearinghouse</i> · Vogels 2009, <i>Eventually Consistent</i></span></p>
 
 </div>
+<script src="../../assets/js/flow.js" defer></script>
 </body>
 </html>

@@ -216,6 +216,7 @@ What each place, building, character, prop and practice of the setting has in co
 | the festival ground, where copyists compare whole collections once a year | Panhellenic festivals drew poets, rhapsodes and scholars from across the Greek world; the yearly collation itself is the setting's own. | Loose |
 | the far terraces, a count kept in voting pebbles | Greek *psēphoi* were pebbles used to vote and to count, and the Greek for “to reckon” (*psēphizein*) comes from them†. | Close |
 | the courier landing | Hellenistic kings ran their own couriers, and merchant ships carried private letters†. | Close |
+| the ferry across the inlet, the one crossing between two parts of the coast | Short sea crossings were ordinary: the strait between the Attic shore and Salamis was crossed by boat†, and the Euripus was bridged only in 411 BC†. | Close |
 
 ### Characters
 
@@ -229,6 +230,9 @@ What each place, building, character, prop and practice of the setting has in co
 |---|---|---|
 | a scrap of papyrus carrying a new learning: that the Earth goes round the Sun | This is a real example: Aristarchus of Samos proposed it in the third century BC, as Archimedes reports in the Sand Reckoner, and Plutarch says that Cleanthes thought he should be charged with impiety for it†. | Close |
 | different editions of one work | Homer's text circulated in variant forms, among them the “city” editions that the Alexandrians collated†. | Close |
+| the catalogue scroll, and the catalogue mark worked from all of it | Callimachus' *Pinakes* catalogued the Alexandrian library in some 120 scrolls†. The mark is the setting's own: sealed documents were common†, but no seal summed up a whole catalogue, and a digest is a modern device. | Invented |
+| a notice of withdrawal, spread like an edition | Aristarchus and Zenodotus marked lines they judged spurious with the *obelos* and left them in the text†; Athenian decrees were sometimes struck from their stelai†. The setting's notice, which travels and cancels older copies, is its own. | Loose |
+| the hot tablet, a wax tablet of the scraps a scholar is still telling | Wax tablets were the Greek everyday writing surface†. | Close |
 
 ### Practices
 
@@ -236,6 +240,7 @@ What each place, building, character, prop and practice of the setting has in co
 |---|---|---|
 | collating copies line by line | The Alexandrian scholars collated manuscripts and marked disputed lines, as the setting says†. | Close |
 | learnings spread by word of mouth, each carrier losing interest | Hesiod calls rumour a goddess, *Pheme*, who never wholly dies (Works and Days 763–764)†. Rhapsodes also spread the epics by recitation (Plato, Ion)†, and a rule credited to Solon or Hipparchus made them take over from one another in order†. | Loose |
+| keepers of a dormant notice named by lot | Athens filled most magistracies by lot, drawing names with an allotment machine, the *kleroterion*†. Drawing names to keep a notice is the setting's use of it. | Close |
 | answering from whatever copy a library holds | The Alexandrian library is said to have seized books from ships in its harbour and returned copies†, so the copy a reader held really did depend on the shelf. | Loose |
 | no assembly; nothing waits for a vote | The scholarly world had no governing body; the Museum was a royal foundation and its scholars answered to the king†. | Loose |
 
