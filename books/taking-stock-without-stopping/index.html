@@ -36,7 +36,8 @@
 <!-- ================= IN A NUTSHELL ================= -->
 <section class="nutshell">
   <h6>In a Nutshell</h6>
-  <p>The houses want a count of all their goods while carts never stop moving along the road, and no one can see every storehouse at once. Red-sashed messengers sent along every road let each house record its stock at its own moment, and the scribes' total comes out certainly correct, even though it describes a morning nobody on Arche ever lived through. In real terms, this is the Chandy–Lamport distributed snapshot: marker messages record a consistent global state of a running system, good for detecting stable properties such as deadlock or termination.</p>
+  <p>The Chandy–Lamport snapshot algorithm records a consistent global state of a running distributed system, one that could have happened, without stopping it. Each process records its own state at its own moment and sends marker messages along every channel; a process records any messages that arrive on a channel between its own recording and that channel's marker. The result is good for detecting stable properties, such as deadlock or termination.</p>
+  <p>Here it is told with the trading houses and their carts. The houses want a count of all their goods while carts never stop moving along the road, and no one can see every storehouse at once. Red-sashed messengers sent along every road let each house record its stock at its own moment, and the scribes' total comes out certainly correct, even though it describes a morning nobody on Arche ever lived through.</p>
 </section>
 
 <nav class="toc">

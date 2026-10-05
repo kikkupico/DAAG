@@ -37,7 +37,8 @@
 <!-- ================= IN A NUTSHELL ================= -->
 <section class="nutshell">
   <h6>In a Nutshell</h6>
-  <p>Three trading houses round a mountain trade along a coastal road where no messenger may pass another, and their sundials fail under cloud. To fill orders in the sequence they were placed, they give every event a rising number, so that anything that could have caused another is numbered before it. That settles every dispute about what came first, and then they find what a single number cannot see: it cannot tell whether two events were connected or merely unrelated. In real terms, this covers Lamport's logical clocks and the happened-before relation, then vector clocks (Fidge and Mattern), which capture causality exactly.</p>
+  <p>Lamport's logical clocks answer how to order events in a distributed system whose machines share no reliable clock. The happened-before relation orders events by what could have caused what, and a counter at each node, passed along on every message, numbers events so that a cause always has a smaller number than its effect. A single number cannot say whether two events were causally related or merely unrelated, and vector clocks (Fidge and Mattern) capture causality exactly.</p>
+  <p>The book tells it with three trading houses round a mountain. They trade along a coastal road where no messenger may pass another, and their sundials fail under cloud. To fill orders in the sequence they were placed, they give every event a rising number, so that anything that could have caused another is numbered before it. That settles every dispute about what came first, and then they find what a single number cannot see: whether two events were connected or merely unrelated.</p>
 </section>
 
 <nav class="toc">
