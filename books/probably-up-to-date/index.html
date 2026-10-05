@@ -33,7 +33,8 @@
 <!-- ================= IN A NUTSHELL ================= -->
 <section class="nutshell">
   <h6>In a Nutshell</h6>
-  <p>A work is kept at three libraries. A writer sends a new edition to all three and announces it once some of them have answered; a reader asks all three and takes the newest of the first few replies. When the two numbers are small the groups may miss each other and the reader is handed an old copy. The book finds how likely that is, how fast the chance falls with the number of editions a reader will accept and with the time since the announcement, and why only a probability, never a promise, can be given. In real terms, this covers Dynamo-style partial quorums and Probabilistically Bounded Staleness: k-staleness, t-visibility, the WARS model and monotonic reads.</p>
+  <p>Dynamo-style stores keep each item at N replicas and let a write wait for only W of them and a read ask only R, so that when W and R are small the two groups may miss each other and a read returns stale data. Probabilistically Bounded Staleness (Bailis et al.) finds how likely that is: how fast the chance of staleness falls with the number of versions a reader will accept (k-staleness) and with the time since the write was acknowledged (t-visibility), modelled from the latencies of the four legs of a request (the WARS model), and why only a probability, never a promise, can be given.</p>
+  <p>The book tells it with three libraries. A work is kept at all three. A writer sends a new edition to all three and announces it once some of them have answered; a reader asks all three and takes the newest of the first few replies. When the two numbers are small the groups may miss each other and the reader is handed an old copy, and the book works out how often, and how soon that stops.</p>
 </section>
 
 <nav class="toc">

@@ -38,7 +38,8 @@
 <!-- ================= IN A NUTSHELL ================= -->
 <section class="nutshell">
   <h6>In a Nutshell</h6>
-  <p>The four bandits keep a scroll of the loot, one copy at each post, and one of them may lie, the man holding the job included, while a wind can hold the rats in their holes for as long as it blows. The entries must stand in the same order in every honest copy, whatever the wind and whoever lies, and must go on standing once it drops. A job that passes from man to man, and two rounds of sealed echoes, are enough. In real terms, this is Practical Byzantine Fault Tolerance (Castro and Liskov): state machine replication that survives Byzantine faults, including a faulty leader, with leader changes by view change.</p>
+  <p>Practical Byzantine Fault Tolerance (Castro and Liskov) makes Byzantine agreement fast enough to use. It replicates a state machine across 3f + 1 nodes so that all honest replicas apply the same commands in the same order even when up to f of them are faulty, the current leader included. Three phases of messages order each command, and a view change replaces a faulty leader without losing what was already committed.</p>
+  <p>The book tells it with four bandits and a scroll of their loot. There is one copy at each post, and one of the four may lie, the man holding the job included, while a wind can hold the rats in their holes for as long as it blows. The entries must stand in the same order in every honest copy, whatever the wind and whoever lies, and must go on standing once it drops. A job that passes from man to man, and two rounds of sealed echoes, are enough.</p>
 </section>
 
 <nav class="toc">
