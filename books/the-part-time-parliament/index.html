@@ -293,6 +293,19 @@ ol.proofsteps li{margin:.55em 0}
 .slab-head{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
 .stmt{font-style:italic}
 
+/* ---------- closing apparatus: lineage, papers, links to where a fact comes from ---------- */
+a.anchor{display:block;height:0;scroll-margin-top:56px}
+sup.xref{font-size:.8em;line-height:0;margin-left:1px}
+sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
+.apparatus{max-width:760px;margin:3rem auto 0;text-align:left;font-size:.94rem}
+.apparatus .lineage{margin:0 0 .6rem}
+.apparatus .lbl{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-right:8px}
+.apparatus a{color:var(--aegean-d)}
+.apparatus details.proof{margin-top:1.2rem}
+.apparatus .refs p,.apparatus ol.refs li{font-size:.9rem;margin:.45em 0}
+.apparatus table{width:100%;border-collapse:collapse;font-size:.9rem}
+.apparatus td{padding:5px 8px 5px 0;border-top:2px solid #1c151222;vertical-align:top}
+
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .pop > .leaf{transition:opacity .3s;transform:none!important}
@@ -306,7 +319,6 @@ ol.proofsteps li{margin:.55em 0}
 
 <div class="bar">
   <a href="../../index.html">← The Books</a>
-  <a href="archive.html">Long edition, with proofs</a>
   <span class="now" id="now"></span>
   <i id="prog"></i>
 </div>
@@ -360,6 +372,7 @@ ol.proofsteps li{margin:.55em 0}
 
 <!-- ============================================================ hall -->
 <section class="spread dark" id="hall" data-name="The Chamber">
+  <a class="anchor" id="s1"></a>
   <div class="bleed">
     <img src="img/p01-scrolls.jpg" alt="Inside the Chamber: a round marble hall with one tall door, a checkerboard floor and legislators sitting along the wall with scrolls" data-parallax>
     <div class="hall-title"><div class="t">
@@ -465,6 +478,7 @@ ol.proofsteps li{margin:.55em 0}
 
 <!-- ============================================================ synod -->
 <section class="spread dark" id="synod" data-name="The Synod">
+  <a class="anchor" id="s2"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
@@ -849,6 +863,7 @@ ol.proofsteps li{margin:.55em 0}
 
 <!-- ============================================================ parliament -->
 <section class="spread dark" id="parliament" data-name="The Parliament">
+  <a class="anchor" id="s3"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1.2rem">
@@ -935,6 +950,7 @@ ol.proofsteps li{margin:.55em 0}
 
 <!-- ============================================================ relevance -->
 <section class="spread dark" id="why" data-name="Back to machines">
+  <a class="anchor" id="s4"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-9-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
@@ -951,10 +967,64 @@ ol.proofsteps li{margin:.55em 0}
       <p class="lede" style="margin:0 auto">It makes progress whenever a majority is present and steady for long enough. It never gives up safety, and asks for progress only once things settle.</p>
       <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">Its ballot protocol lives on as Paxos, the foundation of modern fault-tolerant distributed computing.</p>
       <div class="links">
-        <a href="archive.html">The long edition, with proofs →</a>
         <a href="../../places/the-chamber/index.html">The Chamber, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
       </div>
+    </div>
+    <div class="apparatus">
+      <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/the-chamber/index.html">The Chamber</a></p>
+      <p class="lineage"><span class="lbl">Builds on</span> <a href="../ordering-without-clocks/index.html">Ordering Without Clocks</a> · <a href="../the-limits-of-agreement/index.html">The Limits of Agreement</a> · <a href="../agreeing-when-messages-run-late/index.html">Agreeing When Messages Run Late</a></p>
+      <p class="lineage"><span class="lbl">Leads to</span> <a href="../one-leader-at-a-time/index.html">One Leader at a Time</a> · <a href="../knowing-when-to-wait/index.html">Knowing When to Wait</a> · <a href="../keeping-order-among-liars/index.html">Keeping Order Among Liars</a></p>
+      <p class="lineage"><span class="lbl">Outside this series</span> Lampson 1996, <i>how to build a highly available system using consensus</i> · De Prisco, Lampson &amp; Lynch 1997, <i>revisiting the Paxos algorithm</i> · Howard, Malkhi &amp; Spiegelman 2016, <i>Flexible Paxos</i></p>
+      <details class="proof">
+        <summary>The paper and its references</summary>
+        <p>Leslie Lamport, “The Part-Time Parliament,” <i>ACM Transactions on Computer Systems</i> <b>16</b>, 2 (May 1998), 133–169. Received January 1990; accepted March 1998. The referees wanted the Paxos story removed, the author declined, and the paper sat unpublished for eight years.</p>
+        <ol class="refs">
+    <li>Bernstein, P. A., Hadzilacos, V., and Goodman, N. 1987. <em>Concurrency Control and Recovery in Database Systems.</em> Addison-Wesley, Reading, Massachusetts.</li>
+    <li>De Prisco, R., Lampson, B., and Lynch, N. 1997. Revisiting the Paxos algorithm. In M. Mavronicolas and P. Tsigas (Eds.), <em>Proceedings of the 11th International Workshop on Distributed Algorithms (WDAG 97)</em>, Volume 1320 of <em>Lecture Notes in Computer Science</em>, Saarbruken, Germany, pp. 111–125. Springer-Verlag.</li>
+    <li>Dijkstra, E. W. 1974. Self-stabilizing systems in spite of distributed control. <em>Commun. ACM 17</em>, 11 (Nov.), 643–644.</li>
+    <li>Dwork, C., Lynch, N., and Stockmeyer, L. 1988. Consensus in the presence of partial synchrony. <em>Journal of the ACM 35</em>, 2 (April), 288–323.</li>
+    <li>Fekete, A., Lynch, N., and Shvartsman, A. 1997. Specifying and using a partitionable group communication service. In <em>Proceedings of the Sixteenth Annual ACM Symposium on Principles of Distributed Computing</em>, pp. 53–62. ACM Press.</li>
+    <li>Fischer, M. J., Lynch, N., and Paterson, M. S. 1985. Impossibility of distributed consensus with one faulty process. <em>Journal of the ACM 32</em>, 2 (April), 374–382.</li>
+    <li>Gray, C. G. and Cheriton, D. R. 1989. Leases: An efficient fault-toerant mechanism for distributed file cache consistency. In <em>Proceedings of the Twelfth ACM Symposium on Operating Systems Principles</em>, New York, pp. 202–210. ACM.</li>
+    <li>Keidar, I. and Dolev, D. 1996. Efficient message ordering in dynamic networks. In <em>Proceedings of the 15th Annual ACM Symposium on Principles of Distributed Computing</em>. ACM.</li>
+    <li>Ladin, R., Liskov, B., Shrira, L., and Ghemawat, S. 1992. Providing high availability using lazy replication. <em>ACM Transactions on Computer Systems 10</em>, 4 (Nov.), 360–391.</li>
+    <li>Lamport, L. 1978. Time, clocks, and the ordering of events in a distributed system. <em>Commun. ACM 21</em>, 7 (July), 558–565.</li>
+    <li>Lamport, L. 1984. Using time instead of timeout for fault-tolerant distributed systems. <em>ACM Trans. on Programm. Lang. Syst. 6</em>, 2 (April), 254–280.</li>
+    <li>Lampson, B. W. 1996. How to build a highly available system using consensus. In O. Babaoglu and K. Marzullo (Eds.), <em>Distributed Algorithms</em>, Volume 1151 of <em>Lecture Notes in Computer Science</em>, Berlin, pp. 1–17. Springer-Verlag.</li>
+    <li>Oki, B. M. and Liskov, B. H. 1988. Viewstamped replication: A new primary copy method to support highly-available distributed systems. In <em>Proceedings of the Seventh Annual ACM Symposium on Principles of Distributed Computing</em>, pp. 8–17. ACM Press.</li>
+    <li>Schneider, F. B. 1990. Implementing fault-tolerant services using the state machine approach: A tutorial. <em>ACM Computing Surveys 22</em>, 4 (Dec.), 299–319.</li>
+    <li>Skeen, M. D. 1982. <em>Crash recovery in a distributed database system.</em> Ph. D. thesis, University of California, Berkeley.</li>
+  </ol>
+      </details>
+      <details class="proof">
+        <summary>Who was who on Paxos</summary>
+        <p>The paper gives its Paxons the names of computer scientists, spelled in a mock-Greek alphabet.</p>
+        <table><tbody>
+          <tr><td><b>Λ˘ινχ∂</b></td><td>Nancy Lynch</td><td>Keeper of scroll entry 155; co-author of the FLP impossibility result the paper cites.</td></tr>
+          <tr><td><b>Φισ∂ερ</b></td><td>Michael Fischer</td><td>Holder of decree 132; the F in FLP.</td></tr>
+          <tr><td><b>Τωυεγ</b></td><td>Sam Toueg</td><td>Struck by a falling statue; developed irreversible amnesia.</td></tr>
+          <tr><td><b>Γραϊ</b></td><td>Jim Gray</td><td>Ballot number (13, Γραϊ); database transactions legend.</td></tr>
+          <tr><td><b>Λινσεϊ</b></td><td>Bruce Lindsay</td><td>Ballot number (13, Λινσεϊ); System R database pioneer.</td></tr>
+          <tr><td><b>Ωκι</b></td><td>Brian Oki</td><td>Made president straight off the boat; co-invented Viewstamped Replication — the protocol equivalent to Paxos.</td></tr>
+          <tr><td><b>Δφωρκ</b></td><td>Cynthia Dwork</td><td>The Monday-morning president who filled gaps with olive days.</td></tr>
+          <tr><td><b>Δ˘ικστρα</b></td><td>Edsger W. Dijkstra</td><td>First cheese inspector of Paxos — famously strict. Invented self-stabilization.</td></tr>
+          <tr><td><b>Γωυδα</b></td><td>Mohamed Gouda</td><td>Second cheese inspector. Also a cheese.</td></tr>
+          <tr><td><b>Φρανσεζ</b></td><td>Nissim Francez</td><td>Wine taster, two months.</td></tr>
+          <tr><td><b>Πνυελ˘ι</b></td><td>Amir Pnueli</td><td>Wine taster, one month; temporal-logic Turing laureate.</td></tr>
+          <tr><td><b>Δωλεφ</b></td><td>Danny Dolev</td><td>The farmer with the black (and brown) goats.</td></tr>
+          <tr><td><b>Σκεεν</b></td><td>Dale Skeen</td><td>The law-abiding merchant; three-phase-commit pioneer.</td></tr>
+          <tr><td><b>Στωκμ˘ιρ</b></td><td>Larry Stockmeyer</td><td>The legislator with the out-of-date scroll.</td></tr>
+          <tr><td><b>Σ∂ν˘ιδερ</b></td><td>Fred Schneider</td><td>Citizen reading the law via decree 87; wrote THE state-machine survey.</td></tr>
+          <tr><td><b>Γρεες</b></td><td>David Gries</td><td>The second inquirer about the olive tax.</td></tr>
+          <tr><td><b>Λισκωφ</b></td><td>Barbara Liskov</td><td>Merchant comparing fleece tariffs; the Liskov of Viewstamped Replication.</td></tr>
+          <tr><td><b>Παρνας</b></td><td>David Parnas</td><td>Elder statesman whose son inherited his scroll — information hiding at its finest.</td></tr>
+          <tr><td><b>Στρωνγ</b></td><td>Ray Strong</td><td>Made a legislator by decree 3252.</td></tr>
+          <tr><td><b>Λαμπσων</b></td><td>Butler Lampson</td><td>The general who staged the coup — and, in our world, the great champion of the Paxos algorithm.</td></tr>
+          <tr><td><b>Λεωνίδας Γκίμπας</b></td><td>Leonidas Guibas</td><td>Provided invaluable assistance with the Paxon dialect.</td></tr>
+          <tr><td><b>μαδζ∂ωριτ˘ισετ</b></td><td>“majority set”</td><td>The most contested word in Paxon philology.</td></tr>
+        </tbody></table>
+      </details>
     </div>
   </div>
 </section>
