@@ -330,7 +330,7 @@ every tent sees and no post on the crown does.
 
 ## Pop-up editions
 
-A pop-up edition (`popups/<slug>/index.html`) retells a book as one scroll: short allegory prose, photoreal scenes that unfold as they enter view, and one live interactive per mechanism (scroll-driven stage for a sequence, click-through widget for a choice). Same registers as a book: the synopsis in machine terms first, then allegory only. Self-contained (vanilla JS, images in its own `img/`, re-encoded to about 1600 px). Pop-up editions exist for The Part-Time Parliament and Ordering Without Clocks, each linked from its book's lineage line in the header. A pop-up reuses the book's published pictures and draws space-time in the round, as the books do.
+A pop-up edition (`popups/<slug>/index.html`) retells a book as one scroll: short allegory prose, photoreal scenes that unfold as they enter view, and one live interactive per mechanism (scroll-driven stage for a sequence, click-through widget for a choice). Same registers as a book: the synopsis in machine terms first, then allegory only. Self-contained (vanilla JS, images in its own `img/`, re-encoded to about 1600 px). Pop-up editions exist for The Part-Time Parliament, Ordering Without Clocks and The Limits of Agreement, each linked from its book's lineage line in the header. A pop-up reuses the book's published pictures and draws space-time in the round, as the books do.
 
 ## Changing art direction
 
