@@ -5,324 +5,207 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Distributed Algorithms of Ancient Greece</title>
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
-<link rel="stylesheet" href="assets/css/daag.css">
-<link rel="stylesheet" href="assets/css/books.css">
+<link rel="stylesheet" href="art/scroll/shell.css">
+<link rel="stylesheet" href="art/scroll/place.css">
 </head>
 <body>
-<div class="page">
 
-<header class="cover">
-  <h1 class="display">Distributed Algorithms of Ancient Greece</h1>
-  <div class="frame-cover"><img src="assets/img/map.jpg" width="1240" height="1240"
+<div class="bar">
+  <a href="index.html">Distributed Algorithms of Ancient Greece</a>
+  <a href="papers/index.html">The papers</a>
+  <span class="now" id="now"></span>
+  <i id="prog"></i>
+</div>
+
+<header class="spread dark home" id="cover" data-name="">
+  <div class="wrap grid">
+    <div>
+      <div class="kicker">Two islands · eighteen books</div>
+      <h1>Distributed Algorithms of Ancient Greece</h1>
+      <p class="pub"><a href="papers/index.html">25 landmark papers</a> in distributed computing explained using the same ancient Greece allegory employed by Leslie Lamport in his seminal paper, “The Part-Time Parliament (Paxos)”.</p>
+      <div class="scrollcue"><b>↓</b> Scroll. Things unfold.</div>
+    </div>
+    <div class="pop" data-auto>
+      <div class="leaf">
+        <div class="photo tilt-r" data-depth="14"><img src="assets/img/map.jpg"
        alt="An engraved chart in sepia ink of the two islands along the diagonal: Arche to the north-west, ringed by its road with three harbours and the ringed crown on its hill; Paxos to the south-east, a Y whose two arms open towards Arche, a round hall on each and a town beside the northern one. A compass rose in the top-right corner sends rhumb lines across the sea, with two small ships and wave marks between the islands."></div>
-  <p class="pub"><a href="papers/index.html">25 landmark papers</a> in distributed computing explained using the same ancient
-  Greece allegory employed by Leslie Lamport in his seminal paper, “The Part-Time Parliament
-  (Paxos)”.</p>
+        <div class="fold-shadow"></div>
+      </div>
+    </div>
+  </div>
 </header>
 
-<hr class="rule">
-
-<section>
-  <div class="issue"><span class="no">Arche · The Ring Road</span><h2>Clocks, State &amp; Linearizability</h2></div>
-  <div class="prose">
-    <div class="entry setting">
-      <p><a href="places/ring-road/index.html"><b>The Setting: The Ring Road</b></a></p>
-      <p>Read this first: the island, the three houses and the road between them, which every book here takes for granted. After it, the books
-      below can be read in any order.</p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/ordering-without-clocks/index.html"><b>Ordering Without Clocks</b></a></p>
-      <p>
-      If no two machines agree on the time, how can they agree on what happened first? And
-      when two things happen far apart, how can anyone tell whether one led to the other or
-      neither knew of the other?</p>
-      <p>
-      We find out by exploring how ancient Greek trading houses kept the order of trades
-      when sundials became useless on cloudy days.<br>
-      <span class="paper">Lamport 1978 · Fidge 1988 · Mattern 1988</span></p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/many-copies-acting-as-one/index.html"><b>Many Copies, Acting as One</b></a></p>
-      <p>
-      When data is kept in several copies, what does it take for them to act as one?
-      And who could ever tell the difference?</p>
-      <p>
-      We find out by exploring how three ancient Greek trading houses filled one another's
-      orders in the sequence they really came, though none of them could read the hour.<br>
-      <span class="paper">Herlihy &amp; Wing 1990</span></p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/taking-stock-without-stopping/index.html"><b>Taking Stock Without Stopping</b></a></p>
-      <p>
-      How do you take stock of a whole system that never stops moving, when no one can
-      see all of it at once? And what can such a count reliably tell you?</p>
-      <p>
-      We find out by exploring how ancient Greek trading houses, hearing that bandits were
-      taking their carts, counted every jar they owned, including those in transit, without
-      interrupting ongoing trades.<br>
-      <span class="paper">Chandy &amp; Lamport 1985</span></p>
-    </div>
-
-  </div>
-</section>
-
-<hr class="rule">
-
-<section>
-  <div class="issue"><span class="no">Arche · The Foot of Mount Phyle</span><h2>Consensus &amp; Crash Faults</h2></div>
-  <div class="prose">
-    <div class="entry setting">
-      <p><a href="places/the-foot/index.html"><b>The Setting: The Foot of Mount Phyle</b></a></p>
-      <p>Read this first: the hill, the four camps and the ravens between them, which every book here takes for granted. After it, the books
-      below can be read in any order.</p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/the-limits-of-agreement/index.html"><b>The Limits of Agreement</b></a></p>
-      <p>
-      Can machines always agree when one of them may stop silently and messages take any time
-      at all?</p>
-      <p>
-      We find out by exploring how four mercenaries at the foot of a hill, unable to see one
-      another, tried to agree whether to attack or hold when any of them might be dead.<br>
-      <span class="paper">Fischer, Lynch &amp; Paterson 1985</span></p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/agreeing-when-messages-run-late/index.html"><b>Agreeing When Messages Run Late</b></a></p>
-      <p>
-      If messages can run late without limit, agreement cannot be guaranteed; yet real
-      networks are prompt most of the time. Can a protocol stay safe however late
-      messages run, and still decide once they arrive on time again?</p>
-      <p>
-      We find out by exploring how the same Greek mercenaries, on a windy night when no one
-      could tell how long a raven would take, agreed whether to attack or hold once the wind had dropped.<br>
-      <span class="paper">Dwork, Lynch &amp; Stockmeyer 1988</span></p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/answering-while-cut-off/index.html"><b>Answering While Cut Off</b></a></p>
-      <p>
-      When one part of a system is cut off from the rest, should it keep answering and
-      risk being wrong, or stay silent until it can be sure? Can it ever have both?</p>
-      <p>
-      We find out by exploring what the same Greek mercenaries could promise one another about
-      their standing plan when ravens were lost and one tent was cut off.<br>
-      <span class="paper">Brewer 2000 · Gilbert &amp; Lynch 2002</span></p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/agreeing-by-chance/index.html"><b>Agreeing by Chance</b></a></p>
-      <p>
-      If no plan can guarantee agreement when a machine may stop without warning, can
-      chance succeed where planning cannot? What if a machine that is stuck simply
-      tosses a coin?</p>
-      <p>
-      We find out by exploring how Greek mercenary camps, deadlocked over a plan, let a
-      coin, tossed by each man alone in his tent, break the tie.<br>
-      <span class="paper">Ben-Or 1983</span></p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/telling-the-dead-from-the-slow/index.html"><b>Telling the Dead from the Slow</b></a></p>
-      <p>
-      A machine that has crashed looks exactly like one that is merely slow, and that
-      alone makes agreement impossible. How well must we tell the dead from the slow
-      before agreement becomes possible again?</p>
-      <p>
-      We find out by exploring how the same Greek mercenaries, each keeping a slate of the tents
-      he thought dead, agreed whether to attack or hold though the slates were often wrong.<br>
-      <span class="paper">Chandra &amp; Toueg 1996</span></p>
+<section class="spread light" id="the-ring-road" data-name="Arche · The Ring Road">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <div class="kicker">Arche · The Ring Road</div>
+    <h2>Clocks, State &amp; Linearizability</h2>
+    <div class="pop"><div class="leaf"><a class="cardlink" href="places/ring-road/index.html"><div class="paper setting-card">
+      <div class="photo"><img src="assets/img/places/arche-island.jpg" alt="" loading="lazy"></div>
+      <div class="body"><div class="num">Read this first</div><h3>The Setting: The Ring Road</h3><p>The island, the three houses and the road between them, which every book here takes for granted. After it, the books below can be read in any order.</p></div>
+    </div></a></div></div>
+    <div class="cards3 books">
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/ordering-without-clocks/index.html">
+        <div class="photo"><img src="assets/img/covers/ordering-without-clocks.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Ordering Without Clocks</h3><p class="q">If no two machines agree on the time, how can they agree on what happened first? And when two things happen far apart, how can anyone tell whether one led to the other or neither knew of the other?</p><p class="how">We find out by exploring how ancient Greek trading houses kept the order of trades when sundials became useless on cloudy days.</p><span class="credit">Lamport 1978 · Fidge 1988 · Mattern 1988</span></div>
+      </a></div></div>
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/many-copies-acting-as-one/index.html">
+        <div class="photo"><img src="assets/img/covers/many-copies-acting-as-one.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Many Copies, Acting as One</h3><p class="q">When data is kept in several copies, what does it take for them to act as one? And who could ever tell the difference?</p><p class="how">We find out by exploring how three ancient Greek trading houses filled one another's orders in the sequence they really came, though none of them could read the hour.</p><span class="credit">Herlihy &amp; Wing 1990</span></div>
+      </a></div></div>
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/taking-stock-without-stopping/index.html">
+        <div class="photo"><img src="assets/img/covers/taking-stock-without-stopping.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Taking Stock Without Stopping</h3><p class="q">How do you take stock of a whole system that never stops moving, when no one can see all of it at once? And what can such a count reliably tell you?</p><p class="how">We find out by exploring how ancient Greek trading houses, hearing that bandits were taking their carts, counted every jar they owned, including those in transit, without interrupting ongoing trades.</p><span class="credit">Chandy &amp; Lamport 1985</span></div>
+      </a></div></div>
     </div>
   </div>
 </section>
 
-<hr class="rule">
-
-<section>
-  <div class="issue"><span class="no">Arche · The Crown of Mount Phyle</span><h2>Byzantine Faults &amp; Replication</h2></div>
-  <div class="prose">
-    <div class="entry setting">
-      <p><a href="places/the-crown/index.html"><b>The Setting: The Crown of Mount Phyle</b></a></p>
-      <p>Read this first: the hill, the crown, its four posts and the ravens between them, which every book here takes for granted. After it, the books
-      below can be read in any order.</p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/agreeing-among-liars/index.html"><b>Agreeing Among Liars</b></a></p>
-      <p>
-      Can machines agree when some of them may lie, telling one thing to one and something
-      else to another? How many honest machines does each liar cost?</p>
-      <p>
-      We find out by exploring how four bandits holding a hilltop, some of whom might lie,
-      agreed whether to hold it or scatter, first by plain word and then under seal.<br>
-      <span class="paper">Lamport, Shostak &amp; Pease 1982 · Pease, Shostak &amp; Lamport 1980</span></p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/keeping-order-among-liars/index.html"><b>Keeping Order Among Liars</b></a></p>
-      <p>
-      Can a replicated service keep its commands in order when some of its machines
-      lie, the leader included, and messages take arbitrarily long?</p>
-      <p>
-      We find out by exploring how four bandits holding a hilltop kept one book of their loot
-      when any of them, their chief included, might be lying.<br>
-      <span class="paper">Castro &amp; Liskov 1999</span></p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/changing-leaders-among-liars/index.html"><b>Changing Leaders Among Liars</b></a></p>
-      <p>
-      When some machines may lie, replacing a leader has been slow and costly. Can a new
-      leader take over as cheaply as any ordinary step, and at the pace of the messages
-      rather than of a timer?</p>
-      <p>
-      We find out by exploring how four bandits holding a hilltop took turns keeping their
-      loot scroll, each gathering the others' seals into one bundle instead of every man
-      writing to every other.<br>
-      <span class="paper">Yin, Malkhi, Reiter, Gueta &amp; Abraham 2019</span></p>
+<section class="spread dark" id="the-foot-of-mount-phyle" data-name="Arche · The Foot of Mount Phyle">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="kicker">Arche · The Foot of Mount Phyle</div>
+    <h2>Consensus &amp; Crash Faults</h2>
+    <div class="pop"><div class="leaf"><a class="cardlink" href="places/the-foot/index.html"><div class="paper setting-card">
+      <div class="photo"><img src="assets/img/places/mount-phyle.jpg" alt="" loading="lazy"></div>
+      <div class="body"><div class="num">Read this first</div><h3>The Setting: The Foot of Mount Phyle</h3><p>The hill, the four camps and the ravens between them, which every book here takes for granted. After it, the books below can be read in any order.</p></div>
+    </div></a></div></div>
+    <div class="cards3 books">
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/the-limits-of-agreement/index.html">
+        <div class="photo"><img src="assets/img/covers/the-limits-of-agreement.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>The Limits of Agreement</h3><p class="q">Can machines always agree when one of them may stop silently and messages take any time at all?</p><p class="how">We find out by exploring how four mercenaries at the foot of a hill, unable to see one another, tried to agree whether to attack or hold when any of them might be dead.</p><span class="credit">Fischer, Lynch &amp; Paterson 1985</span></div>
+      </a></div></div>
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/agreeing-when-messages-run-late/index.html">
+        <div class="photo"><img src="assets/img/covers/agreeing-when-messages-run-late.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Agreeing When Messages Run Late</h3><p class="q">If messages can run late without limit, agreement cannot be guaranteed; yet real networks are prompt most of the time. Can a protocol stay safe however late messages run, and still decide once they arrive on time again?</p><p class="how">We find out by exploring how the same Greek mercenaries, on a windy night when no one could tell how long a raven would take, agreed whether to attack or hold once the wind had dropped.</p><span class="credit">Dwork, Lynch &amp; Stockmeyer 1988</span></div>
+      </a></div></div>
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/answering-while-cut-off/index.html">
+        <div class="photo"><img src="assets/img/covers/answering-while-cut-off.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Answering While Cut Off</h3><p class="q">When one part of a system is cut off from the rest, should it keep answering and risk being wrong, or stay silent until it can be sure? Can it ever have both?</p><p class="how">We find out by exploring what the same Greek mercenaries could promise one another about their standing plan when ravens were lost and one tent was cut off.</p><span class="credit">Brewer 2000 · Gilbert &amp; Lynch 2002</span></div>
+      </a></div></div>
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/agreeing-by-chance/index.html">
+        <div class="photo"><img src="assets/img/covers/agreeing-by-chance.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Agreeing by Chance</h3><p class="q">If no plan can guarantee agreement when a machine may stop without warning, can chance succeed where planning cannot? What if a machine that is stuck simply tosses a coin?</p><p class="how">We find out by exploring how Greek mercenary camps, deadlocked over a plan, let a coin, tossed by each man alone in his tent, break the tie.</p><span class="credit">Ben-Or 1983</span></div>
+      </a></div></div>
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/telling-the-dead-from-the-slow/index.html">
+        <div class="photo"><img src="assets/img/covers/telling-the-dead-from-the-slow.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Telling the Dead from the Slow</h3><p class="q">A machine that has crashed looks exactly like one that is merely slow, and that alone makes agreement impossible. How well must we tell the dead from the slow before agreement becomes possible again?</p><p class="how">We find out by exploring how the same Greek mercenaries, each keeping a slate of the tents he thought dead, agreed whether to attack or hold though the slates were often wrong.</p><span class="credit">Chandra &amp; Toueg 1996</span></div>
+      </a></div></div>
     </div>
   </div>
 </section>
 
-<hr class="rule">
-
-<section>
-  <div class="issue"><span class="no">Paxos · The Chamber</span><h2>Consensus &amp; Replicated State Machines</h2></div>
-  <div class="prose">
-    <div class="entry setting">
-      <p><a href="places/the-chamber/index.html"><b>The Setting: The Chamber</b></a></p>
-      <p>Read this first: the island of Paxos and Lamport's Chamber, which every book here takes for granted. After it, the books
-      below can be read in any order.</p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/the-part-time-parliament/index.html"><b>The Part-Time Parliament</b></a></p>
-      <p>
-      How can a group of machines agree on a sequence of commands when any of them may
-      wander off at any time, and no one is in charge for long?</p>
-      <p>
-      Lamport answered this himself, with the part-time legislators of the Greek island of
-      Paxos. We present his paper as he wrote it, with interactive figures. It is the paper
-      that inspired this entire project. Lamport ends it with the parliament's fall; the other
-      books set that aside, and in them the parliament is still sitting.<br>
-      <span class="paper">Lamport 1998 · Lamport 2001</span></p>
-    </div>
-  </div>
-</section>
-
-<hr class="rule">
-
-<section>
-  <div class="issue"><span class="no">Paxos · Schedia</span><h2>Leader-Driven Consensus</h2></div>
-  <div class="prose">
-    <div class="entry setting">
-      <p><a href="places/schedia/index.html"><b>The Setting: Schedia and the Tholos</b></a></p>
-      <p>Read this first: the city with laws of its own and the round hall it is governed from, which every book here takes for granted. After it, the books
-      below can be read in any order.</p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/one-leader-at-a-time/index.html"><b>One Leader at a Time</b></a></p>
-      <p>
-      Many systems put one leader in charge at a time. When the leader falls silent, how
-      does another take over without losing anything the last one promised?</p>
-      <p>
-      We find out by exploring how Schedia, a Greek city on Paxos with laws of its own, kept
-      its law from a podium that one legislator held at a time, and how a new holder took over
-      when the last one fell silent.<br>
-      <span class="paper">Oki &amp; Liskov 1988</span></p>
+<section class="spread light" id="the-crown-of-mount-phyle" data-name="Arche · The Crown of Mount Phyle">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap">
+    <div class="kicker">Arche · The Crown of Mount Phyle</div>
+    <h2>Byzantine Faults &amp; Replication</h2>
+    <div class="pop"><div class="leaf"><a class="cardlink" href="places/the-crown/index.html"><div class="paper setting-card">
+      <div class="photo"><img src="assets/img/places/mount-phyle.jpg" alt="" loading="lazy"></div>
+      <div class="body"><div class="num">Read this first</div><h3>The Setting: The Crown of Mount Phyle</h3><p>The hill, the crown, its four posts and the ravens between them, which every book here takes for granted. After it, the books below can be read in any order.</p></div>
+    </div></a></div></div>
+    <div class="cards3 books">
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/agreeing-among-liars/index.html">
+        <div class="photo"><img src="assets/img/covers/agreeing-among-liars.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Agreeing Among Liars</h3><p class="q">Can machines agree when some of them may lie, telling one thing to one and something else to another? How many honest machines does each liar cost?</p><p class="how">We find out by exploring how four bandits holding a hilltop, some of whom might lie, agreed whether to hold it or scatter, first by plain word and then under seal.</p><span class="credit">Lamport, Shostak &amp; Pease 1982 · Pease, Shostak &amp; Lamport 1980</span></div>
+      </a></div></div>
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/keeping-order-among-liars/index.html">
+        <div class="photo"><img src="assets/img/covers/keeping-order-among-liars.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Keeping Order Among Liars</h3><p class="q">Can a replicated service keep its commands in order when some of its machines lie, the leader included, and messages take arbitrarily long?</p><p class="how">We find out by exploring how four bandits holding a hilltop kept one book of their loot when any of them, their chief included, might be lying.</p><span class="credit">Castro &amp; Liskov 1999</span></div>
+      </a></div></div>
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/changing-leaders-among-liars/index.html">
+        <div class="photo"><img src="assets/img/covers/changing-leaders-among-liars.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Changing Leaders Among Liars</h3><p class="q">When some machines may lie, replacing a leader has been slow and costly. Can a new leader take over as cheaply as any ordinary step, and at the pace of the messages rather than of a timer?</p><p class="how">We find out by exploring how four bandits holding a hilltop took turns keeping their loot scroll, each gathering the others' seals into one bundle instead of every man writing to every other.</p><span class="credit">Yin, Malkhi, Reiter, Gueta &amp; Abraham 2019</span></div>
+      </a></div></div>
     </div>
   </div>
 </section>
 
-<hr class="rule">
-
-<section>
-  <div class="issue"><span class="no">Paxos · The Scholars' Coast</span><h2>Replication Without Assembly</h2></div>
-  <div class="prose">
-    <div class="entry setting">
-      <p><a href="places/scholars-coast/index.html"><b>The Setting: The Scholars' Coast</b></a></p>
-      <p>Read this first: the libraries, the couriers and the words every book there uses, which every book here takes for granted. After it, the books
-      below can be read in any order.</p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/spreading-by-word-of-mouth/index.html"><b>Spreading by Word of Mouth</b></a></p>
-      <p>
-      Can an update reach every machine in a large system just by each passing it on
-      to a few others, with no one organising the spread?</p>
-      <p>
-      We find out by exploring how news spread among the scholars of Paxos by word of
-      mouth, and how they caught whatever the gossip missed.<br>
-      <span class="paper">Demers et al. 1987</span></p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/probably-up-to-date/index.html"><b>Probably Up to Date</b></a></p>
-      <p>
-      When a store reads from only some of its copies, how likely is an answer to be out
-      of date, and by how much? Can we promise that it is probably not?</p>
-      <p>
-      We find out by exploring how ancient Greek libraries, each consulting only a few of
-      the others, judged how likely a copy was to be out of date.<br>
-      <span class="paper">Bailis et al. 2012</span></p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/changes-that-never-clash/index.html"><b>Changes That Never Clash</b></a></p>
-      <p>
-      Can some changes be combined in any order, any number of times, and still come
-      out the same everywhere, so that they never clash and no one ever needs to
-      coordinate?</p>
-      <p>
-      We find out by exploring how Greek scholars far apart kept a shared count that always
-      came out the same, without ever meeting to settle it.<br>
-      <span class="paper">Shapiro, Preguiça, Baquero &amp; Zawirski 2011 · the same authors' comprehensive study, 2011</span></p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/what-you-can-promise-alone/index.html"><b>What You Can Promise Alone</b></a></p>
-      <p>
-      When a machine cannot stop to check with the others on every change, what can it
-      still promise on its own? That no one sees a reply before the message it
-      answers? That no one sees a change half made? That two people never take the
-      last item?</p>
-      <p>
-      We find out by exploring what ancient Greek librarians could still promise their
-      readers when the couriers between the libraries stopped running.<br>
-      <span class="paper">Bailis et al. 2014</span></p>
+<section class="spread dark" id="the-chamber" data-name="Paxos · The Chamber">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <div class="kicker">Paxos · The Chamber</div>
+    <h2>Consensus &amp; Replicated State Machines</h2>
+    <div class="pop"><div class="leaf"><a class="cardlink" href="places/the-chamber/index.html"><div class="paper setting-card">
+      <div class="photo"><img src="assets/img/places/paxos-island.jpg" alt="" loading="lazy"></div>
+      <div class="body"><div class="num">Read this first</div><h3>The Setting: The Chamber</h3><p>The island of Paxos and Lamport's Chamber, which every book here takes for granted. After it, the books below can be read in any order.</p></div>
+    </div></a></div></div>
+    <div class="cards3 books">
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/the-part-time-parliament/index.html">
+        <div class="photo"><img src="assets/img/covers/the-part-time-parliament.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>The Part-Time Parliament</h3><p class="q">How can a group of machines agree on a sequence of commands when any of them may wander off at any time, and no one is in charge for long?</p><p class="how">Lamport answered this himself, with the part-time legislators of the Greek island of Paxos. We present his paper as he wrote it, with interactive figures. It is the paper that inspired this entire project. Lamport ends it with the parliament's fall; the other books set that aside, and in them the parliament is still sitting.</p><span class="credit">Lamport 1998 · Lamport 2001</span></div>
+      </a></div></div>
     </div>
   </div>
 </section>
 
-<hr class="rule">
-
-<section>
-  <div class="issue"><span class="no">Paxos · The Hall of Two Doors</span><h2>When Coordination Is Needed</h2></div>
-  <div class="prose">
-    <div class="entry setting">
-      <p><a href="places/hall-of-two-doors/index.html"><b>The Setting: The Hall of Two Doors</b></a></p>
-      <p>Read this first: the hall at the fork and the two kinds of question, which every book here takes for granted. After it, the books
-      below can be read in any order.</p>
-    </div>
-
-    <div class="entry">
-      <p><a href="books/knowing-when-to-wait/index.html"><b>Knowing When to Wait</b></a></p>
-      <p>
-      Which problems can machines solve without ever waiting for one another, and
-      which force them to wait?</p>
-      <p>
-      We find out by exploring how the scholars of Paxos told the questions they could
-      settle alone from those that needed an assembly.<br>
-      <span class="paper">Hellerstein 2010 · Ameloot, Neven &amp; Van den Bussche 2011</span></p>
+<section class="spread light" id="schedia" data-name="Paxos · Schedia">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <div class="kicker">Paxos · Schedia</div>
+    <h2>Leader-Driven Consensus</h2>
+    <div class="pop"><div class="leaf"><a class="cardlink" href="places/schedia/index.html"><div class="paper setting-card">
+      <div class="photo"><img src="assets/img/places/paxos-island.jpg" alt="" loading="lazy"></div>
+      <div class="body"><div class="num">Read this first</div><h3>The Setting: Schedia and the Tholos</h3><p>The city with laws of its own and the round hall it is governed from, which every book here takes for granted. After it, the books below can be read in any order.</p></div>
+    </div></a></div></div>
+    <div class="cards3 books">
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/one-leader-at-a-time/index.html">
+        <div class="photo"><img src="assets/img/covers/one-leader-at-a-time.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>One Leader at a Time</h3><p class="q">Many systems put one leader in charge at a time. When the leader falls silent, how does another take over without losing anything the last one promised?</p><p class="how">We find out by exploring how Schedia, a Greek city on Paxos with laws of its own, kept its law from a podium that one legislator held at a time, and how a new holder took over when the last one fell silent.</p><span class="credit">Oki &amp; Liskov 1988</span></div>
+      </a></div></div>
     </div>
   </div>
 </section>
 
-</div>
+<section class="spread dark" id="the-scholars-coast" data-name="Paxos · The Scholars&#x27; Coast">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="kicker">Paxos · The Scholars' Coast</div>
+    <h2>Replication Without Assembly</h2>
+    <div class="pop"><div class="leaf"><a class="cardlink" href="places/scholars-coast/index.html"><div class="paper setting-card">
+      <div class="photo"><img src="assets/img/places/paxos-island.jpg" alt="" loading="lazy"></div>
+      <div class="body"><div class="num">Read this first</div><h3>The Setting: The Scholars' Coast</h3><p>The libraries, the couriers and the words every book there uses, which every book here takes for granted. After it, the books below can be read in any order.</p></div>
+    </div></a></div></div>
+    <div class="cards3 books">
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/spreading-by-word-of-mouth/index.html">
+        <div class="photo"><img src="assets/img/covers/spreading-by-word-of-mouth.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Spreading by Word of Mouth</h3><p class="q">Can an update reach every machine in a large system just by each passing it on to a few others, with no one organising the spread?</p><p class="how">We find out by exploring how news spread among the scholars of Paxos by word of mouth, and how they caught whatever the gossip missed.</p><span class="credit">Demers et al. 1987</span></div>
+      </a></div></div>
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/probably-up-to-date/index.html">
+        <div class="photo"><img src="assets/img/covers/probably-up-to-date.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Probably Up to Date</h3><p class="q">When a store reads from only some of its copies, how likely is an answer to be out of date, and by how much? Can we promise that it is probably not?</p><p class="how">We find out by exploring how ancient Greek libraries, each consulting only a few of the others, judged how likely a copy was to be out of date.</p><span class="credit">Bailis et al. 2012</span></div>
+      </a></div></div>
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/changes-that-never-clash/index.html">
+        <div class="photo"><img src="assets/img/covers/changes-that-never-clash.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Changes That Never Clash</h3><p class="q">Can some changes be combined in any order, any number of times, and still come out the same everywhere, so that they never clash and no one ever needs to coordinate?</p><p class="how">We find out by exploring how Greek scholars far apart kept a shared count that always came out the same, without ever meeting to settle it.</p><span class="credit">Shapiro, Preguiça, Baquero &amp; Zawirski 2011 · the same authors' comprehensive study, 2011</span></div>
+      </a></div></div>
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/what-you-can-promise-alone/index.html">
+        <div class="photo"><img src="assets/img/covers/what-you-can-promise-alone.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>What You Can Promise Alone</h3><p class="q">When a machine cannot stop to check with the others on every change, what can it still promise on its own? That no one sees a reply before the message it answers? That no one sees a change half made? That two people never take the last item?</p><p class="how">We find out by exploring what ancient Greek librarians could still promise their readers when the couriers between the libraries stopped running.</p><span class="credit">Bailis et al. 2014</span></div>
+      </a></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="spread light" id="the-hall-of-two-doors" data-name="Paxos · The Hall of Two Doors">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap">
+    <div class="kicker">Paxos · The Hall of Two Doors</div>
+    <h2>When Coordination Is Needed</h2>
+    <div class="pop"><div class="leaf"><a class="cardlink" href="places/hall-of-two-doors/index.html"><div class="paper setting-card">
+      <div class="photo"><img src="assets/img/places/paxos-island.jpg" alt="" loading="lazy"></div>
+      <div class="body"><div class="num">Read this first</div><h3>The Setting: The Hall of Two Doors</h3><p>The hall at the fork and the two kinds of question, which every book here takes for granted. After it, the books below can be read in any order.</p></div>
+    </div></a></div></div>
+    <div class="cards3 books">
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="books/knowing-when-to-wait/index.html">
+        <div class="photo"><img src="assets/img/covers/knowing-when-to-wait.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Knowing When to Wait</h3><p class="q">Which problems can machines solve without ever waiting for one another, and which force them to wait?</p><p class="how">We find out by exploring how the scholars of Paxos told the questions they could settle alone from those that needed an assembly.</p><span class="credit">Hellerstein 2010 · Ameloot, Neven &amp; Van den Bussche 2011</span></div>
+      </a></div></div>
+    </div>
+  </div>
+</section>
+<footer>Distributed Algorithms of Ancient Greece</footer>
+
+<script src="art/scroll/shell.js"></script>
 </body>
 </html>
