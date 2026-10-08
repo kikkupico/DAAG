@@ -233,6 +233,12 @@ svg text{font-family:var(--serif)}
 .slot.new{animation:slotin .6s both}
 @media(max-width:640px){.slots{grid-template-columns:repeat(3,1fr)}}
 
+/* president's scroll, drawn inside the hall svg */
+.fig .row rect{fill:#fffaf0;stroke:#1c1512;stroke-width:3}
+.fig .row rect.future{fill:none;stroke-dasharray:6 6;stroke-opacity:.35}
+.fig .row rect.gap{fill:#fde8de;stroke:#bf4a26;animation:pulse2 1.3s infinite}
+.fig .row rect.fill{fill:#eef3d8;stroke:#5f6e28}
+.fig .row.pop2{animation:slotin .6s both}
 /* cards row */
 .cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
 .card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
@@ -533,7 +539,7 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
     </div>
     <div class="pop"><div class="leaf"><div class="paper well" id="par" style="color:var(--ink);margin-top:2rem">
       <h4>The president's scroll <em id="parstate">newly appointed</em></h4>
-      <div class="slots" id="slots"></div>
+      <svg class="fig" id="parsvg" style="width:100%;height:auto;max-width:880px;display:block;margin:0 auto" role="img" aria-label="The Chamber, with the new president asking every legislator what they have voted for, beside the president's scroll of numbered decrees"></svg>
       <p class="say" id="parsay">Decrees 122 to 124 are known to everyone. Press the first button.</p>
       <div class="row">
         <button class="btn" id="par1">1 · Ask everyone about every open number</button>
@@ -873,28 +879,46 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
   new IntersectionObserver(es=>{if(!es[0].isIntersecting)stop();else if(pres||!$("#drun").disabled)go()},{threshold:.1}).observe($("#duel"));
 })();
 
-/* ===== parliament: the president's scroll ===== */
+/* ===== parliament: the president asks the Chamber, then fills the gap ===== */
 (function(){
-  const slots=$("#slots"); const say=$("#parsay"),st=$("#parstate");
-  const b1=$("#par1"),b2=$("#par2"),b3=$("#par3"),br=$("#parr");
-  const base=[[122,"Tax on olives"],[123,"Lamps burn olive oil"],[124,"Roads kept by the town"],[125,null],[126,"Port dues set"],[127,null],[128,null],[129,null],[130,null]];
-  function build(){slots.innerHTML=base.map(([n,t])=>`<div class="slot ${t&&n<125?"has":""}" id="s${n}"><b>${n}</b>${t&&n<125?t:""}</div>`).join("")}
-  function reset(){build();say.textContent="Decrees 122 to 124 are known to everyone. Press the first button.";st.textContent="newly appointed";b1.disabled=false;b2.disabled=b3.disabled=true;br.hidden=true}
-  b1.onclick=()=>{
-    $("#s126").classList.add("has");$("#s126").innerHTML="<b>126</b>Port dues set";
-    $("#s125").classList.add("gap");$("#s125").innerHTML="<b>125</b>? nobody knows";
-    say.innerHTML="Replies are in. One legislator has voted for <b>126</b>. Nobody has any vote at all for <b class='bad'>125</b>. A hole in the law.";
-    st.textContent="holding the replies";b1.disabled=true;b2.disabled=false};
-  b2.onclick=()=>{
-    const s=$("#s125");s.classList.remove("gap");s.classList.add("fill","new");s.innerHTML="<b>125</b>The ides of February is national olive day";
-    say.innerHTML="The president fills the gap with a harmless decree: <i>the ides of February is national olive day.</i> The hole is closed, and nothing that mattered is lost.";
-    st.textContent="gap filled";b2.disabled=true;b3.disabled=false};
-  b3.onclick=async()=>{
-    b3.disabled=true;
+  const svg=$("#parsvg"); const H=Hall(svg,{vb:"0 0 900 490",cx:235,cy:235,rr:215,R:140,doorText:false});
+  const C={P:"#e0b84a",B:"#5b9be0",G:"#e2564e",D:"#9cb648",E:"#b58be0"}, ang={P:200,B:270,G:340,D:40,E:140}, lab={P:"Α",B:"Β",G:"Γ",D:"Δ",E:"Ε"};
+  const others=["B","G","D","E"], S={}; Object.keys(ang).forEach(k=>S[k]=H.seat(lab[k],C[k],ang[k]));
+  const O=H.over, set=(e,on)=>e.classList.toggle("on",!!on), show=(g,on)=>g.setAttribute("opacity",on?1:0);
+  const pt=el("text",{x:S.P.x,y:S.P.y+46,class:"lab"},O); pt.textContent="new president";
+  // what each legislator reports
+  const rep={B:["voted for 126",true],G:["nothing past 124",false],D:["nothing past 124",false],E:["nothing past 124",false]};
+  const sp={},tp={},chips={};
+  others.forEach(k=>{const dx=S[k].x-S.P.x,dy=S[k].y-S.P.y,d=Math.hypot(dx,dy),ux=dx/d,uy=dy/d;sp[k]=[S.P.x+ux*40,S.P.y+uy*40];tp[k]=[S[k].x-ux*40,S[k].y-uy*40];
+    const [ox,oy]=H.at(ang[k],H.R+56);const c=el("g",{class:"tag fade",transform:`translate(${ox} ${oy})`},O);el("rect",{x:-62,y:-14,width:124,height:28},c);const t=el("text",{},c);t.textContent=rep[k][0];chips[k]=c});
+  function mk(color,glyph){const g=el("g",{class:"tok",opacity:0},O);el("circle",{r:14,fill:color,stroke:"#1c1512","stroke-width":2},g);const t=el("text",{style:"fill:#1c1512;font-size:15px;text-anchor:middle;dominant-baseline:central;font-weight:700"},g);t.textContent=glyph;return g}
+  const tq={},tr={},td={};others.forEach(k=>{tq[k]=mk("#fffaf0","?");tr[k]=mk("#8fc4de","·");td[k]=mk("#c9d98a","✎")});
+  function put(g,k,u){const x=sp[k][0]+(tp[k][0]-sp[k][0])*u,y=sp[k][1]+(tp[k][1]-sp[k][1])*u;g.style.transform=`translate(${x}px,${y}px)`}
+  others.forEach(k=>{put(tq[k],k,0);put(tr[k],k,1);put(td[k],k,0)});
+  // the president's scroll
+  const title=el("text",{x:520,y:42,class:"lab",style:"text-anchor:start;font-size:18px"},O);title.textContent="The president's scroll";
+  const rows={}; const base=[[122,"Tax on olives"],[123,"Lamps burn olive oil"],[124,"Roads kept by the town"],[125,""],[126,""],[127,""],[128,""],[129,""],[130,""]];
+  base.forEach(([n,t],i)=>{const g=el("g",{transform:`translate(520 ${58+i*46})`,class:"row"},O);const r=el("rect",{width:340,height:38,rx:6},g);const nn=el("text",{x:14,y:20,style:"font-family:Optima,sans-serif;font-weight:700;font-size:17px;dominant-baseline:central;fill:#1c1512"},g);nn.textContent=n;const tx=el("text",{x:62,y:20,style:"font-size:16px;dominant-baseline:central;fill:#1c1512"},g);tx.textContent=t;rows[n]={g,r,tx}});
+  function row(n,cls,text){const o=rows[n];o.r.setAttribute("class","r "+cls);if(text!==undefined)o.tx.textContent=text;o.g.classList.remove("pop2");void o.g.getBoundingClientRect();o.g.classList.add("pop2")}
+  function reset(){
+    base.forEach(([n,t])=>row(n,n<=124?"has":"future",t));
+    others.forEach(k=>{set(chips[k],false);show(tq[k],false);show(tr[k],false);show(td[k],false);put(tq[k],k,0);put(tr[k],k,1);put(td[k],k,0)});
+    Object.values(rows).forEach(o=>o.g.classList.remove("pop2"));
+    say.textContent="Decrees 122 to 124 are in everyone's scroll. The new president knows nothing beyond that. Press the first button.";st.textContent="newly appointed";b1.disabled=false;b2.disabled=b3.disabled=true;br.hidden=true}
+  const say=$("#parsay"),st=$("#parstate"),b1=$("#par1"),b2=$("#par2"),b3=$("#par3"),br=$("#parr");
+  b1.onclick=async()=>{b1.disabled=true;
+    others.forEach(k=>{show(tq[k],true);put(tq[k],k,1)});say.innerHTML="One question goes to everyone, covering every open number at once: <i>what have you voted for?</i>";
+    await sleep(reduce?0:1300);
+    others.forEach(k=>{show(tq[k],false);show(tr[k],true);put(tr[k],k,0);set(chips[k],true)});await sleep(reduce?0:1300);others.forEach(k=>show(tr[k],false));
+    row(126,"has","Port dues set");row(125,"gap","? nobody has voted for 125");
+    say.innerHTML="Replies are in. Β has voted for <b>126</b>. Nobody has any vote at all for <b class='bad'>125</b>. A hole in the law.";st.textContent="holding the replies";b2.disabled=false};
+  b2.onclick=async()=>{b2.disabled=true;
+    row(125,"fill","Ides of February: olive day");others.forEach(k=>{show(td[k],true);put(td[k],k,1)});await sleep(reduce?0:1300);others.forEach(k=>{show(td[k],false);put(td[k],k,0)});
+    say.innerHTML="The president fills the gap with a harmless decree: <i>the ides of February is national olive day.</i> The hole is closed, and nothing that mattered is lost.";st.textContent="gap filled";b3.disabled=false};
+  b3.onclick=async()=>{b3.disabled=true;
     for(const [n,t] of [[127,"Lamps burn only olive oil"],[128,"Market opens at dawn"]]){
-      const s=$("#s"+n);s.classList.add("has","new");s.innerHTML=`<b>${n}</b>${t}`; await sleep(reduce?0:650)}
-    say.innerHTML="Only now does the president pass new decrees, in order after everything already in the book. Each is a plain three-step ballot.";
-    st.textContent="governing";br.hidden=false};
+      ["B","G","D"].forEach(k=>{show(td[k],true);put(td[k],k,1)});row(n,"has",t);await sleep(reduce?0:1100);["B","G","D"].forEach(k=>{show(td[k],false);put(td[k],k,0)})}
+    say.innerHTML="Only now does the president pass new decrees, in order after everything already in the book. Each is a plain three-step ballot: ask the quorum to vote, hear their votes, announce the result.";st.textContent="governing";br.hidden=false};
   br.onclick=reset; reset();
 })();
 
