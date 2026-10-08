@@ -1,0 +1,404 @@
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <span class="now" id="now"></span>
+  <i id="prog"></i>
+</div>
+
+<!-- ============================================================ cover -->
+<header class="spread dark" id="cover" data-name="Cover">
+  <div class="cut" style="left:-30px;bottom:-10px;width:90px;opacity:.3" data-depth="-26"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#5f6e28"/></svg></div>
+  <div class="cut" style="right:-20px;bottom:-14px;width:80px;opacity:.3" data-depth="-40"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#7c8f3a"/></svg></div>
+  <div class="wrap grid">
+    <div>
+      <div class="kicker">After Fischer, Lynch and Paterson, 1985</div>
+      <h1>The Limits of Agreement<span>why no plan can promise that anyone ever commits</span></h1>
+      <p class="hook">Can four men always agree, when one of them may fall silent and a message may take any time at all?</p>
+      <p class="hook" style="color:var(--blood);font-style:normal;font-family:var(--sans);font-size:1.1rem">At the foot of Mount Phyle, no plan can promise it.</p>
+      <div class="scrollcue"><b>↓</b> Scroll. Things unfold.</div>
+    </div>
+    <div class="pop" data-auto>
+      <div class="leaf">
+        <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" alt="Under a full moon a mercenary in an oxblood-red cloak sits alone at the mouth of his tent at the foot of a steep hill, looking up towards a ruined ring wall on the skyline"></div>
+        <div class="fold-shadow"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================ machines -->
+<section class="spread light" id="machines" data-name="In machine terms">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap two" style="gap:clamp(24px,5vw,60px);align-items:center">
+    <div>
+      <div class="kicker">First, in machine terms</div>
+      <h2>Many computers, one decision</h2>
+      <p class="lede">A group of computers must all settle on the same one of two values.</p>
+      <ul class="terms">
+        <li><b>Messages take any time at all.</b> Every message arrives, but no delay is too long to be possible.</li>
+        <li><b>One machine may stop</b> at any moment, without a word.</li>
+        <li><b>Fischer, Lynch and Paterson</b> (1985): no protocol that acts only on what it has received can guarantee that the group ever decides.</li>
+      </ul>
+      <p style="margin-top:1.2rem">This edition tells it with four mercenaries, their ravens, and a hill they must take together or not at all.</p>
+    </div>
+    <div class="pop fromright"><div class="leaf">
+      <div class="paper logs">
+        <h4>Crashed, or only slow?</h4>
+        <div class="wire"><div class="m">MACHINE A</div><div class="w"><span>?</span></div><div class="m q">MACHINE B</div></div>
+        <div class="waitlog" id="waitlog"></div>
+        <p class="note" id="waitnote" data-live>A has asked B for its value and is waiting for the reply.</p>
+        <div class="row"><button class="btn" id="waitb">Wait longer</button><button class="btn alt" id="waitr" hidden>Start again</button></div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ============================================================ the hill -->
+<section class="spread dark" id="hall" data-name="The Foot of Mount Phyle">
+  <a class="anchor" id="s1"></a>
+  <div class="bleed">
+    <img src="img/camp.jpg" alt="A lone linen tent with a shield and a chest on a rocky slope below a ring wall on the summit, cypresses and pines around it" data-parallax>
+    <div class="hall-title"><div class="t">
+      <div class="kicker">The foot of Mount Phyle</div>
+      <h2>Four tents, out of sight of one another</h2>
+      <p>Four mercenaries are camped at the foot of the hill, one to a tent, under nobody's command.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> Bandits hold the top.</p>
+    </div></div>
+    <div class="pin pop" style="left:50%;top:44%;"><div class="leaf"><b>Only ravens</b>The four send word only by raven. No raven has a longest flight.</div></div>
+    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>Nobody lies</b>No man at the foot ever misreports anything.</div></div>
+    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>Any man may die</b>A dead man's tent simply falls silent. Nobody succeeds him, and no bird reports it.</div></div>
+  </div>
+</section>
+
+<!-- ============================================================ the question -->
+<section class="spread light" id="question" data-name="Attack or hold">
+  <a class="anchor" id="s2"></a>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">One question, two answers</div>
+      <h2>Attack, or hold</h2>
+      <p class="lede">The four mercenaries must all attack the hill together, or all hold and keep it closed. Half attacking while half hold is worse than either.</p>
+      <p>Each man formed an opinion at dusk from what he could see of his own quarter. A man <b>commits</b> by leaving his tent, to climb or to guard his gully, and he will not be back before dawn. The four want three things of whatever plan they follow.</p>
+    </div>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First demand</div><h3>No two commit differently</h3><p>Nobody attacks while another holds.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second demand</div><h3>Both answers stay possible</h3><p>What they do must depend on what they saw.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third demand</div><h3>Somebody eventually commits</h3><p>A plan under which nobody ever moves keeps the first two for free.</p></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.4rem">And they may not draw lots. Each man acts on what has reached him and nothing else.</p>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Two easy plans <em>try each</em></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg" id="plansvg" role="img" aria-label="The hill from above with four tents at its foot, each showing what its man saw at dusk"></svg>
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">The hill from above. The badge beside each tent is what that man saw at dusk: A for attack, H for hold.</p>
+          <ul class="checks" data-live>
+            <li id="d1"></li><li id="d2"></li><li id="d3"></li>
+          </ul>
+        </div>
+      </div>
+      <p class="say" id="plansay">Each easy plan keeps two demands. Find the one it gives up.</p>
+      <div class="row">
+        <button class="btn" id="plan1">Always hold</button>
+        <button class="btn alt" id="plan2">Wait for every report</button>
+        <button class="btn alt" id="plan3">Wait, while tent 3 stays silent</button>
+        <button class="btn alt" id="plannew">New sightings</button>
+      </div>
+    </div></div></div>
+  </div>
+</section>
+
+<!-- ============================================================ a tent that does not answer -->
+<section class="spread dark" id="silent" data-name="A tent that does not answer">
+  <a class="anchor" id="s3"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">The difficulty, entire</div>
+        <h2>A dead man, or a slow bird?</h2>
+        <p class="lede">The ravens always arrive. They take as long as they take, come in no particular order, and bring exactly what was written.</p>
+        <p>A man may always walk to his perch and find nothing there. That is not news. A man waiting on a tent that has not answered is in one of two situations, and nothing tells them apart.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p03-perch.jpg" alt="A tent and a chest in a wooded gully by moonlight, a shield leaning on the chest, and a bare bird perch with nothing on it" loading="lazy"></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+      <h4>Two nights <em>seen from tent 2's perch</em></h4>
+      <div class="worlds">
+        <div class="world"><h5>One night</h5><svg class="isle-svg" id="worldA" role="img" aria-label="The hill from above: tent 1 has fallen silent and no raven is in the air"></svg><p>Suppose the man at tent 1 is dead. No bird will ever come.</p><div class="perch">Tent 2's perch<b>empty</b></div></div>
+        <div class="world"><h5>Another night</h5><svg class="isle-svg" id="worldB" role="img" aria-label="The hill from above: tent 1's raven has stopped part of the way to tent 2"></svg><p>Suppose he is perfectly well. His raven went out hours ago and is sitting in a pine.</p><div class="perch">Tent 2's perch<b>empty</b></div></div>
+      </div>
+      <p class="say" id="worldsay">Tent 2 has heard nothing from tent 1. Which night is this?</p>
+      <div class="row"><button class="btn" id="worldb">Wait another hour</button></div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">So a plan cannot wait for every report: whenever one man is dead it waits for ever, and can never learn that he is. <b>Each man must act, at some point, without hearing from everyone.</b></p>
+  </div>
+</section>
+
+<!-- ============================================================ standings -->
+<section class="spread light" id="standings" data-name="Standings and arrivals">
+  <a class="anchor" id="s4"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Three words the argument needs</div>
+      <h2>When is the matter settled?</h2>
+      <p class="lede">Somewhere in the night the matter gets settled, without everyone having been heard. To say when, the argument needs three words.</p>
+    </div>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A standing</div><h3>How the night stands, entire</h3><p>What each of the four men holds in his head, together with every raven aloft and not yet taken in.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">An arrival</div><h3>One man takes in one raven</h3><p>It is the only kind of thing that happens. Going to the perch and finding nothing counts as a turn, and changes nothing.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Open or closed</div><h3>Does the order of arrivals still matter?</h3><p>A standing is open if the night can still end in holding, and can still end in attacking. It is closed if only one answer remains.</p></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2.4rem">
+      <h4>Separate folds <em>run them in either order</em></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg fig" id="foldsvg" style="width:100%;max-width:520px" role="img" aria-label="Four lines running outward, one for each tent, with ravens as arcs between tents 1 and 2 and between tents 3 and 4"></svg>
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each line is one tent, at one moment after another, and each ring further out is later. A raven is an arc from one tent to another. A hollow dot is a man who has not committed.</p>
+          <div class="stand" id="foldstand" data-live></div>
+          <p class="say" id="foldsay">Tents 1 and 2 have ravens to trade, and so have tents 3 and 4. Which pair goes first?</p>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn" id="fold12">Tents 1 and 2 trade ravens</button>
+        <button class="btn" id="fold34">Tents 3 and 4 trade ravens</button>
+        <button class="btn alt" id="foldr">Start the night again</button>
+      </div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">That is the first tool, and the dullest fact here: two runs of arrivals with no man in common do not interfere. An arrival belongs to one man and to the air, and to nobody else.</p>
+    <details class="proof">
+      <summary>Proof · courses with no man in common commute</summary>
+      <p class="given">In the paper's terms a standing is a configuration, an arrival an event, a course a schedule, a fair course an admissible run, and open and closed are bivalent and univalent. <b>Lemma 1.</b> Let courses σ₁ and σ₂ both be applicable at a standing, and let the set <var>A</var> of men who act in σ₁ and the set <var>B</var> of men who act in σ₂ be disjoint. Then each can be run after the other, and both orders reach the same standing.</p>
+    <ol class="proofsteps">
+      <li>A standing is what is in each man's head together with the ravens aloft. An arrival
+      changes two parts of it: the one man who takes the raven in, and the air — one raven removed,
+      perhaps others added.</li>
+      <li>Let σ₁ touch a set of men <var>A</var> and σ₂ a set <var>B</var>, disjoint. Running σ₁
+      alters only men in <var>A</var>, which σ₂ never reads; and conversely.</li>
+      <li>Neither disables the other through the air: ravens are addressed, so those σ₂ consumes
+      are addressed into <var>B</var>, and σ₁ removes only ravens addressed into <var>A</var>.
+      Both orders are therefore applicable.</li>
+      <li>In either order, the men of <var>A</var> have taken exactly the arrivals of σ₁ and
+      those of <var>B</var> exactly the arrivals of σ₂, each in its own order, and the air has had
+      the same ravens removed and added. So the standings reached are the
+      same.<span class="qed">∎</span></li>
+    </ol>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ the dusk -->
+<section class="spread dark" id="dusksec" data-name="The dusk that settles nothing">
+  <a class="anchor" id="s5"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">The night can begin open</div>
+      <h2>The dusk that settles nothing</h2>
+      <p class="lede">The sightings at dusk do not always settle the night. Line up some possible beginnings so that each differs from the next in one man's sighting, with all-hold at one end and all-attack at the other.</p>
+      <p>Suppose every beginning were already settled by the sightings alone. The second demand forces the two ends opposite ways. You settle the three in between: click a beginning to change it.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>A row of beginnings <em>click the middle three</em></h4>
+      <div class="dusk" id="dusk"></div>
+      <p class="say" id="dusksay"></p>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">Nobody died to make that argument work. The other three could not tell a silent man from a slow one, and so could not tell two different beginnings apart. <b>However the four arrange their affairs, the sightings can fall so that the night begins open.</b></p>
+    <details class="proof">
+      <summary>Proof · some beginning is open</summary>
+      <p class="given">In the paper's terms a standing is a configuration, an arrival an event, a course a schedule, a fair course an admissible run, and open and closed are bivalent and univalent. A beginning is an initial configuration: the four sightings, with no raven yet aloft. <b>Lemma 2.</b> Whatever the four have arranged, some beginning is open.</p>
+    <ol class="proofsteps">
+      <li>Suppose every beginning were closed, each already fated by the sightings alone.</li>
+      <li>Both fates occur: the second demand forces holding where all four saw hold, and attacking
+      where all four saw attack.</li>
+      <li>Call two beginnings neighbours when they differ in one man's sighting. Walking from a
+      hold-fated beginning to an attack-fated one by single changes, there must be neighbours
+      <var>B</var>₀ and <var>B</var>₁ fated to hold and to attack, differing only in the sighting of one
+      man <var>p</var>.</li>
+      <li>Take a fair course from <var>B</var>₀ in which <var>p</var> never stirs; this is
+      permitted, since at most one man may be silent. Being fair, it ends in holding.</li>
+      <li>Run the same course from <var>B</var>₁. Since <var>p</var> never acts and his sighting
+      is the only difference, every other man sees exactly the same arrivals in the same order, so
+      the course ends in holding here too.</li>
+      <li>But <var>B</var>₁ was fated to attack, and a fated beginning admits no course to the other
+      answer. Hence some beginning is open.<span class="qed">∎</span></li>
+    </ol>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ deferring -->
+<section class="spread dark has-scrolly" id="defersec" data-name="The telling raven">
+  <a class="anchor" id="s6"></a>
+  <div class="wrap" style="margin-bottom:-1rem">
+    <div class="narrow">
+      <div class="kicker">No arrival has to close it</div>
+      <h2>The raven that would settle it can always be held back</h2>
+      <p class="lede">An open night cannot stay open for ever, surely? Some arrival, sooner or later, must be the one that settles it. No arrival has to be. Scroll slowly: the picture moves with you.</p>
+    </div>
+  </div>
+  <div class="scrolly" id="defer">
+    <div class="stage"><div class="stage-inner">
+      <svg class="fig svg-dark" id="defersvg" role="img" aria-label="A small map of standings: a top row reached while one raven is held back, and under each the standing once that raven lands"></svg>
+    </div></div>
+    <div class="steps">
+      <div class="step on"><div class="card"><div class="num">1 · An open night</div><h3>One raven is about to land</h3><p>The night stands open: it can still end either way. One raven is waiting to be taken in. The birds are reliable, so it will land. Must it settle anything when it does?</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · Hold it back</div><h3>Other arrivals can come first</h3><p>The top row is the night going on while that raven waits, one arrival at a time. Under each standing is the standing once the raven lands there.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · Suppose</div><h3>Suppose its landing always settled the night</h3><p>Then every standing in the bottom row is closed, for holding or for attacking. Both must appear, because the night at the top could still end either way.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Neighbours</div><h3>Somewhere, two neighbours split</h3><p>Two standings in the top row are one arrival apart. Land the raven at the first and the night is settled for holding. Land it at the second and the night is settled for attacking.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · Another tent's arrival</div><h3>Then the order cannot matter</h3><p>If that one arrival is another man's business, it and the raven are separate folds: either order reaches the same standing. So one more arrival leads from a night settled for holding to a night settled for attacking. That cannot be.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · The same tent's arrival</div><h3>Then let that man go quiet</h3><p>If both arrivals are one man's business, let him go quiet, as a man does whose birds are in the pines. The other three must finish without him. From where they finish, the raven alone still leads to holding, while his other arrival and then the raven still leads to attacking. A finished night would still be open. That cannot be either.</p></div></div>
+      <div class="step"><div class="card"><div class="num">7 · So</div><h3>The raven lands, and the night is open still</h3><p>The supposition fails. Somewhere in the bottom row a standing is open. No single raven is ever the one that has to settle the matter.</p></div></div>
+    </div>
+  </div>
+  <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <details class="proof">
+      <summary>Proof · an arrival can always be deferred and the night left open</summary>
+      <p class="given">In the paper's terms a standing is a configuration, an arrival an event, a course a schedule, a fair course an admissible run, and open and closed are bivalent and univalent. <b>Lemma 3.</b> Let <var>C</var> be an open standing and <var>e</var> an arrival applicable at <var>C</var>. Let 𝒞 be the set of standings reachable from <var>C</var> without allowing <var>e</var>, and 𝒟 the set got by allowing <var>e</var> at each standing of 𝒞. Then 𝒟 contains an open standing.</p>
+    <ol class="proofsteps">
+      <li>Let <var>C</var> be open and <var>e</var> an arrival applicable there. Write 𝒞 for
+      the standings reachable from <var>C</var> without allowing <var>e</var>, and 𝒟 for those got
+      by allowing <var>e</var> at each standing of 𝒞. Suppose no member of 𝒟 is open.</li>
+      <li><b>Both settlements occur in 𝒟.</b> <var>C</var> is open, so some course from it
+      ends in holding and another in attacking. If such a course never allows <var>e</var>, its standings
+      lie in 𝒞 and allowing <var>e</var> at the end gives a member of 𝒟 settled the same way; if
+      it does allow <var>e</var>, the standing just after is already in 𝒟.</li>
+      <li><b>So 𝒞 holds neighbours that split.</b> 𝒞 is connected, so walking from the standing
+      whose image is settled for holding to the one whose image is settled for attacking gives <var>C</var>₀ and
+      <var>C</var>₁ = <var>f</var>(<var>C</var>₀), one arrival apart, whose images <var>D</var>₀
+      and <var>D</var>₁ are settled opposite ways.</li>
+      <li><b>Case one: <var>f</var> is another man's arrival.</b> By the lemma of separate folds
+      <var>e</var> and <var>f</var> commute, so <var>D</var>₁ = <var>f</var>(<var>D</var>₀). But
+      everything reachable from the hold-settled <var>D</var>₀ is settled for holding, and
+      <var>D</var>₁ is settled for attacking.</li>
+      <li><b>Case two: <var>f</var> is the same man's arrival, say <var>p</var>'s.</b> Take a
+      course σ from <var>C</var>₀ in which <var>p</var> never stirs and which does finish;
+      permitted, since <var>p</var> may be the one silent man. Call the standing it reaches
+      <var>A</var>.</li>
+      <li>σ has no man in common with <var>e</var> or <var>f</var>, so by the lemma it may be run
+      from <var>D</var>₀ and from <var>D</var>₁ as well, reaching <var>e</var>(<var>A</var>) and
+      <var>f</var> then <var>e</var> applied to <var>A</var> — settled for holding and for attacking
+      respectively. So <var>A</var> is open, though σ finished there.</li>
+      <li>Both cases are impossible, so 𝒟 holds an open standing.<span class="qed">∎</span></li>
+    </ol>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ what cannot be promised -->
+<section class="spread light" id="promise" data-name="What cannot be promised">
+  <a class="anchor" id="s7"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Two facts, used without rest</div>
+      <h2>A fair night in which nothing is ever settled</h2>
+      <p class="lede">The night can begin open, and no single arrival need close it. Keep the four men in a queue, and let whoever orders the arrivals use both facts for ever.</p>
+      <p>The man at the head of the queue takes in the raven longest aloft for him, or walks to his perch and back if none is waiting. Then he goes to the back. The stretch before each arrival is chosen so that the night is open after it.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>The night <em id="nightmode">not yet begun</em></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg" id="nightsvg" role="img" aria-label="The hill from above, with ravens aloft between the four tents and each man taking his turn"></svg>
+        <div>
+          <div class="queue" id="nightq" data-live></div>
+          <div class="counts"><span><b id="narr">0</b>arrivals taken in</span><span><b id="naloft">0</b>ravens aloft</span><span><b id="ncom">0</b>men committed</span></div>
+          <p class="say" id="nightsay">No man is starved of his turn, and every raven is taken in at last.</p>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn" id="nightrun">Let the night run</button>
+        <button class="btn alt" id="nightbound">Give the birds a longest flight</button>
+        <button class="btn alt" id="nightreset">Start again</button>
+      </div>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">The picture shows the pattern of the argument, not a worked plan: the turns and the ravens are real, and that the night stays open is what the two facts guarantee for any plan the four could have made.</p>
+    </div></div></div>
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center;margin-top:2rem">
+      <div>
+        <h3 style="font-size:1.5rem;margin-bottom:.5rem">No plan guarantees that anybody ever commits</h3>
+        <p><b>Nobody dies in it.</b> What limits the four is the possibility of a death, which looks exactly like a slow bird.</p>
+        <p><b>Nothing goes wrong.</b> Nobody commits to a wrong answer, because nobody commits at all.</p>
+        <p><b>One would have been enough.</b> The demand was only that somebody commit, and even that fails.</p>
+        <p><b>The hill has nothing to do with it.</b> Any number of men from two upward, any two answers: the same conclusion.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on top" loading="lazy"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ what would have to change -->
+<section class="spread dark" id="change" data-name="What would have to change">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Three ways out</div>
+      <h2>What would have to change</h2>
+      <p class="lede">The slowness of the birds is not the trouble, nor their disorder. The trouble is two things together: no longest flight, and a dead man looking exactly like a slow bird.</p>
+    </div>
+    <div class="cards3">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">One</div><h3>A longest flight</h3><p>Give the birds a longest flight, and enough silence means something.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Two</div><h3>Some report of who has died</h3><p>One that in the end names every dead man, and in the end stops naming at least one living one. It is enough while more than half live.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Three</div><h3>Every death before dusk</h3><p>If no man can die once the evening has begun, a majority can manage.</p></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.6rem">None of the three is on offer at the foot of the hill. The first is on offer at the top, where the bandits' rats have a longest run.<sup class="xref"><a href="../agreeing-among-liars/index.html#s3" title="Agreeing Among Liars: The Ravens Above">*</a></sup></p>
+  </div>
+</section>
+
+<!-- ============================================================ relevance -->
+<section class="spread light" id="why" data-name="Back to machines">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Back to machines</div>
+      <h2>The camp was a group of machines</h2>
+      <p class="lede">Every tent is a process, and every raven a message. Hover or tap to see who is who.</p>
+    </div>
+    <div class="map" id="map">
+      <div class="hd" style="text-align:right;padding-right:6px">At the foot of the hill</div><div></div><div class="hd">In the machine room</div>
+    </div>
+    <div class="meander" style="margin:3rem auto"></div>
+    <div class="end">
+      <p class="big">When messages may take any time and even one machine may stop, no protocol can guarantee that the group ever decides.</p>
+      <p class="lede" style="margin:0 auto">Agreement itself is never broken. What cannot be promised is an end to the waiting.</p>
+      <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">Practical protocols live with this by changing the rules a little: delays that are bounded in the end, an imperfect report of who has failed, or a coin.</p>
+      <div class="links">
+        <a href="../../places/the-foot/index.html">The Foot of Mount Phyle, in detail</a>
+        <a href="../../papers/index.html">All the papers</a>
+      </div>
+    </div>
+    <div class="apparatus">
+      <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/the-foot/index.html">The Foot of Mount Phyle</a></p>
+      <p class="lineage"><span class="lbl">Leads to</span> <a href="../agreeing-when-messages-run-late/index.html">Agreeing When Messages Run Late</a> · <a href="../answering-while-cut-off/index.html">Answering While Cut Off</a> · <a href="../telling-the-dead-from-the-slow/index.html">Telling the Dead from the Slow</a> · <a href="../agreeing-by-chance/index.html">Agreeing by Chance</a> · <a href="../the-part-time-parliament/index.html">The Part-Time Parliament</a></p>
+      <p class="lineage"><span class="lbl">Outside this series</span> Herlihy 1991, <i>wait-free synchronisation</i></p>
+      <details class="proof">
+        <summary>The paper behind this book</summary>
+        <p><b>The paper behind this book.</b> Michael J. Fischer, Nancy A. Lynch and Michael S.
+    Paterson, “Impossibility of Distributed Consensus with One Faulty Process,” <i>Journal of the
+    ACM</i> <b>32</b>, 2 (April 1985), 374–382.</p>
+        <p><b>The ideas.</b> No deterministic protocol can guarantee consensus in an
+    asynchronous system in which even one process may crash. The proof turns on <i>bivalence</i>:
+    a configuration from which both decisions are still reachable. There is always a bivalent
+    initial configuration, and from any bivalent configuration the step that would resolve the
+    indecision can be deferred and then taken without resolving it — so a scheduler can build an
+    admissible run that never decides. Three details carry the weight: the run the proof
+    constructs contains <i>no failure at all</i>, the single permitted fault being spent on the
+    argument; agreement and validity are never violated, only termination is lost; and the result
+    bites even though the requirement is merely that <i>some</i> process decide. The obstruction
+    is not slowness but the inability to distinguish a crashed process from a slow one. Relax it —
+    bound the delays, even only eventually, or supply an imperfect oracle about who has failed —
+    and consensus becomes solvable again; the paper's own §4 relaxes it by letting processes die
+    only <i>before</i> the protocol begins, and gives a protocol that works whenever a majority
+    are sound.</p>
+        <div class="refs">
+      <p>Fischer, M. J., Lynch, N. A., and Paterson, M. S. Impossibility of distributed consensus
+      with one faulty process. <i>J. ACM</i> <b>32</b>, 2 (1985), 374–382.</p>
+      <p>Dwork, C., Lynch, N., and Stockmeyer, L. Consensus in the presence of partial synchrony.
+      <i>J. ACM</i> <b>35</b>, 2 (1988), 288–323.</p>
+      <p>Chandra, T. D., and Toueg, S. Unreliable failure detectors for reliable distributed
+      systems. <i>J. ACM</i> <b>43</b>, 2 (1996), 225–267.</p>
+    </div>
+      </details>
+    </div>
+  </div>
+</section>
+<footer>Distributed Algorithms of Ancient Greece · “The Limits of Agreement”, after Fischer, Lynch and Paterson, JACM 32(2), 1985.</footer>
+
