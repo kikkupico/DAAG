@@ -1,0 +1,50 @@
+/* ---------- two machines counted in turn ---------- */
+.mach{padding:18px 18px 14px}
+.mpair{display:grid;grid-template-columns:1fr 54px 1fr;gap:6px;align-items:center}
+.mbox{border:3px solid var(--ink);background:#fff;padding:8px;text-align:center;transition:background .3s}
+.mbox h5{margin:0 0 4px;font-family:var(--sans);font-size:.7rem;letter-spacing:.08em}
+.mbox b{font-family:var(--sans);font-size:1.4rem;font-variant-numeric:tabular-nums}
+.mbox.on{background:var(--gold)}
+.marrow{text-align:center;font-family:var(--sans);font-size:.78rem;color:var(--blood);min-height:1.2em}
+.lists{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.lists h5{margin:0 0 6px;font-family:var(--sans);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48}
+.lists>div{border:3px solid var(--ink);background:#fff;padding:8px;min-height:120px}
+.e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both;font-family:var(--sans)}
+.e.bad{border-left-color:var(--blood)}
+.e.good{border-left-color:#3f7a2a}
+.e.hit{background:#f3dc92}
+@media(max-width:520px){.lists{grid-template-columns:1fr}.lists>div{min-height:0}}
+/* ---------- figures beside text ---------- */
+.st-wrap{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.st-wrap{grid-template-columns:minmax(0,1fr)}}
+.st-svg{width:100%;height:auto;display:block}
+.st-slip.pick{stroke:#b5602c;stroke-width:4}
+.tok-l{font-family:var(--sans);font-size:15px;font-weight:700;fill:#136f9e;text-anchor:middle;paint-order:stroke;stroke:#fffaf0;stroke-width:5px;stroke-linejoin:round}
+.tok-l.in{fill:#bf4a26}
+.isle-svg .rp{fill:none;stroke-width:5;stroke-linecap:round;transition:stroke-width .3s}
+.isle-svg .rd{opacity:.85;transition:opacity .3s}
+.isle-svg .rd.dim{opacity:.3}
+.isle-svg .rd.pick{opacity:1}
+.isle-svg .rd.pick .rp{stroke-width:9}
+.isle-svg .site.pick rect{stroke:#bf4a26}
+.isle-svg [role=button]{cursor:pointer}
+.isle-svg [role=button]:focus-visible{outline:none}
+.isle-svg [role=button]:focus-visible rect,.isle-svg [role=button]:focus-visible path{stroke:#136f9e}
+.count9{font-family:var(--sans);font-size:.8rem;margin-top:8px;color:#6b5a48}
+/* ---------- the side cards of the sash census ---------- */
+.side .hc .rc{font-size:.8rem}
+.side .hc.done{background:#e3ecc4}
+.side .hc .chk{min-height:2.7em}
+/* ---------- the reordering ---------- */
+.ev{display:flex;gap:6px;align-items:baseline;font-family:var(--sans);font-size:.82rem;padding:3px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--ink)}
+.ev .st{margin-left:auto;font-size:.7rem;color:#6b5a48;text-align:right}
+.ev.hit{background:#f3dc92}
+.ev.mv{outline:2px dashed var(--blood)}
+/* ---------- verdict table ---------- */
+.dtab{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.92rem;margin-top:12px}
+.dtab td{padding:6px;border-top:2px solid #1c151222}
+.dtab td:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.dtab tr:first-child td{border-top:0}
+.btn.on{background:var(--gold);color:var(--ink)}
+.quote{font-style:italic;font-size:clamp(1.1rem,2.6vw,1.5rem);max-width:28em;margin:2rem 0 0;border-left:5px solid var(--blood);padding-left:16px}
+.stack{display:grid;gap:10px;max-width:640px}

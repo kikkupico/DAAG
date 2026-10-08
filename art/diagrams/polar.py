@@ -1325,7 +1325,6 @@ def leaders_chain():
 
 
 FIGURES = {
-    "books/taking-stock-without-stopping/index.html": [stock_sash, stock_cuts],
     "books/many-copies-acting-as-one/index.html": [copies_overlap, copies_loop],
     "books/agreeing-when-messages-run-late/index.html": [late_turn, late_split],
     "books/answering-while-cut-off/index.html": [cutoff_nights, cutoff_recovery],
