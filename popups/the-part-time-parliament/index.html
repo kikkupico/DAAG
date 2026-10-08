@@ -8,7 +8,7 @@
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <style>
 :root{
-  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4; --night:#eae4d4; --night-hi:#fffaf0;
+  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4;
   --aegean:#2e88b5; --aegean-d:#136f9e; --blood:#bf4a26; --olive:#7c8f3a; --terra:#b5602c;
   --gold:#e0b84a; --shadow:#b9a77e;
   /* the five priests, as in the film */
@@ -23,8 +23,7 @@ img{max-width:100%;display:block}
 button{font:inherit;cursor:pointer}
 h1,h2,h3{font-family:var(--sans);line-height:1.12;margin:0;text-wrap:balance}
 p{margin:0 0 .9rem;text-wrap:pretty}
-.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--gold)}
-.kicker{color:var(--blood)}
+.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--blood)}
 
 /* ---------- top bar ---------- */
 .bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
@@ -49,7 +48,6 @@ p{margin:0 0 .9rem;text-wrap:pretty}
 .light .lede{color:#3a2d24}
 .meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
   background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
-.light .meander{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>")}
 
 /* ---------- the pop-up: a card that unfolds from its hinge ---------- */
 .pop{perspective:1400px}
@@ -82,6 +80,11 @@ p{margin:0 0 .9rem;text-wrap:pretty}
 .cut{position:absolute;pointer-events:none;z-index:1}
 .cut svg{display:block;width:100%;height:auto}
 @media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
+
+/* ---------- two-column spreads ---------- */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.two.wide-r{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
+@media(max-width:859px){.two,.two.wide-r{grid-template-columns:1fr}}
 
 /* ---------- machines ---------- */
 #machines .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,60px);align-items:center}
@@ -189,6 +192,8 @@ svg text{font-family:var(--serif)}
 .seat circle.b{stroke:var(--ink);stroke-width:4;transition:fill .4s,opacity .4s}
 .seat text{font-family:var(--sans);font-weight:700;font-size:17px;text-anchor:middle;dominant-baseline:central;pointer-events:none}
 .seat.out circle.b{opacity:.3;fill:#ccc}
+.seat:focus-visible{outline:none}.seat:focus-visible circle.b{stroke:var(--aegean-d);stroke-width:7}
+.ms tbody tr:focus-visible,.btn:focus-visible,.links a:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
 .seat .ringA{stroke:var(--pB)} .seat .ringB{stroke:var(--pG)}
 .seat .m{fill:none;stroke-width:6;opacity:0;transition:opacity .4s}
 .seat.inA .ringA{opacity:1}.seat.inB .ringB{opacity:1}
@@ -238,7 +243,9 @@ svg text{font-family:var(--serif)}
 .fig .row rect.future{fill:none;stroke-dasharray:6 6;stroke-opacity:.35}
 .fig .row rect.gap{fill:#fde8de;stroke:#bf4a26;animation:pulse2 1.3s infinite}
 .fig .row rect.fill{fill:#eef3d8;stroke:#5f6e28}
-.fig .row.pop2{animation:slotin .6s both}
+/* opacity only: a CSS transform here would replace the row's translate attribute */
+.fig .row.pop2{animation:rowin .6s both}
+@keyframes rowin{from{opacity:0}}
 /* cards row */
 .cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
 .card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
@@ -271,7 +278,7 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
   html{scroll-behavior:auto}
   .pop > .leaf{transition:opacity .3s;transform:none!important}
   [data-depth]{transform:none!important}
-  .hot,.scrollcue b,.slot.gap{animation:none}
+  .scrollcue b,.slot.gap,.fig .row rect.gap,.seat.both .glow{animation:none}
   .fig .tok{transition:none}
 }
 </style>
@@ -365,7 +372,7 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
         <button class="btn alt" id="bqr" hidden>Again</button>
       </div>
     </div></div></div>
-    <div class="cols2" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:center;margin-top:1.4rem" id="progrow">
+    <div class="two" style="gap:24px;align-items:center;margin-top:1.4rem">
       <div>
         <h3 style="font-size:1.5rem;margin-bottom:.5rem">Requirement two: progress</h3>
         <p>Leaving every scroll blank would be consistent too. So: if a majority stays in the Chamber long enough, any proposed decree is passed and written down.</p>
@@ -412,7 +419,7 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
 <!-- ============================================================ majorities -->
 <section class="spread light" id="majorities" data-name="Overlapping majorities">
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
-  <div class="wrap cols" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,60px);align-items:center" id="majcols">
+  <div class="wrap two" style="gap:clamp(24px,5vw,60px);align-items:center">
     <div>
       <div class="kicker">The one fact everything rests on</div>
       <h2>Any two majorities share a member</h2>
@@ -465,7 +472,7 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
 </section>
 
 <!-- ============================================================ one ballot -->
-<section class="spread dark" id="ballot" data-name="One ballot" style="padding-bottom:0;background:var(--night)">
+<section class="spread dark" id="ballot" data-name="One ballot" style="padding-bottom:0;background:var(--marble)">
   <div class="wrap" style="margin-bottom:-1rem">
     <div class="narrow">
       <div class="kicker">The whole protocol</div>
@@ -475,13 +482,13 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
   </div>
   <div class="scrolly" id="bal" data-steps="7">
     <div class="stage"><div class="stage-inner">
-      <svg class="fig svg-dark" viewBox="0 0 900 490" id="balsvg" role="img" aria-label="Ballot 27 run by priest A among B, Gamma, Delta and E"></svg>
+      <svg class="fig svg-dark" viewBox="0 0 900 490" id="balsvg" role="img" aria-label="Ballot 27 run by priest A with the quorum A, Gamma and Delta; B and E are outside it"></svg>
     </div></div>
     <div class="steps">
-      <div class="step on"><div class="card"><div class="num">1 · Choose</div><h3>Pick a fresh number and a quorum</h3><p>The initiator, A, picks ballot 27 and three priests to ask: B, Γ and Δ. E sits this one out.</p></div></div>
+      <div class="step on"><div class="card"><div class="num">1 · Choose</div><h3>Pick a fresh number and a quorum</h3><p>The initiator, A, picks ballot 27 and a quorum of three: A, Γ and Δ. B and E sit this one out.</p></div></div>
       <div class="step"><div class="card"><div class="num">2 · Ask</div><h3>A question, with a price</h3><p>“Tell me the latest vote you ever cast, and promise never to vote in any ballot numbered below this one.”</p></div></div>
       <div class="step"><div class="card"><div class="num">3 · Promise</div><h3>Each answers, and promises</h3><p>The promise goes in the back of their scroll, in indelible ink. The reply is the latest vote, or none.</p></div></div>
-      <div class="step"><div class="card"><div class="num">4 · Look back</div><h3>A now holds a fact about the past</h3><p>Γ voted in ballot 5, Δ in ballot 2. The latest is ballot 5, so A <b>must</b> propose its decree: β. Only if nobody had ever voted could A choose freely.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Look back</div><h3>A now holds a fact about the past</h3><p>Γ voted in ballot 5, Δ in ballot 2, A never. The latest is ballot 5, so A <b>must</b> propose its decree: β. Only if nobody had ever voted could A choose freely.</p></div></div>
       <div class="step"><div class="card"><div class="num">5 · Propose</div><h3>“Vote for this, in this ballot”</h3><p>A sends the forced decree to the quorum.</p></div></div>
       <div class="step"><div class="card"><div class="num">6 · Vote</div><h3>Unless they promised something higher</h3><p>Each member votes, writes it in the back of their scroll, and reports back.</p></div></div>
       <div class="step"><div class="card"><div class="num">7 · Done</div><h3>Every member voted: the ballot succeeded</h3><p>A writes the decree in their scroll and tells everyone. Anyone who hears writes it down. A decree, once chosen, is passed forward. That is the whole ballot.</p></div></div>
@@ -530,10 +537,10 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
       <h2>A separate Synod for every number</h2>
       <p class="lede">The real Parliament passes a long series of decrees. Each number is its own little Synod, but one president runs them all.</p>
     </div>
-    <div style="display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(20px,4vw,50px);align-items:center" id="parcols">
+    <div class="two wide-r" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div class="pop fromleft"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/p05-oki.jpg" alt="A newly made president sitting at a desk copying decrees onto a scroll while others wait" loading="lazy"></div></div></div>
       <div>
-        <p>A <b>new president</b> sends one question covering every open number at once. Each reply says what that legislator has voted for. Then it gets interesting.</p>
+        <p>A <b>new president</b> sends one question covering every open number at once. Each reply says what that legislator has voted for, and which later decrees are already in their scroll. Then it gets interesting.</p>
         <p style="font-size:.95rem;color:#6b5a48">Press the buttons in order.</p>
       </div>
     </div>
@@ -574,7 +581,7 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
         <div class="body"><h3>Don't ask one scroll</h3><p>A legislator who had stepped out advised a buyer from a scroll that stopped at decree 76. Decree 77 had made the sale legal. Asking about the law now never returns an older state of it than before.</p></div>
       </div></div>
     </div>
-    <div class="cols2" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;margin-top:2.4rem" id="growcols">
+    <div class="two" style="gap:24px;margin-top:2.4rem">
       <div class="pop"><div class="leaf"><div class="paper well" style="margin:0">
         <h4>Scrolls grew too long <em>fold one</em></h4>
         <div class="fold" id="fold"><div class="digest">Current law + number of the last decree</div></div>
@@ -597,7 +604,7 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The island was a replicated service</h2>
-      <p class="lede">Every server keeps the same log of commands, and the log is what the Parliament passes. Hover to see who is who.</p>
+      <p class="lede">Every server keeps the same log of commands, and the log is what the Parliament passes. Hover or tap to see who is who.</p>
     </div>
     <div class="map" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">On the island</div><div></div><div class="hd">In the machine room</div>
@@ -648,9 +655,11 @@ function Hall(svg,o={}){
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
 $$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
 
+$$(".say,#count,#msx,#lognote").forEach(e=>e.setAttribute("aria-live","polite"));
+
 /* ===== scroll: progress bar, section name, parallax ===== */
 const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
-const dep=$$("[data-depth]"), par=$$("[data-parallax]"), isleimg=$("#isleimg");
+const dep=$$("[data-depth]"), par=$$("[data-parallax]");
 let tick=false;
 function onscroll(){
   if(tick)return; tick=true;
@@ -664,7 +673,6 @@ function onscroll(){
     if(reduce)return;
     for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
     for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
-    if(isleimg){const r=isleimg.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; isleimg.style.transform=`scale(${(1.16-Math.abs(c)*.1).toFixed(3)}) translateY(${(c*-3).toFixed(2)}%)`}
   });
 }
 addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
@@ -672,22 +680,24 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
 /* ===== machines: three replicas, one log ===== */
 (function(){
   const cmds=["set colour = blue","add 40 to total","delete item 9","set colour = red","add 5 to total","delete item 2"];
-  const reps=[0,1,2].map(i=>({i,log:[],down:false})); const box=$("#reps");
+  const reps=[0,1,2].map(i=>({i,next:0,down:false,catching:false})); const box=$("#reps");
   reps.forEach(r=>{r.el=document.createElement("div");r.el.className="rep";r.el.innerHTML=`<h5><span>MACHINE ${"ABC"[r.i]}</span><span class="st">up</span></h5><div class="l"></div>`;box.appendChild(r.el)});
-  let n=0,started=false,timer;
+  const KEEP=8; let n=0,end=cmds.length*2,timer=null,seen=false;
   function sync(r){r.el.classList.toggle("down",r.down);$(".st",r.el).textContent=r.down?"stopped":"up"}
-  function add(r,k){const d=document.createElement("div");d.className="e";d.textContent=`${k+1} ▸ ${cmds[k%cmds.length]}`;$(".l",r.el).appendChild(d);r.log.push(k)}
+  function add(r){const k=r.next++,l=$(".l",r.el),d=document.createElement("div");d.className="e";d.textContent=`${k+1} ▸ ${cmds[k%cmds.length]}`;l.appendChild(d);while(l.children.length>KEEP)l.firstChild.remove()}
   function step(){
-    const k=n++; if(k>=cmds.length*2){clearInterval(timer);return}
-    reps.forEach(r=>{if(!r.down)add(r,k)});
+    if(n>=end){stop();return}
+    n++; reps.forEach(r=>{if(!r.down&&!r.catching)add(r)});
   }
-  function start(){ if(started)return; started=true; step(); timer=setInterval(step,1300); }
-  new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){start();o.disconnect()}},{threshold:.4}).observe($("#logs"));
+  function run(){ if(timer||!seen||n>=end)return; if(!n)step(); timer=setInterval(step,1300) }
+  function stop(){ clearInterval(timer); timer=null }
+  new IntersectionObserver(es=>{seen=es[0].isIntersecting; if(seen)run(); else stop()},{threshold:.4}).observe($("#logs"));
   const note=$("#lognote"),cr=$("#crash"),rv=$("#revive");
-  cr.onclick=()=>{ const up=reps.filter(r=>!r.down); if(up.length<2)return; const r=up[rnd(up.length)]; r.down=true; sync(r); cr.disabled=true; rv.disabled=false; note.textContent=`Machine ${"ABC"[r.i]} stopped. The others carry on: a majority is still up, so new commands still get through.`; if(!timer||n>=cmds.length*2){n=Math.min(n,cmds.length*2-2);timer=setInterval(step,1300)} };
-  rv.onclick=()=>{ const r=reps.find(r=>r.down); r.down=false; sync(r); rv.disabled=true; cr.disabled=false;
-    const have=Math.max(...reps.map(x=>x.log.length)); let k=r.log.length; const t=setInterval(()=>{ if(k>=have){clearInterval(t);return} add(r,k++) },260);
-    note.textContent=`Machine ${"ABC"[r.i]} is back, and catches up on everything it missed, in order.`; };
+  cr.onclick=()=>{ const up=reps.filter(r=>!r.down); const r=up[rnd(up.length)]; r.down=true; r.catching=false; sync(r); cr.disabled=true; rv.disabled=false;
+    note.textContent=`Machine ${"ABC"[r.i]} stopped. The others carry on: a majority is still up, so new commands still get through.`; end=Math.max(end,n+5); run() };
+  rv.onclick=()=>{ const r=reps.find(r=>r.down); r.down=false; r.catching=true; sync(r); rv.disabled=true; cr.disabled=false;
+    const t=setInterval(()=>{ if(r.down||r.next>=n){clearInterval(t);r.catching=false;return} add(r) },260);
+    note.textContent=`Machine ${"ABC"[r.i]} is back, and catches up on everything it missed, in order.`; end=Math.max(end,n+3); run() };
 })();
 
 /* ===== consistency: two banquets, in the Chamber ===== */
@@ -743,35 +753,37 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
     el("circle",{class:"glow",r:33},s); el("circle",{class:"m ringA",r:30},s); el("circle",{class:"m ringB",r:30},s);
     el("circle",{class:"b",r:24,fill:cols[i]},s); const t=el("text",{},s); t.textContent=gl[i];
     el("rect",{class:"ink",x:-9,y:30,width:18,height:22,rx:3},s);
-    s.dataset.i=i; seats.push({el:s,in:true,A:false,B:false,knows:false});
+    s.setAttribute("tabindex",0); s.setAttribute("role","button");
+    seats.push({el:s,name:gl[i],in:true,A:false,B:false,knows:false});
   }
   const say=$("#majsay"),count=$("#count"),b1=$("#maj1"),b2=$("#maj2");
   function paint(){
-    seats.forEach(s=>{s.el.classList.toggle("out",!s.in);s.el.classList.toggle("inA",s.A);s.el.classList.toggle("inB",s.B);s.el.classList.toggle("both",s.A&&s.B);s.el.classList.toggle("knows",s.knows)});
+    seats.forEach(s=>{s.el.setAttribute("aria-label",`Legislator ${s.name}, ${s.in?"in the Chamber":"out of the Chamber"}`);s.el.classList.toggle("out",!s.in);s.el.classList.toggle("inA",s.A);s.el.classList.toggle("inB",s.B);s.el.classList.toggle("both",s.A&&s.B);s.el.classList.toggle("knows",s.knows)});
     const n=seats.filter(s=>s.in).length; count.innerHTML=`<b>${n}</b> of 7 in the Chamber · `+(n>=4?"<span class='ok'>a majority</span>":"<span class='bad'>not a majority</span>");
   }
-  seats.forEach(s=>s.el.addEventListener("click",()=>{s.in=!s.in;paint()}));
-  function pick(pool,k,must){const a=[...pool];for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,k)}
-  let stage=0;
+  seats.forEach(s=>{const flip=()=>{s.in=!s.in;paint()};s.el.addEventListener("click",flip);s.el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip()}})});
+  function pick(pool,k){const a=[...pool];for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,k)}
+  let fresh=true;
   b1.onclick=()=>{
-    seats.forEach(s=>{s.A=s.B=s.knows=false;s.in=true});
-    const A=pick(seats,4); A.forEach(s=>{s.A=true;s.knows=true});
-    seats.forEach(s=>{if(!s.A)s.in=true});
-    say.innerHTML="Four legislators (blue rings) pass a decree and ink it into their scrolls.";
-    b1.disabled=true;b2.disabled=false;paint();
+    seats.forEach(s=>{s.A=s.B=s.knows=false; if(!fresh)s.in=true});
+    const here=seats.filter(s=>s.in);
+    if(here.length<4){say.innerHTML=`Only ${here.length} of 7 ${here.length===1?"is":"are"} in the Chamber. <span class='bad'>That is not a majority, so nothing can pass.</span> Call someone back.`;paint();return}
+    pick(here,4).forEach(s=>{s.A=true;s.knows=true});
+    say.innerHTML="Four of those present (blue rings) pass a decree and ink it into their scrolls.";
+    fresh=false;b1.disabled=true;b2.disabled=false;paint();
   };
   b2.onclick=()=>{
-    seats.forEach(s=>{s.in=true});
-    const A=seats.filter(s=>s.A); A.forEach(s=>s.in=false); paint();
+    b2.disabled=true;
+    seats.forEach(s=>{s.in=!s.A}); paint();
     setTimeout(()=>{
-      const B=pick(seats,4); seats.forEach(s=>{s.B=false;s.in=false}); B.forEach(s=>{s.B=true;s.in=true});
+      let B; do{B=pick(seats,4)}while(B.every(s=>s.A));
+      seats.forEach(s=>{s.B=B.includes(s);s.in=s.B});
       const both=seats.filter(s=>s.A&&s.B).length;
-      say.innerHTML=`The first four wander off. A different four (red rings) gather. <b>${both} of them ${both>1?"were":"was"} in the first majority</b> (gold), so ${both>1?"they remember":"they remember"} the decree. It could not have been otherwise.`;
-      seats.forEach(s=>s.in=true); paint();
-      b1.disabled=false;b2.disabled=true; b1.textContent="Try another pair";
+      say.innerHTML=`The first four wander off. A different four (red rings) gather. <b>${both} of them ${both>1?"were":"was"} in the first majority</b> (gold), and ${both>1?"they remember":"that one remembers"} the decree. It could not have been otherwise: two groups of four cannot fit among seven without sharing someone.`;
+      paint(); b1.disabled=false; b1.textContent="Try another pair";
     },reduce?0:900);
   };
-  paint(); say.textContent="Try it: send some legislators out the door first.";
+"Try it: send some legislators out the door first.";
 })();
 
 /* ===== manuscript ===== */
@@ -781,8 +793,8 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
   const body=$("#msrows"),x=$("#msx"); let sel=null;
   function chips(b,hl){return b.q.map(p=>`<span class="pc ${b.v.includes(p)?"v":""} ${hl&&hl.includes(p)?"hl":""}">${p}</span>`).join("")}
   function render(){
-    body.innerHTML=B.map(b=>`<tr data-n="${b.n}" class="${sel===b.n?"sel":""}"><td><b>${b.n}</b></td><td><span class="pc dec">${b.d}</span></td><td>${chips(b)}</td></tr>`).join("");
-    $$("tr",body).forEach(tr=>tr.onclick=()=>{sel=+tr.dataset.n;explain()});
+    body.innerHTML=B.map(b=>`<tr data-n="${b.n}" tabindex="0" class="${sel===b.n?"sel":""}"><td><b>${b.n}</b></td><td><span class="pc dec">${b.d}</span></td><td>${chips(b)}</td></tr>`).join("");
+    $$("tr",body).forEach(tr=>{tr.onclick=()=>{sel=+tr.dataset.n;explain()};tr.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();sel=+tr.dataset.n;explain();$(`tr[data-n="${sel}"]`,body).focus()}}});
   }
   function explain(){
     const b=B.find(b=>b.n===sel);
@@ -804,19 +816,19 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
 (function(){
   const svg=$("#balsvg"); const H=Hall(svg,{vb:"0 0 900 490",cx:235,cy:235,rr:215,R:140,doorText:false}); svg.classList.add("fig");
   const C={A:"#e0b84a",B:"#5b9be0",G:"#e2564e",D:"#9cb648",E:"#b58be0"}, ang={A:200,B:270,G:340,D:40,E:140}, lab={A:"Α",B:"Β",G:"Γ",D:"Δ",E:"Ε"};
-  const q=["B","G","D"], all=["A","B","G","D","E"]; const S={}; all.forEach(k=>S[k]=H.seat(lab[k],C[k],ang[k]));
+  const Q=["A","G","D"], q=["G","D"], all=["A","B","G","D","E"]; const S={}; all.forEach(k=>S[k]=H.seat(lab[k],C[k],ang[k]));
   const O=H.over; const set=(e,on)=>e.classList.toggle("on",!!on);
-  const rings={}; q.forEach(k=>rings[k]=el("circle",{cx:S[k].x,cy:S[k].y,r:36,class:"ring"},H.under));
+  const rings={}; Q.forEach(k=>rings[k]=el("circle",{cx:S[k].x,cy:S[k].y,r:36,class:"ring"},H.under));
   const iniT=el("text",{x:S.A.x,y:S.A.y+46,class:"lab"},O); iniT.textContent="initiator";
   const balT=el("text",{x:H.cx,y:H.cy+8,class:"lab fade",style:"font-size:26px;fill:#1c1512"},O); balT.textContent="ballot 27";
-  const quT=el("text",{x:H.cx,y:H.cy+34,class:"lab fade"},O); quT.textContent="quorum: Β, Γ, Δ";
+  const quT=el("text",{x:H.cx,y:H.cy+34,class:"lab fade"},O); quT.textContent="quorum: Α, Γ, Δ";
   const tags={},chips={},sp={},tp={};
   all.forEach(k=>{const [ax,ay]=[S.A.x,S.A.y],[bx,by]=[S[k].x,S[k].y];const d=Math.hypot(bx-ax,by-ay)||1,ux=(bx-ax)/d,uy=(by-ay)/d;
     sp[k]=[ax+ux*40,ay+uy*40]; tp[k]=[bx-ux*40,by-uy*40];
     const [ox,oy]=H.at(ang[k],H.R+52); const c=el("g",{class:"tag fade",transform:`translate(${ox} ${oy})`},O); el("rect",{x:-34,y:-14,width:68,height:28},c); const t=el("text",{},c); t.textContent="27: β"; chips[k]=c;
     if(q.includes(k)){const [px,py]=H.at(ang[k],H.R-56); const g=el("g",{class:"tag fade",transform:`translate(${px} ${py})`},O); el("rect",{x:-32,y:-14,width:64,height:28},g); const tt=el("text",{},g); tt.textContent="≥ 27"; tags[k]=g}});
-  const rt=el("text",{x:520,y:100,class:"lab fade",style:"text-anchor:start"},O); rt.textContent="What the quorum sends back"; 
-  const repg={}; [["B","Β: no vote yet"],["G","Γ: ballot 5, decree β"],["D","Δ: ballot 2, decree α"]].forEach(([k,t],i)=>{const g=el("g",{class:"reply fade",transform:`translate(520 ${118+i*46})`},O); el("rect",{width:270,height:36},g); const tx=el("text",{x:14,y:19},g); tx.textContent=t; repg[k]=g});
+  const rt=el("text",{x:520,y:100,class:"lab fade",style:"text-anchor:start"},O); rt.textContent="The quorum's latest votes"; 
+  const repg={}; [["A","Α: no vote yet"],["G","Γ: ballot 5, decree β"],["D","Δ: ballot 2, decree α"]].forEach(([k,t],i)=>{const g=el("g",{class:"reply fade",transform:`translate(520 ${118+i*46})`},O); el("rect",{width:270,height:36},g); const tx=el("text",{x:14,y:19},g); tx.textContent=t; repg[k]=g});
   const forced=el("g",{class:"fade",transform:"translate(520 290)"},O);
   el("rect",{width:150,height:70,rx:10,fill:"#e3ecc4",stroke:"#5f6e28","stroke-width":4},forced);
   const fb=el("text",{x:75,y:36,"text-anchor":"middle","dominant-baseline":"central",style:"font-size:40px;fill:#5f6e28"},forced); fb.textContent="β";
@@ -826,17 +838,16 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
   function put(g,k,u){const x=sp[k][0]+(tp[k][0]-sp[k][0])*u,y=sp[k][1]+(tp[k][1]-sp[k][1])*u;g.style.transform=`translate(${x}px,${y}px)`}
   const show=(g,on)=>g.setAttribute("opacity",on?1:0);
   function render(s){
-    q.forEach(k=>{set(rings[k],s>=0);
+    Q.forEach(k=>{set(rings[k],true);set(repg[k],s>=2);set(chips[k],s>=5)});
+    q.forEach(k=>{set(tags[k],s>=2);
       show(tq[k],s>=1&&s<2);put(tq[k],k,s>=1?1:0);
       show(tr[k],s>=2&&s<3);put(tr[k],k,s>=2?0:1);
-      set(tags[k],s>=2);set(repg[k],s>=2);
       show(tpp[k],s>=4&&s<5);put(tpp[k],k,s>=4?1:0);
-      show(tv[k],s>=5&&s<6);put(tv[k],k,s>=5?0:1);
-      set(chips[k],s>=5)});
-    S.E.g.setAttribute("opacity",s>=0?.4:1);
-    set(balT,s>=0);set(quT,s>=0);set(rt,s>=2);
+      show(tv[k],s>=5&&s<6);put(tv[k],k,s>=5?0:1)});
+    ["B","E"].forEach(k=>S[k].g.setAttribute("opacity",s>=6?1:.4));
+    set(balT,true);set(quT,true);set(rt,s>=2);
     repg.G.classList.toggle("hi",s>=3);set(forced,s>=3);set(ft,s>=3);
-    set(chips.A,s>=6);set(chips.E,s>=6);
+    set(chips.B,s>=6);set(chips.E,s>=6);
     Object.keys(tt).forEach(k=>{show(tt[k],s>=6&&s<7);put(tt[k],k,s>=6?1:0)});
   }
   render(0);
@@ -854,7 +865,7 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
   const lines=[]; ["A","E"].forEach(p=>["B","G","D"].forEach(k=>{const l=el("line",{x1:S[p].x,y1:S[p].y,x2:S[k].x,y2:S[k].y,stroke:C[p],"stroke-width":3,opacity:.3},H.under);lines.push({p,l})}));
   const meters={}; ["B","G","D"].forEach(k=>{const [x,y]=H.at(S[k].deg,H.R-72);const t=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":14,"font-family":"Optima,sans-serif",fill:"#1c1512"},H.over);t.textContent="promised ≥ 0";meters[k]=t});
   const who={A:"Α",E:"Ε"};
-  let ballot=0,passed=0,timer=null,pres=null,turn="A",phase=0,pending={A:null,E:null};
+  let ballot=0,passed=0,timer=null,want=false,pres=null,turn="A",phase=0,pending={A:null,E:null};
   function say(h){const d=document.createElement("div");d.innerHTML=h;log.prepend(d);while(log.children.length>40)log.lastChild.remove()}
   function flash(p,on){lines.forEach(o=>{if(o.p===p)o.l.setAttribute("opacity",on?.95:.3)})}
   function setMeters(n){["B","G","D"].forEach(k=>meters[k].textContent="promised ≥ "+n)}
@@ -873,10 +884,10 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
   }
   function go(){if(timer)return;timer=setInterval(tickF,reduce?500:950)}
   function stop(){clearInterval(timer);timer=null}
-  $("#drun").onclick=()=>{pres=null;mode.textContent="two priests each sure they are in charge";go();$("#drun").disabled=true};
-  $("#dpres").onclick=()=>{pres="A";phase=0;pending={A:null,E:null};S.E.g.setAttribute("opacity",.35);mode.textContent="Α is president, Ε waits";say("<i>Α is appointed president. Ε no longer starts ballots.</i>");go();$("#drun").disabled=false};
-  $("#dreset").onclick=()=>{stop();ballot=0;passed=0;pres=null;phase=0;pending={A:null,E:null};turn="A";hb.textContent=0;pass.textContent=0;setMeters(0);log.innerHTML="";S.E.g.setAttribute("opacity",1);mode.textContent="no one is in charge";$("#drun").disabled=false};
-  new IntersectionObserver(es=>{if(!es[0].isIntersecting)stop();else if(pres||!$("#drun").disabled)go()},{threshold:.1}).observe($("#duel"));
+  $("#drun").onclick=()=>{if(pres){flash(pres,false);say("<i>Ε no longer accepts that Α is president.</i>")}pres=null;turn="A";pending={A:null,E:null};S.E.g.setAttribute("opacity",1);mode.textContent="two priests each sure they are in charge";want=true;go();$("#drun").disabled=true};
+  $("#dpres").onclick=()=>{pres="A";phase=0;pending={A:null,E:null};S.E.g.setAttribute("opacity",.35);mode.textContent="Α is president, Ε waits";say("<i>Α is appointed president. Ε no longer starts ballots.</i>");want=true;go();$("#drun").disabled=false};
+  $("#dreset").onclick=()=>{stop();want=false;flash("A",false);flash("E",false);ballot=0;passed=0;pres=null;phase=0;pending={A:null,E:null};turn="A";hb.textContent=0;pass.textContent=0;setMeters(0);log.innerHTML="";S.E.g.setAttribute("opacity",1);mode.textContent="no one is in charge";$("#drun").disabled=false};
+  new IntersectionObserver(es=>{if(!es[0].isIntersecting)stop();else if(want)go()},{threshold:.1}).observe($("#duel"));
 })();
 
 /* ===== parliament: the president asks the Chamber, then fills the gap ===== */
@@ -887,10 +898,10 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
   const O=H.over, set=(e,on)=>e.classList.toggle("on",!!on), show=(g,on)=>g.setAttribute("opacity",on?1:0);
   const pt=el("text",{x:S.P.x,y:S.P.y+46,class:"lab"},O); pt.textContent="new president";
   // what each legislator reports
-  const rep={B:["voted for 126",true],G:["nothing past 124",false],D:["nothing past 124",false],E:["nothing past 124",false]};
+  const rep={B:["holds decree 126",true],G:["nothing past 124",false],D:["nothing past 124",false],E:["nothing past 124",false]};
   const sp={},tp={},chips={};
   others.forEach(k=>{const dx=S[k].x-S.P.x,dy=S[k].y-S.P.y,d=Math.hypot(dx,dy),ux=dx/d,uy=dy/d;sp[k]=[S.P.x+ux*40,S.P.y+uy*40];tp[k]=[S[k].x-ux*40,S[k].y-uy*40];
-    const [ox,oy]=H.at(ang[k],H.R+56);const c=el("g",{class:"tag fade",transform:`translate(${ox} ${oy})`},O);el("rect",{x:-62,y:-14,width:124,height:28},c);const t=el("text",{},c);t.textContent=rep[k][0];chips[k]=c});
+    const ox=S[k].x,oy=S[k].y+(S[k].y<H.cy?-42:42);const c=el("g",{class:"tag fade",transform:`translate(${ox} ${oy})`},O);el("rect",{x:-62,y:-14,width:124,height:28},c);const t=el("text",{},c);t.textContent=rep[k][0];chips[k]=c});
   function mk(color,glyph){const g=el("g",{class:"tok",opacity:0},O);el("circle",{r:14,fill:color,stroke:"#1c1512","stroke-width":2},g);const t=el("text",{style:"fill:#1c1512;font-size:15px;text-anchor:middle;dominant-baseline:central;font-weight:700"},g);t.textContent=glyph;return g}
   const tq={},tr={},td={};others.forEach(k=>{tq[k]=mk("#fffaf0","?");tr[k]=mk("#8fc4de","·");td[k]=mk("#c9d98a","✎")});
   function put(g,k,u){const x=sp[k][0]+(tp[k][0]-sp[k][0])*u,y=sp[k][1]+(tp[k][1]-sp[k][1])*u;g.style.transform=`translate(${x}px,${y}px)`}
@@ -907,18 +918,18 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
     say.textContent="Decrees 122 to 124 are in everyone's scroll. The new president knows nothing beyond that. Press the first button.";st.textContent="newly appointed";b1.disabled=false;b2.disabled=b3.disabled=true;br.hidden=true}
   const say=$("#parsay"),st=$("#parstate"),b1=$("#par1"),b2=$("#par2"),b3=$("#par3"),br=$("#parr");
   b1.onclick=async()=>{b1.disabled=true;
-    others.forEach(k=>{show(tq[k],true);put(tq[k],k,1)});say.innerHTML="One question goes to everyone, covering every open number at once: <i>what have you voted for?</i>";
+    others.forEach(k=>{show(tq[k],true);put(tq[k],k,1)});say.innerHTML="One question goes to everyone, covering every open number at once: <i>what have you voted for, and what is already in your scroll?</i>";
     await sleep(reduce?0:1300);
     others.forEach(k=>{show(tq[k],false);show(tr[k],true);put(tr[k],k,0);set(chips[k],true)});await sleep(reduce?0:1300);others.forEach(k=>show(tr[k],false));
     row(126,"has","Port dues set");row(125,"gap","? nobody has voted for 125");
-    say.innerHTML="Replies are in. Β has voted for <b>126</b>. Nobody has any vote at all for <b class='bad'>125</b>. A hole in the law.";st.textContent="holding the replies";b2.disabled=false};
+    say.innerHTML="Replies are in. Β's scroll already holds decree <b>126</b>, passed before everyone went home. Nobody has any vote at all for <b class='bad'>125</b>. A hole in the law.";st.textContent="holding the replies";b2.disabled=false};
   b2.onclick=async()=>{b2.disabled=true;
     row(125,"fill","Ides of February: olive day");others.forEach(k=>{show(td[k],true);put(td[k],k,1)});await sleep(reduce?0:1300);others.forEach(k=>{show(td[k],false);put(td[k],k,0)});
     say.innerHTML="The president fills the gap with a harmless decree: <i>the ides of February is national olive day.</i> The hole is closed, and nothing that mattered is lost.";st.textContent="gap filled";b3.disabled=false};
   b3.onclick=async()=>{b3.disabled=true;
     for(const [n,t] of [[127,"Lamps burn only olive oil"],[128,"Market opens at dawn"]]){
       ["B","G","D"].forEach(k=>{show(td[k],true);put(td[k],k,1)});row(n,"has",t);await sleep(reduce?0:1100);["B","G","D"].forEach(k=>{show(td[k],false);put(td[k],k,0)})}
-    say.innerHTML="Only now does the president pass new decrees, in order after everything already in the book. Each is a plain three-step ballot: ask the quorum to vote, hear their votes, announce the result.";st.textContent="governing";br.hidden=false};
+    say.innerHTML="Only now does the president pass new decrees, in order after everything already in the scroll. Each is a plain three-step ballot: ask the quorum to vote, hear their votes, announce the result.";st.textContent="governing";br.hidden=false};
   br.onclick=reset; reset();
 })();
 
@@ -937,11 +948,6 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
     const grp=[l,mid,r]; grp.forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)});
 })();
 
-/* ===== phone layout fix for two-column spreads ===== */
-(function(){
-  function f(){const w=innerWidth<860; ["#majcols","#progrow","#parcols","#growcols"].forEach(s=>{const e=$(s); if(e)e.style.gridTemplateColumns=w?"1fr":(s==="#parcols"?"minmax(0,5fr) minmax(0,6fr)":"minmax(0,1fr) minmax(0,1fr)")})}
-  addEventListener("resize",f); f();
-})();
 })();
 </script>
 </body>
