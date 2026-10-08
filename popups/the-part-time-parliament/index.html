@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Part-Time Parliament — Pop-up Edition</title>
-<meta name="description" content="Leslie Lamport's Paxos paper as a scroll-through pop-up: an island, a round hall, a handful of legislators who keep wandering off, and the ballot that still gets them to agree.">
+<meta name="description" content="Leslie Lamport's Paxos paper as a scroll-through pop-up: a round hall, a handful of legislators who keep wandering off, and the ballot that still gets them to agree.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <style>
 :root{
@@ -98,23 +98,7 @@ p{margin:0 0 .9rem;text-wrap:pretty}
 @keyframes slotin{from{transform:translateY(-8px);opacity:0}}
 .logs .note{font-size:.84rem;color:#6b5a48;margin:10px 0 0;min-height:2.6em;font-style:italic}
 
-/* ---------- island ---------- */
-#island{background:linear-gradient(var(--marble),#d9e6e8 70%,#cfe1e6)}
-#island .cols{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,64px);align-items:center}
-.isle{position:relative;aspect-ratio:896/1200;max-height:86svh;margin:0 auto;width:min(100%,520px)}
-.isle .photo{position:absolute;inset:0}
-.isle .photo img{transform:scale(1.12);transition:transform .2s linear}
-.hot{position:absolute;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;border:3px solid #fffaf0;
-  background:rgba(191,74,38,.85);color:#fff;font-family:var(--sans);font-weight:700;box-shadow:0 0 0 0 rgba(224,184,74,.7);animation:ping 2.2s infinite;z-index:3}
-.hot[aria-pressed=true]{background:var(--gold);color:var(--ink);animation:none;transform:translate(-50%,-50%) scale(1.15)}
-@keyframes ping{70%{box-shadow:0 0 0 16px rgba(224,184,74,0)}100%{box-shadow:0 0 0 0 rgba(224,184,74,0)}}
-.place{padding:22px 24px;color:var(--ink);min-height:200px}
-.place h3{font-size:1.5rem;margin-bottom:.4rem}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
-.chip{background:#fffaf0;border:2px solid var(--ink);color:var(--ink);padding:6px 14px;border-radius:99px;font-family:var(--sans);font-size:.85rem}
-.chip[aria-pressed=true]{background:var(--ink);color:var(--parch)}
-.light .chip{border-color:var(--ink);color:var(--ink)} .light .chip[aria-pressed=true]{background:var(--ink);color:var(--parch)}
-@media(max-width:760px){#island .cols,#machines .cols{grid-template-columns:1fr}}
+@media(max-width:760px){#machines .cols{grid-template-columns:1fr}}
 
 /* ---------- the hall (full-bleed photo with pins) ---------- */
 #hall{padding:0;background:var(--marble)}
@@ -158,14 +142,14 @@ svg text{font-family:var(--serif)}
 /* ballot diagram */
 .fig .pr circle.body{stroke-width:4}
 .fig .pr text{font-family:var(--sans);font-weight:700;font-size:22px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.fig .lab{fill:#6b5a48;font-size:15px;font-style:italic;text-anchor:middle}
+.fig .lab{fill:#6b5a48;font-size:17px;font-style:italic;text-anchor:middle}
 .fig .tag rect{fill:#f6e3a8;stroke:#1c1512;stroke-width:2;rx:6}
-.fig .tag text{fill:#1c1512;font-size:14px;text-anchor:middle;dominant-baseline:central}
+.fig .tag text{fill:#1c1512;font-size:16px;text-anchor:middle;dominant-baseline:central}
 .fig .fade{opacity:0;transition:opacity .6s}
 .fig .fade.on{opacity:1}
 .fig .tok{transition:transform 1s cubic-bezier(.5,0,.2,1),opacity .5s}
 .fig .reply rect{fill:#f3ead0;stroke:#1c1512;stroke-width:2;rx:6}
-.fig .reply text{fill:#1c1512;font-size:15px;dominant-baseline:central}
+.fig .reply text{fill:#1c1512;font-size:17px;dominant-baseline:central}
 .fig .reply.hi rect{stroke:#5f6e28;stroke-width:4;fill:#e3ecc4}
 .fig .ring{fill:none;stroke:#136f9e;stroke-width:4;opacity:0;transition:opacity .6s}
 .fig .ring.on{opacity:1}
@@ -211,6 +195,9 @@ svg text{font-family:var(--serif)}
 .seat .glow{fill:none;stroke:var(--gold);stroke-width:7;opacity:0}
 .seat.both .glow{opacity:1;animation:pulse 1.2s infinite}
 @keyframes pulse{50%{stroke-width:13;opacity:.5}}
+.seat text.lbl{font-family:var(--sans);font-size:11px;font-weight:400;fill:#1c1512}
+.seat.clash text.lbl{fill:#bf4a26;font-weight:700}
+.seat.clash circle.b{stroke:#bf4a26}
 .seat .ink{fill:var(--ink);opacity:0;transition:opacity .4s}
 .seat.knows .ink{opacity:1}
 
@@ -248,7 +235,7 @@ svg text{font-family:var(--serif)}
 
 /* cards row */
 .cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
-.card3 .photo{aspect-ratio:4/3}
+.card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
 .card3 .body{padding:16px 18px 18px}
 .card3 h3{font-size:1.15rem;margin-bottom:.4rem}
 .card3 p{font-size:.95rem;margin:0}
@@ -339,32 +326,6 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
   </div>
 </section>
 
-<!-- ============================================================ island -->
-<section class="spread dark" id="island" data-name="The island">
-  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v10l-60 8-70-10-90 12-80-9-100 10-90-11-80 9-110-8-90 12-100-10-80 9-110-12-40 6z"/></svg>
-  <div class="wrap cols">
-    <div class="pop fromleft"><div class="leaf">
-      <div class="isle" id="isle">
-        <div class="photo tilt-l"><img src="img/island.jpg" alt="The island of Paxos from above: a Y with two arms facing each other across a bay" id="isleimg"></div>
-        <button class="hot" style="left:34%;top:45%" data-p="chamber" aria-label="The Chamber">1</button>
-        <button class="hot" style="left:84%;top:37%" data-p="schedia" aria-label="Schedia">2</button>
-        <button class="hot" style="left:58%;top:76%" data-p="coast" aria-label="The southern coast">3</button>
-      </div>
-    </div></div>
-    <div>
-      <div class="kicker">Paxos</div>
-      <h2>An island shaped like a Y</h2>
-      <p class="lede">Two arms reach north and face each other across a bay. One road runs up the stem and out along both.</p>
-      <div class="chips" id="chips">
-        <button class="chip" data-p="chamber" aria-pressed="true">West arm</button>
-        <button class="chip" data-p="schedia" aria-pressed="false">East arm</button>
-        <button class="chip" data-p="coast" aria-pressed="false">Southern coast</button>
-      </div>
-      <div class="paper place" id="place"></div>
-    </div>
-  </div>
-</section>
-
 <!-- ============================================================ hall -->
 <section class="spread dark" id="hall" data-name="The Chamber">
   <div class="bleed">
@@ -390,7 +351,7 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Requirement one: consistency <em>no two scrolls may ever disagree</em></h4>
-      <div class="scrollsrow" id="scrs"></div>
+      <svg class="hall-svg" id="banq" role="img" aria-label="The Chamber, with a first group of legislators leaving for a banquet and a second group arriving"></svg>
       <p class="say" id="scrsay">A scroll may lack an entry it hasn't heard of. It may never hold a different one.</p>
       <div class="row">
         <button class="btn" id="bq1">A group passes decree 37, then leaves for a banquet</button>
@@ -420,28 +381,21 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
     </div>
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3" style="color:var(--ink)">
-        <div class="photo" style="aspect-ratio:4/3"><img src="img/p02-hourglass.jpg" alt="A legislator holding up a sandglass beside another writing on a scroll" loading="lazy"></div>
+        <div class="photo" style="aspect-ratio:4/3;border:0;box-shadow:none"><img src="img/p02-hourglass.jpg" alt="A legislator holding up a sandglass beside another writing on a scroll" loading="lazy"></div>
         <div class="body"><h3>Memory walks out the door</h3><p>A legislator who leaves may forget what they were doing. Key notes go in the back of the scroll, in indelible ink. A slip of paper may be lost.</p></div>
       </div></div>
       <div class="pop"><div class="leaf paper card3" style="color:var(--ink)">
-        <div class="photo" style="aspect-ratio:4/3"><img src="img/p03-messengers.jpg" alt="A messenger hands a message along while others come and go by the door" loading="lazy"></div>
+        <div class="photo" style="aspect-ratio:4/3;border:0;box-shadow:none"><img src="img/p03-messengers.jpg" alt="A messenger hands a message along while others come and go by the door" loading="lazy"></div>
         <div class="body"><h3>Only messengers</h3><p>A messenger never garbles a message. But they may forget they delivered it, and deliver it again. Or set off on a long voyage and never arrive.</p></div>
       </div></div>
       <div class="pop"><div class="leaf paper card3" style="color:var(--ink)">
-        <div class="photo" style="aspect-ratio:4/3"><img src="img/p01-scrolls.jpg" alt="Legislators sitting along the Chamber wall, each with a scroll" loading="lazy"></div>
+        <div class="photo" style="aspect-ratio:4/3;border:0;box-shadow:none"><img src="img/p01-scrolls.jpg" alt="Legislators sitting along the Chamber wall, each with a scroll" loading="lazy"></div>
         <div class="body"><h3>Prompt inside, anything outside</h3><p>While in the Chamber, everyone acts promptly. Outside it, anything takes any amount of time.</p></div>
       </div></div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well" style="color:var(--ink);max-width:760px;margin:2.4rem auto 0">
       <h4>Send a message <em>try your luck</em></h4>
-      <div class="lane"><svg viewBox="0 0 700 130" id="lane">
-        <g stroke="#1c1512" stroke-width="3" fill="none"><path d="M70 82 C 230 20, 470 20, 630 82" stroke-dasharray="6 7" opacity=".5"/></g>
-        <g><circle cx="60" cy="82" r="26" fill="#e0b84a" stroke="#1c1512" stroke-width="4"/><text x="60" y="82" text-anchor="middle" dominant-baseline="central" font-family="Optima,sans-serif" font-weight="700" font-size="20">A</text></g>
-        <g><circle cx="640" cy="82" r="26" fill="#5b9be0" stroke="#1c1512" stroke-width="4"/><text x="640" y="82" text-anchor="middle" dominant-baseline="central" font-family="Optima,sans-serif" font-weight="700" font-size="20">B</text></g>
-        <g id="m1" opacity="0"><circle r="11" fill="#fffaf0" stroke="#1c1512" stroke-width="3"/><text y="1" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700">✉</text></g>
-        <g id="m2" opacity="0"><circle r="11" fill="#fffaf0" stroke="#1c1512" stroke-width="3"/><text y="1" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700">✉</text></g>
-        <text id="voy" x="350" y="122" text-anchor="middle" font-size="15" font-style="italic" fill="#bf4a26" opacity="0">…set off on a long voyage</text>
-      </svg></div>
+      <svg class="hall-svg" id="lane" style="width:min(100%,340px)" role="img" aria-label="Two legislators in the Chamber and a messenger between them"></svg>
       <div class="row" style="margin-top:0"><button class="btn" id="send">Send a message from A to B</button></div>
       <div class="tally"><span><b id="t-ok">0</b>delivered</span><span><b id="t-two">0</b>delivered twice</span><span><b id="t-lost">0</b>never arrived</span></div>
       <p class="say" id="sendsay">Whatever the protocol does, it must be right under all three.</p>
@@ -515,7 +469,7 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
   </div>
   <div class="scrolly" id="bal" data-steps="7">
     <div class="stage"><div class="stage-inner">
-      <svg class="fig svg-dark" viewBox="0 0 800 520" id="balsvg" role="img" aria-label="Ballot 27 run by priest A among B, Gamma, Delta and E"></svg>
+      <svg class="fig svg-dark" viewBox="0 0 900 490" id="balsvg" role="img" aria-label="Ballot 27 run by priest A among B, Gamma, Delta and E"></svg>
     </div></div>
     <div class="steps">
       <div class="step on"><div class="card"><div class="num">1 · Choose</div><h3>Pick a fresh number and a quorum</h3><p>The initiator, A, picks ballot 27 and three priests to ask: B, Γ and Δ. E sits this one out.</p></div></div>
@@ -543,7 +497,7 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
       <h4>Two would-be presidents <em id="duelmode">no one is in charge</em></h4>
       <div class="duel">
         <div>
-          <svg viewBox="0 0 500 270" style="width:100%;height:auto" id="duelsvg"></svg>
+          <svg style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto" id="duelsvg"></svg>
         </div>
         <div>
           <div class="stat"><b id="dpassed">0</b>decrees passed</div>
@@ -667,6 +621,23 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
 function rnd(n){return Math.floor(Math.random()*n)}
 
+/* ===== the Chamber, seen from above: one picture reused wherever people sit in the hall ===== */
+function Hall(svg,o={}){
+  const cx=o.cx||220, cy=o.cy||220, rr=o.rr||204, R=o.R||135;
+  svg.innerHTML=""; svg.setAttribute("viewBox",o.vb||"0 0 440 460");
+  el("circle",{cx,cy,r:rr,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
+  el("circle",{cx,cy,r:R+34,fill:"none",stroke:"#b5602c","stroke-width":3,"stroke-dasharray":"3 8"},svg);
+  el("rect",{x:cx-24,y:cy+rr-2,width:48,height:12,fill:"#6b4a2a",stroke:"#1c1512","stroke-width":3},svg);
+  if(o.doorText!==false){const t=el("text",{x:cx,y:cy+rr+26,"text-anchor":"middle","font-size":12,"font-style":"italic",fill:"#6b5a48"},svg);t.textContent="the one door"}
+  const under=el("g",{},svg), seatsG=el("g",{},svg), over=el("g",{},svg);
+  const H={svg,cx,cy,rr,R,under,over,
+    at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
+    place(s,x,y){s.x=x;s.y=y;s.g.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`},
+    seat(label,color,deg){const g=el("g",{class:"seat"},seatsG);el("circle",{class:"b",r:24,fill:color},g);const t=el("text",{},g);t.textContent=label;const s={g,color,deg};H.place(s,...H.at(deg));return s}
+  };
+  return H;
+}
+
 /* ===== pop-ups unfold when they enter view ===== */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
 $$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
@@ -713,52 +684,47 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
     note.textContent=`Machine ${"ABC"[r.i]} is back, and catches up on everything it missed, in order.`; };
 })();
 
-/* ===== island hotspots ===== */
+/* ===== consistency: two banquets, in the Chamber ===== */
 (function(){
-  const P={
-    chamber:["The western arm: the Chamber","A round hall of hard stone under one conical roof. This is where the Parliament of Paxos sits, and where legislators come and go."],
-    schedia:["The eastern arm: Schedia","A city across the bay, with laws of its own. Its story belongs to another paper."],
-    coast:["The southern coast","Below the fork the stem widens into the island's southern coast. One road runs up the stem and out along both arms."]
-  };
-  const box=$("#place");
-  function show(k){
-    box.innerHTML=`<h3>${P[k][0]}</h3><p style="margin:0">${P[k][1]}</p>`;
-    $$("#isle .hot").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p===k));
-    $$("#chips .chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p===k));
-  }
-  $$("#isle .hot,#chips .chip").forEach(b=>b.onclick=()=>show(b.dataset.p)); show("chamber");
-})();
-
-/* ===== consistency: two banquets ===== */
-(function(){
-  const names=["Legislator 1","Legislator 2","Legislator 3","Legislator 4"];
-  const row=$("#scrs"); const sc=names.map((n,i)=>{const d=document.createElement("div");d.className="scr";d.innerHTML=`<h5>SCROLL ${i+1}</h5><div class="c"></div>`;row.appendChild(d);return d});
+  const H=Hall($("#banq"),{vb:"0 0 440 545"});
+  const C=["#e0b84a","#5b9be0","#e2564e","#9cb648","#b58be0","#e89a4d"], gl=["Α","Β","Γ","Δ","Ε","Ζ"];
+  const home=[215,270,325,20,70,160], away=[[45,495],[130,495],[215,495],[290,495],[340,495],[390,495]];
+  const S=gl.map((l,i)=>H.seat(l,C[i],home[i]));
+  const bn=el("text",{x:130,y:448,"text-anchor":"middle","font-size":13,"font-style":"italic",fill:"#6b5a48",opacity:0},H.over); bn.textContent="at the banquet";
+  function lbl(s,t){let x=s.g.querySelector(".lbl");if(!x){x=el("text",{class:"lbl",y:40},s.g)}x.textContent=t}
+  function reset(){S.forEach((s,i)=>{H.place(s,...(i<3?H.at(home[i]):away[i]));s.g.setAttribute("opacity",i<3?1:0);s.g.classList.remove("clash");const x=s.g.querySelector(".lbl");if(x)x.remove()});bn.setAttribute("opacity",0)}
   const say=$("#scrsay"),b1=$("#bq1"),b2=$("#bq2"),br=$("#bqr");
-  function put(i,t){$(".c",sc[i]).innerHTML=`<div class="d">37: ${t}</div>`}
-  b1.onclick=()=>{put(0,"Paint nothing on temple walls");put(1,"Paint nothing on temple walls");say.innerHTML="Scrolls 1 and 2 record decree 37. The group wanders off to a banquet. Scrolls 3 and 4 know nothing yet, and that is allowed.";b1.disabled=true;b2.disabled=false};
-  b2.onclick=()=>{put(2,"Art is free on every wall");put(3,"Art is free on every wall");sc[0].classList.add("clash");sc[1].classList.add("clash");sc[2].classList.add("clash");sc[3].classList.add("clash");say.innerHTML="<span class='bad'>Two scrolls, two different decrees numbered 37.</span> Consistency is lost for good, because the ink is indelible. The protocol must stop this from ever happening.";b2.disabled=true;br.hidden=false};
-  br.onclick=()=>{sc.forEach(s=>{s.classList.remove("clash");$(".c",s).innerHTML=""});say.textContent="A scroll may lack an entry it hasn't heard of. It may never hold a different one.";b1.disabled=false;br.hidden=true};
+  b1.onclick=async()=>{b1.disabled=true;
+    [0,1,2].forEach(i=>lbl(S[i],"37: no painting"));
+    say.innerHTML="Three legislators pass decree 37 and write it in their scrolls. Then they leave for a banquet.";
+    await sleep(reduce?0:1300); [0,1,2].forEach(i=>{H.place(S[i],...away[i]);S[i].g.setAttribute("opacity",.55)}); bn.setAttribute("opacity",1);
+    say.innerHTML="The first group is at the banquet. Everyone left in the Chamber knows nothing of decree 37, and that is allowed.";b2.disabled=false};
+  b2.onclick=async()=>{b2.disabled=true;
+    [3,4,5].forEach(i=>{S[i].g.setAttribute("opacity",1);H.place(S[i],...H.at(home[i]));lbl(S[i],"37: art is free")});
+    await sleep(reduce?0:900); S.forEach(s=>s.g.classList.add("clash"));
+    say.innerHTML="<span class='bad'>Two scrolls, two different decrees numbered 37.</span> Consistency is lost for good, because the ink is indelible. The protocol must stop this from ever happening.";br.hidden=false};
+  br.onclick=()=>{reset();say.textContent="A scroll may lack an entry it hasn't heard of. It may never hold a different one.";b1.disabled=false;br.hidden=true};
+  reset();
 })();
 
-/* ===== messenger lottery ===== */
+/* ===== messenger lottery, across the Chamber ===== */
 (function(){
-  const m1=$("#m1"),m2=$("#m2"),voy=$("#voy"),btn=$("#send"),say=$("#sendsay");
-  const T={ok:0,two:0,lost:0};
-  function pt(u){ // quadratic-ish arc between A and B
-    const x=70+(630-70)*u, y=82-4*62*u*(1-u)*0.8*1.0; return [x,y]; }
-  function fly(g,from,to,ms,fadeAt){
-    return new Promise(res=>{const t0=performance.now(); g.setAttribute("opacity",1);
-      (function f(t){const u=Math.min(1,(t-t0)/ms); const e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2; const [x,y]=pt(from+(to-from)*e); g.setAttribute("transform",`translate(${x} ${y})`);
-        if(u<1)requestAnimationFrame(f); else res()})(t0)});
-  }
+  const H=Hall($("#lane"),{vb:"0 0 440 490"});
+  const A=H.seat("Α","#e0b84a",200), B=H.seat("Β","#5b9be0",340);
+  const door=[H.cx,H.cy+H.rr+6];
+  const voy=el("text",{x:H.cx,y:480,"text-anchor":"middle","font-size":14,"font-style":"italic",fill:"#bf4a26",opacity:0},H.over); voy.textContent="…off on a long voyage";
+  function mkm(){const g=el("g",{opacity:0},H.over);el("circle",{r:13,fill:"#fffaf0",stroke:"#1c1512","stroke-width":3},g);const t=el("text",{"text-anchor":"middle","dominant-baseline":"central","font-size":14},g);t.textContent="✉";return g}
+  const m1=mkm(),m2=mkm(),btn=$("#send"),say=$("#sendsay"),T={ok:0,two:0,lost:0};
+  function fly(g,p,q,ms){return new Promise(res=>{const t0=performance.now();g.setAttribute("opacity",1);
+    (function f(t){const u=Math.min(1,(t-t0)/ms),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;g.setAttribute("transform",`translate(${p[0]+(q[0]-p[0])*e} ${p[1]+(q[1]-p[1])*e})`);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
+  const pa=[A.x+34,A.y+6], pb=[B.x-34,B.y+6];
   btn.onclick=async()=>{
-    btn.disabled=true; voy.setAttribute("opacity",0); m1.setAttribute("opacity",0); m2.setAttribute("opacity",0);
-    const r=Math.random(); const dur=reduce?1:1500;
-    if(r<.4){ await fly(m1,0,1,dur); m1.setAttribute("opacity",0); T.ok++; say.innerHTML="<b>Delivered, once.</b> The easy case."; }
-    else if(r<.7){ await fly(m1,0,1,dur); m1.setAttribute("opacity",0); say.innerHTML="Delivered… "; await sleep(reduce?1:500); await fly(m2,0,1,dur); m2.setAttribute("opacity",0); T.two++; say.innerHTML="<b>Delivered twice.</b> The messenger forgot they'd already been."; }
-    else { await fly(m1,0,.45,dur*.6); voy.setAttribute("opacity",1); await sleep(reduce?1:700); m1.setAttribute("opacity",0); T.lost++; say.innerHTML="<b>Never arrived.</b> The messenger set off on a long voyage. Nobody can tell this from “very slow”."; }
-    $("#t-ok").textContent=T.ok;$("#t-two").textContent=T.two;$("#t-lost").textContent=T.lost; btn.disabled=false;
-  };
+    btn.disabled=true;voy.setAttribute("opacity",0);m1.setAttribute("opacity",0);m2.setAttribute("opacity",0);
+    const r=Math.random(),dur=reduce?1:1500;
+    if(r<.4){await fly(m1,pa,pb,dur);m1.setAttribute("opacity",0);T.ok++;say.innerHTML="<b>Delivered, once.</b> The easy case."}
+    else if(r<.7){await fly(m1,pa,pb,dur);m1.setAttribute("opacity",0);say.innerHTML="Delivered… ";await sleep(reduce?1:500);await fly(m2,pa,pb,dur);m2.setAttribute("opacity",0);T.two++;say.innerHTML="<b>Delivered twice.</b> The messenger forgot they'd already been."}
+    else{await fly(m1,pa,[pa[0]+(pb[0]-pa[0])*.25,pa[1]+(pb[1]-pa[1])*.25],dur*.4);await fly(m1,[pa[0]+(pb[0]-pa[0])*.25,pa[1]],door,dur*.7);voy.setAttribute("opacity",1);await sleep(reduce?1:700);m1.setAttribute("opacity",0);T.lost++;say.innerHTML="<b>Never arrived.</b> The messenger walked out of the one door and set off on a long voyage. Nobody can tell this from “very slow”."}
+    $("#t-ok").textContent=T.ok;$("#t-two").textContent=T.two;$("#t-lost").textContent=T.lost;btn.disabled=false};
 })();
 
 /* ===== majorities ===== */
@@ -828,107 +794,83 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
   render();
 })();
 
-/* ===== scrollytelling: one ballot ===== */
+/* ===== scrollytelling: one ballot, in the Chamber ===== */
 (function(){
-  const svg=$("#balsvg"); const C={A:"#e0b84a",B:"#5b9be0",G:"#e2564e",D:"#9cb648",E:"#b58be0"};
-  const pos={A:[120,260],B:[560,95],G:[560,215],D:[560,335],E:[560,450]}; const lab={A:"Α",B:"Β",G:"Γ",D:"Δ",E:"Ε"};
-  const q=["B","G","D"];
-  // quorum bracket
-  const ring=el("rect",{x:455,y:55,width:215,height:330,rx:26,fill:"none",stroke:"#136f9e","stroke-width":3,"stroke-dasharray":"8 7",class:"fade"},svg);
-  const ringT=el("text",{x:562,y:40,class:"lab"},svg); ringT.textContent="the quorum"; ringT.setAttribute("class","lab fade");
-  const nodes={}; for(const k in pos){const g=el("g",{class:"pr",transform:`translate(${pos[k][0]} ${pos[k][1]})`},svg); el("circle",{class:"body",r:32,fill:C[k],stroke:"#1c1512"},g); const t=el("text",{},g);t.textContent=lab[k]; nodes[k]=g}
-  const iniT=el("text",{x:120,y:312,class:"lab"},svg); iniT.textContent="initiator";
-  const balT=el("text",{x:120,y:196,class:"lab fade","font-size":26,style:"font-size:26px;fill:#1c1512"},svg); balT.textContent="ballot 27";
-  const eT=el("text",{x:620,y:450,class:"lab"},svg); eT.textContent="not asked"; eT.setAttribute("x",640); eT.setAttribute("style","text-anchor:start");
-  // reply boxes beside A
-  const reps=[["B","B: no vote yet",0],["G","Γ: ballot 5, decree β",1],["D","Δ: ballot 2, decree α",2]]; const repg={};
-  reps.forEach(([k,t,i])=>{const g=el("g",{class:"reply fade",transform:`translate(215 ${150+i*44})`},svg); el("rect",{width:195,height:34},g); const tx=el("text",{x:12,y:18},g);tx.textContent=t; repg[k]=g});
-  // forced decree
-  const forced=el("g",{class:"fade",transform:"translate(55 345)"},svg);
-  el("rect",{width:130,height:60,rx:10,fill:"#e3ecc4",stroke:"#5f6e28","stroke-width":3},forced);
-  const fb=el("text",{x:65,y:30,"text-anchor":"middle","dominant-baseline":"central","font-size":34,fill:"#a9c25a",style:"font-size:34px;fill:#5f6e28"},forced); fb.textContent="β";
-  const ft=el("text",{x:120,y:428,class:"lab",style:"fill:#5f6e28;font-size:14px"},svg); ft.textContent="forced by the latest vote"; ft.setAttribute("class","lab fade"); ft.setAttribute("x",120);
-  // promise tags + vote record per member
-  const tags={},votes={},wrote={};
-  q.forEach(k=>{const [x,y]=pos[k]; const tg=el("g",{class:"tag fade",transform:`translate(${x+82} ${y})`},svg); el("rect",{x:-34,y:-15,width:68,height:30},tg); const tt=el("text",{},tg);tt.textContent="≥ 27"; tags[k]=tg;
-    const v=el("g",{class:"tok fade",transform:`translate(${x} ${y-44})`},svg); el("circle",{r:15,fill:"#a9c25a",stroke:"#1c1512","stroke-width":2},v); const vt=el("text",{style:"fill:#1c1512;font-size:17px;text-anchor:middle;dominant-baseline:central;font-weight:700"},v);vt.textContent="β"; votes[k]=v;
-    const w=el("text",{x:x+4,y:y+58,class:"lab fade",style:"fill:#5f6e28;font-size:14px"},svg); w.textContent="27: β"; wrote[k]=w;});
-  const Ewrote=el("text",{x:564,y:508,class:"lab fade",style:"fill:#5f6e28;font-size:14px"},svg); Ewrote.textContent="27: β";
-  const Awrote=el("g",{class:"fade",transform:"translate(40 100)"},svg); el("rect",{width:76,height:56,rx:6,fill:"#f6e3a8",stroke:"#1c1512","stroke-width":2},Awrote); const aw=el("text",{x:38,y:30,"text-anchor":"middle","dominant-baseline":"central",style:"fill:#5f6e28;font-size:17px"},Awrote);aw.textContent="27: β";
-  // message tokens
-  function mk(color,glyph){const g=el("g",{class:"tok",opacity:0},svg); el("circle",{r:14,fill:color,stroke:"#1c1512","stroke-width":2},g); const t=el("text",{style:"fill:#1c1512;font-size:16px;text-anchor:middle;dominant-baseline:central;font-weight:700"},g);t.textContent=glyph; return g}
-  const msgs={}; ["B","G","D","E"].forEach(k=>msgs[k]=mk("#fffaf0","?")); const asks=q.map(k=>msgs[k]);
-  const mkq={}; q.forEach(k=>mkq[k]=mk("#fffaf0","?"));
-  const mkr={}; q.forEach(k=>mkr[k]=mk("#136f9e","·"));
-  const mkp={}; q.forEach(k=>mkp[k]=mk("#a9c25a","β"));
-  const mkv={}; q.forEach(k=>mkv[k]=mk("#a9c25a","✓"));
-  const mkt={}; ["B","G","D","E"].forEach(k=>mkt[k]=mk("#a9c25a","β"));
-  function at(g,k,u,off=[0,0]){ // place token on the line A->k at fraction u
-    const a=pos.A,b=pos[k]; const x=a[0]+(b[0]-a[0])*u+off[0], y=a[1]+(b[1]-a[1])*u+off[1];
-    g.setAttribute("transform",`translate(${x} ${y})`);}
-  function show(g,on){g.setAttribute("opacity",on?1:0)}
-  Object.values({...mkq,...mkr,...mkp,...mkv,...mkt}).forEach(g=>g.setAttribute("transform","translate(120 260)"));
-  function set(el,on){el.classList.toggle("on",!!on)}
+  const svg=$("#balsvg"); const H=Hall(svg,{vb:"0 0 900 490",cx:235,cy:235,rr:215,R:140,doorText:false}); svg.classList.add("fig");
+  const C={A:"#e0b84a",B:"#5b9be0",G:"#e2564e",D:"#9cb648",E:"#b58be0"}, ang={A:200,B:270,G:340,D:40,E:140}, lab={A:"Α",B:"Β",G:"Γ",D:"Δ",E:"Ε"};
+  const q=["B","G","D"], all=["A","B","G","D","E"]; const S={}; all.forEach(k=>S[k]=H.seat(lab[k],C[k],ang[k]));
+  const O=H.over; const set=(e,on)=>e.classList.toggle("on",!!on);
+  const rings={}; q.forEach(k=>rings[k]=el("circle",{cx:S[k].x,cy:S[k].y,r:36,class:"ring"},H.under));
+  const iniT=el("text",{x:S.A.x,y:S.A.y+46,class:"lab"},O); iniT.textContent="initiator";
+  const balT=el("text",{x:H.cx,y:H.cy+8,class:"lab fade",style:"font-size:26px;fill:#1c1512"},O); balT.textContent="ballot 27";
+  const quT=el("text",{x:H.cx,y:H.cy+34,class:"lab fade"},O); quT.textContent="quorum: Β, Γ, Δ";
+  const tags={},chips={},sp={},tp={};
+  all.forEach(k=>{const [ax,ay]=[S.A.x,S.A.y],[bx,by]=[S[k].x,S[k].y];const d=Math.hypot(bx-ax,by-ay)||1,ux=(bx-ax)/d,uy=(by-ay)/d;
+    sp[k]=[ax+ux*40,ay+uy*40]; tp[k]=[bx-ux*40,by-uy*40];
+    const [ox,oy]=H.at(ang[k],H.R+52); const c=el("g",{class:"tag fade",transform:`translate(${ox} ${oy})`},O); el("rect",{x:-34,y:-14,width:68,height:28},c); const t=el("text",{},c); t.textContent="27: β"; chips[k]=c;
+    if(q.includes(k)){const [px,py]=H.at(ang[k],H.R-56); const g=el("g",{class:"tag fade",transform:`translate(${px} ${py})`},O); el("rect",{x:-32,y:-14,width:64,height:28},g); const tt=el("text",{},g); tt.textContent="≥ 27"; tags[k]=g}});
+  const rt=el("text",{x:520,y:100,class:"lab fade",style:"text-anchor:start"},O); rt.textContent="What the quorum sends back"; 
+  const repg={}; [["B","Β: no vote yet"],["G","Γ: ballot 5, decree β"],["D","Δ: ballot 2, decree α"]].forEach(([k,t],i)=>{const g=el("g",{class:"reply fade",transform:`translate(520 ${118+i*46})`},O); el("rect",{width:270,height:36},g); const tx=el("text",{x:14,y:19},g); tx.textContent=t; repg[k]=g});
+  const forced=el("g",{class:"fade",transform:"translate(520 290)"},O);
+  el("rect",{width:150,height:70,rx:10,fill:"#e3ecc4",stroke:"#5f6e28","stroke-width":4},forced);
+  const fb=el("text",{x:75,y:36,"text-anchor":"middle","dominant-baseline":"central",style:"font-size:40px;fill:#5f6e28"},forced); fb.textContent="β";
+  const ft=el("text",{x:520,y:392,class:"lab fade",style:"fill:#5f6e28;font-size:16px;text-anchor:start"},O); ft.textContent="forced by the latest vote";
+  function mk(color,glyph){const g=el("g",{class:"tok",opacity:0},O); el("circle",{r:14,fill:color,stroke:"#1c1512","stroke-width":2},g); const t=el("text",{style:"fill:#1c1512;font-size:16px;text-anchor:middle;dominant-baseline:central;font-weight:700"},g); t.textContent=glyph; return g}
+  const tq={},tr={},tpp={},tv={},tt={}; q.forEach(k=>{tq[k]=mk("#fffaf0","?");tr[k]=mk("#8fc4de","·");tpp[k]=mk("#a9c25a","β");tv[k]=mk("#a9c25a","✓")}); all.filter(k=>k!=="A").forEach(k=>tt[k]=mk("#a9c25a","β"));
+  function put(g,k,u){const x=sp[k][0]+(tp[k][0]-sp[k][0])*u,y=sp[k][1]+(tp[k][1]-sp[k][1])*u;g.style.transform=`translate(${x}px,${y}px)`}
+  const show=(g,on)=>g.setAttribute("opacity",on?1:0);
   function render(s){
-    set(ring,s>=0);set(ringT,s>=0);set(balT,s>=0);
-    ["E"].forEach(k=>nodes[k].classList.toggle("dim",s>=0)); eT.style.opacity=s>=0?1:0;
-    // question out (1), reply back (2)
-    q.forEach((k,i)=>{
-      show(mkq[k],s>=1&&s<2); at(mkq[k],k,s>=1?1:0,[-48,0]);
-      show(mkr[k],s>=2&&s<3); at(mkr[k],k,s>=2?0:1,[48,0]);
-      set(tags[k],s>=2); set(repg[k],s>=2);
-      show(mkp[k],s>=4&&s<5); at(mkp[k],k,s>=4?1:0,[-48,0]);
-      set(votes[k],s>=5); set(wrote[k],s>=5);
-      show(mkv[k],s>=5&&s<6); at(mkv[k],k,s>=5?0:1,[48,0]);
-    });
-    repg.G.classList.toggle("hi",s>=3);
-    set(forced,s>=3);set(ft,s>=3);
-    set(Awrote,s>=6);
-    ["B","G","D","E"].forEach(k=>{show(mkt[k],s>=6&&s<7)});
-    ["B","G","D","E"].forEach(k=>at(mkt[k],k,s>=6?1:0,[-48,0]));
-    set(Ewrote,s>=6);
+    q.forEach(k=>{set(rings[k],s>=0);
+      show(tq[k],s>=1&&s<2);put(tq[k],k,s>=1?1:0);
+      show(tr[k],s>=2&&s<3);put(tr[k],k,s>=2?0:1);
+      set(tags[k],s>=2);set(repg[k],s>=2);
+      show(tpp[k],s>=4&&s<5);put(tpp[k],k,s>=4?1:0);
+      show(tv[k],s>=5&&s<6);put(tv[k],k,s>=5?0:1);
+      set(chips[k],s>=5)});
+    S.E.g.setAttribute("opacity",s>=0?.4:1);
+    set(balT,s>=0);set(quT,s>=0);set(rt,s>=2);
+    repg.G.classList.toggle("hi",s>=3);set(forced,s>=3);set(ft,s>=3);
+    set(chips.A,s>=6);set(chips.E,s>=6);
+    Object.keys(tt).forEach(k=>{show(tt[k],s>=6&&s<7);put(tt[k],k,s>=6?1:0)});
   }
   render(0);
-  // the real driver: which step is centred
   const steps=$$("#bal .step");
   const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
   steps.forEach(s=>so.observe(s));
 })();
 
-/* ===== duel of presidents ===== */
+/* ===== rival presidents, in the Chamber ===== */
 (function(){
-  const svg=$("#duelsvg"); const log=$("#dlog"); const pass=$("#dpassed"),hb=$("#dballot"),mode=$("#duelmode");
+  const svg=$("#duelsvg"), log=$("#dlog"), pass=$("#dpassed"), hb=$("#dballot"), mode=$("#duelmode");
+  const H=Hall(svg,{vb:"0 0 440 450"});
   const C={A:"#e0b84a",E:"#b58be0",B:"#5b9be0",G:"#e2564e",D:"#9cb648"};
-  const vp={B:[330,50],G:[330,135],D:[330,220]}, pp={A:[60,70],E:[60,200]};
-  const pr={}; function node(k,x,y,t){const g=el("g",{transform:`translate(${x} ${y})`},svg); el("circle",{r:26,fill:C[k],stroke:"#1c1512","stroke-width":4},g); const tx=el("text",{"text-anchor":"middle","dominant-baseline":"central","font-weight":700,"font-family":"Optima,sans-serif","font-size":18},g);tx.textContent=t; return g}
-  const nodeG={}; nodeG.A=node("A",...pp.A,"Α"); nodeG.E=node("E",...pp.E,"Ε");
-  const who={A:"Α",E:"Ε"}; const pn=el("text",{x:60,y:20,"text-anchor":"middle","font-size":13,"font-style":"italic",fill:"#6b5a48"},svg);pn.textContent="would-be presidents";
-  const meters={}; ["B","G","D"].forEach(k=>{node(k,...vp[k],{B:"Β",G:"Γ",D:"Δ"}[k]); const t=el("text",{x:vp[k][0]+36,y:vp[k][1],"dominant-baseline":"central","font-size":15,fill:"#1c1512","font-family":"Optima,sans-serif"},svg);t.textContent="promised ≥ 0"; meters[k]=t});
-  const lines=[]; ["A","E"].forEach(p=>["B","G","D"].forEach(k=>{const l=el("line",{x1:pp[p][0]+26,y1:pp[p][1],x2:vp[k][0]-26,y2:vp[k][1],stroke:C[p],"stroke-width":2,opacity:.28},svg);lines.push({p,l})}));
-  let ballot=0,passed=0,timer=null,pres=null,turn="A",phase=0,pending={A:null,E:null},run=false;
+  const S={A:H.seat("Α",C.A,205),E:H.seat("Ε",C.E,335),B:H.seat("Β",C.B,20),G:H.seat("Γ",C.G,160),D:H.seat("Δ",C.D,270)};
+  const lines=[]; ["A","E"].forEach(p=>["B","G","D"].forEach(k=>{const l=el("line",{x1:S[p].x,y1:S[p].y,x2:S[k].x,y2:S[k].y,stroke:C[p],"stroke-width":3,opacity:.3},H.under);lines.push({p,l})}));
+  const meters={}; ["B","G","D"].forEach(k=>{const [x,y]=H.at(S[k].deg,H.R-72);const t=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":14,"font-family":"Optima,sans-serif",fill:"#1c1512"},H.over);t.textContent="promised ≥ 0";meters[k]=t});
+  const who={A:"Α",E:"Ε"};
+  let ballot=0,passed=0,timer=null,pres=null,turn="A",phase=0,pending={A:null,E:null};
   function say(h){const d=document.createElement("div");d.innerHTML=h;log.prepend(d);while(log.children.length>40)log.lastChild.remove()}
-  function flash(p,on){lines.forEach(o=>{if(o.p===p)o.l.setAttribute("opacity",on?.9:.28)})}
+  function flash(p,on){lines.forEach(o=>{if(o.p===p)o.l.setAttribute("opacity",on?.95:.3)})}
   function setMeters(n){["B","G","D"].forEach(k=>meters[k].textContent="promised ≥ "+n)}
   function tickF(){
-    const p=pres||turn; const other=p==="A"?"E":"A"; const nm=who[p];
-    if(!pres){ // duel: alternate starting a higher ballot, and every pending vote gets refused
-      ballot++; setMeters(ballot); hb.textContent=ballot; flash(p,true); setTimeout(()=>flash(p,false),500);
+    const p=pres||turn, other=p==="A"?"E":"A", nm=who[p];
+    if(!pres){
+      ballot++;setMeters(ballot);hb.textContent=ballot;flash(p,true);setTimeout(()=>flash(p,false),500);
       say(`<b>${nm}</b> starts ballot ${ballot}: everyone promises nothing lower.`);
-      if(pending[other]!==null) say(`<span class="bad">…${who[other]}'s ballot ${pending[other]} is refused: they already promised ${ballot}.</span>`);
-      pending[p]=ballot; pending[other]=null; turn=other;
-    } else { // one president
-      if(phase===0){ ballot++; setMeters(ballot); hb.textContent=ballot; flash(p,true); say(`<b>${nm}</b> starts ballot ${ballot}. Nobody else is starting any.`); phase=1; }
-      else if(phase===1){ say(`The quorum votes in ballot ${ballot}.`); phase=2; }
-      else { passed++; pass.textContent=passed; flash(p,false); say(`<span class="ok">Ballot ${ballot} succeeded: decree ${passed} is passed.</span>`); phase=0; }
+      if(pending[other]!==null)say(`<span class="bad">…${who[other]}'s ballot ${pending[other]} is refused: they already promised ${ballot}.</span>`);
+      pending[p]=ballot;pending[other]=null;turn=other;
+    }else{
+      if(phase===0){ballot++;setMeters(ballot);hb.textContent=ballot;flash(p,true);say(`<b>${nm}</b> starts ballot ${ballot}. Nobody else is starting any.`);phase=1}
+      else if(phase===1){say(`The quorum votes in ballot ${ballot}.`);phase=2}
+      else{passed++;pass.textContent=passed;flash(p,false);say(`<span class="ok">Ballot ${ballot} succeeded: decree ${passed} is passed.</span>`);phase=0}
     }
   }
-  function go(){ if(timer)return; timer=setInterval(tickF,reduce?500:950); }
+  function go(){if(timer)return;timer=setInterval(tickF,reduce?500:950)}
   function stop(){clearInterval(timer);timer=null}
-  $("#drun").onclick=()=>{ pres=null; mode.textContent="two priests each sure they are in charge"; go(); $("#drun").disabled=true; };
-  $("#dpres").onclick=()=>{ pres="A"; phase=0; pending={A:null,E:null}; nodeG.E.setAttribute("opacity",.35); mode.textContent="Α is president, Ε waits"; say("<i>Α is appointed president. Ε no longer starts ballots.</i>"); go(); $("#drun").disabled=false; };
-  $("#dreset").onclick=()=>{stop();ballot=0;passed=0;pres=null;phase=0;pending={A:null,E:null};turn="A";hb.textContent=0;pass.textContent=0;setMeters(0);log.innerHTML="";nodeG.E.setAttribute("opacity",1);mode.textContent="no one is in charge";$("#drun").disabled=false};
-  // pause when off-screen
-  new IntersectionObserver(es=>{ if(!es[0].isIntersecting) stop(); else if(pres||!$("#drun").disabled) go(); },{threshold:.1}).observe($("#duel"));
+  $("#drun").onclick=()=>{pres=null;mode.textContent="two priests each sure they are in charge";go();$("#drun").disabled=true};
+  $("#dpres").onclick=()=>{pres="A";phase=0;pending={A:null,E:null};S.E.g.setAttribute("opacity",.35);mode.textContent="Α is president, Ε waits";say("<i>Α is appointed president. Ε no longer starts ballots.</i>");go();$("#drun").disabled=false};
+  $("#dreset").onclick=()=>{stop();ballot=0;passed=0;pres=null;phase=0;pending={A:null,E:null};turn="A";hb.textContent=0;pass.textContent=0;setMeters(0);log.innerHTML="";S.E.g.setAttribute("opacity",1);mode.textContent="no one is in charge";$("#drun").disabled=false};
+  new IntersectionObserver(es=>{if(!es[0].isIntersecting)stop();else if(pres||!$("#drun").disabled)go()},{threshold:.1}).observe($("#duel"));
 })();
 
 /* ===== parliament: the president's scroll ===== */
