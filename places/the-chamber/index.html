@@ -5,46 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Chamber — Paxos</title>
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<link rel="stylesheet" href="../../assets/css/daag.css">
-<link rel="stylesheet" href="../../assets/css/books.css">
+<link rel="stylesheet" href="../../art/scroll/shell.css">
+<link rel="stylesheet" href="../../art/scroll/place.css">
 </head>
 <body>
-<nav class="series-nav">
-  <div class="series-nav-inner">
-    <a href="../../index.html" class="nav-back">← The Books</a>
-    <span class="nav-current">Paxos · The Chamber</span>
-  </div>
-</nav>
-<div class="page">
 
-<header class="cover">
-  <div class="kicker">Distributed Algorithms of Ancient Greece · Paxos · The Setting</div>
-  <h1 class="display">The Chamber</h1>
-  <p class="sub">A parliament whose members wander in and out as they please, which still passes laws that never contradict one another.</p>
-  <p class="pub">Read this first, and the book set in the Chamber can be read on its own. It describes the island of Paxos and the Chamber, where Lamport set his parliament.</p>
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <span class="now" id="now"></span>
+  <i id="prog"></i>
+</div>
+
+<header class="spread dark place" id="cover" data-name="Paxos · The Chamber">
+  <div class="wrap grid">
+    <div>
+      <div class="kicker">Paxos · The Setting</div>
+      <h1>The Chamber</h1>
+      <p class="hook">A parliament whose members wander in and out as they please, which still passes laws that never contradict one another.</p>
+      <p class="pub">Read this first, and the book set in the Chamber can be read on its own. It describes the island of Paxos and the Chamber, where Lamport set his parliament.</p>
+      <div class="scrollcue"><b>↓</b> Scroll. Things unfold.</div>
+    </div>
+    <div class="pop" data-auto>
+      <div class="leaf">
+        <div class="photo tilt-r" data-depth="14"><img src="../../assets/img/places/paxos-island.jpg"
+           alt="Paxos from the air: a Y-shaped island whose two arms face each other across a bay, a white colonnaded round hall under a conical roof on one arm and, on the other, a town beside a round hall with a conical red-tiled roof, the arms joining at a fork above the broad body of the island."></div>
+        <div class="fold-shadow"></div>
+      </div>
+    </div>
+  </div>
 </header>
 
-<nav class="toc">
-  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Contents</a></h6>
-  <ol>
-    <li><a href="#s1">I · The Island of Paxos</a></li>
-    <li><a href="#s2">II · The Chamber</a></li>
-    <li><a href="#s3">III · The Parliament Is Still Sitting</a></li>
-    <li><a href="#terms">The Setting and the Papers</a></li>
-    <li><a href="#reality">Reality Checks</a></li>
-    <li><a href="#books">The Books Set Here</a></li>
-  </ol>
-</nav>
-
-<hr class="rule">
-
-<section id="s1">
-  <div class="issue"><span class="no">I</span><h2>The Island of Paxos</h2></div>
-  <div class="prose">
-    <figure class="panel">
-      <img src="../../assets/img/places/paxos-island.jpg" width="1200" height="896" loading="lazy"
-           alt="Paxos from the air: a Y-shaped island whose two arms face each other across a bay, a white colonnaded round hall under a conical roof on one arm and, on the other, a town beside a round hall with a conical red-tiled roof, the arms joining at a fork above the broad body of the island.">
-    </figure>
+<section class="spread light" id="s1" data-name="The Island of Paxos">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <h2>The Island of Paxos</h2>
+    <div class="prosecol">
+    
 
     <p>Paxos is shaped like a Y. Two arms reach north and face each other across a bay: the western
     arm holds the <b>Chamber</b> of the Paxon Parliament, the eastern arm the city of
@@ -57,17 +53,17 @@
     and the Chamber has a meridian line. Word goes by messenger and by courier along the island's
     roads, and takes as long as it takes.</p>
   </div>
+  </div>
 </section>
 
-<hr class="rule">
-
-<section id="s2">
-  <div class="issue"><span class="no">II</span><h2>The Chamber</h2></div>
-  <div class="prose">
-    <figure class="panel">
-      <img src="../../assets/img/places/chamber.jpg" width="1200" height="896" loading="lazy"
-           alt="The Chamber from the air: a round white marble hall ringed by Doric columns under a conical red-tiled roof with a small lantern, on its paved terrace among pines and cypresses above the bay.">
-    </figure>
+<section class="spread dark" id="s2" data-name="The Chamber">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="two read">
+      <div>
+    <h2>The Chamber</h2>
+    <div class="prosecol">
+    
 
     <p>The Chamber is Lamport's, not ours, and it is not retold. It stands on the western arm, on
     the road to the harbour town at the arm's tip, looking across the bay at the Tholos of Schedia.
@@ -75,10 +71,7 @@
     poor, making oratory impossible, so legislators could communicate only by messenger. A round hall with hard stone walls under one conical roof held up by columns inside, with no podium and no head of the room, fits that description,
     and its one doorway, closed by a door that can be locked, lets legislators and messengers come and go.</p>
 
-    <figure class="panel">
-      <img src="../../assets/img/places/chamber-terrace.jpg" width="1200" height="896" loading="lazy"
-           alt="The Chamber from its terrace, between trees: a ring of Doric columns on a stepped base round a white drum, a triglyph frieze, the conical tiled roof with its lantern above, the sea beyond.">
-    </figure>
+    
 
     <p>The legislators are part-time. They wander in and out of the Chamber whenever they like,
     and any of them may be away for any length of time. Each keeps a <b>scroll</b> in which he
@@ -88,62 +81,64 @@
     different decrees under the same number, because any two majorities of legislators share a
     member.</p>
 
-    <figure class="panel">
-      <img src="../../assets/img/places/chamber-inside.jpg" width="1200" height="896" loading="lazy"
-           alt="Inside the Chamber: looking out through its one open door: a checkerboard floor with a bronze meridian line, a ring of slender Corinthian columns, and a stone seat round the wall.">
-    </figure>
+    
 
     <p>The Parliament makes the law of Paxos: the western arm, the stem and the scholars' coast.
     Schedia, on the eastern arm, keeps its own laws, and the Parliament's decrees have never run
     there.</p>
   </div>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="../../assets/img/places/chamber.jpg" loading="lazy"
+           alt="The Chamber from the air: a round white marble hall ringed by Doric columns under a conical red-tiled roof with a small lantern, on its paved terrace among pines and cypresses above the bay."></div></div></div>
+    </div>
+    <div class="photos">
+      <div class="pop "><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="../../assets/img/places/chamber-terrace.jpg" loading="lazy"
+           alt="The Chamber from its terrace, between trees: a ring of Doric columns on a stepped base round a white drum, a triglyph frieze, the conical tiled roof with its lantern above, the sea beyond."></div></div></div>
+      <div class="pop "><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="../../assets/img/places/chamber-inside.jpg" loading="lazy"
+           alt="Inside the Chamber: looking out through its one open door: a checkerboard floor with a bronze meridian line, a ring of slender Corinthian columns, and a stone seat round the wall."></div></div></div>
+    </div>
+  </div>
 </section>
 
-<hr class="rule">
-
-<section id="s3">
-  <div class="issue"><span class="no">III</span><h2>The Parliament Is Still Sitting</h2></div>
-  <div class="prose">
+<section class="spread light" id="s3" data-name="The Parliament Is Still Sitting">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap">
+    <h2>The Parliament Is Still Sitting</h2>
+    <div class="prosecol">
     <p>Lamport ends his paper with the Parliament's fall: a scribe's error names drowned sailors as
     the only legislators, government halts, and a coup and an invasion follow. Every other book in
     this series sets that ending aside, as a matter of convenience. In them the Parliament is still
     sitting, the Chamber still stands on the western arm, and the scholars of the island's coast
     still walk up to it.</p>
   </div>
-</section>
-
-<hr class="rule">
-
-<section id="terms">
-  <div class="issue"><span class="no">Reference</span><h2>The Setting and the Papers</h2></div>
-  <div class="prose">
-    <p>What each part of the place stands for, so that a reader coming to any book here knows the
-    model before the first chapter begins.</p>
-  </div>
-  <div class="table-wrap">
-    <table class="chron">
-      <thead><tr><th>In the setting</th><th>What it stands for</th></tr></thead>
-      <tbody>
-        <tr><td><span class="term">the legislators, wandering in and out</span></td><td>Processes that may stop and restart at any time.</td></tr>
-        <tr><td><span class="term">a legislator's scroll</span></td><td>Stable storage that survives a process's absence.</td></tr>
-        <tr><td><span class="term">messengers, slow or lost</span></td><td>Asynchronous messages that may be delayed, duplicated or lost.</td></tr>
-        <tr><td><span class="term">a decree and its number</span></td><td>A command at a position in a replicated log.</td></tr>
-        <tr><td><span class="term">any two majorities share a legislator</span></td><td>Quorum intersection, which preserves past decisions.</td></tr>
-        <tr><td><span class="term">the Chamber's poor acoustics</span></td><td>No broadcast: legislators communicate only by messenger.</td></tr>
-      </tbody>
-    </table>
   </div>
 </section>
 
-<hr class="rule">
-
-<section id="reality">
-  <div class="issue"><span class="no">Reference</span><h2>Reality Checks</h2></div>
-  <div class="prose">
-    <p>What each part of this place has in common with the real Greek world, so that a reader can tell what is borrowed from what is made up. <i>Close</i> means the real thing is much like it; <i>loose</i> means it is borrowed and changed; <i>invented</i> means the setting made it up; <i>anachronism</i> means the real thing is of another age. A dagger (†) marks a citation given from memory and not checked against the text.</p>
+<section class="spread dark" id="terms" data-name="The Setting and the Papers">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <h2>The Setting and the Papers</h2>
+    <div class="prosecol"><p>What each part of the place stands for, so that a reader coming to any book here knows the
+    model before the first chapter begins.</p></div>
+    <div class="map">
+      <div class="hd" style="text-align:right;padding-right:6px"><tr><th>In the setting</div><div></div><div class="hd">What it stands for</div>
+      <div class="l"><span class="term">the legislators, wandering in and out</span></div><div class="mid">⟷</div><div class="r">Processes that may stop and restart at any time.</div>
+      <div class="l"><span class="term">a legislator's scroll</span></div><div class="mid">⟷</div><div class="r">Stable storage that survives a process's absence.</div>
+      <div class="l"><span class="term">messengers, slow or lost</span></div><div class="mid">⟷</div><div class="r">Asynchronous messages that may be delayed, duplicated or lost.</div>
+      <div class="l"><span class="term">a decree and its number</span></div><div class="mid">⟷</div><div class="r">A command at a position in a replicated log.</div>
+      <div class="l"><span class="term">any two majorities share a legislator</span></div><div class="mid">⟷</div><div class="r">Quorum intersection, which preserves past decisions.</div>
+      <div class="l"><span class="term">the Chamber's poor acoustics</span></div><div class="mid">⟷</div><div class="r">No broadcast: legislators communicate only by messenger.</div>
+    </div>
   </div>
-  <div class="table-wrap">
-    <table class="chron">
+</section>
+
+<section class="spread light" id="reality" data-name="Reality Checks">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <h2>Reality Checks</h2>
+    <div class="prosecol"><p>What each part of this place has in common with the real Greek world, so that a reader can tell what is borrowed from what is made up. <i>Close</i> means the real thing is much like it; <i>loose</i> means it is borrowed and changed; <i>invented</i> means the setting made it up; <i>anachronism</i> means the real thing is of another age. A dagger (†) marks a citation given from memory and not checked against the text.</p></div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+<table class="chron">
       <thead><tr><th>In the setting</th><th>The real precedent</th><th class="c">How close</th></tr></thead>
       <tbody>
         <tr><td><i>Place.</i> <span class="term">the island of Paxos</span></td><td>Lamport's story puts a thriving mercantile Paxos in the Aegean and warns that it is not the Ionian island of Paxoi. Real Paxos is a small island in the Ionian Sea.</td><td class="c">Invented</td></tr>
@@ -157,19 +152,29 @@
         <tr><td><i>Practice.</i> <span class="term">a decree passes by a majority</span></td><td>The Athenian Assembly voted by show of hands, and law-courts by pebbles; decisions went by simple majority†.</td><td class="c">Close</td></tr>
       </tbody>
     </table>
+    </div></div></div>
   </div>
 </section>
 
-<hr class="rule">
-
-<section id="books">
-  <div class="issue"><span class="no">Reference</span><h2>The Books Set Here</h2></div>
-  <div class="prose">
-    <p><a href="../../books/the-part-time-parliament/index.html"><i>The Part-Time Parliament</i></a>: Lamport's paper as he wrote
-    it, with interactive figures. <span class="paper">Lamport 1998 · Lamport 2001</span></p>
+<section class="spread dark" id="books" data-name="The Books Set Here">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <h2>The Books Set Here</h2>
+    <div class="cards3 books">
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="../../books/the-part-time-parliament/index.html">
+        <div class="photo"><img src="../../assets/img/covers/the-part-time-parliament.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>The Part-Time Parliament</h3><p>Lamport's paper as he wrote it, with interactive figures.</p><span class="credit">Lamport 1998 · Lamport 2001</span></div>
+      </a></div></div>
+    </div>
   </div>
 </section>
+<footer>Distributed Algorithms of Ancient Greece · Paxos · The Chamber</footer>
 
-</div>
+<script src="../../art/scroll/shell.js"></script>
+<script>
+/* who is who: light a pair when either side is pointed at */
+document.querySelectorAll(".map").forEach(m=>{const c=[...m.children].slice(3);for(let i=0;i<c.length;i+=3){const l=c[i],r=c[i+2];
+  [l,c[i+1],r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})})}});
+</script>
 </body>
 </html>
