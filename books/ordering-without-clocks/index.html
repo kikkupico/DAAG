@@ -4,479 +4,873 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ordering Without Clocks — Arche</title>
+<meta name="description" content="Lamport's logical clocks: three trading houses round a mountain, a road where no messenger passes another, and a rising number that settles what came first.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<link rel="stylesheet" href="../../assets/css/daag.css">
-<link rel="stylesheet" href="../../assets/css/books.css">
+<style>
+:root{
+  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4;
+  --aegean:#2e88b5; --aegean-d:#136f9e; --blood:#bf4a26; --olive:#7c8f3a; --terra:#b5602c;
+  --gold:#e0b84a; --shadow:#b9a77e;
+  --serif:Georgia,'Iowan Old Style','Palatino Linotype',serif;
+  --sans:Optima,'Gill Sans','Gill Sans MT',sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#d8cba6}
+body{margin:0;background:#d8cba6;color:var(--ink);font-family:var(--serif);line-height:1.55;overflow-x:hidden}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer}
+h1,h2,h3{font-family:var(--sans);line-height:1.12;margin:0;text-wrap:balance}
+p{margin:0 0 .9rem;text-wrap:pretty}
+.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--blood)}
+
+/* ---------- top bar ---------- */
+.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
+  font-family:var(--sans);font-size:.78rem;letter-spacing:.05em;background:linear-gradient(180deg,#3a2a1a,#241a10)}
+.bar a{color:#f0e6cc;text-decoration:none;opacity:.8;white-space:nowrap} .bar a:hover{opacity:1}
+.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:520px){.bar a+a{display:none}}
+.bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
+
+/* ---------- spreads ---------- */
+.spread{position:relative;padding:clamp(4.5rem,11vw,8rem) 20px;overflow:clip}
+.spread.has-scrolly{overflow:visible;padding-bottom:0;background:var(--marble)}
+.dark{background:var(--marble);color:var(--ink);background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
+.light{background:var(--parch);color:var(--ink);
+  background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
+/* torn-paper edge between spreads */
+.tear{position:absolute;left:0;right:0;top:-1px;height:26px;z-index:3;pointer-events:none}
+.tear path{fill:var(--prev)}
+.wrap{max-width:1080px;margin:0 auto;position:relative;z-index:2}
+.narrow{max-width:640px;margin:0 auto}
+.spread h2{font-size:clamp(1.9rem,5vw,3.1rem);margin:.4rem 0 1rem}
+.lede{font-size:clamp(1.05rem,2.2vw,1.3rem);max-width:34em}
+.light .lede{color:#3a2d24}
+.meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
+
+/* ---------- the pop-up: a card that unfolds from its hinge ---------- */
+.pop{perspective:1400px}
+.pop > .leaf{transform-origin:50% 100%;transform:rotateX(78deg) translateY(30px);opacity:0;
+  transition:transform 1.1s cubic-bezier(.2,.9,.25,1.12),opacity .6s ease}
+.pop.up > .leaf{transform:rotateX(0) translateY(0);opacity:1}
+.pop.fromleft > .leaf{transform-origin:0 50%;transform:rotateY(-80deg)}
+.pop.fromright > .leaf{transform-origin:100% 50%;transform:rotateY(80deg)}
+.pop.up.fromleft > .leaf,.pop.up.fromright > .leaf{transform:none}
+.paper{background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);position:relative}
+.light .paper{box-shadow:9px 11px 0 #b9a77e}
+.photo{border:5px solid #fffaf0;box-shadow:0 0 0 3px var(--ink),12px 16px 0 var(--shadow);background:#222;overflow:hidden;position:relative}
+.photo img{width:100%;height:100%;object-fit:cover}
+.tilt-l{transform:rotate(-1.4deg)} .tilt-r{transform:rotate(1.2deg)}
+[data-depth]{will-change:transform}
+.fold-shadow{position:absolute;left:6%;right:6%;bottom:-18px;height:26px;background:radial-gradient(ellipse at center,#0008,transparent 70%);opacity:0;transition:opacity 1s .4s;z-index:-1}
+.up .fold-shadow{opacity:1}
+
+/* ---------- cover ---------- */
+#cover{min-height:100svh;display:grid;align-items:center;padding-top:5rem;
+  background:radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
+#cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
+#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:.6rem 0 1rem;letter-spacing:-.01em}
+#cover h1 span{display:block;font-size:.34em;letter-spacing:.2em;text-transform:uppercase;color:var(--aegean-d);margin-top:.9rem;font-weight:400}
+#cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
+#cover .hook{font-size:clamp(1.1rem,2.4vw,1.45rem);font-style:italic;max-width:24em;color:#3a2d24}
+.scrollcue{margin-top:2rem;font-family:var(--sans);font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);display:flex;gap:10px;align-items:center}
+.scrollcue b{display:inline-block;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(7px)}}
+.cut{position:absolute;pointer-events:none;z-index:1}
+.cut svg{display:block;width:100%;height:auto}
+@media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
+
+/* ---------- two-column spreads ---------- */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.two.wide-r{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
+@media(max-width:859px){.two,.two.wide-r{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- the hall (full-bleed photo with pins) ---------- */
+#hall{padding:0;background:var(--marble)}
+.bleed{position:relative;height:min(100svh,880px);overflow:hidden}
+.bleed img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover}
+.bleed::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--parch) 0,transparent 8%,transparent 92%,var(--parch) 100%);pointer-events:none}
+.pin{position:absolute;z-index:4;max-width:min(250px,44vw);padding:10px 14px;background:#fffaf0;color:var(--ink);border:3px solid var(--ink);
+  box-shadow:5px 6px 0 #0007;font-size:.92rem;line-height:1.35;transform-origin:0 100%}
+.pin b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood)}
+.pin::after{content:"";position:absolute;left:-3px;bottom:-26px;width:3px;height:26px;background:var(--ink)}
+.pin::before{content:"";position:absolute;left:-8px;bottom:-34px;width:13px;height:13px;border-radius:50%;background:var(--blood);border:3px solid var(--ink)}
+.hall-title{position:absolute;z-index:5;left:20px;right:20px;top:clamp(5rem,12vh,8rem);max-width:1080px;margin:0 auto}
+.hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
+.hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
+.hall-title p{margin:0}
+
+/* ---------- scrollytelling ---------- */
+.scrolly{position:relative}
+.scrolly .stage{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;padding:70px 20px 20px;overflow:hidden}
+.scrolly .steps{position:relative;z-index:6;margin-top:-100svh;pointer-events:none}
+.step{min-height:100svh;display:flex;align-items:center;padding:0 20px}
+.step .card{pointer-events:auto;max-width:360px;padding:16px 20px;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);
+  transform:translateY(24px) rotate(-.6deg);opacity:.25;transition:transform .7s cubic-bezier(.2,.9,.25,1.1),opacity .5s}
+.step.on .card{transform:none;opacity:1}
+.step .card h3{font-size:1.1rem;margin-bottom:.35rem}
+.step .card p{margin:0;font-size:.98rem}
+.step .num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
+.step.r{justify-content:flex-end}
+.scrolly svg.fig{width:min(100%,820px);height:auto;max-height:calc(100svh - 120px);overflow:visible}
+.scrolly .stage-inner{width:100%;display:flex;justify-content:center}
+@media(min-width:900px){.scrolly .stage{padding-left:380px} .step .card{max-width:320px} .step{padding-left:max(24px,calc((100vw - 1080px)/2))}}
+@media(max-width:899px){
+  .scrolly .stage{align-items:flex-start;padding-top:64px}
+  .scrolly svg.fig{max-height:46svh}
+  .step{align-items:flex-end;padding-bottom:22px}
+  .step .card{max-width:none;width:100%}
+}
+svg text{font-family:var(--serif)}
+.svg-dark{background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
+
+/* ---------- interactive wells ---------- */
+.well{padding:clamp(16px,3vw,28px);margin:1.6rem 0}
+.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;justify-content:space-between;gap:10px}
+.well h4 em{font-style:normal;color:#6b5a48}
+.btn{background:var(--ink);color:var(--parch);border:3px solid var(--ink);padding:8px 16px;font-family:var(--sans);font-size:.88rem;letter-spacing:.03em;box-shadow:4px 4px 0 var(--blood);transition:transform .12s,box-shadow .12s}
+.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--blood)}
+.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--blood)}
+.btn:disabled{opacity:.35;cursor:default;box-shadow:none}
+.btn.alt{background:#fffaf0;color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.say{margin:12px 0 0;font-size:.98rem;min-height:3.1em}
+.say b{color:var(--blood)}
+.ok{color:#3f7a2a;font-weight:700}.bad{color:var(--blood);font-weight:700}
+
+/* cards row */
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
+.card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
+.card3 .body{padding:16px 18px 18px}
+.card3 h3{font-size:1.15rem;margin-bottom:.4rem}
+.card3 p{font-size:.95rem;margin:0}
+.card3 .fx{margin-top:12px}
+@media(max-width:860px){.cards3{grid-template-columns:1fr}}
+/* relevance */
+.map{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px 0;align-items:stretch;max-width:760px;margin:2rem auto 0}
+.map .l,.map .r{padding:11px 16px;font-size:1rem;border:3px solid var(--ink);background:#fffaf0;color:var(--ink);transition:background .25s,transform .25s;cursor:default}
+.map .r{font-family:var(--sans);background:#e9f2f7}
+.map .mid{display:grid;place-items:center;color:var(--blood);font-size:1.3rem}
+.map .hi{background:var(--gold)!important;transform:scale(1.03)}
+.map .hd{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood)}
+.end{text-align:center}
+.end .big{font-size:clamp(1.5rem,4.2vw,2.5rem);font-style:italic;max-width:19em;margin:0 auto 1.4rem;color:var(--ink);text-wrap:balance}
+.links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+.links a{color:var(--ink);background:#fffaf0;border:3px solid var(--ink);padding:9px 18px;text-decoration:none;font-family:var(--sans);font-size:.9rem;box-shadow:4px 4px 0 var(--shadow)}
+.links a:hover{background:var(--gold)}
+footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;font-family:var(--sans);background:#d8cba6}
+
+/* ---------- lists, small parts ---------- */
+.terms{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:12px}
+.terms li{padding:12px 16px;background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 #b9a77e;font-size:.98rem}
+.terms b{font-family:var(--sans)}
+@keyframes slotin{from{transform:translateY(-8px);opacity:0}}
+.btn:focus-visible,.links a:focus-visible,[role=button]:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
+.num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
+.chip{display:inline-block;padding:1px 7px;margin:2px 3px 2px 0;border:2px solid var(--ink);border-radius:5px;background:#fff;font-family:var(--sans);font-weight:700;font-size:.86rem;white-space:nowrap}
+.chip i{display:inline-block;width:.7em;height:.7em;border-radius:50%;border:1.5px solid var(--ink);margin-right:5px;vertical-align:-.02em}
+.isle-svg{width:min(100%,440px);display:block;margin:0 auto}
+.fig .fade{opacity:0;transition:opacity .6s}
+.fig .fade.on{opacity:1}
+.fig .lab{fill:#6b5a48;font-size:15px;font-style:italic;text-anchor:middle}
+.fig .halo{paint-order:stroke;stroke:#fffaf0;stroke-width:5px;stroke-linejoin:round}
+.tok text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+.site rect,.site circle{stroke:var(--ink);stroke-width:4}
+.site text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+
+/* ---------- space-time, drawn in the round ---------- */
+.st-ring{fill:none;stroke:#b9a77e;stroke-opacity:.7;stroke-width:1;stroke-dasharray:3 4}
+.st-spoke{stroke:#1c1512;stroke-width:2.5;stroke-opacity:.45}
+.st-node rect{fill:#f6eed6;stroke:#1c1512;stroke-width:2}
+.st-node text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+.st-slip{fill:none;stroke:#136f9e;stroke-width:2.6;transition:stroke .3s,stroke-width .3s,opacity .5s}
+.st-seg{stroke:#bf4a26;stroke-width:7;stroke-linecap:round;opacity:0;transition:opacity .3s}
+.st-seg.hi{opacity:.85}
+.st-slip.hi{stroke:#bf4a26;stroke-width:5}
+.st-ev{cursor:pointer}
+.st-ev circle.b{stroke:#1c1512;stroke-width:3;transition:stroke .3s,stroke-width .3s}
+.st-ev text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
+.st-ev .halo2{fill:none;stroke:#e0b84a;stroke-width:7;opacity:0;transition:opacity .3s}
+.st-ev.sel .halo2,.st-ev.mark .halo2{opacity:1}
+.st-ev.sel circle.b{stroke-width:4.5}
+.st-ev.dim{opacity:.3}
+.st-ev:focus-visible{outline:none}.st-ev:focus-visible circle.b{stroke:#136f9e;stroke-width:6}
+.st-note{fill:#6b5a48;font-size:13px;font-style:italic}
+
+/* ---------- a stage with a figure and a side panel ---------- */
+.stage-inner.split{gap:18px;align-items:center}
+.stage-inner.split svg.fig{flex:1 1 300px;min-width:0;max-width:470px}
+.side{flex:0 0 240px;display:grid;gap:10px;font-family:var(--sans);font-size:.84rem}
+.side .hc{background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--shadow);padding:8px 10px;min-height:92px;transition:background .4s}
+.side .hc h5{margin:0 0 5px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:6px}
+.side .hc h5 span{color:#6b5a48;letter-spacing:.02em;text-transform:none}
+.side .hc .chk{font-size:.78rem;margin-top:4px;line-height:1.35}
+.side .hc.in{background:#e3ecc4}
+@media(max-width:899px){
+  .stage-inner.split{flex-direction:column;gap:10px}
+  .stage-inner.split svg.fig{flex:0 0 auto;max-height:30svh;width:auto;max-width:100%}
+  .side{flex:0 0 auto;width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;font-size:.7rem}
+  .side .hc{padding:5px 6px;min-height:0;box-shadow:3px 3px 0 var(--shadow)}
+  .side .hc h5{font-size:.62rem;flex-direction:column;gap:0}
+  .side .hc .chk{font-size:.66rem}
+  .side .chip{font-size:.68rem;padding:0 4px}
+}
+.tear{width:100%}
+.scrolly svg.fig.svg-dark{overflow:hidden}
+/* ---------- three clocks ---------- */
+.logs{padding:18px 18px 14px}
+.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
+.clocks{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.clk{border:3px solid var(--ink);background:#fff;padding:8px;text-align:center}
+.clk h5{margin:0 0 4px;font-family:var(--sans);font-size:.7rem;letter-spacing:.06em}
+.clk b{font-family:var(--sans);font-size:clamp(.95rem,2.4vw,1.25rem);font-variant-numeric:tabular-nums}
+.lists{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.lists h5,.pq h5{margin:0 0 6px;font-family:var(--sans);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48}
+.lists>div,.pq{border:3px solid var(--ink);background:#fff;padding:8px;min-height:96px}
+.e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both;font-family:var(--sans)}
+.e.bad{border-left-color:var(--blood);color:var(--ink);font-weight:400}
+.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:3.2em;font-style:italic}
+/* ---------- queues side by side ---------- */
+.pqs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.pq{min-height:214px}
+.pq .e{background:none;border-left:0;padding:1px 0}
+/* ---------- comparing two columns ---------- */
+.st-wrap{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.st-wrap{grid-template-columns:minmax(0,1fr)}}
+.st-svg{width:100%;height:auto;display:block}
+.cmp{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.95rem;margin-bottom:10px}
+.cmp th{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48;padding:4px 6px;text-align:center;font-weight:400}
+.cmp th:first-child,.cmp td:first-child{text-align:left}
+.cmp td{padding:6px;border-top:2px solid #1c151222;text-align:center;font-weight:700;font-size:1.1rem}
+.cmp td:first-child{font-weight:400;font-size:.9rem}
+.cmp tr.up td:nth-child(3){color:#3f7a2a}.cmp tr.down td:nth-child(3){color:var(--blood)}
+.tok-l{font-family:var(--sans);font-size:13px;font-weight:700;fill:#136f9e;text-anchor:middle}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .pop > .leaf{transition:opacity .3s;transform:none!important}
+  [data-depth]{transform:none!important}
+  .scrollcue b,.pulse{animation:none}
+  .fig .tok{transition:none}
+}
+</style>
 </head>
 <body>
-<nav class="series-nav">
-  <div class="series-nav-inner">
-    <a href="../../index.html" class="nav-back">← The Books</a>
-    <span class="nav-current">Arche · The Ring Road</span>
-  </div>
-</nav>
-<div class="page">
 
-<!-- ================= COVER ================= -->
-<header class="cover">
-  <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · The Ring Road</div>
-  <h1 class="display">Ordering Without Clocks</h1>
-  <p class="basis">Based on “Time, Clocks, and the Ordering of Events in a Distributed System” by Leslie Lamport (1978), “Timestamps in Message-Passing Systems That Preserve the Partial Ordering” by Colin Fidge (1988) and “Virtual Time and Global States of Distributed Systems” by Friedemann Mattern (1988)</p>
-  <p class="sub">If no two machines agree on the time, how can they agree on what happened first? And when
-  two things happen far apart, how can anyone tell whether one led to the other or neither
-  knew of the other?</p>
-  <div class="frame-cover portrait"><img src="../../assets/img/covers/ordering-without-clocks.jpg" width="896" height="1200"
-    alt="On the terrace before House 1's columned portico, an old bald scribe in a cream chiton writes a number on a slip beside a stone sundial that casts no shadow, while three messengers in ochre tunics jog one behind another along the road into the town."></div>
-  <p class="pub">Three houses around a central mountain, acting as a distribution network along a
-  narrow coastal road where no messenger may pass another. To fill every order in the sequence it was placed
-  when sundials fail under cloud, they invent a rising number that settles every dispute about
-  what came first — and then discover what a single number must forever fail to see.</p>
-  <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/ring-road/index.html">The Ring Road</a> · <a href="../../popups/ordering-without-clocks/index.html">Pop-up edition</a></p>
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <a href="archive.html">Long edition, with proofs</a>
+  <span class="now" id="now"></span>
+  <i id="prog"></i>
+</div>
+
+<!-- ============================================================ cover -->
+<header class="spread dark" id="cover" data-name="Cover">
+  <div class="cut" style="left:-30px;bottom:-10px;width:90px;opacity:.3" data-depth="-26"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#5f6e28"/></svg></div>
+  <div class="cut" style="right:-20px;bottom:-14px;width:80px;opacity:.3" data-depth="-40"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#7c8f3a"/></svg></div>
+  <div class="wrap grid">
+    <div>
+      <div class="kicker">After Lamport, 1978, and Fidge and Mattern, 1988</div>
+      <h1>Ordering Without Clocks<span>how three houses agree on what came first</span></h1>
+      <p class="hook">If no two houses agree on the hour, how can they agree on which order was placed first?</p>
+      <p class="hook" style="color:var(--blood);font-style:normal;font-family:var(--sans);font-size:1.1rem">On the island of Arche, they stopped asking the sun.</p>
+      <div class="scrollcue"><b>↓</b> Scroll. Things unfold.</div>
+    </div>
+    <div class="pop" data-auto>
+      <div class="leaf">
+        <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" alt="Before a columned portico a scribe writes a number on a slip beside a stone sundial that casts no shadow, while three messengers jog one behind another along the road"></div>
+        <div class="fold-shadow"></div>
+      </div>
+    </div>
+  </div>
 </header>
 
-<!-- ================= IN A NUTSHELL ================= -->
-<section class="nutshell">
-  <h6>In a Nutshell</h6>
-  <p>Lamport's logical clocks answer how to order events in a distributed system whose machines share no reliable clock. The happened-before relation orders events by what could have caused what, and a counter at each node, passed along on every message, numbers events so that a cause always has a smaller number than its effect. A single number cannot say whether two events were causally related or merely unrelated, and vector clocks (Fidge and Mattern) capture causality exactly.</p>
-  <p>The book tells it with three trading houses round a mountain. They trade along a coastal road where no messenger may pass another, and their sundials fail under cloud. To fill orders in the sequence they were placed, they give every event a rising number, so that anything that could have caused another is numbered before it. That settles every dispute about what came first, and then they find what a single number cannot see: whether two events were connected or merely unrelated.</p>
-</section>
-
-<nav class="toc">
-  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
-  <ol>
-    <li><a href="#s1">I · Two Messengers</a></li>
-    <li><a href="#s2">II · What Came Before</a></li>
-    <li><a href="#s3">III · Breaking Ties</a></li>
-    <li><a href="#s4">IV · The Shared Storehouse</a></li>
-    <li><a href="#s5">V · Over the Mountain</a></li>
-    <li><a href="#s6">VI · The Clerk's Doubt</a></li>
-    <li><a href="#s7">VII · The Column</a></li>
-    <li><a href="#s8">VIII · What the Column Sees</a></li>
-    <li><a href="#s9">IX · Clocks That Run With the World</a></li>
-    <li><a href="#s10">X · In the Book, In the Paper</a></li>
-    <li><a href="#refs">The Papers Behind This Book</a></li>
-  </ol>
-</nav>
-
-<hr class="rule">
-
-<section id="s1">
-  <div class="issue"><span class="no">Chapter I</span><h2>Two Messengers</h2></div>
-  <div class="prose">
-    <p>Three trading houses, <span class="coin">House 1</span>, <span class="coin">House 2</span> and <span class="coin">House 3</span>, stand round the coast of Arche with Mount Phyle between them. Word goes between them only on written slips carried by messengers along the ring road, where by the law of the road no messenger passes another, so slips from one house to another arrive in the order they were sent, after a time nobody can bound. In the trading season cloud silences the sundials, and the water-clocks of the three counting rooms keep no common hour<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup>.</p>
-
-    <p>Say House 3 has grain in its storehouse, enough for one of the others, and both need it. House 2 sends a messenger with an <span class="coin">order</span> for it. House 1, knowing nothing of this, sends a messenger with an order of its own. The houses have agreed that the order placed first is filled first. So which was placed first?</p>
-
-    <figure class="panel">
-      <img src="../../assets/img/panels/ordering-without-clocks/t01-gate.jpg" width="1200" height="896" loading="lazy"
-           alt="Two bare-headed messengers in ochre tunics meet on the road before House 3's columned portico, each holding out a slip toward the gate, while a loader leans in the storehouse doorway.">
-    </figure>
-
-    <p>Can House 3 tell by which reaches its gate first? No: then a house with a quicker messenger would win, whoever placed its order first. It must know when each was written, and for that it needs a clock the three houses share, and they share none. Could House 3 ask each house the hour its order was written? It would be told two readings of two water-clocks that were never set together, and comparing them would decide nothing.</p>
-  </div>
-  <div class="prose">
-    <p class="hook"><em>Every way of settling it asks for a clock the island does not have. Must the houses then give up filling the first-placed order first? Or have they been asking the wrong question?</em></p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<section id="s2">
-  <div class="issue"><span class="no">Chapter II</span><h2>What Came Before</h2></div>
-  <div class="prose">
-    <p>Lamportios, who kept the books of House 1, answered the opening question by changing it. The houses had been asking which of two orders came first in absolute time, which no house can see. What their business needs is narrower. An order should never be served before one that <em>could have led to it</em>. And whether one thing could have led to another is something the houses can see, because the only way news moves on Arche is by slip.</p>
-
-    <p>What, then, does it mean for one event to come before another? He set down three rules, and they are the whole foundation. One event <span class="coin">came before</span> another (written <var>a</var> → <var>b</var>) when:</p>
-  </div>
-  <div class="aside-formal">
-    <span class="lbl">The three rules of coming-before</span>
-    <span class="stmt">(1)</span> They happened in the same house, and the book of that house has
-    the first written above the second.<br>
-    <span class="stmt">(2)</span> The first is a house dispatching a slip, and the second is
-    another house receiving that same slip.<br>
-    <span class="stmt">(3)</span> Or there is some third event that the first came before, and
-    which came before the second.
-  </div>
-  <div class="prose">
-    <p>If none of the three rules joins two events, they are <span class="coin">unrelated</span> (<var>a</var> ∥ <var>b</var>). Does unrelated mean they happened at the same moment? No: it means neither could have known of the other, since no chain of slips joins them. The sun may have seen one before the other, but nothing the houses hold can tell them which.</p>
-  </div>
-  <figure class="diagram">
-    <div class="board">
-      <svg class="flow" viewBox="0 0 600 560" role="img" aria-label="Space-time diagram of three trading houses drawn in the round. H1, H2 and H3 each have a line running outward, the house at one moment after another; each ring outward is a later moment. Events are dots on each house's spoke; slips carried by messengers are arcs running round the circle and outward. Events p2 and r3 are unrelated.">
-        <!-- polar:owc-spacetime -->
-        <defs>
-          <marker id="owc-spacetime-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
-          </marker>
-          <marker id="owc-spacetime-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
-          </marker>
-          <marker id="owc-spacetime-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
-          </marker>
-          <marker id="owc-spacetime-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
-          </marker>
-          <marker id="owc-spacetime-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
-          </marker>
-        </defs>
-        
-        <circle cx="300" cy="282" r="108" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="300" cy="282" r="150" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="300" cy="282" r="192" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="300" cy="282" r="234" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <path id="owc-spacetime-time" fill="none" d="M62.4,218.3 A246,246 0 0 1 236.3,44.4"/>
-        <text class="d-note"><textPath href="#owc-spacetime-time" startOffset="50%" text-anchor="middle">time, later outward</textPath></text>
-        <line class="d-lifeline" x1="300" y1="216" x2="300" y2="34.1"/>
-        <line class="d-lifeline" x1="357.2" y1="315" x2="514.7" y2="405.9"/>
-        <line class="d-lifeline" x1="242.8" y1="315" x2="85.3" y2="405.9"/>
-        <rect class="d-node" x="285" y="205" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="300" y="220.5" text-anchor="middle" fill="#1c1512">H1</text>
-        <rect class="d-node" x="342.2" y="304" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="357.2" y="319.5" text-anchor="middle" fill="#1c1512">H2</text>
-        <rect class="d-node" x="227.8" y="304" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="242.8" y="319.5" text-anchor="middle" fill="#1c1512">H3</text>
-        <clipPath id="owc-spacetime-clip0"><circle class="tclip" cx="300" cy="282" r="267.9" data-r0="66" data-r1="247.9"/></clipPath>
-        <g class="tflow" clip-path="url(#owc-spacetime-clip0)">
-        <path class="d-msg" marker-end="url(#owc-spacetime-b)" d="M300,174 L305.7,173.1 L311.5,172.5 L317.4,172.2 L323.3,172.3 L329.3,172.6 L335.3,173.3 L341.3,174.3 L347.3,175.7 L353.3,177.4 L359.2,179.4 L365.1,181.7 L370.9,184.4 L376.6,187.5 L382.1,190.8 L387.5,194.5 L392.7,198.5 L397.8,202.8 L402.7,207.4 L407.3,212.3 L411.7,217.5 L415.9,223 L419.8,228.7 L423.4,234.6 L426.7,240.8 L429.7,247.3 L432.3,253.9 L434.7,260.7 L436.6,267.6 L438.3,274.8 L439.5,282 L440.4,289.4 L440.8,296.8 L440.9,304.3 L440.6,311.9 L439.8,319.5 L438.7,327.1 L437.1,334.6 L435.1,342.2 L432.7,349.6"/>
-        <path class="d-msg" marker-end="url(#owc-spacetime-b)" d="M393.5,336 L391.5,341.4 L389.1,346.7 L386.4,351.9 L383.4,357.1 L380.1,362.1 L376.5,366.9 L372.6,371.6 L368.4,376.2 L364,380.5 L359.2,384.6 L354.3,388.5 L349.1,392.2 L343.6,395.6 L337.9,398.7 L332,401.5 L325.9,404.1 L319.7,406.3 L313.3,408.2 L306.7,409.8 L300,411 L293.2,411.9 L286.3,412.4 L279.3,412.5 L272.3,412.3 L265.3,411.7 L258.2,410.7 L251.1,409.3 L244.1,407.5 L237.1,405.4 L230.3,402.8 L223.5,399.9 L216.8,396.6 L210.2,392.9 L203.8,388.8 L197.6,384.4 L191.6,379.6 L185.9,374.4 L180.3,368.9 L175.1,363.1"/>
-        <path class="d-msg" marker-end="url(#owc-spacetime-b)" d="M206.5,336 L201.9,332 L197.5,327.6 L193.3,323 L189.3,318 L185.5,312.7 L182,307.1 L178.8,301.2 L175.9,295 L173.3,288.6 L171,282 L169.1,275.1 L167.5,268.1 L166.4,260.8 L165.6,253.4 L165.3,245.9 L165.3,238.2 L165.8,230.5 L166.8,222.7 L168.2,214.9 L170.1,207 L172.4,199.2 L175.2,191.4 L178.5,183.6 L182.3,176 L186.5,168.5 L191.2,161.2 L196.4,154 L202,147.1 L208,140.3 L214.5,133.9 L221.4,127.8 L228.7,121.9 L236.5,116.5 L244.6,111.4 L253,106.7 L261.8,102.4 L271,98.6 L280.4,95.2 L290.1,92.4"/>
-        <path class="d-msg" marker-end="url(#owc-spacetime-b)" d="M466.3,378 L461.9,387.1 L457,396.1 L451.7,404.8 L445.8,413.3 L439.5,421.5 L432.7,429.4 L425.5,436.9 L417.8,444.1 L409.7,451 L401.2,457.4 L392.4,463.4 L383.2,468.9 L373.7,474 L363.9,478.6 L353.8,482.7 L343.4,486.2 L332.8,489.3 L322,491.7 L311.1,493.7 L300,495 L288.8,495.8 L277.5,495.9 L266.2,495.5 L254.8,494.5 L243.5,492.8 L232.2,490.6 L221,487.7 L209.9,484.3 L199,480.2 L188.3,475.6 L177.7,470.3 L167.4,464.5 L157.4,458.1 L147.6,451.2 L138.2,443.8 L129.2,435.8 L120.6,427.3 L112.4,418.3 L104.6,408.9"/>
-        <circle class="d-ev" cx="300" cy="174" r="5"/>
-        <text class="d-lbl d-halo" x="287" y="178" text-anchor="end">p₁</text>
-        <circle class="d-ev-hi" cx="300" cy="132" r="5.5"/>
-        <text class="d-lbl d-halo" x="287" y="136" text-anchor="end">p₂</text>
-        <circle class="d-ev" cx="300" cy="90" r="5"/>
-        <text class="d-lbl d-halo" x="313" y="94" text-anchor="start">p₃</text>
-        <circle class="d-ev" cx="300" cy="48" r="5"/>
-        <text class="d-lbl d-halo" x="287" y="52" text-anchor="end">p₄</text>
-        <circle class="d-ev" cx="393.5" cy="336" r="5"/>
-        <text class="d-lbl d-halo" x="400" y="328.7" text-anchor="start">q₁</text>
-        <circle class="d-ev" cx="429.9" cy="357" r="5"/>
-        <text class="d-lbl d-halo" x="423.4" y="372.3" text-anchor="end">q₂</text>
-        <circle class="d-ev" cx="466.3" cy="378" r="5"/>
-        <text class="d-lbl d-halo" x="472.8" y="370.7" text-anchor="start">q₃</text>
-        <circle class="d-ev" cx="502.6" cy="399" r="5"/>
-        <text class="d-lbl d-halo" x="509.1" y="391.7" text-anchor="start">q₄</text>
-        <circle class="d-ev" cx="206.5" cy="336" r="5"/>
-        <text class="d-lbl d-halo" x="213" y="351.3" text-anchor="start">r₁</text>
-        <circle class="d-ev" cx="170.1" cy="357" r="5"/>
-        <text class="d-lbl d-halo" x="163.6" y="349.7" text-anchor="end">r₂</text>
-        <circle class="d-ev-hi" cx="133.7" cy="378" r="5.5"/>
-        <text class="d-lbl d-halo" x="140.2" y="393.3" text-anchor="start">r₃</text>
-        <circle class="d-ev" cx="97.4" cy="399" r="5"/>
-        <text class="d-lbl d-halo" x="90.9" y="391.7" text-anchor="end">r₄</text>
-        </g>
-        <text class="d-note" x="300" y="548" text-anchor="middle">p₂ and r₃ are unrelated: no path of messengers joins them in either direction</text>
-      </svg>
+<!-- ============================================================ machines -->
+<section class="spread light" id="machines" data-name="In machine terms">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap two" style="gap:clamp(24px,5vw,60px);align-items:center">
+    <div>
+      <div class="kicker">First, in machine terms</div>
+      <h2>Many computers, no shared clock</h2>
+      <p class="lede">Computers that work together must often agree on the order in which things happened.</p>
+      <ul class="terms">
+        <li><b>Their clocks disagree</b>, and no message tells the time it took to arrive.</li>
+        <li><b>Logical clocks</b> (Lamport, 1978): a counter on each machine, sent along with every message, numbers events so that a cause always has a smaller number than its effect.</li>
+        <li><b>Vector clocks</b> (Fidge and Mattern, 1988): one counter per machine tells exactly which events could have affected which.</li>
+      </ul>
+      <p style="margin-top:1.2rem">This edition tells it with three trading houses on an island whose sundials have gone dark.</p>
     </div>
-    <figcaption><b>The space-time diagram of Arche.</b> Each line is one house, H1, H2 or H3, at
-    one moment after another; each ring further out is later. Slips curve round from house to house. Two events with no connecting path are unrelated.</figcaption>
-  </figure>
-  <div class="prose">
-    <p>How is a clerk to calculate with this? Lamportios gave every house a <span class="coin">tally</span>: a number kept in the counting room, written on every slip sent out, and raised by two mechanical rules.</p>
-
-    <figure class="panel">
-      <img src="../../assets/img/panels/ordering-without-clocks/t03-slip.jpg" width="1200" height="896" loading="lazy"
-           alt="Before House 1's columned portico under low winter cloud, the grey-bearded bookkeeper hands a narrow slip to a bare-headed messenger in an ochre tunic.">
-    </figure>
-  </div>
-  <div class="aside-formal">
-    <span class="lbl">The two rules of the tally</span>
-    <span class="stmt">(1)</span> A house advances its tally by at least one between any two
-    entries in its own book.<br>
-    <span class="stmt">(2)</span> When dispatching a slip, a house writes its current tally on it.
-    When receiving a slip, a house sets its own tally higher than the number on the slip, and never lowers it, before
-    entering the arrival in its book.
-  </div>
-  <div class="result">
-    <span class="name">The Clock Condition</span>
-    <p>Whenever event <var>a</var> came before event <var>b</var>, the tally of <var>a</var> is
-    strictly smaller than the tally of <var>b</var>:
-    <br><b><var>a</var> → <var>b</var> ⟹ <var>C</var>(<var>a</var>) &lt; <var>C</var>(<var>b</var>)</b></p>
-  </div>
-  <div class="prose">
-    <p>Walking forward along any chain of slips or book lines always means larger numbers. But is the converse true: does a smaller tally mean an earlier event? It does not. Two houses that have heard nothing from each other all morning may give tallies 2 and 3 to two unrelated events, and a clerk reading only the numbers would take the 2 for the earlier. The tally puts a sequence where nature left none.</p>
-  </div>
-  <div class="prose">
-    <p class="hook"><em>So the tally respects every chain of slips, and says nothing true about orders that no chain joins. Yet the two orders for House 3's grain are exactly such orders. How can a number that means nothing between them decide which is served first?</em></p>
+    <div class="pop fromright"><div class="leaf">
+      <div class="paper logs">
+        <h4>Three machines, three clocks</h4>
+        <div class="clocks" id="clocks"></div>
+        <div class="lists">
+          <div><h5>What happened</h5><div id="truth"></div></div>
+          <div><h5>Sorted by timestamp</h5><div id="stamps"></div></div>
+        </div>
+        <p class="note" id="clknote" data-live>Each machine trusts its own clock. Press the button.</p>
+        <div class="row"><button class="btn" id="wr">Write on A, then on B</button></div>
+      </div>
+    </div></div>
   </div>
 </section>
 
-<hr class="rule">
-
-<section id="s3">
-  <div class="issue"><span class="no">Chapter III</span><h2>Breaking Ties</h2></div>
-  <div class="prose">
-    <p>Two orders no chain of slips joins: the tally may give them different numbers, or the same one. A partial order cannot decide who gets the grain; &ldquo;these two orders are unrelated&rdquo; does not tell House 3 whose order to fill. What does it need? A sequence that decides between every pair, that every house works out the same way, and that never contradicts a chain of slips.</p>
-
-    <p>Lamportios got it by the plainest means available. Compare tallies; where they are equal, compare the houses' numbers, fixed once and for all: House 1 before House 2 before House 3.</p>
-  </div>
-  <div class="aside-formal">
-    <span class="lbl">The rule of precedence</span>
-    An event <var>a</var> at house <var>i</var> is earlier than event <var>b</var> at house
-    <var>j</var> (written <var>a</var> ⇒ <var>b</var>) if:
-    <br><span class="stmt">(1)</span> <var>C</var>(<var>a</var>) &lt; <var>C</var>(<var>b</var>);
-    <br><span class="stmt">(2)</span> or <var>C</var>(<var>a</var>) = <var>C</var>(<var>b</var>)
-    and <var>i</var> is less than <var>j</var>.
-  </div>
-  <details class="proof">
-    <summary>Proof — that precedence is a total order extending coming-before</summary>
-    <ol class="proofsteps">
-      <li><b>Total comparability.</b> For any two distinct events <var>a</var> and <var>b</var>:
-      if their tallies differ, clause (1) decides. If their tallies are equal and they occurred at
-      the same house, rule (1) of the tally already gave the later one a higher tally, so they
-      must belong to different houses, whose numbers differ, and clause (2) decides.</li>
-      <li><b>Antisymmetry and transitivity.</b> Compare by the pair (<var>C</var>(<var>e</var>),
-      <var>house</var>). This is the standard lexicographical ordering of pairs drawn from two
-      total orders, which is strictly total and transitive.</li>
-      <li><b>Consistency with causality.</b> If <var>a</var> → <var>b</var>, then by the Clock
-      Condition <var>C</var>(<var>a</var>) &lt; <var>C</var>(<var>b</var>) strictly. Precedence
-      places <var>a</var> earlier by clause (1) alone; house numbers are never consulted.
-      Hence <var>a</var> → <var>b</var> ⟹ <var>a</var> ⇒ <var>b</var>.<span class="qed">∎</span></li>
-    </ol>
-  </details>
-  <div class="prose">
-    <p>Does this find out which unrelated order was <em>really</em> first? No, and nothing the houses hold could. It replaces the question with an answer every house reads the same way. Is that fair? In the one sense the houses can check: where one order led to another, they are filled in that sequence, and no house can win by owning a quicker messenger. Judged by the sun, placed first is a different promise, and the tallies do not keep it.</p>
-  </div>
-  <div class="prose">
-    <p class="hook"><em>So the houses can agree on a sequence without a clock. Is that enough to run something that truly needs one house at a time, with no master to hand out turns?</em></p>
+<!-- ============================================================ the road -->
+<section class="spread dark" id="hall" data-name="The Ring Road">
+  <div class="bleed">
+    <img src="img/ring-road.jpg" alt="A narrow road cut into a sea cliff, with loaded mules walking one behind another between dry-stone walls and olive trees" data-parallax>
+    <div class="hall-title"><div class="t">
+      <div class="kicker">The ring road of Arche</div>
+      <h2>Three houses, one narrow road</h2>
+      <p>House 1, House 2 and House 3 stand round the coast with a mountain between them. Word passes only on written slips, carried by messengers along the road.</p>
+    </div></div>
+    <div class="pin pop" style="left:50%;top:46%;"><div class="leaf"><b>No passing</b>No messenger may pass another, so slips from one house to another arrive in the order they were sent.</div></div>
+    <div class="pin pop" style="left:6%;top:64%;"><div class="leaf"><b>No longest journey</b>A slip arrives after a time nobody can bound.</div></div>
+    <div class="pin pop" style="left:54%;top:82%;"><div class="leaf"><b>No common hour</b>Cloud silences the sundials, and each counting room's water-clock keeps its own time.</div></div>
   </div>
 </section>
 
-<hr class="rule">
-
-<section id="s4">
-  <div class="issue"><span class="no">Chapter IV</span><h2>The Shared Storehouse</h2></div>
-  <div class="prose">
-    <p>The island keeps one common dry storehouse for grain, cut into the rock beside the road. Only one house may load from it at a time. Could a keeper at the door simply let in whoever asks first? That is the trouble we began with: a request can reach him ahead of one sent earlier, because it had a shorter road to run.</p>
-
-    <p>The rule of precedence answers that question, though not by itself. Each house keeps a private queue of requests, ordered by precedence, and follows five rules.</p>
-  </div>
-  <div class="aside-formal">
-    <span class="lbl">The five rules of the storehouse</span>
-    <span class="stmt">(1) To request:</span> House <var>i</var> writes a request under its current
-    tally, enters it in its queue, and sends a messenger carrying it to every other house.<br>
-    <span class="stmt">(2) On receiving a request:</span> House <var>j</var> enters the request in
-    its queue, advances its tally, and dispatches an acknowledgement slip back to <var>i</var>.<br>
-    <span class="stmt">(3) To release:</span> When done, house <var>i</var> removes its request
-    from its queue and dispatches a release slip to every other house.<br>
-    <span class="stmt">(4) On receiving a release:</span> House <var>j</var> removes that house's
-    request from its queue.<br>
-    <span class="stmt">(5) To enter:</span> House <var>i</var> enters the storehouse when its own
-    request stands first in its queue, <em>and</em> it has received from every other house a slip
-    carrying a tally greater than its request.
-  </div>
-  <div class="prose">
-    <p>Why the second half of the fifth rule? It is not enough that your request is the earliest in your own queue, because an older request may be on the road right now in a messenger's pouch. What proves it is not? A slip from that house carrying a larger tally: the house had moved past your request's number, and on a road where no messenger passes another, nothing older can be trailing behind that slip.</p>
-  </div>
-  <details class="proof">
-    <summary>Proof — that two houses never enter the storehouse at once</summary>
-    <ol class="proofsteps">
-      <li>Suppose for contradiction that House 1 and House 3
-      both hold the storehouse at once, on requests <var>R</var>₁ and
-      <var>R</var>₃. Precedence is total, so one is earlier; assume
-      <var>R</var>₁ ⇒ <var>R</var>₃.</li>
-      <li>By Rule 5, when House 3 entered, it had received from House 1 some message
-      carrying a tally <var>T</var> &gt; <var>C</var>(<var>R</var>₃).</li>
-      <li>House 1 dispatched <var>R</var>₁ to House 3 under tally
-      <var>C</var>(<var>R</var>₁) before dispatching any message with tally
-      <var>T</var>. Because nobody overtakes on the coastal road, slips from House 1 to
-      House 3 arrive in FIFO order.</li>
-      <li>Therefore, House 3 received <var>R</var>₁ before receiving the message
-      with tally <var>T</var>. So <var>R</var>₁ was already in House 3's queue
-      when House 3 entered.</li>
-      <li>Since <var>R</var>₁ ⇒ <var>R</var>₃, <var>R</var>₃ did
-      not stand first in House 3's queue. Rule 5 was violated, and House 3 could not
-      have entered.<span class="qed">∎</span></li>
-    </ol>
-  </details>
-  <div class="prose">
-    <p class="hook"><em>The houses now share a storehouse by a sequence they all agree on, with no clock and no master. But whose order is it? It is not the sun's. If a merchant who saw both houses' messengers set out swore that House 2 asked first, could the houses ever prove him wrong, or right?</em></p>
+<!-- ============================================================ two messengers -->
+<section class="spread light" id="gate" data-name="Two messengers">
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">The question</div>
+        <h2>Which order was placed first?</h2>
+        <p class="lede">House 3 has grain enough for one of the others. House 2 sends an order for it. House 1, knowing nothing of this, sends its own.</p>
+        <p>The houses have agreed that the order placed first is filled first. So House 3 must find out which one that was.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/t01-gate.jpg" alt="Two messengers meet before House 3's portico, each holding out a slip toward the gate" loading="lazy"></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>The gate of House 3 <em>who gets there first?</em></h4>
+      <svg class="isle-svg" id="race" role="img" aria-label="Arche from above: three houses on a ring road round a mountain, with one messenger running from House 2 and one from House 1 toward House 3"></svg>
+      <p class="say" id="racesay">House 2 always writes its order first here. Choose whose messenger has the quicker legs.</p>
+      <div class="row">
+        <button class="btn" id="race2">House 2's messenger is quicker</button>
+        <button class="btn alt" id="race1">House 1's messenger is quicker</button>
+      </div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">Could House 3 ask each house the hour its order was written? It would get two readings of two water-clocks that were never set together. <b>Every way of settling it asks for a clock the island does not have.</b></p>
   </div>
 </section>
 
-<hr class="rule">
-
-<section id="s5">
-  <div class="issue"><span class="no">Chapter V</span><h2>Over the Mountain</h2></div>
-  <div class="prose">
-    <p>There is a way across Arche that is not the road. A goatherd who knows the smugglers' tracks can cross Mount Phyle, if he is lucky, in a couple of hours, though he may take two days or never come down, which is why no house sends its business that way<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup>.</p>
-
-    <p>Suppose a trader at House 3 concludes a sale, then pays a goatherd to cross to House 1. This time the goatherd is lucky. House 1 hears the news and at once issues an order based on it. House 1 has had a quiet morning, and its tally stands at 3. House 3's busy counting room had reached 9 when the sale was entered. The order, which the sale caused, carries a smaller tally than the sale itself, and hours later House 3's messenger arrives by the road with the official letter, too late to correct anything.</p>
-
-    <p>Is that a fault in the tally? By its own rules, no. The rules of the tally touch only slips, and the goatherd carried no slip. As far as the houses' books can tell, the sale and the order are unrelated. Yet the order was caused by the sale, as surely as if a messenger had carried it.</p>
-  </div>
-  <div class="prose">
-    <p class="hook"><em>The houses can make their numbers respect every slip. Could any clock respect the goatherd too, a path that carries no slip at all?</em></p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<section id="s6">
-  <div class="issue"><span class="no">Chapter VI</span><h2>The Clerk's Doubt</h2></div>
-  <div class="prose">
-    <p>At House 2 the clerk who keeps the book has a doubt of her own, and it is a different one. Her book holds two entries a few lines apart: an order House 2 placed for oil, and, above it, a slip that came in from House 1 about the price of jars. Was the order placed <em>because</em> of the slip? Or would House 2 have placed it anyway, knowing nothing of House 1's business?</p>
-
-    <p>The question matters to her. If the order followed from the slip, then whatever House 1 does next with its jars may bear on it; if the two are unconnected, she can treat them apart. But what in her book could tell her? The lines are in order, one above the other, and every line is House 2's own. The book records what happened at House 2. It does not record what House 2 knew, still less what House 1 knew when it wrote its slip.</p>
-
-    <p>Put it more sharply. Two entries in two different books, one at House 1 and one at House 3: were they made in ignorance of each other? Nothing written at either house seems able to say.</p>
-  </div>
-  <div class="prose">
-    <p class="hook"><em>Is there any way of keeping a book so that a clerk can read off, from two entries alone, whether one could have known of the other?</em></p>
+<!-- ============================================================ coming-before -->
+<section class="spread dark" id="before" data-name="What came before">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">A narrower question</div>
+      <h2>Not what was first, but what could have led to what</h2>
+      <p class="lede">The keeper of House 1's accounts changed the question. No house can see which of two orders the sun saw first. Every house can see what could have <b>led to</b> what, because news moves on Arche only by slip.</p>
+      <p>One event <b>came before</b> another in exactly three cases.</p>
+    </div>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Rule one</div><h3>Same house, higher up the scroll</h3><p>Both happened in one house, and its account scroll has the first written above the second.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Rule two</div><h3>Sending comes before receiving</h3><p>The first is a house sending a slip, and the second is another house receiving that same slip.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Rule three</div><h3>Chains count</h3><p>The first came before some third event, which came before the second.</p></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2.4rem">
+      <h4>One morning on Arche <em>click two entries</em></h4>
+      <div class="st-wrap">
+        <svg class="st-svg fig" id="cbsvg" role="group" aria-label="Three lines running outward, one for each house, with the morning's entries as dots and slips as arcs curving from house to house"></svg>
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each line is one house, at one moment after another. Each dot is an entry in its scroll. Each arc is a slip on the road.</p>
+          <p class="say" id="cbsay">Choose any two dots. Did one come before the other?</p>
+        </div>
+      </div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">If none of the three rules joins two events, they are <b>unrelated</b>. That does not mean they happened at the same moment. It means neither could have known of the other.</p>
   </div>
 </section>
 
-<hr class="rule">
-
-<section id="s7">
-  <div class="issue"><span class="no">Chapter VII</span><h2>The Column</h2></div>
-  <div class="prose">
-    <p>The clerk's doubt is not settled by the tally either. Tallies 4 and 5 on two entries say only that the 5 was not made before the 4 could have reached it. Were they joined, or made in ignorance of each other? A single number cannot say.</p>
-
-    <p>Why not? Because a single number mixes together everything a house has heard. When House 2 raises its tally past a slip from House 1, it forgets whose number it was raised past. What would it take to remember? One number <em>for each house</em>.</p>
-
-    <p>Fidgeos of House 2 and Matternos of House 3 found this at the same time. Each house keeps a <span class="coin">column</span> of three rows, one for each house on the island; row <var>i</var> is the latest count of house <var>i</var>'s own entries that this house has heard of.</p>
+<!-- ============================================================ the tally -->
+<section class="spread dark has-scrolly" id="tallysec" data-name="The tally">
+  <div class="wrap" style="margin-bottom:-1rem">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">A number that respects every chain</div>
+        <h2>The tally</h2>
+        <p class="lede">Every counting room keeps a tally: one number, written on every slip it sends, and raised by two mechanical rules. Scroll slowly: the picture moves with you.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/t03-slip.jpg" alt="Before House 1's portico under low cloud, the keeper of the accounts hands a narrow slip to a messenger" loading="lazy"></div></div></div>
+    </div>
   </div>
-  <div class="aside-formal">
-    <span class="lbl">The rules of the column</span>
-    <span class="stmt">(1)</span> When entering any event of its own, the dispatch of a slip included, house <var>i</var> increments its
-    own row: <var>V<sub>i</sub></var>[<var>i</var>] := <var>V<sub>i</sub></var>[<var>i</var>] + 1.<br>
-    <span class="stmt">(2)</span> When sending a slip, house <var>i</var> stamps its full column
-    <var>V<sub>i</sub></var> on the slip, as it stands after that increment.<br>
-    <span class="stmt">(3)</span> On receiving slip with column <var>U</var>, house <var>j</var>
-    merges each row by taking the maximum, then increments its own row:
-    <var>V<sub>j</sub></var>[<var>k</var>] := max(<var>V<sub>j</sub></var>[<var>k</var>], <var>U</var>[<var>k</var>]),
-    and <var>V<sub>j</sub></var>[<var>j</var>] := <var>V<sub>j</sub></var>[<var>j</var>] + 1.
-  </div>
-  <div class="prose">
-    <p>Now the clerk has more than a number to look at. Her order carries a column; so does the slip from House 1. If the slip's row for House 1 is no greater than her order's row for House 1, then by the time of the order House 2 had heard of the slip's entry, and perhaps of more.</p>
-  </div>
-  <div class="prose">
-    <p class="hook"><em>The column plainly sees more than the tally. Does it see everything: can a clerk now tell, from two columns alone, exactly whether one entry came before the other or neither knew of the other?</em></p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<section id="s8">
-  <div class="issue"><span class="no">Chapter VIII</span><h2>What the Column Sees</h2></div>
-  <div class="prose">
-    <p>We asked earlier whether the column sees everything. It does: comparing two columns row by row settles causality completely.</p>
-  </div>
-  <div class="result">
-    <span class="name">Vector Equivalence</span>
-    <p>For any two events <var>a</var> and <var>b</var>:
-    <br><b><var>a</var> → <var>b</var> ⟺ <var>V</var>(<var>a</var>) &lt; <var>V</var>(<var>b</var>)</b>
-    <br>And two events are unrelated if and only if neither column dominates:
-    <br><b><var>a</var> ∥ <var>b</var> ⟺ ¬(<var>V</var>(<var>a</var>) ≤ <var>V</var>(<var>b</var>)) ∧ ¬(<var>V</var>(<var>b</var>) ≤ <var>V</var>(<var>a</var>))</b></p>
-  </div>
-  <details class="proof">
-    <summary>Proof — that vector timestamps detect causality and concurrency exactly</summary>
-    <ol class="proofsteps">
-      <li>If <var>a</var> occurs at house <var>i</var> with timestamp <var>V</var>(<var>a</var>)
-      and <var>a</var> → <var>b</var>, there is a causal chain of local events and messages from
-      <var>a</var> to <var>b</var>. By Rules 1–3, every step non-strictly increases all components
-      and strictly increases the component of the executing process. Thus
-      <var>V</var>(<var>a</var>)[<var>i</var>] ≤ <var>V</var>(<var>b</var>)[<var>i</var>]. Since
-      at least one step strictly increments a component, <var>V</var>(<var>a</var>) &lt;
-      <var>V</var>(<var>b</var>).</li>
-      <li>Conversely, suppose <var>a</var> occurs at house <var>i</var> and does not precede
-      <var>b</var> (<var>a</var> ↛ <var>b</var>). Then no slip carrying information about
-      <var>a</var> has reached <var>b</var>. By Rule 3, the value of row <var>i</var> at <var>b</var>
-      reflects only events at <var>i</var> that causally precede <var>b</var>. Since <var>a</var> is
-      not among them, <var>V</var>(<var>b</var>)[<var>i</var>] &lt;
-      <var>V</var>(<var>a</var>)[<var>i</var>]. Thus <var>V</var>(<var>a</var>) ≰
-      <var>V</var>(<var>b</var>).</li>
-      <li>Therefore, <var>a</var> → <var>b</var> if and only if <var>V</var>(<var>a</var>) &lt;
-      <var>V</var>(<var>b</var>). Concurrency <var>a</var> ∥ <var>b</var> holds if and only if
-      neither column dominates the other.<span class="qed">∎</span></li>
-    </ol>
-  </details>
-  <div class="prose">
-    <p>So the clerk's doubt has its answer. Her order was placed because of House 1's slip exactly when the slip's column is no greater than her order's in every row. And two entries at two houses were made in ignorance of each other exactly when neither column is at least the other. Where the tally could only fail to rule out a connection, the column finds it or rules it out.</p>
-
-    <p>Is anything left that the column cannot see? Only what never went by slip. The column is built from slips and nothing else.</p>
-  </div>
-  <div class="prose">
-    <p class="hook"><em>Which brings back the goatherd, who carried none.</em></p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<section id="s9">
-  <div class="issue"><span class="no">Chapter IX</span><h2>Clocks That Run With the World</h2></div>
-  <div class="prose">
-    <p>Two questions have waited for this chapter. Could any clock respect the goatherd's path? And whose order do the houses keep, if not the sun's?</p>
-
-    <p>To respect the goatherd, it would not be enough to respect slips. What would be needed is this: if one event precedes another in the world, by any path at all, its number is smaller. No rule about slips can promise that, since the path that matters carried no slip. Only clocks that run with the world can.</p>
-
-    <p>Lamportios described such clocks. Each house keeps a physical clock that runs true to within a small fraction. Every slip carries the sender's reading, and a house that receives it sets its own clock forward, if it is behind, to that reading plus the least time the road could have taken. If messengers go down every stretch at regular hours, and the road has a longest crossing, the three clocks stay within some small bound of one another. Then the goatherd is caught, provided that bound is smaller than his fastest crossing: a man who arrives sooner than the clocks can disagree could still arrive, by House 1's clock, before he left.</p>
-
-    <p>Can the houses keep such clocks? They cannot. The remedy needs a longest crossing and messengers at regular hours, and the trading season gives neither: a messenger takes as long as he takes, and nobody on the island knows the hour. Arche's clocks remain the water-clocks of the counting rooms, and the tallies are all the order the houses have.</p>
-
-    <p>That answers the merchant at the storehouse too. The sequence the houses keep is theirs, not the sun's. It respects every slip; between orders that no slip joins it decides by a rule every house reads alike, and it can neither prove the merchant wrong nor prove him right. A sequence judged by the sun would be a different promise, and a harder one.</p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<section id="s10">
-  <div class="issue"><span class="no">Chapter X</span><h2>In the Book, In the Paper</h2></div>
-  <div class="prose">
-    <p>So that the reader may check the allegory rather than trust it.</p>
-  </div>
-  <div class="table-wrap">
-    <table class="chron">
-      <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
-      <tbody>
-        <tr><td>The island of Arche, Mount Phyle in the centre</td><td>A distributed network where nodes cannot communicate by broadcast; line of sight is obstructed.</td></tr>
-        <tr><td>The coastal ring road: a lane each way, no overtaking, direct stretch only</td><td>FIFO channels, one per ordered pair of houses: by the law of the road messengers never pass one another and never take the long way round.</td></tr>
-        <tr><td>Cloud on the crown; a mountain held by others</td><td>No broadcast medium and no second channel: every message goes by the road.</td></tr>
-        <tr><td>Water-clocks that keep no common hour</td><td>Local timers without synchronised clocks.</td></tr>
-        <tr><td>Three trading houses: House 1, House 2, House 3</td><td>Processes <var>P</var>₁, <var>P</var>₂, <var>P</var>₃.</td></tr>
-        <tr><td>Slips carried by messengers</td><td>Point-to-point asynchronous messages.</td></tr>
-        <tr><td>Coming-before (<var>a</var> → <var>b</var>)</td><td>The causal partial order (Lamport happened-before relation).</td></tr>
-        <tr><td>Unrelated events (<var>a</var> ∥ <var>b</var>)</td><td>Concurrent events: no causal chain joins them in either direction.</td></tr>
-        <tr><td>The scalar tally</td><td>Lamport logical clock <var>C</var>(<var>e</var>).</td></tr>
-        <tr><td>Precedence (<var>a</var> ⇒ <var>b</var>)</td><td>Total ordering extending partial order by process ID tie-breaking.</td></tr>
-        <tr><td>The shared storehouse rules</td><td>Lamport's distributed mutual exclusion algorithm (§5).</td></tr>
-        <tr><td>The goatherd over Mount Phyle</td><td>A causal path outside the system, which logical clocks cannot see: the anomalous behaviour of §6.</td></tr>
-        <tr><td>Clocks set forward on each slip; skew less than the fastest crossing; not kept on Arche</td><td>Physical clocks with drift <var>κ</var>, rules IR1′–IR2′, skew bound <var>ϵ</var>; the Strong Clock Condition holds when <var>ϵ</var>/(1 − <var>κ</var>) ≤ <var>μ</var>, the minimum external transit time.</td></tr>
-        <tr><td>The column of three numbers</td><td>Vector clock <var>V</var>(<var>e</var>) (Fidge 1988, Mattern 1988).</td></tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<hr class="rule">
-
-<section id="refs">
-  <div class="ideas-box">
-    <p><b>The papers behind this book.</b> Leslie Lamport, “Time, Clocks, and the Ordering of Events
-    in a Distributed System,” <i>Communications of the ACM</i> <b>21</b>, 7 (July 1978), 558–565.
-    Colin J. Fidge, “Timestamps in Message-Passing Systems That Preserve the Partial Ordering,”
-    <i>Proc. 11th Australian Computer Science Conference</i> (1988), 56–66. Friedemann Mattern,
-    “Virtual Time and Global States of Distributed Systems,” <i>Proc. Workshop on Parallel and
-    Distributed Algorithms</i>, North-Holland (1988), 215–226.</p>
-
-    <div class="refs">
-      <p>Lamport, L. Time, clocks, and the ordering of events in a distributed system. <i>Commun.
-      ACM</i> <b>21</b>, 7 (1978), 558–565.</p>
-      <p>Fidge, C. J. Timestamps in message-passing systems that preserve the partial ordering.
-      <i>Aust. Comput. Sci. Commun.</i> <b>10</b>, 1 (1988), 56–66.</p>
-      <p>Mattern, F. Virtual time and global states of distributed systems. In <i>Parallel and
-      Distributed Algorithms</i>, M. Cosnard et al., Eds. North-Holland, 1989, pp. 215–226.</p>
+  <div class="scrolly" id="tally">
+    <div class="stage"><div class="stage-inner">
+      <svg class="fig svg-dark" id="tallysvg" role="img" aria-label="The same morning, with each entry now carrying its house's tally"></svg>
+    </div></div>
+    <div class="steps">
+      <div class="step on"><div class="card"><div class="num">1 · Start</div><h3>The same morning, without numbers</h3><p>Ten entries in three scrolls, and three slips on the road. No entry has a number yet.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · Rule one</div><h3>Every entry raises the tally</h3><p>A house advances its tally by at least one between any two entries in its own scroll. Sending a slip is an entry too.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · Rule two</div><h3>The tally rides on the slip</h3><p>House 1 writes its current tally, 2, on the slip it sends to House 2.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Rule two</div><h3>The receiver jumps past it</h3><p>House 2 stood at 1. The slip says 2. So House 2 sets its tally higher than the slip, to 3, before entering the arrival. A tally is never lowered.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · On it goes</div><h3>Each slip drags the next house forward</h3><p>House 3 stood at 2 and receives a slip marked 4, so its entry is 5. House 1 stood at 2 and receives a slip marked 6, so its entry is 7.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · The promise</div><h3>Along any chain, the numbers only rise</h3><p>Follow the red chain from house to house: 1, 2, 3, 4, 5, 6, 7. Whatever could have led to an entry has a smaller tally than that entry.</p></div></div>
+      <div class="step"><div class="card"><div class="num">7 · The catch</div><h3>A smaller number is not an earlier event</h3><p>Look at the two ringed entries. No chain joins them. House 3's entry lies further out, later by the sun, yet it carries 2 and House 2's carries 3. The tally puts a sequence where nature left none.</p></div></div>
     </div>
   </div>
 </section>
 
-<hr class="rule">
+<!-- ============================================================ precedence -->
+<section class="spread light" id="ties" data-name="Breaking ties">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">One sequence for everyone</div>
+      <h2>Breaking ties</h2>
+      <p class="lede">“These two orders are unrelated” does not tell House 3 whose order to fill. The houses need a sequence that decides between every pair, that every house works out alike, and that never contradicts a chain of slips.</p>
+      <p><b>The rule of precedence:</b> compare tallies. Where they are equal, the lower house number goes first: House 1 before House 2 before House 3.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Three houses, six entries <em id="pqstate">as each heard of them</em></h4>
+      <div class="pqs">
+        <div class="pq"><h5>House 1's list</h5><div id="pq1"></div></div>
+        <div class="pq"><h5>House 2's list</h5><div id="pq2"></div></div>
+        <div class="pq"><h5>House 3's list</h5><div id="pq3"></div></div>
+      </div>
+      <p class="say" id="pqsay"></p>
+      <div class="row">
+        <button class="btn" id="pqsort">Sort by precedence</button>
+        <button class="btn alt" id="pqmix">Shuffle the arrivals</button>
+      </div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">Does precedence find out which unrelated order was really first? No, and nothing the houses hold could. <b>It replaces the question with an answer every house reads the same way.</b> Where one order led to another, they are filled in that sequence, and no house wins by owning a quicker messenger.</p>
+  </div>
+</section>
 
-<p class="lineage"><span class="lbl">Leads to</span> <a href="../../books/many-copies-acting-as-one/index.html">Many Copies, Acting as One</a> · <a href="../../books/taking-stock-without-stopping/index.html">Taking Stock Without Stopping</a> · <a href="../../books/the-part-time-parliament/index.html">The Part-Time Parliament</a> · <span class="unwritten-link" title="Not yet written">Changes That Never Clash</span> · <span class="unwritten-link" title="Not yet written">What You Can Promise Alone</span><br>
-  <span class="outside"><span class="tag">Outside this series</span> Ricart &amp; Agrawala 1981, <i>mutual exclusion</i> · Birman &amp; Joseph 1987, <i>causal broadcast</i> · Schneider 1990, <i>the state machine approach</i> · Terry et al. 1995, <i>Bayou</i> · DeCandia et al. 2007, <i>Dynamo</i> · Lloyd et al. 2011, <i>COPS</i></span></p>
+<!-- ============================================================ the storehouse -->
+<section class="spread dark has-scrolly" id="storesec" data-name="The shared storehouse">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap" style="margin-bottom:-1rem">
+    <div class="narrow">
+      <div class="kicker">Putting the sequence to work</div>
+      <h2>One storehouse, no keeper</h2>
+      <p class="lede">The island's common storehouse is cut into the rock beside the road, and only one house may load from it at a time. A keeper at the door would be fooled by a quick messenger, as House 3's gate was.</p>
+      <p>So there is no keeper. Each house keeps its own queue of requests, in order of precedence, and follows five rules. Scroll to watch two houses ask at once.</p>
+    </div>
+  </div>
+  <div class="scrolly" id="store">
+    <div class="stage"><div class="stage-inner split">
+      <svg class="fig svg-dark" id="storesvg" role="img" aria-label="Arche from above, with messengers carrying requests, answers and releases along the ring road and the storehouse beside it"></svg>
+      <div class="side" id="storeside" data-live></div>
+    </div></div>
+    <div class="steps">
+      <div class="step on"><div class="card"><div class="num">1 · Quiet</div><h3>Three queues, all empty</h3><p>Every house holds a queue of its own. Nobody is asking for the storehouse.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · To request</div><h3>Two houses ask at once</h3><p>House 1 writes a request under its tally, 2, puts it in its own queue and sends it to both other houses. House 3, knowing nothing of this, does the same under its own tally, also 2.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · Not yet</div><h3>First in your own queue is not enough</h3><p>House 3's request stands first in House 3's queue. May it load? No. An older request may be on the road right now, in a messenger's pouch.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · On receiving a request</div><h3>Every queue comes out the same</h3><p>Each house enters the request it receives. The tallies tie at 2, so House 1's goes first by house number, in all three queues.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · The answer</div><h3>Each house sends an answer back</h3><p>A house that receives a request advances its tally and sends an answer. Every answer carries a tally above 2.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · To enter</div><h3>House 1 loads</h3><p>House 1's request stands first in its queue, and it has heard from both other houses with tallies above 2. Both halves of the rule hold. House 3 has heard from everyone too, but stands second, and waits.</p></div></div>
+      <div class="step"><div class="card"><div class="num">7 · To release</div><h3>House 1 is done</h3><p>House 1 removes its request from its own queue and sends a release to both other houses.</p></div></div>
+      <div class="step"><div class="card"><div class="num">8 · On receiving a release</div><h3>House 3 loads</h3><p>Each house strikes House 1's request. House 3 now stands first, and has long since heard from everyone.</p></div></div>
+      <div class="step"><div class="card"><div class="num">9 · Why it is safe</div><h3>Never two houses at once</h3><p>To load early, House 3 needed a slip from House 1 with a tally above 2. On a road where no messenger passes another, that slip arrives after House 1's request. So the request was already in House 3's queue, ahead of its own.</p></div></div>
+    </div>
+  </div>
+</section>
 
-</div>
-<script src="../../assets/js/flow.js" defer></script>
+<!-- ============================================================ the goatherd -->
+<section class="spread light" id="mountain" data-name="Over the mountain">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div class="pop fromleft"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on top and the trading towns far below on the coast" loading="lazy"></div></div></div>
+      <div>
+        <div class="kicker">What the tally cannot see</div>
+        <h2>Over the mountain</h2>
+        <p class="lede">A goatherd who knows the smugglers' tracks can cross the mountain in a couple of hours, if he is lucky. He may also take two days, or never come down, which is why no house sends its business that way.</p>
+        <p>But news can still travel with him, and he carries no slip.</p>
+      </div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+      <h4>A sale at House 3 <em>and a lucky goatherd</em></h4>
+      <svg class="isle-svg" id="goat" role="img" aria-label="Arche from above: a goatherd crosses the mountain from House 3 to House 1 while the messenger goes round by the road"></svg>
+      <p class="say" id="goatsay">House 3 has had a busy morning. House 1 has had a quiet one.</p>
+      <div class="row"><button class="btn" id="goatgo">Conclude the sale and send both</button></div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">That is no fault in the tally, by its own rules. The rules touch only slips. As far as the houses' scrolls can tell, the sale and the order are unrelated, though one caused the other.</p>
+  </div>
+</section>
+
+<!-- ============================================================ the column -->
+<section class="spread dark" id="column" data-name="The column">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Joined, or made in ignorance?</div>
+      <h2>One number for each house</h2>
+      <p class="lede">The clerk of House 2 has a doubt the tally cannot settle. Two entries carry 4 and 5. Did one lead to the other, or was each made knowing nothing of the other?</p>
+      <p>A single number mixes together everything a house has heard. When House 2 raises its tally past a slip, it forgets whose number it was raised past. So each house keeps a <b>column</b> of three rows instead: row by row, the latest count of each house's entries that it has heard of.</p>
+    </div>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Rule one</div><h3>Count your own entries</h3><p>On every entry of its own, a sent slip included, a house adds one to its own row.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Rule two</div><h3>Send the whole column</h3><p>Every slip is stamped with the sender's full column, as it stands after that entry.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Rule three</div><h3>Keep the larger of each row</h3><p>On receiving a slip, a house takes the larger number in each row, then adds one to its own row.</p></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2.4rem">
+      <h4>The same morning, with columns <em>click two entries</em></h4>
+      <div class="st-wrap">
+        <svg class="st-svg fig" id="colsvg" role="group" aria-label="The same morning: each entry shows its tally, and choosing two entries compares their columns row by row"></svg>
+        <div>
+          <div id="colout"></div>
+          <p class="say" id="colsay">The dots show tallies. Choose two entries to compare their columns. Try the 2 on House 3's line and the 3 on House 2's.</p>
+        </div>
+      </div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">One entry came before another exactly when its column is no greater in every row, and the two columns differ. Two entries are unrelated exactly when neither column is at least the other. <b>Where the tally could only fail to rule out a connection, the column finds it or rules it out.</b></p>
+  </div>
+</section>
+
+<!-- ============================================================ clocks that run with the world -->
+<section class="spread light" id="world" data-name="Whose order?">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">The goatherd again</div>
+        <h2>Whose order do the houses keep?</h2>
+        <p class="lede">The column is built from slips and nothing else, so the goatherd escapes it too. Only clocks that run with the world could catch him.</p>
+        <p>Such clocks can be described. Each house keeps a true clock, every slip carries the sender's reading, and a house that is behind sets itself forward. If the clocks never disagree by more than the goatherd's fastest crossing, he can no longer arrive before he left.</p>
+        <p>Arche cannot keep them. They need a longest journey and messengers at regular hours, and the trading season gives neither.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/arche-island.jpg" alt="The island of Arche from the air under cloud: a wooded mountain ringed by a coast road and small harbour towns" loading="lazy"></div></div></div>
+    </div>
+    <div class="cards3">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The tally</div><h3>Respects every chain of slips</h3><p>It gives every house the same sequence. It cannot say whether two entries were joined or unrelated.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The column</div><h3>Sees every chain of slips</h3><p>It tells joined from unrelated exactly, at the cost of one number for each house.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Neither</div><h3>Sees what never went by slip</h3><p>The sequence the houses keep is theirs, not the sun's. A sequence judged by the sun would be a different promise, and a harder one.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ relevance -->
+<section class="spread dark" id="why" data-name="Back to machines">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-9-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Back to machines</div>
+      <h2>The island was a network of machines</h2>
+      <p class="lede">Every house is a process, and every slip a message. Hover or tap to see who is who.</p>
+    </div>
+    <div class="map" id="map">
+      <div class="hd" style="text-align:right;padding-right:6px">On the island</div><div></div><div class="hd">In the machine room</div>
+    </div>
+    <div class="meander" style="margin:3rem auto"></div>
+    <div class="end">
+      <p class="big">Without a shared clock, machines can still agree on one order of events that never puts an effect before its cause.</p>
+      <p class="lede" style="margin:0 auto">One counter cannot tell related events from unrelated ones. One counter per machine can.</p>
+      <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">Lamport's logical clocks, and the vector clocks of Fidge and Mattern, are how distributed systems still put events in order.</p>
+      <div class="links">
+        <a href="archive.html">The long edition, with proofs →</a>
+        <a href="../../places/ring-road/index.html">The Ring Road, in detail</a>
+        <a href="../../papers/index.html">All the papers</a>
+      </div>
+    </div>
+  </div>
+</section>
+<footer>Distributed Algorithms of Ancient Greece · “Ordering Without Clocks”, after Leslie Lamport, CACM 21(7), 1978; Colin Fidge, 1988; Friedemann Mattern, 1988.</footer>
+
+<script>
+"use strict";
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const NS="http://www.w3.org/2000/svg";
+const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function rnd(n){return Math.floor(Math.random()*n)}
+/* run fn(0..1) over ms, eased */
+function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();return}const t0=performance.now();
+  (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
+function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
+
+/* ===== pop-ups unfold when they enter view ===== */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
+$$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
+$$(".say,[data-live]").forEach(e=>e.setAttribute("aria-live","polite"));
+
+/* ===== scroll: progress bar, section name, parallax ===== */
+const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
+const dep=$$("[data-depth]"), par=$$("[data-parallax]");
+let tick=false;
+function onscroll(){
+  if(tick)return; tick=true;
+  requestAnimationFrame(()=>{
+    tick=false;
+    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
+    prog.style.width=(h>0?y/h*100:0)+"%";
+    const mid=y+innerHeight*.4; let cur=secs[0];
+    for(const s of secs){ if(s.offsetTop<=mid) cur=s; }
+    now.textContent=cur.dataset.name||"";
+    if(reduce)return;
+    for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
+    for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
+  });
+}
+addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
+
+/* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
+function scrolly(root,render){
+  const steps=$$(".step",root); render(0);
+  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
+  steps.forEach(s=>so.observe(s));
+}
+
+/* ===== who is who: the setting on the left, the machine room on the right ===== */
+function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
+  const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
+  [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}
+
+/* ===== space-time drawn in the round: each place is a line running outward, each ring a later moment,
+         and whatever is carried from place to place is an arc curving round and outward ===== */
+function Polar(svg,o){
+  const {cx,cy,r0,step,nodes,rings,tEnd}=o; svg.innerHTML=""; svg.setAttribute("viewBox",o.vb);
+  const defs=el("defs",{},svg);
+  const mk=(key,col)=>{const m=el("marker",{id:`${svg.id}-${key}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:col},m)};
+  mk("b","#136f9e"); mk("r","#bf4a26");
+  const frame=el("g",{},svg), under=el("g",{},svg), slips=el("g",{},svg), evs=el("g",{},svg), over=el("g",{},svg);
+  const P={svg,under,slips,evs,over,cx,cy,
+    r:t=>r0+step*t,
+    xy(deg,rr){const a=deg*Math.PI/180;return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)]},
+    pt(k,t){return P.xy(nodes[k][0],P.r(t))},
+    /* the points of an arc from place a at time ta to place b at time tb, the short way round */
+    arc(a,ta,b,tb){const a0=nodes[a][0],d=((nodes[b][0]-a0+540)%360)-180,n=Math.max(12,Math.round(Math.abs(d)/3)),pts=[];
+      for(let i=0;i<=n;i++)pts.push(P.xy(a0+d*i/n,P.r(ta+(tb-ta)*i/n)));return pts},
+    slip(a,ta,b,tb,trim=17){const pts=P.arc(a,ta,b,tb),end=pts[pts.length-1];
+      while(pts.length>2&&Math.hypot(pts[pts.length-1][0]-end[0],pts[pts.length-1][1]-end[1])<trim)pts.pop();
+      const p=el("path",{class:"st-slip","marker-end":`url(#${svg.id}-b)`,d:"M"+pts.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" L")},slips);
+      p.mid=P.arc(a,ta,b,tb); p.mid=p.mid[Math.floor(p.mid.length/2)]; return p},
+    seg(k,t1,t2){const [x1,y1]=P.pt(k,t1),[x2,y2]=P.pt(k,t2);return el("line",{class:"st-seg",x1,y1,x2,y2},under)},
+    event(k,t,fill,rad=13){const [x,y]=P.pt(k,t),g=el("g",{class:"st-ev",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},evs);
+      el("circle",{class:"halo2",r:rad+5},g);el("circle",{class:"b",r:rad,fill},g);g.label=el("text",{},g);el("circle",{r:rad+8,fill:"transparent"},g);return g}
+  };
+  for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
+  for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
+  for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
+    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
+  if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
+  return P;
+}
+
+const HC={1:"#9cb648",2:"#e0b84a",3:"#5b9be0"};
+const chip=(t,h)=>`<span class="chip"><i style="background:${HC[h]}"></i>${t}·H${h}</span>`;
+
+/* ===== machines: three clocks that disagree ===== */
+(function(){
+  const off=[2.4,-1.8,.5], box=$("#clocks"), t0=performance.now(); let timer=null;
+  const els=off.map((o,i)=>{const d=document.createElement("div");d.className="clk";d.innerHTML=`<h5>MACHINE ${"ABC"[i]}</h5><b></b>`;box.appendChild(d);return $("b",d)});
+  const read=i=>12*3600+(performance.now()-t0)/1000+off[i];
+  const fmt=s=>`${Math.floor(s/3600)}:${String(Math.floor(s%3600/60)).padStart(2,"0")}:${(s%60).toFixed(1).padStart(4,"0")}`;
+  const paint=()=>els.forEach((e,i)=>e.textContent=fmt(read(i)));
+  paint();
+  new IntersectionObserver(es=>{clearInterval(timer);timer=null;if(es[0].isIntersecting)timer=setInterval(paint,100)}).observe(box);
+  const btn=$("#wr"),truth=$("#truth"),stamps=$("#stamps"),note=$("#clknote");
+  btn.onclick=async()=>{btn.disabled=true;truth.innerHTML=stamps.innerHTML="";
+    const a={m:"A",what:"price = 4",s:read(0)};truth.innerHTML=`<div class="e">1 ▸ A: ${a.what}</div>`;note.textContent="Machine A writes, and stamps the write with its own clock.";
+    await sleep(1100);
+    const b={m:"B",what:"price = 7",s:read(1)};truth.innerHTML+=`<div class="e">2 ▸ B: ${b.what}</div>`;note.textContent="A moment later machine B writes, and stamps the write with its own clock, which runs behind.";
+    await sleep(1300);
+    stamps.innerHTML=[b,a].map(x=>`<div class="e bad">${fmt(x.s)} ▸ ${x.m}: ${x.what}</div>`).join("");
+    note.innerHTML="Sorted by timestamp, B's write comes first. <span class='bad'>The clocks have reversed what happened.</span>";btn.disabled=false;btn.textContent="Again"};
+})();
+
+/* ===== Arche, seen from above: one picture reused wherever messengers are on the road ===== */
+function Isle(svg){
+  const cx=235,cy=235,R=165,A={1:-90,2:30,3:150}; svg.innerHTML=""; svg.setAttribute("viewBox","0 0 470 470");
+  el("circle",{cx,cy,r:215,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
+  el("circle",{cx,cy,r:86,fill:"#d9cfb4",stroke:"#6b5a48","stroke-width":2.5,"stroke-dasharray":"2 6"},svg);
+  el("text",{x:cx,y:cy-8,class:"lab"},svg).textContent="Mount Phyle";
+  el("circle",{cx,cy,r:R,fill:"none",stroke:"#b5602c","stroke-width":3,"stroke-dasharray":"3 8"},svg);
+  const under=el("g",{},svg),sites=el("g",{},svg),over=el("g",{},svg);
+  const I={svg,cx,cy,R,A,under,over,house:{},
+    at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
+    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:13,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
+    put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
+    /* u of the way along the direct stretch from house a to house b; each direction keeps to its own lane */
+    road(g,a,b,u){const d=((A[b]-A[a]+540)%360)-180;I.put(g,...I.at(A[a]+d*u,R+(d>0?9:-9)))}
+  };
+  for(const h of [1,2,3]){const [x,y]=I.at(A[h]),g=el("g",{class:"site"},sites);I.put(g,x,y);el("rect",{x:-25,y:-17,width:50,height:34,rx:5,fill:HC[h]},g);el("text",{},g).textContent="H"+h;I.house[h]={x,y,g}}
+  return I;
+}
+
+/* ===== the gate of House 3: arrival follows the quicker legs, not the earlier order ===== */
+(function(){
+  const I=Isle($("#race")),m1=I.token(HC[1],"✉"),m2=I.token(HC[2],"✉"),say=$("#racesay"),b1=$("#race1"),b2=$("#race2");
+  const w1=el("text",{class:"lab halo",x:I.house[1].x,y:I.house[1].y+40},I.over),w2=el("text",{class:"lab halo",x:I.house[2].x-16,y:I.house[2].y-28},I.over);
+  let seen=0;
+  async function run(fast){
+    b1.disabled=b2.disabled=true;w1.textContent=w2.textContent="";m1.setAttribute("opacity",0);m2.setAttribute("opacity",0);
+    const ms=h=>h===fast?1700:3600;
+    w2.textContent="wrote first";say.textContent="House 2 writes its order and sends a messenger.";
+    I.road(m2,2,3,.1);m2.setAttribute("opacity",1);const p2=tween(ms(2),u=>I.road(m2,2,3,.1+.78*u));
+    await sleep(700);
+    w1.textContent="wrote second";say.textContent="A little later House 1 writes its own order and sends a messenger.";
+    I.road(m1,1,3,.1);m1.setAttribute("opacity",1);const p1=tween(ms(1),u=>I.road(m1,1,3,.1+.78*u));
+    await Promise.all([p1,p2]);seen|=fast;
+    say.innerHTML=(fast===1?"<b>House 1's slip reaches the gate first.</b> Yet House 2 wrote first: the quicker messenger won.":"<b>House 2's slip reaches the gate first.</b> This time the order written first also arrives first, but only because its messenger kept ahead.")
+      +(seen===3?" The same two orders, written in the same sequence; only the legs changed. Arrival at the gate cannot be the test.":"");
+    b1.disabled=b2.disabled=false;
+  }
+  b1.onclick=()=>run(1);b2.onclick=()=>run(2);
+})();
+
+/* ===== one morning on Arche: ten entries and three slips, drawn in the round =====
+   The tallies and columns are worked out here by the houses' own rules, and coming-before
+   by following scroll lines and slips, so the page checks one against the other. */
+function Morning(svg){
+  const P=Polar(svg,{vb:"0 0 620 596",cx:310,cy:350,r0:44,step:30,rings:9,tEnd:9.5,note:[14,24],
+    nodes:{1:[-90,"H1",HC[1]],2:[30,"H2",HC[2]],3:[150,"H3",HC[3]]}});
+  const E=[
+    {id:"a",h:1,t:1.2,d:"House 1 enters an order"},
+    {id:"b",h:1,t:2.4,d:"House 1 sends a slip to House 2"},
+    {id:"c",h:2,t:1.6,d:"House 2 enters a sale"},
+    {id:"d",h:2,t:3.8,d:"House 2 receives House 1's slip",from:"b"},
+    {id:"e",h:2,t:5,d:"House 2 sends a slip to House 3"},
+    {id:"f",h:3,t:3,d:"House 3 enters a delivery"},
+    {id:"g",h:3,t:4.6,d:"House 3 enters an order"},
+    {id:"i",h:3,t:6.6,d:"House 3 receives House 2's slip",from:"e"},
+    {id:"j",h:3,t:7.6,d:"House 3 sends a slip to House 1"},
+    {id:"l",h:1,t:9,d:"House 1 receives House 3's slip",from:"j"}];
+  const by={},T={1:0,2:0,3:0},V={1:[0,0,0],2:[0,0,0],3:[0,0,0]},last={};E.forEach(e=>by[e.id]=e);
+  [...E].sort((a,b)=>a.t-b.t).forEach(e=>{const s=e.from&&by[e.from];e.pred=[];
+    if(last[e.h]){e.pred.push(last[e.h]);e.seg=P.seg(e.h,last[e.h].t,e.t)}
+    if(s){e.pred.push(s);e.slip=P.slip(s.h,s.t,e.h,e.t)}
+    e.tally=T[e.h]=Math.max(T[e.h],s?s.tally:0)+1;                       // never lowered; past the slip's number
+    const v=V[e.h];if(s)s.col.forEach((x,k)=>v[k]=Math.max(v[k],x));v[e.h-1]++;e.col=[...v];last[e.h]=e});
+  E.forEach(e=>e.g=P.event(e.h,e.t,HC[e.h]));
+  const past=e=>{const s=new Set();(function f(x){x.pred.forEach(p=>{if(!s.has(p)){s.add(p);f(p)}})})(e);return s};
+  const M={P,E,by,
+    before:(a,b)=>past(b).has(a),
+    /* the links of one chain from a to b, as [earlier, later] pairs */
+    chain(a,b){const next=new Map([[b,null]]),q=[b];while(q.length){const x=q.shift();if(x===a)break;x.pred.forEach(p=>{if(!next.has(p)){next.set(p,x);q.push(p)}})}
+      const out=[];for(let x=a;next.get(x);x=next.get(x))out.push([x,next.get(x)]);return out},
+    clear(){E.forEach(e=>{if(e.seg)e.seg.classList.remove("hi");if(e.slip){e.slip.classList.remove("hi");e.slip.setAttribute("marker-end",`url(#${svg.id}-b)`)}})},
+    hi(links){M.clear();links.forEach(([x,n])=>{if(n.from===x.id){n.slip.classList.add("hi");n.slip.setAttribute("marker-end",`url(#${svg.id}-r)`)}else n.seg.classList.add("hi")})},
+    text(e,s){e.g.label.textContent=s},
+    /* let the reader choose two entries */
+    pick(cb){let sel=[];E.forEach(e=>button(e.g,e.d,()=>{if(sel.length===2||sel.includes(e))sel=[];sel.push(e);E.forEach(x=>x.g.classList.toggle("sel",sel.includes(x)));cb(sel)}))}
+  };
+  return M;
+}
+
+/* ===== coming-before: choose two entries ===== */
+(function(){
+  const M=Morning($("#cbsvg")),say=$("#cbsay");
+  M.pick(sel=>{
+    if(sel.length<2){M.clear();say.innerHTML=`<b>${sel[0].d}.</b> Now choose a second entry.`;return}
+    let [a,b]=sel;if(M.before(b,a))[a,b]=[b,a];
+    if(M.before(a,b)){M.hi(M.chain(a,b));say.innerHTML=`<b>${a.d}</b> came before <b>${b.d}</b>. Follow the red chain: every link is a line of one house's scroll, or a slip on the road.`}
+    else{M.clear();say.innerHTML=`<b>${a.d}</b>, and <b>${b.d}</b>: <span class="bad">unrelated</span>. No chain of scroll lines and slips joins them, so neither house could have known of the other's entry. One lies further out, later by the sun, but nothing the houses hold can tell them so.`}
+  });
+})();
+
+/* ===== scrollytelling: the tally ===== */
+(function(){
+  const M=Morning($("#tallysvg")),lab={};
+  M.E.filter(e=>e.slip).forEach(e=>{const [x,y]=e.slip.mid,t=el("text",{class:"tok-l fade halo",x,y:y+4},M.P.over);t.textContent="slip says "+M.by[e.from].tally;lab[e.id]=t});
+  const from={a:1,b:1,c:1,f:1,g:1,d:3,e:4,i:4,j:4,l:4}, B=M.by;
+  const long=[[B.a,B.b],[B.b,B.d],[B.d,B.e],[B.e,B.i],[B.i,B.j],[B.j,B.l]];
+  scrolly($("#tally"),s=>{
+    M.E.forEach(e=>{M.text(e,s>=from[e.id]?e.tally:"");e.g.classList.toggle("mark",s===6&&(e===B.g||e===B.d));e.g.classList.toggle("dim",s===6&&e!==B.g&&e!==B.d)});
+    lab.d.classList.toggle("on",s>=2&&s<6);lab.i.classList.toggle("on",s>=4&&s<6);lab.l.classList.toggle("on",s>=4&&s<6);
+    if(s===5)M.hi(long);else M.clear();
+  });
+})();
+
+/* ===== precedence: three lists become one ===== */
+(function(){
+  const items=[[1,1],[1,2],[1,3],[2,1],[2,3],[3,2]],cols=[1,2,3].map(h=>$("#pq"+h)),say=$("#pqsay"),st=$("#pqstate"),bs=$("#pqsort"),bm=$("#pqmix");
+  let lists;
+  const mixed=()=>{const a=[...items];for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+  const paint=()=>cols.forEach((c,i)=>c.innerHTML=lists[i].map(([t,h])=>`<div class="e">${chip(t,h)}</div>`).join(""));
+  /* no house hears of an entry ahead of one that came before it */
+  const chains=[["1,1","2,1"],["2,1","3,2"],["1,2","3,2"],["1,3","2,3"]];
+  const sound=l=>{const at=l.map(String);return chains.every(([a,b])=>at.indexOf(a)<at.indexOf(b))};
+  const heard=()=>{let l;do{l=mixed()}while(!sound(l));return l};
+  function mix(){do{lists=[heard(),heard(),heard()]}while(String(lists[0])===String(lists[1])||String(lists[1])===String(lists[2])||String(lists[0])===String(lists[2]));paint();
+    st.textContent="as each heard of them";say.textContent="Six entries from the morning, each marked with its tally and its house. Each house heard of them in a different sequence.";bs.disabled=false}
+  bs.onclick=()=>{lists=lists.map(l=>[...l].sort((a,b)=>a[0]-b[0]||a[1]-b[1]));paint();bs.disabled=true;st.textContent="by precedence";
+    say.innerHTML="Lower tally first; where tallies tie, lower house number first. <span class='ok'>All three houses now hold the same list</span>, and none of them needed a clock.";};
+  bm.onclick=mix;mix();
+})();
+
+/* ===== scrollytelling: the shared storehouse ===== */
+(function(){
+  const I=Isle($("#storesvg")),side=$("#storeside");
+  const [sx,sy]=I.at(90,I.R-36),sg=el("g",{class:"site"},I.over);I.put(sg,sx,sy);
+  const sr=el("rect",{x:-56,y:-14,width:112,height:28,rx:4,fill:"#fffaf0"},sg),stx=el("text",{style:"font-size:12px"},sg);
+  const r1=[2,1],r3=[2,3],both=[r1,r3];
+  /* how things stand at each step: tallies, queues, who is loading, and the highest tally each asker has heard from the others */
+  const ST=[
+    {t:[1,1,1],q:[[],[],[]],in:0,h1:{},h3:{}},
+    {t:[2,1,2],q:[[r1],[],[r3]],in:0,h1:{},h3:{}},
+    {t:[2,1,2],q:[[r1],[],[r3]],in:0,h1:{},h3:{}},
+    {t:[3,4,3],q:[both,both,both],in:0,h1:{3:2},h3:{1:2}},
+    {t:[4,6,4],q:[both,both,both],in:0,h1:{3:2},h3:{1:2}},
+    {t:[7,6,8],q:[both,both,both],in:1,h1:{2:5,3:4},h3:{1:4,2:6}},
+    {t:[8,6,8],q:[[r3],both,both],in:0,h1:null,h3:{1:4,2:6}},
+    {t:[8,9,9],q:[[r3],[r3],[r3]],in:3,h1:null,h3:{1:8,2:6}},
+    {t:[8,9,9],q:[[r3],[r3],[r3]],in:3,h1:null,h3:{1:8,2:6}}];
+  /* every slip of the story: sender, receiver, the tally it carries, and where it is at which step */
+  const toks=[[1,2,2,{1:.3,2:.62}],[1,3,2,{1:.3,2:.62}],[3,1,2,{1:.3,2:.62}],[3,2,2,{1:.3,2:.62}],
+              [2,1,5,{4:.5}],[2,3,6,{4:.5}],[3,1,4,{4:.5}],[1,3,4,{4:.5}],[1,2,8,{6:.5}],[1,3,8,{6:.5}]]
+    .map(([a,b,n,plan])=>({a,b,plan,g:I.token(HC[a],n),u:.1,run:0,end:Math.max(...Object.keys(plan))}));
+  const tick=ok=>ok?"<span class='ok'>✓</span>":"<span class='bad'>✗</span>";
+  function card(h,S){
+    const q=S.q[h-1],heard=h===1?S.h1:h===3?S.h3:null,mine=q.some(r=>r[1]===h);
+    let chk="";
+    if(h===2)chk="no request of its own";
+    else if(!mine)chk="no request standing";
+    else chk=`first in its queue ${tick(q[0][1]===h)}<br>heard above 2 from `+[1,2,3].filter(o=>o!==h).map(o=>`H${o} ${tick((heard[o]||0)>2)}`).join(" ");
+    return `<div class="hc${S.in===h?" in":""}"><h5>House ${h}<span>tally ${S.t[h-1]}</span></h5><div>${q.length?q.map(r=>chip(r[0],r[1])).join(""):"queue empty"}</div><div class="chk">${chk}</div></div>`;
+  }
+  scrolly($("#store"),s=>{
+    const S=ST[s];side.innerHTML=[1,2,3].map(h=>card(h,S)).join("");
+    sr.setAttribute("fill",S.in?HC[S.in]:"#fffaf0");stx.textContent=S.in?`House ${S.in} loading`:"storehouse: empty";
+    toks.forEach(k=>{const u=k.plan[s],id=++k.run;
+      if(u==null){k.g.setAttribute("opacity",0);k.u=s>k.end?.9:.1;I.road(k.g,k.a,k.b,k.u);return}
+      k.g.setAttribute("opacity",1);const u0=k.u;tween(800,e=>{if(k.run!==id)return;k.u=u0+(u-u0)*e;I.road(k.g,k.a,k.b,k.u)})});
+  });
+})();
+
+/* ===== the goatherd: a path that carries no slip ===== */
+(function(){
+  const I=Isle($("#goat")),say=$("#goatsay"),btn=$("#goatgo"),H1=I.house[1],H3=I.house[3];
+  const gt=I.token("#fffaf0","G"),ms=I.token(HC[3],"9");
+  const l3=el("text",{class:"lab halo",x:H3.x+10,y:H3.y+38},I.over),l1=el("text",{class:"lab halo",x:H1.x+32,y:H1.y+36,style:"text-anchor:start"},I.over);
+  const over=u=>{const v=1-u;I.put(gt,v*v*H3.x+2*u*v*I.cx+u*u*H1.x,v*v*H3.y+2*u*v*I.cy+u*u*H1.y)};
+  function reset(){l3.textContent="tally 8";l1.textContent="tally 3";gt.setAttribute("opacity",0);ms.setAttribute("opacity",0)}
+  btn.onclick=async()=>{btn.disabled=true;reset();
+    l3.textContent="sale: tally 9";say.innerHTML="House 3 enters a sale under tally <b>9</b>. A messenger sets out by the road with the official slip, and a goatherd sets out over the mountain with the news.";
+    I.road(ms,3,1,.1);ms.setAttribute("opacity",1);over(.12);gt.setAttribute("opacity",1);
+    const road=tween(6200,u=>I.road(ms,3,1,.1+.78*u));
+    await tween(1900,u=>over(.12+.76*u));
+    l1.textContent="order: tally 4";say.innerHTML="The goatherd is lucky. House 1 hears of the sale and at once enters an order because of it. Its quiet tally stood at 3, so the order goes in under <b>4</b>.";
+    await road;ms.setAttribute("opacity",0);
+    say.innerHTML="Hours later the official slip arrives, marked 9, too late to correct anything. <span class='bad'>By the tallies, the order (4) came before the sale (9) that caused it.</span> The goatherd carried no slip, so the rules never saw him.";
+    btn.textContent="Again";btn.disabled=false};
+  reset();
+})();
+
+/* ===== the column: compare two entries row by row ===== */
+(function(){
+  const M=Morning($("#colsvg")),out=$("#colout"),say=$("#colsay");M.E.forEach(e=>M.text(e,e.tally));
+  const short=e=>`H${e.h}'s ${e.tally}`;
+  M.pick(sel=>{
+    if(sel.length<2){M.clear();out.innerHTML="";say.innerHTML=`<b>${sel[0].d}</b>, tally ${sel[0].tally}. Now choose a second entry.`;return}
+    const [a,b]=sel,le=a.col.every((x,k)=>x<=b.col[k]),ge=a.col.every((x,k)=>x>=b.col[k]);
+    out.innerHTML=`<table class="cmp"><thead><tr><th>Row</th><th>${short(a)}</th><th></th><th>${short(b)}</th></tr></thead><tbody>`+
+      a.col.map((x,k)=>`<tr class="${x<b.col[k]?"up":x>b.col[k]?"down":""}"><td>House ${k+1}</td><td>${x}</td><td>${x<b.col[k]?"&lt;":x>b.col[k]?"&gt;":"="}</td><td>${b.col[k]}</td></tr>`).join("")+"</tbody></table>";
+    if(le||ge){const [x,y]=le?[a,b]:[b,a];M.hi(M.chain(x,y));
+      say.innerHTML=`No row of the ${le?"first":"second"} column is greater than the other's, and the columns differ. So <b>${x.d}</b> <span class="ok">came before</span> <b>${y.d}</b>. Their tallies, ${x.tally} and ${y.tally}, agree with that, but could not have ruled out that the two were unrelated.`}
+    else{M.clear();const up=a.col.findIndex((x,k)=>x>b.col[k]),dn=a.col.findIndex((x,k)=>x<b.col[k]);
+      say.innerHTML=`The first column is greater in the row for House ${up+1}, the second in the row for House ${dn+1}. Neither is at least the other, so the two entries are <span class="bad">unrelated</span>: each was made in ignorance of the other. Their tallies, ${a.tally} and ${b.tally}, ${a.tally===b.tally?"say nothing either way":"would have suggested a sequence that was never there"}.`}
+  });
+})();
+
+/* ===== relevance map ===== */
+mapPairs($("#map"),[["A trading house","A process"],["A slip carried by a messenger","A message"],["No passing on the road","Messages between two processes arrive in the order sent"],["Water-clocks with no common hour","No synchronised clocks"],["Came before","Happened before"],["Unrelated","Concurrent"],["The tally","A Lamport logical clock"],["Precedence: tally, then house number","A total order, ties broken by process number"],["The shared storehouse","Mutual exclusion without a coordinator"],["The goatherd over the mountain","A cause that travels outside the system"],["The column","A vector clock"]]);
+})();
+</script>
 </body>
 </html>

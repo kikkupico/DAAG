@@ -328,9 +328,13 @@ every tent sees and no post on the crown does.
 
 ---
 
-## Pop-up editions
+## The scroll format
 
-A pop-up edition (`popups/<slug>/index.html`) retells a book as one scroll: short allegory prose, photoreal scenes that unfold as they enter view, and one live interactive per mechanism (scroll-driven stage for a sequence, click-through widget for a choice). Same registers as a book: the synopsis in machine terms first, then allegory only. Self-contained (vanilla JS, images in its own `img/`, re-encoded to about 1600 px). Pop-up editions exist for The Part-Time Parliament, Ordering Without Clocks and The Limits of Agreement, each linked from its book's lineage line in the header. A pop-up reuses the book's published pictures and draws space-time in the round, as the books do.
+A book's main page (`books/<slug>/index.html`) is one scroll: short allegory prose, photoreal scenes that unfold as they enter view, and one live interactive per mechanism (a scroll-driven stage for a sequence, a click-through widget for a choice). The registers are unchanged: the synopsis in machine terms first, then allegory only. The page is self-contained (vanilla JS, pictures in the book's own `img/`), reuses the book's published pictures and draws space-time in the round.
+
+The long edition, with the chapters and the proofs, is kept beside it as `books/<slug>/archive.html` and linked from the scroll's top bar and closing links. A link from another book to a particular idea points at the long edition (`archive.html#s3`), where that chapter is; a link to the book as a whole points at `index.html`. `art/diagrams/polar.py` rebuilds the long edition's figures.
+
+In the scroll format so far: The Part-Time Parliament, Ordering Without Clocks, The Limits of Agreement. The other books are still long editions at `index.html`.
 
 ## Changing art direction
 
