@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Part-Time Parliament — Pop-up Edition</title>
+<meta name="description" content="Leslie Lamport's Paxos paper as a scroll-through pop-up: an island, a round hall, a handful of legislators who keep wandering off, and the ballot that still gets them to agree.">
+<link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
+<style>
+:root{
+  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4; --night:#eae4d4; --night-hi:#fffaf0;
+  --aegean:#2e88b5; --aegean-d:#136f9e; --blood:#bf4a26; --olive:#7c8f3a; --terra:#b5602c;
+  --gold:#e0b84a; --shadow:#b9a77e;
+  /* the five priests, as in the film */
+  --pA:#e0b84a; --pB:#5b9be0; --pG:#e2564e; --pD:#9cb648; --pE:#b58be0;
+  --serif:Georgia,'Iowan Old Style','Palatino Linotype',serif;
+  --sans:Optima,'Gill Sans','Gill Sans MT',sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#d8cba6}
+body{margin:0;background:#d8cba6;color:var(--ink);font-family:var(--serif);line-height:1.55;overflow-x:hidden}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer}
+h1,h2,h3{font-family:var(--sans);line-height:1.12;margin:0;text-wrap:balance}
+p{margin:0 0 .9rem;text-wrap:pretty}
+.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--gold)}
+.kicker{color:var(--blood)}
+
+/* ---------- top bar ---------- */
+.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
+  font-family:var(--sans);font-size:.78rem;letter-spacing:.05em;background:linear-gradient(180deg,#3a2a1a,#241a10)}
+.bar a{color:#f0e6cc;text-decoration:none;opacity:.8} .bar a:hover{opacity:1}
+.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a}
+.bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
+
+/* ---------- spreads ---------- */
+.spread{position:relative;padding:clamp(4.5rem,11vw,8rem) 20px;overflow:clip}
+#ballot{overflow:visible}
+.dark{background:var(--marble);color:var(--ink);background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
+.light{background:var(--parch);color:var(--ink);
+  background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
+/* torn-paper edge between spreads */
+.tear{position:absolute;left:0;right:0;top:-1px;height:26px;z-index:3;pointer-events:none}
+.tear path{fill:var(--prev)}
+.wrap{max-width:1080px;margin:0 auto;position:relative;z-index:2}
+.narrow{max-width:640px;margin:0 auto}
+.spread h2{font-size:clamp(1.9rem,5vw,3.1rem);margin:.4rem 0 1rem}
+.lede{font-size:clamp(1.05rem,2.2vw,1.3rem);max-width:34em}
+.light .lede{color:#3a2d24}
+.meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
+.light .meander{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>")}
+
+/* ---------- the pop-up: a card that unfolds from its hinge ---------- */
+.pop{perspective:1400px}
+.pop > .leaf{transform-origin:50% 100%;transform:rotateX(78deg) translateY(30px);opacity:0;
+  transition:transform 1.1s cubic-bezier(.2,.9,.25,1.12),opacity .6s ease}
+.pop.up > .leaf{transform:rotateX(0) translateY(0);opacity:1}
+.pop.fromleft > .leaf{transform-origin:0 50%;transform:rotateY(-80deg)}
+.pop.fromright > .leaf{transform-origin:100% 50%;transform:rotateY(80deg)}
+.pop.up.fromleft > .leaf,.pop.up.fromright > .leaf{transform:none}
+.paper{background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);position:relative}
+.light .paper{box-shadow:9px 11px 0 #b9a77e}
+.photo{border:5px solid #fffaf0;box-shadow:0 0 0 3px var(--ink),12px 16px 0 var(--shadow);background:#222;overflow:hidden;position:relative}
+.photo img{width:100%;height:100%;object-fit:cover}
+.tilt-l{transform:rotate(-1.4deg)} .tilt-r{transform:rotate(1.2deg)}
+[data-depth]{will-change:transform}
+.fold-shadow{position:absolute;left:6%;right:6%;bottom:-18px;height:26px;background:radial-gradient(ellipse at center,#0008,transparent 70%);opacity:0;transition:opacity 1s .4s;z-index:-1}
+.up .fold-shadow{opacity:1}
+
+/* ---------- cover ---------- */
+#cover{min-height:100svh;display:grid;align-items:center;padding-top:5rem;
+  background:radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
+#cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
+#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:.6rem 0 1rem;letter-spacing:-.01em}
+#cover h1 span{display:block;font-size:.34em;letter-spacing:.2em;text-transform:uppercase;color:var(--aegean-d);margin-top:.9rem;font-weight:400}
+#cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
+#cover .hook{font-size:clamp(1.1rem,2.4vw,1.45rem);font-style:italic;max-width:24em;color:#3a2d24}
+.scrollcue{margin-top:2rem;font-family:var(--sans);font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);display:flex;gap:10px;align-items:center}
+.scrollcue b{display:inline-block;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(7px)}}
+.cut{position:absolute;pointer-events:none;z-index:1}
+.cut svg{display:block;width:100%;height:auto}
+@media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
+
+/* ---------- machines ---------- */
+#machines .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,60px);align-items:center}
+.terms{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:12px}
+.terms li{padding:12px 16px;background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 #b9a77e;font-size:.98rem}
+.terms b{font-family:var(--sans)}
+.logs{padding:18px 18px 12px}
+.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
+.replicas{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rep{border:3px solid var(--ink);padding:8px;background:#fff;min-height:210px;transition:opacity .4s,background .4s}
+.rep.down{opacity:.38;background:#ddd}
+.rep h5{margin:0 0 6px;font-family:var(--sans);font-size:.72rem;display:flex;justify-content:space-between;letter-spacing:.06em}
+.rep .e{font-size:.78rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both;font-family:var(--sans)}
+@keyframes slotin{from{transform:translateY(-8px);opacity:0}}
+.logs .note{font-size:.84rem;color:#6b5a48;margin:10px 0 0;min-height:2.6em;font-style:italic}
+
+/* ---------- island ---------- */
+#island{background:linear-gradient(var(--marble),#d9e6e8 70%,#cfe1e6)}
+#island .cols{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,64px);align-items:center}
+.isle{position:relative;aspect-ratio:896/1200;max-height:86svh;margin:0 auto;width:min(100%,520px)}
+.isle .photo{position:absolute;inset:0}
+.isle .photo img{transform:scale(1.12);transition:transform .2s linear}
+.hot{position:absolute;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;border:3px solid #fffaf0;
+  background:rgba(191,74,38,.85);color:#fff;font-family:var(--sans);font-weight:700;box-shadow:0 0 0 0 rgba(224,184,74,.7);animation:ping 2.2s infinite;z-index:3}
+.hot[aria-pressed=true]{background:var(--gold);color:var(--ink);animation:none;transform:translate(-50%,-50%) scale(1.15)}
+@keyframes ping{70%{box-shadow:0 0 0 16px rgba(224,184,74,0)}100%{box-shadow:0 0 0 0 rgba(224,184,74,0)}}
+.place{padding:22px 24px;color:var(--ink);min-height:200px}
+.place h3{font-size:1.5rem;margin-bottom:.4rem}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.chip{background:#fffaf0;border:2px solid var(--ink);color:var(--ink);padding:6px 14px;border-radius:99px;font-family:var(--sans);font-size:.85rem}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--parch)}
+.light .chip{border-color:var(--ink);color:var(--ink)} .light .chip[aria-pressed=true]{background:var(--ink);color:var(--parch)}
+@media(max-width:760px){#island .cols,#machines .cols{grid-template-columns:1fr}}
+
+/* ---------- the hall (full-bleed photo with pins) ---------- */
+#hall{padding:0;background:var(--marble)}
+.bleed{position:relative;height:min(100svh,880px);overflow:hidden}
+.bleed img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover}
+.bleed::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--parch) 0,transparent 8%,transparent 92%,var(--parch) 100%);pointer-events:none}
+.pin{position:absolute;z-index:4;max-width:min(250px,44vw);padding:10px 14px;background:#fffaf0;color:var(--ink);border:3px solid var(--ink);
+  box-shadow:5px 6px 0 #0007;font-size:.92rem;line-height:1.35;transform-origin:0 100%}
+.pin b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood)}
+.pin::after{content:"";position:absolute;left:-3px;bottom:-26px;width:3px;height:26px;background:var(--ink)}
+.pin::before{content:"";position:absolute;left:-8px;bottom:-34px;width:13px;height:13px;border-radius:50%;background:var(--blood);border:3px solid var(--ink)}
+.hall-title{position:absolute;z-index:5;left:20px;right:20px;top:clamp(5rem,12vh,8rem);max-width:1080px;margin:0 auto}
+.hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
+.hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
+.hall-title p{margin:0}
+
+/* ---------- scrollytelling ---------- */
+.scrolly{position:relative}
+.scrolly .stage{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;padding:70px 20px 20px;overflow:hidden}
+.scrolly .steps{position:relative;z-index:6;margin-top:-100svh;pointer-events:none}
+.step{min-height:100svh;display:flex;align-items:center;padding:0 20px}
+.step .card{pointer-events:auto;max-width:360px;padding:16px 20px;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);
+  transform:translateY(24px) rotate(-.6deg);opacity:.25;transition:transform .7s cubic-bezier(.2,.9,.25,1.1),opacity .5s}
+.step.on .card{transform:none;opacity:1}
+.step .card h3{font-size:1.1rem;margin-bottom:.35rem}
+.step .card p{margin:0;font-size:.98rem}
+.step .num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
+.step.r{justify-content:flex-end}
+.scrolly svg.fig{width:min(100%,820px);height:auto;max-height:calc(100svh - 120px);overflow:visible}
+.scrolly .stage-inner{width:100%;display:flex;justify-content:center}
+@media(min-width:900px){.scrolly .stage{padding-left:380px} .step .card{max-width:320px} .step{padding-left:max(24px,calc((100vw - 1080px)/2))}}
+@media(max-width:899px){
+  .scrolly .stage{align-items:flex-start;padding-top:64px}
+  .scrolly svg.fig{max-height:46svh}
+  .step{align-items:flex-end;padding-bottom:22px}
+  .step .card{max-width:none;width:100%}
+}
+svg text{font-family:var(--serif)}
+.svg-dark{background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
+
+/* ballot diagram */
+.fig .pr circle.body{stroke-width:4}
+.fig .pr text{font-family:var(--sans);font-weight:700;font-size:22px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+.fig .lab{fill:#6b5a48;font-size:15px;font-style:italic;text-anchor:middle}
+.fig .tag rect{fill:#f6e3a8;stroke:#1c1512;stroke-width:2;rx:6}
+.fig .tag text{fill:#1c1512;font-size:14px;text-anchor:middle;dominant-baseline:central}
+.fig .fade{opacity:0;transition:opacity .6s}
+.fig .fade.on{opacity:1}
+.fig .tok{transition:transform 1s cubic-bezier(.5,0,.2,1),opacity .5s}
+.fig .reply rect{fill:#f3ead0;stroke:#1c1512;stroke-width:2;rx:6}
+.fig .reply text{fill:#1c1512;font-size:15px;dominant-baseline:central}
+.fig .reply.hi rect{stroke:#5f6e28;stroke-width:4;fill:#e3ecc4}
+.fig .ring{fill:none;stroke:#136f9e;stroke-width:4;opacity:0;transition:opacity .6s}
+.fig .ring.on{opacity:1}
+.fig .dim{opacity:.35}
+
+/* ---------- interactive wells ---------- */
+.well{padding:clamp(16px,3vw,28px);margin:1.6rem 0}
+.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;justify-content:space-between;gap:10px}
+.well h4 em{font-style:normal;color:#6b5a48}
+.btn{background:var(--ink);color:var(--parch);border:3px solid var(--ink);padding:8px 16px;font-family:var(--sans);font-size:.88rem;letter-spacing:.03em;box-shadow:4px 4px 0 var(--blood);transition:transform .12s,box-shadow .12s}
+.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--blood)}
+.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--blood)}
+.btn:disabled{opacity:.35;cursor:default;box-shadow:none}
+.btn.alt{background:#fffaf0;color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.say{margin:12px 0 0;font-size:.98rem;min-height:3.1em}
+.say b{color:var(--blood)}
+.ok{color:#3f7a2a;font-weight:700}.bad{color:var(--blood);font-weight:700}
+
+/* scrolls */
+.scrollsrow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.scr{background:#fff;border:3px solid var(--ink);padding:8px 6px;text-align:center;font-size:.8rem;min-height:92px;position:relative;transition:background .4s,border-color .4s}
+.scr h5{margin:0 0 5px;font-family:var(--sans);font-size:.7rem;letter-spacing:.1em;color:#6b5a48}
+.scr .d{font-style:italic;animation:slotin .4s both}
+.scr.clash{background:#fde0d4;border-color:var(--blood)}
+@media(max-width:560px){.scrollsrow{grid-template-columns:repeat(2,1fr)}}
+
+/* messenger */
+.lane{position:relative;height:130px;margin:6px 0}
+.lane svg{width:100%;height:100%}
+.tally{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin-top:8px}
+.tally span b{font-size:1.2rem;margin-right:4px}
+
+/* majorities */
+.hall-svg{width:min(100%,440px);display:block;margin:0 auto}
+.seat{cursor:pointer;transition:transform .5s cubic-bezier(.3,1.4,.5,1)}
+.seat circle.b{stroke:var(--ink);stroke-width:4;transition:fill .4s,opacity .4s}
+.seat text{font-family:var(--sans);font-weight:700;font-size:17px;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.seat.out circle.b{opacity:.3;fill:#ccc}
+.seat .ringA{stroke:var(--pB)} .seat .ringB{stroke:var(--pG)}
+.seat .m{fill:none;stroke-width:6;opacity:0;transition:opacity .4s}
+.seat.inA .ringA{opacity:1}.seat.inB .ringB{opacity:1}
+.seat .glow{fill:none;stroke:var(--gold);stroke-width:7;opacity:0}
+.seat.both .glow{opacity:1;animation:pulse 1.2s infinite}
+@keyframes pulse{50%{stroke-width:13;opacity:.5}}
+.seat .ink{fill:var(--ink);opacity:0;transition:opacity .4s}
+.seat.knows .ink{opacity:1}
+
+/* manuscript */
+.ms table{width:100%;border-collapse:collapse;font-size:.95rem}
+.ms th{font-family:var(--sans);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;text-align:left;padding:4px 8px;color:#6b5a48}
+.ms td{padding:7px 8px;border-top:2px solid #1c151222}
+.ms tr.sel{background:#fbe9b4}
+.ms tbody tr{cursor:pointer}
+.ms tbody tr:hover{background:#f6e7bd}
+.pc{display:inline-block;min-width:30px;text-align:center;margin:1px 3px 1px 0;padding:1px 4px;font-family:var(--sans);font-weight:700;border:2px solid transparent;border-radius:4px}
+.pc.v{border-color:var(--ink);background:#fff}
+.pc.hl{background:var(--gold)!important;box-shadow:0 0 0 3px var(--gold)}
+.pc.dec{color:var(--blood);font-style:italic}
+.ms .explain{padding:12px 14px;margin-top:12px;background:#fff;border:3px solid var(--ink);font-size:.97rem;min-height:5.2em}
+
+/* president duel */
+.duel{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.duel .stat{font-family:var(--sans);font-size:.85rem}
+.duel .stat b{font-size:1.5rem;display:block}
+.dlog{font-size:.88rem;max-height:210px;overflow:auto;margin-top:10px;padding:8px 12px;background:#fff;border:3px solid var(--ink);font-family:var(--sans)}
+.dlog div{padding:2px 0;border-bottom:1px dotted #1c151233}
+@media(max-width:700px){.duel{grid-template-columns:1fr}}
+
+/* decree row */
+.slots{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin:6px 0}
+.slot{min-height:84px;border:3px dashed #1c151255;padding:5px 3px;text-align:center;font-size:.7rem;line-height:1.15;background:#ffffff80;transition:all .5s;position:relative}
+.slot b{display:block;font-family:var(--sans);font-size:.78rem;margin-bottom:3px}
+.slot.has{border:3px solid var(--ink);background:#fff;border-style:solid}
+.slot.gap{border-color:var(--blood);background:#fde8de;animation:pulse2 1.3s infinite}
+.slot.fill{border-color:var(--olive);background:#eef3d8;border-style:solid}
+@keyframes pulse2{50%{background:#fbcfbc}}
+.slot.new{animation:slotin .6s both}
+@media(max-width:640px){.slots{grid-template-columns:repeat(3,1fr)}}
+
+/* cards row */
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
+.card3 .photo{aspect-ratio:4/3}
+.card3 .body{padding:16px 18px 18px}
+.card3 h3{font-size:1.15rem;margin-bottom:.4rem}
+.card3 p{font-size:.95rem;margin:0}
+.card3 .fx{margin-top:12px}
+@media(max-width:860px){.cards3{grid-template-columns:1fr}}
+.fold{display:flex;align-items:center;gap:6px;height:58px;margin-top:10px}
+.fold .e{flex:0 0 6px;height:44px;background:var(--aegean);opacity:.8;transition:all .8s}
+.fold .e.gone{flex-basis:0;opacity:0;margin-right:-6px}
+.fold .digest{flex:0 0 0;overflow:hidden;white-space:nowrap;opacity:0;font-size:.82rem;font-family:var(--sans);background:var(--gold);border:3px solid var(--ink);padding:6px 0;transition:all .8s}
+.fold.folded .digest{flex-basis:290px;opacity:1;padding:6px 10px}
+
+/* relevance */
+.map{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px 0;align-items:stretch;max-width:760px;margin:2rem auto 0}
+.map .l,.map .r{padding:11px 16px;font-size:1rem;border:3px solid var(--ink);background:#fffaf0;color:var(--ink);transition:background .25s,transform .25s;cursor:default}
+.map .r{font-family:var(--sans);background:#e9f2f7}
+.map .mid{display:grid;place-items:center;color:var(--blood);font-size:1.3rem}
+.map .hi{background:var(--gold)!important;transform:scale(1.03)}
+.map .hd{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood)}
+.end{text-align:center}
+.end .big{font-size:clamp(1.5rem,4.2vw,2.5rem);font-style:italic;max-width:19em;margin:0 auto 1.4rem;color:var(--ink);text-wrap:balance}
+.links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+.links a{color:var(--ink);background:#fffaf0;border:3px solid var(--ink);padding:9px 18px;text-decoration:none;font-family:var(--sans);font-size:.9rem;box-shadow:4px 4px 0 var(--shadow)}
+.links a:hover{background:var(--gold)}
+footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;font-family:var(--sans);background:#d8cba6}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .pop > .leaf{transition:opacity .3s;transform:none!important}
+  [data-depth]{transform:none!important}
+  .hot,.scrollcue b,.slot.gap{animation:none}
+  .fig .tok{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <a href="../../books/the-part-time-parliament/index.html">Read the full paper</a>
+  <span class="now" id="now">Pop-up edition</span>
+  <i id="prog"></i>
+</div>
+
+<!-- ============================================================ cover -->
+<header class="spread dark" id="cover" data-name="Cover">
+  <div class="cut" style="left:-30px;bottom:-10px;width:90px;opacity:.3" data-depth="-26"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#5f6e28"/></svg></div>
+  <div class="cut" style="right:-20px;bottom:-14px;width:80px;opacity:.3" data-depth="-40"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#7c8f3a"/></svg></div>
+  <div class="wrap grid">
+    <div>
+      <div class="kicker">A pop-up edition · after Leslie Lamport, 1998</div>
+      <h1>The Part-Time Parliament<span>how a crowd that keeps wandering off still agrees</span></h1>
+      <p class="hook">Can a parliament whose members come and go as they please still pass laws that never contradict one another?</p>
+      <p class="hook" style="color:var(--blood);font-style:normal;font-family:var(--sans);font-size:1.1rem">On the island of Paxos, it did.</p>
+      <div class="scrollcue"><b>↓</b> Scroll. Things unfold.</div>
+    </div>
+    <div class="pop" data-auto>
+      <div class="leaf">
+        <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" alt="The Chamber of the Paxon Parliament seen from its terrace, legislators with scrolls walking in and out by its one door"></div>
+        <div class="fold-shadow"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================ machines -->
+<section class="spread light" id="machines" data-name="In machine terms">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap cols">
+    <div>
+      <div class="kicker">First, in machine terms</div>
+      <h2>Many computers, one log</h2>
+      <p class="lede">A group of computers must keep the same log of commands, in the same order.</p>
+      <ul class="terms">
+        <li><b>Machines stop and restart</b> at any moment.</li>
+        <li><b>Messages</b> may be slow, lost, or delivered twice.</li>
+        <li><b>Paxos</b> (Lamport, 1998): the logs never disagree, and whenever a majority is up and steady, new commands get through.</li>
+      </ul>
+      <p style="margin-top:1.2rem">Lamport told it as the story of an ancient island parliament. So will we.</p>
+    </div>
+    <div class="pop fromright"><div class="leaf">
+      <div class="paper logs" id="logs">
+        <h4>Three machines, one log</h4>
+        <div class="replicas" id="reps"></div>
+        <p class="note" id="lognote">Commands arrive. Every machine writes them in the same order.</p>
+        <div class="row"><button class="btn" id="crash">Stop a machine</button><button class="btn alt" id="revive" disabled>Restart it</button></div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ============================================================ island -->
+<section class="spread dark" id="island" data-name="The island">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v10l-60 8-70-10-90 12-80-9-100 10-90-11-80 9-110-8-90 12-100-10-80 9-110-12-40 6z"/></svg>
+  <div class="wrap cols">
+    <div class="pop fromleft"><div class="leaf">
+      <div class="isle" id="isle">
+        <div class="photo tilt-l"><img src="img/island.jpg" alt="The island of Paxos from above: a Y with two arms facing each other across a bay" id="isleimg"></div>
+        <button class="hot" style="left:34%;top:45%" data-p="chamber" aria-label="The Chamber">1</button>
+        <button class="hot" style="left:84%;top:37%" data-p="schedia" aria-label="Schedia">2</button>
+        <button class="hot" style="left:58%;top:76%" data-p="coast" aria-label="The southern coast">3</button>
+      </div>
+    </div></div>
+    <div>
+      <div class="kicker">Paxos</div>
+      <h2>An island shaped like a Y</h2>
+      <p class="lede">Two arms reach north and face each other across a bay. One road runs up the stem and out along both.</p>
+      <div class="chips" id="chips">
+        <button class="chip" data-p="chamber" aria-pressed="true">West arm</button>
+        <button class="chip" data-p="schedia" aria-pressed="false">East arm</button>
+        <button class="chip" data-p="coast" aria-pressed="false">Southern coast</button>
+      </div>
+      <div class="paper place" id="place"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ hall -->
+<section class="spread dark" id="hall" data-name="The Chamber">
+  <div class="bleed">
+    <img src="img/p01-scrolls.jpg" alt="Inside the Chamber: a round marble hall with one tall door, a checkerboard floor and legislators sitting along the wall with scrolls" data-parallax>
+    <div class="hall-title"><div class="t">
+      <div class="kicker">The Chamber of the Paxon Parliament</div>
+      <h2>A round hall with no head of the room</h2>
+      <p>One conical roof. One door, and legislators come and go through it as they please.</p>
+    </div></div>
+    <div class="pin pop" style="left:46%;top:40%;"><div class="leaf"><b>One door</b>Anyone may leave at any moment, and be gone for any length of time.</div></div>
+    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>A scroll each</b>Nobody will sit in the Chamber to keep the record, so each legislator keeps one.</div></div>
+    <div class="pin pop" style="left:56%;top:80%;"><div class="leaf"><b>No podium</b>The acoustics are poor. Nobody can address a crowd. Legislators talk only through messengers.</div></div>
+  </div>
+</section>
+
+<!-- ============================================================ requirements -->
+<section class="spread light" id="law" data-name="Two requirements">
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">What the Parliament must do</div>
+      <h2>Settle the law, one numbered decree at a time</h2>
+      <p class="lede">Each legislator writes passed decrees into their own scroll, in order. Two things must hold.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Requirement one: consistency <em>no two scrolls may ever disagree</em></h4>
+      <div class="scrollsrow" id="scrs"></div>
+      <p class="say" id="scrsay">A scroll may lack an entry it hasn't heard of. It may never hold a different one.</p>
+      <div class="row">
+        <button class="btn" id="bq1">A group passes decree 37, then leaves for a banquet</button>
+        <button class="btn alt" id="bq2" disabled>A second group arrives, knowing nothing</button>
+        <button class="btn alt" id="bqr" hidden>Again</button>
+      </div>
+    </div></div></div>
+    <div class="cols2" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:center;margin-top:1.4rem" id="progrow">
+      <div>
+        <h3 style="font-size:1.5rem;margin-bottom:.5rem">Requirement two: progress</h3>
+        <p>Leaving every scroll blank would be consistent too. So: if a majority stays in the Chamber long enough, any proposed decree is passed and written down.</p>
+        <p><b>Both are hard</b> when anyone may vanish mid-vote. Trading the first for the second is easy. Keeping both is the whole game.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p04-synod.jpg" alt="The Chamber from its terrace, legislators strolling in and out between the columns" loading="lazy"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ assumptions -->
+<section class="spread dark" id="rules" data-name="The rules of the island">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1.5rem">
+      <div class="kicker">What can go wrong</div>
+      <h2>Absence. Never lies.</h2>
+      <p class="lede">Everyone on the island is honest. The danger is not lies. It is absence.</p>
+    </div>
+    <div class="cards3">
+      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)">
+        <div class="photo" style="aspect-ratio:4/3"><img src="img/p02-hourglass.jpg" alt="A legislator holding up a sandglass beside another writing on a scroll" loading="lazy"></div>
+        <div class="body"><h3>Memory walks out the door</h3><p>A legislator who leaves may forget what they were doing. Key notes go in the back of the scroll, in indelible ink. A slip of paper may be lost.</p></div>
+      </div></div>
+      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)">
+        <div class="photo" style="aspect-ratio:4/3"><img src="img/p03-messengers.jpg" alt="A messenger hands a message along while others come and go by the door" loading="lazy"></div>
+        <div class="body"><h3>Only messengers</h3><p>A messenger never garbles a message. But they may forget they delivered it, and deliver it again. Or set off on a long voyage and never arrive.</p></div>
+      </div></div>
+      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)">
+        <div class="photo" style="aspect-ratio:4/3"><img src="img/p01-scrolls.jpg" alt="Legislators sitting along the Chamber wall, each with a scroll" loading="lazy"></div>
+        <div class="body"><h3>Prompt inside, anything outside</h3><p>While in the Chamber, everyone acts promptly. Outside it, anything takes any amount of time.</p></div>
+      </div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="color:var(--ink);max-width:760px;margin:2.4rem auto 0">
+      <h4>Send a message <em>try your luck</em></h4>
+      <div class="lane"><svg viewBox="0 0 700 130" id="lane">
+        <g stroke="#1c1512" stroke-width="3" fill="none"><path d="M70 82 C 230 20, 470 20, 630 82" stroke-dasharray="6 7" opacity=".5"/></g>
+        <g><circle cx="60" cy="82" r="26" fill="#e0b84a" stroke="#1c1512" stroke-width="4"/><text x="60" y="82" text-anchor="middle" dominant-baseline="central" font-family="Optima,sans-serif" font-weight="700" font-size="20">A</text></g>
+        <g><circle cx="640" cy="82" r="26" fill="#5b9be0" stroke="#1c1512" stroke-width="4"/><text x="640" y="82" text-anchor="middle" dominant-baseline="central" font-family="Optima,sans-serif" font-weight="700" font-size="20">B</text></g>
+        <g id="m1" opacity="0"><circle r="11" fill="#fffaf0" stroke="#1c1512" stroke-width="3"/><text y="1" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700">✉</text></g>
+        <g id="m2" opacity="0"><circle r="11" fill="#fffaf0" stroke="#1c1512" stroke-width="3"/><text y="1" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700">✉</text></g>
+        <text id="voy" x="350" y="122" text-anchor="middle" font-size="15" font-style="italic" fill="#bf4a26" opacity="0">…set off on a long voyage</text>
+      </svg></div>
+      <div class="row" style="margin-top:0"><button class="btn" id="send">Send a message from A to B</button></div>
+      <div class="tally"><span><b id="t-ok">0</b>delivered</span><span><b id="t-two">0</b>delivered twice</span><span><b id="t-lost">0</b>never arrived</span></div>
+      <p class="say" id="sendsay">Whatever the protocol does, it must be right under all three.</p>
+    </div></div></div>
+  </div>
+</section>
+
+<!-- ============================================================ majorities -->
+<section class="spread light" id="majorities" data-name="Overlapping majorities">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap cols" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,60px);align-items:center" id="majcols">
+    <div>
+      <div class="kicker">The one fact everything rests on</div>
+      <h2>Any two majorities share a member</h2>
+      <p class="lede">That shared member remembers what the first majority decided, even when everyone else has wandered off.</p>
+      <p>Seven legislators, seen from above the Chamber. Click anyone to send them out the door or call them back. Then see what the overlap does.</p>
+      <div class="say" id="majsay"></div>
+      <div class="row">
+        <button class="btn" id="maj1">1 · A majority passes a decree</button>
+        <button class="btn alt" id="maj2" disabled>2 · They leave; another majority gathers</button>
+      </div>
+    </div>
+    <div class="pop fromright"><div class="leaf"><div class="paper well" style="margin:0">
+      <svg class="hall-svg" viewBox="0 0 440 440" id="hallsvg">
+        <circle cx="220" cy="220" r="204" fill="#efe6cf" stroke="#1c1512" stroke-width="5"/>
+        <circle cx="220" cy="220" r="150" fill="none" stroke="#b5602c" stroke-width="3" stroke-dasharray="3 8"/>
+        <rect x="196" y="402" width="48" height="12" fill="#6b4a2a" stroke="#1c1512" stroke-width="3"/>
+        <text x="220" y="428" text-anchor="middle" font-size="12" font-style="italic" fill="#6b5a48">the one door</text>
+        <g id="seats"></g>
+      </svg>
+      <p class="say" id="count" style="text-align:center;margin-bottom:0"></p>
+    </div></div></div>
+  </div>
+</section>
+
+<!-- ============================================================ synod -->
+<section class="spread dark" id="synod" data-name="The Synod">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">A smaller puzzle first</div>
+      <h2>One decree, once every nineteen years</h2>
+      <p class="lede">The Paxons began with a Synod of five priests choosing a single symbolic decree. They did it with <b>ballots</b>.</p>
+      <p>A ballot is a vote on one decree by a chosen group, its <b>quorum</b>. It succeeds if every member of the quorum votes for it. Three rules keep ballots safe.</p>
+    </div>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)"><div class="body"><div class="num" style="font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood)">RULE ONE</div><h3>Every ballot has its own number</h3><p>No two ballots are ever confused, and they have a clear order.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)"><div class="body"><div class="num" style="font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood)">RULE TWO</div><h3>Any two quorums share a priest</h3><p>The same overlap as before, so a decision is never wholly forgotten.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)"><div class="body"><div class="num" style="font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood)">RULE THREE</div><h3>Carry the latest vote forward</h3><p>If anyone in a ballot's quorum has voted before, the ballot must carry the decree of the latest of those votes.</p></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well ms" id="ms" style="color:var(--ink);margin-top:2.4rem">
+      <h4>The manuscript <em>click a ballot</em></h4>
+      <p style="margin:0 0 10px;font-size:.92rem">Five ballots among five priests. A <span class="pc v">boxed</span> priest is one who voted. Which ballots had to copy an earlier decree, and from whom?</p>
+      <table>
+        <thead><tr><th>Ballot</th><th>Decree</th><th>Quorum</th></tr></thead>
+        <tbody id="msrows"></tbody>
+      </table>
+      <div class="explain" id="msx">Try ballot 27.</div>
+    </div></div></div>
+  </div>
+</section>
+
+<!-- ============================================================ one ballot -->
+<section class="spread dark" id="ballot" data-name="One ballot" style="padding-bottom:0;background:var(--night)">
+  <div class="wrap" style="margin-bottom:-1rem">
+    <div class="narrow">
+      <div class="kicker">The whole protocol</div>
+      <h2>One ballot, step by step</h2>
+      <p class="lede">A priest runs a ballot. Scroll slowly: the picture moves with you.</p>
+    </div>
+  </div>
+  <div class="scrolly" id="bal" data-steps="7">
+    <div class="stage"><div class="stage-inner">
+      <svg class="fig svg-dark" viewBox="0 0 800 520" id="balsvg" role="img" aria-label="Ballot 27 run by priest A among B, Gamma, Delta and E"></svg>
+    </div></div>
+    <div class="steps">
+      <div class="step on"><div class="card"><div class="num">1 · Choose</div><h3>Pick a fresh number and a quorum</h3><p>The initiator, A, picks ballot 27 and three priests to ask: B, Γ and Δ. E sits this one out.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · Ask</div><h3>A question, with a price</h3><p>“Tell me the latest vote you ever cast, and promise never to vote in any ballot numbered below this one.”</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · Promise</div><h3>Each answers, and promises</h3><p>The promise goes in the back of their scroll, in indelible ink. The reply is the latest vote, or none.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Look back</div><h3>A now holds a fact about the past</h3><p>Γ voted in ballot 5, Δ in ballot 2. The latest is ballot 5, so A <b>must</b> propose its decree: β. Only if nobody had ever voted could A choose freely.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · Propose</div><h3>“Vote for this, in this ballot”</h3><p>A sends the forced decree to the quorum.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · Vote</div><h3>Unless they promised something higher</h3><p>Each member votes, writes it in the back of their scroll, and reports back.</p></div></div>
+      <div class="step"><div class="card"><div class="num">7 · Done</div><h3>Every member voted: the ballot succeeded</h3><p>A writes the decree in their scroll and tells everyone. Anyone who hears writes it down. A decree, once chosen, is passed forward. That is the whole ballot.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ progress -->
+<section class="spread light" id="progress" data-name="Progress">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Safe is not enough</div>
+      <h2>Too many ballots block everything</h2>
+      <p class="lede">A ballot is safe. But nothing yet makes anyone start one, and starting too many can block everything.</p>
+      <p>Each new ballot makes its quorum promise never to vote in anything lower, so it can doom the one before it. Two priests, each sure they are in charge, keep starting higher ballots, and neither ever finishes.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" id="duel">
+      <h4>Two would-be presidents <em id="duelmode">no one is in charge</em></h4>
+      <div class="duel">
+        <div>
+          <svg viewBox="0 0 500 270" style="width:100%;height:auto" id="duelsvg"></svg>
+        </div>
+        <div>
+          <div class="stat"><b id="dpassed">0</b>decrees passed</div>
+          <div class="stat" style="margin-top:6px"><b id="dballot">0</b>highest ballot started</div>
+          <div class="dlog" id="dlog"></div>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn" id="drun">Let both run</button>
+        <button class="btn alt" id="dpres">Appoint one president</button>
+        <button class="btn alt" id="dreset">Reset</button>
+      </div>
+    </div></div></div>
+    <p style="max-width:40em;margin:1.8rem 0 0"><b>The cure:</b> choose one president who alone starts ballots, and have them start a new one only when the last has had time to succeed. <b>Safety never depended on any of this.</b> Only progress did.</p>
+  </div>
+</section>
+
+<!-- ============================================================ parliament -->
+<section class="spread dark" id="parliament" data-name="The Parliament">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1.2rem">
+      <div class="kicker">From one decree to a whole law</div>
+      <h2>A separate Synod for every number</h2>
+      <p class="lede">The real Parliament passes a long series of decrees. Each number is its own little Synod, but one president runs them all.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(20px,4vw,50px);align-items:center" id="parcols">
+      <div class="pop fromleft"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/p05-oki.jpg" alt="A newly made president sitting at a desk copying decrees onto a scroll while others wait" loading="lazy"></div></div></div>
+      <div>
+        <p>A <b>new president</b> sends one question covering every open number at once. Each reply says what that legislator has voted for. Then it gets interesting.</p>
+        <p style="font-size:.95rem;color:#6b5a48">Press the buttons in order.</p>
+      </div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" id="par" style="color:var(--ink);margin-top:2rem">
+      <h4>The president's scroll <em id="parstate">newly appointed</em></h4>
+      <div class="slots" id="slots"></div>
+      <p class="say" id="parsay">Decrees 122 to 124 are known to everyone. Press the first button.</p>
+      <div class="row">
+        <button class="btn" id="par1">1 · Ask everyone about every open number</button>
+        <button class="btn alt" id="par2" disabled>2 · Fill the gap</button>
+        <button class="btn alt" id="par3" disabled>3 · Pass new decrees</button>
+        <button class="btn alt" id="parr" hidden>Again</button>
+      </div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">Once a president is chosen, each new decree takes just three steps: ask the quorum to vote, hear their votes, announce the result.</p>
+  </div>
+</section>
+
+<!-- ============================================================ developments -->
+<section class="spread light" id="grew" data-name="How it grew">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Governing the island</div>
+      <h2>Real life made the protocol grow</h2>
+    </div>
+    <div class="cards3">
+      <div class="pop"><div class="leaf paper card3">
+        <div class="photo"><img src="img/p05-oki.jpg" alt="A president copying decrees onto a scroll" loading="lazy"></div>
+        <div class="body"><h3>Better presidents</h3><p>At first the president was whoever came first alphabetically. A legislator back from months away had to copy six months of decrees while Parliament waited. A president who is already up to date would have spared everyone the wait.</p></div>
+      </div></div>
+      <div class="pop"><div class="leaf paper card3">
+        <div class="photo"><img src="img/p06-cheese.jpg" alt="Two inspectors giving conflicting verdicts on the same lot of cheese in the town square" loading="lazy"></div>
+        <div class="body"><h3>One office, one holder</h3><p>Two cheese inspectors, one after the other, both still sure of their post: conflicting verdicts. Each decree now carries the time it was proposed, so a post has at most one holder at a time.</p></div>
+      </div></div>
+      <div class="pop"><div class="leaf paper card3">
+        <div class="photo"><img src="img/p07-goats.jpg" alt="A legislator whose scroll stops at decree 76 advises a buyer about black goats" loading="lazy"></div>
+        <div class="body"><h3>Don't ask one scroll</h3><p>A legislator who had stepped out advised a buyer from a scroll that stopped at decree 76. Decree 77 had made the sale legal. Asking about the law now never returns an older state of it than before.</p></div>
+      </div></div>
+    </div>
+    <div class="cols2" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;margin-top:2.4rem" id="growcols">
+      <div class="pop"><div class="leaf"><div class="paper well" style="margin:0">
+        <h4>Scrolls grew too long <em>fold one</em></h4>
+        <div class="fold" id="fold"><div class="digest">Current law + number of the last decree</div></div>
+        <p class="say" style="margin-top:12px">Keeping every decree forever became a burden. Scrolls shrank to the current law and the number of the last decree.</p>
+        <div class="row"><button class="btn" id="foldb">Fold the scroll</button></div>
+      </div></div></div>
+      <div class="pop"><div class="leaf"><div class="paper well" style="margin:0">
+        <h4>Everyone can change <em>and heal</em></h4>
+        <p style="margin:0 0 10px">Legislators were added and removed by decree. And old decrees were passed again, so that a mistake in any scroll would heal.</p>
+        <p style="margin:0;font-size:.95rem;color:#6b5a48">The machinery is the same. It is the same ballot, applied to the membership list, and to the scrolls themselves.</p>
+      </div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ relevance -->
+<section class="spread dark" id="why" data-name="Back to machines">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-9-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Back to machines</div>
+      <h2>The island was a replicated service</h2>
+      <p class="lede">Every server keeps the same log of commands, and the log is what the Parliament passes. Hover to see who is who.</p>
+    </div>
+    <div class="map" id="map">
+      <div class="hd" style="text-align:right;padding-right:6px">On the island</div><div></div><div class="hd">In the machine room</div>
+    </div>
+    <div class="meander" style="margin:3rem auto"></div>
+    <div class="end">
+      <p class="big">The protocol never lets two logs disagree, however machines come and go.</p>
+      <p class="lede" style="margin:0 auto">It makes progress whenever a majority is present and steady for long enough. It never gives up safety, and asks for progress only once things settle.</p>
+      <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">Its ballot protocol lives on as Paxos, the foundation of modern fault-tolerant distributed computing.</p>
+      <div class="links">
+        <a href="../../books/the-part-time-parliament/index.html">Read the whole paper →</a>
+        <a href="../../places/the-chamber/index.html">The Chamber, in detail</a>
+        <a href="../../papers/index.html">All the papers</a>
+      </div>
+    </div>
+  </div>
+</section>
+<footer>Distributed Algorithms of Ancient Greece · Pop-up edition of “The Part-Time Parliament”, Leslie Lamport, ACM TOCS 16(2), 1998.</footer>
+
+<script>
+"use strict";
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const NS="http://www.w3.org/2000/svg";
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function rnd(n){return Math.floor(Math.random()*n)}
+
+/* ===== pop-ups unfold when they enter view ===== */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
+$$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
+
+/* ===== scroll: progress bar, section name, parallax ===== */
+const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
+const dep=$$("[data-depth]"), par=$$("[data-parallax]"), isleimg=$("#isleimg");
+let tick=false;
+function onscroll(){
+  if(tick)return; tick=true;
+  requestAnimationFrame(()=>{
+    tick=false;
+    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
+    prog.style.width=(h>0?y/h*100:0)+"%";
+    const mid=y+innerHeight*.4; let cur=secs[0];
+    for(const s of secs){ if(s.offsetTop<=mid) cur=s; }
+    now.textContent=cur.dataset.name||"";
+    if(reduce)return;
+    for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
+    for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
+    if(isleimg){const r=isleimg.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; isleimg.style.transform=`scale(${(1.16-Math.abs(c)*.1).toFixed(3)}) translateY(${(c*-3).toFixed(2)}%)`}
+  });
+}
+addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
+
+/* ===== machines: three replicas, one log ===== */
+(function(){
+  const cmds=["set colour = blue","add 40 to total","delete item 9","set colour = red","add 5 to total","delete item 2"];
+  const reps=[0,1,2].map(i=>({i,log:[],down:false})); const box=$("#reps");
+  reps.forEach(r=>{r.el=document.createElement("div");r.el.className="rep";r.el.innerHTML=`<h5><span>MACHINE ${"ABC"[r.i]}</span><span class="st">up</span></h5><div class="l"></div>`;box.appendChild(r.el)});
+  let n=0,started=false,timer;
+  function sync(r){r.el.classList.toggle("down",r.down);$(".st",r.el).textContent=r.down?"stopped":"up"}
+  function add(r,k){const d=document.createElement("div");d.className="e";d.textContent=`${k+1} ▸ ${cmds[k%cmds.length]}`;$(".l",r.el).appendChild(d);r.log.push(k)}
+  function step(){
+    const k=n++; if(k>=cmds.length*2){clearInterval(timer);return}
+    reps.forEach(r=>{if(!r.down)add(r,k)});
+  }
+  function start(){ if(started)return; started=true; step(); timer=setInterval(step,1300); }
+  new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){start();o.disconnect()}},{threshold:.4}).observe($("#logs"));
+  const note=$("#lognote"),cr=$("#crash"),rv=$("#revive");
+  cr.onclick=()=>{ const up=reps.filter(r=>!r.down); if(up.length<2)return; const r=up[rnd(up.length)]; r.down=true; sync(r); cr.disabled=true; rv.disabled=false; note.textContent=`Machine ${"ABC"[r.i]} stopped. The others carry on: a majority is still up, so new commands still get through.`; if(!timer||n>=cmds.length*2){n=Math.min(n,cmds.length*2-2);timer=setInterval(step,1300)} };
+  rv.onclick=()=>{ const r=reps.find(r=>r.down); r.down=false; sync(r); rv.disabled=true; cr.disabled=false;
+    const have=Math.max(...reps.map(x=>x.log.length)); let k=r.log.length; const t=setInterval(()=>{ if(k>=have){clearInterval(t);return} add(r,k++) },260);
+    note.textContent=`Machine ${"ABC"[r.i]} is back, and catches up on everything it missed, in order.`; };
+})();
+
+/* ===== island hotspots ===== */
+(function(){
+  const P={
+    chamber:["The western arm: the Chamber","A round hall of hard stone under one conical roof. This is where the Parliament of Paxos sits, and where legislators come and go."],
+    schedia:["The eastern arm: Schedia","A city across the bay, with laws of its own. Its story belongs to another paper."],
+    coast:["The southern coast","Below the fork the stem widens into the island's southern coast. One road runs up the stem and out along both arms."]
+  };
+  const box=$("#place");
+  function show(k){
+    box.innerHTML=`<h3>${P[k][0]}</h3><p style="margin:0">${P[k][1]}</p>`;
+    $$("#isle .hot").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p===k));
+    $$("#chips .chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p===k));
+  }
+  $$("#isle .hot,#chips .chip").forEach(b=>b.onclick=()=>show(b.dataset.p)); show("chamber");
+})();
+
+/* ===== consistency: two banquets ===== */
+(function(){
+  const names=["Legislator 1","Legislator 2","Legislator 3","Legislator 4"];
+  const row=$("#scrs"); const sc=names.map((n,i)=>{const d=document.createElement("div");d.className="scr";d.innerHTML=`<h5>SCROLL ${i+1}</h5><div class="c"></div>`;row.appendChild(d);return d});
+  const say=$("#scrsay"),b1=$("#bq1"),b2=$("#bq2"),br=$("#bqr");
+  function put(i,t){$(".c",sc[i]).innerHTML=`<div class="d">37: ${t}</div>`}
+  b1.onclick=()=>{put(0,"Paint nothing on temple walls");put(1,"Paint nothing on temple walls");say.innerHTML="Scrolls 1 and 2 record decree 37. The group wanders off to a banquet. Scrolls 3 and 4 know nothing yet, and that is allowed.";b1.disabled=true;b2.disabled=false};
+  b2.onclick=()=>{put(2,"Art is free on every wall");put(3,"Art is free on every wall");sc[0].classList.add("clash");sc[1].classList.add("clash");sc[2].classList.add("clash");sc[3].classList.add("clash");say.innerHTML="<span class='bad'>Two scrolls, two different decrees numbered 37.</span> Consistency is lost for good, because the ink is indelible. The protocol must stop this from ever happening.";b2.disabled=true;br.hidden=false};
+  br.onclick=()=>{sc.forEach(s=>{s.classList.remove("clash");$(".c",s).innerHTML=""});say.textContent="A scroll may lack an entry it hasn't heard of. It may never hold a different one.";b1.disabled=false;br.hidden=true};
+})();
+
+/* ===== messenger lottery ===== */
+(function(){
+  const m1=$("#m1"),m2=$("#m2"),voy=$("#voy"),btn=$("#send"),say=$("#sendsay");
+  const T={ok:0,two:0,lost:0};
+  function pt(u){ // quadratic-ish arc between A and B
+    const x=70+(630-70)*u, y=82-4*62*u*(1-u)*0.8*1.0; return [x,y]; }
+  function fly(g,from,to,ms,fadeAt){
+    return new Promise(res=>{const t0=performance.now(); g.setAttribute("opacity",1);
+      (function f(t){const u=Math.min(1,(t-t0)/ms); const e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2; const [x,y]=pt(from+(to-from)*e); g.setAttribute("transform",`translate(${x} ${y})`);
+        if(u<1)requestAnimationFrame(f); else res()})(t0)});
+  }
+  btn.onclick=async()=>{
+    btn.disabled=true; voy.setAttribute("opacity",0); m1.setAttribute("opacity",0); m2.setAttribute("opacity",0);
+    const r=Math.random(); const dur=reduce?1:1500;
+    if(r<.4){ await fly(m1,0,1,dur); m1.setAttribute("opacity",0); T.ok++; say.innerHTML="<b>Delivered, once.</b> The easy case."; }
+    else if(r<.7){ await fly(m1,0,1,dur); m1.setAttribute("opacity",0); say.innerHTML="Delivered… "; await sleep(reduce?1:500); await fly(m2,0,1,dur); m2.setAttribute("opacity",0); T.two++; say.innerHTML="<b>Delivered twice.</b> The messenger forgot they'd already been."; }
+    else { await fly(m1,0,.45,dur*.6); voy.setAttribute("opacity",1); await sleep(reduce?1:700); m1.setAttribute("opacity",0); T.lost++; say.innerHTML="<b>Never arrived.</b> The messenger set off on a long voyage. Nobody can tell this from “very slow”."; }
+    $("#t-ok").textContent=T.ok;$("#t-two").textContent=T.two;$("#t-lost").textContent=T.lost; btn.disabled=false;
+  };
+})();
+
+/* ===== majorities ===== */
+(function(){
+  const N=7,cx=220,cy=205,R=135; const cols=["#e0b84a","#5b9be0","#e2564e","#9cb648","#b58be0","#e89a4d","#5fbfae"]; const gl=["Α","Β","Γ","Δ","Ε","Ζ","Η"];
+  const g=$("#seats"); const seats=[];
+  for(let i=0;i<N;i++){
+    const a=-Math.PI/2+i*2*Math.PI/N+.2, x=cx+R*Math.cos(a), y=cy+R*Math.sin(a);
+    const s=el("g",{class:"seat",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},g);
+    el("circle",{class:"glow",r:33},s); el("circle",{class:"m ringA",r:30},s); el("circle",{class:"m ringB",r:30},s);
+    el("circle",{class:"b",r:24,fill:cols[i]},s); const t=el("text",{},s); t.textContent=gl[i];
+    el("rect",{class:"ink",x:-9,y:30,width:18,height:22,rx:3},s);
+    s.dataset.i=i; seats.push({el:s,in:true,A:false,B:false,knows:false});
+  }
+  const say=$("#majsay"),count=$("#count"),b1=$("#maj1"),b2=$("#maj2");
+  function paint(){
+    seats.forEach(s=>{s.el.classList.toggle("out",!s.in);s.el.classList.toggle("inA",s.A);s.el.classList.toggle("inB",s.B);s.el.classList.toggle("both",s.A&&s.B);s.el.classList.toggle("knows",s.knows)});
+    const n=seats.filter(s=>s.in).length; count.innerHTML=`<b>${n}</b> of 7 in the Chamber · `+(n>=4?"<span class='ok'>a majority</span>":"<span class='bad'>not a majority</span>");
+  }
+  seats.forEach(s=>s.el.addEventListener("click",()=>{s.in=!s.in;paint()}));
+  function pick(pool,k,must){const a=[...pool];for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,k)}
+  let stage=0;
+  b1.onclick=()=>{
+    seats.forEach(s=>{s.A=s.B=s.knows=false;s.in=true});
+    const A=pick(seats,4); A.forEach(s=>{s.A=true;s.knows=true});
+    seats.forEach(s=>{if(!s.A)s.in=true});
+    say.innerHTML="Four legislators (blue rings) pass a decree and ink it into their scrolls.";
+    b1.disabled=true;b2.disabled=false;paint();
+  };
+  b2.onclick=()=>{
+    seats.forEach(s=>{s.in=true});
+    const A=seats.filter(s=>s.A); A.forEach(s=>s.in=false); paint();
+    setTimeout(()=>{
+      const B=pick(seats,4); seats.forEach(s=>{s.B=false;s.in=false}); B.forEach(s=>{s.B=true;s.in=true});
+      const both=seats.filter(s=>s.A&&s.B).length;
+      say.innerHTML=`The first four wander off. A different four (red rings) gather. <b>${both} of them ${both>1?"were":"was"} in the first majority</b> (gold), so ${both>1?"they remember":"they remember"} the decree. It could not have been otherwise.`;
+      seats.forEach(s=>s.in=true); paint();
+      b1.disabled=false;b2.disabled=true; b1.textContent="Try another pair";
+    },reduce?0:900);
+  };
+  paint(); say.textContent="Try it: send some legislators out the door first.";
+})();
+
+/* ===== manuscript ===== */
+(function(){
+  const P=["Α","Β","Γ","Δ","Ε"];
+  const B=[{n:2,d:"α",q:["Α","Β","Γ","Δ"],v:["Δ"]},{n:5,d:"β",q:["Α","Β","Γ","Ε"],v:["Γ"]},{n:14,d:"α",q:["Β","Δ","Ε"],v:["Β","Ε"]},{n:27,d:"β",q:["Α","Γ","Δ"],v:["Α","Γ","Δ"]},{n:29,d:"β",q:["Β","Γ","Δ"],v:["Β"]}];
+  const body=$("#msrows"),x=$("#msx"); let sel=null;
+  function chips(b,hl){return b.q.map(p=>`<span class="pc ${b.v.includes(p)?"v":""} ${hl&&hl.includes(p)?"hl":""}">${p}</span>`).join("")}
+  function render(){
+    body.innerHTML=B.map(b=>`<tr data-n="${b.n}" class="${sel===b.n?"sel":""}"><td><b>${b.n}</b></td><td><span class="pc dec">${b.d}</span></td><td>${chips(b)}</td></tr>`).join("");
+    $$("tr",body).forEach(tr=>tr.onclick=()=>{sel=+tr.dataset.n;explain()});
+  }
+  function explain(){
+    const b=B.find(b=>b.n===sel);
+    const prev=b.q.map(p=>{let best=null;B.forEach(e=>{if(e.n<b.n&&e.v.includes(p)&&(!best||e.n>best.n))best=e});return best?{p,e:best}:null}).filter(Boolean);
+    let h;
+    if(!prev.length) h=`<b>Ballot ${b.n}</b>: nobody in its quorum had voted before, so it was free to carry <i>any</i> decree.`;
+    else{const latest=prev.reduce((a,c)=>c.e.n>a.e.n?c:a);
+      h=`<b>Ballot ${b.n}</b> looks back: `+prev.map(o=>`${o.p} voted in ballot ${o.e.n} (${o.e.d})`).join(", ")+`. The latest is ballot ${latest.e.n}, so ballot ${b.n} <b>must</b> carry <span class="pc dec">${latest.e.d}</span>. `+(latest.e.d===b.d?"<span class='ok'>It does.</span>":"<span class='bad'>It doesn't!</span>");
+      h+=` <i>(${b.q.every(p=>b.v.includes(p))?"Everyone voted: this ballot succeeded.":"Not everyone voted, so this ballot has not succeeded."})</i>`;
+      render(); $$("tr",body).find(tr=>+tr.dataset.n===sel).children[2].innerHTML=chips(b,prev.filter(o=>o.e.n===latest.e.n).map(o=>o.p)); }
+    if(!prev.length) render();
+    $$("tr",body).forEach(tr=>tr.classList.toggle("sel",+tr.dataset.n===sel));
+    x.innerHTML=h;
+  }
+  render();
+})();
+
+/* ===== scrollytelling: one ballot ===== */
+(function(){
+  const svg=$("#balsvg"); const C={A:"#e0b84a",B:"#5b9be0",G:"#e2564e",D:"#9cb648",E:"#b58be0"};
+  const pos={A:[120,260],B:[560,95],G:[560,215],D:[560,335],E:[560,450]}; const lab={A:"Α",B:"Β",G:"Γ",D:"Δ",E:"Ε"};
+  const q=["B","G","D"];
+  // quorum bracket
+  const ring=el("rect",{x:455,y:55,width:215,height:330,rx:26,fill:"none",stroke:"#136f9e","stroke-width":3,"stroke-dasharray":"8 7",class:"fade"},svg);
+  const ringT=el("text",{x:562,y:40,class:"lab"},svg); ringT.textContent="the quorum"; ringT.setAttribute("class","lab fade");
+  const nodes={}; for(const k in pos){const g=el("g",{class:"pr",transform:`translate(${pos[k][0]} ${pos[k][1]})`},svg); el("circle",{class:"body",r:32,fill:C[k],stroke:"#1c1512"},g); const t=el("text",{},g);t.textContent=lab[k]; nodes[k]=g}
+  const iniT=el("text",{x:120,y:312,class:"lab"},svg); iniT.textContent="initiator";
+  const balT=el("text",{x:120,y:196,class:"lab fade","font-size":26,style:"font-size:26px;fill:#1c1512"},svg); balT.textContent="ballot 27";
+  const eT=el("text",{x:620,y:450,class:"lab"},svg); eT.textContent="not asked"; eT.setAttribute("x",640); eT.setAttribute("style","text-anchor:start");
+  // reply boxes beside A
+  const reps=[["B","B: no vote yet",0],["G","Γ: ballot 5, decree β",1],["D","Δ: ballot 2, decree α",2]]; const repg={};
+  reps.forEach(([k,t,i])=>{const g=el("g",{class:"reply fade",transform:`translate(215 ${150+i*44})`},svg); el("rect",{width:195,height:34},g); const tx=el("text",{x:12,y:18},g);tx.textContent=t; repg[k]=g});
+  // forced decree
+  const forced=el("g",{class:"fade",transform:"translate(55 345)"},svg);
+  el("rect",{width:130,height:60,rx:10,fill:"#e3ecc4",stroke:"#5f6e28","stroke-width":3},forced);
+  const fb=el("text",{x:65,y:30,"text-anchor":"middle","dominant-baseline":"central","font-size":34,fill:"#a9c25a",style:"font-size:34px;fill:#5f6e28"},forced); fb.textContent="β";
+  const ft=el("text",{x:120,y:428,class:"lab",style:"fill:#5f6e28;font-size:14px"},svg); ft.textContent="forced by the latest vote"; ft.setAttribute("class","lab fade"); ft.setAttribute("x",120);
+  // promise tags + vote record per member
+  const tags={},votes={},wrote={};
+  q.forEach(k=>{const [x,y]=pos[k]; const tg=el("g",{class:"tag fade",transform:`translate(${x+82} ${y})`},svg); el("rect",{x:-34,y:-15,width:68,height:30},tg); const tt=el("text",{},tg);tt.textContent="≥ 27"; tags[k]=tg;
+    const v=el("g",{class:"tok fade",transform:`translate(${x} ${y-44})`},svg); el("circle",{r:15,fill:"#a9c25a",stroke:"#1c1512","stroke-width":2},v); const vt=el("text",{style:"fill:#1c1512;font-size:17px;text-anchor:middle;dominant-baseline:central;font-weight:700"},v);vt.textContent="β"; votes[k]=v;
+    const w=el("text",{x:x+4,y:y+58,class:"lab fade",style:"fill:#5f6e28;font-size:14px"},svg); w.textContent="27: β"; wrote[k]=w;});
+  const Ewrote=el("text",{x:564,y:508,class:"lab fade",style:"fill:#5f6e28;font-size:14px"},svg); Ewrote.textContent="27: β";
+  const Awrote=el("g",{class:"fade",transform:"translate(40 100)"},svg); el("rect",{width:76,height:56,rx:6,fill:"#f6e3a8",stroke:"#1c1512","stroke-width":2},Awrote); const aw=el("text",{x:38,y:30,"text-anchor":"middle","dominant-baseline":"central",style:"fill:#5f6e28;font-size:17px"},Awrote);aw.textContent="27: β";
+  // message tokens
+  function mk(color,glyph){const g=el("g",{class:"tok",opacity:0},svg); el("circle",{r:14,fill:color,stroke:"#1c1512","stroke-width":2},g); const t=el("text",{style:"fill:#1c1512;font-size:16px;text-anchor:middle;dominant-baseline:central;font-weight:700"},g);t.textContent=glyph; return g}
+  const msgs={}; ["B","G","D","E"].forEach(k=>msgs[k]=mk("#fffaf0","?")); const asks=q.map(k=>msgs[k]);
+  const mkq={}; q.forEach(k=>mkq[k]=mk("#fffaf0","?"));
+  const mkr={}; q.forEach(k=>mkr[k]=mk("#136f9e","·"));
+  const mkp={}; q.forEach(k=>mkp[k]=mk("#a9c25a","β"));
+  const mkv={}; q.forEach(k=>mkv[k]=mk("#a9c25a","✓"));
+  const mkt={}; ["B","G","D","E"].forEach(k=>mkt[k]=mk("#a9c25a","β"));
+  function at(g,k,u,off=[0,0]){ // place token on the line A->k at fraction u
+    const a=pos.A,b=pos[k]; const x=a[0]+(b[0]-a[0])*u+off[0], y=a[1]+(b[1]-a[1])*u+off[1];
+    g.setAttribute("transform",`translate(${x} ${y})`);}
+  function show(g,on){g.setAttribute("opacity",on?1:0)}
+  Object.values({...mkq,...mkr,...mkp,...mkv,...mkt}).forEach(g=>g.setAttribute("transform","translate(120 260)"));
+  function set(el,on){el.classList.toggle("on",!!on)}
+  function render(s){
+    set(ring,s>=0);set(ringT,s>=0);set(balT,s>=0);
+    ["E"].forEach(k=>nodes[k].classList.toggle("dim",s>=0)); eT.style.opacity=s>=0?1:0;
+    // question out (1), reply back (2)
+    q.forEach((k,i)=>{
+      show(mkq[k],s>=1&&s<2); at(mkq[k],k,s>=1?1:0,[-48,0]);
+      show(mkr[k],s>=2&&s<3); at(mkr[k],k,s>=2?0:1,[48,0]);
+      set(tags[k],s>=2); set(repg[k],s>=2);
+      show(mkp[k],s>=4&&s<5); at(mkp[k],k,s>=4?1:0,[-48,0]);
+      set(votes[k],s>=5); set(wrote[k],s>=5);
+      show(mkv[k],s>=5&&s<6); at(mkv[k],k,s>=5?0:1,[48,0]);
+    });
+    repg.G.classList.toggle("hi",s>=3);
+    set(forced,s>=3);set(ft,s>=3);
+    set(Awrote,s>=6);
+    ["B","G","D","E"].forEach(k=>{show(mkt[k],s>=6&&s<7)});
+    ["B","G","D","E"].forEach(k=>at(mkt[k],k,s>=6?1:0,[-48,0]));
+    set(Ewrote,s>=6);
+  }
+  render(0);
+  // the real driver: which step is centred
+  const steps=$$("#bal .step");
+  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
+  steps.forEach(s=>so.observe(s));
+})();
+
+/* ===== duel of presidents ===== */
+(function(){
+  const svg=$("#duelsvg"); const log=$("#dlog"); const pass=$("#dpassed"),hb=$("#dballot"),mode=$("#duelmode");
+  const C={A:"#e0b84a",E:"#b58be0",B:"#5b9be0",G:"#e2564e",D:"#9cb648"};
+  const vp={B:[330,50],G:[330,135],D:[330,220]}, pp={A:[60,70],E:[60,200]};
+  const pr={}; function node(k,x,y,t){const g=el("g",{transform:`translate(${x} ${y})`},svg); el("circle",{r:26,fill:C[k],stroke:"#1c1512","stroke-width":4},g); const tx=el("text",{"text-anchor":"middle","dominant-baseline":"central","font-weight":700,"font-family":"Optima,sans-serif","font-size":18},g);tx.textContent=t; return g}
+  const nodeG={}; nodeG.A=node("A",...pp.A,"Α"); nodeG.E=node("E",...pp.E,"Ε");
+  const who={A:"Α",E:"Ε"}; const pn=el("text",{x:60,y:20,"text-anchor":"middle","font-size":13,"font-style":"italic",fill:"#6b5a48"},svg);pn.textContent="would-be presidents";
+  const meters={}; ["B","G","D"].forEach(k=>{node(k,...vp[k],{B:"Β",G:"Γ",D:"Δ"}[k]); const t=el("text",{x:vp[k][0]+36,y:vp[k][1],"dominant-baseline":"central","font-size":15,fill:"#1c1512","font-family":"Optima,sans-serif"},svg);t.textContent="promised ≥ 0"; meters[k]=t});
+  const lines=[]; ["A","E"].forEach(p=>["B","G","D"].forEach(k=>{const l=el("line",{x1:pp[p][0]+26,y1:pp[p][1],x2:vp[k][0]-26,y2:vp[k][1],stroke:C[p],"stroke-width":2,opacity:.28},svg);lines.push({p,l})}));
+  let ballot=0,passed=0,timer=null,pres=null,turn="A",phase=0,pending={A:null,E:null},run=false;
+  function say(h){const d=document.createElement("div");d.innerHTML=h;log.prepend(d);while(log.children.length>40)log.lastChild.remove()}
+  function flash(p,on){lines.forEach(o=>{if(o.p===p)o.l.setAttribute("opacity",on?.9:.28)})}
+  function setMeters(n){["B","G","D"].forEach(k=>meters[k].textContent="promised ≥ "+n)}
+  function tickF(){
+    const p=pres||turn; const other=p==="A"?"E":"A"; const nm=who[p];
+    if(!pres){ // duel: alternate starting a higher ballot, and every pending vote gets refused
+      ballot++; setMeters(ballot); hb.textContent=ballot; flash(p,true); setTimeout(()=>flash(p,false),500);
+      say(`<b>${nm}</b> starts ballot ${ballot}: everyone promises nothing lower.`);
+      if(pending[other]!==null) say(`<span class="bad">…${who[other]}'s ballot ${pending[other]} is refused: they already promised ${ballot}.</span>`);
+      pending[p]=ballot; pending[other]=null; turn=other;
+    } else { // one president
+      if(phase===0){ ballot++; setMeters(ballot); hb.textContent=ballot; flash(p,true); say(`<b>${nm}</b> starts ballot ${ballot}. Nobody else is starting any.`); phase=1; }
+      else if(phase===1){ say(`The quorum votes in ballot ${ballot}.`); phase=2; }
+      else { passed++; pass.textContent=passed; flash(p,false); say(`<span class="ok">Ballot ${ballot} succeeded: decree ${passed} is passed.</span>`); phase=0; }
+    }
+  }
+  function go(){ if(timer)return; timer=setInterval(tickF,reduce?500:950); }
+  function stop(){clearInterval(timer);timer=null}
+  $("#drun").onclick=()=>{ pres=null; mode.textContent="two priests each sure they are in charge"; go(); $("#drun").disabled=true; };
+  $("#dpres").onclick=()=>{ pres="A"; phase=0; pending={A:null,E:null}; nodeG.E.setAttribute("opacity",.35); mode.textContent="Α is president, Ε waits"; say("<i>Α is appointed president. Ε no longer starts ballots.</i>"); go(); $("#drun").disabled=false; };
+  $("#dreset").onclick=()=>{stop();ballot=0;passed=0;pres=null;phase=0;pending={A:null,E:null};turn="A";hb.textContent=0;pass.textContent=0;setMeters(0);log.innerHTML="";nodeG.E.setAttribute("opacity",1);mode.textContent="no one is in charge";$("#drun").disabled=false};
+  // pause when off-screen
+  new IntersectionObserver(es=>{ if(!es[0].isIntersecting) stop(); else if(pres||!$("#drun").disabled) go(); },{threshold:.1}).observe($("#duel"));
+})();
+
+/* ===== parliament: the president's scroll ===== */
+(function(){
+  const slots=$("#slots"); const say=$("#parsay"),st=$("#parstate");
+  const b1=$("#par1"),b2=$("#par2"),b3=$("#par3"),br=$("#parr");
+  const base=[[122,"Tax on olives"],[123,"Lamps burn olive oil"],[124,"Roads kept by the town"],[125,null],[126,"Port dues set"],[127,null],[128,null],[129,null],[130,null]];
+  function build(){slots.innerHTML=base.map(([n,t])=>`<div class="slot ${t&&n<125?"has":""}" id="s${n}"><b>${n}</b>${t&&n<125?t:""}</div>`).join("")}
+  function reset(){build();say.textContent="Decrees 122 to 124 are known to everyone. Press the first button.";st.textContent="newly appointed";b1.disabled=false;b2.disabled=b3.disabled=true;br.hidden=true}
+  b1.onclick=()=>{
+    $("#s126").classList.add("has");$("#s126").innerHTML="<b>126</b>Port dues set";
+    $("#s125").classList.add("gap");$("#s125").innerHTML="<b>125</b>? nobody knows";
+    say.innerHTML="Replies are in. One legislator has voted for <b>126</b>. Nobody has any vote at all for <b class='bad'>125</b>. A hole in the law.";
+    st.textContent="holding the replies";b1.disabled=true;b2.disabled=false};
+  b2.onclick=()=>{
+    const s=$("#s125");s.classList.remove("gap");s.classList.add("fill","new");s.innerHTML="<b>125</b>The ides of February is national olive day";
+    say.innerHTML="The president fills the gap with a harmless decree: <i>the ides of February is national olive day.</i> The hole is closed, and nothing that mattered is lost.";
+    st.textContent="gap filled";b2.disabled=true;b3.disabled=false};
+  b3.onclick=async()=>{
+    b3.disabled=true;
+    for(const [n,t] of [[127,"Lamps burn only olive oil"],[128,"Market opens at dawn"]]){
+      const s=$("#s"+n);s.classList.add("has","new");s.innerHTML=`<b>${n}</b>${t}`; await sleep(reduce?0:650)}
+    say.innerHTML="Only now does the president pass new decrees, in order after everything already in the book. Each is a plain three-step ballot.";
+    st.textContent="governing";br.hidden=false};
+  br.onclick=reset; reset();
+})();
+
+/* ===== fold the scroll ===== */
+(function(){
+  const f=$("#fold"); for(let i=0;i<30;i++){const e=document.createElement("div");e.className="e";f.insertBefore(e,f.lastElementChild)}
+  let on=false; const b=$("#foldb");
+  b.onclick=()=>{on=!on; const es=$$(".e",f); es.forEach((e,i)=>setTimeout(()=>e.classList.toggle("gone",on),reduce?0:i*20)); f.classList.toggle("folded",on); b.textContent=on?"Unfold it again":"Fold the scroll"};
+})();
+
+/* ===== relevance map ===== */
+(function(){
+  const pairs=[["A legislator","A server"],["Leaving the Chamber","A crash or a partition"],["A messenger","A network message"],["A scroll of decrees","The log of commands"],["A majority in the Chamber","A quorum of servers"],["The president","The leader"],["A ballot number","A proposal or term number"],["A decree","A command in the log"]];
+  const m=$("#map"); pairs.forEach(([a,b])=>{
+    const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
+    const grp=[l,mid,r]; grp.forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)});
+})();
+
+/* ===== phone layout fix for two-column spreads ===== */
+(function(){
+  function f(){const w=innerWidth<860; ["#majcols","#progrow","#parcols","#growcols"].forEach(s=>{const e=$(s); if(e)e.style.gridTemplateColumns=w?"1fr":(s==="#parcols"?"minmax(0,5fr) minmax(0,6fr)":"minmax(0,1fr) minmax(0,1fr)")})}
+  addEventListener("resize",f); f();
+})();
+})();
+</script>
+</body>
+</html>
