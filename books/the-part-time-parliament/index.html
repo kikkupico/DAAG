@@ -275,6 +275,24 @@ svg text{font-family:var(--serif)}
 .links a:hover{background:var(--gold)}
 footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;font-family:var(--sans);background:#d8cba6}
 
+/* ---------- proofs, in the paper's own terms ---------- */
+details.proof{max-width:760px;margin:1.8rem 0 0;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);padding:0 clamp(14px,3vw,22px);font-size:.95rem}
+details.proof>summary{cursor:pointer;padding:12px 0;font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--aegean-d)}
+details.proof>summary:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
+details.proof[open]{padding-bottom:14px}
+details.proof details.proof{border-width:3px;box-shadow:none;background:#fff;margin:1rem 0;max-width:none}
+details.proof .given{padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean);margin:0 0 .8rem}
+details.proof h3,details.proof h4{font-size:1.02rem;margin:1.4rem 0 .5rem}
+details.proof .hlink{color:inherit;text-decoration:none}
+details.proof .fnote{font-size:.84rem;color:#6b5a48}
+ol.proofsteps{padding-left:1.4em;margin:.4rem 0 0}
+ol.proofsteps li{margin:.55em 0}
+.qed{float:right;font-family:var(--sans);letter-spacing:.15em;color:#5f6e28}
+.mathblock{margin:.8rem 0;padding:8px 12px;overflow-x:auto;text-align:center;font-style:italic;background:#fff;border:2px solid #1c151233}
+.slab{margin:1rem 0;padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean)}
+.slab-head{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
+.stmt{font-style:italic}
+
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .pop > .leaf{transition:opacity .3s;transform:none!important}
@@ -469,6 +487,123 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
       </table>
       <div class="explain" id="msx">Try ballot 27.</div>
     </div></div></div>
+    <details class="proof">
+      <summary>The three rules, formally · and the proofs that they give consistency</summary>
+      <p class="given">Each ballot <var>B</var> has a number <var>B</var><sub>bal</sub>, a decree <var>B</var><sub>dec</sub>, a quorum <var>B</var><sub>qrm</sub> and a set of voters <var>B</var><sub>vot</sub>, and ℬ is a set of ballots. The three rules are the conditions <var>B</var>1(ℬ), <var>B</var>2(ℬ) and <var>B</var>3(ℬ). A ballot is successful when <var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub>.</p>
+  <div class="prose">
+    <p>To state <var>B</var>1(<var>ℬ</var>)–<var>B</var>3(<var>ℬ</var>) formally requires some more notation. A <em>vote</em> <var>v</var> was defined to be a quantity consisting of three components: a priest <var>v</var><sub>pst</sub>, a ballot number <var>v</var><sub>bal</sub>, and a decree <var>v</var><sub>dec</sub>. It represents a vote cast by priest <var>v</var><sub>pst</sub> for decree <var>v</var><sub>dec</sub> in ballot number <var>v</var><sub>bal</sub>. The Paxons also defined <em>null</em> votes to be votes <var>v</var> with <var>v</var><sub>bal</sub>&nbsp;=&nbsp;−∞ and <var>v</var><sub>dec</sub>&nbsp;=&nbsp;<span style="font-variant:small-caps">blank</span>, where −∞&nbsp;&lt;&nbsp;<var>b</var>&nbsp;&lt;&nbsp;∞ for any ballot number <var>b</var>, and <span style="font-variant:small-caps">blank</span> is not a decree. For any priest <var>p</var>, they defined <var>null</var><sub><var>p</var></sub> to be the unique null vote <var>v</var> with <var>v</var><sub>pst</sub>&nbsp;=&nbsp;<var>p</var>.</p>
+    <p>Paxon mathematicians defined a total ordering on the set of all votes, but part of the manuscript containing the definition has been lost. The remaining fragment indicates that, for any votes <var>v</var> and <var>v′</var>, if <var>v</var><sub>bal</sub>&nbsp;&lt;&nbsp;<var>v′</var><sub>bal</sub> then <var>v</var>&nbsp;&lt;&nbsp;<var>v′</var>. It is not known how the relative order of <var>v</var> and <var>v′</var> was defined if <var>v</var><sub>bal</sub>&nbsp;=&nbsp;<var>v′</var><sub>bal</sub>.</p>
+    <p>For any set <var>ℬ</var> of ballots, the set <var>Votes</var>(<var>ℬ</var>) of votes in <var>ℬ</var> was defined to consist of all votes <var>v</var> such that <var>v</var><sub>pst</sub>&nbsp;∈&nbsp;<var>B</var><sub>vot</sub>, <var>v</var><sub>bal</sub>&nbsp;=&nbsp;<var>B</var><sub>bal</sub>, and <var>v</var><sub>dec</sub>&nbsp;=&nbsp;<var>B</var><sub>dec</sub> for some <var>B</var>&nbsp;∈&nbsp;<var>ℬ</var>. If <var>p</var> is a priest and <var>b</var> is either a ballot number or ±∞, then
+  <var>MaxVote</var>(<var>b</var>,&nbsp;<var>p</var>,&nbsp;<var>ℬ</var>)
+    was defined to be the largest vote <var>v</var> in <var>Votes</var>(<var>ℬ</var>) cast by <var>p</var> with <var>v</var><sub>bal</sub>&nbsp;&lt;&nbsp;<var>b</var>, or to be <var>null</var><sub><var>p</var></sub> if there was no such vote. Since <var>null</var><sub><var>p</var></sub> is smaller than any real vote cast by <var>p</var>, this means that <var>MaxVote</var>(<var>b</var>,&nbsp;<var>p</var>,&nbsp;<var>ℬ</var>) is the largest vote in the set</p>
+  </div>
+  <div class="mathblock">{<var>v</var> ∈ <var>Votes</var>(<var>ℬ</var>) :
+    (<var>v</var><sub>pst</sub> = <var>p</var>) ∧ (<var>v</var><sub>bal</sub> &lt; <var>b</var>)}
+    ∪ {<var>null</var><sub><var>p</var></sub>}</div>
+  <div class="prose">
+    <p>For any nonempty set <var>Q</var> of priests, <var>MaxVote</var>(<var>b</var>,&nbsp;<var>Q</var>,&nbsp;<var>ℬ</var>) was defined to equal the maximum of all votes <var>MaxVote</var>(<var>b</var>,&nbsp;<var>p</var>,&nbsp;<var>ℬ</var>) with <var>p</var> in <var>Q</var>.<br>Conditions <var>B</var>1(<var>ℬ</var>)–<var>B</var>3(<var>ℬ</var>) are stated formally as follows.<sup>8</sup></p>
+  </div>
+  <div class="slab">
+    <div class="mathblock">
+      <var>B</var>1(<var>ℬ</var>) ≜ ∀<var>B</var>, <var>B′</var> ∈ <var>ℬ</var> :
+      (<var>B</var> ≠ <var>B′</var>) ⇒ (<var>B</var><sub>bal</sub> ≠ <var>B′</var><sub>bal</sub>)
+    </div>
+    <div class="mathblock">
+      <var>B</var>2(<var>ℬ</var>) ≜ ∀<var>B</var>, <var>B′</var> ∈ <var>ℬ</var> :
+      <var>B</var><sub>qrm</sub> ∩ <var>B′</var><sub>qrm</sub> ≠ ∅
+    </div>
+    <div class="mathblock">
+      <var>B</var>3(<var>ℬ</var>) ≜ ∀<var>B</var> ∈ <var>ℬ</var> :
+      (<var>MaxVote</var>(<var>B</var><sub>bal</sub>, <var>B</var><sub>qrm</sub>, <var>ℬ</var>)<sub>bal</sub> ≠ −∞) ⇒
+      (<var>B</var><sub>dec</sub> = <var>MaxVote</var>(<var>B</var><sub>bal</sub>, <var>B</var><sub>qrm</sub>, <var>ℬ</var>)<sub>dec</sub>)
+    </div>
+    <p>Although the definition of <var>MaxVote</var> depends upon the ordering of votes, <var>B</var>1(<var>ℬ</var>) implies that <var>MaxVote</var>(<var>b</var>,&nbsp;<var>Q</var>,&nbsp;<var>ℬ</var>)<sub>dec</sub> is independent of how votes with equal ballot numbers were ordered.</p>
+  </div>
+  <p class="fnote"><b>8.</b> I use the Paxon mathematical symbol ≜, which meant <i>equals by
+  definition</i>.</p>
+
+  <div class="prose">
+    <p>To show that these conditions imply consistency, the Paxons first showed that <var>B</var>1(<var>ℬ</var>)–<var>B</var>3(<var>ℬ</var>) imply that, if a ballot <var>B</var> in <var>ℬ</var> is successful, then any later ballot in <var>ℬ</var> is for the same decree as <var>B</var>.</p>
+  </div>
+  <div class="slab">
+    <div class="slab-head">Lemma</div>
+    <p class="stmt">If <var>B</var>1(<var>ℬ</var>), <var>B</var>2(<var>ℬ</var>), and
+    <var>B</var>3(<var>ℬ</var>) hold, then</p>
+    <div class="mathblock">((<var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub>) ∧
+      (<var>B′</var><sub>bal</sub> &gt; <var>B</var><sub>bal</sub>)) ⇒
+      (<var>B′</var><sub>dec</sub> = <var>B</var><sub>dec</sub>)</div>
+    <p class="stmt">for any <var>B</var>, <var>B′</var> in <var>ℬ</var>.</p>
+  </div>
+  <details class="proof">
+    <summary>Proof of Lemma</summary>
+    <p style="font-size:.92rem">For any ballot <var>B</var> in <var>ℬ</var>, let <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>) be the set of ballots in <var>ℬ</var> later than <var>B</var> for a decree different from <var>B</var>’s:</p>
+    <div class="mathblock"><var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>) ≜ {<var>B′</var> ∈ <var>ℬ</var> : (<var>B′</var><sub>bal</sub> &gt; <var>B</var><sub>bal</sub>) ∧ (<var>B′</var><sub>dec</sub> ≠ <var>B</var><sub>dec</sub>)}</div>
+    <p style="font-size:.92rem">To prove the lemma, it suffices to show that if <var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub> then <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>) is empty. The Paxons gave a proof by contradiction. They assumed the existence of a <var>B</var> with <var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub> and <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>) ≠ ∅, and obtained a contradiction as follows.<sup>9</sup></p>
+    <ol class="proofsteps">
+      <li>Choose <var>C</var> ∈ <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>) such that <var>C</var><sub>bal</sub> = min{<var>B′</var><sub>bal</sub> : <var>B′</var> ∈ <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>)}.
+        <br><small><i>Proof:</i> <var>C</var> exists because <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>) is nonempty and finite.</small></li>
+      <li><var>C</var><sub>bal</sub> &gt; <var>B</var><sub>bal</sub>
+        <br><small><i>Proof:</i> By 1 and the definition of <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>).</small></li>
+      <li><var>B</var><sub>vot</sub> ∩ <var>C</var><sub>qrm</sub> ≠ ∅
+        <br><small><i>Proof:</i> By <var>B</var>2(<var>ℬ</var>) and the hypothesis that <var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub>.</small></li>
+      <li><var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>)<sub>bal</sub> ≥ <var>B</var><sub>bal</sub>
+        <br><small><i>Proof:</i> By 2, 3 and the definition of <var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>).</small></li>
+      <li><var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>) ∈ <var>Votes</var>(<var>ℬ</var>)
+        <br><small><i>Proof:</i> By 4 (which implies that <var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>) is not a null vote) and the definition of <var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>).</small></li>
+      <li><var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>)<sub>dec</sub> = <var>C</var><sub>dec</sub>.
+        <br><small><i>Proof:</i> By 5 and <var>B</var>3(<var>ℬ</var>).</small></li>
+      <li><var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>)<sub>dec</sub> ≠ <var>B</var><sub>dec</sub>
+        <br><small><i>Proof:</i> By 6, 1, and the definition of <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>).</small></li>
+      <li><var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>)<sub>bal</sub> &gt; <var>B</var><sub>bal</sub>
+        <br><small><i>Proof:</i> By 4, since 7 and <var>B</var>1(<var>ℬ</var>) imply that <var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>)<sub>bal</sub> ≠ <var>B</var><sub>bal</sub>.</small></li>
+      <li><var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>) ∈ <var>Votes</var>(<var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>))
+        <br><small><i>Proof:</i> By 7, 8, and the definition of <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>).</small></li>
+      <li><var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>)<sub>bal</sub> &lt; <var>C</var><sub>bal</sub>
+        <br><small><i>Proof:</i> By definition of <var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>).</small></li>
+      <li><b>Contradiction</b>
+        <br><small><i>Proof:</i> By 9, 10, and 1.</small></li>
+    </ol>
+    <p style="font-size:.92rem"><span class="qed">End Proof of Lemma</span></p>
+  </details>
+  <p class="fnote"><b>9.</b> Paxon mathematicians always provided careful, structured proofs of
+  important theorems. They were not as sophisticated as modern mathematicians, who can omit many
+  details and write paragraph-style proofs without ever making a mistake.</p>
+
+  <div class="prose">
+    <p>With this lemma, it was easy to show that, if <var>B</var>1–<var>B</var>3 hold, then any two successful ballots are for the same decree.</p>
+  </div>
+  <div class="slab">
+    <div class="slab-head">Theorem 1</div>
+    <p class="stmt">If <var>B</var>1(<var>ℬ</var>), <var>B</var>2(<var>ℬ</var>), and
+    <var>B</var>3(<var>ℬ</var>) hold, then</p>
+    <div class="mathblock">((<var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub>) ∧
+      (<var>B′</var><sub>qrm</sub> ⊆ <var>B′</var><sub>vot</sub>)) ⇒
+      (<var>B′</var><sub>dec</sub> = <var>B</var><sub>dec</sub>)</div>
+    <p class="stmt">for any <var>B</var>, <var>B′</var> in <var>ℬ</var>.</p>
+  </div>
+  <details class="proof">
+    <summary>Proof of Theorem</summary>
+    <p style="font-size:.92rem">If <var>B′</var><sub>bal</sub> = <var>B</var><sub>bal</sub>, then <var>B</var>1(<var>ℬ</var>) implies <var>B′</var> = <var>B</var>. If <var>B′</var><sub>bal</sub> ≠ <var>B</var><sub>bal</sub>, then the theorem follows immediately from the lemma. <span class="qed">End Proof of Theorem</span></p>
+  </details>
+
+  <div class="prose">
+    <p>The Paxons then proved a theorem asserting that if there are enough priests in the Chamber, then it is possible to conduct a successful ballot while preserving <var>B</var>1–<var>B</var>3. Although this does not guarantee progress, it at least shows that a balloting protocol based on <var>B</var>1–<var>B</var>3 will not deadlock.</p>
+  </div>
+  <div class="slab">
+    <div class="slab-head">Theorem 2</div>
+    <p class="stmt">Let <var>b</var> be a ballot number and <var>Q</var> a set of priests such
+    that <var>b</var> &gt; <var>B</var><sub>bal</sub> and
+    <var>Q</var> ∩ <var>B</var><sub>qrm</sub> ≠ ∅ for all <var>B</var> ∈ <var>ℬ</var>. If
+    <var>B</var>1(<var>ℬ</var>), <var>B</var>2(<var>ℬ</var>), and <var>B</var>3(<var>ℬ</var>)
+    hold, then there is a ballot <var>B′</var> with <var>B′</var><sub>bal</sub> = <var>b</var> and
+    <var>B′</var><sub>qrm</sub> = <var>B′</var><sub>vot</sub> = <var>Q</var> such that
+    <var>B</var>1(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}), <var>B</var>2(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}), and <var>B</var>3(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}) hold.</p>
+  </div>
+  <details class="proof">
+    <summary>Proof of Theorem</summary>
+    <p style="font-size:.92rem">Condition <var>B</var>1(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}) follows from <var>B</var>1(<var>ℬ</var>), the choice of <var>B′</var><sub>bal</sub>, and the assumption about <var>b</var>. Condition <var>B</var>2(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}) follows from <var>B</var>2(<var>ℬ</var>), the choice of <var>B′</var><sub>qrm</sub>, and the assumption about <var>Q</var>. If <var>MaxVote</var>(<var>b</var>,&nbsp;<var>Q</var>,&nbsp;<var>ℬ</var>)<sub>bal</sub> = −∞ then let <var>B′</var><sub>dec</sub> be any decree, else let it equal <var>MaxVote</var>(<var>b</var>,&nbsp;<var>Q</var>,&nbsp;<var>ℬ</var>)<sub>dec</sub>. Condition <var>B</var>3(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}) then follows from <var>B</var>3(<var>ℬ</var>). <span class="qed">End Proof of Theorem</span></p>
+  </details>
+    </details>
   </div>
 </section>
 
@@ -494,6 +629,189 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
       <div class="step"><div class="card"><div class="num">6 · Vote</div><h3>Unless they promised something higher</h3><p>Each member votes, writes it in the back of their scroll, and reports back.</p></div></div>
       <div class="step"><div class="card"><div class="num">7 · Done</div><h3>Every member voted: the ballot succeeded</h3><p>A writes the decree in their scroll and tells everyone. Anyone who hears writes it down. A decree, once chosen, is passed forward. That is the whole ballot.</p></div></div>
     </div>
+  </div>
+  <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <details class="proof">
+      <summary>Appendix · proof of consistency of the Synod's protocol</summary>
+      <p class="given">The one-ballot protocol above, stated as the actions a priest may take, with the invariant those actions maintain and its proof.</p>
+  <h3 id="a1-the-basic-protocol" class="sect"><a href="#a1-the-basic-protocol" class="hlink">A1 · The Basic Protocol</a></h3>
+  <div class="prose">
+    <p>The Synod’s basic protocol, described informally above, is stated here using modern algorithmic notation. We begin with the variables that a priest <var>p</var> must maintain. First come the variables that represent information kept in his ledger. (For convenience, a priest's previous vote is kept as its two components <var>prevBal</var>[<var>p</var>] and <var>prevDec</var>[<var>p</var>].)</p>
+  </div>
+  <div class="slab">
+    <div class="slab-head">Ledger variables</div>
+    <p style="font-size:.92rem"><b><var>outcome</var>[<var>p</var>]</b> — The decree written in <var>p</var>’s ledger, or <span style="font-variant:small-caps">blank</span> if there is nothing written there yet.</p>
+    <p style="font-size:.92rem"><b><var>lastTried</var>[<var>p</var>]</b> — The number of the last ballot that <var>p</var> tried to begin, or −∞ if there was none.</p>
+    <p style="font-size:.92rem"><b><var>prevBal</var>[<var>p</var>]</b> — The number of the last ballot in which <var>p</var> voted, or −∞ if he never voted.</p>
+    <p style="font-size:.92rem"><b><var>prevDec</var>[<var>p</var>]</b> — The decree for which <var>p</var> last voted, or <span style="font-variant:small-caps">blank</span> if <var>p</var> never voted.</p>
+    <p style="font-size:.92rem"><b><var>nextBal</var>[<var>p</var>]</b> — The number of the last ballot in which <var>p</var> agreed to participate, or −∞ if he has never agreed to participate in a ballot.</p>
+  </div>
+  <div class="prose">
+    <p>Next come variables representing information that priest <var>p</var> could keep on a slip of
+    paper:</p>
+    </div>
+  <div class="slab">
+    <div class="slab-head">Slip-of-paper variables</div>
+    <p style="font-size:.92rem"><b><var>status</var>[<var>p</var>]</b> — One of the following values:<br>&nbsp;&nbsp;<i>idle</i> — Not conducting or trying to begin a ballot<br>&nbsp;&nbsp;<i>trying</i> — Trying to begin ballot number <var>lastTried</var>[<var>p</var>]<br>&nbsp;&nbsp;<i>polling</i> — Now conducting ballot number <var>lastTried</var>[<var>p</var>]<br>If <var>p</var> has lost his slip of paper, then <var>status</var>[<var>p</var>] is assumed to equal <i>idle</i> and the values of the following four variables are irrelevant.</p>
+    <p style="font-size:.92rem"><b><var>prevVotes</var>[<var>p</var>]</b> — The set of votes received in <em>LastVote</em> messages for the current ballot (the one with ballot number <var>lastTried</var>[<var>p</var>]).</p>
+    <p style="font-size:.92rem"><b><var>quorum</var>[<var>p</var>]</b> — If <var>status</var>[<var>p</var>] = <i>polling</i>, then the set of priests forming the quorum of the current ballot; otherwise, meaningless.</p>
+    <p style="font-size:.92rem"><b><var>voters</var>[<var>p</var>]</b> — If <var>status</var>[<var>p</var>] = <i>polling</i>, then the set of quorum members from whom <var>p</var> has received <em>Voted</em> messages in the current ballot; otherwise, meaningless.</p>
+    <p style="font-size:.92rem"><b><var>decree</var>[<var>p</var>]</b> — If <var>status</var>[<var>p</var>] = <i>polling</i>, then the decree of the current ballot; otherwise, meaningless.</p>
+  </div>
+  <div class="prose">
+    <p>There is also the history variable <var>ℬ</var>, which is the set of ballots that have been started and their progress—namely, which priests have cast votes. (A history variable is one used in the development and proof of an algorithm, but not actually implemented.)</p>
+    <p>Next come the actions that priest <var>p</var> may take. These actions are assumed to be atomic, meaning that once an action is begun, it must be completed before priest <var>p</var> begins any other action. An action is described by an enabling condition and a list of effects. The enabling condition describes when the action can be performed; actions that receive a message are enabled whenever a messenger has arrived with the appropriate message. The list of effects describes how the action changes the algorithm’s variables and what message, if any, it sends. (Each individual action sends at most one message.)</p>
+    <p>Recall that ballot numbers were partitioned among the priests. For any ballot number <var>b</var>, the Paxons defined <var>owner</var>(<var>b</var>) to be the priest who was allowed to use that ballot number.</p>
+    <p>The actions in the basic protocol are allowed actions; the protocol does not require that a priest ever do anything. No attempt at efficiency has been made; the actions allow <var>p</var> to do silly things, such as sending another <em>BeginBallot</em> message to a priest from whom he has already received a <em>LastVote</em> message.</p>
+  </div>
+  <details class="proof" open>
+    <summary>The actions of the basic protocol</summary>
+    <div style="font-size:.92rem">
+      <p><b>Try New Ballot</b><br>
+      <i>Always enabled.</i><br>
+      – Set <var>lastTried</var>[<var>p</var>] to any ballot number <var>b</var>, greater than its previous value, such that <var>owner</var>(<var>b</var>) = <var>p</var>.<br>
+      – Set <var>status</var>[<var>p</var>] to <i>trying</i>.<br>
+      – Set <var>prevVotes</var>[<var>p</var>] to ∅.</p>
+      <p><b>Send NextBallot Message</b><br>
+      <i>Enabled whenever <var>status</var>[<var>p</var>] = <i>trying</i>.</i><br>
+      – Send a <em>NextBallot</em>(<var>lastTried</var>[<var>p</var>]) message to any priest.</p>
+      <p><b>Receive NextBallot(<var>b</var>) Message</b><br>
+      <i>If <var>b</var> ≥ <var>nextBal</var>[<var>p</var>] then</i><br>
+      – Set <var>nextBal</var>[<var>p</var>] to <var>b</var>.</p>
+      <p><b>Send LastVote Message</b><br>
+      <i>Enabled whenever <var>nextBal</var>[<var>p</var>] &gt; <var>prevBal</var>[<var>p</var>].</i><br>
+      – Send a <em>LastVote</em>(<var>nextBal</var>[<var>p</var>],&nbsp;<var>v</var>) message to priest <var>owner</var>(<var>nextBal</var>[<var>p</var>]), where <var>v</var><sub>pst</sub> = <var>p</var>, <var>v</var><sub>bal</sub> = <var>prevBal</var>[<var>p</var>], and <var>v</var><sub>dec</sub> = <var>prevDec</var>[<var>p</var>].</p>
+      <p><b>Receive LastVote(<var>b</var>,&nbsp;<var>v</var>) Message</b><br>
+      <i>If <var>b</var> = <var>lastTried</var>[<var>p</var>] and <var>status</var>[<var>p</var>] = <i>trying</i>, then</i><br>
+      – Set <var>prevVotes</var>[<var>p</var>] to the union of its original value and {<var>v</var>}.</p>
+      <p><b>Start Polling Majority Set <var>Q</var></b><br>
+      <i>Enabled when <var>status</var>[<var>p</var>] = <i>trying</i> and <var>Q</var> ⊆ {<var>v</var><sub>pst</sub> : <var>v</var> ∈ <var>prevVotes</var>[<var>p</var>]}, where <var>Q</var> is a majority set.</i><br>
+      – Set <var>status</var>[<var>p</var>] to <i>polling</i>.<br>
+      – Set <var>quorum</var>[<var>p</var>] to <var>Q</var>.<br>
+      – Set <var>voters</var>[<var>p</var>] to ∅.<br>
+      – Set <var>decree</var>[<var>p</var>] to a decree <var>d</var> chosen as follows: Let <var>v</var> be the maximum element of <var>prevVotes</var>[<var>p</var>]. If <var>v</var><sub>bal</sub> ≠ −∞ then <var>d</var> = <var>v</var><sub>dec</sub>, else <var>d</var> can equal any decree.<br>
+      – Set <var>ℬ</var> to the union of its former value and {<var>B</var>}, where <var>B</var><sub>dec</sub> = <var>d</var>, <var>B</var><sub>qrm</sub> = <var>Q</var>, <var>B</var><sub>vot</sub> = ∅, and <var>B</var><sub>bal</sub> = <var>lastTried</var>[<var>p</var>].</p>
+      <p><b>Send BeginBallot Message</b><br>
+      <i>Enabled when <var>status</var>[<var>p</var>] = <i>polling</i>.</i><br>
+      – Send a <em>BeginBallot</em>(<var>lastTried</var>[<var>p</var>],&nbsp;<var>decree</var>[<var>p</var>]) message to any priest in <var>quorum</var>[<var>p</var>].</p>
+      <p><b>Receive BeginBallot(<var>b</var>,&nbsp;<var>d</var>) Message</b><br>
+      <i>If <var>b</var> = <var>nextBal</var>[<var>p</var>] &gt; <var>prevBal</var>[<var>p</var>] then</i><br>
+      – Set <var>prevBal</var>[<var>p</var>] to <var>b</var>.<br>
+      – Set <var>prevDec</var>[<var>p</var>] to <var>d</var>.<br>
+      – If there is a ballot <var>B</var> in <var>ℬ</var> with <var>B</var><sub>bal</sub> = <var>b</var> [there will be], then choose any such <var>B</var> [there will be only one] and let the new value of <var>ℬ</var> be obtained from its old value by setting <var>B</var><sub>vot</sub> equal to the union of its old value and {<var>p</var>}.</p>
+      <p><b>Send Voted Message</b><br>
+      <i>Enabled whenever <var>prevBal</var>[<var>p</var>] ≠ −∞.</i><br>
+      – Send a <em>Voted</em>(<var>prevBal</var>[<var>p</var>],&nbsp;<var>p</var>) message to <var>owner</var>(<var>prevBal</var>[<var>p</var>]).</p>
+      <p><b>Receive Voted(<var>b</var>,&nbsp;<var>q</var>) Message</b><br>
+      <i>If <var>b</var> = <var>lastTried</var>[<var>p</var>] and <var>status</var>[<var>p</var>] = <i>polling</i>, then</i><br>
+      – Set <var>voters</var>[<var>p</var>] to the union of its old value and {<var>q</var>}</p>
+      <p><b>Succeed</b><br>
+      <i>Enabled whenever <var>status</var>[<var>p</var>] = <i>polling</i>, <var>quorum</var>[<var>p</var>] ⊆ <var>voters</var>[<var>p</var>], and <var>outcome</var>[<var>p</var>] = <span style="font-variant:small-caps">blank</span>.</i><br>
+      – Set <var>outcome</var>[<var>p</var>] to <var>decree</var>[<var>p</var>].</p>
+      <p><b>Send Success Message</b><br>
+      <i>Enabled whenever <var>outcome</var>[<var>p</var>] ≠ <span style="font-variant:small-caps">blank</span>.</i><br>
+      – Send a <em>Success</em>(<var>outcome</var>[<var>p</var>]) message to any priest.</p>
+      <p><b>Receive Success(<var>d</var>) Message</b><br>
+      <i>If <var>outcome</var>[<var>p</var>] = <span style="font-variant:small-caps">blank</span>, then</i><br>
+      – Set <var>outcome</var>[<var>p</var>] to <var>d</var>.</p>
+    </div>
+  </details>
+  <div class="prose">
+    <p>This algorithm is an abstract description of the real protocol performed by Paxon priests. Do the algorithm’s actions accurately model the actions of the real priests? There were three kinds of actions that a priest could perform “atomically”: receiving a message, writing a note or ledger entry, and sending a message. Each of these is represented by a single action of the algorithm, except that <b>Receive</b> actions both receive a message and set a variable. We can pretend that the receipt of a message occurred when a priest acted upon the message; if he left the Chamber before acting upon it, then we can pretend that the message was never received. Since this pretense does not affect the consistency condition, we can infer the consistency of the basic Synod protocol from the consistency of the algorithm.</p>
+  </div>
+
+  <h3 id="a2-proof-of-consistency" class="sect"><a href="#a2-proof-of-consistency" class="hlink">A2 · Proof of Consistency</a></h3>
+  <div class="prose">
+    <p>To prove the consistency condition, it is necessary to show that whenever <var>outcome</var>[<var>p</var>] and <var>outcome</var>[<var>q</var>] are both different from <span style="font-variant:small-caps">blank</span>, they are equal. A rigorous correctness proof requires a complete description of the algorithm. The description given above is almost complete. Missing is a variable <var>ℳ</var> whose value is the multiset of all messages in transit.<sup>15</sup> Each <b>Send</b> action adds a message to this multiset and each <b>Receive</b> action removes one. Also needed are actions to represent the loss and duplication of messages, as well as a <b>Forget</b> action that represents a priest losing his slip of paper.</p>
+    <p>With these additions, we get an algorithm that defines a set of possible behaviors, in which each change of state corresponds to one of the allowed actions. The Paxons proved correctness by finding a predicate <var>I</var> such that</p>
+    <ol class="proofsteps">
+      <li><var>I</var> is true initially.</li>
+      <li><var>I</var> implies the desired correctness condition.</li>
+      <li>Each allowed action leaves <var>I</var> true.</li>
+    </ol>
+    <p>The predicate <var>I</var> was written as a conjunction <var>I</var>1&nbsp;∧&nbsp;...&nbsp;∧&nbsp;<var>I</var>7, where <var>I</var>1–<var>I</var>5 were in turn the conjunction of predicates <var>I</var>1(<var>p</var>)–<var>I</var>5(<var>p</var>) for all priests <var>p</var>. Although most variables are mentioned in several of the conjuncts, each variable except <var>status</var>[<var>p</var>] is naturally associated with one conjunct, and each conjunct can be thought of as a constraint on its associated variables. The definitions of the individual conjuncts of <var>I</var> are given below, where a list of items marked by ∧ symbols denotes the conjunction of those items. The variables associated with a conjunct are listed in bracketed comments.</p>
+  </div>
+  <p class="fnote"><b>15.</b> A multiset is a set that may contain multiple copies of the same
+  element.</p>
+  <details class="proof">
+    <summary>The invariant I, in full</summary>
+    <div style="font-size:.9rem">
+      <div class="mathblock" style="text-align:left">
+        <var>I</var>1(<var>p</var>) ≜ <span class="rm">[Associated variable: <var>outcome</var>[<var>p</var>]]</span><br>
+        (<var>outcome</var>[<var>p</var>] ≠ <span class="rm" style="font-variant:small-caps">blank</span>) ⇒
+        ∃<var>B</var> ∈ <var>ℬ</var> : (<var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub>) ∧
+        (<var>B</var><sub>dec</sub> = <var>outcome</var>[<var>p</var>])
+      </div>
+      <div class="mathblock" style="text-align:left">
+        <var>I</var>2(<var>p</var>) ≜ <span class="rm">[Associated variable: <var>lastTried</var>[<var>p</var>]]</span><br>
+        ∧ <var>owner</var>(<var>lastTried</var>[<var>p</var>]) = <var>p</var><br>
+        ∧ ∀<var>B</var> ∈ <var>ℬ</var> : (<var>owner</var>(<var>B</var><sub>bal</sub>) = <var>p</var>) ⇒<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;∧ <var>B</var><sub>bal</sub> ≤ <var>lastTried</var>[<var>p</var>]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;∧ (<var>status</var>[<var>p</var>] = <span class="rm"><i>trying</i></span>) ⇒ (<var>B</var><sub>bal</sub> &lt; <var>lastTried</var>[<var>p</var>])
+      </div>
+      <div class="mathblock" style="text-align:left">
+        <var>I</var>3(<var>p</var>) ≜ <span class="rm">[Associated variables: <var>prevBal</var>[<var>p</var>], <var>prevDec</var>[<var>p</var>], <var>nextBal</var>[<var>p</var>]]</span><br>
+        ∧ <var>prevBal</var>[<var>p</var>] = <var>MaxVote</var>(∞, <var>p</var>, <var>ℬ</var>)<sub>bal</sub><br>
+        ∧ <var>prevDec</var>[<var>p</var>] = <var>MaxVote</var>(∞, <var>p</var>, <var>ℬ</var>)<sub>dec</sub><br>
+        ∧ <var>nextBal</var>[<var>p</var>] ≥ <var>prevBal</var>[<var>p</var>]
+      </div>
+      <div class="mathblock" style="text-align:left">
+        <var>I</var>4(<var>p</var>) ≜ <span class="rm">[Associated variable: <var>prevVotes</var>[<var>p</var>]]</span><br>
+        (<var>status</var>[<var>p</var>] ≠ <span class="rm"><i>idle</i></span>) ⇒
+        ∀<var>v</var> ∈ <var>prevVotes</var>[<var>p</var>] :<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;∧ <var>v</var> = <var>MaxVote</var>(<var>lastTried</var>[<var>p</var>], <var>v</var><sub>pst</sub>, <var>ℬ</var>)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;∧ <var>nextBal</var>[<var>v</var><sub>pst</sub>] ≥ <var>lastTried</var>[<var>p</var>]
+      </div>
+      <div class="mathblock" style="text-align:left">
+        <var>I</var>5(<var>p</var>) ≜ <span class="rm">[Associated variables: <var>quorum</var>[<var>p</var>], <var>voters</var>[<var>p</var>], <var>decree</var>[<var>p</var>]]</span><br>
+        (<var>status</var>[<var>p</var>] = <span class="rm"><i>polling</i></span>) ⇒<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;∧ <var>quorum</var>[<var>p</var>] ⊆ {<var>v</var><sub>pst</sub> : <var>v</var> ∈ <var>prevVotes</var>[<var>p</var>]}<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;∧ ∃<var>B</var> ∈ <var>ℬ</var> : ∧ <var>quorum</var>[<var>p</var>] = <var>B</var><sub>qrm</sub>
+        ∧ <var>decree</var>[<var>p</var>] = <var>B</var><sub>dec</sub><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;∧ <var>voters</var>[<var>p</var>] ⊆ <var>B</var><sub>vot</sub>
+        ∧ <var>lastTried</var>[<var>p</var>] = <var>B</var><sub>bal</sub>
+      </div>
+      <div class="mathblock" style="text-align:left">
+        <var>I</var>6 ≜ <span class="rm">[Associated variable: <var>ℬ</var>]</span><br>
+        ∧ <var>B</var>1(<var>ℬ</var>) ∧ <var>B</var>2(<var>ℬ</var>) ∧ <var>B</var>3(<var>ℬ</var>)<br>
+        ∧ ∀<var>B</var> ∈ <var>ℬ</var> : <var>B</var><sub>qrm</sub> <span class="rm">is a majority set</span>
+      </div>
+      <div class="mathblock" style="text-align:left">
+        <var>I</var>7 ≜ <span class="rm">[Associated variable: <var>ℳ</var>]</span><br>
+        ∧ ∀<var>NextBallot</var>(<var>b</var>) ∈ <var>ℳ</var> : (<var>b</var> ≤ <var>lastTried</var>[<var>owner</var>(<var>b</var>)])<br>
+        ∧ ∀<var>LastVote</var>(<var>b</var>, <var>v</var>) ∈ <var>ℳ</var> :
+        ∧ <var>v</var> = <var>MaxVote</var>(<var>b</var>, <var>v</var><sub>pst</sub>, <var>ℬ</var>)
+        ∧ <var>nextBal</var>[<var>v</var><sub>pst</sub>] ≥ <var>b</var><br>
+        ∧ ∀<var>BeginBallot</var>(<var>b</var>, <var>d</var>) ∈ <var>ℳ</var> :
+        ∃<var>B</var> ∈ <var>ℬ</var> : (<var>B</var><sub>bal</sub> = <var>b</var>) ∧ (<var>B</var><sub>dec</sub> = <var>d</var>)<br>
+        ∧ ∀<var>Voted</var>(<var>b</var>, <var>p</var>) ∈ <var>ℳ</var> :
+        ∃<var>B</var> ∈ <var>ℬ</var> : (<var>B</var><sub>bal</sub> = <var>b</var>) ∧ (<var>p</var> ∈ <var>B</var><sub>vot</sub>)<br>
+        ∧ ∀<var>Success</var>(<var>d</var>) ∈ <var>ℳ</var> :
+        ∃<var>p</var> : <var>outcome</var>[<var>p</var>] = <var>d</var> ≠ <span class="rm" style="font-variant:small-caps">blank</span>
+      </div>
+    </div>
+  </details>
+  <div class="prose">
+    <p>The Paxons had to prove that <var>I</var> satisfies the three conditions given above. The first condition, that <var>I</var> holds initially, requires checking that each conjunct is true for the initial values of all the variables. While not stated explicitly, these initial values can be inferred from the variables’ descriptions, and checking the first condition is straightforward. The second condition, that <var>I</var> implies consistency, follows from <var>I</var>1, the first conjunct of <var>I</var>6, and Theorem 1. The hard part was proving the third condition, the invariance of <var>I</var>, which meant proving that <var>I</var> is left true by every action. This condition is proved by showing that, for each conjunct of <var>I</var>, executing any action when <var>I</var> is true leaves that conjunct true. The proofs are sketched below.</p>
+  </div>
+  <details class="proof">
+    <summary>The proofs, conjunct by conjunct</summary>
+    <div style="font-size:.92rem">
+      <p><b><var>I</var>1(<var>p</var>)</b> — <var>ℬ</var> is changed only by adding a new ballot or adding a new priest to <var>B</var><sub>vot</sub> for some <var>B</var> ∈ <var>ℬ</var>, neither of which can falsify <var>I</var>1(<var>p</var>). The value of <var>outcome</var>[<var>p</var>] is changed only by the <b>Succeed</b> and <b>Receive Success Message</b> actions. The enabling condition and <var>I</var>5(<var>p</var>) imply that <var>I</var>1(<var>p</var>) is left true by the <b>Succeed</b> action. The enabling condition, <var>I</var>1(<var>p</var>), and the last conjunct of <var>I</var>7 imply that <var>I</var>1(<var>p</var>) is left true by the <b>Receive Success Message</b> action.</p>
+      <p><b><var>I</var>2(<var>p</var>)</b> — This conjunct depends only on <var>lastTried</var>[<var>p</var>], <var>status</var>[<var>p</var>], and <var>ℬ</var>. Only the <b>Try New Ballot</b> action changes <var>lastTried</var>[<var>p</var>], and only that action can set <var>status</var>[<var>p</var>] to <i>trying</i>. Since the action increases <var>lastTried</var>[<var>p</var>] to a value <var>b</var> with <var>owner</var>(<var>b</var>) = <var>p</var>, it leaves <var>I</var>2(<var>p</var>) true. A completely new element is added to <var>ℬ</var> only by a <b>Start Polling</b> action; the first conjunct of <var>I</var>2(<var>p</var>) and the specification of the action imply that adding this new element does not falsify the second conjunct of <var>I</var>2(<var>p</var>). The only other way <var>ℬ</var> is changed is by adding a new priest to <var>B</var><sub>vot</sub> for some <var>B</var> ∈ <var>ℬ</var>, which does not affect <var>I</var>2(<var>p</var>).</p>
+      <p><b><var>I</var>3(<var>p</var>)</b> — Since votes are never removed from <var>ℬ</var>, the only action that can change <var>MaxVote</var>(∞,&nbsp;<var>p</var>,&nbsp;<var>ℬ</var>) is one that adds to <var>ℬ</var> a vote cast by <var>p</var>. Only a <b>Receive BeginBallot Message</b> action can do that, and only that action changes <var>prevBal</var>[<var>p</var>] and <var>prevDec</var>[<var>p</var>]. The <em>BeginBallot</em> conjunct of <var>I</var>7 implies that this action actually does add a vote to <var>ℬ</var>, and <var>B</var>1(<var>ℬ</var>) (the first conjunct of <var>I</var>6) implies that there is only one ballot to which the vote can be added. The enabling condition, the assumption that <var>I</var>3(<var>p</var>) holds before executing the action, and the definition of <var>MaxVote</var> then imply that the action leaves the first two conjuncts of <var>I</var>3(<var>p</var>) true. The third conjunct is left true because <var>prevBal</var>[<var>p</var>] is changed only by setting it to <var>nextBal</var>[<var>p</var>], and <var>nextBal</var>[<var>p</var>] is never decreased.</p>
+      <p><b><var>I</var>4(<var>p</var>)</b> — This conjunct depends only upon the values of <var>status</var>[<var>p</var>], <var>prevVotes</var>[<var>p</var>], <var>lastTried</var>[<var>p</var>], <var>nextBal</var>[<var>q</var>] for some priests <var>q</var>, and <var>ℬ</var>. The value of <var>status</var>[<var>p</var>] is changed from <i>idle</i> to not <i>idle</i> only by a <b>Try New Ballot</b> action, which sets <var>prevVotes</var>[<var>p</var>] to ∅, making <var>I</var>4(<var>p</var>) vacuously true. The only other actions that change <var>prevVotes</var>[<var>p</var>] are the <b>Forget</b> action, which leaves <var>I</var>4(<var>p</var>) true because it sets <var>status</var>[<var>p</var>] to <i>idle</i>, and the <b>Receive LastVote Message</b> action. It follows from the enabling condition and the <em>LastVote</em> conjunct of <var>I</var>7 that the <b>Receive LastVote Message</b> action preserves <var>I</var>4(<var>p</var>). The value of <var>lastTried</var>[<var>p</var>] is changed only by the <b>Try New Ballot</b> action, which leaves <var>I</var>4(<var>p</var>) true because it sets <var>status</var>[<var>p</var>] to <i>trying</i>. The value of <var>nextBal</var>[<var>q</var>] can only increase, which cannot make <var>I</var>4(<var>p</var>) false. Finally, <var>MaxVote</var>(<var>lastTried</var>[<var>p</var>],&nbsp;<var>v</var><sub>pst</sub>,&nbsp;<var>ℬ</var>) can be changed only if <var>v</var><sub>pst</sub> is added to <var>B</var><sub>vot</sub> for some <var>B</var> ∈ <var>ℬ</var> with <var>B</var><sub>bal</sub> &lt; <var>lastTried</var>[<var>p</var>]. But <var>v</var><sub>pst</sub> is added to <var>B</var><sub>vot</sub> (by a <b>Receive BeginBallot Message</b> action) only if <var>nextBal</var>[<var>v</var><sub>pst</sub>] = <var>B</var><sub>bal</sub>, in which case <var>I</var>4(<var>p</var>) implies that <var>B</var><sub>bal</sub> ≥ <var>lastTried</var>[<var>p</var>].</p>
+      <p><b><var>I</var>5(<var>p</var>)</b> — The value of <var>status</var>[<var>p</var>] is set to <i>polling</i> only by the <b>Start Polling</b> action. This action’s enabling condition guarantees that the first conjunct becomes true, and it adds the ballot to <var>ℬ</var> that makes the second conjunct true. No other action changes <var>quorum</var>[<var>p</var>], <var>decree</var>[<var>p</var>], or <var>lastTried</var>[<var>p</var>] while leaving <var>status</var>[<var>p</var>] equal to <i>polling</i>. The value of <var>prevVotes</var>[<var>p</var>] cannot be changed while <var>status</var>[<var>p</var>] = <i>polling</i>, and <var>ℬ</var> is changed only by adding new elements or by adding a new priest to <var>B</var><sub>vot</sub>. The only remaining possibility for falsifying <var>I</var>5(<var>p</var>) is the addition of a new element to <var>voters</var>[<var>p</var>] by the <b>Receive Voted Message</b> action. The <em>Voted</em> conjunct of <var>I</var>7, <var>B</var>1(<var>ℬ</var>) (the first conjunct of <var>I</var>6), and the action’s enabling condition imply that the element added to <var>voters</var>[<var>p</var>] is in <var>B</var><sub>vot</sub>, where <var>B</var> is the ballot whose existence is asserted in <var>I</var>5(<var>p</var>).</p>
+      <p><b><var>I</var>6</b> — Since <var>B</var><sub>bal</sub> and <var>B</var><sub>qrm</sub> are never changed for any <var>B</var> ∈ <var>ℬ</var>, the only way <var>B</var>1(<var>ℬ</var>), <var>B</var>2(<var>ℬ</var>), and the second conjunct of <var>I</var>6 can be falsified is by adding a new ballot to <var>ℬ</var>, which is done only by the <b>Start Polling Majority Set <var>Q</var></b> action when <var>status</var>[<var>p</var>] equals <i>trying</i>. It follows from the second conjunct of <var>I</var>2(<var>p</var>) that this action leaves <var>B</var>1(<var>ℬ</var>) true; and the assertion, in the enabling condition, that <var>Q</var> is a majority set implies that the action leaves <var>B</var>2(<var>ℬ</var>) and the second conjunct of <var>I</var>6 true. There are two possible ways of falsifying <var>B</var>3(<var>ℬ</var>): changing <var>MaxVote</var>(<var>B</var><sub>bal</sub>,&nbsp;<var>B</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>) by adding a new vote to <var>ℬ</var>, and adding a new ballot to <var>ℬ</var>. A new vote is added only by the <b>Receive BeginBallot Message</b> action, and <var>I</var>3(<var>p</var>) implies that the action adds a vote later than any other vote cast by <var>p</var> in <var>ℬ</var>, so it cannot change <var>MaxVote</var>(<var>B</var><sub>bal</sub>,&nbsp;<var>B</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>) for any <var>B</var> in <var>ℬ</var>. Conjunct <var>I</var>4(<var>p</var>) implies that the new ballot added by the <b>Start Polling</b> action does not falsify <var>B</var>3(<var>ℬ</var>).</p>
+      <p><b><var>I</var>7</b> — <var>I</var>7 can be falsified either by adding a new message to <var>ℳ</var> or by changing the value of another variable on which <var>I</var>7 depends. Since <var>lastTried</var>[<var>p</var>] and <var>nextBal</var>[<var>p</var>] are never decreased, changing them cannot make <var>I</var>7 false. Since <var>outcome</var>[<var>p</var>] is never changed if its value is not <span style="font-variant:small-caps">blank</span>, changing it cannot falsify <var>I</var>7. Since <var>ℬ</var> is changed only by adding ballots and adding votes, the only change to it that can make <var>I</var>7 false is the addition of a vote by <var>v</var><sub>pst</sub> that makes the <em>LastVote</em>(<var>b</var>,&nbsp;<var>v</var>) conjunct false by changing <var>MaxVote</var>(<var>b</var>,&nbsp;<var>v</var><sub>pst</sub>,&nbsp;<var>ℬ</var>). This can happen only if <var>v</var><sub>pst</sub> votes in a ballot <var>B</var> with <var>B</var><sub>bal</sub> &lt; <var>b</var>. But <var>v</var><sub>pst</sub> can vote only in ballot number <var>nextBal</var>[<var>v</var><sub>pst</sub>], and the assumption that this conjunct holds initially implies that <var>nextBal</var>[<var>v</var><sub>pst</sub>] ≥ <var>b</var>. Therefore, we need check only that every message that is sent satisfies the condition in the appropriate conjunct of <var>I</var>7.</p>
+      <p style="margin-left:1.2em"><em>NextBallot</em>: Follows from the definition of the <b>Send NextBallot Message</b> action and the first conjunct of <var>I</var>2(<var>p</var>).</p>
+      <p style="margin-left:1.2em"><em>LastVote</em>: The enabling condition of the <b>Send LastVote Message</b> action and <var>I</var>3(<var>p</var>) imply that <var>MaxVote</var>(<var>nextBal</var>[<var>p</var>],&nbsp;<var>p</var>,&nbsp;<var>ℬ</var>) = <var>MaxVote</var>(∞,&nbsp;<var>p</var>,&nbsp;<var>ℬ</var>), from which it follows that the <em>LastVote</em> message sent by the action satisfies the condition in <var>I</var>7.</p>
+      <p style="margin-left:1.2em"><em>BeginBallot</em>: Follows from <var>I</var>5(<var>p</var>) and the definition of the <b>Send BeginBallot Message</b> action.</p>
+      <p style="margin-left:1.2em"><em>Voted</em>: Follows from <var>I</var>3(<var>p</var>), the definition of <var>MaxVote</var>, and the definition of the <b>Send Voted Message</b> action.</p>
+      <p style="margin-left:1.2em"><em>Success</em>: Follows from the definition of <b>Send Success Message</b>.</p>
+    </div>
+  </details>
+    </details>
   </div>
 </section>
 
@@ -595,6 +913,23 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
         <p style="margin:0;font-size:.95rem;color:#6b5a48">The machinery is the same. It is the same ballot, applied to the membership list, and to the scrolls themselves.</p>
       </div></div></div>
     </div>
+    <details class="proof">
+      <summary>Why one office has one holder</summary>
+      <p class="given">A decree carries the time it was proposed. That is safe because of a property of the parliamentary protocol, stated here with its proof.</p>
+  <div class="slab">
+    <p class="stmt">If two decrees are passed by different presidents, then one of the presidents
+    proposed his decree after learning that the other decree had been proposed.</p>
+  </div>
+  <details class="proof">
+    <summary>Why the property holds</summary>
+    <p style="font-size:.92rem">To see that this property is satisfied, suppose that ballot number <var>b</var> was successful
+    for decree <var>D</var>, ballot number <var>b′</var> was successful for decree <var>D′</var>, and <var>b</var>&nbsp;&lt;&nbsp;<var>b′</var>. Let
+    <var>q</var> be a legislator who voted in both ballots. The balloting for <var>D′</var> began with
+    a <em>NextBallot</em>(<var>b′</var>,&nbsp;<var>n</var>) message. If the sender of that message did not already know
+    about <var>D</var>, then <var>n</var> is less than the decree number of <var>D</var>, and <var>q</var>’s reply to the <em>NextBallot</em>
+    message must state that he voted for <var>D</var>.</p>
+  </details>
+    </details>
   </div>
 </section>
 
