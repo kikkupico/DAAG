@@ -1,0 +1,28 @@
+/* ---------- three clocks ---------- */
+.logs{padding:18px 18px 14px}
+.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
+.clocks{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.clk{border:3px solid var(--ink);background:#fff;padding:8px;text-align:center}
+.clk h5{margin:0 0 4px;font-family:var(--sans);font-size:.7rem;letter-spacing:.06em}
+.clk b{font-family:var(--sans);font-size:clamp(.95rem,2.4vw,1.25rem);font-variant-numeric:tabular-nums}
+.lists{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.lists h5,.pq h5{margin:0 0 6px;font-family:var(--sans);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48}
+.lists>div,.pq{border:3px solid var(--ink);background:#fff;padding:8px;min-height:96px}
+.e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both;font-family:var(--sans)}
+.e.bad{border-left-color:var(--blood);color:var(--ink);font-weight:400}
+.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:3.2em;font-style:italic}
+/* ---------- queues side by side ---------- */
+.pqs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.pq{min-height:214px}
+.pq .e{background:none;border-left:0;padding:1px 0}
+/* ---------- comparing two columns ---------- */
+.st-wrap{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.st-wrap{grid-template-columns:minmax(0,1fr)}}
+.st-svg{width:100%;height:auto;display:block}
+.cmp{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.95rem;margin-bottom:10px}
+.cmp th{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48;padding:4px 6px;text-align:center;font-weight:400}
+.cmp th:first-child,.cmp td:first-child{text-align:left}
+.cmp td{padding:6px;border-top:2px solid #1c151222;text-align:center;font-weight:700;font-size:1.1rem}
+.cmp td:first-child{font-weight:400;font-size:.9rem}
+.cmp tr.up td:nth-child(3){color:#3f7a2a}.cmp tr.down td:nth-child(3){color:var(--blood)}
+.tok-l{font-family:var(--sans);font-size:13px;font-weight:700;fill:#136f9e;text-anchor:middle}

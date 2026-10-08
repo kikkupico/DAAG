@@ -330,13 +330,11 @@ every tent sees and no post on the crown does.
 
 ## The scroll format
 
-A book's main page (`books/<slug>/index.html`) is one scroll: short allegory prose, photoreal scenes that unfold as they enter view, and one live interactive per mechanism (a scroll-driven stage for a sequence, a click-through widget for a choice). The registers are unchanged: the synopsis in machine terms first, then allegory only. The page is self-contained (vanilla JS, pictures in the book's own `img/`), reuses the book's published pictures and draws space-time in the round.
+A book is one scroll at `books/<slug>/index.html`: short allegory prose, photoreal scenes that unfold as they enter view, one live interactive per mechanism (a scroll-driven stage for a sequence, a click-through widget for a choice), and the proofs as collapsed panels in the paper's own notation. The registers are unchanged: the synopsis in machine terms first, then allegory only. A page is self-contained and keeps its pictures in the book's own `img/`.
 
-Proofs sit in the scroll as collapsed panels (`<details class="proof">`) at the end of the section they belong to. A panel opens with the claim in the paper's own notation (`<p class="given">`), then the steps; nothing outside a panel uses that notation.
+`art/scroll/BRIEF.md` is the authoring guide: the kit (`shell.css`, `shell.js`, `assemble.py`, `shot.sh`), the page from top to bottom, and the house rules. A book's source is its four parts in `art/scroll/parts/<slug>/`; `python3 art/scroll/assemble.py <slug>` builds the page. The Part-Time Parliament predates the kit and its page is edited directly.
 
-The long edition, with the chapters and the proofs, is kept beside it as `books/<slug>/archive.html` and linked from the scroll's top bar and closing links. A link from another book to a particular idea points at the long edition (`archive.html#s3`), where that chapter is; a link to the book as a whole points at `index.html`. `art/diagrams/polar.py` rebuilds the long edition's figures.
-
-In the scroll format so far: The Part-Time Parliament, Ordering Without Clocks, The Limits of Agreement. The other books are still long editions at `index.html`.
+A scroll keeps the chapter anchors of the long edition it replaced (`<a class="anchor" id="s3">`), so a link from another book to one idea is still `../<slug>/index.html#s3`. The long editions are not kept beside the scrolls; they are in the git history.
 
 ## Changing art direction
 
