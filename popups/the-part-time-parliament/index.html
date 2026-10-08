@@ -28,8 +28,9 @@ p{margin:0 0 .9rem;text-wrap:pretty}
 /* ---------- top bar ---------- */
 .bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
   font-family:var(--sans);font-size:.78rem;letter-spacing:.05em;background:linear-gradient(180deg,#3a2a1a,#241a10)}
-.bar a{color:#f0e6cc;text-decoration:none;opacity:.8} .bar a:hover{opacity:1}
-.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a}
+.bar a{color:#f0e6cc;text-decoration:none;opacity:.8;white-space:nowrap} .bar a:hover{opacity:1}
+.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:520px){.bar a+a{display:none}}
 .bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
 
 /* ---------- spreads ---------- */
@@ -84,7 +85,7 @@ p{margin:0 0 .9rem;text-wrap:pretty}
 /* ---------- two-column spreads ---------- */
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .two.wide-r{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
-@media(max-width:859px){.two,.two.wide-r{grid-template-columns:1fr}}
+@media(max-width:859px){.two,.two.wide-r{grid-template-columns:minmax(0,1fr)}}
 
 /* ---------- machines ---------- */
 #machines .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,60px);align-items:center}
@@ -254,11 +255,11 @@ svg text{font-family:var(--serif)}
 .card3 p{font-size:.95rem;margin:0}
 .card3 .fx{margin-top:12px}
 @media(max-width:860px){.cards3{grid-template-columns:1fr}}
-.fold{display:flex;align-items:center;gap:6px;height:58px;margin-top:10px}
-.fold .e{flex:0 0 6px;height:44px;background:var(--aegean);opacity:.8;transition:all .8s}
+.fold{display:flex;align-items:center;gap:6px;height:58px;margin-top:10px;overflow:hidden}
+.fold .e{flex:0 1 6px;height:44px;background:var(--aegean);opacity:.8;transition:all .8s}
 .fold .e.gone{flex-basis:0;opacity:0;margin-right:-6px}
 .fold .digest{flex:0 0 0;overflow:hidden;white-space:nowrap;opacity:0;font-size:.82rem;font-family:var(--sans);background:var(--gold);border:3px solid var(--ink);padding:6px 0;transition:all .8s}
-.fold.folded .digest{flex-basis:290px;opacity:1;padding:6px 10px}
+.fold.folded .digest{flex:0 1 290px;opacity:1;padding:6px 10px;text-overflow:ellipsis}
 
 /* relevance */
 .map{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px 0;align-items:stretch;max-width:760px;margin:2rem auto 0}
@@ -827,6 +828,7 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
     sp[k]=[ax+ux*40,ay+uy*40]; tp[k]=[bx-ux*40,by-uy*40];
     const [ox,oy]=H.at(ang[k],H.R+52); const c=el("g",{class:"tag fade",transform:`translate(${ox} ${oy})`},O); el("rect",{x:-34,y:-14,width:68,height:28},c); const t=el("text",{},c); t.textContent="27: β"; chips[k]=c;
     if(q.includes(k)){const [px,py]=H.at(ang[k],H.R-56); const g=el("g",{class:"tag fade",transform:`translate(${px} ${py})`},O); el("rect",{x:-32,y:-14,width:64,height:28},g); const tt=el("text",{},g); tt.textContent="≥ 27"; tags[k]=g}});
+  {const g=el("g",{class:"tag fade",transform:`translate(${S.A.x} ${S.A.y-50})`},O); el("rect",{x:-32,y:-14,width:64,height:28},g); el("text",{},g).textContent="≥ 27"; tags.A=g}
   const rt=el("text",{x:520,y:100,class:"lab fade",style:"text-anchor:start"},O); rt.textContent="The quorum's latest votes"; 
   const repg={}; [["A","Α: no vote yet"],["G","Γ: ballot 5, decree β"],["D","Δ: ballot 2, decree α"]].forEach(([k,t],i)=>{const g=el("g",{class:"reply fade",transform:`translate(520 ${118+i*46})`},O); el("rect",{width:270,height:36},g); const tx=el("text",{x:14,y:19},g); tx.textContent=t; repg[k]=g});
   const forced=el("g",{class:"fade",transform:"translate(520 290)"},O);
@@ -838,8 +840,8 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
   function put(g,k,u){const x=sp[k][0]+(tp[k][0]-sp[k][0])*u,y=sp[k][1]+(tp[k][1]-sp[k][1])*u;g.style.transform=`translate(${x}px,${y}px)`}
   const show=(g,on)=>g.setAttribute("opacity",on?1:0);
   function render(s){
-    Q.forEach(k=>{set(rings[k],true);set(repg[k],s>=2);set(chips[k],s>=5)});
-    q.forEach(k=>{set(tags[k],s>=2);
+    Q.forEach(k=>{set(rings[k],true);set(tags[k],s>=2);set(repg[k],s>=2);set(chips[k],s>=5)});
+    q.forEach(k=>{
       show(tq[k],s>=1&&s<2);put(tq[k],k,s>=1?1:0);
       show(tr[k],s>=2&&s<3);put(tr[k],k,s>=2?0:1);
       show(tpp[k],s>=4&&s<5);put(tpp[k],k,s>=4?1:0);
@@ -907,9 +909,12 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
   function put(g,k,u){const x=sp[k][0]+(tp[k][0]-sp[k][0])*u,y=sp[k][1]+(tp[k][1]-sp[k][1])*u;g.style.transform=`translate(${x}px,${y}px)`}
   others.forEach(k=>{put(tq[k],k,0);put(tr[k],k,1);put(td[k],k,0)});
   // the president's scroll
-  const title=el("text",{x:520,y:42,class:"lab",style:"text-anchor:start;font-size:18px"},O);title.textContent="The president's scroll";
+  const SG=el("g",{},O), tall=matchMedia("(max-width:640px)");
+  function lay(){svg.setAttribute("viewBox",tall.matches?"0 0 470 960":"0 0 900 490");SG.setAttribute("transform",tall.matches?"translate(-455 460)":"")}
+  tall.addEventListener("change",lay); lay();
+  const title=el("text",{x:520,y:42,class:"lab",style:"text-anchor:start;font-size:18px"},SG);title.textContent="The president's scroll";
   const rows={}; const base=[[122,"Tax on olives"],[123,"Lamps burn olive oil"],[124,"Roads kept by the town"],[125,""],[126,""],[127,""],[128,""],[129,""],[130,""]];
-  base.forEach(([n,t],i)=>{const g=el("g",{transform:`translate(520 ${58+i*46})`,class:"row"},O);const r=el("rect",{width:340,height:38,rx:6},g);const nn=el("text",{x:14,y:20,style:"font-family:Optima,sans-serif;font-weight:700;font-size:17px;dominant-baseline:central;fill:#1c1512"},g);nn.textContent=n;const tx=el("text",{x:62,y:20,style:"font-size:16px;dominant-baseline:central;fill:#1c1512"},g);tx.textContent=t;rows[n]={g,r,tx}});
+  base.forEach(([n,t],i)=>{const g=el("g",{transform:`translate(520 ${58+i*46})`,class:"row"},SG);const r=el("rect",{width:340,height:38,rx:6},g);const nn=el("text",{x:14,y:20,style:"font-family:Optima,sans-serif;font-weight:700;font-size:17px;dominant-baseline:central;fill:#1c1512"},g);nn.textContent=n;const tx=el("text",{x:62,y:20,style:"font-size:16px;dominant-baseline:central;fill:#1c1512"},g);tx.textContent=t;rows[n]={g,r,tx}});
   function row(n,cls,text){const o=rows[n];o.r.setAttribute("class","r "+cls);if(text!==undefined)o.tx.textContent=text;o.g.classList.remove("pop2");void o.g.getBoundingClientRect();o.g.classList.add("pop2")}
   function reset(){
     base.forEach(([n,t])=>row(n,n<=124?"has":"future",t));
