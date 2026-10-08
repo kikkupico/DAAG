@@ -173,6 +173,33 @@ with a superscript. Do not write "as an earlier book showed".
 **Plain words.** Short sentences. No rhetorical flourishes, no em-dash asides, no "not X but Y"
 for effect.
 
+## Lessons from the books already converted
+
+- **Ids are unique across the whole page.** A `section` id must not equal the id of an `svg` or
+  any element `page.js` looks up (`section#nine` and `svg#nine` broke a page). Suffix sections
+  (`ninesec`) or figures (`ninesvg`).
+- **Every `Isle`, `Hill` or crown figure carries `class="isle-svg fig"`**, or its labels lose
+  their styling.
+- **Personal names become roles.** The long editions give the paper's authors Hellenised names
+  (Lamportios, Chandyos). The scroll says "the keeper of House 1's accounts", "the keeper of the
+  customs rolls". Their old footnote is dropped.
+- **Prose stays neutral about people.** No "he", "his", "she" for a numbered figure or a role;
+  repeat the role or use "they". `alt` text may describe what the picture shows.
+- **Nothing beyond the long edition in the closing lines.** No product names, no claims about
+  modern systems that the long edition does not make.
+- **A "stated formally" aside or boxed formula of the long edition** goes into a proof-style
+  panel at the end of its spread, never into the prose.
+- **Machine words are allowed in four places only:** the machine-terms spread, the right-hand
+  column of the closing table, the `.end` block of the last spread, and proof panels.
+- **Keep it short.** A spread is a heading, a lede, at most two short paragraphs, and its
+  interactive or cards. The scroll is a retelling, never the long edition's prose pasted in.
+- **Arrowheads on `Polar` slips grow with the stroke width.** Highlight a slip by colour, and
+  keep its stroke under 5.
+- **`shot.sh` takes a height as its fourth argument.** A long book needs about 34000 at 1280 and
+  44000 at 500, or the screenshot is cut off. The tall window shows a scroll-driven stage only
+  in its last step: to check the other steps, make a temporary copy of the built page in the
+  book's folder that calls your `render(i)` for a fixed `i`, shoot it, and delete it.
+
 ## Pictures
 
 Use only pictures that already exist. Never generate an image and never call a paid service.
@@ -193,5 +220,6 @@ the picture first). A picture may disagree with the prose; never bend the prose 
 - [ ] every interactive pressed through in your head against the long edition's rules
 - [ ] every proof panel present, steps verbatim, each with a `given`
 - [ ] every old `sN` anchor present once; references, lineage and Outside-this-series carried
+- [ ] no id used twice on the page
 - [ ] grep the body outside proof panels for `<var`, `σ`, `⟹`, `book`, `ledger`, `Chapter`,
       `metre`, ` m ` and personal names
