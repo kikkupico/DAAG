@@ -328,6 +328,10 @@ every tent sees and no post on the crown does.
 
 ---
 
+## Pop-up editions
+
+A pop-up edition (`popups/<slug>/index.html`) retells a book as one scroll: short allegory prose, photoreal scenes that unfold as they enter view, and one live interactive per mechanism (scroll-driven stage for a sequence, click-through widget for a choice). Same registers as a book: the synopsis in machine terms first, then allegory only. Self-contained (vanilla JS, images in its own `img/`, re-encoded to about 1600 px). The first is The Part-Time Parliament, linked from the book's lineage line.
+
 ## Changing art direction
 
 Art direction flows from the Hellenistic reference (`hellenistic-reference.html`) through the world
