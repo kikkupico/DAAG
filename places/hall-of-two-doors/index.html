@@ -5,46 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Hall of Two Doors — Paxos</title>
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<link rel="stylesheet" href="../../assets/css/daag.css">
-<link rel="stylesheet" href="../../assets/css/books.css">
+<link rel="stylesheet" href="../../art/scroll/shell.css">
+<link rel="stylesheet" href="../../art/scroll/place.css">
 </head>
 <body>
-<nav class="series-nav">
-  <div class="series-nav-inner">
-    <a href="../../index.html" class="nav-back">← The Books</a>
-    <span class="nav-current">Paxos · The Hall of Two Doors</span>
-  </div>
-</nav>
-<div class="page">
 
-<header class="cover">
-  <div class="kicker">Distributed Algorithms of Ancient Greece · Paxos · The Setting</div>
-  <h1 class="display">The Hall of Two Doors</h1>
-  <p class="sub">A hall at the fork of the island that rules on nothing, and only sorts every question into one of two doors.</p>
-  <p class="pub">Read this first, and the book set in the hall can be read on its own. It describes the island of Paxos and the hall at its fork, between the assemblies and the scholars.</p>
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <span class="now" id="now"></span>
+  <i id="prog"></i>
+</div>
+
+<header class="spread dark place" id="cover" data-name="Paxos · The Hall of Two Doors">
+  <div class="wrap grid">
+    <div>
+      <div class="kicker">Paxos · The Setting</div>
+      <h1>The Hall of Two Doors</h1>
+      <p class="hook">A hall at the fork of the island that rules on nothing, and only sorts every question into one of two doors.</p>
+      <p class="pub">Read this first, and the book set in the hall can be read on its own. It describes the island of Paxos and the hall at its fork, between the assemblies and the scholars.</p>
+      <div class="scrollcue"><b>↓</b> Scroll. Things unfold.</div>
+    </div>
+    <div class="pop" data-auto>
+      <div class="leaf">
+        <div class="photo tilt-r" data-depth="14"><img src="../../assets/img/places/paxos-island.jpg"
+           alt="Paxos from the air: a Y-shaped island whose two arms face each other across a bay, a white colonnaded round hall under a conical roof on one arm and, on the other, a town beside a round hall with a conical red-tiled roof, the arms joining at a fork above the broad body of the island."></div>
+        <div class="fold-shadow"></div>
+      </div>
+    </div>
+  </div>
 </header>
 
-<nav class="toc">
-  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Contents</a></h6>
-  <ol>
-    <li><a href="#s1">I · The Island of Paxos</a></li>
-    <li><a href="#s2">II · The Hall</a></li>
-    <li><a href="#s3">III · Two Kinds of Question</a></li>
-    <li><a href="#terms">The Setting and the Papers</a></li>
-    <li><a href="#reality">Reality Checks</a></li>
-    <li><a href="#books">The Books Set Here</a></li>
-  </ol>
-</nav>
-
-<hr class="rule">
-
-<section id="s1">
-  <div class="issue"><span class="no">I</span><h2>The Island of Paxos</h2></div>
-  <div class="prose">
-    <figure class="panel">
-      <img src="../../assets/img/places/paxos-island.jpg" width="1200" height="896" loading="lazy"
-           alt="Paxos from the air: a Y-shaped island whose two arms face each other across a bay, a white colonnaded round hall under a conical roof on one arm and, on the other, a town beside a round hall with a conical red-tiled roof, the arms joining at a fork above the broad body of the island.">
-    </figure>
+<section class="spread light" id="s1" data-name="The Island of Paxos">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <h2>The Island of Paxos</h2>
+    <div class="prosecol">
+    
 
     <p>Paxos is shaped like a Y. Two arms reach north and face each other across a bay: the western
     arm holds the <b>Chamber</b> of the Paxon Parliament, the eastern arm the city of
@@ -57,17 +53,17 @@
     and the Chamber has a meridian line. Word goes by messenger and by courier along the island's
     roads, and takes as long as it takes.</p>
   </div>
+  </div>
 </section>
 
-<hr class="rule">
-
-<section id="s2">
-  <div class="issue"><span class="no">II</span><h2>The Hall</h2></div>
-  <div class="prose">
-    <figure class="panel">
-      <img src="../../assets/img/places/hall.jpg" width="1200" height="896" loading="lazy"
-           alt="The hall of two doors: a small gabled stone hall where the island road forks, with the western arm and its round hall rising behind.">
-    </figure>
+<section class="spread dark" id="s2" data-name="The Hall">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="two read">
+      <div>
+    <h2>The Hall</h2>
+    <div class="prosecol">
+    
 
     <p>The <b>hall of two doors</b> stands at the fork of the island, on common ground that belongs
     to neither city, as the Messon on Lesbos was the common sanctuary of that island's cities. It has
@@ -78,13 +74,18 @@
     <p>The hall does not rule on anything. It sorts. Every question brought to it leaves by the door
     its own shape decides.</p>
   </div>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="../../assets/img/places/hall.jpg" loading="lazy"
+           alt="The hall of two doors: a small gabled stone hall where the island road forks, with the western arm and its round hall rising behind."></div></div></div>
+    </div>
+  </div>
 </section>
 
-<hr class="rule">
-
-<section id="s3">
-  <div class="issue"><span class="no">III</span><h2>Two Kinds of Question</h2></div>
-  <div class="prose">
+<section class="spread light" id="s3" data-name="Two Kinds of Question">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap">
+    <h2>Two Kinds of Question</h2>
+    <div class="prosecol">
     <p>Some questions only grow. <i>Has at least one copy of this work been made?</i> can be answered
     yes as soon as it is true, and once it is yes it is yes for ever, whatever news comes later. A
     question of that kind needs no assembly, and it leaves by the scholars' door.</p>
@@ -97,40 +98,34 @@
     <p>Putting both cities and the scholars on one island makes the difference a walk: the scholars
     could take any question to an assembly, and the hall shows which questions need one.</p>
   </div>
-</section>
-
-<hr class="rule">
-
-<section id="terms">
-  <div class="issue"><span class="no">Reference</span><h2>The Setting and the Papers</h2></div>
-  <div class="prose">
-    <p>What each part of the place stands for, so that a reader coming to any book here knows the
-    model before the first chapter begins.</p>
-  </div>
-  <div class="table-wrap">
-    <table class="chron">
-      <thead><tr><th>In the setting</th><th>What it stands for</th></tr></thead>
-      <tbody>
-        <tr><td><span class="term">a question brought to the hall</span></td><td>A program or query.</td></tr>
-        <tr><td><span class="term">a question that only grows</span></td><td>A monotonic query.</td></tr>
-        <tr><td><span class="term">a question that rests on absence</span></td><td>A non-monotonic query.</td></tr>
-        <tr><td><span class="term">the scholars' door</span></td><td>No coordination needed.</td></tr>
-        <tr><td><span class="term">the door of the assemblies</span></td><td>Coordination needed.</td></tr>
-        <tr><td><span class="term">the hall sorting and never ruling</span></td><td>The CALM theorem: coordination is needed exactly when a program is not monotonic.</td></tr>
-      </tbody>
-    </table>
   </div>
 </section>
 
-<hr class="rule">
-
-<section id="reality">
-  <div class="issue"><span class="no">Reference</span><h2>Reality Checks</h2></div>
-  <div class="prose">
-    <p>What each part of this place has in common with the real Greek world, so that a reader can tell what is borrowed from what is made up. <i>Close</i> means the real thing is much like it; <i>loose</i> means it is borrowed and changed; <i>invented</i> means the setting made it up; <i>anachronism</i> means the real thing is of another age. A dagger (†) marks a citation given from memory and not checked against the text.</p>
+<section class="spread dark" id="terms" data-name="The Setting and the Papers">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <h2>The Setting and the Papers</h2>
+    <div class="prosecol"><p>What each part of the place stands for, so that a reader coming to any book here knows the
+    model before the first chapter begins.</p></div>
+    <div class="map">
+      <div class="hd" style="text-align:right;padding-right:6px"><tr><th>In the setting</div><div></div><div class="hd">What it stands for</div>
+      <div class="l"><span class="term">a question brought to the hall</span></div><div class="mid">⟷</div><div class="r">A program or query.</div>
+      <div class="l"><span class="term">a question that only grows</span></div><div class="mid">⟷</div><div class="r">A monotonic query.</div>
+      <div class="l"><span class="term">a question that rests on absence</span></div><div class="mid">⟷</div><div class="r">A non-monotonic query.</div>
+      <div class="l"><span class="term">the scholars' door</span></div><div class="mid">⟷</div><div class="r">No coordination needed.</div>
+      <div class="l"><span class="term">the door of the assemblies</span></div><div class="mid">⟷</div><div class="r">Coordination needed.</div>
+      <div class="l"><span class="term">the hall sorting and never ruling</span></div><div class="mid">⟷</div><div class="r">The CALM theorem: coordination is needed exactly when a program is not monotonic.</div>
+    </div>
   </div>
-  <div class="table-wrap">
-    <table class="chron">
+</section>
+
+<section class="spread light" id="reality" data-name="Reality Checks">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <h2>Reality Checks</h2>
+    <div class="prosecol"><p>What each part of this place has in common with the real Greek world, so that a reader can tell what is borrowed from what is made up. <i>Close</i> means the real thing is much like it; <i>loose</i> means it is borrowed and changed; <i>invented</i> means the setting made it up; <i>anachronism</i> means the real thing is of another age. A dagger (†) marks a citation given from memory and not checked against the text.</p></div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+<table class="chron">
       <thead><tr><th>In the setting</th><th>The real precedent</th><th class="c">How close</th></tr></thead>
       <tbody>
         <tr><td><i>Building.</i> <span class="term">a hall on common ground that belongs to neither city</span></td><td>The Messon sanctuary of Zeus, Hera and Dionysos was the common sacred ground of the cities of Lesbos (Alcaeus fr. 129), and the Panionion on Mycale served the Ionian cities (Herodotus 1.141–148)†.</td><td class="c">Close</td></tr>
@@ -141,20 +136,29 @@
         <tr><td><i>Practice.</i> <span class="term">a question on common ground</span></td><td>Neutral meeting places of cities existed (the Amphictyony at Delphi and Thermopylae)†.</td><td class="c">Close</td></tr>
       </tbody>
     </table>
+    </div></div></div>
   </div>
 </section>
 
-<hr class="rule">
-
-<section id="books">
-  <div class="issue"><span class="no">Reference</span><h2>The Books Set Here</h2></div>
-  <div class="prose">
-    <p><a href="../../books/knowing-when-to-wait/index.html"><i>Knowing When to Wait</i></a>: which questions need an
-    assembly and which do not, and why the answer is the question's shape.
-    <span class="paper">Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020</span></p>
+<section class="spread dark" id="books" data-name="The Books Set Here">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <h2>The Books Set Here</h2>
+    <div class="cards3 books">
+      <div class="pop"><div class="leaf paper card3 tall"><a class="cardlink" href="../../books/knowing-when-to-wait/index.html">
+        <div class="photo"><img src="../../assets/img/covers/knowing-when-to-wait.jpg" alt="" loading="lazy"></div>
+        <div class="body"><h3>Knowing When to Wait</h3><p>Which questions need an assembly and which do not, and why the answer is the question's shape.</p><span class="credit">Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020</span></div>
+      </a></div></div>
+    </div>
   </div>
 </section>
+<footer>Distributed Algorithms of Ancient Greece · Paxos · The Hall of Two Doors</footer>
 
-</div>
+<script src="../../art/scroll/shell.js"></script>
+<script>
+/* who is who: light a pair when either side is pointed at */
+document.querySelectorAll(".map").forEach(m=>{const c=[...m.children].slice(3);for(let i=0;i<c.length;i+=3){const l=c[i],r=c[i+2];
+  [l,c[i+1],r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})})}});
+</script>
 </body>
 </html>
