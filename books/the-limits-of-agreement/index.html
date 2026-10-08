@@ -275,6 +275,24 @@ button.beg{cursor:pointer}
 .stand{font-family:var(--sans);font-size:.88rem;border:3px solid var(--ink);background:#fff;padding:8px 12px;margin-bottom:10px}
 .stand div{padding:2px 0}
 
+/* ---------- proofs, in the paper's own terms ---------- */
+details.proof{max-width:760px;margin:1.8rem 0 0;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);padding:0 clamp(14px,3vw,22px);font-size:.95rem}
+details.proof>summary{cursor:pointer;padding:12px 0;font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--aegean-d)}
+details.proof>summary:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
+details.proof[open]{padding-bottom:14px}
+details.proof details.proof{border-width:3px;box-shadow:none;background:#fff;margin:1rem 0;max-width:none}
+details.proof .given{padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean);margin:0 0 .8rem}
+details.proof h3,details.proof h4{font-size:1.02rem;margin:1.4rem 0 .5rem}
+details.proof .hlink{color:inherit;text-decoration:none}
+details.proof .fnote{font-size:.84rem;color:#6b5a48}
+ol.proofsteps{padding-left:1.4em;margin:.4rem 0 0}
+ol.proofsteps li{margin:.55em 0}
+.qed{float:right;font-family:var(--sans);letter-spacing:.15em;color:#5f6e28}
+.mathblock{margin:.8rem 0;padding:8px 12px;overflow-x:auto;text-align:center;font-style:italic;background:#fff;border:2px solid #1c151233}
+.slab{margin:1rem 0;padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean)}
+.slab-head{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
+.stmt{font-style:italic}
+
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .pop > .leaf{transition:opacity .3s;transform:none!important}
@@ -450,6 +468,24 @@ button.beg{cursor:pointer}
       </div>
     </div></div></div>
     <p style="max-width:40em;margin-top:1.4rem">That is the first tool, and the dullest fact here: two runs of arrivals with no man in common do not interfere. An arrival belongs to one man and to the air, and to nobody else.</p>
+    <details class="proof">
+      <summary>Proof · courses with no man in common commute</summary>
+      <p class="given">In the paper's terms a standing is a configuration, an arrival an event, a course a schedule, a fair course an admissible run, and open and closed are bivalent and univalent. <b>Lemma 1.</b> Let courses σ₁ and σ₂ both be applicable at a standing, and let the set <var>A</var> of men who act in σ₁ and the set <var>B</var> of men who act in σ₂ be disjoint. Then each can be run after the other, and both orders reach the same standing.</p>
+    <ol class="proofsteps">
+      <li>A standing is what is in each man's head together with the ravens aloft. An arrival
+      changes two parts of it: the one man who takes the raven in, and the air — one raven removed,
+      perhaps others added.</li>
+      <li>Let σ₁ touch a set of men <var>A</var> and σ₂ a set <var>B</var>, disjoint. Running σ₁
+      alters only men in <var>A</var>, which σ₂ never reads; and conversely.</li>
+      <li>Neither disables the other through the air: ravens are addressed, so those σ₂ consumes
+      are addressed into <var>B</var>, and σ₁ removes only ravens addressed into <var>A</var>.
+      Both orders are therefore applicable.</li>
+      <li>In either order, the men of <var>A</var> have taken exactly the arrivals of σ₁ and
+      those of <var>B</var> exactly the arrivals of σ₂, each in its own order, and the air has had
+      the same ravens removed and added. So the standings reached are the
+      same.<span class="qed">∎</span></li>
+    </ol>
+    </details>
   </div>
 </section>
 
@@ -469,6 +505,26 @@ button.beg{cursor:pointer}
       <p class="say" id="dusksay"></p>
     </div></div></div>
     <p style="max-width:40em;margin-top:1.4rem">Nobody died to make that argument work. The other three could not tell a silent man from a slow one, and so could not tell two different beginnings apart. <b>However the four arrange their affairs, the sightings can fall so that the night begins open.</b></p>
+    <details class="proof">
+      <summary>Proof · some beginning is open</summary>
+      <p class="given">In the paper's terms a standing is a configuration, an arrival an event, a course a schedule, a fair course an admissible run, and open and closed are bivalent and univalent. A beginning is an initial configuration: the four sightings, with no raven yet aloft. <b>Lemma 2.</b> Whatever the four have arranged, some beginning is open.</p>
+    <ol class="proofsteps">
+      <li>Suppose every beginning were closed, each already fated by the sightings alone.</li>
+      <li>Both fates occur: the second demand forces holding where all four saw hold, and attacking
+      where all four saw attack.</li>
+      <li>Call two beginnings neighbours when they differ in one man's sighting. Walking from a
+      hold-fated beginning to an attack-fated one by single changes, there must be neighbours
+      <var>B</var>₀ and <var>B</var>₁ fated to hold and to attack, differing only in the sighting of one
+      man <var>p</var>.</li>
+      <li>Take a fair course from <var>B</var>₀ in which <var>p</var> never stirs; this is
+      permitted, since at most one man may be silent. Being fair, it ends in holding.</li>
+      <li>Run the same course from <var>B</var>₁. Since <var>p</var> never acts and his sighting
+      is the only difference, every other man sees exactly the same arrivals in the same order, so
+      the course ends in holding here too.</li>
+      <li>But <var>B</var>₁ was fated to attack, and a fated beginning admits no course to the other
+      answer. Hence some beginning is open.<span class="qed">∎</span></li>
+    </ol>
+    </details>
   </div>
 </section>
 
@@ -494,6 +550,38 @@ button.beg{cursor:pointer}
       <div class="step"><div class="card"><div class="num">6 · The same tent's arrival</div><h3>Then let that man go quiet</h3><p>If both arrivals are one man's business, let him go quiet, as a man does whose birds are in the pines. The other three must finish without him. From where they finish, the raven alone still leads to holding, while his other arrival and then the raven still leads to attacking. A finished night would still be open. That cannot be either.</p></div></div>
       <div class="step"><div class="card"><div class="num">7 · So</div><h3>The raven lands, and the night is open still</h3><p>The supposition fails. Somewhere in the bottom row a standing is open. No single raven is ever the one that has to settle the matter.</p></div></div>
     </div>
+  </div>
+  <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <details class="proof">
+      <summary>Proof · an arrival can always be deferred and the night left open</summary>
+      <p class="given">In the paper's terms a standing is a configuration, an arrival an event, a course a schedule, a fair course an admissible run, and open and closed are bivalent and univalent. <b>Lemma 3.</b> Let <var>C</var> be an open standing and <var>e</var> an arrival applicable at <var>C</var>. Let 𝒞 be the set of standings reachable from <var>C</var> without allowing <var>e</var>, and 𝒟 the set got by allowing <var>e</var> at each standing of 𝒞. Then 𝒟 contains an open standing.</p>
+    <ol class="proofsteps">
+      <li>Let <var>C</var> be open and <var>e</var> an arrival applicable there. Write 𝒞 for
+      the standings reachable from <var>C</var> without allowing <var>e</var>, and 𝒟 for those got
+      by allowing <var>e</var> at each standing of 𝒞. Suppose no member of 𝒟 is open.</li>
+      <li><b>Both settlements occur in 𝒟.</b> <var>C</var> is open, so some course from it
+      ends in holding and another in attacking. If such a course never allows <var>e</var>, its standings
+      lie in 𝒞 and allowing <var>e</var> at the end gives a member of 𝒟 settled the same way; if
+      it does allow <var>e</var>, the standing just after is already in 𝒟.</li>
+      <li><b>So 𝒞 holds neighbours that split.</b> 𝒞 is connected, so walking from the standing
+      whose image is settled for holding to the one whose image is settled for attacking gives <var>C</var>₀ and
+      <var>C</var>₁ = <var>f</var>(<var>C</var>₀), one arrival apart, whose images <var>D</var>₀
+      and <var>D</var>₁ are settled opposite ways.</li>
+      <li><b>Case one: <var>f</var> is another man's arrival.</b> By the lemma of separate folds
+      <var>e</var> and <var>f</var> commute, so <var>D</var>₁ = <var>f</var>(<var>D</var>₀). But
+      everything reachable from the hold-settled <var>D</var>₀ is settled for holding, and
+      <var>D</var>₁ is settled for attacking.</li>
+      <li><b>Case two: <var>f</var> is the same man's arrival, say <var>p</var>'s.</b> Take a
+      course σ from <var>C</var>₀ in which <var>p</var> never stirs and which does finish;
+      permitted, since <var>p</var> may be the one silent man. Call the standing it reaches
+      <var>A</var>.</li>
+      <li>σ has no man in common with <var>e</var> or <var>f</var>, so by the lemma it may be run
+      from <var>D</var>₀ and from <var>D</var>₁ as well, reaching <var>e</var>(<var>A</var>) and
+      <var>f</var> then <var>e</var> applied to <var>A</var> — settled for holding and for attacking
+      respectively. So <var>A</var> is open, though σ finished there.</li>
+      <li>Both cases are impossible, so 𝒟 holds an open standing.<span class="qed">∎</span></li>
+    </ol>
+    </details>
   </div>
 </section>
 
