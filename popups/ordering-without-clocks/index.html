@@ -362,7 +362,7 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">A narrower question</div>
       <h2>Not what was first, but what could have led to what</h2>
-      <p class="lede">The bookkeeper of House 1 changed the question. No house can see which of two orders the sun saw first. Every house can see what could have <b>led to</b> what, because news moves on Arche only by slip.</p>
+      <p class="lede">The keeper of House 1's accounts changed the question. No house can see which of two orders the sun saw first. Every house can see what could have <b>led to</b> what, because news moves on Arche only by slip.</p>
       <p>One event <b>came before</b> another in exactly three cases.</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
@@ -393,7 +393,7 @@ footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;fo
         <h2>The tally</h2>
         <p class="lede">Every counting room keeps a tally: one number, written on every slip it sends, and raised by two mechanical rules. Scroll slowly: the picture moves with you.</p>
       </div>
-      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/t03-slip.jpg" alt="Before House 1's portico under low cloud, the bookkeeper hands a narrow slip to a messenger" loading="lazy"></div></div></div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/t03-slip.jpg" alt="Before House 1's portico under low cloud, the keeper of the accounts hands a narrow slip to a messenger" loading="lazy"></div></div></div>
     </div>
   </div>
   <div class="scrolly" id="tally">
@@ -783,7 +783,11 @@ function Morning(svg){
   let lists;
   const mixed=()=>{const a=[...items];for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
   const paint=()=>cols.forEach((c,i)=>c.innerHTML=lists[i].map(([t,h])=>`<div class="e">${chip(t,h)}</div>`).join(""));
-  function mix(){do{lists=[mixed(),mixed(),mixed()]}while(String(lists[0])===String(lists[1])||String(lists[1])===String(lists[2]));paint();
+  /* no house hears of an entry ahead of one that came before it */
+  const chains=[["1,1","2,1"],["2,1","3,2"],["1,2","3,2"],["1,3","2,3"]];
+  const sound=l=>{const at=l.map(String);return chains.every(([a,b])=>at.indexOf(a)<at.indexOf(b))};
+  const heard=()=>{let l;do{l=mixed()}while(!sound(l));return l};
+  function mix(){do{lists=[heard(),heard(),heard()]}while(String(lists[0])===String(lists[1])||String(lists[1])===String(lists[2])||String(lists[0])===String(lists[2]));paint();
     st.textContent="as each heard of them";say.textContent="Six entries from the morning, each marked with its tally and its house. Each house heard of them in a different sequence.";bs.disabled=false}
   bs.onclick=()=>{lists=lists.map(l=>[...l].sort((a,b)=>a[0]-b[0]||a[1]-b[1]));paint();bs.disabled=true;st.textContent="by precedence";
     say.innerHTML="Lower tally first; where tallies tie, lower house number first. <span class='ok'>All three houses now hold the same list</span>, and none of them needed a clock.";};

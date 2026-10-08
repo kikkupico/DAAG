@@ -491,7 +491,7 @@ button.beg{cursor:pointer}
       <div class="step"><div class="card"><div class="num">3 · Suppose</div><h3>Suppose its landing always settled the night</h3><p>Then every standing in the bottom row is closed, for holding or for attacking. Both must appear, because the night at the top could still end either way.</p></div></div>
       <div class="step"><div class="card"><div class="num">4 · Neighbours</div><h3>Somewhere, two neighbours split</h3><p>Two standings in the top row are one arrival apart. Land the raven at the first and the night is settled for holding. Land it at the second and the night is settled for attacking.</p></div></div>
       <div class="step"><div class="card"><div class="num">5 · Another tent's arrival</div><h3>Then the order cannot matter</h3><p>If that one arrival is another man's business, it and the raven are separate folds: either order reaches the same standing. So one more arrival leads from a night settled for holding to a night settled for attacking. That cannot be.</p></div></div>
-      <div class="step"><div class="card"><div class="num">6 · The same tent's arrival</div><h3>Then let that man go quiet</h3><p>If both arrivals are one man's business, let him go quiet, as a man does whose birds are in the pines. The other three must finish without him. Yet after they finish, his two arrivals in either order still lead to both answers. A finished night would still be open. That cannot be either.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · The same tent's arrival</div><h3>Then let that man go quiet</h3><p>If both arrivals are one man's business, let him go quiet, as a man does whose birds are in the pines. The other three must finish without him. From where they finish, the raven alone still leads to holding, while his other arrival and then the raven still leads to attacking. A finished night would still be open. That cannot be either.</p></div></div>
       <div class="step"><div class="card"><div class="num">7 · So</div><h3>The raven lands, and the night is open still</h3><p>The supposition fails. Somewhere in the bottom row a standing is open. No single raven is ever the one that has to settle the matter.</p></div></div>
     </div>
   </div>
@@ -665,7 +665,7 @@ function Polar(svg,o){
 }
 
 /* the four mercenaries, told apart by colour */
-const TC={1:"#e0b84a",2:"#7d9be0",3:"#cf6a5e",4:"#9cb648"};
+const TC={1:"#e0b84a",2:"#6583d6",3:"#c45448",4:"#9cb648"};
 const yesno=ok=>ok?"<span class='ok'>✓</span>":"<span class='bad'>✗</span>";
 const tentChip=(k,extra="")=>`<span class="chip"${extra}><i style="background:${TC[k]}"></i>Tent ${k}</span>`;
 
@@ -750,7 +750,7 @@ function Hill(svg){
   const dot=(k,t)=>{const g=P.event(k,t,"#fffaf0",8);g.classList.add("st-new");g.style.cursor="default"};
   const arc=(a,ta,b,tb)=>P.slip(a,ta,b,tb,12).classList.add("st-new");
   function run(a,b,btn){
-    const t=.9+3.1*done.length;dot(a,t);arc(a,t,b,t+1.1);dot(b,t+1.1);arc(b,t+1.1,a,t+2.2);dot(a,t+2.2);
+    const t=1.4+3.1*done.length;dot(a,t);arc(a,t,b,t+1.1);dot(b,t+1.1);arc(b,t+1.1,a,t+2.2);dot(a,t+2.2);
     took[b]=a;took[a]=b;done.push(a);btn.disabled=true;paint();
     if(done.length<2){say.innerHTML=`Tents ${a} and ${b} trade ravens. Nothing in that touched the other two tents.`;return}
     const order=done.join();
