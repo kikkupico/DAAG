@@ -1325,10 +1325,10 @@ def leaders_chain():
 
 
 FIGURES = {
-    "books/ordering-without-clocks/index.html": [ordering_spacetime],
+    "books/ordering-without-clocks/archive.html": [ordering_spacetime],
     "books/taking-stock-without-stopping/index.html": [stock_sash, stock_cuts],
     "books/many-copies-acting-as-one/index.html": [copies_overlap, copies_loop],
-    "books/the-limits-of-agreement/index.html": [limits_fold, limits_silent, limits_defer],
+    "books/the-limits-of-agreement/archive.html": [limits_fold, limits_silent, limits_defer],
     "books/agreeing-when-messages-run-late/index.html": [late_turn, late_split],
     "books/answering-while-cut-off/index.html": [cutoff_nights, cutoff_recovery],
     "books/keeping-order-among-liars/index.html": [order_entry],
@@ -1336,7 +1336,7 @@ FIGURES = {
     "books/one-leader-at-a-time/index.html": [board_passes],
     "books/agreeing-among-liars/index.html": [liars_worlds, liars_repeat, liars_sealed],
     "books/changing-leaders-among-liars/index.html": [leaders_stage, leaders_chain],
-    "books/the-part-time-parliament/index.html": [parl_steps, parl_wander, parl_duel, parl_theorem, parl_ledger],
+    "books/the-part-time-parliament/archive.html": [parl_steps, parl_wander, parl_duel, parl_theorem, parl_ledger],
 }
 
 # A figure not yet in its book takes the place of the nth flat <figure class="diagram">.
