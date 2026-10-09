@@ -493,7 +493,7 @@ Defaults for the 3D phase, taken from `hellenistic-reference.html` (its *Modelli
 
 ### 3.5 Paxos cast: dress
 
-The ring road's rule holds: every garment is one loom-woven rectangle, pinned or belted, never tailored, with no set-in sleeves, sewn collars, buckles or stitched bags. The reference sheet is `art/refs/paxos-sheet.png`, cut into `art/refs/paxos/`; the Schedia council and its runner boys are on `art/refs/schedia-sheet.png` and `art/refs/schedia2-sheet.png`.
+The ring road's rule holds: every garment is one loom-woven rectangle, pinned or belted, never tailored, with no set-in sleeves, sewn collars, buckles or stitched bags. The reference sheet is `art/refs/paxos-sheet.png`, cut into `art/refs/paxos/`; the Schedia council and its runners are on `art/refs/schedia-sheet.png` and `art/refs/schedia2-sheet.png`.
 
 | Who | Dress |
 |---|---|
