@@ -4,574 +4,946 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Changing Leaders Among Liars — The Crown of Mount Phyle</title>
+<meta name="description" content="HotStuff (Yin, Malkhi, Reiter, Gueta and Abraham): four bandits on the crown, the job passing at every entry, and why one more stage lets a new holder take over as cheaply as an old one.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<link rel="stylesheet" href="../../assets/css/daag.css">
-<link rel="stylesheet" href="../../assets/css/books.css">
+<style>
+:root{
+  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4;
+  --aegean:#2e88b5; --aegean-d:#136f9e; --blood:#bf4a26; --olive:#7c8f3a; --terra:#b5602c;
+  --gold:#e0b84a; --shadow:#b9a77e;
+  --serif:Georgia,'Iowan Old Style','Palatino Linotype',serif;
+  --sans:Optima,'Gill Sans','Gill Sans MT',sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#d8cba6}
+body{margin:0;background:#d8cba6;color:var(--ink);font-family:var(--serif);line-height:1.55;overflow-x:hidden}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer}
+h1,h2,h3{font-family:var(--sans);line-height:1.12;margin:0;text-wrap:balance}
+p{margin:0 0 .9rem;text-wrap:pretty}
+.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--blood)}
+
+/* ---------- top bar ---------- */
+.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
+  font-family:var(--sans);font-size:.78rem;letter-spacing:.05em;background:linear-gradient(180deg,#3a2a1a,#241a10)}
+.bar a{color:#f0e6cc;text-decoration:none;opacity:.8;white-space:nowrap} .bar a:hover{opacity:1}
+.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:520px){.bar a+a{display:none}}
+.bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
+
+/* ---------- spreads ---------- */
+.spread{position:relative;padding:clamp(4.5rem,11vw,8rem) 20px;overflow:clip}
+.spread.has-scrolly{overflow:visible;padding-bottom:0;background:var(--marble)}
+.dark{background:var(--marble);color:var(--ink);background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
+.light{background:var(--parch);color:var(--ink);
+  background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
+/* torn-paper edge between spreads */
+.tear{position:absolute;left:0;right:0;top:-1px;height:26px;z-index:3;pointer-events:none}
+.tear path{fill:var(--prev)}
+.wrap{max-width:1080px;margin:0 auto;position:relative;z-index:2}
+.narrow{max-width:640px;margin:0 auto}
+.spread h2{font-size:clamp(1.9rem,5vw,3.1rem);margin:.4rem 0 1rem}
+.lede{font-size:clamp(1.05rem,2.2vw,1.3rem);max-width:34em}
+.light .lede{color:#3a2d24}
+.meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
+
+/* ---------- the pop-up: a card that unfolds from its hinge ---------- */
+.pop{perspective:1400px}
+.pop > .leaf{transform-origin:50% 100%;transform:rotateX(78deg) translateY(30px);opacity:0;
+  transition:transform 1.1s cubic-bezier(.2,.9,.25,1.12),opacity .6s ease}
+.pop.up > .leaf{transform:rotateX(0) translateY(0);opacity:1}
+.pop.fromleft > .leaf{transform-origin:0 50%;transform:rotateY(-80deg)}
+.pop.fromright > .leaf{transform-origin:100% 50%;transform:rotateY(80deg)}
+.pop.up.fromleft > .leaf,.pop.up.fromright > .leaf{transform:none}
+.paper{background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);position:relative}
+.light .paper{box-shadow:9px 11px 0 #b9a77e}
+.photo{border:5px solid #fffaf0;box-shadow:0 0 0 3px var(--ink),12px 16px 0 var(--shadow);background:#222;overflow:hidden;position:relative}
+.photo img{width:100%;height:100%;object-fit:cover}
+.tilt-l{transform:rotate(-1.4deg)} .tilt-r{transform:rotate(1.2deg)}
+[data-depth]{will-change:transform}
+.fold-shadow{position:absolute;left:6%;right:6%;bottom:-18px;height:26px;background:radial-gradient(ellipse at center,#0008,transparent 70%);opacity:0;transition:opacity 1s .4s;z-index:-1}
+.up .fold-shadow{opacity:1}
+
+/* ---------- cover ---------- */
+#cover{min-height:100svh;display:grid;align-items:center;padding-top:5rem;
+  background:radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
+#cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
+#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:.6rem 0 1rem;letter-spacing:-.01em}
+#cover h1 span{display:block;font-size:.34em;letter-spacing:.2em;text-transform:uppercase;color:var(--aegean-d);margin-top:.9rem;font-weight:400}
+#cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
+#cover .hook{font-size:clamp(1.1rem,2.4vw,1.45rem);font-style:italic;max-width:24em;color:#3a2d24}
+.scrollcue{margin-top:2rem;font-family:var(--sans);font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);display:flex;gap:10px;align-items:center}
+.scrollcue b{display:inline-block;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(7px)}}
+.cut{position:absolute;pointer-events:none;z-index:1}
+.cut svg{display:block;width:100%;height:auto}
+@media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
+
+/* ---------- two-column spreads ---------- */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.two.wide-r{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
+@media(max-width:859px){.two,.two.wide-r{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- the hall (full-bleed photo with pins) ---------- */
+#hall{padding:0;background:var(--marble)}
+.bleed{position:relative;height:min(100svh,880px);overflow:hidden}
+.bleed img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover}
+.bleed::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--parch) 0,transparent 8%,transparent 92%,var(--parch) 100%);pointer-events:none}
+.pin{position:absolute;z-index:4;max-width:min(250px,44vw);padding:10px 14px;background:#fffaf0;color:var(--ink);border:3px solid var(--ink);
+  box-shadow:5px 6px 0 #0007;font-size:.92rem;line-height:1.35;transform-origin:0 100%}
+.pin b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood)}
+.pin::after{content:"";position:absolute;left:-3px;bottom:-26px;width:3px;height:26px;background:var(--ink)}
+.pin::before{content:"";position:absolute;left:-8px;bottom:-34px;width:13px;height:13px;border-radius:50%;background:var(--blood);border:3px solid var(--ink)}
+.hall-title{position:absolute;z-index:5;left:20px;right:20px;top:clamp(5rem,12vh,8rem);max-width:1080px;margin:0 auto}
+.hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
+.hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
+.hall-title p{margin:0}
+
+/* ---------- scrollytelling ---------- */
+.scrolly{position:relative}
+.scrolly .stage{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;padding:70px 20px 20px;overflow:hidden}
+.scrolly .steps{position:relative;z-index:6;margin-top:-100svh;pointer-events:none}
+.step{min-height:100svh;display:flex;align-items:center;padding:0 20px}
+.step .card{pointer-events:auto;max-width:360px;padding:16px 20px;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);
+  transform:translateY(24px) rotate(-.6deg);opacity:.25;transition:transform .7s cubic-bezier(.2,.9,.25,1.1),opacity .5s}
+.step.on .card{transform:none;opacity:1}
+.step .card h3{font-size:1.1rem;margin-bottom:.35rem}
+.step .card p{margin:0;font-size:.98rem}
+.step .num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
+.step.r{justify-content:flex-end}
+.scrolly svg.fig{width:min(100%,820px);height:auto;max-height:calc(100svh - 120px);overflow:visible}
+.scrolly .stage-inner{width:100%;display:flex;justify-content:center}
+@media(min-width:900px){.scrolly .stage{padding-left:380px} .step .card{max-width:320px} .step{padding-left:max(24px,calc((100vw - 1080px)/2))}}
+@media(max-width:899px){
+  .scrolly .stage{align-items:flex-start;padding-top:64px}
+  .scrolly svg.fig{max-height:46svh}
+  .step{align-items:flex-end;padding-bottom:22px}
+  .step .card{max-width:none;width:100%}
+}
+svg text{font-family:var(--serif)}
+.svg-dark{background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
+
+/* ---------- interactive wells ---------- */
+.well{padding:clamp(16px,3vw,28px);margin:1.6rem 0}
+.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;justify-content:space-between;gap:10px}
+.well h4 em{font-style:normal;color:#6b5a48}
+.btn{background:var(--ink);color:var(--parch);border:3px solid var(--ink);padding:8px 16px;font-family:var(--sans);font-size:.88rem;letter-spacing:.03em;box-shadow:4px 4px 0 var(--blood);transition:transform .12s,box-shadow .12s}
+.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--blood)}
+.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--blood)}
+.btn:disabled{opacity:.35;cursor:default;box-shadow:none}
+.btn.alt{background:#fffaf0;color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.say{margin:12px 0 0;font-size:.98rem;min-height:3.1em}
+.say b{color:var(--blood)}
+.ok{color:#3f7a2a;font-weight:700}.bad{color:var(--blood);font-weight:700}
+
+/* cards row */
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
+.card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
+.card3 .body{padding:16px 18px 18px}
+.card3 h3{font-size:1.15rem;margin-bottom:.4rem}
+.card3 p{font-size:.95rem;margin:0}
+.card3 .fx{margin-top:12px}
+@media(max-width:860px){.cards3{grid-template-columns:1fr}}
+/* relevance */
+.map{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px 0;align-items:stretch;max-width:760px;margin:2rem auto 0}
+.map .l,.map .r{padding:11px 16px;font-size:1rem;border:3px solid var(--ink);background:#fffaf0;color:var(--ink);transition:background .25s,transform .25s;cursor:default}
+.map .r{font-family:var(--sans);background:#e9f2f7}
+.map .mid{display:grid;place-items:center;color:var(--blood);font-size:1.3rem}
+.map .hi{background:var(--gold)!important;transform:scale(1.03)}
+.map .hd{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood)}
+.end{text-align:center}
+.end .big{font-size:clamp(1.5rem,4.2vw,2.5rem);font-style:italic;max-width:19em;margin:0 auto 1.4rem;color:var(--ink);text-wrap:balance}
+.links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+.links a{color:var(--ink);background:#fffaf0;border:3px solid var(--ink);padding:9px 18px;text-decoration:none;font-family:var(--sans);font-size:.9rem;box-shadow:4px 4px 0 var(--shadow)}
+.links a:hover{background:var(--gold)}
+footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;font-family:var(--sans);background:#d8cba6}
+
+/* ---------- lists, small parts ---------- */
+.terms{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:12px}
+.terms li{padding:12px 16px;background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 #b9a77e;font-size:.98rem}
+.terms b{font-family:var(--sans)}
+@keyframes slotin{from{transform:translateY(-8px);opacity:0}}
+.btn:focus-visible,.links a:focus-visible,[role=button]:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
+.num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
+.chip{display:inline-block;padding:1px 7px;margin:2px 3px 2px 0;border:2px solid var(--ink);border-radius:5px;background:#fff;font-family:var(--sans);font-weight:700;font-size:.86rem;white-space:nowrap}
+.chip i{display:inline-block;width:.7em;height:.7em;border-radius:50%;border:1.5px solid var(--ink);margin-right:5px;vertical-align:-.02em}
+.isle-svg{width:min(100%,440px);display:block;margin:0 auto}
+.fig .fade{opacity:0;transition:opacity .6s}
+.fig .fade.on{opacity:1}
+.fig .lab{fill:#6b5a48;font-size:15px;font-style:italic;text-anchor:middle}
+.fig .halo{paint-order:stroke;stroke:#fffaf0;stroke-width:5px;stroke-linejoin:round}
+.tok text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+.site rect,.site circle{stroke:var(--ink);stroke-width:4}
+.site text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+
+/* ---------- space-time, drawn in the round ---------- */
+.st-ring{fill:none;stroke:#b9a77e;stroke-opacity:.7;stroke-width:1;stroke-dasharray:3 4}
+.st-spoke{stroke:#1c1512;stroke-width:2.5;stroke-opacity:.45}
+.st-node rect{fill:#f6eed6;stroke:#1c1512;stroke-width:2}
+.st-node text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+.st-slip{fill:none;stroke:#136f9e;stroke-width:2.6;transition:stroke .3s,stroke-width .3s,opacity .5s}
+.st-seg{stroke:#bf4a26;stroke-width:7;stroke-linecap:round;opacity:0;transition:opacity .3s}
+.st-seg.hi{opacity:.85}
+.st-slip.hi{stroke:#bf4a26;stroke-width:5}
+.st-ev{cursor:pointer}
+.st-ev circle.b{stroke:#1c1512;stroke-width:3;transition:stroke .3s,stroke-width .3s}
+.st-ev text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
+.st-ev .halo2{fill:none;stroke:#e0b84a;stroke-width:7;opacity:0;transition:opacity .3s}
+.st-ev.sel .halo2,.st-ev.mark .halo2{opacity:1}
+.st-ev.sel circle.b{stroke-width:4.5}
+.st-ev.dim{opacity:.3}
+.st-ev:focus-visible{outline:none}.st-ev:focus-visible circle.b{stroke:#136f9e;stroke-width:6}
+.st-note{fill:#6b5a48;font-size:13px;font-style:italic}
+
+/* ---------- a stage with a figure and a side panel ---------- */
+.stage-inner.split{gap:18px;align-items:center}
+.stage-inner.split svg.fig{flex:1 1 300px;min-width:0;max-width:470px}
+.side{flex:0 0 240px;display:grid;gap:10px;font-family:var(--sans);font-size:.84rem}
+.side .hc{background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--shadow);padding:8px 10px;min-height:92px;transition:background .4s}
+.side .hc h5{margin:0 0 5px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:6px}
+.side .hc h5 span{color:#6b5a48;letter-spacing:.02em;text-transform:none}
+.side .hc .chk{font-size:.78rem;margin-top:4px;line-height:1.35}
+.side .hc.in{background:#e3ecc4}
+@media(max-width:899px){
+  .stage-inner.split{flex-direction:column;gap:10px}
+  .stage-inner.split svg.fig{flex:0 0 auto;max-height:30svh;width:auto;max-width:100%}
+  .side{flex:0 0 auto;width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;font-size:.7rem}
+  .side .hc{padding:5px 6px;min-height:0;box-shadow:3px 3px 0 var(--shadow)}
+  .side .hc h5{font-size:.62rem;flex-direction:column;gap:0}
+  .side .hc .chk{font-size:.66rem}
+  .side .chip{font-size:.68rem;padding:0 4px}
+}
+.tear{width:100%}
+.scrolly svg.fig.svg-dark{overflow:hidden}
+
+/* ---------- proofs, in the paper's own terms ---------- */
+details.proof{max-width:760px;margin:1.8rem 0 0;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);padding:0 clamp(14px,3vw,22px);font-size:.95rem}
+details.proof>summary{cursor:pointer;padding:12px 0;font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--aegean-d)}
+details.proof>summary:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
+details.proof[open]{padding-bottom:14px}
+details.proof details.proof{border-width:3px;box-shadow:none;background:#fff;margin:1rem 0;max-width:none}
+details.proof .given{padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean);margin:0 0 .8rem}
+details.proof h3,details.proof h4{font-size:1.02rem;margin:1.4rem 0 .5rem}
+details.proof .hlink{color:inherit;text-decoration:none}
+details.proof .fnote{font-size:.84rem;color:#6b5a48}
+ol.proofsteps{padding-left:1.4em;margin:.4rem 0 0}
+ol.proofsteps li{margin:.55em 0}
+.qed{float:right;font-family:var(--sans);letter-spacing:.15em;color:#5f6e28}
+.mathblock{margin:.8rem 0;padding:8px 12px;overflow-x:auto;text-align:center;font-style:italic;background:#fff;border:2px solid #1c151233}
+.slab{margin:1rem 0;padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean)}
+.slab-head{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
+.stmt{font-style:italic}
+
+/* ---------- closing apparatus: lineage, papers, links to where a fact comes from ---------- */
+a.anchor{display:block;height:0;scroll-margin-top:56px}
+sup.xref{font-size:.8em;line-height:0;margin-left:1px}
+sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
+.apparatus{max-width:760px;margin:3rem auto 0;text-align:left;font-size:.94rem}
+.apparatus .lineage{margin:0 0 .6rem}
+.apparatus .lbl{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-right:8px}
+.apparatus a{color:var(--aegean-d)}
+.apparatus details.proof{margin-top:1.2rem}
+.apparatus .refs p,.apparatus ol.refs li{font-size:.9rem;margin:.45em 0}
+.apparatus table{width:100%;border-collapse:collapse;font-size:.9rem}
+.apparatus td{padding:5px 8px 5px 0;border-top:2px solid #1c151222;vertical-align:top}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .pop > .leaf{transition:opacity .3s;transform:none!important}
+  [data-depth]{transform:none!important}
+  .scrollcue b,.pulse{animation:none}
+  .fig .tok{transition:none}
+}
+/* ---------- the coin words and the result cards ---------- */
+.coin{font-style:italic;font-weight:700}
+.cite{font-style:italic;color:#6b5a48}
+.result{max-width:640px;margin:1.4rem 0 0;padding:14px 18px;background:#fffaf0;border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow)}
+.result .name{display:block;font-family:var(--sans);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:.3rem}
+.result p{margin:0;font-size:1.05rem}
+@media(min-width:861px){.cards2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* ---------- machines: counting messages ---------- */
+.logs{padding:18px 18px 14px}
+.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
+.cmp{display:grid;gap:10px}
+.cbox{border:3px solid var(--ink);background:#fff;padding:8px 10px}
+.cbox h5{margin:0 0 4px;font-family:var(--sans);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#6b5a48}
+.cbox b{font-family:var(--sans);font-size:1.6rem;font-variant-numeric:tabular-nums}
+.bar2{height:10px;background:#e9dcb6;margin-top:4px}
+.bar2 i{display:block;height:100%;width:0;background:var(--blood);transition:width .6s}
+#mleadbar{background:var(--aegean-d)}
+.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:4.4em;font-style:italic}
+/* ---------- layout of the figure beside its text ---------- */
+.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
+.site.out{opacity:.35}
+.site .state{font-family:var(--serif);font-weight:400;font-style:italic;font-size:14px;fill:#1c1512}
+.fig .wall{fill:#efe6cf;stroke:#6b5a48;stroke-width:7;stroke-dasharray:14 3}
+.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0}
+.counts span b{font-size:1.6rem;margin-right:5px}
+.scrolly svg.isle-svg{width:min(100%,520px)}
+/* ---------- ticked lists, small boxes ---------- */
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:.95rem}
+.checks li{padding:8px 12px;background:#fff;border:3px solid var(--ink);min-height:2.6em}
+.checks b{font-family:var(--sans)}
+.stand{font-family:var(--sans);font-size:.88rem;border:3px solid var(--ink);background:#fff;padding:8px 12px;margin:10px 0}
+.stand div{padding:2px 0}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pairs h5{margin:0 0 6px;font-family:var(--sans);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48}
+@media(max-width:520px){.pairs{grid-template-columns:1fr}}
+.btn.on{background:var(--gold);color:var(--ink)}
+.btn.chipb{padding:6px 10px;font-size:.82rem}
+.scene{margin:0;font-size:.98rem}
+/* ---------- four men, who holds what ---------- */
+.pk{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media(max-width:520px){.pk{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pm{border:3px solid var(--ink);background:#fff;padding:6px 8px;font-family:var(--sans);font-size:.78rem;line-height:1.35;transition:background .3s,opacity .3s}
+.pm h5{margin:0 0 3px;font-size:.78rem;display:flex;align-items:center;gap:5px}
+.pm h5 i{display:inline-block;width:.75em;height:.75em;border-radius:50%;border:1.5px solid var(--ink)}
+.pm.slow{opacity:.45;border-style:dashed}
+.pm.has{background:#f3dc92}
+.pm.lock{box-shadow:0 0 0 3px var(--blood)}
+.st-slip.pick{stroke:#b5602c;stroke-width:4}
+.st-wrap{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.st-wrap{grid-template-columns:minmax(0,1fr)}}
+.st-svg{width:100%;height:auto;display:block}
+.stat{display:inline-block;min-width:5.5em;font-weight:700}
+.stat.s-stands{color:#3f7a2a}.stat.s-lock{color:var(--blood)}
+ul.checks[hidden]{display:none}
+.stand:empty{display:none}
+</style>
 </head>
 <body>
-<nav class="series-nav">
-  <div class="series-nav-inner">
-    <a href="../../index.html" class="nav-back">← The Books</a>
-    <span class="nav-current">Arche · The Crown of Mount Phyle</span>
-  </div>
-</nav>
-<div class="page">
 
-<!-- ================= COVER ================= -->
-<header class="cover">
-  <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · The Crown of Mount Phyle</div>
-  <h1 class="display">Changing Leaders Among Liars</h1>
-  <p class="basis">Based on “HotStuff: BFT Consensus with Linearity and Responsiveness” by Maofan Yin, Dahlia Malkhi, Michael Reiter, Guy Golan Gueta and Ittai Abraham (2019)</p>
-  <p class="sub">When some machines may lie, replacing a leader has been slow and costly. Can a new
-  leader take over as cheaply as any ordinary step, and at the pace of the messages rather than of a
-  timer?</p>
-  <div class="frame-cover portrait"><img src="../../assets/img/covers/changing-leaders-among-liars.jpg" width="896" height="1200"
-    alt="At dusk a bandit in a slate-grey cloak sits behind a low dry-stone breastwork among pale crags, tying three sealed cords into one bundle, a rat waiting on the stones beside him."></div>
-  <p class="pub">The same four bandits keep the same loot scroll on the same windy crown. This time the
-  job passes at every entry. Each man sends his sealed vote to the holder alone, who ties three into a
-  bundle and sends the bundle on. One more stage than before lets a new holder take over as cheaply
-  as an old one, and go as fast as the rats once the wind drops.</p>
-  <p class="lineage"><span class="lbl">Builds on</span> <a href="../keeping-order-among-liars/index.html">Keeping Order Among Liars</a></p>
-  <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/the-crown/index.html">The Crown of Mount Phyle</a></p>
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <span class="now" id="now"></span>
+  <i id="prog"></i>
+</div>
+
+<!-- ============================================================ cover -->
+<header class="spread dark" id="cover" data-name="Cover">
+  <div class="cut" style="left:-30px;bottom:-10px;width:90px;opacity:.3" data-depth="-26"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#5f6e28"/></svg></div>
+  <div class="cut" style="right:-20px;bottom:-14px;width:80px;opacity:.3" data-depth="-40"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#7c8f3a"/></svg></div>
+  <div class="wrap grid">
+    <div>
+      <div class="kicker">After Yin, Malkhi, Reiter, Gueta and Abraham, 2019</div>
+      <h1>Changing Leaders Among Liars<span>a new holder every entry, at the pace of the rats</span></h1>
+      <p class="hook">Could the job pass at every entry, whether or not anyone suspects its holder, with a change of holder costing no more than an entry?</p>
+      <p class="hook" style="color:var(--blood);font-style:normal;font-family:var(--sans);font-size:1.1rem">On the crown, it can, with one stage more.</p>
+      <div class="scrollcue"><b>↓</b> Scroll. Things unfold.</div>
+    </div>
+    <div class="pop" data-auto>
+      <div class="leaf">
+        <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" alt="At dusk a bandit in a slate-grey cloak sits behind a low dry-stone breastwork among pale crags, tying cords with wax seals into a bundle, a rat waiting on the stones beside them"></div>
+        <div class="fold-shadow"></div>
+      </div>
+    </div>
+  </div>
 </header>
 
-<!-- ================= IN A NUTSHELL ================= -->
-<section class="nutshell">
-  <h6>In a Nutshell</h6>
-  <p>HotStuff (Yin et al.) is leader-based Byzantine consensus in which a leader costs only linear message traffic per decision, a new leader can take over as cheaply as an old one, and the protocol runs as fast as the network allows once it behaves. It gets there by having replicas send votes only to the leader, who aggregates them into a quorum certificate, and by chaining three phases of such certificates so that leader replacement is just another round.</p>
-  <p>In the allegory, four bandits keep a scroll of their loot on a windy crown, and now the job passes at every entry. Each man sends his sealed vote to the holder alone, who ties three votes into a bundle and sends it on. One more stage than before lets a new holder take over as cheaply as an old one, and go as fast as the rats once the wind drops.</p>
-</section>
-
-<nav class="toc">
-  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
-  <ol>
-    <li><a href="#s1">I · What a Change Cost</a></li>
-    <li><a href="#s2">II · Votes to One Man, Bundles to All</a></li>
-    <li><a href="#s3">III · Three Stages and a Lock</a></li>
-    <li><a href="#s4">IV · Never Two Entries</a></li>
-    <li><a href="#s5">V · The Hidden Lock</a></li>
-    <li><a href="#s6">VI · A New Holder Every Entry</a></li>
-    <li><a href="#s7">VII · What It Does Not Say</a></li>
-    <li><a href="#s8">VIII · In the Book, In the Paper</a></li>
-    <li><a href="#refs">The Paper Behind This Book</a></li>
-  </ol>
-</nav>
-
-<hr class="rule">
-
-<!-- ================= I ================= -->
-<section id="s1">
-  <div class="issue"><span class="no">Chapter I</span><h2>What a Change Cost</h2></div>
-
-  <div class="prose">
-    <p>On the crown of Mount Phyle, Number 1 inside the ring wall and Numbers 2, 3 and 4 at their
-    posts keep one loot scroll, a copy at each post. One of them may lie. Every rat is sealed with an
-    unforgeable ring, and a wind can hold the rats in their holes for as long as it blows. Entries are numbered
-    by whoever holds the job, echoed twice, and stand in the same order in every honest copy; when the
-    holder stalls, the job
-    passes<sup class="xref"><a href="../keeping-order-among-liars/index.html#s3" title="Keeping Order Among Liars: Two Echoes">*</a></sup>.</p>
-
-    <p>What does that arrangement cost? Two things.</p>
-
-    <p><b>Every man writes to every man.</b> Each echo goes from each man to all the others. With four
-    men that is a dozen rats a stage. With forty it would be over fifteen hundred.</p>
-
-    <p><b>A change of job is heavy.</b> The new holder must gather requests from three men, each carrying
-    sealed proof of every entry readied at his post, and send all of it on, so that each man can check
-    his new numbering<sup class="xref"><a href="../keeping-order-among-liars/index.html#s5" title="Keeping Order Among Liars: Changing the Job">*</a></sup>.
-    A change costs far more than an ordinary entry, and the more often the job passes, the more that
-    matters.</p>
-
-    <p>The crown, the book, the seals, the wind and the four men all stay. Only the procedure changes.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>Could the job pass at every entry, whether or not anyone suspects its holder,
-    with a change of holder costing no more than an entry? Start with the rats: must every man write
-    to every man?</em></p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<!-- ================= II ================= -->
-<section id="s2">
-  <div class="issue"><span class="no">Chapter II</span><h2>Votes to One Man, Bundles to All</h2></div>
-
-  <div class="prose">
-    <p>No. Instead of every man echoing to every man, each man sends his sealed
-    <span class="coin">vote</span> to the holder alone. When the holder has three matching votes, he
-    ties them into a <span class="coin">bundle</span> and sends the bundle to everyone. Why trust a
-    bundle? Three seals prove that three men voted, and so, with one liar, that at least two honest men
-    did.</p>
-  </div>
-
-  <figure class="panel">
-    <img src="../../assets/img/panels/changing-leaders-among-liars/c01-bundle.jpg" width="1200" height="896" loading="lazy"
-         alt="At dusk at a chink in the foot of a ruined ring wall, a rat carries on its back three short cords tied together, each ending in a dab of sealing wax with its own stamped mark: three votes made into one bundle.">
-  </figure>
-
-  <figure class="diagram">
-    <div class="board">
-      <svg class="flow" viewBox="0 0 660 420" role="img" aria-label="Two panels with the four bandits B1 to B4 drawn in the round, later moments further out. Left: in one stage every man sends to every other man, twelve rats. Right: the three other men send their sealed votes to the holder, B1, who ties three into a bundle and sends it to the other three.">
-        <!-- polar:cla-stage -->
-        <defs>
-          <marker id="cla-stage-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
-          </marker>
-          <marker id="cla-stage-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
-          </marker>
-          <marker id="cla-stage-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
-          </marker>
-          <marker id="cla-stage-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
-          </marker>
-          <marker id="cla-stage-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
-          </marker>
-        </defs>
-        <text class="d-house" x="165" y="24" text-anchor="middle">EVERY MAN TO EVERY MAN</text>
-        <text class="d-house" x="495" y="24" text-anchor="middle">VOTES TO ONE, BUNDLE TO ALL</text>
-        <circle cx="165" cy="205" r="60" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="205" r="74" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="205" r="88" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="205" r="102" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="205" r="116" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="205" r="130" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <line class="d-lifeline" x1="132.5" y1="172.5" x2="71.1" y2="111.1"/>
-        <line class="d-lifeline" x1="132.5" y1="237.5" x2="71.1" y2="298.9"/>
-        <line class="d-lifeline" x1="197.5" y1="172.5" x2="258.9" y2="111.1"/>
-        <line class="d-lifeline" x1="197.5" y1="237.5" x2="258.9" y2="298.9"/>
-        <rect class="d-node" x="117.5" y="161.5" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="132.5" y="177" text-anchor="middle" fill="#1c1512">B1</text>
-        <rect class="d-node" x="117.5" y="226.5" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="132.5" y="242" text-anchor="middle" fill="#1c1512">B2</text>
-        <rect class="d-node" x="182.5" y="161.5" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="197.5" y="177" text-anchor="middle" fill="#1c1512">B3</text>
-        <rect class="d-node" x="182.5" y="226.5" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="197.5" y="242" text-anchor="middle" fill="#1c1512">B4</text>
-        <clipPath id="cla-stage-clip0"><circle class="tclip" cx="165" cy="205" r="152.8" data-r0="46" data-r1="132.8"/></clipPath>
-        <g class="tflow" clip-path="url(#cla-stage-clip0)">
-        <circle class="d-ev" cx="122.6" cy="162.6" r="5"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M122.6,162.6 L119.2,163.7 L115.8,165.1 L112.4,166.8 L109,168.7 L105.8,170.8 L102.6,173.2 L99.4,175.8 L96.4,178.7 L93.6,181.8 L90.8,185.1 L88.2,188.7 L85.8,192.5 L83.6,196.4 L81.6,200.6 L79.8,205 L78.2,209.5 L76.9,214.3 L75.9,219.1 L75.1,224.1 L74.6,229.2 L74.4,234.4 L74.5,239.7 L74.9,245.1 L75.6,250.5 L76.7,256 L78,261.5 L79.8,266.9 L81.8,272.4"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M122.6,162.6 L123.7,159.2 L125.1,155.8 L126.8,152.4 L128.7,149 L130.8,145.8 L133.2,142.6 L135.8,139.4 L138.7,136.4 L141.8,133.6 L145.1,130.8 L148.7,128.2 L152.5,125.8 L156.4,123.6 L160.6,121.6 L165,119.8 L169.5,118.2 L174.3,116.9 L179.1,115.9 L184.1,115.1 L189.2,114.6 L194.4,114.4 L199.7,114.5 L205.1,114.9 L210.5,115.6 L216,116.7 L221.5,118 L226.9,119.8 L232.4,121.8"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M122.6,162.6 L119.8,164.3 L117.1,166.2 L114.4,168.3 L111.9,170.5 L109.4,172.9 L107,175.5 L104.8,178.2 L102.7,181.1 L100.7,184.1 L98.9,187.3 L97.3,190.6 L95.8,194 L94.5,197.6 L93.3,201.2 L92.4,205 L91.7,208.8 L91.1,212.8 L90.8,216.8 L90.7,220.8 L90.8,224.9 L91.2,229 L91.7,233.1 L92.5,237.3 L93.6,241.4 L94.9,245.5 L96.4,249.6 L98.1,253.6 L100.1,257.6 L102.3,261.4 L104.8,265.2 L107.4,268.9 L110.3,272.5 L113.4,276 L116.8,279.3 L120.3,282.4 L124,285.4 L128,288.2 L132.1,290.8 L136.3,293.2 L140.8,295.4 L145.4,297.4 L150.1,299.1 L155,300.6 L159.9,301.8 L165,302.8 L170.2,303.5 L175.4,303.9 L180.7,304.1 L186,303.9 L191.4,303.5 L196.8,302.8 L202.2,301.8 L207.5,300.5 L212.8,298.9 L218.1,297 L223.3,294.8 L228.4,292.3 L233.4,289.5"/>
-        <circle class="d-ev" cx="122.6" cy="247.4" r="5"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M122.6,247.4 L119.2,246.3 L115.8,244.9 L112.4,243.2 L109,241.3 L105.8,239.2 L102.6,236.8 L99.4,234.2 L96.4,231.3 L93.6,228.2 L90.8,224.9 L88.2,221.3 L85.8,217.5 L83.6,213.6 L81.6,209.4 L79.8,205 L78.2,200.5 L76.9,195.7 L75.9,190.9 L75.1,185.9 L74.6,180.8 L74.4,175.6 L74.5,170.3 L74.9,164.9 L75.6,159.5 L76.7,154 L78,148.5 L79.8,143.1 L81.8,137.6"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M122.6,247.4 L124.3,250.2 L126.2,252.9 L128.3,255.6 L130.5,258.1 L132.9,260.6 L135.5,263 L138.2,265.2 L141.1,267.3 L144.1,269.3 L147.3,271.1 L150.6,272.7 L154,274.2 L157.6,275.5 L161.2,276.7 L165,277.6 L168.8,278.3 L172.8,278.9 L176.8,279.2 L180.8,279.3 L184.9,279.2 L189,278.8 L193.1,278.3 L197.3,277.5 L201.4,276.4 L205.5,275.1 L209.6,273.6 L213.6,271.9 L217.6,269.9 L221.4,267.7 L225.2,265.2 L228.9,262.6 L232.5,259.7 L236,256.6 L239.3,253.2 L242.4,249.7 L245.4,246 L248.2,242 L250.8,237.9 L253.2,233.7 L255.4,229.2 L257.4,224.6 L259.1,219.9 L260.6,215 L261.8,210.1 L262.8,205 L263.5,199.8 L263.9,194.6 L264.1,189.3 L263.9,184 L263.5,178.6 L262.8,173.2 L261.8,167.8 L260.5,162.5 L258.9,157.2 L257,151.9 L254.8,146.7 L252.3,141.6 L249.5,136.6"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M122.6,247.4 L123.7,250.8 L125.1,254.2 L126.8,257.6 L128.7,261 L130.8,264.2 L133.2,267.4 L135.8,270.6 L138.7,273.6 L141.8,276.4 L145.1,279.2 L148.7,281.8 L152.5,284.2 L156.4,286.4 L160.6,288.4 L165,290.2 L169.5,291.8 L174.3,293.1 L179.1,294.1 L184.1,294.9 L189.2,295.4 L194.4,295.6 L199.7,295.5 L205.1,295.1 L210.5,294.4 L216,293.3 L221.5,292 L226.9,290.2 L232.4,288.2"/>
-        <circle class="d-ev" cx="207.4" cy="162.6" r="5"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M207.4,162.6 L206.3,159.2 L204.9,155.8 L203.2,152.4 L201.3,149 L199.2,145.8 L196.8,142.6 L194.2,139.4 L191.3,136.4 L188.2,133.6 L184.9,130.8 L181.3,128.2 L177.5,125.8 L173.6,123.6 L169.4,121.6 L165,119.8 L160.5,118.2 L155.7,116.9 L150.9,115.9 L145.9,115.1 L140.8,114.6 L135.6,114.4 L130.3,114.5 L124.9,114.9 L119.5,115.6 L114,116.7 L108.5,118 L103.1,119.8 L97.6,121.8"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M207.4,162.6 L205.7,159.8 L203.8,157.1 L201.7,154.4 L199.5,151.9 L197.1,149.4 L194.5,147 L191.8,144.8 L188.9,142.7 L185.9,140.7 L182.7,138.9 L179.4,137.3 L176,135.8 L172.4,134.5 L168.8,133.3 L165,132.4 L161.2,131.7 L157.2,131.1 L153.2,130.8 L149.2,130.7 L145.1,130.8 L141,131.2 L136.9,131.7 L132.7,132.5 L128.6,133.6 L124.5,134.9 L120.4,136.4 L116.4,138.1 L112.4,140.1 L108.6,142.3 L104.8,144.8 L101.1,147.4 L97.5,150.3 L94,153.4 L90.7,156.8 L87.6,160.3 L84.6,164 L81.8,168 L79.2,172.1 L76.8,176.3 L74.6,180.8 L72.6,185.4 L70.9,190.1 L69.4,195 L68.2,199.9 L67.2,205 L66.5,210.2 L66.1,215.4 L65.9,220.7 L66.1,226 L66.5,231.4 L67.2,236.8 L68.2,242.2 L69.5,247.5 L71.1,252.8 L73,258.1 L75.2,263.3 L77.7,268.4 L80.5,273.4"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M207.4,162.6 L210.8,163.7 L214.2,165.1 L217.6,166.8 L221,168.7 L224.2,170.8 L227.4,173.2 L230.6,175.8 L233.6,178.7 L236.4,181.8 L239.2,185.1 L241.8,188.7 L244.2,192.5 L246.4,196.4 L248.4,200.6 L250.2,205 L251.8,209.5 L253.1,214.3 L254.1,219.1 L254.9,224.1 L255.4,229.2 L255.6,234.4 L255.5,239.7 L255.1,245.1 L254.4,250.5 L253.3,256 L252,261.5 L250.2,266.9 L248.2,272.4"/>
-        <circle class="d-ev" cx="207.4" cy="247.4" r="5"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M207.4,247.4 L210.2,245.7 L212.9,243.8 L215.6,241.7 L218.1,239.5 L220.6,237.1 L223,234.5 L225.2,231.8 L227.3,228.9 L229.3,225.9 L231.1,222.7 L232.7,219.4 L234.2,216 L235.5,212.4 L236.7,208.8 L237.6,205 L238.3,201.2 L238.9,197.2 L239.2,193.2 L239.3,189.2 L239.2,185.1 L238.8,181 L238.3,176.9 L237.5,172.7 L236.4,168.6 L235.1,164.5 L233.6,160.4 L231.9,156.4 L229.9,152.4 L227.7,148.6 L225.2,144.8 L222.6,141.1 L219.7,137.5 L216.6,134 L213.2,130.7 L209.7,127.6 L206,124.6 L202,121.8 L197.9,119.2 L193.7,116.8 L189.2,114.6 L184.6,112.6 L179.9,110.9 L175,109.4 L170.1,108.2 L165,107.2 L159.8,106.5 L154.6,106.1 L149.3,105.9 L144,106.1 L138.6,106.5 L133.2,107.2 L127.8,108.2 L122.5,109.5 L117.2,111.1 L111.9,113 L106.7,115.2 L101.6,117.7 L96.6,120.5"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M207.4,247.4 L206.3,250.8 L204.9,254.2 L203.2,257.6 L201.3,261 L199.2,264.2 L196.8,267.4 L194.2,270.6 L191.3,273.6 L188.2,276.4 L184.9,279.2 L181.3,281.8 L177.5,284.2 L173.6,286.4 L169.4,288.4 L165,290.2 L160.5,291.8 L155.7,293.1 L150.9,294.1 L145.9,294.9 L140.8,295.4 L135.6,295.6 L130.3,295.5 L124.9,295.1 L119.5,294.4 L114,293.3 L108.5,292 L103.1,290.2 L97.6,288.2"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M207.4,247.4 L210.8,246.3 L214.2,244.9 L217.6,243.2 L221,241.3 L224.2,239.2 L227.4,236.8 L230.6,234.2 L233.6,231.3 L236.4,228.2 L239.2,224.9 L241.8,221.3 L244.2,217.5 L246.4,213.6 L248.4,209.4 L250.2,205 L251.8,200.5 L253.1,195.7 L254.1,190.9 L254.9,185.9 L255.4,180.8 L255.6,175.6 L255.5,170.3 L255.1,164.9 L254.4,159.5 L253.3,154 L252,148.5 L250.2,143.1 L248.2,137.6"/>
-        </g>
-        <circle cx="495" cy="205" r="60" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="205" r="74" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="205" r="88" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="205" r="102" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="205" r="116" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="205" r="130" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <line class="d-lifeline" x1="462.5" y1="172.5" x2="401.1" y2="111.1"/>
-        <line class="d-lifeline" x1="462.5" y1="237.5" x2="401.1" y2="298.9"/>
-        <line class="d-lifeline" x1="527.5" y1="172.5" x2="588.9" y2="111.1"/>
-        <line class="d-lifeline" x1="527.5" y1="237.5" x2="588.9" y2="298.9"/>
-        <rect class="d-node" x="447.5" y="161.5" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="462.5" y="177" text-anchor="middle" fill="#1c1512">B1</text>
-        <rect class="d-node" x="447.5" y="226.5" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="462.5" y="242" text-anchor="middle" fill="#1c1512">B2</text>
-        <rect class="d-node" x="512.5" y="161.5" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="527.5" y="177" text-anchor="middle" fill="#1c1512">B3</text>
-        <rect class="d-node" x="512.5" y="226.5" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="527.5" y="242" text-anchor="middle" fill="#1c1512">B4</text>
-        <clipPath id="cla-stage-clip1"><circle class="tclip" cx="495" cy="205" r="152.8" data-r0="46" data-r1="132.8"/></clipPath>
-        <g class="tflow" clip-path="url(#cla-stage-clip1)">
-        <text class="d-lbl d-halo" x="441.3" y="191.7" text-anchor="end" style="fill:#bf4a26">holder</text>
-        <circle class="d-ev" cx="452.6" cy="247.4" r="5"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M452.6,247.4 L449.9,245.6 L447.2,243.7 L444.6,241.6 L442.2,239.3 L439.8,236.9 L437.5,234.3 L435.4,231.5 L433.4,228.6 L431.5,225.6 L429.8,222.5 L428.3,219.2 L426.9,215.8 L425.7,212.3 L424.6,208.7 L423.8,205 L423.2,201.2 L422.7,197.4 L422.5,193.5 L422.4,189.6 L422.6,185.6 L423,181.6 L423.6,177.6 L424.5,173.6 L425.6,169.6 L426.9,165.7 L428.4,161.7 L430.1,157.9 L432.1,154.1"/>
-        <circle class="d-ev" cx="537.4" cy="162.6" r="5"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M537.4,162.6 L535.6,159.9 L533.7,157.2 L531.6,154.6 L529.3,152.2 L526.9,149.8 L524.3,147.5 L521.5,145.4 L518.6,143.4 L515.6,141.5 L512.5,139.8 L509.2,138.3 L505.8,136.9 L502.3,135.7 L498.7,134.6 L495,133.8 L491.2,133.2 L487.4,132.7 L483.5,132.5 L479.6,132.4 L475.6,132.6 L471.6,133 L467.6,133.6 L463.6,134.5 L459.6,135.6 L455.7,136.9 L451.7,138.4 L447.9,140.1 L444.1,142.1"/>
-        <circle class="d-ev" cx="537.4" cy="247.4" r="5"/>
-        <path class="d-msg" marker-end="url(#cla-stage-b)" d="M537.4,247.4 L539.9,245.4 L542.2,243.2 L544.4,240.9 L546.6,238.5 L548.6,235.9 L550.5,233.3 L552.2,230.5 L553.8,227.6 L555.3,224.6 L556.6,221.5 L557.7,218.3 L558.7,215.1 L559.5,211.8 L560.1,208.4 L560.6,205 L560.9,201.5 L561,198.1 L560.9,194.6 L560.6,191.1 L560.2,187.5 L559.5,184 L558.7,180.6 L557.7,177.1 L556.4,173.7 L555,170.3 L553.5,167 L551.7,163.8 L549.8,160.7 L547.6,157.6 L545.3,154.7 L542.9,151.8 L540.3,149.1 L537.5,146.5 L534.6,144 L531.5,141.7 L528.3,139.6 L525,137.6 L521.6,135.7 L518,134.1 L514.4,132.6 L510.7,131.3 L506.8,130.3 L502.9,129.4 L499,128.7 L495,128.2 L491,127.9 L486.9,127.9 L482.8,128 L478.7,128.4 L474.6,129 L470.6,129.8 L466.5,130.9 L462.5,132.1 L458.6,133.6 L454.7,135.3 L450.9,137.1 L447.2,139.2 L443.6,141.5"/>
-        <circle class="d-ev-hi" cx="430.8" cy="140.8" r="5.5"/>
-        <text class="d-lbl d-halo" x="437.9" y="131.7" text-anchor="start" style="fill:#bf4a26">ties three</text>
-        <path class="d-msg-hi" marker-end="url(#cla-stage-r)" d="M430.8,140.8 L426.7,143.5 L422.7,146.4 L418.8,149.7 L415.1,153.1 L411.5,156.8 L408.1,160.7 L404.9,164.9 L401.9,169.2 L399.1,173.8 L396.5,178.6 L394.1,183.6 L392,188.7 L390.2,194 L388.7,199.4 L387.4,205 L386.4,210.7 L385.8,216.5 L385.4,222.4 L385.4,228.3 L385.7,234.3 L386.3,240.3 L387.2,246.4 L388.5,252.4 L390.1,258.4 L392.1,264.4 L394.4,270.3 L397.1,276.1 L400.1,281.9"/>
-        <path class="d-msg-hi" marker-end="url(#cla-stage-r)" d="M430.8,140.8 L433.5,136.7 L436.4,132.7 L439.7,128.8 L443.1,125.1 L446.8,121.5 L450.7,118.1 L454.9,114.9 L459.2,111.9 L463.8,109.1 L468.6,106.5 L473.6,104.1 L478.7,102 L484,100.2 L489.4,98.7 L495,97.4 L500.7,96.4 L506.5,95.8 L512.4,95.4 L518.3,95.4 L524.3,95.7 L530.3,96.3 L536.4,97.2 L542.4,98.5 L548.4,100.1 L554.4,102.1 L560.3,104.4 L566.1,107.1 L571.9,110.1"/>
-        <path class="d-msg-hi" marker-end="url(#cla-stage-r)" d="M430.8,140.8 L427.1,143.9 L423.6,147.2 L420.2,150.6 L417,154.3 L413.9,158.2 L411.1,162.3 L408.5,166.5 L406,170.9 L403.9,175.4 L401.9,180 L400.2,184.8 L398.7,189.7 L397.5,194.7 L396.5,199.8 L395.8,205 L395.4,210.2 L395.2,215.5 L395.4,220.8 L395.8,226.1 L396.5,231.4 L397.5,236.7 L398.7,242 L400.3,247.2 L402.1,252.3 L404.2,257.4 L406.6,262.4 L409.3,267.3 L412.2,272 L415.5,276.6 L418.9,281.1 L422.6,285.4 L426.6,289.5 L430.8,293.4 L435.2,297.1 L439.8,300.6 L444.6,303.9 L449.6,306.9 L454.8,309.6 L460.2,312.1 L465.7,314.3 L471.3,316.3 L477.1,317.9 L483,319.3 L489,320.3 L495,321 L501.1,321.4 L507.2,321.5 L513.4,321.2 L519.6,320.7 L525.7,319.8 L531.9,318.5 L538,317 L544,315.1 L550,312.8 L555.8,310.3 L561.5,307.5 L567.1,304.3 L572.6,300.8"/>
-        </g>
-        <text class="d-note" x="165" y="376" text-anchor="middle">twelve rats a stage</text>
-        <text class="d-note" x="495" y="376" text-anchor="middle">three votes in, three bundles out</text>
-        <line x1="330" y1="10" x2="330" y2="396" stroke="#b9a77e" stroke-width="1.5"/>
-      </svg>
+<!-- ============================================================ machines -->
+<section class="spread light" id="machines" data-name="In machine terms">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap two" style="gap:clamp(24px,5vw,60px);align-items:center">
+    <div>
+      <div class="kicker">First, in machine terms</div>
+      <h2>Replacing a leader that may lie</h2>
+      <p class="lede">A group of computers keeps one log in the same order, led by one machine at a time, and some of them may lie.</p>
+      <ul class="terms">
+        <li><b>Replacing the leader is costly.</b> When a leader stalls, the group must change it, and in earlier protocols a change costs far more than an ordinary step.</li>
+        <li><b>Every machine tells every machine.</b> The messages in one step grow with every pair of machines.</li>
+        <li><b>HotStuff</b> (Yin, Malkhi, Reiter, Gueta and Abraham, 2019): votes go only to the leader, and one more phase lets a new leader take over as cheaply as an old one.</li>
+      </ul>
+      <p style="margin-top:1.2rem">This edition tells it with four bandits on a hilltop and their trained rats.</p>
     </div>
-    <figcaption><b>A stage costs rats in step with the number of men, not its square.</b> Each man
-    writes only to the holder, and the holder's bundle carries proof of all three votes.</figcaption>
-  </figure>
-
-  <div class="prose">
-    <p>Is the bundle small? On the crown it is three rats' worth of seals, tied together. The paper
-    does better: with a <em>threshold</em> seal, where each man holds a piece and any three pieces
-    combine into one seal that anyone can check, the bundle is the size of a single seal however many
-    men there are. The crown's rings cannot do that; they are ordinary seals. So the saving here is in
-    rats, not in the size of what they carry. With the threshold seal, each stage costs a number of
-    seals that grows only in step with the number of men.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>Fewer rats, then. But the heavy part was the change of holder. How can a new
-    holder pick up where the last left off without gathering everyone's proofs?</em></p>
+    <div class="pop fromright"><div class="leaf">
+      <div class="paper logs">
+        <h4>Messages in one step</h4>
+        <div class="cmp">
+          <div class="cbox"><h5>Every machine to every machine</h5><b id="mall">–</b><div class="bar2"><i id="mallbar"></i></div></div>
+          <div class="cbox"><h5>Votes to one leader, one certificate back</h5><b id="mlead">–</b><div class="bar2"><i id="mleadbar"></i></div></div>
+        </div>
+        <p class="note" id="msay" data-live>Pick a size for the group.</p>
+        <div class="row"><button class="btn alt" id="mn4">4 machines</button><button class="btn alt" id="mn10">10 machines</button><button class="btn alt" id="mn40">40 machines</button></div>
+      </div>
+    </div></div>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= III ================= -->
-<section id="s3">
-  <div class="issue"><span class="no">Chapter III</span><h2>Three Stages and a Lock</h2></div>
-
-  <div class="prose">
-    <p>By having every man send the new holder his latest bundle, and nothing more. For that to be enough, entries now form a chain: each entry names the
-    one before it, so an entry stands only with everything behind it. Two entries
-    <span class="coin">conflict</span> if neither lies on the other's chain.</p>
-
-    <p>Each man keeps two bundles: the latest <em>first bundle</em> he has seen, and his
-    <span class="coin">lock</span>, the latest <em>second bundle</em> he has voted on. A term goes like
-    this.</p>
-  </div>
-
-  <div class="aside-formal">
-    <span class="lbl">A term</span>
-    <span class="stmt">Starting.</span> Every man sends the term's holder his latest first bundle. The
-    holder waits for three, takes the latest of them, and proposes a new entry on top of the entry it
-    names, sending the proposal and that bundle to all.<br>
-    <span class="stmt">First vote.</span> A man votes for the proposal if it lies on the chain of the
-    entry he is locked on, <em>or</em> if the bundle it carries is from a later term than his lock.<br>
-    <span class="stmt">Second vote.</span> The holder ties three first votes into a first bundle and sends
-    it; every man keeps it and votes again.<br>
-    <span class="stmt">Third vote.</span> The holder ties three second votes into a second bundle and
-    sends it; every man locks on it and votes again.<br>
-    <span class="stmt">Standing.</span> The holder ties three third votes into a third bundle and sends it;
-    every man writes the entry and everything behind it into his copy.<br>
-    <span class="stmt">Moving on.</span> If a man's sandglass runs out before the term ends, he moves to the
-    next term and sends its holder his latest first bundle.<br>
-    <span class="paper">Basic HotStuff, Algorithm 2: new-view, prepare, pre-commit, commit, decide;
-    highQC; lockedQC; safeNode, Algorithm 1; nextView.</span>
-  </div>
-
-  <div class="prose">
-    <p>Why does the rule for the first vote have two halves? Each has its own job. <em>Lies on my locked
-    entry's chain</em> keeps the book safe: a locked man will not help a conflicting entry forward.
-    <em>Carries a later bundle than my lock</em> keeps the book moving: a man locked on something the
-    rest have gone past can be shown that they have, and let go.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>A lock can be let go. Could letting it go ever let a conflicting entry
-    stand?</em></p>
+<!-- ============================================================ the crown -->
+<section class="spread dark" id="hall" data-name="The Crown of Mount Phyle">
+  <div class="bleed">
+    <img src="img/crown.jpg" alt="The ruined ring wall on the summit of a rocky hill seen from above through mist, with a small dry-stone post on the slope on each side among pines" data-parallax>
+    <div class="hall-title"><div class="t">
+      <div class="kicker">The crown of Mount Phyle</div>
+      <h2>Four bandits, out of sight of one another</h2>
+      <p>Bandit 1 sits inside the ring wall on the crown, and bandits 2, 3 and 4 hold posts on the slopes. They keep one loot scroll, a copy at each post, and send word only by rat.<sup class="xref"><a href="../../places/the-crown/index.html" title="The Setting: The Crown of Mount Phyle">*</a></sup></p>
+    </div></div>
+    <div class="pin pop" style="left:50%;top:49%;"><div class="leaf"><b>Rats and seals</b>A rat arrives with exactly what was written. Every strip carries the sender's ring, which nobody can forge.</div></div>
+    <div class="pin pop" style="left:6%;top:66%;"><div class="leaf"><b>One may lie</b>One of the four may lie. Nobody learns which.</div></div>
+    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>The wind</b>A wind can hold the rats in their holes for as long as it blows. Each post keeps a sandglass.</div></div>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= IV ================= -->
-<section id="s4">
-  <div class="issue"><span class="no">Chapter IV</span><h2>Never Two Entries</h2></div>
-
-  <div class="prose">
-    <p>Letting a lock go can never let a conflicting entry stand. Within a term, can two bundles of the same stage vouch for conflicting entries? No:
-    each needs three seals out of four, the two threes share an honest man, and an honest man votes
-    once a stage a
-    term<sup class="xref"><a href="../keeping-order-among-liars/index.html#s4" title="Keeping Order Among Liars: Why Three Seals, and Four Men">*</a></sup>.
-    And across terms? There the lock does the work.</p>
-  </div>
-
-  <div class="result">
-    <span class="name">Never Two Entries</span>
-    <p>However the wind blows and whoever lies, no two conflicting entries both stand at honest
-    posts.</p>
-  </div>
-
-  <details class="proof">
-    <summary>Proof — that the locks keep conflicting entries from both standing</summary>
-    <ol class="proofsteps">
-      <li>Suppose W stands on a third bundle from term <var>a</var>, and a conflicting B on one from term
-      <var>b</var>. They are not the same term, so say <var>a</var> is earlier.</li>
-      <li>B's standing needed a first bundle for B, or for something on B's chain, in term <var>b</var>.
-      Among all first bundles from terms after <var>a</var>, up to <var>b</var>, for entries that
-      conflict with W, take the one from the earliest term, <var>s</var>.</li>
-      <li>W's third bundle in term <var>a</var> and that first bundle in term <var>s</var> each carry three
-      seals, so they share an honest man, <var>r</var>. A man casts his third vote only after locking, so
-      in term <var>a</var>, <var>r</var> locked on W's second bundle. Nothing between <var>a</var> and <var>s</var> can have moved his lock off W's chain,
-      since that would need a first bundle for a conflicting entry earlier than <var>s</var>.</li>
-      <li>So in term <var>s</var>, <var>r</var> was locked on W, and the proposal conflicted with W. It
-      carried a bundle from no later than term <var>a</var>, again because <var>s</var> is the earliest.
-      Neither half of the rule lets <var>r</var> vote for it. But he did vote, since his seal is in the
-      term-<var>s</var> bundle. Contradiction.<span class="qed">∎</span></li>
-    </ol>
-  </details>
-
-  <div class="prose">
-    <p class="hook"><em>Safe with three stages. But two echoes were enough before. Why add a
-    third?</em></p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<!-- ================= V ================= -->
-<section id="s5">
-  <div class="issue"><span class="no">Chapter V</span><h2>The Hidden Lock</h2></div>
-
-  <div class="prose">
-    <p>Try two, and see what goes wrong. A man locks as soon as he sees a first bundle, and an entry
-    stands on the next.</p>
-
-    <p>In some term an entry reaches its first bundle, and only one man, say Number 3, sees it before the
-    others' sandglasses run out; he locks on it. The next holder hears from the three others, not Number 3,
-    since he need only wait for three. None of them has that bundle, so he proposes an entry that
-    conflicts with Number 3's lock. The two other honest men vote for it. Number 3 refuses: it conflicts
-    with his lock and carries no later bundle. That is two votes, not three. The sandglasses run out, and
-    just then a liar adds his vote, so the holder forms a first bundle that one man sees and locks on.
-    The next term begins the same way. Could it go on for ever? It could.</p>
-
-    <p>Is there a remedy with two stages? Make each new holder wait out a full sandglass before proposing,
-    long enough, once the wind drops, to be sure of hearing every man's latest bundle. That works, but
-    it ties every change of holder to the length of a sandglass rather than to the run of a rat.</p>
-
-    <p>What does the third stage change? With three stages the lock cannot hide. A man locks only on a
-    second bundle, and a second bundle exists only because three men voted on a first bundle and kept
-    it. So a lock at any honest post means at least two honest men hold the matching first bundle. A
-    new holder who hears from any three men hears from at least one of them. He learns the latest
-    bundle without waiting out anything.</p>
-  </div>
-
-  <div class="result">
-    <span class="name">Going at the Rats' Pace</span>
-    <p>Once the wind has dropped, a term whose holder is honest, with every honest man in it long
-    enough, ends with an entry standing, and it needs to wait only for the first three answers at each
-    stage, never for a full sandglass.</p>
-  </div>
-
-  <details class="proof">
-    <summary>Proof — that an honest holder after the wind drops gets his entry through</summary>
-    <ol class="proofsteps">
-      <li>Take the latest lock held by any honest man: a second bundle. It exists because three men voted
-      on its first bundle, at least two of them honest, and each keeps it.</li>
-      <li>The holder hears the latest first bundles of three men, which include at least one of those two.
-      So he takes a bundle at least as late as every honest lock.</li>
-      <li>Every honest man then votes for the proposal. A man whose lock is from the same term as the
-      bundle the holder took is locked on that very entry, since one term has only one second bundle, and
-      the proposal lies on its chain. Every other honest man's lock is earlier, and the proposal carries a
-      later bundle. In still air all votes and bundles arrive, and each stage completes on three answers.
-      So the entry stands.<span class="qed">∎</span></li>
-    </ol>
-  </details>
-
-  <div class="prose">
-    <p>How do the honest men come to be in the same term for long enough once the wind drops? The
-    holders pass in a fixed order by term number, and each man doubles his sandglass whenever a term ends
-    with nothing standing, as
-    before<sup class="xref"><a href="../keeping-order-among-liars/index.html#s6" title="Keeping Order Among Liars: Going On Once the Wind Drops">*</a></sup>.
-    In the end the sandglasses overlap for long enough under an honest holder. The paper keeps this part,
-    which it calls the pacemaker, apart from the rest: it affects only whether entries stand, never
-    which.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>Each entry now waits three stages, where two echoes did before. Must the book then take in entries more slowly?</em></p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<!-- ================= VI ================= -->
-<section id="s6">
-  <div class="issue"><span class="no">Chapter VI</span><h2>A New Holder Every Entry</h2></div>
-
-  <div class="prose">
-    <p>The book need not take in entries more slowly. Each entry still waits three stages, but the three stages all look alike: the holder sends something, the men
-    vote, the holder bundles the votes. So they can be run on top of one another. Each term the job
-    passes to the next man, who proposes a new entry carrying the latest first bundle. A vote for it is
-    also a second vote for the entry before it, and a third vote for the one before that.</p>
-  </div>
-
-  <figure class="diagram">
-    <div class="board">
-      <svg class="flow" viewBox="0 0 660 560" role="img" aria-label="The four posts drawn in the round, later moments further out. The job passes to the next man with every entry: term 5 at B1, term 6 at B2, term 7 at B3, term 8 at B4, each proposal carrying the bundle for the entry directly before it, so the chain winds outward round the circle. With the proposal of term 8, the entry of term 7 has its first bundle, term 6's is locked on, and term 5's stands.">
-        <!-- polar:cla-chain -->
-        <defs>
-          <marker id="cla-chain-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
-          </marker>
-          <marker id="cla-chain-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
-          </marker>
-          <marker id="cla-chain-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
-          </marker>
-          <marker id="cla-chain-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
-          </marker>
-          <marker id="cla-chain-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
-          </marker>
-        </defs>
-        <circle cx="330" cy="280" r="66" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="280" r="92" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="280" r="118" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="280" r="144" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="280" r="170" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="280" r="196" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="280" r="222" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="280" r="248" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="280" r="274" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <line class="d-lifeline" x1="330" y1="240" x2="330" y2="16.4"/>
-        <line class="d-lifeline" x1="370" y1="280" x2="593.6" y2="280"/>
-        <line class="d-lifeline" x1="330" y1="320" x2="330" y2="543.6"/>
-        <line class="d-lifeline" x1="290" y1="280" x2="66.4" y2="280"/>
-        <rect class="d-node" x="315" y="229" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="330" y="244.5" text-anchor="middle" fill="#1c1512">B1</text>
-        <rect class="d-node" x="355" y="269" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="370" y="284.5" text-anchor="middle" fill="#1c1512">B2</text>
-        <rect class="d-node" x="315" y="309" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="330" y="324.5" text-anchor="middle" fill="#1c1512">B3</text>
-        <rect class="d-node" x="275" y="269" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="290" y="284.5" text-anchor="middle" fill="#1c1512">B4</text>
-        <clipPath id="cla-chain-clip0"><circle class="tclip" cx="330" cy="280" r="283.6" data-r0="40" data-r1="263.6"/></clipPath>
-        <g class="tflow" clip-path="url(#cla-chain-clip0)">
-        <path class="d-msg" marker-end="url(#cla-chain-b)" d="M330,208.8 L333.8,207.3 L337.8,206.1 L341.9,205.1 L346.1,204.3 L350.4,203.7 L354.9,203.4 L359.4,203.3 L364,203.6 L368.7,204.1 L373.4,204.8 L378.1,205.9 L382.9,207.3 L387.6,208.9 L392.3,210.9 L396.9,213.1 L401.5,215.7 L405.9,218.5 L410.3,221.6 L414.6,225.1 L418.7,228.8 L422.6,232.8 L426.4,237.1 L430,241.6 L433.3,246.4 L436.4,251.5 L439.3,256.8 L441.9,262.3 L444.3,268"/>
-        <path class="d-msg" marker-end="url(#cla-chain-b)" d="M448,280 L449.4,286.3 L450.5,292.7 L451.2,299.2 L451.5,305.8 L451.5,312.6 L451.1,319.4 L450.4,326.2 L449.2,333.1 L447.6,339.9 L445.7,346.8 L443.4,353.6 L440.6,360.4 L437.5,367 L433.9,373.6 L430,380 L425.7,386.2 L420.9,392.3 L415.9,398.2 L410.4,403.8 L404.6,409.2 L398.4,414.3 L392,419.2 L385.1,423.7 L378,427.8 L370.6,431.7 L363,435.1 L355,438.1 L346.9,440.8 L338.5,443"/>
-        <path class="d-msg" marker-end="url(#cla-chain-b)" d="M330,444.8 L321.3,446.1 L312.4,447 L303.5,447.4 L294.4,447.3 L285.3,446.7 L276.2,445.6 L267,444 L257.9,442 L248.8,439.3 L239.8,436.2 L230.9,432.6 L222.1,428.5 L213.5,423.8 L205.1,418.7 L196.9,413.1 L189,407 L181.3,400.4 L174,393.4 L166.9,385.9 L160.3,378 L154,369.7 L148.1,361 L142.6,351.9 L137.7,342.5 L133.1,332.7 L129.1,322.7 L125.6,312.4 L122.7,301.8 L120.2,291"/>
-        <circle class="d-ev-hi" cx="330" cy="208.8" r="5.5"/>
-        <circle cx="313" cy="208.8" r="8.5" style="fill:#bf4a26; stroke:#f6eed6; stroke-width:1.5"/><text x="313" y="212.8" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">5</text>
-        <circle class="d-ev" cx="448" cy="280" r="5"/>
-        <circle cx="448" cy="297" r="8.5" style="fill:#1c1512; stroke:#f6eed6; stroke-width:1.5"/><text x="448" y="301" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">6</text>
-        <circle class="d-ev" cx="330" cy="444.8" r="5"/>
-        <circle cx="313" cy="444.8" r="8.5" style="fill:#1c1512; stroke:#f6eed6; stroke-width:1.5"/><text x="313" y="448.8" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">7</text>
-        <circle class="d-ev" cx="118.4" cy="280" r="5"/>
-        <circle cx="118.4" cy="297" r="8.5" style="fill:#1c1512; stroke:#f6eed6; stroke-width:1.5"/><text x="118.4" y="301" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">8</text>
-        <text class="d-lbl d-halo" x="292" y="212.8" text-anchor="end" style="fill:#bf4a26">stands</text>
-        <text class="d-lbl d-halo" x="448" y="242" text-anchor="middle">locked on</text>
-        <text class="d-lbl d-halo" x="368" y="448.8" text-anchor="start">first bundle</text>
-        <text class="d-lbl d-halo" x="118.4" y="242" text-anchor="middle">new proposal</text>
-        </g>
-        <text class="d-note" x="330" y="536" text-anchor="middle">each arc is the bundle an entry carries for the one directly before it</text>
-      </svg>
+<!-- ============================================================ what a change cost -->
+<section class="spread light" id="cost" data-name="What a change cost">
+  <a class="anchor" id="s1"></a>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">The arrangement so far</div>
+      <h2>What a change of job cost</h2>
+      <p class="lede">Each entry in the loot scroll is numbered by whoever holds the job, echoed twice, and written in the same order at every honest post. When the holder stalls, the job passes.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s3" title="Keeping Order Among Liars: Two Echoes">*</a></sup></p>
+      <p>What does that arrangement cost? Two things.</p>
     </div>
-    <figcaption><b>Each new proposal moves the three before it one stage on.</b> When three entries in a
-    row each carry a bundle for the one directly before, the entry behind all three stands: one vote a
-    term does the work of three stages, spread over three terms.</figcaption>
-  </figure>
-
-  <div class="prose">
-    <p>How does a man tell what stands? He reads the chain behind each new proposal. If it carries a
-    bundle for its direct parent, the parent has its first bundle. If that parent carries one for its
-    own direct parent, the grandparent is ready to lock on. If the grandparent carries one for its own
-    direct parent too, that entry, the one behind all three, stands. Where a holder failed and a term
-    left nothing, the chain has a gap, and counting starts again.</p>
-
-    <p>The job now passes at every entry, suspected or not. Is that costly? No, for the same reason a
-    change of holder is cheap: a new holder only proposes on the latest bundle he hears of, like any
-    other.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>A new holder every entry, at the rats' pace. What has not changed?</em></p>
+    <div class="cards3 cards2" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First cost</div><h3>Every man writes to every man</h3><p>Each echo goes from each man to all the others. With four men that is a dozen rats a stage. With forty it would be over fifteen hundred.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second cost</div><h3>A change of job is heavy</h3><p>The new holder must gather requests from three men, each carrying sealed proof of every entry readied at their post, and send all of it on, so that each man can check the new numbering.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s5" title="Keeping Order Among Liars: Changing the Job">*</a></sup> A change costs far more than an ordinary entry, and the more often the job passes, the more that matters.</p></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.6rem">The crown, the scroll, the seals, the wind and the four men all stay. Only the procedure changes.</p>
+    <p class="lede" style="margin-top:1rem">Could the job pass at every entry, whether or not anyone suspects its holder, with a change of holder costing no more than an entry? Start with the rats: must every man write to every man?</p>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= VII ================= -->
-<section id="s7">
-  <div class="issue"><span class="no">Chapter VII</span><h2>What It Does Not Say</h2></div>
-
-  <div class="prose">
-    <p><b>Does anything stand before the wind drops?</b> Nothing. Order holds in any wind. Entries
-    stand only once it has dropped, as for any arrangement.</p>
-
-    <p><b>Is the bundle always small?</b> Only with a threshold seal. The crown's rings make a bundle of
-    three seals. The paper's saving in the size of what is carried needs seals that combine, which the
-    rings are not.</p>
-
-    <p><b>Is an entry slower?</b> It takes one more stage than before to stand. Chained, the stages
-    overlap, so a new entry still stands at every term.</p>
-
-    <p><b>Does anyone learn who lies?</b> No, and a liar may still file nonsense that stands in
-    order.</p>
-
-    <p><b>What follows from any entry?</b> Nothing.</p>
+<!-- ============================================================ votes to one, bundles to all -->
+<section class="spread dark" id="votes" data-name="Votes to one, bundles to all">
+  <a class="anchor" id="s2"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">One stage, two ways</div>
+        <h2>Votes to one man, bundles to all</h2>
+        <p class="lede">No. Instead of every man echoing to every man, each man sends their sealed <span class="coin">vote</span> to the holder alone.</p>
+        <p>When the holder has three matching votes, they tie them into a <span class="coin">bundle</span> and send the bundle to everyone. Why trust a bundle? Three seals prove that three men voted, and so, with one liar, that at least two honest men did.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/c01-bundle.jpg" alt="At dusk at a chink in the foot of a ruined ring wall, a rat with several cords knotted together across its back, each cord ending in a dab of sealing wax stamped with its own mark" loading="lazy"></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2.2rem">
+      <h4>One stage on the crown <em>count the rats</em></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg fig" id="votesvg" role="img" aria-label="The crown from above: bandit 1 inside the ring wall at the centre, and bandits 2, 3 and 4 at three posts out on the slopes, with rats running between them"></svg>
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">The crown from above. Bandit 1 holds the job and sits inside the ring wall. Each rat takes the colour of the man who sent it.</p>
+          <div class="counts" data-live><span><b id="votecount">0</b>rats this stage</span></div>
+          <p class="say" id="votesay">Run one stage each way and count the rats.</p>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn" id="voteall">Every man to every man</button>
+        <button class="btn alt" id="voteone">Votes to the holder, a bundle to all</button>
+      </div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">A stage costs rats in step with the number of men, not with every pair of them. On the crown a bundle is three seals tied together.</p>
+    <p class="lede" style="margin-top:1rem">Fewer rats, then. But the heavy part was the change of holder. How can a new holder pick up where the last left off without gathering everyone's proofs?</p>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= VIII ================= -->
-<section id="s8">
-  <div class="issue"><span class="no">Chapter VIII</span><h2>In the Book, In the Paper</h2></div>
-
-  <div class="prose">
-    <p>So that the reader may check the bundles against the paper of Yin, Malkhi, Reiter, Gueta and
-    Abraham.</p>
+<!-- ============================================================ three stages and a lock -->
+<section class="spread dark has-scrolly" id="stages" data-name="Three stages and a lock">
+  <a class="anchor" id="s3"></a>
+  <div class="wrap" style="margin-bottom:-1rem">
+    <div class="narrow">
+      <div class="kicker">The new holder asks for one thing</div>
+      <h2>Three stages and a lock</h2>
+      <p class="lede">By having every man send the new holder their latest bundle, and nothing more. For that to be enough, entries now form a chain: each entry names the one before it, so an entry stands only with everything behind it. Two entries <span class="coin">conflict</span> if neither lies on the other's chain.</p>
+      <p>Each man keeps two bundles: the latest <em>first bundle</em> they have seen, and their <span class="coin">lock</span>, the latest <em>second bundle</em> they have voted on. A term goes like this. Scroll slowly.</p>
+    </div>
   </div>
-
-  <div class="table-wrap">
-    <table class="chron">
-      <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
-      <tbody>
-        <tr><td><span class="term">the four men; one may lie; the wind</span></td><td><var>n</var> = 3<var>f</var> + 1 = 4; Byzantine faults; partial synchrony with GST. <span class="paper">§3.</span></td></tr>
-        <tr><td><span class="term">the loot scroll; entries forming a chain</span></td><td>State machine replication; a tree of nodes with parent links; a branch. <span class="paper">§4, §4.2.</span></td></tr>
-        <tr><td><span class="term">conflicting entries</span></td><td>Neither branch extends the other. <span class="paper">§4.2.</span></td></tr>
-        <tr><td><span class="term">a term; its holder</span></td><td>A view; its leader. <span class="paper">§4.</span></td></tr>
-        <tr><td><span class="term">a vote; a bundle of three</span></td><td>A partially signed vote; a quorum certificate of <var>n</var> − <var>f</var> votes. <span class="paper">§4.1–4.2.</span></td></tr>
-        <tr><td><span class="term">a threshold seal</span></td><td>A (2<var>f</var> + 1, <var>n</var>)-threshold signature, combining partial signatures into one. <span class="paper">§3.</span></td></tr>
-        <tr><td><span class="term">first, second, third votes and bundles</span></td><td>prepare, pre-commit, commit votes; prepareQC, precommitQC, commitQC. <span class="paper">§4.1.</span></td></tr>
-        <tr><td><span class="term">the latest first bundle a man sends a new holder</span></td><td>new-view carrying prepareQC; highQC. <span class="paper">§4.1.</span></td></tr>
-        <tr><td><span class="term">the lock</span></td><td>lockedQC, set on the precommitQC. <span class="paper">Algorithm 2, line 25.</span></td></tr>
-        <tr><td><span class="term">the rule for the first vote, its two halves</span></td><td>safeNode: the safety rule (extends the locked node) or the liveness rule (a higher view than the lock). <span class="paper">Algorithm 1.</span></td></tr>
-        <tr><td><span class="term">Never Two Entries</span></td><td>Conflicting nodes cannot both be committed by correct replicas. <span class="paper">Lemma 1, Theorem 2.</span></td></tr>
-        <tr><td><span class="term">the hidden lock; two stages and a full sandglass</span></td><td>The livelessness of two-phase HotStuff; Tendermint and Casper's wait for Δ. <span class="paper">§4.4; §7.3.</span></td></tr>
-        <tr><td><span class="term">Going at the Rats' Pace</span></td><td>Optimistic responsiveness; after GST a correct leader decides within a bounded time. <span class="paper">Lemma 3, Theorem 4.</span></td></tr>
-        <tr><td><span class="term">holders in fixed order; doubling sandglasses</span></td><td>The leader function and nextView with exponential back-off: the Pacemaker. <span class="paper">§4.4, §6.</span></td></tr>
-        <tr><td><span class="term">a new holder every entry; three in a row</span></td><td>Chained HotStuff; One-, Two- and Three-Chains. <span class="paper">§5, Algorithm 3, Theorem 5.</span></td></tr>
-        <tr><td><span class="term">every man to every man; a heavy change</span></td><td>PBFT's quadratic normal case and cubic view change in authenticators. <span class="paper">Table 1.</span></td></tr>
-      </tbody>
-    </table>
+  <div class="scrolly" id="term">
+    <div class="stage"><div class="stage-inner">
+      <svg class="isle-svg fig svg-dark" id="termsvg" role="img" aria-label="The crown from above: bandit 1 inside the ring wall and bandits 2, 3 and 4 at their posts, with rats carrying votes in and bundles out"></svg>
+    </div></div>
+    <div class="steps">
+      <div class="step on"><div class="card"><div class="num">1 · Starting</div><h3>Every man sends the holder their latest first bundle</h3><p>The holder waits for three, takes the latest of them, and proposes a new entry on top of the entry it names, sending the proposal and that bundle to all.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · First vote</div><h3>A man votes if the proposal is safe for them</h3><p>They vote for the proposal if it lies on the chain of the entry they are locked on, or if the bundle it carries is from a later term than their lock.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · Second vote</div><h3>The first bundle</h3><p>The holder ties three first votes into a first bundle and sends it. Every man keeps it and votes again.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Third vote</div><h3>The second bundle, and the lock</h3><p>The holder ties three second votes into a second bundle and sends it. Every man locks on it and votes again.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · Standing</div><h3>The third bundle</h3><p>The holder ties three third votes into a third bundle and sends it. Every man writes the entry and everything behind it into their copy.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · Moving on</div><h3>A sandglass runs out</h3><p>If a man's sandglass runs out before the term ends, they move to the next term and send its holder their latest first bundle.</p></div></div>
+    </div>
   </div>
-
-  <div class="ideas-box">
-    <span class="lbl">The ideas, plainly</span>
-    <p>HotStuff is a Byzantine state machine replication protocol for <var>n</var> = 3<var>f</var> + 1
-    replicas under partial synchrony, like PBFT, with two properties together: a new leader costs no more
-    than an ordinary step (linear view change), and after the network stabilizes a correct leader proceeds
-    at the speed of actual messages rather than a timeout (optimistic responsiveness).</p>
-
-    <p>Votes go only to the leader, who combines <var>n</var> − <var>f</var> of them into a quorum
-    certificate, one threshold signature, so each phase is linear. There are three phases where PBFT had
-    two. Replicas lock on the second certificate, and vote for a proposal if it extends their lock or
-    carries a certificate from a later view. Because a lock implies that <var>f</var> + 1 correct replicas
-    hold the matching first certificate, a new leader hearing from any <var>n</var> − <var>f</var>
-    replicas learns it without waiting; with two phases a lock can hide, and progress needs a wait for the
-    maximum delay.</p>
-
-    <p>Because the phases are identical, they pipeline: every view proposes a new block, the leader rotates
-    every view, and a block commits when three consecutive views extend it.</p>
+  <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <details class="proof">
+      <summary>Where the term is in the paper</summary>
+      <p class="given">The steps above are the paper's Basic HotStuff: a first, second and third vote are the prepare, pre-commit and commit votes, and a first, second and third bundle are prepareQC, precommitQC and commitQC.</p>
+      <p><span class="cite">Basic HotStuff, Algorithm 2: new-view, prepare, pre-commit, commit, decide; highQC; lockedQC; safeNode, Algorithm 1; nextView.</span></p>
+    </details>
   </div>
 </section>
 
-<hr class="rule">
-<section id="refs" class="refs">
-  <h3 class="sect">The Paper Behind This Book</h3>
-  <ul>
-    <li>Maofan Yin, Dahlia Malkhi, Michael K. Reiter, Guy Golan Gueta and Ittai Abraham, <i>HotStuff: BFT
-    Consensus with Linearity and Responsiveness</i>. Proceedings of the 38th ACM Symposium on Principles
-    of Distributed Computing (PODC), 2019. — Basic and Chained HotStuff, the safety and liveness
-    arguments, the two-phase liveness failure, and the comparison with PBFT, Tendermint and Casper.</li>
-  </ul>
-  <aside class="fn">The four are the bandits of <i>The Limits of Agreement</i>, at the same places
-  and known, as there, by number, with Number 1 the chief.
-  Maofan Yin, Dahlia Malkhi, Michael Reiter, Guy Golan Gueta and Ittai Abraham are credited here.</aside>
+<!-- ============================================================ the rule for the first vote -->
+<section class="spread light" id="rulesec" data-name="Two halves, two jobs">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">The rule for the first vote</div>
+      <h2>Two halves, two jobs</h2>
+      <p class="lede">Why does the rule for the first vote have two halves? Each has its own job.</p>
+    </div>
+    <div class="cards3 cards2" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First half</div><h3>Lies on my locked entry's chain</h3><p>This keeps the scroll safe: a locked man will not help a conflicting entry forward.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second half</div><h3>Carries a later bundle than my lock</h3><p>This keeps the scroll moving: a man locked on something the rest have gone past can be shown that they have, and let go.</p></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>One man's first vote <em>lock: term 4</em></h4>
+      <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">A proposal reaches a man whose lock is the second bundle of term 4. Which proposal is it?</p>
+      <div class="row" id="ruleopts" style="margin:0 0 .8rem"></div>
+      <ul class="checks" data-live hidden><li id="rule1"></li><li id="rule2"></li><li id="rule3"></li></ul>
+      <p class="say" id="rulesay">Pick a proposal. The man votes if either half holds.</p>
+    </div></div></div>
+    <p class="lede" style="margin-top:1rem">A lock can be let go. Could letting it go ever let a conflicting entry stand?</p>
+  </div>
 </section>
 
-<hr class="rule">
+<!-- ============================================================ never two entries -->
+<section class="spread dark" id="never" data-name="Never two entries">
+  <a class="anchor" id="s4"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">The first promise</div>
+      <h2>Never two entries</h2>
+      <p class="lede">Letting a lock go can never let a conflicting entry stand.</p>
+      <p>Within a term, can two bundles of the same stage vouch for conflicting entries? No: each needs three seals out of four, the two threes share an honest man, and an honest man votes once a stage a term.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s4" title="Keeping Order Among Liars: Why Three Seals, and Four Men">*</a></sup> And across terms? There the lock does the work.</p>
+    </div>
+    <div class="result"><span class="name">Never Two Entries</span><p>However the wind blows and whoever lies, no two conflicting entries both stand at honest posts.</p></div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.6rem">
+      <h4>Two bundles of the same stage <em>who is in both?</em></h4>
+      <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each bundle has three seals out of four. For each bundle, pick the man whose seal it lacks.</p>
+      <div class="pairs">
+        <div><h5>Bundle A lacks</h5><div class="row" id="lackA" style="margin:0"></div></div>
+        <div><h5>Bundle B lacks</h5><div class="row" id="lackB" style="margin:0"></div></div>
+      </div>
+      <div class="stand" id="lackstand" data-live></div>
+      <p class="say" id="lacksay">Pick one man for each bundle.</p>
+    </div></div></div>
+    <details class="proof">
+      <summary>Proof — that the locks keep conflicting entries from both standing</summary>
+      <p class="given"><b>Theorem 2.</b> Conflicting nodes cannot both be committed by correct replicas. Here W and B are conflicting entries (nodes); <var>a</var>, <var>b</var> and <var>s</var> are terms (views); and <var>r</var> is an honest man (a correct replica). A third bundle is a commitQC, a first bundle a prepareQC.</p>
+      <ol class="proofsteps">
+        <li>Suppose W stands on a third bundle from term <var>a</var>, and a conflicting B on one from term
+        <var>b</var>. They are not the same term, so say <var>a</var> is earlier.</li>
+        <li>B's standing needed a first bundle for B, or for something on B's chain, in term <var>b</var>.
+        Among all first bundles from terms after <var>a</var>, up to <var>b</var>, for entries that
+        conflict with W, take the one from the earliest term, <var>s</var>.</li>
+        <li>W's third bundle in term <var>a</var> and that first bundle in term <var>s</var> each carry three
+        seals, so they share an honest man, <var>r</var>. A man casts his third vote only after locking, so
+        in term <var>a</var>, <var>r</var> locked on W's second bundle. Nothing between <var>a</var> and <var>s</var> can have moved his lock off W's chain,
+        since that would need a first bundle for a conflicting entry earlier than <var>s</var>.</li>
+        <li>So in term <var>s</var>, <var>r</var> was locked on W, and the proposal conflicted with W. It
+        carried a bundle from no later than term <var>a</var>, again because <var>s</var> is the earliest.
+        Neither half of the rule lets <var>r</var> vote for it. But he did vote, since his seal is in the
+        term-<var>s</var> bundle. Contradiction.<span class="qed">∎</span></li>
+      </ol>
+    </details>
+    <p class="lede" style="margin-top:1.6rem">Safe with three stages. But two echoes were enough before. Why add a third?</p>
+  </div>
+</section>
 
-<p class="lineage"><span class="lbl">Leads to</span> <a href="../the-part-time-parliament/index.html">The Part-Time Parliament</a> · <span class="unwritten-link" title="Not yet written">One Leader at a Time</span><br>
-  <span class="outside"><span class="tag">Outside this series</span> Buchman, Kwon &amp; Milosevic 2018, <i>Tendermint</i> · Buterin &amp; Griffith 2017, <i>Casper</i> · Gueta et al. 2019, <i>SBFT</i></span></p>
+<!-- ============================================================ the hidden lock -->
+<section class="spread light" id="hidden" data-name="The hidden lock">
+  <a class="anchor" id="s5"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">What two stages would do</div>
+      <h2>The hidden lock</h2>
+      <p class="lede">Try two stages, and see what goes wrong. A man locks as soon as they see a first bundle, and an entry stands on the next.</p>
+      <p>In some term an entry reaches its first bundle, and only one man, say bandit 3, sees it before the others' sandglasses run out; they lock on it. The next holder hears from three men, and bandit 3 is not one of them, since the holder need only wait for three. None of them has that bundle, so the holder proposes an entry that conflicts with bandit 3's lock.</p>
+      <p>The two other honest men vote for it. Bandit 3 refuses: it conflicts with their lock and carries no later bundle. That is two votes, not three. The sandglasses run out, and just then a liar adds a vote, so the holder forms a first bundle that one man sees and locks on. The next term begins the same way. Could it go on for ever? It could.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>The new holder listens <em id="hidmode">two stages</em></h4>
+      <div class="row" style="margin:0 0 .8rem"><button class="btn on" id="hid2">Two stages</button><button class="btn alt" id="hid3">Three stages</button></div>
+      <p class="scene" id="hidscene"></p>
+      <p style="font-size:.92rem;color:#6b5a48;margin:.8rem 0 .5rem">The holder waits for the first three answers. Pick the man whose answer is slowest, so that the holder does not wait for it.</p>
+      <div class="pk" id="hidmen" data-live></div>
+      <div class="row" id="hidslow" style="margin-top:.8rem"></div>
+      <p class="say" id="hidsay">Pick the slowest man.</p>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">Is there a remedy with two stages? Make each new holder wait out a full sandglass before proposing, long enough, once the wind drops, to be sure of hearing every man's latest bundle. That works, but it ties every change of holder to the length of a sandglass, not to the run of a rat.</p>
+    <p style="max-width:40em">What does the third stage change? With three stages the lock cannot hide. A man locks only on a second bundle, and a second bundle exists only because three men voted on a first bundle and kept it. So a lock at any honest post means at least two honest men hold the matching first bundle. A new holder who hears from any three men hears from at least one of them. They learn the latest bundle without waiting out anything.</p>
+  </div>
+</section>
 
-</div>
-<script src="../../assets/js/flow.js" defer></script>
+<!-- ============================================================ the rats' pace -->
+<section class="spread dark" id="pace" data-name="At the rats' pace">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">The second promise</div>
+      <h2>Going at the rats' pace</h2>
+    </div>
+    <div class="result"><span class="name">Going at the Rats' Pace</span><p>Once the wind has dropped, a term whose holder is honest, with every honest man in it long enough, ends with an entry standing, and it needs to wait only for the first three answers at each stage, never for a full sandglass.</p></div>
+    <details class="proof">
+      <summary>Proof — that an honest holder after the wind drops gets their entry through</summary>
+      <p class="given"><b>Lemma 3, Theorem 4 (optimistic responsiveness).</b> After GST, in a view with a correct leader and every correct replica in it long enough, the leader obtains a highQC at least as high as every correct replica's lockedQC, every correct replica votes for its proposal, and each phase completes on the first <var>n</var> − <var>f</var> answers, so the proposal commits. A second bundle is a precommitQC, and a lock is lockedQC.</p>
+      <ol class="proofsteps">
+        <li>Take the latest lock held by any honest man: a second bundle. It exists because three men voted
+        on its first bundle, at least two of them honest, and each keeps it.</li>
+        <li>The holder hears the latest first bundles of three men, which include at least one of those two.
+        So he takes a bundle at least as late as every honest lock.</li>
+        <li>Every honest man then votes for the proposal. A man whose lock is from the same term as the
+        bundle the holder took is locked on that very entry, since one term has only one second bundle, and
+        the proposal lies on its chain. Every other honest man's lock is earlier, and the proposal carries a
+        later bundle. In still air all votes and bundles arrive, and each stage completes on three answers.
+        So the entry stands.<span class="qed">∎</span></li>
+      </ol>
+    </details>
+    <p style="max-width:40em;margin-top:1.6rem">How do the honest men come to be in the same term for long enough once the wind drops? The holders pass in a fixed order by term number, and each man doubles their sandglass whenever a term ends with nothing standing, as before.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s6" title="Keeping Order Among Liars: Going On Once the Wind Drops">*</a></sup> In the end the sandglasses overlap for long enough under an honest holder. The paper keeps this part, which it calls the pacemaker, apart from the rest: it affects only whether entries stand, never which.</p>
+    <p class="lede" style="margin-top:1rem">Each entry now waits three stages, where two echoes did before. Must the scroll then take in entries more slowly?</p>
+  </div>
+</section>
+
+<!-- ============================================================ a new holder every entry -->
+<section class="spread light" id="chain" data-name="A new holder every entry">
+  <a class="anchor" id="s6"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">The stages run on top of one another</div>
+      <h2>A new holder every entry</h2>
+      <p class="lede">No. Each entry still waits three stages, but the three stages all look alike: the holder sends something, the men vote, the holder bundles the votes. So they can be run on top of one another.</p>
+      <p>Each term the job passes to the next man, who proposes a new entry carrying the latest first bundle. A vote for it is also a second vote for the entry before it, and a third vote for the one before that.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Terms in a row <em id="chainterm">no term yet</em></h4>
+      <div class="st-wrap">
+        <svg class="st-svg isle-svg fig" id="chainsvg" style="max-width:none" role="img" aria-label="The four posts drawn in the round, later moments further out. With each term the job passes to the next man, and each proposal carries the bundle for the entry directly before it, so the chain winds outward round the circle."></svg>
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each line is one man, and each ring further out is a later moment. The numbered dot is a term's proposal. The arc into it is the bundle it carries for the entry directly before.</p>
+          <div class="stand" id="chainlist" data-live></div>
+          <p class="say" id="chainsay">The job starts at bandit 1. Press the button to run a term.</p>
+        </div>
+      </div>
+      <div class="row"><button class="btn" id="chainnext">Run the next term</button><button class="btn alt" id="chainreset">Start again</button></div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">How does a man tell what stands? They read the chain behind each new proposal. If it carries a bundle for its direct parent, the parent has its first bundle. If that parent carries one for its own direct parent, the grandparent is ready to lock on. If the grandparent carries one for its own direct parent too, that entry, the one behind all three, stands. Where a holder failed and a term left nothing, the chain has a gap, and counting starts again.</p>
+    <p style="max-width:40em">The job now passes at every entry, suspected or not. Is that costly? No, for the same reason a change of holder is cheap: a new holder only proposes on the latest bundle they hear of, like any other.</p>
+    <p class="lede" style="margin-top:1rem">A new holder every entry, at the rats' pace. What has not changed?</p>
+  </div>
+</section>
+
+<!-- ============================================================ what it does not say -->
+<section class="spread dark" id="notsay" data-name="What it does not say">
+  <a class="anchor" id="s7"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">Five questions</div>
+        <h2>What it does not say</h2>
+        <ul class="terms">
+          <li><b>Does anything stand before the wind drops?</b> Nothing. Order holds in any wind. Entries stand only once it has dropped, as for any arrangement.</li>
+          <li><b>Is the bundle always small?</b> Only with a threshold seal, where each man holds a piece and any three pieces combine into one seal that anyone can check. Then the bundle is the size of a single seal however many men there are, and each stage costs a number of seals that grows only in step with the number of men. The crown's rings are ordinary seals and make a bundle of three, so the saving here is in rats, not in the size of what they carry.</li>
+          <li><b>Is an entry slower?</b> It takes one more stage than before to stand. Chained, the stages overlap, so a new entry still stands at every term.</li>
+          <li><b>Does anyone learn who lies?</b> No, and a liar may still file nonsense that stands in order.</li>
+          <li><b>What follows from any entry?</b> Nothing.</li>
+        </ul>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/mount-phyle.jpg" alt="Mount Phyle from the air under a grey sky: a steep wooded crag with a ruined ring wall on top, a few small white tents on the slope below, and tiled roofs among the trees on either side" loading="lazy"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ back to machines -->
+<section class="spread light" id="why" data-name="Back to machines">
+  <a class="anchor" id="s8"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Back to machines</div>
+      <h2>The crown was a group of machines</h2>
+      <p class="lede">Every bandit is a replica and every rat a message. Hover or tap to see who is who.</p>
+    </div>
+    <div class="map" id="map">
+      <div class="hd" style="text-align:right;padding-right:6px">On the crown</div><div></div><div class="hd">In the machine room</div>
+    </div>
+    <div class="meander" style="margin:3rem auto"></div>
+    <div class="end">
+      <p class="big">A leader costs only linear traffic per decision, and a new leader can take over as cheaply as an old one.</p>
+      <p class="lede" style="margin:0 auto">HotStuff gets there by having replicas send votes only to the leader, who aggregates them into a quorum certificate, and by chaining three phases of such certificates so that leader replacement is just another round. Once the network behaves, it runs as fast as the network allows.</p>
+      <div class="links">
+        <a href="../../places/the-crown/index.html">The Crown of Mount Phyle, in detail</a>
+        <a href="../../papers/index.html">All the papers</a>
+      </div>
+    </div>
+    <div class="apparatus">
+      <a class="anchor" id="refs"></a>
+      <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/the-crown/index.html">The Crown of Mount Phyle</a></p>
+      <p class="lineage"><span class="lbl">Builds on</span> <a href="../keeping-order-among-liars/index.html">Keeping Order Among Liars</a></p>
+      <p class="lineage"><span class="lbl">Leads to</span> <a href="../the-part-time-parliament/index.html">The Part-Time Parliament</a> · <a href="../one-leader-at-a-time/index.html">One Leader at a Time</a></p>
+      <p class="lineage"><span class="lbl">Outside this series</span> Buchman, Kwon &amp; Milosevic 2018, <i>Tendermint</i> · Buterin &amp; Griffith 2017, <i>Casper</i> · Gueta et al. 2019, <i>SBFT</i></p>
+      <details class="proof">
+        <summary>The paper behind this book</summary>
+        <div class="refs">
+          <p>Maofan Yin, Dahlia Malkhi, Michael K. Reiter, Guy Golan Gueta and Ittai Abraham, <i>HotStuff: BFT Consensus with Linearity and Responsiveness</i>. Proceedings of the 38th ACM Symposium on Principles of Distributed Computing (PODC), 2019. — Basic and Chained HotStuff, the safety and liveness arguments, the two-phase liveness failure, and the comparison with PBFT, Tendermint and Casper.</p>
+        </div>
+        <p><b>The ideas.</b> HotStuff is a Byzantine state machine replication protocol for <var>n</var> = 3<var>f</var> + 1 replicas under partial synchrony, like PBFT, with two properties together: a new leader costs no more than an ordinary step (linear view change), and after the network stabilizes a correct leader proceeds at the speed of actual messages rather than a timeout (optimistic responsiveness).</p>
+        <p>Votes go only to the leader, who combines <var>n</var> − <var>f</var> of them into a quorum certificate, one threshold signature, so each phase is linear. There are three phases where PBFT had two. Replicas lock on the second certificate, and vote for a proposal if it extends their lock or carries a certificate from a later view. Because a lock implies that <var>f</var> + 1 correct replicas hold the matching first certificate, a new leader hearing from any <var>n</var> − <var>f</var> replicas learns it without waiting; with two phases a lock can hide, and progress needs a wait for the maximum delay.</p>
+        <p>Because the phases are identical, they pipeline: every view proposes a new block, the leader rotates every view, and a block commits when three consecutive views extend it.</p>
+      </details>
+    </div>
+  </div>
+</section>
+<footer>Distributed Algorithms of Ancient Greece · “Changing Leaders Among Liars”, after Yin, Malkhi, Reiter, Gueta and Abraham, PODC 2019.</footer>
+<script>
+"use strict";
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const NS="http://www.w3.org/2000/svg";
+const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function rnd(n){return Math.floor(Math.random()*n)}
+/* run fn(0..1) over ms, eased */
+function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();return}const t0=performance.now();
+  (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
+function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
+
+/* ===== pop-ups unfold when they enter view ===== */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
+$$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
+$$(".say,[data-live]").forEach(e=>e.setAttribute("aria-live","polite"));
+
+/* ===== scroll: progress bar, section name, parallax ===== */
+const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
+const dep=$$("[data-depth]"), par=$$("[data-parallax]");
+let tick=false;
+function onscroll(){
+  if(tick)return; tick=true;
+  requestAnimationFrame(()=>{
+    tick=false;
+    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
+    prog.style.width=(h>0?y/h*100:0)+"%";
+    const mid=y+innerHeight*.4; let cur=secs[0];
+    for(const s of secs){ if(s.offsetTop<=mid) cur=s; }
+    now.textContent=cur.dataset.name||"";
+    if(reduce)return;
+    for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
+    for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
+  });
+}
+addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
+
+/* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
+function scrolly(root,render){
+  const steps=$$(".step",root); render(0);
+  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
+  steps.forEach(s=>so.observe(s));
+}
+
+/* ===== who is who: the setting on the left, the machine room on the right ===== */
+function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
+  const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
+  [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}
+
+/* ===== space-time drawn in the round: each place is a line running outward, each ring a later moment,
+         and whatever is carried from place to place is an arc curving round and outward ===== */
+function Polar(svg,o){
+  const {cx,cy,r0,step,nodes,rings,tEnd}=o; svg.innerHTML=""; svg.setAttribute("viewBox",o.vb);
+  const defs=el("defs",{},svg);
+  const mk=(key,col)=>{const m=el("marker",{id:`${svg.id}-${key}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:col},m)};
+  mk("b","#136f9e"); mk("r","#bf4a26");
+  const frame=el("g",{},svg), under=el("g",{},svg), slips=el("g",{},svg), evs=el("g",{},svg), over=el("g",{},svg);
+  const P={svg,under,slips,evs,over,cx,cy,
+    r:t=>r0+step*t,
+    xy(deg,rr){const a=deg*Math.PI/180;return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)]},
+    pt(k,t){return P.xy(nodes[k][0],P.r(t))},
+    /* the points of an arc from place a at time ta to place b at time tb, the short way round */
+    arc(a,ta,b,tb){const a0=nodes[a][0],d=((nodes[b][0]-a0+540)%360)-180,n=Math.max(12,Math.round(Math.abs(d)/3)),pts=[];
+      for(let i=0;i<=n;i++)pts.push(P.xy(a0+d*i/n,P.r(ta+(tb-ta)*i/n)));return pts},
+    slip(a,ta,b,tb,trim=17){const pts=P.arc(a,ta,b,tb),end=pts[pts.length-1];
+      while(pts.length>2&&Math.hypot(pts[pts.length-1][0]-end[0],pts[pts.length-1][1]-end[1])<trim)pts.pop();
+      const p=el("path",{class:"st-slip","marker-end":`url(#${svg.id}-b)`,d:"M"+pts.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" L")},slips);
+      p.mid=P.arc(a,ta,b,tb); p.mid=p.mid[Math.floor(p.mid.length/2)]; return p},
+    seg(k,t1,t2){const [x1,y1]=P.pt(k,t1),[x2,y2]=P.pt(k,t2);return el("line",{class:"st-seg",x1,y1,x2,y2},under)},
+    event(k,t,fill,rad=13){const [x,y]=P.pt(k,t),g=el("g",{class:"st-ev",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},evs);
+      el("circle",{class:"halo2",r:rad+5},g);el("circle",{class:"b",r:rad,fill},g);g.label=el("text",{},g);el("circle",{r:rad+8,fill:"transparent"},g);return g}
+  };
+  for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
+  for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
+  for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
+    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
+  if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
+  return P;
+}
+
+/* the four bandits, told apart by colour; bandit 1 is the chief */
+const BC={1:"#a57fc0",2:"#9aa0a8",3:"#e8964d",4:"#b07a55"};
+const yesno=ok=>ok?"<span class='ok'>✓</span>":"<span class='bad'>✗</span>";
+const chip=k=>`<span class="chip"><i style="background:${BC[k]}"></i>bandit ${k}</span>`;
+const chips=a=>a.map(chip).join(" ");
+const men=[1,2,3,4];
+
+/* ===== machines: how many messages one step costs ===== */
+(function(){
+  const sizes=[4,10,40],all=$("#mall"),lead=$("#mlead"),ab=$("#mallbar"),lb=$("#mleadbar"),say=$("#msay");
+  sizes.forEach(n=>{const b=$("#mn"+n);b.onclick=()=>{
+    const f=(n-1)/3,every=n*(n-1),viaLeader=2*(n-1);
+    sizes.forEach(m=>$("#mn"+m).classList.toggle("on",m===n));
+    all.textContent=every;lead.textContent=viaLeader;ab.style.width="100%";lb.style.width=(viaLeader/every*100).toFixed(1)+"%";
+    say.textContent=`With ${n} machines, up to ${f} of them lying, every machine telling every other sends ${every} messages in a step. Votes to one leader, and one certificate back out to the rest, send ${viaLeader}. The first grows with every pair of machines, the second only with the number of machines.`}});
+})();
+
+/* ===== the crown, seen from above: one picture reused wherever rats run between the posts ===== */
+function Crown(svg){
+  const cx=235,cy=235,R=158,A={2:-90,3:30,4:150};svg.innerHTML="";svg.setAttribute("viewBox","0 0 470 470");
+  el("circle",{cx,cy,r:215,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
+  el("circle",{cx,cy,r:96,fill:"#d9cfb4",stroke:"#6b5a48","stroke-width":2.5,"stroke-dasharray":"2 6"},svg);
+  el("circle",{cx,cy,r:42,class:"wall"},svg);
+  el("text",{x:cx,y:cy-54,class:"lab"},svg).textContent="ring wall";
+  const sites=el("g",{},svg),over=el("g",{},svg),pos={1:[cx,cy]},C={svg,over,site:{},pos};
+  for(const k of [2,3,4]){const a=A[k]*Math.PI/180;pos[k]=[cx+R*Math.cos(a),cy+R*Math.sin(a)]}
+  const put=(g,x,y)=>g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`);
+  C.token=(fill,glyph)=>{const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g};
+  /* a rat u of the way from post a to post b; each direction keeps to its own lane */
+  C.fly=(g,a,b,u)=>{const [x1,y1]=pos[a],[x2,y2]=pos[b],L=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/L,uy=(y2-y1)/L,s=a===1?46:32,e=L-(b===1?46:32),d=s+(e-s)*u;put(g,x1+ux*d-uy*7,y1+uy*d+ux*7)};
+  C.state=(k,s)=>{C.site[k].st.textContent=s};
+  const dy={1:72,2:-28,3:42,4:42};
+  for(const k of men){const [x,y]=pos[k],g=el("g",{class:"site"},sites);put(g,x,y);
+    el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:BC[k]},g);el("text",{},g).textContent="B"+k;
+    const st=el("text",{class:"state halo",x:0,y:dy[k]},g);C.site[k]={g,st}}
+  return C;
+}
+
+/* ===== one stage on the crown, counted both ways ===== */
+(function(){
+  const C=Crown($("#votesvg")),say=$("#votesay"),cnt=$("#votecount"),b1=$("#voteall"),b2=$("#voteone");
+  const flight=(a,b,fill,glyph,ms)=>{const g=C.token(fill,glyph);g.setAttribute("opacity",1);C.fly(g,a,b,0);return tween(ms,u=>C.fly(g,a,b,u)).then(()=>g.remove())};
+  const lock=on=>b1.disabled=b2.disabled=on;
+  b1.onclick=async()=>{lock(true);const pairs=[];for(const a of men)for(const b of men)if(a!==b)pairs.push([a,b]);
+    cnt.textContent=pairs.length;say.textContent="Every man writes to every other man.";
+    await Promise.all(pairs.map(([a,b])=>flight(a,b,BC[a],"",1100+rnd(800))));
+    say.innerHTML=`<b>${pairs.length} rats</b> in one stage: each of the four men writes to the other three.`;lock(false)};
+  b2.onclick=async()=>{lock(true);const votes=[2,3,4].map(k=>[k,1]),bundle=[2,3,4].map(k=>[1,k]);
+    cnt.textContent=votes.length;say.textContent="Each man sends their sealed vote to the holder, bandit 1.";
+    await Promise.all(votes.map(([a,b])=>flight(a,b,BC[a],"",1100+rnd(500))));
+    cnt.textContent=votes.length+bundle.length;say.textContent="The holder has three votes, ties them into a bundle, and sends the bundle to the other three.";
+    await Promise.all(bundle.map(([a,b])=>flight(a,b,BC[1],"3",1100+rnd(500))));
+    say.innerHTML=`<b>${votes.length+bundle.length} rats</b> in one stage: ${votes.length} votes in, ${bundle.length} bundles out.`;lock(false)};
+})();
+
+/* ===== scroll: one term, stage by stage ===== */
+(function(){
+  const C=Crown($("#termsvg")),posts=[2,3,4];let run=0,toks=[];
+  const flight=(a,b,fill,glyph,ms,id)=>{const g=C.token(fill,glyph);toks.push(g);g.setAttribute("opacity",1);C.fly(g,a,b,0);return tween(ms,u=>{if(id===run)C.fly(g,a,b,u)}).then(()=>g.remove())};
+  const wave=(pairs,glyph,id)=>Promise.all(pairs.map(([a,b])=>flight(a,b,BC[a],glyph,1000+rnd(400),id)));
+  const vin=(id)=>wave(posts.map(k=>[k,1]),"",id),vout=(id,g)=>wave(posts.map(k=>[1,k]),g||"",id);
+  const set=o=>men.forEach(k=>C.state(k,o[k]||""));
+  const all=s=>({1:s,2:s,3:s,4:s});
+  const S=[{1:"proposed",2:"has proposal",3:"has proposal",4:"has proposal"},
+           {1:"has three votes",2:"voted",3:"voted",4:"voted"},
+           all("first bundle"),all("locked"),all("entry written"),{2:"holds the job"}];
+  async function render(i){
+    const id=++run;toks.forEach(g=>g.remove());toks=[];set(i?S[i-1]:{});
+    const live=()=>id===run;
+    if(i===0){await vin(id);if(!live())return;await vout(id);if(!live())return;set(S[0])}
+    else if(i===1){await vin(id);if(!live())return;set(S[1])}
+    else if(i===2||i===3){await vout(id,"3");if(!live())return;set(S[i]);await vin(id)}
+    else if(i===4){await vout(id,"3");if(!live())return;set(S[4])}
+    else{await wave([1,3,4].map(k=>[k,2]),"",id);if(!live())return;set(S[5])}
+  }
+  scrolly($("#term"),render);
+})();
+
+/* ===== the rule for the first vote, worked out for one man ===== */
+(function(){
+  const LOCK=4,box=$("#ruleopts"),L=[$("#rule1"),$("#rule2"),$("#rule3")],say=$("#rulesay");
+  const opts=[["On top of the locked entry",true,4],["On a rival entry, bundle from term 2",false,2],["On a rival entry, bundle from term 3",false,3],["On a rival entry, bundle from term 6",false,6]];
+  opts.forEach(([t,on,b],i)=>{const bt=document.createElement("button");bt.className="btn alt chipb";bt.textContent=t;box.appendChild(bt);
+    bt.onclick=()=>{$("ul.checks").hidden=false;$$("button",box).forEach(x=>x.classList.toggle("on",x===bt));
+      const h1=on,h2=b>LOCK,vote=h1||h2;
+      L[0].innerHTML=`<b>Lies on the chain of the entry they are locked on</b> ${yesno(h1)}`;
+      L[1].innerHTML=`<b>Carries a bundle from a later term than their lock</b> ${yesno(h2)}<br>the bundle is from term ${b}, the lock from term ${LOCK}`;
+      L[2].innerHTML=`<b>Votes for the proposal</b> ${yesno(vote)}`;
+      say.innerHTML=h1?"<b>The first half holds.</b> The proposal builds on the entry the man is locked on, so voting for it helps nothing conflicting forward."
+        :h2?`<b>The second half holds.</b> The proposal conflicts with the lock, but the bundle it carries is from term ${b}, later than term ${LOCK}. The rest have gone past the lock, the man is shown that they have, and they let go.`
+        :`<b>Neither half holds.</b> The proposal conflicts with the lock and carries no later bundle. The man refuses.`}});
+})();
+
+/* ===== two bundles of the same stage share an honest man ===== */
+(function(){
+  const A=$("#lackA"),B=$("#lackB"),stand=$("#lackstand"),say=$("#lacksay");let a=null,b=null;
+  function render(){
+    $$("button",A).forEach(x=>x.classList.toggle("on",+x.dataset.k===a));$$("button",B).forEach(x=>x.classList.toggle("on",+x.dataset.k===b));
+    if(a==null||b==null){stand.innerHTML="";say.textContent="Pick one man for each bundle.";return}
+    const sealed=l=>men.filter(k=>k!==l),shared=men.filter(k=>k!==a&&k!==b);
+    stand.innerHTML=`<div>Bundle A is sealed by ${chips(sealed(a))}</div><div>Bundle B is sealed by ${chips(sealed(b))}</div><div><b>Sealed both:</b> ${chips(shared)}</div>`;
+    say.innerHTML=`<b>${shared.length} men sealed both bundles.</b> If one of them lies, at least ${shared.length-1} honest ${shared.length-1>1?"men":"man"} still did. An honest man votes once a stage a term, so two bundles of the same stage cannot vouch for conflicting entries.`}
+  [[A,k=>a=k],[B,k=>b=k]].forEach(([box,setk])=>men.forEach(k=>{const bt=document.createElement("button");bt.className="btn alt chipb";bt.dataset.k=k;bt.textContent="bandit "+k;bt.onclick=()=>{setk(k);render()};box.appendChild(bt)}));
+  render();
+})();
+
+/* ===== the hidden lock: what a new holder hears with two stages and with three ===== */
+(function(){
+  const scene=$("#hidscene"),menBox=$("#hidmen"),slowBox=$("#hidslow"),say=$("#hidsay"),mode=$("#hidmode"),b2=$("#hid2"),b3=$("#hid3");
+  let stages=2,slow=null;const LOCK=3;
+  const holds=()=>stages===2?[3]:[2,3,4];
+  function render(){
+    b2.classList.toggle("on",stages===2);b3.classList.toggle("on",stages===3);b2.classList.toggle("alt",stages!==2);b3.classList.toggle("alt",stages!==3);
+    mode.textContent=stages===2?"two stages":"three stages";
+    scene.innerHTML=stages===2?"A man locks as soon as they see a first bundle. In this term only <b>bandit 3</b> saw the first bundle before the sandglasses ran out, and bandit 3 is locked on it."
+      :"A man locks only on a second bundle, and a second bundle exists only because three men voted on a first bundle and kept it. Here <b>bandits 2, 3 and 4</b> hold the first bundle, and bandit 3 is locked on it.";
+    menBox.innerHTML=men.map(k=>`<div class="pm${holds().includes(k)?" has":""}${k===LOCK?" lock":""}${k===slow?" slow":""}"><h5><i style="background:${BC[k]}"></i>bandit ${k}</h5>first bundle: ${holds().includes(k)?"yes":"no"}<br>locked: ${k===LOCK?"yes":"no"}<br>${slow==null?"":k===slow?"answers last":"heard"}</div>`).join("");
+    if(slow==null){say.textContent="Pick the slowest man.";return}
+    const heard=men.filter(k=>k!==slow),who=heard.filter(k=>holds().includes(k));
+    if(who.length)say.innerHTML=`The holder hears ${chips(heard)} and learns the latest first bundle from ${chips(who)}. `+(stages===3?"At least two honest men hold the first bundle, so any three answers include one of them. The lock cannot hide."
+      :"Here nothing hides. But the holder need only wait for three answers, and the three need not include bandit 3.");
+    else say.innerHTML=`The holder hears ${chips(heard)}. <span class="bad">None of them has the first bundle.</span> The holder proposes an entry that conflicts with bandit 3's lock, and bandit 3 refuses. The lock stayed hidden.`;
+  }
+  men.forEach(k=>{const bt=document.createElement("button");bt.className="btn alt chipb";bt.textContent=`bandit ${k} answers last`;bt.onclick=()=>{slow=k;render()};slowBox.appendChild(bt)});
+  b2.onclick=()=>{stages=2;render()};b3.onclick=()=>{stages=3;render()};render();
+})();
+
+/* ===== a new holder every entry: terms in a row, read by the chain rule ===== */
+(function(){
+  const nodes={1:[-90,"B1",BC[1]],2:[0,"B2",BC[2]],3:[90,"B3",BC[3]],4:[180,"B4",BC[4]]};
+  const P=Polar($("#chainsvg"),{vb:"0 0 560 560",cx:280,cy:280,r0:46,step:22,rings:10,tEnd:9.6,note:[12,22],nodes});
+  const list=$("#chainlist"),say=$("#chainsay"),term=$("#chainterm"),bn=$("#chainnext"),br=$("#chainreset"),MAX=7;
+  const holder=k=>(k-1)%4+1,t=k=>1.4+1.2*(k-1);
+  const kinds=[["new proposal","#fffaf0","#1c1512",""],["first bundle","#fbe7a1","#1c1512",""],["locked on","#f0b429","#1c1512","s-lock"],["stands","#3f7a2a","#fffaf0","s-stands"]];
+  let k=0,dots=[];
+  /* the entry of term j has been carried by k-j proposals in a row: new, first bundle, locked on, stands */
+  const stat=j=>kinds[Math.min(3,k-j)];
+  function paint(){
+    dots.forEach((g,i)=>{const s=stat(i+1);g.querySelector("circle.b").setAttribute("fill",s[1]);g.label.style.fill=s[2]});
+    let h="";for(let j=k;j>=Math.max(1,k-3);j--){const s=stat(j);h+=`<div>Entry of term ${j}: <span class="stat ${s[3]}">${s[0]}</span></div>`}
+    if(k>4)h+=`<div>Every entry behind them stands.</div>`;list.innerHTML=h}
+  function next(){
+    k++;const h=holder(k),g=P.event(h,t(k),"#fffaf0",11);g.label.textContent=k;g.style.cursor="default";dots.push(g);
+    if(k>1)P.slip(holder(k-1),t(k-1),h,t(k),12);
+    term.textContent=`term ${k}`;paint();
+    let s=`<b>Term ${k}.</b> Bandit ${h} proposes an entry`;
+    if(k===1)s+=". There is no bundle for any entry yet.";
+    else{s+=` carrying the bundle for the entry of term ${k-1}, which now has its first bundle`;if(k>=3)s+=`; the entry of term ${k-2} is ready to lock on`;if(k>=4)s+=`; and the entry of term ${k-3} stands`;s+="."}
+    if(k===MAX){bn.disabled=true;s+=" Three proposals in a row stand behind each entry from now on, one more entry standing at every term."}
+    say.innerHTML=s}
+  function reset(){P.slips.innerHTML="";P.evs.innerHTML="";dots=[];k=0;bn.disabled=false;term.textContent="no term yet";list.innerHTML="";say.textContent="The job starts at bandit 1. Press the button to run a term."}
+  bn.onclick=next;br.onclick=reset;reset();
+})();
+
+/* ===== who is who ===== */
+mapPairs($("#map"),[
+ ["The four men; one may lie; the wind","n = 3f + 1 = 4; Byzantine faults; partial synchrony with GST (§3)"],
+ ["The loot scroll; entries forming a chain","State machine replication; a tree of nodes with parent links; a branch (§4, §4.2)"],
+ ["Conflicting entries","Neither branch extends the other (§4.2)"],
+ ["A term; its holder","A view; its leader (§4)"],
+ ["A vote; a bundle of three","A partially signed vote; a quorum certificate of n − f votes (§4.1–4.2)"],
+ ["A threshold seal","A (2f + 1, n)-threshold signature, combining partial signatures into one (§3)"],
+ ["First, second, third votes and bundles","prepare, pre-commit, commit votes; prepareQC, precommitQC, commitQC (§4.1)"],
+ ["The latest first bundle a man sends a new holder","new-view carrying prepareQC; highQC (§4.1)"],
+ ["The lock","lockedQC, set on the precommitQC (Algorithm 2, line 25)"],
+ ["The rule for the first vote, its two halves","safeNode: the safety rule (extends the locked node) or the liveness rule (a higher view than the lock) (Algorithm 1)"],
+ ["Never Two Entries","Conflicting nodes cannot both be committed by correct replicas (Lemma 1, Theorem 2)"],
+ ["The hidden lock; two stages and a full sandglass","The livelessness of two-phase HotStuff; Tendermint and Casper's wait for Δ (§4.4; §7.3)"],
+ ["Going at the Rats' Pace","Optimistic responsiveness; after GST a correct leader decides within a bounded time (Lemma 3, Theorem 4)"],
+ ["Holders in fixed order; doubling sandglasses","The leader function and nextView with exponential back-off: the Pacemaker (§4.4, §6)"],
+ ["A new holder every entry; three in a row","Chained HotStuff; One-, Two- and Three-Chains (§5, Algorithm 3, Theorem 5)"],
+ ["Every man to every man; a heavy change","PBFT's quadratic normal case and cubic view change in authenticators (Table 1)"]]);
+})();
+</script>
 </body>
 </html>
