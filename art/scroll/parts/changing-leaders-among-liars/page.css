@@ -1,0 +1,56 @@
+/* ---------- the coin words and the result cards ---------- */
+.coin{font-style:italic;font-weight:700}
+.cite{font-style:italic;color:#6b5a48}
+.result{max-width:640px;margin:1.4rem 0 0;padding:14px 18px;background:#fffaf0;border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow)}
+.result .name{display:block;font-family:var(--sans);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:.3rem}
+.result p{margin:0;font-size:1.05rem}
+@media(min-width:861px){.cards2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* ---------- machines: counting messages ---------- */
+.logs{padding:18px 18px 14px}
+.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
+.cmp{display:grid;gap:10px}
+.cbox{border:3px solid var(--ink);background:#fff;padding:8px 10px}
+.cbox h5{margin:0 0 4px;font-family:var(--sans);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#6b5a48}
+.cbox b{font-family:var(--sans);font-size:1.6rem;font-variant-numeric:tabular-nums}
+.bar2{height:10px;background:#e9dcb6;margin-top:4px}
+.bar2 i{display:block;height:100%;width:0;background:var(--blood);transition:width .6s}
+#mleadbar{background:var(--aegean-d)}
+.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:4.4em;font-style:italic}
+/* ---------- layout of the figure beside its text ---------- */
+.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
+.site.out{opacity:.35}
+.site .state{font-family:var(--serif);font-weight:400;font-style:italic;font-size:14px;fill:#1c1512}
+.fig .wall{fill:#efe6cf;stroke:#6b5a48;stroke-width:7;stroke-dasharray:14 3}
+.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0}
+.counts span b{font-size:1.6rem;margin-right:5px}
+.scrolly svg.isle-svg{width:min(100%,520px)}
+/* ---------- ticked lists, small boxes ---------- */
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:.95rem}
+.checks li{padding:8px 12px;background:#fff;border:3px solid var(--ink);min-height:2.6em}
+.checks b{font-family:var(--sans)}
+.stand{font-family:var(--sans);font-size:.88rem;border:3px solid var(--ink);background:#fff;padding:8px 12px;margin:10px 0}
+.stand div{padding:2px 0}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pairs h5{margin:0 0 6px;font-family:var(--sans);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48}
+@media(max-width:520px){.pairs{grid-template-columns:1fr}}
+.btn.on{background:var(--gold);color:var(--ink)}
+.btn.chipb{padding:6px 10px;font-size:.82rem}
+.scene{margin:0;font-size:.98rem}
+/* ---------- four men, who holds what ---------- */
+.pk{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media(max-width:520px){.pk{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pm{border:3px solid var(--ink);background:#fff;padding:6px 8px;font-family:var(--sans);font-size:.78rem;line-height:1.35;transition:background .3s,opacity .3s}
+.pm h5{margin:0 0 3px;font-size:.78rem;display:flex;align-items:center;gap:5px}
+.pm h5 i{display:inline-block;width:.75em;height:.75em;border-radius:50%;border:1.5px solid var(--ink)}
+.pm.slow{opacity:.45;border-style:dashed}
+.pm.has{background:#f3dc92}
+.pm.lock{box-shadow:0 0 0 3px var(--blood)}
+.st-slip.pick{stroke:#b5602c;stroke-width:4}
+.st-wrap{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.st-wrap{grid-template-columns:minmax(0,1fr)}}
+.st-svg{width:100%;height:auto;display:block}
+.stat{display:inline-block;min-width:5.5em;font-weight:700}
+.stat.s-stands{color:#3f7a2a}.stat.s-lock{color:var(--blood)}
+ul.checks[hidden]{display:none}
+.stand:empty{display:none}
