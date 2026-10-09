@@ -1331,7 +1331,6 @@ FIGURES = {
     "books/keeping-order-among-liars/index.html": [order_entry],
     "books/telling-the-dead-from-the-slow/index.html": [slate_split],
     "books/one-leader-at-a-time/index.html": [board_passes],
-    "books/agreeing-among-liars/index.html": [liars_worlds, liars_repeat, liars_sealed],
 }
 
 # A figure not yet in its book takes the place of the nth flat <figure class="diagram">.
