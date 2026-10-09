@@ -34,8 +34,8 @@ Setting pages (`places/<place>/index.html`) and the home page wear the same look
 ordinary hand-edited pages that link `art/scroll/shell.css`, `art/scroll/place.css` and
 `art/scroll/shell.js`.
 
-Six Paxos books are still in the earlier chapter layout, with `assets/css/books.css` and static
-figures built by `art/diagrams/polar.py`: *One Leader at a Time*, *Spreading by Word of Mouth*,
+Five Paxos books are still in the earlier chapter layout, with `assets/css/books.css`:
+*Spreading by Word of Mouth*,
 *Probably Up to Date*, *Changes That Never Clash*, *What You Can Promise Alone* and *Knowing When
 to Wait*; so is `papers/index.html`. A converted book keeps no copy of its earlier edition; that
 is in the git history.
@@ -78,10 +78,12 @@ These are correctness constraints, not preferences.
 4. **Devices are per setting.** There is no series-wide table of symbols. Each setting
    establishes its own vocabulary, and a device means nothing outside the setting that defines
    it.
-5. **Nobody on Arche has a name.** *The Part-Time Parliament* keeps Lamport's Paxons, who are
-   Hellenised computer scientists. Everywhere else a figure is a role or a number: "the keeper of
-   House 1's accounts", never a Hellenised author. The paper's authors are credited on the cover
-   and in the closing panel. **The houses, the mercenaries and the bandits have no names or
+5. **Paxos has names; Arche has numbers.** On Paxos, named figures are Hellenised authors of
+   the book's own papers, following Lamport's practice with the Paxon legislators, with ordinary
+   Greek names for seats no author fills; a place's figures are told apart by colour (Schedia's
+   five legislators). On Arche nobody has a name: a figure is a role or a number, "the keeper of
+   House 1's accounts", and the paper's authors are credited on the cover and in the closing panel.
+   **The houses, the mercenaries and the bandits have no names or
    emblems; they go by number**: Houses 1–3, the mercenaries by their tents'
    numbers, Number 1 to Number 4, and the bandits Number 1 to Number 4, Number 1 being the chief
    inside the ring wall. Every book at a place keeps that place's numbered cast. Ties between houses are

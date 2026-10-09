@@ -180,7 +180,8 @@ for effect.
   (`ninesec`) or figures (`ninesvg`).
 - **Every `Isle`, `Hill` or crown figure carries `class="isle-svg fig"`**, or its labels lose
   their styling.
-- **Personal names become roles.** The long editions give the paper's authors Hellenised names
+- **On Arche, personal names become roles** (Paxos books keep their named, colour-coded
+  figures, as *One Leader at a Time* does). The Arche long editions give the paper's authors Hellenised names
   (Lamportios, Chandyos). The scroll says "the keeper of House 1's accounts", "the keeper of the
   customs rolls". Their old footnote is dropped.
 - **Prose stays neutral about people.** No "he", "his", "she" for a numbered figure or a role;

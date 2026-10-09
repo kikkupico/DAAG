@@ -1,0 +1,46 @@
+/* ---------- five logs ---------- */
+.logs{padding:18px 18px 14px}
+.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
+.reps5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.rep5{border:3px solid var(--ink);background:#fff;padding:6px 4px;min-height:150px;text-align:center;font-family:var(--sans);font-size:.7rem;transition:opacity .4s,background .4s}
+.rep5 h5{margin:0 0 5px;font-size:.66rem;letter-spacing:.04em}
+.rep5.down{opacity:.4;background:#ddd}
+.rep5.lead{box-shadow:0 0 0 3px var(--gold)}
+.rep5 .op{margin:2px 0;padding:1px 0;background:var(--parch-lo);border-left:4px solid var(--aegean)}
+.rep5 .op.done{border-left-color:#5f6e28;background:#e3ecc4}
+.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:3.6em;font-style:italic}
+/* ---------- the Tholos from above ---------- */
+.seat{cursor:default}
+.seat circle.b{stroke:var(--ink);stroke-width:4;transition:opacity .4s}
+.seat text.g{font-family:var(--sans);font-weight:700;font-size:17px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
+.seat text.s{font-family:var(--sans);font-size:12.5px;text-anchor:middle;fill:#1c1512}
+.seat .ring{fill:none;stroke:var(--gold);stroke-width:6;opacity:0;transition:opacity .4s}
+.seat.holder .ring{opacity:1}
+.seat.out circle.b{opacity:.3}
+.seat.out text.g{opacity:.45}
+.seat.pick{cursor:pointer}
+.seat.pick:focus-visible{outline:none}.seat.pick:focus-visible circle.b{stroke:var(--aegean-d);stroke-width:7}
+.podium text{font-family:var(--sans);font-weight:700;font-size:12px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+.who{display:inline-block;white-space:nowrap;font-family:var(--sans);font-weight:700}
+.who i{display:inline-block;width:.75em;height:.75em;border-radius:50%;border:1.5px solid var(--ink);margin-right:4px;vertical-align:-.03em}
+.cast{display:flex;flex-wrap:wrap;gap:8px 16px;margin:.6rem 0 1rem}
+/* ---------- choices ---------- */
+.marks{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 4px}
+.mark{background:#fff;border:3px solid var(--ink);padding:6px 10px;font-family:var(--sans);font-size:.86rem;font-weight:700}
+.mark[aria-pressed=true]{background:var(--gold)}
+.ans{display:grid;gap:8px}
+.ans .r{display:grid;grid-template-columns:minmax(0,7.5em) minmax(0,1fr);gap:8px;align-items:center}
+.seg{display:flex;flex-wrap:wrap;gap:0}
+.seg button{background:#fff;border:3px solid var(--ink);margin-right:-3px;padding:4px 8px;font-family:var(--sans);font-size:.76rem}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--parch)}
+.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
+.checks{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px;font-size:.92rem}
+.checks li{padding:6px 10px;background:#fff;border:3px solid var(--ink)}
+.cards3.five{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+table.terms2{width:100%;border-collapse:collapse;font-size:.88rem}
+table.terms2 td{padding:6px 8px 6px 0;border-top:2px solid #1c151222;vertical-align:top}
+table.terms2 td:first-child{width:40%;font-weight:700}
+@media(max-width:899px){.side.five{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0}
+.counts span b{font-size:1.4rem;margin-right:5px}
