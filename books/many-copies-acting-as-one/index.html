@@ -4,905 +4,1238 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Many Copies, Acting as One — Arche</title>
+<meta name="description" content="Herlihy and Wing's linearizability: three trading houses on the ring road ask that orders be filled as though one keeper had entered them all on one board, in the sequence they really came by the sun.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<link rel="stylesheet" href="../../assets/css/daag.css">
-<link rel="stylesheet" href="../../assets/css/books.css">
+<style>
+:root{
+  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4;
+  --aegean:#2e88b5; --aegean-d:#136f9e; --blood:#bf4a26; --olive:#7c8f3a; --terra:#b5602c;
+  --gold:#e0b84a; --shadow:#b9a77e;
+  --serif:Georgia,'Iowan Old Style','Palatino Linotype',serif;
+  --sans:Optima,'Gill Sans','Gill Sans MT',sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#d8cba6}
+body{margin:0;background:#d8cba6;color:var(--ink);font-family:var(--serif);line-height:1.55;overflow-x:hidden}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer}
+h1,h2,h3{font-family:var(--sans);line-height:1.12;margin:0;text-wrap:balance}
+p{margin:0 0 .9rem;text-wrap:pretty}
+.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--blood)}
+
+/* ---------- top bar ---------- */
+.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
+  font-family:var(--sans);font-size:.78rem;letter-spacing:.05em;background:linear-gradient(180deg,#3a2a1a,#241a10)}
+.bar a{color:#f0e6cc;text-decoration:none;opacity:.8;white-space:nowrap} .bar a:hover{opacity:1}
+.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:520px){.bar a+a{display:none}}
+.bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
+
+/* ---------- spreads ---------- */
+.spread{position:relative;padding:clamp(4.5rem,11vw,8rem) 20px;overflow:clip}
+.spread.has-scrolly{overflow:visible;padding-bottom:0;background:var(--marble)}
+.dark{background:var(--marble);color:var(--ink);background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
+.light{background:var(--parch);color:var(--ink);
+  background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
+/* torn-paper edge between spreads */
+.tear{position:absolute;left:0;right:0;top:-1px;height:26px;z-index:3;pointer-events:none}
+.tear path{fill:var(--prev)}
+.wrap{max-width:1080px;margin:0 auto;position:relative;z-index:2}
+.narrow{max-width:640px;margin:0 auto}
+.spread h2{font-size:clamp(1.9rem,5vw,3.1rem);margin:.4rem 0 1rem}
+.lede{font-size:clamp(1.05rem,2.2vw,1.3rem);max-width:34em}
+.light .lede{color:#3a2d24}
+.meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
+
+/* ---------- the pop-up: a card that unfolds from its hinge ---------- */
+.pop{perspective:1400px}
+.pop > .leaf{transform-origin:50% 100%;transform:rotateX(78deg) translateY(30px);opacity:0;
+  transition:transform 1.1s cubic-bezier(.2,.9,.25,1.12),opacity .6s ease}
+.pop.up > .leaf{transform:rotateX(0) translateY(0);opacity:1}
+.pop.fromleft > .leaf{transform-origin:0 50%;transform:rotateY(-80deg)}
+.pop.fromright > .leaf{transform-origin:100% 50%;transform:rotateY(80deg)}
+.pop.up.fromleft > .leaf,.pop.up.fromright > .leaf{transform:none}
+.paper{background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);position:relative}
+.light .paper{box-shadow:9px 11px 0 #b9a77e}
+.photo{border:5px solid #fffaf0;box-shadow:0 0 0 3px var(--ink),12px 16px 0 var(--shadow);background:#222;overflow:hidden;position:relative}
+.photo img{width:100%;height:100%;object-fit:cover}
+.tilt-l{transform:rotate(-1.4deg)} .tilt-r{transform:rotate(1.2deg)}
+[data-depth]{will-change:transform}
+.fold-shadow{position:absolute;left:6%;right:6%;bottom:-18px;height:26px;background:radial-gradient(ellipse at center,#0008,transparent 70%);opacity:0;transition:opacity 1s .4s;z-index:-1}
+.up .fold-shadow{opacity:1}
+
+/* ---------- cover ---------- */
+#cover{min-height:100svh;display:grid;align-items:center;padding-top:5rem;
+  background:radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
+#cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
+#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:.6rem 0 1rem;letter-spacing:-.01em}
+#cover h1 span{display:block;font-size:.34em;letter-spacing:.2em;text-transform:uppercase;color:var(--aegean-d);margin-top:.9rem;font-weight:400}
+#cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
+#cover .hook{font-size:clamp(1.1rem,2.4vw,1.45rem);font-style:italic;max-width:24em;color:#3a2d24}
+.scrollcue{margin-top:2rem;font-family:var(--sans);font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);display:flex;gap:10px;align-items:center}
+.scrollcue b{display:inline-block;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(7px)}}
+.cut{position:absolute;pointer-events:none;z-index:1}
+.cut svg{display:block;width:100%;height:auto}
+@media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
+
+/* ---------- two-column spreads ---------- */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.two.wide-r{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
+@media(max-width:859px){.two,.two.wide-r{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- the hall (full-bleed photo with pins) ---------- */
+#hall{padding:0;background:var(--marble)}
+.bleed{position:relative;height:min(100svh,880px);overflow:hidden}
+.bleed img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover}
+.bleed::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--parch) 0,transparent 8%,transparent 92%,var(--parch) 100%);pointer-events:none}
+.pin{position:absolute;z-index:4;max-width:min(250px,44vw);padding:10px 14px;background:#fffaf0;color:var(--ink);border:3px solid var(--ink);
+  box-shadow:5px 6px 0 #0007;font-size:.92rem;line-height:1.35;transform-origin:0 100%}
+.pin b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood)}
+.pin::after{content:"";position:absolute;left:-3px;bottom:-26px;width:3px;height:26px;background:var(--ink)}
+.pin::before{content:"";position:absolute;left:-8px;bottom:-34px;width:13px;height:13px;border-radius:50%;background:var(--blood);border:3px solid var(--ink)}
+.hall-title{position:absolute;z-index:5;left:20px;right:20px;top:clamp(5rem,12vh,8rem);max-width:1080px;margin:0 auto}
+.hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
+.hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
+.hall-title p{margin:0}
+
+/* ---------- scrollytelling ---------- */
+.scrolly{position:relative}
+.scrolly .stage{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;padding:70px 20px 20px;overflow:hidden}
+.scrolly .steps{position:relative;z-index:6;margin-top:-100svh;pointer-events:none}
+.step{min-height:100svh;display:flex;align-items:center;padding:0 20px}
+.step .card{pointer-events:auto;max-width:360px;padding:16px 20px;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);
+  transform:translateY(24px) rotate(-.6deg);opacity:.25;transition:transform .7s cubic-bezier(.2,.9,.25,1.1),opacity .5s}
+.step.on .card{transform:none;opacity:1}
+.step .card h3{font-size:1.1rem;margin-bottom:.35rem}
+.step .card p{margin:0;font-size:.98rem}
+.step .num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
+.step.r{justify-content:flex-end}
+.scrolly svg.fig{width:min(100%,820px);height:auto;max-height:calc(100svh - 120px);overflow:visible}
+.scrolly .stage-inner{width:100%;display:flex;justify-content:center}
+@media(min-width:900px){.scrolly .stage{padding-left:380px} .step .card{max-width:320px} .step{padding-left:max(24px,calc((100vw - 1080px)/2))}}
+@media(max-width:899px){
+  .scrolly .stage{align-items:flex-start;padding-top:64px}
+  .scrolly svg.fig{max-height:46svh}
+  .step{align-items:flex-end;padding-bottom:22px}
+  .step .card{max-width:none;width:100%}
+}
+svg text{font-family:var(--serif)}
+.svg-dark{background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
+
+/* ---------- interactive wells ---------- */
+.well{padding:clamp(16px,3vw,28px);margin:1.6rem 0}
+.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;justify-content:space-between;gap:10px}
+.well h4 em{font-style:normal;color:#6b5a48}
+.btn{background:var(--ink);color:var(--parch);border:3px solid var(--ink);padding:8px 16px;font-family:var(--sans);font-size:.88rem;letter-spacing:.03em;box-shadow:4px 4px 0 var(--blood);transition:transform .12s,box-shadow .12s}
+.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--blood)}
+.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--blood)}
+.btn:disabled{opacity:.35;cursor:default;box-shadow:none}
+.btn.alt{background:#fffaf0;color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.say{margin:12px 0 0;font-size:.98rem;min-height:3.1em}
+.say b{color:var(--blood)}
+.ok{color:#3f7a2a;font-weight:700}.bad{color:var(--blood);font-weight:700}
+
+/* cards row */
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
+.card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
+.card3 .body{padding:16px 18px 18px}
+.card3 h3{font-size:1.15rem;margin-bottom:.4rem}
+.card3 p{font-size:.95rem;margin:0}
+.card3 .fx{margin-top:12px}
+@media(max-width:860px){.cards3{grid-template-columns:1fr}}
+/* relevance */
+.map{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px 0;align-items:stretch;max-width:760px;margin:2rem auto 0}
+.map .l,.map .r{padding:11px 16px;font-size:1rem;border:3px solid var(--ink);background:#fffaf0;color:var(--ink);transition:background .25s,transform .25s;cursor:default}
+.map .r{font-family:var(--sans);background:#e9f2f7}
+.map .mid{display:grid;place-items:center;color:var(--blood);font-size:1.3rem}
+.map .hi{background:var(--gold)!important;transform:scale(1.03)}
+.map .hd{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood)}
+.end{text-align:center}
+.end .big{font-size:clamp(1.5rem,4.2vw,2.5rem);font-style:italic;max-width:19em;margin:0 auto 1.4rem;color:var(--ink);text-wrap:balance}
+.links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+.links a{color:var(--ink);background:#fffaf0;border:3px solid var(--ink);padding:9px 18px;text-decoration:none;font-family:var(--sans);font-size:.9rem;box-shadow:4px 4px 0 var(--shadow)}
+.links a:hover{background:var(--gold)}
+footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;font-family:var(--sans);background:#d8cba6}
+
+/* ---------- lists, small parts ---------- */
+.terms{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:12px}
+.terms li{padding:12px 16px;background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 #b9a77e;font-size:.98rem}
+.terms b{font-family:var(--sans)}
+@keyframes slotin{from{transform:translateY(-8px);opacity:0}}
+.btn:focus-visible,.links a:focus-visible,[role=button]:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
+.num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
+.chip{display:inline-block;padding:1px 7px;margin:2px 3px 2px 0;border:2px solid var(--ink);border-radius:5px;background:#fff;font-family:var(--sans);font-weight:700;font-size:.86rem;white-space:nowrap}
+.chip i{display:inline-block;width:.7em;height:.7em;border-radius:50%;border:1.5px solid var(--ink);margin-right:5px;vertical-align:-.02em}
+.isle-svg{width:min(100%,440px);display:block;margin:0 auto}
+.fig .fade{opacity:0;transition:opacity .6s}
+.fig .fade.on{opacity:1}
+.fig .lab{fill:#6b5a48;font-size:15px;font-style:italic;text-anchor:middle}
+.fig .halo{paint-order:stroke;stroke:#fffaf0;stroke-width:5px;stroke-linejoin:round}
+.tok text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+.site rect,.site circle{stroke:var(--ink);stroke-width:4}
+.site text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+
+/* ---------- space-time, drawn in the round ---------- */
+.st-ring{fill:none;stroke:#b9a77e;stroke-opacity:.7;stroke-width:1;stroke-dasharray:3 4}
+.st-spoke{stroke:#1c1512;stroke-width:2.5;stroke-opacity:.45}
+.st-node rect{fill:#f6eed6;stroke:#1c1512;stroke-width:2}
+.st-node text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+.st-slip{fill:none;stroke:#136f9e;stroke-width:2.6;transition:stroke .3s,stroke-width .3s,opacity .5s}
+.st-seg{stroke:#bf4a26;stroke-width:7;stroke-linecap:round;opacity:0;transition:opacity .3s}
+.st-seg.hi{opacity:.85}
+.st-slip.hi{stroke:#bf4a26;stroke-width:5}
+.st-ev{cursor:pointer}
+.st-ev circle.b{stroke:#1c1512;stroke-width:3;transition:stroke .3s,stroke-width .3s}
+.st-ev text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
+.st-ev .halo2{fill:none;stroke:#e0b84a;stroke-width:7;opacity:0;transition:opacity .3s}
+.st-ev.sel .halo2,.st-ev.mark .halo2{opacity:1}
+.st-ev.sel circle.b{stroke-width:4.5}
+.st-ev.dim{opacity:.3}
+.st-ev:focus-visible{outline:none}.st-ev:focus-visible circle.b{stroke:#136f9e;stroke-width:6}
+.st-note{fill:#6b5a48;font-size:13px;font-style:italic}
+
+/* ---------- a stage with a figure and a side panel ---------- */
+.stage-inner.split{gap:18px;align-items:center}
+.stage-inner.split svg.fig{flex:1 1 300px;min-width:0;max-width:470px}
+.side{flex:0 0 240px;display:grid;gap:10px;font-family:var(--sans);font-size:.84rem}
+.side .hc{background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--shadow);padding:8px 10px;min-height:92px;transition:background .4s}
+.side .hc h5{margin:0 0 5px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:6px}
+.side .hc h5 span{color:#6b5a48;letter-spacing:.02em;text-transform:none}
+.side .hc .chk{font-size:.78rem;margin-top:4px;line-height:1.35}
+.side .hc.in{background:#e3ecc4}
+@media(max-width:899px){
+  .stage-inner.split{flex-direction:column;gap:10px}
+  .stage-inner.split svg.fig{flex:0 0 auto;max-height:30svh;width:auto;max-width:100%}
+  .side{flex:0 0 auto;width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;font-size:.7rem}
+  .side .hc{padding:5px 6px;min-height:0;box-shadow:3px 3px 0 var(--shadow)}
+  .side .hc h5{font-size:.62rem;flex-direction:column;gap:0}
+  .side .hc .chk{font-size:.66rem}
+  .side .chip{font-size:.68rem;padding:0 4px}
+}
+.tear{width:100%}
+.scrolly svg.fig.svg-dark{overflow:hidden}
+
+/* ---------- proofs, in the paper's own terms ---------- */
+details.proof{max-width:760px;margin:1.8rem 0 0;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);padding:0 clamp(14px,3vw,22px);font-size:.95rem}
+details.proof>summary{cursor:pointer;padding:12px 0;font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--aegean-d)}
+details.proof>summary:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
+details.proof[open]{padding-bottom:14px}
+details.proof details.proof{border-width:3px;box-shadow:none;background:#fff;margin:1rem 0;max-width:none}
+details.proof .given{padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean);margin:0 0 .8rem}
+details.proof h3,details.proof h4{font-size:1.02rem;margin:1.4rem 0 .5rem}
+details.proof .hlink{color:inherit;text-decoration:none}
+details.proof .fnote{font-size:.84rem;color:#6b5a48}
+ol.proofsteps{padding-left:1.4em;margin:.4rem 0 0}
+ol.proofsteps li{margin:.55em 0}
+.qed{float:right;font-family:var(--sans);letter-spacing:.15em;color:#5f6e28}
+.mathblock{margin:.8rem 0;padding:8px 12px;overflow-x:auto;text-align:center;font-style:italic;background:#fff;border:2px solid #1c151233}
+.slab{margin:1rem 0;padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean)}
+.slab-head{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
+.stmt{font-style:italic}
+
+/* ---------- closing apparatus: lineage, papers, links to where a fact comes from ---------- */
+a.anchor{display:block;height:0;scroll-margin-top:56px}
+sup.xref{font-size:.8em;line-height:0;margin-left:1px}
+sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
+.apparatus{max-width:760px;margin:3rem auto 0;text-align:left;font-size:.94rem}
+.apparatus .lineage{margin:0 0 .6rem}
+.apparatus .lbl{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-right:8px}
+.apparatus a{color:var(--aegean-d)}
+.apparatus details.proof{margin-top:1.2rem}
+.apparatus .refs p,.apparatus ol.refs li{font-size:.9rem;margin:.45em 0}
+.apparatus table{width:100%;border-collapse:collapse;font-size:.9rem}
+.apparatus td{padding:5px 8px 5px 0;border-top:2px solid #1c151222;vertical-align:top}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .pop > .leaf{transition:opacity .3s;transform:none!important}
+  [data-depth]{transform:none!important}
+  .scrollcue b,.pulse{animation:none}
+  .fig .tok{transition:none}
+}
+/* ---------- the copies of a queue, in machine terms ---------- */
+.mach{padding:18px 18px 14px}
+.mpair{display:grid;grid-template-columns:1fr 54px 1fr;gap:6px;align-items:center}
+.mbox{border:3px solid var(--ink);background:#fff;padding:8px;text-align:center;transition:background .3s}
+.mbox h5{margin:0 0 4px;font-family:var(--sans);font-size:.7rem;letter-spacing:.08em}
+.mbox b{font-family:var(--sans);font-size:1.1rem;min-height:1.4em;display:block}
+.mbox.on{background:var(--gold)}
+.marrow{text-align:center;font-family:var(--sans);font-size:.72rem;color:var(--blood);min-height:1.2em}
+.lists{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.lists h5{margin:0 0 6px;font-family:var(--sans);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48}
+.lists>div{border:3px solid var(--ink);background:#fff;padding:8px;min-height:120px}
+.e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);font-family:var(--sans)}
+.e.bad{border-left-color:var(--blood);color:var(--ink);font-weight:400}
+.e.good{border-left-color:#3f7a2a}
+@media(max-width:520px){.lists{grid-template-columns:1fr}.lists>div{min-height:0}}
+/* ---------- figures beside text ---------- */
+.st-wrap{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.st-wrap{grid-template-columns:minmax(0,1fr)}}
+.st-svg{width:100%;height:auto;display:block}
+.vt{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.9rem;margin:6px 0 10px}
+.vt td{padding:6px;border-top:2px solid #1c151222;vertical-align:top}
+.vt tr:first-child td{border-top:0}
+.vt td:last-child{text-align:right;font-weight:700}
+.cards2{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:700px){.cards2{grid-template-columns:minmax(0,1fr)}}
+.btn.on{background:var(--gold);color:var(--ink)}
+.side .hc .chk{min-height:2.6em}
+.side .hc.in{background:#e3ecc4}
+.bsvg text{font-family:var(--sans);font-weight:700;fill:#1c1512}
+.seqline{margin:6px 0 0;line-height:1.9}
+.tok-l{font-family:var(--sans);font-size:13px;font-weight:700;fill:#136f9e;text-anchor:middle}
+.st-svg .st-ev text{font-size:19px}
+</style>
 </head>
 <body>
-<nav class="series-nav">
-  <div class="series-nav-inner">
-    <a href="../../index.html" class="nav-back">← The Books</a>
-    <span class="nav-current">Arche · The Ring Road</span>
-  </div>
-</nav>
-<div class="page">
 
-<!-- ================= COVER ================= -->
-<header class="cover">
-  <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · The Ring Road</div>
-  <h1 class="display">Many Copies, Acting as One</h1>
-  <p class="basis">Based on “Linearizability: A Correctness Condition for Concurrent Objects” by Maurice Herlihy and Jeannette Wing (1990)</p>
-  <p class="sub">When data is kept in several copies, what does it take for them to act as one?
-  And who could ever tell the difference?</p>
-  <div class="frame-cover portrait"><img src="../../assets/img/covers/many-copies-acting-as-one.jpg" width="896" height="1200"
-    alt="Under the portico of House 3's trading house on its quay, a bare-headed messenger hands an order slip to a clerk in a grey-blue tunic, while a loader stoops over grain sacks beside a wall board of slots marked with Greek numerals."></div>
-  <p class="pub">House 3 fills the other houses' orders from its storehouse, and the order placed
-  first is filled first. The tallies put the orders in a sequence every house can work out from its slips. But an
-  order that was entered and confirmed in the morning can still be filled after one made at noon.
-  This book asks for placed first judged by the sun: every order filled as though one keeper had
-  entered them all on one board, in the sequence they really came.</p>
-  <p class="lineage"><span class="lbl">Builds on</span> <a href="../ordering-without-clocks/index.html">Ordering Without Clocks</a></p>
-  <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/ring-road/index.html">The Ring Road</a></p>
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <span class="now" id="now"></span>
+  <i id="prog"></i>
+</div>
+
+<!-- ============================================================ cover -->
+<header class="spread dark" id="cover" data-name="Cover">
+  <div class="cut" style="left:-30px;bottom:-10px;width:90px;opacity:.3" data-depth="-26"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#5f6e28"/></svg></div>
+  <div class="cut" style="right:-20px;bottom:-14px;width:80px;opacity:.3" data-depth="-40"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#7c8f3a"/></svg></div>
+  <div class="wrap grid">
+    <div>
+      <div class="kicker">After Herlihy and Wing, 1990</div>
+      <h1>Many Copies, Acting as One<span>how three houses promise that orders are filled as the sun saw them</span></h1>
+      <p class="hook">When a board is kept in several copies, what does it take for them to act as one? And who could ever tell the difference?</p>
+      <p class="hook" style="color:var(--blood);font-style:normal;font-family:var(--sans);font-size:1.1rem">On the island of Arche, they asked for a single keeper.</p>
+      <div class="scrollcue"><b>↓</b> Scroll. Things unfold.</div>
+    </div>
+    <div class="pop" data-auto>
+      <div class="leaf">
+        <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" alt="Under the portico of a trading house on a quay, a man in an ochre tunic holds out a slip to a man in a grey-blue tunic who holds a wax tablet, while a third man in brown stands by a grain sack; a wall board of pigeonholes holding clay tablets runs along the wall, with the harbour and a ruined hilltop beyond"></div>
+        <div class="fold-shadow"></div>
+      </div>
+    </div>
+  </div>
 </header>
 
-<!-- ================= IN A NUTSHELL ================= -->
-<section class="nutshell">
-  <h6>In a Nutshell</h6>
-  <p>Linearizability (Herlihy and Wing) is the strongest everyday consistency guarantee for a replicated object: it behaves as if there were a single copy, and each operation takes effect at one instant between its request and its response, so the order agrees with real time. Agreeing on any one sequence is not enough: an operation that finished before another began must come first.</p>
-  <p>The book tells it with three trading houses. They fill orders in a sequence they can all work out, yet an order entered and confirmed in the morning can still be filled after one made at noon. So they ask for more: every order filled as though a single keeper had entered them all on one board, in the order they really came by the sun.</p>
-</section>
-
-<nav class="toc">
-  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
-  <ol>
-    <li><a href="#s1">I · The Goatherd's Morning</a></li>
-    <li><a href="#s2">II · The Rule of the Board</a></li>
-    <li><a href="#s3">III · Four Mornings</a></li>
-    <li><a href="#s4">IV · Two Kinds of First</a></li>
-    <li><a href="#s5">V · Copies Nobody Can Count</a></li>
-    <li><a href="#s6">VI · Grain and Oil</a></li>
-    <li><a href="#s7">VII · Nobody Made to Wait</a></li>
-    <li><a href="#s8">VIII · The Busy Board</a></li>
-    <li><a href="#s9">IX · What the Board Could Mean</a></li>
-    <li><a href="#s10">X · What the Rule Does Not Say</a></li>
-    <li><a href="#s11">XI · In the Book, In the Paper</a></li>
-    <li><a href="#refs">The Paper Behind This Book</a></li>
-  </ol>
-</nav>
-
-<hr class="rule">
-
-<!-- ================= I ================= -->
-<section id="s1">
-  <div class="issue"><span class="no">Chapter I</span><h2>The Goatherd's Morning</h2></div>
-
-  <div class="prose">
-    <p>The three trading houses of Arche, <span class="coin">House 1</span>,
-    <span class="coin">House 2</span> and <span class="coin">House 3</span>, send word to one
-    another only by messenger on the ring road, and in the trading season nobody on the island can
-    read the hour<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup>.
-    House 3 has grain, both other houses need it, and the houses have agreed that the order
-    <em>placed first</em> is filled first.</p>
-
-    <p>How is House 3 to know which was placed first, with no hour to go by? By tallies: a number
-    written on every slip and raised on every arrival, with the houses' numbers to break ties. The
-    tallies never put an order ahead of one that led to it, and no house can win by keeping a quicker
-    messenger<sup class="xref"><a href="../ordering-without-clocks/index.html#s3" title="Ordering Without Clocks: Breaking Ties">*</a></sup>.</p>
-
-    <p>Now take one morning. House 1 sends House 3 an <span class="coin">order</span>. House 3
-    enters it and sends back word that it is entered; House 1 has its
-    <span class="coin">confirmation</span> before the sun is high. A goatherd crossing Mount Phyle by
-    the smugglers' tracks mentions it at House 2, which has heard nothing by slip all
-    morning<sup class="xref"><a href="../ordering-without-clocks/index.html#s5" title="Ordering Without Clocks: Over the Mountain">*</a></sup>.
-    At noon House 2 sends an order of its own. Its tally is low, since no slip has reached it for
-    hours, lower than House 1's. So House 3 serves House 2 first.</p>
-  </div>
-
-  <figure class="panel">
-      <img src="../../assets/img/panels/many-copies-acting-as-one/b01-goatherd.jpg" width="1200" height="896" loading="lazy"
-           alt="High on the hillside above House 2's harbour, a goatherd in a sheepskin cape stands among his goats and points down at the town and its pier, with the cliff road running round the bay.">
-    </figure>
-
-  <div class="prose">
-    <p>Did anything go wrong? By the tallies, no: no slip joined the two orders, so either could come
-    first. But House 2 knows, and so does anyone who talked to the goatherd, that House 1's order had
-    been entered and confirmed before House 2 even asked. What the sun saw, House 1 was first.</p>
-    <p>The tallies have always had this gap. They respect every slip, and the goatherd carries none.
-    One answer is to make better clocks: clocks that run true, kept close together by the slips,
-    so that nobody crossing the mountain can arrive before he left<sup class="xref"><a href="../ordering-without-clocks/index.html#s9" title="Ordering Without Clocks: Clocks That Run With the World">*</a></sup>.
-    That is a way of catching the goatherd. The houses want something else: a promise about how
-    orders are filled that no goatherd can ever catch them breaking, whatever clocks they keep or do without.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>Could the houses promise instead to fill first the order placed first as the
-    sun saw it? Nobody on Arche can read the sun. What would such a promise even say?</em></p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<!-- ================= II ================= -->
-<section id="s2">
-  <div class="issue"><span class="no">Chapter II</span><h2>The Rule of the Board</h2></div>
-
-  <div class="prose">
-    <p>A promise about orders has to be said in terms of what the houses themselves see. What does a house see of its
-    order? Two moments: when it sends the order, and when the confirmation comes back. Somewhere in
-    between, the order was put on the <span class="coin">board</span> where House 3 keeps its waiting
-    orders. And serving? A <span class="coin">loader</span> at House 3 goes to the board, takes an
-    order and loads the grain for it; that too begins and ends. Each house, and each loader, does one
-    thing at a time.</p>
-
-    <p>So every piece of business has a span, from its beginning to its end. When does one come
-    <span class="coin">before</span> another? When the first was over before the second began:
-    House 1's order came before House 2's. Otherwise the two <span class="coin">overlap</span>, and
-    neither came first. This is judged by the sun, whether or not anyone could see it.</p>
-
-    <p>Now the promise. Picture a single keeper with a single board, doing one thing at a time: he
-    enters an order, or he serves the oldest waiting one. No order goes onto his board and none comes
-    off it except through his own hands, one at a time. The houses cannot see him and do not need
-    to. They need only this: that everything they got could have come from him, with each thing he did
-    falling somewhere inside the span of the business it belonged to.</p>
-  </div>
-
-  <div class="aside-formal">
-    <span class="lbl">The rule of the board</span>
-    All the orders and all the servings can be set in a single sequence such that:
-    <br><span class="stmt">(1)</span> every serving takes the order that a single keeper, with a
-    single board, taking everything in that sequence, would have served;
-    <br><span class="stmt">(2)</span> each piece of business takes its place in the sequence at some
-    moment between its beginning and its end; so that
-    <br><span class="stmt">(3)</span> anything finished before another began comes before it.
-    <br><span class="paper">Linearizability, §2.2: a history is linearizable if, after adding
-    responses to some pending invocations and dropping the rest, it is equivalent to a legal
-    sequential history that respects the real-time order &lt;<sub>H</sub>. The board is a FIFO
-    queue: an order is <code>Enq</code>, a serving is <code>Deq</code>.</span>
-  </div>
-
-  <div class="prose">
-    <p>Why does clause (2) matter? Without it the keeper could do things whenever it suited him, and
-    the promise would say nothing about the sun. With it, clause (3) follows: if House 1's order was
-    over before House 2's began, the keeper's moment for House 1 came first, and a single keeper
-    serves the older order first. So the goatherd's morning breaks the rule.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>Is the rule too strict, forbidding mornings that are plainly fine? Or too
-    loose, allowing ones that are plainly wrong?</em></p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<!-- ================= III ================= -->
-<section id="s3">
-  <div class="issue"><span class="no">Chapter III</span><h2>Four Mornings</h2></div>
-
-  <div class="prose">
-    <p>Try it on four mornings.</p>
-
-    <p><b>Two orders sent at the same time.</b> Neither is confirmed before the other is sent, and a
-    loader serves House 2 first. Is that allowed? Yes: the orders overlap, and the keeper may have
-    entered House 2's first.</p>
-
-    <p><b>One order after the other.</b> House 1's order is confirmed before House 2's is sent, and
-    House 2 is served first. That is the goatherd's morning, and it is forbidden.</p>
-  </div>
-
-  <figure class="diagram">
-    <div class="board">
-      <svg class="flow" viewBox="0 0 660 420" role="img" aria-label="Two panels drawn in the round: H3, where the board and its loader are, on top; House 1 lower left and House 2 lower right; later moments further out. Each house sends an order slip to H3 and gets a confirmation slip back; a shaded ring, House 1's green and House 2's ochre, runs from sending to confirmation. Left: the two orders overlap and the loader serves House 2, then House 1, which is allowed. Right: House 1's order is confirmed before House 2's is sent, and the loader still serves House 2 first, which the rule forbids.">
-        <!-- polar:mcao-overlap -->
-        <defs>
-          <marker id="mcao-overlap-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
-          </marker>
-          <marker id="mcao-overlap-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
-          </marker>
-          <marker id="mcao-overlap-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
-          </marker>
-          <marker id="mcao-overlap-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
-          </marker>
-          <marker id="mcao-overlap-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
-          </marker>
-        </defs>
-        <text class="d-house" x="165" y="24" text-anchor="middle">ALLOWED</text>
-        <circle cx="165" cy="200" r="49.5" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="200" r="63" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="200" r="76.5" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="200" r="90" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="200" r="103.5" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="200" r="117" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="200" r="130.5" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="200" r="144" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <clipPath id="mcao-overlap-clip0"><circle class="tclip" cx="165" cy="200" r="169.4" data-r0="36" data-r1="149.4"/></clipPath>
-        <g class="tflow" clip-path="url(#mcao-overlap-clip0)">
-        <path d="M268.5,200 A103.5,103.5 0 1 0 61.5,200 A103.5,103.5 0 1 0 268.5,200 Z M214.5,200 A49.5,49.5 0 1 0 115.5,200 A49.5,49.5 0 1 0 214.5,200 Z" fill-rule="evenodd" style="fill:#5f6e28; fill-opacity:0.16; stroke:#5f6e28; stroke-opacity:.5; stroke-width:.8"/>
-        <path d="M255,200 A90,90 0 1 0 75,200 A90,90 0 1 0 255,200 Z M221.2,200 A56.2,56.2 0 1 0 108.8,200 A56.2,56.2 0 1 0 221.2,200 Z" fill-rule="evenodd" style="fill:#a8741a; fill-opacity:0.16; stroke:#a8741a; stroke-opacity:.5; stroke-width:.8"/>
-        </g>
-        <line class="d-lifeline" x1="133.8" y1="218" x2="35.6" y2="274.7"/>
-        <line class="d-lifeline" x1="196.2" y1="218" x2="294.4" y2="274.7"/>
-        <line class="d-lifeline" x1="165" y1="164" x2="165" y2="50.6"/>
-        <g class="tflow" clip-path="url(#mcao-overlap-clip0)">
-        <line x1="122.1" y1="224.8" x2="75.4" y2="251.8" stroke="#5f6e28" stroke-width="8"/>
-        <line x1="213.7" y1="228.1" x2="242.9" y2="245" stroke="#a8741a" stroke-width="8"/>
-        </g>
-        <rect class="d-node" x="118.8" y="207" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="133.8" y="222.5" text-anchor="middle" fill="#1c1512">H1</text>
-        <rect class="d-node" x="181.2" y="207" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="196.2" y="222.5" text-anchor="middle" fill="#1c1512">H2</text>
-        <rect class="d-node" x="150" y="153" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="165" y="168.5" text-anchor="middle" fill="#1c1512">H3</text>
-        <g class="tflow" clip-path="url(#mcao-overlap-clip0)">
-        <path class="d-msg" marker-end="url(#mcao-overlap-b)" d="M122.1,224.8 L120.3,222.8 L118.5,220.7 L116.9,218.5 L115.4,216.1 L113.9,213.7 L112.6,211.1 L111.4,208.5 L110.4,205.7 L109.5,202.9 L108.8,200 L108.2,197 L107.7,194 L107.4,190.9 L107.3,187.7 L107.4,184.6 L107.7,181.4 L108.1,178.1 L108.7,174.9 L109.5,171.7 L110.4,168.5 L111.6,165.3 L112.9,162.2 L114.5,159.1 L116.2,156 L118.1,153.1 L120.1,150.2 L122.4,147.4 L124.8,144.7 L127.4,142.1 L130.1,139.6 L133,137.3 L136.1,135 L139.3,133 L142.6,131.1 L146.1,129.4 L149.7,127.8 L153.3,126.4 L157.1,125.3"/>
-        <path class="d-msg" marker-end="url(#mcao-overlap-b)" d="M165,123.5 L161,122.9 L156.9,122.6 L152.7,122.4 L148.5,122.5 L144.3,122.8 L140.1,123.4 L135.9,124.2 L131.7,125.2 L127.5,126.4 L123.4,127.9 L119.3,129.6 L115.3,131.6 L111.3,133.7 L107.5,136.1 L103.7,138.7 L100.1,141.6 L96.6,144.6 L93.3,147.9 L90.1,151.4 L87.1,155 L84.2,158.8 L81.5,162.8 L79.1,167 L76.8,171.4 L74.8,175.8 L73,180.4 L71.4,185.2 L70.1,190 L69.1,195 L68.2,200 L67.7,205.1 L67.4,210.3 L67.4,215.5 L67.7,220.7 L68.3,225.9 L69.1,231.1 L70.3,236.4 L71.7,241.5 L73.4,246.7"/>
-        <circle class="d-ev" cx="165" cy="123.5" r="3.5"/>
-        <path class="d-msg" marker-end="url(#mcao-overlap-b)" d="M213.7,228.1 L215.4,225.7 L217,223.2 L218.5,220.5 L219.8,217.8 L221,215 L222,212.1 L222.9,209.2 L223.6,206.2 L224.2,203.1 L224.6,200 L224.9,196.9 L225,193.7 L224.9,190.5 L224.6,187.3 L224.2,184.1 L223.6,180.9 L222.9,177.8 L221.9,174.7 L220.8,171.6 L219.6,168.5 L218.1,165.5 L216.5,162.6 L214.7,159.7 L212.8,156.9 L210.7,154.3 L208.5,151.7 L206.1,149.2 L203.6,146.8 L201,144.6 L198.2,142.5 L195.3,140.6 L192.3,138.7 L189.1,137.1 L185.9,135.6 L182.6,134.3 L179.2,133.1 L175.8,132.1 L172.2,131.3"/>
-        <path class="d-msg" marker-end="url(#mcao-overlap-b)" d="M165,130.2 L168.7,129.8 L172.4,129.6 L176.1,129.6 L179.9,129.8 L183.7,130.2 L187.5,130.8 L191.3,131.6 L195,132.6 L198.7,133.8 L202.4,135.2 L206,136.8 L209.6,138.7 L213,140.7 L216.4,142.9 L219.7,145.3 L222.9,147.9 L225.9,150.7 L228.8,153.6 L231.6,156.8 L234.2,160.1 L236.6,163.5 L238.9,167.1 L241,170.8 L242.9,174.7 L244.6,178.7 L246.1,182.8 L247.4,187 L248.5,191.2 L249.3,195.6 L249.9,200 L250.3,204.5 L250.5,209 L250.4,213.5 L250.1,218.1 L249.5,222.6 L248.7,227.2 L247.6,231.7 L246.3,236.2"/>
-        <circle class="d-ev" cx="165" cy="130.2" r="3.5"/>
-        <circle class="d-ev" cx="165" cy="74.9" r="5"/>
-        <text class="d-lbl d-halo" x="155" y="78.9" text-anchor="end">serves House 2</text>
-        <circle class="d-ev" cx="165" cy="61.4" r="5"/>
-        <text class="d-lbl d-halo" x="155" y="65.4" text-anchor="end">serves House 1</text>
-        </g>
-        <text class="d-note" x="165" y="382" text-anchor="middle">the two orders overlap,</text>
-        <text class="d-note" x="165" y="398" text-anchor="middle">so either may come first</text>
-        <text class="d-house" x="495" y="24" text-anchor="middle" style="fill:#bf4a26">NOT ALLOWED</text>
-        <circle cx="495" cy="200" r="49.5" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="200" r="63" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="200" r="76.5" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="200" r="90" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="200" r="103.5" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="200" r="117" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="200" r="130.5" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="200" r="144" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <clipPath id="mcao-overlap-clip1"><circle class="tclip" cx="495" cy="200" r="169.4" data-r0="36" data-r1="149.4"/></clipPath>
-        <g class="tflow" clip-path="url(#mcao-overlap-clip1)">
-        <path d="M571.5,200 A76.5,76.5 0 1 0 418.5,200 A76.5,76.5 0 1 0 571.5,200 Z M544.5,200 A49.5,49.5 0 1 0 445.5,200 A49.5,49.5 0 1 0 544.5,200 Z" fill-rule="evenodd" style="fill:#5f6e28; fill-opacity:0.16; stroke:#5f6e28; stroke-opacity:.5; stroke-width:.8"/>
-        <path d="M609.3,200 A114.3,114.3 0 1 0 380.7,200 A114.3,114.3 0 1 0 609.3,200 Z M582.3,200 A87.3,87.3 0 1 0 407.7,200 A87.3,87.3 0 1 0 582.3,200 Z" fill-rule="evenodd" style="fill:#a8741a; fill-opacity:0.16; stroke:#a8741a; stroke-opacity:.5; stroke-width:.8"/>
-        <circle cx="495" cy="200" r="76.5" fill="none" style="stroke:#1c1512; stroke-opacity:.55; stroke-width:1.2; stroke-dasharray:4 3"/>
-        </g>
-        <line class="d-lifeline" x1="463.8" y1="218" x2="365.6" y2="274.7"/>
-        <line class="d-lifeline" x1="526.2" y1="218" x2="624.4" y2="274.7"/>
-        <line class="d-lifeline" x1="495" y1="164" x2="495" y2="50.6"/>
-        <g class="tflow" clip-path="url(#mcao-overlap-clip1)">
-        <line x1="452.1" y1="224.8" x2="428.7" y2="238.2" stroke="#5f6e28" stroke-width="8"/>
-        <line x1="570.6" y1="243.6" x2="594" y2="257.1" stroke="#a8741a" stroke-width="8"/>
-        </g>
-        <rect class="d-node" x="448.8" y="207" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="463.8" y="222.5" text-anchor="middle" fill="#1c1512">H1</text>
-        <rect class="d-node" x="511.2" y="207" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="526.2" y="222.5" text-anchor="middle" fill="#1c1512">H2</text>
-        <rect class="d-node" x="480" y="153" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="495" y="168.5" text-anchor="middle" fill="#1c1512">H3</text>
-        <g class="tflow" clip-path="url(#mcao-overlap-clip1)">
-        <path class="d-msg" marker-end="url(#mcao-overlap-b)" d="M452.1,224.8 L450.6,222.6 L449.2,220.4 L447.8,218.1 L446.6,215.7 L445.6,213.2 L444.6,210.7 L443.8,208.1 L443.1,205.5 L442.5,202.7 L442.1,200 L441.9,197.2 L441.7,194.4 L441.8,191.6 L442,188.7 L442.3,185.9 L442.8,183 L443.4,180.2 L444.2,177.4 L445.2,174.6 L446.3,171.9 L447.5,169.2 L448.9,166.5 L450.5,164 L452.2,161.5 L454,159 L456,156.7 L458.1,154.4 L460.4,152.3 L462.7,150.3 L465.2,148.4 L467.8,146.6 L470.5,144.9 L473.3,143.4 L476.2,142 L479.1,140.8 L482.2,139.7 L485.3,138.8"/>
-        <path class="d-msg" marker-end="url(#mcao-overlap-b)" d="M495,137 L491.7,136.7 L488.3,136.7 L485,136.8 L481.6,137.1 L478.3,137.5 L474.9,138.2 L471.6,139 L468.3,140 L465,141.2 L461.8,142.5 L458.7,144.1 L455.6,145.8 L452.6,147.6 L449.7,149.7 L446.9,151.9 L444.2,154.2 L441.6,156.7 L439.1,159.4 L436.8,162.2 L434.6,165.1 L432.6,168.2 L430.7,171.4 L428.9,174.6 L427.4,178 L426,181.5 L424.8,185.1 L423.8,188.7 L422.9,192.4 L422.3,196.2 L421.9,200 L421.6,203.8 L421.6,207.7 L421.8,211.6 L422.2,215.5 L422.7,219.4 L423.5,223.2 L424.5,227.1 L425.7,230.8"/>
-        <circle class="d-ev" cx="495" cy="137" r="3.5"/>
-        <path class="d-msg" marker-end="url(#mcao-overlap-b)" d="M570.6,243.6 L573.1,239.8 L575.4,235.8 L577.4,231.6 L579.3,227.4 L581,223 L582.4,218.6 L583.6,214 L584.5,209.4 L585.2,204.7 L585.7,200 L585.9,195.2 L585.8,190.5 L585.6,185.7 L585,180.9 L584.2,176.1 L583.2,171.4 L581.9,166.7 L580.3,162 L578.5,157.5 L576.4,153 L574.2,148.6 L571.6,144.3 L568.9,140.2 L565.9,136.2 L562.7,132.3 L559.3,128.6 L555.7,125.1 L551.9,121.7 L547.9,118.6 L543.7,115.6 L539.4,112.9 L534.9,110.4 L530.3,108.1 L525.5,106.1 L520.7,104.3 L515.7,102.7 L510.6,101.4 L505.5,100.4"/>
-        <path class="d-msg" marker-end="url(#mcao-overlap-b)" d="M495,99.2 L500.3,99 L505.6,99.1 L510.9,99.4 L516.2,100.1 L521.5,101 L526.8,102.2 L532,103.7 L537.1,105.4 L542.1,107.5 L547.1,109.8 L551.9,112.3 L556.6,115.2 L561.2,118.3 L565.6,121.6 L569.9,125.1 L573.9,128.9 L577.8,133 L581.5,137.2 L584.9,141.6 L588.1,146.2 L591.1,151 L593.9,156 L596.4,161.1 L598.6,166.3 L600.5,171.7 L602.2,177.2 L603.6,182.8 L604.6,188.5 L605.4,194.2 L605.9,200 L606.1,205.8 L606,211.7 L605.6,217.5 L604.8,223.3 L603.8,229.1 L602.4,234.9 L600.8,240.6 L598.8,246.2 L596.5,251.7"/>
-        <circle class="d-ev" cx="495" cy="99.2" r="3.5"/>
-        <circle class="d-ev-hi" cx="495" cy="74.9" r="5.5"/>
-        <text class="d-lbl d-halo" x="485" y="78.9" text-anchor="end" style="fill:#bf4a26">serves House 2</text>
-        <circle class="d-ev" cx="495" cy="61.4" r="5"/>
-        <text class="d-lbl d-halo" x="485" y="65.4" text-anchor="end">serves House 1</text>
-        </g>
-        <text class="d-note" x="495" y="382" text-anchor="middle" style="fill:#bf4a26">House 1's order was confirmed</text>
-        <text class="d-note" x="495" y="398" text-anchor="middle" style="fill:#bf4a26">before House 2's was sent</text>
-        <line x1="330" y1="10" x2="330" y2="410" stroke="#b9a77e" stroke-width="1.5"/>
-      </svg>
+<!-- ============================================================ machines -->
+<section class="spread light" id="machines" data-name="In machine terms">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap two" style="gap:clamp(24px,5vw,60px);align-items:center">
+    <div>
+      <div class="kicker">First, in machine terms</div>
+      <h2>Copies that must act as one</h2>
+      <p class="lede">A shared object, such as a queue, may be kept in several copies on several machines. Programmers want it to behave as if there were one copy.</p>
+      <ul class="terms">
+        <li><b>The problem:</b> calls on the object overlap in time, and each takes time. Agreeing on some one-at-a-time order is not enough: a call that finished before another began must come first.</li>
+        <li><b>The condition</b> (Herlihy and Wing, 1990), linearizability: every call appears to take effect at one instant between its start and its answer, and the answers are those of a single copy.</li>
+        <li><b>The results:</b> each object can be checked alone, a caller is never made to wait where the call is always defined, and the condition can be proved even for a queue no one can pause.</li>
+      </ul>
+      <p style="margin-top:1.2rem">This edition tells it with three trading houses and the board where House 3 keeps its waiting orders.</p>
     </div>
-    <figcaption><b>Overlapping orders may be served either way round; orders one after the other may
-    not.</b> Each house sends its order to the board at H3 and gets word back that it is entered;
-    its ring, green for House 1 and ochre for House 2, runs from sending to that word. Where the
-    rings overlap, so do the orders. Later moments lie further out. On the right House 1's order was finished before House 2's began, so a single
-    keeper would have served House 1 first.</figcaption>
-  </figure>
-
-  <div class="prose">
-    <p><b>An order served before its confirmation arrives.</b> House 1's order is entered, and a
-    loader serves it while word of the entry is still on the road. Allowed: the order's moment came
-    at its entry, and the house simply has not heard yet.</p>
-
-    <p><b>One order served twice.</b> Two loaders each take House 2's single order and load grain
-    for it. No single keeper serves one order twice, so this is forbidden, however the times fall.</p>
-
-    <p>What about business still unfinished when we look? An order sent but not yet confirmed may be
-    counted as on the board or not, whichever fits what happens next.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>The rule and the tallies both claim to say which order came first. Are they
-    the same answer, one stricter than the other?</em></p>
+    <div class="pop fromright"><div class="leaf">
+      <div class="paper mach">
+        <h4>One queue, two copies <em>choose a run</em></h4>
+        <div class="mpair">
+          <div class="mbox" id="mcA"><h5>COPY A</h5><b></b></div>
+          <div class="marrow" id="mcArrow"></div>
+          <div class="mbox" id="mcB"><h5>COPY B</h5><b></b></div>
+        </div>
+        <div class="lists">
+          <div><h5>The calls</h5><div id="mcCalls"></div></div>
+          <div><h5>Could one queue give this?</h5><div id="mcVerdict"></div></div>
+        </div>
+        <p class="say" id="mcSay">Client 1 enqueues x at copy A, and the update is sent on to copy B. Client 2 then enqueues y at copy B, and client 3 dequeues at copy B. When does the update reach B?</p>
+        <div class="row">
+          <button class="btn" id="mcSync">Before client 2 calls</button>
+          <button class="btn alt" id="mcStale">After client 3 has been answered</button>
+          <button class="btn alt" id="mcOver">Client 2 calls while client 1 still waits</button>
+        </div>
+      </div>
+    </div></div>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= IV ================= -->
-<section id="s4">
-  <div class="issue"><span class="no">Chapter IV</span><h2>Two Kinds of First</h2></div>
-
-  <div class="prose">
-    <p>The rule and the tallies do not give the same answer. For the tallies, one order is first if a chain of slips leads from it to the
-    other; orders no chain joins are put in sequence by tally and house number, fairly but
-    arbitrarily<sup class="xref"><a href="../ordering-without-clocks/index.html#s2" title="Ordering Without Clocks: What Came Before">*</a></sup>.
-    For the sun, one order is first if it was over before the other began, whether or not any slip
-    joined them.</p>
-
-    <p>Does either include the other? No. On the goatherd's morning no slip joined the two orders, so
-    the tallies could put House 2 first; the sun put House 1 first. Turn it round: House 1 sends an
-    order, and before it is confirmed sends House 2 a slip about it, and House 2 then orders. A chain
-    of slips joins them, so the tallies put House 1 first. But House 1's order was not over when
-    House 2's began, so for the sun they overlap, and the rule would let House 2 go first.</p>
-
-    <p>Can the rule be kept at all? Easily, by the arrangement the tallies were invented to avoid. Let
-    House 3 keep the only board and enter each order when its slip reaches the gate. The entry falls
-    after the slip was written and before the confirmation leaves, so it lies inside the order's span.
-    Serve in order of entry, and the keeper of the rule is House 3 itself.</p>
-  </div>
-
-  <div class="result">
-    <span class="name">Two Kinds of First</span>
-    <p>Serving orders in the sequence they reach House 3's gate keeps the rule of the board. Serving them in the sequence of their tallies need not. And the tallies' sequence can put one order before
-    another where the rule of the board would allow either.</p>
-  </div>
-
-  <details class="proof">
-    <summary>Proof — that serving by entry keeps the rule</summary>
-    <ol class="proofsteps">
-      <li>Put all orders and servings in sequence by the moment each is done at the board: an order when the
-      keeper enters it, a serving when a loader takes an order. This is one sequence.</li>
-      <li>Each serving takes the earliest order entered and not yet served, which is what a single
-      keeper with a single board would serve, so clause (1) holds.</li>
-      <li>An order is entered after its slip was written and before word of its entry leaves, so its
-      moment lies within it. A serving's moment lies within the loader's business. That is clause
-      (2), and clause (3) follows: whatever was finished before another began had its moment
-      first.<span class="qed">∎</span></li>
-    </ol>
-  </details>
-
-  <div class="prose">
-    <p>Then what was wrong with serving by arrival? Only that the house with the shorter road wins
-    every pair of orders that overlap. The rule does not mind, because it says nothing about orders
-    that overlap. The tallies do mind, and pay for it by sometimes serving a later order first. The
-    two answers protect different things.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>One board at House 3's gate keeps the rule. But must there be only one? Each
-    house might rather keep a copy of the board close at hand.</em></p>
+<!-- ============================================================ the setting -->
+<section class="spread dark" id="hall" data-name="The Ring Road">
+  <div class="bleed">
+    <img src="img/ring-road.jpg" alt="A narrow road cut into a sea cliff, with loaded mules walking one behind another between dry-stone walls and olive trees" data-parallax>
+    <div class="hall-title"><div class="t">
+      <div class="kicker">The ring road of Arche</div>
+      <h2>Three houses, and no hour</h2>
+      <p>House 1, House 2 and House 3 stand round the coast with a mountain between them. Word passes only on slips carried along the road, and in the trading season nobody on the island can read the hour.</p>
+    </div></div>
+    <div class="pin pop" style="left:50%;top:46%;"><div class="leaf"><b>No passing</b>Nothing overtakes on the road, and every slip arrives.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></div></div>
+    <div class="pin pop" style="left:6%;top:64%;"><div class="leaf"><b>No common hour</b>Cloud silences the sundials, and each counting room's water-clock keeps its own time.</div></div>
+    <div class="pin pop" style="left:54%;top:82%;"><div class="leaf"><b>The goatherd</b>A goatherd who knows the smugglers' tracks sometimes crosses the mountain with news no slip carries.</div></div>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= V ================= -->
-<section id="s5">
-  <div class="issue"><span class="no">Chapter V</span><h2>Copies Nobody Can Count</h2></div>
-
-  <div class="prose">
-    <p>Look again at what the rule mentions: sendings, confirmations and servings, all things that
-    happen at the houses' gates. It never mentions the board itself. So it cannot tell one board from
-    three copies kept in step by slips, or from any other arrangement behind the gates. Whatever
-    stands behind them is judged by what comes out of them.</p>
-
-    <p>That is what it means for many copies to <span class="coin">act as one</span>: no house,
-    comparing notes with every other and with anyone who watched the sun, could tell that there is
-    more than one board. How copies might be kept so is another matter, and this book does not take it
-    up. What it takes up is what the promise gives to a house that relies on it.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>Grain is not the only thing on order. If the houses keep several boards, must
-    the rule be checked across all of them at once?</em></p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<!-- ================= VI ================= -->
-<section id="s6">
-  <div class="issue"><span class="no">Chapter VI</span><h2>Grain and Oil</h2></div>
-
-  <div class="prose">
-    <p>House 2 presses oil, and all three houses order it the same way, on a board of its own at House
-    2. If the rule had to hold over both boards together, then every change to how one board is kept
-    would have to be weighed against the other. Does it?</p>
-
-    <p>No. It is enough that each board keeps the rule by itself.</p>
-  </div>
-
-  <div class="result">
-    <span class="name">One Board at a Time</span>
-    <p>All the business keeps the rule if and only if, for every board, the business on that board,
-    taken by itself, keeps it.</p>
-  </div>
-
-  <div class="prose">
-    <p>Why should two boards fit together without anyone arranging it? Because the sun ties them, and
-    the sun never contradicts itself. Two boards could fail to fit only through a loop: one order
-    before another on the grain board, that one before a third by the sun, and so round to the start.
-    The proof shows that such a loop would need the sun to put something before itself.</p>
-  </div>
-
-  <details class="proof">
-    <summary>Proof — that if every board keeps the rule, all the business does</summary>
-    <ol class="proofsteps">
-      <li>For each board, choose a sequence and moments that show it keeps the rule. Say one piece of
-      business <em>must go before</em> another if they are on the same board and its sequence puts the
-      first earlier, or if the sun does: the first finished before the second began. Follow chains of
-      these.</li>
-      <li>If no chain leads from a piece of business back to itself, set everything in any single sequence that keeps every <em>must go before</em>. It keeps each board's own sequence, so every
-      serving is what a single keeper would do; and it keeps the sun's sequence, which is clause (3),
-      and clause (2) with it. So it remains to show there is no loop.</li>
-      <li>Suppose there is one, <var>e</var>₁, …, <var>e</var><sub>n</sub>, back to <var>e</var>₁,
-      as short as any loop can be.</li>
-      <li><b>All on one board.</b> A board's sequence puts any two of its pieces one way or the other,
-      so some step of the loop runs against it, and that step must be the sun's: <var>b</var>
-      finished before <var>a</var> began, though the board put <var>a</var> first. Then that board
-      did not keep clause (3). So the loop touches at least two boards.</li>
-      <li>Number it so that <var>e</var>₁ is on board <var>x</var> and <var>e</var>₂ on another. The
-      step between them crosses boards, so it is the sun's: <var>e</var>₁ finished before
-      <var>e</var>₂ began.</li>
-      <li><b>Nothing else in the loop is on board <var>x</var>.</b> Suppose something is, and let
-      <var>e</var><sub>i</sub> be the first after <var>e</var>₂. The step into it crosses boards, so
-      <var>e</var><sub>i−1</sub> finished before <var>e</var><sub>i</sub> began. And <var>e</var>₂
-      began before <var>e</var><sub>i−1</sub> finished, or else <var>e</var>₂, …,
-      <var>e</var><sub>i−1</sub> would be a shorter loop. So <var>e</var>₁ finished before
-      <var>e</var>₂ began, before <var>e</var><sub>i−1</sub> finished, before <var>e</var><sub>i</sub>
-      began: <var>e</var>₁ came before <var>e</var><sub>i</sub> by the sun, and <var>e</var>₁,
-      <var>e</var><sub>i</sub>, …, <var>e</var><sub>n</sub> is a shorter loop.</li>
-      <li>So the last step, into <var>e</var>₁, also crosses boards: <var>e</var><sub>n</sub>
-      finished before <var>e</var>₁ began, and therefore before <var>e</var>₂ began, making
-      <var>e</var>₂, …, <var>e</var><sub>n</sub> a shorter loop. Every case contradicts the choice of
-      a shortest loop.<span class="qed">∎</span></li>
-    </ol>
-  </details>
-
-  <div class="prose">
-    <p>Is this true of any sensible rule? Take the sun out and see. Ask only that everything could have
-    come from a single keeper, with each house's own business in the order it did it, and nothing said
-    about moments. Under that looser rule the goatherd's morning is fine. But now let House 1 order
-    grain and then oil, and House 2 order oil and then grain; the grain loader serves House 2 first and
-    the oil loader serves House 1 first.</p>
-  </div>
-
-  <figure class="diagram">
-    <div class="board">
-      <svg class="flow" viewBox="0 0 640 610" role="img" aria-label="Two houses drawn in the round, House 1 on the left and House 2 on the right, later moments further out. House 1 orders grain, then oil; House 2 orders oil, then grain. Top half, the oil board at House 2: House 1's oil order arrives by slip and is entered before House 2 places its own, so the oil board puts House 1 first. Bottom half, the grain board at House 3 (not drawn): it puts House 2's grain first, though House 1's grain order was finished long before. Each board alone can be explained; together, with each house's own order, they run House 1 grain, House 1 oil, House 2 oil, House 2 grain, House 1 grain: a loop.">
-        <!-- polar:mcao-loop -->
-        <defs>
-          <marker id="mcao-loop-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
-          </marker>
-          <marker id="mcao-loop-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
-          </marker>
-          <marker id="mcao-loop-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
-          </marker>
-          <marker id="mcao-loop-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
-          </marker>
-          <marker id="mcao-loop-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
-          </marker>
-        </defs>
-        <circle cx="320" cy="290" r="78" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="320" cy="290" r="112" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="320" cy="290" r="146" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="320" cy="290" r="180" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="320" cy="290" r="214" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="320" cy="290" r="248" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <clipPath id="mcao-loop-clip0"><circle class="tclip" cx="320" cy="290" r="278.2" data-r0="44" data-r1="258.2"/></clipPath>
-        <g class="tflow" clip-path="url(#mcao-loop-clip0)">
-        <path d="M61.8,290 A258.2,258.2 0 0 1 578.2,290 Z" style="fill:#a8741a; fill-opacity:0.08; stroke:none"/>
-        <path d="M61.8,290 A258.2,258.2 0 0 0 578.2,290 Z" style="fill:#5f6e28; fill-opacity:0.08; stroke:none"/>
-        </g>
-        <line class="d-lifeline" x1="276" y1="290" x2="68.6" y2="290"/>
-        <line class="d-lifeline" x1="364" y1="290" x2="571.4" y2="290"/>
-        <g class="tflow" clip-path="url(#mcao-loop-clip0)">
-        <line x1="255.6" y1="290" x2="228.4" y2="290" stroke="#5f6e28" stroke-width="8"/>
-        <line x1="201.2" y1="290" x2="133.2" y2="290" stroke="#a8741a" stroke-width="8"/>
-        <line x1="486.4" y1="290" x2="503.4" y2="290" stroke="#a8741a" stroke-width="8"/>
-        <line x1="530.6" y1="290" x2="561.2" y2="290" stroke="#5f6e28" stroke-width="8"/>
-        </g>
-        <rect class="d-node" x="261" y="279" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="276" y="294.5" text-anchor="middle" fill="#1c1512">H1</text>
-        <rect class="d-node" x="349" y="279" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="364" y="294.5" text-anchor="middle" fill="#1c1512">H2</text>
-        <g class="tflow" clip-path="url(#mcao-loop-clip0)">
-        <path class="d-msg" marker-end="url(#mcao-loop-b)" d="M201.2,290 L200.9,283.8 L200.8,277.5 L201.2,271.2 L201.8,264.9 L202.8,258.6 L204.1,252.3 L205.8,246.1 L207.7,240 L210.1,234 L212.7,228 L215.7,222.2 L218.9,216.6 L222.5,211.1 L226.4,205.7 L230.6,200.6 L235,195.7 L239.8,190.9 L244.8,186.5 L250,182.2 L255.5,178.3 L261.2,174.6 L267.1,171.2 L273.2,168.1 L279.5,165.4 L286,162.9 L292.5,160.8 L299.3,159.1 L306.1,157.6 L313,156.6 L320,155.9 L327,155.6 L334.1,155.6 L341.2,156 L348.3,156.8 L355.4,158 L362.4,159.6 L369.3,161.5 L376.2,163.8 L383,166.4 L389.6,169.4 L396.1,172.8 L402.4,176.6 L408.6,180.6 L414.5,185 L420.2,189.8 L425.7,194.8 L431,200.2 L435.9,205.8 L440.6,211.7 L445,217.8 L449,224.3 L452.8,230.9 L456.1,237.7 L459.2,244.8 L461.8,252 L464.1,259.4 L466,266.9 L467.6,274.5 L468.7,282.2"/>
-        <path class="d-msg" marker-end="url(#mcao-loop-b)" d="M469.4,290 L469.8,282.1 L469.8,274.3 L469.4,266.3 L468.6,258.4 L467.3,250.5 L465.6,242.7 L463.6,234.9 L461,227.2 L458.1,219.6 L454.8,212.2 L451,204.9 L446.9,197.8 L442.4,190.9 L437.5,184.2 L432.3,177.7 L426.6,171.6 L420.7,165.7 L414.4,160.1 L407.8,154.8 L400.9,149.8 L393.8,145.2 L386.3,141 L378.7,137.1 L370.8,133.7 L362.7,130.6 L354.4,128 L346,125.8 L337.4,124.1 L328.8,122.8 L320,121.9 L311.2,121.5 L302.3,121.6 L293.4,122.1 L284.5,123.1 L275.7,124.6 L266.9,126.6 L258.2,129 L249.6,131.9 L241.1,135.2 L232.8,139 L224.7,143.3 L216.8,148 L209.1,153.1 L201.7,158.6 L194.5,164.5 L187.7,170.8 L181.1,177.5 L174.9,184.6 L169.1,192 L163.6,199.7 L158.6,207.7 L153.9,216 L149.7,224.6 L145.9,233.4 L142.6,242.5 L139.7,251.7 L137.3,261.1 L135.5,270.6 L134.1,280.3"/>
-        <circle class="d-ev" cx="469.4" cy="290" r="3.5"/>
-        <path marker-end="url(#mcao-loop-k)" d="M225,290 L204.6,290" style="stroke:#1c1512; stroke-width:1.6; fill:none"/>
-        <path marker-end="url(#mcao-loop-k)" d="M506.8,290 L527.2,290" style="stroke:#1c1512; stroke-width:1.6; fill:none"/>
-        <circle cx="167.2" cy="272" r="8.5" style="fill:#a8741a; stroke:#f6eed6; stroke-width:1.5"/><text x="167.2" y="276" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">1</text>
-        <text class="d-lbl d-halo" x="167.2" y="257" text-anchor="middle">oil</text>
-        <circle cx="494.9" cy="272" r="8.5" style="fill:#a8741a; stroke:#f6eed6; stroke-width:1.5"/><text x="494.9" y="276" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">2</text>
-        <text class="d-lbl d-halo" x="494.9" y="257" text-anchor="middle">oil</text>
-        <circle cx="545.9" cy="308" r="8.5" style="fill:#5f6e28; stroke:#f6eed6; stroke-width:1.5"/><text x="545.9" y="312" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">1</text>
-        <text class="d-lbl d-halo" x="545.9" y="331" text-anchor="middle">grain</text>
-        <circle cx="242" cy="308" r="8.5" style="fill:#5f6e28; stroke:#f6eed6; stroke-width:1.5"/><text x="242" y="312" text-anchor="middle" style="font:700 11.5px Optima,'Gill Sans',sans-serif; fill:#f6eed6">2</text>
-        <text class="d-lbl d-halo" x="242" y="331" text-anchor="middle">grain</text>
-        </g>
-        <text class="d-house" x="320" y="24" text-anchor="middle" style="fill:#a8741a">OIL BOARD, AT HOUSE 2</text>
-        <text class="d-note" x="320" y="42" text-anchor="middle">House 1's oil arrives and is entered first: 1 House 1's oil, 2 House 2's oil</text>
-        <text class="d-house" x="320" y="548" text-anchor="middle" style="fill:#5f6e28">GRAIN BOARD, AT HOUSE 3 (NOT DRAWN)</text>
-        <text class="d-note" x="320" y="566" text-anchor="middle">it puts House 2's grain first, though House 1's was finished long before</text>
-        <text class="d-note" x="320" y="596" text-anchor="middle" style="fill:#bf4a26">together: House 1 grain → House 1 oil → House 2 oil → House 2 grain → House 1 grain</text>
-      </svg>
+<!-- ============================================================ the goatherd's morning -->
+<section class="spread light" id="question" data-name="The goatherd's morning">
+  <a class="anchor" id="s1"></a>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">The goatherd's morning</div>
+        <h2>Which order was placed first?</h2>
+        <p class="lede">House 3 has grain, and both other houses need it. The houses have agreed that the order placed first is filled first.</p>
+        <p>With no hour to go by, House 3 reads the tallies: a number written on every slip and raised on every arrival, with the houses' numbers to break ties. The tallies never put an order ahead of one that led to it, and no house can win by keeping a quicker messenger.<sup class="xref"><a href="../ordering-without-clocks/index.html#s3" title="Ordering Without Clocks: Breaking Ties">*</a></sup></p>
+        <p>Now take one morning. Scroll to follow it.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/b01-goatherd.jpg" alt="High on a hillside above a harbour town, a goatherd in a sheepskin cape points down with his staff among his goats, with white houses, red roofs and a stone pier below" loading="lazy"></div></div></div>
     </div>
-    <figcaption><b>Each board can be explained, and the two together cannot.</b> House 1 orders grain, then
-    oil; House 2 orders oil, then grain. Above, House 1's oil reaches the oil board at House 2
-    before House 2 places its own, so that board puts House 1 first. Below, the grain board at
-    House 3 puts House 2's grain first, though House 1's was finished long before: without the sun,
-    that is allowed. Each board alone can be explained. Together, with each house's own order, they
-    run from House 1's grain back round to itself: a loop.</figcaption>
-  </figure>
-
-  <div class="prose">
-    <p>Each board passes the looser rule alone, and together they fail it. Houses that kept only the
-    looser rule would need one plan spanning every board. The sun's clause is what lets each board be
-    kept, and judged, on its own.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>Each board can be judged alone. Could keeping the rule ever force a house to
-    stand at the gate and wait on someone else's business?</em></p>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= VII ================= -->
-<section id="s7">
-  <div class="issue"><span class="no">Chapter VII</span><h2>Nobody Made to Wait</h2></div>
-
-  <div class="prose">
-    <p>Not for an order. Whatever is on the board, a single keeper can always put a new order at the
-    end, so the rule never makes an order wait on anyone else's business.</p>
-  </div>
-
-  <div class="result">
-    <span class="name">No Order Waits on Another</span>
-    <p>If the business so far keeps the rule, a waiting order can be entered now and the rule still
-    kept.</p>
-  </div>
-
-  <details class="proof">
-    <summary>Proof — that a waiting order can always be entered</summary>
-    <ol class="proofsteps">
-      <li>Take a single sequence that shows the business so far keeps the rule.</li>
-      <li>If it already counts the order as entered, confirm it now; the same sequence still works.</li>
-      <li>If not, put the order at the end of the sequence and confirm it now. Nothing earlier changes,
-      so clause (1) holds. Its moment is now, within its span, which is clause (2). Nothing began
-      after it finished, so putting it last breaks no <em>before</em>, which is clause
-      (3).<span class="qed">∎</span></li>
-    </ol>
-  </details>
-
-  <div class="prose">
-    <p>So when a house does wait for its confirmation, the cause is the arrangement behind the board,
-    a slip still on the road, and never the rule.</p>
-
-    <p>Serving is different. A loader who comes to an empty board has nothing to take, and a single
-    keeper would make him wait until an order comes. That wait is asked for, not forced: <em>serve the
-    oldest order</em> has no answer while there are no orders.</p>
-
-    <p>Would a stronger promise keep this? Not always. Suppose a house wanted several things done as
-    one, with nothing else between them: <em>look at the oil board, and if it is empty, order
-    grain</em>. If House 1 does that while House 2 looks at the grain board and orders oil, and both
-    find their board empty, then each must have gone before the other's order, and one of them has to
-    be called off. Promises about such groups can force a house to undo its business; the rule of the
-    board, whose business is always single, never does.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>So far the board has had one keeper, doing one thing at a time. House 3's real
-    board is busier. With many clerks and loaders at work at once, is there still a moment to point
-    to?</em></p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<!-- ================= VIII ================= -->
-<section id="s8">
-  <div class="issue"><span class="no">Chapter VIII</span><h2>The Busy Board</h2></div>
-
-  <div class="prose">
-    <p>Herlios keeps House 3's board, and he has arranged it so that nobody ever stands aside for
-    anybody. It has numbered <span class="coin">slots</span>, each holding one order tablet or
-    nothing, and a <span class="coin">peg</span> at the first slot nobody has been given yet. Clerks
-    enter orders as slips come in; loaders serve.</p>
-  </div>
-
-  <div class="aside-formal">
-    <span class="lbl">Herlios' board</span>
-    <span class="stmt">To enter an order:</span> note the peg's number and move the peg on one, in a
-    single movement. Put the order tablet in that slot.<br>
-    <span class="stmt">To serve:</span> look at the peg. Go along the slots from 1 up to the one
-    before the peg, and take the first tablet you find, emptying its slot in a single movement. If
-    you find none, go back to the peg and start again.<br>
-    <span class="paper">The queue of §4.2: <code>Enq</code> is <code>INC(back)</code> then
-    <code>STORE</code>; <code>Deq</code> is <code>READ(back)</code> then <code>SWAP</code> along the
-    array. Slots are never reused.</span>
-  </div>
-
-  <figure class="panel">
-      <img src="../../assets/img/panels/many-copies-acting-as-one/b08-board.jpg" width="1200" height="896" loading="lazy"
-           alt="Along the portico of House 3's trading house, two clerks reach for slots of a long wooden board marked with Greek numerals, some slots holding clay tablets, while a loader carries a grain sack towards them past the open storehouse door.">
-    </figure>
-
-  <div class="prose">
-    <p>No key, no queue, and a clerk who stops halfway stops no one else. Everything happens at one
-    board at one house; no slip crosses the road. Is there still a moment for each order?</p>
-
-    <p>Watch a race. Glaukos is entering House 1's order and Mikon House 2's, at the same time. The peg
-    stands at 1. Glaukos takes slot 1, Mikon slot 2, and the peg moves to 3. Mikon puts House 2's
-    tablet in slot 2 and is done. Glaukos has not yet reached slot 1.</p>
-
-    <p>Is House 1's order on the board yet? Say yes, ahead of House 2's: then Sosias, a loader who
-    comes now, finds slot 1 empty and serves House 2 from slot 2. Say no: then let Glaukos put his
-    tablet in, and Sosias, coming after, finds it in slot 1 and serves House 1 first.</p>
-  </div>
-
-  <figure class="diagram">
-    <div class="board">
-      <svg viewBox="0 0 660 380" role="img" aria-label="Two panels with three lifelines: Glaukos and Mikon, clerks entering House 1's and House 2's orders, and Sosias, a loader. In both, Glaukos takes slot 1, Mikon slot 2, and Mikon puts House 2's tablet in slot 2. Left: Sosias looks at the peg, finds slot 1 empty and serves House 2 from slot 2; afterwards Glaukos puts House 1's tablet in slot 1. Right: Glaukos puts House 1's tablet in slot 1 first; then Sosias serves House 1 from slot 1.">
-        <!-- ============ left panel ============ -->
-        <text class="d-house" x="160" y="22" text-anchor="middle">SOSIAS FIRST</text>
-        <text class="d-house" x="50" y="48" text-anchor="middle" font-size="11">GLAUKOS</text>
-        <text class="d-house" x="160" y="48" text-anchor="middle" font-size="11">MIKON</text>
-        <text class="d-house" x="260" y="48" text-anchor="middle" font-size="11">SOSIAS</text>
-        <line class="d-lifeline" x1="50" y1="58" x2="50" y2="300"/>
-        <line class="d-lifeline" x1="160" y1="58" x2="160" y2="300"/>
-        <line class="d-lifeline" x1="260" y1="58" x2="260" y2="300"/>
-
-        <circle class="d-ev" cx="50" cy="80" r="4.5"/>
-        <text class="d-lbl" x="58" y="84" font-size="11">no. 1</text>
-        <circle class="d-ev" cx="160" cy="98" r="4.5"/>
-        <text class="d-lbl" x="168" y="102" font-size="11">no. 2</text>
-        <circle class="d-ev" cx="160" cy="126" r="4.5"/>
-        <text class="d-lbl" x="168" y="130" font-size="11">House 2 → 2</text>
-        <circle class="d-ev" cx="160" cy="150" r="4.5"/>
-        <text class="d-lbl" x="168" y="154" font-size="11">done</text>
-
-        <circle class="d-ev" cx="260" cy="180" r="4.5"/>
-        <text class="d-lbl" x="268" y="184" font-size="11">peg: 3</text>
-        <circle class="d-ev" cx="260" cy="204" r="4.5"/>
-        <text class="d-lbl" x="268" y="208" font-size="11">1: empty</text>
-        <circle class="d-ev-hi" cx="260" cy="228" r="5"/>
-        <text class="d-lbl" x="268" y="232" font-size="11" fill="#bf4a26">2: House 2</text>
-
-        <circle class="d-ev" cx="50" cy="262" r="4.5"/>
-        <text class="d-lbl" x="58" y="266" font-size="11">House 1 → 1</text>
-
-        <text class="d-note" x="160" y="330" text-anchor="middle">House 2's order counts first</text>
-
-        <!-- divider -->
-        <line x1="330" y1="10" x2="330" y2="370" stroke="#b9a77e" stroke-width="1.5"/>
-
-        <!-- ============ right panel ============ -->
-        <text class="d-house" x="500" y="22" text-anchor="middle">GLAUKOS FIRST</text>
-        <text class="d-house" x="390" y="48" text-anchor="middle" font-size="11">GLAUKOS</text>
-        <text class="d-house" x="500" y="48" text-anchor="middle" font-size="11">MIKON</text>
-        <text class="d-house" x="600" y="48" text-anchor="middle" font-size="11">SOSIAS</text>
-        <line class="d-lifeline" x1="390" y1="58" x2="390" y2="300"/>
-        <line class="d-lifeline" x1="500" y1="58" x2="500" y2="300"/>
-        <line class="d-lifeline" x1="600" y1="58" x2="600" y2="300"/>
-
-        <circle class="d-ev" cx="390" cy="80" r="4.5"/>
-        <text class="d-lbl" x="398" y="84" font-size="11">no. 1</text>
-        <circle class="d-ev" cx="500" cy="98" r="4.5"/>
-        <text class="d-lbl" x="508" y="102" font-size="11">no. 2</text>
-        <circle class="d-ev" cx="500" cy="126" r="4.5"/>
-        <text class="d-lbl" x="508" y="130" font-size="11">House 2 → 2</text>
-        <circle class="d-ev" cx="500" cy="150" r="4.5"/>
-        <text class="d-lbl" x="508" y="154" font-size="11">done</text>
-
-        <circle class="d-ev" cx="390" cy="180" r="4.5"/>
-        <text class="d-lbl" x="398" y="184" font-size="11">House 1 → 1</text>
-
-        <circle class="d-ev" cx="600" cy="210" r="4.5"/>
-        <text class="d-lbl" x="608" y="214" font-size="11">peg: 3</text>
-        <circle class="d-ev-hi" cx="600" cy="234" r="5"/>
-        <text class="d-lbl" x="592" y="238" font-size="11" fill="#bf4a26" text-anchor="end">1: House 1</text>
-
-        <text class="d-note" x="500" y="330" text-anchor="middle">House 1's order counts first</text>
-      </svg>
+<section class="spread dark has-scrolly" id="mornsec" data-name="One morning, step by step">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap" style="margin-bottom:-1rem">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">One morning on the road</div>
+      <h2>House 2 is served first</h2>
+      <p class="lede">House 1 sends an order and has its confirmation. A goatherd carries the news over the mountain. House 2 orders at noon.</p>
     </div>
-    <figcaption><b>Which order is first is settled by a race run later.</b> When Mikon is done,
-    the board is the same in both panels. Whether House 1's order counts as ahead of House 2's
-    depends on whether Glaukos reaches slot 1 before Sosias looks there, so no step Glaukos has taken so
-    far can be the moment his order joined the board.</figcaption>
-  </figure>
-
-  <div class="prose">
-    <p>Has anything gone wrong? No: the two orders overlapped, so either sequence keeps the rule. The
-    trouble is only that when Mikon is done, which one it will be is not yet settled. A race still to
-    be run will settle it, so no step anyone has taken so far can be called the moment House 1's order
-    joined the board.</p>
   </div>
-
-  <div class="prose">
-    <p class="hook"><em>If there is no moment to point to, how can anyone show that Herlios' board
-    keeps the rule?</em></p>
+  <div class="scrolly" id="goat">
+    <div class="stage"><div class="stage-inner split">
+      <svg class="isle-svg fig svg-dark" id="goatsvg" role="img" aria-label="Arche from above: three houses on a ring road round a mountain, with slips on the road and a goatherd crossing the mountain"></svg>
+      <div class="side" id="goatside" data-live></div>
+    </div></div>
+    <div class="steps">
+      <div class="step on"><div class="card"><div class="num">1 · The morning</div><h3>Three houses, three tallies</h3><p>House 1 has made two entries this morning. Houses 2 and 3 have made none, and every house has heard nothing. Each house's tally is shown beside its name.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · The order</div><h3>House 1 sends an order</h3><p>House 1 writes the order as its third entry, so the order's tally is <b id="gt1"></b>. A messenger takes the slip to House 3.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · The entry</div><h3>House 3 enters it</h3><p>The slip reaches House 3, which puts the order on its board and raises its own tally past the slip's. It sends back word that the order is entered, marked with its new tally, <b id="gt2"></b>.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · The confirmation</div><h3>House 1 has its word</h3><p>The confirmation reaches House 1 before the sun is high, and House 1's tally is raised past it.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · The goatherd</div><h3>News over the mountain</h3><p>A goatherd crossing Mount Phyle by the smugglers' tracks mentions the order at House 2. The goatherd carries no slip, and House 2 has had none all morning, so its tally has not moved.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · Noon</div><h3>House 2 sends an order</h3><p>House 2 writes an order of its own. Its tally is <b id="gt3"></b>, low, since no slip has reached it for hours, and lower than House 1's order's.</p></div></div>
+      <div class="step"><div class="card"><div class="num">7 · The serving</div><h3>The lower tally goes first</h3><p>House 3 enters the second order and serves the lower tally first, which is House 2's. Fair by the tallies. But House 1's order was entered and confirmed before House 2 even asked.</p></div></div>
+    </div>
   </div>
-</section>
-
-<hr class="rule">
-
-<!-- ================= IX ================= -->
-<section id="s9">
-  <div class="issue"><span class="no">Chapter IX</span><h2>What the Board Could Mean</h2></div>
-
-  <div class="prose">
-    <p>By asking not what the board <em>means</em> but what it <em>could</em> mean. Once Glaukos's
-    tablet is in, the board could stand for <em>House 2, then House 1</em> or for <em>House 1, then
-    House 2</em>. A tablet put in before another clerk even took his number must come first; any two
-    not so placed may go either way.</p>
-
-    <p>Then the thing to show is this: at every moment, every sequence the board could stand for is
-    one the business so far could honestly have produced. Two facts carry it. A tablet just put in
-    never has to stand ahead of anything already waiting. And a loader going up from slot 1 always
-    takes a tablet that could be first.</p>
-  </div>
-
-  <div class="result">
-    <span class="name">The Board Keeps the Rule</span>
-    <p>At every moment, every sequence of waiting orders the board could stand for is one the business
-    so far could have produced, so Herlios' board keeps the rule.</p>
-  </div>
-
-  <details class="proof">
-    <summary>Proof — that the board keeps the rule, in outline</summary>
-    <ol class="proofsteps">
-      <li>An empty board stands only for no orders, which is what no business produces. It is enough
-      to show that every single movement, and every beginning and end of a clerk's or loader's
-      business, keeps it so.</li>
-      <li><b>Beginnings and ends</b> put nothing in a slot and take nothing out. A beginning adds
-      business that may or may not have had its moment yet; an end settles one such choice. Neither
-      removes a sequence the board could stand for.</li>
-      <li><b>Moving the peg and looking at it</b> move no tablet, so they change nothing.</li>
-      <li><b>Putting a tablet in.</b> For a waiting tablet to have to stand behind this one, its
-      clerk would have taken his number after this one was put in, and this one is only now being put
-      in. So the new tablet may go last in every sequence, and the business agrees: an entry may have
-      its moment now, at the back.</li>
-      <li><b>Emptying a slot.</b> Say Sosias, going up from slot 1, empties slot <var>i</var> and finds
-      tablet <var>x</var>, and some waiting tablet <var>z</var> must come before <var>x</var> because
-      <var>z</var> was put in before <var>x</var>'s clerk took his number. Then <var>z</var>'s slot is
-      lower, so Sosias has already passed it. He went only as far as the peg showed when he looked,
-      so <var>x</var>'s number was taken before he looked, and <var>z</var> was put in before that. So
-      <var>z</var> was in its slot when he passed it, and he would have taken it. Hence <var>x</var>
-      could be first, and a serving may have its moment now, with <var>x</var>.</li>
-      <li>Every movement keeps the order, so it holds at every moment.<span class="qed">∎</span></li>
-    </ol>
-  </details>
-
-  <div class="prose">
-    <p>This is an outline, and so is the paper's. Herlihy and Wing give the two facts of steps 4 and 5
-    and the shape of the argument; the lemmas that make it airtight are in their technical
-    report.</p>
-
-    <p>What does a house get from a board known to keep the rule? Everything a single keeper would
-    guarantee: orders are served in the sequence they came by the sun, none vanishes, and none is
-    served that nobody made. Would the obvious one-line promise, <em>no later order is served before
-    an earlier one</em>, have done as well? No: a board that lost tablets would keep that promise.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>The rule, then, can be kept even by a board no one can pause. What has it left
-    unpromised?</em></p>
+  <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <p style="max-width:40em">Did anything go wrong? By the tallies, no: no slip joined the two orders, so either could come first. But House 2 knows, and so does anyone who talked to the goatherd, that House 1's order had been entered and confirmed before House 2 even asked. What the sun saw, House 1 was first.</p>
+    <p style="max-width:40em">The tallies have always had this gap. They respect every slip, and the goatherd carries none. One answer is to make better clocks, kept so close together by the slips that nobody crossing the mountain can arrive before leaving.<sup class="xref"><a href="../ordering-without-clocks/index.html#s9" title="Ordering Without Clocks: Clocks That Run With the World">*</a></sup> That is a way of catching the goatherd. The houses want something else: a promise about how orders are filled that no goatherd can ever catch them breaking, whatever clocks they keep or do without. What would such a promise say?</p>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= X ================= -->
-<section id="s10">
-  <div class="issue"><span class="no">Chapter X</span><h2>What the Rule Does Not Say</h2></div>
-
-  <div class="prose">
-    <p><b>Can anyone check it?</b> No one. It is judged by the sun, which nobody on Arche can read in
-    the trading season. A house knows the rule is kept only because the arrangement behind the board
-    has been shown to keep it, as House 3's gate and Herlios' board were. The rule gives the island no
-    hour and needs none.</p>
-
-    <p><b>Does it promise that orders are served?</b> No. Every clause says what must not happen; a
-    board that never served anyone would break none of them. A loader may even be overtaken on every
-    round, finding each tablet taken just before he reaches it, and go round for ever while the rule
-    holds. That every order is served in the end is a separate promise.</p>
-
-    <p><b>Does it say how copies are kept?</b> No. It says what copies must look like from the gates,
-    and nothing about the slips that would keep them in step.</p>
-
-    <p><b>Does it make the tallies wrong?</b> No. The tallies keep a different promise, fairness
-    between orders that overlap, and give up the sun to keep it. Which first the houses want is
-    theirs to choose.</p>
+<!-- ============================================================ the rule of the board -->
+<section class="spread light" id="rulesec" data-name="The rule of the board">
+  <a class="anchor" id="s2"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">A promise in what the houses see</div>
+      <h2>The rule of the board</h2>
+      <p class="lede">A house sees two moments of its order: when it sends the order, and when the confirmation comes back. In between, the order was put on the board where House 3 keeps its waiting orders.</p>
+      <p>A loader at House 3 goes to the board, takes an order and loads the grain for it. That too begins and ends. Each house, and each loader, does one thing at a time.</p>
+      <p>So every piece of business has a span, from its beginning to its end. One piece of business comes <b>before</b> another when it was over before the other began. Otherwise the two <b>overlap</b>, and neither came first. This is judged by the sun, whether or not anyone could see it.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Before, or overlap? <em>choose two orders</em></h4>
+      <div class="st-wrap">
+        <svg class="st-svg fig" id="spansvg" role="group" aria-label="Three lines running outward, one for each house, with the spans of three orders as thick stretches of House 1's and House 2's lines"></svg>
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each line is one house. A thick stretch is the span of one order, from its sending to its confirmation. Later moments are further out. Choose the first dot of any two orders.</p>
+          <p class="say" id="spansay">A is House 1's order, B is House 2's first order and C is House 2's second.</p>
+        </div>
+      </div>
+    </div></div></div>
+    <div class="narrow" style="margin:2rem 0 0">
+      <p>Now the promise. Picture a single keeper with a single board, doing one thing at a time: they enter an order, or they serve the oldest waiting one. No order goes onto their board and none comes off it except through their own hands. The houses cannot see the keeper and do not need to. They need only this: all the orders and all the servings can be set in one sequence such that three demands hold.</p>
+    </div>
+    <div class="cards3">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First demand</div><h3>The same as one keeper</h3><p>Every serving takes the order that a single keeper, with a single board, taking everything in that sequence, would have served.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second demand</div><h3>A moment inside the span</h3><p>Each piece of business takes its place in the sequence at some moment between its beginning and its end.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third demand</div><h3>Finished first, comes first</h3><p>Anything finished before another began comes before it.</p></div></div></div>
+    </div>
+    <div class="narrow" style="margin:2rem 0 0">
+      <p>Why does the second demand matter? Without it the keeper could act whenever it suited them, and the promise would say nothing about the sun. With it, the third follows: if House 1's order was over before House 2's began, the keeper's moment for House 1 came first, and a single keeper serves the older order first. So the goatherd's morning breaks the rule.</p>
+    </div>
+    <details class="proof">
+      <summary>The rule of the board, stated formally</summary>
+      <p class="given">Write &lt;<sub>H</sub> for the real-time order of a history <var>H</var>: <var>a</var> &lt;<sub>H</sub> <var>b</var> when <var>a</var> responds before <var>b</var> is invoked. The board is a FIFO queue: an order is <code>Enq</code>, a serving is <code>Deq</code>.</p>
+      <p>All the orders and all the servings can be set in a single sequence such that:</p>
+      <ol class="proofsteps">
+        <li>every serving takes the order that a single keeper, with a single board, taking everything in that sequence, would have served;</li>
+        <li>each piece of business takes its place in the sequence at some moment between its beginning and its end; so that</li>
+        <li>anything finished before another began comes before it.</li>
+      </ol>
+      <p class="fnote">Linearizability, §2.2: a history is linearizable if, after adding responses to some pending invocations and dropping the rest, it is equivalent to a legal sequential history that respects the real-time order &lt;<sub>H</sub>.</p>
+    </details>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= XI ================= -->
-<section id="s11">
-  <div class="issue"><span class="no">Chapter XI</span><h2>In the Book, In the Paper</h2></div>
-
-  <div class="prose">
-    <p>So that the reader may check the rule of the board against Herlihy and Wing's definition.</p>
-  </div>
-
-  <div class="table-wrap">
-    <table class="chron">
-      <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
-      <tbody>
-        <tr><td><span class="term">the houses; the loaders; the clerks</span></td><td>Sequential processes, each waiting for one operation's response before issuing the next. <span class="paper">Processes, §2.1.</span></td></tr>
-        <tr><td><span class="term">the board; placed first, filled first</span></td><td>A FIFO queue. <span class="paper">The paper's running example, Fig. 1 and Fig. 3.</span></td></tr>
-        <tr><td><span class="term">an order; a serving</span></td><td><code>Enq</code>; <code>Deq</code>, which returns the oldest item. <span class="paper">Axioms E and D, Fig. 3. <code>Enq</code> is total; <code>Deq</code> is partial.</span></td></tr>
-        <tr><td><span class="term">sending an order; its confirmation</span></td><td>An invocation and its matching response. <span class="paper">§2.1.</span></td></tr>
-        <tr><td><span class="term">before; overlap; judged by the sun</span></td><td>One operation's response precedes the other's invocation; otherwise concurrent. <span class="paper">The real-time partial order &lt;<sub>H</sub>, §2.2, which no process observes.</span></td></tr>
-        <tr><td><span class="term">a single keeper with a single board</span></td><td>The object's sequential specification. <span class="paper">A legal sequential history.</span></td></tr>
-        <tr><td><span class="term">the rule of the board</span></td><td>Extend the history with responses to some pending invocations, drop the rest; the result is equivalent to a legal sequential history that respects &lt;<sub>H</sub>. <span class="paper">Linearizability, L1 and L2, §2.2.</span></td></tr>
-        <tr><td><span class="term">each thing's moment inside its span</span></td><td>The instant between invocation and response at which the operation appears to take effect. <span class="paper">§1, §6.2.</span></td></tr>
-        <tr><td><span class="term">the goatherd's morning</span></td><td>An enqueue completes before another begins, and the later item is dequeued first. <span class="paper">Sequentially consistent but not linearizable: <var>H</var>₇; with overlap, <var>H</var>₂ (Fig. 1b).</span></td></tr>
-        <tr><td><span class="term">the four mornings</span></td><td><span class="paper"><var>H</var>₁ (acceptable), <var>H</var>₂ (not), <var>H</var>₃ (an operation takes effect before its response), <var>H</var>₄ (one item dequeued twice, not acceptable), Fig. 1.</span></td></tr>
-        <tr><td><span class="term">the tallies' first</span></td><td>Lamport's happened-before, extended to a total order by process identifiers. <span class="paper">Not in this paper; neither it nor &lt;<sub>H</sub> contains the other.</span></td></tr>
-        <tr><td><span class="term">serving by entry at House 3's gate</span></td><td>A single-copy implementation whose linearization point is the step at which the request is applied. <span class="paper">The single-valued abstraction function of §4.2, in the easy case.</span></td></tr>
-        <tr><td><span class="term">copies acting as one</span></td><td>Linearizability is stated on invocations and responses alone and does not see the implementation. <span class="paper">§2.2; the implementor is free to realise any level of concurrency, §6.2.</span></td></tr>
-        <tr><td><span class="term">One Board at a Time; grain and oil</span></td><td>A history is linearizable if and only if each object's subhistory is. <span class="paper">Locality, Theorem 1, §3.1.</span></td></tr>
-        <tr><td><span class="term">the looser rule; each board served the other house first</span></td><td>Sequential consistency; each queue's subhistory is sequentially consistent and the whole is not. <span class="paper">Lamport 1979; <var>H</var>₈, §3.3.</span></td></tr>
-        <tr><td><span class="term">No Order Waits on Another</span></td><td>A pending invocation of a total operation can always be completed without breaking linearizability. <span class="paper">Nonblocking, Theorem 2, §3.2.</span></td></tr>
-        <tr><td><span class="term">a loader at an empty board</span></td><td>Blocking on a partial operation, which the nonblocking property allows. <span class="paper"><code>Deq</code> on the empty queue, §3.2.</span></td></tr>
-        <tr><td><span class="term">several things done as one; one of two called off</span></td><td>A transaction; serializability is neither local nor nonblocking. <span class="paper">§3.3. The paper's blocking example, <var>H</var>₉, uses two registers; <var>H</var>₈ read as transactions is strictly serializable per object and not overall. Footnote 1: there is no counterpart to aborting for linearizability.</span></td></tr>
-        <tr><td><span class="term">Herlios' board; slots; the peg</span></td><td>The lock-free queue: the array <code>items</code> and the index <code>back</code>. <span class="paper">§4.2.</span></td></tr>
-        <tr><td><span class="term">taking a number; putting a tablet in; looking at the peg; emptying a slot</span></td><td><code>INC</code> (returning the old value); <code>STORE</code>; <code>READ</code>; <code>SWAP</code> with null. <span class="paper">§4.2.</span></td></tr>
-        <tr><td><span class="term">Glaukos, Mikon and Sosias's race</span></td><td>Two concurrent enqueues and a dequeue whose order depends on a later race, so no single-valued abstraction function exists. <span class="paper">§4.2. The paper's trace shows <code>READ(q.back)</code> returning 2 after two <code>INC</code>s from 1; with <code>INC</code> returning the old value it would be 3, giving the two slots the trace walks.</span></td></tr>
-        <tr><td><span class="term">what the board could mean</span></td><td>An abstraction function to sets of queue values, with the representation invariant kept between every step. <span class="paper"><var>A</var>: REP → 2<sup>ABS</sup>, §4.2–4.3.3.</span></td></tr>
-        <tr><td><span class="term">put in before another's number was taken</span></td><td><var>x</var>'s <code>STORE</code> precedes <var>y</var>'s <code>INC</code>. <span class="paper">The partial order &lt;<sub>r</sub>.</span></td></tr>
-        <tr><td><span class="term">sequences the business could have produced</span></td><td>Linearized values. <span class="paper">Lin(<var>H</var>), §4.3.1.</span></td></tr>
-        <tr><td><span class="term">The Board Keeps the Rule</span></td><td><var>A</var>(<var>r</var>) ⊆ Lin(<var>H</var>|ABS) for every linearized representation value. <span class="paper">§4.3.2; Theorem 17, Appendix II, using Lemmas 15 and 16. Supporting lemmas are proved in the technical report [45].</span></td></tr>
-        <tr><td><span class="term">in order, none vanishes, none invented</span></td><td><span class="paper">Theorems 6–8, §5.2. Theorem 6 alone was Gottlieb, Lubachevsky and Rudolph's condition.</span></td></tr>
-        <tr><td><span class="term">a loader overtaken for ever; a board that never serves</span></td><td>Linearizability is a safety property only. <span class="paper">§4.2; §6.2.</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="ideas-box">
-    <span class="lbl">The ideas, plainly</span>
-    <p>A shared object is correct, Herlihy and Wing propose, if every operation appears to take effect
-    at a single instant somewhere between its call and its return. Then the results are those of some
-    one-at-a-time execution, and that execution respects real time: an operation that finished before
-    another started comes first. This is linearizability. It lets a concurrent queue be specified as
-    an ordinary queue, and it says nothing about how the object is built, so one copy or many are
-    judged alike.</p>
-
-    <p>Real-time order is not Lamport's causal order. An operation can finish before another starts
-    with no message between them, and operations joined by messages can still overlap. Neither order
-    contains the other, and linearizability is the one an outside observer comparing notes would
-    expect.</p>
-
-    <p>Linearizability is local: a system is linearizable exactly when each object is. And it is
-    nonblocking: a pending call of an operation that is always defined can always be completed.
-    Sequential consistency drops real time and loses locality; serializability, over multi-operation
-    transactions, loses both and needs a way to abort.</p>
-
-    <p>When no single step of an implementation can be named as an operation's instant, Herlihy and
-    Wing map each state to the set of abstract values it could stand for, and show that set is always
-    among the values the history could have produced. Their example is a lock-free queue built from
-    fetch-and-increment and swap.</p>
+<!-- ============================================================ four mornings -->
+<section class="spread dark" id="mornings" data-name="Four mornings">
+  <a class="anchor" id="s3"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Is the rule too strict, or too loose?</div>
+      <h2>Four mornings, tried against the rule</h2>
+      <p class="lede">Choose a morning. The page puts it to the rule: could a single keeper have produced it, with every piece of business falling inside its span?</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Four mornings <em id="fmname">choose one</em></h4>
+      <div class="st-wrap">
+        <svg class="st-svg fig" id="fmsvg" role="group" aria-label="Three lines running outward: House 1 and House 2, which send orders, and House 3, where the board and its loaders are; the spans of the orders and of the servings are thick stretches"></svg>
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Orders are thick stretches on House 1's and House 2's lines, from sending to confirmation. A serving is a grey stretch on House 3's line, ending in a dot for the order it took. Later moments are further out.</p>
+          <p class="say" id="fmsay">Choose a morning.</p>
+          <div id="fmverd"></div>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn alt" data-m="0">Two orders sent at the same time</button>
+        <button class="btn alt" data-m="1">One order after the other</button>
+        <button class="btn alt" data-m="2">Served before the confirmation arrives</button>
+        <button class="btn alt" data-m="3">One order served twice</button>
+      </div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">What about business still unfinished when we look? An order sent but not yet confirmed may be counted as on the board or not, whichever fits what happens next.</p>
   </div>
 </section>
 
-<hr class="rule">
-<section id="refs" class="refs">
-  <h3 class="sect">The Paper Behind This Book</h3>
-  <ul>
-    <li>Maurice P. Herlihy and Jeannette M. Wing, <i>Linearizability: A Correctness Condition for
-    Concurrent Objects</i>. ACM Transactions on Programming Languages and Systems <b>12</b>, 3
-    (July 1990), 463–492. — The definition, locality (Theorem 1), the nonblocking property
-    (Theorem 2), the comparison with sequential consistency and serializability, the proof method
-    with set-valued abstraction functions, and the concurrent queue.</li>
-  </ul>
-  <aside class="fn">Herlios is Hellenised from Herlihy. Glaukos and Mikon, the clerks, and Sosias,
-  the loader, are ordinary Greek names and nobody's authors.</aside>
+<!-- ============================================================ two kinds of first, and copies -->
+<section class="spread light" id="firsts" data-name="Two kinds of first">
+  <a class="anchor" id="s4"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">The rule and the tallies</div>
+      <h2>The tallies' first, and the sun's first</h2>
+      <p class="lede">The rule and the tallies do not give the same answer, and neither includes the other.</p>
+      <p>For the tallies, one order is first if a chain of slips leads from it to the other. Orders no chain joins are put in sequence by tally and house number, fairly but arbitrarily.<sup class="xref"><a href="../ordering-without-clocks/index.html#s2" title="Ordering Without Clocks: What Came Before">*</a></sup> For the sun, one order is first if it was over before the other began, whether or not any slip joined them.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Two mornings <em id="fkname">choose one</em></h4>
+      <div class="st-wrap">
+        <svg class="st-svg fig" id="fksvg" role="group" aria-label="Three lines running outward, one for each house, with the spans of House 1's and House 2's orders and the slips between the houses"></svg>
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">The number in a dot is the tally the order was written under. A thick stretch is an order's span. An arc is a slip. Later moments are further out.</p>
+          <table class="vt" id="fktab"></table>
+          <p class="say" id="fksay">Choose a morning.</p>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn alt" data-k="0">The goatherd's morning</button>
+        <button class="btn alt" data-k="1">A slip joins the orders before the first is confirmed</button>
+      </div>
+    </div></div></div>
+    <div class="narrow" style="margin:2rem 0 0">
+      <p>On the goatherd's morning no slip joined the two orders, so the tallies could put House 2 first, and the sun put House 1 first. Turn it round: House 1 sends an order, and before it is confirmed sends House 2 a slip about it, and House 2 then orders. A chain of slips joins them, so the tallies put House 1 first. But House 1's order was not over when House 2's began, so for the sun they overlap, and the rule would let House 2 go first.</p>
+      <p>Can the rule be kept at all? Easily, by the arrangement the tallies were invented to avoid. Let House 3 keep the only board and enter each order when its slip reaches the gate. The entry falls after the slip was written and before the confirmation leaves, so it lies inside the order's span. Serve in order of entry, and the keeper of the rule is House 3 itself.</p>
+    </div>
+    <div class="slab" style="max-width:640px;margin:1.4rem 0 0"><div class="slab-head">Two Kinds of First</div><p style="margin:0">Serving orders in the sequence they reach House 3's gate keeps the rule of the board. Serving them in the sequence of their tallies need not. And the tallies' sequence can put one order before another where the rule of the board would allow either.</p></div>
+    <details class="proof">
+      <summary>Proof — that serving by entry keeps the rule</summary>
+      <p class="given">Write &lt;<sub>H</sub> for the real-time order of a history <var>H</var>: <var>a</var> &lt;<sub>H</sub> <var>b</var> when <var>a</var> responds before <var>b</var> is invoked. <var>H</var> is linearizable if it can be extended to a history equivalent to a legal sequential history <var>S</var> with &lt;<sub>H</sub> ⊆ &lt;<sub>S</sub>. For the board, a FIFO queue, legal means each <code>Deq</code> returns the oldest item <code>Enq</code>-ed and not yet returned. The implementation is one copy at House 3's gate, and an operation takes effect at the step where its request is applied. <b>Claim.</b> The operations in the order of those steps form such an <var>S</var>.</p>
+      <ol class="proofsteps">
+        <li>Put all orders and servings in sequence by the moment each is done at the board: an order when the keeper enters it, a serving when a loader takes an order. This is one sequence.</li>
+        <li>Each serving takes the earliest order entered and not yet served, which is what a single keeper with a single board would serve, so clause (1) holds.</li>
+        <li>An order is entered after its slip was written and before word of its entry leaves, so its moment lies within it. A serving's moment lies within the loader's business. That is clause (2), and clause (3) follows: whatever was finished before another began had its moment first.<span class="qed">∎</span></li>
+      </ol>
+    </details>
+    <div class="narrow" style="margin:2rem 0 0">
+      <p>Then what was wrong with serving by arrival? Only that the house with the shorter road wins every pair of orders that overlap. The rule does not mind, because it says nothing about orders that overlap. The tallies do mind, and pay for it by sometimes serving a later order first. The two answers protect different things.</p>
+    </div>
+
+    <div class="narrow" style="margin:4rem 0 0">
+      <a class="anchor" id="s5"></a>
+      <div class="kicker">One board, or three</div>
+      <h2>Copies nobody can count</h2>
+      <p class="lede">One board at House 3's gate keeps the rule. But must there be only one? Each house might rather keep a copy of the board close at hand.</p>
+      <p>The rule mentions only sendings, confirmations and servings, all things that happen at the houses' gates. It never mentions the board itself. So it cannot tell one board from three copies kept in step by slips, or from any other arrangement behind the gates. Whatever stands behind them is judged by what comes out of them.</p>
+    </div>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">At the gate</div><h3>What a house sees</h3><p>A house sends an order, gets its confirmation, and sees loaders serve.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Behind the gate</div><h3>What it cannot see</h3><p>One board, three copies kept in step by slips, or any other arrangement. The rule is silent on all of them.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Acting as one</div><h3>No way to tell</h3><p>No house, comparing notes with every other and with anyone who watched the sun, could tell that there is more than one board.</p></div></div></div>
+    </div>
+    <div class="narrow" style="margin:1.4rem 0 0">
+      <p>How copies might be kept so is another matter, and this book does not take it up. What it takes up is what the promise gives to a house that relies on it.</p>
+    </div>
+  </div>
 </section>
 
-<hr class="rule">
+<!-- ============================================================ grain and oil -->
+<section class="spread dark" id="locality" data-name="Grain and oil">
+  <a class="anchor" id="s6"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Grain is not the only thing on order</div>
+      <h2>Grain and oil</h2>
+      <p class="lede">House 2 presses oil, and all three houses order it the same way, on a board of its own at House 2. If the rule had to hold over both boards together, every change to how one board is kept would have to be weighed against the other. Does it?</p>
+      <p>No. It is enough that each board keeps the rule by itself.</p>
+    </div>
+    <div class="slab" style="max-width:640px;margin:0 0 1.4rem"><div class="slab-head">One Board at a Time</div><p style="margin:0">All the business keeps the rule if and only if, for every board, the business on that board, taken by itself, keeps it.</p></div>
+    <div class="narrow" style="margin:0 0 1rem">
+      <p>Why should two boards fit together without anyone arranging it? Because the sun ties them, and the sun never contradicts itself. Two boards could fail to fit only through a loop: one order before another on the grain board, that one before a third by the sun, and so round to the start. The proof shows that such a loop would need the sun to put something before itself.</p>
+      <p>Is this true of any sensible rule? Take the sun out and see. Ask only that everything could have come from a single keeper, with each house's own business in the order it did it, and nothing said about moments. Under that looser rule the goatherd's morning is fine. Now let House 1 order grain and then oil, and House 2 order oil and then grain. Choose a rule and the page tests the three boards.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Grain and oil <em id="locname">choose a rule</em></h4>
+      <p style="font-size:.92rem;color:#6b5a48;margin:0 0 .6rem">House 1 orders grain, then oil. House 2 orders oil, then grain. House 1's oil reaches the oil board before House 2 places its own, so the oil board serves House 1's first. The grain board serves House 2's grain first, though House 1's grain was finished long before.</p>
+      <table class="vt" id="loctab"></table>
+      <p class="say" id="locsay">Choose a rule.</p>
+      <div class="row">
+        <button class="btn alt" id="locLoose">The looser rule, without the sun</button>
+        <button class="btn alt" id="locSun">The rule of the board</button>
+      </div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">Each board passes the looser rule alone, and together they fail it. Houses that kept only the looser rule would need one plan spanning every board. The sun's demand is what lets each board be kept, and judged, on its own.</p>
+    <details class="proof">
+      <summary>Proof — that if every board keeps the rule, all the business does</summary>
+      <p class="given">For a history <var>H</var> and an object <var>x</var>, write <var>H</var>|<var>x</var> for the subhistory of operations on <var>x</var>, and &lt;<sub>H</sub> for the real-time order: <var>a</var> &lt;<sub>H</sub> <var>b</var> when <var>a</var> responds before <var>b</var> is invoked. <b>Claim</b> (locality, Theorem 1, the "if" direction): if every <var>H</var>|<var>x</var> is linearizable, then <var>H</var> is.</p>
+      <ol class="proofsteps">
+        <li>For each board, choose a sequence and moments that show it keeps the rule. Say one piece of business <em>must go before</em> another if they are on the same board and its sequence puts the first earlier, or if the sun does: the first finished before the second began. Follow chains of these.</li>
+        <li>If no chain leads from a piece of business back to itself, set everything in any single sequence that keeps every <em>must go before</em>. It keeps each board's own sequence, so every serving is what a single keeper would do; and it keeps the sun's sequence, which is clause (3), and clause (2) with it. So it remains to show there is no loop.</li>
+        <li>Suppose there is one, <var>e</var>₁, …, <var>e</var><sub>n</sub>, back to <var>e</var>₁, as short as any loop can be.</li>
+        <li><b>All on one board.</b> A board's sequence puts any two of its pieces one way or the other, so some step of the loop runs against it, and that step must be the sun's: <var>b</var> finished before <var>a</var> began, though the board put <var>a</var> first. Then that board did not keep clause (3). So the loop touches at least two boards.</li>
+        <li>Number it so that <var>e</var>₁ is on board <var>x</var> and <var>e</var>₂ on another. The step between them crosses boards, so it is the sun's: <var>e</var>₁ finished before <var>e</var>₂ began.</li>
+        <li><b>Nothing else in the loop is on board <var>x</var>.</b> Suppose something is, and let <var>e</var><sub>i</sub> be the first after <var>e</var>₂. The step into it crosses boards, so <var>e</var><sub>i−1</sub> finished before <var>e</var><sub>i</sub> began. And <var>e</var>₂ began before <var>e</var><sub>i−1</sub> finished, or else <var>e</var>₂, …, <var>e</var><sub>i−1</sub> would be a shorter loop. So <var>e</var>₁ finished before <var>e</var>₂ began, before <var>e</var><sub>i−1</sub> finished, before <var>e</var><sub>i</sub> began: <var>e</var>₁ came before <var>e</var><sub>i</sub> by the sun, and <var>e</var>₁, <var>e</var><sub>i</sub>, …, <var>e</var><sub>n</sub> is a shorter loop.</li>
+        <li>So the last step, into <var>e</var>₁, also crosses boards: <var>e</var><sub>n</sub> finished before <var>e</var>₁ began, and therefore before <var>e</var>₂ began, making <var>e</var>₂, …, <var>e</var><sub>n</sub> a shorter loop. Every case contradicts the choice of a shortest loop.<span class="qed">∎</span></li>
+      </ol>
+    </details>
+  </div>
+</section>
 
-<p class="lineage"><span class="lbl">Leads to</span> <a href="../taking-stock-without-stopping/index.html">Taking Stock Without Stopping</a> · <span class="unwritten-link" title="Not yet written">Probably Up to Date</span> · <span class="unwritten-link" title="Not yet written">What You Can Promise Alone</span><br>
-  <span class="outside"><span class="tag">Outside this series</span> Lamport 1979, <i>sequential consistency</i> · Papadimitriou 1979, <i>serializability</i> · Herlihy 1988, <i>wait-free synchronization</i></span></p>
+<!-- ============================================================ nobody made to wait -->
+<section class="spread light" id="nowait" data-name="Nobody made to wait">
+  <a class="anchor" id="s7"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Could the rule make a house stand at the gate?</div>
+      <h2>Nobody made to wait</h2>
+      <p class="lede">Whatever is on the board, a single keeper can always put a new order at the end, so the rule never makes an order wait on anyone else's business.</p>
+    </div>
+    <div class="slab" style="max-width:640px;margin:0 0 1.4rem"><div class="slab-head">No Order Waits on Another</div><p style="margin:0">If the business so far keeps the rule, a waiting order can be entered now and the rule still kept.</p></div>
+    <div class="narrow" style="margin:0 0 1rem">
+      <p>So when a house does wait for its confirmation, the cause is the arrangement behind the board, a slip still on the road, and never the rule. Serving is different: a loader who comes to an empty board has nothing to take, and a single keeper would make them wait until an order comes. That wait is asked for, not forced. Would a stronger promise keep this? Not always. Choose a case.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Waiting <em id="wtname">choose a case</em></h4>
+      <div id="wtlog"></div>
+      <p class="say" id="wtsay">Choose a case.</p>
+      <div class="row">
+        <button class="btn alt" data-w="0">An order is waiting for its confirmation</button>
+        <button class="btn alt" data-w="1">A loader comes to an empty board</button>
+        <button class="btn alt" data-w="2">Two houses each do two things as one</button>
+      </div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">Promises about such groups can force a house to undo its business. The rule of the board, whose business is always single, never does.</p>
+    <details class="proof">
+      <summary>Proof — that a waiting order can always be entered</summary>
+      <p class="given">A total operation, such as <code>Enq</code>, has a response in every state. <b>Claim</b> (the nonblocking property, Theorem 2): if <var>H</var> is linearizable and <var>p</var> is a pending invocation of a total operation, then there is a response <var>r</var> such that <var>H</var> extended by <var>p</var> and <var>r</var> is linearizable.</p>
+      <ol class="proofsteps">
+        <li>Take a single sequence that shows the business so far keeps the rule.</li>
+        <li>If it already counts the order as entered, confirm it now; the same sequence still works.</li>
+        <li>If not, put the order at the end of the sequence and confirm it now. Nothing earlier changes, so clause (1) holds. Its moment is now, within its span, which is clause (2). Nothing began after it finished, so putting it last breaks no <em>before</em>, which is clause (3).<span class="qed">∎</span></li>
+      </ol>
+    </details>
+  </div>
+</section>
 
-</div>
-<script src="../../assets/js/flow.js" defer></script>
+<!-- ============================================================ the busy board -->
+<section class="spread dark has-scrolly" id="busy" data-name="The busy board">
+  <a class="anchor" id="s8"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-9-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap" style="margin-bottom:-1rem">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">So far one keeper, one thing at a time</div>
+        <h2>The busy board</h2>
+        <p class="lede">House 3's real board is busier, with many clerks and loaders at work at once. The keeper of the board has arranged it so that nobody ever stands aside for anybody.</p>
+        <p>The board has numbered slots, each holding one order tablet or nothing, and a peg at the first slot nobody has been given yet. A clerk takes a number and moves the peg on, then puts a tablet in that slot. A loader reads the peg, goes along the slots from the first, and takes the first tablet it finds. No clerk or loader waits for another.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/b08-board.jpg" alt="Along the portico of a trading house, two clerks reach for the pigeonholes of a long wooden board that hold stacks of clay tablets, while a loader carries a grain sack past the columns from an open storehouse" loading="lazy"></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.6rem">Everything happens at one board at one house; no slip crosses the road. Is there still a moment for each order? Watch a race: the clerk entering House 1's order and the clerk entering House 2's begin at the same time, and a loader comes by.</p>
+  </div>
+  <div class="scrolly" id="board">
+    <div class="stage"><div class="stage-inner split">
+      <svg class="fig svg-dark bsvg" id="boardsvg" viewBox="0 0 380 240" role="img" aria-label="A board of four numbered slots with a peg above one slot, tablets in slots, and the places of two clerks and a loader"></svg>
+      <div class="side" id="boardside" data-live></div>
+    </div></div>
+    <div class="steps">
+      <div class="step on"><div class="card"><div class="num">1 · The board</div><h3>Slots and a peg</h3><p>Four slots are shown, all empty, and the peg stands at the first. Two clerks are about to enter orders, one for House 1 and one for House 2.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · A number</div><h3>The first clerk takes number 1</h3><p>The clerk entering House 1's order takes the number at the peg and moves the peg on, in a single movement. The tablet is not yet in its slot.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · A number</div><h3>The second clerk takes number 2</h3><p>The clerk entering House 2's order takes the next number, and the peg moves on again.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · A tablet</div><h3>House 2's tablet goes in</h3><p>The second clerk puts House 2's tablet in slot 2 and is done. The first clerk has not yet reached slot 1.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · The question</div><h3>Is House 1's order on the board?</h3><p>Say yes, ahead of House 2's. Then a loader who comes now finds slot 1 empty and serves House 2. Say no, and let the first clerk put the tablet in first. Then a loader finds it in slot 1 and serves House 1. Both runs follow.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · One way it runs</div><h3>The loader comes first</h3><p>The loader reads the peg, looks at slot 1, finds it empty, and takes House 2's tablet from slot 2.</p></div></div>
+      <div class="step"><div class="card"><div class="num">7 · The other way</div><h3>The first clerk is quicker</h3><p>The first clerk puts House 1's tablet in slot 1 before the loader looks. The loader reads the peg, finds the tablet in slot 1, and serves House 1.</p></div></div>
+    </div>
+  </div>
+  <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <p style="max-width:40em">Has anything gone wrong? No: the two orders overlapped, so either sequence keeps the rule. The trouble is only that when the second clerk is done, which one it will be is not yet settled. A race still to be run will settle it, so no step anyone has taken so far can be called the moment House 1's order joined the board.</p>
+    <p style="max-width:40em">If there is no moment to point to, how can anyone show that this board keeps the rule?</p>
+    <details class="proof">
+      <summary>The busy board, stated formally</summary>
+      <p class="given">The queue of §4.2. The board is an array <code>items</code> and an index <code>back</code>; slots are never reused.</p>
+      <ol class="proofsteps">
+        <li><b>To enter an order:</b> note the peg's number and move the peg on one, in a single movement. Put the order tablet in that slot. <code>Enq</code> is <code>INC(back)</code> then <code>STORE</code>.</li>
+        <li><b>To serve:</b> look at the peg. Go along the slots from 1 up to the one before the peg, and take the first tablet you find, emptying its slot in a single movement. If you find none, go back to the peg and start again. <code>Deq</code> is <code>READ(back)</code> then <code>SWAP</code> along the array.</li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ what the board could mean -->
+<section class="spread light" id="could" data-name="What the board could mean">
+  <a class="anchor" id="s9"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">When no moment can be pointed to</div>
+      <h2>What the board could mean</h2>
+      <p class="lede">The way through is to ask what the board <i>could</i> mean at each moment. Once the first clerk's tablet is in, the board could stand for House 2, then House 1, or for House 1, then House 2.</p>
+      <p>A tablet put in before another clerk even took a number must come first. Any two not so placed may go either way. The page shows the board only once every tablet is in.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>What could the board stand for? <em id="mnname">choose a run</em></h4>
+      <div class="lists">
+        <div><h5>The slots</h5><div id="mnslots"></div></div>
+        <div><h5>Sequences it could stand for</h5><div id="mnseqs"></div></div>
+      </div>
+      <p class="say" id="mnsay">Choose a run.</p>
+      <div class="row">
+        <button class="btn alt" data-n="0">The two clerks race</button>
+        <button class="btn alt" data-n="1">One clerk is done before the other takes a number</button>
+        <button class="btn" id="mnload" disabled>A loader goes up from slot 1</button>
+      </div>
+    </div></div></div>
+    <div class="narrow" style="margin:2rem 0 0">
+      <p>The thing to show is this: at every moment, every sequence the board could stand for is one the business so far could honestly have produced. Two facts carry it. A tablet just put in never has to stand ahead of anything already waiting. And a loader going up from slot 1 always takes a tablet that could be first.</p>
+    </div>
+    <div class="slab" style="max-width:640px;margin:1.4rem 0 0"><div class="slab-head">The Board Keeps the Rule</div><p style="margin:0">At every moment, every sequence of waiting orders the board could stand for is one the business so far could have produced, so the busy board keeps the rule.</p></div>
+    <details class="proof">
+      <summary>Proof — that the board keeps the rule, in outline</summary>
+      <p class="given">Let <var>A</var>: REP → 2<sup>ABS</sup> map each state of the array and index to the set of queue values it could stand for, and let Lin(<var>H</var>|ABS) be the queue values the business so far could have produced. Write <var>x</var> &lt;<sub>r</sub> <var>y</var> when the <code>STORE</code> of <var>x</var> precedes the <code>INC</code> of <var>y</var>. <b>Claim</b> (§4.3.2, Theorem 17): for every linearized representation value <var>r</var>, <var>A</var>(<var>r</var>) ⊆ Lin(<var>H</var>|ABS).</p>
+      <ol class="proofsteps">
+        <li>An empty board stands only for no orders, which is what no business produces. It is enough to show that every single movement, and every beginning and end of a clerk's or loader's business, keeps it so.</li>
+        <li><b>Beginnings and ends</b> put nothing in a slot and take nothing out. A beginning adds business that may or may not have had its moment yet; an end settles one such choice. Neither removes a sequence the board could stand for.</li>
+        <li><b>Moving the peg and looking at it</b> move no tablet, so they change nothing.</li>
+        <li><b>Putting a tablet in.</b> For a waiting tablet to have to stand behind this one, its clerk would have taken their number after this one was put in, and this one is only now being put in. So the new tablet may go last in every sequence, and the business agrees: an entry may have its moment now, at the back.</li>
+        <li><b>Emptying a slot.</b> Say the loader, going up from slot 1, empties slot <var>i</var> and finds tablet <var>x</var>, and some waiting tablet <var>z</var> must come before <var>x</var> because <var>z</var> was put in before <var>x</var>'s clerk took their number. Then <var>z</var>'s slot is lower, so the loader has already passed it. They went only as far as the peg showed when they looked, so <var>x</var>'s number was taken before they looked, and <var>z</var> was put in before that. So <var>z</var> was in its slot when the loader passed it, and they would have taken it. Hence <var>x</var> could be first, and a serving may have its moment now, with <var>x</var>.</li>
+        <li>Every movement keeps the order, so it holds at every moment.<span class="qed">∎</span></li>
+      </ol>
+      <p class="fnote">This is an outline, and so is the paper's. Herlihy and Wing give the two facts of steps 4 and 5 and the shape of the argument; the lemmas that make it airtight are in their technical report.</p>
+    </details>
+    <div class="narrow" style="margin:2rem 0 0">
+      <p>What does a house get from a board known to keep the rule? Everything a single keeper would guarantee: orders are served in the sequence they came by the sun, none vanishes, and none is served that nobody made. Would the obvious one-line promise, <i>no later order is served before an earlier one</i>, have done as well? No: a board that lost tablets would keep that promise.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ what the rule does not say -->
+<section class="spread dark" id="unsaid" data-name="What the rule does not say">
+  <a class="anchor" id="s10"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-9-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">What has the rule left unpromised?</div>
+      <h2>What the rule does not say</h2>
+    </div>
+    <div class="cards3 cards2" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Can anyone check it?</div><h3>No one</h3><p>It is judged by the sun, which nobody on Arche can read in the trading season. A house knows the rule is kept only because the arrangement behind the board has been shown to keep it, as House 3's gate and the busy board were. The rule gives the island no hour and needs none.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Are orders served?</div><h3>Not promised</h3><p>Every demand says what must not happen; a board that never served anyone would break none of them. A loader may even be overtaken on every round, finding each tablet taken just before they reach it, and go round for ever while the rule holds. That every order is served in the end is a separate promise.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">How are copies kept?</div><h3>Not said</h3><p>The rule says what copies must look like from the gates, and nothing about the slips that would keep them in step.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Are the tallies wrong?</div><h3>No</h3><p>The tallies keep a different promise, fairness between orders that overlap, and give up the sun to keep it. Which first the houses want is theirs to choose.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ back to machines -->
+<section class="spread light" id="why" data-name="Back to machines">
+  <a class="anchor" id="s11"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Back to machines</div>
+      <h2>The island was a set of shared objects</h2>
+      <p class="lede">Each house, loader and clerk is a process, and each board an object. Hover or tap to see who is who.</p>
+    </div>
+    <div class="map" id="map">
+      <div class="hd" style="text-align:right;padding-right:6px">On the island</div><div></div><div class="hd">In the machine room</div>
+    </div>
+    <div class="meander" style="margin:3rem auto"></div>
+    <div class="end">
+      <p class="big">A shared object is correct if every call appears to take effect at one instant between its start and its answer, in an order that respects real time.</p>
+      <p class="lede" style="margin:0 auto">Then one copy or many are judged alike, each object can be checked alone, and no caller is made to wait where the call is always defined.</p>
+      <div class="links">
+        <a href="../../places/ring-road/index.html">The Ring Road, in detail</a>
+        <a href="../../papers/index.html">All the papers</a>
+      </div>
+    </div>
+    <div class="apparatus">
+      <a class="anchor" id="refs"></a>
+      <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/ring-road/index.html">The Ring Road</a></p>
+      <p class="lineage"><span class="lbl">Builds on</span> <a href="../ordering-without-clocks/index.html">Ordering Without Clocks</a></p>
+      <p class="lineage"><span class="lbl">Leads to</span> <a href="../taking-stock-without-stopping/index.html">Taking Stock Without Stopping</a> · <a href="../probably-up-to-date/index.html">Probably Up to Date</a> · <a href="../what-you-can-promise-alone/index.html">What You Can Promise Alone</a></p>
+      <p class="lineage"><span class="lbl">Outside this series</span> Lamport 1979, <i>sequential consistency</i> · Papadimitriou 1979, <i>serializability</i> · Herlihy 1988, <i>wait-free synchronization</i></p>
+      <details class="proof">
+        <summary>In the paper, term by term</summary>
+        <table>
+          <tr><td>the houses; the loaders; the clerks</td><td>Sequential processes, each waiting for one operation's response before issuing the next. Processes, §2.1.</td></tr>
+          <tr><td>the board; placed first, filled first</td><td>A FIFO queue. The paper's running example, Fig. 1 and Fig. 3.</td></tr>
+          <tr><td>an order; a serving</td><td><code>Enq</code>; <code>Deq</code>, which returns the oldest item. Axioms E and D, Fig. 3. <code>Enq</code> is total; <code>Deq</code> is partial.</td></tr>
+          <tr><td>sending an order; its confirmation</td><td>An invocation and its matching response. §2.1.</td></tr>
+          <tr><td>before; overlap; judged by the sun</td><td>One operation's response precedes the other's invocation; otherwise concurrent. The real-time partial order &lt;<sub>H</sub>, §2.2, which no process observes.</td></tr>
+          <tr><td>a single keeper with a single board</td><td>The object's sequential specification. A legal sequential history.</td></tr>
+          <tr><td>the rule of the board</td><td>Extend the history with responses to some pending invocations, drop the rest; the result is equivalent to a legal sequential history that respects &lt;<sub>H</sub>. Linearizability, L1 and L2, §2.2.</td></tr>
+          <tr><td>each thing's moment inside its span</td><td>The instant between invocation and response at which the operation appears to take effect. §1, §6.2.</td></tr>
+          <tr><td>the goatherd's morning</td><td>An enqueue completes before another begins, and the later item is dequeued first. Sequentially consistent but not linearizable: <var>H</var>₇; with overlap, <var>H</var>₂ (Fig. 1b).</td></tr>
+          <tr><td>the four mornings</td><td><var>H</var>₁ (acceptable), <var>H</var>₂ (not), <var>H</var>₃ (an operation takes effect before its response), <var>H</var>₄ (one item dequeued twice, not acceptable), Fig. 1.</td></tr>
+          <tr><td>the tallies' first</td><td>Lamport's happened-before, extended to a total order by process identifiers. Not in this paper; neither it nor &lt;<sub>H</sub> contains the other.</td></tr>
+          <tr><td>serving by entry at House 3's gate</td><td>A single-copy implementation whose linearization point is the step at which the request is applied. The single-valued abstraction function of §4.2, in the easy case.</td></tr>
+          <tr><td>copies acting as one</td><td>Linearizability is stated on invocations and responses alone and does not see the implementation. §2.2; the implementor is free to realise any level of concurrency, §6.2.</td></tr>
+          <tr><td>One Board at a Time; grain and oil</td><td>A history is linearizable if and only if each object's subhistory is. Locality, Theorem 1, §3.1.</td></tr>
+          <tr><td>the looser rule; each board served the other house first</td><td>Sequential consistency; each queue's subhistory is sequentially consistent and the whole is not. Lamport 1979; <var>H</var>₈, §3.3.</td></tr>
+          <tr><td>No Order Waits on Another</td><td>A pending invocation of a total operation can always be completed without breaking linearizability. Nonblocking, Theorem 2, §3.2.</td></tr>
+          <tr><td>a loader at an empty board</td><td>Blocking on a partial operation, which the nonblocking property allows. <code>Deq</code> on the empty queue, §3.2.</td></tr>
+          <tr><td>several things done as one; one of two called off</td><td>A transaction; serializability is neither local nor nonblocking. §3.3. The paper's blocking example, <var>H</var>₉, uses two registers; <var>H</var>₈ read as transactions is strictly serializable per object and not overall. Footnote 1: there is no counterpart to aborting for linearizability.</td></tr>
+          <tr><td>the busy board; slots; the peg</td><td>The lock-free queue: the array <code>items</code> and the index <code>back</code>. §4.2.</td></tr>
+          <tr><td>taking a number; putting a tablet in; looking at the peg; emptying a slot</td><td><code>INC</code> (returning the old value); <code>STORE</code>; <code>READ</code>; <code>SWAP</code> with null. §4.2.</td></tr>
+          <tr><td>the race of the two clerks and the loader</td><td>Two concurrent enqueues and a dequeue whose order depends on a later race, so no single-valued abstraction function exists. §4.2. The paper's trace shows <code>READ(q.back)</code> returning 2 after two <code>INC</code>s from 1; with <code>INC</code> returning the old value it would be 3, giving the two slots the trace walks.</td></tr>
+          <tr><td>what the board could mean</td><td>An abstraction function to sets of queue values, with the representation invariant kept between every step. <var>A</var>: REP → 2<sup>ABS</sup>, §4.2–4.3.3.</td></tr>
+          <tr><td>put in before another's number was taken</td><td><var>x</var>'s <code>STORE</code> precedes <var>y</var>'s <code>INC</code>. The partial order &lt;<sub>r</sub>.</td></tr>
+          <tr><td>sequences the business could have produced</td><td>Linearized values. Lin(<var>H</var>), §4.3.1.</td></tr>
+          <tr><td>The Board Keeps the Rule</td><td><var>A</var>(<var>r</var>) ⊆ Lin(<var>H</var>|ABS) for every linearized representation value. §4.3.2; Theorem 17, Appendix II, using Lemmas 15 and 16. Supporting lemmas are proved in the technical report [45].</td></tr>
+          <tr><td>in order, none vanishes, none invented</td><td>Theorems 6–8, §5.2. Theorem 6 alone was Gottlieb, Lubachevsky and Rudolph's condition.</td></tr>
+          <tr><td>a loader overtaken for ever; a board that never serves</td><td>Linearizability is a safety property only. §4.2; §6.2.</td></tr>
+        </table>
+      </details>
+      <details class="proof">
+        <summary>The paper behind this book</summary>
+        <p><b>The paper behind this book.</b> Maurice P. Herlihy and Jeannette M. Wing, <i>Linearizability: A Correctness Condition for Concurrent Objects</i>. ACM Transactions on Programming Languages and Systems <b>12</b>, 3 (July 1990), 463–492. The definition, locality (Theorem 1), the nonblocking property (Theorem 2), the comparison with sequential consistency and serializability, the proof method with set-valued abstraction functions, and the concurrent queue.</p>
+        <p><b>The ideas.</b> A shared object is correct, Herlihy and Wing propose, if every operation appears to take effect at a single instant somewhere between its call and its return. Then the results are those of some one-at-a-time execution, and that execution respects real time: an operation that finished before another started comes first. This is linearizability. It lets a concurrent queue be specified as an ordinary queue, and it says nothing about how the object is built, so one copy or many are judged alike.</p>
+        <p>Real-time order is not Lamport's causal order. An operation can finish before another starts with no message between them, and operations joined by messages can still overlap. Neither order contains the other, and linearizability is the one an outside observer comparing notes would expect.</p>
+        <p>Linearizability is local: a system is linearizable exactly when each object is. And it is nonblocking: a pending call of an operation that is always defined can always be completed. Sequential consistency drops real time and loses locality; serializability, over multi-operation transactions, loses both and needs a way to abort.</p>
+        <p>When no single step of an implementation can be named as an operation's instant, Herlihy and Wing map each state to the set of abstract values it could stand for, and show that set is always among the values the history could have produced. Their example is a lock-free queue built from fetch-and-increment and swap.</p>
+        <div class="refs">
+          <p>Herlihy, M. P., and Wing, J. M. Linearizability: a correctness condition for concurrent objects. <i>ACM Trans. Program. Lang. Syst.</i> <b>12</b>, 3 (1990), 463–492.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+<footer>Distributed Algorithms of Ancient Greece · “Many Copies, Acting as One”, after Maurice Herlihy and Jeannette Wing, ACM TOPLAS 12(3), 1990.</footer>
+<script>
+"use strict";
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const NS="http://www.w3.org/2000/svg";
+const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function rnd(n){return Math.floor(Math.random()*n)}
+/* run fn(0..1) over ms, eased */
+function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();return}const t0=performance.now();
+  (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
+function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
+
+/* ===== pop-ups unfold when they enter view ===== */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
+$$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
+$$(".say,[data-live]").forEach(e=>e.setAttribute("aria-live","polite"));
+
+/* ===== scroll: progress bar, section name, parallax ===== */
+const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
+const dep=$$("[data-depth]"), par=$$("[data-parallax]");
+let tick=false;
+function onscroll(){
+  if(tick)return; tick=true;
+  requestAnimationFrame(()=>{
+    tick=false;
+    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
+    prog.style.width=(h>0?y/h*100:0)+"%";
+    const mid=y+innerHeight*.4; let cur=secs[0];
+    for(const s of secs){ if(s.offsetTop<=mid) cur=s; }
+    now.textContent=cur.dataset.name||"";
+    if(reduce)return;
+    for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
+    for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
+  });
+}
+addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
+
+/* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
+function scrolly(root,render){
+  const steps=$$(".step",root); render(0);
+  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
+  steps.forEach(s=>so.observe(s));
+}
+
+/* ===== who is who: the setting on the left, the machine room on the right ===== */
+function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
+  const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
+  [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}
+
+/* ===== space-time drawn in the round: each place is a line running outward, each ring a later moment,
+         and whatever is carried from place to place is an arc curving round and outward ===== */
+function Polar(svg,o){
+  const {cx,cy,r0,step,nodes,rings,tEnd}=o; svg.innerHTML=""; svg.setAttribute("viewBox",o.vb);
+  const defs=el("defs",{},svg);
+  const mk=(key,col)=>{const m=el("marker",{id:`${svg.id}-${key}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:col},m)};
+  mk("b","#136f9e"); mk("r","#bf4a26");
+  const frame=el("g",{},svg), under=el("g",{},svg), slips=el("g",{},svg), evs=el("g",{},svg), over=el("g",{},svg);
+  const P={svg,under,slips,evs,over,cx,cy,
+    r:t=>r0+step*t,
+    xy(deg,rr){const a=deg*Math.PI/180;return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)]},
+    pt(k,t){return P.xy(nodes[k][0],P.r(t))},
+    /* the points of an arc from place a at time ta to place b at time tb, the short way round */
+    arc(a,ta,b,tb){const a0=nodes[a][0],d=((nodes[b][0]-a0+540)%360)-180,n=Math.max(12,Math.round(Math.abs(d)/3)),pts=[];
+      for(let i=0;i<=n;i++)pts.push(P.xy(a0+d*i/n,P.r(ta+(tb-ta)*i/n)));return pts},
+    slip(a,ta,b,tb,trim=17){const pts=P.arc(a,ta,b,tb),end=pts[pts.length-1];
+      while(pts.length>2&&Math.hypot(pts[pts.length-1][0]-end[0],pts[pts.length-1][1]-end[1])<trim)pts.pop();
+      const p=el("path",{class:"st-slip","marker-end":`url(#${svg.id}-b)`,d:"M"+pts.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" L")},slips);
+      p.mid=P.arc(a,ta,b,tb); p.mid=p.mid[Math.floor(p.mid.length/2)]; return p},
+    seg(k,t1,t2){const [x1,y1]=P.pt(k,t1),[x2,y2]=P.pt(k,t2);return el("line",{class:"st-seg",x1,y1,x2,y2},under)},
+    event(k,t,fill,rad=13){const [x,y]=P.pt(k,t),g=el("g",{class:"st-ev",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},evs);
+      el("circle",{class:"halo2",r:rad+5},g);el("circle",{class:"b",r:rad,fill},g);g.label=el("text",{},g);el("circle",{r:rad+8,fill:"transparent"},g);return g}
+  };
+  for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
+  for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
+  for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
+    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
+  if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
+  return P;
+}
+
+const HC={1:"#9cb648",2:"#e0b84a",3:"#5b9be0"};
+const chip=(t,h)=>`<span class="chip"><i style="background:${HC[h]}"></i>${t}</span>`;
+const ANG={1:-90,2:30,3:150};
+const NODES={1:[-90,"H1",HC[1]],2:[30,"H2",HC[2]],3:[150,"H3",HC[3]]};
+
+/*LOGIC-START*/
+/* ===== the rule of the board, as a checker =====
+   An entry is {id, obj, p, i, kind:"enq"|"deq", item, ret, s, e}: which board, which house or loader (p) and
+   its place in that one's own sequence (i), an order put on a board or a serving that returned an order,
+   and the moment it began and ended by the sun. rt=true asks for the rule of the board (what finished before
+   another began comes first); rt=false asks only that each one's own business keeps its own order. */
+function lin(ops,rt=true,free=false){
+  const n=ops.length,placed=new Array(n).fill(false),q={},seq=[];
+  const before=(a,b)=>free?false:rt?a.e<b.s:(a.p===b.p&&a.i<b.i);
+  function go(k){
+    if(k===n)return true;
+    for(let j=0;j<n;j++){if(placed[j])continue;const o=ops[j];
+      if(ops.some((x,m)=>!placed[m]&&m!==j&&before(x,o)))continue;
+      const Q=q[o.obj]=q[o.obj]||[];
+      if(o.kind==="enq"){Q.push(o.item);placed[j]=true;seq.push(o);if(go(k+1))return true;seq.pop();placed[j]=false;Q.pop()}
+      else if(Q.length&&Q[0]===o.ret){const h=Q.shift();placed[j]=true;seq.push(o);if(go(k+1))return true;seq.pop();placed[j]=false;Q.unshift(h)}}
+    return false}
+  const ok=go(0);return {ok,seq:ok?seq.slice():null};
+}
+/* why a history fails: no single keeper could have produced it at all, or only the sun forbids it */
+function verdict(ops){
+  if(lin(ops,true).ok)return "ok";
+  return lin(ops,true,true).ok?"sun":"keeper";
+}
+/* is this exact sequence one the rule allows? */
+function validSeq(seq,rt=true){
+  const q={};
+  for(let a=0;a<seq.length;a++)for(let b=a+1;b<seq.length;b++)if(rt&&seq[b].e<seq[a].s)return false;
+  for(const o of seq){const Q=q[o.obj]=q[o.obj]||[];
+    if(o.kind==="enq")Q.push(o.item);else{if(!Q.length||Q[0]!==o.ret)return false;Q.shift()}}
+  return true}
+/* tallies, by the rule of Ordering Without Clocks: every entry raises a house's tally, and a slip's arrival lifts it past the slip's number */
+function Tally(start){const T={...start};
+  return {T,
+    local(h){return ++T[h]},
+    send(h){return ++T[h]},
+    recv(h,v){T[h]=Math.max(T[h],v)+1;return T[h]}}}
+/* is there a chain of scroll lines and slips from event a to event b? (events: {id,h,t,from?}) */
+function chained(E,a,b){
+  const by={};E.forEach(e=>by[e.id]=e);
+  const pred=e=>E.filter(x=>x.h===e.h&&x.t<e.t&&!E.some(y=>y.h===e.h&&y.t>x.t&&y.t<e.t)).concat(e.from?[by[e.from]]:[]);
+  const seen=new Set();(function f(x){pred(x).forEach(p=>{if(!seen.has(p)){seen.add(p);f(p)}})})(by[b]);
+  return seen.has(by[a])}
+/* the tablet board of the busy house: slots numbered from 1, a peg at the first number nobody has been given */
+function Board(){
+  const B={peg:1,slot:{},A:{num:null,put:false},B:{num:null,put:false},L:{peg:null,at:null,took:null},log:[]};
+  B.do=(w,a)=>{
+    if(a==="take"){B[w].num=B.peg;B.peg++}
+    else if(a==="put"){B.slot[B[w].num]=w;B[w].put=true}
+    else if(a==="peg"){B.L.peg=B.peg;B.L.at=1}
+    else if(a==="look"){const s=B.L.at;if(B.slot[s]){B.L.took=B.slot[s];B.L.from=s;delete B.slot[s]}else if(s+1>=B.L.peg){B.L.peg=B.peg;B.L.at=1}else B.L.at=s+1}
+    return B};
+  return B}
+const aStep=(...xs)=>xs.map(x=>x.split("."));
+/* the sequences a set of tablets in slots could stand for: x must stand ahead of y if x's tablet went in before y's clerk took a number */
+function meanings(tabs){
+  const out=[],k=tabs.length;
+  (function perm(cur,rest){if(!rest.length){out.push(cur);return}
+    rest.forEach((x,i)=>{const r=rest.filter((_,j)=>j!==i);
+      if(r.every(y=>!(y.put<x.take)))perm(cur.concat(x),r)})})([],tabs);
+  return out}
+/*LOGIC-END*/
+
+/* ===== drawing helpers: a span is a thick stretch of a place's line, a dot marks a moment ===== */
+function mark(P,pl,t,fill,label,off=0,rad=12){
+  const [x,y]=P.xy(ANG[pl]+off,P.r(t)),g=el("g",{class:"st-ev",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},P.evs);
+  el("circle",{class:"halo2",r:rad+5},g);el("circle",{class:"b",r:rad,fill},g);el("text",{},g).textContent=label;el("circle",{r:rad+8,fill:"transparent"},g);return g}
+function band(P,pl,t1,t2,col,off=0,w=8){
+  const [x1,y1]=P.xy(ANG[pl]+off,P.r(t1)),[x2,y2]=P.xy(ANG[pl]+off,P.r(t2));
+  return el("line",{x1:x1.toFixed(1),y1:y1.toFixed(1),x2:x2.toFixed(1),y2:y2.toFixed(1),stroke:col,"stroke-width":w,"stroke-linecap":"round",opacity:.5},P.under)}
+
+/* ===== machines: two copies of a queue, and the update that may be late ===== */
+(function(){
+  const A=$("#mcA"),B=$("#mcB"),va=$("b",A),vb=$("b",B),ar=$("#mcArrow"),calls=$("#mcCalls"),vd=$("#mcVerdict"),say=$("#mcSay"),bs=[$("#mcSync"),$("#mcStale"),$("#mcOver")];
+  const C=[{upd:2.5,c1:[1,2],c2:[3,4],c3:[5,6]},{upd:7,c1:[1,2],c2:[3,4],c3:[5,6]},{upd:3.5,c1:[1,4],c2:[2,3],c3:[5,6]}];
+  const EXPECT=["ok","sun","ok"];
+  /* the copies are run by the events' own times; what the dequeue returns comes out of the copy it reached */
+  function simulate(n){
+    const c=C[n],log=[];let a=[],b=[],res=null;
+    const ev=[[c.c1[0],"c1s","Client 1 calls enqueue x at copy A"],[c.c1[1],"c1e","Client 1's call returns"],[c.c2[0],"c2s","Client 2 calls enqueue y at copy B"],[c.c2[1],"c2e","Client 2's call returns"],
+      [c.c3[0],"c3s","Client 3 calls dequeue at copy B"],[c.c3[1],"c3e",""],[c.upd,"upd","The update reaches copy B"]].sort((p,q)=>p[0]-q[0]);
+    for(const [t,k,tx] of ev){
+      if(k==="c1s")a=["x"];else if(k==="c2s")b.push("y");else if(k==="c3s")res=b.shift();else if(k==="upd")b.push("x");
+      log.push({t,k,tx:k==="c3e"?"Client 3's call returns "+res:tx,a:[...a],b:[...b]})}
+    const ops=[{id:"x",obj:"q",p:1,i:0,kind:"enq",item:"x",s:c.c1[0],e:c.c1[1]},{id:"y",obj:"q",p:2,i:0,kind:"enq",item:"y",s:c.c2[0],e:c.c2[1]},{id:"d",obj:"q",p:3,i:0,kind:"deq",ret:res,s:c.c3[0],e:c.c3[1]}];
+    return {log,ops,res,v:verdict(ops)}}
+  C.forEach((_,n)=>{if(simulate(n).v!==EXPECT[n])throw new Error("the copies' runs do not match the rule")});
+  const txt=q=>q.length?q.join(", "):"empty";
+  async function run(n){
+    bs.forEach(b=>b.disabled=true);calls.innerHTML=vd.innerHTML="";va.textContent=vb.textContent="empty";ar.textContent="";
+    const S=simulate(n);say.textContent="The run begins.";
+    for(const L of S.log){
+      va.textContent=txt(L.a);vb.textContent=txt(L.b);
+      if(L.k==="c1s")ar.textContent="update →";if(L.k==="upd")ar.textContent="";
+      A.classList.toggle("on",L.k==="c1s"||L.k==="c1e");B.classList.toggle("on",L.k!=="c1s"&&L.k!=="c1e");
+      calls.insertAdjacentHTML("beforeend",`<div class="e">${L.tx}</div>`);await sleep(650)}
+    A.classList.remove("on");B.classList.remove("on");
+    const lab=o=>o.kind==="enq"?"enqueue "+o.item:"dequeue → "+o.ret;
+    if(S.v==="ok"){const q=lin(S.ops,true).seq;vd.innerHTML=`<div class="e good"><b>Yes.</b> One queue could give this, taking the calls in this sequence:</div><div class="seqline">${q.map(o=>`<span class="chip">${lab(o)}</span>`).join(" ")}</div>`;
+      say.innerHTML=n===2?`<span class="ok">Allowed.</span> The two enqueues overlapped, so either could go first, and y coming out first is fine.`:`<span class="ok">Allowed.</span> The update arrived in time, and the dequeue returns x.`}
+    else{vd.innerHTML=`<div class="e bad"><b>No.</b> The enqueue of x returned before the enqueue of y began, so a single queue would return x first. Here the dequeue returned ${S.res}.</div>`;
+      say.innerHTML=`<span class="bad">Not allowed.</span> Client 1 was told its call was done. Client 2 then wrote at a copy that had not heard, and the queue gave the later write first.`}
+    bs.forEach(b=>b.disabled=false)}
+  bs.forEach((b,n)=>b.onclick=()=>run(n));
+})();
+
+/* ===== Arche, seen from above: the same picture as every book on the ring road ===== */
+function Isle(svg){
+  const cx=235,cy=235,R=165,A={1:-90,2:30,3:150}; svg.innerHTML=""; svg.setAttribute("viewBox","0 0 470 470");
+  el("circle",{cx,cy,r:215,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
+  el("circle",{cx,cy,r:86,fill:"#d9cfb4",stroke:"#6b5a48","stroke-width":2.5,"stroke-dasharray":"2 6"},svg);
+  el("text",{x:cx,y:cy-8,class:"lab"},svg).textContent="Mount Phyle";
+  el("circle",{cx,cy,r:R,fill:"none",stroke:"#b5602c","stroke-width":3,"stroke-dasharray":"3 8"},svg);
+  const under=el("g",{},svg),sites=el("g",{},svg),over=el("g",{},svg);
+  const I={svg,cx,cy,R,A,under,over,house:{},
+    at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
+    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:13,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
+    put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
+    /* u of the way along the direct stretch from house a to house b; each direction keeps to its own lane */
+    road(g,a,b,u){const d=((A[b]-A[a]+540)%360)-180;I.put(g,...I.at(A[a]+d*u,R+(d>0?9:-9)))}
+  };
+  for(const h of [1,2,3]){const [x,y]=I.at(A[h]),g=el("g",{class:"site"},sites);I.put(g,x,y);el("rect",{x:-25,y:-17,width:50,height:34,rx:5,fill:HC[h]},g);el("text",{},g).textContent="H"+h;I.house[h]={x,y,g}}
+  return I;
+}
+
+/* ===== scroll: the goatherd's morning, with tallies worked out by the rule ===== */
+(function(){
+  const I=Isle($("#goatsvg")),side=$("#goatside"),S=Tally({1:2,2:0,3:0}),st=[];
+  const orders={1:null,2:null},board=[];
+  const snap=()=>st.push({T:{...S.T},o:{...orders},board:board.map(b=>({...b}))});
+  snap();                                                         // 0 the morning
+  const n1=S.send(1);orders[1]=n1;snap();                         // 1 House 1 sends its order, its third entry
+  S.recv(3,n1);board.push({h:1,n:n1});const n2=S.send(3);snap();  // 2 House 3 enters it and sends word back
+  S.recv(1,n2);snap();                                            // 3 the confirmation arrives
+  snap();                                                         // 4 the goatherd: no slip, no change
+  const n3=S.send(2);orders[2]=n3;snap();                         // 5 House 2 orders at noon
+  S.recv(3,n3);board.push({h:2,n:n3});snap();                     // 6 House 3 enters it
+  $("#gt1").textContent=n1;$("#gt2").textContent=n2;$("#gt3").textContent=n3;
+  if(!(n3<n1))throw new Error("House 2's order should carry the lower tally");
+  const first=[...board].sort((a,b)=>a.n-b.n||a.h-b.h)[0].h;
+  const toks=[[1,3,n1,{1:.35,2:.88}],[3,1,n2,{2:.2,3:.88}],[2,3,n3,{5:.35,6:.88}]].map(([a,b,n,plan])=>({a,b,plan,g:I.token(HC[a],n),u:.1,run:0,end:Math.max(...Object.keys(plan))}));
+  const gt=I.token("#fffaf0","G"),H1=I.house[1],H2=I.house[2];
+  const over=u=>{const v=1-u;I.put(gt,v*v*H1.x+2*u*v*I.cx+u*u*H2.x,v*v*H1.y+2*u*v*I.cy+u*u*H2.y)};let gr=0;
+  function card(h,s){const X=st[s];let body;
+    if(h===3)body=X.board.length?X.board.map(b=>chip(`House ${b.h}'s order · ${b.n}`,b.h)).join("")+(s===6?`<br><b>serves House ${first} first</b>`:""):"board empty";
+    else body=X.o[h]!=null?`order sent, tally ${X.o[h]}`:h===1?"two entries so far":"no entries, no slips";
+    return `<div class="hc${s===6&&h===first?" in":""}"><h5>House ${h}<span>tally ${X.T[h]}</span></h5><div class="chk">${body}</div></div>`}
+  scrolly($("#goat"),s=>{
+    side.innerHTML=[1,2,3].map(h=>card(h,s)).join("");
+    toks.forEach(k=>{const u=k.plan[s],id=++k.run;
+      if(u==null){k.g.setAttribute("opacity",0);k.u=s>k.end?.9:.1;I.road(k.g,k.a,k.b,k.u);return}
+      k.g.setAttribute("opacity",1);const u0=k.u;tween(800,e=>{if(k.run!==id)return;k.u=u0+(u-u0)*e;I.road(k.g,k.a,k.b,k.u)})});
+    const id=++gr;if(s===4){over(.12);gt.setAttribute("opacity",1);tween(1500,e=>{if(gr===id)over(.12+.76*e)})}else gt.setAttribute("opacity",0);
+  });
+})();
+
+/* ===== before, or overlap: choose two orders ===== */
+(function(){
+  const svg=$("#spansvg"),say=$("#spansay");
+  const P=Polar(svg,{vb:"0 0 640 470",cx:320,cy:290,r0:44,step:22,rings:10,tEnd:10.4,note:[14,24],nodes:NODES});
+  const O=[{k:"A",pl:1,s:1.6,e:4.2,name:"House 1's order"},{k:"B",pl:2,s:3.0,e:5.4,name:"House 2's first order"},{k:"C",pl:2,s:7.0,e:9.4,name:"House 2's second order"}];
+  O.forEach(o=>{band(P,o.pl,o.s,o.e,HC[o.pl]);mark(P,o.pl,o.e,HC[o.pl],"",0,6);o.g=mark(P,o.pl,o.s,HC[o.pl],o.k)});
+  let sel=[];
+  O.forEach(o=>button(o.g,o.name,()=>{if(sel.length===2||sel.includes(o))sel=[];sel.push(o);O.forEach(x=>x.g.classList.toggle("sel",sel.includes(x)));
+    if(sel.length<2){say.innerHTML=`<b>${o.name}.</b> Now choose a second order.`;return}
+    let [a,b]=sel;if(b.e<a.s)[a,b]=[b,a];
+    say.innerHTML=a.e<b.s?`<b>${a.name}</b> was over before <b>${b.name}</b> began, so it came <span class="ok">before</span>.`
+      :`<b>${a.name}</b> and <b>${b.name}</b> <span class="bad">overlap</span>: neither was over before the other began, so neither came first.`}));
+})();
+
+/* ===== four mornings, put to the rule by the checker ===== */
+(function(){
+  const svg=$("#fmsvg"),say=$("#fmsay"),vd=$("#fmverd"),nm=$("#fmname"),bs=$$("button[data-m]");
+  const E=(id,h,s,e)=>({id,obj:"b",p:id,i:0,kind:"enq",item:h,h,pl:h,s,e,off:0});
+  const D=(id,h,s,e,off=0)=>({id,obj:"b",p:id,i:0,kind:"deq",ret:h,h,pl:3,s,e,off});
+  const M=[
+    {n:"Two orders sent at the same time",v:"ok",ops:[E("a",1,1.6,4.0),E("b",2,2.4,4.8),D("c",2,6,7),D("d",1,7.5,8.5)],t:"Neither order is confirmed before the other is sent, and a loader serves House 2 first. The orders overlap, and the keeper may have entered House 2's first."},
+    {n:"One order after the other",v:"sun",ops:[E("a",1,1.6,3.4),E("b",2,4.4,6.2),D("c",2,7,8),D("d",1,8.5,9.5)],t:"House 1's order is confirmed before House 2's is sent, and House 2 is served first. That is the goatherd's morning."},
+    {n:"Served before the confirmation arrives",v:"ok",ops:[E("a",1,1.6,6.0),D("c",1,3.4,4.6)],t:"House 1's order is entered, and a loader serves it while word of the entry is still on the road. The order's moment came at its entry, and the house simply has not heard yet."},
+    {n:"One order served twice",v:"keeper",ops:[E("b",2,1.6,3.4),D("c",2,4.4,5.4,-5),D("d",2,4.8,6.0,5)],t:"Two loaders each take House 2's single order and load grain for it."}];
+  M.forEach(m=>{if(verdict(m.ops)!==m.v)throw new Error("a morning does not match the rule: "+m.n)});
+  function show(n){const m=M[n],ops=m.ops;bs.forEach((b,i)=>{b.classList.toggle("on",i===n);b.classList.toggle("alt",i!==n)});nm.textContent=m.n;
+    const P=Polar(svg,{vb:"0 0 640 470",cx:320,cy:290,r0:44,step:22,rings:10,tEnd:10.4,note:[14,24],nodes:NODES});
+    ops.forEach(o=>{const col=o.kind==="enq"?HC[o.h]:"#8a7a62";band(P,o.pl,o.s,o.e,col,o.off);
+      if(o.kind==="enq"){mark(P,o.pl,o.e,col,"",o.off,6);mark(P,o.pl,o.s,col,o.h,o.off)}
+      else{mark(P,o.pl,o.s,col,"",o.off,6);mark(P,o.pl,o.e,HC[o.h],o.h,o.off)}});
+    const v=verdict(ops);say.textContent=m.t;
+    const lab=o=>chip(o.kind==="enq"?`enters House ${o.h}'s order`:`serves House ${o.h}'s order`,o.h);
+    vd.innerHTML=v==="ok"?`<p class="say"><span class="ok">Allowed.</span> A single keeper could have produced it, in this sequence:</p><div class="seqline">${lin(ops,true).seq.map(lab).join(" ")}</div>`
+      :v==="sun"?`<p class="say"><span class="bad">Forbidden.</span> Whatever sequence is tried, an order that was over before another began is served after it. That breaks the third demand.</p>`
+      :`<p class="say"><span class="bad">Forbidden.</span> No single keeper serves one order twice, however the times fall. That breaks the first demand.</p>`}
+  bs.forEach((b,i)=>b.onclick=()=>show(i));
+})();
+
+/* ===== two kinds of first: tallies, slips and spans, worked out ===== */
+(function(){
+  const svg=$("#fksvg"),tab=$("#fktab"),say=$("#fksay"),nm=$("#fkname"),bs=$$("button[data-k]");
+  const base=[{id:"a1",h:1,t:1.0,k:"loc"},{id:"a2",h:1,t:2.0,k:"loc"},{id:"o1",h:1,t:3.0,k:"send"}];
+  const K=[{n:"The goatherd's morning",ev:[...base,{id:"o2",h:2,t:7.0,k:"send"}],sp:{o1:[3.0,5.4],o2:[7.0,9.0]}},
+           {n:"A slip joins the orders",ev:[...base,{id:"s1",h:1,t:4.0,k:"send"},{id:"r1",h:2,t:5.6,k:"recv",from:"s1"},{id:"o2",h:2,t:6.4,k:"send"}],sp:{o1:[3.0,8.0],o2:[6.4,9.0]}}];
+  function work(k){const T=Tally({1:0,2:0,3:0}),tal={};[...k.ev].sort((a,b)=>a.t-b.t).forEach(e=>{tal[e.id]=e.k==="loc"?T.local(e.h):e.k==="send"?T.send(e.h):T.recv(e.h,tal[e.from])});return tal}
+  const facts=k=>{const tal=work(k),ch=chained(k.ev,"o1","o2"),n1=tal.o1,n2=tal.o2,sunBefore=k.sp.o1[1]<k.sp.o2[0];return {tal,ch,n1,n2,sunBefore,tFirst:(n1<n2||(n1===n2))?1:2}};
+  /* the book's two mornings, checked against what they say */
+  {const f0=facts(K[0]),f1=facts(K[1]);
+   if(f0.ch||f0.tFirst!==2||!f0.sunBefore||!f1.ch||f1.tFirst!==1||f1.sunBefore)throw new Error("the two mornings do not behave as the book says")}
+  function show(i){const k=K[i],f=facts(k);bs.forEach((b,j)=>{b.classList.toggle("on",j===i);b.classList.toggle("alt",j!==i)});nm.textContent=k.n;
+    const P=Polar(svg,{vb:"0 0 640 470",cx:320,cy:290,r0:44,step:22,rings:10,tEnd:10.4,note:[14,24],nodes:NODES});
+    [["o1",1],["o2",2]].forEach(([id,h])=>band(P,h,k.sp[id][0],k.sp[id][1],HC[h]));
+    k.ev.forEach(e=>{if(e.id==="o1"||e.id==="o2")mark(P,e.h,e.t,HC[e.h],f.tal[e.id]);else mark(P,e.h,e.t,HC[e.h],"",0,6)});
+    k.ev.filter(e=>e.from).forEach(e=>{const s=k.ev.find(x=>x.id===e.from);P.slip(s.h,s.t,e.h,e.t)});
+    [[1,k.sp.o1[1]],[2,k.sp.o2[1]]].forEach(([h,t])=>mark(P,h,t,HC[h],"",0,6));
+    tab.innerHTML=`<tr><td>Does a chain of slips join the orders?</td><td>${f.ch?"yes":"no"}</td></tr>
+      <tr><td>Tallies: House 1's order ${f.n1}, House 2's ${f.n2}</td><td>House ${f.tFirst} first${f.ch?"":" (arbitrary)"}</td></tr>
+      <tr><td>The sun</td><td>${f.sunBefore?"House 1 first":"overlap"}</td></tr>
+      <tr><td>May the rule serve House 2 first?</td><td>${f.sunBefore?"no":"yes"}</td></tr>`;
+    say.innerHTML=!f.ch&&f.sunBefore?`No slip joins the orders, so the tallies may put either first, and here they put House 2 first. The sun puts House 1 first, because its order was over before House 2's began. <span class="bad">The two answers differ.</span>`
+      :`A chain of slips joins the orders, so the tallies put House 1 first. But House 1's order was not over when House 2's began, so for the sun they overlap, and the rule would let House 2 go first. <span class="bad">The two answers differ.</span>`}
+  bs.forEach((b,i)=>b.onclick=()=>show(i));
+})();
+
+/* ===== grain and oil: each board alone, and both together ===== */
+(function(){
+  const tab=$("#loctab"),say=$("#locsay"),nm=$("#locname"),b1=$("#locLoose"),b2=$("#locSun");
+  const o=(id,obj,p,i,kind,x,s,e)=>({id,obj,p,i,kind,item:kind==="enq"?x:undefined,ret:kind==="deq"?x:undefined,s,e});
+  const go=[o("G1","g",1,0,"enq","G1",1,2),o("O1","o",1,1,"enq","O1",3,4),o("O2","o",2,0,"enq","O2",4.5,5.5),o("G2","g",2,1,"enq","G2",6,7),
+    o("do1","o",3,0,"deq","O1",8,9),o("do2","o",3,1,"deq","O2",9.5,10.5),o("dg1","g",4,0,"deq","G2",8,9),o("dg2","g",4,1,"deq","G1",9.5,10.5)];
+  const NAME={G1:"House 1's grain",O1:"House 1's oil",O2:"House 2's oil",G2:"House 2's grain"};
+  const on=b=>go.filter(x=>x.obj===b);
+  const R=rt=>({g:lin(on("g"),rt).ok,o:lin(on("o"),rt).ok,all:lin(go,rt).ok});
+  {const L=R(false),S=R(true);if(!(L.g&&L.o&&!L.all&&!S.g&&S.o&&!S.all))throw new Error("grain and oil do not behave as the book says")}
+  /* the loop: each house's own business in order, and each board's serving order, as must-go-before arrows */
+  function loop(){const edge={};const add=(a,b)=>(edge[a]=edge[a]||[]).push(b);
+    go.filter(x=>x.kind==="enq").forEach(a=>go.filter(x=>x.kind==="enq"&&x.p===a.p&&x.i===a.i+1).forEach(b=>add(a.id,b.id)));
+    for(const ob of ["g","o"]){const r=on(ob).filter(x=>x.kind==="deq").sort((a,b)=>a.s-b.s).map(x=>x.ret);for(let i=0;i+1<r.length;i++)add(r[i],r[i+1])}
+    for(const start of ["G1","O1","O2","G2"]){const path=[],seen=new Set();
+      const f=x=>{if(x===start&&path.length)return true;if(seen.has(x))return false;seen.add(x);path.push(x);for(const y of edge[x]||[])if(f(y))return true;path.pop();return false};
+      if(f(start)){path.push(start);return path.map(x=>NAME[x]).join(" → ")}}
+    return null}
+  const cell=ok=>ok?'<span class="ok">passes</span>':'<span class="bad">fails</span>';
+  function show(rt){b1.classList.toggle("on",!rt);b1.classList.toggle("alt",rt);b2.classList.toggle("on",rt);b2.classList.toggle("alt",!rt);
+    nm.textContent=rt?"the rule of the board":"the looser rule";const r=R(rt);
+    tab.innerHTML=`<tr><td>The grain board, by itself</td><td>${cell(r.g)}</td></tr><tr><td>The oil board, by itself</td><td>${cell(r.o)}</td></tr><tr><td>Both together</td><td>${cell(r.all)}</td></tr>`;
+    say.innerHTML=!rt?`Each board can be explained alone, and together they cannot. With each house's own business kept in order, they run ${loop()}: a loop. Without the sun, the boards cannot be judged apart.`
+      :`The grain board already fails by itself: House 1's grain was finished before House 2's began, yet House 2's was served first. Judged board by board, the fault shows where it is, and no loop is needed to find it.`}
+  b1.onclick=()=>show(false);b2.onclick=()=>show(true);
+})();
+
+/* ===== nobody made to wait ===== */
+(function(){
+  const log=$("#wtlog"),say=$("#wtsay"),nm=$("#wtname"),bs=$$("button[data-w]");
+  const enq=(id,item,s,e)=>({id,obj:"q",p:id,i:0,kind:"enq",item,s,e,h:item});
+  const deq=(id,ret,s,e)=>({id,obj:"q",p:id,i:0,kind:"deq",ret,s,e,h:ret});
+  const lab=o=>chip(o.kind==="enq"?`enters House ${o.h}'s order`:`serves House ${o.h}'s order`,o.h);
+  const cases=[
+    ()=>{const done=[enq("a",1,1,2),deq("c",1,2.5,3.5)],seq=lin(done,true).seq,b=enq("b",2,3,4);
+      const ext=seq.concat(b);if(!validSeq(ext,true))throw new Error("the end of the sequence is not allowed");
+      return {name:"a waiting order",html:`<div class="e">So far: House 1's order is entered and served. House 2's order has been sent, and no confirmation has come.</div><div class="e good">A sequence that shows the business so far keeps the rule:<div class="seqline">${seq.map(lab).join(" ")}</div></div><div class="e good">Put House 2's order at the end, and confirm it now:<div class="seqline">${ext.map(lab).join(" ")}</div></div>`,
+        say:`<span class="ok">Nothing earlier changes, and nothing began after it finished.</span> The sequence still keeps the rule, so the order can be entered now.`}},
+    ()=>{const done=[enq("a",1,1,2),deq("c",1,3,4)],seq=lin(done,true).seq,left=[];seq.forEach(o=>{if(o.kind==="enq")left.push(o.item);else left.shift()});
+      return {name:"an empty board",html:`<div class="e">House 1's order was entered and served, so the board is empty.</div><div class="e bad">A loader comes and asks for the oldest order. Orders the board holds: ${left.length}. Answers it could give: ${left.length?left[0]:"none"}.</div>`,
+        say:`<span class="bad">There is nothing to answer with.</span> A single keeper would make the loader wait until an order comes. That wait is asked for, not forced: <i>serve the oldest order</i> has no answer while there are no orders.`}},
+    ()=>{/* House 1 looks at the oil board and, if empty, orders grain; House 2 looks at the grain board and, if empty, orders oil. Both look and find empty. */
+      const groups={1:{look:"o",put:"g"},2:{look:"g",put:"o"}};let fits=0;
+      for(const order of [[1,2],[2,1]]){const board={g:0,o:0};let ok=true;for(const h of order){const G=groups[h];if(board[G.look]!==0)ok=false;board[G.put]++}if(ok)fits++}
+      if(fits!==0)throw new Error("two groups should not both fit");
+      return {name:"two things as one",html:`<div class="e">House 1 looks at the oil board and, if it is empty, orders grain. House 2 looks at the grain board and, if it is empty, orders oil. Each does both as one thing, with nothing between.</div><div class="e bad">Both find their board empty. Tried with House 1's group first: House 2's look then finds the grain board holding an order. Tried with House 2's first: House 1's look finds the oil board holding one. Sequences that fit: ${fits}.</div>`,
+        say:`<span class="bad">One of the two has to be called off.</span> Promises about such groups can force a house to undo its business. The rule of the board, whose business is always single, never does.`}}];
+  bs.forEach((b,i)=>b.onclick=()=>{bs.forEach((x,j)=>{x.classList.toggle("on",j===i);x.classList.toggle("alt",j!==i)});const c=cases[i]();nm.textContent=c.name;log.innerHTML=c.html;say.innerHTML=c.say});
+})();
+
+/* ===== scroll: the race at the busy board ===== */
+(function(){
+  const svg=$("#boardsvg"),side=$("#boardside");
+  const common=["A.take","B.take","B.put"];
+  const plan=[[],["A.take"],["A.take","B.take"],common,common,[...common,"L.peg","L.look","L.look"],["A.take","B.take","B.put","A.put","L.peg","L.look"]];
+  const sx=i=>30+(i-1)*80;
+  const states=plan.map(p=>{const b=Board();aStep(...p).forEach(([w,a])=>b.do(w,a));return b});
+  const f5=states[5],f6=states[6];
+  if(f5.L.took!=="B"||f6.L.took!=="A"||f5.L.from!==2||f6.L.from!==1)throw new Error("the race does not run as the book says");
+  const col={A:HC[1],B:HC[2]},hs={A:1,B:2};
+  function draw(b){svg.innerHTML="";
+    for(let i=1;i<=4;i++){el("rect",{x:sx(i),y:110,width:70,height:64,rx:4,fill:"#fffaf0",stroke:"#1c1512","stroke-width":3},svg);
+      el("text",{x:sx(i)+35,y:196,"text-anchor":"middle","font-size":15},svg).textContent=i;
+      const w=b.slot[i];if(w){el("rect",{x:sx(i)+12,y:124,width:46,height:36,rx:4,fill:col[w],stroke:"#1c1512","stroke-width":2.5},svg);el("text",{x:sx(i)+35,y:149,"text-anchor":"middle","font-size":20},svg).textContent=hs[w]}}
+    if(b.peg<=4){const x=sx(b.peg)+35;el("path",{d:`M${x-12},84 L${x+12},84 L${x},104 Z`,fill:"#bf4a26",stroke:"#1c1512","stroke-width":2},svg);el("text",{x:x,y:76,"text-anchor":"middle","font-size":15,fill:"#bf4a26"},svg).textContent="peg"}
+    for(const w of ["A","B"])if(b[w].num&&!b[w].put&&b[w].num<=4){const x=sx(b[w].num)+35;el("rect",{x:x-18,y:22,width:36,height:28,rx:4,fill:col[w],"fill-opacity":.45,stroke:"#1c1512","stroke-width":2,"stroke-dasharray":"4 3"},svg);el("text",{x:x,y:43,"text-anchor":"middle","font-size":17},svg).textContent=hs[w]}
+    if(b.L.at&&!b.L.took){const x=sx(b.L.at)+35;el("path",{d:`M${x-10},222 L${x+10},222 L${x},206 Z`,fill:"#136f9e",stroke:"#1c1512","stroke-width":2},svg);el("text",{x:x,y:238,"text-anchor":"middle","font-size":14},svg).textContent="loader"}
+    if(b.L.took){const x=sx(b.L.from)+35;el("path",{d:`M${x-10},222 L${x+10},222 L${x},206 Z`,fill:"#3f7a2a",stroke:"#1c1512","stroke-width":2},svg);el("text",{x:x,y:238,"text-anchor":"middle","font-size":14},svg).textContent="served"}}
+  function cards(b){
+    const clerk=(w)=>{const c=b[w];return c.put?`tablet in slot ${c.num}`:c.num?`has number ${c.num}, tablet not yet in`:"not begun"};
+    const ld=b.L.took?`took House ${hs[b.L.took]}'s tablet from slot ${b.L.from}`:b.L.peg?`read the peg: ${b.L.peg}; at slot ${b.L.at}`:"not at the board";
+    return [["Clerk, House 1's order",clerk("A"),b.A.put],["Clerk, House 2's order",clerk("B"),b.B.put],["Loader",ld,!!b.L.took]].map(([h,t,d])=>`<div class="hc${d?" in":""}"><h5>${h}</h5><div class="chk">${t}</div></div>`).join("")}
+  scrolly($("#board"),s=>{draw(states[s]);side.innerHTML=cards(states[s])});
+})();
+
+/* ===== what the board could mean ===== */
+(function(){
+  const sl=$("#mnslots"),sq=$("#mnseqs"),say=$("#mnsay"),nm=$("#mnname"),bs=$$("button[data-n]"),ld=$("#mnload");
+  /* the order each clerk's movements fall in: a number taken, a tablet put in */
+  const runs=[{n:"the two clerks race",tabs:[{h:1,take:1,put:4,slot:1},{h:2,take:2,put:3,slot:2}]},
+              {n:"one clerk done first",tabs:[{h:2,take:1,put:2,slot:1},{h:1,take:3,put:4,slot:2}]}];
+  let cur=null,rest=null,slots=null;
+  const seqs=tabs=>meanings(tabs);
+  /* the business could have produced a sequence if it respects what finished before what began */
+  const honest=(tabs,s)=>validSeq(s.map(t=>({kind:"enq",obj:"q",item:t.h,s:t.take,e:t.put})),true);
+  runs.forEach(r=>{const all=seqs(r.tabs),ok=all.every(s=>honest(r.tabs,s));
+    let n=0;(function p(cur,rem){if(!rem.length){if(honest(r.tabs,cur))n++;return}rem.forEach((x,i)=>p(cur.concat(x),rem.filter((_,j)=>j!==i)))})([],r.tabs);
+    if(!ok||n!==all.length)throw new Error("the board's meanings and the business's differ")});
+  const paint=()=>{
+    sl.innerHTML=[1,2,3,4].map(i=>{const t=slots.find(x=>x.slot===i);return `<div class="e" style="border-left-color:${t?HC[t.h]:"#b9a77e"}">slot ${i}: ${t?"House "+t.h+"'s order":"empty"}</div>`}).join("");
+    sq.innerHTML=rest.length?rest.map(s=>`<div class="e">${s.length?s.map(t=>`<span class="chip"><i style="background:${HC[t.h]}"></i>${t.h}</span>`).join(" then "):"nothing waiting"}</div>`).join(""):"<div class='e'>nothing waiting</div>"};
+  function pick(i){const r=runs[i];cur=r;slots=r.tabs.map(t=>({...t}));rest=seqs(r.tabs);
+    bs.forEach((b,j)=>{b.classList.toggle("on",j===i);b.classList.toggle("alt",j!==i)});nm.textContent=r.n;ld.disabled=false;paint();
+    say.innerHTML=i===0?`Both clerks took their numbers before either tablet went in, so nothing forces one ahead of the other. The board could stand for either sequence. <span class="ok">Each is one the business could have produced:</span> the two orders overlapped.`
+      :`House 2's tablet went in before the other clerk took a number, so it must come first. The board can stand for one sequence only. <span class="ok">It is one the business could have produced.</span>`}
+  bs.forEach((b,i)=>b.onclick=()=>pick(i));
+  ld.onclick=()=>{if(!slots.length)return;slots.sort((a,b)=>a.slot-b.slot);const t=slots[0],before=rest.length,first=rest.filter(s=>s[0].h===t.h).length;
+    slots.shift();rest=[...new Set(rest.filter(s=>s[0].h===t.h).map(s=>s.slice(1)))].map(x=>x);
+    paint();ld.disabled=!slots.length;
+    say.innerHTML=`The loader goes up from slot 1 and takes the first tablet it finds: House ${t.h}'s order from slot ${t.slot}. <span class="ok">It could be first:</span> it leads ${first} of the ${before} sequence${before>1?"s":""} the board could stand for. The waiting orders are left standing for ${rest.length===1?"one sequence":rest.length+" sequences"}.`}
+})();
+
+/* ===== who is who ===== */
+mapPairs($("#map"),[["A trading house; a loader; a clerk","A process: it waits for each answer before its next call"],["The board; placed first, filled first","A shared FIFO queue"],["An order; a serving","Enq; Deq"],["Sending an order; its confirmation","An invocation and its response"],["Before; overlap","Real-time order; concurrent calls"],["A single keeper with a single board","The object's sequential specification"],["The rule of the board","Linearizability"],["A moment inside the span","The linearization point"],["The tallies' first","Happened-before, extended by process number"],["The looser rule","Sequential consistency"],["One Board at a Time","Locality: check each object alone"],["No Order Waits on Another","The nonblocking property"],["Several things done as one","A transaction; serializability"],["The busy board: slots and a peg","A lock-free queue on an array and a counter"],["What the board could mean","An abstraction function to a set of values"],["A rule that only forbids","A safety property, with no promise of progress"]]);
+})();
+</script>
 </body>
 </html>
