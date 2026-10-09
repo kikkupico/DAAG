@@ -1,0 +1,468 @@
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <span class="now" id="now"></span>
+  <i id="prog"></i>
+</div>
+
+<!-- ============================================================ cover -->
+<header class="spread dark" id="cover" data-name="Cover">
+  <div class="cut" style="left:-30px;bottom:-10px;width:90px;opacity:.3" data-depth="-26"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#5f6e28"/></svg></div>
+  <div class="cut" style="right:-20px;bottom:-14px;width:80px;opacity:.3" data-depth="-40"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#7c8f3a"/></svg></div>
+  <div class="wrap grid">
+    <div>
+      <div class="kicker">After Lamport, Shostak and Pease, 1982</div>
+      <h1>Agreeing Among Liars<span>what a liar costs, and what a seal changes</span></h1>
+      <p class="hook">Can four men agree, when one of them may lie, telling one man one thing and another something else?</p>
+      <p class="hook" style="color:var(--blood);font-style:normal;font-family:var(--sans);font-size:1.1rem">On the crown of Mount Phyle, they can, if more than two thirds are honest. Under seal, however many lie.</p>
+      <div class="scrollcue"><b>↓</b> Scroll. Things unfold.</div>
+    </div>
+    <div class="pop" data-auto>
+      <div class="leaf">
+        <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" alt="At dusk a bandit in a purple cloak stands alone inside a small ring of huge rough stones, three strongboxes and a ladder drawn up against the wall behind them, looking up at the darkening sky"></div>
+        <div class="fold-shadow"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================ machines -->
+<section class="spread light" id="machines" data-name="In machine terms">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap two" style="gap:clamp(24px,5vw,60px);align-items:center">
+    <div>
+      <div class="kicker">First, in machine terms</div>
+      <h2>Many computers, some of them lying</h2>
+      <p class="lede">A group of computers must all follow the same order, though any of them may be faulty in any way at all.</p>
+      <ul class="terms">
+        <li><b>A faulty machine may do anything.</b> It may tell one peer one thing and another peer something else, send nothing, or act together with another faulty machine.</li>
+        <li><b>With plain messages</b>, agreement is possible only if more than two thirds of the machines are honest: it takes 3f + 1 machines to tolerate f traitors.</li>
+        <li><b>With signed messages</b> that cannot be forged, it is possible whatever the number of traitors.</li>
+      </ul>
+      <p style="margin-top:1.2rem">Lamport, Shostak and Pease (1982). This edition tells it with four bandits, their rats, and their seal rings.</p>
+    </div>
+    <div class="pop fromright"><div class="leaf">
+      <div class="paper logs">
+        <h4>Two explanations, <em>one pair of messages</em></h4>
+        <div class="trio"><div class="m">C <small>sends the order</small></div><div class="m">B <small>a peer</small></div><div class="m a">A <small>the receiver</small></div></div>
+        <div class="stand" id="mqhold" data-live></div>
+        <p class="note" id="mqnote" data-live>A holds two messages. Which machine is faulty, C or B?</p>
+        <div class="row"><button class="btn" id="mqc">Suppose C is faulty</button><button class="btn alt" id="mqb">Suppose B is faulty</button></div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ============================================================ the crown -->
+<section class="spread dark" id="hall" data-name="The crown of Mount Phyle">
+  <a class="anchor" id="s1"></a>
+  <div class="bleed">
+    <img src="img/crown.jpg" alt="The crown of Mount Phyle from the air: a small ring of rough stones on a rocky summit in mist, with three smaller stone rings out on the slopes among pines" data-parallax>
+    <div class="hall-title"><div class="t">
+      <div class="kicker">The crown of Mount Phyle</div>
+      <h2>Four bandits, out of sight of one another</h2>
+      <p>Bandits hold the crown with their loot: bandit 1, the chief, inside a ring wall with no gate, and bandits 2, 3 and 4 at lookout posts out on the slopes.<sup class="xref"><a href="../../places/the-crown/index.html" title="The Setting: The Crown of Mount Phyle">*</a></sup> They send word only by rat, and have one question to settle.</p>
+    </div></div>
+    <div class="pin pop" style="left:50%;top:42%;"><div class="leaf"><b>Only rats</b>Word goes by rat, from one post to one other. No man can see another.</div></div>
+    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>Some men lie</b>Nobody on the crown dies. But some men do not report what they were told.</div></div>
+    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>Below</b>Four mercenaries camp at the foot. Their trouble is the opposite: none lies, but any may die.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup></div></div>
+  </div>
+  <div class="wrap" style="padding:clamp(2.5rem,6vw,4rem) 20px 0">
+    <p class="hook" style="font-style:italic;font-size:clamp(1.1rem,2.4vw,1.4rem);max-width:30em">Which is the worse trouble to arrange against: a friend who may be lying, or a friend who may be dead? The last spread answers.</p>
+  </div>
+</section>
+
+<!-- ============================================================ the question -->
+<section class="spread light" id="question" data-name="Hold or scatter">
+  <a class="anchor" id="s2"></a>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">One question, two answers</div>
+      <h2>Hold, or scatter</h2>
+      <p class="lede">The bandits must all hold the hill and keep the loot, or all scatter and abandon it. Half holding while half scatter is worse than either.</p>
+      <p>Which answer is better is never at issue, and holding ties no man to a post: each holds from wherever they choose. Nobody dies, and no night is told here. What is described is an arrangement, and nothing comes out of it.</p>
+      <p>Each bandit forms an account of what should be done. The three at the posts have each watched one approach from the slopes. The chief, inside the wall, has seen only sky. The four accounts must reach four heads unaltered, and that is hard, because a liar can send one thing to one man and something else to another.</p>
+      <p>So take the accounts one at a time. One man, the chief for this round, sends an order to the other three, the guards. Two things are wanted of that sending.</p>
+    </div>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The first condition</div><h3>Honest guards obey one order</h3><p>Every honest guard obeys the same order.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The second condition</div><h3>An honest chief is obeyed</h3><p>If the chief is honest, every honest guard obeys the order the chief sent.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The chief is a job</div><h3>Not a rank</h3><p>Bandit 1 sits inside the ring wall, but whoever's account is going round is the chief for that round. Run it four times, once for each man's account, and every honest man holds the same four accounts.</p></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.4rem">If the chief is honest, the second condition gives the first for nothing. If the chief lies, the second says nothing at all, while the first still stands: honest men must end up together even when the man they listened to told them different things. A liar may do anything: send different orders to different men, send nothing, keep a lie up, or agree lies with another liar. Nobody on the hill, and no reader, ever learns who the liars are.</p>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Test the two conditions <em>suppose, then decide</em></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg fig" id="condsvg" role="img" aria-label="The crown from above: bandit 1 inside the ring wall at the centre, and bandits 2, 3 and 4 at three posts on the slopes"></svg>
+        <div>
+          <div class="ctl" id="condctl"></div>
+          <div class="stand" id="condguards"></div>
+          <ul class="checks" data-live><li id="c1"></li><li id="c2"></li></ul>
+        </div>
+      </div>
+      <p class="say" id="condsay"></p>
+    </div></div></div>
+    <p class="hook" style="font-style:italic;font-size:1.15rem;max-width:34em;margin-top:1.6rem">The chief might lie. Then why does each guard not simply ask the others what the chief told them, and compare?</p>
+  </div>
+</section>
+
+<!-- ============================================================ the rats -->
+<section class="spread dark" id="ratsec" data-name="The rats in the wall">
+  <a class="anchor" id="s3"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">How word travels</div>
+        <h2>The rats in the wall</h2>
+        <p class="lede">Each guard can ask the others what the chief told them, because the rats up here are different.</p>
+        <p>The runs are short and direct, over the rocks and through the chinks of the wall, and no rat has ever taken longer than a sandglass takes to run. At dusk, before the posts were manned, the four turned their glasses together at one word, and each turns theirs again the moment it runs out. One running is a round: within it, every man who is going to send, sends.</p>
+        <p>Each man has trained rats to run to each of the others. A man writes a slip, ties it on a cord knotted with their own number to one of them, and lets it go. The wall has no gate, but its stones do not fit close, and a rat finds the chinks.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p06-dusk.jpg" alt="At dusk inside a small ring of huge rough stones open to the sky, three iron-bound strongboxes of loot stand on a low stone shelf against the wall, the last light on its top edge" loading="lazy"></div></div></div>
+    </div>
+    <div class="cards3" style="margin-top:2rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What a rat gives · first</div><h3>It arrives as written</h3><p>A slip sent arrives, and arrives as written.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What a rat gives · second</div><h3>The knots name the sender</h3><p>The knots on its cord name the man who sent it, so no man can be impersonated.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What a rat gives · third</div><h3>Silence can be seen</h3><p>If nothing comes from a post within the round, nothing was sent.</p></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.4rem">The third is the one that costs something. It is bought with the short run and the rounds, exactly what the mercenaries at the foot do not have.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s3" title="The Limits of Agreement: A Tent That Does Not Answer">*</a></sup> Silence is also given a meaning, or a man could block everything by sending nothing: no slip within the round counts as hold. Hold is the default, not the wiser answer, only the definite one.</p>
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center;margin-top:1.4rem">
+      <div class="pop"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/p07-post.jpg" alt="The view from behind a rough dry-stone breastwork at a lookout post, over a steep wooded slope falling to the sea in dusk light; no wall and no other post in sight" loading="lazy"></div></div></div>
+      <div>
+        <p>What none of this gives is any check on content. A plain slip says whatever its writer chose, and a guard reporting what the chief sent may write anything at all.</p>
+      </div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>One round of rats <em>the glass runs out</em></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg fig" id="ratsvg" role="img" aria-label="The crown from above, with rats running between the ring wall and the three posts"></svg>
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">H on a rat is a slip saying hold, S a slip saying scatter. The chief's order is scatter.</p>
+          <div class="stand" id="ratacc" data-live></div>
+        </div>
+      </div>
+      <p class="say" id="ratsay">Choose what happens in the round.</p>
+      <div class="row">
+        <button class="btn" id="rat1">The chief sends to all three</button>
+        <button class="btn alt" id="rat2">Suppose the chief sends nothing to bandit 3</button>
+        <button class="btn alt" id="rat3">Suppose bandit 3 passes on a different word</button>
+      </div>
+    </div></div></div>
+    <p class="hook" style="font-style:italic;font-size:1.15rem;max-width:34em;margin-top:1.6rem">So guards can compare notes, and silence means something. Take the smallest party, a chief and two guards, with one of the three a liar. Is comparing notes enough to save the two honest men?</p>
+  </div>
+</section>
+
+<!-- ============================================================ three cannot -->
+<section class="spread light" id="threesec" data-name="Three cannot agree">
+  <a class="anchor" id="s4"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">The smallest party</div>
+      <h2>Three cannot be brought to agree</h2>
+      <p class="lede">Comparing notes does not save two honest guards against a liar among three, and nothing can.</p>
+      <p>Put one honest guard, bandit 2, in two nights. In the first, the chief is honest and sends hold to both guards. Suppose bandit 3 is the liar, and tells bandit 2 "the chief sent me scatter". The second condition binds bandit 2: the chief is honest, so bandit 2 must hold.</p>
+      <p>In the second night, suppose the chief is the liar, sending hold to bandit 2 and scatter to bandit 3. Bandit 3 is honest, and reports, truthfully, "the chief sent me scatter".</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Two nights <em>seen from bandit 2's post</em></h4>
+      <div class="worlds">
+        <div class="world"><h5>First night</h5><svg class="isle-svg fig" id="worldA" role="img" aria-label="Three men drawn in the round, later moments further out. The chief is honest and sends hold to bandits 2 and 3; bandit 3, supposed liar, tells bandit 2 the chief sent scatter"></svg><p>Suppose the chief is honest and bandit 3 lies.</p><div class="ev" id="evA">bandit 2 holds: nothing yet</div></div>
+        <div class="world"><h5>Second night</h5><svg class="isle-svg fig" id="worldB" role="img" aria-label="Three men drawn in the round, later moments further out. The chief sends hold to bandit 2 and scatter to bandit 3; bandit 3, honest, tells bandit 2 the chief sent scatter"></svg><p>Suppose the chief lies and bandit 3 is honest.</p><div class="ev" id="evB">bandit 2 holds: nothing yet</div></div>
+      </div>
+      <p class="key"><span style="color:#136f9e">&#9632; hold</span> <span style="color:#bf4a26">&#9632; scatter</span> &nbsp; A slip's word is what it says the chief sent.</p>
+      <p class="say" id="worldsay">Press the buttons in turn.</p>
+      <div class="row">
+        <button class="btn" id="wb1">The chief sends its orders</button>
+        <button class="btn alt" id="wb2" disabled>The guards compare notes</button>
+        <button class="btn alt" id="wb3" disabled>What must bandit 2 do?</button>
+        <button class="btn alt" id="wb4" disabled>The same argument, on bandit 3</button>
+        <button class="btn alt" id="wbr">Start again</button>
+      </div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.6rem">What does bandit 2 hold in each night? Exactly the same two slips. Bandit 2 cannot tell the nights apart, so holds in both. But the same argument, run on bandit 3, has them scatter in the second night, and there both guards are honest and have gone two ways.</p>
+    <p style="max-width:40em">That argument is persuasive and not a proof, because reasoning of just this shape has settled things that turned out false. The panel gives it as far as such an argument goes.</p>
+    <details class="proof">
+      <summary>Proof — that three cannot be brought to agree, as far as such an argument goes</summary>
+      <p class="given">The two conditions are the paper's IC1 and IC2, for a commanding general and two lieutenants with oral messages and at most one traitor. A, B and C are three situations defined in the steps. The result is Pease, Shostak and Lamport 1980, whose rigorous proof this is not. <b>Claim.</b> No arrangement of oral messages brings three men, one possibly a liar, to meet both conditions.</p>
+      <ol class="proofsteps">
+        <li>Suppose an arrangement works for three men with one liar: all honest men obey the same
+        order, and an honest chief is obeyed.</li>
+        <li><b>A.</b> Chief honest, sending <em>hold</em> to both guards; the second guard lies,
+        reporting <em>he sent me scatter</em>.</li>
+        <li><b>B.</b> Chief the liar, sending <em>hold</em> to the first guard and <em>scatter</em>
+        to the second; the second guard is honest and reports the same words.</li>
+        <li>The first guard receives the same two things in A and B and nothing else, so he does the
+        same in both. In A the chief is honest, so he must hold; hence he holds in B.</li>
+        <li><b>C</b>, the mirror of A: chief honest, sending <em>scatter</em> to both; the first
+        guard lies. By the same argument the second guard scatters in C, and B looks like C to him,
+        so he scatters in B.</li>
+        <li>In B both guards are honest and have gone two ways, against the first
+        condition.<span class="qed">∎</span></li>
+      </ol>
+    </details>
+    <p class="hook" style="font-style:italic;font-size:1.15rem;max-width:34em;margin-top:1.6rem">Three men cannot bear one liar. How many can? What does a liar cost?</p>
+  </div>
+</section>
+
+<!-- ============================================================ four men to a liar -->
+<section class="spread dark has-scrolly" id="fewsec" data-name="Four men to a liar">
+  <a class="anchor" id="s5"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap" style="margin-bottom:-1rem">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">What a liar costs</div>
+      <h2>Four men to a liar</h2>
+      <p class="lede">More than three men for each liar. One liar wants four men, two want seven, three want ten. The crown has four, so it bears one liar and no more.</p>
+      <p>Suppose some method brought three men or fewer to a liar safely through. Then three real men, one of them a liar, could each play a third of that method's men in their own heads. The method would keep its promise among those parts, and three real men would agree against one liar, which cannot happen.</p>
+      <p>Asking for less does not help. Acting at about the same time can be turned back into acting at exactly the same time, so the one is as hard as the other.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.6rem">
+      <h4>The price of a liar <em>press and read</em></h4>
+      <div class="counts price" data-live>
+        <span><b id="pm">1</b>liars to bear</span>
+        <span><b id="pn">4</b>men with plain slips</span>
+        <span><b id="pr">2</b>rounds of reports</span>
+        <span><b id="ps">3</b>men at least, under seal</span>
+      </div>
+      <p class="say" id="pricesay"></p>
+      <div class="row"><button class="btn" id="pup">One more liar</button><button class="btn alt" id="pdown">One fewer</button></div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.6rem">Above the bound there is a method, the Repeating. It needs one tool, the greater count: any rule that takes the accounts a guard holds and returns one, such that if most of them say the same thing, that is what it returns.</p>
+    <p style="max-width:40em">On this crown, bearing one liar, the Repeating is two rounds. Scroll to watch it run, once with a guard lying and once with the chief.</p>
+  </div>
+  <div class="scrolly" id="rep">
+    <div class="stage"><div class="stage-inner split">
+      <svg class="fig svg-dark" id="repsvg" role="img" aria-label="The chief at B1 and three guards at B2, B3 and B4, drawn in the round, later moments further out, with the slips of the first and second rounds"></svg>
+      <div class="side" id="repside" data-live></div>
+    </div></div>
+    <div class="steps">
+      <div class="step on"><div class="card"><div class="num">1 · Four men</div><h3>A chief and three guards</h3><p>Bandit 1 is the chief for this round, and bandits 2, 3 and 4 are the guards. Each line runs outward, and later moments are further out. Blue slips say hold, red slips say scatter.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · First round</div><h3>The chief sends the order</h3><p>Suppose bandit 3 lies, and the chief is honest. The chief's order is scatter, and goes to each guard.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · Second round</div><h3>Each guard puts it about</h3><p>Each guard repeats to the other two what the chief sent them. Bandits 2 and 4 repeat scatter. Bandit 3 writes hold to both, which a plain slip allows.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · The greater count</div><h3>An honest chief is obeyed</h3><p>Bandit 2 holds scatter from the chief, hold from bandit 3 and scatter from bandit 4, and obeys the greater count: scatter. So does bandit 4. The liar's word was outvoted.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · Another night</div><h3>Suppose the chief lies</h3><p>The chief sends scatter to bandit 2, hold to bandit 3 and scatter to bandit 4. All three guards are honest.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · Second round</div><h3>Each guard repeats faithfully</h3><p>Each guard tells the other two exactly what the chief sent them, and every honest guard now holds the same three accounts.</p></div></div>
+      <div class="step"><div class="card"><div class="num">7 · The greater count</div><h3>All three go the same way</h3><p>Each guard holds scatter twice and hold once, and the greater count is scatter for all. Nobody worked out who lied. The liar was outvoted, which is cheaper.</p></div></div>
+    </div>
+  </div>
+  <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <details class="proof">
+      <summary>Proof — that fewer than four men to a liar cannot be made to work</summary>
+      <p class="given">Let <var>n</var> be the number of men and <var>m</var> the number of liars the method is built to bear. The two conditions are the paper's IC1 and IC2. <b>Claim.</b> No method of oral messages brings <var>n</var> men safely through <var>m</var> liars when <var>n</var> ≤ 3<var>m</var>. A method's men are called its <em>parts</em>; the real men play them.</p>
+      <ol class="proofsteps">
+        <li>Suppose a method brings <var>n</var> men safely through <var>m</var> liars with
+        <var>n</var> ≤ 3<var>m</var>. Call its men <em>parts</em>.</li>
+        <li>Set three real men, one a liar, to play the parts: the real chief plays the parts' chief
+        and at most <var>m</var> − 1 of its guards, and each real guard plays at most <var>m</var>
+        of its guards. Since <var>n</var> ≤ 3<var>m</var>, they divide so.</li>
+        <li>Word between two parts played by one man passes in his head; word between parts played
+        by different men goes by rat, and, as the rats above are assumed to give, arrives as sent and correctly
+        attributed.</li>
+        <li>At most one real man lies, and he plays at most <var>m</var> parts, so at most
+        <var>m</var> parts lie — which the method was assumed to bear. It therefore keeps both
+        conditions among the parts.</li>
+        <li>By the first condition, all the parts played by one honest real man obey one order,
+        which he obeys; by the second, if the real chief is honest then every honest part obeys his
+        order. So the three real men satisfy both conditions against one liar, which, as we saw, cannot be done.<span class="qed">∎</span></li>
+      </ol>
+    </details>
+    <details class="proof">
+      <summary>The Repeating, stated formally</summary>
+      <p class="given">The Repeating bearing <var>m</var> liars is the paper's algorithm OM(<var>m</var>); the greater count is its function <code>majority</code>. <b>What it gives.</b> Bearing <var>m</var> liars, it meets both conditions whenever there are more than 3<var>m</var> men and at most <var>m</var> of them lie.</p>
+      <ol class="proofsteps">
+        <li><b>(1)</b> The chief sends his order to every guard.</li>
+        <li><b>(2)</b> Each guard takes what he received, or <em>hold</em> if nothing
+        came, and — unless <var>m</var> is zero — acts as chief himself in the Repeating bearing
+        <var>m</var> − 1 liars, putting that order about to the other guards.</li>
+        <li><b>(3)</b> Each guard now holds his own account and one from each other
+        guard, and obeys the greater count of them.</li>
+      </ol>
+    </details>
+    <details class="proof">
+      <summary>Proof — that the Repeating meets both conditions above the bound</summary>
+      <p class="given">Let <var>n</var> be the number of men, <var>m</var> the number of liars the Repeating bears, <var>k</var> the number of men who actually lie, and <var>v</var> an order. <b>Claim.</b> The Repeating bearing <var>m</var> liars meets both conditions whenever <var>n</var> &gt; 3<var>m</var> and <var>k</var> ≤ <var>m</var>.</p>
+      <ol class="proofsteps">
+        <li><b>Lemma.</b> Bearing <var>m</var> liars, the method meets the second condition if there
+        are more than 2<var>k</var> + <var>m</var> men and at most <var>k</var> liars. By induction
+        on <var>m</var>: for <var>m</var> = 0 an honest chief's order arrives as sent. Assume it for
+        <var>m</var> − 1.</li>
+        <li>An honest chief sends <var>v</var> to all <var>n</var> − 1 guards. Each honest guard
+        puts <var>v</var> about among <var>n</var> − 1 men bearing <var>m</var> − 1 liars, and
+        <var>n</var> − 1 &gt; 2<var>k</var> + (<var>m</var> − 1), so by the hypothesis every honest
+        guard receives <var>v</var> from every honest guard.</li>
+        <li>Since <var>n</var> − 1 &gt; 2<var>k</var>, most guards are honest, so <var>v</var> is
+        most of what each honest guard holds and the greater count returns it.</li>
+        <li><b>The theorem</b>, by induction on <var>m</var>. If the chief is honest, the lemma with
+        <var>k</var> = <var>m</var> gives the second condition, and the first follows from it.</li>
+        <li>If the chief lies, at most <var>m</var> − 1 guards lie, and there are more than
+        3<var>m</var> − 1 &gt; 3(<var>m</var> − 1) guards, so the hypothesis applies to their
+        repeatings: for each guard, any two honest guards end holding the same account of what he
+        put about.</li>
+        <li>So any two honest guards hold the same accounts in the same places, and the same greater
+        count of them. The first condition holds; the second is vacuous, the chief being a
+        liar.<span class="qed">∎</span></li>
+      </ol>
+    </details>
+    <p class="hook" style="font-style:italic;font-size:1.15rem;max-width:34em;margin-top:1.8rem">Every further liar costs three more men and another round of reports about reports. The trouble was that a plain slip says whatever its writer chose. What if a slip could not be altered?</p>
+  </div>
+</section>
+
+<!-- ============================================================ the seal rings -->
+<section class="spread light" id="sealsec" data-name="The seal rings">
+  <a class="anchor" id="s6"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">A slip that cannot be altered</div>
+      <h2>The seal rings</h2>
+      <p class="lede">Each man on the crown has a signet cut with their own number. A slip sent under seal is written in wax and stamped, and a man passing it on stamps their own beside.</p>
+      <p>So <span class="term">hold : 1 : 2</span> is the chief's order as relayed by bandit 2. What a seal can and cannot do is short.</p>
+    </div>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A seal · first</div><h3>It cannot be counterfeited</h3><p>An honest man's seal cannot be counterfeited, and tampering shows.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A seal · second</div><h3>Anyone can read it</h3><p>Anyone can tell whose seal is whose.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A seal · not assumed</div><h3>A liar's seal, or a refusal</h3><p>Nothing is assumed about a liar's seal: liars may lend each other rings. And a seal cannot compel: a man can refuse to pass a slip on. They simply cannot alter it.</p></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.4rem">Each guard keeps a sheaf of the orders properly received, and a fixed standing rule turns a sheaf into one order, with an empty sheaf giving hold.</p>
+    <p style="max-width:40em">The chief seals an order and sends it to every guard. A guard given a properly sealed order not yet in the sheaf puts it in. If fewer guards' seals stand on it than the party is built to bear liars, the chief's not counted, the guard adds their own seal and sends it to every guard not already named on it. When no further slip can come, each guard obeys the standing rule applied to the sheaf.</p>
+    <p style="max-width:40em">Three men are now enough. If the chief lies, sealing hold to one guard and scatter to the other, each guard passes theirs across, both sheaves hold the same two orders, and the same standing rule sends both the same way. And each guard now holds two orders under the chief's seal, which could not both exist if the chief were honest: the chief has convicted themselves, of lying and of nothing else, and only because the chief was careless enough to seal two orders.</p>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Seal and pass <em>suppose, then run it</em></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg fig" id="sealsvg" role="img" aria-label="Four men drawn in the round, later moments further out, with the sealed slips each round sends"></svg>
+        <div>
+          <div class="ctl" id="sealctl"></div>
+          <div class="stand" id="sealtab" data-live></div>
+          <ul class="checks" data-live><li id="k1"></li><li id="k2"></li></ul>
+        </div>
+      </div>
+      <p class="say" id="sealsay"></p>
+      <p style="font-size:.88rem;color:#6b5a48;margin:10px 0 0"><span style="color:#136f9e">&#9632; hold</span> <span style="color:#bf4a26">&#9632; scatter</span> &nbsp; The standing rule used here is an example: one order in the sheaf gives that order, and anything else gives hold. In this picture a supposed liar guard only withholds. That is one thing a liar may do, not the worst. An honest chief seals scatter.</p>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.6rem">How many liars can be borne? Any number, whatever the size of the party. Only the question gives out: with fewer than two men more than there are liars, too few honest men remain for agreement among them to mean anything. Where plain slips bought each liar with three more men, seals buy each with one more glass.</p>
+    <details class="proof">
+      <summary>The Sealed Repeating, stated formally</summary>
+      <p class="given">The Sealed Repeating bearing <var>m</var> liars is the paper's algorithm SM(<var>m</var>); a seal is its unforgeable signature (assumption A4), and a sheaf is the set <var>V</var><sub>i</sub> held by guard <var>i</var>. The standing rule is its function <code>choice</code>. A slip <span class="term">hold : 1 : 2</span> is the paper's <var>v</var> : 0 : <var>j</var><sub>1</sub>, with the chief's seal first.</p>
+      <ol class="proofsteps">
+        <li><b>(1)</b> The chief seals his order and sends it to every guard.</li>
+        <li><b>(2)</b> A guard given a properly sealed order not yet in his sheaf puts
+        it in; and if fewer than <var>m</var> guards' seals stand on it — the chief's not counted — he
+        adds his own and sends it to every guard not already named on it.</li>
+        <li><b>(3)</b> When no further slip can come, he obeys the standing rule
+        applied to his sheaf.</li>
+      </ol>
+    </details>
+    <details class="proof">
+      <summary>Proof — that the Sealed Repeating works against any number of liars</summary>
+      <p class="given">Let <var>m</var> be the number of liars the method is built to bear, <var>i</var> and <var>j</var> two honest guards, and <var>k</var> the number of guards' seals standing on a slip, the chief's not counted. <b>Claim.</b> Whatever the number of men, if at most <var>m</var> lie, both conditions hold. A sheaf is the set of orders a guard has put in.</p>
+      <ol class="proofsteps">
+        <li><b>Second condition.</b> An honest chief seals one order and sends it to all, and no one
+        can counterfeit his seal, so every honest guard's sheaf holds exactly that order and the
+        standing rule returns it.</li>
+        <li><b>First condition.</b> Take the chief to be a liar. It is enough that if an honest
+        guard <var>i</var> has an order in his sheaf, every honest guard <var>j</var> has it too;
+        equal sheaves give equal answers.</li>
+        <li>If <var>i</var> received it under the chief's seal alone, he sealed it and sent it to
+        every other guard, so <var>j</var> has it.</li>
+        <li>If it reached <var>i</var> carrying <var>k</var> guards' seals and <var>j</var> is among
+        them, <var>j</var> had it already.</li>
+        <li>If <var>j</var> is not among them and <var>k</var> &lt; <var>m</var>, then <var>i</var>
+        seals it and sends it to every guard not named on it, <var>j</var> included.</li>
+        <li>If <var>j</var> is not among them and <var>k</var> = <var>m</var>: the chief is a liar,
+        so at most <var>m</var> − 1 guards lie, so one of the <var>m</var> named on the slip is
+        honest — and he, when he first received the order, sent it to every guard not then named on
+        it, <var>j</var> among them.</li>
+        <li>Nowhere were the men counted. The bound of four men to a liar belongs to unsealed slips, not
+        to lying, and the seals dissolve it.<span class="qed">∎</span></li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ the two halves -->
+<section class="spread dark" id="halvesec" data-name="The two halves">
+  <a class="anchor" id="s7"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">The two ends of the hill</div>
+        <h2>The two halves</h2>
+        <p class="lede">Above, agreement is had in a few rounds: four men bear one liar by plain slip, and under seal any number of liars is borne.</p>
+        <p>Below, where any man may die and no bird has a longest flight, no arrangement whatever guarantees that anybody ever moves.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup> The bandits are no cleverer. They have rounds to bound the runs between them, and the mercenaries do not. Each end is short of exactly one distinction, the same shape of trouble twice over.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on its top, and a few red-roofed houses among the pines on the slopes" loading="lazy"></div></div></div>
+    </div>
+    <div class="cards3" style="margin-top:2rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Below</div><h3>A dead man or a bird in a pine</h3><p>A man with an empty perch cannot tell whether the man in that tent is dead or whether the bird is in a pine. So the man can never safely stop waiting, and nothing is ever concluded.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Above</div><h3>A lying chief or a lying peer</h3><p>A guard holding two accounts of one order that disagree cannot tell whether the chief lied to one of them or the peer is lying to them. So no single man's word can ever be trusted, and nobody ever learns who lied.</p></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.6rem">In both cases what is lost is smaller than it looks. Below, nothing goes wrong: the men are never in disagreement, only never finished. Above, nothing is discovered: the men agree, and are wrong together as readily as right together. The arrangements were not built to tell anybody who failed. They were built so that nobody needs to be told.</p>
+    <p style="max-width:40em">So which trouble is worse? The one without a clock. Lies can be outvoted when silence means something; a death cannot be told from a delay when nothing ever does.</p>
+  </div>
+</section>
+
+<!-- ============================================================ back to machines -->
+<section class="spread light" id="why" data-name="Back to machines">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Back to machines</div>
+      <h2>The crown was a group of machines</h2>
+      <p class="lede">Every bandit is a machine that may lie, and every rat a message. Hover or tap to see who is who.</p>
+    </div>
+    <div class="map" id="map">
+      <div class="hd" style="text-align:right;padding-right:6px">On the crown</div><div></div><div class="hd">In the machine room</div>
+    </div>
+    <div class="meander" style="margin:3rem auto"></div>
+    <div class="end">
+      <p class="big">With plain messages, machines can agree despite liars only if more than two thirds are honest. With unforgeable signatures, they can whatever the number of liars.</p>
+      <p class="lede" style="margin:0 auto">Nothing in either tells anybody which machine lied, except a commander who signs two contradictory orders. All of it rests on detecting silence, which in practice means bounded message time and clocks kept in step.</p>
+      <div class="links">
+        <a href="../../places/the-crown/index.html">The Crown of Mount Phyle, in detail</a>
+        <a href="../../papers/index.html">All the papers</a>
+      </div>
+    </div>
+    <div class="apparatus">
+      <a class="anchor" id="refs"></a>
+      <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/the-crown/index.html">The Crown of Mount Phyle</a></p>
+      <p class="lineage"><span class="lbl">Leads to</span> <a href="../keeping-order-among-liars/index.html">Keeping Order Among Liars</a> · <a href="../changing-leaders-among-liars/index.html">Changing Leaders Among Liars</a></p>
+      <p class="lineage"><span class="lbl">Outside this series</span> Dolev &amp; Strong 1983, <i>signed Byzantine agreement</i></p>
+      <details class="proof">
+        <summary>The papers behind this book</summary>
+        <p><b>The papers behind this book.</b> Leslie Lamport, Robert Shostak and Marshall Pease,
+    “The Byzantine Generals Problem,” <i>ACM Transactions on Programming Languages and
+    Systems</i> <b>4</b>, 3 (July 1982), 382–401; and Marshall Pease, Robert Shostak and Leslie
+    Lamport, “Reaching Agreement in the Presence of Faults,” <i>Journal of the ACM</i> <b>27</b>,
+    2 (April 1980), 228–234, for the rigorous proof that three cannot be brought to agree.</p>
+        <p>The bandits go by number, not by name: bandit 1 is the chief inside the ring wall and bandits 2, 3
+    and 4 hold the posts. The mercenaries at the foot are numbered separately, so the bandits' bandit 1 is not the mercenary in tent 1.</p>
+        <p><b>The ideas.</b> A commander must get an order to n − 1 lieutenants so that IC1 all
+    loyal lieutenants obey the same order and IC2 they obey his if he is loyal. IC2 gives IC1 only
+    when the commander is loyal, and he may not be: that is the problem. With oral messages no
+    solution exists for three generals against one traitor, because a loyal lieutenant cannot
+    distinguish a lying commander from a lying peer; more generally nothing works below 3m + 1
+    generals, shown by having three generals each simulate a third of a hypothetical smaller
+    solution, and settling for approximate agreement does not help, since it can be turned back
+    into exact agreement. Above the bound, OM(m) works: the commander sends his value, each
+    lieutenant relays what he got by OM(m − 1), and each takes the majority — one extra round per
+    traitor tolerated. Unforgeable signatures change everything: SM(m) tolerates any number of
+    traitors with no requirement at all on the number of generals, and three generals suffice
+    against one. No assumption is made about a traitor's signature, so signatures prove what the
+    loyal did and nothing about the rest, and a traitor can still withhold a message. What no
+    algorithm gives is identification, the sole exception being a commander who signs two
+    contradictory orders. And all of it rests on A3 — detecting absence — which in practice means
+    bounded message time and clocks kept synchronised, itself a problem as hard as this one.</p>
+        <div class="refs">
+      <p>Lamport, L., Shostak, R., and Pease, M. The Byzantine Generals Problem.
+      <i>ACM Trans. Program. Lang. Syst.</i> <b>4</b>, 3 (1982), 382–401.</p>
+      <p>Pease, M., Shostak, R., and Lamport, L. Reaching agreement in the presence of faults.
+      <i>J. ACM</i> <b>27</b>, 2 (1980), 228–234. The rigorous impossibility proof for three.</p>
+    </div>
+      </details>
+    </div>
+  </div>
+</section>
+<footer>Distributed Algorithms of Ancient Greece · “Agreeing Among Liars”, after Lamport, Shostak and Pease, TOPLAS 4(3), 1982.</footer>
+
