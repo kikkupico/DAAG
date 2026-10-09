@@ -9,28 +9,49 @@ analysis, the constraints that cannot be broken, and the islands themselves), `r
 (the real Greek precedent for each device, and how close it is), and `hellenistic-reference.html`
 (buildings, tools, weapons, dress, transport, town planning and civic procedure of the period, with
 measurements for modelling).
-**Read as models:** the finished books in `books/`. They are the specification. Where
-this document and a finished book disagree, the book is right.
+**Read as models:** the finished books in `books/`, and their sources in `art/scroll/parts/`.
+They are the specification. Where this document and a finished book disagree, the book is right.
+**Read before writing a page:** `art/scroll/BRIEF.md`, the authoring guide for the format.
 
 ---
 
+## The format
+
+A book is one scroll at `books/<slug>/index.html`. From top to bottom it has a cover; one spread
+that states the paper's problem and result in machine terms; a photograph of the setting with the
+allegory's premise in two or three sentences; one spread for each idea of the argument; and a
+closing spread that returns to machines. Each mechanism has one live interactive: a scroll-driven
+stage for a sequence, a click-through widget for a choice. Proofs sit in collapsed panels at the
+end of the spread they belong to. Photographs and cards unfold as they enter view.
+
+A page is self-contained. Its source is four parts in `art/scroll/parts/<slug>/` (`meta.json`,
+`body.html`, `page.css`, `page.js`); `python3 art/scroll/assemble.py <slug>` copies the shared
+`shell.css` and `shell.js` round them and writes the page, and `art/scroll/shot.sh` checks it in
+headless Chrome. Never edit a built page by hand. *The Part-Time Parliament* predates the kit, and
+its page is edited directly. The pictures a book uses are copied into `books/<slug>/img/`.
+
+Setting pages (`places/<place>/index.html`) and the home page wear the same look. They are
+ordinary hand-edited pages that link `art/scroll/shell.css`, `art/scroll/place.css` and
+`art/scroll/shell.js`.
+
+Six Paxos books are still in the earlier chapter layout, with `assets/css/books.css` and static
+figures built by `art/diagrams/polar.py`: *One Leader at a Time*, *Spreading by Word of Mouth*,
+*Probably Up to Date*, *Changes That Never Clash*, *What You Can Promise Alone* and *Knowing When
+to Wait*; so is `papers/index.html`. A converted book keeps no copy of its earlier edition; that
+is in the git history.
+
 ## The two phases
 
-**Phase 1 — text.** Complete prose, with SVG or HTML diagrams where a diagram carries the
-argument better than a sentence. Every formal argument in a collapsed section. **No image
-tags.** Where a picture is planned, leave a slot that describes it:
+**Phase 1 — text and interactives.** The complete scroll: prose, interactives and proofs, with
+whatever pictures already exist (the place shots in `assets/img/places/` at least). A spread
+whose picture does not exist yet is written without one; the prose never refers to a picture, so
+the book reads as finished.
 
-```html
-<figure class="panel"><div class="planned"><span class="lbl">Planned picture</span>
-  <p>What the picture shows: place, time of day, figures by colour, props.</p></div></figure>
-```
-
-and on the cover, `<div class="frame-cover portrait planned">` with the label *Planned cover*.
-The prose never refers to a picture, so the book reads as finished with every slot left empty.
-
-**Phase 2 — art.** Happens later, separately, from the slots' descriptions. It replaces each slot
-with the picture. The allegorical devices must nevertheless be **fully in place in the prose**,
-because phase 2 will be built from what you write.
+**Phase 2 — art.** Happens later and separately: the cover and the panels, made from the
+book's shots (`art/panels/<slug>/shots.json`) and published to `assets/img/`. A picture enters the
+scroll as a `.photo` inside a `.pop`, copied into the book's `img/`. The allegorical devices must
+nevertheless be **fully in place in the prose**, because phase 2 is built from what you write.
+Never bend the prose to fit a picture.
 
 **Reality checks.** A new setting, or a device added to an existing one (a place, building,
 character, prop or practice), gets its entries in `reality.md` and in the *Reality Checks* table on
@@ -57,9 +78,10 @@ These are correctness constraints, not preferences.
 4. **Devices are per setting.** There is no series-wide table of symbols. Each setting
    establishes its own vocabulary, and a device means nothing outside the setting that defines
    it.
-5. **Named figures are Hellenised authors** of that book's own papers, following Lamport's
-   practice with the Paxon legislators. Where a setting needs a seat no author fills, use an
-   ordinary Greek name. **On Arche the houses, the mercenaries and the bandits have no names or
+5. **Nobody on Arche has a name.** *The Part-Time Parliament* keeps Lamport's Paxons, who are
+   Hellenised computer scientists. Everywhere else a figure is a role or a number: "the keeper of
+   House 1's accounts", never a Hellenised author. The paper's authors are credited on the cover
+   and in the closing panel. **The houses, the mercenaries and the bandits have no names or
    emblems; they go by number**: Houses 1–3, the mercenaries by their tents'
    numbers, Number 1 to Number 4, and the bandits Number 1 to Number 4, Number 1 being the chief
    inside the ring wall. Every book at a place keeps that place's numbered cast. Ties between houses are
@@ -69,9 +91,9 @@ These are correctness constraints, not preferences.
    board at House 2) without making it a fixture of the place.
 6. **Read the paper, not your memory of it.** Open the PDF. Quote the theorem. See
    *Verification* below.
-7. **Close with the mapping.** Every book ends with an *In the book / In the paper* table and
-   a plain-prose statement of the ideas, so a reader can check the allegory rather than trust
-   it.
+7. **Close with the mapping.** Every book ends with a who-is-who table, the setting on the left
+   and the machine room on the right, a plain statement of the result, and a panel with the paper
+   and its ideas, so a reader can check the allegory rather than trust it.
 8. **Records are scrolls and tablets.** Nothing in the setting is a bound book. Lasting
    records (the houses' accounts, the loot scroll, a legislator's scroll) are papyrus scrolls,
    written in columns and added to at the end; temporary ones are wax tablets or slips of
@@ -97,7 +119,7 @@ Before writing a word of prose, write down, from the PDF and not from memory:
   (FIFO channels, at most one fault, synchronous rounds, unforgeable signatures).
 - Every **numbered result** — lemma, theorem, bound — in its exact form, with its constants.
 - The **negative space**: what the paper explicitly does *not* claim. This is usually where
-  the book's most interesting chapter is.
+  the book's most interesting spread is.
 
 ### 3. Build the device table
 
@@ -115,27 +137,39 @@ Then write the **must not exist** list: the things that would be natural to add 
 wreck the model. For the camps book it includes horns, fires and any counted night. For a
 gossip book it would include anything resembling an assembly.
 
-### 4. Draft the chapters
+### 4. Lay out the spreads
 
 The shape that has worked before:
 
 | | |
 |---|---|
-| **I** | The problem, set in the place. Gloss the place in a sentence or two and link its setting article (`places/<place>/`) with a superscript; do not describe it again. State the paper's model in the setting's words, and the one thing this book changes. |
-| **II–III** | The model, built up one device at a time. The reader should not notice they are being handed a formal system. |
-| **IV–VII** | The paper's results, one per chapter, each stated in the setting's own vocabulary and then proved in a collapsed section. |
-| **VIII** | What the result does *not* say, or what it costs, or what it assumes and never verifies. It is often the best chapter in a book. |
-| **IX** | *In the book / In the paper*, then the ideas plainly. |
+| **Cover** | The book's opening question, and a one-line answer. |
+| **In machine terms** | The paper's problem and result in plain distributed-systems words, with one small interactive that shows the difficulty with machines. |
+| **The setting** | A photograph of the place with the premise in two or three sentences. Link the setting page with a superscript; do not describe the place again. |
+| **The model** | One spread per device, each built up by an interactive. The reader should not notice they are being handed a formal system. |
+| **The results** | One spread per result, each stated in the setting's own words, shown by an interactive, and proved in a collapsed panel. |
+| **What it does not say** | What the result does *not* claim, or what it costs, or what it assumes and never verifies. It is often the best spread in a book. |
+| **Back to machines** | The who-is-who table, the result in one sentence, then lineage, the papers and the ideas. |
 
 **The book is carried by questions.** Write down the questions a careful reader would ask, in
-order, and let them drive the chapters. Each chapter answers the question the one before it closed
-on, and ends on the next question, in a paragraph of its own:
-`<p class="hook"><em>…</em></p>`. Inside a chapter, raise the reader's objection as a question and
+order, and let them drive the spreads. Each spread answers the question the one before it closed
+on, and may end on the next. Inside a spread, raise the reader's objection as a question and
 answer it at once: *Does unrelated mean they happened at the same moment? No: it means…* The
 questions are the reader's, never a character's, and nothing is narrated, so rule 1 stands. Keep
-one line of argument: every hook is answered in the chapters that follow, and threads never
-alternate. *Ordering Without Clocks* and
-*The Limits of Agreement* are the models.
+one line of argument: threads never alternate.
+
+**A spread is short.** A heading, a lede, at most two short paragraphs, and its interactive or
+cards. What the earlier editions said in a page of prose, a scroll shows.
+
+**An interactive follows the book's rules exactly.** Work its numbers out in code by those
+rules, and make the code refuse a state the rules forbid. Where a page shows a pattern and does
+not compute it, the page says so. Nothing runs until the reader presses a button. If the book's
+stance is that nobody dies in it, no interactive stages a death: it shows two possible nights
+side by side.
+
+A scroll that replaces a chapter edition keeps that edition's chapter anchors
+(`<a class="anchor" id="s3"></a>` at the top of the spread that covers the idea), because other
+books link to them.
 
 ### 5. Register
 
@@ -147,22 +181,21 @@ Concretely:
 
 - Prefer the physical noun to the abstract one. *A boy carries the slip along the quay*, not
   *the message is transmitted*.
-- State results as results. Use `<div class="result"><span class="name">…</span>` and give the
-  result a name a reader can refer back to.
-- When you first coin a device, mark it with `<span class="coin">` (bold, never underlined:
-  only links are underlined). Node labels such as *House 1* or *Number 2* take the same mark where
-  they are introduced.
-- **Never refer to a chapter by its number or place**, in the prose or in the apparatus. No "as
-  Chapter IV showed", no "the fifth chapter asked", no "Part Two". Say "as we saw", "below", or
-  name the idea ("by Never Two Gates", "the rules of the tally"). Chapter headings and the table
-  of contents carry the numbers; a superscript's `title` gives the book and the chapter's title.
+- State results as results. Give a result a name a reader can refer back to, as a card's heading
+  or a bold line.
+- When you first coin a device, set it in bold (never underlined: only links are underlined).
+- **Never refer to a part of a book by number or place**, in the prose or in the apparatus. No
+  "as Chapter IV showed", no "the fifth spread asked", no "Part Two". Say "as we saw", "below", or
+  name the idea ("by Never Two Gates", "the rules of the tally"). A superscript's `title` gives
+  the book and the idea's title.
 - **Never refer to another volume in the prose.** No "as *Ordering Without Clocks* relates", no
   "the four of *Agreeing Among Liars*", no "the earlier book". A fact established elsewhere is
   restated in this book's own words, as a fact of the island, and linked to the book that
   established it by a superscript:
   `<sup class="xref"><a href="../ordering-without-clocks/index.html#s3" title="Ordering Without Clocks: Breaking Ties">*</a></sup>`,
-  placed after the fact. The apparatus may name books: the lineage lines, the *In the book / In the
-  paper* table, and the footnotes.
+  placed after the fact. The apparatus may name books: the lineage lines and the closing panels.
+- **People are neutral.** A numbered figure or a role is never "he" or "she": repeat the role or
+  use "they". Picture `alt` text may describe what the picture shows.
 - Say what is *not* claimed, out loud, immediately after saying what is. The gap between a
   theorem and its converse is where readers go wrong, and it is cheap to close in prose.
 
@@ -170,11 +203,12 @@ Concretely:
 
 ## Proofs: always collapsed, never omitted
 
-Every formal argument goes in:
+Every formal argument goes in a panel at the end of the spread it belongs to:
 
 ```html
 <details class="proof">
-  <summary>Proof — that …</summary>
+  <summary>Proof · that …</summary>
+  <p class="given">The claim in the paper's own notation, with every symbol the steps use.</p>
   <ol class="proofsteps">
     <li>…</li>
     <li>…<span class="qed">∎</span></li>
@@ -184,16 +218,18 @@ Every formal argument goes in:
 
 Rules for the proofs themselves:
 
-- **The prose above must stand without it.** A reader who never opens a single proof should
-  finish the book understanding the result and why it is true. The collapsed section is for
-  the reader who wants it airtight, not for the reader who wants it at all.
+- **The page above must stand without it.** A reader who never opens a single panel should
+  finish the book understanding the result and why it is true. The panel is for the reader who
+  wants it airtight, not for the reader who wants it at all.
+- **A panel opens with its `given`.** The page outside the panels never introduces notation, so
+  the panel states the claim and defines its symbols before the first step.
 - **Prove it in the paper's abstractions, not the setting's.** The proof is the mathematics:
   it uses the paper's own objects and notation (schedules σ₁ and σ₂, sets *A* and *B*,
-  configurations, events, messages), and its summary line does too: *Proof — that disjoint
+  configurations, events, messages), and its summary line does too: *Proof · that disjoint
   schedules commute*. The allegory never enters a proof, and mathematical symbols never enter
   the prose or the diagrams (see *Two registers* below).
-- **One summary line per proof, naming what is proved.** &ldquo;Proof — that nothing comes
-  before itself&rdquo;, not &ldquo;Proof of Lemma 1&rdquo;.
+- **One summary line per proof, naming what is proved.** "Proof · that nothing comes before
+  itself", not "Proof of Lemma 1".
 - **Where the paper's own proof is long or hard, say so** and give the sketch. *Many Copies,
   Acting as One* does this for the board's proof; *Agreeing Among Liars* does it for the
   three-general impossibility. Honesty about a gap is fine; pretending there is none is not.
@@ -204,40 +240,52 @@ A book speaks in two registers, and each belongs to its own places.
 
 - **Proofs use the math.** Everything inside `<details class="proof">` is written in the
   paper's abstractions, as the paper states them.
-- **Prose, tables' plain-language column, captions and diagrams use the allegory.** No σ, no
-  *A* and *B*, no set notation: tents, ravens, standings, courses, houses, slips. A diagram
-  labels what the setting's people do (*tents 1 and 2 trade ravens*), and the *In the paper*
-  column of the closing table is where the technical term meets the device.
+- **Prose, captions, button labels and figures use the allegory.** No σ, no *A* and *B*, no set
+  notation, no "process" or "message": tents, ravens, standings, courses, houses, slips. A figure
+  labels what the setting's people do (*tents 1 and 2 trade ravens*).
+- **Machine words have four places:** the machine-terms spread, the right-hand column of the
+  closing table (where the technical term meets the device), the closing statement of the result,
+  and the proof panels.
 
 Never blend them: no allegorical figures inside a proof, no Greek letters in a figure or its
 caption.
 
-Formal statements that are not proofs — model definitions, conditions, bounds — go inline in
-`<div class="aside-formal">` or `<div class="mathblock">`, *not* collapsed. The reader should
-meet the model in the open and only the argument behind a door.
+Formal statements that are not proofs (model definitions, conditions, bounds) also go in a
+proof-style panel at the end of their spread, titled for what they state ("The round, stated
+formally"). The reader meets the model in the open as an interactive, in the setting's words.
 
 ---
 
-## Diagrams
+## Figures
 
-Inline SVG, in `<figure class="diagram"><div class="board">…</div><figcaption>…</figcaption>`.
-The primitives are defined in `assets/css/books.css` — `.d-lifeline`, `.d-ev`, `.d-ev-hi`,
-`.d-msg`, `.d-msg-hi`, `.d-lbl`, `.d-num`, `.d-note`, `.d-key`, `.d-band` — and using them is
-what makes every diagram in the series read as one hand. Do not introduce new colours.
+A figure is inline SVG drawn by the page's script, so it can move. Two kinds recur, and using
+them is what makes every figure in the series read as one hand. Do not introduce new colours.
 
-**Draw a diagram when the argument has a shape**, and not otherwise. The finished books
-have many between them, and each one does a job prose could not:
+**The place from above.** Each setting has one picture, reused wherever something travels there:
+Arche with its three houses on the ring road (`Isle`), the hill with its four tents (`Hill`), the
+crown with the chief inside the ring wall and three posts on the slopes, the Chamber with its one
+door (`Hall`). Copy the picture from a book of the same setting and keep it the same.
+
+**Space-time, in the round.** `Polar` in `shell.js`: each place is a line running outward from
+its label, each ring further out is a later moment, and whatever is carried between places is an
+arc that curves round and outward. Never flat lifelines. Events stay clear of the label boxes. A
+dead man is a cross on a shortened line; a hollow dot is a man who has not committed; a cut is a
+dashed loop that carried things may cross outward and never inward.
+
+**Draw a figure when the argument has a shape**, and not otherwise:
 
 | Kind | What it does | Seen in |
 |---|---|---|
-| **Space–time** | Lifelines down, messages as arrows. The workhorse: any argument about order, causality or cuts. | *Ordering Without Clocks*, *Taking Stock Without Stopping* |
-| **The same picture annotated twice** | Draw one scene, then redraw it with the numbers, then with the vectors. The reader compares like with like. | *Ordering Without Clocks* |
-| **Two panels, sound and impossible** | Put the legal case beside the illegal one with a divider. Far clearer than describing the illegal one. | *Taking Stock Without Stopping*, *Answering While Cut Off* |
-| **Commuting diamond** | For any argument that two things may be done in either order. | *The Limits of Agreement* |
-| **A chain of cases** | For arguments that walk from one extreme to another one step at a time. | *The Limits of Agreement* |
+| **Click two events** | The reader picks two dots and the page says how they are related, lighting the chain between them. Any argument about order or causality. | *Ordering Without Clocks* |
+| **The same picture, numbered step by step** | A scroll-driven stage fills in one figure as the reader scrolls. Any protocol with rounds. | *Ordering Without Clocks*, *Taking Stock Without Stopping*, *Agreeing Among Liars* |
+| **Two nights side by side** | The legal case beside the illegal one, or two cases nobody inside can tell apart. Far clearer than describing the second. | *The Limits of Agreement*, *Answering While Cut Off* |
+| **Either order** | Two runs the reader may press in either order, arriving at the same place. | *The Limits of Agreement* |
+| **A row of cases** | The reader settles each case and the page finds where two neighbours split. For arguments that walk from one extreme to the other. | *The Limits of Agreement* |
+| **A night by the rules** | A rule engine runs a fresh random night each press. Says on the page that each run differs. | *Agreeing by Chance*, *Telling the Dead from the Slow* |
 
-Always give the SVG a real `aria-label` describing what it shows. The caption should state the
-*conclusion*, not describe the picture.
+Give every SVG a real `aria-label` describing what it shows, make every control work from the
+keyboard, and put narration in a `.say` line so it is announced. Check each figure at phone
+width: anything wordy goes in HTML beside the SVG, not inside it.
 
 ---
 
@@ -259,19 +307,21 @@ Check things by content, never by name.
 
 ## Finishing
 
-Before calling a book done:
+Before calling a book done (the brief's checklist has the mechanics):
 
-- [ ] `grep -c '<img'` returns **0**.
-- [ ] Every formal argument is inside `<details class="proof">`.
-- [ ] Proofs use only the paper's abstractions; prose, captions and diagrams use only the allegory.
-- [ ] The prose stands with every proof closed.
-- [ ] Every device in the book appears in the *In the book / In the paper* table.
+- [ ] `assemble.py` builds the page; `shot.sh` at 500 and 1280 reports equal widths and no
+      errors; the page has been looked at, and each scroll-driven stage checked step by step.
+- [ ] Every interactive has been pressed through against the paper's rules.
+- [ ] Every formal argument is inside `<details class="proof">`, and each opens with its `given`.
+- [ ] Proofs use only the paper's abstractions; prose, captions and figures use only the allegory.
+- [ ] The page stands with every panel closed.
+- [ ] Every device in the book appears in the closing who-is-who table.
 - [ ] The *must not exist* list is checked against the finished draft.
 - [ ] Nothing contradicts a book that shares the setting.
 - [ ] Every claim traceable to the paper has been checked against the PDF.
-- [ ] Added to the home page, `index.html`.
-- [ ] The place's setting article, `places/<place>/index.html`, lists the book and still
-  describes the place truly. Each home-page section opens with its setting article, the brief a
+- [ ] Added to the home page, `index.html`, as a cover card in its section.
+- [ ] The place's setting page, `places/<place>/index.html`, lists the book and still
+  describes the place truly. Each home-page section opens with its setting page, the brief a
   reader needs before reading that section's books in any order. Its opening picture is a
   photorealistic establishing shot: a Blender previs render put through `pipeline.py scene` with a
   crop of the island plate (`art/refs/places/`) and any people refs on the board, with no comic
@@ -289,7 +339,7 @@ establish.
 |---|---|---|
 | The order board | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Shares the orders premise of *Ordering Without Clocks*: the tallies order orders by slips, this book by the sun. The object is House 3's board of orders, a FIFO queue; Herlios' board with its slots and peg is the paper's §4 queue. Must not give Arche a readable hour in the trading season. Written: `books/many-copies-acting-as-one/`. |
 | The camps | Chandra &amp; Toueg 1996 | *Telling the Dead from the Slow.* Shares the camps with FLP. The camps may decide; nothing follows from it. The slate's guarantees are granted, not earned — see `settings.md`. With a majority alive, a turn to propose, not a leader; point to *Agreeing When Messages Run Late* for it and stay on the detector. Written: `books/telling-the-dead-from-the-slow/`. |
-| The Part-Time Parliament | Lamport 1998, 2001 | **Not retold.** Lamport's paper in its original form, with interactive figures and no illustrations: it is the paper the whole project borrows its allegory from. Written: `books/the-part-time-parliament/`. At §3.3.6, where a scribe's error ends the parliament and leads to the island's destruction, the rendition carries a caveat: later books ignore this detail for convenience, and in them the parliament is still sitting. |
+| The Part-Time Parliament | Lamport 1998, 2001 | Lamport's own allegory, the one the whole project borrows, retold as a scroll with his Paxons kept. The paper's formal conditions, its proofs and its appendix are carried in panels; the rest of the paper's prose is not reproduced. Written: `books/the-part-time-parliament/`. The paper ends with a scribe's error that destroys the parliament; later books ignore this for convenience, and in them the parliament is still sitting. |
 | The Tholos, Schedia | Oki &amp; Liskov 1988 | *One Leader at a Time.* VR, a genuine alternative to Paxos, found independently and published first, in Schedia, the city on Paxos's eastern arm with laws of its own. One council of five and one law scroll; the paper's transactions are stated, not carried. Written: `books/one-leader-at-a-time/`. |
 | The crown | Castro &amp; Liskov 1999 | *Keeping Order Among Liars.* Needs the vocabulary of *Agreeing Among Liars* and must not contradict it. A later, windy night: the loot scroll, each man both replica and client (the client's rule of two agreeing seals, f + 1, stated and shown redundant for the four), the chief's job numbering entries and passing in a fixed order when suspected. Safe in any wind; progress once the wind drops. Nothing follows from any entry. Written: `books/keeping-order-among-liars/`. |
 | The crown | Yin et al. 2019 (HotStuff) | *Changing Leaders Among Liars.* Needs the vocabulary of *Keeping Order Among Liars* and must not contradict it. Tell only what changes: the chief's job passes with every entry, and its holder bundles the others' seals instead of every man writing to every other. Say plainly that a threshold signature makes the bundle one seal's size. Nothing follows from any entry. Written: `books/changing-leaders-among-liars/`. |
@@ -328,14 +378,6 @@ every tent sees and no post on the crown does.
 
 ---
 
-## The scroll format
-
-A book is one scroll at `books/<slug>/index.html`: short allegory prose, photoreal scenes that unfold as they enter view, one live interactive per mechanism (a scroll-driven stage for a sequence, a click-through widget for a choice), and the proofs as collapsed panels in the paper's own notation. The registers are unchanged: the synopsis in machine terms first, then allegory only. A page is self-contained and keeps its pictures in the book's own `img/`.
-
-`art/scroll/BRIEF.md` is the authoring guide: the kit (`shell.css`, `shell.js`, `assemble.py`, `shot.sh`), the page from top to bottom, and the house rules. A book's source is its four parts in `art/scroll/parts/<slug>/`; `python3 art/scroll/assemble.py <slug>` builds the page. The Part-Time Parliament predates the kit and its page is edited directly.
-
-A scroll keeps the chapter anchors of the long edition it replaced (`<a class="anchor" id="s3">`), so a link from another book to one idea is still `../<slug>/index.html#s3`. The long editions are not kept beside the scrolls; they are in the git history.
-
 ## Changing art direction
 
 Art direction flows from the Hellenistic reference (`hellenistic-reference.html`) through the world
@@ -355,3 +397,6 @@ many commits it is behind, and an image, which git does not track, carries the c
    last touched; `tree.py log <id>` shows that history. `tree.py build` refreshes `art/direction/TREE.md`.
 
 Add a decision when a new rule is settled.
+
+A scroll carries its own copies of its pictures in `books/<slug>/img/`. After regenerating a
+picture in `assets/img/`, copy it over the book's copy in the same pass.

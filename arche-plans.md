@@ -1,6 +1,6 @@
 # The remaining Arche books
 
-One page per book: the idea, the allegory, the chapters, and the decisions taken.
+One page per book: the idea, the allegory, the order of the argument, and the decisions taken.
 Read with `settings.md`, `buildings.md` and `process.md`; where this file and those disagree,
 those are right until this file's decisions are taken back into them.
 
