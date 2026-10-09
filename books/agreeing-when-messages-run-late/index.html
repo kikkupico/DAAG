@@ -4,295 +4,578 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Agreeing When Messages Run Late — The Foot of Mount Phyle</title>
+<meta name="description" content="Dwork, Lynch and Stockmeyer's partial synchrony: four mercenaries and their ravens stay safe in any wind, and commit once the wind drops, though none can tell when it did.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<link rel="stylesheet" href="../../assets/css/daag.css">
-<link rel="stylesheet" href="../../assets/css/books.css">
+<style>
+:root{
+  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4;
+  --aegean:#2e88b5; --aegean-d:#136f9e; --blood:#bf4a26; --olive:#7c8f3a; --terra:#b5602c;
+  --gold:#e0b84a; --shadow:#b9a77e;
+  --serif:Georgia,'Iowan Old Style','Palatino Linotype',serif;
+  --sans:Optima,'Gill Sans','Gill Sans MT',sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#d8cba6}
+body{margin:0;background:#d8cba6;color:var(--ink);font-family:var(--serif);line-height:1.55;overflow-x:hidden}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer}
+h1,h2,h3{font-family:var(--sans);line-height:1.12;margin:0;text-wrap:balance}
+p{margin:0 0 .9rem;text-wrap:pretty}
+.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--blood)}
+
+/* ---------- top bar ---------- */
+.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
+  font-family:var(--sans);font-size:.78rem;letter-spacing:.05em;background:linear-gradient(180deg,#3a2a1a,#241a10)}
+.bar a{color:#f0e6cc;text-decoration:none;opacity:.8;white-space:nowrap} .bar a:hover{opacity:1}
+.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:520px){.bar a+a{display:none}}
+.bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
+
+/* ---------- spreads ---------- */
+.spread{position:relative;padding:clamp(4.5rem,11vw,8rem) 20px;overflow:clip}
+.spread.has-scrolly{overflow:visible;padding-bottom:0;background:var(--marble)}
+.dark{background:var(--marble);color:var(--ink);background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
+.light{background:var(--parch);color:var(--ink);
+  background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
+/* torn-paper edge between spreads */
+.tear{position:absolute;left:0;right:0;top:-1px;height:26px;z-index:3;pointer-events:none}
+.tear path{fill:var(--prev)}
+.wrap{max-width:1080px;margin:0 auto;position:relative;z-index:2}
+.narrow{max-width:640px;margin:0 auto}
+.spread h2{font-size:clamp(1.9rem,5vw,3.1rem);margin:.4rem 0 1rem}
+.lede{font-size:clamp(1.05rem,2.2vw,1.3rem);max-width:34em}
+.light .lede{color:#3a2d24}
+.meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
+
+/* ---------- the pop-up: a card that unfolds from its hinge ---------- */
+.pop{perspective:1400px}
+.pop > .leaf{transform-origin:50% 100%;transform:rotateX(78deg) translateY(30px);opacity:0;
+  transition:transform 1.1s cubic-bezier(.2,.9,.25,1.12),opacity .6s ease}
+.pop.up > .leaf{transform:rotateX(0) translateY(0);opacity:1}
+.pop.fromleft > .leaf{transform-origin:0 50%;transform:rotateY(-80deg)}
+.pop.fromright > .leaf{transform-origin:100% 50%;transform:rotateY(80deg)}
+.pop.up.fromleft > .leaf,.pop.up.fromright > .leaf{transform:none}
+.paper{background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);position:relative}
+.light .paper{box-shadow:9px 11px 0 #b9a77e}
+.photo{border:5px solid #fffaf0;box-shadow:0 0 0 3px var(--ink),12px 16px 0 var(--shadow);background:#222;overflow:hidden;position:relative}
+.photo img{width:100%;height:100%;object-fit:cover}
+.tilt-l{transform:rotate(-1.4deg)} .tilt-r{transform:rotate(1.2deg)}
+[data-depth]{will-change:transform}
+.fold-shadow{position:absolute;left:6%;right:6%;bottom:-18px;height:26px;background:radial-gradient(ellipse at center,#0008,transparent 70%);opacity:0;transition:opacity 1s .4s;z-index:-1}
+.up .fold-shadow{opacity:1}
+
+/* ---------- cover ---------- */
+#cover{min-height:100svh;display:grid;align-items:center;padding-top:5rem;
+  background:radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
+#cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
+#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:.6rem 0 1rem;letter-spacing:-.01em}
+#cover h1 span{display:block;font-size:.34em;letter-spacing:.2em;text-transform:uppercase;color:var(--aegean-d);margin-top:.9rem;font-weight:400}
+#cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
+#cover .hook{font-size:clamp(1.1rem,2.4vw,1.45rem);font-style:italic;max-width:24em;color:#3a2d24}
+.scrollcue{margin-top:2rem;font-family:var(--sans);font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);display:flex;gap:10px;align-items:center}
+.scrollcue b{display:inline-block;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(7px)}}
+.cut{position:absolute;pointer-events:none;z-index:1}
+.cut svg{display:block;width:100%;height:auto}
+@media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
+
+/* ---------- two-column spreads ---------- */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.two.wide-r{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
+@media(max-width:859px){.two,.two.wide-r{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- the hall (full-bleed photo with pins) ---------- */
+#hall{padding:0;background:var(--marble)}
+.bleed{position:relative;height:min(100svh,880px);overflow:hidden}
+.bleed img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover}
+.bleed::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--parch) 0,transparent 8%,transparent 92%,var(--parch) 100%);pointer-events:none}
+.pin{position:absolute;z-index:4;max-width:min(250px,44vw);padding:10px 14px;background:#fffaf0;color:var(--ink);border:3px solid var(--ink);
+  box-shadow:5px 6px 0 #0007;font-size:.92rem;line-height:1.35;transform-origin:0 100%}
+.pin b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood)}
+.pin::after{content:"";position:absolute;left:-3px;bottom:-26px;width:3px;height:26px;background:var(--ink)}
+.pin::before{content:"";position:absolute;left:-8px;bottom:-34px;width:13px;height:13px;border-radius:50%;background:var(--blood);border:3px solid var(--ink)}
+.hall-title{position:absolute;z-index:5;left:20px;right:20px;top:clamp(5rem,12vh,8rem);max-width:1080px;margin:0 auto}
+.hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
+.hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
+.hall-title p{margin:0}
+
+/* ---------- scrollytelling ---------- */
+.scrolly{position:relative}
+.scrolly .stage{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;padding:70px 20px 20px;overflow:hidden}
+.scrolly .steps{position:relative;z-index:6;margin-top:-100svh;pointer-events:none}
+.step{min-height:100svh;display:flex;align-items:center;padding:0 20px}
+.step .card{pointer-events:auto;max-width:360px;padding:16px 20px;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);
+  transform:translateY(24px) rotate(-.6deg);opacity:.25;transition:transform .7s cubic-bezier(.2,.9,.25,1.1),opacity .5s}
+.step.on .card{transform:none;opacity:1}
+.step .card h3{font-size:1.1rem;margin-bottom:.35rem}
+.step .card p{margin:0;font-size:.98rem}
+.step .num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
+.step.r{justify-content:flex-end}
+.scrolly svg.fig{width:min(100%,820px);height:auto;max-height:calc(100svh - 120px);overflow:visible}
+.scrolly .stage-inner{width:100%;display:flex;justify-content:center}
+@media(min-width:900px){.scrolly .stage{padding-left:380px} .step .card{max-width:320px} .step{padding-left:max(24px,calc((100vw - 1080px)/2))}}
+@media(max-width:899px){
+  .scrolly .stage{align-items:flex-start;padding-top:64px}
+  .scrolly svg.fig{max-height:46svh}
+  .step{align-items:flex-end;padding-bottom:22px}
+  .step .card{max-width:none;width:100%}
+}
+svg text{font-family:var(--serif)}
+.svg-dark{background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
+
+/* ---------- interactive wells ---------- */
+.well{padding:clamp(16px,3vw,28px);margin:1.6rem 0}
+.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;justify-content:space-between;gap:10px}
+.well h4 em{font-style:normal;color:#6b5a48}
+.btn{background:var(--ink);color:var(--parch);border:3px solid var(--ink);padding:8px 16px;font-family:var(--sans);font-size:.88rem;letter-spacing:.03em;box-shadow:4px 4px 0 var(--blood);transition:transform .12s,box-shadow .12s}
+.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--blood)}
+.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--blood)}
+.btn:disabled{opacity:.35;cursor:default;box-shadow:none}
+.btn.alt{background:#fffaf0;color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.say{margin:12px 0 0;font-size:.98rem;min-height:3.1em}
+.say b{color:var(--blood)}
+.ok{color:#3f7a2a;font-weight:700}.bad{color:var(--blood);font-weight:700}
+
+/* cards row */
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
+.card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
+.card3 .body{padding:16px 18px 18px}
+.card3 h3{font-size:1.15rem;margin-bottom:.4rem}
+.card3 p{font-size:.95rem;margin:0}
+.card3 .fx{margin-top:12px}
+@media(max-width:860px){.cards3{grid-template-columns:1fr}}
+/* relevance */
+.map{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px 0;align-items:stretch;max-width:760px;margin:2rem auto 0}
+.map .l,.map .r{padding:11px 16px;font-size:1rem;border:3px solid var(--ink);background:#fffaf0;color:var(--ink);transition:background .25s,transform .25s;cursor:default}
+.map .r{font-family:var(--sans);background:#e9f2f7}
+.map .mid{display:grid;place-items:center;color:var(--blood);font-size:1.3rem}
+.map .hi{background:var(--gold)!important;transform:scale(1.03)}
+.map .hd{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood)}
+.end{text-align:center}
+.end .big{font-size:clamp(1.5rem,4.2vw,2.5rem);font-style:italic;max-width:19em;margin:0 auto 1.4rem;color:var(--ink);text-wrap:balance}
+.links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+.links a{color:var(--ink);background:#fffaf0;border:3px solid var(--ink);padding:9px 18px;text-decoration:none;font-family:var(--sans);font-size:.9rem;box-shadow:4px 4px 0 var(--shadow)}
+.links a:hover{background:var(--gold)}
+footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;font-family:var(--sans);background:#d8cba6}
+
+/* ---------- lists, small parts ---------- */
+.terms{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:12px}
+.terms li{padding:12px 16px;background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 #b9a77e;font-size:.98rem}
+.terms b{font-family:var(--sans)}
+@keyframes slotin{from{transform:translateY(-8px);opacity:0}}
+.btn:focus-visible,.links a:focus-visible,[role=button]:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
+.num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
+.chip{display:inline-block;padding:1px 7px;margin:2px 3px 2px 0;border:2px solid var(--ink);border-radius:5px;background:#fff;font-family:var(--sans);font-weight:700;font-size:.86rem;white-space:nowrap}
+.chip i{display:inline-block;width:.7em;height:.7em;border-radius:50%;border:1.5px solid var(--ink);margin-right:5px;vertical-align:-.02em}
+.isle-svg{width:min(100%,440px);display:block;margin:0 auto}
+.fig .fade{opacity:0;transition:opacity .6s}
+.fig .fade.on{opacity:1}
+.fig .lab{fill:#6b5a48;font-size:15px;font-style:italic;text-anchor:middle}
+.fig .halo{paint-order:stroke;stroke:#fffaf0;stroke-width:5px;stroke-linejoin:round}
+.tok text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+.site rect,.site circle{stroke:var(--ink);stroke-width:4}
+.site text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+
+/* ---------- space-time, drawn in the round ---------- */
+.st-ring{fill:none;stroke:#b9a77e;stroke-opacity:.7;stroke-width:1;stroke-dasharray:3 4}
+.st-spoke{stroke:#1c1512;stroke-width:2.5;stroke-opacity:.45}
+.st-node rect{fill:#f6eed6;stroke:#1c1512;stroke-width:2}
+.st-node text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+.st-slip{fill:none;stroke:#136f9e;stroke-width:2.6;transition:stroke .3s,stroke-width .3s,opacity .5s}
+.st-seg{stroke:#bf4a26;stroke-width:7;stroke-linecap:round;opacity:0;transition:opacity .3s}
+.st-seg.hi{opacity:.85}
+.st-slip.hi{stroke:#bf4a26;stroke-width:5}
+.st-ev{cursor:pointer}
+.st-ev circle.b{stroke:#1c1512;stroke-width:3;transition:stroke .3s,stroke-width .3s}
+.st-ev text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
+.st-ev .halo2{fill:none;stroke:#e0b84a;stroke-width:7;opacity:0;transition:opacity .3s}
+.st-ev.sel .halo2,.st-ev.mark .halo2{opacity:1}
+.st-ev.sel circle.b{stroke-width:4.5}
+.st-ev.dim{opacity:.3}
+.st-ev:focus-visible{outline:none}.st-ev:focus-visible circle.b{stroke:#136f9e;stroke-width:6}
+.st-note{fill:#6b5a48;font-size:13px;font-style:italic}
+
+/* ---------- a stage with a figure and a side panel ---------- */
+.stage-inner.split{gap:18px;align-items:center}
+.stage-inner.split svg.fig{flex:1 1 300px;min-width:0;max-width:470px}
+.side{flex:0 0 240px;display:grid;gap:10px;font-family:var(--sans);font-size:.84rem}
+.side .hc{background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--shadow);padding:8px 10px;min-height:92px;transition:background .4s}
+.side .hc h5{margin:0 0 5px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:6px}
+.side .hc h5 span{color:#6b5a48;letter-spacing:.02em;text-transform:none}
+.side .hc .chk{font-size:.78rem;margin-top:4px;line-height:1.35}
+.side .hc.in{background:#e3ecc4}
+@media(max-width:899px){
+  .stage-inner.split{flex-direction:column;gap:10px}
+  .stage-inner.split svg.fig{flex:0 0 auto;max-height:30svh;width:auto;max-width:100%}
+  .side{flex:0 0 auto;width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;font-size:.7rem}
+  .side .hc{padding:5px 6px;min-height:0;box-shadow:3px 3px 0 var(--shadow)}
+  .side .hc h5{font-size:.62rem;flex-direction:column;gap:0}
+  .side .hc .chk{font-size:.66rem}
+  .side .chip{font-size:.68rem;padding:0 4px}
+}
+.tear{width:100%}
+.scrolly svg.fig.svg-dark{overflow:hidden}
+
+/* ---------- proofs, in the paper's own terms ---------- */
+details.proof{max-width:760px;margin:1.8rem 0 0;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);padding:0 clamp(14px,3vw,22px);font-size:.95rem}
+details.proof>summary{cursor:pointer;padding:12px 0;font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--aegean-d)}
+details.proof>summary:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
+details.proof[open]{padding-bottom:14px}
+details.proof details.proof{border-width:3px;box-shadow:none;background:#fff;margin:1rem 0;max-width:none}
+details.proof .given{padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean);margin:0 0 .8rem}
+details.proof h3,details.proof h4{font-size:1.02rem;margin:1.4rem 0 .5rem}
+details.proof .hlink{color:inherit;text-decoration:none}
+details.proof .fnote{font-size:.84rem;color:#6b5a48}
+ol.proofsteps{padding-left:1.4em;margin:.4rem 0 0}
+ol.proofsteps li{margin:.55em 0}
+.qed{float:right;font-family:var(--sans);letter-spacing:.15em;color:#5f6e28}
+.mathblock{margin:.8rem 0;padding:8px 12px;overflow-x:auto;text-align:center;font-style:italic;background:#fff;border:2px solid #1c151233}
+.slab{margin:1rem 0;padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean)}
+.slab-head{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
+.stmt{font-style:italic}
+
+/* ---------- closing apparatus: lineage, papers, links to where a fact comes from ---------- */
+a.anchor{display:block;height:0;scroll-margin-top:56px}
+sup.xref{font-size:.8em;line-height:0;margin-left:1px}
+sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
+.apparatus{max-width:760px;margin:3rem auto 0;text-align:left;font-size:.94rem}
+.apparatus .lineage{margin:0 0 .6rem}
+.apparatus .lbl{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-right:8px}
+.apparatus a{color:var(--aegean-d)}
+.apparatus details.proof{margin-top:1.2rem}
+.apparatus .refs p,.apparatus ol.refs li{font-size:.9rem;margin:.45em 0}
+.apparatus table{width:100%;border-collapse:collapse;font-size:.9rem}
+.apparatus td{padding:5px 8px 5px 0;border-top:2px solid #1c151222;vertical-align:top}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .pop > .leaf{transition:opacity .3s;transform:none!important}
+  [data-depth]{transform:none!important}
+  .scrollcue b,.pulse{animation:none}
+  .fig .tok{transition:none}
+}
+/* ---------- waiting on a machine ---------- */
+.logs{padding:18px 18px 14px}
+.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
+.wire{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700}
+.wire .m{flex:0 0 auto;border:3px solid var(--ink);background:#fff;padding:10px 14px;font-size:.8rem;letter-spacing:.06em}
+.wire .w{flex:1;border-top:3px dotted var(--ink);position:relative;height:0}
+.wire .w span{position:absolute;left:50%;top:-1.05em;transform:translateX(-50%);color:var(--blood)}
+.e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both;font-family:var(--sans)}
+.e.late{border-left-color:var(--blood)}
+.e.ok2{border-left-color:#3f7a2a}
+.waitlog{border:3px solid var(--ink);background:#fff;padding:8px;min-height:150px;margin-top:12px}
+.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:4.8em;font-style:italic}
+/* ---------- little shared parts ---------- */
+.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
+.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0}
+.counts span b{font-size:1.4rem;margin-right:5px}
+.site.out{opacity:.35}
+.site.turn rect{stroke-width:8}
+.site .state{font-family:var(--serif);font-weight:400;font-style:italic;font-size:15px;fill:#1c1512}
+.btn.sel{background:var(--gold);color:var(--ink)}
+.pickrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 0;font-family:var(--sans);font-size:.88rem}
+.pickrow>span{min-width:11em}
+.stmt-box{max-width:40em;margin:1.4rem 0 0;padding:14px 18px;background:#fffaf0;border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow)}
+.stmt-box b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
+.stmt-box p{margin:0}
+/* ---------- the wind: one span at a time ---------- */
+.spans{display:grid;gap:4px;font-family:var(--sans);font-size:.86rem}
+.sp{display:grid;grid-template-columns:5.2em minmax(0,1fr);gap:8px;padding:4px 8px;background:#fff;border:2px solid var(--ink);align-items:center;min-height:2em}
+.sp.empty{opacity:.35}
+.sp.cut{border-bottom:6px solid var(--blood)}
+.sp b{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:#6b5a48}
+.sp .ok{white-space:nowrap}
+.sp .pine{color:#6b5a48;font-style:italic}
+/* ---------- a bird taken in ---------- */
+.pole{display:grid;gap:5px;font-family:var(--sans);font-size:.86rem;min-height:5em}
+.pole .e{font-size:.84rem}
+/* ---------- the pledge counter ---------- */
+.men{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0 0;font-family:var(--sans);font-size:.8rem;text-align:center}
+.men div{border:3px solid var(--ink);background:#fff;padding:6px 2px;line-height:1.3}
+.men div i{display:block;width:100%;height:5px;margin-bottom:5px}
+.men div.pl{background:#e9f2f7}
+.verdict{margin:12px 0 0;font-size:.96rem;min-height:5.6em}
+/* ---------- turns laid out along the night ---------- */
+.night{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;font-family:var(--sans);margin:12px 0 0}
+.nt{border:3px solid var(--ink);background:#fff;padding:3px 3px 4px;text-align:center}
+.nt small{display:block;font-size:.6rem;letter-spacing:.04em;line-height:1.2;margin-bottom:3px}
+.nt .gl{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.nt .gl i{display:block;height:14px;border:1.5px solid var(--ink);background:#f6eed6}
+.nt .gl i.drop{background:var(--blood)}
+.nt .gl i.still{background:#c9dfeb}
+.nt .gl i.c1{background:var(--aegean-d);outline:2px solid var(--ink)}
+.nt .gl i.c2{background:#3f7a2a;outline:2px solid var(--ink)}
+.nt.own1{box-shadow:0 0 0 3px var(--aegean-d)}
+.nt.own2{box-shadow:0 0 0 3px #3f7a2a}
+.nt .who{font-size:.62rem;display:block;margin-top:3px}
+.keyline{font-family:var(--sans);font-size:.78rem;margin:8px 0 0;display:flex;gap:14px;flex-wrap:wrap}
+.keyline i{display:inline-block;width:.9em;height:.9em;border:1.5px solid var(--ink);vertical-align:-.1em;margin-right:5px}
+/* ---------- three nights side by side ---------- */
+.nights{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,2vw,18px);margin-top:12px}
+@media(max-width:760px){.nights{grid-template-columns:minmax(0,1fr)}}
+.nightc{border:3px solid var(--ink);background:#fff;padding:10px 12px;font-family:var(--sans);font-size:.84rem;display:flex;flex-direction:column;gap:6px}
+.nightc h5{margin:0;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#6b5a48}
+.nightc p{margin:0;font-family:var(--serif);font-size:.9rem;min-height:3.6em}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pair{border:2px solid var(--ink);padding:5px 6px;text-align:center;background:#fffaf0;line-height:1.3}
+.pair.quiet{opacity:.45}
+.gbar{display:grid;grid-template-columns:repeat(12,1fr);gap:2px}
+.gbar i{height:12px;border:1.5px solid var(--ink);background:#f6eed6}
+.gbar i.on{background:var(--gold)}
+.gbar i.mk{background:var(--aegean-d)}
+.gbar i.mk2{background:var(--blood)}
+.gbar i.held{background:repeating-linear-gradient(45deg,#d9cfb4,#d9cfb4 3px,#f6eed6 3px,#f6eed6 6px)}
+/* ---------- how many men ---------- */
+.need{border:3px solid var(--ink);background:#fff;padding:10px 14px;margin-top:12px;min-height:6.4em;font-size:.96rem}
+.need b.n{font-family:var(--sans);font-size:1.5rem;color:var(--blood)}
+/* ---------- side cards of the turn ---------- */
+.side .hc .chk{min-height:2.7em}
+.side .hc.own{background:#fdf0c4}
+@media(max-width:899px){.side{grid-template-columns:repeat(2,minmax(0,1fr))}.side .hc .chk{min-height:0}}
+/* ---------- the wide table in the closing panels ---------- */
+.apparatus table.chron th{text-align:left;font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48;padding:5px 8px 5px 0}
+.apparatus table.chron td i{color:#6b5a48}
+.apparatus .tw{overflow-x:auto}
+.apparatus .tw table{min-width:520px}
+.qa h3{font-size:1.02rem}
+.qa p+p{margin-top:.5rem}
+</style>
 </head>
 <body>
-<nav class="series-nav">
-  <div class="series-nav-inner">
-    <a href="../../index.html" class="nav-back">← The Books</a>
-    <span class="nav-current">Arche · The Foot of Mount Phyle</span>
-  </div>
-</nav>
-<div class="page">
 
-<!-- ================= COVER ================= -->
-<header class="cover">
-  <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · The Foot of Mount Phyle</div>
-  <h1 class="display">Agreeing When Messages Run Late</h1>
-  <p class="basis">Based on “Consensus in the Presence of Partial Synchrony” by Cynthia Dwork, Nancy Lynch and Larry Stockmeyer (1988)</p>
-  <p class="sub">If messages can run late without limit, agreement cannot be guaranteed; yet real networks
-  are prompt most of the time. Can a protocol stay safe however late messages run, and still
-  decide once they arrive on time again?</p>
-  <div class="frame-cover portrait"><img src="../../assets/img/covers/agreeing-when-messages-run-late.jpg" width="896" height="1200"
-    alt="On a moonlit night, with the wind bending the pines and cypresses, a mercenary in a blue cloak crouches at the mouth of his tent on a headland above the sea, holding a sandglass up to the moon."></div>
-  <p class="pub">The four mercenaries at the foot of the hill must all attack or all hold, and any one of
-  them may fall silent. While the wind blows, no one can say how long a raven will take, and no
-  arrangement can make any of them commit. But the wind always drops in the end, and in still air every
-  bird is at its perch within a glass. Change only that, and the four never commit to different answers,
-  whatever the wind does, and once it has dropped they all commit, though none of them can tell when it
-  dropped.</p>
-  <p class="lineage"><span class="lbl">Builds on</span> <a href="../the-limits-of-agreement/index.html">The Limits of Agreement</a></p>
-  <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/the-foot/index.html">The Foot of Mount Phyle</a></p>
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <span class="now" id="now"></span>
+  <i id="prog"></i>
+</div>
+
+<!-- ============================================================ cover -->
+<header class="spread dark" id="cover" data-name="Cover">
+  <div class="cut" style="left:-30px;bottom:-10px;width:90px;opacity:.3" data-depth="-26"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#5f6e28"/></svg></div>
+  <div class="cut" style="right:-20px;bottom:-14px;width:80px;opacity:.3" data-depth="-40"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#7c8f3a"/></svg></div>
+  <div class="wrap grid">
+    <div>
+      <div class="kicker">After Dwork, Lynch and Stockmeyer, 1988</div>
+      <h1>Agreeing When Messages Run Late<span>safe in any wind, and sure to commit once it drops</span></h1>
+      <p class="hook">Can the four stay safe however late the ravens run, and still commit once the birds come on time again?</p>
+      <p class="hook" style="color:var(--blood);font-style:normal;font-family:var(--sans);font-size:1.1rem">At the foot of Mount Phyle, they can, with turns and pledges.</p>
+      <div class="scrollcue"><b>↓</b> Scroll. Things unfold.</div>
+    </div>
+    <div class="pop" data-auto>
+      <div class="leaf">
+        <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" alt="On a moonlit night, with the wind bending the pines and cypresses, a mercenary in a blue cloak crouches at the mouth of a tent on a rocky headland above the sea, holding a sandglass up to the moon"></div>
+        <div class="fold-shadow"></div>
+      </div>
+    </div>
+  </div>
 </header>
 
-<!-- ================= IN A NUTSHELL ================= -->
-<section class="nutshell">
-  <h6>In a Nutshell</h6>
-  <p>Dwork, Lynch and Stockmeyer's partial synchrony sits between a network with no timing guarantees, where consensus is impossible, and one with strict bounds, which no real network is. Delays may be unbounded for a while, but from some unknown time on they stay within some unknown bound. A protocol can then be safe under any delays and still terminate once the network settles, without anyone knowing when that was.</p>
-  <p>The book tells it with four mercenaries and a wind. They must agree to attack or hold, and in a high wind no one can say how long a raven will take, so no arrangement can make them commit. But the wind always drops in the end, and in still air every bird arrives within a glass. A turn-taking plan keeps them safe whatever the wind does, and lets them commit soon after it drops, though none can tell when it did.</p>
-</section>
-
-<nav class="toc">
-  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
-  <ol>
-    <li><a href="#s1">I · A Windy Night</a></li>
-    <li><a href="#s2">II · Glasses and Late Birds</a></li>
-    <li><a href="#s3">III · Turns and Pledges</a></li>
-    <li><a href="#s4">IV · Never Two Answers, in Any Wind</a></li>
-    <li><a href="#s5">V · Committing Once the Wind Drops</a></li>
-    <li><a href="#s6">VI · Two Against Two</a></li>
-    <li><a href="#s7">VII · Liars and Seals</a></li>
-    <li><a href="#s8">VIII · What the Wind Does Not Say</a></li>
-    <li><a href="#s9">IX · In the Book, In the Paper</a></li>
-    <li><a href="#refs">The Paper Behind This Book</a></li>
-  </ol>
-</nav>
-
-<hr class="rule">
-
-<!-- ================= I ================= -->
-<section id="s1">
-  <div class="issue"><span class="no">Chapter I</span><h2>A Windy Night</h2></div>
-
-  <div class="prose">
-    <p>At the foot of Mount Phyle four mercenaries, <span class="coin">Number 1</span> to
-    <span class="coin">Number 4</span>, keep four tents out of sight of one another and
-    send word only by raven<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup>. They must all attack or all hold: an attack by fewer than four may meet more than it can handle, and a hold with a man missing leaves the hill open. Each formed his own
-    opinion at dusk, his <span class="coin">sighting</span>, and committing is final: a man who attacks strikes his tent and goes round the slope to climb with the others, a man who holds leaves his tent to lie by the path down his gully, and what a
-    man thinks before he commits does not count.</p>
-
-    <p>The birds always arrive, and what they carry is what was written. Nobody lies. Any one of
-    the four may be killed. It has not happened, and no one is killed in this book; what matters is
-    that it may. A dead man's tent falls silent and stays silent.</p>
-  </div>
-
-  <div class="aside-formal">
-    <span class="lbl">The three demands</span>
-    <span class="stmt">First.</span> No two of them commit to different answers.<br>
-    <span class="stmt">Second.</span> If all four sighted the same answer, that is the answer they commit
-    to.<br>
-    <span class="stmt">Third.</span> Every man who is not killed eventually commits.
-  </div>
-
-  <div class="prose">
-    <p>Can they be sure of meeting all three? With no promise about the birds, no arrangement the four
-    could make guarantees that any of them ever commits<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup>. The trouble is two things together: there is no longest flight, and a
-    dead man looks exactly like a slow bird. Would a longest flight change that? It would. If it were
-    known truly that no bird had ever taken more than five hours, silence of six hours would mean
-    something<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup>. No such promise is made at the foot of the hill.</p>
-
-    <p>Is there something less than a longest flight that would still be enough? There is.</p>
-
-    <p>What keeps a raven in the folds is the <span class="coin">wind</span>. While it blows, a bird
-    let go into the gullies goes down among the hill's crows and sits it out in the pines, for an hour
-    or for the night, and nobody can say for how long; a bird that has gone down among them may stay
-    there as long as it likes, even after the wind has dropped. A bird let go in still air comes
-    straight. On the nights of this book the wind blows over the whole hill, and while it blows the
-    four can arrange nothing that makes anyone commit<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup>. But it always drops in the end, and once it has
-    dropped it stays down, and no bird let go in still air takes longer than a short span that every
-    man knows.</p>
-  <figure class="panel">
-    <img src="../../assets/img/panels/agreeing-when-messages-run-late/p01-wind.jpg" width="1200" height="896" loading="lazy"
-         alt="Under a full moon, with the wind bending the pines and cypresses of the hill, a raven with a message tied to its leg sits among a flock of crows on a bare branch, waiting out the wind.">
-  </figure>
-
-    <p>That is the whole change. Without it, nobody could count on the wind dropping, and that is the
-    whole of the trouble. Here the four can count on it. Can they see it? No. A lull at one tent says
-    nothing about the folds two spurs away, where a bird may still be sitting in a pine, and a lull
-    that ends in a fresh gust looks exactly like the end of the wind. No man ever knows that the wind
-    has dropped over the whole hill. He knows only that it will.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>So the four need an arrangement that never commits two men to different answers
-    however long the wind blows, since no one can tell when it stops, and that has everyone commit once it
-    has stopped. But how can a man use a span of time he has no way to measure?</em></p>
+<!-- ============================================================ machines -->
+<section class="spread light" id="machines" data-name="In machine terms">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap two" style="gap:clamp(24px,5vw,60px);align-items:center">
+    <div>
+      <div class="kicker">First, in machine terms</div>
+      <h2>Safe always, live once the network settles</h2>
+      <p class="lede">A group of computers must all settle on the same one of two values, and any message may be late.</p>
+      <ul class="terms">
+        <li><b>Late for a while, then prompt.</b> Until some unknown moment a message may take any time at all. From then on every message arrives within a bound the machines know.</li>
+        <li><b>One machine may stop</b> at any moment, without a word. The protocol needs more than half of the machines sound.</li>
+        <li><b>Dwork, Lynch and Stockmeyer</b> (1988): a protocol can be built that never lets two machines decide differently, however late messages run, and that has every sound machine decide once delays settle, though none can tell when they did.</li>
+      </ul>
+      <p style="margin-top:1.2rem">This edition tells it with four mercenaries, their ravens, and a wind.</p>
+    </div>
+    <div class="pop fromright"><div class="leaf">
+      <div class="paper logs">
+        <h4>Is the network prompt yet?</h4>
+        <div class="wire"><div class="m">MACHINE A</div><div class="w"><span>?</span></div><div class="m">MACHINE B</div></div>
+        <div class="waitlog" id="replylog"></div>
+        <p class="note" id="replynote" data-live>A asks B for a reply and allows 2 seconds for it.</p>
+        <div class="row"><button class="btn" id="askb">Ask B again</button><button class="btn alt" id="askshow" disabled>When did it settle?</button><button class="btn alt" id="askr" hidden>Start again</button></div>
+      </div>
+    </div></div>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= II ================= -->
-<section id="s2">
-  <div class="issue"><span class="no">Chapter II</span><h2>Glasses and Late Birds</h2></div>
-
-  <div class="prose">
-    <p>Every man measures time with sand. Each tent has a sandglass, and the glasses run alike. On the
-    evenings of this book the crown stands clear at sunset, and the last light leaves the top of the
-    hill at one moment, seen from every tent at the foot. At that moment each man turned his glass.
-    He turns it again the moment it runs out and keeps count of the <span class="coin">glasses</span>,
-    and since the four glasses started together and run alike, all four men always have the same
-    count. Do the glasses drift apart over a night? They do, as any sand does, but by less than a
-    flight, which is all that is needed.</p>
-
-    <p>Is the last light a signal? No. It is the only common moment the four have, and nobody made
-    it; the sun did, once, at dusk, and nothing like it happens again until morning. The bandits
-    cannot use it on the crown. Their posts lie on different slopes, and the hill's shoulders take the light from each at a different moment; the chief, inside his wall, sees only sky.</p>
-
-    <p>How long is a glass? Long enough for a man to write and tie a strip for every tent, and for
-    any bird let go in still air to reach its perch before the sand runs out. That is what the known
-    span buys: once the wind is down, a bird let go in a glass is taken in within the same glass.</p>
-
-    <p>And a bird that comes late? Every strip carries the count of the glass in which it was
-    written. A man who takes in a bird in a later glass than the one on its strip reads it, and sets
-    it aside. Nothing in it counts: not what it asks, not what it answers, not what it says was seen
-    at dusk. Only a bird of one kind is taken whenever it comes, and we will meet it. Setting birds
-    aside loses nothing that matters, and it makes every glass stand alone. What a man does in a
-    glass depends only on the birds written in that glass, and while the wind blows, a glass's birds
-    may simply fail to come.</p>
-  </div>
-
-  <div class="aside-formal">
-    <span class="lbl">The hill, as this book uses it</span>
-    <span class="stmt">(1) While the wind blows,</span> a bird may take any time. None is lost.<br>
-    <span class="stmt">(2) The wind drops</span> at some moment and stays down. From then on, a bird
-    let go in a glass reaches its perch within the same glass. A bird let go before the drop may
-    still be in the pines.<br>
-    <span class="stmt">(3) No man knows</span> when the wind has dropped.<br>
-    <span class="stmt">(4) The glasses</span> were turned together at last light and run alike, so
-    every man's count of glasses is the same.<br>
-    <span class="stmt">(5) Late birds:</span> a strip taken in during a later glass than the one it
-    was written in is set aside, except a parting bird.<br>
-    <span class="stmt">(6) At most one</span> of the four is killed. No one lies.<br>
-    <span class="paper">Communication is partially synchronous, &ldquo;Δ holds eventually&rdquo;:
-    the bound Δ is known and holds from an unknown global stabilization time (GST) on, §2.3.
-    Processors are synchronous, Φ = 1, §4. Each processor simulates a round of the basic round
-    model in a group of <var>N</var> + Δ steps, and a message that arrives in a later round is
-    ignored, §4.1. Fail-stop faults, <var>N</var> = 4, <var>t</var> = 1.</span>
-  </div>
-
-  <div class="prose">
-    <p>Take away line (2), and what is left? The camps on a night when nothing can be arranged<sup class="xref"><a href="../the-limits-of-agreement/index.html#s3" title="The Limits of Agreement: A Tent That Does Not Answer">*</a></sup>.
-    The glasses on their own would not help. With no longest flight, a glass that runs out with no
-    bird tells a man nothing, however many glasses he counts. What gives the glasses their meaning is
-    the wind's dropping, and the wind's dropping is something no man sees.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>Every man now shares a count of glasses, and late birds are set aside. What
-    do the four do with that count?</em></p>
+<!-- ============================================================ the setting -->
+<section class="spread dark" id="hall" data-name="The Foot of Mount Phyle">
+  <div class="bleed">
+    <img src="img/camp.jpg" alt="A lone linen tent with a shield and a chest on a rocky slope below a ring wall on the summit, cypresses and pines around it" data-parallax>
+    <div class="hall-title"><div class="t">
+      <div class="kicker">The foot of Mount Phyle</div>
+      <h2>Four tents, out of sight of one another</h2>
+      <p>Four mercenaries camp at the foot of the hill, one to a tent, and send word only by raven.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> They must all attack the hill together, or all hold.</p>
+    </div></div>
+    <div class="pin pop" style="left:50%;top:44%;"><div class="leaf"><b>Only ravens</b>The birds always arrive, and bring exactly what was written.</div></div>
+    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>Nobody lies</b>No man at the foot ever misreports anything.</div></div>
+    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>One may die</b>Any one of the four may be killed, and a dead man's tent falls silent. Nobody is killed in this telling. What matters is that one may be.</div></div>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= III ================= -->
-<section id="s3">
-  <div class="issue"><span class="no">Chapter III</span><h2>Turns and Pledges</h2></div>
-
-  <div class="prose">
-    <p>The four group the glasses in fours, and each four is a <span class="coin">turn</span>. The first
-    turn is glasses one to four, the second five to eight, and so on through the night. Each turn
-    belongs to one man, in the order of the tents' numbers: the first to Number 1, the second to
-    Number 2, the third to Number 3, the fourth to Number 4, the fifth to Number 1 again. A turn's
-    man is its <span class="coin">owner</span>.</p>
-
-    <p>Is the owner a leader? No. Nobody chose him; the count of glasses did, and it would have
-    chosen him if he were dead. He gives no orders. He may only put forward an answer that three men,
-    himself included, have already told him they could accept, and his turn passes when its fourth
-    glass runs out, whatever has happened in it.</p>
-
-    <p>What does each man keep besides his sighting? Two things.</p>
-
-    <p>The first is <span class="coin">the sighted answers</span>: the answers he knows someone sighted.
-    It starts as his own sighting. Every strip he sends carries it, and when a strip he does not set
-    aside names an answer as seen, he adds it. So if all four sighted hold, the only answer on anyone's list
-    is ever hold, in every tent.</p>
-
-    <p>The second is his <span class="coin">pledges</span>. A pledge is a strip tied to his tent
-    pole, naming an answer and a turn: <em>hold, turn five</em>. It means: <em>in turn five, the owner
-    may have committed to hold</em>. A man may have pledges on both answers at once. He can
-    <span class="coin">accept</span> an answer if he has no pledge on the other.</p>
-  </div>
-
-  <div class="aside-formal">
-    <span class="lbl">The four glasses of a turn</span>
-    <span class="stmt">The asking glass.</span> Every man, the owner included, sends the owner the
-    answers he can accept that are among the sighted answers.<br>
-    <span class="stmt">The calling glass.</span> If at least three men, himself included, named the
-    same answer, the owner calls it: he sends <em>pledge to hold, turn five</em>, say, to every tent,
-    his own included. If both answers qualify he calls either; if neither, he calls nothing.<br>
-    <span class="stmt">The answering glass.</span> A man who took in the call in the calling glass
-    ties a pledge for that answer and turn, unties any earlier pledge on the <em>same</em> answer, and
-    sends the owner <em>pledged</em>. A pledge on the other answer stays where it is. If the owner
-    takes in <em>pledged</em> from at least two men, himself possibly among them, he commits to the
-    answer he called.<br>
-    <span class="stmt">The untying glass.</span> Every man sends every tent all his pledges, answer and
-    turn. A man with a pledge on one answer who learns of a pledge on the other answer at a turn as
-    late as his own, or later, unties his.<br>
-    <span class="paper">Algorithm 1, §3.2.1: trying phase <var>k</var> of three rounds and
-    lock-release phase <var>k</var> of one; phase <var>k</var> belongs to <var>p</var><sub>i</sub>
-    when <var>k</var> ≡ <var>i</var> (mod <var>N</var>). A proposal needs <var>N</var> − <var>t</var>
-    = 3 processors finding the value acceptable and proper; a decision needs acknowledgments from
-    <var>t</var> + 1 = 2. The sighted answers are the PROPER set.</span>
-  </div>
-
-  <div class="prose">
-    <p>Why these numbers? Four men, of whom one may be dead: so an owner can never count on hearing
-    from more than three, and he never waits for a fourth. A call needs three men who can accept its
-    answer. And why does an owner commit on two <em>pledged</em>, not three or four? Two pledges on an answer
-    leave only two men who could accept the other, and the other would need three.</p>
-
-    <p>Who decides which answer is better? Nobody. Which answer the four commit to is not the subject of this
-    book and is settled nowhere in it. An owner who may call either answer calls either; the
-    arrangement is indifferent to which.</p>
-
-    <p>What do the sighted answers do? They keep the second demand. An owner calls only an answer that
-    three men named from among the answers they know were sighted, and an answer enters that list only
-    because someone sighted it. If all four sighted hold, attack is never on anyone's list, and
-    nothing but hold can ever be called.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>Birds come late, are set aside, or sit in the pines for glass after glass.
-    Can pledges tied on such a night ever commit two men to different answers?</em></p>
+<!-- ============================================================ attack or hold -->
+<section class="spread light" id="demands" data-name="Attack or hold">
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">What the four want</div>
+      <h2>All attack, or all hold</h2>
+      <p class="lede">An attack by fewer than four may meet more than it can handle, and a hold with a man missing leaves the hill open.</p>
+      <p>Each man formed an opinion at dusk from the quarter in view, a <b>sighting</b>. A man <b>commits</b> by leaving the tent: to strike it and go round the slope to climb with the others, or to lie by the path down a gully and hold. Committing is final, and what a man thinks before it does not count.</p>
+    </div>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First demand</div><h3>No two commit differently</h3><p>Nobody attacks while another holds.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second demand</div><h3>A shared sighting wins</h3><p>If all four sighted the same answer, that is the answer they commit to.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third demand</div><h3>Every living man commits</h3><p>Every man who is not killed eventually commits.</p></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.4rem">Can they be sure of meeting all three? With no promise about the birds, no arrangement guarantees that anybody ever commits.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup> A longest flight would change that, since enough silence would then mean something.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup> No such promise is made at the foot of the hill. Is something less than a longest flight enough? It is.</p>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= IV ================= -->
-<section id="s4">
-  <div class="issue"><span class="no">Chapter IV</span><h2>Never Two Answers, in Any Wind</h2></div>
-
-  <div class="prose">
-    <p>Why must the first demand be kept in any wind? Because nobody can tell when the wind drops. If it
-    were kept only in still air, the four would never know whether it was. So the arrangement is built
-    so that the first demand needs nothing from the wind at all.</p>
-
-    <p>What does it rest on? Two facts. The first is small. In any turn only the owner calls, and he
-    calls at most one answer, so no two men ever tie pledges on different answers for the same turn.</p>
-
-    <p>The second is the heart of it. Suppose some man commits, and take the earliest turn in which
-    anyone committed, say to hold in turn five. The owner of turn five had <em>pledged</em> from two men,
-    so two men tied <em>hold, turn five</em>. Could either of them lose his pledge to hold? To lose
-    it, he would have to untie it without tying a later pledge to hold, and he unties only on hearing of a
-    pledge to attack at a turn as late as five. There was none in turn five, so it would have to be a
-    later turn, say turn eight. But for attack to be called in turn eight, three men had to be able to
-    accept attack in turn eight's asking glass, which means three men with no pledge to hold. Two
-    of the four still had one. That leaves two.</p>
+<!-- ============================================================ the wind -->
+<section class="spread dark" id="windsec" data-name="The wind">
+  <a class="anchor" id="s1"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">The only promise</div>
+        <h2>The wind keeps the ravens in the folds</h2>
+        <p class="lede">While the wind blows, a bird let go into the gullies goes down among the hill's crows and sits it out in the pines, for an hour or for the night. A bird that has gone down may stay there as long as it likes, even after the wind has dropped.</p>
+        <p>A bird let go in still air comes straight. The wind always drops in the end, and once down it stays down. From then on no bird let go in still air takes longer than a short span that every man knows. That is the whole change.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p01-wind.jpg" alt="Under a full moon, with the wind bending the pines and cypresses of the hill, a raven with a message tied to its leg sits among a flock of crows on a bare branch, waiting out the wind" loading="lazy"></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+      <h4>Birds let go in the wind <em>one span at a time</em></h4>
+      <div class="spans" id="spans"></div>
+      <div class="counts"><span><b id="wlet">0</b>birds let go</span><span><b id="win">0</b>taken in within their own span</span></div>
+      <p class="say" id="windsay">In each span, tent 1 lets a bird go to tent 2. Let the spans pass and watch which birds come in time.</p>
+      <div class="row">
+        <button class="btn" id="windnext">Let the next span pass</button>
+        <button class="btn alt" id="windshow" disabled>Show where the wind dropped</button>
+        <button class="btn alt" id="windreset">Start again</button>
+      </div>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">The page draws the moment the wind drops at random and keeps it from you, as the hill keeps it from the men. The birds' delays are drawn by the rule above: any length in the wind, and a bird let go in still air within its span.</p>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.6rem">Can the four see the wind drop? No. A lull at one tent says nothing about the folds two spurs away, where a bird may still sit in a pine, and a lull that ends in a fresh gust looks exactly like the end of the wind. No man ever knows that the wind has dropped over the whole hill. Each knows only that it will. Without that, nothing could be arranged.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup></p>
+    <p style="max-width:40em"><b>So the four need an arrangement</b> that never commits two men to different answers however long the wind blows, since no one can tell when it stops, and that has everyone commit once it has stopped. But how can a man use a span of time that has no way to be measured?</p>
   </div>
+</section>
 
-  <div class="result">
-    <span class="name">Never Two Answers</span>
-    <p>However long the wind blows and however the birds are delayed, no two men ever commit to
-    different answers; and if all four sighted the same answer, no man commits to the other.</p>
+<!-- ============================================================ glasses and late birds -->
+<section class="spread light" id="glasses" data-name="Glasses and late birds">
+  <a class="anchor" id="s2"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">A count every man shares</div>
+      <h2>Glasses and late birds</h2>
+      <p class="lede">Each tent has a sandglass, and the four run alike. When the last light left the top of the hill, seen from every tent at one moment, every man turned the glass.</p>
+      <p>A man turns the glass again the moment it runs out, and counts the <b>glasses</b>. The four started together and run alike, so all four always have the same count. The glasses do drift over a night, as sand does, but by less than a flight, which is all that is needed. The last light is no signal. It is the only common moment the four have, and the sun made it. The bandits cannot use it on the crown: their posts lie on different slopes, and the chief inside the wall sees only sky.</p>
+      <p>A glass is long enough for a man to write and tie a strip for every tent, and for any bird let go in still air to reach its perch before the sand runs out. So once the wind is down, a bird let go in a glass is taken in within the same glass.</p>
+    </div>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Every strip</div><h3>Carries its glass</h3><p>A strip is written with the count of the glass in which it was written.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A late bird</div><h3>Is read, and set aside</h3><p>A strip taken in during a later glass than its own counts for nothing: not what it asks, not what it answers, not what it says was seen at dusk.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">One exception</div><h3>The parting bird</h3><p>One kind of bird is taken in whenever it comes. It is met further on.</p></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Birds at a tent pole <em>taken in, or set aside</em></h4>
+      <div class="pole" id="pole" data-live></div>
+      <div class="counts"><span><b id="pcount">0</b>counted</span><span><b id="paside">0</b>set aside</span></div>
+      <p class="say" id="polesay">A bird comes in at tent 2. Is it taken in, or set aside?</p>
+      <div class="row"><button class="btn" id="polenext">A bird comes in</button><button class="btn alt" id="poler">Start again</button></div>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">The page draws each bird at random. What is done with it follows the rule above.</p>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">Setting birds aside loses nothing that matters, and it makes every glass stand alone. What a man does in a glass depends only on the birds written in that glass, and while the wind blows, a glass's birds may simply fail to come.</p>
+    <p style="max-width:40em">Take away the wind's dropping, and what is left? A night on which nothing can be arranged.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s3" title="The Limits of Agreement: A Tent That Does Not Answer">*</a></sup> The glasses alone would not help. With no longest flight, a glass that runs out with no bird tells a man nothing, however many glasses are counted. What gives the glasses their meaning is the wind's dropping, and no man sees that.</p>
+    <details class="proof">
+      <summary>The hill, as this telling uses it, stated in the paper's terms</summary>
+      <p><b>(1) While the wind blows,</b> a bird may take any time. None is lost.<br>
+      <b>(2) The wind drops</b> at some moment and stays down. From then on, a bird let go in a glass reaches its perch within the same glass. A bird let go before the drop may still be in the pines.<br>
+      <b>(3) No man knows</b> when the wind has dropped.<br>
+      <b>(4) The glasses</b> were turned together at last light and run alike, so every man's count of glasses is the same.<br>
+      <b>(5) Late birds:</b> a strip taken in during a later glass than the one it was written in is set aside, except a parting bird.<br>
+      <b>(6) At most one</b> of the four is killed. No one lies.</p>
+      <p class="given">Communication is partially synchronous, “Δ holds eventually”: the bound Δ is known and holds from an unknown global stabilization time (GST) on, §2.3. Processors are synchronous, Φ = 1, §4. Each processor simulates a round of the basic round model in a group of <var>N</var> + Δ steps, and a message that arrives in a later round is ignored, §4.1. Fail-stop faults, <var>N</var> = 4, <var>t</var> = 1.</p>
+    </details>
   </div>
+</section>
 
-  <details class="proof">
-    <summary>Proof — that no two men commit to different answers, in any wind</summary>
+<!-- ============================================================ turns and pledges -->
+<section class="spread dark has-scrolly" id="turnsec" data-name="Turns and pledges">
+  <a class="anchor" id="s3"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap" style="margin-bottom:-1rem">
+    <div class="narrow">
+      <div class="kicker">Who may propose</div>
+      <h2>Turns and pledges</h2>
+      <p class="lede">The four group the glasses in fours, and each four is a <b>turn</b>. The first turn is glasses one to four, the second five to eight, and so on through the night.</p>
+      <p>A turn belongs to one man, in the order of the tents' numbers: the first to tent 1, the second to tent 2, the fifth to tent 1 again. That man is its <b>owner</b>. The owner is no leader. The count of glasses chose them, and would have chosen a dead man. The owner gives no orders, and may only put forward an answer that three men, themselves included, have already said they could accept. The turn passes when its fourth glass runs out, whatever has happened in it.</p>
+    </div>
+    <div class="cards3" style="margin-top:1.4rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What each man keeps</div><h3>The sighted answers</h3><p>The answers the man knows someone sighted. The list starts as the man's own sighting, every strip carries it, and a man adds whatever a strip names. If all four sighted hold, only hold is ever on any list.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What each man keeps</div><h3>Pledges</h3><p>A strip tied to the tent pole, naming an answer and a turn: <i>hold, turn five</i>. It means that the owner of turn five may have committed to hold. A man may hold pledges on both answers at once.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A word for it</div><h3>To accept</h3><p>A man can accept an answer if there is no pledge on the other. Scroll to watch one turn run in still air.</p></div></div></div>
+    </div>
+  </div>
+  <div class="scrolly" id="turn">
+    <div class="stage"><div class="stage-inner split">
+      <svg class="isle-svg fig svg-dark" id="turnsvg" role="img" aria-label="The hill from above with four tents at its foot and ravens in flight between them, for one turn of four glasses"></svg>
+      <div class="side" id="turnside" data-live></div>
+    </div></div>
+    <div class="steps">
+      <div class="step on"><div class="card"><div class="num">1 · The owner</div><h3>Turn five is tent 1's</h3><p>Still air: every bird comes within its glass. Tent 3 sighted attack and the others hold, and every man has heard that both answers were sighted. One pledge is left from an earlier turn: tent 2 holds <i>attack, turn two</i>, and nobody committed on it.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · The asking glass</div><h3>Every man names what can be accepted</h3><p id="turnc2"></p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · The calling glass</div><h3>The owner counts, and calls</h3><p id="turnc3"></p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · The answering glass</div><h3>Pledges are tied, and the owner commits</h3><p id="turnc4"></p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · The untying glass</div><h3>An older pledge is untied</h3><p id="turnc5"></p></div></div>
+    </div>
+  </div>
+  <div class="wrap" style="padding-top:2.5rem;padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <p style="max-width:40em">Why these numbers? Four men, of whom one may be dead: an owner can never count on hearing from more than three, and never waits for a fourth. A call needs three men who can accept its answer. An owner commits on two <i>pledged</i>, because two pledges leave only two men who could accept the other answer, and the other would need three.</p>
+    <p style="max-width:40em">Who decides which answer is better? Nobody. Which answer the four commit to is settled nowhere here. An owner who may call either answer calls either.</p>
+    <p style="max-width:40em">What do the sighted answers do? They keep the second demand. An owner calls only an answer that three men named from the answers they know were sighted, and an answer enters that list only because someone sighted it. If all four sighted hold, nothing but hold can ever be called.</p>
+    <details class="proof">
+      <summary>The four glasses of a turn, stated in the paper's terms</summary>
+      <p><b>The asking glass.</b> Every man, the owner included, sends the owner the answers he can accept that are among the sighted answers.<br>
+      <b>The calling glass.</b> If at least three men, himself included, named the same answer, the owner calls it: he sends <i>pledge to hold, turn five</i>, say, to every tent, his own included. If both answers qualify he calls either; if neither, he calls nothing.<br>
+      <b>The answering glass.</b> A man who took in the call in the calling glass ties a pledge for that answer and turn, unties any earlier pledge on the <i>same</i> answer, and sends the owner <i>pledged</i>. A pledge on the other answer stays where it is. If the owner takes in <i>pledged</i> from at least two men, himself possibly among them, he commits to the answer he called.<br>
+      <b>The untying glass.</b> Every man sends every tent all his pledges, answer and turn. A man with a pledge on one answer who learns of a pledge on the other answer at a turn as late as his own, or later, unties his.</p>
+      <p class="given">Algorithm 1, §3.2.1: trying phase <var>k</var> of three rounds and lock-release phase <var>k</var> of one; phase <var>k</var> belongs to <var>p</var><sub>i</sub> when <var>k</var> ≡ <var>i</var> (mod <var>N</var>). A proposal needs <var>N</var> − <var>t</var> = 3 processors finding the value acceptable and proper; a decision needs acknowledgments from <var>t</var> + 1 = 2. The sighted answers are the PROPER set.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ never two answers -->
+<section class="spread light" id="never" data-name="Never two answers">
+  <a class="anchor" id="s4"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Safety asks nothing of the wind</div>
+      <h2>Never two answers, in any wind</h2>
+      <p class="lede">The first demand has to hold in any wind, because nobody can tell when the wind drops. If it held only in still air, the four would never know whether it did. So the arrangement is built so that the first demand needs nothing from the wind at all.</p>
+      <p>Two facts carry it. First, in any turn only the owner calls, and at most one answer, so no two men tie pledges on different answers for the same turn. Second, take the earliest turn in which anyone committed, say to hold in turn five. The owner had <i>pledged</i> from two men, so two men tied <i>hold, turn five</i>. To lose it, a man would have to untie it on hearing of a pledge to attack in a later turn, say turn eight. But for attack to be called in turn eight, three men had to be able to accept attack in its asking glass, which means three men with no pledge to hold. Two of the four still had one. That leaves two.</p>
+    </div>
+    <div class="stmt-box"><b>Never Two Answers</b><p>However long the wind blows and however the birds are delayed, no two men ever commit to different answers. If all four sighted the same answer, no man commits to the other.</p></div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Pledges in turn five, and a call to attack later <em>try each count</em></h4>
+      <div class="pickrow"><span>Men who tie <i>hold, turn five</i></span><span id="pickk"></span></div>
+      <div class="pickrow"><span><i>Pledged</i> birds in time</span><span id="pickm"></span></div>
+      <div class="men" id="menrow"></div>
+      <p class="verdict" id="verdict" data-live></p>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">Which men tied the pledge does not matter, only how many. The page counts by the rules of the turn: an owner commits on at least two <i>pledged</i>, and a call needs three men who can accept.</p>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">Where does the wind come into this? Nowhere. It uses only the counting: two pledges that cannot be untied, and three men needed to accept the other answer, among four. Birds may arrive late, be set aside, or not come at all in the glass they were meant for. Each of those only makes a call or a <i>pledged</i> fail to happen, and failing to happen is always safe. That is why the arrangement can run straight through the wind without anyone knowing when it ends.</p>
+    <p style="max-width:40em">Then why untie pledges at all? A pledge from a turn in which nobody committed, because the owner's <i>pledged</i> birds were in the pines, would otherwise sit on its tent pole all night and forbid its holder to accept the other answer for ever. The untying glass lets a later call, which knew more, override it. What it can never override is a pledge held by the two men of a turn in which someone committed, because no later call against that answer can gather three.</p>
+    <p style="max-width:40em"><b>Nobody commits to a wrong answer, in any wind.</b> But an arrangement where nobody ever commits would manage that too. Once the wind drops, does anyone commit?</p>
+    <details class="proof">
+      <summary>Proof · that no two men commit to different answers, in any wind</summary>
+      <p class="given">In the paper's terms a turn is a phase, a pledge is a lock, to accept an answer is to find a value acceptable, and to commit is to decide; <var>k</var> and <var>h</var> are turn numbers, <var>N</var> = 4 and <var>t</var> = 1. <b>Theorem 3.1 and Theorem 4.1(a).</b> However messages are delayed, no two processors decide different values (consistency), and if all four started with the same value no processor decides another (strong unanimity).</p>
     <ol class="proofsteps">
       <li><b>One answer per turn.</b> Only a turn's owner calls, and he calls at most one answer in it.
       A pledge for turn <var>k</var> is tied only on taking in the call of turn <var>k</var>. So all
@@ -318,159 +601,47 @@
       answers, and an answer enters that list only through someone's sighting. If all four
       sighted hold, only hold can be named, called or committed to.<span class="qed">∎</span></li>
     </ol>
-  </details>
-
-  <div class="prose">
-    <p>Where does the wind come into the proof? Nowhere. It uses only the counting: two pledges that
-    cannot be untied, and three men needed to accept the other answer, among four. Birds may arrive
-    late, be set aside, or not come at all in the glass they were meant for; each of those only makes
-    a call or a <em>pledged</em> fail to happen, and failing to happen is always safe. That is why the
-    arrangement can run straight through the wind without anyone knowing when it ends.</p>
-
-    <p>Then why untie pledges at all? Because a pledge from a turn in which nobody committed, because the
-    owner's <em>pledged</em> birds were in the pines, would otherwise sit on its tent pole all night
-    and forbid its holder to accept the other answer for ever. The untying glass lets a later call,
-    which knew more, override it. What it can never override is a pledge held by the two men of a
-    turn in which someone committed, because no later call against that answer can gather three.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>Nobody commits to a wrong answer, in any wind. But an arrangement where nobody
-    ever commits would manage that too. Once the wind drops, does anyone commit?</em></p>
+    </details>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= V ================= -->
-<section id="s5">
-  <div class="issue"><span class="no">Chapter V</span><h2>Committing Once the Wind Drops</h2></div>
-
-  <div class="prose">
-    <p>First, what happens when a man commits? Committing is silence. Attacking or holding, a man has left his tent and its birds, so he sends no
-    more birds and ties no more pledges. So a man who commits must
-    first say so. Before he leaves his tent, he sends each of the other tents a
-    <span class="coin">parting bird</span>: <em>parting, hold</em>. A parting bird carries no turn and is
-    never set aside. A man who takes one in, at any glass, whenever it comes, sends parting birds of
-    his own to every tent, and then commits to the answer it names.</p>
-
-    <p>Why must every man who commits send his own parting birds, not only the first? A man may be killed
-    halfway through tying them, with two sent and one not. Whoever received one of his will send a
-    full set. Since at most one man is killed, the birds of the others reach every tent in the end,
-    and every man left alive commits, whenever the birds come.</p>
-
-    <p>Is this an addition to the paper? No, it is the paper's own device. The paper has a man who
-    decides send the decision to everyone, lets anyone who receives it decide at once, and, where
-    messages are delayed but never lost, lets a man who has sent it stop. On this hill no bird is
-    ever lost.</p>
-
-    <p>So once one man commits, the third demand is settled. Does some man commit once the wind has
-    dropped?</p>
-  </div>
-
-  <figure class="diagram">
-    <div class="board">
-      <svg class="flow" viewBox="0 0 660 500" role="img" aria-label="One turn in still air, owned by tent 3, drawn in the round: four tents, later moments further out. Three shaded rings are the asking, calling and answering glasses. In the asking glass every man sends the owner the answers he can accept. In the calling glass the owner calls hold to every tent. In the answering glass the others send pledged birds back. The owner, with two or more pledged birds, sends parting birds and commits to hold.">
-        <!-- polar:awl-turn -->
-        <defs>
-          <marker id="awl-turn-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
-          </marker>
-          <marker id="awl-turn-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
-          </marker>
-          <marker id="awl-turn-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
-          </marker>
-          <marker id="awl-turn-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
-          </marker>
-          <marker id="awl-turn-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
-          </marker>
-        </defs>
-        <circle cx="330" cy="250" r="66" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="250" r="92" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="250" r="118" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="250" r="144" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="250" r="170" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="250" r="196" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="250" r="222" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <clipPath id="awl-turn-clip0"><circle class="tclip" cx="330" cy="250" r="231.6" data-r0="40" data-r1="211.6"/></clipPath>
-        <g class="tflow" clip-path="url(#awl-turn-clip0)">
-        <path d="M427.2,250 A97.2,97.2 0 1 0 232.8,250 A97.2,97.2 0 1 0 427.2,250 Z M377.8,250 A47.8,47.8 0 1 0 282.2,250 A47.8,47.8 0 1 0 377.8,250 Z" fill-rule="evenodd" style="fill:#a8741a; fill-opacity:0.16; stroke:#a8741a; stroke-opacity:.5; stroke-width:.8"/>
-        <path d="M479.2,250 A149.2,149.2 0 1 0 180.8,250 A149.2,149.2 0 1 0 479.2,250 Z M427.2,250 A97.2,97.2 0 1 0 232.8,250 A97.2,97.2 0 1 0 427.2,250 Z" fill-rule="evenodd" style="fill:#5f6e28; fill-opacity:0.16; stroke:#5f6e28; stroke-opacity:.5; stroke-width:.8"/>
-        <path d="M531.2,250 A201.2,201.2 0 1 0 128.8,250 A201.2,201.2 0 1 0 531.2,250 Z M479.2,250 A149.2,149.2 0 1 0 180.8,250 A149.2,149.2 0 1 0 479.2,250 Z" fill-rule="evenodd" style="fill:#a8741a; fill-opacity:0.16; stroke:#a8741a; stroke-opacity:.5; stroke-width:.8"/>
-        </g>
-        <line class="d-lifeline" x1="290" y1="250" x2="118.4" y2="250"/>
-        <line class="d-lifeline" x1="330" y1="210" x2="330" y2="38.4"/>
-        <line class="d-lifeline" x1="330" y1="290" x2="330" y2="461.6"/>
-        <line class="d-lifeline" x1="370" y1="250" x2="541.6" y2="250"/>
-        <rect class="d-node" x="275" y="239" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="290" y="254.5" text-anchor="middle" fill="#1c1512">T1</text>
-        <rect class="d-node" x="315" y="199" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="330" y="214.5" text-anchor="middle" fill="#1c1512">T2</text>
-        <rect class="d-node" x="315" y="279" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="330" y="294.5" text-anchor="middle" fill="#1c1512">T3</text>
-        <rect class="d-node" x="355" y="239" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="370" y="254.5" text-anchor="middle" fill="#1c1512">T4</text>
-        <text class="d-lbl d-halo" x="362" y="294" text-anchor="start" style="fill:#bf4a26">owner</text>
-        <text class="d-key" x="20" y="30" text-anchor="start" style="fill:#a8741a">asking glass</text>
-        <text class="d-key" x="20" y="48" text-anchor="start" style="fill:#5f6e28">calling glass</text>
-        <text class="d-key" x="20" y="66" text-anchor="start" style="fill:#a8741a">answering glass</text>
-        <g class="tflow" clip-path="url(#awl-turn-clip0)">
-        <path class="d-msg" marker-end="url(#awl-turn-b)" d="M274.4,250 L273.3,253 L272.3,256.1 L271.5,259.3 L270.9,262.6 L270.4,266 L270.2,269.4 L270.2,273 L270.3,276.6 L270.7,280.2 L271.3,283.9 L272.2,287.6 L273.2,291.2 L274.5,294.9 L276.1,298.6 L277.8,302.2 L279.8,305.7 L282,309.2 L284.5,312.7 L287.2,316 L290.1,319.2 L293.2,322.2 L296.5,325.2 L300.1,328 L303.8,330.6 L307.8,333 L311.9,335.2 L316.2,337.3 L320.6,339.1"/>
-        <circle class="d-ev" cx="274.4" cy="250" r="5"/>
-        <path class="d-msg-hi" marker-end="url(#awl-turn-r)" d="M330,355 L324.4,356.1 L318.8,356.8 L313,357.3 L307.2,357.5 L301.3,357.3 L295.3,356.8 L289.3,356 L283.3,354.8 L277.4,353.3 L271.4,351.4 L265.5,349.3 L259.7,346.7 L254,343.9 L248.4,340.7 L242.9,337.1 L237.5,333.2 L232.4,329.1 L227.4,324.6 L222.6,319.7 L218.1,314.6 L213.7,309.2 L209.7,303.6 L205.9,297.6 L202.4,291.4 L199.3,285 L196.4,278.4 L193.9,271.6 L191.8,264.5 L190,257.3"/>
-        <circle class="d-ev" cx="175.6" cy="250" r="5"/>
-        <path class="d-msg" marker-end="url(#awl-turn-b)" d="M175.6,250 L174.5,258.1 L173.9,266.4 L173.6,274.8 L173.9,283.2 L174.6,291.6 L175.7,300.1 L177.4,308.6 L179.4,317 L182,325.4 L185,333.7 L188.5,341.9 L192.5,349.9 L196.9,357.8 L201.7,365.5 L207,373 L212.8,380.2 L218.9,387.2 L225.5,393.8 L232.5,400.2 L239.8,406.2 L247.5,411.9 L255.6,417.2 L264,422.1 L272.6,426.5 L281.6,430.5 L290.9,434.1 L300.4,437.2 L310.1,439.8 L319.9,441.8"/>
-        <path class="d-msg" marker-end="url(#awl-turn-b)" d="M330,194.4 L327.1,193.9 L324.1,193.5 L321,193.3 L317.9,193.2 L314.8,193.4 L311.7,193.7 L308.6,194.1 L305.4,194.8 L302.3,195.6 L299.2,196.6 L296.1,197.8 L293,199.1 L290,200.7 L287.1,202.4 L284.3,204.3 L281.5,206.3 L278.8,208.5 L276.2,210.9 L273.7,213.4 L271.3,216.1 L269.1,219 L267,222 L265.1,225.1 L263.3,228.3 L261.6,231.7 L260.2,235.2 L258.9,238.7 L257.8,242.4 L256.9,246.2 L256.2,250 L255.7,253.9 L255.4,257.8 L255.3,261.8 L255.4,265.8 L255.8,269.9 L256.4,273.9 L257.1,278 L258.1,282 L259.4,286 L260.8,289.9 L262.5,293.8 L264.4,297.7 L266.5,301.4 L268.8,305.1 L271.4,308.6 L274.1,312.1 L277.1,315.4 L280.2,318.5 L283.5,321.6 L287,324.4 L290.7,327.1 L294.6,329.6 L298.6,331.9 L302.7,334 L307,335.9 L311.4,337.6 L315.9,339.1 L320.5,340.3"/>
-        <circle class="d-ev" cx="330" cy="194.4" r="5"/>
-        <path class="d-msg-hi" marker-end="url(#awl-turn-r)" d="M330,355 L335.5,355.5 L341.1,355.6 L346.7,355.5 L352.3,355.1 L358,354.4 L363.6,353.3 L369.2,352 L374.7,350.4 L380.1,348.4 L385.5,346.2 L390.8,343.7 L396,340.8 L401,337.7 L405.9,334.3 L410.7,330.7 L415.2,326.8 L419.6,322.6 L423.8,318.1 L427.7,313.5 L431.4,308.6 L434.9,303.5 L438.1,298.1 L441.1,292.6 L443.7,286.9 L446.1,281.1 L448.1,275.1 L449.9,269 L451.3,262.8 L452.4,256.4 L453.2,250 L453.6,243.5 L453.7,237 L453.5,230.4 L452.9,223.9 L451.9,217.3 L450.6,210.8 L449,204.3 L447,197.9 L444.6,191.6 L441.9,185.4 L438.9,179.3 L435.6,173.3 L431.9,167.5 L427.9,161.9 L423.6,156.4 L418.9,151.2 L414,146.2 L408.8,141.5 L403.4,137 L397.7,132.8 L391.7,128.9 L385.5,125.3 L379.2,122 L372.6,119 L365.8,116.3 L358.9,114.1 L351.8,112.1 L344.7,110.6 L337.4,109.4"/>
-        <circle class="d-ev" cx="330" cy="95.6" r="5"/>
-        <path class="d-msg" marker-end="url(#awl-turn-b)" d="M330,95.6 L321.9,95.2 L313.7,95.2 L305.5,95.6 L297.4,96.4 L289.2,97.7 L281.1,99.4 L273,101.6 L265.1,104.2 L257.2,107.2 L249.6,110.7 L242,114.5 L234.7,118.8 L227.5,123.4 L220.6,128.5 L213.9,133.9 L207.5,139.7 L201.4,145.9 L195.6,152.4 L190.2,159.2 L185,166.3 L180.3,173.7 L175.9,181.4 L171.9,189.3 L168.3,197.5 L165.2,205.8 L162.4,214.4 L160.2,223.1 L158.3,232 L157,240.9 L156.1,250 L155.7,259.1 L155.8,268.3 L156.3,277.5 L157.4,286.7 L158.9,295.8 L160.9,304.9 L163.4,314 L166.4,322.8 L169.8,331.6 L173.8,340.2 L178.2,348.6 L183,356.8 L188.3,364.8 L194,372.5 L200.1,379.9 L206.7,387 L213.6,393.7 L220.9,400.2 L228.6,406.2 L236.5,411.9 L244.9,417.1 L253.5,421.9 L262.3,426.3 L271.4,430.2 L280.8,433.7 L290.3,436.6 L300.1,439.1 L309.9,441 L319.9,442.5"/>
-        <path class="d-msg" marker-end="url(#awl-turn-b)" d="M385.6,250 L386.7,253 L387.7,256.1 L388.5,259.3 L389.1,262.6 L389.6,266 L389.8,269.4 L389.8,273 L389.7,276.6 L389.3,280.2 L388.7,283.9 L387.8,287.6 L386.8,291.2 L385.5,294.9 L383.9,298.6 L382.2,302.2 L380.2,305.7 L378,309.2 L375.5,312.7 L372.8,316 L369.9,319.2 L366.8,322.2 L363.5,325.2 L359.9,328 L356.2,330.6 L352.2,333 L348.1,335.2 L343.8,337.3 L339.4,339.1"/>
-        <circle class="d-ev" cx="385.6" cy="250" r="5"/>
-        <path class="d-msg-hi" marker-end="url(#awl-turn-r)" d="M330,355 L335.6,356.1 L341.2,356.8 L347,357.3 L352.8,357.5 L358.7,357.3 L364.7,356.8 L370.7,356 L376.7,354.8 L382.6,353.3 L388.6,351.4 L394.5,349.3 L400.3,346.7 L406,343.9 L411.6,340.7 L417.1,337.1 L422.5,333.2 L427.6,329.1 L432.6,324.6 L437.4,319.7 L441.9,314.6 L446.3,309.2 L450.3,303.6 L454.1,297.6 L457.6,291.4 L460.7,285 L463.6,278.4 L466.1,271.6 L468.2,264.5 L470,257.3"/>
-        <circle class="d-ev" cx="484.4" cy="250" r="5"/>
-        <path class="d-msg" marker-end="url(#awl-turn-b)" d="M484.4,250 L485.5,258.1 L486.1,266.4 L486.4,274.8 L486.1,283.2 L485.4,291.6 L484.3,300.1 L482.6,308.6 L480.6,317 L478,325.4 L475,333.7 L471.5,341.9 L467.5,349.9 L463.1,357.8 L458.3,365.5 L453,373 L447.2,380.2 L441.1,387.2 L434.5,393.8 L427.5,400.2 L420.2,406.2 L412.5,411.9 L404.4,417.2 L396,422.1 L387.4,426.5 L378.4,430.5 L369.1,434.1 L359.6,437.2 L349.9,439.8 L340.1,441.8"/>
-        <text class="d-lbl d-halo" x="340" y="198.4" text-anchor="start">“I can accept hold”</text>
-        <circle class="d-ev-hi" cx="330" cy="355" r="5.5"/>
-        <text class="d-lbl d-halo" x="340" y="359" text-anchor="start" style="fill:#bf4a26">calls hold</text>
-        <text class="d-lbl d-halo" x="175.6" y="240" text-anchor="middle">pledges</text>
-        <text class="d-lbl d-halo" x="484.4" y="240" text-anchor="middle">pledges</text>
-        <circle class="d-ev-hi" cx="330" cy="448.6" r="7.5"/>
-        <text x="330" y="452" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">H</text>
-        <text class="d-lbl d-halo" x="344" y="452.6" text-anchor="start" style="fill:#bf4a26">parting birds; holds</text>
-        </g>
-      </svg>
+<!-- ============================================================ committing once the wind drops -->
+<section class="spread dark" id="commitsec" data-name="Committing once the wind drops">
+  <a class="anchor" id="s5"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">The third demand</div>
+      <h2>Committing once the wind drops</h2>
+      <p class="lede">Committing is silence. A man who has left the tent has left its birds, and sends no more and ties no more pledges. So a man who commits first sends each other tent a <b>parting bird</b>: <i>parting, hold</i>.</p>
+      <p>A parting bird carries no turn and is never set aside. A man who takes one in, at any glass, sends parting birds of their own to every tent and then commits to the answer it names. Why must every man who commits send their own, and not only the first? A man may be killed halfway through tying them, with two sent and one not. Whoever received one sends a full set. Since at most one man is killed and no bird is ever lost, the birds of the others reach every tent in the end, and every man left alive commits. This is the paper's own device. Once one man commits, the third demand is settled. The question is whether some man commits once the wind has dropped.</p>
     </div>
-    <figcaption><b>In still air, a turn owned by a live man ends with someone committing.</b> Every bird
-    arrives within its glass: the owner hears from every live man, calls an answer they can all accept,
-    and has his two <em>pledged</em> birds before the answering glass runs out. The untying glass
-    that follows is not drawn.</figcaption>
-  </figure>
-
-  <div class="prose">
-    <p>While the wind blows, a turn can fail at every step. The asking birds are in the pines, so the
-    owner hears from two men and calls nothing; or he calls, and the call reaches one man in time; or
-    three men pledge, and their <em>pledged</em> birds come in the next glass and are set aside. Each
-    failure leaves pledges tied that nobody committed on. What clears them up? The untying glass, in still
-    air. Every man then hears every live man's pledges within the glass, and any pledge on one answer
-    that is no later than some pledge on the other is untied. What is left is on one answer at most.</p>
-
-    <p>Now take the next turn owned by a live man. In its asking glass every live man hears from
-    every other; at least three are alive; the sighted answers have gone round, so every man's list
-    carries the same answers; and all the pledges still tied are on one answer, which every live man can
-    therefore accept. So all the live men name a common answer, the owner calls it, every live man
-    pledges, and the owner has his two <em>pledged</em> before the answering glass runs out.</p>
-  </div>
-
-  <div class="result">
-    <span class="name">Committing After the Wind</span>
-    <p>If the wind drops, every man who is not killed commits. If nobody had committed when it dropped, all
-    commit within twenty glasses of the drop. If someone had, they commit when his parting birds arrive, which
-    is certain but bounded by no count of glasses.</p>
-  </div>
-
-  <details class="proof">
-    <summary>Proof — that the four commit once the wind has dropped</summary>
+    <p style="max-width:40em;margin-top:1.4rem">While the wind blows, a turn can fail in three places.</p>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First place</div><h3>The asking birds are in the pines</h3><p>The owner hears from two men and calls nothing.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second place</div><h3>The call is late</h3><p>The owner calls, and the call reaches one man in time.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third place</div><h3>The pledged birds are late</h3><p>Three men pledge, and their <i>pledged</i> birds come in the next glass and are set aside.</p></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.4rem">Each failure leaves pledges tied that nobody committed on. In still air, the untying glass clears them: every man hears every live man's pledges within the glass, and any pledge on one answer that is no later than some pledge on the other is untied. What is left is on one answer at most.</p>
+    <p style="max-width:40em">Then take the next turn owned by a live man. In its asking glass every live man hears from every other, at least three are alive, every list of sighted answers is the same, and all the pledges still tied are on one answer, which every live man can therefore accept. So the live men all name a common answer, the owner calls it, every live man pledges, and the owner has two <i>pledged</i> before the answering glass runs out.</p>
+    <div class="stmt-box"><b>Committing After the Wind</b><p>If the wind drops, every man who is not killed commits. If nobody had committed when it dropped, all commit within twenty glasses of the drop. If someone had, they commit when that man's parting birds arrive, which is certain but bounded by no count of glasses.</p></div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>When the wind drops <em>choose the turn and the glass</em></h4>
+      <div class="pickrow"><span>The wind drops in turn</span><span id="pickt"></span></div>
+      <div class="pickrow"><span>in that turn's glass</span><span id="pickg"></span></div>
+      <div class="night" id="nightrow"></div>
+      <div class="keyline"><span><i style="background:var(--blood)"></i>the wind drops</span><span><i style="background:#c9dfeb"></i>wholly still glass</span><span><i style="background:var(--aegean-d)"></i>commits, every man alive</span><span><i style="background:#3f7a2a"></i>commits, if the owner of the first turn is the silent one</span></div>
+      <p class="say" id="nightsay2" data-live>Choose when the wind drops. The men cannot see it. Only the page knows.</p>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">The page counts glasses as the proof does and does not run the pledges. It shows two possible nights: one in which every man lives, and one in which the owner of the first turn it would use is the silent one. Nobody is killed in either; the second is only the night the count must also survive.</p>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">Where does twenty come from? It is the paper's: four glasses to a turn, and five turns after the wind drops. The proof below is a little tighter, but nothing depends on it. The paper's men earn their bound by never stopping, since a man who has decided there goes on taking part. On the hill a man who commits has left the tent. If one commits while the wind blows and another is dead, the two left cannot gather three names for a call, and they wait for the parting birds, which will come, but at no glass anyone can count. Can anyone say, at some glass of the night, <i>by now we will have committed</i>? No. The bound counts glasses after an event no man sees, so nobody knows from which glass to count.</p>
+    <details class="proof">
+      <summary>Where the allegory leaks</summary>
+      <p>A night ends. The paper's rounds do not: it lets the wind blow for as long as it likes before dropping, and then promises a decision within a fixed number of rounds after. On the hill, if the wind drops late, dawn may come first. The model has no dawn, and nothing here turns on one: the first demand holds at every glass of the night, and the third is a promise about glasses after the drop, however many there are.</p>
+    </details>
+    <details class="proof">
+      <summary>Proof · that the four commit once the wind has dropped</summary>
+      <p class="given">In the paper's terms the wind drops at the global stabilization time GST, and a glass is a round. <b>Termination</b> (Theorem 3.1; Theorem 4.1; §3.2.1). Every correct processor decides by round GST + 4(<var>N</var> + 1), with <var>N</var> = 4 and <var>t</var> = 1. If some processor had already decided when the wind dropped, the others decide when its “decide” arrives. <var>h</var> is a turn number.</p>
     <ol class="proofsteps">
       <li>From the glass after the wind drops, every bird let go by a live man is taken in within its
       own glass, so no bird between live men is set aside.</li>
@@ -502,207 +673,39 @@
       his parting birds, within sixteen glasses of the wind's dropping.</li>
       <li>By the parting birds, every man left alive then commits, and by Never Two Answers they all commit to the same answer.<span class="qed">∎</span></li>
     </ol>
-  </details>
-
-  <div class="prose">
-    <p>Where does twenty come from? It is the paper's: four glasses to a turn, and <var>N</var> + 1
-    = 5 turns after the wind drops. The proof above is a little tighter, but nothing depends on it.
-    The paper's men earn it by never stopping: a man who has decided there goes on taking part. On
-    the hill a man who commits has left his tent. If one commits while the wind blows, and another is dead, the two
-    left cannot gather three names for a call, and they wait for his parting birds, which will come,
-    but at no glass anyone can count. Can anyone say, at some glass of the night, <em>by now we will
-    have committed</em>? No: the bound counts glasses after an event no man sees, so nobody knows from
-    which glass to count.</p>
-  </div>
-
-  <aside class="leak">
-    <span class="lbl">Where the allegory leaks</span>
-    <p>A night ends. The paper's rounds do not: it lets the wind blow for as long as it likes before
-    dropping, and then promises a decision within a fixed number of rounds after. On the hill, if the
-    wind drops late, dawn may come first. The model has no dawn, and nothing in this book turns on
-    one: the first demand holds at every glass of the night, and the third is a promise about glasses
-    after the drop, however many there are.</p>
-  </aside>
-
-  <div class="prose">
-    <p class="hook"><em>The arrangement bears one death among four. Could a cleverer one bear
-    two?</em></p>
+    </details>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= VI ================= -->
-<section id="s6">
-  <div class="issue"><span class="no">Chapter VI</span><h2>Two Against Two</h2></div>
-
-  <div class="prose">
-    <p>No arrangement could. The reason is the wind again, now working against the four.</p>
-
-    <p>Suppose any two of the four might be killed. Can a pair of men who have heard nothing from the
-    other pair wait for them? They cannot: the other two may be dead, and the third demand says the
-    living must commit. But the other two may be alive, with every bird between the pairs in the pines,
-    and the wind will drop only after the living pair has committed.</p>
-  </div>
-
-  <figure class="diagram">
-    <div class="board">
-      <svg class="flow" viewBox="0 0 660 400" role="img" aria-label="Three panels, each with two pairs of tents: T1 and T2 on the left, T3 and T4 on the right, later moments further out. First: all sighted hold, T3 and T4 are dead; T1 and T2 must hold. Second: all sighted attack, T1 and T2 are dead; T3 and T4 must attack. Third: all alive, the left pair sighted hold and the right pair attack, and every bird between the pairs is held by the wind until both pairs have committed; each pair sees exactly what it saw before and commits to a different answer.">
-        <!-- polar:awl-split -->
-        <defs>
-          <marker id="awl-split-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
-          </marker>
-          <marker id="awl-split-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
-          </marker>
-          <marker id="awl-split-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
-          </marker>
-          <marker id="awl-split-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
-          </marker>
-          <marker id="awl-split-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
-          </marker>
-        </defs>
-        <text class="d-house" x="112" y="24" text-anchor="middle">FIRST</text>
-        <circle cx="112" cy="175" r="51.6" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="112" cy="175" r="59.2" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="112" cy="175" r="66.8" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="112" cy="175" r="74.4" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="112" cy="175" r="82" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="112" cy="175" r="89.6" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="112" cy="175" r="97.2" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="112" cy="175" r="104.8" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <line class="d-lifeline" x1="80.9" y1="143.9" x2="36.8" y2="99.8"/>
-        <line class="d-lifeline" x1="80.9" y1="206.1" x2="36.8" y2="250.2"/>
-        <line class="d-lifeline" x1="143.1" y1="143.9" x2="158.2" y2="128.8"/>
-        <line class="d-lifeline" x1="143.1" y1="206.1" x2="158.2" y2="221.2"/>
-        <rect class="d-node" x="65.9" y="132.9" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="80.9" y="148.4" text-anchor="middle" fill="#1c1512">T1</text>
-        <rect class="d-node" x="65.9" y="195.1" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="80.9" y="210.6" text-anchor="middle" fill="#1c1512">T2</text>
-        <rect class="d-node" x="128.1" y="132.9" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="143.1" y="148.4" text-anchor="middle" fill="#1c1512">T3</text>
-        <rect class="d-node" x="128.1" y="195.1" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="143.1" y="210.6" text-anchor="middle" fill="#1c1512">T4</text>
-        <clipPath id="awl-split-clip0"><circle class="tclip" cx="112" cy="175" r="126.3" data-r0="44" data-r1="106.3"/></clipPath>
-        <g class="tflow" clip-path="url(#awl-split-clip0)">
-        <path d="M152.7,123.3 L163.7,134.3 M152.7,134.3 L163.7,123.3" style="stroke:#1c1512; stroke-width:2.4; fill:none"/>
-        <path d="M152.7,215.7 L163.7,226.7 M152.7,226.7 L163.7,215.7" style="stroke:#1c1512; stroke-width:2.4; fill:none"/>
-        <path class="d-msg" marker-end="url(#awl-split-b)" d="M65.8,128.8 L63.3,131.2 L60.9,133.6 L58.6,136.2 L56.5,138.9 L54.5,141.8 L52.6,144.7 L50.9,147.8 L49.4,151 L48,154.2 L46.7,157.5 L45.7,160.9 L44.8,164.4 L44.1,167.9 L43.6,171.4 L43.3,175 L43.2,178.6 L43.2,182.2 L43.5,185.9 L43.9,189.5 L44.5,193.1 L45.4,196.7 L46.4,200.2 L47.6,203.7 L49,207.1 L50.5,210.5 L52.3,213.8 L54.2,217 L56.3,220.1"/>
-        <path class="d-msg" marker-end="url(#awl-split-b)" d="M58.3,228.7 L55.4,226 L52.6,223.1 L50,220 L47.6,216.8 L45.3,213.5 L43.1,210.1 L41.2,206.5 L39.4,202.9 L37.8,199.1 L36.5,195.2 L35.3,191.3 L34.3,187.3 L33.5,183.2 L33,179.1 L32.7,175 L32.5,170.8 L32.6,166.7 L33,162.5 L33.5,158.3 L34.3,154.2 L35.2,150.1 L36.4,146 L37.9,142 L39.5,138 L41.3,134.2 L43.4,130.4 L45.6,126.8 L48,123.2"/>
-        <circle class="d-ev" cx="65.8" cy="128.8" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev" cx="61" cy="226" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev" cx="58.3" cy="228.7" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev" cx="53.5" cy="116.5" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev" cx="46.5" cy="109.5" r="7.5"/>
-        <text x="46.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">H</text>
-        <circle class="d-ev" cx="46.5" cy="240.5" r="7.5"/>
-        <text x="46.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">H</text>
-        </g>
-        <text class="d-note" x="112" y="306" text-anchor="middle">1 and 2 sighted hold; 3 and 4</text>
-        <text class="d-note" x="112" y="322" text-anchor="middle">dead at dusk. 1 and 2 hold:</text>
-        <text class="d-note" x="112" y="338" text-anchor="middle">they cannot wait, two may be dead</text>
-        <text class="d-house" x="330" y="24" text-anchor="middle">SECOND</text>
-        <circle cx="330" cy="175" r="51.6" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="175" r="59.2" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="175" r="66.8" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="175" r="74.4" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="175" r="82" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="175" r="89.6" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="175" r="97.2" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="175" r="104.8" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <line class="d-lifeline" x1="298.9" y1="143.9" x2="283.8" y2="128.8"/>
-        <line class="d-lifeline" x1="298.9" y1="206.1" x2="283.8" y2="221.2"/>
-        <line class="d-lifeline" x1="361.1" y1="143.9" x2="405.2" y2="99.8"/>
-        <line class="d-lifeline" x1="361.1" y1="206.1" x2="405.2" y2="250.2"/>
-        <rect class="d-node" x="283.9" y="132.9" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="298.9" y="148.4" text-anchor="middle" fill="#1c1512">T1</text>
-        <rect class="d-node" x="283.9" y="195.1" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="298.9" y="210.6" text-anchor="middle" fill="#1c1512">T2</text>
-        <rect class="d-node" x="346.1" y="132.9" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="361.1" y="148.4" text-anchor="middle" fill="#1c1512">T3</text>
-        <rect class="d-node" x="346.1" y="195.1" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="361.1" y="210.6" text-anchor="middle" fill="#1c1512">T4</text>
-        <clipPath id="awl-split-clip1"><circle class="tclip" cx="330" cy="175" r="126.3" data-r0="44" data-r1="106.3"/></clipPath>
-        <g class="tflow" clip-path="url(#awl-split-clip1)">
-        <path d="M278.3,123.3 L289.3,134.3 M278.3,134.3 L289.3,123.3" style="stroke:#1c1512; stroke-width:2.4; fill:none"/>
-        <path d="M278.3,215.7 L289.3,226.7 M278.3,226.7 L289.3,215.7" style="stroke:#1c1512; stroke-width:2.4; fill:none"/>
-        <path class="d-msg" marker-end="url(#awl-split-b)" d="M376.2,128.8 L378.7,131.2 L381.1,133.6 L383.4,136.2 L385.5,138.9 L387.5,141.8 L389.4,144.7 L391.1,147.8 L392.6,151 L394,154.2 L395.3,157.5 L396.3,160.9 L397.2,164.4 L397.9,167.9 L398.4,171.4 L398.7,175 L398.8,178.6 L398.8,182.2 L398.5,185.9 L398.1,189.5 L397.5,193.1 L396.6,196.7 L395.6,200.2 L394.4,203.7 L393,207.1 L391.5,210.5 L389.7,213.8 L387.8,217 L385.7,220.1"/>
-        <path class="d-msg" marker-end="url(#awl-split-b)" d="M383.7,228.7 L386.6,226 L389.4,223.1 L392,220 L394.4,216.8 L396.7,213.5 L398.9,210.1 L400.8,206.5 L402.6,202.9 L404.2,199.1 L405.5,195.2 L406.7,191.3 L407.7,187.3 L408.5,183.2 L409,179.1 L409.3,175 L409.5,170.8 L409.4,166.7 L409,162.5 L408.5,158.3 L407.7,154.2 L406.8,150.1 L405.6,146 L404.1,142 L402.5,138 L400.7,134.2 L398.6,130.4 L396.4,126.8 L394,123.2"/>
-        <circle class="d-ev" cx="376.2" cy="128.8" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev" cx="381" cy="226" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev" cx="383.7" cy="228.7" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev" cx="388.5" cy="116.5" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev" cx="395.5" cy="109.5" r="7.5"/>
-        <text x="395.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">A</text>
-        <circle class="d-ev" cx="395.5" cy="240.5" r="7.5"/>
-        <text x="395.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">A</text>
-        </g>
-        <text class="d-note" x="330" y="306" text-anchor="middle">3 and 4 sighted attack; 1 and 2</text>
-        <text class="d-note" x="330" y="322" text-anchor="middle">dead at dusk. 3 and 4 attack:</text>
-        <text class="d-note" x="330" y="338" text-anchor="middle">the same, pairs and answers swapped</text>
-        <text class="d-house" x="548" y="24" text-anchor="middle" style="fill:#bf4a26">THIRD</text>
-        <circle cx="548" cy="175" r="51.6" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="548" cy="175" r="59.2" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="548" cy="175" r="66.8" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="548" cy="175" r="74.4" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="548" cy="175" r="82" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="548" cy="175" r="89.6" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="548" cy="175" r="97.2" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="548" cy="175" r="104.8" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <line class="d-lifeline" x1="516.9" y1="143.9" x2="472.8" y2="99.8"/>
-        <line class="d-lifeline" x1="516.9" y1="206.1" x2="472.8" y2="250.2"/>
-        <line class="d-lifeline" x1="579.1" y1="143.9" x2="623.2" y2="99.8"/>
-        <line class="d-lifeline" x1="579.1" y1="206.1" x2="623.2" y2="250.2"/>
-        <rect class="d-node" x="501.9" y="132.9" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="516.9" y="148.4" text-anchor="middle" fill="#1c1512">T1</text>
-        <rect class="d-node" x="501.9" y="195.1" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="516.9" y="210.6" text-anchor="middle" fill="#1c1512">T2</text>
-        <rect class="d-node" x="564.1" y="132.9" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="579.1" y="148.4" text-anchor="middle" fill="#1c1512">T3</text>
-        <rect class="d-node" x="564.1" y="195.1" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="579.1" y="210.6" text-anchor="middle" fill="#1c1512">T4</text>
-        <clipPath id="awl-split-clip2"><circle class="tclip" cx="548" cy="175" r="126.3" data-r0="44" data-r1="106.3"/></clipPath>
-        <g class="tflow" clip-path="url(#awl-split-clip2)">
-        <path class="d-msg" marker-end="url(#awl-split-b)" d="M501.8,128.8 L499.3,131.2 L496.9,133.6 L494.6,136.2 L492.5,138.9 L490.5,141.8 L488.6,144.7 L486.9,147.8 L485.4,151 L484,154.2 L482.7,157.5 L481.7,160.9 L480.8,164.4 L480.1,167.9 L479.6,171.4 L479.3,175 L479.2,178.6 L479.2,182.2 L479.5,185.9 L479.9,189.5 L480.5,193.1 L481.4,196.7 L482.4,200.2 L483.6,203.7 L485,207.1 L486.5,210.5 L488.3,213.8 L490.2,217 L492.3,220.1"/>
-        <path class="d-msg" marker-end="url(#awl-split-b)" d="M494.3,228.7 L491.4,226 L488.6,223.1 L486,220 L483.6,216.8 L481.3,213.5 L479.1,210.1 L477.2,206.5 L475.4,202.9 L473.8,199.1 L472.5,195.2 L471.3,191.3 L470.3,187.3 L469.5,183.2 L469,179.1 L468.7,175 L468.5,170.8 L468.6,166.7 L469,162.5 L469.5,158.3 L470.3,154.2 L471.2,150.1 L472.4,146 L473.9,142 L475.5,138 L477.3,134.2 L479.4,130.4 L481.6,126.8 L484,123.2"/>
-        <circle class="d-ev" cx="501.8" cy="128.8" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev" cx="497" cy="226" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev" cx="494.3" cy="228.7" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev" cx="489.5" cy="116.5" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev-hi" cx="482.5" cy="109.5" r="7.5"/>
-        <text x="482.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">H</text>
-        <circle class="d-ev-hi" cx="482.5" cy="240.5" r="7.5"/>
-        <text x="482.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">H</text>
-        <path class="d-msg" marker-end="url(#awl-split-b)" d="M594.2,128.8 L596.7,131.2 L599.1,133.6 L601.4,136.2 L603.5,138.9 L605.5,141.8 L607.4,144.7 L609.1,147.8 L610.6,151 L612,154.2 L613.3,157.5 L614.3,160.9 L615.2,164.4 L615.9,167.9 L616.4,171.4 L616.7,175 L616.8,178.6 L616.8,182.2 L616.5,185.9 L616.1,189.5 L615.5,193.1 L614.6,196.7 L613.6,200.2 L612.4,203.7 L611,207.1 L609.5,210.5 L607.7,213.8 L605.8,217 L603.7,220.1"/>
-        <path class="d-msg" marker-end="url(#awl-split-b)" d="M601.7,228.7 L604.6,226 L607.4,223.1 L610,220 L612.4,216.8 L614.7,213.5 L616.9,210.1 L618.8,206.5 L620.6,202.9 L622.2,199.1 L623.5,195.2 L624.7,191.3 L625.7,187.3 L626.5,183.2 L627,179.1 L627.3,175 L627.5,170.8 L627.4,166.7 L627,162.5 L626.5,158.3 L625.7,154.2 L624.8,150.1 L623.6,146 L622.1,142 L620.5,138 L618.7,134.2 L616.6,130.4 L614.4,126.8 L612,123.2"/>
-        <circle class="d-ev" cx="594.2" cy="128.8" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev" cx="599" cy="226" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev" cx="601.7" cy="228.7" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev" cx="606.5" cy="116.5" r="4.5" style="fill:#f6eed6; stroke:#1c1512; stroke-width:1.6"/>
-        <circle class="d-ev-hi" cx="613.5" cy="109.5" r="7.5"/>
-        <text x="613.5" y="112.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">A</text>
-        <circle class="d-ev-hi" cx="613.5" cy="240.5" r="7.5"/>
-        <text x="613.5" y="243.9" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">A</text>
-        <path class="d-msg-hi" marker-end="url(#awl-split-r)" d="M500.8,222.2 L502.5,225.6 L504.4,228.9 L506.5,232.1 L508.9,235.3 L511.4,238.3 L514.2,241.3 L517.2,244.1 L520.4,246.8 L523.8,249.4 L527.4,251.8 L531.2,254 L535.2,256 L539.3,257.8 L543.6,259.4 L548,260.8 L552.6,261.9 L557.2,262.8 L562,263.5 L566.9,263.9 L571.8,264 L576.9,263.8 L581.9,263.4 L587,262.6 L592.1,261.6 L597.2,260.3 L602.3,258.6 L607.4,256.7 L612.4,254.5" style="stroke-dasharray:6 4"/>
-        <path class="d-msg-hi" marker-end="url(#awl-split-r)" d="M595.2,222.2 L593.5,225.6 L591.6,228.9 L589.5,232.1 L587.1,235.3 L584.6,238.3 L581.8,241.3 L578.8,244.1 L575.6,246.8 L572.2,249.4 L568.6,251.8 L564.8,254 L560.8,256 L556.7,257.8 L552.4,259.4 L548,260.8 L543.4,261.9 L538.8,262.8 L534,263.5 L529.1,263.9 L524.2,264 L519.1,263.8 L514.1,263.4 L509,262.6 L503.9,261.6 L498.8,260.3 L493.7,258.6 L488.6,256.7 L483.6,254.5" style="stroke-dasharray:6 4"/>
-        <path class="d-msg-hi" marker-end="url(#awl-split-r)" d="M500.8,127.8 L502.5,124.4 L504.4,121.1 L506.5,117.9 L508.9,114.7 L511.4,111.7 L514.2,108.7 L517.2,105.9 L520.4,103.2 L523.8,100.6 L527.4,98.2 L531.2,96 L535.2,94 L539.3,92.2 L543.6,90.6 L548,89.2 L552.6,88.1 L557.2,87.2 L562,86.5 L566.9,86.1 L571.8,86 L576.9,86.2 L581.9,86.6 L587,87.4 L592.1,88.4 L597.2,89.7 L602.3,91.4 L607.4,93.3 L612.4,95.5" style="stroke-dasharray:6 4"/>
-        <path class="d-msg-hi" marker-end="url(#awl-split-r)" d="M595.2,127.8 L593.5,124.4 L591.6,121.1 L589.5,117.9 L587.1,114.7 L584.6,111.7 L581.8,108.7 L578.8,105.9 L575.6,103.2 L572.2,100.6 L568.6,98.2 L564.8,96 L560.8,94 L556.7,92.2 L552.4,90.6 L548,89.2 L543.4,88.1 L538.8,87.2 L534,86.5 L529.1,86.1 L524.2,86 L519.1,86.2 L514.1,86.6 L509,87.4 L503.9,88.4 L498.8,89.7 L493.7,91.4 L488.6,93.3 L483.6,95.5" style="stroke-dasharray:6 4"/>
-        <text class="d-lbl d-halo" x="548" y="262.5" text-anchor="middle" style="fill:#bf4a26">held by the wind</text>
-        </g>
-        <text class="d-note" x="548" y="306" text-anchor="middle" style="fill:#bf4a26">nobody dead, but the wind holds every</text>
-        <text class="d-note" x="548" y="322" text-anchor="middle" style="fill:#bf4a26">bird between the pairs: each pair sees</text>
-        <text class="d-note" x="548" y="338" text-anchor="middle" style="fill:#bf4a26">just what it saw before, and commits</text>
-        <line x1="221" y1="10" x2="221" y2="390" stroke="#b9a77e" stroke-width="1.5"/>
-        <line x1="439" y1="10" x2="439" y2="390" stroke="#b9a77e" stroke-width="1.5"/>
-      </svg>
+<!-- ============================================================ two against two -->
+<section class="spread light" id="twosec" data-name="Two against two">
+  <a class="anchor" id="s6"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">What the arrangement cannot bear</div>
+      <h2>Two against two</h2>
+      <p class="lede">The arrangement bears one death among four. No arrangement could bear two. The reason is the wind again, now working against the four.</p>
+      <p>Suppose any two of the four might be killed. A pair that has heard nothing from the other pair cannot wait for it: the other two may be dead, and the third demand says the living must commit. But the other two may be alive, with every bird between the pairs in the pines, and the wind will drop only after the living pair has committed.</p>
     </div>
-    <figcaption><b>If two may die, the wind can split the four.</b> Each live pair must commit without
-    the other, since the other may be dead. In the third night nobody is dead, and the wind holds
-    every bird between the pairs until both have committed; each pair's night is identical to one in which
-    the other pair was dead, so they commit to different answers.</figcaption>
-  </figure>
-
-  <div class="result">
-    <span class="name">More Than Half</span>
-    <p>If two of the four may be killed, no arrangement meets the three demands, even with glasses,
-    even if the wind always drops, and even if all that is asked of the second demand is that four
-    live men who sighted the same answer commit to it.</p>
-  </div>
-
-  <details class="proof">
-    <summary>Proof — that four men cannot bear two deaths</summary>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Three nights <em>give up waiting, pair by pair</em></h4>
+      <div class="nights" id="nights"></div>
+      <p class="say" id="twosay" data-live>Let some glasses pass, then say when tents 1 and 2 give up waiting for tents 3 and 4.</p>
+      <div class="row">
+        <button class="btn alt" id="twoglass">Let a glass pass</button>
+        <button class="btn" id="twoa">Tents 1 and 2 give up waiting</button>
+        <button class="btn" id="twob">Tents 3 and 4 give up waiting</button>
+        <button class="btn alt" id="twor">Start again</button>
+      </div>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">You choose the glass at which each pair gives up, since the arrangement may take any number of glasses. Nothing else is chosen: the pair's answer in each of the first two nights is forced by the three demands, and the wind in the third night is held for as long as it needs to be.</p>
+    </div></div></div>
+    <div class="stmt-box"><b>More Than Half</b><p>If two of the four may be killed, no arrangement meets the three demands, even with glasses, even if the wind always drops, and even if all that is asked of the second demand is that four live men who sighted the same answer commit to it.</p></div>
+    <p style="max-width:40em;margin-top:1.4rem">Did the argument need the number four? Only that there are two sides, each small enough to be dead. Any number of men of whom half or more may die can be split in the same way. So the arrangement's ratio is the right one: it bears some number of deaths among men when there are more than twice as many men as may die, and no arrangement bears more.</p>
+    <p style="max-width:40em">Is this a new argument? It is the camps' own. A dead man looks exactly like a slow bird,<sup class="xref"><a href="../the-limits-of-agreement/index.html#s3" title="The Limits of Agreement: A Tent That Does Not Answer">*</a></sup> and here the likeness is used once, for a fixed length of time, rather than for ever. That is the difference the wind's dropping makes. It cannot make silence mean death, but it limits how long the confusion can last, and an arrangement that waits for more than half can outlast it.</p>
+    <details class="proof">
+      <summary>Proof · that four men cannot bear two deaths</summary>
+      <p class="given">In the paper's terms this is <b>Theorem 4.3</b>: there is no <var>t</var>-resilient consensus protocol for fail-stop faults when <var>N</var> ≤ 2<var>t</var>, even for weak unanimity and binary values. Here <var>N</var> = 4 and <var>t</var> = 2. <var>A</var> and <var>B</var> are numbers of glasses.</p>
     <ol class="proofsteps">
       <li>Suppose some arrangement does. Divide the four into two pairs, Numbers 1 and 2 on one
       side, Numbers 3 and 4 on the other.</li>
@@ -724,44 +727,35 @@
       cannot tell it from the second, and have committed to attack. Two men committed to different answers, which
       contradicts the first demand.<span class="qed">∎</span></li>
     </ol>
-  </details>
-
-  <div class="prose">
-    <p>Did the proof need the number four? Only that there are two sides, each small enough to be
-    dead. Any number of men of whom half or more may die can be split in the same way. So the
-    arrangement's ratio is the right one: it bears <var>t</var> deaths among <var>N</var> men when
-    <var>N</var> is at least 2<var>t</var> + 1, and no arrangement bears more.</p>
-
-    <p>Is this a new argument? It is the camps' own. A dead man looks exactly like a slow bird<sup class="xref"><a href="../the-limits-of-agreement/index.html#s3" title="The Limits of Agreement: A Tent That Does Not Answer">*</a></sup>, and
-    here the likeness is used once, for a fixed length of time, rather than for ever. That is the
-    difference the wind's dropping makes. It cannot make silence mean death, but it limits how long
-    the confusion can last, and an arrangement that waits for more than half can outlast it.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>The mercenaries die but never lie. On the crown the same wind blows over men
-    who may lie. What does it cost them?</em></p>
+    </details>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= VII ================= -->
-<section id="s7">
-  <div class="issue"><span class="no">Chapter VII</span><h2>Liars and Seals</h2></div>
-
-  <div class="prose">
-    <p>The mercenaries do not lie. On the crown some of the bandits do<sup class="xref"><a href="../agreeing-among-liars/index.html#s2" title="Agreeing Among Liars: What the Bandits Want">*</a></sup>, and on the later nights of the siege the same wind blows there, holding the
-    rats in their holes between the posts for as long as it lasts. The paper answers for liars too, and its answer
-    belongs to the crown, not to the camps. It is set down here because it is the same wind.</p>
-
-    <p>On the crown's first night there was no wind, and the runs were short. There, with sealed
-    orders that no one can forge, the chief's word can be carried to any number of posts with any
-    number of liars among them<sup class="xref"><a href="../agreeing-among-liars/index.html#s6" title="Agreeing Among Liars: The Seal Rings">*</a></sup>. Does that survive the wind? It does not.</p>
-  </div>
-
-  <div class="table-wrap">
-    <table class="chron">
+<!-- ============================================================ liars and seals -->
+<section class="spread dark" id="liarsec" data-name="Liars and seals">
+  <a class="anchor" id="s7"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">The same wind, on the crown</div>
+      <h2>Liars and seals</h2>
+      <p class="lede">The mercenaries do not lie. On the crown some of the bandits do,<sup class="xref"><a href="../agreeing-among-liars/index.html#s2" title="Agreeing Among Liars: What the Bandits Want">*</a></sup> and on the later nights of the siege the same wind blows there, holding the rats in their holes between the posts for as long as it lasts.</p>
+      <p>On the crown's first night there was no wind, and the runs were short. There, with sealed orders that no one can forge, the chief's word can be carried to any number of posts with any number of liars among them.<sup class="xref"><a href="../agreeing-among-liars/index.html#s6" title="Agreeing Among Liars: The Seal Rings">*</a></sup> Does that survive the wind? It does not. The paper answers for liars too, and its answer belongs to the crown, not to the camps. It is set down here because it is the same wind.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>How many men are enough? <em>choose the wind and the trouble</em></h4>
+      <div class="pickrow"><span>The wind</span><span id="pickw"></span></div>
+      <div class="pickrow"><span>Men who may</span><span id="pickf"></span></div>
+      <div class="pickrow"><span>How many may</span><span id="pickc"></span></div>
+      <div class="need" id="need" data-live></div>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">The answers are the paper's table, applied by the page: more than twice as many men as may die or drop birds, and more than three times as many as may lie.</p>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">With a wind that drops, seals change nothing. Four posts bear one liar, sealed or not, and three posts bear none. Why do seals stop helping? The wind again. On the crown's first night a post that heard nothing within the round knew that nothing was sent, and could treat silence as a message. Under the wind a man can never wait for everyone, since one may be a man whose birds are in the pines and another a liar keeping quiet. Waiting is possible only for all but the few who may fail, and among the ones heard from, some may be liars answering promptly. A seal stops a liar forging another man's word. It does not stop a liar answering promptly while an honest man's bird is still in a pine, and from the liar's own mouth two men may be told two different things.</p>
+    <p style="max-width:40em">The crown has four men and bears one liar. On a windy night those four keep a loot scroll together, with seals and a chief's job that passes from man to man.<sup class="xref"><a href="../keeping-order-among-liars/index.html" title="Keeping Order Among Liars">*</a></sup> That is the crown's matter. The wind and this table belong to both.</p>
+    <details class="proof">
+      <summary>The paper's table of liars and seals</summary>
+      <p class="given">This is Table I of the paper: the smallest <var>N</var> for a <var>t</var>-resilient protocol. The middle column is its third, the one for partially synchronous communication and synchronous processors.</p>
+      <div class="tw"><table class="chron">
       <thead><tr><th>Who may fail, and how</th><th>No wind</th><th>Wind that drops</th><th>Wind for ever</th></tr></thead>
       <tbody>
         <tr><td>men who may die</td><td>any number</td><td>more than twice as many as may die: 2<var>t</var> + 1</td><td>no arrangement</td></tr>
@@ -769,25 +763,11 @@
         <tr><td>men who may lie, with seals no one can forge</td><td>any number</td><td>more than three times as many as may lie: 3<var>t</var> + 1</td><td>no arrangement</td></tr>
         <tr><td>men who may lie, without seals</td><td>3<var>t</var> + 1</td><td>3<var>t</var> + 1</td><td>no arrangement</td></tr>
       </tbody>
-    </table>
-  </div>
-
-  <div class="prose">
-    <p>The table is the paper's first. The middle column is this book's: glasses that run alike and a
-    wind that drops. In it, seals change nothing. Four posts bear one liar, sealed or not, and three
-    posts bear none.</p>
-
-    <p>Why do seals stop helping? The wind again. On the crown's first night a post that heard
-    nothing within the round knew that nothing was sent, and could treat silence as a message. Under
-    the wind a man can never wait for everyone, since one of them may be a man whose birds are in the
-    pines and another a liar keeping quiet. He can wait only for all but <var>t</var>, and among the
-    ones he hears from, <var>t</var> may be liars answering promptly. A seal stops a liar forging
-    another man's word. It does not stop him answering promptly while an honest man's bird is still
-    in a pine, and from his own mouth he may tell two men two different things.</p>
-  </div>
-
-  <details class="proof">
-    <summary>Proof — that sealed or not, three posts cannot bear one liar under a wind that drops</summary>
+    </table></div>
+    </details>
+    <details class="proof">
+      <summary>Proof · sealed or not, three posts cannot bear one liar under a wind that drops</summary>
+      <p class="given">In the paper's terms this is <b>Theorem 4.4</b>: there is no <var>t</var>-resilient consensus protocol for authenticated Byzantine faults when <var>N</var> ≤ 3<var>t</var>. Here <var>N</var> = 3 and <var>t</var> = 1; <var>P</var>, <var>Q</var> and <var>R</var> are the three posts.</p>
     <ol class="proofsteps">
       <li>Take three posts, <var>P</var>, <var>Q</var> and <var>R</var>, of whom one may lie, and
       suppose some arrangement meets the three demands.</li>
@@ -801,179 +781,452 @@
       <var>P</var> and <var>R</var> until both have acted. <var>P</var> cannot tell this night from
       the first, nor <var>R</var> from the second, so they choose differently.<span class="qed">∎</span></li>
     </ol>
-  </details>
-
-  <div class="prose">
-    <p>The crown has four men and bears one liar, exactly 3<var>t</var> + 1. On a windy night those
-    four keep a loot scroll together, with seals and a chief's job that passes from man to
-    man<sup class="xref"><a href="../keeping-order-among-liars/index.html" title="Keeping Order Among Liars">*</a></sup>. That is the crown's matter; this book is the camps'. The
-    wind and this table belong to both.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>A wind that drops is enough, with more than half alive. What has it not
-    given the four?</em></p>
+    </details>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= VIII ================= -->
-<section id="s8">
-  <div class="issue"><span class="no">Chapter VIII</span><h2>What the Wind Does Not Say</h2></div>
-
-  <div class="prose">
-    <p><b>Does anyone learn when the wind dropped?</b> No. Nothing in the arrangement detects the
-    calm. The four run the same turns in the wind and after it, and the proofs do the knowing on
-    their behalf. A man who commits knows only that the two <em>pledged</em> birds came in time, not that
-    the wind has dropped; a man who is still waiting cannot tell whether the wind is still up or his
-    owner is dead.</p>
-
-    <p><b>Would the glasses alone have been enough?</b> No. Glasses that run alike, turned together,
-    with no bound on flights, would leave the four able to arrange nothing<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup>. A glass that runs
-    out with nothing at the perch tells a man only that a glass has run out. What makes the glasses
-    count is the promise about the wind. Take either away, the common count or the dropping wind, and
-    nothing can be arranged.</p>
-
-    <p><b>What if the glasses had not been turned together?</b> The four here have one common moment,
-    the last light on the crown. The paper also answers for men who have none, whose glasses may run
-    at somewhat different rates. They can make a common count by birds alone: each man sends the
-    others the count he has reached, and moves his own count on only when enough others show they
-    have passed it, never so far that the dead or the slow could not catch up. This is a clock kept by
-    ravens, and it needs the same more-than-half as the rest. Its proof is long, and the paper says
-    so. The resiliency comes out the same.</p>
-
-    <p><b>What if nobody knew how long a still flight takes?</b> Here every man knows the span of a
-    still-air flight, and a glass is made to fit it. The paper also answers for men who know only
-    that some such span exists. Then each round is given a little more time than the one before, so
-    that in the end the rounds are longer than any flight, whatever it is, and from then on the
-    arrangement works as before.</p>
-
-    <p><b>Is there a bound before the wind drops?</b> No. The twenty glasses are counted from a moment
-    nobody sees. How long the wind blows is up to the wind. On a night when it never drops, nobody can
-    be made to commit<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup>. Nobody commits to a wrong answer either.</p>
-
-    <p><b>Does it matter that no bird is lost?</b> It does, for stopping. The four can leave their
-    tents and commit because a parting bird, once let go, always arrives. If birds could be lost while the
-    wind blew, the paper observes that some man would have to go on sending for ever, however the
-    arrangement was made, since no one could be sure his parting bird had reached the others. On this
-    hill that never arises.</p>
-
-    <p><b>Is the wind the only way out?</b> No. There are other ways out at these tents, each changing
-    one thing. Men who may each toss a coin, alone in his tent, commit with probability one, on no night
-    anyone can name<sup class="xref"><a href="../agreeing-by-chance/index.html#s6" title="Agreeing by Chance: With Probability One">*</a></sup>. Men each given a slate that in the end chalks the dead, and in the end
-    spares one living man, can agree while a majority is alive<sup class="xref"><a href="../telling-the-dead-from-the-slow/index.html" title="Telling the Dead from the Slow">*</a></sup>. Here nothing is given to
-    the men at all; the change is in the wind. The three answers are different in kind. The coin needs
-    no promise about time and gives none; the slate is granted, not built; the wind is a fact about the
-    hill, and the arrangement makes use of it without ever observing it. The turn that passes round
-    the tents in number order, fixed by the count and not by anyone's command, is also how men with
-    such slates take turns to propose<sup class="xref"><a href="../telling-the-dead-from-the-slow/index.html" title="Telling the Dead from the Slow">*</a></sup>.</p>
-
-    <p><b>What follows from committing?</b> Nothing. The four attack together or hold together. What happens then
-    is not the subject of this book or any other: no assault is made, no wall is carried, and nobody
-    surrenders.</p>
+<!-- ============================================================ what the wind does not say -->
+<section class="spread light" id="notsay" data-name="What the wind does not say">
+  <a class="anchor" id="s8"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Questions left over</div>
+      <h2>What the wind does not say</h2>
+      <p class="lede">The wind is a fact about the hill. The arrangement uses it without ever seeing it. Eight things follow from that.</p>
+    </div>
+    <div class="cards3 qa">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does anyone learn when the wind dropped?</h3><p>No. Nothing in the arrangement detects the calm. The four run the same turns in the wind and after it. A man who commits knows only that two <i>pledged</i> birds came in time, and a man still waiting cannot tell whether the wind is still up or the owner is dead.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Would the glasses alone have been enough?</h3><p>No. Glasses turned together, with no longest flight, leave the four able to arrange nothing.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup> What makes the glasses count is the promise about the wind. Take either away, the common count or the dropping wind, and nothing can be arranged.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What if the glasses had not been turned together?</h3><p>The paper also answers for men with no common moment, whose glasses run at somewhat different rates. They make a common count by birds alone: each sends the others the count reached, and moves on only when enough others show they have passed it, never so far that the dead or the slow could not catch up. This is a clock kept by ravens. It needs the same more-than-half, and its proof is long.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What if nobody knew how long a still flight takes?</h3><p>The paper also answers for men who know only that some such span exists. Each round is given a little more time than the one before, so that in the end the rounds outlast any flight, and from then on the arrangement works as before.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is there a bound before the wind drops?</h3><p>No. The twenty glasses are counted from a moment nobody sees. How long the wind blows is up to the wind. On a night when it never drops, nobody can be made to commit.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup> Nobody commits to a wrong answer either.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it matter that no bird is lost?</h3><p>For stopping, yes. The four can leave their tents and commit because a parting bird, once let go, always arrives. If birds could be lost while the wind blew, the paper observes that some man would have to go on sending for ever, however the arrangement was made, since no one could be sure a parting bird had reached the others.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is the wind the only way out?</h3><p>No. Men who may each toss a coin, alone in a tent, commit with probability one, on no night anyone can name.<sup class="xref"><a href="../agreeing-by-chance/index.html#s6" title="Agreeing by Chance: With Probability One">*</a></sup> Men each given a slate that in the end chalks the dead, and in the end spares one living man, can agree while a majority is alive.<sup class="xref"><a href="../telling-the-dead-from-the-slow/index.html" title="Telling the Dead from the Slow">*</a></sup> Here nothing is given to the men; the change is in the wind. The coin needs no promise about time, the slate is granted and not built, and the wind is a fact about the hill. The turn that passes round the tents in number order is also how men with such slates take turns to propose.<sup class="xref"><a href="../telling-the-dead-from-the-slow/index.html" title="Telling the Dead from the Slow">*</a></sup></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What follows from committing?</h3><p>Nothing. The four attack together or hold together. What happens then is not the subject of this telling or any other: no assault is made, no wall is carried, and nobody surrenders.</p></div></div></div>
+    </div>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= IX ================= -->
-<section id="s9">
-  <div class="issue"><span class="no">Chapter IX</span><h2>In the Book, In the Paper</h2></div>
-
-  <div class="prose">
-    <p>So that the reader may check the windy nights at the camps against the paper of Dwork, Lynch
-    and Stockmeyer.</p>
-  </div>
-
-  <div class="table-wrap">
-    <table class="chron">
-      <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
+<!-- ============================================================ back to machines -->
+<section class="spread dark" id="why" data-name="Back to machines">
+  <a class="anchor" id="s9"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Back to machines</div>
+      <h2>The camp was a group of machines</h2>
+      <p class="lede">Every tent is a processor, and every raven a message. Hover or tap to see who is who.</p>
+    </div>
+    <div class="map" id="map">
+      <div class="hd" style="text-align:right;padding-right:6px">At the foot of the hill</div><div></div><div class="hd">In the machine room</div>
+    </div>
+    <div class="meander" style="margin:3rem auto"></div>
+    <div class="end">
+      <p class="big">When messages may be late for as long as they like but are prompt from some moment on, a protocol can be safe in every case and still decide once the delays settle.</p>
+      <p class="lede" style="margin:0 auto">Agreement is never broken, in any wind. What the settled network adds is an end to the waiting, though no machine can tell when it came.</p>
+      <div class="links">
+        <a href="../../places/the-foot/index.html">The Foot of Mount Phyle, in detail</a>
+        <a href="../../papers/index.html">All the papers</a>
+      </div>
+    </div>
+    <div class="apparatus">
+      <a class="anchor" id="refs"></a>
+      <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/the-foot/index.html">The Foot of Mount Phyle</a></p>
+      <p class="lineage"><span class="lbl">Builds on</span> <a href="../the-limits-of-agreement/index.html">The Limits of Agreement</a></p>
+      <p class="lineage"><span class="lbl">Leads to</span> <a href="../telling-the-dead-from-the-slow/index.html">Telling the Dead from the Slow</a> · <a href="../keeping-order-among-liars/index.html">Keeping Order Among Liars</a> · <a href="../answering-while-cut-off/index.html">Answering While Cut Off</a></p>
+      <p class="lineage"><span class="lbl">Outside this series</span> Dolev, Dwork &amp; Stockmeyer 1987, <i>minimal synchronism</i> · Attiya, Dwork, Lynch &amp; Stockmeyer 1994, <i>bounds on consensus time</i> · Buchman, Kwon &amp; Milosevic 2018, <i>Tendermint</i></p>
+      <details class="proof">
+        <summary>At the camps and in the paper: the whole table</summary>
+        <p class="given">So that the reader may check the windy nights at the camps against the paper of Dwork, Lynch and Stockmeyer.</p>
+        <div class="tw"><table class="chron">
+      <thead><tr><th>At the camps</th><th>What it means</th></tr></thead>
       <tbody>
-        <tr><td><span class="term">the four mercenaries</span></td><td>The processors, <var>N</var> = 4. <span class="paper">§2.1.</span></td></tr>
-        <tr><td><span class="term">a sighting, attack or hold</span></td><td>A processor's initial value, from a binary domain. <span class="paper">The protocols work for any domain <var>V</var>; the lower bounds hold already for |<var>V</var>| = 2. Technical Remark 3.</span></td></tr>
-        <tr><td><span class="term">committing</span></td><td>An irrevocable decision. <span class="paper">§2.1.</span></td></tr>
-        <tr><td><span class="term">the three demands</span></td><td>Consistency; strong unanimity; termination. <span class="paper">§2.4.</span></td></tr>
-        <tr><td><span class="term">a man who may be killed; at most one</span></td><td>A fail-stop fault; <var>t</var> = 1. <span class="paper">§2.2.</span></td></tr>
-        <tr><td><span class="term">ravens, never lost</span></td><td>Messages that are delayed but not lost. <span class="paper">The strengthened model of §4.2, Remark 2.</span></td></tr>
-        <tr><td><span class="term">the wind; its dropping; a still flight within a glass</span></td><td>Unbounded delay before an unknown time, and a known bound after it. <span class="paper">&ldquo;Δ holds eventually&rdquo;; GST; §2.3.</span></td></tr>
-        <tr><td><span class="term">no man knows when the wind dropped</span></td><td>GST is unknown to the processors. <span class="paper">§1.2.</span></td></tr>
-        <tr><td><span class="term">glasses turned together at last light, run alike; the count</span></td><td>Completely synchronous processors with a common step count. <span class="paper">Φ = 1, §4.</span></td></tr>
-        <tr><td><span class="term">a glass</span></td><td>A round of the basic round model, simulated by <var>N</var> + Δ steps. <span class="paper">§3.1, §4.1.</span></td></tr>
-        <tr><td><span class="term">a late bird, set aside</span></td><td>A message arriving in a later round than it was sent is ignored, so rounds are independent. <span class="paper">§4.1.</span></td></tr>
-        <tr><td><span class="term">a turn; its owner, in number order</span></td><td>A trying phase of three rounds and a lock-release phase of one; phase <var>k</var> belongs to <var>p</var><sub>i</sub> when <var>k</var> ≡ <var>i</var> mod <var>N</var>. <span class="paper">Algorithm 1, §3.2.1. The same rotation as the coordinator of Chandra and Toueg's ◇S algorithm.</span></td></tr>
-        <tr><td><span class="term">the sighted answers</span></td><td>The set of values a processor knows to be proper, piggybacked on every message. <span class="paper">PROPER, §3.2.</span></td></tr>
-        <tr><td><span class="term">a pledge on the tent pole; accepting an answer</span></td><td>A lock with its phase number; a value is acceptable if the processor holds no lock on another value. <span class="paper">§3.2.1.</span></td></tr>
-        <tr><td><span class="term">the asking glass</span></td><td>Each processor sends the phase's owner its acceptable, proper values. <span class="paper">Round <var>s</var> = 4<var>k</var> − 3.</span></td></tr>
-        <tr><td><span class="term">the calling glass</span></td><td>The owner proposes a value that <var>N</var> − <var>t</var> processors found acceptable and proper: (lock <var>v</var>, <var>k</var>). <span class="paper">Round <var>s</var> + 1.</span></td></tr>
-        <tr><td><span class="term">the answering glass; committing on two <em>pledged</em></span></td><td>Receivers lock <var>v</var>, releasing only earlier locks on <var>v</var>, and acknowledge; the owner decides on <var>t</var> + 1 acknowledgments. <span class="paper">Round <var>s</var> + 2.</span></td></tr>
-        <tr><td><span class="term">the untying glass</span></td><td>All locks are broadcast; a lock on <var>v</var> at phase <var>h</var> is released on learning of a lock on <var>w</var> ≠ <var>v</var> at phase <var>h</var>′ ≥ <var>h</var>. <span class="paper">Lock-release phase, round 4<var>k</var>.</span></td></tr>
-        <tr><td><span class="term">one answer per turn</span></td><td><span class="paper">Lemma 3.1.</span></td></tr>
-        <tr><td><span class="term">the two keep a pledge on the answer</span></td><td>After the first decision, at least <var>t</var> + 1 processors keep a lock on its value at that phase or later. <span class="paper">Lemma 3.2.</span></td></tr>
-        <tr><td><span class="term">Never Two Answers</span></td><td>Consistency and strong unanimity hold however messages are delayed. <span class="paper">Theorem 3.1; Theorem 4.1(a).</span></td></tr>
-        <tr><td><span class="term">after a still untying glass, one answer at most</span></td><td><span class="paper">Lemma 3.3.</span></td></tr>
-        <tr><td><span class="term">Committing After the Wind; twenty glasses</span></td><td>Termination; all correct processors decide by round GST + 4(<var>N</var> + 1). <span class="paper">Theorem 3.1; §3.2.1; time bound 4(<var>N</var> + 1)(<var>N</var> + Δ) after GST in Theorem 4.1. The paper's processors keep participating after deciding; with halting (Remark 2), a decision made before GST gives termination without that bound.</span></td></tr>
-        <tr><td><span class="term">a parting bird, sent by every man who commits</span></td><td>&ldquo;Decide <var>v</var>&rdquo;, untagged, accepted at any time; a receiver decides at once; with fail-stop faults a processor may halt after sending it. <span class="paper">Remarks 1 and 2 (§3, §4.2). Each send is a separate step: there is no atomic broadcast, Technical Remark 1.</span></td></tr>
-        <tr><td><span class="term">More Than Half; the three nights</span></td><td>No <var>t</var>-resilient consensus for fail-stop faults when <var>N</var> ≤ 2<var>t</var>, even for weak unanimity and binary values. <span class="paper">Theorem 4.3, Scenarios A, B, C.</span></td></tr>
-        <tr><td><span class="term">the table of liars and seals</span></td><td>The smallest <var>N</var> for a <var>t</var>-resilient protocol. <span class="paper">Table I; the middle column is its third, the one for partially synchronous communication and synchronous processors.</span></td></tr>
-        <tr><td><span class="term">men who may drop birds, or fail to take them in</span></td><td>Omission faults. <span class="paper">§2.2; Algorithm 1 also covers them.</span></td></tr>
-        <tr><td><span class="term">liars; seals</span></td><td>Byzantine faults; authentication. <span class="paper">§2.2; Algorithms 2 and 3.</span></td></tr>
-        <tr><td><span class="term">three posts cannot bear one liar</span></td><td>No <var>t</var>-resilient consensus for authenticated Byzantine faults when <var>N</var> ≤ 3<var>t</var>. <span class="paper">Theorem 4.4.</span></td></tr>
-        <tr><td><span class="term">a clock kept by ravens</span></td><td>Distributed clocks for partially synchronous processors. <span class="paper">§5; for fail-stop faults the authenticated clock of §5.2, simplified, with <var>N</var> ≥ 2<var>t</var> + 1.</span></td></tr>
-        <tr><td><span class="term">rounds given more time each time</span></td><td>&ldquo;Δ unknown&rdquo;: round <var>r</var> is simulated by <var>N</var> + <var>r</var> steps. <span class="paper">§4.2, Theorem 4.2.</span></td></tr>
-        <tr><td><span class="term">some man sending for ever</span></td><td>If messages can be lost before GST, some correct processor cannot halt. <span class="paper">§2.4; Remark 2.</span></td></tr>
+        <tr><td>the four mercenaries</td><td>The processors, <var>N</var> = 4. <i>§2.1.</i></td></tr>
+        <tr><td>a sighting, attack or hold</td><td>A processor's initial value, from a binary domain. <i>The protocols work for any domain <var>V</var>; the lower bounds hold already for |<var>V</var>| = 2. Technical Remark 3.</i></td></tr>
+        <tr><td>committing</td><td>An irrevocable decision. <i>§2.1.</i></td></tr>
+        <tr><td>the three demands</td><td>Consistency; strong unanimity; termination. <i>§2.4.</i></td></tr>
+        <tr><td>a man who may be killed; at most one</td><td>A fail-stop fault; <var>t</var> = 1. <i>§2.2.</i></td></tr>
+        <tr><td>ravens, never lost</td><td>Messages that are delayed but not lost. <i>The strengthened model of §4.2, Remark 2.</i></td></tr>
+        <tr><td>the wind; its dropping; a still flight within a glass</td><td>Unbounded delay before an unknown time, and a known bound after it. <i>&ldquo;Δ holds eventually&rdquo;; GST; §2.3.</i></td></tr>
+        <tr><td>no man knows when the wind dropped</td><td>GST is unknown to the processors. <i>§1.2.</i></td></tr>
+        <tr><td>glasses turned together at last light, run alike; the count</td><td>Completely synchronous processors with a common step count. <i>Φ = 1, §4.</i></td></tr>
+        <tr><td>a glass</td><td>A round of the basic round model, simulated by <var>N</var> + Δ steps. <i>§3.1, §4.1.</i></td></tr>
+        <tr><td>a late bird, set aside</td><td>A message arriving in a later round than it was sent is ignored, so rounds are independent. <i>§4.1.</i></td></tr>
+        <tr><td>a turn; its owner, in number order</td><td>A trying phase of three rounds and a lock-release phase of one; phase <var>k</var> belongs to <var>p</var><sub>i</sub> when <var>k</var> ≡ <var>i</var> mod <var>N</var>. <i>Algorithm 1, §3.2.1. The same rotation as the coordinator of Chandra and Toueg's ◇S algorithm.</i></td></tr>
+        <tr><td>the sighted answers</td><td>The set of values a processor knows to be proper, piggybacked on every message. <i>PROPER, §3.2.</i></td></tr>
+        <tr><td>a pledge on the tent pole; accepting an answer</td><td>A lock with its phase number; a value is acceptable if the processor holds no lock on another value. <i>§3.2.1.</i></td></tr>
+        <tr><td>the asking glass</td><td>Each processor sends the phase's owner its acceptable, proper values. <i>Round <var>s</var> = 4<var>k</var> − 3.</i></td></tr>
+        <tr><td>the calling glass</td><td>The owner proposes a value that <var>N</var> − <var>t</var> processors found acceptable and proper: (lock <var>v</var>, <var>k</var>). <i>Round <var>s</var> + 1.</i></td></tr>
+        <tr><td>the answering glass; committing on two <em>pledged</em></td><td>Receivers lock <var>v</var>, releasing only earlier locks on <var>v</var>, and acknowledge; the owner decides on <var>t</var> + 1 acknowledgments. <i>Round <var>s</var> + 2.</i></td></tr>
+        <tr><td>the untying glass</td><td>All locks are broadcast; a lock on <var>v</var> at phase <var>h</var> is released on learning of a lock on <var>w</var> ≠ <var>v</var> at phase <var>h</var>′ ≥ <var>h</var>. <i>Lock-release phase, round 4<var>k</var>.</i></td></tr>
+        <tr><td>one answer per turn</td><td><i>Lemma 3.1.</i></td></tr>
+        <tr><td>the two keep a pledge on the answer</td><td>After the first decision, at least <var>t</var> + 1 processors keep a lock on its value at that phase or later. <i>Lemma 3.2.</i></td></tr>
+        <tr><td>Never Two Answers</td><td>Consistency and strong unanimity hold however messages are delayed. <i>Theorem 3.1; Theorem 4.1(a).</i></td></tr>
+        <tr><td>after a still untying glass, one answer at most</td><td><i>Lemma 3.3.</i></td></tr>
+        <tr><td>Committing After the Wind; twenty glasses</td><td>Termination; all correct processors decide by round GST + 4(<var>N</var> + 1). <i>Theorem 3.1; §3.2.1; time bound 4(<var>N</var> + 1)(<var>N</var> + Δ) after GST in Theorem 4.1. The paper's processors keep participating after deciding; with halting (Remark 2), a decision made before GST gives termination without that bound.</i></td></tr>
+        <tr><td>a parting bird, sent by every man who commits</td><td>&ldquo;Decide <var>v</var>&rdquo;, untagged, accepted at any time; a receiver decides at once; with fail-stop faults a processor may halt after sending it. <i>Remarks 1 and 2 (§3, §4.2). Each send is a separate step: there is no atomic broadcast, Technical Remark 1.</i></td></tr>
+        <tr><td>More Than Half; the three nights</td><td>No <var>t</var>-resilient consensus for fail-stop faults when <var>N</var> ≤ 2<var>t</var>, even for weak unanimity and binary values. <i>Theorem 4.3, Scenarios A, B, C.</i></td></tr>
+        <tr><td>the table of liars and seals</td><td>The smallest <var>N</var> for a <var>t</var>-resilient protocol. <i>Table I; the middle column is its third, the one for partially synchronous communication and synchronous processors.</i></td></tr>
+        <tr><td>men who may drop birds, or fail to take them in</td><td>Omission faults. <i>§2.2; Algorithm 1 also covers them.</i></td></tr>
+        <tr><td>liars; seals</td><td>Byzantine faults; authentication. <i>§2.2; Algorithms 2 and 3.</i></td></tr>
+        <tr><td>three posts cannot bear one liar</td><td>No <var>t</var>-resilient consensus for authenticated Byzantine faults when <var>N</var> ≤ 3<var>t</var>. <i>Theorem 4.4.</i></td></tr>
+        <tr><td>a clock kept by ravens</td><td>Distributed clocks for partially synchronous processors. <i>§5; for fail-stop faults the authenticated clock of §5.2, simplified, with <var>N</var> ≥ 2<var>t</var> + 1.</i></td></tr>
+        <tr><td>rounds given more time each time</td><td>&ldquo;Δ unknown&rdquo;: round <var>r</var> is simulated by <var>N</var> + <var>r</var> steps. <i>§4.2, Theorem 4.2.</i></td></tr>
+        <tr><td>some man sending for ever</td><td>If messages can be lost before GST, some correct processor cannot halt. <i>§2.4; Remark 2.</i></td></tr>
       </tbody>
-    </table>
-  </div>
-
-  <div class="ideas-box">
-    <span class="lbl">The ideas, plainly</span>
-    <p>Fischer, Lynch and Paterson showed that consensus is impossible in an asynchronous system if
-    even one process may crash, because a crashed process cannot be told from a slow one. Dwork,
-    Lynch and Stockmeyer asked how much synchrony is enough. Their answer is partial synchrony:
-    either a bound on message delay exists but is unknown, or it is known but holds only from some
-    unknown global stabilization time (GST) on.</p>
-
-    <p>In both models consensus is possible, and they determine exactly how many faults can be
-    tolerated: with crash or omission faults, more than half the processes must be correct
-    (<var>N</var> ≥ 2<var>t</var> + 1); with Byzantine faults, more than two thirds
-    (<var>N</var> ≥ 3<var>t</var> + 1), whether or not messages are signed. The lower bounds are
-    partition arguments: if half may fail, the network can delay every message between two halves
-    until each has decided alone.</p>
-
-    <p>The protocols run in rounds grouped into phases, each phase belonging to one process in
-    rotation. A phase's owner proposes a value that enough processes find acceptable; processes lock
-    it and acknowledge; the owner decides on enough acknowledgments; a lock-release round lets a later
-    lock override an earlier one. Safety holds under any delay, because the processes that locked a
-    decided value can never all be outvoted. Termination follows once delays are bounded, because the
-    first phase owned by a correct process after stabilization succeeds.</p>
-
-    <p>The separation between safety in all conditions and progress in good conditions, and
-    rotating phases with locks carried forward, became the shape of later consensus protocols.</p>
+    </table></div>
+      </details>
+      <details class="proof">
+        <summary>The paper behind this book</summary>
+        <p><b>The paper behind this book.</b> Cynthia Dwork, Nancy Lynch and Larry Stockmeyer, <i>Consensus in the Presence of Partial Synchrony</i>. Journal of the ACM <b>35</b>, 2 (April 1988), 288–323. The two models of partially synchronous communication, the basic round model and Algorithms 1–3, the lower bounds (Theorems 4.3 and 4.4), and the distributed clocks for partially synchronous processors.</p>
+        <p><b>The ideas.</b> Fischer, Lynch and Paterson showed that consensus is impossible in an asynchronous system if even one process may crash, because a crashed process cannot be told from a slow one. Dwork, Lynch and Stockmeyer asked how much synchrony is enough. Their answer is partial synchrony: either a bound on message delay exists but is unknown, or it is known but holds only from some unknown global stabilization time (GST) on.</p>
+        <p>In both models consensus is possible, and they determine exactly how many faults can be tolerated: with crash or omission faults, more than half the processes must be correct (<var>N</var> ≥ 2<var>t</var> + 1); with Byzantine faults, more than two thirds (<var>N</var> ≥ 3<var>t</var> + 1), whether or not messages are signed. The lower bounds are partition arguments: if half may fail, the network can delay every message between two halves until each has decided alone.</p>
+        <p>The protocols run in rounds grouped into phases, each phase belonging to one process in rotation. A phase's owner proposes a value that enough processes find acceptable; processes lock it and acknowledge; the owner decides on enough acknowledgments; a lock-release round lets a later lock override an earlier one. Safety holds under any delay, because the processes that locked a decided value can never all be outvoted. Termination follows once delays are bounded, because the first phase owned by a correct process after stabilization succeeds.</p>
+        <p>The separation between safety in all conditions and progress in good conditions, and rotating phases with locks carried forward, became the shape of later consensus protocols.</p>
+        <div class="refs">
+          <p>Dwork, C., Lynch, N., and Stockmeyer, L. Consensus in the presence of partial synchrony. <i>J. ACM</i> <b>35</b>, 2 (1988), 288–323.</p>
+        </div>
+      </details>
+    </div>
   </div>
 </section>
+<footer>Distributed Algorithms of Ancient Greece · “Agreeing When Messages Run Late”, after Dwork, Lynch and Stockmeyer, JACM 35(2), 1988.</footer>
+<script>
+"use strict";
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const NS="http://www.w3.org/2000/svg";
+const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function rnd(n){return Math.floor(Math.random()*n)}
+/* run fn(0..1) over ms, eased */
+function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();return}const t0=performance.now();
+  (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
+function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
 
-<hr class="rule">
-<section id="refs" class="refs">
-  <h3 class="sect">The Paper Behind This Book</h3>
-  <ul>
-    <li>Cynthia Dwork, Nancy Lynch and Larry Stockmeyer, <i>Consensus in the Presence of Partial
-    Synchrony</i>. Journal of the ACM <b>35</b>, 2 (April 1988), 288–323. — The two models of
-    partially synchronous communication, the basic round model and Algorithms 1–3, the lower
-    bounds (Theorems 4.3 and 4.4), and the distributed clocks for partially synchronous
-    processors.</li>
-  </ul>
-  <aside class="fn">The four are the mercenaries of <i>The Limits of Agreement</i>, at the same
-  tents and known, as there, by their tents' numbers; every book at the camps keeps them. Cynthia
-  Dwork, Nancy Lynch and Larry Stockmeyer are credited here.</aside>
-</section>
+/* ===== pop-ups unfold when they enter view ===== */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
+$$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
+$$(".say,[data-live]").forEach(e=>e.setAttribute("aria-live","polite"));
 
-<hr class="rule">
+/* ===== scroll: progress bar, section name, parallax ===== */
+const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
+const dep=$$("[data-depth]"), par=$$("[data-parallax]");
+let tick=false;
+function onscroll(){
+  if(tick)return; tick=true;
+  requestAnimationFrame(()=>{
+    tick=false;
+    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
+    prog.style.width=(h>0?y/h*100:0)+"%";
+    const mid=y+innerHeight*.4; let cur=secs[0];
+    for(const s of secs){ if(s.offsetTop<=mid) cur=s; }
+    now.textContent=cur.dataset.name||"";
+    if(reduce)return;
+    for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
+    for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
+  });
+}
+addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
 
-<p class="lineage"><span class="lbl">Leads to</span> <a href="../telling-the-dead-from-the-slow/index.html">Telling the Dead from the Slow</a> · <a href="../keeping-order-among-liars/index.html">Keeping Order Among Liars</a> · <a href="../answering-while-cut-off/index.html">Answering While Cut Off</a><br>
-  <span class="outside"><span class="tag">Outside this series</span> Dolev, Dwork &amp; Stockmeyer 1987, <i>minimal synchronism</i> · Attiya, Dwork, Lynch &amp; Stockmeyer 1994, <i>bounds on consensus time</i> · Buchman, Kwon &amp; Milosevic 2018, <i>Tendermint</i></span></p>
+/* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
+function scrolly(root,render){
+  const steps=$$(".step",root); render(0);
+  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
+  steps.forEach(s=>so.observe(s));
+}
 
-</div>
-<script src="../../assets/js/flow.js" defer></script>
+/* ===== who is who: the setting on the left, the machine room on the right ===== */
+function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
+  const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
+  [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}
+
+/* ===== space-time drawn in the round: each place is a line running outward, each ring a later moment,
+         and whatever is carried from place to place is an arc curving round and outward ===== */
+function Polar(svg,o){
+  const {cx,cy,r0,step,nodes,rings,tEnd}=o; svg.innerHTML=""; svg.setAttribute("viewBox",o.vb);
+  const defs=el("defs",{},svg);
+  const mk=(key,col)=>{const m=el("marker",{id:`${svg.id}-${key}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:col},m)};
+  mk("b","#136f9e"); mk("r","#bf4a26");
+  const frame=el("g",{},svg), under=el("g",{},svg), slips=el("g",{},svg), evs=el("g",{},svg), over=el("g",{},svg);
+  const P={svg,under,slips,evs,over,cx,cy,
+    r:t=>r0+step*t,
+    xy(deg,rr){const a=deg*Math.PI/180;return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)]},
+    pt(k,t){return P.xy(nodes[k][0],P.r(t))},
+    /* the points of an arc from place a at time ta to place b at time tb, the short way round */
+    arc(a,ta,b,tb){const a0=nodes[a][0],d=((nodes[b][0]-a0+540)%360)-180,n=Math.max(12,Math.round(Math.abs(d)/3)),pts=[];
+      for(let i=0;i<=n;i++)pts.push(P.xy(a0+d*i/n,P.r(ta+(tb-ta)*i/n)));return pts},
+    slip(a,ta,b,tb,trim=17){const pts=P.arc(a,ta,b,tb),end=pts[pts.length-1];
+      while(pts.length>2&&Math.hypot(pts[pts.length-1][0]-end[0],pts[pts.length-1][1]-end[1])<trim)pts.pop();
+      const p=el("path",{class:"st-slip","marker-end":`url(#${svg.id}-b)`,d:"M"+pts.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" L")},slips);
+      p.mid=P.arc(a,ta,b,tb); p.mid=p.mid[Math.floor(p.mid.length/2)]; return p},
+    seg(k,t1,t2){const [x1,y1]=P.pt(k,t1),[x2,y2]=P.pt(k,t2);return el("line",{class:"st-seg",x1,y1,x2,y2},under)},
+    event(k,t,fill,rad=13){const [x,y]=P.pt(k,t),g=el("g",{class:"st-ev",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},evs);
+      el("circle",{class:"halo2",r:rad+5},g);el("circle",{class:"b",r:rad,fill},g);g.label=el("text",{},g);el("circle",{r:rad+8,fill:"transparent"},g);return g}
+  };
+  for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
+  for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
+  for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
+    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
+  if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
+  return P;
+}
+
+/* the four mercenaries, told apart by colour */
+const TC={1:"#e0b84a",2:"#6583d6",3:"#c45448",4:"#9cb648"};
+const tentChip=(k,extra="")=>`<span class="chip"${extra}><i style="background:${TC[k]}"></i>Tent ${k}</span>`;
+const WORD={H:"hold",A:"attack"};
+/* a row of buttons of which one is picked */
+function picker(box,items,fn){box.innerHTML="";
+  const bs=items.map(([v,l])=>{const b=document.createElement("button");b.className="btn alt";b.textContent=l;b.setAttribute("aria-pressed","false");b.onclick=()=>fn(v);box.appendChild(b);return [v,b]});
+  return {set(v){bs.forEach(([x,b])=>{b.classList.toggle("sel",x===v);b.setAttribute("aria-pressed",x===v?"true":"false")})},
+          enable(f){bs.forEach(([x,b])=>b.disabled=!f(x))}};
+}
+
+/* ===== machines: delays that settle, at a moment nobody sees ===== */
+(function(){
+  const log=$("#replylog"),note=$("#replynote"),b=$("#askb"),sh=$("#askshow"),r=$("#askr"),LIMIT=2;
+  let n,S,lucky,run,t;
+  const r1=x=>Math.round(x*10)/10;
+  function init(){n=0;S=4+rnd(4);lucky=0;run=0;log.innerHTML="";b.disabled=false;sh.disabled=true;r.hidden=true;
+    note.textContent=`A asks B for a reply and allows ${LIMIT} seconds for it.`}
+  b.onclick=()=>{n++;
+    const luck=n<=S&&Math.random()<.3;
+    t=(n>S||luck)?r1(.4+Math.random()*(LIMIT-.4)):r1(LIMIT+1+Math.random()*27);
+    if(luck)lucky++;
+    const ok=t<=LIMIT;run=ok?run+1:0;
+    const d=document.createElement("div");d.className="e "+(ok?"ok2":"late");
+    d.textContent=`ask ${n} ▸ reply after ${t} s ▸ ${ok?"on time":"late"}`;log.appendChild(d);
+    while(log.children.length>6)log.firstChild.remove();
+    note.textContent=!ok?"Late. Has B stopped, or has the network not settled? A cannot tell.":
+      run>=3?"Several on time in a row. It looks like calm, but no run of replies proves that the delays have settled.":
+      "On time. Settled, or luck? A cannot tell from one reply.";
+    sh.disabled=false;r.hidden=false;if(n>=14)b.disabled=true};
+  sh.onclick=()=>{note.innerHTML=n<=S?
+      `Not yet. The delays settle after ask ${S}, and ${n===S?"this was the last ask before that":"A has asked "+n+" times"}. ${lucky} of the replies so far were on time by luck.`:
+      `The delays settled after ask ${S}. From ask ${S+1} on, every reply is within ${LIMIT} seconds. Before that, ${lucky} of the ${S} replies were on time by luck. A saw only the replies, never the moment.`;
+    sh.disabled=true};
+  r.onclick=init;init();
+})();
+
+/* ===== the hill, seen from above: one picture reused wherever ravens fly between the tents ===== */
+function Hill(svg){
+  const cx=235,cy=235,R=158,A={1:-90,2:0,3:90,4:180}; svg.innerHTML=""; svg.setAttribute("viewBox","0 0 470 470");
+  el("circle",{cx,cy,r:215,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
+  el("circle",{cx,cy,r:96,fill:"#d9cfb4",stroke:"#6b5a48","stroke-width":2.5,"stroke-dasharray":"2 6"},svg);
+  el("circle",{cx,cy,r:24,fill:"#efe6cf",stroke:"#6b5a48","stroke-width":6},svg);
+  el("text",{x:cx,y:cy+52,class:"lab"},svg).textContent="the crown";
+  const under=el("g",{},svg),sites=el("g",{},svg),over=el("g",{},svg);
+  const H={svg,cx,cy,R,A,under,over,tent:{},
+    at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
+    put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
+    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
+    /* a raven u of the way from tent a to tent b, flying round the hill; each direction keeps its own line */
+    fly(g,a,b,u){const d=((A[b]-A[a]+540)%360)-180;H.put(g,...H.at(A[a]+d*u,R-(d>0?24:46)*Math.sin(Math.PI*u)))},
+    state(k,s){H.tent[k].st.textContent=s},
+    badge(k,s){const b=H.tent[k].badge;b.setAttribute("opacity",s?1:0);b.lastChild.textContent=s||""}
+  };
+  for(const k of [1,2,3,4]){const a=A[k]*Math.PI/180,[x,y]=H.at(A[k]),g=el("g",{class:"site"},sites);H.put(g,x,y);
+    el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:TC[k]},g);el("text",{},g).textContent="T"+k;
+    const st=el("text",{class:"state halo",x:-48*Math.cos(a),y:-46*Math.sin(a)},g);
+    const badge=el("g",{class:"badge",opacity:0,transform:`translate(${(38*Math.cos(a)).toFixed(1)} ${(34*Math.sin(a)).toFixed(1)})`},g);el("circle",{r:11},badge);el("text",{},badge);
+    H.tent[k]={x,y,g,st,badge}}
+  return H;
+}
+
+/* ===== the wind: birds let go one span at a time ===== */
+(function(){
+  const box=$("#spans"),say=$("#windsay"),nx=$("#windnext"),sh=$("#windshow"),rs=$("#windreset"),cl=$("#wlet"),ci=$("#win"),N=10;
+  let cur,D,a,shown;
+  function render(){
+    let inTime=0;box.innerHTML="";
+    for(let n=1;n<=N;n++){
+      const row=document.createElement("div");row.className="sp";
+      let txt="";
+      if(n>cur){row.classList.add("empty");txt="<span class='pine'>not yet</span>"}
+      else if(a[n]===n){inTime++;txt="<span class='ok'>✓ taken in within its span</span>"}
+      else if(a[n]<=cur)txt=`<span class='bad'>taken in late, in span ${a[n]}</span>`;
+      else txt="<span class='pine'>still in the pines</span>";
+      if(shown&&n===D)row.classList.add("cut");
+      row.innerHTML=`<b>Span ${n}</b>${txt}`;box.appendChild(row);
+    }
+    cl.textContent=cur;ci.textContent=inTime;
+  }
+  function init(){cur=0;D=3+rnd(4);a=[];shown=false;nx.disabled=false;sh.disabled=true;
+    say.textContent="In each span, tent 1 lets a bird go to tent 2. Let the spans pass and watch which birds come in time.";render()}
+  nx.onclick=()=>{cur++;a[cur]=cur>D?cur:(Math.random()<.35?cur:cur+1+rnd(8));
+    sh.disabled=false;if(cur>=N)nx.disabled=true;
+    say.innerHTML=a[cur]===cur?`Span ${cur}: the bird came in within its span. Is the wind down, or is this a lull?`:`Span ${cur}: the bird is in the pines. Is the wind up, or is this bird just slow?`;render()};
+  sh.onclick=()=>{
+    if(cur<=D){say.innerHTML=`The wind has not dropped yet. It drops after span ${D}, which has not passed. Every bird so far was let go in the wind, and some came in time by luck.`;return}
+    shown=true;sh.disabled=true;
+    let luck=0,after=0;for(let n=1;n<=D;n++){if(a[n]===n)luck++;else if(a[n]>D)after++}
+    say.innerHTML=`The wind dropped after span ${D}. From span ${D+1} on every bird came in within its span. Of the ${D} birds let go in the wind, <b>${luck}</b> came in time by luck and <b>${after}</b> were still in the pines after the wind had dropped. At the tents, nothing told span ${D+1} from a lull.`;render()};
+  rs.onclick=init;init();
+})();
+
+/* ===== a bird comes in: read, or set aside ===== */
+(function(){
+  const pole=$("#pole"),say=$("#polesay"),nx=$("#polenext"),rs=$("#poler"),cc=$("#pcount"),ca=$("#paside");
+  let g,rows,counted,aside;
+  function init(){g=4;rows=[];counted=aside=0;pole.innerHTML="";cc.textContent=ca.textContent=0;say.textContent="A bird comes in at tent 2. Is it taken in, or set aside?"}
+  nx.onclick=()=>{
+    g+=1+rnd(2);const s=[1,3,4][rnd(3)],parting=Math.random()<.2,w=g-[0,0,0,0,1,1,2,3][rnd(8)];
+    let ok,txt;
+    if(parting){ok=true;txt=`${tentChip(s)} <b>parting bird</b>, taken in during glass ${g} ▸ taken in whenever it comes`;say.innerHTML="A parting bird carries no glass, and is never set aside."}
+    else if(w===g){ok=true;txt=`${tentChip(s)} strip written in glass ${w}, taken in during glass ${g} ▸ same glass: it counts`;say.innerHTML="Written in the glass it arrived in: <b>it counts</b>."}
+    else{ok=false;txt=`${tentChip(s)} strip written in glass ${w}, taken in during glass ${g} ▸ a later glass: set aside`;say.innerHTML=`Written in glass ${w}, taken in during glass ${g}: <b>read, and set aside</b>. Nothing in it counts.`}
+    if(ok)counted++;else aside++;
+    const d=document.createElement("div");d.className="e "+(ok?"ok2":"late");d.innerHTML=txt;pole.appendChild(d);while(pole.children.length>5)pole.firstChild.remove();
+    cc.textContent=counted;ca.textContent=aside};
+  rs.onclick=init;init();
+})();
+
+/* ===== one turn, glass by glass, in still air ===== */
+(function(){
+  const svg=$("#turnsvg"),side=$("#turnside"),H=Hill(svg),T=[1,2,3,4],OWNER=1,TURN=5;
+  const sight={1:"H",2:"H",3:"A",4:"H"},list=new Set(["H","A"]);
+  const pl0={1:[],2:[["A",2]],3:[],4:[]};
+  /* the rules of the four glasses, applied to the starting pledges */
+  const can=(k,x,pl)=>!pl[k].some(p=>p[0]!==x);
+  const names={};T.forEach(k=>names[k]=["H","A"].filter(x=>list.has(x)&&can(k,x,pl0)));
+  const count={H:T.filter(k=>names[k].includes("H")).length,A:T.filter(k=>names[k].includes("A")).length};
+  const cand=["H","A"].filter(x=>count[x]>=3),call=cand.includes("H")?"H":cand[0];
+  const pl1={};T.forEach(k=>pl1[k]=pl0[k].filter(p=>p[0]!==call).concat([[call,TURN]]));
+  const pledged=T.length,commits=pledged>=2;
+  const all=[].concat(...T.map(k=>pl1[k]));
+  const pl2={};T.forEach(k=>pl2[k]=pl1[k].filter(p=>!all.some(q=>q[0]!==p[0]&&q[1]>=p[1])));
+  const pw=p=>`${WORD[p[0]]}, turn ${p[1]}`,pls=pl=>pl.length?pl.map(pw).join("; "):"none";
+  const nm=k=>names[k].length===2?"hold or attack":WORD[names[k][0]]+" only";
+  $("#turnc2").innerHTML=`Tent 2 holds a pledge to attack, so it cannot accept hold, and names ${nm(2)}. The other three can accept either and name ${nm(1)}. Names sent to tent 1: <b>${count.H}</b> for hold, <b>${count.A}</b> for attack.`;
+  $("#turnc3").innerHTML=`Three or more men named ${cand.map(x=>WORD[x]).join(" and ")}, so tent 1 may call ${cand.length>1?"either":WORD[cand[0]]}. Tent 1 calls ${WORD[call]}, to every tent, itself included.`;
+  $("#turnc4").innerHTML=`All ${pledged} men take in the call and tie <i>${WORD[call]}, turn ${TURN}</i>. Tent 2 keeps its older pledge to attack, since that is on the other answer. Each sends <i>pledged</i> to tent 1. Tent 1 takes in ${pledged}, at least two, and ${commits?`<b>commits to ${WORD[call]}</b>`:"does not commit"}.`;
+  const gone=pl1[2].filter(p=>!pl2[2].includes(p));
+  $("#turnc5").innerHTML=`Every man sends every tent all their pledges. Tent 2 learns of <i>${WORD[call]}, turn ${TURN}</i>, a pledge on the other answer at a turn later than its own, so it unties <i>${gone.map(pw).join("; ")}</i>. Every pledge left stands on ${WORD[call]}.`;
+  const tok=[];
+  const put=(a,b,glyph)=>{const g=H.token(TC[a],glyph);H.fly(g,a,b,.5);g.setAttribute("opacity",1);tok.push(g)};
+  function card(k,s){
+    const pl=s<3?pl0[k]:s===3?pl1[k]:pl2[k];
+    let line="";
+    if(s===0)line=k===OWNER?"owner of turn five":"";
+    if(s===1)line="names: "+nm(k);
+    if(s===2)line=k===OWNER?`counts: hold ${count.H}, attack ${count.A}`:"takes in the call";
+    if(s===3)line=k===OWNER&&commits?`commits to ${WORD[call]}`:"ties "+WORD[call]+", turn "+TURN;
+    if(s===4)line=pl1[k].length!==pl2[k].length?"unties "+pls(pl1[k].filter(p=>!pl2[k].includes(p))):"nothing to untie";
+    return `<div class="hc${k===OWNER?" own":""}"><h5>${tentChip(k)}<span>saw ${WORD[sight[k]]}</span></h5><div class="chk">pledges: ${pls(pl)}<br>${line}</div></div>`;
+  }
+  scrolly($("#turn"),s=>{
+    tok.splice(0).forEach(g=>g.remove());
+    T.forEach(k=>{H.state(k,"");H.tent[k].g.classList.toggle("turn",k===OWNER)});
+    if(s===1)T.filter(k=>k!==OWNER).forEach(k=>put(k,OWNER,names[k].map(x=>x).join("")));
+    if(s===2)T.filter(k=>k!==OWNER).forEach(k=>put(OWNER,k,call));
+    if(s===3){T.filter(k=>k!==OWNER).forEach(k=>put(k,OWNER,"P"));if(commits)H.state(OWNER,"commits")}
+    if(s===4)T.filter(k=>k!==2).forEach(k=>put(k,2,WORD[call][0].toUpperCase()+TURN));
+    if(s===0)H.state(OWNER,"owner");
+    side.innerHTML=T.map(k=>card(k,s)).join("");
+  });
+})();
+
+/* ===== pledges in turn five, and a call to attack later ===== */
+(function(){
+  const pk=picker($("#pickk"),[1,2,3,4].map(v=>[v,String(v)]),v=>{K=v;if(M!=null&&M>K)M=null;draw()});
+  const pm=picker($("#pickm"),[0,1,2,3,4].map(v=>[v,String(v)]),v=>{M=v;draw()});
+  const row=$("#menrow"),verdict=$("#verdict");let K=null,M=null;
+  function draw(){
+    pk.set(K);pm.set(M);pm.enable(v=>K!=null&&v<=K);
+    row.innerHTML=K==null?"":[1,2,3,4].map(i=>`<div class="${i<=K?"pl":""}"><i style="background:${TC[i]}"></i>Tent ${i}<br>${i<=K?"hold, turn 5":"no pledge on hold"}</div>`).join("");
+    if(K==null){verdict.textContent="Choose how many men tie the pledge to hold in turn five.";return}
+    if(M==null){verdict.textContent="Now choose how many of their pledged birds reach tent 1 in time. Tent 1 itself is one of the men who pledge.";return}
+    const com=M>=2,free=4-K;
+    let s=com?`Tent 1 takes in ${M} <i>pledged</i>, at least two, and <b>commits to hold</b>.`:`Tent 1 takes in only ${M} <i>pledged</i> in time and does not commit.`;
+    s+=` In a later turn, ${free} ${free===1?"man has":"men have"} no pledge to hold, and so can accept attack. A call needs three. `;
+    if(free>=3)s+=`<span class="ok">Attack can be called.</span> Nobody committed to hold, so nothing is broken: a call to attack makes the pledge to hold be untied, and the night starts clean.`;
+    else s+=`<span class="ok">Attack can never be called</span> while these pledges stand, and they are untied only by a pledge to attack. ${com?"Nobody can ever commit to attack.":"Only hold can be called from here, so nobody can ever commit to attack."}`;
+    verdict.innerHTML=s;
+  }
+  draw();
+})();
+
+/* ===== when the wind drops, and how many glasses until the four commit ===== */
+(function(){
+  const row=$("#nightrow"),say=$("#nightsay2");let D=null,G=null;
+  const pt=picker($("#pickt"),[1,2,3,4].map(v=>[v,String(v)]),v=>{D=v;draw()});
+  const pg=picker($("#pickg"),[1,2,3,4].map(v=>[v,String(v)]),v=>{G=v;draw()});
+  const own=n=>((n-1)%4)+1;
+  function draw(){
+    pt.set(D);pg.set(G);
+    const W=D!=null&&G!=null?4*(D-1)+G:null,t1=W&&D+2,t2=W&&D+3;
+    row.innerHTML="";
+    for(let n=1;n<=7;n++){
+      const d=document.createElement("div");d.className="nt"+(n===t1?" own1":"")+(n===t2?" own2":"");
+      let cells="";
+      for(let g=1;g<=4;g++){const x=4*(n-1)+g;let c="";
+        if(W&&x===W)c="drop";else if(W&&x>W)c="still";
+        if(W&&n===t1&&g===3)c="c1";if(W&&n===t2&&g===3)c="c2";
+        cells+=`<i class="${c}"></i>`}
+      d.innerHTML=`<small>Turn ${n}</small><div class="gl">${cells}</div><span class="who"><i style="display:inline-block;width:.7em;height:.7em;border-radius:50%;border:1.5px solid #1c1512;background:${TC[own(n)]}"></i> T${own(n)}</span>`;
+      row.appendChild(d);
+    }
+    if(W==null){say.textContent="Choose when the wind drops. The men cannot see it. Only the page knows.";return}
+    const c1=4*(t1-1)+3,c2=4*(t2-1)+3,o1=own(t1);
+    say.innerHTML=`The wind drops in glass ${W}, during turn ${D}. The proof counts on turn ${t1}, whose owner is tent ${o1}. If every man lives, tent ${o1} calls in glass ${c1-1}, takes in the <i>pledged</i> birds in glass ${c1} and commits: <b>${c1-W} glasses</b> after the drop. If tent ${o1} were the silent one, turn ${t2} would do it instead, in glass ${c2}: <b>${c2-W} glasses</b>. Both are inside the twenty. Nobody at the tents could say which glass was ${W}. If a man had already committed before the drop, the rest commit when that man's parting birds arrive, and no count of glasses bounds that.`;
+  }
+  draw();
+})();
+
+/* ===== two against two: three nights, and the pairs that cannot tell them apart ===== */
+(function(){
+  const box=$("#nights"),say=$("#twosay"),bg=$("#twoglass"),ba=$("#twoa"),bb=$("#twob"),br=$("#twor"),N=12;
+  let g,A,B;
+  const chips=(a,b)=>tentChip(a)+tentChip(b);
+  const bar=(on,mk,mk2,held)=>{let s='<div class="gbar">';for(let i=1;i<=N;i++){let c=held&&i<=held?"held":"";if(i<=on)c=held?c:"on";if(i===mk)c="mk";if(i===mk2)c="mk2";s+=`<i class="${c}"></i>`}return s+"</div>"};
+  function draw(){
+    const both=A!=null&&B!=null,top=both?Math.max(A,B):null;
+    const n1=`<div class="nightc"><h5>First night</h5><p>Suppose tents 3 and 4 are silent from dusk. Tents 1 and 2 sighted hold, and every bird between them comes within its glass.</p>
+      <div class="pairs"><div class="pair">${chips(1,2)}<br>sighted hold</div><div class="pair quiet">${chips(3,4)}<br>silent</div></div>${bar(g,A,0)}
+      <span>${A==null?"Tents 1 and 2 are waiting.":`They cannot wait for a pair that may be dead, and the third demand says the living commit. They commit to <b>hold</b> in glass ${A}. Attack would break the second demand on a night when all four live and sighted hold.`}</span></div>`;
+    const n2=`<div class="nightc"><h5>Second night</h5><p>Suppose tents 1 and 2 are silent from dusk. Tents 3 and 4 sighted attack, and every bird between them comes within its glass.</p>
+      <div class="pairs"><div class="pair quiet">${chips(1,2)}<br>silent</div><div class="pair">${chips(3,4)}<br>sighted attack</div></div>${bar(g,B,0)}
+      <span>${B==null?"Tents 3 and 4 are waiting.":`The same, with the pairs and answers swapped. They commit to <b>attack</b> in glass ${B}.`}</span></div>`;
+    const n3=`<div class="nightc"><h5>Third night</h5><p>Nobody is silent. Tents 1 and 2 sighted hold, tents 3 and 4 attack, and the wind holds every bird between the pairs.</p>
+      <div class="pairs"><div class="pair">${chips(1,2)}<br>sighted hold</div><div class="pair">${chips(3,4)}<br>sighted attack</div></div>${bar(g,A,B,both?top:g)}
+      <span>${both?`Tents 1 and 2 have heard nothing from the others for ${A} glasses, which is exactly what they saw in the first night, so they commit to <b>hold</b>. Tents 3 and 4 see the second night, and commit to <b>attack</b>. The wind drops after glass ${top}, too late. <span class="bad">Two answers: the first demand is broken.</span>`:"The birds between the pairs are in the pines."}</span></div>`;
+    box.innerHTML=n1+n2+n3;
+    bg.disabled=g>=N||both;ba.disabled=g<1||A!=null;bb.disabled=g<1||B!=null;
+    if(both)say.innerHTML=`Each pair gave up waiting at a glass you chose. The wind can hold every bird between the pairs for more than ${A} and more than ${B} glasses, so the pairs cannot tell the third night from their own. Whatever glasses the arrangement allows, the wind can do this.`;
+    else if(A!=null)say.textContent="Now say when tents 3 and 4 give up waiting.";
+    else if(B!=null)say.textContent="Now say when tents 1 and 2 give up waiting.";
+    else say.textContent=g?"Say when either pair gives up waiting, or let more glasses pass.":"Let some glasses pass, then say when tents 1 and 2 give up waiting for tents 3 and 4.";
+  }
+  bg.onclick=()=>{g++;draw()};ba.onclick=()=>{A=g;draw()};bb.onclick=()=>{B=g;draw()};
+  br.onclick=()=>{g=0;A=B=null;draw()};g=0;A=B=null;draw();
+})();
+
+/* ===== how many men are enough, by the paper's table ===== */
+(function(){
+  const out=$("#need");let W=null,F=null,C=null;
+  const rules={die:[null,2,"drop"],omit:[null,2,"drop"],seal:[null,3,"drop"],noseal:[3,3,"drop"]};
+  const pw=picker($("#pickw"),[["none","No wind"],["drops","Wind that drops"],["ever","Wind for ever"]],v=>{W=v;draw()});
+  const pf=picker($("#pickf"),[["die","Die"],["omit","Drop birds"],["seal","Lie, with seals"],["noseal","Lie, without seals"]],v=>{F=v;draw()});
+  const pc=picker($("#pickc"),[1,2,3].map(v=>[v,String(v)]),v=>{C=v;draw()});
+  function draw(){
+    pw.set(W);pf.set(F);pc.set(C);
+    if(W==null||F==null||C==null){out.textContent="Choose the wind, the trouble, and how many men it may touch.";return}
+    const kind=F==="die"?"die":F==="omit"?"drop birds or fail to take them in":F==="seal"?"lie, with seals no one can forge":"lie, without seals";
+    const mult=F==="die"||F==="omit"?2:3;
+    if(W==="ever"){out.innerHTML=`<b class="n">No arrangement.</b> With the wind for ever, no number of men meets the three demands, whatever may befall them.`;return}
+    if(W==="none"&&(F==="die"||F==="omit"||F==="seal")){out.innerHTML=`<b class="n">Any number.</b> With no wind, any number of men can be borne ${F==="seal"?"lying, with seals":"failing this way"}, whatever ${C===1?"the one":C+" of them"} may do.`;return}
+    const N=mult*C+1;
+    out.innerHTML=`<b class="n">${N} men</b> are needed when ${C} may ${kind}: more than ${mult===2?"twice":"three times"} as many as may fail, ${mult} × ${C} + 1. Four men ${4>=N?"are enough":"are not enough"}.${W==="drops"&&F==="seal"?" Seals change nothing here: the answer is the same without them.":""}`;
+  }
+  draw();
+})();
+
+/* ===== back to machines ===== */
+mapPairs($("#map"),[["Four tents, one man in each","Processors"],["Attack or hold","A decision between two values"],["A sighting","A processor's initial value"],["Committing","An irrevocable decision"],["The three demands","Consistency, strong unanimity, termination"],["A man who may be killed","A fail-stop fault: at most one of four"],["A raven, never lost","A message, delayed but never lost"],["The wind, and its dropping","Unbounded delay until an unknown time, then a known bound"],["No man knows it has dropped","The stabilization time is unknown to the processors"],["The glasses, and the common count","Synchronous processors with a common step count"],["A glass","One round"],["A late bird, set aside","A message from an earlier round is ignored"],["A turn, its owner by tent number","A phase, its coordinator in rotation"],["The sighted answers","The set of proper values"],["A pledge on the tent pole","A lock, with its phase number"],["The four glasses of a turn","Ask, propose, acknowledge, release locks"],["Never Two Answers","Safety under any delay"],["Committing After the Wind","Termination soon after stabilization"],["A parting bird","A decision announced to all, accepted at any time"],["Two against two","No resilience when half may fail"],["Liars and seals","Byzantine faults and authentication"],["A clock kept by ravens","Distributed clocks for partially synchronous processors"]]);
+})();
+</script>
 </body>
 </html>
