@@ -2,7 +2,7 @@
 
 One page per book, centred on the **allegorical devices**: each device, what it stands for in the paper, and where it meets the other books. Read with `settings.md`, `buildings.md` and `process.md`; where this file and those disagree, those are right until this file's decisions are taken back into them.
 
-*The Part-Time Parliament* is not here: it is Lamport's own allegory, already a scroll. The six books below are still in the chapter layout; when one is converted to the scroll format (`process.md`, `art/scroll/BRIEF.md`), its **Chapters** list is the order of its spreads.
+*The Part-Time Parliament* is not here: it is Lamport's own allegory, already a scroll. *One Leader at a Time* is a scroll too. The other five books below are still in the chapter layout; when one is converted to the scroll format (`process.md`, `art/scroll/BRIEF.md`), its **Chapters** list is the order of its spreads.
 
 ---
 

@@ -1325,11 +1325,10 @@ def leaders_chain():
 
 
 FIGURES = {
-    "books/one-leader-at-a-time/index.html": [board_passes],
 }
 
 # A figure not yet in its book takes the place of the nth flat <figure class="diagram">.
-LEGACY = {"awl-turn": 0, "awl-split": 1, "awco-nights": 0, "awco-recovery": 1, "kol-entry": 0, "tdts-split": 0, "olt-board": 0,
+LEGACY = {"awl-turn": 0, "awl-split": 1, "awco-nights": 0, "awco-recovery": 1, "kol-entry": 0, "tdts-split": 0,
           "aal-worlds": 0, "aal-repeat": 1, "aal-sealed": 2, "cla-stage": 0, "cla-chain": 1}
 SCRIPT = '<script src="../../assets/js/flow.js" defer></script>\n'
 
