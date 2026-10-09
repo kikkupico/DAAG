@@ -1,0 +1,440 @@
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <span class="now" id="now"></span>
+  <i id="prog"></i>
+</div>
+
+<!-- ============================================================ cover -->
+<header class="spread dark" id="cover" data-name="Cover">
+  <div class="cut" style="left:-30px;bottom:-10px;width:90px;opacity:.3" data-depth="-26"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#5f6e28"/></svg></div>
+  <div class="cut" style="right:-20px;bottom:-14px;width:80px;opacity:.3" data-depth="-40"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#7c8f3a"/></svg></div>
+  <div class="wrap grid">
+    <div>
+      <div class="kicker">After Michael Ben-Or, 1983</div>
+      <h1>Agreeing by Chance<span>what a coin buys that no plan can</span></h1>
+      <p class="hook">If no plan can guarantee that four men agree, what if a man who is stuck simply tosses a coin?</p>
+      <p class="hook" style="color:var(--blood);font-style:normal;font-family:var(--sans);font-size:1.1rem">At the foot of Mount Phyle, the four never commit to different answers. They commit in the end with probability one, though on no night anyone can name.</p>
+      <div class="scrollcue"><b>↓</b> Scroll. Things unfold.</div>
+    </div>
+    <div class="pop" data-auto>
+      <div class="leaf">
+        <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" alt="In the late afternoon a mercenary in a dark red cloak stands in front of a linen tent on a rocky hillside above the sea, one arm raised, a single silver coin glinting in the air above the open hand"></div>
+        <div class="fold-shadow"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================ machines -->
+<section class="spread light" id="machines" data-name="In machine terms">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap two" style="gap:clamp(24px,5vw,60px);align-items:center">
+    <div>
+      <div class="kicker">First, in machine terms</div>
+      <h2>A coin where reasoning gives out</h2>
+      <p class="lede">A group of computers must all settle on the same one of two values, and one of them may stop without a word.</p>
+      <ul class="terms">
+        <li><b>Messages take any time at all.</b> Every message arrives, but no delay is too long to be possible.</li>
+        <li><b>No fixed protocol can promise it.</b> One that acts only on what it has received cannot guarantee that the group ever decides.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup></li>
+        <li><b>Ben-Or</b> (1983): let a machine that cannot decide flip a private coin. No two machines ever decide differently, and every machine that has not stopped decides with probability one, though no round can be named.</li>
+      </ul>
+      <p style="margin-top:1.2rem">This edition tells it with four mercenaries, their ravens and a coin in each tent.</p>
+    </div>
+    <div class="pop fromright"><div class="leaf">
+      <div class="paper logs">
+        <h4>A split nothing breaks <em>then a coin</em></h4>
+        <div class="mach4s" id="mvals"></div>
+        <p class="note" id="msay" data-live></p>
+        <div class="row"><button class="btn" id="mfixed">Fixed rule, worst-order messages</button><button class="btn alt" id="mcoin">Each machine flips a coin</button><button class="btn alt" id="mreset">Start again</button></div>
+        <p class="note" style="margin-top:8px">The fixed rule is one example, used only to show the difficulty. The coins fall differently each time.</p>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ============================================================ the hill -->
+<section class="spread dark" id="hall" data-name="The Foot of Mount Phyle">
+  <a class="anchor" id="s1"></a>
+  <div class="bleed">
+    <img src="img/camp.jpg" alt="A lone linen tent with a round shield and a chest on a rocky slope below a ruined ring wall on the summit, cypresses and pines around it" data-parallax>
+    <div class="hall-title"><div class="t">
+      <div class="kicker">The foot of Mount Phyle</div>
+      <h2>The same four tents</h2>
+      <p>Four mercenaries camp at the foot of the hill, one to a tent, out of sight of one another, under nobody's command.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> Bandits hold the top.</p>
+    </div></div>
+    <div class="pin pop" style="left:50%;top:44%;"><div class="leaf"><b>Only ravens</b>The four send word only by raven. No raven has a longest flight, and birds sent an hour apart arrive in either order.</div></div>
+    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>Nobody lies</b>No man at the foot ever misreports anything.</div></div>
+    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>Nobody is killed</b>Any man may be, and a dead man's tent falls silent. No one is, in this book.</div></div>
+  </div>
+</section>
+
+<!-- ============================================================ the demands -->
+<section class="spread light" id="demands" data-name="Three demands, one assumption">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">What the four want, and what bound them</div>
+      <h2>Three demands, and one assumption</h2>
+      <p class="lede">The four must all attack or all hold. Each formed an opinion at dusk, a sighting, and committing is final: a man leaves the tent and its birds for the night.</p>
+      <p>Nobody lies and nothing goes wrong, and still no arrangement guarantees that any of them ever commits. The birds can always be ordered so that the night stays open.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup></p>
+    </div>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First demand</div><h3>No two commit differently</h3><p>Nobody attacks while another holds.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second demand</div><h3>Matching sightings are followed</h3><p>If all four sighted the same answer, that is the answer they commit to.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third demand</div><h3>Every man left alive commits</h3><p>Every man who is not killed eventually commits.</p></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.4rem">The second and third ask more than the impossibility needs. The second says exactly how the answers stay possible, and the third asks committing of every man left alive. Even the weaker demands could not be guaranteed,<sup class="xref"><a href="../the-limits-of-agreement/index.html#s2" title="The Limits of Agreement: What the Mercenaries Want">*</a></sup> so these cannot be either.</p>
+    <p style="max-width:40em">The impossibility rested on one assumption, easy to pass over: the four may not draw lots. Each acts only on what has reached them, so that, given the same sighting and the same birds in the same order, each does the same thing every time.</p>
+    <p class="lede" style="font-style:italic;margin-top:1.4rem">What if that one assumption is dropped, and nothing else is changed? What could four men do with chance?</p>
+  </div>
+</section>
+
+<!-- ============================================================ a coin in each tent -->
+<section class="spread dark" id="coin" data-name="A coin in each tent">
+  <a class="anchor" id="s2"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Dropping the assumption</div>
+      <h2>A coin in each tent</h2>
+      <p class="lede">Every man at the foot was paid in Attic silver, and every Attic coin has the goddess's head on one face and her owl on the other. The owl stands for holding and the goddess for attacking.</p>
+      <p>A man who cannot settle on an answer, by the rules that follow, tosses a coin high off the thumb, catches it, and favours the answer it shows.</p>
+      <p>There are four coins and four separate tosses. The four cannot toss one coin together, because nothing on the hill brings them to one place. One man tossing for all would have to send the result by raven, and that raven might be the one still in the pines, or the man might be the one who is killed. Nobody learns another's toss except by bird, if at all.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Four coins <em>four tents</em></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg fig" id="coinsvg" role="img" aria-label="The hill from above with four tents at its foot, each showing the face its last toss came up"></svg>
+        <div>
+          <div class="stand" id="cointally" data-live></div>
+          <p class="say" id="coinsay"></p>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn" id="coin1">Toss in tent 1</button><button class="btn" id="coin2">Toss in tent 2</button><button class="btn" id="coin3">Toss in tent 3</button><button class="btn" id="coin4">Toss in tent 4</button>
+        <button class="btn alt" id="coinall">Toss in all four</button><button class="btn alt" id="coinr">Clear the tallies</button>
+      </div>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">Over many tosses owl and goddess come up about equally often. In a short run they need not.</p>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.6rem">A silver coin tossed high and caught gives three things. A spun coin would not: it tends to fall to one face, and a struck coin is never quite even.</p>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">(1) Fair</div><h3>Owl and goddess equally</h3><p>Owl and goddess come up equally often.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">(2) Fresh</div><h3>No toss owes anything</h3><p>Each toss owes nothing to any toss before it, in this tent or any other.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">(3) Unforeseen</div><h3>Unknown until made</h3><p>Before a toss is made, no one knows how it will fall. After it is made, anyone may know it.</p></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.6rem">The third matters because of how the arguments of this book treat the birds. Without coins, the birds are taken in the worst order the argument can find: whatever the four arrange, the order of arrivals can be chosen against them.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s6" title="The Limits of Agreement: Deferring the Telling Arrival">*</a></sup> The same is done here, and done harder. Think of the order in which the birds come down as arranged by someone who can see into every tent, read every strip and see every toss already made, and who arranges the arrivals to keep the four apart for as long as possible. What can this arranger not do? See a toss before it is made. The arranger is only the worst case, and no such person exists, but anything that holds against the arranger holds on every night.</p>
+    <p class="lede" style="font-style:italic;margin-top:1.4rem">A coin in each tent, then. But when does a man toss, and what does the toss do?</p>
+  </div>
+</section>
+
+<!-- ============================================================ rounds -->
+<section class="spread light" id="rounds" data-name="Rounds of birds">
+  <a class="anchor" id="s3"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">When a man tosses</div>
+      <h2>Rounds of birds</h2>
+      <p class="lede">The arrangement goes in numbered rounds, and every bird carries its round's number, so that a late bird of the second round is not taken for an early one of the third.</p>
+      <p>In each round each man sends two birds to each of the others, and counts their own two as though they had come. The first is the <b>report</b>: the answer favoured at the start of the round, beginning with the sighting. The second says one of two things: <b>sure of</b> an answer, or <b>unsure</b>.</p>
+    </div>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step one</div><h3>Send the report</h3><p>Send the answer favoured now, to all the others.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step two</div><h3>Wait for three reports</h3><p>If all three name the same answer, more than half of all four, send <i>sure of</i> that answer. Otherwise send <i>unsure</i>.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step three</div><h3>Wait for three second birds</h3><p>One that is sure of an answer: favour it from now on. Two or more: be <b>settled</b> on it. None: toss the coin and favour the answer it shows. Then the next round begins.</p></div></div></div>
+    </div>
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center;margin-top:2rem">
+      <div>
+        <h3 style="font-size:1.5rem;margin-bottom:.5rem">Three birds, not four</h3>
+        <p>With four men and at most one silent, three birds always come. A man who waited for four would wait for ever whenever one of them had been killed, and could not know it.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p03-perch.jpg" alt="A tent, a chest and a leaning shield in a wooded gully by moonlight, with a bare bird perch beside them and nothing on it" loading="lazy"></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+      <h4>One round <em>at tent 1</em></h4>
+      <p style="font-size:.92rem;color:#6b5a48;margin:0 0 8px">Tent 1 has read three reports: its own and two ravens. Press a report to change what it says.</p>
+      <div class="tgs" id="rrep"></div>
+      <p style="font-size:.92rem;color:#6b5a48;margin:12px 0 8px">Then three second birds: its own, which the reports decide, and two ravens.</p>
+      <div class="tgs" id="rpick"></div>
+      <div class="tgs" id="rsec"></div>
+      <p class="say" id="rout"></p>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.6rem">A settled man still has to <em>commit</em>, and that has a catch. A man who leaves the tent to attack or to hold falls as silent as a dead one, and the others are waiting for three birds each round. If two men committed and a third were killed, the last would wait for ever. So a settled man does one thing more: in the round of settling, at once, both birds of the next round go to all, the report and <i>sure of</i> that answer. This is the <b>rule of parting</b>. Then the man leaves the tent and commits.</p>
+    <p style="max-width:40em">The two birds sent early are exactly the two that would have been sent had the man stayed.</p>
+    <details class="proof">
+      <summary>The round, stated formally</summary>
+      <p class="given">In the paper's terms the four tents are <var>N</var> = 4 processes, at most <var>t</var> = 1 of which may crash; a sighting is an initial value, a report is the message (1, <var>r</var>, <var>x</var>), <i>sure of</i> <var>v</var> is the D-message (2, <var>r</var>, <var>v</var>, D), <i>unsure</i> is (2, <var>r</var>, ?), being <i>settled</i> is deciding, and a process waits for <var>N</var> − <var>t</var> = 3 messages at each step. The three steps below are the paper's round, written for one process.</p>
+      <p><b>One round, <var>r</var>, at one tent.</b></p>
+      <ol class="proofsteps">
+        <li>Send the report of round <var>r</var>, the answer favoured now, to all.</li>
+        <li>Wait for three reports of round <var>r</var>. If more than two of them, that is all three, name the same answer, send <i>sure of</i> that answer to all; otherwise send <i>unsure</i>.</li>
+        <li>Wait for three second birds of round <var>r</var>. Then: (a) if at least one says <i>sure of</i> an answer, favour that answer from now on; (b) if two or more say <i>sure of</i> it, be <i>settled</i> on it; (c) if none says <i>sure</i>, toss the coin and favour the answer it shows.</li>
+        <li>Go on to round <var>r</var> + 1.</li>
+      </ol>
+      <p><b>The same, for <var>N</var> men of whom <var>t</var> may fall silent.</b> Wait each time for <var>N</var> − <var>t</var> birds. Send <i>sure of v</i> when more than <var>N</var>/2 of the reports received name <var>v</var>. Favour <var>v</var> on one <i>sure of v</i>; settle on <var>v</var> on more than <var>t</var> of them; toss otherwise. The arrangement needs <var>N</var> &gt; 2<var>t</var>. On the hill, <var>N</var> = 4 and <var>t</var> = 1.</p>
+      <p><b>The rule of parting.</b> A man who becomes settled on an answer in round <var>r</var> at once sends both his birds of round <var>r</var> + 1 to all: the report, that answer, and the second bird, <i>sure of</i> that answer. Then he leaves his tent and commits to it.</p>
+      <p>This rule is not in Ben-Or's paper. There a process that has decided simply goes on taking part, and nothing is said of stopping. On the hill deciding is committing, and committing is silence, so the rule is needed; the two birds it sends early are exactly the two the man would have sent had he stayed.</p>
+    </details>
+    <p class="lede" style="font-style:italic;margin-top:1.6rem">Each man now tosses whenever they cannot settle, alone and unseen. Could two coins falling differently commit two men to different answers?</p>
+  </div>
+</section>
+
+<!-- ============================================================ never two answers -->
+<section class="spread dark has-scrolly" id="neversec" data-name="Never two answers">
+  <a class="anchor" id="s4"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap" style="margin-bottom:-1rem">
+    <div class="narrow">
+      <div class="kicker">Whatever the birds, whatever the coins</div>
+      <h2>Never two answers</h2>
+      <p class="lede">Two coins can never commit two men to different answers. The first two demands hold on every night. The whole of it rests on one small fact about majorities.</p>
+    </div>
+    <div class="cards3" style="margin-top:1.4rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">One sure answer a round</div><h3>Every sure bird agrees</h3><p>In any round, every <i>sure</i> bird names the same answer. Each man sends one report a round, so a round has at most four reports. Three of hold and three of attack out of four must share a man, and a man cannot have reported both.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Never two answers</div><h3>No two commit differently</h3><p>If one man is settled on an answer in a round, every man who finishes that round favours that answer, and every man not killed is settled on it in the next round.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The sightings respected</div><h3>Matching sightings settle at once</h3><p>If all four sighted the same answer, every man not killed is settled on it in the first round, and no coin is tossed.</p></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.4rem">Scroll to watch one round worked out by the rules, with each man missing one of the four birds.</p>
+  </div>
+  <div class="scrolly" id="never">
+    <div class="stage"><div class="stage-inner">
+      <div class="ngrid" id="nevergrid" data-live style="max-width:600px;width:100%"></div>
+    </div></div>
+    <div class="steps">
+      <div class="step on"><div class="card"><div class="num">1 · The reports</div><h3>Tents 1, 2 and 4 favour hold</h3><p>Tent 3 favours attack. Each man will read three of the four reports, and misses one.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · Who is sure</div><h3>Two men read three alike</h3><p>Tents 1 and 2 read three reports of hold, and write <i>sure of hold</i>. Tents 3 and 4 each read the attack among their three, and write <i>unsure</i>. A man cannot write <i>sure of attack</i> here, since that needs three of attack.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · The second birds</div><h3>One man settles, the rest follow</h3><p>Tent 1 reads two <i>sure of hold</i> and is settled. Tents 2, 3 and 4 each read one, and favour hold. A man misses at most one bird, so every man reads at least one when two were sent. Nobody tosses.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Parting</div><h3>Tent 1 has gone, and its birds are in</h3><p>In the settling round tent 1 sent both birds of the next round: hold, and <i>sure of hold</i>. Those are the very birds it would have sent had it stayed.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · The next round</div><h3>Every report names hold</h3><p>Each remaining man reads three reports of hold, writes <i>sure of hold</i>, reads three such birds, and is settled on hold. No bird names attack.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · So</div><h3>The coins can delay, never divide</h3><p>A coin is tossed only by a man who read no <i>sure</i> bird at all, and while anyone is settled, no one is tossing against them. Chance does not come in anywhere in either result.</p></div></div>
+    </div>
+  </div>
+  <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <details class="proof">
+      <summary>Proof · that once one man is settled, all end at his answer</summary>
+      <p class="given">In the paper's terms the four tents are <var>N</var> = 4 processes, at most <var>t</var> = 1 of which may crash; a sighting is an initial value, a report is the message (1, <var>r</var>, <var>x</var>), <i>sure of</i> <var>v</var> is the D-message (2, <var>r</var>, <var>v</var>, D), <i>unsure</i> is (2, <var>r</var>, ?), being <i>settled</i> is deciding, and a process waits for <var>N</var> − <var>t</var> = 3 messages at each step. <b>Claim.</b> If a process decides <var>v</var> in round <var>r</var>, then every process that completes round <var>r</var> adopts <var>v</var>, and every process that does not crash decides <var>v</var> in round <var>r</var> + 1. This is Theorem 1 (ii).</p>
+    <ol class="proofsteps">
+      <li>Say Number 1 is settled on hold in round <var>r</var>. Then two or more of the three
+      second birds that reached him said <i>sure of hold</i>, so at least two such birds were sent in
+      round <var>r</var>.</li>
+      <li>Any other man who finishes round <var>r</var> read three of the four second birds of that
+      round, so he missed at most one. He therefore read at least one <i>sure of hold</i>. By
+      <i>one sure answer a round</i> he read no <i>sure of attack</i>, so he favours hold: by rule (a) if
+      he read one, and he may also be settled on hold by rule (b). He does not toss.</li>
+      <li>So every report of round <var>r</var> + 1 names hold. Every man who reaches step (2) of that
+      round sees three reports of hold and sends <i>sure of hold</i>; every man who reaches step (3)
+      reads three <i>sure of hold</i> and is settled on hold.</li>
+      <li>The birds a settled man sends early under the rule of parting are a report of hold and
+      <i>sure of hold</i>. By step 3 these are exactly the birds he would have sent in round
+      <var>r</var> + 1 had he stayed, whichever three reports he had read. So the rule changes nothing
+      the others see, and each of them still gets three birds at every step, since at most one man
+      is dead and the settled ones have sent theirs.</li>
+      <li>No man is settled on attack in round <var>r</var> or any later round, since no <i>sure of
+      attack</i> is ever sent from round <var>r</var> on. So no two men commit to different
+      answers.<span class="qed">∎</span></li>
+    </ol>
+    </details>
+    <details class="proof">
+      <summary>Proof · that four matching sightings settle the first round</summary>
+      <p class="given">In the paper's terms the four tents are <var>N</var> = 4 processes, at most <var>t</var> = 1 of which may crash; a sighting is an initial value, a report is the message (1, <var>r</var>, <var>x</var>), <i>sure of</i> <var>v</var> is the D-message (2, <var>r</var>, <var>v</var>, D), <i>unsure</i> is (2, <var>r</var>, ?), being <i>settled</i> is deciding, and a process waits for <var>N</var> − <var>t</var> = 3 messages at each step. <b>Claim.</b> If all <var>N</var> initial values are equal, every process that does not crash decides that value in round 1. This is Theorem 1 (iii).</p>
+    <ol class="proofsteps">
+      <li>Every report of round 1 names that answer, so every man reads three reports of it and sends
+      <i>sure of</i> it.</li>
+      <li>Every man then reads three <i>sure</i> birds for it, more than one, and is settled on it.
+      No coin is tossed.<span class="qed">∎</span></li>
+    </ol>
+    </details>
+    <p style="max-width:40em;margin-top:1.8rem" class="lede">The coins cannot divide the four. Can they bring them together, on a night when the sightings are split?</p>
+  </div>
+</section>
+
+<!-- ============================================================ the toss -->
+<section class="spread light" id="toss" data-name="The toss">
+  <a class="anchor" id="s5"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">How the coin does its work</div>
+      <h2>The toss</h2>
+      <p class="lede">The coin does its work in the rounds where nobody is sure. Here is one way a night can go, with tent 4 silent from the start, so that every wait is for the three who remain.</p>
+      <p>The sightings were hold at tent 1, attack at tent 2 and hold at tent 3. The tosses below are the ones of this night in the story. The rounds are worked out by the rules.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>One night <em>press for the next round</em></h4>
+      <div class="ngrid" id="storygrid" data-live></div>
+      <p class="say" id="storysay"></p>
+      <div class="row"><button class="btn" id="storynext">The next round</button><button class="btn alt" id="storyr">Start again</button></div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.6rem">The tosses did not have to agree with anybody's sighting. Tent 3 sighted hold and tossed the owl, tent 1 sighted hold and tossed the goddess. That is allowed, because the second demand speaks only of nights when all four sightings agree. And round 2 settled nothing, though two of the three favoured attack, because a man is sure only when more than half of all four agree, not more than half of those heard from. That keeps <i>one sure answer a round</i> true when a slow bird may be carrying the fourth report.</p>
+    <p style="max-width:40em">Nothing is to be read into which answer the coins chose. The coins pick an answer the way the birds' order would otherwise have picked it: by nothing anyone can know in advance. The night could as well have ended in attack.</p>
+    <p class="lede" style="font-style:italic;margin-top:1.4rem">That night ended in three rounds. Must every night end?</p>
+  </div>
+</section>
+
+<!-- ============================================================ probability one -->
+<section class="spread dark" id="prob" data-name="With probability one">
+  <a class="anchor" id="s6"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">The end of the night</div>
+      <h2>With probability one</h2>
+      <p class="lede">Not on every course of birds and coins. The example could have taken thirty rounds, and there is a course of birds and coins, one among very many, in which it never ends: the tosses keep coming up split, round after round, for ever.</p>
+      <p>What can be promised is that such courses, taken together, have no chance whatever of happening. With at most one of the four silent, and however the birds are ordered, the chance that every man not killed eventually commits is one.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>A fresh night <em>every press is a new night</em></h4>
+      <p style="font-size:.92rem;color:#6b5a48;margin:0 0 8px">Choose what each tent saw at dusk. The birds here arrive in a random order, each man missing one of the other three, which is gentler than the arranger would be.</p>
+      <div class="tgs" id="nightsight"></div>
+      <div class="row" style="margin-bottom:10px"><button class="btn alt tg" id="nightsilent"></button></div>
+      <div class="ngrid" id="nightgrid" data-live></div>
+      <p class="say" id="nightsay">Press to run a night.</p>
+      <div class="row"><button class="btn" id="nightgo">Run a night</button></div>
+    </div></div></div>
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center;margin-top:2rem">
+      <div>
+        <p>The coins keep giving the four a way out, and the birds cannot shut it for good. In any round at most one answer can be the subject of <i>sure</i> birds. If every man who tosses comes up with that answer, or, when there is none, all with the same answer, then every man starts the next round favouring one answer, and the next round settles everyone. The arranger can make that harder, round by round, but a way out that keeps coming back with some chance is taken in the end with chance one.</p>
+        <p><b>No night can be named</b> by which the four will have committed. There is no round after which committing is certain, only a chance, growing towards one, that it has happened by then. No figure for how fast it grows is given here. A man who asks <i>will we have committed by the fortieth round?</i> can only be told <i>almost certainly</i>. And the courses that never end still exist. They have been given chance nothing, not abolished.</p>
+        <p>The short argument for this has a gap, said plainly in the panel below, and a full proof came much later.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on top, and a few small tents among the pines on the slopes below" loading="lazy"></div></div></div>
+    </div>
+    <details class="proof">
+      <summary>Proof · a sketch, that the four commit with probability one</summary>
+      <p class="given">In the paper's terms the four tents are <var>N</var> = 4 processes, at most <var>t</var> = 1 of which may crash; a sighting is an initial value, a report is the message (1, <var>r</var>, <var>x</var>), <i>sure of</i> <var>v</var> is the D-message (2, <var>r</var>, <var>v</var>, D), <i>unsure</i> is (2, <var>r</var>, ?), being <i>settled</i> is deciding, and a process waits for <var>N</var> − <var>t</var> = 3 messages at each step. A <i>local coin</i> is step 3(c): set the value to 0 or 1 with probability 1/2 each. <var>g</var> is a value, defined in step 1 below. <b>Claim.</b> With <var>N</var> &gt; 2<var>t</var>, every process that does not crash decides with probability 1. This is Theorem 1 (i), which the paper states without proof.</p>
+    <ol class="proofsteps">
+      <li>Fix a round <var>r</var> in which no one is yet settled. Let <var>g</var> be the answer named by
+      <i>sure</i> birds in round <var>r</var>, if any are sent, and let <var>g</var> be hold
+      otherwise.</li>
+      <li>Every man who finishes round <var>r</var> either reads a <i>sure of g</i> and favours
+      <var>g</var>, or tosses. Each toss is fair and fresh, and the arranger cannot see it before it
+      is made, so each comes up <var>g</var> with chance one half, whatever has gone before.</li>
+      <li>At most four men toss in round <var>r</var>, so with chance at least 1/16 (the sketch's figure,
+      not a proven bound) every one of them
+      comes up <var>g</var>. Then every report of round <var>r</var> + 1 names <var>g</var>, and as in
+      the proof of <i>never two answers</i>, every man who is not killed is settled on <var>g</var> in round
+      <var>r</var> + 1.</li>
+      <li>The rounds' tosses are fresh, so the chance that this fails in each of <var>k</var> rounds in a
+      row is at most (15/16)<sup><var>k</var></sup>, which shrinks towards nothing as <var>k</var>
+      grows. The chance that it fails for ever is therefore nothing.<span class="qed">∎</span></li>
+    </ol>
+      <p>Is the sketch airtight? No, and it should be said plainly where it fails. Step 1 treats the answer <var>g</var> as fixed before the round's tosses. But a slow man's report for round <var>r</var> comes from how his round <var>r</var> − 1 ended, and the arranger chooses which second birds he reads there, and may choose after seeing some tosses of round <var>r</var>. So the answer named <i>sure</i> in round <var>r</var> can be picked against the early tosses, and the one-in-sixteen of step 3 is not a bound anyone has proved. Ben-Or's paper states its theorems without any proof. A proof that closes every such gap was published only in 2012, by Aguilera and Toueg; it comes to the same conclusion by a longer road.</p>
+      <p>What is not claimed? <b>No night can be named</b> by which the four will have committed. There is no round after which committing is certain; there is only a chance, growing towards one, that it has happened by then. Ben-Or's paper gives no figure for how fast that chance grows, and this book gives none.</p>
+    </details>
+    <p class="lede" style="font-style:italic;margin-top:1.6rem">If endless courses still exist, what exactly did the coin change about the impossibility?</p>
+  </div>
+</section>
+
+<!-- ============================================================ what the coin changed -->
+<section class="spread light" id="changed" data-name="What the coin changed">
+  <a class="anchor" id="s7"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">A fork the arranger does not steer</div>
+      <h2>What the coin changed</h2>
+      <p class="lede">The endless night without coins is built in three steps:<sup class="xref"><a href="../the-limits-of-agreement/index.html#s5" title="The Limits of Agreement: The Dusk That Settles Nothing">*</a></sup> a way for the sightings to fall that leaves the night open; from any open standing, an arrival that can be deferred and taken without closing the night; and so an arranger who defers well can keep it open for ever.</p>
+      <p>Every step leans on the four being unable to draw lots. Given the same birds in the same order, each man does the same thing, so the arranger knows, before choosing an arrival, what it will lead to.</p>
+    </div>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">With coins</div><h3>The arranger no longer knows</h3><p>At a toss the night forks, one way for the owl and one for the goddess, and the coin takes the fork, not the arranger. The arranger can still be as clever about the birds, but cannot steer both forks at once.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Still there</div><h3>Open standings and endless courses</h3><p>Fix every toss in advance and the argument without coins runs unchanged.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s6" title="The Limits of Agreement: Deferring the Telling Arrival">*</a></sup> What has changed is that an endless course now needs the coins to cooperate, round after round, and they do not.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What it bought</div><h3>Every course, or probability one</h3><p>No arrangement guarantees that anybody ever commits, and this one does not either. It guarantees that the four never commit differently, and that failing to commit has no chance at all. That difference is the whole of what the coin bought.</p></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.6rem">Three things would change matters at the foot of the hill: a longest flight, or some report of who has died, or all the deaths happening before the evening begins.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup> The coin is a fourth way, and a different kind. The other three give the four men more knowledge of the world. The coin gives them none. It gives the world less power over them.</p>
+    <p class="lede" style="font-style:italic;margin-top:1.4rem">The coin takes power from the world. What does it leave the world holding?</p>
+  </div>
+</section>
+
+<!-- ============================================================ what chance does not buy -->
+<section class="spread dark" id="limits" data-name="What chance does not buy">
+  <a class="anchor" id="s8"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">The limits of the coin</div>
+      <h2>What chance does not buy</h2>
+      <p class="lede">Could the coins carry the four past two silences? No. The arrangement needs the silent to be fewer than half, and that is not a weakness of the arrangement.</p>
+      <p><b>Half is too many.</b> If half the men or more may fall silent, no arrangement, with or without coins, can meet all three demands: that no two commit to different answers, that matching sightings are followed, and that every man not killed eventually commits.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>A hill where two may fall silent <em>the argument</em></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg fig" id="halfsvg" role="img" aria-label="The hill from above with four tents: tents 1 and 2 saw hold, tents 3 and 4 saw attack"></svg>
+        <p class="say" id="halfsay"></p>
+      </div>
+      <div class="row"><button class="btn" id="half1">Hold back every bird from tents 3 and 4</button><button class="btn" id="half2">Hold back every bird from tents 1 and 2</button><button class="btn alt" id="half3">Release the held birds</button><button class="btn alt" id="halfr">Start again</button></div>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">The picture shows the pattern of the argument, not a worked plan. Nobody falls silent in it: every bird is only late.</p>
+    </div></div></div>
+    <details class="proof">
+      <summary>Proof · that with two of four silent, the answers can divide</summary>
+      <p class="given">In the paper's terms this is the case <var>N</var> ≤ 2<var>t</var>, here <var>N</var> = 4 and <var>t</var> = 2, a process being able to crash at any moment. <b>Claim.</b> No protocol, randomized or not, meets agreement, validity when all inputs are equal, and termination for every process that does not crash. This is the remark after Theorem 2: the schedule can simulate a partition.</p>
+    <ol class="proofsteps">
+      <li>Suppose Numbers 1 and 2 sighted hold and Numbers 3 and 4 sighted attack, and
+      take any arrangement that follows matching sightings and makes every man not killed commit
+      eventually.</li>
+      <li>Two men may be silent, so Numbers 1 and 2 must be able to commit without ever hearing from
+      Number 3 or Number 4: for all they can tell, those two are dead. Keep every bird from
+      Numbers 3 and 4 in the pines; Numbers 1 and 2, hearing only each other, commit. Whatever
+      their coins show, what they see is exactly what they would see on a night when all four sighted
+      hold and the other two were killed at dusk, and on that night the second demand has them
+      hold. So they hold.</li>
+      <li>In the same way keep back every bird from Numbers 1 and 2, and Numbers 3 and 4
+      attack.</li>
+      <li>Do both at once, releasing the held birds only after all four have committed: all four are alive,
+      every bird is merely late, and neither pair can tell. The pairs commit to different
+      answers.<span class="qed">∎</span></li>
+    </ol>
+    </details>
+    <p style="max-width:40em;margin-top:1.6rem">Four tents bear one silent man, and no more.</p>
+    <div class="cards3" style="margin-top:1rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What about liars?</div><h3>Six men against one liar</h3><p>Nobody lies at the foot of the hill. For men who may lie as well as die there is a second arrangement of the same shape: each man must be able to tell whose bird they hold, and the liars must be fewer than one in five. Against one liar that is six men. The four bandits on the crown could not use it, and do not need to; they have their own methods.<sup class="xref"><a href="../agreeing-among-liars/index.html#s2" title="Agreeing Among Liars: What the Bandits Want">*</a></sup> Whether one in five is the best that can be done was not known.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Is it quick?</div><h3>No</h3><p>With many men and many possible silences, the tosses that must all come up alike are many too, and the expected number of rounds may grow very fast. One happier case: if the silent are few, no more than about the square root of the number of men, and the birds happen to come in step, the rounds needed on average do not grow at all. No arrangement without coins can do that, since those need at least one more round than there are men who may fail.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Does it choose a good answer?</div><h3>Nothing says so</h3><p>The coins say nothing about which answer is wiser. When the sightings agree, the four do what they sighted; when they do not, the answer is whichever the coins and the birds happen to reach. As always on the hill, nothing follows from it: no assault is told, and no one learns whether it was the right answer.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ back to machines -->
+<section class="spread light" id="why" data-name="Back to machines">
+  <a class="anchor" id="s9"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Back to machines</div>
+      <h2>The camp was a group of machines</h2>
+      <p class="lede">Every tent is a process, and every raven a message. Hover or tap to see who is who.</p>
+    </div>
+    <div class="map" id="map">
+      <div class="hd" style="text-align:right;padding-right:6px">At the foot of the hill</div><div></div><div class="hd">In the machine room</div>
+    </div>
+    <div class="meander" style="margin:3rem auto"></div>
+    <div class="end">
+      <p class="big">A machine that cannot decide may flip a coin: then no two machines ever decide differently, and every machine decides in the end with probability one.</p>
+      <p class="lede" style="margin:0 auto">The impossibility stands. The coin changes one of its hypotheses, and asks for a majority of machines that keep running.</p>
+      <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">Later work replaced the private coins with a shared coin, to make the expected number of rounds small.</p>
+      <div class="links">
+        <a href="../../places/the-foot/index.html">The Foot of Mount Phyle, in detail</a>
+        <a href="../../papers/index.html">All the papers</a>
+      </div>
+    </div>
+    <div class="apparatus">
+      <a class="anchor" id="refs"></a>
+      <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/the-foot/index.html">The Foot of Mount Phyle</a></p>
+      <p class="lineage"><span class="lbl">Builds on</span> <a href="../the-limits-of-agreement/index.html">The Limits of Agreement</a></p>
+      <p class="lineage"><span class="lbl">Leads to</span> <a href="../telling-the-dead-from-the-slow/index.html">Telling the Dead from the Slow</a> · <a href="../spreading-by-word-of-mouth/index.html">Spreading by Word of Mouth</a></p>
+      <p class="lineage"><span class="lbl">Outside this series</span> Rabin 1983, <i>randomized Byzantine generals</i> · Bracha 1987, <i>asynchronous Byzantine agreement with n &gt; 3t</i> · Aguilera &amp; Toueg 2012, <i>the correctness proof of Ben-Or's algorithm</i></p>
+      <details class="proof">
+        <summary>The paper behind this book</summary>
+        <div class="refs">
+          <p>Michael Ben-Or, <i>Another Advantage of Free Choice: Completely Asynchronous Agreement Protocols</i> (extended abstract). Proceedings of the 2nd ACM Symposium on Principles of Distributed Computing (PODC), Montreal, August 1983, 27–30. The randomized consensus protocol for crash failures with <var>N</var> &gt; 2<var>t</var> (Theorem 1), the Byzantine protocol with <var>N</var> &gt; 5<var>t</var> (Theorem 2), and constant expected rounds when <var>t</var> = O(√<var>N</var>) (Theorem 3), stated without proofs.</p>
+        </div>
+        <p><b>The ideas.</b> Fischer, Lynch and Paterson proved that no deterministic protocol can guarantee consensus in an asynchronous system if even one process may crash: an adversary ordering the messages can always keep the outcome undecided. Their proof depends on determinism, since the adversary must know in advance what each step will lead to.</p>
+        <p>Ben-Or showed that randomness removes the obstacle. Processes run in rounds. In each round every process broadcasts its current value, waits for <var>N</var> − <var>t</var> values, and broadcasts a proposal marked D if a strict majority of all <var>N</var> processes hold the same value. It then waits for <var>N</var> − <var>t</var> proposals: it decides on more than <var>t</var> D-proposals for a value, adopts the value on at least one, and otherwise flips a private fair coin.</p>
+        <p>Safety holds on every run. Two strict majorities intersect, so only one value can be proposed with D in a round; a decision means more than <var>t</var> D-proposals exist, so every process that finishes the round sees one and adopts the value, and all decide it in the next round. Termination holds with probability 1 when <var>N</var> &gt; 2<var>t</var>: once every correct process holds the same value, the next round decides, and the coin flips keep giving that a chance the adversary cannot remove. Ben-Or states this without proof; a complete proof, which must handle an adversary that sees earlier flips, is Aguilera and Toueg's (2012). Runs that never terminate still exist, but together they have probability zero.</p>
+        <p>The protocol does not contradict FLP; it changes a hypothesis. It needs a correct majority, which is necessary, and it may take many rounds. Later work replaced the private coins with a shared coin to make the expected number of rounds small.</p>
+      </details>
+    </div>
+  </div>
+</section>
+<footer>Distributed Algorithms of Ancient Greece · “Agreeing by Chance”, after Ben-Or, PODC 1983.</footer>
