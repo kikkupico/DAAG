@@ -91,7 +91,34 @@ def generate_meshy(inputs, prompt, aspect, dest):
     print(f"  {dest.relative_to(ROOT)}  task={tid}")
 
 
+def generate_gemini(inputs, prompt, aspect, dest):
+    """Nano Banana 2 (gemini-3.1-flash-image) straight from the Gemini Interactions API."""
+    parts = [{"type": "text", "text": prompt}] + [
+        {"type": "image", "mime_type": "image/png",
+         "data": base64.b64encode(Path(p).read_bytes()).decode()} for p in inputs]
+    body = {"model": "gemini-3.1-flash-image", "input": parts,
+            "response_format": {"type": "image", "aspect_ratio": aspect}}
+    req = urllib.request.Request(
+        "https://generativelanguage.googleapis.com/v1beta/interactions", method="POST",
+        data=json.dumps(body).encode(),
+        headers={"x-goog-api-key": os.environ["GEMINI_API_KEY"], "Api-Revision": "2026-05-20",
+                 "Content-Type": "application/json"})
+    try:
+        res = json.load(urllib.request.urlopen(req, timeout=300))
+    except urllib.error.HTTPError as e:
+        sys.exit(f"gemini {e.code}: {e.read().decode()[:600]}")
+    for step in res.get("steps", []):
+        for c in step.get("content", []):
+            if c.get("type") == "image":
+                dest.write_bytes(base64.b64decode(c["data"]))
+                print(f"  {dest.relative_to(ROOT)}  gemini {res.get('id')}")
+                return
+    sys.exit("gemini returned no image: " + json.dumps(res)[:600])
+
+
 def generate(inputs, prompt, aspect, dest, name):
+    if os.environ.get("GEN") == "gemini":
+        return generate_gemini(inputs, prompt, aspect, dest)
     if len(prompt) > PROMPT_MAX:
         sys.exit(f"prompt is {len(prompt)} chars (max {PROMPT_MAX})")
     if os.environ.get("GEN", "meshy") == "meshy":
