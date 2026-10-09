@@ -38,18 +38,26 @@ a.cardlink:focus-visible{outline:3px solid var(--aegean-d);outline-offset:4px}
 #cover.home h1{font-size:clamp(2.2rem,5.6vw,4.4rem)}
 #cover.home .pub{font-size:clamp(1.05rem,2.2vw,1.3rem);max-width:30em;color:#3a2d24}
 #cover.home .pub a{color:var(--aegean-d)}
-.setting-card{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);margin-top:1.4rem;max-width:860px}
-.setting-card .photo{border:0;box-shadow:none;aspect-ratio:4/3}
-.setting-card .body{padding:18px 22px;align-self:center}
-.setting-card h3{font-size:1.25rem;margin-bottom:.4rem}
-.setting-card p{margin:0;font-size:.98rem}
-/* a place with one book: the book lies flat under the setting card, same width and columns */
+/* the setting is a place in the allegory, not a paper: no sheet, no frame, no unfolding. A medallion of the place and a line of text lie on the page itself, closed by a meander */
+.setting-card{display:grid;grid-template-columns:104px minmax(0,1fr);gap:0 20px;align-items:center;margin-top:1.2rem;max-width:600px;color:inherit;text-decoration:none}
+.setting-card .photo{aspect-ratio:1/1;border:0;border-radius:50%;box-shadow:0 0 0 2px var(--ink),0 0 0 5px transparent,0 0 0 6px #1c151255;background:var(--parch-lo)}
+.setting-card .photo img{filter:sepia(.55) saturate(.75) contrast(.95)}
+.setting-card h3{font-size:1.05rem;margin:.15rem 0 .3rem}
+.setting-card p{margin:0;font-size:.9rem;line-height:1.45;color:#5a4a3a}
+.setting-card::after{content:"";grid-column:1/-1;height:9px;margin-top:16px;opacity:.4;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='9' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
+.setting-card:hover h3{color:var(--aegean-d)}
+.setting-card:hover .photo img{filter:none}
+.setting-card:focus-visible{outline:3px solid var(--aegean-d);outline-offset:6px}
+.setting-card+.cards3{margin-top:1.6rem}
+/* a place with one book: the book lies flat, picture beside text */
 .cards3.books>.pop:only-child{grid-column:1/-1;max-width:860px}
 .cards3.books>.pop:only-child a.cardlink{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr)}
 .cards3.books>.pop:only-child .body{padding:22px 26px;align-self:center}
 .cards3.books>.pop:only-child h3{font-size:1.45rem;margin-bottom:.6rem}
 .cards3.books>.pop:only-child p{font-size:1rem}
 .cards3.books>.pop:only-child p+p{margin-top:.7rem}
-@media(max-width:640px){.setting-card,.cards3.books>.pop:only-child a.cardlink{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:640px){.cards3.books>.pop:only-child a.cardlink{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:520px){.setting-card{grid-template-columns:76px minmax(0,1fr);gap:0 14px}}
 .card3 .q{font-style:italic}
 .card3 .how{margin-top:.6rem!important;font-size:.9rem!important;color:#3a2d24}
