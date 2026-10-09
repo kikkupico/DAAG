@@ -368,23 +368,23 @@ Axonometric orthographic projection, hyperfocal focus, clean unpopulated monumen
 A circular civic assembly hall (a rotunda) built of finely dressed white ashlar limestone.
 Surrounded by an unbroken outer colonnaded peristyle of Doric limestone columns with no bases, supporting a classical entablature and a lean-to roof of pan and cover tiles that runs up to the drum.
 Roofed with one low conical roof of oxblood terracotta pan tiles and narrow cover tiles on timber rafters, crowned by a small louvred lantern and a bronze finial; bare dressed stone walls inside, a ring of ten slender Corinthian columns with acanthus bell capitals holding the roof beams, no hangings or panelling.
-A stepped circular stone plinth (crepidoma) surrounds the base. Several open doorways spaced evenly around the circular drum, none of them grander than the others, so there is no front entrance.
+A stepped circular stone plinth (crepidoma) surrounds the base. One doorway in the drum, closed by a plain timber door that can be locked.
 Paved concentric circular interior flagstone floor with no podium, no speaker's platform, no head of the room, and no seating facing any single point; low stone benches follow the curve of the wall.
-Set on a paved limestone public terrace crossed by a road, with marble statues on tall pedestals standing just outside the doorways, and slender Italian cypress trees.
+Set on a paved limestone public terrace crossed by a road, with marble statues on tall pedestals standing round the terrace, and slender Italian cypress trees.
 ```
 
 #### Feature 1a: The Chamber — Interior
-The roof is lifted away. The room carries Lamport's Chamber exactly: no point from which anyone could address the room, one scroll per legislator and no shared record, doorways all round because legislators and messengers come and go, and a meridian line because Paxons tell time by the sun.
+The roof is lifted away. The room carries Lamport's Chamber exactly: no point from which anyone could address the room, one scroll per legislator and no shared record, one doorway through which legislators and messengers come and go, and a meridian line because Paxons tell time by the sun.
 ```text
 Isometric 3D interior model of the Chamber on Paxos, a Hellenistic Greek parliament hall.
 Orthographic axonometric view, deep focus, zero people.
 The roof is lifted away to show the whole interior, with a ring of ten slender Corinthian columns inside the wall.
 A large circular hall; bare dressed white limestone walls, hard and echoing, no hangings or panelling.
-Identical open doorways spaced evenly round the wall: no front, no podium, no head of the room, nothing at the centre.
+One doorway in the wall; no podium, no head of the room, nothing at the centre.
 Concentric flagstone floor with a bronze meridian line inlaid where sunlight from the lantern falls, marked with hours.
 Round the wall, a ring of identical low stone benches, each with a small wooden writing desk, an inkpot and a closed papyrus scroll with its title tag.
 No shelves, archive or shared record anywhere.
-A plain wooden bench for messengers beside each doorway.
+A plain wooden bench for messengers beside the doorway.
 Warm daylight, photorealistic PBR stone, bronze and wood.
 ```
 
