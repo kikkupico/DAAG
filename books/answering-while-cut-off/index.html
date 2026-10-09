@@ -4,726 +4,1242 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Answering While Cut Off — The Foot of Mount Phyle</title>
+<meta name="description" content="The CAP theorem after Brewer and Gilbert and Lynch: four mercenaries and their ravens, and why a cut-off tent cannot both answer at once and answer as the others would.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<link rel="stylesheet" href="../../assets/css/daag.css">
-<link rel="stylesheet" href="../../assets/css/books.css">
+<style>
+:root{
+  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4;
+  --aegean:#2e88b5; --aegean-d:#136f9e; --blood:#bf4a26; --olive:#7c8f3a; --terra:#b5602c;
+  --gold:#e0b84a; --shadow:#b9a77e;
+  --serif:Georgia,'Iowan Old Style','Palatino Linotype',serif;
+  --sans:Optima,'Gill Sans','Gill Sans MT',sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#d8cba6}
+body{margin:0;background:#d8cba6;color:var(--ink);font-family:var(--serif);line-height:1.55;overflow-x:hidden}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer}
+h1,h2,h3{font-family:var(--sans);line-height:1.12;margin:0;text-wrap:balance}
+p{margin:0 0 .9rem;text-wrap:pretty}
+.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--blood)}
+
+/* ---------- top bar ---------- */
+.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
+  font-family:var(--sans);font-size:.78rem;letter-spacing:.05em;background:linear-gradient(180deg,#3a2a1a,#241a10)}
+.bar a{color:#f0e6cc;text-decoration:none;opacity:.8;white-space:nowrap} .bar a:hover{opacity:1}
+.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:520px){.bar a+a{display:none}}
+.bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
+
+/* ---------- spreads ---------- */
+.spread{position:relative;padding:clamp(4.5rem,11vw,8rem) 20px;overflow:clip}
+.spread.has-scrolly{overflow:visible;padding-bottom:0;background:var(--marble)}
+.dark{background:var(--marble);color:var(--ink);background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
+.light{background:var(--parch);color:var(--ink);
+  background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
+/* torn-paper edge between spreads */
+.tear{position:absolute;left:0;right:0;top:-1px;height:26px;z-index:3;pointer-events:none}
+.tear path{fill:var(--prev)}
+.wrap{max-width:1080px;margin:0 auto;position:relative;z-index:2}
+.narrow{max-width:640px;margin:0 auto}
+.spread h2{font-size:clamp(1.9rem,5vw,3.1rem);margin:.4rem 0 1rem}
+.lede{font-size:clamp(1.05rem,2.2vw,1.3rem);max-width:34em}
+.light .lede{color:#3a2d24}
+.meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
+
+/* ---------- the pop-up: a card that unfolds from its hinge ---------- */
+.pop{perspective:1400px}
+.pop > .leaf{transform-origin:50% 100%;transform:rotateX(78deg) translateY(30px);opacity:0;
+  transition:transform 1.1s cubic-bezier(.2,.9,.25,1.12),opacity .6s ease}
+.pop.up > .leaf{transform:rotateX(0) translateY(0);opacity:1}
+.pop.fromleft > .leaf{transform-origin:0 50%;transform:rotateY(-80deg)}
+.pop.fromright > .leaf{transform-origin:100% 50%;transform:rotateY(80deg)}
+.pop.up.fromleft > .leaf,.pop.up.fromright > .leaf{transform:none}
+.paper{background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);position:relative}
+.light .paper{box-shadow:9px 11px 0 #b9a77e}
+.photo{border:5px solid #fffaf0;box-shadow:0 0 0 3px var(--ink),12px 16px 0 var(--shadow);background:#222;overflow:hidden;position:relative}
+.photo img{width:100%;height:100%;object-fit:cover}
+.tilt-l{transform:rotate(-1.4deg)} .tilt-r{transform:rotate(1.2deg)}
+[data-depth]{will-change:transform}
+.fold-shadow{position:absolute;left:6%;right:6%;bottom:-18px;height:26px;background:radial-gradient(ellipse at center,#0008,transparent 70%);opacity:0;transition:opacity 1s .4s;z-index:-1}
+.up .fold-shadow{opacity:1}
+
+/* ---------- cover ---------- */
+#cover{min-height:100svh;display:grid;align-items:center;padding-top:5rem;
+  background:radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
+#cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
+#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:.6rem 0 1rem;letter-spacing:-.01em}
+#cover h1 span{display:block;font-size:.34em;letter-spacing:.2em;text-transform:uppercase;color:var(--aegean-d);margin-top:.9rem;font-weight:400}
+#cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
+#cover .hook{font-size:clamp(1.1rem,2.4vw,1.45rem);font-style:italic;max-width:24em;color:#3a2d24}
+.scrollcue{margin-top:2rem;font-family:var(--sans);font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);display:flex;gap:10px;align-items:center}
+.scrollcue b{display:inline-block;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(7px)}}
+.cut{position:absolute;pointer-events:none;z-index:1}
+.cut svg{display:block;width:100%;height:auto}
+@media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
+
+/* ---------- two-column spreads ---------- */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.two.wide-r{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
+@media(max-width:859px){.two,.two.wide-r{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- the hall (full-bleed photo with pins) ---------- */
+#hall{padding:0;background:var(--marble)}
+.bleed{position:relative;height:min(100svh,880px);overflow:hidden}
+.bleed img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover}
+.bleed::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--parch) 0,transparent 8%,transparent 92%,var(--parch) 100%);pointer-events:none}
+.pin{position:absolute;z-index:4;max-width:min(250px,44vw);padding:10px 14px;background:#fffaf0;color:var(--ink);border:3px solid var(--ink);
+  box-shadow:5px 6px 0 #0007;font-size:.92rem;line-height:1.35;transform-origin:0 100%}
+.pin b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood)}
+.pin::after{content:"";position:absolute;left:-3px;bottom:-26px;width:3px;height:26px;background:var(--ink)}
+.pin::before{content:"";position:absolute;left:-8px;bottom:-34px;width:13px;height:13px;border-radius:50%;background:var(--blood);border:3px solid var(--ink)}
+.hall-title{position:absolute;z-index:5;left:20px;right:20px;top:clamp(5rem,12vh,8rem);max-width:1080px;margin:0 auto}
+.hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
+.hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
+.hall-title p{margin:0}
+
+/* ---------- scrollytelling ---------- */
+.scrolly{position:relative}
+.scrolly .stage{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;padding:70px 20px 20px;overflow:hidden}
+.scrolly .steps{position:relative;z-index:6;margin-top:-100svh;pointer-events:none}
+.step{min-height:100svh;display:flex;align-items:center;padding:0 20px}
+.step .card{pointer-events:auto;max-width:360px;padding:16px 20px;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);
+  transform:translateY(24px) rotate(-.6deg);opacity:.25;transition:transform .7s cubic-bezier(.2,.9,.25,1.1),opacity .5s}
+.step.on .card{transform:none;opacity:1}
+.step .card h3{font-size:1.1rem;margin-bottom:.35rem}
+.step .card p{margin:0;font-size:.98rem}
+.step .num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
+.step.r{justify-content:flex-end}
+.scrolly svg.fig{width:min(100%,820px);height:auto;max-height:calc(100svh - 120px);overflow:visible}
+.scrolly .stage-inner{width:100%;display:flex;justify-content:center}
+@media(min-width:900px){.scrolly .stage{padding-left:380px} .step .card{max-width:320px} .step{padding-left:max(24px,calc((100vw - 1080px)/2))}}
+@media(max-width:899px){
+  .scrolly .stage{align-items:flex-start;padding-top:64px}
+  .scrolly svg.fig{max-height:46svh}
+  .step{align-items:flex-end;padding-bottom:22px}
+  .step .card{max-width:none;width:100%}
+}
+svg text{font-family:var(--serif)}
+.svg-dark{background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
+
+/* ---------- interactive wells ---------- */
+.well{padding:clamp(16px,3vw,28px);margin:1.6rem 0}
+.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;justify-content:space-between;gap:10px}
+.well h4 em{font-style:normal;color:#6b5a48}
+.btn{background:var(--ink);color:var(--parch);border:3px solid var(--ink);padding:8px 16px;font-family:var(--sans);font-size:.88rem;letter-spacing:.03em;box-shadow:4px 4px 0 var(--blood);transition:transform .12s,box-shadow .12s}
+.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--blood)}
+.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--blood)}
+.btn:disabled{opacity:.35;cursor:default;box-shadow:none}
+.btn.alt{background:#fffaf0;color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.say{margin:12px 0 0;font-size:.98rem;min-height:3.1em}
+.say b{color:var(--blood)}
+.ok{color:#3f7a2a;font-weight:700}.bad{color:var(--blood);font-weight:700}
+
+/* cards row */
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
+.card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
+.card3 .body{padding:16px 18px 18px}
+.card3 h3{font-size:1.15rem;margin-bottom:.4rem}
+.card3 p{font-size:.95rem;margin:0}
+.card3 .fx{margin-top:12px}
+@media(max-width:860px){.cards3{grid-template-columns:1fr}}
+/* relevance */
+.map{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px 0;align-items:stretch;max-width:760px;margin:2rem auto 0}
+.map .l,.map .r{padding:11px 16px;font-size:1rem;border:3px solid var(--ink);background:#fffaf0;color:var(--ink);transition:background .25s,transform .25s;cursor:default}
+.map .r{font-family:var(--sans);background:#e9f2f7}
+.map .mid{display:grid;place-items:center;color:var(--blood);font-size:1.3rem}
+.map .hi{background:var(--gold)!important;transform:scale(1.03)}
+.map .hd{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood)}
+.end{text-align:center}
+.end .big{font-size:clamp(1.5rem,4.2vw,2.5rem);font-style:italic;max-width:19em;margin:0 auto 1.4rem;color:var(--ink);text-wrap:balance}
+.links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+.links a{color:var(--ink);background:#fffaf0;border:3px solid var(--ink);padding:9px 18px;text-decoration:none;font-family:var(--sans);font-size:.9rem;box-shadow:4px 4px 0 var(--shadow)}
+.links a:hover{background:var(--gold)}
+footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;font-family:var(--sans);background:#d8cba6}
+
+/* ---------- lists, small parts ---------- */
+.terms{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:12px}
+.terms li{padding:12px 16px;background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 #b9a77e;font-size:.98rem}
+.terms b{font-family:var(--sans)}
+@keyframes slotin{from{transform:translateY(-8px);opacity:0}}
+.btn:focus-visible,.links a:focus-visible,[role=button]:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
+.num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
+.chip{display:inline-block;padding:1px 7px;margin:2px 3px 2px 0;border:2px solid var(--ink);border-radius:5px;background:#fff;font-family:var(--sans);font-weight:700;font-size:.86rem;white-space:nowrap}
+.chip i{display:inline-block;width:.7em;height:.7em;border-radius:50%;border:1.5px solid var(--ink);margin-right:5px;vertical-align:-.02em}
+.isle-svg{width:min(100%,440px);display:block;margin:0 auto}
+.fig .fade{opacity:0;transition:opacity .6s}
+.fig .fade.on{opacity:1}
+.fig .lab{fill:#6b5a48;font-size:15px;font-style:italic;text-anchor:middle}
+.fig .halo{paint-order:stroke;stroke:#fffaf0;stroke-width:5px;stroke-linejoin:round}
+.tok text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+.site rect,.site circle{stroke:var(--ink);stroke-width:4}
+.site text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+
+/* ---------- space-time, drawn in the round ---------- */
+.st-ring{fill:none;stroke:#b9a77e;stroke-opacity:.7;stroke-width:1;stroke-dasharray:3 4}
+.st-spoke{stroke:#1c1512;stroke-width:2.5;stroke-opacity:.45}
+.st-node rect{fill:#f6eed6;stroke:#1c1512;stroke-width:2}
+.st-node text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+.st-slip{fill:none;stroke:#136f9e;stroke-width:2.6;transition:stroke .3s,stroke-width .3s,opacity .5s}
+.st-seg{stroke:#bf4a26;stroke-width:7;stroke-linecap:round;opacity:0;transition:opacity .3s}
+.st-seg.hi{opacity:.85}
+.st-slip.hi{stroke:#bf4a26;stroke-width:5}
+.st-ev{cursor:pointer}
+.st-ev circle.b{stroke:#1c1512;stroke-width:3;transition:stroke .3s,stroke-width .3s}
+.st-ev text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
+.st-ev .halo2{fill:none;stroke:#e0b84a;stroke-width:7;opacity:0;transition:opacity .3s}
+.st-ev.sel .halo2,.st-ev.mark .halo2{opacity:1}
+.st-ev.sel circle.b{stroke-width:4.5}
+.st-ev.dim{opacity:.3}
+.st-ev:focus-visible{outline:none}.st-ev:focus-visible circle.b{stroke:#136f9e;stroke-width:6}
+.st-note{fill:#6b5a48;font-size:13px;font-style:italic}
+
+/* ---------- a stage with a figure and a side panel ---------- */
+.stage-inner.split{gap:18px;align-items:center}
+.stage-inner.split svg.fig{flex:1 1 300px;min-width:0;max-width:470px}
+.side{flex:0 0 240px;display:grid;gap:10px;font-family:var(--sans);font-size:.84rem}
+.side .hc{background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--shadow);padding:8px 10px;min-height:92px;transition:background .4s}
+.side .hc h5{margin:0 0 5px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:6px}
+.side .hc h5 span{color:#6b5a48;letter-spacing:.02em;text-transform:none}
+.side .hc .chk{font-size:.78rem;margin-top:4px;line-height:1.35}
+.side .hc.in{background:#e3ecc4}
+@media(max-width:899px){
+  .stage-inner.split{flex-direction:column;gap:10px}
+  .stage-inner.split svg.fig{flex:0 0 auto;max-height:30svh;width:auto;max-width:100%}
+  .side{flex:0 0 auto;width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;font-size:.7rem}
+  .side .hc{padding:5px 6px;min-height:0;box-shadow:3px 3px 0 var(--shadow)}
+  .side .hc h5{font-size:.62rem;flex-direction:column;gap:0}
+  .side .hc .chk{font-size:.66rem}
+  .side .chip{font-size:.68rem;padding:0 4px}
+}
+.tear{width:100%}
+.scrolly svg.fig.svg-dark{overflow:hidden}
+
+/* ---------- proofs, in the paper's own terms ---------- */
+details.proof{max-width:760px;margin:1.8rem 0 0;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);padding:0 clamp(14px,3vw,22px);font-size:.95rem}
+details.proof>summary{cursor:pointer;padding:12px 0;font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--aegean-d)}
+details.proof>summary:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
+details.proof[open]{padding-bottom:14px}
+details.proof details.proof{border-width:3px;box-shadow:none;background:#fff;margin:1rem 0;max-width:none}
+details.proof .given{padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean);margin:0 0 .8rem}
+details.proof h3,details.proof h4{font-size:1.02rem;margin:1.4rem 0 .5rem}
+details.proof .hlink{color:inherit;text-decoration:none}
+details.proof .fnote{font-size:.84rem;color:#6b5a48}
+ol.proofsteps{padding-left:1.4em;margin:.4rem 0 0}
+ol.proofsteps li{margin:.55em 0}
+.qed{float:right;font-family:var(--sans);letter-spacing:.15em;color:#5f6e28}
+.mathblock{margin:.8rem 0;padding:8px 12px;overflow-x:auto;text-align:center;font-style:italic;background:#fff;border:2px solid #1c151233}
+.slab{margin:1rem 0;padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean)}
+.slab-head{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
+.stmt{font-style:italic}
+
+/* ---------- closing apparatus: lineage, papers, links to where a fact comes from ---------- */
+a.anchor{display:block;height:0;scroll-margin-top:56px}
+sup.xref{font-size:.8em;line-height:0;margin-left:1px}
+sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
+.apparatus{max-width:760px;margin:3rem auto 0;text-align:left;font-size:.94rem}
+.apparatus .lineage{margin:0 0 .6rem}
+.apparatus .lbl{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-right:8px}
+.apparatus a{color:var(--aegean-d)}
+.apparatus details.proof{margin-top:1.2rem}
+.apparatus .refs p,.apparatus ol.refs li{font-size:.9rem;margin:.45em 0}
+.apparatus table{width:100%;border-collapse:collapse;font-size:.9rem}
+.apparatus td{padding:5px 8px 5px 0;border-top:2px solid #1c151222;vertical-align:top}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .pop > .leaf{transition:opacity .3s;transform:none!important}
+  [data-depth]{transform:none!important}
+  .scrollcue b,.pulse{animation:none}
+  .fig .tok{transition:none}
+}
+/* ---------- waiting on a machine ---------- */
+.logs{padding:18px 18px 14px}
+.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
+.wire{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700}
+.wire .m{flex:0 0 auto;border:3px solid var(--ink);background:#fff;padding:10px 14px;font-size:.8rem;letter-spacing:.06em}
+.wire .m.q{background:#ddd;color:#6b5a48}
+.wire .w{flex:1;border-top:3px dotted var(--ink);position:relative;height:0}
+.wire .w span{position:absolute;left:50%;top:-1.05em;transform:translateX(-50%);color:var(--blood)}
+.e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both;font-family:var(--sans)}
+.waitlog{border:3px solid var(--ink);background:#fff;padding:8px;min-height:128px;margin-top:12px}
+.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:3.2em;font-style:italic}
+/* ---------- the three demands, ticked off ---------- */
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:.95rem}
+.checks li{padding:8px 12px;background:#fff;border:3px solid var(--ink);min-height:3.4em}
+.checks b{font-family:var(--sans)}
+.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
+.site.out{opacity:.35}
+.site.turn rect{stroke-width:7}
+.site .state{font-family:var(--serif);font-weight:400;font-style:italic;font-size:14px;fill:#1c1512}
+.badge circle{fill:#fffaf0;stroke:#1c1512;stroke-width:2.5}
+.badge text{font-family:var(--sans);font-weight:700;font-size:13px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+/* ---------- two nights side by side ---------- */
+.worlds{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(8px,2vw,22px)}
+.world h5{margin:0 0 6px;font-family:var(--sans);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#6b5a48;text-align:center}
+.world p{font-size:.86rem;margin:6px 0 0;text-align:center;min-height:3.9em}
+.perch{margin-top:6px;border:3px solid var(--ink);background:#fff;font-family:var(--sans);font-size:.82rem;text-align:center;padding:6px 4px}
+.perch b{display:block;font-size:1rem}
+/* ---------- the row of beginnings ---------- */
+.dusk{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(4px,1.4vw,12px)}
+.beg{border:3px solid var(--ink);background:#fff;padding:8px 4px;text-align:center;font-family:var(--sans);transition:background .3s,box-shadow .3s;color:var(--ink)}
+button.beg{cursor:pointer}
+.beg.split{background:#fde8de;box-shadow:0 0 0 3px var(--blood)}
+.beg .sq{display:grid;grid-template-columns:1fr 1fr;gap:3px;max-width:64px;margin:0 auto 6px}
+.beg .sq span{border:2px solid var(--ink);font-weight:700;font-size:.8rem;line-height:1.5}
+.beg .sq span.p{outline:3px solid var(--blood);outline-offset:1px}
+.beg small{display:block;font-size:.66rem;letter-spacing:.04em;line-height:1.25}
+.beg small b{display:block;font-size:.8rem}
+.beg .hold{color:var(--aegean-d)}.beg .att{color:var(--blood)}
+/* ---------- standings, drawn as a small map ---------- */
+.gr-arrow{stroke:#1c1512;stroke-width:2.5;fill:none}
+.gr-arrow.dash{stroke-dasharray:6 5}
+.gr-lab{font-size:16px;font-style:italic;fill:#6b5a48;text-anchor:middle}
+.gr-node circle.rim{fill:none;stroke:#1c1512;stroke-width:3.5}
+.gr-node text{font-family:var(--sans);font-weight:700;font-size:19px;text-anchor:middle;dominant-baseline:central;fill:#fffaf0}
+.gr-box{fill:#e0b84a;fill-opacity:.22;stroke:#bf4a26;stroke-width:3;stroke-dasharray:8 5}
+.gr-x{font-family:var(--sans);font-weight:700;font-size:30px;fill:#bf4a26;text-anchor:middle;dominant-baseline:central}
+.gr-ok{font-family:var(--sans);font-weight:700;font-size:30px;fill:#3f7a2a;text-anchor:middle;dominant-baseline:central}
+/* ---------- counters ---------- */
+.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0}
+.counts span b{font-size:1.4rem;margin-right:5px}
+.counts .open{color:var(--blood)}.counts .closed{color:#3f7a2a}
+.queue{font-family:var(--sans);font-size:.85rem;margin-top:8px}
+.st-new{animation:rowin .6s both}
+@keyframes rowin{from{opacity:0}}
+.stand{font-family:var(--sans);font-size:.88rem;border:3px solid var(--ink);background:#fff;padding:8px 12px;margin-bottom:10px}
+.stand div{padding:2px 0}
+/* ---------- two machines ---------- */
+.mpair{display:grid;grid-template-columns:1fr 64px 1fr;gap:6px;align-items:center}
+.mbox{border:3px solid var(--ink);background:#fff;padding:8px;text-align:center}
+.mbox h5{margin:0 0 4px;font-family:var(--sans);font-size:.7rem;letter-spacing:.08em}
+.mbox b{font-family:var(--sans);font-size:1.4rem}
+.marrow{text-align:center;font-family:var(--sans);font-size:.78rem;color:var(--blood)}
+.e.bad{border-left-color:var(--blood)}.e.good{border-left-color:#3f7a2a}
+.dash{color:#6b5a48;font-weight:700}
+.hawkset{transition:opacity .5s}
+.puff{animation:puff 1.6s both}
+@keyframes puff{0%{opacity:1}70%{opacity:1}100%{opacity:0}}
+.cards4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:1.4rem}
+@media(max-width:860px){.cards4{grid-template-columns:1fr}}
+.glass{font-family:var(--sans);font-size:.8rem;margin-bottom:10px}
+.gbar{border:3px solid var(--ink);background:#fff;height:18px;margin-top:4px}
+.gbar i{display:block;height:100%;width:0;background:var(--gold);transition:width .8s,background .3s}
+.gbar i.out{background:var(--blood)}
+.dtab{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.88rem}
+.dtab td,.dtab th{padding:6px;border-top:2px solid #1c151222;text-align:left}
+.dtab th{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48}
+.side .hc .rc{font-size:.8rem}
+</style>
 </head>
 <body>
-<nav class="series-nav">
-  <div class="series-nav-inner">
-    <a href="../../index.html" class="nav-back">← The Books</a>
-    <span class="nav-current">Arche · The Foot of Mount Phyle</span>
-  </div>
-</nav>
-<div class="page">
 
-<!-- ================= COVER ================= -->
-<header class="cover">
-  <div class="kicker">Distributed Algorithms of Ancient Greece · Arche · The Foot of Mount Phyle</div>
-  <h1 class="display">Answering While Cut Off</h1>
-  <p class="basis">Based on “Towards Robust Distributed Systems” by Eric Brewer (2000), “Brewer’s Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services” by Seth Gilbert and Nancy Lynch (2002) and “Perspectives on the CAP Theorem” by Seth Gilbert and Nancy Lynch (2012)</p>
-  <p class="sub">When one part of a system is cut off from the rest, should it keep answering and risk
-  being wrong, or stay silent until it can be sure? Can it ever have both?</p>
-  <div class="frame-cover portrait"><img src="../../assets/img/covers/answering-while-cut-off.jpg" width="896" height="1200"
-    alt="On a calm, overcast day a mercenary sits at the mouth of his linen tent on a headland above the sea, a basket of ravens beside him, looking up at a single hawk circling in the empty sky."></div>
-  <p class="pub">The four mercenaries at the foot of the hill keep a standing plan, attack or hold,
-  which any of them may move and any may ask after. On these nights a raven can be lost. When every
-  bird between one tent and the rest is lost, the man in that tent cannot both answer at once and
-  answer as the others would. No arrangement lets him. What the four can choose is which to give up,
-  and for how long.</p>
-  <p class="lineage"><span class="lbl">Builds on</span> <a href="../the-limits-of-agreement/index.html">The Limits of Agreement</a> · <a href="../many-copies-acting-as-one/index.html">Many Copies, Acting as One</a> · <a href="../agreeing-when-messages-run-late/index.html">Agreeing When Messages Run Late</a></p>
-  <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/the-foot/index.html">The Foot of Mount Phyle</a></p>
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <span class="now" id="now"></span>
+  <i id="prog"></i>
+</div>
+
+<!-- ============================================================ cover -->
+<header class="spread dark" id="cover" data-name="Cover">
+  <div class="cut" style="left:-30px;bottom:-10px;width:90px;opacity:.3" data-depth="-26"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#5f6e28"/></svg></div>
+  <div class="cut" style="right:-20px;bottom:-14px;width:80px;opacity:.3" data-depth="-40"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#7c8f3a"/></svg></div>
+  <div class="wrap grid">
+    <div>
+      <div class="kicker">After Brewer, 2000, and Gilbert and Lynch, 2002</div>
+      <h1>Answering While Cut Off<span>why a cut-off tent cannot both answer at once and answer as the others would</span></h1>
+      <p class="hook">When one tent is cut off from the other three, should the man in it keep answering and risk being wrong, or stay silent until they can be sure? Can they ever have both?</p>
+      <p class="hook" style="color:var(--blood);font-style:normal;font-family:var(--sans);font-size:1.1rem">At the foot of Mount Phyle, they cannot.</p>
+      <div class="scrollcue"><b>↓</b> Scroll. Things unfold.</div>
+    </div>
+    <div class="pop" data-auto>
+      <div class="leaf">
+        <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" alt="On a calm, overcast day a mercenary sits at the mouth of his linen tent on a headland above the sea, a basket of ravens beside him, looking up at a single hawk circling in the empty sky"></div>
+        <div class="fold-shadow"></div>
+      </div>
+    </div>
+  </div>
 </header>
 
-<!-- ================= IN A NUTSHELL ================= -->
-<section class="nutshell">
-  <h6>In a Nutshell</h6>
-  <p>The CAP theorem (Brewer; Gilbert and Lynch) says that a replicated service cannot be consistent, available and partition-tolerant at once. Since networks do partition, the real choice comes when one does: either refuse some requests to keep every answer consistent, or answer every request and let the replicas diverge.</p>
-  <p>The book tells it with four mercenaries and a standing plan, attack or hold, which any of them may change and any may ask after. On some nights ravens are lost, and a man whose tent is cut off from the rest cannot both answer at once and answer as the others would. What the four can choose is which to give up, and for how long.</p>
-</section>
-
-<nav class="toc">
-  <h6 id="table-of-contents"><a href="#table-of-contents" class="hlink">Table of Contents</a></h6>
-  <ol>
-    <li><a href="#s1">I · Lost Birds</a></li>
-    <li><a href="#s2">II · What the Four Owe Each Other</a></li>
-    <li><a href="#s3">III · The Cut-Off Tent</a></li>
-    <li><a href="#s4">IV · Keeping Any Two</a></li>
-    <li><a href="#s5">V · Waiting a Glass</a></li>
-    <li><a href="#s6">VI · How Stale, and for How Long</a></li>
-    <li><a href="#s7">VII · What Being Cut Off Does Not Say</a></li>
-    <li><a href="#s8">VIII · In the Book, In the Paper</a></li>
-    <li><a href="#refs">The Papers Behind This Book</a></li>
-  </ol>
-</nav>
-
-<hr class="rule">
-
-<!-- ================= I ================= -->
-<section id="s1">
-  <div class="issue"><span class="no">Chapter I</span><h2>Lost Birds</h2></div>
-
-  <div class="prose">
-    <p>At the foot of Mount Phyle four mercenaries, <span class="coin">Number 1</span> to
-    <span class="coin">Number 4</span>, keep four tents out of sight of one another and
-    send word only by raven<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup>. They must all attack or all hold, and nobody lies.</p>
-
-    <p>Until they commit, the four keep a <span class="coin">standing plan</span>: the answer they mean to
-    commit to, as things stand. At dusk it is hold. Any man who sees something on his side of the
-    hill may <em>move</em> it to the other answer, and any man may <em>ask</em> which plan stands. A
-    move is done when the man who made it is told it stands; a question is done when he is told
-    attack or hold. Nobody commits in this book, and nothing follows from which plan
-    stands.</p>
-
-    <p>What is different about these nights? A raven can be <span class="coin">lost</span>. A hawk
-    may take it in the folds, and it never arrives. Nobody sees a bird taken; a man waiting on a bird
-    learns it was lost only when longer than any flight has passed and it has not come, and even
-    then he learns nothing of what it carried. On some nights every bird between one tent and the
-    other three is lost, for as long as the hawks keep to that fold. That tent is
-    <span class="coin">cut off</span>.</p>
-
-    <p>On the night this book is about, tent 4 is cut off. Number 4 is alive and well and in his
-    tent. He wants to know which plan stands, and he wants to know now.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>What should he be told? And what, exactly, do the four owe a man who
-    asks?</em></p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<!-- ================= II ================= -->
-<section id="s2">
-  <div class="issue"><span class="no">Chapter II</span><h2>What the Four Owe Each Other</h2></div>
-
-  <div class="prose">
-    <p>Two things.</p>
-
-    <p>The first is that the standing plan behave as one plan, though each tent keeps its own note
-    of it. Every move and every question, at all four tents, must fit one order in which a single
-    record would have given every answer, each taking effect at a moment within its own span, and
-    anything finished before another began coming
-    first<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One: The Rule of the Board">*</a></sup>.
-    Call it <span class="coin">answering as one</span>. If Number 2 has moved the plan to attack and
-    been told it stands, a man who asks afterwards must hear attack, or a later move.</p>
-
-    <p>The second is that <span class="coin">every man is answered</span>. A man who asks, or moves
-    the plan, is answered in the end, from what his tent holds. How soon? No limit is set, only that
-    the answer come. Is <em>wait until the hawks leave</em> an answer? No, since they may stay all
-    night. And a tent that says <em>hold</em> to every question, to be safe, has answered, but
-    wrongly whenever attack stands.</p>
-  </div>
-
-  <div class="aside-formal">
-    <span class="lbl">The camps, as this book uses them</span>
-    <span class="stmt">(1)</span> On these nights there is no wind. A bird that arrives does so within
-    a known span, a <span class="coin">flight</span>; a man answers a bird within a known span of his
-    own.<br>
-    <span class="stmt">(2)</span> Any bird may be lost, and between a cut-off tent and the rest every
-    bird is lost, for as long as that lasts.<br>
-    <span class="stmt">(3)</span> Each tent has a sandglass. The glasses run alike, so a man can
-    measure how long he has waited, but no man can tell what another's glass shows.<br>
-    <span class="paper">Gilbert &amp; Lynch's partially synchronous model with arbitrary message loss,
-    §4.1: a known bound <var>t</var><sub>msg</sub> on delivery of messages that are not lost, and
-    local timers at the same rate.</span>
-  </div>
-
-  <figure class="panel">
-    <img src="../../assets/img/panels/answering-while-cut-off/c02-glass.jpg" width="1200" height="896" loading="lazy"
-         alt="Close up on a tent's sandglass standing on the lid of its iron-bound wooden chest: two glass bulbs between turned wooden posts, the sand half run through, with the limestone hillside and the edge of a linen tent soft behind.">
-  </figure>
-
-  <div class="prose">
-    <p>Line (1) is the calm of the windy nights after the wind has
-    dropped<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s2" title="Agreeing When Messages Run Late: Glasses and Late Birds">*</a></sup>,
-    here from the start. The wind comes back at the end of the book.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>Answering as one, and answering every man, while birds can be lost. Can the
-    four promise all three?</em></p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<!-- ================= III ================= -->
-<section id="s3">
-  <div class="issue"><span class="no">Chapter III</span><h2>The Cut-Off Tent</h2></div>
-
-  <div class="prose">
-    <p>The four cannot promise all three. The impossibility was first put as a claim, and only later proved: of three things, answering as
-    one, answering every man, and carrying on while birds can be lost, the four may have any two, but
-    not all three.</p>
-
-    <p>Why not? At dusk the standing plan is hold, and tent 4 is cut off. At tent 2, Number 2 moves
-    the plan to attack and is told it stands. His birds to tent 4 are lost. Later, Number 4 asks which
-    plan stands.</p>
-
-    <p>He must be answered. What can he go on? His own note, which says hold, and whatever birds have
-    reached him, which is none. Now take a second night, the same in every respect except that nobody
-    moves the plan. Tent 4 is cut off, and later Number 4 asks. Here the right answer is hold.</p>
-
-    <p>Can Number 4 tell the two nights apart? No. His note is the same, his glass has run the same,
-    and no bird has come in either. Whatever he says on the second night he says on the first. So on
-    the first he says hold, though Number 2's move was finished before he asked, and answering as
-    one requires attack.</p>
-  </div>
-
-  <figure class="diagram">
-    <div class="board">
-      <svg class="flow" viewBox="0 0 660 400" role="img" aria-label="Two panels drawn in the round. In each, one line stands for tents 1, 2 and 3 together and one for tent 4, with lost birds between them; later moments further out. Left, the first night: a man among tents 1 to 3 moves the standing plan to attack and his birds to tent 4 are lost; later tent 4 asks which plan stands and answers hold, which breaks answering as one. Right, the second night: nobody moves the plan; tent 4 asks and answers hold, which is right. Tent 4's line is identical in both panels.">
-        <!-- polar:awco-nights -->
-        <defs>
-          <marker id="awco-nights-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
-          </marker>
-          <marker id="awco-nights-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
-          </marker>
-          <marker id="awco-nights-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
-          </marker>
-          <marker id="awco-nights-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
-          </marker>
-          <marker id="awco-nights-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
-          </marker>
-        </defs>
-        <text class="d-house" x="165" y="24" text-anchor="middle" style="fill:#bf4a26">THE FIRST NIGHT</text>
-        <circle cx="165" cy="205" r="57" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="205" r="74" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="205" r="91" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="205" r="108" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="205" r="125" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="165" cy="205" r="142" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <line class="d-lifeline" x1="165" y1="165" x2="165" y2="56.2"/>
-        <line class="d-lifeline" x1="165" y1="245" x2="165" y2="353.8"/>
-        <rect class="d-node" x="143" y="154" width="44" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="165" y="169.5" text-anchor="middle" fill="#1c1512">T1–3</text>
-        <rect class="d-node" x="143" y="234" width="44" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="165" y="249.5" text-anchor="middle" fill="#1c1512">T4</text>
-        <clipPath id="awco-nights-clip0"><circle class="tclip" cx="165" cy="205" r="168.8" data-r0="40" data-r1="148.8"/></clipPath>
-        <g class="tflow" clip-path="url(#awco-nights-clip0)">
-        <circle class="d-ev-hi" cx="165" cy="141.2" r="7.5"/>
-        <text x="165" y="144.6" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">A</text>
-        <text class="d-lbl d-halo" x="179" y="145.2" text-anchor="start" style="fill:#bf4a26">moves plan to attack</text>
-        <path class="d-msg" d="M165,141.2 L161.6,140.7 L158.2,140.4 L154.8,140.3 L151.3,140.4 L147.8,140.6 L144.2,141.1 L140.7,141.7 L137.2,142.6 L133.7,143.6 L130.3,144.8 L126.9,146.3 L123.5,147.9 L120.2,149.7 L117,151.7 L113.9,153.9 L110.8,156.2 L107.9,158.8 L105.1,161.5 L102.5,164.4 L99.9,167.4 L97.6,170.6 L95.3,174 L93.3,177.5 L91.4,181.1 L89.7,184.8 L88.2,188.7 L86.9,192.6 L85.8,196.7 L84.9,200.8 L84.2,205 L83.7,209.3 L83.5,213.6 L83.5,217.9 L83.7,222.3 L84.2,226.6 L84.9,231"/>
-        <path d="M79.9,226 L89.9,236 M79.9,236 L89.9,226" style="stroke:#bf4a26; stroke-width:2.2; fill:none"/>
-        <text class="d-lbl d-halo" x="72.9" y="235" text-anchor="end">birds lost</text>
-        <circle class="d-ev" cx="165" cy="326.6" r="7.5"/>
-        <text x="165" y="330" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">H</text>
-        <text class="d-lbl d-halo" x="177" y="330.6" text-anchor="start">asks; says “hold”</text>
-        </g>
-        <text class="d-note" x="165" y="366" text-anchor="middle" style="fill:#bf4a26">the move was finished first;</text>
-        <text class="d-note" x="165" y="382" text-anchor="middle" style="fill:#bf4a26">answering as one requires attack</text>
-        <text class="d-house" x="495" y="24" text-anchor="middle">THE SECOND NIGHT</text>
-        <circle cx="495" cy="205" r="57" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="205" r="74" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="205" r="91" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="205" r="108" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="205" r="125" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="495" cy="205" r="142" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <line class="d-lifeline" x1="495" y1="165" x2="495" y2="56.2"/>
-        <line class="d-lifeline" x1="495" y1="245" x2="495" y2="353.8"/>
-        <rect class="d-node" x="473" y="154" width="44" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="495" y="169.5" text-anchor="middle" fill="#1c1512">T1–3</text>
-        <rect class="d-node" x="473" y="234" width="44" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="495" y="249.5" text-anchor="middle" fill="#1c1512">T4</text>
-        <clipPath id="awco-nights-clip1"><circle class="tclip" cx="495" cy="205" r="168.8" data-r0="40" data-r1="148.8"/></clipPath>
-        <g class="tflow" clip-path="url(#awco-nights-clip1)">
-        <path class="d-msg" d="M495,141.2 L491.6,140.7 L488.2,140.4 L484.8,140.3 L481.3,140.4 L477.8,140.6 L474.2,141.1 L470.7,141.7 L467.2,142.6 L463.7,143.6 L460.3,144.8 L456.9,146.3 L453.5,147.9 L450.2,149.7 L447,151.7 L443.9,153.9 L440.8,156.2 L437.9,158.8 L435.1,161.5 L432.5,164.4 L429.9,167.4 L427.6,170.6 L425.3,174 L423.3,177.5 L421.4,181.1 L419.7,184.8 L418.2,188.7 L416.9,192.6 L415.8,196.7 L414.9,200.8 L414.2,205 L413.7,209.3 L413.5,213.6 L413.5,217.9 L413.7,222.3 L414.2,226.6 L414.9,231"/>
-        <path d="M409.9,226 L419.9,236 M409.9,236 L419.9,226" style="stroke:#bf4a26; stroke-width:2.2; fill:none"/>
-        <text class="d-lbl d-halo" x="402.9" y="235" text-anchor="end">birds lost</text>
-        <circle class="d-ev" cx="495" cy="326.6" r="7.5"/>
-        <text x="495" y="330" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">H</text>
-        <text class="d-lbl d-halo" x="507" y="330.6" text-anchor="start">asks; says “hold”</text>
-        </g>
-        <text class="d-note" x="495" y="366" text-anchor="middle">“hold” is right;</text>
-        <text class="d-note" x="495" y="382" text-anchor="middle">tent 4's side is the same</text>
-        <line x1="330" y1="10" x2="330" y2="390" stroke="#b9a77e" stroke-width="1.5"/>
-      </svg>
+<!-- ============================================================ machines -->
+<section class="spread light" id="machines" data-name="In machine terms">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap two" style="gap:clamp(24px,5vw,60px);align-items:center">
+    <div>
+      <div class="kicker">First, in machine terms</div>
+      <h2>Many copies, one service</h2>
+      <p class="lede">A service keeps copies of its data on several machines, and clients may ask any of them.</p>
+      <ul class="terms">
+        <li><b>Three wishes.</b> Every read sees the latest completed write, as if there were one copy. Every request to a working machine is answered. And all this holds although the network may lose messages, even every message between two groups of machines.</li>
+        <li><b>Brewer</b> (2000) conjectured, and <b>Gilbert and Lynch</b> (2002) proved: no service can have all three. When the network splits, a part must refuse some requests or answer from a copy that may be stale.</li>
+        <li><b>Gilbert and Lynch</b> (2012): this is one case of a wider fact. A promise that nothing goes wrong and a promise that something happens cannot always both be kept.</li>
+      </ul>
+      <p style="margin-top:1.2rem">This edition tells it with four mercenaries, their ravens, and a plan they keep between them.</p>
     </div>
-    <figcaption><b>Number 4 cannot tell the two nights apart.</b> Everything on his side of the lost
-    birds is the same on both nights, so he must give the same answer on both. The answer that is right
-    on the second night breaks answering as one on the first.</figcaption>
-  </figure>
-
-
-  <div class="result">
-    <span class="name">The Cut-Off Tent</span>
-    <p>When birds can be lost, no arrangement of the four can both answer every man and answer as
-    one, even with a known flight and glasses in every tent.</p>
-  </div>
-
-  <details class="proof">
-    <summary>Proof — that no arrangement both answers every man and answers as one</summary>
-    <ol class="proofsteps">
-      <li>Suppose some arrangement did both. Put tent 4 on one side and the other three on the
-      other, and lose every bird between them for the whole of what follows.</li>
-      <li><b>The first night.</b> The plan stands at hold. Number 2 moves it to attack. Since every man
-      is answered, he is told it stands. Nothing else happens anywhere. Call the time this takes
-      <var>T</var>, by the glass.</li>
-      <li><b>The second night.</b> The plan stands at hold. Nothing happens anywhere for at least
-      <var>T</var>. Then Number 4 asks which plan stands, and is answered. Nobody moved it, so answering
-      as one gives hold.</li>
-      <li><b>Put them together.</b> Let the first night happen among the three and the second at
-      tent 4, at the same time. The three cannot tell this from the first night, since nothing reaches
-      them from tent 4 in either, so Number 2's move is made and answered as before. Because of the
-      quiet span, Number 4 asks after his move was finished.</li>
-      <li>Number 4 cannot tell this from the second night. He began with the same note, his glass has
-      run the same, and no bird has reached him in either. So he answers hold.</li>
-      <li>But Number 2's move was finished before Number 4 asked, so it comes first in any order that
-      answers as one, and a single record would have said attack. That contradicts the
-      supposition.<span class="qed">∎</span></li>
-    </ol>
-  </details>
-
-  <div class="prose">
-    <p>Would a known flight help, or glasses that run alike? The proof gave the four both, and they are
-    no help, because what Number 4 lacks is not time but news, and no amount of waiting brings a lost
-    bird. Did the proof need tent 4 alone? No; with any division of the four into two sides the
-    argument is the same. And did Number 4 answer badly? No. On the second night hold is exactly
-    right. He must say the same thing on both nights, and the two nights want different answers.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>Not all three, then. But can the four have any two they choose, and
-    how?</em></p>
+    <div class="pop fromright"><div class="leaf">
+      <div class="paper logs">
+        <h4>A write, then a read, with the link cut</h4>
+        <div class="mpair"><div class="mbox" id="mA"><h5>MACHINE A</h5><b id="vA">1</b></div><div class="marrow">link cut ✗</div><div class="mbox" id="mB"><h5>MACHINE B</h5><b id="vB">1</b></div></div>
+        <div class="waitlog" id="cutlog"></div>
+        <p class="note" id="cutnote" data-live></p>
+        <div class="row">
+          <button class="btn" id="cutw">Write 2 at A</button>
+          <button class="btn alt" id="cuta" disabled>B answers from its own copy</button>
+          <button class="btn alt" id="cutwait" disabled>B waits for A</button>
+          <button class="btn alt" id="cutm" hidden>Mend the link</button>
+          <button class="btn alt" id="cutr" hidden>Start again</button>
+        </div>
+      </div>
+    </div></div>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= IV ================= -->
-<section id="s4">
-  <div class="issue"><span class="no">Chapter IV</span><h2>Keeping Any Two</h2></div>
-
-  <div class="prose">
-    <p>The four can have any two, and one arrangement does most of the work. Let one tent <span class="coin">keep</span>
-    the standing plan: say tent 1. Number 1 has the only true note. A man at any other tent who
-    moves the plan or asks sends a bird to tent 1 and waits; Number 1 changes his note or reads it,
-    and sends the answer back; only then is the man answered.</p>
-  </div>
-
-  <div class="aside-formal">
-    <span class="lbl">The keeper's arrangement</span>
-    <span class="stmt">(1)</span> One tent keeps the only note of the standing plan.<br>
-    <span class="stmt">(2)</span> A man at any other tent is answered only when the keeper's answer
-    has come back.<br>
-    <span class="stmt">(3)</span> The keeper deals with birds one at a time, in the order he takes
-    them in.<br>
-    <span class="paper">The centralized algorithm, §3.2.1–3.2.2.</span>
-  </div>
-
-  <details class="proof">
-    <summary>Proof — that the keeper's arrangement answers as one</summary>
-    <ol class="proofsteps">
-      <li>Order all moves and questions by the moment the keeper dealt with them. This is one order,
-      the same whichever tent the man was at.</li>
-      <li>Every answer is the keeper's, from his one note in that order, so each is what a single
-      record would say.</li>
-      <li>The keeper deals with a man's business after it began, since the bird was sent then, and
-      before it ends, since the answer waits for the keeper. So each takes effect within its span,
-      and anything finished before another began was dealt with first.<span class="qed">∎</span></li>
-    </ol>
-  </details>
-
-  <div class="prose">
-    <p>What do the three choices look like with that arrangement?</p>
-
-    <p><b>Answering as one, while birds can be lost.</b> The keeper's arrangement and nothing else.
-    When tent 4 is cut off, Number 4's bird does not arrive and he is not answered: his tent, in
-    effect, falls silent. Every answer that is given is right. When no bird is lost, every man is
-    answered.</p>
-
-    <p><b>Answering as one and answering every man, while no bird is lost.</b> The same arrangement:
-    every bird reaches the keeper and every answer comes back.</p>
-
-    <p><b>Answering every man, while birds can be lost.</b> Let each man answer from his own note,
-    whatever it says. Every man is answered at once, and answering as one is given up. In the worst
-    case a man who has heard nothing since dusk says hold all night.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>Most nights no fold has hawks in it. Must the four give up answering as one
-    on every night, just because birds may be lost on some?</em></p>
+<!-- ============================================================ the hall -->
+<section class="spread dark" id="hall" data-name="The Foot of Mount Phyle">
+  <a class="anchor" id="s1"></a>
+  <div class="bleed">
+    <img src="img/camp.jpg" alt="A lone linen tent with a round shield, a chest and a basket on a rocky slope below a ring wall on the summit, with cypresses and pines around it" data-parallax>
+    <div class="hall-title"><div class="t">
+      <div class="kicker">The foot of Mount Phyle</div>
+      <h2>Four tents, out of sight of one another</h2>
+      <p>Four mercenaries are camped at the foot of the hill, one to a tent, under nobody's command.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> They must all attack or all hold. Bandits hold the top.</p>
+    </div></div>
+    <div class="pin pop" style="left:50%;top:44%;"><div class="leaf"><b>A known flight</b>No wind blows. A raven that arrives does so within a span all four know.</div></div>
+    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>A hawk may take any bird</b>Nobody sees it taken. The bird never arrives.</div></div>
+    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>Nobody stops, nobody commits</b>Nobody lies, and nothing is decided. The four only keep a plan.</div></div>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= V ================= -->
-<section id="s5">
-  <div class="issue"><span class="no">Chapter V</span><h2>Waiting a Glass</h2></div>
-
-  <div class="prose">
-    <p>The four need not give up answering as one. On a night with no hawks the keeper's arrangement gives both answering as one
-    and an answer for every man. The four want to lose answering as one only while birds are actually
-    being lost, and to answer every man throughout. Can they? Because a bird that arrives does so
-    within a known flight, they can.</p>
-  </div>
-
-  <div class="aside-formal">
-    <span class="lbl">Waiting a glass</span>
-    <span class="stmt">(1)</span> A man who moves the plan or asks sends a bird to the keeper and
-    turns a glass that runs for two flights and the keeper's time to answer.<br>
-    <span class="stmt">(2)</span> If the keeper's answer comes before the glass runs out, he takes
-    it.<br>
-    <span class="stmt">(3)</span> If the glass runs out first, he answers from his own note: a
-    question gets the latest plan the keeper has sent him, unless he has himself moved the plan since,
-    in which case it gets his own move; a move is told it stands.<br>
-    <span class="paper">A timeout of 2<var>t</var><sub>msg</sub> + <var>t</var><sub>local</sub>, §4.3.</span>
-  </div>
-
-  <div class="prose">
-    <p>Why does it work? When no bird is lost, no glass runs out, and this is the keeper's
-    arrangement: it answers as one. When a bird is lost, the glass runs out and the man answers
-    anyway. Every man is always answered. So on any night on which no bird is lost, every answer is as
-    one.</p>
-
-    <p>Does this break the Cut-Off Tent? No. On the first night of the cut-off tent, Number 4's glass
-    runs out and he says hold, exactly as that result says any arrangement answering every man must.
-    What waiting a glass buys is that this happens only on nights when birds are actually lost.</p>
-
-    <p>Does it buy anything afterwards? Nothing. If Number 4 moved the plan while cut off, the keeper
-    never heard of it, and nothing here tells him. Long after the hawks have gone, the others are told
-    a plan Number 4 has moved away from. The promise is about whole nights, not about the glasses
-    after a loss.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>The hawks left long ago, and a man's note may still be hours behind. Can the
-    four promise that the damage ends?</em></p>
-  </div>
-</section>
-
-<hr class="rule">
-
-<!-- ================= VI ================= -->
-<section id="s6">
-  <div class="issue"><span class="no">Chapter VI</span><h2>How Stale, and for How Long</h2></div>
-
-  <div class="prose">
-    <p>The four can promise the damage ends, and the promise has a span of time in it. Call that span <var>t</var>, fixed in
-    advance and measured by the glass.</p>
-  </div>
-
-  <div class="aside-formal">
-    <span class="lbl">The promise of the span <var>t</var></span>
-    All the moves and questions can be set in one order <var>P</var> in which:
-    <br><span class="stmt">(1)</span> all moves are ordered among themselves, and every question is
-    placed relative to every move;
-    <br><span class="stmt">(2)</span> every question is answered with the plan of the last move
-    before it in <var>P</var>, or hold if there is none;
-    <br><span class="stmt">(3)</span> each man's own business keeps its order in <var>P</var>;
-    <br><span class="stmt">(4)</span> if no bird was ever lost, <var>P</var> answers as one;
-    <br><span class="stmt">(5)</span> and whatever happens, if something was finished, and then a span
-    longer than <var>t</var> passed with no bird lost, and only then something else began, the first
-    comes before the second.
-    <br><span class="paper">Delayed-<var>t</var> consistency, Definition 3.</span>
-  </div>
-
-  <div class="prose">
-    <p>Which clause is new? The last. A loss does its damage only while it lasts and for a span
-    <var>t</var> after. How long do the hawks stay? Nobody can promise that. The four promise only how
-    long they take to catch up.</p>
-
-    <p>Can a man count on an earlier bird arriving first? Not at the camps, where birds come in any
-    order. Instead every bird he sends the keeper carries, before anything else, all the moves he has
-    made that the keeper has not yet acknowledged, in the order he made them.</p>
-  </div>
-
-  <div class="aside-formal">
-    <span class="lbl">The keeper's arrangement with a span</span>
-    <span class="stmt">At every tent, always:</span> every bird from the keeper carries the plan and
-    its number, and a man keeps the highest-numbered one he has had. Every bird a man sends the keeper
-    carries all his unacknowledged moves, in order.<br>
-    <span class="stmt">A question:</span> send to the keeper and wait a glass. If the keeper answers
-    in time, give that answer. If not, give the latest of his own unacknowledged moves, or if there is
-    none, the highest-numbered plan he has.<br>
-    <span class="stmt">A move:</span> send to the keeper and wait a glass. It stands when the keeper
-    acknowledges it or the glass runs out, whichever is first. Until acknowledged, send it again,
-    often enough that with no bird lost it reaches the keeper within half of <var>t</var>.<br>
-    <span class="stmt">At the keeper:</span> each move that reaches him, taken in its sender's order,
-    changes his note and takes the next number. He sends the plan and number to every tent, again and
-    again to any that has not acknowledged it, often enough that with no bird lost they arrive within
-    half of <var>t</var>.
-    <br><span class="paper">The modified centralized algorithm, Theorem 4.</span>
-  </div>
-
-  <div class="result">
-    <span class="name">The Span</span>
-    <p>The keeper's arrangement with a span answers every man, answers as one on any night on which
-    no bird is lost, and on every night keeps the promise of the span <var>t</var>.</p>
-  </div>
-
-  <figure class="diagram">
-    <div class="board">
-      <svg class="flow" viewBox="0 0 660 520" role="img" aria-label="Tent 4, tent 1 (the keeper of the standing plan) and tent 2, drawn in the round, later moments further out. A shaded ring marks the loss of birds around tent 4; birds between tents 1 and 2 still arrive. Number 4 moves the plan to attack during the loss and is told it stands when his glass runs out; his birds are lost. After the loss ends his move is sent again, tent 1 numbers it and sends it to every tent, and a question at tent 2 after a span longer than t with no loss hears attack.">
-        <!-- polar:awco-recovery -->
-        <defs>
-          <marker id="awco-recovery-b" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#136f9e"/>
-          </marker>
-          <marker id="awco-recovery-r" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#bf4a26"/>
-          </marker>
-          <marker id="awco-recovery-o" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#a8741a"/>
-          </marker>
-          <marker id="awco-recovery-g" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#5f6e28"/>
-          </marker>
-          <marker id="awco-recovery-k" markerWidth="9" markerHeight="9" refX="7.5" refY="3.2" orient="auto">
-            <path d="M0,0 L7.5,3.2 L0,6.4 z" fill="#1c1512"/>
-          </marker>
-        </defs>
-        <circle cx="330" cy="262" r="58" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="262" r="80" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="262" r="102" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="262" r="124" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="262" r="146" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="262" r="168" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="262" r="190" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="262" r="212" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <circle cx="330" cy="262" r="234" fill="none" style="stroke:#b9a77e; stroke-opacity:.65; stroke-width:.8; stroke-dasharray:3 4"/>
-        <clipPath id="awco-recovery-clip0"><circle class="tclip" cx="330" cy="262" r="249.6" data-r0="36" data-r1="229.6"/></clipPath>
-        <g class="tflow" clip-path="url(#awco-recovery-clip0)">
-        <path d="M445.2,262 A115.2,115.2 0 1 0 214.8,262 A115.2,115.2 0 1 0 445.2,262 Z M392.4,262 A62.4,62.4 0 1 0 267.6,262 A62.4,62.4 0 1 0 392.4,262 Z" fill-rule="evenodd" style="fill:#bf4a26; fill-opacity:0.1; stroke:#bf4a26; stroke-opacity:.5; stroke-width:.8"/>
-        <path d="M533.2,262 A203.2,203.2 0 1 0 126.8,262 A203.2,203.2 0 1 0 533.2,262 Z M445.2,262 A115.2,115.2 0 1 0 214.8,262 A115.2,115.2 0 1 0 445.2,262 Z" fill-rule="evenodd" style="fill:#5f6e28; fill-opacity:0.08; stroke:#5f6e28; stroke-opacity:.5; stroke-width:.8"/>
-        </g>
-        <line class="d-lifeline" x1="330" y1="226" x2="330" y2="32.4"/>
-        <line class="d-lifeline" x1="361.2" y1="280" x2="528.8" y2="376.8"/>
-        <line class="d-lifeline" x1="298.8" y1="280" x2="131.2" y2="376.8"/>
-        <rect class="d-node" x="315" y="215" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="330" y="230.5" text-anchor="middle" fill="#1c1512">T4</text>
-        <rect class="d-node" x="346.2" y="269" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="361.2" y="284.5" text-anchor="middle" fill="#1c1512">T1</text>
-        <rect class="d-node" x="283.8" y="269" width="30" height="22" rx="3" fill="#f6eed6" stroke="#1c1512" stroke-width="1.6"/><text class="d-house" x="298.8" y="284.5" text-anchor="middle" fill="#1c1512">T2</text>
-        <text class="d-lbl d-halo" x="378.2" y="262.6" text-anchor="start" style="fill:#5f6e28">keeper</text>
-        <text class="d-key" x="20" y="30" text-anchor="start" style="fill:#bf4a26">birds lost around tent 4</text>
-        <text class="d-key" x="20" y="48" text-anchor="start" style="fill:#5f6e28">a span t with no loss</text>
-        <g class="tflow" clip-path="url(#awco-recovery-clip0)">
-        <path class="d-msg" marker-end="url(#awco-recovery-b)" d="M387.9,295.4 L386.5,298.7 L384.9,301.9 L383.2,305.1 L381.3,308.2 L379.2,311.2 L376.9,314.1 L374.5,316.9 L371.9,319.6 L369.1,322.2 L366.1,324.6 L363.1,326.9 L359.9,329.1 L356.5,331 L353,332.9 L349.4,334.5 L345.7,335.9 L341.9,337.2 L338,338.3 L334,339.1 L330,339.8 L325.9,340.2 L321.8,340.5 L317.6,340.5 L313.4,340.3 L309.2,339.8 L304.9,339.1 L300.7,338.2 L296.6,337.1 L292.4,335.7 L288.4,334.1 L284.3,332.3 L280.4,330.3 L276.5,328 L272.8,325.5 L269.2,322.8 L265.6,319.9 L262.3,316.8 L259,313.5"/>
-        <path class="d-msg" marker-end="url(#awco-recovery-b)" d="M249.3,308.6 L251.5,313 L253.9,317.3 L256.5,321.5 L259.4,325.5 L262.5,329.5 L265.9,333.2 L269.4,336.8 L273.1,340.2 L277.1,343.5 L281.2,346.5 L285.5,349.4 L289.9,352 L294.6,354.3 L299.3,356.5 L304.2,358.4 L309.2,360 L314.3,361.4 L319.4,362.6 L324.7,363.4 L330,364 L335.4,364.3 L340.8,364.3 L346.2,364 L351.6,363.5 L357,362.6 L362.3,361.5 L367.7,360.1 L372.9,358.4 L378.1,356.4 L383.2,354.1 L388.2,351.6 L393.1,348.8 L397.8,345.7 L402.4,342.4 L406.8,338.8 L411,335 L415.1,330.9 L418.9,326.6"/>
-        <circle class="d-ev-hi" cx="330" cy="186.4" r="7.5"/>
-        <text x="330" y="189.8" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">A</text>
-        <text class="d-lbl d-halo" x="344" y="190.4" text-anchor="start" style="fill:#bf4a26">moves to attack</text>
-        <path class="d-msg" d="M330,186.4 L334,185.6 L338.1,185.1 L342.2,184.7 L346.4,184.6 L350.7,184.7 L355,185.1 L359.3,185.7 L363.6,186.5 L367.9,187.6 L372.2,188.9 L376.4,190.5 L380.6,192.3 L384.8,194.4 L388.8,196.7 L392.8,199.2 L396.6,202 L400.4,205 L404,208.3 L407.4,211.7"/>
-        <path d="M402.4,206.7 L412.4,216.7 M402.4,216.7 L412.4,206.7" style="stroke:#bf4a26; stroke-width:2.2; fill:none"/>
-        <path class="d-msg" d="M330,186.4 L326,185.6 L321.9,185.1 L317.8,184.7 L313.6,184.6 L309.3,184.7 L305,185.1 L300.7,185.7 L296.4,186.5 L292.1,187.6 L287.8,188.9 L283.6,190.5 L279.4,192.3 L275.2,194.4 L271.2,196.7 L267.2,199.2 L263.4,202 L259.6,205 L256,208.3 L252.6,211.7"/>
-        <path d="M247.6,206.7 L257.6,216.7 M247.6,216.7 L257.6,206.7" style="stroke:#bf4a26; stroke-width:2.2; fill:none"/>
-        <circle class="d-ev" cx="330" cy="153.4" r="5"/>
-        <text class="d-lbl d-halo" x="318" y="157.4" text-anchor="end">glass out: “it stands”</text>
-        <path class="d-msg-hi" marker-end="url(#awco-recovery-r)" d="M330,138 L336.5,137.5 L343.1,137.4 L349.7,137.6 L356.3,138.1 L362.9,139 L369.5,140.3 L376.1,141.9 L382.6,143.9 L389,146.2 L395.3,148.9 L401.5,151.9 L407.5,155.3 L413.4,159 L419.2,163 L424.7,167.3 L430,172 L435.1,176.9 L439.9,182.1 L444.5,187.6 L448.8,193.4 L452.8,199.4 L456.5,205.7 L459.9,212.1 L463,218.8 L465.7,225.6 L468.1,232.7 L470.1,239.8 L471.7,247.1 L472.9,254.5 L473.8,262 L474.3,269.6 L474.3,277.2 L474,284.8 L473.2,292.4 L472.1,300.1 L470.5,307.7 L468.6,315.2 L466.2,322.6 L463.4,330"/>
-        <circle class="d-ev-hi" cx="464.1" cy="339.4" r="5.5"/>
-        <text class="d-lbl d-halo" x="464.1" y="349" text-anchor="start" style="fill:#bf4a26">numbers it: No. 7</text>
-        <path class="d-msg-hi" marker-end="url(#awco-recovery-r)" d="M464.1,339.4 L460.4,346.7 L456.3,353.8 L451.8,360.7 L447,367.3 L441.8,373.8 L436.2,380 L430.3,385.9 L424.1,391.5 L417.5,396.8 L410.7,401.8 L403.6,406.4 L396.2,410.7 L388.6,414.5 L380.7,418 L372.6,421.1 L364.4,423.7 L356,426 L347.4,427.8 L338.8,429.1 L330,430 L321.2,430.4 L312.3,430.4 L303.4,429.9 L294.5,428.9 L285.7,427.5 L276.9,425.5 L268.1,423.2 L259.5,420.3 L251,417 L242.7,413.2 L234.5,409 L226.6,404.3 L218.9,399.2 L211.4,393.7 L204.2,387.8 L197.3,381.5 L190.7,374.8 L184.5,367.7 L178.6,360.3"/>
-        <path class="d-msg-hi" marker-end="url(#awco-recovery-r)" d="M464.1,339.4 L468.5,332.6 L472.6,325.5 L476.4,318.2 L479.7,310.7 L482.7,302.9 L485.3,295 L487.5,286.9 L489.2,278.7 L490.5,270.4 L491.4,262 L491.8,253.5 L491.8,245 L491.4,236.4 L490.5,227.9 L489.1,219.4 L487.3,210.9 L485,202.5 L482.3,194.2 L479.1,186 L475.5,178 L471.5,170.1 L467,162.5 L462.1,155 L456.8,147.8 L451.1,140.9 L445.1,134.2 L438.6,127.8 L431.9,121.8 L424.7,116.1 L417.3,110.8 L409.6,105.8 L401.6,101.3 L393.3,97.1 L384.8,93.4 L376,90.2 L367.1,87.3 L358,85 L348.8,83.1 L339.4,81.7"/>
-        <circle class="d-ev-hi" cx="173.1" cy="352.6" r="5.5"/>
-        <circle class="d-ev-hi" cx="330" cy="80.8" r="5.5"/>
-        <circle class="d-ev" cx="142.6" cy="370.2" r="7.5"/>
-        <text x="142.6" y="373.6" text-anchor="middle" style="font:700 10px Optima,'Gill Sans',sans-serif; fill:#f6eed6">A</text>
-        <text class="d-lbl d-halo" x="136.6" y="363.8" text-anchor="end">asks: hears attack</text>
-        </g>
-      </svg>
+<!-- ============================================================ the plan -->
+<section class="spread light" id="plansec" data-name="The standing plan">
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">A plan to keep</div>
+      <h2>The standing plan</h2>
+      <p class="lede">The four keep a standing plan: the answer they mean to commit to, as things stand. At dusk it is hold.</p>
+      <p>Any man who sees something on his side of the hill may move the plan to the other answer, and any man may ask which plan stands. Each tent keeps its own note of it. A move is done when the man who made it is told it stands. A question is done when the man who asked is told attack or hold. Nobody commits in this book, and nothing follows from which plan stands.</p>
+      <p>What is different about these nights? A hawk may take a raven in the folds, and it never arrives. A man waiting on a bird learns it was lost only when longer than any flight has passed and it has not come, and even then learns nothing of what it carried. On some nights every bird between one tent and the other three is lost, for as long as the hawks keep to that fold. That tent is <b>cut off</b>.</p>
     </div>
-    <figcaption><b>The damage lasts only as long as the loss and a span <var>t</var> after.</b>
-    Number 4 moved the plan without the keeper. Once birds get through again, his move is sent again,
-    numbered by the keeper and passed to every tent; a question asked after a span longer than
-    <var>t</var> with no bird lost is answered with it.</figcaption>
-  </figure>
-
-
-  <details class="proof">
-    <summary>Proof — that the keeper's arrangement with a span keeps the promise</summary>
-    <ol class="proofsteps">
-      <li><b>The order.</b> Order the moves by the keeper's numbers; a move that never reaches him
-      goes after all the numbered ones, in the order it was made. Place each question immediately
-      after the move whose plan it was given, or at the start if it was given hold from dusk. Then
-      every question is answered with the last move before it: clauses (1) and (2).</li>
-      <li><b>Each man's own order.</b> A man's moves reach the keeper in the order he made them, since
-      each bird carries all the earlier unacknowledged ones first; so the keeper numbers them in that
-      order, and has numbered them before he answers that man's question. A man never answers with a
-      lower number than one he holds, and his own unacknowledged moves are newer than anything the
-      keeper has sent him. So each man's questions land after his earlier business: clause (3).</li>
-      <li><b>No bird lost.</b> Then no glass runs out, every answer is the keeper's, and this is the plain keeper's arrangement, which answers as one: clause (4).</li>
-      <li><b>A move, then a span.</b> Suppose a move by Number 4 was finished, then more than
-      <var>t</var> passed with no bird lost. In that span his move reaches the keeper and the keeper's
-      number for it reaches every tent, each within half of <var>t</var>. So any move begun after
-      the span gets a higher number, and any question begun after it is answered with this move or a
-      later one.</li>
-      <li><b>A question, then a span.</b> The plan a finished question was given came from the keeper
-      or from a move of the asker's own. Either way, within the span that move is numbered and sent to
-      every tent, and the last step places everything begun after the span later in <var>P</var>:
-      clause (5).<span class="qed">∎</span></li>
-    </ol>
-  </details>
-
-  <div class="prose">
-    <p>The paper's own proof of this is a few lines long, and says nothing about how a man should
-    treat his own moves the keeper has not yet acknowledged; the second step supplies it.</p>
-
-    <p>What does the diagram not show? All through the loss, the three went on moving and asking
-    through the keeper. If Number 2 moved the plan to hold while Number 4, cut off, moved it to
-    attack, the keeper numbers both when Number 4's bird arrives, and the plan ends at whichever was
-    numbered later. The promise is kept. But for a while two men were each told a different plan
-    stood, and no promise about when they learn of it undoes that.</p>
-  </div>
-
-  <div class="prose">
-    <p class="hook"><em>Everything so far leaned on a known flight. What is left when the wind
-    blows?</em></p>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Ravens and hawks <em>send a bird and see what comes</em></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg fig" id="birdsvg" role="img" aria-label="The hill from above with four tents at its foot and ravens flying between them"></svg>
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">The hill from above. A raven is a dot flying round the hill between two tents. While hawks are in the fold of tent 4, every bird to or from tent 4 is lost.</p>
+          <div class="stand" id="bstand" data-live></div>
+        </div>
+      </div>
+      <p class="say" id="bsay">Send a bird, and see whether it comes.</p>
+      <div class="row">
+        <button class="btn" id="bs21">Tent 2 sends to tent 1</button>
+        <button class="btn" id="bs24">Tent 2 sends to tent 4</button>
+        <button class="btn" id="bs43">Tent 4 sends to tent 3</button>
+        <button class="btn alt" id="bhawk">Hawks come to tent 4's fold</button>
+        <button class="btn alt" id="bflight" disabled>A flight passes</button>
+      </div>
+    </div></div></div>
+    <div class="narrow" style="margin:1.6rem 0 0">
+      <p>On the night this book is about, tent 4 is cut off. Number 4 is alive and well and in the tent. They want to know which plan stands, and they want to know now. <b>What should they be told? And what, exactly, do the four owe a man who asks?</b></p>
+    </div>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= VII ================= -->
-<section id="s7">
-  <div class="issue"><span class="no">Chapter VII</span><h2>What Being Cut Off Does Not Say</h2></div>
-
-  <div class="prose">
-    <p><b>Does waiting a glass survive a wind?</b> No. Everything about waiting a glass relied on the
-    flight: a glass that runs out means a bird was lost. On a windy night there is no known flight; a
-    bird may sit in the pines for any time, and a man who has waited any length of
-    time<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s1" title="Agreeing When Messages Run Late: A Windy Night">*</a></sup>
-    cannot tell a lost bird from a slow one. Then something stronger is true.</p>
-  </div>
-
-  <div class="result">
-    <span class="name">The Wind</span>
-    <p>If flights have no bound, no arrangement that answers every man can answer as one even on the
-    nights when no bird is lost.</p>
-  </div>
-
-  <details class="proof">
-    <summary>Proof — that in a wind, answering as one cannot even be promised when nothing is lost</summary>
-    <ol class="proofsteps">
-      <li>Suppose an arrangement answers every man on every night, and answers as one on every night
-      on which no bird is lost.</li>
-      <li>By the Cut-Off Tent, which holds in a wind as well, there is a night on which a bird is lost
-      and a wrong answer is given. It is given after only so much has happened.</li>
-      <li>Take that night up to the wrong answer. Let every bird that was lost instead be still in the
-      pines, arriving afterwards; in a wind nobody can tell the difference. Continue the night so that
-      every bird arrives.</li>
-      <li>On this night no bird is lost, and up to the wrong answer it is the same night, so the wrong
-      answer is still given. That contradicts the supposition.<span class="qed">∎</span></li>
-    </ol>
-  </details>
-
-  <div class="prose">
-    <p><b>Is this the camps' impossibility?</b> No. With one man who may fall silent and no longest
-    flight, the four cannot be sure of ever
-    committing<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup>.
-    That has the same shape as this book's result: something that must never go wrong, and something
-    that must in the end happen, which cannot both be promised. But neither result gives the other.
-    There, no bird is lost and one man may stop. Here, no man stops and birds are lost instead.</p>
-
-    <p><b>Is it about a dead man?</b> No. A man who has stopped owes no one an answer. Number 4 is
-    alive and wants to know. That is why the question has to be put to his tent at all.</p>
-
-    <p><b>Does it cover everything the four know?</b> No: a thing that needs no news is outside it.
-    Which number each tent bears never changes, and any man, cut off or not, can say so and be right.
-    The result is about a plan that can be moved, where one tent needs news of the others.</p>
-
-    <p><b>Must the four choose once for all?</b> No. They may answer as one for the standing plan and
-    answer at once for something that matters less, or answer questions from their own notes while
-    moves wait for the keeper. Each such division gives up a little of both, and each is still bound
-    by the Cut-Off Tent wherever a man answers from a note that may be behind.</p>
+<!-- ============================================================ what the four owe -->
+<section class="spread dark" id="owe" data-name="What the four owe">
+  <a class="anchor" id="s2"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Two debts, and a condition</div>
+      <h2>What the four owe each other</h2>
+      <p class="lede">The four owe a man who asks two things, and they must pay while birds can be lost.</p>
+    </div>
+    <div class="cards3">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First debt</div><h3>Answering as one</h3><p>Each tent keeps its own note, but the plan behaves as one plan. Every move and every question, at all four tents, fits one order in which a single record would have given every answer, each taking effect at a moment within its own span, and anything finished before another began coming first.<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One: The Rule of the Board">*</a></sup> If Number 2 has moved the plan to attack and been told it stands, a man who asks afterwards must hear attack, or a later move.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second debt</div><h3>Every man is answered</h3><p>A man who asks, or moves the plan, is answered in the end, from what their tent holds. No limit is set on how soon, only that the answer come.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The condition</div><h3>Birds may be lost</h3><p>A hawk may take any bird, on any night. The two debts must be paid all the same.</p></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+      <h4>Two ways to answer badly <em>Number 3 asks</em></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg fig" id="owesvg" role="img" aria-label="The hill from above: tent 2 has moved the plan to attack and tent 3 holds a note saying hold"></svg>
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Number 2 has moved the plan to attack and been told it stands. Later Number 3 asks which plan stands.</p>
+          <ul class="checks" data-live><li id="ow1"></li><li id="ow2"></li></ul>
+        </div>
+      </div>
+      <p class="say" id="owesay"></p>
+      <div class="row">
+        <button class="btn" id="owehold">Tent 3 says hold to every question</button>
+        <button class="btn alt" id="owewait">Tent 3 waits until the hawks leave</button>
+        <button class="btn alt" id="owereset">Start again</button>
+      </div>
+    </div></div></div>
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center;margin-top:2.4rem">
+      <div>
+        <p>On these nights each tent has a sandglass. The glasses run alike, so a man can measure how long he has waited, but no man can tell what another's glass shows. No wind blows, so a bird that arrives does so within a known flight, as on a windy night once the wind has dropped,<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s2" title="Agreeing When Messages Run Late: Glasses and Late Birds">*</a></sup> here from the start. The wind comes back at the end of the book.</p>
+        <p><b>Answering as one, and answering every man, while birds can be lost. Can the four promise all three?</b></p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/c02-glass.jpg" alt="Close up of a tent's sandglass standing on the lid of an iron-bound wooden chest: two glass bulbs between turned wooden posts, the sand half run through, with limestone and the edge of a linen tent soft behind" loading="lazy"></div></div></div>
+    </div>
+    <details class="proof">
+      <summary>The camps of this book, stated formally</summary>
+      <ol class="proofsteps">
+        <li>On these nights there is no wind. A bird that arrives does so within a known span, a <b>flight</b>; a man answers a bird within a known span of his own.</li>
+        <li>Any bird may be lost, and between a cut-off tent and the rest every bird is lost, for as long as that lasts.</li>
+        <li>Each tent has a sandglass. The glasses run alike, so a man can measure how long he has waited, but no man can tell what another's glass shows.</li>
+      </ol>
+      <p class="fnote">Gilbert &amp; Lynch's partially synchronous model with arbitrary message loss, §4.1: a known bound <var>t</var><sub>msg</sub> on delivery of messages that are not lost, and local timers at the same rate.</p>
+    </details>
   </div>
 </section>
 
-<hr class="rule">
-
-<!-- ================= VIII ================= -->
-<section id="s8">
-  <div class="issue"><span class="no">Chapter VIII</span><h2>In the Book, In the Paper</h2></div>
-
-  <div class="prose">
-    <p>So that the reader may check the cut-off tent against Brewer's conjecture and the proof of
-    Gilbert and Lynch.</p>
+<!-- ============================================================ the cut-off tent -->
+<section class="spread dark has-scrolly" id="cutsec" data-name="The cut-off tent">
+  <a class="anchor" id="s3"></a>
+  <div class="wrap" style="margin-bottom:-1rem">
+    <div class="narrow">
+      <div class="kicker">The first result</div>
+      <h2>The cut-off tent</h2>
+      <p class="lede">The four cannot promise all three: answering as one, answering every man, and carrying on while birds can be lost. They may have any two. The impossibility was first put as a claim, and only later proved.</p>
+      <p><b>The Cut-Off Tent.</b> When birds can be lost, no arrangement of the four can both answer every man and answer as one, even with a known flight and glasses in every tent. Scroll through two nights.</p>
+    </div>
   </div>
-
-  <div class="table-wrap">
-    <table class="chron">
-      <thead><tr><th>In this book</th><th>What it means</th></tr></thead>
-      <tbody>
-        <tr><td><span class="term">the four tents</span></td><td>The nodes of the service, each also issuing requests for its man. <span class="paper">Nodes and their clients.</span></td></tr>
-        <tr><td><span class="term">the standing plan; moving it; asking</span></td><td>An atomic read/write object with values hold and attack; a move is a write, a question a read, hold at dusk the initial value. <span class="paper">§2.1.</span></td></tr>
-        <tr><td><span class="term">answering as one</span></td><td>Atomic (linearizable) consistency. <span class="paper">§2.1; &ldquo;any read that begins after a write completes must return that value, or a later one.&rdquo;</span></td></tr>
-        <tr><td><span class="term">every man is answered</span></td><td>Every request at a non-failed node eventually gets a response. <span class="paper">Availability, §2.2.</span></td></tr>
-        <tr><td><span class="term">a lost bird; a cut-off tent</span></td><td>A lost message; a partition, in which every message between two components is lost. <span class="paper">Partition tolerance, §2.3.</span></td></tr>
-        <tr><td><span class="term">a flight; a man's time to answer</span></td><td>Known bounds on delivery of messages that are not lost, and on local processing. <span class="paper"><var>t</var><sub>msg</sub>, <var>t</var><sub>local</sub>, §4.1.</span></td></tr>
-        <tr><td><span class="term">glasses that run alike</span></td><td>Local timers at the same rate, not synchronised. <span class="paper">The partially synchronous model, §4.1.</span></td></tr>
-        <tr><td><span class="term">the claim, any two of three</span></td><td>At most two of consistency, availability and partition tolerance. <span class="paper">Brewer's conjecture, PODC 2000.</span></td></tr>
-        <tr><td><span class="term">the Cut-Off Tent; the two nights</span></td><td>No algorithm guarantees availability and atomic consistency when messages may be lost, even with timers and a delivery bound; the executions α and α′₂. <span class="paper">Theorem 2 (Theorem 1 in the asynchronous model).</span></td></tr>
-        <tr><td><span class="term">the keeper's arrangement</span></td><td>A designated node holds the object; others forward requests and wait. <span class="paper">The centralized algorithm, §3.2.</span></td></tr>
-        <tr><td><span class="term">answering from one's own note</span></td><td>Returning local, possibly stale, data. <span class="paper">Available and partition tolerant, §3.2.3.</span></td></tr>
-        <tr><td><span class="term">waiting a glass</span></td><td>A timeout after which the node answers with the best value it knows. <span class="paper">2<var>t</var><sub>msg</sub> + <var>t</var><sub>local</sub>, §4.3.</span></td></tr>
-        <tr><td><span class="term">the promise of the span <var>t</var></span></td><td>A partial order that is atomic when no message is lost, and that orders any operation completed before a loss-free interval longer than <var>t</var> ahead of any operation begun after it. <span class="paper">Delayed-<var>t</var> consistency, Definition 3.</span></td></tr>
-        <tr><td><span class="term">the keeper's numbers; sending again; every bird carrying the unacknowledged moves</span></td><td>The central node's sequence numbers and retransmission. <span class="paper">Theorem 4. Carrying the unacknowledged writes on every message stands in for ordered channels, which ravens do not give.</span></td></tr>
-        <tr><td><span class="term">the wind; the Wind result</span></td><td>No bound on message delay; availability cannot be combined with atomicity even in executions where no messages are lost. <span class="paper">The asynchronous model, §3; Corollary 1.1.</span></td></tr>
-        <tr><td><span class="term">which number each tent bears</span></td><td>A service needing no coordination. <span class="paper">A trivial service, outside the theorem (2012, §2).</span></td></tr>
-        <tr><td><span class="term">the camps' impossibility</span></td><td>FLP: consensus with one crash, no message loss. <span class="paper">Neither FLP nor CAP implies the other (2012, footnote 2).</span></td></tr>
-        <tr><td><span class="term">dividing the choice</span></td><td>Partitioning by data or by operation. <span class="paper">2012, §4.3–4.4.</span></td></tr>
-      </tbody>
-    </table>
+  <div class="scrolly" id="cut">
+    <div class="stage"><div class="stage-inner split">
+      <svg class="fig svg-dark" id="cutsvg" role="img" aria-label="Four lines running outward, one for each tent, with later moments further out, showing two nights at the foot of the hill"></svg>
+      <div class="side" id="cutside" data-live></div>
+    </div></div>
+    <div class="steps">
+      <div class="step on"><div class="card"><div class="num">1 · Dusk</div><h3>Tent 4 is cut off</h3><p>The plan stands at hold. Every bird between tent 4 and the other three will be lost, for as long as this lasts.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · The first night</div><h3>Number 2 moves the plan</h3><p>Number 2 moves the plan to attack. Every man is answered, so Number 2 is told it stands. Whatever birds go to tent 4 are lost. Nothing else happens anywhere.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · The second night</div><h3>Nobody moves the plan</h3><p>The same dusk, and nothing happens anywhere for at least as long as the first night's move took. Then Number 4 asks which plan stands, and is answered. Nobody moved it, so a single record says hold.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Put together</div><h3>Both nights at once</h3><p>Let the first night happen among the three and the second at tent 4. Nothing reaches tent 4 in either. Number 4 has the same note, the same glass and no bird, and asks after Number 2's move was finished.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · So</div><h3>Number 4 says hold</h3><p>Number 4 cannot tell this from the second night, so says what they said there: hold. But Number 2's move was finished before they asked, and a single record would say attack. The arrangement does not answer as one.</p></div></div>
+    </div>
   </div>
-
-  <div class="ideas-box">
-    <span class="lbl">The ideas, plainly</span>
-    <p>In 2000 Eric Brewer conjectured that a shared-data system can have at most two of three
-    properties: consistency, availability, and tolerance of network partitions. Gilbert and Lynch made
-    the conjecture precise and proved it. Consistency is atomicity, or linearizability: the system
-    behaves as if there were one copy of the data. Availability means every request received by a
-    working node eventually gets a response. Partition tolerance means these hold even though the
-    network may lose any messages, including every message between two groups of nodes.</p>
-
-    <p>The proof is a single indistinguishability argument. Cut the nodes into two groups and lose
-    every message between them. A write completes in one group; later, a read arrives in the other.
-    That group cannot tell this execution from one with no write, so if it answers at all, it is
-    wrong. Timers and a known delivery bound do not help, because the missing information cannot
-    arrive.</p>
-
-    <p>Any two of the three can be had. A single designated node gives consistency always and
-    availability whenever there is no partition. With timers and a delivery bound, a node can time out
-    and answer locally only when messages are actually lost, and Delayed-<var>t</var> consistency
-    bounds how long stale answers persist once the partition heals. Without a delivery bound, even
-    that is impossible.</p>
-
-    <p>CAP is one case of a wider fact about unreliable systems: a safety property and a liveness
-    property often cannot both be guaranteed. Real systems divide the trade-off by data or by
-    operation.</p>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <p><b>Would a known flight help, or glasses that run alike?</b> The proof gave the four both. What Number 4 lacks is news, and no amount of waiting brings a lost bird.</p>
+      <p><b>Did the proof need tent 4 alone?</b> No. With any division of the four into two sides the argument is the same.</p>
+      <p><b>Did Number 4 answer badly?</b> No. On the second night hold is exactly right. Number 4 must say the same on both nights, and the two nights want different answers.</p>
+    </div>
+  </div>
+  <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <details class="proof">
+      <summary>Proof · that no arrangement both answers every man and answers as one</summary>
+      <p class="given">In the paper's terms the tents are nodes, a lost bird is a lost message, a cut-off tent is a partition, answering every man is availability, and answering as one is atomic consistency. <b>Theorem 2.</b> In the partially synchronous model, with a known bound on delivery of messages that are not lost and local timers at the same rate, no algorithm guarantees both availability and atomic consistency in all executions, including those in which messages are lost. The two nights are the paper's executions α and α′₂, and <var>T</var> below is a time measured by the glass.</p>
+      <ol class="proofsteps">
+        <li>Suppose some arrangement did both. Put tent 4 on one side and the other three on the
+        other, and lose every bird between them for the whole of what follows.</li>
+        <li><b>The first night.</b> The plan stands at hold. Number 2 moves it to attack. Since every man
+        is answered, he is told it stands. Nothing else happens anywhere. Call the time this takes
+        <var>T</var>, by the glass.</li>
+        <li><b>The second night.</b> The plan stands at hold. Nothing happens anywhere for at least
+        <var>T</var>. Then Number 4 asks which plan stands, and is answered. Nobody moved it, so answering
+        as one gives hold.</li>
+        <li><b>Put them together.</b> Let the first night happen among the three and the second at
+        tent 4, at the same time. The three cannot tell this from the first night, since nothing reaches
+        them from tent 4 in either, so Number 2's move is made and answered as before. Because of the
+        quiet span, Number 4 asks after his move was finished.</li>
+        <li>Number 4 cannot tell this from the second night. He began with the same note, his glass has
+        run the same, and no bird has reached him in either. So he answers hold.</li>
+        <li>But Number 2's move was finished before Number 4 asked, so it comes first in any order that
+        answers as one, and a single record would have said attack. That contradicts the
+        supposition.<span class="qed">∎</span></li>
+      </ol>
+    </details>
   </div>
 </section>
 
-<hr class="rule">
-<section id="refs" class="refs">
-  <h3 class="sect">The Papers Behind This Book</h3>
-  <ul>
-    <li>Eric A. Brewer, <i>Towards Robust Distributed Systems</i>. Invited talk, 19th ACM Symposium
-    on Principles of Distributed Computing (PODC), Portland, Oregon, July 2000. — The conjecture:
-    of consistency, availability and tolerance to network partitions, a shared-data system can have
-    at most two; the three cases and their examples.</li>
-    <li>Seth Gilbert and Nancy Lynch, <i>Brewer's Conjecture and the Feasibility of Consistent,
-    Available, Partition-Tolerant Web Services</i>. ACM SIGACT News <b>33</b>, 2 (June 2002),
-    51–59. — The formal model, the impossibility in the asynchronous and partially synchronous
-    models (Theorems 1 and 2, Corollary 1.1), the centralized algorithm, and Delayed-<var>t</var>
-    consistency (Theorem 4).</li>
-    <li>Seth Gilbert and Nancy Lynch, <i>Perspectives on the CAP Theorem</i>. IEEE Computer
-    <b>45</b>, 2 (February 2012), 30–36. — CAP as a trade-off between safety and liveness, its
-    relation to FLP, and the ways real systems divide the trade-off.</li>
-  </ul>
-  <aside class="fn">The four are the mercenaries of <i>The Limits of Agreement</i>, at the same
-  tents and known by their tents' numbers, as in every book at the camps. Eric Brewer, Seth Gilbert
-  and Nancy Lynch are credited here.</aside>
+<!-- ============================================================ the keeper -->
+<section class="spread light" id="keepersec" data-name="Keeping any two">
+  <a class="anchor" id="s4"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Any two of the three</div>
+      <h2>The keeper's arrangement</h2>
+      <p class="lede">The four can have any two, and one arrangement does most of the work. Let one tent keep the standing plan: say tent 1.</p>
+      <p>Number 1 has the only true note. A man at any other tent who moves the plan or asks sends a bird to tent 1 and waits. Number 1 changes the note or reads it, and sends the answer back. Only then is the man answered. The keeper deals with birds one at a time, in the order taken in.</p>
+    </div>
+    <div class="cards3">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Answering as one, while birds can be lost</div><h3>The keeper's arrangement</h3><p>When tent 4 is cut off, Number 4's bird does not arrive and they are not answered. Every answer that is given is right. When no bird is lost, every man is answered.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Answering as one and every man, while no bird is lost</div><h3>The same arrangement</h3><p>Every bird reaches the keeper and every answer comes back.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Answering every man, while birds can be lost</div><h3>Each from their own note</h3><p>Every man is answered at once, and answering as one is given up. In the worst case a man who has heard nothing since dusk says hold all night.</p></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+      <h4>Three nights <em>Number 2 moves the plan to attack; Number 4 asks later</em></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg fig" id="keepsvg" role="img" aria-label="The hill from above with tent 1 marked as the keeper"></svg>
+        <div><ul class="checks" data-live><li id="kd1"></li><li id="kd2"></li><li id="kd3"></li></ul></div>
+      </div>
+      <p class="say" id="keepsay">Choose a night.</p>
+      <div class="row">
+        <button class="btn" id="kp1">The keeper, no hawks</button>
+        <button class="btn alt" id="kp2">The keeper, hawks at tent 4</button>
+        <button class="btn alt" id="kp3">Own notes, hawks at tent 4</button>
+      </div>
+    </div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem"><b>Most nights no fold has hawks in it. Must the four give up answering as one on every night, just because birds may be lost on some?</b></p>
+    <details class="proof">
+      <summary>The keeper's arrangement, stated formally</summary>
+      <ol class="proofsteps">
+        <li>One tent keeps the only note of the standing plan.</li>
+        <li>A man at any other tent is answered only when the keeper's answer has come back.</li>
+        <li>The keeper deals with birds one at a time, in the order he takes them in.</li>
+      </ol>
+      <p class="fnote">The centralized algorithm, §3.2.1–3.2.2.</p>
+    </details>
+    <details class="proof">
+      <summary>Proof · that the keeper's arrangement answers as one</summary>
+      <p class="given">In the paper's terms the keeper is the designated node of the centralized algorithm, and answering as one is atomic consistency. <b>Claim.</b> Ordering all moves and questions by the moment the keeper dealt with them, every answer is what a single record would say, each takes effect within its own span, and anything finished before another began comes first.</p>
+      <ol class="proofsteps">
+        <li>Order all moves and questions by the moment the keeper dealt with them. This is one order,
+        the same whichever tent the man was at.</li>
+        <li>Every answer is the keeper's, from his one note in that order, so each is what a single
+        record would say.</li>
+        <li>The keeper deals with a man's business after it began, since the bird was sent then, and
+        before it ends, since the answer waits for the keeper. So each takes effect within its span,
+        and anything finished before another began was dealt with first.<span class="qed">∎</span></li>
+      </ol>
+    </details>
+  </div>
 </section>
 
-<hr class="rule">
+<!-- ============================================================ waiting a glass -->
+<section class="spread dark" id="glasssec" data-name="Waiting a glass">
+  <a class="anchor" id="s5"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">A glass to wait</div>
+      <h2>Waiting a glass</h2>
+      <p class="lede">The four need not give up answering as one on every night. On a night with no hawks the keeper's arrangement gives answering as one and an answer for every man.</p>
+      <p>The four want to lose answering as one only while birds are actually being lost, and to answer every man throughout. Because a bird that arrives does so within a known flight, they can.</p>
+    </div>
+    <div class="cards3">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First</div><h3>Turn a glass</h3><p>A man who moves the plan or asks sends a bird to the keeper and turns a glass that runs for two flights and the keeper's time to answer.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second</div><h3>The answer comes in time</h3><p>If the keeper's answer comes before the glass runs out, the man takes it.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third</div><h3>The glass runs out first</h3><p>The man answers from their own note. A question gets the latest plan the keeper has sent them, unless they have themselves moved the plan since, and then it gets their own move. A move is told it stands.</p></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+      <h4>The glass <em>earlier tonight Number 2 moved the plan to attack</em></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg fig" id="glasssvg" role="img" aria-label="The hill from above with tent 1 marked as the keeper"></svg>
+        <div>
+          <div class="glass"><span>Number 4's glass</span><div class="gbar"><i id="gfill"></i></div></div>
+          <div class="stand" id="gstand" data-live></div>
+        </div>
+      </div>
+      <p class="say" id="gsay"></p>
+      <div class="row">
+        <button class="btn" id="gask">Number 4 asks</button>
+        <button class="btn" id="gmove">Number 4 moves the plan to hold</button>
+        <button class="btn alt" id="gask2">Number 2 asks</button>
+        <button class="btn alt" id="ghawk">Hawks come to tent 4's fold</button>
+        <button class="btn alt" id="greset">Start again</button>
+      </div>
+    </div></div></div>
+    <div class="narrow" style="margin:1.6rem 0 0">
+      <p><b>Why does it work?</b> When no bird is lost, no glass runs out, and this is the keeper's arrangement, which answers as one. When a bird is lost, the glass runs out and the man answers anyway, so every man is always answered. On any night on which no bird is lost, every answer is as one. This does not break the Cut-Off Tent: on its first night Number 4's glass runs out and they say hold, as that result says any arrangement answering every man must. What waiting a glass buys is that this happens only on nights when birds are actually lost.</p>
+      <p><b>Does it buy anything afterwards?</b> Nothing. If Number 4 moved the plan while cut off, the keeper never heard of it, and nothing here tells them. Long after the hawks have gone, the others are told a plan Number 4 has moved away from. The promise is about whole nights, not about the glasses after a loss.</p>
+      <p><b>The hawks left long ago, and a man's note may still be hours behind. Can the four promise that the damage ends?</b></p>
+    </div>
+    <details class="proof">
+      <summary>Waiting a glass, stated formally</summary>
+      <ol class="proofsteps">
+        <li>A man who moves the plan or asks sends a bird to the keeper and turns a glass that runs for two flights and the keeper's time to answer.</li>
+        <li>If the keeper's answer comes before the glass runs out, he takes it.</li>
+        <li>If the glass runs out first, he answers from his own note: a question gets the latest plan the keeper has sent him, unless he has himself moved the plan since, in which case it gets his own move; a move is told it stands.</li>
+      </ol>
+      <p class="fnote">A timeout of 2<var>t</var><sub>msg</sub> + <var>t</var><sub>local</sub>, §4.3.</p>
+    </details>
+  </div>
+</section>
 
-<p class="lineage"><span class="lbl">Leads to</span> <span class="unwritten-link" title="Not yet written">Probably Up to Date</span> · <span class="unwritten-link" title="Not yet written">Changes That Never Clash</span> · <span class="unwritten-link" title="Not yet written">What You Can Promise Alone</span> · <span class="unwritten-link" title="Not yet written">Knowing When to Wait</span><br>
-  <span class="outside"><span class="tag">Outside this series</span> Yu &amp; Vahdat 2002, <i>continuous consistency</i> · DeCandia et al. 2007, <i>Dynamo</i> · Abadi 2012, <i>PACELC</i></span></p>
+<!-- ============================================================ the span -->
+<section class="spread dark has-scrolly" id="spansec" data-name="How stale, and for how long">
+  <a class="anchor" id="s6"></a>
+  <div class="wrap" style="margin-bottom:-1rem">
+    <div class="narrow">
+      <div class="kicker">The damage ends</div>
+      <h2>How stale, and for how long</h2>
+      <p class="lede">The four can promise the damage ends, and the promise has a span of time in it, fixed in advance and measured by the glass. A loss does its damage only while it lasts and for the span after. How long do the hawks stay? Nobody can promise that. The four promise only how long they take to catch up.</p>
+      <p>At the camps birds come in any order, so a man cannot count on an earlier bird arriving first. Every bird a man sends the keeper carries, before anything else, all the moves they have made that the keeper has not yet acknowledged, in the order they made them. The keeper numbers each move that reaches them, and every bird from the keeper carries the plan and its number. Scroll to watch Number 4 mend the damage.</p>
+    </div>
+  </div>
+  <div class="scrolly" id="span">
+    <div class="stage"><div class="stage-inner split">
+      <svg class="fig svg-dark" id="spansvg" role="img" aria-label="Four lines running outward, one for each tent, with later moments further out: a move made at tent 4 during a loss reaches the keeper at tent 1 and is sent to every tent"></svg>
+      <div class="side" id="spanside" data-live></div>
+    </div></div>
+    <div class="steps">
+      <div class="step on"><div class="card"><div class="num">1 · Cut off</div><h3>Number 4 moves the plan</h3><p>Hawks are in the fold of tent 4. Number 4 moves the plan to attack and sends the move to the keeper. The bird is lost. After a glass Number 4 is told it stands.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · Sent again</div><h3>Until acknowledged, send it again</h3><p>Number 4 sends the move again and again, often enough that with no bird lost it would reach the keeper within half the span. Each bird is lost while the hawks stay.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · The hawks leave</div><h3>One bird gets through</h3><p>The next bird after the hawks leave reaches the keeper. The keeper changes the note and gives the move the next number.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · The keeper sends it round</div><h3>Every tent learns the plan</h3><p>The keeper sends the plan and its number to every tent, again to any that has not acknowledged it, often enough that with no bird lost they arrive within half the span.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · A span</div><h3>No bird is lost for a span</h3><p>From the moment the hawks left, a span longer than the promised one passes with no bird lost. Everything the loss did is now mended.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · A question</div><h3>Anyone asking now hears attack</h3><p>A question begun after that span is answered with Number 4's move or a later one. Here Number 3 asks, and is told attack.</p></div></div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <p><b>The Span.</b> The keeper's arrangement with a span answers every man, answers as one on any night on which no bird is lost, and on every night keeps the promise of the span.</p>
+      <p><b>What does the picture not show?</b> All through the loss, the three went on moving and asking through the keeper. Take Number 2 moving the plan to hold while Number 4, cut off, moves it to attack. For a while two men are each told a different plan stands, and no promise about when they learn of it undoes that.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.4rem">
+      <h4>Two men move the plan <em>the plan stood at attack, number 1</em></h4>
+      <table class="dtab" id="twotab"></table>
+      <p class="say" id="twosay"></p>
+      <div class="row"><button class="btn" id="twonext">Next</button><button class="btn alt" id="tworeset">Start again</button></div>
+    </div></div></div>
+  </div>
+  <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <details class="proof">
+      <summary>The promise of the span, stated formally</summary>
+      <p class="given">All the moves and questions can be set in one order <var>P</var>, with <var>t</var> the span, fixed in advance and measured by the glass, in which:</p>
+      <ol class="proofsteps">
+        <li>all moves are ordered among themselves, and every question is placed relative to every move;</li>
+        <li>every question is answered with the plan of the last move before it in <var>P</var>, or hold if there is none;</li>
+        <li>each man's own business keeps its order in <var>P</var>;</li>
+        <li>if no bird was ever lost, <var>P</var> answers as one;</li>
+        <li>and whatever happens, if something was finished, and then a span longer than <var>t</var> passed with no bird lost, and only then something else began, the first comes before the second.</li>
+      </ol>
+      <p class="fnote">Delayed-<var>t</var> consistency, Definition 3.</p>
+    </details>
+    <details class="proof">
+      <summary>The keeper's arrangement with a span, stated formally</summary>
+      <p><b>At every tent, always:</b> every bird from the keeper carries the plan and its number, and a man keeps the highest-numbered one he has had. Every bird a man sends the keeper carries all his unacknowledged moves, in order.</p>
+      <p><b>A question:</b> send to the keeper and wait a glass. If the keeper answers in time, give that answer. If not, give the latest of his own unacknowledged moves, or if there is none, the highest-numbered plan he has.</p>
+      <p><b>A move:</b> send to the keeper and wait a glass. It stands when the keeper acknowledges it or the glass runs out, whichever is first. Until acknowledged, send it again, often enough that with no bird lost it reaches the keeper within half of <var>t</var>.</p>
+      <p><b>At the keeper:</b> each move that reaches him, taken in its sender's order, changes his note and takes the next number. He sends the plan and number to every tent, again and again to any that has not acknowledged it, often enough that with no bird lost they arrive within half of <var>t</var>.</p>
+      <p class="fnote">The modified centralized algorithm, Theorem 4.</p>
+    </details>
+    <details class="proof">
+      <summary>Proof · that the keeper's arrangement with a span keeps the promise</summary>
+      <p class="given">In the paper's terms (Definition 3 and Theorem 4), <var>t</var> is the span, fixed in advance and measured by the local timers, and <var>P</var> is an order on all the moves and questions of a night. <b>Claim.</b> On every night the keeper's arrangement with a span answers every man, and admits an order <var>P</var> satisfying clauses (1) to (5) of the promise of the span, stated above.</p>
+      <ol class="proofsteps">
+        <li><b>The order.</b> Order the moves by the keeper's numbers; a move that never reaches him
+        goes after all the numbered ones, in the order it was made. Place each question immediately
+        after the move whose plan it was given, or at the start if it was given hold from dusk. Then
+        every question is answered with the last move before it: clauses (1) and (2).</li>
+        <li><b>Each man's own order.</b> A man's moves reach the keeper in the order he made them, since
+        each bird carries all the earlier unacknowledged ones first; so the keeper numbers them in that
+        order, and has numbered them before he answers that man's question. A man never answers with a
+        lower number than one he holds, and his own unacknowledged moves are newer than anything the
+        keeper has sent him. So each man's questions land after his earlier business: clause (3).</li>
+        <li><b>No bird lost.</b> Then no glass runs out, every answer is the keeper's, and this is the plain keeper's arrangement, which answers as one: clause (4).</li>
+        <li><b>A move, then a span.</b> Suppose a move by Number 4 was finished, then more than
+        <var>t</var> passed with no bird lost. In that span his move reaches the keeper and the keeper's
+        number for it reaches every tent, each within half of <var>t</var>. So any move begun after
+        the span gets a higher number, and any question begun after it is answered with this move or a
+        later one.</li>
+        <li><b>A question, then a span.</b> The plan a finished question was given came from the keeper
+        or from a move of the asker's own. Either way, within the span that move is numbered and sent to
+        every tent, and the last step places everything begun after the span later in <var>P</var>:
+        clause (5).<span class="qed">∎</span></li>
+      </ol>
+      <p class="fnote">The paper's own proof of this is a few lines long, and says nothing about how a man should treat his own moves the keeper has not yet acknowledged; the second step supplies it.</p>
+    </details>
+  </div>
+</section>
 
-</div>
-<script src="../../assets/js/flow.js" defer></script>
+<!-- ============================================================ the wind -->
+<section class="spread light" id="windsec" data-name="The wind">
+  <a class="anchor" id="s7"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">Everything leaned on a known flight</div>
+        <h2>When the flight has no bound</h2>
+        <p class="lede">Does waiting a glass survive a wind? No. A glass that runs out means a bird was lost only because there is a known flight.</p>
+        <p>On a windy night there is none. A bird may sit in the pines for any time, and a man who has waited any length of time cannot tell a lost bird from a slow one.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s1" title="Agreeing When Messages Run Late: A Windy Night">*</a></sup> Then something stronger is true.</p>
+        <p><b>The Wind.</b> If flights have no bound, no arrangement that answers every man can answer as one even on the nights when no bird is lost.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on top, pines on the slopes, small white tents among them and the sea beyond" loading="lazy"></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+      <h4>Two windy nights <em>seen from tent 4</em></h4>
+      <div class="worlds">
+        <div class="world"><h5>One night</h5><svg class="isle-svg fig" id="windA" role="img" aria-label="The hill from above: a raven from tent 4 toward tent 1"></svg><p id="wcapA">Suppose a hawk takes the bird.</p></div>
+        <div class="world"><h5>Another night</h5><svg class="isle-svg fig" id="windB" role="img" aria-label="The hill from above: a raven from tent 4 toward tent 1"></svg><p id="wcapB">Suppose the bird sits out the wind in a pine.</p></div>
+      </div>
+      <p class="say" id="windsay">Number 2 has moved the plan to attack and been told it stands. Number 4 now asks which plan stands.</p>
+      <div class="row">
+        <button class="btn" id="windask">Number 4 asks, and waits</button>
+        <button class="btn alt" id="windans" disabled>Number 4 must answer</button>
+        <button class="btn alt" id="windgo" disabled>Let the night go on</button>
+        <button class="btn alt" id="windreset">Start again</button>
+      </div>
+    </div></div></div>
+    <details class="proof">
+      <summary>Proof · that in a wind, answering as one cannot even be promised when nothing is lost</summary>
+      <p class="given">In the paper's terms a night is an execution, and in the asynchronous model there is no bound on message delay. <b>Corollary 1.1.</b> No algorithm that guarantees availability in every execution guarantees atomic consistency in every execution in which no message is lost.</p>
+      <ol class="proofsteps">
+        <li>Suppose an arrangement answers every man on every night, and answers as one on every night
+        on which no bird is lost.</li>
+        <li>By the Cut-Off Tent, which holds in a wind as well, there is a night on which a bird is lost
+        and a wrong answer is given. It is given after only so much has happened.</li>
+        <li>Take that night up to the wrong answer. Let every bird that was lost instead be still in the
+        pines, arriving afterwards; in a wind nobody can tell the difference. Continue the night so that
+        every bird arrives.</li>
+        <li>On this night no bird is lost, and up to the wrong answer it is the same night, so the wrong
+        answer is still given. That contradicts the supposition.<span class="qed">∎</span></li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ what it does not say -->
+<section class="spread dark" id="notsec" data-name="What being cut off does not say">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Four questions</div>
+      <h2>What being cut off does not say</h2>
+    </div>
+    <div class="cards4">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is this the camps' impossibility?</h3><p>No. With one man who may fall silent and no longest flight, the four cannot be sure of ever committing.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup> That has the same shape as this result: something that must never go wrong, and something that must in the end happen, which cannot both be promised. But neither result gives the other. There, no bird is lost and one man may stop. Here, no man stops and birds are lost instead.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is it about a dead man?</h3><p>No. A man who has stopped owes no one an answer. Number 4 is alive and wants to know. That is why the question has to be put to tent 4 at all.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it cover everything the four know?</h3><p>No: a thing that needs no news is outside it. Which number each tent bears never changes, and any man, cut off or not, can say so and be right. The result is about a plan that can be moved, where one tent needs news of the others.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Must the four choose once for all?</h3><p>No. They may answer as one for the standing plan and answer at once for something that matters less, or answer questions from their own notes while moves wait for the keeper. Each such division gives up a little of both, and each is still bound by the Cut-Off Tent wherever a man answers from a note that may be behind.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ relevance -->
+<section class="spread light" id="why" data-name="Back to machines">
+  <a class="anchor" id="s8"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Back to machines</div>
+      <h2>The camp was a service of copies</h2>
+      <p class="lede">Every tent is a machine holding a copy, and every raven a message. Hover or tap to see who is who.</p>
+    </div>
+    <div class="map" id="map">
+      <div class="hd" style="text-align:right;padding-right:6px">At the foot of the hill</div><div></div><div class="hd">In the machine room</div>
+    </div>
+    <div class="meander" style="margin:3rem auto"></div>
+    <div class="end">
+      <p class="big">A service cannot be consistent, available and partition-tolerant at once.</p>
+      <p class="lede" style="margin:0 auto">Since networks do partition, the real choice comes when one does: refuse some requests to keep every answer consistent, or answer every request and let the copies diverge.</p>
+      <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">This is one case of a wider fact: a safety property and a liveness property often cannot both be guaranteed. Real systems divide the trade-off by data or by operation.</p>
+      <div class="links">
+        <a href="../../places/the-foot/index.html">The Foot of Mount Phyle, in detail</a>
+        <a href="../../papers/index.html">All the papers</a>
+      </div>
+    </div>
+    <div class="apparatus">
+      <a class="anchor" id="refs"></a>
+      <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/the-foot/index.html">The Foot of Mount Phyle</a></p>
+      <p class="lineage"><span class="lbl">Builds on</span> <a href="../the-limits-of-agreement/index.html">The Limits of Agreement</a> · <a href="../many-copies-acting-as-one/index.html">Many Copies, Acting as One</a> · <a href="../agreeing-when-messages-run-late/index.html">Agreeing When Messages Run Late</a></p>
+      <p class="lineage"><span class="lbl">Leads to</span> <a href="../probably-up-to-date/index.html">Probably Up to Date</a> · <a href="../changes-that-never-clash/index.html">Changes That Never Clash</a> · <a href="../what-you-can-promise-alone/index.html">What You Can Promise Alone</a> · <a href="../knowing-when-to-wait/index.html">Knowing When to Wait</a></p>
+      <p class="lineage"><span class="lbl">Outside this series</span> Yu &amp; Vahdat 2002, <i>continuous consistency</i> · DeCandia et al. 2007, <i>Dynamo</i> · Abadi 2012, <i>PACELC</i></p>
+      <details class="proof">
+        <summary>The papers behind this book</summary>
+        <div class="refs">
+          <p>Eric A. Brewer, <i>Towards Robust Distributed Systems</i>. Invited talk, 19th ACM Symposium on Principles of Distributed Computing (PODC), Portland, Oregon, July 2000. — The conjecture: of consistency, availability and tolerance to network partitions, a shared-data system can have at most two; the three cases and their examples.</p>
+          <p>Seth Gilbert and Nancy Lynch, <i>Brewer's Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services</i>. ACM SIGACT News <b>33</b>, 2 (June 2002), 51–59. — The formal model, the impossibility in the asynchronous and partially synchronous models (Theorems 1 and 2, Corollary 1.1), the centralized algorithm, and Delayed-<var>t</var> consistency (Theorem 4).</p>
+          <p>Seth Gilbert and Nancy Lynch, <i>Perspectives on the CAP Theorem</i>. IEEE Computer <b>45</b>, 2 (February 2012), 30–36. — CAP as a trade-off between safety and liveness, its relation to FLP, and the ways real systems divide the trade-off.</p>
+        </div>
+        <p><b>The ideas, plainly.</b> In 2000 Eric Brewer conjectured that a shared-data system can have at most two of three properties: consistency, availability, and tolerance of network partitions. Gilbert and Lynch made the conjecture precise and proved it. Consistency is atomicity, or linearizability: the system behaves as if there were one copy of the data. Availability means every request received by a working node eventually gets a response. Partition tolerance means these hold even though the network may lose any messages, including every message between two groups of nodes.</p>
+        <p>The proof is a single indistinguishability argument. Cut the nodes into two groups and lose every message between them. A write completes in one group; later, a read arrives in the other. That group cannot tell this execution from one with no write, so if it answers at all, it is wrong. Timers and a known delivery bound do not help, because the missing information cannot arrive.</p>
+        <p>Any two of the three can be had. A single designated node gives consistency always and availability whenever there is no partition. With timers and a delivery bound, a node can time out and answer locally only when messages are actually lost, and Delayed-<var>t</var> consistency bounds how long stale answers persist once the partition heals. Without a delivery bound, even that is impossible.</p>
+        <p>CAP is one case of a wider fact about unreliable systems: a safety property and a liveness property often cannot both be guaranteed. Real systems divide the trade-off by data or by operation.</p>
+      </details>
+    </div>
+  </div>
+</section>
+<footer>Distributed Algorithms of Ancient Greece · “Answering While Cut Off”, after Brewer, PODC 2000, and Gilbert and Lynch, 2002 and 2012.</footer>
+<script>
+"use strict";
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const NS="http://www.w3.org/2000/svg";
+const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function rnd(n){return Math.floor(Math.random()*n)}
+/* run fn(0..1) over ms, eased */
+function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();return}const t0=performance.now();
+  (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
+function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
+
+/* ===== pop-ups unfold when they enter view ===== */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
+$$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
+$$(".say,[data-live]").forEach(e=>e.setAttribute("aria-live","polite"));
+
+/* ===== scroll: progress bar, section name, parallax ===== */
+const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
+const dep=$$("[data-depth]"), par=$$("[data-parallax]");
+let tick=false;
+function onscroll(){
+  if(tick)return; tick=true;
+  requestAnimationFrame(()=>{
+    tick=false;
+    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
+    prog.style.width=(h>0?y/h*100:0)+"%";
+    const mid=y+innerHeight*.4; let cur=secs[0];
+    for(const s of secs){ if(s.offsetTop<=mid) cur=s; }
+    now.textContent=cur.dataset.name||"";
+    if(reduce)return;
+    for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
+    for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
+  });
+}
+addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
+
+/* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
+function scrolly(root,render){
+  const steps=$$(".step",root); render(0);
+  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
+  steps.forEach(s=>so.observe(s));
+}
+
+/* ===== who is who: the setting on the left, the machine room on the right ===== */
+function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
+  const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
+  [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}
+
+/* ===== space-time drawn in the round: each place is a line running outward, each ring a later moment,
+         and whatever is carried from place to place is an arc curving round and outward ===== */
+function Polar(svg,o){
+  const {cx,cy,r0,step,nodes,rings,tEnd}=o; svg.innerHTML=""; svg.setAttribute("viewBox",o.vb);
+  const defs=el("defs",{},svg);
+  const mk=(key,col)=>{const m=el("marker",{id:`${svg.id}-${key}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:col},m)};
+  mk("b","#136f9e"); mk("r","#bf4a26");
+  const frame=el("g",{},svg), under=el("g",{},svg), slips=el("g",{},svg), evs=el("g",{},svg), over=el("g",{},svg);
+  const P={svg,under,slips,evs,over,cx,cy,
+    r:t=>r0+step*t,
+    xy(deg,rr){const a=deg*Math.PI/180;return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)]},
+    pt(k,t){return P.xy(nodes[k][0],P.r(t))},
+    /* the points of an arc from place a at time ta to place b at time tb, the short way round */
+    arc(a,ta,b,tb){const a0=nodes[a][0],d=((nodes[b][0]-a0+540)%360)-180,n=Math.max(12,Math.round(Math.abs(d)/3)),pts=[];
+      for(let i=0;i<=n;i++)pts.push(P.xy(a0+d*i/n,P.r(ta+(tb-ta)*i/n)));return pts},
+    slip(a,ta,b,tb,trim=17){const pts=P.arc(a,ta,b,tb),end=pts[pts.length-1];
+      while(pts.length>2&&Math.hypot(pts[pts.length-1][0]-end[0],pts[pts.length-1][1]-end[1])<trim)pts.pop();
+      const p=el("path",{class:"st-slip","marker-end":`url(#${svg.id}-b)`,d:"M"+pts.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" L")},slips);
+      p.mid=P.arc(a,ta,b,tb); p.mid=p.mid[Math.floor(p.mid.length/2)]; return p},
+    seg(k,t1,t2){const [x1,y1]=P.pt(k,t1),[x2,y2]=P.pt(k,t2);return el("line",{class:"st-seg",x1,y1,x2,y2},under)},
+    event(k,t,fill,rad=13){const [x,y]=P.pt(k,t),g=el("g",{class:"st-ev",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},evs);
+      el("circle",{class:"halo2",r:rad+5},g);el("circle",{class:"b",r:rad,fill},g);g.label=el("text",{},g);el("circle",{r:rad+8,fill:"transparent"},g);return g}
+  };
+  for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
+  for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
+  for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
+    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
+  if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
+  return P;
+}
+
+/* the four mercenaries, told apart by colour */
+const TC={1:"#e0b84a",2:"#6583d6",3:"#c45448",4:"#9cb648"};
+const HOLD="#136f9e",ATT="#bf4a26",PC={hold:HOLD,attack:ATT},PL={hold:"H",attack:"A"};
+const yesno=ok=>ok?"<span class='ok'>✓</span>":"<span class='bad'>✗</span>";
+const dash="<span class='dash'>—</span>";
+const tentChip=(k,extra="")=>`<span class="chip"${extra}><i style="background:${TC[k]}"></i>Tent ${k}</span>`;
+
+/* ===== machines: answer from a copy that may be stale, or wait ===== */
+(function(){
+  const log=$("#cutlog"),note=$("#cutnote"),vA=$("#vA"),vB=$("#vB"),bw=$("#cutw"),ba=$("#cuta"),bz=$("#cutwait"),bm=$("#cutm"),br=$("#cutr");
+  const add=(t,c)=>{const d=document.createElement("div");d.className="e "+(c||"");d.textContent=t;log.appendChild(d);while(log.children.length>5)log.firstChild.remove()};
+  function reset(){log.innerHTML="";vA.textContent=vB.textContent="1";bw.disabled=false;ba.disabled=bz.disabled=true;bm.hidden=br.hidden=true;
+    note.textContent="Both machines hold the value 1, and every message between them is lost."}
+  bw.onclick=()=>{vA.textContent="2";add("write 2 at A: done","good");bw.disabled=true;ba.disabled=bz.disabled=false;
+    note.textContent="The write finished at A, and A's message to B was lost. Now a client reads from B."};
+  const fin=()=>{ba.disabled=bz.disabled=true};
+  ba.onclick=()=>{fin();add("read at B: answered 1","bad");br.hidden=false;
+    note.textContent="B answered, so the service is available. The answer is stale, because the write finished before the read began, so it is not consistent. B could not know: a copy that says 1 is right whenever no write came."};
+  bz.onclick=()=>{fin();add("read at B: waiting for A…");bm.hidden=false;br.hidden=false;
+    note.textContent="B cannot answer without hearing from A. While the link stays cut, B answers no one: consistent, but not available. Waiting longer changes nothing."};
+  bm.onclick=()=>{bm.hidden=true;vB.textContent="2";add("link mended: B asks A, A says 2");add("read at B: answered 2","good");
+    note.textContent="Once messages get through again, B can answer, and the answer is right. The wait lasted as long as the cut."};
+  br.onclick=reset;reset();
+})();
+
+/* ===== the hill, seen from above: one picture reused wherever ravens fly between the tents ===== */
+function Hill(svg){
+  const cx=235,cy=235,R=158,A={1:-90,2:0,3:90,4:180}; svg.innerHTML=""; svg.setAttribute("viewBox","0 0 470 470");
+  el("circle",{cx,cy,r:215,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
+  el("circle",{cx,cy,r:96,fill:"#d9cfb4",stroke:"#6b5a48","stroke-width":2.5,"stroke-dasharray":"2 6"},svg);
+  el("circle",{cx,cy,r:24,fill:"#efe6cf",stroke:"#6b5a48","stroke-width":6},svg);
+  el("text",{x:cx,y:cy+52,class:"lab"},svg).textContent="the crown";
+  const under=el("g",{},svg),sites=el("g",{},svg),over=el("g",{},svg);
+  const H={svg,cx,cy,R,A,under,over,tent:{},
+    at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
+    put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
+    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
+    /* a raven u of the way from tent a to tent b, flying round the hill; each direction keeps its own line */
+    fly(g,a,b,u){const d=((A[b]-A[a]+540)%360)-180;H.put(g,...H.at(A[a]+d*u,R-(d>0?24:46)*Math.sin(Math.PI*u)))},
+    state(k,s){H.tent[k].st.textContent=s},
+    badge(k,s){const b=H.tent[k].badge;b.setAttribute("opacity",s?1:0);b.lastChild.textContent=s||""}
+  };
+  for(const k of [1,2,3,4]){const a=A[k]*Math.PI/180,[x,y]=H.at(A[k]),g=el("g",{class:"site"},sites);H.put(g,x,y);
+    el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:TC[k]},g);el("text",{},g).textContent="T"+k;
+    const st=el("text",{class:"state halo",x:-48*Math.cos(a),y:-46*Math.sin(a)},g);
+    const badge=el("g",{class:"badge",opacity:0,transform:`translate(${(38*Math.cos(a)).toFixed(1)} ${(34*Math.sin(a)).toFixed(1)})`},g);el("circle",{r:11},badge);el("text",{},badge);
+    H.tent[k]={x,y,g,st,badge}}
+  return H;
+}
+/* hawks, and the fold they keep */
+function hawkShape(parent,x,y,s){const g=el("g",{transform:`translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${s||1})`},parent);
+  el("path",{d:"M-13,-2 Q-6,-12 0,-1 Q6,-12 13,-2 Q6,-5 0,3 Q-6,-5 -13,-2z",fill:"#5a4632",stroke:"#1c1512","stroke-width":1.5,"stroke-linejoin":"round"},g);return g}
+function hawkFold(H,k){const t=H.tent[k],g=el("g",{class:"hawkset",opacity:0},H.under);
+  let dx=t.x-H.cx,dy=t.y-H.cy;const n=Math.hypot(dx,dy);dx/=n;dy/=n;const px=-dy,py=dx;
+  el("circle",{cx:t.x,cy:t.y,r:42,fill:"none",stroke:ATT,"stroke-width":3,"stroke-dasharray":"6 5"},g);
+  hawkShape(g,t.x+dx*62+px*22,t.y+dy*62+py*22,1.1);hawkShape(g,t.x+dx*62-px*22,t.y+dy*62-py*22,1.1);
+  return {show(on){g.setAttribute("opacity",on?1:0)}}}
+function whereIs(g){const m=/translate\(([-\d.]+) ([-\d.]+)\)/.exec(g.getAttribute("transform"));return [+m[1],+m[2]]}
+function takeBird(H,g){const [x,y]=whereIs(g);g.remove();const h=hawkShape(H.over,x,y,1.2);h.classList.add("puff");setTimeout(()=>h.remove(),1700)}
+/* a raven from tent a to tent b: it lands, or a hawk takes it on the way */
+async function trip(H,a,b,lost){const g=H.token(TC[a],"");g.setAttribute("opacity",1);H.fly(g,a,b,.12);
+  await tween(1100,u=>H.fly(g,a,b,.12+(lost?.34:.76)*u));if(lost)takeBird(H,g);else{await sleep(120);g.remove()}}
+
+/* what a man at tent 4 can go on: his note, the birds that reached him, how long he waited */
+const view4=(birds,askAt)=>({note:"hold",birds:birds.filter(b=>b.to===4&&!b.lost).map(b=>b.plan),askAt});
+const answer4=v=>v.birds.length?v.birds[v.birds.length-1]:v.note;
+/* what a single record says: the last move finished before the question began, else hold */
+const record=(moves,askAt)=>{const done=moves.filter(m=>m.end<askAt).sort((a,b)=>a.end-b.end);return done.length?done[done.length-1].plan:"hold"};
+
+/* ===== ravens and hawks ===== */
+(function(){
+  const H=Hill($("#birdsvg")),hk=hawkFold(H,4),say=$("#bsay"),stand=$("#bstand"),bs=[["#bs21",2,1],["#bs24",2,4],["#bs43",4,3]].map(([s,a,b])=>({b:$(s),a,to:b})),bh=$("#bhawk"),bf=$("#bflight");
+  let hawks=false,pend=null,busy=false;
+  const paint=()=>{stand.innerHTML=`<div>Hawks in the fold of tent 4: <b>${hawks?"yes":"no"}</b></div><div>${pend?(pend.known?`Number ${pend.to} knows the raven from tent ${pend.a} was lost, and not what it carried.`:`Number ${pend.to} is waiting on a raven from tent ${pend.a}.`):"No man is waiting on a bird."}</div>`;
+    bf.disabled=busy||!pend||pend.known;bs.forEach(x=>x.b.disabled=busy);bh.disabled=busy};
+  bs.forEach(x=>x.b.onclick=async()=>{const lost=hawks&&(x.a===4||x.to===4);busy=true;pend=null;paint();
+    say.textContent=`A raven leaves tent ${x.a} for tent ${x.to}.`;await trip(H,x.a,x.to,lost);busy=false;
+    if(lost){pend={a:x.a,to:x.to,known:false};say.textContent=`No bird has come. No man at the foot saw it go, and Number ${x.to} cannot yet say whether it is lost or only slow.`}
+    else say.textContent=`The raven lands at tent ${x.to}, within a flight.`;paint()});
+  bf.onclick=()=>{pend.known=true;say.innerHTML=`<b>A whole flight has passed</b> and the raven from tent ${pend.a} has not come. A slow bird would have come by now, so Number ${pend.to} can say it was lost. Nothing says what it carried.`;paint()};
+  bh.onclick=()=>{hawks=!hawks;hk.show(hawks);bh.textContent=hawks?"Hawks leave tent 4's fold":"Hawks come to tent 4's fold";
+    say.textContent=hawks?"Hawks keep to the fold of tent 4. Every bird between tent 4 and the other three is lost for as long as they stay: tent 4 is cut off.":"The hawks have gone, and birds fly freely again.";paint()};
+  paint();
+})();
+
+/* ===== two ways to answer badly ===== */
+(function(){
+  const H=Hill($("#owesvg")),hk=hawkFold(H,3),say=$("#owesay"),D=[$("#ow1"),$("#ow2")],b1=$("#owehold"),b2=$("#owewait"),br=$("#owereset");
+  const moves=[{by:2,plan:"attack",end:1}],askAt=2,right=record(moves,askAt);
+  const show=(given,why)=>{const one=given==null?null:given===right,ev=given!=null;
+    D[0].innerHTML=`<b>Answering as one</b> ${one==null?dash:yesno(one)}<br>${why[0]}`;D[1].innerHTML=`<b>Every man is answered</b> ${yesno(ev)}<br>${why[1]}`};
+  function reset(){H.state(2,"attack");H.state(3,"note: hold");hk.show(false);D.forEach((d,i)=>d.innerHTML=`<b>${["Answering as one","Every man is answered"][i]}</b>`);
+    say.textContent="Number 3 asks which plan stands. How might tent 3 answer?";b1.disabled=b2.disabled=false}
+  b1.onclick=()=>{b1.disabled=b2.disabled=true;H.state(3,"says hold");
+    show("hold",[`A single record says ${right}, because Number 2's move was finished before the question began.`,"Number 3 is answered at once."]);
+    say.innerHTML="A tent that says <b>hold</b> to every question has answered, but wrongly whenever attack stands."};
+  b2.onclick=()=>{b1.disabled=b2.disabled=true;H.state(3,"waits");hk.show(true);
+    show(null,["Nothing is said, so nothing is wrong.","Waiting is not an answer: the hawks may stay all night."]);
+    say.innerHTML="<b>Wait until the hawks leave</b> is not an answer, since the hawks may stay all night."};
+  br.onclick=reset;reset();
+})();
+
+/* ===== scrolly: two nights, and a man who cannot tell them apart ===== */
+(function(){
+  const svg=$("#cutsvg"),side=$("#cutside");
+  const P=Polar(svg,{vb:"0 0 520 480",cx:260,cy:240,r0:40,step:27,rings:7,tEnd:7.4,note:[10,20],nodes:{1:[225,"T1",TC[1]],2:[135,"T2",TC[2]],3:[315,"T3",TC[3]],4:[45,"T4",TC[4]]}});
+  const grp=()=>el("g",{class:"fade"},P.over);
+  const dot=(g,k,t,plan)=>{const e=P.event(k,t,plan?PC[plan]:"#1c1512",plan?12:6);if(plan){e.label.textContent=PL[plan];e.label.style.fill="#fffaf0"}e.style.cursor="default";g.appendChild(e);return e};
+  const lostArc=(g,a,ta,b,tb,frac)=>{const pts=P.arc(a,ta,b,tb),n=Math.round((pts.length-1)*frac),q=pts.slice(0,n+1);
+    g.appendChild(el("path",{d:"M"+q.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" L"),fill:"none",stroke:ATT,"stroke-width":2.6,"stroke-dasharray":"6 4"}));
+    hawkShape(g,...q[q.length-1],.9)};
+  /* the nights, as data */
+  const T=1.2,mv1=1.4,askAt=mv1+T+1.6,ansAt=askAt+1;
+  const night1={moves:[{by:2,plan:"attack",begin:mv1,end:mv1+T}],birds:[{from:2,to:4,sent:mv1,lost:true,plan:"attack"}]};
+  const night2={moves:[],birds:[]};
+  const gA=grp(),gB=grp(),gC=grp();
+  /* night one among the three */
+  P.seg(2,mv1,mv1+T).classList.add("hi");gA.appendChild(P.under.lastChild);
+  dot(gA,2,mv1);lostArc(gA,2,mv1,4,mv1+1.6,.55);dot(gA,2,mv1+T,"attack");
+  /* night two at tent 4 */
+  P.seg(4,askAt,ansAt).classList.add("hi");gB.appendChild(P.under.lastChild);
+  dot(gB,4,askAt);const ans=answer4(view4(night1.birds,askAt));dot(gB,4,ansAt,ans);
+  /* tent 4, cut off */
+  const [cx4,cy4]=P.pt(4,0);hawkShape(gC,cx4+30,cy4+30,1);hawkShape(gC,cx4+44,cy4-12,1);
+  const mk=(h,r,c)=>`<div class="hc"><h5>${h}</h5><div class="rc">${r}</div><div class="chk">${c||""}</div></div>`;
+  const same=JSON.stringify(view4(night1.birds,askAt))===JSON.stringify(view4(night2.birds,askAt));
+  const rec1=record(night1.moves.map(m=>({plan:m.plan,end:m.end})),askAt),rec2=record(night2.moves,askAt);
+  const cards=[
+    [mk("Tent 2","note: hold"),mk("Tent 4","note: hold<br>cut off"),mk("A single record","hold")],
+    [mk("Tent 2","moves the plan to attack<br>told it stands"),mk("Tent 4","nothing has come in"),mk("A single record","hold, then attack")],
+    [mk("Tent 2","nothing happens"),mk("Tent 4",`asks<br>note hold, no bird, glass run<br>answers <b>${answer4(view4(night2.birds,askAt))}</b>`),mk("A single record",`${rec2}: ${yesno(answer4(view4(night2.birds,askAt))===rec2)}`)],
+    [mk("Tent 2","moves the plan to attack<br>told it stands"),mk("Tent 4",`inputs the same as the second night: ${same?"yes":"no"}`),mk("A single record",`attack`)],
+    [mk("Tent 2","moved the plan to attack"),mk("Tent 4",`answers <b>${ans}</b>`),mk("A single record",`${rec1} ${yesno(ans===rec1)}`)]];
+  const show=[[0,0,1],[1,0,1],[0,1,1],[1,1,1],[1,1,1]];
+  scrolly($("#cut"),s=>{
+    [gA,gB,gC].forEach((g,i)=>g.classList.toggle("on",!!show[s][i]&&!(i===2&&s===0&&false)));
+    gC.classList.add("on");
+    side.innerHTML=cards[s].join("");
+    $$(".st-ev",gB).forEach(e=>e.classList.toggle("mark",s===4));
+  });
+  if(!same||ans===rec1)throw new Error("the two nights must look alike to tent 4 and the answer must break answering as one");
+})();
+
+/* ===== the keeper's arrangement: any two ===== */
+(function(){
+  const H=Hill($("#keepsvg")),hk=hawkFold(H,4),say=$("#keepsay"),D=[1,2,3].map(i=>$("#kd"+i)),bt=["#kp1","#kp2","#kp3"].map(s=>$(s));
+  H.state(1,"keeper");
+  const names=["Answering as one","Every man is answered","Carrying on while birds can be lost"];
+  const right=record([{plan:"attack",end:1}],2);
+  function line(i,v,why){D[i].innerHTML=`<b>${names[i]}</b> ${v==null?dash:yesno(v)}<br>${why}`}
+  async function run(kind){bt.forEach(b=>b.disabled=true);const hawks=kind!=="keeper-clear";hk.show(hawks);
+    [2,3,4].forEach(k=>H.state(k,""));D.forEach((d,i)=>d.innerHTML=`<b>${names[i]}</b>`);
+    let ans;
+    say.textContent="Number 2 moves the plan to attack.";
+    if(kind==="own"){H.state(2,"told: stands");await sleep(900)}
+    else{await trip(H,2,1,false);await trip(H,1,2,false);H.state(2,"told: stands")}
+    say.textContent="Later, Number 4 asks which plan stands.";
+    if(kind==="own"){ans="hold";await sleep(700);H.state(4,"says hold")}
+    else if(kind==="keeper-clear"){await trip(H,4,1,false);await trip(H,1,4,false);ans="attack";H.state(4,"told: attack")}
+    else{await trip(H,4,1,true);ans=null;H.state(4,"no answer")}
+    const one=ans==null?true:ans===right,every=ans!=null;
+    line(0,one,ans==null?"Every answer that is given is right.":one?"Number 4 hears attack, which is what a single record says.":`Number 4 says ${ans}, though Number 2's move was finished before they asked. A single record says ${right}.`);
+    line(1,every,every?(kind==="own"?"Number 4 is answered at once, from their own note.":"Both men are answered."):"Number 4 is alive and well and is not answered.");
+    line(2,hawks?true:null,hawks?(kind==="own"?"Nobody waits for a bird.":"Tent 4 is cut off, and nothing the four say is wrong."):"No bird is lost tonight, so this night does not test it.");
+    say.innerHTML=kind==="keeper-clear"?"With no hawks, the keeper's arrangement gives <b>answering as one</b> and an answer for every man.":kind==="keeper"?"With tent 4 cut off, the keeper's arrangement gives up <b>answering every man</b>.":"Answering from their own notes gives up <b>answering as one</b>.";
+    bt.forEach(b=>b.disabled=false)}
+  bt[0].onclick=()=>run("keeper-clear");bt[1].onclick=()=>run("keeper");bt[2].onclick=()=>run("own");
+  D.forEach((d,i)=>d.innerHTML=`<b>${names[i]}</b>`);
+})();
+
+/* ===== waiting a glass ===== */
+(function(){
+  const H=Hill($("#glasssvg")),hk=hawkFold(H,4),say=$("#gsay"),stand=$("#gstand"),fill=$("#gfill"),bs={ask:$("#gask"),move:$("#gmove"),ask2:$("#gask2"),hawk:$("#ghawk"),reset:$("#greset")};
+  H.state(1,"keeper");
+  let hawks,K,N,own,done,answers,everLost,busy;
+  function init(){hawks=false;K="attack";N={4:"hold"};own={4:null};done=[{by:2,plan:"attack"}];answers=[];everLost=false;busy=false;hk.show(false);
+    bs.hawk.textContent="Hawks come to tent 4's fold";fill.style.width="0";fill.classList.remove("out");
+    say.textContent="Number 4 may ask, or move the plan. With hawks in the fold, the glass will run out.";paint()}
+  function paint(){
+    stand.innerHTML=`<div>Keeper's note: <b>${K}</b></div><div>Tent 4's note: <b>${N[4]}</b>${own[4]?`; their own move, not known to the keeper: <b>${own[4]}</b>`:""}</div>
+      <div>Hawks in the fold of tent 4: <b>${hawks?"yes":"no"}</b></div>
+      <div style="margin-top:6px">Answers given: ${answers.length?answers.map(a=>`Number ${a.k}: ${a.given} ${yesno(a.ok)}`).join("; "):"none"}</div>`;
+    Object.values(bs).forEach(b=>b.disabled=busy)}
+  async function ask(k){busy=true;paint();const lost=hawks&&k===4,right=record(done.map(m=>({plan:m.plan,end:0})),1);let given;
+    fill.classList.remove("out");fill.style.width="0";say.textContent=`Number ${k} asks, sends a bird to the keeper and turns the glass.`;
+    if(!lost){const w=35+rnd(45);await trip(H,k,1,false);await trip(H,1,k,false);fill.style.width=w+"%";given=K;if(k===4)N[4]=K;
+      say.innerHTML=`The keeper's answer came <b>before the glass ran out</b>, and Number ${k} takes it: ${given}.`}
+    else{everLost=true;const p=trip(H,4,1,true);fill.style.width="100%";await p;await sleep(600);fill.classList.add("out");
+      given=own[4]!=null?own[4]:N[4];
+      say.innerHTML=`<b>The glass ran out.</b> Number 4 answers from their own note: ${given}${own[4]!=null?", their own move, since they have moved the plan since":""}.`}
+    const ok=given===right;if(!ok&&!everLost)throw new Error("a wrong answer on a night with no lost bird");
+    answers.push({k,given,ok});if(!ok)say.innerHTML+=` <span class="bad">A single record says ${right}.</span>`+(everLost&&!hawks?" The hawks are gone, but a bird was lost earlier tonight.":" This happens only because a bird is lost.");
+    busy=false;paint()}
+  async function move(p){busy=true;paint();const lost=hawks;fill.classList.remove("out");fill.style.width="0";
+    say.textContent=`Number 4 moves the plan to ${p}, sends the move to the keeper and turns the glass.`;
+    if(!lost){await trip(H,4,1,false);await trip(H,1,4,false);K=p;own[4]=null;N[4]=p;fill.style.width=(35+rnd(45))+"%";say.innerHTML="The keeper answered in time: the move stands, and the keeper's note changes."}
+    else{everLost=true;const q=trip(H,4,1,true);fill.style.width="100%";await q;await sleep(600);fill.classList.add("out");own[4]=p;
+      say.innerHTML="<b>The glass ran out.</b> Number 4 is told the move stands. The keeper never heard of it."}
+    done.push({by:4,plan:p});busy=false;paint()}
+  bs.ask.onclick=()=>ask(4);bs.ask2.onclick=()=>ask(2);bs.move.onclick=()=>move("hold");
+  bs.hawk.onclick=()=>{hawks=!hawks;hk.show(hawks);bs.hawk.textContent=hawks?"Hawks leave tent 4's fold":"Hawks come to tent 4's fold";
+    say.textContent=hawks?"Hawks keep to the fold of tent 4.":"The hawks have gone. Nothing here tells the keeper what Number 4 may have moved while they stayed.";paint()};
+  bs.reset.onclick=init;init();
+})();
+
+/* ===== scrolly: the damage mends ===== */
+(function(){
+  const svg=$("#spansvg"),side=$("#spanside");
+  const P=Polar(svg,{vb:"0 0 620 600",cx:310,cy:300,r0:44,step:30,rings:9,tEnd:9.4,note:[14,24],nodes:{1:[225,"T1",TC[1]],2:[135,"T2",TC[2]],3:[315,"T3",TC[3]],4:[45,"T4",TC[4]]}});
+  /* the times, in glass units: a flight, the keeper's time to answer, the span, the moment the hawks leave */
+  const f=.7,aT=.2,S=3.2,G=2*f+aT,rs=S/2-f,mv=1.4,h=3.5;
+  const sends=[];for(let t=mv;;t+=rs){sends.push({t,lost:t<h});if(t>=h)break}
+  const first=sends.find(x=>!x.lost),arrK=first.t+f,arrAll=arrK+f,spanEnd=h+S,askT=spanEnd+.2,ansT=askT+G;
+  if(mv+G>=h||arrK-h>S/2||arrAll>spanEnd||ansT>9.2)throw new Error("the span figure breaks its own rules");
+  const grp=()=>el("g",{class:"fade"},P.over);
+  const dot=(g,k,t,plan,txt)=>{const e=P.event(k,t,plan?PC[plan]:"#1c1512",plan?12:6);if(plan){e.label.textContent=txt||PL[plan];e.label.style.fill="#fffaf0"}e.style.cursor="default";g.appendChild(e)};
+  const arrow=(g,a,ta,b,tb)=>g.appendChild(P.slip(a,ta,b,tb,12));
+  const lostArc=(g,a,ta,b,tb,frac)=>{const pts=P.arc(a,ta,b,tb),q=pts.slice(0,Math.round((pts.length-1)*frac)+1);
+    g.appendChild(el("path",{d:"M"+q.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" L"),fill:"none",stroke:ATT,"stroke-width":2.6,"stroke-dasharray":"6 4"}));hawkShape(g,...q[q.length-1],.9)};
+  const seg=(g,k,a,b)=>{const s=P.seg(k,a,b);s.classList.add("hi");g.appendChild(s)};
+  const G1=grp(),G2=grp(),G3=grp(),G4=grp(),G5=grp(),G6=grp();
+  seg(G1,4,mv,mv+G);dot(G1,4,mv);lostArc(G1,4,mv,1,mv+f,.5);dot(G1,4,mv+G,"attack");
+  sends.filter(x=>x.lost).slice(1).forEach(x=>lostArc(G2,4,x.t,1,x.t+f,.5));
+  {const [x,y]=P.pt(4,h);const a=135*Math.PI/180;G2.appendChild(el("line",{x1:x+14*Math.cos(a),y1:y+14*Math.sin(a),x2:x-14*Math.cos(a),y2:y-14*Math.sin(a),stroke:"#1c1512","stroke-width":4}));
+    const t=el("text",{class:"st-note",x:x+18,y:y+20},G2);t.textContent="hawks leave"}
+  arrow(G3,4,first.t,1,arrK);dot(G3,1,arrK,"attack","1");
+  [2,3,4].forEach(k=>{arrow(G4,1,arrK,k,arrAll);dot(G4,k,arrAll,"attack","1")});
+  seg(G5,4,h,spanEnd);
+  dot(G6,3,askT);arrow(G6,3,askT,1,askT+f);arrow(G6,1,askT+f+aT,3,ansT);dot(G6,3,ansT,"attack");
+  const gs=[G1,G2,G3,G4,G5,G6];
+  const mk=(h,r)=>`<div class="hc"><h5>${h}</h5><div class="rc">${r}</div></div>`;
+  const cards=[
+    [mk("Tent 1, the keeper","note: hold<br>nothing heard"),mk("Tent 3","note: hold"),mk("Tent 4","moved the plan to attack<br>told it stands")],
+    [mk("Tent 1, the keeper","note: hold<br>nothing heard"),mk("Tent 3","note: hold"),mk("Tent 4","sends the move again<br>no bird gets through")],
+    [mk("Tent 1, the keeper","attack, number 1"),mk("Tent 3","note: hold"),mk("Tent 4","not yet acknowledged")],
+    [mk("Tent 1, the keeper","attack, number 1"),mk("Tent 3","attack, number 1"),mk("Tent 4","attack, number 1<br>acknowledged")],
+    [mk("Tent 1, the keeper","attack, number 1"),mk("Tent 3","attack, number 1"),mk("Tent 4","attack, number 1<br>a span has passed, no bird lost")],
+    [mk("Tent 1, the keeper","attack, number 1"),mk("Tent 3","asks<br>answered <b>attack</b>"),mk("Tent 4","attack, number 1")]];
+  scrolly($("#span"),s=>{gs.forEach((g,i)=>g.classList.toggle("on",i<=s));side.innerHTML=cards[s].join("")});
+})();
+
+/* ===== two men move the plan during a loss ===== */
+(function(){
+  const tab=$("#twotab"),say=$("#twosay"),bn=$("#twonext"),br=$("#tworeset");
+  let K,view,i;
+  const beats=[
+    ()=>"The plan stands at attack, number 1, at every tent. Hawks are in the fold of tent 4.",
+    ()=>{K={plan:"hold",n:2};[1,2,3].forEach(k=>view[k]={plan:"hold",n:2});view[4]={plan:"attack",n:"own move"};
+      return "Number 2 moves the plan to hold. The keeper numbers it 2 and sends it round, and Number 2 is told it stands. Number 4, cut off, moves it to attack and after a glass is told it stands too. Two men are each told a different plan stands."},
+    ()=>{K={plan:"attack",n:3};return "The hawks leave. Number 4's move reaches the keeper, who numbers it 3."},
+    ()=>{[1,2,3,4].forEach(k=>view[k]={plan:K.plan,n:K.n});return "The keeper sends attack, number 3, to every tent. The plan ends at whichever move was numbered later."}];
+  function paint(t){tab.innerHTML="<tr><th>Tent</th><th>Holds, or was told</th><th>Number</th></tr>"+[1,2,3,4].map(k=>`<tr><td>${tentChip(k)}${k===1?" keeper":""}</td><td>${k===1?K.plan:view[k].plan}</td><td>${k===1?K.n:view[k].n}</td></tr>`).join("");say.textContent=t;bn.disabled=i>=beats.length-1}
+  function reset(){K={plan:"attack",n:1};view={};[1,2,3,4].forEach(k=>view[k]={plan:"attack",n:1});i=0;paint(beats[0]())}
+  bn.onclick=()=>{i++;paint(beats[i]())};
+  br.onclick=reset;reset();
+})();
+
+/* ===== two windy nights ===== */
+(function(){
+  const HA=Hill($("#windA")),HB=Hill($("#windB")),say=$("#windsay"),b1=$("#windask"),b2=$("#windans"),b3=$("#windgo"),br=$("#windreset");
+  const asks=3,moves=[{plan:"attack",end:1}],right=record(moves,asks);
+  let stage,rv;
+  function setup(H){H.state(2,"attack");H.state(4,"note: hold");[1,3].forEach(k=>H.state(k,k===1?"":""))}
+  async function both(fn){await Promise.all([fn(HA,true),fn(HB,false)])}
+  function reset(){setup(HA);setup(HB);$$(".pine,.puff",document).forEach(e=>e.remove());stage=0;b1.disabled=false;b2.disabled=b3.disabled=true;
+    say.textContent="Number 2 has moved the plan to attack and been told it stands. Number 4 now asks which plan stands."}
+  b1.onclick=async()=>{b1.disabled=true;
+    const ga=HA.token(TC[4],""),gb=HB.token(TC[4],"");[ga,gb].forEach(g=>g.setAttribute("opacity",1));HA.fly(ga,4,1,.12);HB.fly(gb,4,1,.12);
+    await Promise.all([tween(1100,u=>HA.fly(ga,4,1,.12+.34*u)),tween(1100,u=>HB.fly(gb,4,1,.12+.34*u))]);
+    takeBird(HA,ga);const [x,y]=whereIs(gb);rv=gb;const pn=el("path",{class:"pine",d:"M0,-16 L11,5 L-11,5z M-2,5 h4 v8 h-4z",fill:"#4f6b2e",stroke:"#1c1512","stroke-width":1.5},HB.over);HB.put(pn,x+16,y-6);
+    el("text",{class:"lab halo",x:x+16,y:y+26},HB.over).classList.add("pine");HB.over.lastChild.textContent="in a pine";
+    say.textContent="No bird has come on either night. In a wind nobody can say how long a bird may sit in the pines, so Number 4 can wait any length of time and learn nothing.";b2.disabled=false};
+  b2.onclick=()=>{b2.disabled=true;const v=view4([],asks),a=answer4(v);HA.state(4,"says "+a);HB.state(4,"says "+a);
+    say.innerHTML=`Every man must be answered, so Number 4 answers: <b>${a}</b>. Their inputs are the same on both nights, so the answer is the same. A single record says ${right}, so <span class="bad">it is wrong.</span>`;b3.disabled=false};
+  b3.onclick=async()=>{b3.disabled=true;HB.fly(rv,4,1,.46);await tween(1100,u=>HB.fly(rv,4,1,.46+.42*u));rv.remove();$$(".pine",HB.svg).forEach(e=>e.remove());
+    say.innerHTML="On the left night the bird was lost for good. On the right night it was only slow, and lands at last: <b>no bird was lost</b>. The answer was given before it landed, so it is still wrong."};
+  br.onclick=reset;reset();
+})();
+
+/* ===== who is who ===== */
+mapPairs($("#map"),[
+ ["The four tents, one man in each","The nodes of the service, each also issuing requests for its client"],
+ ["The standing plan; moving it; asking","An atomic read/write object with values hold and attack: a move is a write, a question a read, hold at dusk the initial value (§2.1)"],
+ ["Answering as one","Atomic (linearizable) consistency: any read that begins after a write completes must return that value, or a later one (§2.1)"],
+ ["Every man is answered","Availability: every request at a non-failed node eventually gets a response (§2.2)"],
+ ["A lost bird; a cut-off tent","A lost message; a partition, in which every message between two components is lost: partition tolerance (§2.3)"],
+ ["A flight; a man's time to answer","Known bounds on delivery of messages that are not lost, and on local processing: t_msg, t_local (§4.1)"],
+ ["Glasses that run alike","Local timers at the same rate, not synchronised: the partially synchronous model (§4.1)"],
+ ["The claim, any two of three","At most two of consistency, availability and partition tolerance: Brewer's conjecture, PODC 2000"],
+ ["The Cut-Off Tent; the two nights","No algorithm guarantees availability and atomic consistency when messages may be lost, even with timers and a delivery bound; the executions α and α′₂ (Theorem 2; Theorem 1 in the asynchronous model)"],
+ ["The keeper's arrangement","A designated node holds the object; others forward requests and wait: the centralized algorithm (§3.2)"],
+ ["Answering from one's own note","Returning local, possibly stale, data: available and partition tolerant (§3.2.3)"],
+ ["Waiting a glass","A timeout after which the node answers with the best value it knows: 2 t_msg + t_local (§4.3)"],
+ ["The promise of the span","A partial order that is atomic when no message is lost, and that orders any operation completed before a loss-free interval longer than t ahead of any operation begun after it: delayed-t consistency (Definition 3)"],
+ ["The keeper's numbers; sending again; every bird carrying the unacknowledged moves","The central node's sequence numbers and retransmission. Carrying the unacknowledged writes on every message stands in for ordered channels, which ravens do not give (Theorem 4)"],
+ ["The wind; the Wind result","No bound on message delay: availability cannot be combined with atomicity even in executions where no messages are lost (asynchronous model, §3; Corollary 1.1)"],
+ ["Which number each tent bears","A service needing no coordination: a trivial service, outside the theorem (2012, §2)"],
+ ["The camps' impossibility","FLP: consensus with one crash, no message loss. Neither FLP nor CAP implies the other (2012, footnote 2)"],
+ ["Dividing the choice","Partitioning by data or by operation (2012, §4.3–4.4)"]]);
+})();
+</script>
 </body>
 </html>
