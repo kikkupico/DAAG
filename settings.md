@@ -318,7 +318,7 @@ what makes that safe.
 **The council.** Five legislators: Okios and Liskovia (Oki and Liskov), and Kleon, Melissa and
 Theron, ordinary names for seats no author fills. A majority is three, so a law passes when the
 holder and two others hold its line. They are told apart by colour: Okios blue-grey, Liskovia
-saffron, Kleon green, Melissa madder red, Theron grey. The podium's runners are boys in short
+saffron, Kleon green, Melissa madder red, Theron grey. The podium's runners are young men in short
 brown tunics, one to each bench, who carry the lines in order and never skip one. Citizens
 petition the podium only; a petition that reaches a bench comes back with the holder's name.
 The Tholos set seats more than five (twelve benches); the book is right and the set may be

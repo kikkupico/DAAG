@@ -182,7 +182,7 @@ What each place, building, character, prop and practice of the setting has in co
 |---|---|---|
 | a council of five, a majority of three | Sparta had five ephors, elected each year†. Councils and colleges of other sizes were common. | Loose |
 | the five told apart by colour; plain Greek names for the seats | Kleon, Theron and Melissa are ordinary Greek names (Kleon was an Athenian politician, Theron a tyrant of Akragas)†. Colours only tell the figures apart. | Close |
-| boys who run the lines from the podium | Heralds and runners again†. | Close |
+| young men who run the lines from the podium | Heralds and runners again†. | Close |
 
 ### Props
 
