@@ -1,0 +1,87 @@
+/* ---------- waiting on a machine ---------- */
+.logs{padding:18px 18px 14px}
+.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
+.wire{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700}
+.wire .m{flex:0 0 auto;border:3px solid var(--ink);background:#fff;padding:10px 14px;font-size:.8rem;letter-spacing:.06em}
+.wire .w{flex:1;border-top:3px dotted var(--ink);position:relative;height:0}
+.wire .w span{position:absolute;left:50%;top:-1.05em;transform:translateX(-50%);color:var(--blood)}
+.e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both;font-family:var(--sans)}
+.e.late{border-left-color:var(--blood)}
+.e.ok2{border-left-color:#3f7a2a}
+.waitlog{border:3px solid var(--ink);background:#fff;padding:8px;min-height:150px;margin-top:12px}
+.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:4.8em;font-style:italic}
+/* ---------- little shared parts ---------- */
+.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
+.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0}
+.counts span b{font-size:1.4rem;margin-right:5px}
+.site.out{opacity:.35}
+.site.turn rect{stroke-width:8}
+.site .state{font-family:var(--serif);font-weight:400;font-style:italic;font-size:15px;fill:#1c1512}
+.btn.sel{background:var(--gold);color:var(--ink)}
+.pickrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 0;font-family:var(--sans);font-size:.88rem}
+.pickrow>span{min-width:11em}
+.stmt-box{max-width:40em;margin:1.4rem 0 0;padding:14px 18px;background:#fffaf0;border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow)}
+.stmt-box b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
+.stmt-box p{margin:0}
+/* ---------- the wind: one span at a time ---------- */
+.spans{display:grid;gap:4px;font-family:var(--sans);font-size:.86rem}
+.sp{display:grid;grid-template-columns:5.2em minmax(0,1fr);gap:8px;padding:4px 8px;background:#fff;border:2px solid var(--ink);align-items:center;min-height:2em}
+.sp.empty{opacity:.35}
+.sp.cut{border-bottom:6px solid var(--blood)}
+.sp b{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:#6b5a48}
+.sp .ok{white-space:nowrap}
+.sp .pine{color:#6b5a48;font-style:italic}
+/* ---------- a bird taken in ---------- */
+.pole{display:grid;gap:5px;font-family:var(--sans);font-size:.86rem;min-height:5em}
+.pole .e{font-size:.84rem}
+/* ---------- the pledge counter ---------- */
+.men{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0 0;font-family:var(--sans);font-size:.8rem;text-align:center}
+.men div{border:3px solid var(--ink);background:#fff;padding:6px 2px;line-height:1.3}
+.men div i{display:block;width:100%;height:5px;margin-bottom:5px}
+.men div.pl{background:#e9f2f7}
+.verdict{margin:12px 0 0;font-size:.96rem;min-height:5.6em}
+/* ---------- turns laid out along the night ---------- */
+.night{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;font-family:var(--sans);margin:12px 0 0}
+.nt{border:3px solid var(--ink);background:#fff;padding:3px 3px 4px;text-align:center}
+.nt small{display:block;font-size:.6rem;letter-spacing:.04em;line-height:1.2;margin-bottom:3px}
+.nt .gl{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.nt .gl i{display:block;height:14px;border:1.5px solid var(--ink);background:#f6eed6}
+.nt .gl i.drop{background:var(--blood)}
+.nt .gl i.still{background:#c9dfeb}
+.nt .gl i.c1{background:var(--aegean-d);outline:2px solid var(--ink)}
+.nt .gl i.c2{background:#3f7a2a;outline:2px solid var(--ink)}
+.nt.own1{box-shadow:0 0 0 3px var(--aegean-d)}
+.nt.own2{box-shadow:0 0 0 3px #3f7a2a}
+.nt .who{font-size:.62rem;display:block;margin-top:3px}
+.keyline{font-family:var(--sans);font-size:.78rem;margin:8px 0 0;display:flex;gap:14px;flex-wrap:wrap}
+.keyline i{display:inline-block;width:.9em;height:.9em;border:1.5px solid var(--ink);vertical-align:-.1em;margin-right:5px}
+/* ---------- three nights side by side ---------- */
+.nights{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,2vw,18px);margin-top:12px}
+@media(max-width:760px){.nights{grid-template-columns:minmax(0,1fr)}}
+.nightc{border:3px solid var(--ink);background:#fff;padding:10px 12px;font-family:var(--sans);font-size:.84rem;display:flex;flex-direction:column;gap:6px}
+.nightc h5{margin:0;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#6b5a48}
+.nightc p{margin:0;font-family:var(--serif);font-size:.9rem;min-height:3.6em}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pair{border:2px solid var(--ink);padding:5px 6px;text-align:center;background:#fffaf0;line-height:1.3}
+.pair.quiet{opacity:.45}
+.gbar{display:grid;grid-template-columns:repeat(12,1fr);gap:2px}
+.gbar i{height:12px;border:1.5px solid var(--ink);background:#f6eed6}
+.gbar i.on{background:var(--gold)}
+.gbar i.mk{background:var(--aegean-d)}
+.gbar i.mk2{background:var(--blood)}
+.gbar i.held{background:repeating-linear-gradient(45deg,#d9cfb4,#d9cfb4 3px,#f6eed6 3px,#f6eed6 6px)}
+/* ---------- how many men ---------- */
+.need{border:3px solid var(--ink);background:#fff;padding:10px 14px;margin-top:12px;min-height:6.4em;font-size:.96rem}
+.need b.n{font-family:var(--sans);font-size:1.5rem;color:var(--blood)}
+/* ---------- side cards of the turn ---------- */
+.side .hc .chk{min-height:2.7em}
+.side .hc.own{background:#fdf0c4}
+@media(max-width:899px){.side{grid-template-columns:repeat(2,minmax(0,1fr))}.side .hc .chk{min-height:0}}
+/* ---------- the wide table in the closing panels ---------- */
+.apparatus table.chron th{text-align:left;font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48;padding:5px 8px 5px 0}
+.apparatus table.chron td i{color:#6b5a48}
+.apparatus .tw{overflow-x:auto}
+.apparatus .tw table{min-width:520px}
+.qa h3{font-size:1.02rem}
+.qa p+p{margin-top:.5rem}
