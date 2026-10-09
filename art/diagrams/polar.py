@@ -1327,7 +1327,6 @@ def leaders_chain():
 FIGURES = {
     "books/many-copies-acting-as-one/index.html": [copies_overlap, copies_loop],
     "books/answering-while-cut-off/index.html": [cutoff_nights, cutoff_recovery],
-    "books/telling-the-dead-from-the-slow/index.html": [slate_split],
     "books/one-leader-at-a-time/index.html": [board_passes],
 }
 

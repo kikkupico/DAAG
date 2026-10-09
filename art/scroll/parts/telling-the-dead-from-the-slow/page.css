@@ -1,0 +1,69 @@
+/* ---------- waiting on a machine ---------- */
+.logs{padding:18px 18px 14px}
+.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
+.wire{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700}
+.wire .m{flex:0 0 auto;border:3px solid var(--ink);background:#fff;padding:10px 14px;font-size:.8rem;letter-spacing:.06em}
+.wire .m.q{background:#ddd;color:#6b5a48}
+.wire .w{flex:1;border-top:3px dotted var(--ink);position:relative;height:0}
+.wire .w span{position:absolute;left:50%;top:-1.05em;transform:translateX(-50%);color:var(--blood)}
+.e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both;font-family:var(--sans)}
+.e.bad{border-left-color:var(--blood)}.e.good{border-left-color:#3f7a2a}
+.waitlog{border:3px solid var(--ink);background:#fff;padding:8px;min-height:128px;margin-top:12px}
+.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:4.8em;font-style:italic}
+/* ---------- the hill and its lists ---------- */
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:.95rem}
+.checks li{padding:8px 12px;background:#fff;border:3px solid var(--ink)}
+.checks b{font-family:var(--sans)}
+.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
+.site.out{opacity:.35}
+.site.turn rect{stroke-width:7}
+.site .state{font-family:var(--serif);font-weight:400;font-style:italic;font-size:14px;fill:#1c1512}
+.badge circle{fill:#fffaf0;stroke:#1c1512;stroke-width:2.5}
+.badge text{font-family:var(--sans);font-weight:700;font-size:13px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+.gr-arrow{stroke:#1c1512;stroke-width:2.2;fill:none}
+/* ---------- the slate widget ---------- */
+.srow{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;font-family:var(--sans);font-size:.88rem;padding:6px 0;border-top:2px solid #1c151222}
+.srow:first-child{border-top:0}
+.srow .sv{grid-column:1/-1;font-size:.84rem;min-height:1.1em}
+/* ---------- boards of small rows ---------- */
+.chead,.crow{display:grid;grid-template-columns:auto 1fr 1.2fr 1.3fr;gap:4px 10px;align-items:center;font-family:var(--sans);font-size:.82rem;padding:6px 8px;border-top:2px solid #1c151222;background:#fff}
+.chead{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:#6b5a48;border:3px solid var(--ink);border-bottom:0}
+.crow{border-left:3px solid var(--ink);border-right:3px solid var(--ink)}
+.crow:last-child{border-bottom:3px solid var(--ink)}
+.crow.dead{background:#eee;color:#6b5a48}
+.crow.owner{background:#f6e7b0}
+.crow i{color:#6b5a48}
+.chead.t,.crow.t{grid-template-columns:auto auto 1.2fr 1.3fr auto}
+.chead.t2,.crow.t2{grid-template-columns:auto auto 1fr 1.3fr}
+@media(max-width:520px){.chead,.crow{grid-template-columns:auto 1fr;font-size:.78rem}.chead span:nth-child(n+3){display:none}
+  .chead.t,.crow.t,.chead.t2,.crow.t2{grid-template-columns:auto 1fr 1fr}.chead.t span:nth-child(n+4),.chead.t2 span:nth-child(n+4){display:none}}
+.tally{display:inline-grid;grid-template-columns:repeat(4,1.7em);gap:3px}
+.tidx{display:grid;grid-template-columns:repeat(4,1fr);font-size:.6rem;color:#6b5a48;text-align:center;margin-top:3px}
+.side .tally{display:grid;grid-template-columns:repeat(4,1fr)}
+.tc{border:2px solid var(--ink);text-align:center;font-family:var(--sans);font-weight:700;font-size:.82rem;line-height:1.5;background:#fff;color:#6b5a48}
+.tc.f{background:#fffaf0;color:var(--ink)}
+.tc.new{background:#f3dc92}
+.tc.gone{background:#f3c9b8;text-decoration:line-through}
+.side .hc.gone{opacity:.55}
+.side .hc h5 .chip{margin:0}
+/* ---------- the eight kinds ---------- */
+.kinds{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.86rem;background:#fff;border:3px solid var(--ink)}
+.kinds th,.kinds td{padding:7px 9px;border-top:2px solid #1c151222;text-align:left;vertical-align:top}
+.kinds th{font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;color:#6b5a48}
+.kinds td b{color:var(--blood)}
+@media(max-width:520px){.kinds{font-size:.76rem}.kinds th,.kinds td{padding:5px}}
+/* ---------- the windy night ---------- */
+.windtl{display:grid;grid-template-columns:repeat(15,minmax(0,1fr));gap:3px;margin:12px 0}
+.wc{height:30px;border:2px solid var(--ink);background:#fff;text-align:center;font-family:var(--sans);font-weight:700;line-height:26px;font-size:.85rem}
+.wc.wd{background:#e1ebf2}
+.wc.ch{background:#f3c9b8;color:var(--blood)}
+.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0;min-height:3rem}
+.counts span b{display:block;font-size:1.2rem}
+.stand{font-family:var(--sans);font-size:.88rem;border:3px solid var(--ink);background:#fff;padding:8px 12px;margin-bottom:10px}
+.stand div{padding:2px 0}
+.btn.on{background:var(--gold);color:var(--ink)}
+.steplist li{padding:7px 12px}
+@media(max-width:899px){#strongside{grid-template-columns:repeat(2,minmax(0,1fr))!important}.side .tally{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:520px){.chead.t{display:none}.crow.t{grid-template-columns:auto 1fr 1fr}.crow.t .tally{grid-column:1/-1}.crow.t>span:nth-child(5){grid-column:2/-1}}
+@media(max-width:520px){.chead{display:none}.crow{grid-template-columns:auto 1fr}.crow>span[data-l]{grid-column:1/-1}.crow>span[data-l]::before{content:attr(data-l) ": ";color:#6b5a48;font-size:.74rem}.chead{border-bottom:0}.crow:first-of-type{border-top:3px solid var(--ink)}}
