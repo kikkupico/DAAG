@@ -43,6 +43,13 @@ a.cardlink:focus-visible{outline:3px solid var(--aegean-d);outline-offset:4px}
 .setting-card .body{padding:18px 22px;align-self:center}
 .setting-card h3{font-size:1.25rem;margin-bottom:.4rem}
 .setting-card p{margin:0;font-size:.98rem}
-@media(max-width:640px){.setting-card{grid-template-columns:minmax(0,1fr)}}
+/* a place with one book: the book lies flat under the setting card, same width and columns */
+.cards3.books>.pop:only-child{grid-column:1/-1;max-width:860px}
+.cards3.books>.pop:only-child a.cardlink{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr)}
+.cards3.books>.pop:only-child .body{padding:22px 26px;align-self:center}
+.cards3.books>.pop:only-child h3{font-size:1.45rem;margin-bottom:.6rem}
+.cards3.books>.pop:only-child p{font-size:1rem}
+.cards3.books>.pop:only-child p+p{margin-top:.7rem}
+@media(max-width:640px){.setting-card,.cards3.books>.pop:only-child a.cardlink{grid-template-columns:minmax(0,1fr)}}
 .card3 .q{font-style:italic}
 .card3 .how{margin-top:.6rem!important;font-size:.9rem!important;color:#3a2d24}
