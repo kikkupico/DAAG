@@ -27,7 +27,7 @@ What is modelled, so that it need not be described to an image model:
 - the outer columns as Doric: no base, 20 flutes meeting in arrises, annulets, echinus, abacus;
   above them an architrave with taenia, regulae and guttae, a frieze of triglyphs and plain
   metopes, and a cornice with mutules; a coffered marble ceiling over the walk;
-- the ceiling inside as five rings of deep stepped coffers, each with a bronze rosette, round an
+- the ceiling inside as five rings of deep stepped coffers, each with a marble rosette, round an
   oculus with a bronze rim under a plastered well that rises to the lantern;
 - the roof beams: a ring of squared timbers from capital to capital and one from each capital to
   a marble corbel in the wall;
@@ -449,7 +449,7 @@ for j, a in enumerate(col_a):
             w = (nxt - a) / n * rm - 0.42
             shell.box(polar(rm, am, ch + 0.265), (r1 - r0 - 0.34, w, 0.07), MARBLE_B, yaw=am)   # the coffer's step
             shell.box(polar(rm, am, ch + 0.25), (r1 - r0 - 0.5, w - 0.16, 0.12), COFFER, yaw=am)
-            shell.disc(polar(rm, am, ch + 0.28), 0.11, 0.06, (0, 0, 1), BRONZE, 10)             # a rosette
+            shell.disc(polar(rm, am, ch + 0.28), 0.11, 0.06, (0, 0, 1), MARBLE_C, 10)           # a rosette
 # its lean-to roof, from the cornice up to the drum
 tiled(shell, PR + 0.42, zr + 0.3, RO + 0.05, zr + 1.35, 128, 0.72, 0.15)
 shell.grid(arc(RO, RO + 0.12, 0, FULL, zr + 1.3, zr + 1.5, SEG + 1), MARBLE_C)                  # a course over its head
@@ -567,10 +567,10 @@ for (r0, r1), n in zip(zip(bounds, bounds[1:]), sectors):
             slab(shell, q0, zc(q0), q1, zc(q1), a0, a1, DEEP / 2, DEEP + 0.04, MARBLE_B)
         for b0, b1 in ((a0, a0 + sw / rm), (a1 - sw / rm, a1)):
             slab(shell, i0, zc(i0), i1, zc(i1), b0, b1, DEEP / 2, DEEP + 0.04, MARBLE_B, na=2)
-        am = (a0 + a1) / 2                                                                        # a bronze rosette
+        am = (a0 + a1) / 2                                                                        # a marble rosette
         nrm = Vector((-(cz1 - cz0) * math.cos(am), -(cz1 - cz0) * math.sin(am), -(R - cr1))).normalized()
-        shell.disc(polar(rm, am, zc(rm)) - nrm * (DEEP - 0.01), min(0.13, (a1 - a0) * rm * 0.22), 0.06, nrm, BRONZE, 10)
-        shell.sphere(polar(rm, am, zc(rm)) - nrm * (DEEP - 0.06), min(0.05, (a1 - a0) * rm * 0.09), BRONZE, 1.0, 8, 6)
+        shell.disc(polar(rm, am, zc(rm)) - nrm * (DEEP - 0.01), min(0.13, (a1 - a0) * rm * 0.22), 0.06, nrm, MARBLE_C, 10)
+        shell.sphere(polar(rm, am, zc(rm)) - nrm * (DEEP - 0.06), min(0.05, (a1 - a0) * rm * 0.09), MARBLE, 1.0, 8, 6)
 shell.grid(arc(ir - 0.16, ir + 0.1, 0, FULL, H - 0.09, zc(ir) + 0.02, SEG + 1), MARBLE_C)             # the course on the ring beam
 slab(shell, cr1 + 0.14, zc(cr1 + 0.14), cr1, cz1, 0, FULL, -0.03, 0.2, BRONZE, na=SEG, wrap=True)      # the oculus's bronze rim
 slab(shell, cr1 + 0.05, cz1, ra_ + 0.02, lz - 0.05, 0, FULL, 0.0, 0.06, PLASTER, na=48, wrap=True)       # the well up to the lantern
