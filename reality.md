@@ -94,7 +94,7 @@ What each place, building, character, prop and practice of the setting has in co
 | the four told apart by tunic colour | Soldiers were not generally in uniform, but Sparta's crimson cloak is the famous case of a colour that identifies a body of men (Xenophon, Constitution of the Lacedaemonians 11.3). | Loose |
 | four bandits holding loot on a hill | Brigands and pirates were a fixture of the Hellenistic world, and bandit chiefs are stock figures in the Greek novels: Heliodorus's Egyptian herdsmen and Xenophon of Ephesus's robbers†. Why any one of them lies is never given, in the setting or in the model. | Close |
 | the chief, in purple | Purple dye from the murex was one of the costliest in the ancient world†, so a chief in stolen purple is plausible; the colour only tells the figures apart. | Close |
-| the lying lieutenant among loyal ones | Betrayal inside a defended position is a staple of Greek siege narrative, from Ephialtes at Thermopylae (Herodotus 7.213) onward. The paper's “Byzantine generals” are Lamport's own picture of an army round a city. | Close |
+| a liar among honest men, who may be the chief | Betrayal of a defended position is a staple of Greek war narrative, from Ephialtes at Thermopylae (Herodotus 7.213) onward, and Aeneas Tacticus gives much of his siege manual to guarding a city against its own men†. The paper's “Byzantine generals” are Lamport's own picture of an army round a city. | Close |
 
 ### Props
 
@@ -137,7 +137,7 @@ What each place, building, character, prop and practice of the setting has in co
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| the Chamber, a round hall ringed by a Doric colonnade under a conical tiled roof | Greek round halls were tholoi under conical roofs. The Athenian Tholos, a round building on the west side of the agora, housed the prytaneis (Aristotle, Constitution of Athens 44), and its roof was held up by columns inside†; the tholos at Delphi and the Philippeion at Olympia add a colonnade round the drum†. The tholos at Epidaurus has a Doric colonnade outside and a ring of Corinthian columns inside the drum†, so the Chamber's inner columns are Corinthian, not Doric. A true dome belongs to Roman concrete. Like a real tholos, it has one door, which can be locked. | Loose |
+| the Chamber, a round hall ringed by a Doric colonnade under a conical tiled roof | Greek round halls were tholoi under conical roofs. The Athenian Tholos, a round building on the west side of the agora, housed the prytaneis (Aristotle, Constitution of Athens 44), and its roof was held up by columns inside†; the tholos at Delphi and the Philippeion at Olympia add a colonnade round the drum†. The tholos at Epidaurus has a Doric colonnade outside and a ring of Corinthian columns inside the drum†, and the Chamber has both. Like a real tholos, it has one door, which can be locked. | Close |
 | poor acoustics, so legislators send messengers | This is Lamport's own conceit, which the setting follows faithfully. The real Greek councils met in halls built for hearing, such as the bouleuteria of Priene and Miletus†. | Invented |
 
 ### Characters
@@ -151,6 +151,7 @@ What each place, building, character, prop and practice of the setting has in co
 
 | In the setting | The real precedent | How close |
 |---|---|---|
+| a bronze meridian line on the Chamber's floor | Greeks told the hour by the shadow of a gnomon, and Meton set up a sun instrument, a *hēliotropion*, on the Pnyx in Athens to mark the solstices†. A line on a floor that a spot of sunlight crosses at noon is later: Augustus's meridian in Rome and the church meridians of the Renaissance†. | Loose |
 | a legislator's scroll in indelible ink | Greek ink was soot in gum and could be wiped off with a sponge†, so indelible ink is the story's own; the scroll itself is the ordinary Hellenistic form of a record. | Loose |
 | a decree and its number | Athenian decrees were dated by the year's chief magistrate and the number of the prytany, and cut in stone†. | Close |
 
@@ -174,7 +175,7 @@ What each place, building, character, prop and practice of the setting has in co
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| the Tholos, a round hall with a podium | The Athenian Tholos housed the committee on duty, with one member presiding for a day and a night chosen by lot (Aristotle, Constitution of Athens 44). The podium is the setting's version of that president's place; the real president was chosen by lot, not by a numbered board. | Close |
+| the Tholos, a plain round hall with a podium | The building follows the Athenian Tholos: a plain drum with no colonnade outside, six columns inside carrying a conical tiled roof, and a porch at its one door†. The Athenian Tholos housed the committee on duty, with one member presiding for a day and a night chosen by lot (Aristotle, Constitution of Athens 44). The podium is the setting's version of that president's place; the real president was chosen by lot, not by a numbered board. | Close |
 
 ### Characters
 
@@ -215,9 +216,9 @@ What each place, building, character, prop and practice of the setting has in co
 | the stoa, where scholars pass on news | Zeno taught under the Stoa Poikile in Athens, which gave the Stoics their name†; philosophers and scholars gathered in colonnades. | Close |
 | the festival ground, where copyists compare whole collections once a year | Panhellenic festivals drew poets, rhapsodes and scholars from across the Greek world; the yearly collation itself is the setting's own. | Loose |
 | a stone table grooved in columns, with piles of pebbles | The Salamis Tablet, a marble counting board of the fourth century BC, was used for reckoning with pebbles†; *psēphoi* are pebbles used to count. | Close |
-| white pebbles for copies made, black for copies lost | Jurors voted with pebbles of two kinds, as Athena's casting vote does in Aeschylus' *Eumenides* (734–753)†. Counting made against lost with the two colours is the setting's own. | Loose |
 | a hillside cut into terraces, a scribe at each | Greek sanctuaries were built on terraces cut into slopes, as at Delphi†. | Close |
 | the far terraces, a count kept in voting pebbles | Greek *psēphoi* were pebbles used to vote and to count, and the Greek for “to reckon” (*psēphizein*) comes from them†. | Close |
+| the reading room in every library, where a reader asks and corrects | Scholars read in the rooms and colonnades of the Museum and library at Alexandria†. | Close |
 | the courier landing | Hellenistic kings ran their own couriers, and merchant ships carried private letters†. | Close |
 | the ferry across the inlet, the one crossing between two parts of the coast | Short sea crossings were ordinary: the strait between the Attic shore and Salamis was crossed by boat†, and the Euripus was bridged only in 411 BC†. | Close |
 
@@ -231,6 +232,7 @@ What each place, building, character, prop and practice of the setting has in co
 
 | In the setting | The real precedent | How close |
 |---|---|---|
+| white pebbles for copies made, black for copies lost | Jurors voted with pebbles of two kinds, as Athena's casting vote does in Aeschylus' *Eumenides* (734–753)†. Counting made against lost with the two colours is the setting's own. | Loose |
 | a scrap of papyrus carrying a new learning: that the Earth goes round the Sun | This is a real example: Aristarchus of Samos proposed it in the third century BC, as Archimedes reports in the Sand Reckoner, and Plutarch says that Cleanthes thought he should be charged with impiety for it†. | Close |
 | different editions of one work | Homer's text circulated in variant forms, among them the “city” editions that the Alexandrians collated†. | Close |
 | the catalogue scroll, and the catalogue mark worked from all of it | Callimachus' *Pinakes* catalogued the Alexandrian library in some 120 scrolls†. The mark is the setting's own: sealed documents were common†, but no seal summed up a whole catalogue, and a digest is a modern device. | Invented |
@@ -248,8 +250,7 @@ What each place, building, character, prop and practice of the setting has in co
 | a promise with odds: nine in ten you are handed the newest | Greek rhetoric argued from the likely, *eikos* (Antiphon's *Tetralogies*; Aristotle, *Rhetoric* 2.24)†; odds worked out from counts are not Greek. | Loose |
 | a library lends a copy to a reader for a term | Ptolemy III is said to have borrowed Athens' official copy of the tragedies against a large deposit and kept the original, returning a copy (Galen on Hippocrates' *Epidemics* III)†. A term of loan is the setting's own. | Loose |
 | corrections to several works bound under one cord, shown all together or not at all | Scrolls were tied and sealed in bundles†; showing a bundle only when complete is the setting's own. | Loose |
-| the reading room in every library, where a reader asks and corrects | Scholars read in the rooms and colonnades of the Museum and library at Alexandria†. | Close |
-| keepers of a dormant notice named by lot | Athens filled most magistracies by lot, drawing names with an allotment machine, the *kleroterion*†. Drawing names to keep a notice is the setting's use of it. | Close |
+| keepers of a dormant notice named by lot | Athens filled most magistracies by lot, drawing names with an allotment machine, the *klērotērion*†. Drawing names to keep a notice is the setting's use of it. | Close |
 | answering from whatever copy a library holds | The Alexandrian library is said to have seized books from ships in its harbour and returned copies†, so the copy a reader held really did depend on the shelf. | Loose |
 | no assembly; nothing waits for a vote | The scholarly world had no governing body; the Museum was a royal foundation and its scholars answered to the king†. | Loose |
 
