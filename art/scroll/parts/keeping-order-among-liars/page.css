@@ -1,0 +1,59 @@
+/* ---------- two copies of a service ---------- */
+.logs{padding:18px 18px 14px}
+.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
+.copies{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.copy{border:3px solid var(--ink);background:#fff;padding:8px 10px;font-family:var(--sans);font-size:.82rem;min-height:9.5em}
+.copy h5{margin:0 0 6px;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#6b5a48}
+.copy .e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both}
+.copy .fin{margin-top:6px;font-weight:700;font-size:1rem}
+.copy.bad{background:#fde8de}
+.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:3.6em;font-style:italic}
+/* ---------- the crown figure and its controls ---------- */
+.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
+.site.out{opacity:.35}
+.site.gone{display:none}
+.site.turn rect{stroke-width:7}
+.site.shared rect{stroke:#136f9e;stroke-width:7}
+.site.sus rect{stroke:#bf4a26;stroke-width:5;stroke-dasharray:7 4}
+.site .state{font-family:var(--serif);font-weight:400;font-style:italic;font-size:14px;fill:#1c1512;text-anchor:middle}
+.stand{font-family:var(--sans);font-size:.88rem;border:3px solid var(--ink);background:#fff;padding:8px 12px;margin-bottom:10px}
+.stand div{padding:2px 0}
+.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0}
+.counts span b{font-size:1.4rem;margin-right:5px}
+.pick{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 0}
+.pick .plab{font-family:var(--sans);font-size:.78rem;color:#6b5a48;flex:0 0 100%}
+.pick .btn{padding:6px 12px;font-size:.82rem}
+.pick .btn.alt[aria-pressed=false]{opacity:.85}
+.st-new{animation:rowin .6s both}
+@keyframes rowin{from{opacity:0}}
+.req{display:grid;gap:4px}
+.req .rq{padding:3px 8px;border-left:6px solid var(--ink);background:#f6eed6;font-size:.84rem}
+.req .rq.yes{background:#e3ecc4}
+/* ---------- the four posts beside the stage ---------- */
+.side.four .hc{min-height:0}
+.side.four .hc h5{align-items:center}
+.side.four .hc i.dot{display:inline-block;width:.8em;height:.8em;border-radius:50%;border:1.5px solid var(--ink);margin-right:5px}
+.side.four .hc.done{background:#e3ecc4}
+.side.four .hc.dim{opacity:.6}
+.side.four .hc .chk{min-height:2.6em}
+@media(max-width:899px){
+  .side.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .side.four .hc .chk{min-height:0}
+}
+/* ---------- terms, as a run of sandglasses ---------- */
+.terms-list{display:grid;gap:5px;margin-top:12px}
+.trow{display:grid;grid-template-columns:5.2rem minmax(0,1fr);gap:2px 10px;align-items:center;font-family:var(--sans);font-size:.8rem;border:3px solid var(--ink);background:#fff;padding:5px 8px;animation:slotin .35s ease both}
+.trow b{font-size:.8rem}
+.trow .gl{display:block;height:10px;background:#f6eed6;border:2px solid var(--ink)}
+.trow .gl i{display:block;height:100%;background:#9cb648}
+.trow em{grid-column:1/-1;font-style:normal;font-size:.78rem;color:#6b5a48}
+.trow.ok{background:#e3ecc4}
+.trow.ok em{color:#2f5a1c}
+.trow.wind .gl i{background:#6583d6}
+.trow.short .gl i{background:#e0b84a}
+.trow.more{border-style:dashed;text-align:center;display:block}
+/* ---------- the allowed numbers ---------- */
+.meter{height:16px;border:3px solid var(--ink);background:#fff;margin-top:12px}
+.meter i{display:block;height:100%;width:0;background:#6583d6;transition:width .4s}
+.meter.full i{background:#c45448}
