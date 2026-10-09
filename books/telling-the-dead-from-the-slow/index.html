@@ -325,6 +325,8 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
 @media(max-width:899px){#strongside{grid-template-columns:repeat(2,minmax(0,1fr))!important}.side .tally{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:520px){.chead.t{display:none}.crow.t{grid-template-columns:auto 1fr 1fr}.crow.t .tally{grid-column:1/-1}.crow.t>span:nth-child(5){grid-column:2/-1}}
 @media(max-width:520px){.chead{display:none}.crow{grid-template-columns:auto 1fr}.crow>span[data-l]{grid-column:1/-1}.crow>span[data-l]::before{content:attr(data-l) ": ";color:#6b5a48;font-size:.74rem}.chead{border-bottom:0}.crow:first-of-type{border-top:3px solid var(--ink)}}
+/* on a phone the table of slates scrolls sideways inside its own box instead of being cut off */
+@media(max-width:560px){table.kinds{display:block;overflow-x:auto;max-width:100%}}
 </style>
 </head>
 <body>
