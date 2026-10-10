@@ -94,7 +94,6 @@ page = f'''<!DOCTYPE html>
       <h1>{h1}</h1>
       <p class="hook">{sub}</p>
       <p class="pub">{pub}</p>
-      <div class="scrollcue"><b>↓</b> Scroll. Things unfold.</div>
     </div>
     <div class="pop" data-auto>
       <div class="leaf">

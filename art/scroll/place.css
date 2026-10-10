@@ -32,7 +32,31 @@ table.chron td:first-child{width:32%}
 a.cardlink{display:block;color:inherit;text-decoration:none;height:100%}
 a.cardlink:focus-visible{outline:3px solid var(--aegean-d);outline-offset:4px}
 .card3.tall .photo{aspect-ratio:3/4}
-.cards3.books{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+/* book cards: the row is as many columns as there are books, so no row ends in a blank cell; five stand three over two, the two centred */
+.cards3.books{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(min-width:861px) and (max-width:999px){.cards3.books:has(>:nth-child(4):last-child){grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1000px){.cards3.books:has(>:nth-child(4):last-child){grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(min-width:861px){
+  .cards3.books:has(>:nth-child(5):last-child){grid-template-columns:repeat(6,minmax(0,1fr))}
+  .cards3.books:has(>:nth-child(5):last-child)>*{grid-column:span 2}
+  .cards3.books:has(>:nth-child(5):last-child)>:nth-child(4){grid-column:2/span 2}
+}
+/* narrower windows: two to a row, then one, with a shallower picture so a card is not a screen tall */
+@media(max-width:860px){.cards3.books{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){
+  .cards3.books{grid-template-columns:minmax(0,1fr)}
+  .cards3.books .card3.tall .photo{aspect-ratio:4/3}
+}
+/* ---------- setting pages: spreads sit closer, and on a wide window a text spread puts its heading in a rail beside the text ---------- */
+body:has(#cover.place) .spread:not(#cover){padding-top:clamp(3.4rem,7vw,5.4rem);padding-bottom:clamp(3.4rem,7vw,5.4rem)}
+body:has(#cover.place) .spread h2{font-size:clamp(1.7rem,2.9vw,2.3rem)}
+@media(min-width:900px){
+  .wrap:has(>h2+.prosecol){display:grid;grid-template-columns:minmax(0,3fr) minmax(0,7fr);column-gap:clamp(24px,4vw,56px);align-items:start}
+  .wrap:has(>h2+.prosecol)>*{grid-column:2}
+  .wrap:has(>h2+.prosecol)>h2{grid-column:1;font-size:clamp(1.7rem,2.9vw,2.3rem);margin:.15rem 0 0;position:sticky;top:76px}
+  .wrap:has(>h2+.prosecol)>.pop{grid-column:1/-1;margin-top:1.2rem}
+  .wrap:has(>h2+.prosecol)>.map{margin:1.2rem 0 0}
+}
 /* ---------- the home page ---------- */
 #cover.home .photo{aspect-ratio:1/1;max-height:none;background:#e9dcb6}
 #cover.home h1{font-size:clamp(2.2rem,5.6vw,4.4rem)}
@@ -61,3 +85,22 @@ a.cardlink:focus-visible{outline:3px solid var(--aegean-d);outline-offset:4px}
 @media(max-width:520px){.setting-card{grid-template-columns:76px minmax(0,1fr);gap:0 14px}}
 .card3 .q{font-style:italic}
 .card3 .how{margin-top:.6rem!important;font-size:.9rem!important;color:#3a2d24}
+/* ---------- the papers list: a short cover with no picture, then the table ---------- */
+#cover.brief{min-height:0;padding-bottom:clamp(2.6rem,6vw,4.2rem)}
+#cover.brief .hook{max-width:30em;margin:0}
+#papers{padding-top:clamp(3rem,6vw,4.4rem)}
+#papers .well{margin-top:0}
+table.chron a{color:var(--aegean-d)}
+table.chron.papers td:first-child{width:2.4em;color:#6b5a48;font-weight:400}
+table.chron.papers td:nth-child(2){width:4em;font-family:var(--sans);white-space:nowrap}
+table.chron.papers td:nth-child(4){width:30%}
+table.chron .where{display:block;font-size:.84rem;color:#6b5a48}
+table.chron br{display:none}
+#papers .prosecol{margin-top:2rem}
+#papers .prosecol ul{padding-left:1.2em;margin:0}
+#papers .prosecol li{margin-bottom:.5rem}
+@media(max-width:700px){
+  table.chron.papers td:first-child,table.chron.papers td:nth-child(2){display:inline;font-size:.78rem;letter-spacing:.08em;color:var(--blood);font-family:var(--sans);font-weight:700}
+  table.chron.papers td:first-child::after{content:" · "}
+  table.chron.papers td:nth-child(3){padding-top:4px}
+}
