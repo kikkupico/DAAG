@@ -72,10 +72,10 @@ Copy the markup from a model's `body.html`. The spreads, in order:
 1. **Top bar** (`.bar`): only `← The Books`, the section name (`#now`) and the progress line.
 2. **Cover** (`header.spread.dark#cover`): four pieces of text and no more, beside the cover
    picture (`img/cover.jpg`, 3:4). The title alone in the `h1`, with no subtitle. `.generic`:
-   the problem and its solution in plain distributed-systems words, two or three sentences, no
-   symbols. `.allegory`: the same problem and solution in the setting's words, two or three
-   sentences. `.source`: `After <every author by full name>, <i>paper title</i>, <year>`, the
-   papers separated by ` · `, as small print.
+   the question from the book's card on the home page (its `.q`), word for word. `.allegory`:
+   the card's `.how` line, word for word. `.source`: the papers the card credits, written out as
+   `After <every author by full name>, <i>paper title</i>, <year>`, separated by ` · `, as
+   small print.
 3. **In machine terms** (`section#machines`): the paper's problem and result in plain
    distributed-systems words, three `.terms` bullets at most, and one small interactive that
    shows the difficulty with machines. Apart from the cover's `.generic` line, this is the only
