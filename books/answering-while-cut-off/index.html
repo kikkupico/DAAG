@@ -350,6 +350,11 @@ button.beg{cursor:pointer}
 .dtab td,.dtab th{padding:6px;border-top:2px solid #1c151222;text-align:left}
 .dtab th{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48}
 .side .hc .rc{font-size:.8rem}
+.tell{max-width:40em;margin-top:1.6rem}
+.tell+.tell{margin-top:0}
+.cards3.pair{grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px}
+@media(max-width:860px){.cards3.pair{grid-template-columns:1fr}}
+.card3 h3:last-child{margin-bottom:0}
 </style>
 </head>
 <body>
@@ -387,13 +392,13 @@ button.beg{cursor:pointer}
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>Many copies, one service</h2>
-      <p class="lede">A service keeps copies of its data on several machines, and clients may ask any of them.</p>
+      <p class="lede">A service keeps copies of its data on several machines, and clients may read or write at any of them.</p>
+      <p>Three things are wanted of such a service. Every read should see the latest completed write, as if there were one copy. Every request to a working machine should be answered. And both should hold although the network may lose messages, even every message between two groups of machines.</p>
       <ul class="terms">
-        <li><b>Three wishes.</b> Every read sees the latest completed write, as if there were one copy. Every request to a working machine is answered. And all this holds although the network may lose messages, even every message between two groups of machines.</li>
         <li><b>Brewer</b> (2000) conjectured, and <b>Gilbert and Lynch</b> (2002) proved: no service can have all three. When the network splits, a part must refuse some requests or answer from a copy that may be stale.</li>
         <li><b>Gilbert and Lynch</b> (2012): this is one case of a wider fact. A promise that nothing goes wrong and a promise that something happens cannot always both be kept.</li>
       </ul>
-      <p style="margin-top:1.2rem">This edition tells it with four mercenaries, their ravens, and a plan they keep between them.</p>
+      <p style="margin-top:1.2rem">So the choice comes when the network splits, and what is left to settle is which wish to give up and for how long. We tell it with four mercenaries, their ravens, and a plan they keep between them.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper logs">
@@ -421,11 +426,11 @@ button.beg{cursor:pointer}
     <div class="hall-title"><div class="t">
       <div class="kicker">The foot of Mount Phyle</div>
       <h2>Four tents, out of sight of one another</h2>
-      <p>Four mercenaries are camped at the foot of the hill, one to a tent, under nobody's command.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> They must all attack or all hold. Bandits hold the top.</p>
+      <p>Four mercenaries are camped at the foot of Mount Phyle, one to a tent and under nobody's command.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> Bandits hold the top of the hill, and the four must all attack or all hold. The tents cannot see one another, so word passes between them only by raven.</p>
     </div></div>
-    <div class="pin pop" style="left:50%;top:44%;"><div class="leaf"><b>A known flight</b>No wind blows. A raven that arrives does so within a span all four know.</div></div>
-    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>A hawk may take any bird</b>Nobody sees it taken. The bird never arrives.</div></div>
-    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>Nobody stops, nobody commits</b>Nobody lies, and nothing is decided. The four only keep a plan.</div></div>
+    <div class="pin pop" style="left:50%;top:44%;"><div class="leaf"><b>A known flight</b>No wind blows on these nights, so a raven that arrives does so within a span that all four know.</div></div>
+    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>A hawk may take any bird</b>A hawk may take a raven in the folds of the hill. Nobody sees it taken, and the bird never arrives.</div></div>
+    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>Nobody stops, nobody commits</b>On these nights no man stops, no man lies, and nothing is decided. The four only keep a plan and answer one another about it.</div></div>
   </div>
 </section>
 
@@ -435,9 +440,10 @@ button.beg{cursor:pointer}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">A plan to keep</div>
       <h2>The standing plan</h2>
-      <p class="lede">The four keep a standing plan: the answer they mean to commit to, as things stand. At dusk it is hold.</p>
-      <p>Any man who sees something on their side of the hill may move the plan to the other answer, and any man may ask which plan stands. Each tent keeps its own note of it. A move is done when the man who made it is told it stands. A question is done when the man who asked is told attack or hold. Nobody commits in this book, and nothing follows from which plan stands.</p>
-      <p>What is different about these nights? A hawk may take a raven in the folds, and it never arrives. A man waiting on a bird learns it was lost only when longer than any flight has passed and it has not come, and even then learns nothing of what it carried. On some nights every bird between one tent and the other three is lost, for as long as the hawks keep to that fold. That tent is <b>cut off</b>.</p>
+      <p class="lede">Until they commit, the four keep a standing plan: the answer they mean to commit to, as things stand. At dusk it is hold.</p>
+      <p>Any man who sees something on their side of the hill may move the plan to the other answer, and any man may ask which plan stands. Each tent keeps its own note of it. A move is done when the man who made it is told it stands, and a question is done when the man who asked is told attack or hold. Nobody commits in this book, and nothing follows from which plan stands. What matters here is only what each man is told.</p>
+      <p>These nights differ from the others at the camps in one thing: a raven can be lost. A hawk may take it in the folds, and it never arrives. Nobody sees a bird taken, so a man waiting on a bird learns it was lost only when longer than any flight has passed and it has not come, and even then learns nothing of what it carried. On some nights every bird between one tent and the other three is lost, for as long as the hawks keep to that fold. That tent is <b>cut off</b>.</p>
+      <p>Send a bird below with no hawks about, and it lands within a flight. Then bring the hawks to tent 4's fold, send a bird from tent 2 to tent 4, and let a flight pass. Number 4 learns that a bird was lost, and nothing more.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Ravens and hawks <em>send a bird and see what comes</em></h4>
@@ -458,7 +464,7 @@ button.beg{cursor:pointer}
       </div>
     </div></div></div>
     <div class="narrow" style="margin:1.6rem 0 0">
-      <p>On the night this book is about, tent 4 is cut off. Number 4 is alive and well and in the tent. They want to know which plan stands, and they want to know now. <b>What should they be told? And what, exactly, do the four owe a man who asks?</b></p>
+      <p class="tell" style="margin-top:0">On the night this book is about, tent 4 is cut off. Number 4 is alive and well and in the tent, wants to know which plan stands, and wants to know now. <b>Something has to be said to Number 4, and the four have not yet settled what they owe a man who asks.</b></p>
     </div>
   </div>
 </section>
@@ -471,14 +477,16 @@ button.beg{cursor:pointer}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Two debts, and a condition</div>
       <h2>What the four owe each other</h2>
-      <p class="lede">The four owe a man who asks two things, and they must pay while birds can be lost.</p>
+      <p class="lede">What the four owe a man who asks comes to two debts, and both must be paid while birds can be lost.</p>
+      <p>The first debt is about what an answer says, and the second is about getting an answer at all. The condition is the hawks.</p>
     </div>
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First debt</div><h3>Answering as one</h3><p>Each tent keeps its own note, but the plan behaves as one plan. Every move and every question, at all four tents, fits one order in which a single record would have given every answer, each taking effect at a moment within its own span, and anything finished before another began coming first.<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One: The Rule of the Board">*</a></sup> If Number 2 has moved the plan to attack and been told it stands, a man who asks afterwards must hear attack, or a later move.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second debt</div><h3>Every man is answered</h3><p>A man who asks, or moves the plan, is answered in the end, from what their tent holds. No limit is set on how soon, only that the answer come.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The condition</div><h3>Birds may be lost</h3><p>A hawk may take any bird, on any night. The two debts must be paid all the same.</p></div></div></div>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+    <p class="tell" style="margin-top:2.4rem">Two ways of answering look safe, and each leaves one debt unpaid. Suppose Number 2 has moved the plan to attack and been told it stands, and Number 3 asks afterwards. A tent that says hold to every question has answered, but wrongly whenever attack stands. A tent that waits until the hawks leave has said nothing wrong and has not answered either, since the hawks may stay all night. Try both below.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>Two ways to answer badly <em>Number 3 asks</em></h4>
       <div class="hill-wrap">
         <svg class="isle-svg fig" id="owesvg" role="img" aria-label="The hill from above: tent 2 has moved the plan to attack and tent 3 holds a note saying hold"></svg>
@@ -496,8 +504,8 @@ button.beg{cursor:pointer}
     </div></div></div>
     <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center;margin-top:2.4rem">
       <div>
-        <p>On these nights each tent has a sandglass. The glasses run alike, so a man can measure how long they have waited, but no man can tell what another's glass shows. No wind blows, so a bird that arrives does so within a known flight, as on a windy night once the wind has dropped,<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s2" title="Agreeing When Messages Run Late: Glasses and Late Birds">*</a></sup> here from the start. The wind comes back at the end of the book.</p>
-        <p><b>Answering as one, and answering every man, while birds can be lost. Can the four promise all three?</b></p>
+        <p>The four have two things in their favour on these nights. Each tent has a sandglass. The glasses run alike, so a man can measure how long they have waited, though no man can tell what another's glass shows. And no wind blows, so a bird that arrives does so within a known flight. That is the calm of a windy night once the wind has dropped,<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s2" title="Agreeing When Messages Run Late: Glasses and Late Birds">*</a></sup> and here it holds from the start. The wind comes back at the end of the book.</p>
+        <p class="tell">That makes three things to promise together: answering as one, answering every man, and doing both while birds can be lost. <b>Whether the four can promise all three is still open.</b></p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/c02-glass.jpg" alt="Close up of a tent's sandglass standing on the lid of an iron-bound wooden chest: two glass bulbs between turned wooden posts, the sand half run through, with limestone and the edge of a linen tent soft behind" loading="lazy"></div></div></div>
     </div>
@@ -520,8 +528,9 @@ button.beg{cursor:pointer}
     <div class="narrow">
       <div class="kicker">The first result</div>
       <h2>The cut-off tent</h2>
-      <p class="lede">The four cannot promise all three: answering as one, answering every man, and carrying on while birds can be lost. They may have any two. The impossibility was first put as a claim, and only later proved.</p>
-      <p><b>The Cut-Off Tent.</b> When birds can be lost, no arrangement of the four can both answer every man and answer as one, even with a known flight and glasses in every tent. Scroll through two nights.</p>
+      <p class="lede">The four cannot promise all three. Of answering as one, answering every man, and carrying on while birds can be lost, they may have any two. The impossibility was first put as a claim, and only later proved.</p>
+      <p><b>The Cut-Off Tent.</b> When birds can be lost, no arrangement of the four can both answer every man and answer as one, even with a known flight and glasses in every tent.</p>
+      <p>The proof takes two nights that begin alike, with the plan at hold and tent 4 cut off. On the first Number 2 moves the plan, and on the second nobody does. Scroll through them, and watch what Number 4 has to go on each night: the note in the tent, the glass, and whatever birds have come in.</p>
     </div>
   </div>
   <div class="scrolly" id="cut">
@@ -534,14 +543,14 @@ button.beg{cursor:pointer}
       <div class="step"><div class="card"><div class="num">2 · The first night</div><h3>Number 2 moves the plan</h3><p>Number 2 moves the plan to attack. Every man is answered, so Number 2 is told it stands. Whatever birds go to tent 4 are lost. Nothing else happens anywhere.</p></div></div>
       <div class="step"><div class="card"><div class="num">3 · The second night</div><h3>Nobody moves the plan</h3><p>The same dusk, and nothing happens anywhere for at least as long as the first night's move took. Then Number 4 asks which plan stands, and is answered. Nobody moved it, so a single record says hold.</p></div></div>
       <div class="step"><div class="card"><div class="num">4 · Put together</div><h3>Both nights at once</h3><p>Let the first night happen among the three and the second at tent 4. Nothing reaches tent 4 in either. Number 4 has the same note, the same glass and no bird, and asks after Number 2's move was finished.</p></div></div>
-      <div class="step"><div class="card"><div class="num">5 · So</div><h3>Number 4 says hold</h3><p>Number 4 cannot tell this from the second night, so says what they said there: hold. But Number 2's move was finished before they asked, and a single record would say attack. The arrangement does not answer as one.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · So</div><h3>Number 4 says hold</h3><p>Number 4 cannot tell this from the second night, so says what was said there: hold. But Number 2's move was finished before Number 4 asked, and a single record would say attack. The arrangement does not answer as one.</p></div></div>
     </div>
   </div>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <p><b>Would a known flight help, or glasses that run alike?</b> The proof gave the four both. What Number 4 lacks is news, and no amount of waiting brings a lost bird.</p>
-      <p><b>Did the proof need tent 4 alone?</b> No. With any division of the four into two sides the argument is the same.</p>
-      <p><b>Did Number 4 answer badly?</b> No. On the second night hold is exactly right. Number 4 must say the same on both nights, and the two nights want different answers.</p>
+      <p>Number 4 did not answer badly. Everything on Number 4's side of the lost birds is the same on both nights, so Number 4 must give the same answer on both. On the second night hold is exactly right. The two nights want different answers, and the answer that is right on the second breaks answering as one on the first.</p>
+      <p>A known flight and glasses that run alike were both given to the four in the proof, and neither helped. What Number 4 lacks is news, and no amount of waiting brings a lost bird. Nor does the proof need tent 4 to be alone. With any division of the four into two sides the argument is the same.</p>
+      <p class="tell">So the four cannot have all three. Which two they may keep, and by what arrangement, is the next thing to settle.</p>
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
@@ -579,15 +588,17 @@ button.beg{cursor:pointer}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Any two of the three</div>
       <h2>The keeper's arrangement</h2>
-      <p class="lede">The four can have any two, and one arrangement does most of the work. Let one tent keep the standing plan: say tent 1.</p>
-      <p>Number 1 has the only true note. A man at any other tent who moves the plan or asks sends a bird to tent 1 and waits. Number 1 changes the note or reads it, and sends the answer back. Only then is the man answered. The keeper deals with birds one at a time, in the order taken in.</p>
+      <p class="lede">The four can keep any two of the three, and one arrangement does most of the work. Let one tent keep the standing plan: say tent 1.</p>
+      <p>Number 1 then has the only true note. A man at any other tent who moves the plan or asks sends a bird to tent 1 and waits. Number 1 changes the note or reads it, and sends the answer back. Only then is the man answered. The keeper deals with birds one at a time, in the order taken in, so every move and every question falls into one order, the same whichever tent it came from. Every answer is read from the one note in that order, which is what answering as one asks for.</p>
+      <p>Each pair of the three then has its arrangement.</p>
     </div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Answering as one, while birds can be lost</div><h3>The keeper's arrangement</h3><p>When tent 4 is cut off, Number 4's bird does not arrive and they are not answered. Every answer that is given is right. When no bird is lost, every man is answered.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Answering as one and every man, while no bird is lost</div><h3>The same arrangement</h3><p>Every bird reaches the keeper and every answer comes back.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Answering every man, while birds can be lost</div><h3>Each from their own note</h3><p>Every man is answered at once, and answering as one is given up. In the worst case a man who has heard nothing since dusk says hold all night.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Answering as one, while birds can be lost</div><h3>The keeper's arrangement</h3><p>When tent 4 is cut off, Number 4's bird does not arrive and Number 4 is not answered, so the tent in effect falls silent. Every answer that is given is right. When no bird is lost, every man is answered.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Answering as one and every man, while no bird is lost</div><h3>The same arrangement</h3><p>This pair asks for nothing new. With no bird lost, every bird reaches the keeper and every answer comes back.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Answering every man, while birds can be lost</div><h3>Each from their own note</h3><p>Let each man answer from their own note, whatever it says. Every man is answered at once, and answering as one is given up. In the worst case a man who has heard nothing since dusk says hold all night.</p></div></div></div>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+    <p class="tell" style="margin-top:2.4rem">The three nights below put the same business to each arrangement: Number 2 moves the plan to attack, and Number 4 asks later. Choose a night and watch which of the three things is kept, and which is given up or goes untested.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>Three nights <em>Number 2 moves the plan to attack; Number 4 asks later</em></h4>
       <div class="hill-wrap">
         <svg class="isle-svg fig" id="keepsvg" role="img" aria-label="The hill from above with tent 1 marked as the keeper"></svg>
@@ -600,7 +611,7 @@ button.beg{cursor:pointer}
         <button class="btn alt" id="kp3">Own notes, hawks at tent 4</button>
       </div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem"><b>Most nights no fold has hawks in it. Must the four give up answering as one on every night, just because birds may be lost on some?</b></p>
+    <p class="tell">Each of these choices is made once and kept every night. A camp that answers from its own notes can be wrong on a night when every bird arrives. <b>Most nights no fold has hawks in it</b>, and the four would be giving up answering as one on all of them because birds may be lost on some.</p>
     <details class="proof">
       <summary>The keeper's arrangement, stated formally</summary>
       <ol class="proofsteps">
@@ -634,15 +645,16 @@ button.beg{cursor:pointer}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">A glass to wait</div>
       <h2>Waiting a glass</h2>
-      <p class="lede">The four need not give up answering as one on every night. On a night with no hawks the keeper's arrangement gives answering as one and an answer for every man.</p>
-      <p>The four want to lose answering as one only while birds are actually being lost, and to answer every man throughout. Because a bird that arrives does so within a known flight, they can.</p>
+      <p class="lede">The four need not give up answering as one on every night. On a night with no hawks the keeper's arrangement already gives answering as one and an answer for every man.</p>
+      <p>What the four want is to lose answering as one only while birds are actually being lost, and to answer every man throughout. They can, because a bird that arrives does so within a known flight. A man who has waited two flights and the keeper's time to answer, and has heard nothing, knows that a bird was lost and can stop waiting. Three rules make use of that.</p>
     </div>
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First</div><h3>Turn a glass</h3><p>A man who moves the plan or asks sends a bird to the keeper and turns a glass that runs for two flights and the keeper's time to answer.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second</div><h3>The answer comes in time</h3><p>If the keeper's answer comes before the glass runs out, the man takes it.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third</div><h3>The glass runs out first</h3><p>The man answers from their own note. A question gets the latest plan the keeper has sent them, unless they have themselves moved the plan since, and then it gets their own move. A move is told it stands.</p></div></div></div>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+    <p class="tell" style="margin-top:2.4rem">Earlier on the night below Number 2 moved the plan to attack, and tent 4's note still says hold. Bring the hawks to tent 4's fold and let Number 4 ask or move the plan, and watch the glass run out. With no hawks about, the keeper's answer comes before it does.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>The glass <em>earlier tonight Number 2 moved the plan to attack</em></h4>
       <div class="hill-wrap">
         <svg class="isle-svg fig" id="glasssvg" role="img" aria-label="The hill from above with tent 1 marked as the keeper"></svg>
@@ -661,9 +673,10 @@ button.beg{cursor:pointer}
       </div>
     </div></div></div>
     <div class="narrow" style="margin:1.6rem 0 0">
-      <p><b>Why does it work?</b> When no bird is lost, no glass runs out, and this is the keeper's arrangement, which answers as one. When a bird is lost, the glass runs out and the man answers anyway, so every man is always answered. On any night on which no bird is lost, every answer is as one. This does not break the Cut-Off Tent: on its first night Number 4's glass runs out and they say hold, as that result says any arrangement answering every man must. What waiting a glass buys is that this happens only on nights when birds are actually lost.</p>
-      <p><b>Does it buy anything afterwards?</b> Nothing. If Number 4 moved the plan while cut off, the keeper never heard of it, and nothing here tells them. Long after the hawks have gone, the others are told a plan Number 4 has moved away from. The promise is about whole nights, not about the glasses after a loss.</p>
-      <p><b>The hawks left long ago, and a man's note may still be hours behind. Can the four promise that the damage ends?</b></p>
+      <p>Waiting a glass works for a plain reason. When no bird is lost, no glass runs out, and the arrangement is the keeper's, which answers as one. When a bird is lost, the glass runs out and the man answers anyway, so every man is always answered. On any night on which no bird is lost, then, every answer is as one.</p>
+      <p>The Cut-Off Tent still stands. On its first night Number 4's glass runs out and Number 4 says hold, as that result says any arrangement answering every man must. What waiting a glass buys is that this happens only on nights when birds are actually lost.</p>
+      <p>Waiting a glass buys nothing after a loss. If Number 4 moved the plan while cut off, the keeper never heard of it, and nothing here tells the keeper. Long after the hawks have gone, the others are told a plan Number 4 has moved away from. The picture shows it: move the plan from tent 4 under the hawks, send the hawks away, and let Number 2 ask. The promise covers whole nights on which no bird is lost, and says nothing about the glasses that follow a loss.</p>
+      <p class="tell" style="margin-top:0"><b>The hawks may have left long ago, and a man's note may still be hours behind.</b> What the four lack is a promise that the damage ends.</p>
     </div>
     <details class="proof">
       <summary>Waiting a glass, stated formally</summary>
@@ -684,8 +697,8 @@ button.beg{cursor:pointer}
     <div class="narrow">
       <div class="kicker">The damage ends</div>
       <h2>How stale, and for how long</h2>
-      <p class="lede">The four can promise the damage ends, and the promise has a span of time in it, fixed in advance and measured by the glass. A loss does its damage only while it lasts and for the span after. How long do the hawks stay? Nobody can promise that. The four promise only how long they take to catch up.</p>
-      <p>At the camps birds come in any order, so a man cannot count on an earlier bird arriving first. Every bird a man sends the keeper carries, before anything else, all the moves they have made that the keeper has not yet acknowledged, in the order they made them. The keeper numbers each move that reaches them, and every bird from the keeper carries the plan and its number. Scroll to watch Number 4 mend the damage.</p>
+      <p class="lede">The four can promise the damage ends, and the promise has a span of time in it, fixed in advance and measured by the glass. A loss does its damage only while it lasts and for the span after. Nobody can promise how long the hawks stay. The four promise only how long they take to catch up.</p>
+      <p>Catching up means that a move made without the keeper reaches the keeper, and then every tent. At the camps birds come in any order, so a man cannot count on an earlier bird arriving first. Every bird a man sends the keeper therefore carries, before anything else, all the moves that man has made that the keeper has not yet acknowledged, in the order they were made. The keeper numbers each move as it comes in, and every bird from the keeper carries the plan and its number, so that a man can keep the highest-numbered plan to have come. Scroll to watch a move that Number 4 made while cut off find its way round.</p>
     </div>
   </div>
   <div class="scrolly" id="span">
@@ -704,8 +717,8 @@ button.beg{cursor:pointer}
   </div>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <p><b>The Span.</b> The keeper's arrangement with a span answers every man, answers as one on any night on which no bird is lost, and on every night keeps the promise of the span.</p>
-      <p><b>What does the picture not show?</b> All through the loss, the three went on moving and asking through the keeper. Take Number 2 moving the plan to hold while Number 4, cut off, moves it to attack. For a while two men are each told a different plan stands, and no promise about when they learn of it undoes that.</p>
+      <p><b>The Span.</b> The keeper's arrangement with a span answers every man, answers as one on any night on which no bird is lost, and on every night keeps the promise of the span. The damage lasts only as long as the loss and a span after.</p>
+      <p>The picture leaves one thing out. All through the loss, the three went on moving and asking through the keeper. Take Number 2 moving the plan to hold while Number 4, cut off, moves it to attack. The keeper numbers both once Number 4's bird arrives, and the plan ends at whichever move was numbered later, so the promise is kept. For a while, though, two men are each told a different plan stands, and no promise about when they learn of it undoes that. Step through it below.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.4rem">
       <h4>Two men move the plan <em>the plan stood at attack, number 1</em></h4>
@@ -713,6 +726,7 @@ button.beg{cursor:pointer}
       <p class="say" id="twosay"></p>
       <div class="row"><button class="btn" id="twonext">Next</button><button class="btn alt" id="tworeset">Start again</button></div>
     </div></div></div>
+    <p class="tell">Every part of this leaned on a known flight: the glass that runs out, the birds sent again often enough, and the span itself. A windy night has no known flight, and what is left of the promise then has still to be seen.</p>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
     <details class="proof">
@@ -773,13 +787,14 @@ button.beg{cursor:pointer}
       <div>
         <div class="kicker">Everything leaned on a known flight</div>
         <h2>When the flight has no bound</h2>
-        <p class="lede">Does waiting a glass survive a wind? No. A glass that runs out means a bird was lost only because there is a known flight.</p>
+        <p class="lede">A known flight is what a wind takes away, and waiting a glass does not survive it. A glass that runs out means a bird was lost only because there is a known flight.</p>
         <p>On a windy night there is none. A bird may sit in the pines for any time, and a man who has waited any length of time cannot tell a lost bird from a slow one.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s1" title="Agreeing When Messages Run Late: A Windy Night">*</a></sup> Then something stronger is true.</p>
         <p><b>The Wind.</b> If flights have no bound, no arrangement that answers every man can answer as one even on the nights when no bird is lost.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on top, pines on the slopes, small white tents among them and the sea beyond" loading="lazy"></div></div></div>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+    <p class="tell" style="margin-top:2.4rem">The two windy nights below look the same from tent 4. On one a hawk takes Number 4's bird, and on the other the bird sits out the wind in a pine. Let Number 4 ask and wait, have Number 4 answer, and then let the night go on.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>Two windy nights <em>seen from tent 4</em></h4>
       <div class="worlds">
         <div class="world"><h5>One night</h5><svg class="isle-svg fig" id="windA" role="img" aria-label="The hill from above: a raven from tent 4 toward tent 1"></svg><p id="wcapA">Suppose a hawk takes the bird.</p></div>
@@ -793,6 +808,7 @@ button.beg{cursor:pointer}
         <button class="btn alt" id="windreset">Start again</button>
       </div>
     </div></div></div>
+    <p class="tell">On the second night no bird was lost, and the wrong answer was given all the same. Number 4 had to answer before the slow bird landed, and could not tell that night from the first. So in a wind an arrangement that answers every man can be wrong even on a night when every bird arrives. The results go no further than this, and it is worth marking where they stop.</p>
     <details class="proof">
       <summary>Proof · that in a wind, answering as one cannot even be promised when nothing is lost</summary>
       <p class="given">In the paper's terms a night is an execution, and in the asynchronous model there is no bound on message delay. <b>Corollary 1.1.</b> No algorithm that guarantees availability in every execution guarantees atomic consistency in every execution in which no message is lost.</p>
@@ -818,12 +834,13 @@ button.beg{cursor:pointer}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Four questions</div>
       <h2>What being cut off does not say</h2>
+      <p class="tell">The Cut-Off Tent is easily taken for more than it says. Four questions mark where it stops.</p>
     </div>
     <div class="cards4">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is this the camps' impossibility?</h3><p>No. With one man who may fall silent and no longest flight, the four cannot be sure of ever committing.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup> That has the same shape as this result: something that must never go wrong, and something that must in the end happen, which cannot both be promised. But neither result gives the other. There, no bird is lost and one man may stop. Here, no man stops and birds are lost instead.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is it about a dead man?</h3><p>No. A man who has stopped owes no one an answer. Number 4 is alive and wants to know. That is why the question has to be put to tent 4 at all.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it cover everything the four know?</h3><p>No: a thing that needs no news is outside it. Which number each tent bears never changes, and any man, cut off or not, can say so and be right. The result is about a plan that can be moved, where one tent needs news of the others.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Must the four choose once for all?</h3><p>No. They may answer as one for the standing plan and answer at once for something that matters less, or answer questions from their own notes while moves wait for the keeper. Each such division gives up a little of both, and each is still bound by the Cut-Off Tent wherever a man answers from a note that may be behind.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is this the camps' impossibility?</h3><p>The camps' impossibility is a different result. With one man who may fall silent and no longest flight, the four cannot be sure of ever committing.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup> That has the same shape as the Cut-Off Tent: something that must never go wrong, and something that must in the end happen, which cannot both be promised. But neither result gives the other. There, no bird is lost and one man may stop. Here, no man stops and birds are lost instead.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is it about a dead man?</h3><p>The result is about a living man. A man who has stopped owes no one an answer. Number 4 is alive and wants to know, and that is why the question has to be put to tent 4 at all.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it cover everything the four know?</h3><p>A thing that needs no news is outside the result. Which number each tent bears never changes, and any man, cut off or not, can say so and be right. The result is about a plan that can be moved, where one tent needs news of the others.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Must the four choose once for all?</h3><p>The four need not choose once for all. They may answer as one for the standing plan and answer at once for something that matters less, or answer questions from their own notes while moves wait for the keeper. Each such division gives up a little of both, and each is still bound by the Cut-Off Tent wherever a man answers from a note that may be behind.</p></div></div></div>
     </div>
   </div>
 </section>
@@ -836,7 +853,7 @@ button.beg{cursor:pointer}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The camp was a service of copies</h2>
-      <p class="lede">Every tent is a machine holding a copy, and every raven a message. Hover or tap to see who is who.</p>
+      <p class="lede">Read the foot of the hill again with machines in the tents. Every tent is a machine holding a copy of the data, every raven is a message, and a cut-off tent is a part of the network that no message reaches or leaves. Hover over a row, or tap it, to see who is who.</p>
     </div>
     <div class="map" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">At the foot of the hill</div><div></div><div class="hd">In the machine room</div>
