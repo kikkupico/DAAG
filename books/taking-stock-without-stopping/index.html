@@ -322,6 +322,11 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
 .btn.on{background:var(--gold);color:var(--ink)}
 .quote{font-style:italic;font-size:clamp(1.1rem,2.6vw,1.5rem);max-width:28em;margin:2rem 0 0;border-left:5px solid var(--blood);padding-left:16px}
 .stack{display:grid;gap:10px;max-width:640px}
+.tell{max-width:40em;margin-top:1.6rem}
+.tell+.tell{margin-top:0}
+.cards3.pair{grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px}
+@media(max-width:860px){.cards3.pair{grid-template-columns:1fr}}
+.card3 h3:last-child{margin-bottom:0}
 </style>
 </head>
 <body>
@@ -359,13 +364,13 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>Recording a system that is still running</h2>
-      <p class="lede">A distributed system is many machines passing messages. No machine can see all the others, and stopping the whole system to look is costly.</p>
+      <p class="lede">A distributed system is many machines passing messages. Some questions about it need its global state: every machine's own state, plus the messages still on their way between machines.</p>
+      <p>No machine can see all the others. Reading them one after another gives a total that is wrong by whatever moved between one reading and the next, as the two machines here show. Stopping the whole system to look does work, but it is costly, and knowing that the channels have drained already needs a marker on every channel. One method records the state while the system runs.</p>
       <ul class="terms">
-        <li><b>The aim</b> is a global state: every machine's own state, plus the messages still on their way between machines.</li>
         <li><b>The method</b> (Chandy and Lamport, 1985): each machine records its own state, then sends a marker down every outgoing channel. Messages that arrive on a channel after the machine recorded and before that channel's marker are the channel's state.</li>
         <li><b>The result</b> may be a state the system never passed through, yet it settles every stable property, such as deadlock or termination.</li>
       </ul>
-      <p style="margin-top:1.2rem">This edition tells it with three trading houses and their carts on the ring road of Arche.</p>
+      <p style="margin-top:1.2rem">The recorded state is one the system could have passed through, and that is enough for those properties. We tell it with three trading houses and their carts on the ring road of Arche.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper mach">
@@ -396,11 +401,11 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="hall-title"><div class="t">
       <div class="kicker">The ring road of Arche</div>
       <h2>Three houses, carts on one cliff road</h2>
-      <p>House 1, House 2 and House 3 stand round the coast with a mountain between them. Carts and messengers go from house to house by the road, and bandits are about.</p>
+      <p>House 1, House 2 and House 3 stand round the coast of Arche with a mountain between them. Carts and messengers go from house to house by the cliff road, and there are bandits about the island.</p>
     </div></div>
-    <div class="pin pop" style="left:50%;top:46%;"><div class="leaf"><b>No passing</b>Nothing overtakes on a track, and every messenger arrives.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></div></div>
-    <div class="pin pop" style="left:6%;top:64%;"><div class="leaf"><b>One track each way</b>Each house has its own track to each other house, and each track carries only its own traffic.</div></div>
-    <div class="pin pop" style="left:54%;top:82%;"><div class="leaf"><b>Bandits take carts</b>A messenger with nothing on their back is not worth a bandit's while.</div></div>
+    <div class="pin pop" style="left:50%;top:46%;"><div class="leaf"><b>No passing</b>Nothing overtakes on a track, so carts and messengers come in at the far end in the order they set out.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></div></div>
+    <div class="pin pop" style="left:6%;top:64%;"><div class="leaf"><b>One track each way</b>Each house has a track of its own to each other house, and each of the six tracks carries only its own traffic.</div></div>
+    <div class="pin pop" style="left:54%;top:82%;"><div class="leaf"><b>Bandits take carts</b>A cart may be taken on the road. A messenger with nothing on their back is not worth a bandit's while, and every messenger arrives.</div></div>
   </div>
 </section>
 
@@ -412,18 +417,20 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <div>
         <div class="kicker">The houses' question</div>
         <h2>How much do we hold between us?</h2>
-        <p class="lede">In a winter of busy trade, the houses kept hearing that their goods had been stolen. A cart that left one house and had not come in at the next was said to have been taken on the cliff road. Was it taken, or only late?</p>
-        <p>The houses want to know how much grain and oil is really there, everywhere at once, to set against what the account scrolls say they should hold. Whatever falls short is what the bandits took.</p>
-        <p>Some of it sits in the three storehouses. The rest is on the road, in carts that take as long as they take.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></p>
+        <p class="lede">In a winter of busy trade, the three houses kept hearing that their goods had been stolen. A cart that left one house and had not come in at the next was said to have been taken on the cliff road, and no house could tell a cart that was taken from one that was only late.</p>
+        <p>To find out, the houses want to know how much grain and oil is really there, everywhere at once, to set against what the account scrolls say they should hold. Whatever falls short is what the bandits took.</p>
+        <p>The goods lie in two kinds of place. Some sit in the three storehouses. The rest are on the road, in carts and pack-trains that take as long as they take.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/arche-island.jpg" alt="The island of Arche from the air under cloud: a wooded mountain with a ruined wall on its crown, ringed by a coast road and small harbour towns" loading="lazy"></div></div></div>
     </div>
-    <p style="max-width:40em;margin-top:1.6rem">The scribes' first plan is to send an auditor to each house, count each storehouse, and add the three counts. Two mornings show why it fails.</p>
+    <p class="tell">The scribes' first plan is the plain one: send an auditor to each house, count each storehouse, and add the three counts. The keeper of the customs rolls sent the auditors out, went down to the cliff road to watch the carts pass, and came back to say that the plan would not do. Two mornings show why.</p>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Morning one</div><h3>Counted twice</h3><p>House 3's auditor counts at dawn and House 2's late in the day. In between, a cart carries two hundred jars of oil from House 3 to House 2. House 3 counted them, and House 2 counts them again. The total is two hundred jars too high.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Morning two</div><h3>Counted by nobody</h3><p>The counts are taken as before, but the cart carries two hundred jars from House 2 to House 3. They left House 2's storehouse before its auditor looked, and had not reached House 3 when its auditor closed the slate. The jars have vanished, and no bandit took them.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Morning one</div><h3>Counted twice</h3><p>House 3's auditor counts at dawn and House 2's late in the day. In between, a cart carries two hundred jars of oil from House 3 to House 2. House 3 counted them before they left, and House 2 counts them again when they arrive. The total is two hundred jars too high, though nothing was added to the island.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Morning two</div><h3>Counted by nobody</h3><p>The counts are taken as before, but the cart carries two hundred jars from House 2 to House 3. They left House 2's storehouse before its auditor looked, and had not reached House 3 when its auditor closed the slate. Nobody counted them. The jars have vanished from the total, and no bandit took them.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The error, stated once</div><h3>Wrong by what moved</h3><p>Counting the houses one after another is wrong by exactly the goods that moved along the road between one counting and the next. It can run either way, no one can say in advance by how much, and no account scroll shows that it happened.</p></div></div></div>
     </div>
+    <p class="tell">On both mornings the auditors counted the storehouses rightly and the road wrongly. The goods that slipped through their counts were goods on the move, and a count taken house by house has no place to put them.</p>
+    <p class="tell">The plain remedy is to stop the road, so that nothing is on it to count.</p>
   </div>
 </section>
 
@@ -435,15 +442,17 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The first thought</div>
       <h2>A road that cannot be stopped all at once</h2>
-      <p class="lede">The houses' first thought is to stop every cart for a morning, count every storehouse while everything stands still, and then let the trains move again. With nothing on the road, the three counts add up.</p>
+      <p class="lede">Stopping the road is the houses' first thought. From a given morning no cart moves, every storehouse is counted while everything stands still, and then the trains move again. With nothing on the road, the three counts add up.</p>
+      <p>Two objections stand against the plan. The first is its price. The second can be answered, and answering it turns up a catch that changes the whole plan.</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First objection</div><h3>It is costly</h3><p>The houses feed the three port towns, and a road that stops moving food stops serving the island. A count that halts all trade will be tolerated once and never repeated.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second objection</div><h3>The order travels by road</h3><p>The order to stop goes by messenger and takes as long as the road takes. House 2 may hear it before House 3, and House 3, knowing nothing, quite properly sends a cart. That does no harm. Each house stops sending when the order reaches it, keeps taking in whatever arrives, and counts when its incoming roads are empty.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The catch</div><h3>Empty how?</h3><p>A house cannot see the road, and a cart may be out round the next headland behind a lame mule. So each house, the moment it stops, sends down each of its roads a last messenger who means <i>nothing behind me</i>. Nobody overtakes, so when that messenger comes in, the road behind them is empty.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second objection</div><h3>The order travels by road</h3><p>The order to stop goes by messenger and takes as long as the road takes. House 2 may hear it before House 3, and House 3, knowing nothing, quite properly sends a cart. That does no harm. Each house stops sending when the order reaches it, keeps taking in whatever arrives, and counts when its incoming roads are empty. Houses that stop at different hours still give a true total, so long as each waits until nothing more is coming.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The catch</div><h3>Empty how?</h3><p>A house has to know that nothing more is coming. It cannot see the road, and a cart may be out round the next headland behind a lame mule. So each house, the moment it stops, sends down each of its roads a last messenger who means <i>nothing behind me</i>. Nobody overtakes, so when that messenger comes in, the road behind them is empty.</p></div></div></div>
     </div>
-    <p style="max-width:40em;margin-top:1.6rem">Stopping the island needs a messenger on every road anyway. The keeper of the customs rolls saw it: once the houses have such messengers, why stop at all?</p>
-    <p style="max-width:40em">The keeper of House 1's accounts asked a different question. Must the count catch the island at one instant? What the houses need is a total that is <b>sound</b>: no cart counted twice, none gone missing. Whether the total was ever true of the island at a single moment is a separate question, and the houses have no need to ask it.</p>
+    <p class="tell">So stopping the island needs a messenger on every road anyway. The keeper of the customs rolls saw what follows from that. A messenger who can mark the end of a road's traffic for a stopped house can mark a place in that traffic for a house that keeps trading, and once the houses have such messengers they have no need to stop at all.</p>
+    <p class="tell">The keeper of House 1's accounts took away a second burden. The stopped road was meant to catch the island at one instant, and the count need not do that. What the houses need is a total that is <b>sound</b>: no cart counted twice, none gone missing. Whether the total was ever true of the island at a single moment is a separate question, and the houses have no practical need to ask it.</p>
+    <p class="tell">The houses want a sound total, then, taken while the carts keep moving. The goods on the road are exactly what the auditors got wrong, and no house ever sees the road.</p>
   </div>
 </section>
 
@@ -455,16 +464,18 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">What is being counted</div>
       <h2>Nine places, not three</h2>
-      <p class="lede">Oil in a cellar is stock. Oil in jars lashed to a mule on the cliff road is in no house's storehouse and on no house's slate. Yet it exists, it is owned, and it is exactly what the auditors counted twice or lost.</p>
-      <p>So the island is counted in nine places: the three storehouses, and, separately, what each of the six tracks is holding.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></p>
+      <p class="lede">The goods on the road must first be admitted as part of what is counted. Each house thinks of its stock as what sits under its own roof. Oil in a cellar is stock, while oil in jars lashed to a mule on the cliff road is in no house's storehouse and on no house's slate. Yet it exists, it is owned, and it is exactly what the auditors counted twice or lost.</p>
+      <p>So the island is counted in nine places: the three storehouses, and, separately, what each of the six tracks is holding. Each house has a track to each other house, and each track carries only its own traffic.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></p>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well">
+    <p class="tell">The picture shows all nine. Choose each in turn, and notice which of them a scribe could count from a desk.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>Nine places to count <em id="ninecount">0 of nine looked at</em></h4>
       <svg class="isle-svg fig" id="nine" role="group" aria-label="Arche from above: three houses on a ring road round a mountain, with a track drawn from each house to each other house, one lane for each direction"></svg>
       <p class="say" id="ninesay">Three storehouses and six tracks. Choose any of them.</p>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">A method that records only the storehouses does not give an incomplete account of Arche. It gives a complete account of a different island, one where carts take no time to travel.</p>
-    <p style="max-width:40em">A scribe at a desk cannot count a road. A cart rounding a headland is hidden behind rock, and nobody can post men along the surf. What a house can do is write down what comes in at its own gate. That is enough, if the house knows exactly when to start writing and when to stop.</p>
+    <p class="tell">Three of the nine can be counted from a desk, and the auditors counted only those. A method that records only the storehouses gives a complete account of a different island, one where carts take no time to travel. On Arche the six tracks have to be recorded as well.</p>
+    <p class="tell">A scribe at a desk cannot count a road. A cart rounding a headland is hidden behind rock, and nobody can post watchers along the surf. What a house can do is write down what comes in at its own gate. The keeper of the customs rolls saw that this is enough, provided the house knows exactly when to start writing down arrivals and when to stop.</p>
+    <p class="tell">When to start is easy: a house starts when it counts its own storehouse. When to stop is harder. Something has to tell a house, standing at its gate, that the last cart sent before the count has now come in.</p>
   </div>
 </section>
 
@@ -477,18 +488,18 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <div>
         <div class="kicker">When to start, and when to stop</div>
         <h2>The red sash</h2>
-        <p class="lede">A house knows when to start: when it counts its own storehouse. What can tell it when to stop? The same messenger the stopped road needed, wearing a plain red sash.</p>
-        <p>The messenger carries no goods and no orders. Their whole purpose is to divide what was sent down a track before them from what was sent after.</p>
+        <p class="lede">The signal to stop is the same messenger the stopped road needed, now wearing a plain red sash. Nothing overtakes on a track, so when the sash comes in at a gate, everything sent down that track ahead of it has already arrived.</p>
+        <p>The messenger carries no goods, no orders and no tallies. The messenger's whole purpose is to divide what was sent down a track before the sash from what was sent after.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/c04-sash.jpg" alt="A messenger in an undyed tunic with a broad red sash sets off along the road through a white-walled town, while a loaded oil cart and its mule wait at a doorway" loading="lazy"></div></div></div>
     </div>
-    <p style="max-width:40em;margin-top:1.6rem">Two rules govern the sash, one for sending and one for receiving. They are the entire method.</p>
+    <p class="tell">Two rules govern the sash, one for sending and one for receiving, and the rule of receiving depends on whether the house has already recorded. The three cards are the entire method.</p>
     <div class="cards3" style="margin-top:1rem">
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The rule of sending</div><h3>Record, then send the sash first</h3><p>A house records the inventory of its own storehouse. At once, before it sends any further cart or order down any road, it sends one messenger in a red sash down each of its roads.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The rule of receiving</div><h3>A sash, and no record yet</h3><p>The house records its storehouse at once, writes down that this road holds nothing, and then follows the rule of sending, with a sash down each of its own roads.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The rule of receiving</div><h3>A sash, and a record already made</h3><p>The house writes down, as that road's holding, every item that came in along that road between its own recording and this sash's arrival.</p></div></div></div>
     </div>
-    <p style="max-width:40em;margin-top:1.4rem">Any house may start it, and it makes no difference which. No cart is delayed and no mule stopped, and no house needs to know another's stock. Scroll to watch it run.</p>
+    <p class="tell">Any house may start the count, and it makes no difference which. No cart is delayed and no mule stopped, and no house needs to know another's stock. Scroll to watch one morning's count. Beside the picture, each house shows its stock, its record, and the slate it keeps for each incoming road.</p>
   </div>
   <div class="scrolly" id="sash">
     <div class="stage"><div class="stage-inner split">
@@ -510,9 +521,10 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
-    <p style="max-width:40em">A house that has recorded goes on taking in carts as usual, but from then on it keeps a slate for each incoming road, listing every jar and sack that arrives along it. When the sash comes through the gate, that road's slate is closed, and its sum <i>is</i> the road's holding. The house never saw the road. It only needed to know when to open the slate and when to close it, and the sash marked both.</p>
-    <p style="max-width:40em">The method relies on two things about the road.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup> <b>Nothing overtakes on a track.</b> A sash sent after a cart cannot pass that cart, and a cart sent after the sash cannot pass the sash. <b>Every sash arrives.</b> If either fails, the count fails.</p>
-    <p style="max-width:40em">Carts are another matter, because bandits do take them. A taken cart does not spoil the count. Its jars leave the island's goods as surely as jars sold into a port town, and the count counts what is left. A taken messenger would spoil it, because the slate they were to close would never be closed.</p>
+    <p class="tell" style="margin-top:0">The second case of the rule of receiving does the work. A house that has recorded goes on taking in carts as usual, but from then on it keeps a slate for each incoming road, listing every jar and sack that arrives along it. When the sash comes through the gate, that road's slate is closed, and its sum <i>is</i> the road's holding. The house never saw the road. It only needed to know when to open the slate and when to close it, and the sash marked both.</p>
+    <p class="tell">The method relies on two things about the road.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup> <b>Nothing overtakes on a track.</b> A sash sent after a cart cannot pass that cart, and a cart sent after the sash cannot pass the sash, so the sash divides a track's traffic cleanly in two. <b>Every sash arrives.</b> A messenger with a sash and nothing on their back is not worth a bandit's while, and none falls from the cliff. If either fails, the count fails.</p>
+    <p class="tell">Carts are another matter, because bandits do take them. A taken cart does not spoil the count. Its jars leave the island's goods as surely as jars sold into a port town, and the count counts what is left. A taken messenger would spoil it, because the slate that messenger was to close would never be closed.</p>
+    <p class="tell">Each slate is closed by a sash, and every house records at its own hour. It remains to show that nine numbers taken at different hours fit together, and that the auditors' error cannot come back in another form.</p>
   </div>
 </section>
 
@@ -524,11 +536,12 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Do the nine numbers fit together?</div>
       <h2>Cuts that hold and cuts that do not</h2>
-      <p class="lede">To see whether the numbers fit, draw the island's morning in the round: each house a line running outward, later moments further out, each cart an arc from its departure to its arrival.</p>
-      <p>The count draws a loop through each house at the moment it recorded. The loop is a <b>cut</b>, and everything inside it is counted as past. The houses record at different moments, so the loop is not round.</p>
-      <p>A cart that leaves from inside the loop and arrives outside it is exactly goods in transit, and the slates catch it. A cart that crosses the loop <i>inward</i> is the fatal error: goods received that, by the other house's record, had not yet been sent.</p>
+      <p class="lede">To see whether the nine numbers fit together, draw the island's morning in the round: each house a line running outward, later moments further out, each cart an arc from its departure to its arrival.</p>
+      <p>The count draws a loop through each house at the moment it recorded. The keeper of the customs rolls called the loop a <b>cut</b>. Everything inside it is counted as past, and everything outside it comes after. The houses record at different moments, so the loop is not round.</p>
+      <p>A cart that leaves from inside the loop and arrives outside it was sent before its sender recorded and came in after its receiver recorded. Such carts are exactly the goods on the road, and the slates catch them. A cart that crosses the loop <i>inward</i> is the fatal error: goods received that, by the other house's record, had not yet been sent. Those jars stand in both records, which is the auditors' first morning over again.</p>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+    <p class="tell">The figure draws the morning of the red sashes, with its four carts. Choose any cart to see where its jars were counted. Then let each house count at an hour of its own choosing, and one cart crosses the loop inward.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>The morning's carts <em>choose a cart</em></h4>
       <div class="st-wrap">
         <svg class="st-svg fig" id="cutsvg" role="group" aria-label="Three lines running outward, one for each house, with a dashed loop through each house at the moment it recorded, and the morning's carts as arcs from house to house"></svg>
@@ -542,8 +555,9 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         </div>
       </div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">Does anyone have to watch for the inward crossing? No, because the rule of sending rules it out. A house sends the sash down a track <i>before</i> any further cart. No cart can overtake the messenger, so no cart sent after a house records can reach a neighbour before the sash does, and none can be counted as arrived before the neighbour recorded.</p>
-    <p style="max-width:40em">Does the count ever finish? Every house has a road to every other, so a sash sent by any one house reaches both the others. Each house that receives one records and sends sashes down all its roads. The island is finite and every messenger arrives in the end, so every house records and every slate is closed.</p>
+    <p class="tell">Nobody has to watch for the inward crossing, because the rule of sending rules it out. A house sends the sash down a track <i>before</i> any further cart. No cart can overtake the messenger, so no cart sent after a house records can reach a neighbour before the sash does, and none can be counted as arrived before the neighbour recorded.</p>
+    <p class="tell">The count also finishes. Every house has a road to every other, so a sash sent by any one house reaches both the others. Each house that receives one records and sends sashes down all its roads. The island is finite and every messenger arrives in the end, so every house records and every slate is closed.</p>
+    <p class="tell">No cart is counted twice, none is lost, and the count ends. The nine numbers therefore describe the island. At what moment they describe it is still to be said, since each house recorded at a different hour.</p>
     <details class="proof">
       <summary>Proof · no message crosses the cut upward</summary>
       <p class="given">The marker-sending rule: a process records its state, then sends a marker on each outgoing channel before sending any further message on it. The marker-receiving rule: on receiving a marker, a process that has not recorded records its state, and a process that has recorded closes that channel's record. Channels are FIFO and every marker arrives. <b>Claim.</b> No message is sent after its sender recorded and received before its receiver recorded.</p>
@@ -578,12 +592,13 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <div>
         <div class="kicker">At what moment?</div>
         <h2>A morning nobody lived through</h2>
-        <p class="lede">The nine numbers describe the island at no single moment. Each house recorded at its own hour, and the total describes a morning the island never had.</p>
+        <p class="lede">The nine numbers describe the island at no single moment. When they came in, the keeper of the customs rolls summed them for the houses, and then showed that the total described a morning the island never had.</p>
         <p>House 1 recorded first and House 2 some while later. Soon after House 1 recorded, it sold forty jars of oil into its own port town. Later, and still before House 2 recorded, House 2 milled eighty measures of barley into flour. Neither touched a road, a cart or a sash.</p>
-        <p>So the total describes an island in which House 1 still holds the forty jars and House 2 has already milled its barley. Was the island ever in that state? No. While House 1 still held the jars, the barley was not yet milled, and by the time it was, the jars were gone.</p>
+        <p>So the total describes an island in which House 1 still holds the forty jars and House 2 has already milled its barley. The island was never in that state. While House 1 still held the jars, the barley was not yet milled, and by the time it was, the jars were gone.</p>
       </div>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+    <p class="tell">The four entries are set out below in the order they were lived. Put the milling ahead of the sale, and see which of the two mornings passes through the picture the count recorded.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>The same four entries <em>in two orders</em></h4>
       <div class="lists">
         <div><h5>The morning as lived</h5><div id="mlived"></div></div>
@@ -597,10 +612,11 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       </div>
     </div></div></div>
     <div class="narrow" style="margin:2rem 0 0">
-      <p class="lede">Is the total false, then? It is not. Call the island as it stood when the count began its <b>start</b>, the island as the scribes recorded it the <b>recorded island</b>, and the island when the last slate closed its <b>end</b>.</p>
+      <p class="lede">The total is still not false, and saying why takes three names. Call the island as it stood when the count began its <b>start</b>, the island as the scribes recorded it the <b>recorded island</b>, and the island when the last slate closed its <b>end</b>.</p>
       <p><b>First,</b> the recorded island can be reached from the start by the very events that happened, taken in an order that keeps every chain of carts and messengers intact. <b>Second,</b> the end can be reached from the recorded island by the rest of those same events.</p>
       <p>So the recorded island lies on a lawful path from the start to the end. It is not an idle fiction. It is a state Arche <i>could have passed through</i>, had independent events on opposite sides of Mount Phyle come in another, equally lawful order.</p>
-      <p>Why may the count reorder the sale and the milling? Because nothing joins them. Two events at different houses with no chain of messengers between them stand in no natural order,<sup class="xref"><a href="../ordering-without-clocks/index.html#s2" title="Ordering Without Clocks: What Came Before">*</a></sup> and the count may take either first. What it may never do is reverse events that one chain of messengers joins, and the red sash sees to it that it never does.</p>
+      <p>The count may reorder the sale and the milling because nothing joins them. Neither touched a road, so neither could have known of the other. Two events at different houses with no chain of messengers between them stand in no natural order,<sup class="xref"><a href="../ordering-without-clocks/index.html#s2" title="Ordering Without Clocks: What Came Before">*</a></sup> and the count may take either first. What it may never do is reverse events that one chain of messengers joins, and the red sash sees to it that it never does.</p>
+      <p>The houses hold a morning that could have happened and did not. What they can do with such a total is the last thing to settle.</p>
     </div>
     <details class="proof">
       <summary>Proof · the recorded state lies on a valid execution path</summary>
@@ -648,8 +664,8 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">A morning that could have happened</div>
       <h2>What such a total is good for</h2>
-      <p class="lede">Start with what it cannot do. If a merchant swears that House 2 held three hundred jars of oil at the moment a ship dropped anchor, can the count settle it? No. The count was taken at no one moment, so it cannot speak for that moment.</p>
-      <p>It can answer questions whose answer, <i>once it becomes true, stays true for ever.</i> The keeper of the customs rolls called these <b>settled properties</b>. Counting only the trade between the houses, with the port towns' buying and selling set aside, some examples are:</p>
+      <p class="lede">Such a total is good for some questions and useless for others, and it is best to start with what it cannot do. If a merchant swears that House 2 held three hundred jars of oil at the moment a ship dropped anchor, the count cannot settle it. The count was taken at no one moment, so it cannot speak for that moment.</p>
+      <p>The questions it can answer are those whose answer, <i>once it becomes true, stays true for ever.</i> The keeper of the customs rolls called these <b>settled properties</b>. Counting only the trade between the houses, with the port towns' buying and selling set aside, some examples are:</p>
       <ul class="terms">
         <li><b>Everything delivered:</b> every cart has arrived and all houses are idle.</li>
         <li><b>Standstill:</b> every house is waiting for carts from another.</li>
@@ -659,7 +675,8 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <p style="margin-top:1.2rem">For these, the count decides. <b>If the property holds on the recorded island,</b> it holds on the island now, because the end can be reached from the recorded island and a settled property, once true, remains true. <b>If it does not hold there,</b> it did not hold when the count began, because had it held at the start, it would still hold on the recorded island.</p>
       <p>Either way, the count gives a sure answer about a real state of the island. That the recorded island itself never happened does not matter, because a settled property cannot tell the path the island took from a path it could have taken.</p>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well" id="dec">
+    <p class="tell">The houses' own question, whether the bandits have robbed them, is of this kind on the right day. Below, the count is taken on a day with no buying or selling. Choose when a bandit takes one cart off the road, and compare what the count says with how the island stood when the count began and when it ended.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" id="dec" style="margin-top:1.2rem">
       <h4>Have the bandits robbed us? <em>a day with no buying or selling</em></h4>
       <p style="font-size:.92rem;color:#6b5a48;margin:0 0 .6rem">The account scrolls say the houses hold 270 jars between them. Choose when a bandit takes one cart of 30 jars off the road.</p>
       <div class="row" style="margin-top:0">
@@ -671,7 +688,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <p class="say" id="decsay"></p>
     </div></div></div>
     <div class="narrow" style="margin:2rem 0 0">
-      <p>The houses' own question was whether the bandits have robbed them. The count gives a sound inventory, with no jar lost and none counted twice. A cart that was only late turns up on a road slate and is counted. A cart that was taken turns up nowhere.</p>
+      <p>The count can answer the houses' own question because it gives a sound inventory, with no jar lost and none counted twice. A cart that was only late turns up on a road slate and is counted. A cart that was taken turns up nowhere.</p>
       <p>So the houses take their count on a day when nothing is bought from or sold into the port towns. Then goods only move between the houses, and every move takes jars from one of the nine places and adds the same jars to another. Only the bandits can change the total. The account scrolls say what the houses should hold between them, and the houses set the count against it. A shortfall is a deficit, and a deficit is settled. If the count shows one, the houses have been robbed, and the shortfall is what the bandits hold now. If it shows none, nothing had been taken when the count began.</p>
       <p>On a day of buying and selling, the account scrolls move with every sale, and the recorded total is true of the recorded island and of no moment anyone lived through. What was true at one particular moment, nothing on an island without a common hour will ever tell.</p>
     </div>
@@ -695,7 +712,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The island was a network of machines</h2>
-      <p class="lede">Every house is a process, and every road a channel. Hover or tap to see who is who.</p>
+      <p class="lede">Read the island again with machines in the storehouses. Every house is a process, every track is a channel, and the messenger in the red sash is a marker. Hover over a row, or tap it, to see who is who.</p>
     </div>
     <div class="map" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">On the island</div><div></div><div class="hd">In the machine room</div>
