@@ -226,13 +226,13 @@
     <p class="tell">The count also finishes. Every house has a road to every other, so a sash sent by any one house reaches both the others. Each house that receives one records and sends sashes down all its roads. The island is finite and every messenger arrives in the end, so every house records and every slate is closed.</p>
     <p class="tell">No cart is counted twice, none is lost, and the count ends. The nine numbers therefore describe the island. At what moment they describe it is still to be said, since each house recorded at a different hour.</p>
     <details class="proof">
-      <summary>Proof · no message crosses the cut upward</summary>
+      <summary>Proof · no message crosses the cut inward</summary>
       <p class="given">The marker-sending rule: a process records its state, then sends a marker on each outgoing channel before sending any further message on it. The marker-receiving rule: on receiving a marker, a process that has not recorded records its state, and a process that has recorded closes that channel's record. Channels are FIFO and every marker arrives. <b>Claim.</b> No message is sent after its sender recorded and received before its receiver recorded.</p>
 <ol class="proofsteps">
       <li>Call an event at a house <b>early</b> if it occurred before that house recorded its own
       storehouse, and <b>late</b> otherwise.</li>
       <li>Suppose some cart were dispatched late at House 2 and arrived early at House 1.
-      This is the upward crossing.</li>
+      This is the inward crossing.</li>
       <li>House 2 recorded its storehouse before dispatching that cart, since the dispatch was
       late. By the rule of sending, House 2 dispatched a red sash messenger down the track to
       House 1 at the moment of recording — prior to dispatching any further carts down that

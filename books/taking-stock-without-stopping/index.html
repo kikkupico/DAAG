@@ -559,13 +559,13 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <p class="tell">The count also finishes. Every house has a road to every other, so a sash sent by any one house reaches both the others. Each house that receives one records and sends sashes down all its roads. The island is finite and every messenger arrives in the end, so every house records and every slate is closed.</p>
     <p class="tell">No cart is counted twice, none is lost, and the count ends. The nine numbers therefore describe the island. At what moment they describe it is still to be said, since each house recorded at a different hour.</p>
     <details class="proof">
-      <summary>Proof · no message crosses the cut upward</summary>
+      <summary>Proof · no message crosses the cut inward</summary>
       <p class="given">The marker-sending rule: a process records its state, then sends a marker on each outgoing channel before sending any further message on it. The marker-receiving rule: on receiving a marker, a process that has not recorded records its state, and a process that has recorded closes that channel's record. Channels are FIFO and every marker arrives. <b>Claim.</b> No message is sent after its sender recorded and received before its receiver recorded.</p>
 <ol class="proofsteps">
       <li>Call an event at a house <b>early</b> if it occurred before that house recorded its own
       storehouse, and <b>late</b> otherwise.</li>
       <li>Suppose some cart were dispatched late at House 2 and arrived early at House 1.
-      This is the upward crossing.</li>
+      This is the inward crossing.</li>
       <li>House 2 recorded its storehouse before dispatching that cart, since the dispatch was
       late. By the rule of sending, House 2 dispatched a red sash messenger down the track to
       House 1 at the moment of recording — prior to dispatching any further carts down that
@@ -875,7 +875,7 @@ function Isle(svg){
   return I;
 }
 
-/* ===== the census, run by the book's own rules =====
+/* ===== the count, run by the book's own rules =====
    Three houses, six one-way tracks, nothing overtaking on a track. Every event of the morning is
    listed with its time; the houses' records, the slates and the total are worked out by the
    rules of sending and receiving, so the page checks itself. */
@@ -901,7 +901,7 @@ function Census(){
   let i=0;for(const e of ends){while(i<ev.length&&ev[i][0]<=e)ev[i++][1]();snaps.push(snap(e))}
   const R=[1,2,3].map(h=>rec[h]),L=[];for(const h of [1,2,3])for(const o of [1,2,3])if(o!==h)L.push(slate[h][o].sum);
   const total=R.reduce((a,b)=>a+b,0)+L.reduce((a,b)=>a+b,0);
-  if(total!==truth||[1,2,3].some(h=>[1,2,3].some(o=>o!==h&&!slate[h][o].closed)))throw new Error("the census does not add up");
+  if(total!==truth||[1,2,3].some(h=>[1,2,3].some(o=>o!==h&&!slate[h][o].closed)))throw new Error("the count does not add up");
   return {items,snaps,ends,rec:R,recT,slate,truth,total};
 }
 
@@ -926,7 +926,7 @@ function Census(){
     button(g,`House ${h}'s storehouse`,()=>pick(x,`<b>House ${h}'s storehouse.</b> What sits under its roof. A scribe at that house can count it.`))}
 })();
 
-/* ===== scroll: the census with red sashes ===== */
+/* ===== scroll: the count with red sashes ===== */
 (function(){
   const C=Census(),I=Isle($("#sashsvg")),side=$("#sashside"),{items,snaps,ends}=C;
   const toks=items.map(x=>({x,g:I.token(x.k==="sash"?"#bf4a26":HC[x.a],x.k==="cart"?x.n:""),u:.1,run:0,shown:false}));
@@ -1007,9 +1007,9 @@ function Census(){
   const recorded={j:"held",m:"milled"};
   const html=(order,mark)=>{const st=states(order);return order.map((k,i)=>`<div class="ev ${mark&&mark.includes(k)?"mv":""} ${st[i].j===recorded.j&&st[i].m===recorded.m?"hit":""}" style="border-left-color:${HC[E[k].h]}"><span>${E[k].t}</span><span class="st">jars ${st[i].j}<br>barley ${st[i].m}</span></div>`).join("")};
   const base=()=>{lived.innerHTML=html(livedOrder);cens.innerHTML="<p style='font-size:.85rem;color:#6b5a48;margin:0'>Not yet drawn.</p>";bb.disabled=true;bs.disabled=false;
-    say.innerHTML="House 1 recorded first, and House 2 some while later. The census wrote down: House 1 still holds the jars, and House 2 has already milled its barley. Did the island ever stand so?"};
+    say.innerHTML="House 1 recorded first, and House 2 some while later. The count wrote down: House 1 still holds the jars, and House 2 has already milled its barley. Did the island ever stand so?"};
   bs.onclick=()=>{cens.innerHTML=html(censusOrder,["b","c"]);lived.innerHTML=html(livedOrder);bs.disabled=true;bb.disabled=false;
-    say.innerHTML=`Nothing joins the sale and the milling, so the census may take either first. <span class="${matches(livedOrder,recorded)?"bad":"ok"}">${matches(livedOrder,recorded)?"The morning as lived":"The morning as lived never"}</span> passed through the recorded picture; <span class="${matches(censusOrder,recorded)?"ok":"bad"}">the rearranged morning ${matches(censusOrder,recorded)?"does":"does not"}</span>, in the rows marked. Every one of its entries still happened, each house's own entries in their own order.`};
+    say.innerHTML=`Nothing joins the sale and the milling, so the count may take either first. <span class="${matches(livedOrder,recorded)?"bad":"ok"}">${matches(livedOrder,recorded)?"The morning as lived":"The morning as lived never"}</span> passed through the recorded picture; <span class="${matches(censusOrder,recorded)?"ok":"bad"}">the rearranged morning ${matches(censusOrder,recorded)?"does":"does not"}</span>, in the rows marked. Every one of its entries still happened, each house's own entries in their own order.`};
   bj.onclick=()=>{say.innerHTML="Could a cart tie the sale to the milling? A cart sent after House 1 recorded cannot reach House 2 before House 2 has recorded: the red sash is ahead of it on the track. So nothing joins an entry made after one house recorded to an entry made before the other recorded, and the two can always be swapped."};
   bb.onclick=base;base();
 })();
@@ -1022,17 +1022,17 @@ function Census(){
   const deficit=held=>held<scrolls;
   function show(key){const c=cases[key];bs.forEach(b=>{b.classList.toggle("on",b.dataset.case===key);b.classList.toggle("alt",b.dataset.case!==key)});
     const atStart=scrolls-c.took,atCensus=scrolls-c.took,atEnd=scrolls-c.took-c.after;
-    tab.innerHTML=`<tr><td>What the account scrolls say the houses hold</td><td>${scrolls}</td></tr><tr><td>The census total, nine places</td><td>${atCensus}</td></tr><tr><td>Short by</td><td>${scrolls-atCensus}</td></tr><tr><td>The island when the census began</td><td>${deficit(atStart)?"short":"whole"}</td></tr><tr><td>The island when the census ended</td><td>${deficit(atEnd)?"short":"whole"}</td></tr>`;
+    tab.innerHTML=`<tr><td>What the account scrolls say the houses hold</td><td>${scrolls}</td></tr><tr><td>The count's total, nine places</td><td>${atCensus}</td></tr><tr><td>Short by</td><td>${scrolls-atCensus}</td></tr><tr><td>The island when the count began</td><td>${deficit(atStart)?"short":"whole"}</td></tr><tr><td>The island when the count ended</td><td>${deficit(atEnd)?"short":"whole"}</td></tr>`;
     if(deficit(atCensus)){if(!deficit(atEnd))throw new Error("a deficit was undone");
-      say.innerHTML=`<span class="bad">The census is short, so the houses have been robbed.</span> Being short is a settled property: once jars are gone that no trade between the houses can bring back, they stay gone. What is true of the recorded island is true of the island now, and the shortfall is what the bandits hold.`}
+      say.innerHTML=`<span class="bad">The count is short, so the houses have been robbed.</span> Being short is a settled property: once jars are gone that no trade between the houses can bring back, they stay gone. What is true of the recorded island is true of the island now, and the shortfall is what the bandits hold.`}
     else{if(deficit(atStart))throw new Error("the rule failed");
-      say.innerHTML=`<span class="ok">The census is whole, so nothing had been taken when it began.</span> That is all it says.${deficit(atEnd)?` <span class="bad">Here the bandits struck after the census ended, and the island is short now.</span> The census could not know, and does not claim to.`:" Here nothing has been taken since, either."}`}
+      say.innerHTML=`<span class="ok">The count is whole, so nothing had been taken when it began.</span> That is all it says.${deficit(atEnd)?` <span class="bad">Here the bandits struck after the count ended, and the island is short now.</span> The count could not know, and does not claim to.`:" Here nothing has been taken since, either."}`}
   }
   bs.forEach(b=>b.onclick=()=>show(b.dataset.case));show("before");
 })();
 
 /* ===== who is who ===== */
-mapPairs($("#map"),[["A trading house","A process"],["A road segment, one way","A channel: FIFO, reliable, unbounded delay"],["What the road is holding","Channel state"],["The nine quantities","A global state: process states plus channel states"],["The red-sashed messenger","A marker message"],["The rule of sending","The marker-sending rule"],["The rule of receiving","The marker-receiving rule"],["A cut","A cut in a space-time diagram"],["Crossing upward","An inconsistent cut"],["A settled property","A stable property"],["The island at the start, as recorded, at the end","S_begin, S*, S_end (S_ι, S*, S_φ in the paper)"]]);
+mapPairs($("#map"),[["A trading house","A process"],["A track, one way","A channel: FIFO, reliable, unbounded delay"],["What the road is holding","Channel state"],["The nine places","A global state: process states plus channel states"],["The red-sashed messenger","A marker message"],["The rule of sending","The marker-sending rule"],["The rule of receiving","The marker-receiving rule"],["A cut","A cut in a space-time diagram"],["Crossing the loop inward","An inconsistent cut"],["A settled property","A stable property"],["The island at the start, as recorded, at the end","S_begin, S*, S_end (S_ι, S*, S_φ in the paper)"]]);
 })();
 </script>
 </body>
