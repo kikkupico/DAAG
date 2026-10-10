@@ -525,14 +525,12 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         <li>Suppose an arrangement works for three men with one liar: all honest men obey the same
         order, and an honest chief is obeyed.</li>
         <li><b>A.</b> Chief honest, sending <em>hold</em> to both guards; the second guard lies,
-        reporting <em>he sent me scatter</em>.</li>
+        reporting <em>the chief sent me scatter</em>.</li>
         <li><b>B.</b> Chief the liar, sending <em>hold</em> to the first guard and <em>scatter</em>
         to the second; the second guard is honest and reports the same words.</li>
-        <li>The first guard receives the same two things in A and B and nothing else, so he does the
-        same in both. In A the chief is honest, so he must hold; hence he holds in B.</li>
+        <li>The first guard receives the same two things in A and B and nothing else, so the first guard does the same in both. In A the chief is honest, so the first guard must hold, and therefore holds in B.</li>
         <li><b>C</b>, the mirror of A: chief honest, sending <em>scatter</em> to both; the first
-        guard lies. By the same argument the second guard scatters in C, and B looks like C to him,
-        so he scatters in B.</li>
+        guard lies. By the same argument the second guard scatters in C, and B looks like C to the second guard, who therefore scatters in B.</li>
         <li>In B both guards are honest and have gone two ways, against the first
         condition.<span class="qed">∎</span></li>
       </ol>
@@ -592,26 +590,24 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         <li>Set three real men, one a liar, to play the parts: the real chief plays the parts' chief
         and at most <var>m</var> − 1 of its guards, and each real guard plays at most <var>m</var>
         of its guards. Since <var>n</var> ≤ 3<var>m</var>, they divide so.</li>
-        <li>Word between two parts played by one man passes in his head; word between parts played
+        <li>Word between two parts played by one man passes in that man's head; word between parts played
         by different men goes by rat, and, as the rats above are assumed to give, arrives as sent and correctly
         attributed.</li>
-        <li>At most one real man lies, and he plays at most <var>m</var> parts, so at most
+        <li>At most one real man lies, and that man plays at most <var>m</var> parts, so at most
         <var>m</var> parts lie — which the method was assumed to bear. It therefore keeps both
         conditions among the parts.</li>
-        <li>By the first condition, all the parts played by one honest real man obey one order,
-        which he obeys; by the second, if the real chief is honest then every honest part obeys his
-        order. So the three real men satisfy both conditions against one liar, which, as we saw, cannot be done.<span class="qed">∎</span></li>
+        <li>By the first condition, all the parts played by one honest real man obey one order, which that man obeys; by the second, if the real chief is honest then every honest part obeys the real chief's order. So the three real men satisfy both conditions against one liar, which, as we saw, cannot be done.<span class="qed">∎</span></li>
       </ol>
     </details>
     <details class="proof">
       <summary>The Repeating, stated formally</summary>
       <p class="given">The Repeating bearing <var>m</var> liars is the paper's algorithm OM(<var>m</var>); the greater count is its function <code>majority</code>. <b>What it gives.</b> Bearing <var>m</var> liars, it meets both conditions whenever there are more than 3<var>m</var> men and at most <var>m</var> of them lie.</p>
       <ol class="proofsteps">
-        <li><b>(1)</b> The chief sends his order to every guard.</li>
-        <li><b>(2)</b> Each guard takes what he received, or <em>hold</em> if nothing
-        came, and — unless <var>m</var> is zero — acts as chief himself in the Repeating bearing
+        <li><b>(1)</b> The chief sends an order to every guard.</li>
+        <li><b>(2)</b> Each guard takes what was received, or <em>hold</em> if nothing
+        came, and — unless <var>m</var> is zero — acts as chief in turn in the Repeating bearing
         <var>m</var> − 1 liars, putting that order about to the other guards.</li>
-        <li><b>(3)</b> Each guard now holds his own account and one from each other
+        <li><b>(3)</b> Each guard now holds their own account and one from each other
         guard, and obeys the greater count of them.</li>
       </ol>
     </details>
@@ -633,8 +629,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         <var>k</var> = <var>m</var> gives the second condition, and the first follows from it.</li>
         <li>If the chief lies, at most <var>m</var> − 1 guards lie, and there are more than
         3<var>m</var> − 1 &gt; 3(<var>m</var> − 1) guards, so the hypothesis applies to their
-        repeatings: for each guard, any two honest guards end holding the same account of what he
-        put about.</li>
+        repeatings: for each guard, any two honest guards end holding the same account of what that guard put about.</li>
         <li>So any two honest guards hold the same accounts in the same places, and the same greater
         count of them. The first condition holds; the second is vacuous, the chief being a
         liar.<span class="qed">∎</span></li>
@@ -683,25 +678,22 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <summary>The Sealed Repeating, stated formally</summary>
       <p class="given">The Sealed Repeating bearing <var>m</var> liars is the paper's algorithm SM(<var>m</var>); a seal is its unforgeable signature (assumption A4), and a sheaf is the set <var>V</var><sub>i</sub> held by guard <var>i</var>. The standing rule is its function <code>choice</code>. A slip <span class="term">hold : 1 : 2</span> is the paper's <var>v</var> : 0 : <var>j</var><sub>1</sub>, with the chief's seal first.</p>
       <ol class="proofsteps">
-        <li><b>(1)</b> The chief seals his order and sends it to every guard.</li>
-        <li><b>(2)</b> A guard given a properly sealed order not yet in his sheaf puts
-        it in; and if fewer than <var>m</var> guards' seals stand on it — the chief's not counted — he
-        adds his own and sends it to every guard not already named on it.</li>
-        <li><b>(3)</b> When no further slip can come, he obeys the standing rule
-        applied to his sheaf.</li>
+        <li><b>(1)</b> The chief seals an order and sends it to every guard.</li>
+        <li><b>(2)</b> A guard given a properly sealed order not yet in the sheaf puts it in; and if fewer than <var>m</var> guards' seals stand on it — the chief's not counted — the guard adds their own seal and sends it to every guard not already named on it.</li>
+        <li><b>(3)</b> When no further slip can come, the guard obeys the standing rule
+        applied to the sheaf.</li>
       </ol>
     </details>
     <details class="proof">
       <summary>Proof — that the Sealed Repeating works against any number of liars</summary>
       <p class="given">Let <var>m</var> be the number of liars the method is built to bear, <var>i</var> and <var>j</var> two honest guards, and <var>k</var> the number of guards' seals standing on a slip, the chief's not counted. <b>Claim.</b> Whatever the number of men, if at most <var>m</var> lie, both conditions hold. A sheaf is the set of orders a guard has put in.</p>
       <ol class="proofsteps">
-        <li><b>Second condition.</b> An honest chief seals one order and sends it to all, and no one
-        can counterfeit his seal, so every honest guard's sheaf holds exactly that order and the
+        <li><b>Second condition.</b> An honest chief seals one order and sends it to all, and no one can counterfeit that seal, so every honest guard's sheaf holds exactly that order and the
         standing rule returns it.</li>
         <li><b>First condition.</b> Take the chief to be a liar. It is enough that if an honest
-        guard <var>i</var> has an order in his sheaf, every honest guard <var>j</var> has it too;
+        guard <var>i</var> has an order in the sheaf, every honest guard <var>j</var> has it too;
         equal sheaves give equal answers.</li>
-        <li>If <var>i</var> received it under the chief's seal alone, he sealed it and sent it to
+        <li>If <var>i</var> received it under the chief's seal alone, <var>i</var> sealed it and sent it to
         every other guard, so <var>j</var> has it.</li>
         <li>If it reached <var>i</var> carrying <var>k</var> guards' seals and <var>j</var> is among
         them, <var>j</var> had it already.</li>
@@ -709,7 +701,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         seals it and sends it to every guard not named on it, <var>j</var> included.</li>
         <li>If <var>j</var> is not among them and <var>k</var> = <var>m</var>: the chief is a liar,
         so at most <var>m</var> − 1 guards lie, so one of the <var>m</var> named on the slip is
-        honest — and he, when he first received the order, sent it to every guard not then named on
+        honest — and that guard, on first receiving the order, sent it to every guard not then named on
         it, <var>j</var> among them.</li>
         <li>Nowhere were the men counted. The bound of four men to a liar belongs to unsealed slips, not
         to lying, and the seals dissolve it.<span class="qed">∎</span></li>
@@ -777,14 +769,12 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         <p>The bandits go by number, not by name: bandit 1 is the chief inside the ring wall and bandits 2, 3
     and 4 hold the posts. The mercenaries at the foot are numbered separately, so the bandits' bandit 1 is not the mercenary in tent 1.</p>
         <p><b>The ideas.</b> A commander must get an order to n − 1 lieutenants so that IC1 all
-    loyal lieutenants obey the same order and IC2 they obey his if he is loyal. IC2 gives IC1 only
-    when the commander is loyal, and he may not be: that is the problem. With oral messages no
+    loyal lieutenants obey the same order and IC2 they obey the commander's order if the commander is loyal. IC2 gives IC1 only when the commander is loyal, which is not assured: that is the problem. With oral messages no
     solution exists for three generals against one traitor, because a loyal lieutenant cannot
     distinguish a lying commander from a lying peer; more generally nothing works below 3m + 1
     generals, shown by having three generals each simulate a third of a hypothetical smaller
     solution, and settling for approximate agreement does not help, since it can be turned back
-    into exact agreement. Above the bound, OM(m) works: the commander sends his value, each
-    lieutenant relays what he got by OM(m − 1), and each takes the majority — one extra round per
+    into exact agreement. Above the bound, OM(m) works: the commander sends a value, each lieutenant relays what was received by OM(m − 1), and each takes the majority — one extra round per
     traitor tolerated. Unforgeable signatures change everything: SM(m) tolerates any number of
     traitors with no requirement at all on the number of generals, and three generals suffice
     against one. No assumption is made about a traitor's signature, so signatures prove what the

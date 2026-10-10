@@ -501,8 +501,8 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         <li>Go on to round <var>r</var> + 1.</li>
       </ol>
       <p><b>The same, for <var>N</var> men of whom <var>t</var> may fall silent.</b> Wait each time for <var>N</var> − <var>t</var> birds. Send <i>sure of v</i> when more than <var>N</var>/2 of the reports received name <var>v</var>. Favour <var>v</var> on one <i>sure of v</i>; settle on <var>v</var> on more than <var>t</var> of them; toss otherwise. The arrangement needs <var>N</var> &gt; 2<var>t</var>. On the hill, <var>N</var> = 4 and <var>t</var> = 1.</p>
-      <p><b>The rule of parting.</b> A man who becomes settled on an answer in round <var>r</var> at once sends both his birds of round <var>r</var> + 1 to all: the report, that answer, and the second bird, <i>sure of</i> that answer. Then he leaves his tent and commits to it.</p>
-      <p>This rule is not in Ben-Or's paper. There a process that has decided simply goes on taking part, and nothing is said of stopping. On the hill deciding is committing, and committing is silence, so the rule is needed; the two birds it sends early are exactly the two the man would have sent had he stayed.</p>
+      <p><b>The rule of parting.</b> A man who becomes settled on an answer in round <var>r</var> at once sends both birds of round <var>r</var> + 1 to all: the report, that answer, and the second bird, <i>sure of</i> that answer. Then the man leaves the tent and commits to it.</p>
+      <p>This rule is not in Ben-Or's paper. There a process that has decided simply goes on taking part, and nothing is said of stopping. On the hill deciding is committing, and committing is silence, so the rule is needed; the two birds it sends early are exactly the two the man would have sent by staying.</p>
     </details>
   </div>
 </section>
@@ -541,22 +541,20 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
     <p class="tell">The coins cannot divide the four, then, and when the sightings agree no coin is tossed at all. What is left is the night on which the sightings are split and nobody can be sure. On such a night only the coins can bring the four together.</p>
     <details class="proof">
-      <summary>Proof · that once one man is settled, all end at his answer</summary>
+      <summary>Proof · that once one man is settled, all end at that answer</summary>
       <p class="given">In the paper's terms the four tents are <var>N</var> = 4 processes, at most <var>t</var> = 1 of which may crash; a sighting is an initial value, a report is the message (1, <var>r</var>, <var>x</var>), <i>sure of</i> <var>v</var> is the D-message (2, <var>r</var>, <var>v</var>, D), <i>unsure</i> is (2, <var>r</var>, ?), being <i>settled</i> is deciding, and a process waits for <var>N</var> − <var>t</var> = 3 messages at each step. <b>Claim.</b> If a process decides <var>v</var> in round <var>r</var>, then every process that completes round <var>r</var> adopts <var>v</var>, and every process that does not crash decides <var>v</var> in round <var>r</var> + 1. This is Theorem 1 (iii).</p>
     <ol class="proofsteps">
       <li>Say Number 1 is settled on hold in round <var>r</var>. Then two or more of the three
-      second birds that reached him said <i>sure of hold</i>, so at least two such birds were sent in
+      second birds that reached Number 1 said <i>sure of hold</i>, so at least two such birds were sent in
       round <var>r</var>.</li>
-      <li>Any other man who finishes round <var>r</var> read three of the four second birds of that
-      round, so he missed at most one. He therefore read at least one <i>sure of hold</i>. By
-      <i>one sure answer a round</i> he read no <i>sure of attack</i>, so he favours hold: by rule (a) if
-      he read one, and he may also be settled on hold by rule (b). He does not toss.</li>
+      <li>Any other man who finishes round <var>r</var> read three of the four second birds of that round, and so missed at most one. That man therefore read at least one <i>sure of hold</i>. By
+      <i>one sure answer a round</i> the same man read no <i>sure of attack</i>, and so favours hold: by rule (a) on reading one, and perhaps settled on hold by rule (b). No toss is made.</li>
       <li>So every report of round <var>r</var> + 1 names hold. Every man who reaches step (2) of that
       round sees three reports of hold and sends <i>sure of hold</i>; every man who reaches step (3)
       reads three <i>sure of hold</i> and is settled on hold.</li>
       <li>The birds a settled man sends early under the rule of parting are a report of hold and
-      <i>sure of hold</i>. By step 3 these are exactly the birds he would have sent in round
-      <var>r</var> + 1 had he stayed, whichever three reports he had read. So the rule changes nothing
+      <i>sure of hold</i>. By step 3 these are exactly the birds that man would have sent in round
+      <var>r</var> + 1 by staying, whichever three reports were read. So the rule changes nothing
       the others see, and each of them still gets three birds at every step, since at most one man
       is dead and the settled ones have sent theirs.</li>
       <li>No man is settled on attack in round <var>r</var> or any later round, since no <i>sure of
@@ -650,7 +648,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       row is at most (15/16)<sup><var>k</var></sup>, which shrinks towards nothing as <var>k</var>
       grows. The chance that it fails for ever is therefore nothing.<span class="qed">∎</span></li>
     </ol>
-      <p>Is the sketch airtight? No, and it should be said plainly where it fails. Step 1 treats the answer <var>g</var> as fixed before the round's tosses. But a slow man's report for round <var>r</var> comes from how his round <var>r</var> − 1 ended, and the arranger chooses which second birds he reads there, and may choose after seeing some tosses of round <var>r</var>. So the answer named <i>sure</i> in round <var>r</var> can be picked against the early tosses, and the one-in-sixteen of step 3 is not a bound anyone has proved. Ben-Or's paper states its theorems without any proof. A proof that closes every such gap was published only in 2012, by Aguilera and Toueg; it comes to the same conclusion by a longer road.</p>
+      <p>Is the sketch airtight? No, and it should be said plainly where it fails. Step 1 treats the answer <var>g</var> as fixed before the round's tosses. But a slow man's report for round <var>r</var> comes from how that man's round <var>r</var> − 1 ended, and the arranger chooses which second birds are read there, and may choose after seeing some tosses of round <var>r</var>. So the answer named <i>sure</i> in round <var>r</var> can be picked against the early tosses, and the one-in-sixteen of step 3 is not a bound anyone has proved. Ben-Or's paper states its theorems without any proof. A proof that closes every such gap was published only in 2012, by Aguilera and Toueg; it comes to the same conclusion by a longer road.</p>
       <p>What is not claimed? <b>No night can be named</b> by which the four will have committed. There is no round after which committing is certain; there is only a chance, growing towards one, that it has happened by then. Ben-Or's paper gives no figure for how fast that chance grows, and this book gives none.</p>
     </details>
   </div>
