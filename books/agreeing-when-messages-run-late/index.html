@@ -566,10 +566,10 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <p class="tell">Turn five ran in still air. In the wind, birds come late, are set aside, or sit in the pines for glass after glass, and pledges tied on such a night must still never commit two men to different answers.</p>
     <details class="proof">
       <summary>The four glasses of a turn, stated in the paper's terms</summary>
-      <p><b>The asking glass.</b> Every man, the owner included, sends the owner the answers he can accept that are among the sighted answers.<br>
-      <b>The calling glass.</b> If at least three men, himself included, named the same answer, the owner calls it: he sends <i>pledge to hold, turn five</i>, say, to every tent, his own included. If both answers qualify he calls either; if neither, he calls nothing.<br>
-      <b>The answering glass.</b> A man who took in the call in the calling glass ties a pledge for that answer and turn, unties any earlier pledge on the <i>same</i> answer, and sends the owner <i>pledged</i>. A pledge on the other answer stays where it is. If the owner takes in <i>pledged</i> from at least two men, himself possibly among them, he commits to the answer he called.<br>
-      <b>The untying glass.</b> Every man sends every tent all his pledges, answer and turn. A man with a pledge on one answer who learns of a pledge on the other answer at a turn as late as his own, or later, unties his.</p>
+      <p><b>The asking glass.</b> Every man, the owner included, sends the owner the answers that man can accept and that are among the sighted answers.<br>
+      <b>The calling glass.</b> If at least three men, the owner included, named the same answer, the owner calls it, sending <i>pledge to hold, turn five</i>, say, to every tent, the owner's own included. If both answers qualify the owner calls either; if neither, the owner calls nothing.<br>
+      <b>The answering glass.</b> A man who took in the call in the calling glass ties a pledge for that answer and turn, unties any earlier pledge on the <i>same</i> answer, and sends the owner <i>pledged</i>. A pledge on the other answer stays where it is. If the owner takes in <i>pledged</i> from at least two men, the owner possibly among them, the owner commits to the answer called.<br>
+      <b>The untying glass.</b> Every man sends every tent all the pledges tied there, answer and turn. A man with a pledge on one answer who learns of a pledge on the other answer at a turn as late as that pledge's own, or later, unties it.</p>
       <p class="given">Algorithm 1, §3.2.1: trying phase <var>k</var> of three rounds and lock-release phase <var>k</var> of one; phase <var>k</var> belongs to <var>p</var><sub>i</sub> when <var>k</var> ≡ <var>i</var> (mod <var>N</var>). A proposal needs <var>N</var> − <var>t</var> = 3 processors finding the value acceptable and proper; a decision needs acknowledgments from <var>t</var> + 1 = 2. The sighted answers are the PROPER set.</p>
     </details>
   </div>
@@ -603,16 +603,16 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <summary>Proof · that no two men commit to different answers, in any wind</summary>
       <p class="given">In the paper's terms a turn is a phase, a pledge is a lock, to accept an answer is to find a value acceptable, and to commit is to decide; <var>k</var> and <var>h</var> are turn numbers, <var>N</var> = 4 and <var>t</var> = 1. <b>Theorem 3.1 and Theorem 4.1(a).</b> However messages are delayed, no two processors decide different values (consistency), and if all four started with the same value no processor decides another (strong unanimity).</p>
     <ol class="proofsteps">
-      <li><b>One answer per turn.</b> Only a turn's owner calls, and he calls at most one answer in it.
+      <li><b>One answer per turn.</b> Only a turn's owner calls, and the owner calls at most one answer in it.
       A pledge for turn <var>k</var> is tied only on taking in the call of turn <var>k</var>. So all
       pledges for turn <var>k</var> are on one answer.</li>
       <li>Suppose some man commits, and let turn <var>k</var> be the earliest turn in which
-      an owner committed; say he committed to hold. He had <em>pledged</em> from two men, so two men tied
+      an owner committed; say that owner committed to hold. The owner had <em>pledged</em> from two men, so two men tied
       <em>hold, turn k</em>. Men who commit on a parting bird (described below) commit to an answer some owner committed to
       earlier, so it is enough to show that no owner in a later turn commits to attack.</li>
       <li><b>The two keep a pledge to hold.</b> Suppose not, and take the first untying glass in
       which one of the two unties a pledge to hold for turn <var>k</var> or later without having a
-      later one. He unties it on learning of a pledge to attack for some turn <var>h</var> at least
+      later one. That man unties it on learning of a pledge to attack for some turn <var>h</var> at least
       as late. By step 1, <var>h</var> is not <var>k</var>, so <var>h</var> is later than
       <var>k</var>, and no later than this untying glass.</li>
       <li>A pledge to attack for turn <var>h</var> means attack was called in turn <var>h</var>, so
@@ -683,23 +683,23 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       and in a still untying glass every live man hears from every other. After it, an answer that any
       live man knows was seen is known to all of them. An answer still pledged was called by some
       owner, who called it from a list, so it is among them.</li>
-      <li>If some man had already committed when the wind dropped, his parting birds are never lost, so
+      <li>If some man had already committed when the wind dropped, that man's parting birds are never lost, so
       they reach every tent in the end and every man left alive commits. A parting bird let go while the
       wind blew may still be in the pines, so no count of glasses bounds this. So suppose no one had
-      committed when the wind dropped. From then on a man who commits sends his parting birds in still air,
+      committed when the wind dropped. From then on a man who commits sends parting birds in still air,
       and they arrive within the glass.</li>
       <li>The wind drops during some turn. The untying glass of the turn after it is wholly still. Of
       the two turns after that, at least one is owned by a live man, since only one man may be dead.
       Take the first of them owned by a live man: it begins within three turns of the drop and ends
       within four, sixteen glasses.</li>
       <li>In its asking glass, each of the live men, at least three, names every answer on the common
-      list that he can accept. If some answer is still pledged, every live man can accept it, since no
+      list that the man can accept. If some answer is still pledged, every live man can accept it, since no
       pledge on the other answer remains; and it is on the list. If none is pledged, every live man can
       accept every answer on the list. Either way at least three men name a common answer, and the owner
       hears them all within the glass and calls it.</li>
       <li>Every live man takes in the call within the calling glass, pledges and sends
       <em>pledged</em>; the owner takes in at least two within the answering glass and commits, sending
-      his parting birds, within sixteen glasses of the wind's dropping.</li>
+      parting birds, within sixteen glasses of the wind's dropping.</li>
       <li>By the parting birds, every man left alive then commits, and by Never Two Answers they all commit to the same answer.<span class="qed">∎</span></li>
     </ol>
     </details>
@@ -737,23 +737,23 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <summary>Proof · that four men cannot bear two deaths</summary>
       <p class="given">In the paper's terms this is <b>Theorem 4.3</b>: there is no <var>t</var>-resilient consensus protocol for fail-stop faults when <var>N</var> ≤ 2<var>t</var>, even for weak unanimity and binary values. Here <var>N</var> = 4 and <var>t</var> = 2. <var>A</var> and <var>B</var> are numbers of glasses.</p>
     <ol class="proofsteps">
-      <li>Suppose some arrangement does. Divide the four into two pairs, Numbers 1 and 2 on one
-      side, Numbers 3 and 4 on the other.</li>
-      <li><b>The first night.</b> All four sighted hold. Numbers 3 and 4 are dead from dusk,
-      and every bird between Numbers 1 and 2 is taken in within its glass. Two deaths are
-      allowed, so by the third demand Numbers 1 and 2 commit, within some number of glasses, say
+      <li>Suppose some arrangement does. Divide the four into two pairs, tents 1 and 2 on one
+      side, tents 3 and 4 on the other.</li>
+      <li><b>The first night.</b> All four sighted hold. The men of tents 3 and 4 are dead from dusk,
+      and every bird between tents 1 and 2 is taken in within its glass. Two deaths are
+      allowed, so by the third demand the men of tents 1 and 2 commit, within some number of glasses, say
       <var>A</var>. They commit to hold. For if they committed to attack, take a night the same for them in every
-      respect, except that Numbers 3 and 4 are alive and sighted hold, and the wind holds every
-      bird from them for more than <var>A</var> glasses before dropping. Numbers 1 and 2 cannot
+      respect, except that the men of tents 3 and 4 are alive and sighted hold, and the wind holds every
+      bird from them for more than <var>A</var> glasses before dropping. Tents 1 and 2 cannot
       tell that night from this one, so they commit to attack, though all four were alive and sighted hold.</li>
-      <li><b>The second night.</b> All four sighted attack; Numbers 1 and 2 are dead from dusk;
-      by the same argument Numbers 3 and 4 commit to attack within some <var>B</var> glasses.</li>
-      <li><b>The third night.</b> Numbers 1 and 2 sighted hold, Numbers 3 and 4 attack.
+      <li><b>The second night.</b> All four sighted attack; the men of tents 1 and 2 are dead from dusk;
+      by the same argument tents 3 and 4 commit to attack within some <var>B</var> glasses.</li>
+      <li><b>The third night.</b> Tents 1 and 2 sighted hold, tents 3 and 4 attack.
       Nobody dies. Birds within each pair are taken in within their glass, and the wind holds every
       bird between the pairs for more than <var>A</var> and more than <var>B</var> glasses, and then
       drops. That is a night the wind allows.</li>
-      <li>Numbers 1 and 2 cannot tell the third night from the first until more than
-      <var>A</var> glasses have passed, and by then they have committed to hold. Numbers 3 and 4
+      <li>Tents 1 and 2 cannot tell the third night from the first until more than
+      <var>A</var> glasses have passed, and by then they have committed to hold. Tents 3 and 4
       cannot tell it from the second, and have committed to attack. Two men committed to different answers, which
       contradicts the first demand.<span class="qed">∎</span></li>
     </ol>
@@ -804,12 +804,12 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <li>Take three posts, <var>P</var>, <var>Q</var> and <var>R</var>, of whom one may lie, and
       suppose some arrangement meets the three demands.</li>
       <li><b>The first night.</b> All sighted hold. <var>R</var> is silent from dusk, which a liar may
-      be. <var>P</var> and <var>Q</var> must act without him, within some number of glasses, and, as with the two pairs of men, they must choose hold.</li>
+      be. <var>P</var> and <var>Q</var> must act without <var>R</var>, within some number of glasses, and, as with the two pairs of men, they must choose hold.</li>
       <li><b>The second night.</b> All sighted scatter. <var>P</var> is silent from dusk.
       <var>Q</var> and <var>R</var> choose scatter, within some number of glasses.</li>
       <li><b>The third night.</b> <var>P</var> sighted hold, <var>R</var> scatter, and <var>Q</var> is
-      the liar. To <var>P</var> he behaves exactly as on the first night, to <var>R</var> exactly as on
-      the second, sealing every strip honestly with his own seal. The wind holds every bird between
+      the liar. To <var>P</var> the liar behaves exactly as on the first night, to <var>R</var> exactly as on
+      the second, sealing every strip honestly with the liar's own seal. The wind holds every bird between
       <var>P</var> and <var>R</var> until both have acted. <var>P</var> cannot tell this night from
       the first, nor <var>R</var> from the second, so they choose differently.<span class="qed">∎</span></li>
     </ol>
@@ -831,7 +831,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does anyone learn when the wind dropped?</h3><p>Nothing in the arrangement detects the calm, so no man ever learns of it. The four run the same turns in the wind and after it, and the proofs do the knowing on their behalf. A man who commits knows only that two <i>pledged</i> birds came in time, and a man still waiting cannot tell whether the wind is still up or the owner is dead.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Would the glasses alone have been enough?</h3><p>Glasses turned together, with no longest flight, leave the four able to arrange nothing.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup> A glass that runs out with nothing at the perch tells a man only that a glass has run out. What makes the glasses count is the promise about the wind. Take either away, the common count or the dropping wind, and nothing can be arranged.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What if the glasses had not been turned together?</h3><p>The four here have one common moment, the last light on the crown. The paper also answers for men with none, whose glasses run at somewhat different rates. They make a common count by birds alone: each sends the others the count reached, and moves on only when enough others show they have passed it, never so far that the dead or the slow could not catch up. This is a clock kept by ravens. It needs the same more-than-half, and its proof is long.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What if nobody knew how long a still flight takes?</h3><p>Here every man knows the span of a still flight, and a glass is made to fit it. The paper also answers for men who know only that some such span exists. Each round is given a little more time than the one before, so that in the end the rounds outlast any flight, and from then on the arrangement works as before.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What if nobody knew how long a still flight takes?</h3><p>Here every man knows the span of a still flight, and a glass is made to fit it. The paper also answers for men who know only that some such span exists. Each glass is given a little more time than the one before, so that in the end the glasses outlast any flight, and from then on the arrangement works as before.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is there a bound before the wind drops?</h3><p>There is none. The twenty glasses are counted from a moment nobody sees, and how long the wind blows is up to the wind. On a night when it never drops, nobody can be made to commit.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup> Nobody commits to a wrong answer either.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it matter that no bird is lost?</h3><p>It matters for stopping. The four can leave their tents and commit because a parting bird, once let go, always arrives. If birds could be lost while the wind blew, the paper observes that some man would have to go on sending for ever, however the arrangement was made, since no one could be sure a parting bird had reached the others.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is the wind the only way out?</h3><p>There are other ways out at these tents, each changing one thing. Men who may each toss a coin, alone in a tent, commit with probability one, on no night anyone can name.<sup class="xref"><a href="../agreeing-by-chance/index.html#s6" title="Agreeing by Chance: With Probability One">*</a></sup> Men each given a slate that in the end chalks the dead, and in the end spares one living man, can agree while a majority is alive.<sup class="xref"><a href="../telling-the-dead-from-the-slow/index.html" title="Telling the Dead from the Slow">*</a></sup> Here nothing is given to the men, and the change is in the wind. The three differ in kind: the coin needs no promise about time and gives none, the slate is granted and not built, and the wind is a fact about the hill. The turn that passes round the tents in number order, fixed by the count and not by anyone's command, is also how men with such slates take turns to propose.<sup class="xref"><a href="../telling-the-dead-from-the-slow/index.html" title="Telling the Dead from the Slow">*</a></sup></p></div></div></div>
