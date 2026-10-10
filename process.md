@@ -28,7 +28,10 @@ A page is self-contained. Its source is four parts in `art/scroll/parts/<slug>/`
 `body.html`, `page.css`, `page.js`); `python3 art/scroll/assemble.py <slug>` copies the shared
 `shell.css` and `shell.js` round them and writes the page, and `art/scroll/shot.sh` checks it in
 headless Chrome. Never edit a built page by hand. *The Part-Time Parliament* predates the kit, and
-its page is edited directly. The pictures a book uses are copied into `books/<slug>/img/`.
+its page is edited directly. The question a book asks, its "We find out by exploring…" line and
+its papers are written once, in `meta.json`; the cover and the book's card on the home page both
+carry them, and `python3 art/scroll/cover.py` checks that they agree (`--write` puts them into
+the cards). The pictures a book uses are copied into `books/<slug>/img/`.
 
 Setting pages (`places/<place>/index.html`) and the home page wear the same look. They are
 ordinary hand-edited pages that link `art/scroll/shell.css`, `art/scroll/place.css` and
@@ -145,7 +148,7 @@ The shape that has worked before:
 
 | | |
 |---|---|
-| **Cover** | Four pieces of text beside the picture: the title; the question from the book's home-page card; the card's "We find out by exploring…" line; and the source papers with their titles and every author, in small print. |
+| **Cover** | Four pieces of text beside the picture: the title; the book's question in machine terms; its "We find out by exploring…" line; and the source papers with their titles and every author, in small print. The last three come from `meta.json`. |
 | **In machine terms** | The paper's problem and result in plain distributed-systems words, with one small interactive that shows the difficulty with machines. |
 | **The setting** | A photograph of the place with the premise in two or three sentences. Link the setting page with a superscript; do not describe the place again. |
 | **The model** | One spread per device, each built up by an interactive. The reader should not notice they are being handed a formal system. |
@@ -321,7 +324,8 @@ Before calling a book done (the brief's checklist has the mechanics):
 - [ ] The *must not exist* list is checked against the finished draft.
 - [ ] Nothing contradicts a book that shares the setting.
 - [ ] Every claim traceable to the paper has been checked against the PDF.
-- [ ] Added to the home page, `index.html`, as a cover card in its section.
+- [ ] Added to the home page, `index.html`, as a cover card in its section, and `cover.py`
+      reports that the card and the cover agree with `meta.json`.
 - [ ] The place's setting page, `places/<place>/index.html`, lists the book and still
   describes the place truly. Each home-page section opens with its setting page, the brief a
   reader needs before reading that section's books in any order. Its opening picture is a

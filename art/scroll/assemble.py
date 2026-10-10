@@ -3,25 +3,30 @@
     python3 art/scroll/assemble.py <slug>
 
 Parts live in art/scroll/parts/<slug>/:
-    meta.json   {"title": "...", "description": "..."}
-    body.html   everything inside <body>, from the top bar to the footer
+    meta.json   {"title": "...", "description": "..."} and the cover's words (see cover.py)
+    body.html   everything inside <body>, from the top bar to the footer; its cover says
+                {{question}}, {{how}} and {{source}}, filled in from meta.json
     page.css    styles only this book needs (may be empty)
     page.js     this book's interactives; runs after shell.js, inside one function scope
 
 The page that comes out is self-contained: shell.css and shell.js are copied into it.
-The Part-Time Parliament is not built this way; its page is edited directly.
+The Part-Time Parliament is not built this way; its page is edited directly, and cover.py keeps
+its cover in step with its meta.json.
 """
-import json, sys
+import sys
 from pathlib import Path
+from cover import fill, load
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 slug = sys.argv[1]
 part = HERE / "parts" / slug
-meta = json.loads((part / "meta.json").read_text())
+if not (part / "body.html").exists():
+    sys.exit(f"{slug} has no body.html: its page is edited directly")
+meta = load(slug)
 css = (HERE / "shell.css").read_text() + (part / "page.css").read_text()
 js = (HERE / "shell.js").read_text() + "\n" + (part / "page.js").read_text()
-body = (part / "body.html").read_text()
+body = fill((part / "body.html").read_text(), meta)
 out = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
