@@ -525,9 +525,9 @@ button.beg{cursor:pointer}
     <details class="proof">
       <summary>The camps of this book, stated formally</summary>
       <ol class="proofsteps">
-        <li>On these nights there is no wind. A bird that arrives does so within a known span, a <b>flight</b>; a man answers a bird within a known span of his own.</li>
+        <li>On these nights there is no wind. A bird that arrives does so within a known span, a <b>flight</b>; a man answers a bird within a known span of that man's own.</li>
         <li>Any bird may be lost, and between a cut-off tent and the rest every bird is lost, for as long as that lasts.</li>
-        <li>Each tent has a sandglass. The glasses run alike, so a man can measure how long he has waited, but no man can tell what another's glass shows.</li>
+        <li>Each tent has a sandglass. The glasses run alike, so a man can measure the length of a wait, but no man can tell what another's glass shows.</li>
       </ol>
       <p class="fnote">Gilbert &amp; Lynch's partially synchronous model with arbitrary message loss, §4.1: a known bound <var>t</var><sub>msg</sub> on delivery of messages that are not lost, and local timers at the same rate.</p>
     </details>
@@ -573,8 +573,7 @@ button.beg{cursor:pointer}
       <ol class="proofsteps">
         <li>Suppose some arrangement did both. Put tent 4 on one side and the other three on the
         other, and lose every bird between them for the whole of what follows.</li>
-        <li><b>The first night.</b> The plan stands at hold. Number 2 moves it to attack. Since every man
-        is answered, he is told it stands. Nothing else happens anywhere. Call the time this takes
+        <li><b>The first night.</b> The plan stands at hold. Number 2 moves it to attack. Since every man is answered, Number 2 is told it stands. Nothing else happens anywhere. Call the time this takes
         <var>T</var>, by the glass.</li>
         <li><b>The second night.</b> The plan stands at hold. Nothing happens anywhere for at least
         <var>T</var>. Then Number 4 asks which plan stands, and is answered. Nobody moved it, so answering
@@ -582,9 +581,8 @@ button.beg{cursor:pointer}
         <li><b>Put them together.</b> Let the first night happen among the three and the second at
         tent 4, at the same time. The three cannot tell this from the first night, since nothing reaches
         them from tent 4 in either, so Number 2's move is made and answered as before. Because of the
-        quiet span, Number 4 asks after his move was finished.</li>
-        <li>Number 4 cannot tell this from the second night. He began with the same note, his glass has
-        run the same, and no bird has reached him in either. So he answers hold.</li>
+        quiet span, Number 4 asks after Number 2's move was finished.</li>
+        <li>Number 4 cannot tell this from the second night. Number 4 began with the same note, the glass has run the same, and no bird has reached tent 4 in either. So Number 4 answers hold.</li>
         <li>But Number 2's move was finished before Number 4 asked, so it comes first in any order that
         answers as one, and a single record would have said attack. That contradicts the
         supposition.<span class="qed">∎</span></li>
@@ -630,7 +628,7 @@ button.beg{cursor:pointer}
       <ol class="proofsteps">
         <li>One tent keeps the only note of the standing plan.</li>
         <li>A man at any other tent is answered only when the keeper's answer has come back.</li>
-        <li>The keeper deals with birds one at a time, in the order he takes them in.</li>
+        <li>The keeper deals with birds one at a time, in the order they are taken in.</li>
       </ol>
       <p class="fnote">The centralized algorithm, §3.2.1–3.2.2.</p>
     </details>
@@ -640,7 +638,7 @@ button.beg{cursor:pointer}
       <ol class="proofsteps">
         <li>Order all moves and questions by the moment the keeper dealt with them. This is one order,
         the same whichever tent the man was at.</li>
-        <li>Every answer is the keeper's, from his one note in that order, so each is what a single
+        <li>Every answer is the keeper's, from the keeper's one note in that order, so each is what a single
         record would say.</li>
         <li>The keeper deals with a man's business after it began, since the bird was sent then, and
         before it ends, since the answer waits for the keeper. So each takes effect within its span,
@@ -695,8 +693,8 @@ button.beg{cursor:pointer}
       <summary>Waiting a glass, stated formally</summary>
       <ol class="proofsteps">
         <li>A man who moves the plan or asks sends a bird to the keeper and turns a glass that runs for two flights and the keeper's time to answer.</li>
-        <li>If the keeper's answer comes before the glass runs out, he takes it.</li>
-        <li>If the glass runs out first, he answers from his own note: a question gets the latest plan the keeper has sent him, unless he has himself moved the plan since, in which case it gets his own move; a move is told it stands.</li>
+        <li>If the keeper's answer comes before the glass runs out, the man takes it.</li>
+        <li>If the glass runs out first, the man answers from the tent's own note: a question gets the latest plan the keeper has sent that tent, unless the man has moved the plan since, in which case it gets that move; a move is told it stands.</li>
       </ol>
       <p class="fnote">A timeout of 2<var>t</var><sub>msg</sub> + <var>t</var><sub>local</sub>, §4.3.</p>
     </details>
@@ -756,28 +754,25 @@ button.beg{cursor:pointer}
     </details>
     <details class="proof">
       <summary>The keeper's arrangement with a span, stated formally</summary>
-      <p><b>At every tent, always:</b> every bird from the keeper carries the plan and its number, and a man keeps the highest-numbered one he has had. Every bird a man sends the keeper carries all his unacknowledged moves, in order.</p>
-      <p><b>A question:</b> send to the keeper and wait a glass. If the keeper answers in time, give that answer. If not, give the latest of his own unacknowledged moves, or if there is none, the highest-numbered plan he has.</p>
+      <p><b>At every tent, always:</b> every bird from the keeper carries the plan and its number, and a man keeps the highest-numbered one to have come. Every bird a man sends the keeper carries all that man's unacknowledged moves, in order.</p>
+      <p><b>A question:</b> send to the keeper and wait a glass. If the keeper answers in time, give that answer. If not, give the latest of the asker's own unacknowledged moves, or if there is none, the highest-numbered plan the asker holds.</p>
       <p><b>A move:</b> send to the keeper and wait a glass. It stands when the keeper acknowledges it or the glass runs out, whichever is first. Until acknowledged, send it again, often enough that with no bird lost it reaches the keeper within half of <var>t</var>.</p>
-      <p><b>At the keeper:</b> each move that reaches him, taken in its sender's order, changes his note and takes the next number. He sends the plan and number to every tent, again and again to any that has not acknowledged it, often enough that with no bird lost they arrive within half of <var>t</var>.</p>
+      <p><b>At the keeper:</b> each move that reaches the keeper, taken in its sender's order, changes the keeper's note and takes the next number. The keeper sends the plan and number to every tent, again and again to any that has not acknowledged it, often enough that with no bird lost they arrive within half of <var>t</var>.</p>
       <p class="fnote">The modified centralized algorithm, Theorem 4.</p>
     </details>
     <details class="proof">
       <summary>Proof · that the keeper's arrangement with a span keeps the promise</summary>
       <p class="given">In the paper's terms (Definition 3 and Theorem 4), <var>t</var> is the span, fixed in advance and measured by the local timers, and <var>P</var> is an order on all the moves and questions of a night. <b>Claim.</b> On every night the keeper's arrangement with a span answers every man, and admits an order <var>P</var> satisfying clauses (1) to (5) of the promise of the span, stated above.</p>
       <ol class="proofsteps">
-        <li><b>The order.</b> Order the moves by the keeper's numbers; a move that never reaches him
-        goes after all the numbered ones, in the order it was made. Place each question immediately
+        <li><b>The order.</b> Order the moves by the keeper's numbers; a move that never reaches the keeper goes after all the numbered ones, in the order it was made. Place each question immediately
         after the move whose plan it was given, or at the start if it was given hold from dusk. Then
         every question is answered with the last move before it: clauses (1) and (2).</li>
-        <li><b>Each man's own order.</b> A man's moves reach the keeper in the order he made them, since
+        <li><b>Each man's own order.</b> A man's moves reach the keeper in the order they were made, since
         each bird carries all the earlier unacknowledged ones first; so the keeper numbers them in that
-        order, and has numbered them before he answers that man's question. A man never answers with a
-        lower number than one he holds, and his own unacknowledged moves are newer than anything the
-        keeper has sent him. So each man's questions land after his earlier business: clause (3).</li>
+        order, and has numbered them before answering that man's question. A man never answers with a lower number than one already held, and that man's own unacknowledged moves are newer than anything the keeper has sent. So each man's questions land after that man's earlier business: clause (3).</li>
         <li><b>No bird lost.</b> Then no glass runs out, every answer is the keeper's, and this is the plain keeper's arrangement, which answers as one: clause (4).</li>
         <li><b>A move, then a span.</b> Suppose a move by Number 4 was finished, then more than
-        <var>t</var> passed with no bird lost. In that span his move reaches the keeper and the keeper's
+        <var>t</var> passed with no bird lost. In that span the move reaches the keeper and the keeper's
         number for it reaches every tent, each within half of <var>t</var>. So any move begun after
         the span gets a higher number, and any question begun after it is answered with this move or a
         later one.</li>
@@ -786,7 +781,7 @@ button.beg{cursor:pointer}
         every tent, and the last step places everything begun after the span later in <var>P</var>:
         clause (5).<span class="qed">∎</span></li>
       </ol>
-      <p class="fnote">The paper's own proof of this is a few lines long, and says nothing about how a man should treat his own moves the keeper has not yet acknowledged; the second step supplies it.</p>
+      <p class="fnote">The paper's own proof of this is a few lines long, and says nothing about how a man should treat moves of that man's own that the keeper has not yet acknowledged; the second step supplies it.</p>
     </details>
   </div>
 </section>

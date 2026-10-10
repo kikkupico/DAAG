@@ -508,9 +508,9 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <p class="given">In the paper's terms the holder is the primary, the numbering a pre-prepare, the first echo a prepare, readied is <i>prepared</i> (the pre-prepare and 2<var>f</var> matching prepares), the second echo a commit, and standing is <i>committed-local</i> (prepared and 2<var>f</var> + 1 matching commits). Writing in number order is execution in sequence-number order. (Castro and Liskov, §4.2.)</p>
       <ol class="proofsteps">
         <li><b>Numbering.</b> The holder sends every man <em>in this term, entry 7 is X</em>.</li>
-        <li><b>First echo.</b> A man accepts the numbering if it is from this term's holder, he has not accepted a different entry for number 7 in this term, and 7 is within the numbers now allowed (see settling columns, below). He sends every man <em>in this term, I heard entry 7 is X</em>. When he holds the numbering and two matching first echoes from men other than the holder, his own possibly among them, three seals on the same entry and number, the entry is <b>readied</b> at his post.</li>
-        <li><b>Second echo.</b> Once it is readied, he sends every man <em>in this term, entry 7 is X is readied here</em>. When he holds three matching second echoes, his own among them, the entry <b>stands</b> at his post.</li>
-        <li><b>Carrying out.</b> He writes a standing entry into his copy as soon as every lower number has been written, and sends the filer word that it stands.</li>
+        <li><b>First echo.</b> A man accepts the numbering if it is from this term's holder, the man has not accepted a different entry for number 7 in this term, and 7 is within the numbers now allowed (see settling columns, below). That man sends every man <em>in this term, I heard entry 7 is X</em>. On holding the numbering and two matching first echoes from men other than the holder, the man's own possibly among them, three seals on the same entry and number, the entry is <b>readied</b> at that post.</li>
+        <li><b>Second echo.</b> Once it is readied, that man sends every man <em>in this term, entry 7 is X is readied here</em>. On three matching second echoes, the man's own among them, the entry <b>stands</b> at that post.</li>
+        <li><b>Carrying out.</b> The man writes a standing entry into the post's copy as soon as every lower number has been written, and sends the filer word that it stands.</li>
       </ol>
     </details>
   </div>
@@ -549,8 +549,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         <li>If X and Y were both readied for number 7 in one term, the two sets of three would share at
         least two men among four, and at least one of them is honest.</li>
         <li>That honest man sealed both X and Y for number 7 in the same term. But an honest man accepts
-        only one numbering for a number in a term, and seals only what he accepted. Contradiction. His seal
-        cannot be counterfeited, so the liar cannot have made it for him.<span class="qed">∎</span></li>
+        only one numbering for a number in a term, and seals only what was accepted. Contradiction. An honest man's seal cannot be counterfeited, so the liar cannot have made it.<span class="qed">∎</span></li>
       </ol>
     </details>
     <p class="tell" style="margin-top:1.8rem"><b>Four bandits are the fewest that will do for one liar.</b> A bandit can never wait to hear from everyone, since one may be a liar who keeps quiet. So a bandit acts on hearing from all but one, which is three. But the one not heard from may be an honest bandit whose rat is held in its hole, and then the liar may be among the three heard. The honest must still outnumber the liars among those three: two honest against one liar. That needs four bandits for one liar, and in general more than three times as many as may lie.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s7" title="Agreeing When Messages Run Late: Liars and Seals">*</a></sup> Seals do not lower the number. A seal stops a liar forging the word of another bandit. It cannot make a liar answer promptly with their own.</p>
@@ -612,7 +611,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         That man's request shows X readied under 7 in term <var>v</var>, or some entry readied under 7 in a
         later term. The holder must number the entry readied in the latest term shown.</li>
         <li>By induction over the terms after <var>v</var>, every entry that can be shown readied under 7
-        in such a term is X, so every later holder must number X under 7, honest men check that he does,
+        in such a term is X, so every later holder must number X under 7, honest men check that the holder does,
         and only X is readied or stands under 7 at honest posts. The induction, which must also handle
         requests from the liar, is carried out in full in Castro's thesis; this is the paper's
         sketch.<span class="qed">∎</span></li>
@@ -623,8 +622,8 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <summary>Stated formally · changing the job</summary>
       <p class="given">In the paper's terms: view-change with the set <var>P</var> of prepared certificates; new-view with 2<var>f</var> + 1 view-changes and the set <var>O</var> of pre-prepares; null requests fill gaps. (Castro and Liskov, §4.4.)</p>
       <ol class="proofsteps">
-        <li>The next holder waits for requests for the new term from three men, his own among them.</li>
-        <li>He sends every man the three requests and a new numbering. For each number, if some request shows an entry readied there, he numbers the one readied in the latest term; if none does, he numbers a <b>blank entry</b>, which does nothing.</li>
+        <li>The next holder waits for requests for the new term from three men, the holder's own among them.</li>
+        <li>The holder sends every man the three requests and a new numbering. For each number, if some request shows an entry readied there, the holder numbers the one readied in the latest term; if none does, the holder numbers a <b>blank entry</b>, which does nothing.</li>
         <li>Each man checks that the requests are sealed and that the new numbering is what they call for, then echoes it twice, as before, in the new term.</li>
       </ol>
     </details>
