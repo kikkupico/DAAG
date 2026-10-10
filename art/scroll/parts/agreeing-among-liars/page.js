@@ -134,11 +134,11 @@ const dot=(P,k,t,fill="#fffaf0")=>{const g=P.event(k,t,fill,8);g.style.cursor="d
 
 /* ===== the price of a liar ===== */
 (function(){
-  const nm=$("#pm"),nn=$("#pn"),nr=$("#pr"),ns=$("#ps"),say=$("#pricesay"),up=$("#pup"),dn=$("#pdown");let m=1;
+  const nm=$("#pm"),nn=$("#pn"),nr=$("#pr"),say=$("#pricesay"),up=$("#pup"),dn=$("#pdown");let m=1;
   function paint(){
-    nm.textContent=m;nn.textContent=3*m+1;nr.textContent=m+1;ns.textContent=m+2;up.disabled=m>=6;dn.disabled=m<=1;
-    const plain=4>3*m,sealed=4>=m+2;
-    say.innerHTML=`With plain slips the crown's four men ${plain?"are enough":"are too few"} ${yesno(plain)}, since it takes more than ${3*m} men. Under seal four men ${sealed?"are enough":"leave too few honest men for agreement to mean anything"} ${yesno(sealed)}, since the question needs at least two men more than there are liars.`}
+    nm.textContent=m;nn.textContent=3*m+1;nr.textContent=m+1;up.disabled=m>=6;dn.disabled=m<=1;
+    const plain=4>3*m;
+    say.innerHTML=`With plain slips the crown's four men ${plain?"are enough":"are too few"} ${yesno(plain)}, since it takes more than ${3*m} men.`}
   up.onclick=()=>{m++;paint()};dn.onclick=()=>{m--;paint()};paint();
 })();
 
