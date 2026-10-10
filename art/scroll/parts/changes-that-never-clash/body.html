@@ -1,0 +1,387 @@
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <span class="now" id="now"></span>
+  <i id="prog"></i>
+</div>
+
+<!-- ============================================================ cover -->
+<header class="spread dark" id="cover" data-name="Cover">
+  <div class="cut" style="left:-30px;bottom:-10px;width:90px;opacity:.3" data-depth="-26"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#5f6e28"/></svg></div>
+  <div class="cut" style="right:-20px;bottom:-14px;width:80px;opacity:.3" data-depth="-40"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#7c8f3a"/></svg></div>
+  <div class="wrap grid">
+    <div>
+      <div class="kicker">After Shapiro, Preguiça, Baquero and Zawirski, 2011</div>
+      <h1>Changes That Never Clash<span>counts and lists that merge the same in any order</span></h1>
+      <p class="hook">Can some changes be combined in any order, any number of times, and still come out the same everywhere, so that they never clash and no one ever needs to wait?</p>
+      <p class="hook" style="color:var(--blood);font-style:normal;font-family:var(--sans);font-size:1.1rem">On the far terraces, each scribe adds pebbles to one column only, and two tables merge by taking the larger pile in each.</p>
+    </div>
+    <div class="pop" data-auto>
+      <div class="leaf">
+        <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" alt="The stepped hillside at the southern tip: three terraces one below another, a stone table on each with a low wall of rough stone behind it, the tables' tops grooved in columns, and trees on the height above"></div>
+        <div class="fold-shadow"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================ In machine terms -->
+<section class="spread light" id="machines" data-name="In machine terms">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(24px,5vw,60px);align-items:center">
+      <div>
+        <div class="kicker">First, in machine terms</div>
+        <h2>Replicas that never ask first</h2>
+        <p class="lede">Several replicas hold the same data. Each accepts updates on its own, with no coordination, and the replicas exchange what they have afterwards.</p>
+        <ul class="terms">
+          <li><b>Strong eventual consistency</b>: replicas that have received the same updates are in the same state.</li>
+          <li><b>State-based</b>: merging two states must be commutative, associative and idempotent, and updates must only move a state upward.</li>
+          <li><b>Conflict-free replicated data types</b> (Shapiro et al., 2011): counters, registers and sets built that way, and what cannot be.</li>
+        </ul>
+        <p style="margin-top:1.2rem">This edition tells it with pebbles on stone tables, one table on each terrace of a hillside.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf">
+        <div class="paper well" style="margin:0">
+          <h4>Two replicas, one plain counter <em>each counts on its own</em></h4>
+          <div class="counts"><span><b id="ma">0</b>replica A</span><span><b id="mb">0</b>replica B</span><span><b id="mt">0</b>increments made</span></div>
+          <p class="note" id="mnote" data-live style="min-height:4.4em;margin:10px 0 0">Both replicas increment at once, then merge. Try each way of merging, more than once.</p>
+          <div class="row"><button class="btn" id="minc">Both increment</button><button class="btn alt" id="mmax">Merge: keep the larger</button><button class="btn alt" id="madd">Merge: add them</button></div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ the setting -->
+<section class="spread dark" id="hall" data-name="The far terraces">
+  <div class="bleed">
+    <img src="img/p03-pier.jpg" alt="The southern tip from high above the bay: three stone tables stepping down the terraces towards pale cliffs and deep water, a library with a tiled roof among the trees on the height" data-parallax>
+    <div class="hall-title"><div class="t">
+      <div class="kicker">The far terraces</div>
+      <h2>A table of pebbles on every terrace</h2>
+      <p>At the island's southern tip, as far from the Chamber and the Tholos as Paxos goes, a hillside is cut into terraces, and on each a scribe keeps a table that counts the copies made of each work.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: The Scholars' Coast">*</a></sup></p>
+    </div></div>
+    <div class="pin pop" style="left:54%;top:36%;"><div class="leaf"><b>No waiting</b>A scribe adds a pebble the moment a copy is made, without asking anyone.</div></div>
+    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>Tables by courier</b>The terraces send one another their tables. A courier may be late, lost, or arrive twice.</div></div>
+    <div class="pin pop" style="left:56%;top:80%;"><div class="leaf"><b>The same count</b>Terraces that have heard of the same copies must show the same count.</div></div>
+  </div>
+</section>
+
+<!-- ============================================================ The count no one settles -->
+<section class="spread light" id="count" data-name="The count no one settles">
+  <a class="anchor" id="s1"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">What is wanted</div>
+        <h2>The count no one settles</h2>
+        <p class="lede">The table counts how many copies of each work have been made on the coast, in <b>pebbles</b> set in grooves on a stone slab. The scribe of the first terrace is Shapirios.</p>
+        <p>Start with one pile for each work. Two terraces each add a pebble for the same work at the same time, each unaware of the other. Each table shows one copy made, and two were made.</p>
+        <p>When the tables meet, keeping the larger pile keeps one, and a copy is lost. Adding the two piles gives two, which is right this once. At the next meeting the same piles are added again, and the count rises for ever on copies that were made once.</p>
+        <p>The terraces could take turns, but then they wait for one another, and a stopped courier stops them all. What is wanted is narrower than agreement: add at once, show the same count for the same news in whatever order it came, and never take anything back.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p01-terraces.jpg" alt="The stepped hillside at the southern tip seen from over the sea: a stone table on each of three terraces, each with a wall of rough stone behind it and a short flight of steps up to the terrace above, trees round the height" loading="lazy"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ One column each -->
+<section class="spread dark" id="column" data-name="One column each">
+  <a class="anchor" id="s2"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">One writer to a column</div>
+      <h2>One column each</h2>
+      <p class="lede">The trouble was that two scribes added to the same pile. So each table is kept with a <b>column</b> for every terrace, and a scribe adds white pebbles only to the column of the scribe's own terrace.</p>
+      <p>A column then has one writer, and it only goes up. When two scribes each add a pebble, they add to different columns, and neither can overwrite or double the other. On any table, a column is the number of copies its terrace has made, as far as that table has heard. The count of copies made is the sum of the columns.</p>
+      <p>A terrace learns another's pile by being sent its table. Its own table has its own column up to date and the others as old as the news that has reached it. The table that arrives is out of date in a different way. Which pile in each column is right?</p>
+    </div>
+    <a class="anchor" id="s3"></a>
+    <div class="narrow" style="margin:2.4rem 0 1rem">
+      <div class="kicker">When two tables meet</div>
+      <h2>Take the larger</h2>
+      <p class="lede">A terrace keeps the larger pile in each column. A column only ever grows, so of two piles in the same column the larger is the later, and holds everything the smaller holds and more.</p>
+      <p>Three things are then true of merging, and the whole idea rests on them. It does not matter <em>which</em> table is merged into which. It does not matter <em>how</em> several tables are grouped. And merging the same table twice changes nothing. A table can be lost, delayed, copied, or arrive out of turn, and the terrace that takes it in ends at the same place.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Three terraces, three tables <em>make copies, send tables, in any order you like</em></h4>
+      <div class="tables3" id="tabs" data-live></div>
+      <div class="hill-wrap" style="align-items:start;margin-top:12px">
+        <div>
+          <div class="seglab">A copy is made at</div><div class="row" style="margin-top:0" id="tmake"></div>
+          <div class="seglab" style="margin-top:14px">When a table arrives, the terrace</div><div class="seg" id="trule" role="group" aria-label="How a terrace merges"></div>
+        </div>
+        <div>
+          <div class="seglab">Send the table of</div><div class="seg" id="tfrom" role="group" aria-label="Sender"></div>
+          <div class="seglab">to</div><div class="seg" id="tto" role="group" aria-label="Receiver"></div>
+          <div class="row"><button class="btn" id="tsend">Send it</button><button class="btn alt" id="treset">Clear the tables</button></div>
+        </div>
+      </div>
+      <p class="say" id="tsay">Each table has a column for every terrace. The shaded column is the one its own scribe may add to.</p>
+    </div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Why adding the totals is wrong</div><h3>Two tables each hold part of the same piles</h3><p>Adding them counts the shared part twice, and again at every later meeting. Taking the larger in each column counts each pile once, because it never combines two piles of the same column.</p></div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">None of this needs the terraces to agree on anything. Terraces that can still pass tables to one another come to show the same count among themselves, even if the roads to the rest are cut, and when the roads open the rest join them. Any number of terraces can fall silent without stopping the others.</p>
+    <details class="proof">
+      <summary>Proof · that the state-based counter is a CvRDT, and that every pair of replicas converges</summary>
+      <p class="given">The payload is a vector <var>P</var> of <var>n</var> naturals, one entry per replica. The update <var>increment</var> at replica <var>g</var> sets <var>P</var>[<var>g</var>] := <var>P</var>[<var>g</var>] + 1; the query <var>value</var> returns Σ<sub><var>i</var></sub> <var>P</var>[<var>i</var>]; the merge of <var>X</var> and <var>Y</var> is the entry-by-entry maximum. A CvRDT is an object whose states form a semilattice under an order ≤, whose merge ⊔ is the least upper bound, and whose updates never decrease the state. <b>Claim.</b> This counter is a CvRDT, and any two replicas that keep exchanging states converge.</p>
+      <ol class="proofsteps">
+        <li>This is Specification 6 of the comprehensive report (the G-Counter). The payload is a vector <var>P</var> of <var>n</var> naturals, one entry per replica. The update <var>increment</var> at replica <var>g</var> sets <var>P</var>[<var>g</var>] := <var>P</var>[<var>g</var>] + 1; the query <var>value</var> returns Σ<sub><var>i</var></sub> <var>P</var>[<var>i</var>]; the merge of <var>X</var> and <var>Y</var> is <var>Z</var> with <var>Z</var>.<var>P</var>[<var>i</var>] = max(<var>X</var>.<var>P</var>[<var>i</var>], <var>Y</var>.<var>P</var>[<var>i</var>]) for each <var>i</var>.</li>
+        <li>The order is <var>X</var> ≤ <var>Y</var> ⇔ ∀<var>i</var>, <var>X</var>.<var>P</var>[<var>i</var>] ≤ <var>Y</var>.<var>P</var>[<var>i</var>]. Componentwise maximum is the least upper bound of two vectors under this order, since it is an upper bound of both and any other upper bound is at least as large in every entry. So the states form a semilattice, and merge is its join.</li>
+        <li>Each update increases one entry and leaves the rest, so the state never decreases: <var>s</var> ≤ <var>s</var> • <var>increment</var>. The object is a monotonic semilattice, hence a CvRDT (Theorem 1 of the short paper).</li>
+        <li>Now let <var>x<sub>i</sub></var> and <var>x<sub>j</sub></var> be any two replicas that can exchange states infinitely often by some channel that eventually delivers (Proposition 2.1 of the report). Let <var>x<sub>i</sub></var>′ = <var>x<sub>i</sub></var> ⊔ <var>x<sub>j</sub></var> and <var>x<sub>j</sub></var>′ = <var>x<sub>j</sub></var> ⊔ <var>x<sub>i</sub></var>. By the commutativity of ⊔, <var>x<sub>i</sub></var>′ = <var>x<sub>j</sub></var>′, and by idempotence and associativity further merges of the same states change nothing. Both replicas have the same causal history, C(<var>x<sub>i</sub></var>) ∪ C(<var>x<sub>j</sub></var>), and the same state.</li>
+        <li>The report states two assumptions of this vector form: the payload does not overflow, and the set of replicas is known. A grow-only set of unique marks, one per increment, can serve as the same counter without knowing the replicas.<span class="qed">∎</span></li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ Sending the table or the change -->
+<section class="spread light" id="ways" data-name="Sending the table or the change">
+  <a class="anchor" id="s4"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">What a courier carries</div>
+      <h2>Sending the table or the change</h2>
+      <p class="lede">A terrace can send its whole table, or it can send a short notice of each change: <i>one more copy at terrace 1</i>. The first is the <b>table way</b> and the second the <b>notice way</b>.</p>
+      <p>Both can keep every terrace's count the same. They ask very different things of the couriers.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Terrace 1 has one more copy to report <em>send it either way, as often as you like</em></h4>
+      <div class="hill-wrap">
+        <div class="tables3 two" id="wtabs" data-live></div>
+        <div>
+          <div class="counts"><span><b id="wtrue">1</b>copies made</span><span><b id="wshown">0</b>shown at terrace 2</span></div>
+          <p class="say" id="wsay">Terrace 2 has not heard yet.</p>
+        </div>
+      </div>
+      <div class="row"><button class="btn" id="wtable">The courier brings the whole table</button><button class="btn" id="wnote">The courier brings the notice</button><button class="btn alt" id="wreset">Start again</button></div>
+    </div></div></div>
+    <div class="cards3">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the table way asks</div><h3>Almost nothing</h3><p>A table may arrive twice, late, or before an older one, and it makes no difference. A courier may be lost and nobody need know, provided some later table gets through. The cost is size: every table, to carry a handful of changes.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the notice way asks</div><h3>Exactly once, in order</h3><p>A notice taken in twice counts twice, and a notice lost leaves a pile short for good. Notices that depend on one another must arrive in that order: a strike must not arrive before the addition it strikes. That needs no vote and no leader, but it is a promise about the roads.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Each is the other in disguise</div><h3>A table as a notice, notices in a table</h3><p>A terrace can send a whole table as a notice, <i>take this table in</i>. And a terrace can keep in its table every notice it has received and every one it has acted on, so that merging tables merges the notices. The paper proves it both ways.</p></div></div></div>
+    </div>
+    <details class="proof">
+      <summary>Proof · that every SEC state-based object can be emulated by an op-based one, and conversely</summary>
+      <p class="given">SEC is strong eventual consistency. A state-based object, a CvRDT, is (<var>S</var>, ≤, <var>s<sub>0</sub></var>, <var>q</var>, <var>u</var>, <var>m</var>): states, their order, the initial state, query, update and merge. An operation-based object, a CmRDT, is (<var>S</var>, <var>s<sub>0</sub></var>, <var>q</var>, <var>t</var>, <var>u</var>, <var>P</var>): states, initial state, query, prepare-update, effect-update and delivery precondition. <b>Claim.</b> Each can emulate the other.</p>
+      <ol class="proofsteps">
+        <li>This is Theorems 3 and 4 of the short paper (§3.2).</li>
+        <li><i>State-based by op-based.</i> Given a CvRDT (<var>S</var>, ≤, <var>s<sub>0</sub></var>, <var>q</var>, <var>u</var>, <var>m</var>), define a CmRDT with the same state and query. Its prepare-update <var>t</var>(<var>a</var>) records <var>s</var>′ = <var>s</var> • <var>u</var>(<var>a</var>) and its effect-update <var>u</var>′(<var>s</var>′) is s • <var>m</var>(<var>s</var>′), delivered to every replica with no precondition. Merge always commutes, so these effect-updates commute, and with reliable delivery the object is a CmRDT.</li>
+        <li><i>Op-based by state-based.</i> Given a CmRDT (<var>S</var>, <var>s<sub>0</sub></var>, <var>q</var>, <var>t</var>, <var>u</var>, <var>P</var>), take the state (<var>s<sub>m</sub></var>, <var>M</var>, <var>D</var>), where <var>s<sub>m</sub></var> is the CmRDT's state and <var>M</var>, <var>D</var> are add-only sets of the updates known and the updates delivered. Order (<var>s<sub>m</sub></var>, <var>M</var>, <var>D</var>) ≤ (<var>s<sub>m</sub></var>′, <var>M</var>′, <var>D</var>′) by <var>M</var> ⊆ <var>M</var>′ ∧ <var>D</var> ⊆ <var>D</var>′.</li>
+        <li>A local update runs <var>t</var> and <var>u</var> and adds the update to <var>M</var>. A recursive function <var>d</var> delivers any known update in <var>M</var> \ <var>D</var> whose precondition <var>P</var> holds, adds it to <var>D</var> and applies it to <var>s<sub>m</sub></var>, until none is enabled. The merge takes the union of the <var>M</var> sets, then runs <var>d</var>.</li>
+        <li>Every update is delivered exactly once to the embedded object, in an order satisfying <var>P</var>, and the triple forms a monotonic semilattice (the merge is a union, hence a least upper bound). So the emulation is a CvRDT, and it is SEC because the embedded CmRDT is.<span class="qed">∎</span></li>
+      </ol>
+    </details>
+    <p style="max-width:40em;margin-top:1.4rem">So a count that can be kept one way can be kept the other, and the choice is about the roads and the cost.</p>
+  </div>
+</section>
+
+<!-- ============================================================ Made and lost -->
+<section class="spread dark" id="lost" data-name="Made and lost">
+  <a class="anchor" id="s5"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div class="pop fromleft"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/p02-table.jpg" alt="One terrace's table: a marble slab on two stone blocks, its top cut with six grooves, white pebbles lying in three of them and black pebbles in the other three, a bowl of spare pebbles at each end, a stool beside it, and the wall and steps of the terrace above behind" loading="lazy"></div></div></div>
+      <div>
+        <div class="kicker">A count that goes down</div>
+        <h2>Made and lost</h2>
+        <p class="lede">Taking the larger pile works because a pile never shrinks. A scribe who took a pebble out would be undone at the next meeting, by any table that still had the larger pile.</p>
+        <p>So the tables keep a second kind of pebble. White pebbles stand for copies made, and black for copies <em>lost</em>. Each terrace has a white set of columns and a black set, and a scribe adds only to the scribe's own column of each.</p>
+        <p>Each set merges by the larger pile in every column. The count of copies there are is the white pebbles less the black. Both sets only grow, so both merge safely, and their difference can fall.</p>
+      </div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>One copy left, two scribes <em>each sees one copy on the table before them</em></h4>
+      <div class="seglab">A scribe may mark a copy lost</div><div class="seg" id="lrule" role="group" aria-label="The rule each scribe keeps"></div>
+      <div class="tables3 two" id="ltabs" data-live></div>
+      <p class="say" id="lsay">The one copy was made at terrace 1. Both tables show it.</p>
+      <div class="row"><button class="btn" id="l1">Terrace 1 marks it lost</button><button class="btn" id="l2">Terrace 2 marks it lost</button><button class="btn" id="lmeet">The tables meet</button><button class="btn alt" id="lreset">Start again</button></div>
+    </div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">The first thing the idea cannot do</div><h3>A limit on the whole coast's count cannot be seen from any one terrace's table</h3><p>A stricter rule that each scribe can keep alone does work: mark no more copies lost than were made at one's own terrace. But a terrace whose library never made a copy could then mark none lost, however many it held. The other cures are to agree before marking a copy lost, which is to wait, or to share out beforehand how many losses each terrace may mark, which is agreeing in advance. The paper's verdict is that there is no cheap way.</p></div></div></div>
+  </div>
+</section>
+
+<!-- ============================================================ Two hands on one work -->
+<section class="spread light" id="hands" data-name="Two hands on one work">
+  <a class="anchor" id="s6"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Corrections that meet</div>
+      <h2>Two hands on one work</h2>
+      <p class="lede">A table of corrections holds a work's text with the tally of the edition that wrote it. Two libraries correct the same work, each unaware of the other, and the terraces must end with one result.</p>
+      <p>Neither rule below is forced by the idea. Both merge in any order and any number of times, and both leave every terrace with the same result.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Library 1 writes at noon, Library 2 later that day <em>choose the rule, and the order in which the two corrections reach a terrace</em></h4>
+      <div class="seglab">The terraces</div><div class="seg" id="hrule" role="group" aria-label="The rule"></div>
+      <div class="seglab">A terrace hears first from</div><div class="seg" id="hord" role="group" aria-label="Which correction arrives first"></div>
+      <div class="shelves" id="hout" data-live></div>
+      <p class="say" id="hsay"></p>
+    </div></div></div>
+    <div class="cards3">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The plain rule</div><h3>Keep the later</h3><p>The edition with the larger tally wins and the other is thrown away.<sup class="xref"><a href="../spreading-by-word-of-mouth/index.html" title="Spreading by Word of Mouth">*</a></sup> It is the larger pile again, applied to a number that only rises. The loser is lost for good. Nothing says the later edition was the better, only that it is later.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What it needs</div><h3>Tallies that follow events</h3><p>An edition written by someone who had seen another must carry a larger tally than the one it answers, or the rule would throw away the answer and keep the question.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The other rule</div><h3>Keep both</h3><p>Each edition is kept with a note of which editions it was written after, and is dropped only when some kept edition was written after it. Two corrections written in ignorance of each other are both kept, and the reader chooses.</p></div></div></div>
+    </div>
+    <p style="max-width:40em;margin-top:1.4rem">The paper lists several such choices for one kind of record, each a different meaning for the same clash, and all of them settle. What the idea guarantees is that every terrace settles <em>the same way</em>. It does not say the way is the right one.</p>
+  </div>
+</section>
+
+<!-- ============================================================ Titles added and struck -->
+<section class="spread dark" id="titles" data-name="Titles added and struck">
+  <a class="anchor" id="s7"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">A list of titles</div>
+      <h2>Titles added and struck</h2>
+      <p class="lede">The terraces also keep a list of the titles of the works made on the coast. The simplest list is only ever added to. Two such lists merge by joining their titles, and joining is the same either way round, in any grouping, and twice over. That is the <b>catalogue of titles</b>.</p>
+      <p>Striking a title off is harder. Three ways follow, and each gives a different meaning to the same clash.</p>
+    </div>
+    <div class="cards3">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The cheap way</div><h3>A struck-off list</h3><p>Keep a second list, the <b>struck-off list</b>. A title is on the catalogue if it is on the first list and not on the second. Both lists only grow, so both merge. A title once struck can never come back: a strike beats an add, for good.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The way most like an ordinary list</div><h3>A mark for every writing</h3><p>Each time a title is written, it gets a <b>mark</b> that nobody else will ever use. A title is on the catalogue if any mark of it is. To strike a title, a scribe strikes <em>all the marks in sight</em>, and only those.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Other ways</div><h3>A tally, or a count</h3><p>Each title can carry a tally, so that the later of its last add and last strike wins. Or a count, up with adds and down with strikes, which settles but behaves oddly: a title struck twice needs two adds to return.</p></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>One title, two libraries, a mark for every writing <em>add and strike in any order, then let the two exchange</em></h4>
+      <div class="shelves" id="olibs" data-live></div>
+      <p class="say" id="osay">Each library sees only its own list until the two exchange.</p>
+      <div class="row"><button class="btn" id="oa1">Library 1 adds the title</button><button class="btn" id="os1">Library 1 strikes it</button><button class="btn" id="oa2">Library 2 adds the title</button><button class="btn" id="os2">Library 2 strikes it</button><button class="btn alt" id="omeet">The two exchange lists</button><button class="btn alt" id="oreset">Start again</button></div>
+    </div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">A strike takes away only the marks it has seen</div><h3>An add and a strike made in ignorance of each other leave the add standing</h3><p>If one library strikes a title while another writes it again, the new writing carries a mark the striker never saw, so the title stays. A title added after a strike is on the catalogue. The paper names this list after what it does: a strike removes what it has observed.</p></div></div></div>
+  </div>
+</section>
+
+<!-- ============================================================ Not the same as one order -->
+<section class="spread light" id="order" data-name="Not the same as one order">
+  <a class="anchor" id="s8"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Something different in kind</div>
+      <h2>Not the same as one order</h2>
+      <p class="lede">An ordinary list is kept with every act in one order that every terrace shares. Such a list is simple to reason about, and it asks the terraces to settle that order between them, which means everyone waits.</p>
+      <p>The lists of titles can give a result that no single order could. Library 1 adds title E and then strikes title F. At the same time, Library 2 adds title F and then strikes title E. A terrace takes in both.</p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4>Four acts, no single order <em>two libraries and a terrace, later moments further out</em></h4>
+      <div class="hill-wrap">
+        <svg class="fig" id="ordsvg" role="img" aria-label="Space-time drawn in the round with three places: Library 1, Library 2 and a terrace. Library 1 adds E and then strikes F; Library 2 adds F and then strikes E; both lists reach the terrace afterwards."></svg>
+        <div>
+          <ul class="checks" id="ordlist" data-live></ul>
+          <p class="say" id="ordsay"></p>
+        </div>
+      </div>
+    </div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Neither contains the other</div><h3>Each kind of promise allows results the other does not</h3><p>If the terraces did settle one order they would all end with the same list, so they would agree too. But settling one order needs agreement, and agreement cannot be had if many terraces may fall silent. Here a terrace is always free to read and to add, whatever the roads, with all but one of the terraces silent.</p></div></div></div>
+    <details class="proof">
+      <summary>Proof · that SEC and sequential consistency are incomparable</summary>
+      <p class="given">SEC is strong eventual consistency: replicas that have delivered the same updates have the same state. Sequential consistency asks that the result be that of all updates executed in some single order. Take a Set CRDT with add-wins semantics: after add(<var>e</var>) ∥ remove(<var>e</var>), where ∥ means concurrent, <var>e</var> ∈ <var>S</var>. <b>Claim.</b> Neither property implies the other.</p>
+      <ol class="proofsteps">
+        <li>This is §3.3 of the short paper. <i>SEC does not imply sequential consistency.</i> Take a Set CRDT with add-wins semantics: after add(<var>e</var>) ∥ remove(<var>e</var>), <var>e</var> ∈ <var>S</var>. Let replica <var>p<sub>0</sub></var> execute add(<var>e</var>); remove(<var>e</var>′), and concurrently replica <var>p<sub>1</sub></var> execute add(<var>e</var>′); remove(<var>e</var>), and let <var>p<sub>3</sub></var> merge both.</li>
+        <li>Each remove acts on the add it observed at its own replica, and concurrent with the other replica's add, so by the add-wins specification the final state at <var>p<sub>3</sub></var> satisfies <var>e</var> ∈ <var>S</var> ∧ <var>e</var>′ ∈ <var>S</var>.</li>
+        <li>In any sequentially consistent execution of the four updates in a single order, either remove(<var>e</var>) or remove(<var>e</var>′) is last, and that element is not in <var>S</var>. So the final state above occurs in no sequentially consistent execution.</li>
+        <li><i>Sequential consistency does not imply SEC.</i> In the absence of crashes a sequentially consistent object is SEC, since there is a single order after which all replicas terminate in the same state. In general, however, sequential consistency requires consensus, which cannot be solved in the presence of <var>n</var> − 1 crashes, whereas a SEC object is available and converges with up to <var>n</var> − 1 crashes. Therefore the two are incomparable.<span class="qed">∎</span></li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ What it does not say -->
+<section class="spread dark" id="nots" data-name="What it does not say">
+  <a class="anchor" id="s9"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">The limits</div>
+        <h2>What it does not say</h2>
+        <p class="lede">The terraces get a count and a catalogue that can always be read and written, that never wait on a courier, and that settle by merging alone. Five things they do not get.</p>
+      </div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p04-tip.jpg" alt="Two of the terraces seen from below: a table on each, pebbles in its grooves, a wall of rough stone behind it and steps up to the terrace above, with trees on the height" loading="lazy"></div></div></div>
+    </div>
+    <div class="cards3 five">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it keep a limit?</h3><p>No. A count that must never go below zero, or a catalogue that must never hold two titles together, is a rule about the whole coast, and no terrace can see the whole coast from its own table. Keeping such a rule means agreeing, beforehand or at times.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it say which result is right?</h3><p>No. Every terrace settles the same way, and the way is chosen by whoever designs the list: the strike may beat the add or the add the strike, the later correction may win or both be kept. Any of them may be reasonable for some use.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it keep the tables small?</h3><p>Not by itself. The struck-off list only grows, every mark stays until it is struck, and there is a column for every terrace. To throw old notices away a terrace must know every other has taken them in, which it can learn only while no terrace is silent.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What does it assume?</h3><p>That no scribe lies: one who adds to another's column, or reuses someone's mark, can break it. That the terraces are known and the piles never outgrow their grooves. That on the notice way each notice arrives exactly once, in order of dependence. That tallies follow the order of events.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is the list of examples complete?</h3><p>No. The paper also gives designs for cross-references between works and for ordered sequences, which are left to the paper. What it shows is the shape of the idea: the merge must take the least that holds both, and changes must only go up, or else they must not mind their order.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ Back to machines -->
+<section class="spread light" id="why" data-name="Back to machines">
+  <a class="anchor" id="s10"></a>
+  <a class="anchor" id="refs"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">Back to machines</div>
+      <h2>The terraces were replicas</h2>
+      <p class="lede">Every terrace is a replica, and its table is the replica's state. Hover or tap to see who is who.</p>
+    </div>
+    <div class="map" id="map">
+      <div class="hd" style="text-align:right;padding-right:6px">On the terraces</div><div></div><div class="hd">In the machine room</div>
+    </div>
+    <div class="meander" style="margin:3rem auto"></div>
+    <div class="end">
+      <p class="big">Replicas that only ever move their state upward, and merge by taking the least state that holds both, converge without coordinating.</p>
+      <p class="lede" style="margin:0 auto">A rule that spans all the replicas, such as a count that never goes below zero, still needs agreement.</p>
+      <div class="links">
+        <a href="../../places/scholars-coast/index.html">The scholars' coast, in detail</a>
+        <a href="../../papers/index.html">All the papers</a>
+      </div>
+    </div>
+    <div class="apparatus">
+      <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/scholars-coast/index.html">The Scholars' Coast</a></p>
+      <p class="lineage"><span class="lbl">Leads to</span> <a href="../what-you-can-promise-alone/index.html">What You Can Promise Alone</a> · <a href="../knowing-when-to-wait/index.html">Knowing When to Wait</a></p>
+      <p class="lineage"><span class="lbl">Outside this series</span> Wuu &amp; Bernstein 1984, <i>Efficient solutions to the replicated log and dictionary problems</i> · Thomas 1979, <i>A majority consensus approach to concurrency control</i> · Preguiça et al. 2009, <i>A commutative replicated data type for cooperative editing</i></p>
+      <details class="proof">
+        <summary>The paper behind this book</summary>
+        <p>Marc Shapiro, Nuno Preguiça, Carlos Baquero and Marek Zawirski, <i>Conflict-free Replicated Data Types</i>. Stabilization, Safety, and Security of Distributed Systems (SSS), 2011. — Strong eventual consistency, the state-based and operation-based sufficient conditions, their equivalence, the incomparability with sequential consistency, counters, sets and graphs.</p>
+        <p>Marc Shapiro, Nuno Preguiça, Carlos Baquero and Marek Zawirski, <i>A Comprehensive Study of Convergent and Commutative Replicated Data Types</i>. INRIA Research Report RR-7506, January 2011. — The portfolio: counters, registers, sets, graphs, sequences, with specifications and proofs.</p>
+        <p><b>The ideas, plainly.</b></p>
+        <p>Shapiro and his co-authors ask when replicas of some data can accept changes without ever talking to one another first, and still end the same. Their answer, strong eventual consistency, asks only that replicas that have received the same updates are in the same state. They give two sufficient conditions. In the state-based form the states are ordered so that each update moves a state upward and merging two states is their least upper bound; then merging commutes, groups freely and may be repeated. In the operation-based form every pair of concurrent operations commutes and operations are delivered once each, in causal order. Each form can imitate the other.</p>
+        <p>A counter that only counts up is a vector with one entry per replica and a per-entry maximum for merge; a counter that also counts down is two of them. A register can keep the later write or keep both. A set that only grows is a union; a set that also loses elements can let removal win, or let adds win by tagging every add and having a removal take away only the tags it has seen. These all converge, and each means something different by a clash.</p>
+        <p>What the approach does not do is keep a rule that spans all the replicas, such as a count that never goes below zero; for that, replicas must agree. It does not decide which meaning of a clash is right, and it is not the same as keeping one order of all the updates: it permits results no single order would give, and it is available where one order would need agreement.</p>
+        <p class="fnote">Shapirios stands for Marc Shapiro, the first author. The papers have four authors, Marc Shapiro, Nuno Preguiça, Carlos Baquero and Marek Zawirski, and all are credited here; only Shapirios is named, and the scribes and libraries are told apart by what they do.</p>
+      </details>
+      <details class="proof">
+        <summary>In the paper, term by term</summary>
+        <table class="terms2"><tbody>
+          <tr><td><span class="term">the far terraces, each with a scribe and a table</span></td><td>Replicas, one at each process. <span class="paper">Short paper §2; report §2.</span></td></tr>
+          <tr><td><span class="term">a table of pebbles for each work</span></td><td>The payload of a replicated object. <span class="paper">Short paper §2.1.</span></td></tr>
+          <tr><td><span class="term">terraces that have heard the same news show the same count</span></td><td>Strong eventual consistency (SEC): strong convergence. <span class="paper">Short paper §2.2.</span></td></tr>
+          <tr><td><span class="term">no waiting, no vote, nothing undone</span></td><td>No synchronisation, no consensus, no roll-back; up to n − 1 crashes tolerated. <span class="paper">Short paper §1, §3.1.</span></td></tr>
+          <tr><td><span class="term">a column for each terrace, written only by its own scribe</span></td><td>A vector of integers with one entry per replica. <span class="paper">Short paper §4.1; report spec. 6.</span></td></tr>
+          <tr><td><span class="term">taking the larger pile in each column</span></td><td>Merge as least upper bound: the per-entry maximum. <span class="paper">Short paper §2.3, §4.1.</span></td></tr>
+          <tr><td><span class="term">any order, any grouping, as often as you like</span></td><td>The join is commutative, associative and idempotent. <span class="paper">Short paper §2.3.</span></td></tr>
+          <tr><td><span class="term">adding the totals counts a pile twice</span></td><td>Merge by addition is not idempotent, so not a CvRDT. <span class="paper">Report §3.1.2.</span></td></tr>
+          <tr><td><span class="term">the table way</span></td><td>State-based replication: a CvRDT. <span class="paper">Short paper §2.3, Theorem 1.</span></td></tr>
+          <tr><td><span class="term">the notice way; exactly once, in order of dependence</span></td><td>Op-based replication: a CmRDT, with reliable causal broadcast. <span class="paper">Short paper §2.4, Theorem 2.</span></td></tr>
+          <tr><td><span class="term">each way is a disguise of the other</span></td><td>CvRDTs and CmRDTs emulate each other. <span class="paper">Short paper §3.2, Theorems 3 and 4.</span></td></tr>
+          <tr><td><span class="term">white pebbles and black; the count is white less black</span></td><td>PN-Counter: two G-Counters. <span class="paper">Report §3.1.3, spec. 7.</span></td></tr>
+          <tr><td><span class="term">two scribes each marking the last copy lost</span></td><td>The non-negative counter: a global invariant cannot be kept without synchronisation. <span class="paper">Report §3.1.4.</span></td></tr>
+          <tr><td><span class="term">a terrace may not mark more lost than it made</span></td><td>A local invariant implying the global one, P[g] − N[g] ≥ 0; escrow. <span class="paper">Report §3.1.4.</span></td></tr>
+          <tr><td><span class="term">the later edition wins by its tally</span></td><td>LWW-Register. <span class="paper">Report §3.2.1, specs. 8, 9.</span></td></tr>
+          <tr><td><span class="term">keeping both corrections, each with what it was written after</span></td><td>MV-Register, with version vectors. <span class="paper">Report §3.2.2, spec. 10.</span></td></tr>
+          <tr><td><span class="term">the catalogue of titles, only added to</span></td><td>G-Set: union. <span class="paper">Report §3.3.1, spec. 11.</span></td></tr>
+          <tr><td><span class="term">the struck-off list: once struck, never restored</span></td><td>2P-Set, with a tombstone set; remove only what is present. <span class="paper">Report §3.3.2, spec. 12.</span></td></tr>
+          <tr><td><span class="term">each title with its own mark; a strike removes the marks it has seen</span></td><td>OR-Set (observed-remove, add wins). <span class="paper">Report §3.3.5, spec. 15.</span></td></tr>
+          <tr><td><span class="term">a title carrying a tally; a title carrying a count</span></td><td>LWW-element-Set; PN-Set. <span class="paper">Report §3.3.3, §3.3.4.</span></td></tr>
+          <tr><td><span class="term">two libraries each adding one title and striking the other's, ending with both</span></td><td>SEC is incomparable with sequential consistency. <span class="paper">Short paper §3.3.</span></td></tr>
+          <tr><td><span class="term">throwing away old notices needs every terrace heard from</span></td><td>Distributed garbage collection of the log or tombstones (Wuu and Bernstein). <span class="paper">Short paper §4.2.</span></td></tr>
+          <tr><td><span class="term">a catalogue of cross-references between works, left to the paper</span></td><td>Directed graph CRDTs. <span class="paper">Short paper §5; report §3.4.</span></td></tr>
+        </tbody></table>
+      </details>
+    </div>
+  </div>
+</section>
+<footer>Distributed Algorithms of Ancient Greece · “Changes That Never Clash”, after Shapiro, Preguiça, Baquero and Zawirski, 2011.</footer>
