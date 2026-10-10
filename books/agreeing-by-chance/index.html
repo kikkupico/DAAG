@@ -71,10 +71,12 @@ p{margin:0 0 .9rem;text-wrap:pretty}
 /* the cover ends in one colour, and the torn edge under it is that colour */
 #cover+.spread>.tear path{fill:#e0d6bb}
 #cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
-#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:.6rem 0 1rem;letter-spacing:-.01em}
-#cover h1 span{display:block;font-size:.34em;letter-spacing:.2em;text-transform:uppercase;color:var(--aegean-d);margin-top:.9rem;font-weight:400}
+#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:0 0 1.4rem;letter-spacing:-.01em}
 #cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
-#cover .hook{font-size:clamp(1.1rem,2.4vw,1.45rem);font-style:italic;max-width:24em;color:#3a2d24}
+#cover .generic,#cover .allegory{font-size:clamp(1.05rem,2.1vw,1.3rem);max-width:26em;margin:0 0 1rem}
+#cover .generic{color:#3a2d24}
+#cover .allegory{font-style:italic;color:var(--blood)}
+#cover .source{font-family:var(--sans);font-size:.74rem;line-height:1.5;max-width:36em;margin:1.6rem 0 0;color:#6b5d4f}
 .cut{position:absolute;pointer-events:none;z-index:1}
 .cut svg{display:block;width:100%;height:auto}
 @media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
@@ -303,10 +305,10 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
   <div class="cut" style="right:-20px;bottom:-14px;width:80px;opacity:.3" data-depth="-40"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#7c8f3a"/></svg></div>
   <div class="wrap grid">
     <div>
-      <div class="kicker">After Michael Ben-Or, 1983</div>
-      <h1>Agreeing by Chance<span>what a coin buys that no plan can</span></h1>
-      <p class="hook">If no plan can guarantee that four men agree, what if a man who is stuck simply tosses a coin?</p>
-      <p class="hook" style="color:var(--blood);font-style:normal;font-family:var(--sans);font-size:1.1rem">At the foot of Mount Phyle, the four never commit to different answers. They commit in the end with probability one, though on no night anyone can name.</p>
+      <h1>Agreeing by Chance</h1>
+      <p class="generic">No fixed plan can guarantee that computers agree when one of them may stop and a message may take any time at all. If a machine that cannot decide flips a coin, no two machines ever decide differently, and all of them decide in the end with probability one.</p>
+      <p class="allegory">Four mercenaries at the foot of Mount Phyle must settle on one answer by raven. A man who is stuck tosses a coin. The four never commit to different answers, and they commit in the end, though on no night anyone can name.</p>
+      <p class="source">After Michael Ben-Or, <i>Another Advantage of Free Choice: Completely Asynchronous Agreement Protocols</i>, 1983</p>
     </div>
     <div class="pop" data-auto>
       <div class="leaf">

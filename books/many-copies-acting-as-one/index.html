@@ -71,10 +71,12 @@ p{margin:0 0 .9rem;text-wrap:pretty}
 /* the cover ends in one colour, and the torn edge under it is that colour */
 #cover+.spread>.tear path{fill:#e0d6bb}
 #cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
-#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:.6rem 0 1rem;letter-spacing:-.01em}
-#cover h1 span{display:block;font-size:.34em;letter-spacing:.2em;text-transform:uppercase;color:var(--aegean-d);margin-top:.9rem;font-weight:400}
+#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:0 0 1.4rem;letter-spacing:-.01em}
 #cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
-#cover .hook{font-size:clamp(1.1rem,2.4vw,1.45rem);font-style:italic;max-width:24em;color:#3a2d24}
+#cover .generic,#cover .allegory{font-size:clamp(1.05rem,2.1vw,1.3rem);max-width:26em;margin:0 0 1rem}
+#cover .generic{color:#3a2d24}
+#cover .allegory{font-style:italic;color:var(--blood)}
+#cover .source{font-family:var(--sans);font-size:.74rem;line-height:1.5;max-width:36em;margin:1.6rem 0 0;color:#6b5d4f}
 .cut{position:absolute;pointer-events:none;z-index:1}
 .cut svg{display:block;width:100%;height:auto}
 @media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
@@ -305,10 +307,10 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
   <div class="cut" style="right:-20px;bottom:-14px;width:80px;opacity:.3" data-depth="-40"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#7c8f3a"/></svg></div>
   <div class="wrap grid">
     <div>
-      <div class="kicker">After Herlihy and Wing, 1990</div>
-      <h1>Many Copies, Acting as One<span>how three houses promise that orders are filled as the sun saw them</span></h1>
-      <p class="hook">When a board is kept in several copies, what does it take for them to act as one? And who could ever tell the difference?</p>
-      <p class="hook" style="color:var(--blood);font-style:normal;font-family:var(--sans);font-size:1.1rem">On the island of Arche, they asked for a single keeper.</p>
+      <h1>Many Copies, Acting as One</h1>
+      <p class="generic">A shared object kept in several copies should behave as if there were only one. For that, every call must appear to take effect at one instant between its start and its answer, so that a call that finished before another began always comes first.</p>
+      <p class="allegory">Three trading houses on the island of Arche each keep a copy of one board of orders. They promise that orders are filled as a single keeper would have filled them, in the order the sun saw them placed.</p>
+      <p class="source">After Maurice P. Herlihy and Jeannette M. Wing, <i>Linearizability: A Correctness Condition for Concurrent Objects</i>, 1990</p>
     </div>
     <div class="pop" data-auto>
       <div class="leaf">
