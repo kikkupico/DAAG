@@ -37,10 +37,16 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
 /* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
 function stepDots(root,steps){
   const stage=$(".stage",root),nav=document.createElement("div"); nav.className="dots"; nav.setAttribute("role","group"); nav.setAttribute("aria-label","The steps of this picture");
-  const dots=steps.map((s,i)=>{const b=document.createElement("button"),h=$("h3",s); b.type="button"; b.setAttribute("aria-label","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""));
-    b.addEventListener("click",()=>s.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"})); nav.append(b); return b});
+  let cur=0; const go=i=>steps[i]&&steps[i].scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
+  const ctl=(cls,label,d,fn)=>{const b=document.createElement("button"); b.type="button"; b.className=cls; b.setAttribute("aria-label",label); b.title=label;
+    if(d) b.innerHTML='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="'+d+'"/></svg>'; b.addEventListener("click",fn); return b};
+  const prev=ctl("arr","Previous step","M7.5 2 3.5 6l4 4",()=>go(cur-1)), next=ctl("arr","Next step","M4.5 2l4 4-4 4",()=>go(cur+1)),
+        back=ctl("arr back","Back to the first step","M2.6 6.4a3.5 3.5 0 1 0 1-2.8M2.4 1.6v2.2h2.2",()=>go(0));
+  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""),"",()=>go(i))});
+  nav.append(prev,...dots,next,back);
   if(stage&&steps.length>1) stage.append(nav);
-  return i=>dots.forEach((d,j)=>{d.classList.toggle("on",j===i); if(j===i)d.setAttribute("aria-current","step"); else d.removeAttribute("aria-current")});
+  return i=>{cur=i; prev.disabled=back.disabled=i===0; next.disabled=i===steps.length-1;
+    dots.forEach((d,j)=>{d.classList.toggle("on",j===i); if(j===i)d.setAttribute("aria-current","step"); else d.removeAttribute("aria-current")})};
 }
 function scrolly(root,render){
   const steps=$$(".step",root),mark=stepDots(root,steps); render(0); mark(0);
