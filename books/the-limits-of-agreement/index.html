@@ -926,7 +926,7 @@ function Hill(svg){
     took[b]=a;took[a]=b;done.push(a);btn.disabled=true;paint();
     if(done.length<2){say.innerHTML=`Tents ${a} and ${b} trade ravens. Nothing in that touched the other two tents.`;return}
     const order=done.join();
-    say.innerHTML=`Now tents ${a} and ${b} trade. Every man has taken in his partner's raven, and no raven is left aloft. `+
+    say.innerHTML=`Now tents ${a} and ${b} trade. Every man has taken in the partner's raven, and no raven is left aloft. `+
       (last&&last!==order?"<span class='ok'>It is the same standing as last time</span>, when the other pair went first. The ravens and the tents they reach are the same; only the moments swapped.":"Start the night again, and let the other pair go first.");
     last=order;
   }
