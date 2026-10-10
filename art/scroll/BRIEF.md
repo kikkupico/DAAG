@@ -58,8 +58,11 @@ time `ta` to place `b` at `tb`, the short way round, with an arrowhead), `P.seg(
 `g.label` a text node inside it), and the layers `P.under`, `P.slips`, `P.evs`, `P.over`.
 
 Each model book also has its own "place from above" picture (`Isle` for Arche's ring road, `Hill`
-for the foot of the hill). Copy the one for your setting into your `page.js` and keep it the
-same, so the series reads as one. A crown book draws the crown from above in the same manner: the
+for the foot of the hill, `Tholos` for Schedia in *One Leader at a Time*, `Coast` for the scholars'
+coast in *Probably Up to Date*). Copy the one for your setting into your `page.js` and keep it the
+same, so the series reads as one. The coast books also share a few small parts, copied the same
+way: `seg` (a row of choices), tables of pebbles (*Changes That Never Clash*), shelves of what a
+library holds, and squares for a coast of many libraries (*Spreading by Word of Mouth*). A crown book draws the crown from above in the same manner: the
 ring wall at the centre with the chief inside, three posts out on the slopes.
 
 ## The page, top to bottom
