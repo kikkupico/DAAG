@@ -156,15 +156,18 @@ The shape that has worked before:
 | **What it does not say** | What the result does *not* claim, or what it costs, or what it assumes and never verifies. It is often the best spread in a book. |
 | **Back to machines** | The who-is-who table, the result in one sentence, then lineage, the papers and the ideas. |
 
-**The book is carried by questions.** Write down the questions a careful reader would ask, in
-order, and let them drive the spreads. Each spread answers the question the one before it closed
-on, and may end on the next. Inside a spread, raise the reader's objection as a question and
-answer it at once: *Does unrelated mean they happened at the same moment? No: it means…* The
-questions are the reader's, never a character's, and nothing is narrated, so rule 1 stands. Keep
-one line of argument: threads never alternate.
+**The book is carried by questions, written as statements.** Write down the questions a careful
+reader would ask, in order, and let them drive the spreads. Each spread answers what the one
+before it left open, and ends on a sentence that says what is open now; the next spread's lede
+begins by naming it. Inside a spread, meet the reader's objection with a plain sentence and its
+reason: *Unrelated does not mean they happened at the same moment. It means neither could have
+known of the other.* The prose never asks a question and answers it at once. Nothing is
+narrated, so rule 1 stands. Keep one line of argument: threads never alternate.
 
-**A spread is short.** A heading, a lede, at most two short paragraphs, and its interactive or
-cards. What the earlier editions said in a page of prose, a scroll shows.
+**A spread reads on into the next.** A heading, a lede, a paragraph or two, its interactive or
+cards, and the connecting paragraphs that join them. A card that names a rule holds the rule
+alone, and the reason for it stands in the text beside the card. Every sentence carries a
+reason, a consequence or a connection; `art/scroll/BRIEF.md` ("Continuous prose") has the detail.
 
 **An interactive follows the book's rules exactly.** Work its numbers out in code by those
 rules, and make the code refuse a state the rules forbid. Where a page shows a pattern and does

@@ -1,15 +1,16 @@
 # Writing a book in the scroll format
 
-A book is one scrolling page at `books/<slug>/index.html`: short allegory prose, photographs that
-unfold as they enter view, one live interactive per mechanism, and the proofs in collapsed panels.
+A book is one scrolling page at `books/<slug>/index.html`: allegory prose that reads as one
+continuous argument, photographs that unfold as they enter view, one live interactive per mechanism, and the proofs in collapsed panels.
 It replaces the older long edition (chapters of prose with static figures) completely. Nothing
 may be lost that a reader needs: every proof, the references, the lineage lines and every chapter
 anchor carry over.
 
-Two finished books are the models. Read both before writing anything:
+Three finished books are the models. Read them before writing anything:
 
 - `art/scroll/parts/ordering-without-clocks/` (the ring road: houses, messengers, slips)
 - `art/scroll/parts/the-limits-of-agreement/` (the foot of the hill: tents, ravens)
+- `art/scroll/parts/one-leader-at-a-time/` (the Tholos: named legislators, rules on cards)
 
 ## The kit
 
@@ -85,26 +86,54 @@ Copy the markup from a model's `body.html`. The spreads, in order:
    `<p class="source">{{source}}</p>`, which `assemble.py` fills from `meta.json`: the question
    in machine terms, the "We find out by exploring…" line, and every paper as
    `After <authors>, <i>title</i>, <year>` in small print.
-3. **In machine terms** (`section#machines`): the paper's problem and result in plain
-   distributed-systems words, three `.terms` bullets at most, and one small interactive that
+3. **In machine terms** (`section#machines`): the paper's problem in a lede and a framing
+   paragraph of plain distributed-systems words, the two or three named results as `.terms`
+   bullets, a closing line that begins "We tell it with …", and one small interactive that
    shows the difficulty with machines. Apart from the cover's `.generic` line, this is the only
    spread before the last that may speak of machines.
 4. **The setting** (`section#hall`, a `.bleed` photograph with a title card and three `.pin`
-   notes): the allegory's premise. It must fit in two or three short sentences.
-5. **The argument**, one spread per idea, in the long edition's order. Alternate `light` and
+   notes): the allegory's premise, in full sentences. It must fit in two or three short ones.
+5. **The argument**, one spread per idea, in the long edition's order. Each spread ends on what
+   is still open and the next begins by naming it (see "Continuous prose" below). Alternate `light` and
    `dark`; a spread that follows one of the other colour starts with a `.tear` (copy one, and set
    `--prev` to the colour above: `#eae4d4` after dark, `#f6eed6` after light).
-6. **Back to machines** (`section#why`): the `.map` table, the `.end` block (one sentence in
+6. **Back to machines** (`section#why`): a lede that begins "Read the <place> again with
+   machines …" and names the main correspondences, the `.map` table, the `.end` block (one sentence in
    `.big`, a `.lede`, the `.links`), then the `.apparatus`.
 
 Building blocks inside a spread: `.narrow` (kicker, `h2`, `.lede`, a paragraph or two);
 `.two` (text beside a `.photo` in a `.pop`); `.cards3` (three `.card3` papers, for rules or
 demands); `.paper.well` (an interactive, with an `h4`, the figure, a `.say` line that narrates,
-and a `.row` of `.btn` buttons); `.scrolly` inside a `section.has-scrolly` (a sticky `.stage`
+and a `.row` of `.btn` buttons); `p.tell` (a paragraph in the reading column, between or after
+those blocks); `.cards3.pair` (two cards side by side); `.scrolly` inside a `section.has-scrolly` (a sticky `.stage`
 and a column of `.step` cards). Everything that unfolds is wrapped
 `<div class="pop"><div class="leaf">…</div></div>`.
 
 Give every `section` a `data-name` (shown in the top bar) and an `id`.
+
+`.tell`, `.cards3.pair` and `.card3 h3:last-child` are styled in each book's `page.css`; copy the
+five rules from the end of a model's.
+
+## Continuous prose
+
+A reader should be able to go from one spread's lede through its paragraphs and into the next
+spread's lede as one line of thought. *Ordering Without Clocks* and *One Leader at a Time* are
+the models for this.
+
+- **Bridges.** An argument spread ends on a `p.tell` that states what is still open, and the next
+  spread's lede opens by naming that thing. The tell stands after the spread's interactive or
+  cards and before its proof panel. After a scroll-driven stage it goes in the `.wrap` that
+  follows the `.scrolly`.
+- **Statements, never question-and-answer turns.** "Why not wait for all five? Because …" is
+  written as the point and its reason. A heading may be a question; the prose under it does not
+  ask and answer itself.
+- **Reasons in the text.** A card that names a rule holds the rule alone, as its `h3`, and the
+  argument for the rule is a `p.tell` beside it. A card whose paragraph defines its rule keeps
+  the paragraph.
+- **Openings say why.** A lede and the paragraph after it say why the spread's idea is needed. A
+  sentence before each interactive tells the reader what to try and what to watch for.
+- **Connected, never ornate.** Every sentence carries a reason, a consequence or a connection,
+  drawn from the long edition. Sentences stay short and plain.
 
 ## Interactives
 
@@ -207,8 +236,9 @@ for effect.
   panel at the end of its spread, never into the prose.
 - **Machine words are allowed in four places only:** the machine-terms spread, the right-hand
   column of the closing table, the `.end` block of the last spread, and proof panels.
-- **Keep it short.** A spread is a heading, a lede, at most two short paragraphs, and its
-  interactive or cards. The scroll is a retelling, never the long edition's prose pasted in.
+- **A retelling, never the long edition pasted in.** A spread is a heading, a lede, a paragraph
+  or two, its interactive or cards, and the tells that join them. Take the long edition's
+  reasons and transitions, and write them fresh.
 - **Arrowheads on `Polar` slips grow with the stroke width.** Highlight a slip by colour, and
   keep its stroke under 5.
 - **`shot.sh` takes a height as its fourth argument.** A long book needs about 34000 at 1280 and
