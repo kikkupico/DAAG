@@ -1,7 +1,7 @@
-"""Framing studies of the scholars' coast sets, on a bare ground: close views to check a set's
+"""Framing studies of the scholars' coast sets and the hall of two doors, on a bare ground: close views to check a set's
 detail before it is baked into the island.
 
-    blender -b -P art/sets/coast_study.py -- <libraries|stoa|terraces> [which]
+    blender -b -P art/sets/coast_study.py -- <libraries|stoa|terraces|hall> [which]
 
 Writes art/previs/renders/<set>-study/<view>.png. `which` picks the library or the table (0 if
 not given). Every view is given in the building's own frame (along its front, out from its
@@ -38,6 +38,8 @@ sc.camera = cam
 if NAME == "libraries":
     B = INFO["libraries"][N]
     o, front, z0 = B["door"], B["steps"], B["ground"]
+elif NAME == "hall":
+    o, front, z0 = INFO["south_door"], INFO["south"], INFO["floor"] - 0.45
 elif NAME == "stoa":
     o, front, z0 = INFO["middle"], INFO["front"], INFO["ground_floor"]
 else:
@@ -73,6 +75,13 @@ if NAME == "libraries":
     shot("room", (-1.0, -0.9, 2.2), (1.2, -3.4, 1.7), 18)
     shot("back34", (-7, -11, 4.5), (0, -2, 2.2), 30)
     shot("roof", (5, 7, 11), (0, -1.5, 3.5), 32)
+elif NAME == "hall":
+    shot("south34", (7, 9, 2.6), (0, -3, 2.6), 28)
+    shot("south_door", (0.4, 6, 1.9), (0, -2, 2.2), 28)
+    shot("north34", (-7, -16.5, 2.6), (0, -5, 2.6), 28)
+    shot("north_door", (0.5, -12.5, 1.9), (0, -6, 2.4), 30)
+    shot("inside", (0.6, -0.9, 1.9), (-0.3, -7, 2.6), 18)
+    shot("roof", (9, 6, 10), (0, -3.5, 3), 30)
 elif NAME == "stoa":
     shot("front34", (20, 22, 6), (0, -2, 2.5), 28)
     shot("colonnade", (-10.5, 1.5, 1.7), (6, -2.5, 2.6), 24)
