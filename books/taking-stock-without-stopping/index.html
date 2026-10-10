@@ -101,6 +101,18 @@ p{margin:0 0 .9rem;text-wrap:pretty}
 .hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
 .hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
 .hall-title p{margin:0}
+/* on a phone, or a screen too short to hold them, the title and the notes leave the photograph and stand under it */
+@media(max-width:900px),(max-height:680px){
+  #hall{background:var(--parch);padding-bottom:clamp(2.5rem,8vw,4rem)}
+  .bleed{height:auto!important;overflow:visible;display:flex;flex-direction:column;gap:14px;padding:0 20px}
+  .bleed::after{display:none}
+  .bleed img{position:static;width:calc(100% + 40px);max-width:none;height:min(58svh,460px);margin:0 -20px;transform:none!important;
+    -webkit-mask-image:linear-gradient(transparent,#000 9%);mask-image:linear-gradient(transparent,#000 9%)}
+  .hall-title{position:relative;inset:auto;width:100%;max-width:640px;margin:-3.2rem auto 4px}
+  .hall-title .t{display:block;max-width:none}
+  .pin{position:static;width:100%;max-width:640px;margin:0 auto;box-shadow:5px 6px 0 var(--shadow)}
+  .pin::before,.pin::after{display:none}
+}
 
 /* ---------- scrollytelling ---------- */
 .scrolly{position:relative}
