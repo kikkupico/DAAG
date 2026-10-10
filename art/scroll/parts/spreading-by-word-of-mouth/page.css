@@ -1,0 +1,51 @@
+/* ---------- shared by the coast books ---------- */
+.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
+@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
+.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0}
+.counts span b{font-size:1.4rem;margin-right:5px}
+.cards3.five{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+table.terms2{width:100%;border-collapse:collapse;font-size:.88rem}
+table.terms2 td{padding:6px 8px 6px 0;border-top:2px solid #1c151222;vertical-align:top}
+table.terms2 td:first-child{width:40%;font-weight:700}
+.seg{display:flex;flex-wrap:wrap;gap:0;margin:0 0 8px}
+.seg button{background:#fff;border:3px solid var(--ink);margin-right:-3px;margin-bottom:-3px;padding:4px 9px;font-family:var(--sans);font-size:.78rem}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--parch)}
+.seglab{font-family:var(--sans);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:#6b5a48;margin:8px 0 4px}
+.checks{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px;font-size:.92rem}
+.checks li{padding:6px 10px;background:#fff;border:3px solid var(--ink)}
+.note{font-size:.9rem;color:#6b5a48;font-style:italic}
+.lib circle.b,.lib rect.b{stroke:var(--ink);stroke-width:3.5;transition:fill .4s,opacity .4s}
+.lib text{font-family:var(--sans);font-weight:700;font-size:13px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
+.lib.pick{cursor:pointer}
+.lib.pick:focus-visible{outline:none}.lib.pick:focus-visible .b{stroke:var(--aegean-d);stroke-width:6}
+.lib.off .b{opacity:.3}
+.lib .ring{fill:none;stroke:var(--gold);stroke-width:5;opacity:0;transition:opacity .3s}
+.lib.mark .ring{opacity:1}
+.way{fill:none;stroke:#b5602c;stroke-width:2.5;stroke-dasharray:3 7;opacity:.7}
+.way.cut{stroke:#bf4a26;stroke-dasharray:2 9;opacity:.35}
+.bars{display:grid;gap:10px;margin:.4rem 0 0}
+.bars .b{display:grid;grid-template-columns:minmax(0,11em) minmax(0,1fr);gap:10px;align-items:center;font-family:var(--sans);font-size:.82rem}
+.bars .b i{display:block;height:16px;background:var(--aegean);border:2px solid var(--ink);min-width:3px}
+.bars .b i.n{background:var(--gold)}
+.bars .b span.v{display:flex;align-items:center;gap:8px}
+.bars h5{font-family:var(--sans);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;margin:10px 0 0;color:#6b5a48}
+.tbl{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.86rem}
+.tbl th,.tbl td{padding:5px 8px;border-top:2px solid #1c151222;text-align:left}
+.tbl th{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48;border-top:0}
+/* ---------- cells: a coast of many libraries, one small square each ---------- */
+.cells{display:grid;gap:2px;background:#fff;border:3px solid var(--ink);padding:4px}
+.cells i{display:block;aspect-ratio:1/1;background:#f1e7cd;transition:background .25s}
+.cells i.t{background:var(--gold)}
+.cells i.d{background:#7c8f3a}
+.cells i.h{background:var(--aegean-d)}
+.cells i.x{background:#fde0d4;outline:2px solid var(--blood);outline-offset:-2px}
+.cells.c30{grid-template-columns:repeat(10,minmax(0,1fr));gap:4px}
+.cells.c100{grid-template-columns:repeat(10,minmax(0,1fr));gap:3px}
+.cells.c1000{grid-template-columns:repeat(40,minmax(0,1fr));gap:1px}
+.shelves{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:8px 0 0}
+.shelf{border:3px solid var(--ink);background:#fff;padding:8px 10px;font-family:var(--sans);font-size:.84rem;min-height:86px}
+.shelf h5{margin:0 0 6px;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48}
+.shelf .it{display:block;padding:3px 6px;margin:3px 0;border-left:5px solid var(--aegean);background:var(--parch-lo)}
+.shelf .it.nt{border-left-color:var(--blood)}
+.shelf .it.gone{text-decoration:line-through;opacity:.5}
+.shelf .it.none{border-left-color:#b9a77e;background:none;font-style:italic;color:#6b5a48}
