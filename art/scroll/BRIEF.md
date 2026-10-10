@@ -52,7 +52,7 @@ with PIL first). Also run `node --check` on `page.js`.
 | `sleep(ms)` | promise; instant under reduced motion |
 | `tween(ms, fn)` | calls `fn(0..1)` eased over `ms`; returns a promise |
 | `button(g, label, fn)` | make an SVG group keyboard-operable (tabindex, role, Enter/Space) |
-| `scrolly(root, render)` | scroll-driven stage: calls `render(i)` for the step in mid-window |
+| `scrolly(root, render)` | scroll-driven stage: calls `render(i)` for the step in mid-window, and puts a row of dots under the picture, one per step, the current one long; a dot scrolls to its step |
 | `mapPairs(el, pairs)` | the two-column "who is who" table of the closing spread |
 | `Polar(svg, opts)` | space-time drawn in the round (see below) |
 | `reduce` | true when the reader asked for reduced motion |

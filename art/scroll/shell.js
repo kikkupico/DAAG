@@ -35,9 +35,16 @@ function onscroll(){
 addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
 
 /* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
+function stepDots(root,steps){
+  const stage=$(".stage",root),nav=document.createElement("div"); nav.className="dots"; nav.setAttribute("role","group"); nav.setAttribute("aria-label","The steps of this picture");
+  const dots=steps.map((s,i)=>{const b=document.createElement("button"),h=$("h3",s); b.type="button"; b.setAttribute("aria-label","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""));
+    b.addEventListener("click",()=>s.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"})); nav.append(b); return b});
+  if(stage&&steps.length>1) stage.append(nav);
+  return i=>dots.forEach((d,j)=>{d.classList.toggle("on",j===i); if(j===i)d.setAttribute("aria-current","step"); else d.removeAttribute("aria-current")});
+}
 function scrolly(root,render){
-  const steps=$$(".step",root); render(0);
-  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
+  const steps=$$(".step",root),mark=stepDots(root,steps); render(0); mark(0);
+  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); mark(i); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
   steps.forEach(s=>so.observe(s));
 }
 

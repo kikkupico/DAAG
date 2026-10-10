@@ -128,9 +128,17 @@ p{margin:0 0 .9rem;text-wrap:pretty}
 .step.r{justify-content:flex-end}
 .scrolly svg.fig{width:min(100%,820px);height:auto;max-height:calc(100svh - 120px);overflow:visible}
 .scrolly .stage-inner{width:100%;display:flex;justify-content:center}
+/* one dot per step under the picture: the current step is the long one, and each dot scrolls to its step */
+.scrolly .stage{flex-direction:column;gap:12px}
+.dots{flex:0 0 auto;display:flex;justify-content:center;gap:1px;position:relative;z-index:7}
+.dots button{appearance:none;border:0;background:none;padding:8px 4px;line-height:0;cursor:pointer}
+.dots button::before{content:"";display:block;width:7px;height:7px;border-radius:7px;background:var(--ink);opacity:.22;transition:width .3s,opacity .3s,background .3s}
+.dots button:hover::before{opacity:.5}
+.dots button.on::before{width:20px;opacity:1;background:var(--blood)}
+.dots button:focus-visible{outline:2px solid var(--aegean-d);outline-offset:-3px}
 @media(min-width:900px){.scrolly .stage{padding-left:380px} .step .card{max-width:320px} .step{padding-left:max(24px,calc((100vw - 1080px)/2))}}
 @media(max-width:899px){
-  .scrolly .stage{align-items:flex-start;padding-top:64px}
+  .scrolly .stage{justify-content:flex-start;padding-top:64px}
   .scrolly svg.fig{max-height:46svh}
   .step{align-items:flex-end;padding-bottom:22px}
   .step .card{max-width:none;width:100%}
@@ -796,9 +804,16 @@ function onscroll(){
 addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
 
 /* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
+function stepDots(root,steps){
+  const stage=$(".stage",root),nav=document.createElement("div"); nav.className="dots"; nav.setAttribute("role","group"); nav.setAttribute("aria-label","The steps of this picture");
+  const dots=steps.map((s,i)=>{const b=document.createElement("button"),h=$("h3",s); b.type="button"; b.setAttribute("aria-label","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""));
+    b.addEventListener("click",()=>s.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"})); nav.append(b); return b});
+  if(stage&&steps.length>1) stage.append(nav);
+  return i=>dots.forEach((d,j)=>{d.classList.toggle("on",j===i); if(j===i)d.setAttribute("aria-current","step"); else d.removeAttribute("aria-current")});
+}
 function scrolly(root,render){
-  const steps=$$(".step",root); render(0);
-  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
+  const steps=$$(".step",root),mark=stepDots(root,steps); render(0); mark(0);
+  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); mark(i); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
   steps.forEach(s=>so.observe(s));
 }
 
