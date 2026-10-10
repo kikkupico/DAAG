@@ -343,6 +343,11 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
 @media(max-width:520px){.chead{display:none}.crow{grid-template-columns:auto 1fr}.crow>span[data-l]{grid-column:1/-1}.crow>span[data-l]::before{content:attr(data-l) ": ";color:#6b5a48;font-size:.74rem}.chead{border-bottom:0}.crow:first-of-type{border-top:3px solid var(--ink)}}
 /* on a phone the table of slates scrolls sideways inside its own box instead of being cut off */
 @media(max-width:560px){table.kinds{display:block;overflow-x:auto;max-width:100%}}
+.tell{max-width:40em;margin-top:1.6rem}
+.tell+.tell{margin-top:0}
+.cards3.pair{grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px}
+@media(max-width:860px){.cards3.pair{grid-template-columns:1fr}}
+.card3 h3:last-child{margin-bottom:0}
 </style>
 </head>
 <body>
@@ -380,13 +385,13 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>A guess about who has crashed</h2>
-      <p class="lede">A machine that has crashed looks exactly like one that is merely slow, and that alone makes agreement impossible.</p>
+      <p class="lede">A machine that has crashed looks exactly like one that is merely slow, and that alone makes agreement impossible: a machine waiting on a silent one cannot know whether to go on waiting.</p>
+      <p>A failure detector is a module on each machine that lists the machines it suspects have crashed. The list may be wrong, often. Two properties are asked of it: crashed machines are eventually suspected, and live ones are not. Chandra and Toueg (1996) found how little of the second is enough.</p>
       <ul class="terms">
-        <li><b>A failure detector</b> is a module on each machine that lists the machines it suspects have crashed. The list may be wrong, often.</li>
-        <li><b>Two properties</b> are asked of it: crashed machines are eventually suspected, and live ones are not.</li>
-        <li><b>Chandra and Toueg</b> (1996): with one correct machine never suspected, agreement survives any number of crashes. If that holds only eventually, it survives while more than half the machines live.</li>
+        <li><b>One correct machine never suspected</b>: agreement survives any number of crashes.</li>
+        <li><b>The same, but only eventually</b>: agreement survives while more than half the machines live.</li>
       </ul>
-      <p style="margin-top:1.2rem">This edition tells it with four mercenaries, their ravens, and a slate at each tent.</p>
+      <p style="margin-top:1.2rem">The detector is never told how to guess. It is judged only by what its lists get right. We tell it with four mercenaries, their ravens, and a slate at each tent.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper logs">
@@ -408,11 +413,11 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="hall-title"><div class="t">
       <div class="kicker">The foot of Mount Phyle</div>
       <h2>Four tents, out of sight of one another</h2>
-      <p>Four mercenaries are camped at the foot of the hill, one to a tent, under nobody's command.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> Bandits hold the top.</p>
+      <p>Four mercenaries are camped at the foot of Mount Phyle, one to a tent and under nobody's command, and no tent can be seen from another.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> Bandits hold the top of the hill.</p>
     </div></div>
-    <div class="pin pop" style="left:50%;top:44%;"><div class="leaf"><b>Only ravens</b>The four send word only by raven. A bird always arrives, but no bird has a longest flight.</div></div>
-    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>Nobody lies</b>No man at the foot ever misreports anything.</div></div>
-    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>Any man may die</b>A dead man's tent simply falls silent. No bird reports it.</div></div>
+    <div class="pin pop" style="left:50%;top:44%;"><div class="leaf"><b>Only ravens</b>The four send word to one another only by raven. A bird always arrives, but no bird has a longest flight.</div></div>
+    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>Nobody lies</b>No man at the foot ever misreports anything, so whatever a bird carries is true.</div></div>
+    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>Any man may die</b>Any of the four may be killed in the night. A dead man's tent simply falls silent, and no bird reports the death.</div></div>
   </div>
 </section>
 
@@ -422,23 +427,24 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Three demands, one change</div>
       <h2>A slate at every tent</h2>
-      <p class="lede">The four must all attack or all hold. Each formed an opinion at dusk, a sighting. Committing to either takes a man from the tent and its birds for the night.</p>
+      <p class="lede">The four must all attack or all hold. Each formed an opinion at dusk, a sighting, and the sightings may differ. Committing to either answer takes a man from the tent and its birds for the night, so a man who has committed sends and hears nothing more.</p>
+      <p>Whatever arrangement the four follow to settle on one answer, three things are demanded of it.</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First demand</div><h3>No two commit differently</h3><p>Nobody attacks while another holds.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second demand</div><h3>Only a sighted answer</h3><p>A man commits only to an answer someone sighted.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third demand</div><h3>Every living man commits</h3><p>Every man who is not killed eventually commits.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First demand</div><h3>No two commit differently</h3><p>No two of the four commit to different answers. Nobody attacks while another holds.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second demand</div><h3>Only a sighted answer</h3><p>A man commits only to an answer that one of the four sighted at dusk.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third demand</div><h3>Every living man commits</h3><p>Every man who is not killed commits in the end. Nobody is left waiting for ever.</p></div></div></div>
     </div>
     <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center;margin-top:2rem">
       <div>
-        <p>Can they be sure of meeting all three? On such a night no arrangement guarantees that anyone commits. A man waiting on a silent tent cannot tell whether the man there is dead or the bird is still in the pines.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s3" title="The Limits of Agreement: A Tent That Does Not Answer">*</a></sup></p>
-        <p>If the man waits, the wait may be for ever, on a dead man. If the man stops waiting, a live man whose bird was about to arrive may be left out.</p>
+        <p>The first two are easy to keep by never committing, and the third forbids that. On such a night no arrangement can be sure of meeting all three, because none guarantees that anyone commits. The trouble is a silent tent. A man waiting on one cannot tell whether the man there is dead or the bird is still in the pines.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s3" title="The Limits of Agreement: A Tent That Does Not Answer">*</a></sup></p>
+        <p>Both choices can go wrong. If the man waits, the wait may be for ever, on a dead man. If the man stops waiting, a live man whose bird was about to arrive may be left out.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p03-perch.jpg" alt="A tent and a chest in a wooded gully by moonlight, a shield leaning on the chest, and a bare bird perch with nothing on it" loading="lazy"></div></div></div>
     </div>
     <div class="narrow" style="margin:2rem 0 0">
-      <p><b>What if each man had some help in telling the dead from the slow?</b> That is the one change in this book. Each tent has a <b>slate</b>, with a row for every other tent. A man <b>chalks</b> a tent thought dead, and rubs the mark out when thinking again. How a man decides is not the question here.</p>
-      <p>Is the slate right? Often not. A mark may stand against a live man whose bird is merely slow, and a dead man's row may stay clean for a while. How good must a slate be for the four to agree, and what does it mean for a slate to be good at all?</p>
+      <p><b>Suppose each man had some help in telling the dead from the slow.</b> That is the one change in this book. Each tent has a <b>slate</b>, with a row for every other tent. A man <b>chalks</b> a tent thought dead, and rubs the mark out when thinking again. A man with a slate knows when to stop waiting: when the silent tent is chalked. How a man decides to chalk is not the question here.</p>
+      <p class="tell">The slate is often wrong. A mark may stand against a live man whose bird is merely slow, and a dead man's row may stay clean for a while. So the four have to find out how good a slate must be before they can agree, and before that, what it means for a slate to be good at all.</p>
     </div>
   </div>
 </section>
@@ -451,7 +457,8 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Two ways to go wrong</div>
       <h2>How a slate may be wrong</h2>
-      <p class="lede">A slate can fail to chalk the dead, or it can chalk the living. So two things are asked of it. Try a slate and see.</p>
+      <p class="lede">A slate is good when it keeps clear of its mistakes, and it can make only two. It can fail to chalk the dead, or it can chalk the living. So two things are asked of it.</p>
+      <p>Keep a slate yourself for one night. You sit at tent 1, and some tents have sent no bird. Chalk the ones you think are dead, then reveal the night and see which of the two mistakes you made.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Mark a slate <em>you are at tent 1</em></h4>
@@ -465,10 +472,12 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <div class="row"><button class="btn" id="slatereveal">Reveal the night</button><button class="btn alt" id="slatenew">A new night</button></div>
     </div></div></div>
     <div class="cards3" style="margin-top:2rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The dead</div><h3>Chalking the dead</h3><p>Every man who is killed is, in the end, chalked for good. Either by every living man, or at least by some living man.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The living</div><h3>Sparing the living</h3><p>Four strengths, from strongest to weakest. The next spread lists them.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A warning</div><h3>Chalking the dead is worth nothing alone</h3><p>A slate that chalks every tent all night chalks every dead man, and tells nobody anything. It is the sparing of the living that makes a slate useful.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The dead</div><h3>Chalking the dead</h3><p>Every man who is killed is, in the end, chalked for good. This can be asked of every living man's slate, or only of some living man's.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The living</div><h3>Sparing the living</h3><p>A man who lives is not chalked. This can be asked in four strengths, of all the living or of one, from dusk or only in the end.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A warning</div><h3>Chalking the dead is worth nothing alone</h3></div></div></div>
     </div>
+    <p class="tell">The warning is easy to check. A slate that chalks every tent all night chalks every dead man, and tells nobody anything, since a man who trusted it would wait for no one. It is the sparing of the living that makes a slate useful.</p>
+    <p class="tell">Sparing the living can be asked strictly or loosely, and how strictly it is asked decides what kind of slate a man holds.</p>
   </div>
 </section>
 
@@ -479,7 +488,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Four strengths of sparing</div>
       <h2>Eight kinds of slate</h2>
-      <p class="lede">Two ways of chalking the dead and four of sparing the living make eight kinds of slate.</p>
+      <p class="lede">Sparing the living is asked in four strengths, set out here from the strictest to the loosest. With the two ways of chalking the dead, by every living man or by some, they make eight kinds of slate.</p>
     </div>
     <ul class="checks" style="margin-bottom:1.6rem">
       <li><b>Never chalked.</b> No man is chalked while living.</li>
@@ -496,8 +505,8 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         <tr><th>in the end, one never chalked</th><td><b>in the end strong</b></td><td><b>in the end weak</b></td></tr>
       </tbody></table></div></div>
     <div class="narrow" style="margin:1.6rem 0 0">
-      <p>What does the last row promise? The least a slate can promise and still promise anything. Every living man may be chalked at one time or another, over and over, by everyone. All that is asked is that, from some moment nobody can see, one man who lives is left alone. Does any man know when that moment has come, or who that man is? No.</p>
-      <p>Eight kinds of slate. Must the four study all eight, or do some of them come to the same thing?</p>
+      <p>Six of the eight have names in the table, and the other two will not be needed. The last row promises the least a slate can promise and still promise anything. Every living man may be chalked at one time or another, over and over, by everyone. All that is asked is that, from some moment nobody can see, one man who lives is left alone. No man knows when that moment has come, or who that man is.</p>
+      <p class="tell">Eight kinds of slate are a great many to study. The four need not study them all, because the two columns of the table come to the same thing.</p>
     </div>
     <details class="proof">
       <summary>The eight kinds, in the paper's names</summary>
@@ -518,10 +527,11 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">The two rows are one</div>
+      <div class="kicker">The two columns are one</div>
       <h2>Copying marks</h2>
-      <p class="lede">If only some living man chalks the dead, can the rest be brought to chalk them too? Yes: the men make every living man do so by copying one another's marks.</p>
-      <p>Every man keeps a second slate, a <b>copy</b>. Again and again the man sends every tent the marks on the first slate. When a bird comes from a tent, the man adds its marks to the copy, and rubs out the mark against the tent the bird came from.</p>
+      <p class="lede">The two columns come to the same thing because a mark can be passed on. If only some living man chalks the dead, the rest can be brought to chalk them too, by copying one another's marks.</p>
+      <p>Every man keeps a second slate, a <b>copy</b>. Again and again the man sends every tent the marks on the first slate. When a bird comes from a tent, the man adds its marks to the copy, and rubs out the mark against the tent the bird came from, since that tent was alive to send it.</p>
+      <p>In the rounds below tent 4 is dead, and of the three living men only tent 1 has chalked it. Early on, two slates also chalk a living man by mistake. Send the birds, and watch the mark against tent 4 reach every copy while the mistaken marks come and go.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Rounds of birds <em>tent 4 is dead</em></h4>
@@ -529,8 +539,9 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <p class="say" id="copysay"></p>
       <div class="row"><button class="btn" id="copygo">Send a round of birds</button><button class="btn alt" id="copyr">Start again</button></div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">If some living man in the end chalks every dead man for good, then with copying every living man does. And the copy spares the living exactly as well as the slate it was copied from. So only the top row matters: perfect, strong, in the end perfect, and in the end strong. Of these, two are needed, <b>strong</b> and <b>in the end strong</b>, because whatever works with the weaker works with the stronger.</p>
-    <p style="max-width:40em">Start with the stronger of the two. If one living man is never chalked by anyone, and nobody knows which, is that enough to agree?</p>
+    <p class="tell">If some living man in the end chalks every dead man for good, then with copying every living man does. That man goes on sending the mark, and no bird ever comes from the dead to rub it out. And the copy spares the living exactly as well as the slate it was copied from. A man whom no slate chalks is on nobody's list of marks, so no copy chalks that man. A man whom the slates stop chalking goes on sending birds, and each bird rubs that man out of a copy.</p>
+    <p class="tell">So only the first column matters: perfect, strong, in the end perfect, and in the end strong. Of these, two need study, <b>strong</b> and <b>in the end strong</b>. A perfect slate is also strong, and one in the end perfect is also in the end strong, so whatever works with the weaker works with the stronger.</p>
+    <p class="tell">Start with the stronger of the two. With a strong slate one living man is never chalked by anyone, and nobody knows which man that is. What has to be settled is whether so little is enough to agree.</p>
     <details class="proof">
       <summary>Proof · that copying makes every living man chalk the dead, and spares the living as before</summary>
       <p class="given">The reduction <var>T</var><sub>D→D′</sub> of Fig. 3, §3: every process <var>p</var> keeps <var>output</var><sub><var>p</var></sub>, repeatedly sends its own suspect list to all, and on receiving the list of <var>q</var> sets <var>output</var><sub><var>p</var></sub> to (<var>output</var><sub><var>p</var></sub> ∪ the list of <var>q</var>) − {<var>q</var>}. <b>Theorem 1.</b> If the detector D has weak completeness, <var>output</var> has strong completeness, and it satisfies the same accuracy property as D.</p>
@@ -558,14 +569,15 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow">
       <div class="kicker">However many die</div>
       <h2>One man never chalked</h2>
-      <p class="lede">Suppose the slates are strong: every living man in the end chalks the dead, and one man who lives, say the man at tent 2, is never chalked by anyone. Nobody knows it is tent 2. Can the four agree? They can, however many of them die, even three.</p>
-      <p>Each man keeps a <b>tally of sightings</b>: a row for each tent, holding that tent's sighting if the man has learned it, and blank if not. At first it holds only the man's own.</p>
+      <p class="lede">One living man whom nobody ever chalks is enough. Suppose the slates are strong: every living man in the end chalks the dead, and one man who lives, say the man at tent 2, is never chalked by anyone. Nobody knows it is tent 2. The four can then agree however many of them die, even three.</p>
+      <p>Each man keeps a <b>tally of sightings</b>: a row for each tent, holding that tent's sighting if the man has learned it, and blank if not. At first it holds only the man's own. The arrangement works in three parts to make every tally come out the same, so that every man reads the same answer from it.</p>
     </div>
     <div class="cards3" style="margin-top:1.4rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Spreading, three rounds</div><h3>Send what is new</h3><p>In each round a man sends every tent the sightings learned for the first time in the round before (in the first round, the man's own). The man waits for that round's bird from every tent except a tent chalked, and writes any new sightings into the tally.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Spreading, three rounds</div><h3>Send what is new</h3><p>In each round a man sends every tent the sightings learned for the first time in the round before (in the first round, the man's own). The man waits for that round's bird from every tent except a tent chalked, and stops waiting for a tent chalked during the wait. Any new sightings go into the tally.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Comparing</div><h3>Send the whole tally</h3><p>The man sends every tent the whole tally, and waits in the same way. Any row that is blank in any tally received is blanked in the man's own.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Committing</div><h3>First filled row</h3><p>The man commits to the answer in the first row of the tally that is not blank, taking the rows in number order. Scroll to watch a night run.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Committing</div><h3>First filled row</h3><p>The man commits to the answer in the first row of the tally that is not blank, taking the rows in number order.</p></div></div></div>
     </div>
+    <p class="tell">Scroll to watch one night run. Tent 4 is killed in the first round, and the slates chalk living men by mistake. Follow tent 4's sighting, which reaches one tally and no further.</p>
   </div>
   <div class="scrolly" id="strong">
     <div class="stage"><div class="stage-inner split">
@@ -583,8 +595,10 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
     <div class="narrow" style="margin:0 0 1rem">
-      <p><b>Why does it work?</b> The whole thing turns on the man nobody chalks. Everybody waits for every one of that man's birds, so whatever the man has learned by a round, everyone who finishes the next round has learned too. After comparing, everyone who reaches the end holds exactly that man's tally, which is not empty, since it holds the man's own sighting.</p>
-      <p><b>Could anyone wait for ever?</b> No: a dead man is chalked in the end, and a live man's bird comes in the end. Who is in charge? Nobody. Everybody sends everything to everybody, and the man who holds it together is one nobody can name.</p>
+      <p><b>The arrangement turns on the man nobody chalks.</b> Since nobody chalks that man, everybody waits for every one of that man's birds, so whatever the man has learned by a round, everyone who finishes the next round has learned too. By the end of spreading, every tally that finishes holds everything that man's tally holds.</p>
+      <p>In comparing, everyone waits for that man's tally and blanks every row that is blank in it. A row filled in it is filled in every tally, so nobody blanks it. Everyone who reaches the end therefore holds exactly that man's tally, which is not empty, since it holds the man's own sighting. All commit to the same answer, and it is an answer someone sighted.</p>
+      <p><b>Nobody waits for ever</b>, because a dead man is chalked in the end and a live man's bird comes in the end. So every man who lives commits, and all three demands are met. Nobody is in charge of any of it. Everybody sends everything to everybody, and the man who holds it together is one nobody can name.</p>
+      <p>The night above was a single night. Press a button below for another, with as many deaths as you choose, and check that the living always end with one tally.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Another night <em>choose how many are killed</em></h4>
@@ -593,7 +607,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <div class="row"><button class="btn" data-dead="0">Nobody is killed</button><button class="btn alt" data-dead="1">One is killed</button><button class="btn alt" data-dead="2">Two are killed</button><button class="btn alt" data-dead="3">Three are killed</button></div>
       <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">Each press deals new sightings, new deaths and new mistaken marks, and runs the arrangement by its rules.</p>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">But a slate that never, from dusk on, chalks one living man is a great deal to ask. What if the slates are right about someone only in the end?</p>
+    <p class="tell">A slate that never, from dusk on, chalks one living man is a great deal to ask. A slate may be right about someone only in the end, and it remains to see what the four can do with that.</p>
     <details class="proof">
       <summary>Proof · that with a strong slate everyone who finishes holds the same tally</summary>
       <p class="given"><b>Theorem 2.</b> With a failure detector of class S, consensus is solvable whatever the number of crashes. Here <var>n</var> = 4; <var>V</var><sub><var>p</var></sub> is the tally of <var>p</var> (a blank is ⊥); the algorithm is that of Fig. 5, §6.1, with <var>n</var> − 1 = 3 rounds of Phase 1, then Phase 2, then Phase 3.</p>
@@ -630,8 +644,8 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Slates right only in the end</div>
       <h2>In the end, one man spared</h2>
-      <p class="lede">Suppose less: the slates are only in the end strong. For as long as the slates like, every man may be chalked by everyone. Only from some moment nobody sees is one living man left alone. The four can still agree, provided more than half of them live. With four men, one may die.</p>
-      <p>They take <b>turns</b>. Each round belongs to one tent, in number order: 1, 2, 3, 4, then 1 again. The round number decides whose turn it is, not anyone's command, as on the windy nights.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s3" title="Agreeing When Messages Run Late: Turns and Pledges">*</a></sup> Each man carries an <b>estimate</b>, an answer, which starts as the sighting, and beside it the round in which the man last took it up.</p>
+      <p class="lede">Slates that are right about someone only in the end are the slates in the end strong. For as long as such slates like, every man may be chalked by everyone. Only from some moment nobody sees is one living man left alone. The four can still agree, provided more than half of them live. With four men, one may die.</p>
+      <p>The tallies leaned from dusk on a man nobody chalked, and now there may be no such man until late in the night. So the four take <b>turns</b>, and each tent in its turn tries to bring the rest to one answer. Each round belongs to one tent, in number order: 1, 2, 3, 4, then 1 again. Nobody commands this. The round number alone decides whose turn it is, as on the windy nights.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s3" title="Agreeing When Messages Run Late: Turns and Pledges">*</a></sup> Each man carries an <b>estimate</b>, an answer, which starts as the sighting, and beside it the round in which the man last took it up. A round has four steps.</p>
     </div>
     <ul class="checks steplist" style="margin-bottom:1.6rem">
       <li><b>(1)</b> Every man sends the round's owner the estimate and the round it was taken up.</li>
@@ -640,6 +654,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <li><b>(4)</b> The owner waits for three replies. If all three say <em>agreed</em>, the owner sends every tent a <b>parting bird</b> naming the estimate.</li>
       <li><b>Committing.</b> A man who takes in a parting bird for the first time sends it on to every tent, then commits to its answer.</li>
     </ul>
+    <p class="tell" style="margin-top:0;margin-bottom:1.6rem">Choose a night and take the rounds one at a time. For the first two rounds the slates are wrong and a man may chalk an owner who lives. From the third round they are right. Watch which rounds come to nothing, and whether one sends out the parting bird.</p>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Rounds by turns <em>choose a night</em></h4>
       <div id="turnrows" data-live></div>
@@ -649,11 +664,11 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <div id="turnlog" style="margin-top:12px" data-live></div>
     </div></div></div>
     <div class="narrow" style="margin:1.6rem 0 0">
-      <p><b>Why do they never commit to two answers?</b> Take the first round in which three men sent <em>agreed</em>, say on hold. Those three took up hold in that round. Any later owner waits for three estimates, and any three out of four share a man with those three, so the owner sees at least one hold taken up that recently or later. Take the estimate taken up most recently, and by the same argument round after round, it is hold. So every later owner sends hold, and every parting bird names hold.</p>
-      <p><b>Why do they commit?</b> Nobody waits for ever: a dead owner is in the end chalked, and three men live to reply. From some moment one living man is never chalked. When that man's turn next comes, the man gathers three estimates, everyone waits for the estimate, nobody chalks the owner, all say <em>agreed</em>, and the parting bird goes out.</p>
-      <p>While the slates are still chalking the living, rounds fail: a man chalks a live owner whose bird is slow, says <em>not agreed</em>, and the round comes to nothing. Failing is always safe. The chalk can cost time; it can never cost agreement.</p>
+      <p><b>The four never commit to two answers.</b> Take the first round in which three men sent <em>agreed</em>, say on hold. Those three took up hold in that round. Any later owner waits for three estimates, and any three out of four share a man with those three, so the owner sees at least one hold taken up that recently or later. Take the estimate taken up most recently, and by the same argument round after round, it is hold. So every later owner sends hold, and every parting bird names hold.</p>
+      <p><b>Every living man commits.</b> Nobody waits for ever, because a dead owner is in the end chalked, and three men live to reply. From some moment one living man is never chalked. When that man's turn next comes, the man gathers three estimates, everyone waits for the estimate, nobody chalks the owner, all say <em>agreed</em>, and the parting bird goes out. Each man who takes it in sends it on before committing, so it reaches every man who lives.</p>
+      <p>While the slates are still chalking the living, rounds fail: a man chalks a live owner whose bird is slow, says <em>not agreed</em>, and the round comes to nothing. Failing is always safe, since a round that fails sends out no parting bird. The chalk can cost time. It can never cost agreement.</p>
     </div>
-    <p style="max-width:40em;margin-top:1rem">A strong slate bore any number of deaths; this one needs more than half alive. Is that a weakness of the arrangement, or would every arrangement need it?</p>
+    <p class="tell">A strong slate bore any number of deaths, and this one needs more than half alive, because an owner must gather three estimates and three replies. That may be a weakness of the turns, or it may be a need that every arrangement shares.</p>
     <details class="proof">
       <summary>Proof · that the turns never commit anyone to two answers, and in the end commit everyone to one</summary>
       <p class="given"><b>Theorem 3.</b> With a failure detector of class ◇S, consensus is solvable if fewer than <var>n</var>/2 processes crash. Here <var>n</var> = 4, so three is ⌈(<var>n</var> + 1)/2⌉; the algorithm is the rotating coordinator of Fig. 6, §6.2, and the parting bird is Reliable Broadcast of the decision (Fig. 4). Here <var>e</var> is an estimate, <var>r</var> a round, and <var>q</var> a process.</p>
@@ -691,7 +706,8 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Would every arrangement need it?</div>
       <h2>Why more than half, then</h2>
-      <p class="lede">Every arrangement would. The need is real, and it holds even for slates in the end perfect, which in the end chalk the dead and nobody else. Suppose some arrangement carried the four past two deaths, and run it on three nights.</p>
+      <p class="lede">The need for more than half alive is shared by every arrangement. It holds even for slates in the end perfect, which in the end chalk the dead and nobody else. To see it, suppose some arrangement carried the four past two deaths, and run it on three nights.</p>
+      <p>Take the nights in turn. On each, look at what tents 1 and 2 can see of tents 3 and 4, and at what the two pairs commit to.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Three nights <em>pairs: tents 1 and 2, tents 3 and 4</em></h4>
@@ -706,8 +722,9 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <div class="row"><button class="btn" data-night="1">First night</button><button class="btn alt" data-night="2">Second night</button><button class="btn alt" data-night="3">Third night</button></div>
     </div></div></div>
     <div class="narrow" style="margin:1.6rem 0 0">
-      <p><b>If two of the four may die, no arrangement meets the three demands, even with slates in the end perfect.</b> What is the difference from a strong slate? When the slate is right. A strong slate never chalks one living man, from dusk, and that man holds the four together from the start. A slate that is right only in the end may be wrong about everyone for as long as the arrangement needs it to be right. While it is, the four are two pairs, each able to believe the other dead.</p>
-      <p>So a slate in the end strong, with more than half alive, is enough. But where does such a slate come from, and what has it left unsaid?</p>
+      <p>On the third night nobody is dead, but each pair's birds to the other are slow and each pair chalks the other, exactly as on a night when the other pair was dead. The slates are rubbed clean afterwards, too late. <b>If two of the four may die, no arrangement meets the three demands, even with slates in the end perfect.</b></p>
+      <p>The difference from a strong slate is when the slate is right. A strong slate never chalks one living man, from dusk, and that man holds the four together from the start. A slate that is right only in the end may be wrong about everyone for as long as the arrangement needs it to be right. While it is, the four are two pairs, each able to believe the other dead.</p>
+      <p class="tell">So a slate in the end strong, with more than half alive, is enough, and with such slates the half cannot be spared. Nothing so far has said where such a slate comes from, or what its promises leave unsaid.</p>
     </div>
     <details class="proof">
       <summary>Proof · that slates in the end perfect cannot carry the four past two deaths</summary>
@@ -740,13 +757,13 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <div>
         <div class="kicker">Granted, not earned</div>
         <h2>What the slate does not say</h2>
-        <p class="lede">The slate's promises are granted, not earned. On a night when no bird has a longest flight, and nothing more is known, no man can keep a slate that is even in the end weak. If one could, the four could agree on that night, and they cannot.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup></p>
-        <p>The slates of this book are an assumption about the hill, stated as a promise about chalk.</p>
+        <p class="lede">Where a slate comes from is the one thing the slate does not say. Its promises are granted, not earned. On a night when no bird has a longest flight, and nothing more is known, no man can keep a slate that is even in the end weak. If one could, the four could agree on that night, and they cannot.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup></p>
+        <p>So the slates of this book are an assumption about the hill, stated as a promise about chalk. The four were handed slates that keep their promises, and were never told how to keep one.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on top, tiny tents on the slopes and the sea beyond" loading="lazy"></div></div></div>
     </div>
     <div class="narrow" style="margin:2rem 0 1rem">
-      <p><b>Can a slate ever be kept?</b> On a windy night, yes. Where a wind blows for a while and then drops, and in still air every bird comes within a glass,<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s2" title="Agreeing When Messages Run Late: Glasses and Late Birds">*</a></sup> a man can keep a slate in the end perfect. Every man sends a bird to every tent, again and again, to say the sender is alive. A man chalks a tent when a glass has run out with no bird from it. When a bird from it comes after all, the man rubs out the mark and waits longer for that tent next time.</p>
+      <p><b>A slate can be kept on a windy night.</b> Where a wind blows for a while and then drops, and in still air every bird comes within a glass,<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s2" title="Agreeing When Messages Run Late: Glasses and Late Birds">*</a></sup> a man can keep a slate in the end perfect. Every man sends a bird to every tent, again and again, to say the sender is alive. A man chalks a tent when a glass has run out with no bird from it. When a bird from it comes after all, the man rubs out the mark and waits longer for that tent next time. Below, one man watches one tent through such a night. Run it once with the watched man alive and once with the watched man killed.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>A slate kept on a windy night <em>one watched man</em></h4>
@@ -757,13 +774,14 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <div class="row"><button class="btn" id="windlive">The watched man lives</button><button class="btn alt" id="winddead">The watched man is killed</button><button class="btn alt" id="windr" hidden>Start again</button></div>
       <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">The delays are drawn at random for the picture; the rule the watcher follows is the one in the text.</p>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.2rem">Once the wind has dropped, a live man's birds come in time once the waiting is long enough, so in the end nobody living is chalked. A dead man's birds stop, so the dead man is chalked for good. The slate is a way of saying what the wind gives, without saying anything about wind.</p>
+    <p class="tell">Each mistaken mark lengthens the wait. Once the wind has dropped, a live man's birds come in time once the waiting is long enough, so in the end nobody living is chalked. A dead man's birds stop, so the dead man is chalked for good. The slate is a way of saying what the wind gives, without saying anything about wind.</p>
+    <p class="tell">Three more things about the slates are worth setting down before leaving the hill.</p>
     <div class="cards3" style="margin-top:1.6rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Must it be right to be safe?</div><h3>No</h3><p>If the slates break every promise, chalking the living for ever and never chalking the dead, the two arrangements may never commit anyone. They never commit two men to different answers. Only committing is lost.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A slate that breaks every promise</div><h3>Still never two answers</h3><p>If the slates chalk the living for ever and never chalk the dead, the two arrangements may never commit anyone. They never commit two men to different answers. Only committing is lost.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The weakest slate that will do</div><h3>In the end weak</h3><p>In the end weak, with more than half alive, is enough. It is also necessary: any slate with which the four could agree can be made into one in the end weak. That was proved separately, and is not proved here.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Many things to decide</div><h3>The same slates</h3><p>If the four had to decide one after another, and take them in the same order, the same slates would do, and nothing weaker: agreeing once and agreeing on an order can each be turned into the other.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Many things to decide</div><h3>The same slates</h3><p>If the four had many things to decide, one after another, and had to take them in the same order, the same slates would do, and nothing weaker: agreeing once and agreeing on an order can each be turned into the other.</p></div></div></div>
     </div>
-    <p style="max-width:40em;margin-top:1.4rem"><b>What follows from committing?</b> Nothing. The four attack together or hold together. What happens then is not the subject of this book.</p>
+    <p class="tell">Nothing follows here from committing. The four attack together or hold together, and what happens then is not the subject of this book.</p>
   </div>
 </section>
 
@@ -775,7 +793,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>At the foot, in the paper</h2>
-      <p class="lede">So that the reader may check the slates against the paper of Chandra and Toueg. Hover or tap to see who is who.</p>
+      <p class="lede">Read the foot of the hill again with machines in the tents, and the slates can be checked against the paper of Chandra and Toueg. Every man is a process, a man killed is a process that has crashed, and the slate is a failure detector. Hover over a row, or tap it, to see who is who.</p>
     </div>
     <div class="map" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">At the foot of the hill</div><div></div><div class="hd">In the machine room</div>
