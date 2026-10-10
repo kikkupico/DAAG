@@ -32,12 +32,12 @@
       <div class="kicker">First, in machine terms</div>
       <h2>Replacing a leader that may lie</h2>
       <p class="lede">A group of computers keeps one log in the same order, led by one machine at a time, and some of them may lie.</p>
+      <p>When a leader stalls, the group must replace it, and in earlier protocols that is the costly part. Every machine tells every other machine, so the messages in one step grow with every pair of machines, and a change of leader costs far more than an ordinary step. HotStuff, which Yin, Malkhi, Reiter, Gueta and Abraham published in 2019, removes both costs with two ideas.</p>
       <ul class="terms">
-        <li><b>Replacing the leader is costly.</b> When a leader stalls, the group must change it, and in earlier protocols a change costs far more than an ordinary step.</li>
-        <li><b>Every machine tells every machine.</b> The messages in one step grow with every pair of machines.</li>
-        <li><b>HotStuff</b> (Yin, Malkhi, Reiter, Gueta and Abraham, 2019): votes go only to the leader, and one more phase lets a new leader take over as cheaply as an old one.</li>
+        <li><b>Votes go only to the leader</b>, who combines them into one certificate and sends it back out, so the messages in a step grow only with the number of machines.</li>
+        <li><b>One more phase</b> of voting lets a new leader take over as cheaply as an old one.</li>
       </ul>
-      <p style="margin-top:1.2rem">This edition tells it with four bandits on a hilltop and their trained rats.</p>
+      <p style="margin-top:1.2rem">Together they let the leader change at every step, at the pace of the messages and not of a timer. We tell it with four bandits on a hilltop and their trained rats.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper logs">
@@ -60,11 +60,11 @@
     <div class="hall-title"><div class="t">
       <div class="kicker">The crown of Mount Phyle</div>
       <h2>Four bandits, out of sight of one another</h2>
-      <p>Bandit 1 sits inside the ring wall on the crown, and bandits 2, 3 and 4 hold posts on the slopes. They keep one loot scroll, a copy at each post, and send word only by rat.<sup class="xref"><a href="../../places/the-crown/index.html" title="The Setting: The Crown of Mount Phyle">*</a></sup></p>
+      <p>Bandit 1 sits inside the ring wall on the crown of Mount Phyle, and bandits 2, 3 and 4 hold posts on the slopes below it. The four keep one loot scroll, with a copy at each post, and send word to one another only by rat.<sup class="xref"><a href="../../places/the-crown/index.html" title="The Setting: The Crown of Mount Phyle">*</a></sup></p>
     </div></div>
-    <div class="pin pop" style="left:50%;top:49%;"><div class="leaf"><b>Rats and seals</b>A rat arrives with exactly what was written. Every strip carries the sender's ring, which nobody can forge.</div></div>
-    <div class="pin pop" style="left:6%;top:66%;"><div class="leaf"><b>One may lie</b>One of the four may lie. Nobody learns which.</div></div>
-    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>The wind</b>A wind can hold the rats in their holes for as long as it blows. Each post keeps a sandglass.</div></div>
+    <div class="pin pop" style="left:50%;top:49%;"><div class="leaf"><b>Rats and seals</b>A rat arrives with exactly what was written on its strip. Every strip is sealed with the sender's ring, and nobody can forge a ring.</div></div>
+    <div class="pin pop" style="left:6%;top:66%;"><div class="leaf"><b>One may lie</b>One of the four may lie in what they send, and nobody ever learns which.</div></div>
+    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>The wind</b>A wind can hold the rats in their holes for as long as it blows, so each post keeps a sandglass to wait by.</div></div>
   </div>
 </section>
 
@@ -75,15 +75,15 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The arrangement so far</div>
       <h2>What a change of job cost</h2>
-      <p class="lede">Each entry in the loot scroll is numbered by whoever holds the job, echoed twice, and written in the same order at every honest post. When the holder stalls, the job passes.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s3" title="Keeping Order Among Liars: Two Echoes">*</a></sup></p>
-      <p>What does that arrangement cost? Two things.</p>
+      <p class="lede">Each entry in the loot scroll is numbered by whoever holds the job, echoed twice by the men, and written in the same order at every honest post. When the holder stalls, the job passes.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s3" title="Keeping Order Among Liars: Two Echoes">*</a></sup></p>
+      <p>That arrangement keeps the scroll in one order whoever lies, and the four men pay for it in two ways.</p>
     </div>
     <div class="cards3 cards2" style="margin-top:1rem">
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First cost</div><h3>Every man writes to every man</h3><p>Each echo goes from each man to all the others. With four men that is a dozen rats a stage. With forty it would be over fifteen hundred.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second cost</div><h3>A change of job is heavy</h3><p>The new holder must gather requests from three men, each carrying sealed proof of every entry readied at their post, and send all of it on, so that each man can check the new numbering.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s5" title="Keeping Order Among Liars: Changing the Job">*</a></sup> A change costs far more than an ordinary entry, and the more often the job passes, the more that matters.</p></div></div></div>
     </div>
-    <p style="max-width:40em;margin-top:1.6rem">The crown, the scroll, the seals, the wind and the four men all stay. Only the procedure changes.</p>
-    <p class="lede" style="margin-top:1rem">Could the job pass at every entry, whether or not anyone suspects its holder, with a change of holder costing no more than an entry? Start with the rats: must every man write to every man?</p>
+    <p class="tell">The crown, the scroll, the seals, the wind and the four men all stay as they are. Only the procedure changes, and it aims at both costs. The job should be able to pass at every entry, whether or not anyone suspects its holder, with a change of holder costing no more than an entry.</p>
+    <p class="tell">The rats come first. A dozen of them run in every stage because every man writes to every man, and the four can do without that.</p>
   </div>
 </section>
 
@@ -96,12 +96,13 @@
       <div>
         <div class="kicker">One stage, two ways</div>
         <h2>Votes to one man, bundles to all</h2>
-        <p class="lede">No. Instead of every man echoing to every man, each man sends their sealed <span class="coin">vote</span> to the holder alone.</p>
-        <p>When the holder has three matching votes, they tie them into a <span class="coin">bundle</span> and send the bundle to everyone. Why trust a bundle? Three seals prove that three men voted, and so, with one liar, that at least two honest men did.</p>
+        <p class="lede">Every man need not write to every man. Each man sends their sealed <span class="coin">vote</span> to the holder alone, and the holder tells the rest what the votes came to.</p>
+        <p>When the holder has three matching votes, the holder ties them into a <span class="coin">bundle</span> and sends the bundle to everyone. A bundle can be trusted because nobody can forge a seal. Three seals prove that three men voted, and so, with one liar among the four, that at least two honest men did.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/c01-bundle.jpg" alt="At dusk at a chink in the foot of a ruined ring wall, a rat with several cords knotted together across its back, each cord ending in a dab of sealing wax stamped with its own mark" loading="lazy"></div></div></div>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2.2rem">
+    <p class="tell" style="margin-top:2.4rem">The crown below runs one stage each way, with bandit 1 holding the job. Press each button in turn and watch the count of rats.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>One stage on the crown <em>count the rats</em></h4>
       <div class="hill-wrap">
         <svg class="isle-svg fig" id="votesvg" role="img" aria-label="The crown from above: bandit 1 inside the ring wall at the centre, and bandits 2, 3 and 4 at three posts out on the slopes, with rats running between them"></svg>
@@ -116,8 +117,8 @@
         <button class="btn alt" id="voteone">Votes to the holder, a bundle to all</button>
       </div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">A stage costs rats in step with the number of men, not with every pair of them. On the crown a bundle is three seals tied together.</p>
-    <p class="lede" style="margin-top:1rem">Fewer rats, then. But the heavy part was the change of holder. How can a new holder pick up where the last left off without gathering everyone's proofs?</p>
+    <p class="tell">Twelve rats become six. Each man writes only to the holder, and the holder's bundle carries proof of all three votes, so a stage costs rats in step with the number of men and no longer with every pair of them. On the crown a bundle is three seals tied together.</p>
+    <p class="tell">The rats were the lighter of the two costs. The heavy one was the change of holder, where a new holder gathered everyone's sealed proofs before numbering anything. A new holder needs a way to pick up where the last left off with far less in hand.</p>
   </div>
 </section>
 
@@ -128,8 +129,8 @@
     <div class="narrow">
       <div class="kicker">The new holder asks for one thing</div>
       <h2>Three stages and a lock</h2>
-      <p class="lede">By having every man send the new holder their latest bundle, and nothing more. For that to be enough, entries now form a chain: each entry names the one before it, so an entry stands only with everything behind it. Two entries <span class="coin">conflict</span> if neither lies on the other's chain.</p>
-      <p>Each man keeps two bundles: the latest <em>first bundle</em> they have seen, and their <span class="coin">lock</span>, the latest <em>second bundle</em> they have voted on. A term goes like this. Scroll slowly.</p>
+      <p class="lede">A new holder can pick up where the last left off if every man sends the new holder their latest bundle, and nothing more. For one bundle to be enough, entries now form a chain: each entry names the one before it, so an entry stands only with everything behind it. Two entries <span class="coin">conflict</span> if neither lies on the other's chain.</p>
+      <p>An entry now goes through three stages of voting, and each stage ends in a bundle: a first, a second and a third. Each man keeps two bundles: the latest <em>first bundle</em> they have seen, and their <span class="coin">lock</span>, the latest <em>second bundle</em> they have voted on. A term is one holder's turn at the job, and it goes in six steps. Scroll slowly, and the crown moves with you.</p>
     </div>
   </div>
   <div class="scrolly" id="term">
@@ -138,7 +139,7 @@
     </div></div>
     <div class="steps">
       <div class="step on"><div class="card"><div class="num">1 · Starting</div><h3>Every man sends the holder their latest first bundle</h3><p>The holder waits for three, takes the latest of them, and proposes a new entry on top of the entry it names, sending the proposal and that bundle to all.</p></div></div>
-      <div class="step"><div class="card"><div class="num">2 · First vote</div><h3>A man votes if the proposal is safe for them</h3><p>They vote for the proposal if it lies on the chain of the entry they are locked on, or if the bundle it carries is from a later term than their lock.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · First vote</div><h3>A man votes if the proposal is safe for them</h3><p>A man votes for the proposal if it lies on the chain of the entry they are locked on, or if the bundle it carries is from a later term than their lock.</p></div></div>
       <div class="step"><div class="card"><div class="num">3 · Second vote</div><h3>The first bundle</h3><p>The holder ties three first votes into a first bundle and sends it. Every man keeps it and votes again.</p></div></div>
       <div class="step"><div class="card"><div class="num">4 · Third vote</div><h3>The second bundle, and the lock</h3><p>The holder ties three second votes into a second bundle and sends it. Every man locks on it and votes again.</p></div></div>
       <div class="step"><div class="card"><div class="num">5 · Standing</div><h3>The third bundle</h3><p>The holder ties three third votes into a third bundle and sends it. Every man writes the entry and everything behind it into their copy.</p></div></div>
@@ -146,6 +147,7 @@
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <p class="tell" style="margin-top:0">A term that goes well ends with the entry written at every post. A term that stalls leaves each man with whatever first bundle and lock they had reached, and the next holder is owed only the first bundles. Whether the men then vote for the next holder's proposal is decided by the rule for the first vote, and that rule has two halves.</p>
     <details class="proof">
       <summary>Where the term is in the paper</summary>
       <p class="given">The steps above are the paper's Basic HotStuff: a first, second and third vote are the prepare, pre-commit and commit votes, and a first, second and third bundle are prepareQC, precommitQC and commitQC.</p>
@@ -161,20 +163,23 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The rule for the first vote</div>
       <h2>Two halves, two jobs</h2>
-      <p class="lede">Why does the rule for the first vote have two halves? Each has its own job.</p>
+      <p class="lede">The rule for the first vote has two halves because it has two jobs to do. A man votes for a proposal if either half holds.</p>
     </div>
     <div class="cards3 cards2" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First half</div><h3>Lies on my locked entry's chain</h3><p>This keeps the scroll safe: a locked man will not help a conflicting entry forward.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second half</div><h3>Carries a later bundle than my lock</h3><p>This keeps the scroll moving: a man locked on something the rest have gone past can be shown that they have, and let go.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First half</div><h3>Lies on my locked entry's chain</h3></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second half</div><h3>Carries a later bundle than my lock</h3></div></div></div>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well">
+    <p class="tell">The first half keeps the scroll safe. A proposal on the locked entry's chain builds on that entry, so a locked man who votes for it helps nothing conflicting forward, and a locked man votes for nothing else on the strength of this half.</p>
+    <p class="tell">The second half keeps the scroll moving. A man may be locked on something the rest have gone past. A bundle from a later term than the lock shows that three men have voted for something since, and a man who is shown this lets the lock go.</p>
+    <p class="tell" style="margin-top:2.4rem">The four proposals below put the rule to one man. Pick each in turn and watch which half, if either, lets the man vote.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>One man's first vote <em>lock: term 4</em></h4>
       <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">A proposal reaches a man whose lock is the second bundle of term 4. Which proposal is it?</p>
       <div class="row" id="ruleopts" style="margin:0 0 .8rem"></div>
       <ul class="checks" data-live hidden><li id="rule1"></li><li id="rule2"></li><li id="rule3"></li></ul>
       <p class="say" id="rulesay">Pick a proposal. The man votes if either half holds.</p>
     </div></div></div>
-    <p class="lede" style="margin-top:1rem">A lock can be let go. Could letting it go ever let a conflicting entry stand?</p>
+    <p class="tell">A lock, then, can be let go. The worry is that a man who lets go might help a conflicting entry to stand beside the one they had locked on.</p>
   </div>
 </section>
 
@@ -186,11 +191,12 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The first promise</div>
       <h2>Never two entries</h2>
-      <p class="lede">Letting a lock go can never let a conflicting entry stand.</p>
-      <p>Within a term, can two bundles of the same stage vouch for conflicting entries? No: each needs three seals out of four, the two threes share an honest man, and an honest man votes once a stage a term.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s4" title="Keeping Order Among Liars: Why Three Seals, and Four Men">*</a></sup> And across terms? There the lock does the work.</p>
+      <p class="lede">Letting a lock go can never let a conflicting entry stand. The reason comes in two parts, one for a single term and one for the terms that follow it.</p>
+      <p>Within a term, two bundles of the same stage cannot vouch for conflicting entries. Each needs three seals out of four, so the two threes share an honest man, and an honest man votes once a stage a term.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s4" title="Keeping Order Among Liars: Why Three Seals, and Four Men">*</a></sup> Across terms the lock does the work. An entry stands only on a third bundle, and a man casts a third vote only after locking, so an entry that stands has honest men locked on it. A later bundle for a conflicting entry needs three seals too, and so the vote of one of those locked men, who gives it only to a proposal that carries a bundle later than the lock.</p>
     </div>
     <div class="result"><span class="name">Never Two Entries</span><p>However the wind blows and whoever lies, no two conflicting entries both stand at honest posts.</p></div>
-    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.6rem">
+    <p class="tell" style="margin-top:2.4rem">The part within a term can be checked by hand. Choose the missing seal of each bundle below, and see how many men sealed both.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>Two bundles of the same stage <em>who is in both?</em></h4>
       <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each bundle has three seals out of four. For each bundle, pick the man whose seal it lacks.</p>
       <div class="pairs">
@@ -200,6 +206,7 @@
       <div class="stand" id="lackstand" data-live></div>
       <p class="say" id="lacksay">Pick one man for each bundle.</p>
     </div></div></div>
+    <p class="tell">The scroll is safe with three stages, then. Two echoes were enough to keep it safe before, so the third stage has to earn its place some other way. The plain test is to take it away.</p>
     <details class="proof">
       <summary>Proof — that the locks keep conflicting entries from both standing</summary>
       <p class="given"><b>Theorem 2.</b> Conflicting nodes cannot both be committed by correct replicas. Here W and B are conflicting entries (nodes); <var>a</var>, <var>b</var> and <var>s</var> are terms (views); and <var>r</var> is an honest man (a correct replica). A third bundle is a commitQC, a first bundle a prepareQC.</p>
@@ -219,7 +226,6 @@
         term-<var>s</var> bundle. Contradiction.<span class="qed">∎</span></li>
       </ol>
     </details>
-    <p class="lede" style="margin-top:1.6rem">Safe with three stages. But two echoes were enough before. Why add a third?</p>
   </div>
 </section>
 
@@ -231,11 +237,12 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">What two stages would do</div>
       <h2>The hidden lock</h2>
-      <p class="lede">Try two stages, and see what goes wrong. A man locks as soon as they see a first bundle, and an entry stands on the next.</p>
-      <p>In some term an entry reaches its first bundle, and only one man, say bandit 3, sees it before the others' sandglasses run out; they lock on it. The next holder hears from three men, and bandit 3 is not one of them, since the holder need only wait for three. None of them has that bundle, so the holder proposes an entry that conflicts with bandit 3's lock.</p>
-      <p>The two other honest men vote for it. Bandit 3 refuses: it conflicts with their lock and carries no later bundle. That is two votes, not three. The sandglasses run out, and just then a liar adds a vote, so the holder forms a first bundle that one man sees and locks on. The next term begins the same way. Could it go on for ever? It could.</p>
+      <p class="lede">Take the third stage away, and a lock can hide from the next holder. With two stages a man locks as soon as they see a first bundle, and an entry stands on the bundle after it.</p>
+      <p>Suppose that in some term an entry reaches its first bundle, and only one man, say bandit 3, sees that bundle before the others' sandglasses run out. Bandit 3 locks on it. The next holder need only wait for three men, and hears from three who do not include bandit 3. None of the three has that bundle, so the holder proposes an entry that conflicts with bandit 3's lock.</p>
+      <p>The two other honest men vote for it. Bandit 3 refuses, because the proposal conflicts with bandit 3's lock and carries no later bundle. That makes two votes where three are needed. The sandglasses run out, and just then a liar adds a vote, so the holder forms a first bundle that one man sees and locks on. The next term begins the same way, and nothing stops the terms from going on like this for ever.</p>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well">
+    <p class="tell" style="margin-top:2.4rem">The panel below sets up that moment. Choose whose answer comes last under two stages, then switch to three stages and choose again.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>The new holder listens <em id="hidmode">two stages</em></h4>
       <div class="row" style="margin:0 0 .8rem"><button class="btn on" id="hid2">Two stages</button><button class="btn alt" id="hid3">Three stages</button></div>
       <p class="scene" id="hidscene"></p>
@@ -244,8 +251,9 @@
       <div class="row" id="hidslow" style="margin-top:.8rem"></div>
       <p class="say" id="hidsay">Pick the slowest man.</p>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">Is there a remedy with two stages? Make each new holder wait out a full sandglass before proposing, long enough, once the wind drops, to be sure of hearing every man's latest bundle. That works, but it ties every change of holder to the length of a sandglass, not to the run of a rat.</p>
-    <p style="max-width:40em">What does the third stage change? With three stages the lock cannot hide. A man locks only on a second bundle, and a second bundle exists only because three men voted on a first bundle and kept it. So a lock at any honest post means at least two honest men hold the matching first bundle. A new holder who hears from any three men hears from at least one of them. They learn the latest bundle without waiting out anything.</p>
+    <p class="tell">Two stages can be mended. Each new holder waits out a full sandglass before proposing, which is long enough, once the wind drops, to be sure of hearing every man's latest bundle. The remedy works, and it ties every change of holder to the length of a sandglass, however fast the rats run.</p>
+    <p class="tell">The third stage does the same work without the wait. With three stages a man locks only on a second bundle, and a second bundle exists only because three men voted on a first bundle and kept it. So a lock at any honest post means at least two honest men hold the matching first bundle. A new holder who hears from any three men hears from at least one of those two, and learns the latest bundle without waiting out anything.</p>
+    <p class="tell">A lock that cannot hide is what the third stage buys. With it an honest holder can go as fast as the rats bring answers, and that can be stated as a promise.</p>
   </div>
 </section>
 
@@ -256,8 +264,11 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The second promise</div>
       <h2>Going at the rats' pace</h2>
+      <p class="tell" style="margin-top:0">The promise is about pace. Order holds in any wind, but an entry can stand only when the rats run, so the promise speaks of the time after the wind has dropped.</p>
     </div>
     <div class="result"><span class="name">Going at the Rats' Pace</span><p>Once the wind has dropped, a term whose holder is honest, with every honest man in it long enough, ends with an entry standing, and it needs to wait only for the first three answers at each stage, never for a full sandglass.</p></div>
+    <p class="tell">The promise asks for the honest men to be in the same term for long enough, and the sandglasses see to that. The holders pass in a fixed order by term number, and each man doubles their sandglass whenever a term ends with nothing standing, as before.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s6" title="Keeping Order Among Liars: Going On Once the Wind Drops">*</a></sup> In the end the sandglasses overlap for long enough under an honest holder. The paper keeps this part, which it calls the pacemaker, apart from the rest, because it affects only whether entries stand and never which.</p>
+    <p class="tell">Pace seems to have a price. Each entry now waits three stages where two echoes did before, which looks as though the scroll must take in entries more slowly.</p>
     <details class="proof">
       <summary>Proof — that an honest holder after the wind drops gets their entry through</summary>
       <p class="given"><b>Lemma 3, Theorem 4 (optimistic responsiveness).</b> After GST, in a view with a correct leader and every correct replica in it long enough, the leader obtains a highQC at least as high as every correct replica's lockedQC, every correct replica votes for its proposal, and each phase completes on the first <var>n</var> − <var>f</var> answers, so the proposal commits. A second bundle is a precommitQC, and a lock is lockedQC.</p>
@@ -273,8 +284,6 @@
         So the entry stands.<span class="qed">∎</span></li>
       </ol>
     </details>
-    <p style="max-width:40em;margin-top:1.6rem">How do the honest men come to be in the same term for long enough once the wind drops? The holders pass in a fixed order by term number, and each man doubles their sandglass whenever a term ends with nothing standing, as before.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s6" title="Keeping Order Among Liars: Going On Once the Wind Drops">*</a></sup> In the end the sandglasses overlap for long enough under an honest holder. The paper keeps this part, which it calls the pacemaker, apart from the rest: it affects only whether entries stand, never which.</p>
-    <p class="lede" style="margin-top:1rem">Each entry now waits three stages, where two echoes did before. Must the scroll then take in entries more slowly?</p>
   </div>
 </section>
 
@@ -286,10 +295,11 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The stages run on top of one another</div>
       <h2>A new holder every entry</h2>
-      <p class="lede">No. Each entry still waits three stages, but the three stages all look alike: the holder sends something, the men vote, the holder bundles the votes. So they can be run on top of one another.</p>
-      <p>Each term the job passes to the next man, who proposes a new entry carrying the latest first bundle. A vote for it is also a second vote for the entry before it, and a third vote for the one before that.</p>
+      <p class="lede">The scroll need not take in entries more slowly. Each entry still waits three stages, but the three stages all look alike: the holder sends something, the men vote, the holder bundles the votes. So they can be run on top of one another.</p>
+      <p>Each term the job passes to the next man, who proposes a new entry carrying the latest first bundle. A vote for it is also a second vote for the entry before it, and a third vote for the one before that. Each new proposal moves the entries before it one stage on, so one vote a term does the work of three stages, spread over three terms.</p>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well">
+    <p class="tell" style="margin-top:2.4rem">Run the terms below one at a time. The job starts at bandit 1 and goes round the four posts, and from the fourth term on an entry stands at every term.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>Terms in a row <em id="chainterm">no term yet</em></h4>
       <div class="st-wrap">
         <svg class="st-svg isle-svg fig" id="chainsvg" style="max-width:none" role="img" aria-label="The four posts drawn in the round, later moments further out. With each term the job passes to the next man, and each proposal carries the bundle for the entry directly before it, so the chain winds outward round the circle."></svg>
@@ -301,9 +311,9 @@
       </div>
       <div class="row"><button class="btn" id="chainnext">Run the next term</button><button class="btn alt" id="chainreset">Start again</button></div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">How does a man tell what stands? They read the chain behind each new proposal. If it carries a bundle for its direct parent, the parent has its first bundle. If that parent carries one for its own direct parent, the grandparent is ready to lock on. If the grandparent carries one for its own direct parent too, that entry, the one behind all three, stands. Where a holder failed and a term left nothing, the chain has a gap, and counting starts again.</p>
-    <p style="max-width:40em">The job now passes at every entry, suspected or not. Is that costly? No, for the same reason a change of holder is cheap: a new holder only proposes on the latest bundle they hear of, like any other.</p>
-    <p class="lede" style="margin-top:1rem">A new holder every entry, at the rats' pace. What has not changed?</p>
+    <p class="tell">A man tells what stands by reading the chain behind each new proposal. If the proposal carries a bundle for its direct parent, the parent has its first bundle. If that parent carries one for its own direct parent, the grandparent is ready to lock on. If the grandparent carries one for its own direct parent too, that entry, the one behind all three, stands. Where a holder failed and a term left nothing, the chain has a gap, and counting starts again.</p>
+    <p class="tell">The job now passes at every entry, suspected or not, and the passing costs nothing more, for the same reason a change of holder is cheap: a new holder only proposes on the latest bundle they hear of, like any other.</p>
+    <p class="tell">The crown now has a new holder at every entry, going at the rats' pace. Some things the new procedure leaves exactly as they were, and some it gains only on conditions.</p>
   </div>
 </section>
 
@@ -316,12 +326,13 @@
       <div>
         <div class="kicker">Five questions</div>
         <h2>What it does not say</h2>
+        <p class="tell" style="margin-top:0">What the new procedure leaves alone, and what it gains only on conditions, can be set down under five questions.</p>
         <ul class="terms">
-          <li><b>Does anything stand before the wind drops?</b> Nothing. Order holds in any wind. Entries stand only once it has dropped, as for any arrangement.</li>
-          <li><b>Is the bundle always small?</b> Only with a threshold seal, where each man holds a piece and any three pieces combine into one seal that anyone can check. Then the bundle is the size of a single seal however many men there are, and each stage costs a number of seals that grows only in step with the number of men. The crown's rings are ordinary seals and make a bundle of three, so the saving here is in rats, not in the size of what they carry.</li>
-          <li><b>Is an entry slower?</b> It takes one more stage than before to stand. Chained, the stages overlap, so a new entry still stands at every term.</li>
-          <li><b>Does anyone learn who lies?</b> No, and a liar may still file nonsense that stands in order.</li>
-          <li><b>What follows from any entry?</b> Nothing.</li>
+          <li><b>Does anything stand before the wind drops?</b> Order holds in any wind, but no entry stands until the wind has dropped, and that is so for any arrangement.</li>
+          <li><b>Is the bundle always small?</b> The bundle is small only with a threshold seal, where each man holds a piece and any three pieces combine into one seal that anyone can check. Then the bundle is the size of a single seal however many men there are, and each stage costs a number of seals that grows only in step with the number of men. The crown's rings are ordinary seals and make a bundle of three, so the saving here is in rats and leaves the size of what they carry as it was.</li>
+          <li><b>Is an entry slower?</b> An entry takes one more stage than before to stand. Chained, the stages overlap, so a new entry still stands at every term.</li>
+          <li><b>Does anyone learn who lies?</b> Nobody learns who lies, and a liar may still file nonsense that stands in order.</li>
+          <li><b>What follows from any entry?</b> Nothing follows from it.</li>
         </ul>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/mount-phyle.jpg" alt="Mount Phyle from the air under a grey sky: a steep wooded crag with a ruined ring wall on top, a few small white tents on the slope below, and tiled roofs among the trees on either side" loading="lazy"></div></div></div>
@@ -337,7 +348,7 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The crown was a group of machines</h2>
-      <p class="lede">Every bandit is a replica and every rat a message. Hover or tap to see who is who.</p>
+      <p class="lede">Read the crown again with machines at the posts. Every bandit is a replica and every rat a message, a term is a view and its holder the leader, and a bundle of three votes is a quorum certificate. Hover over a row, or tap it, to see who is who.</p>
     </div>
     <div class="map" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">On the crown</div><div></div><div class="hd">In the machine room</div>
