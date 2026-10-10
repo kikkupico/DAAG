@@ -363,7 +363,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
           <li><b>Operators often choose smaller numbers</b>, for speed. A read may then return stale data.</li>
           <li><b>Probabilistically Bounded Staleness</b> (Bailis et al., 2012) works out how likely that is, how many versions behind, and for how long after the write. It gives a probability, never a promise.</li>
         </ul>
-        <p style="margin-top:1.2rem">This edition tells it with one work kept at three libraries, a writer, a reader, and couriers who take as long as they take.</p>
+        <p style="margin-top:1.2rem">We tell it with one work kept at three libraries, a writer, a reader, and couriers who take as long as they take.</p>
       </div>
       <div class="pop fromright"><div class="leaf">
         <div class="paper well" style="margin:0">
@@ -447,7 +447,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
         <li>If <var>R</var> + <var>W</var> &gt; <var>N</var>, the right side is at least 1, so the two quorums share a replica. That replica holds the committed write, and a read that returns the value with the greatest version among its responses returns that write or a later one.<span class="qed">∎</span></li>
       </ol>
     </details>
-    <p style="max-width:40em;margin-top:1.4rem">Why would anyone choose smaller numbers? For speed. The paper observes that real systems with three copies often wait for one and ask one, on purpose: the quicker answers matter more to them than an old copy now and then. On the coast that is the <b>quick way</b>.</p>
+    <p style="max-width:40em;margin-top:1.4rem">Smaller numbers are chosen for speed. The paper observes that real systems with three copies often wait for one and ask one, on purpose: the quicker answers matter more to them than an old copy now and then. On the coast that is the <b>quick way</b>.</p>
   </div>
 </section>
 
@@ -602,7 +602,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       </ol>
       <p>The method of §5.1 for the general case: draw <var>N</var> samples from each of <var>W</var>, <var>A</var>, <var>R</var> and <var>S</var>; compute <var>w<sub>t</sub></var>, the <var>W</var>th smallest of the sums <var>W</var>[<var>i</var>] + <var>A</var>[<var>i</var>]; order the replicas by <var>R</var>[<var>i</var>] + <var>S</var>[<var>i</var>]; and count the read stale when each of the first <var>R</var> satisfies <var>w<sub>t</sub></var> + <var>R</var>[<var>i</var>] + <var>t</var> ≤ <var>W</var>[<var>i</var>]. Repeating this many times gives the probability for each <var>t</var>.</p>
     </details>
-    <p style="max-width:40em;margin-top:1.4rem">Is the replay to be trusted? The authors checked it against a working system they set up, with chosen journey times for each leg. Across fifty thousand writings, the predicted chance of seeing the edition after each moment differed from the measured by well under one part in a hundred on average.</p>
+    <p style="max-width:40em;margin-top:1.4rem">The replay can be trusted as far as it was tested. The authors checked it against a working system they set up, with chosen journey times for each leg. Across fifty thousand writings, the predicted chance of seeing the edition after each moment differed from the measured by well under one part in a hundred on average.</p>
   </div>
 </section>
 
@@ -709,7 +709,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     </div>
     <div class="apparatus">
       <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/scholars-coast/index.html">The Scholars' Coast</a></p>
-      <p class="lineage"><span class="lbl">Follows</span> <a href="../spreading-by-word-of-mouth/index.html">Spreading by Word of Mouth</a></p>
+      <p class="lineage"><span class="lbl">Builds on</span> <a href="../spreading-by-word-of-mouth/index.html">Spreading by Word of Mouth</a></p>
       <p class="lineage"><span class="lbl">Outside this series</span> DeCandia et al. 2007, <i>Dynamo</i> · Malkhi, Reiter et al. 2001, <i>Probabilistic quorum systems</i> · Aiyer, Alvisi &amp; Bazzi 2005, <i>On the availability of non-strict quorum systems</i></p>
       <details class="proof">
         <summary>The paper behind this book</summary>

@@ -367,11 +367,11 @@ table.terms2 td:first-child{width:40%;font-weight:700}
         <h2>Replicas that must always answer</h2>
         <p class="lede">A database is replicated. A network partition can cut replicas off from one another for any length of time, and every replica a client can reach must still answer, from its own state.</p>
         <ul class="terms">
-          <li><b>Highly available transactions</b> (Bailis et al., 2014): which isolation levels and session guarantees survive that demand?</li>
+          <li><b>Highly available transactions</b> (Bailis et al., 2014): a sorting of the isolation levels and session guarantees by whether they survive that demand.</li>
           <li><b>Some survive</b>: read committed, atomic visibility of a transaction's writes, monotonic reads. <b>Some survive if each client sticks to one replica</b>: read your writes, causal consistency.</li>
           <li><b>Some cannot</b>: preventing lost updates and write skew, and any bound on how stale a read may be.</li>
         </ul>
-        <p style="margin-top:1.2rem">This edition tells it in the reading rooms of the scholars' coast, on a day when the couriers have stopped.</p>
+        <p style="margin-top:1.2rem">We tell it in the reading rooms of the scholars' coast, on a day when the couriers have stopped.</p>
       </div>
       <div class="pop fromright"><div class="leaf">
         <div class="paper well" style="margin:0">
@@ -614,7 +614,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <summary>Proof · that Lost Update and Write Skew cannot be prevented with high availability</summary>
       <p class="given"><var>r<sub>x</sub></var>(<var>v</var>) is a read of item <var>x</var> returning <var>v</var>, and <var>w<sub>x</sub></var>(<var>v</var>) a write of <var>v</var> to <var>x</var>. <i>Lost Update</i>: <var>T<sub>1</sub></var> reads an item, <var>T<sub>2</sub></var> updates it, and <var>T<sub>1</sub></var> then writes from its original read. <i>Write Skew</i>: the same across several items bound by a constraint. Transactional availability: a transaction that reaches a replica for each of its items eventually commits, or aborts by its own choice. <b>Claim.</b> Neither anomaly can be prevented with high availability.</p>
       <ol class="proofsteps">
-        <li>This is §5.2.2. <i>Lost Update</i>: <var>T<sub>1</sub></var> reads an item, <var>T<sub>2</sub></var> updates the same item, and <var>T<sub>1</sub></var> writes based on its original read, losing <var>T<sub>2</sub></var>'s update. Take <var>T<sub>1</sub></var> : <var>r<sub>x</sub></var>(100) <var>w<sub>x</sub></var>(100 + 20 = 120) and <var>T<sub>2</sub></var> : <var>r<sub>x</sub></var>(100) <var>w<sub>x</sub></var>(100 + 30 = 130), submitted on opposite sides of a network partition.</li>
+        <li>This is §5.2.1. <i>Lost Update</i>: <var>T<sub>1</sub></var> reads an item, <var>T<sub>2</sub></var> updates the same item, and <var>T<sub>1</sub></var> writes based on its original read, losing <var>T<sub>2</sub></var>'s update. Take <var>T<sub>1</sub></var> : <var>r<sub>x</sub></var>(100) <var>w<sub>x</sub></var>(100 + 20 = 120) and <var>T<sub>2</sub></var> : <var>r<sub>x</sub></var>(100) <var>w<sub>x</sub></var>(100 + 30 = 130), submitted on opposite sides of a network partition.</li>
         <li>By transactional availability both must be allowed to commit. Whichever of 120 and 130 a replica then chooses, the state could not have arisen from a serial execution of <var>T<sub>1</sub></var> and <var>T<sub>2</sub></var>, since a serial execution gives 150.</li>
         <li>To prevent it, one of the transactions must not commit. Each side's server could try to detect that another write occurred, but this requires knowing the version of the latest write to <var>x</var>, which reduces to a requirement for linearizability, provably at odds with high availability by Gilbert and Lynch's proof of the CAP theorem.</li>
         <li><i>Write Skew</i> generalises Lost Update to several items: <var>T<sub>1</sub></var> : <var>r<sub>y</sub></var>(0) <var>w<sub>x</sub></var>(1) and <var>T<sub>2</sub></var> : <var>r<sub>x</sub></var>(0) <var>w<sub>y</sub></var>(1), with a constraint that only one of <var>x</var> and <var>y</var> may be 1. Run on opposite sides of a partition, both commit and the constraint is violated, though each would have preserved it in isolation; any prevention needs the same knowledge of the other side and is likewise unavailable.</li>
@@ -645,7 +645,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <summary>Proof · that no recency guarantee, including linearizability, is achievable with high availability</summary>
       <p class="given">A recency guarantee bounds how out of date a read may be: linearizability (a read returns the last completed write), safe and regular register semantics, or any bound in time. High availability: every client that reaches a non-failing replica gets a response. <b>Claim.</b> No recency guarantee can be provided with high availability.</p>
       <ol class="proofsteps">
-        <li>This is §5.2.1. A recency guarantee bounds how out of date a read may be: linearizability (reads return the last completed write), safe and regular register semantics, and any bound such as "no more than five seconds out of date".</li>
+        <li>This is §5.2.2. A recency guarantee bounds how out of date a read may be: linearizability (reads return the last completed write), safe and regular register semantics, and any bound such as "no more than five seconds out of date".</li>
         <li>Let a write complete at a replica on one side of a partition and let a client then read the item at a replica on the other side. The partition may last indefinitely, with no message crossing.</li>
         <li>By availability the reading replica must respond, and it can respond only from information it received before the partition began, which does not include the write. So the response is out of date by at least the time the partition has lasted.</li>
         <li>Since the partition can last longer than any fixed bound, no recency bound is enforceable. This is the argument of Gilbert and Lynch for the CAP theorem, applied to every recency guarantee.<span class="qed">∎</span></li>
@@ -699,7 +699,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     </div>
     <div class="apparatus">
       <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/scholars-coast/index.html">The Scholars' Coast</a></p>
-      <p class="lineage"><span class="lbl">Follows</span> <a href="../probably-up-to-date/index.html">Probably Up to Date</a> · <a href="../changes-that-never-clash/index.html">Changes That Never Clash</a></p>
+      <p class="lineage"><span class="lbl">Builds on</span> <a href="../probably-up-to-date/index.html">Probably Up to Date</a> · <a href="../changes-that-never-clash/index.html">Changes That Never Clash</a></p>
       <p class="lineage"><span class="lbl">Outside this series</span> Gilbert &amp; Lynch 2002, <i>Brewer's conjecture</i> · Terry et al. 1994, <i>Session guarantees for weakly consistent replicated data</i> · Adya 1999, <i>Weak consistency</i> · Berenson et al. 1995, <i>A critique of ANSI SQL isolation levels</i></p>
       <details class="proof">
         <summary>The paper behind this book</summary>
@@ -717,8 +717,8 @@ table.terms2 td:first-child{width:40%;font-weight:700}
           <tr><td><span class="term">the couriers stopped</span></td><td>A network partition, indefinitely long. <span class="paper">§2.1, §4.</span></td></tr>
           <tr><td><span class="term">answering alone, from one's own shelves</span></td><td>High availability: every client that reaches a non-failing server gets a response. <span class="paper">§4.</span></td></tr>
           <tr><td><span class="term">a librarian who waits for most of the coast, or answers "probably"</span></td><td>Not available: a majority-quorum system, or a response with high probability. <span class="paper">§4, footnote 2.</span></td></tr>
-          <tr><td><span class="term">a visit that finishes, or is withdrawn by the reader</span></td><td>Transactional availability: commit or internal abort, never indefinite external abort. <span class="paper">§4.1.</span></td></tr>
-          <tr><td><span class="term">keeping to one library</span></td><td>Sticky availability; a client acting as a server itself. <span class="paper">§4.2.</span></td></tr>
+          <tr><td><span class="term">a visit that finishes, or is withdrawn by the reader</span></td><td>Transactional availability: commit or internal abort, never indefinite external abort. <span class="paper">§4.2.</span></td></tr>
+          <tr><td><span class="term">keeping to one library</span></td><td>Sticky availability; a client acting as a server itself. <span class="paper">§4.1.</span></td></tr>
           <tr><td><span class="term">no half-made or abandoned correction shown</span></td><td>Read Committed (Adya PL-2); no dirty reads (G1). <span class="paper">§5.1.1.</span></td></tr>
           <tr><td><span class="term">every correction of a visit carries one tally</span></td><td>Read Uncommitted (PL-1): one timestamp per transaction, last-writer-wins; no G0. <span class="paper">§5.1.1.</span></td></tr>
           <tr><td><span class="term">corrections bound under one cord; held back until all have arrived</span></td><td>Monotonic Atomic View (MAV): writes pending stable; item list and timestamp. <span class="paper">§5.1.2.</span></td></tr>
@@ -729,9 +729,9 @@ table.terms2 td:first-child{width:40%;font-weight:700}
           <tr><td><span class="term">a reader finds their own corrections</span></td><td>Read your writes: needs stickiness. <span class="paper">§5.1.3.</span></td></tr>
           <tr><td><span class="term">a visit read and written in order; letters before replies, too</span></td><td>PRAM; causal consistency (PL-2L), both sticky. <span class="paper">§5.1.3.</span></td></tr>
           <tr><td><span class="term">the coast's libraries settle the same way in the end</span></td><td>Convergence, by anti-entropy. <span class="paper">§5.1.4.</span></td></tr>
-          <tr><td><span class="term">two readers borrowing the last copy</span></td><td>Lost Update; unavailable: it needs linearizability. <span class="paper">§5.2.2.</span></td></tr>
-          <tr><td><span class="term">two readers each leaving one work on the shelf, both borrowing the other</span></td><td>Write Skew; unavailable. <span class="paper">§5.2.2.</span></td></tr>
-          <tr><td><span class="term">"this is the latest edition"; "no more than a day behind"</span></td><td>Recency guarantees, linearizability, safe and regular semantics; unavailable. <span class="paper">§5.2.1.</span></td></tr>
+          <tr><td><span class="term">two readers borrowing the last copy</span></td><td>Lost Update; unavailable: it needs linearizability. <span class="paper">§5.2.1.</span></td></tr>
+          <tr><td><span class="term">two readers each leaving one work on the shelf, both borrowing the other</span></td><td>Write Skew; unavailable. <span class="paper">§5.2.1.</span></td></tr>
+          <tr><td><span class="term">"this is the latest edition"; "no more than a day behind"</span></td><td>Recency guarantees, linearizability, safe and regular semantics; unavailable. <span class="paper">§5.2.2.</span></td></tr>
           <tr><td><span class="term">the two readers settling it on the road</span></td><td>Compensation: moving non-monotonicity to the real world. <span class="paper">§6.2.</span></td></tr>
           <tr><td><span class="term">unique shelf-marks; next-in-sequence marks</span></td><td>Unique IDs by client identifier and timestamp; sequential IDs need preventing Lost Update. <span class="paper">§6.2.</span></td></tr>
           <tr><td><span class="term">making another copy rather than fall below none</span></td><td>New-Order restocks inventory that would go negative. <span class="paper">§6.2.</span></td></tr>

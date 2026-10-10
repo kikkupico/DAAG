@@ -33,15 +33,11 @@ its papers are written once, in `meta.json`; the cover and the book's card on th
 carry them, and `python3 art/scroll/cover.py` checks that they agree (`--write` puts them into
 the cards). The pictures a book uses are copied into `books/<slug>/img/`.
 
-Setting pages (`places/<place>/index.html`) and the home page wear the same look. They are
-ordinary hand-edited pages that link `art/scroll/shell.css`, `art/scroll/place.css` and
-`art/scroll/shell.js`.
+Setting pages (`places/<place>/index.html`), the home page and `papers/index.html` wear the same
+look. They are ordinary hand-edited pages that link `art/scroll/shell.css`, `art/scroll/place.css`
+and `art/scroll/shell.js`.
 
-Five Paxos books are still in the earlier chapter layout, with `assets/css/books.css`:
-*Spreading by Word of Mouth*,
-*Probably Up to Date*, *Changes That Never Clash*, *What You Can Promise Alone* and *Knowing When
-to Wait*; so is `papers/index.html`. A converted book keeps no copy of its earlier edition; that
-is in the git history.
+Every book is a scroll. The earlier chapter editions are kept only in the git history.
 
 ## The two phases
 
@@ -348,10 +344,10 @@ Before calling a book done (the brief's checklist has the mechanics):
 
 ---
 
-## The remaining papers
+## The papers after the first books
 
-From `buildings.md`, in a suggested order: later ones depend on vocabulary the earlier ones
-establish.
+From `buildings.md`, in the order they were written: later ones depend on vocabulary the earlier
+ones establish. Each note is the brief its book was written to.
 
 | Building | Paper(s) | Note |
 |---|---|---|
@@ -361,11 +357,11 @@ establish.
 | The Tholos, Schedia | Oki &amp; Liskov 1988 | *One Leader at a Time.* VR, a genuine alternative to Paxos, found independently and published first, in Schedia, the city on Paxos's eastern arm with laws of its own. One council of five and one law scroll; the paper's transactions are stated, not carried. Written: `books/one-leader-at-a-time/`. |
 | The crown | Castro &amp; Liskov 1999 | *Keeping Order Among Liars.* Needs the vocabulary of *Agreeing Among Liars* and must not contradict it. A later, windy night: the loot scroll, each man both replica and client (the client's rule of two agreeing seals, f + 1, stated and shown redundant for the four), the chief's job numbering entries and passing in a fixed order when suspected. Safe in any wind; progress once the wind drops. Nothing follows from any entry. Written: `books/keeping-order-among-liars/`. |
 | The crown | Yin et al. 2019 (HotStuff) | *Changing Leaders Among Liars.* Needs the vocabulary of *Keeping Order Among Liars* and must not contradict it. Tell only what changes: the chief's job passes with every entry, and its holder bundles the others' seals instead of every man writing to every other. Say plainly that a threshold signature makes the bundle one seal's size. Nothing follows from any entry. Written: `books/changing-leaders-among-liars/`. |
-| The stoa and festival ground | Demers 1987 | |
-| The libraries | PBS 2012 | *Probably Up to Date.* The model, not a store: how likely a reader who asks only a few libraries is handed an out-of-date copy, and by how much. |
-| The far terraces | Shapiro et al. 2011 (both) | |
-| The reading room | HATS 2014 | *What You Can Promise Alone.* What a librarian can promise while the couriers are stopped, and what no librarian alone can. |
-| The hall of two doors | Hellerstein 2010 · Ameloot 2011 · Hellerstein &amp; Alvaro 2020 | Draft from the 2020 paper; it is the clearest. |
+| The stoa and festival ground | Demers 1987 | *Spreading by Word of Mouth.* Letters to everyone, the festival and the telling in the stoa, each covering what the other misses; a withdrawal travels as a notice. Nobody is in charge and no library records what another holds. Written: `books/spreading-by-word-of-mouth/`. |
+| The libraries | PBS 2012 | *Probably Up to Date.* The model, not a store: how likely a reader who asks only a few libraries is handed an out-of-date copy, and by how much. Odds, never a promise. Written: `books/probably-up-to-date/`. |
+| The far terraces | Shapiro et al. 2011 (both) | *Changes That Never Clash.* A column of pebbles to each terrace, merged by the larger pile; white for copies made and black for copies lost. A limit on the whole coast's count cannot be kept from one table. Written: `books/changes-that-never-clash/`. |
+| The reading room | HATS 2014 | *What You Can Promise Alone.* What a librarian can promise while the couriers are stopped, and what no librarian alone can. Written: `books/what-you-can-promise-alone/`. |
+| The hall of two doors | Hellerstein 2010 · Ameloot 2011 · Hellerstein &amp; Alvaro 2020 | *Knowing When to Wait.* Drafted from the 2020 paper, the clearest of the three, with the definitions and the proof from Ameloot et al. The hall sorts and never rules. Written: `books/knowing-when-to-wait/`. |
 
 ### Standing constraints on future books
 
