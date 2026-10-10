@@ -17,6 +17,7 @@ Two finished books are the models. Read both before writing anything:
 art/scroll/shell.css      shared styles (never edit)
 art/scroll/shell.js       shared script (never edit)
 art/scroll/assemble.py    python3 art/scroll/assemble.py <slug>   -> books/<slug>/index.html
+art/scroll/cover.py       python3 art/scroll/cover.py [--write]   cards and covers against meta.json
 art/scroll/shot.sh        art/scroll/shot.sh <slug> <width> <out.png>   headless check
 art/scroll/parts/<slug>/  meta.json, body.html, page.css, page.js   (what you write)
 books/<slug>/img/         the book's pictures (you copy them in)
@@ -24,6 +25,14 @@ books/<slug>/img/         the book's pictures (you copy them in)
 
 You write the four files in `parts/<slug>/`, run `assemble.py`, and never edit
 `books/<slug>/index.html` by hand. Run everything from the repository root.
+
+`meta.json` holds the page's `title` and `description` and the words the cover shares with the
+book's card on the home page: `question`, `how`, `credit` (the card's short credit line) and
+`papers` (a list of `{"authors", "title", "year"}`, authors by full name). Write them there
+and nowhere else. `assemble.py` puts them on the cover. `cover.py` checks that every card in
+`index.html` and every cover says what its `meta.json` says, and `cover.py --write` puts
+`meta.json`'s words into the cards and into the Part-Time Parliament's cover, whose page is
+edited by hand and has only a `meta.json` in `parts/`.
 
 `shot.sh` prints one line, `PROBE width=<page>/<window> errors=[...]`, and writes a full-page
 screenshot. The two widths must be equal (no sideways scroll) and `errors` must be empty. Check
@@ -71,11 +80,11 @@ Copy the markup from a model's `body.html`. The spreads, in order:
 
 1. **Top bar** (`.bar`): only `← The Books`, the section name (`#now`) and the progress line.
 2. **Cover** (`header.spread.dark#cover`): four pieces of text and no more, beside the cover
-   picture (`img/cover.jpg`, 3:4). The title alone in the `h1`, with no subtitle. `.generic`:
-   the question from the book's card on the home page (its `.q`), word for word. `.allegory`:
-   the card's `.how` line, word for word. `.source`: the papers the card credits, written out as
-   `After <every author by full name>, <i>paper title</i>, <year>`, separated by ` · `, as
-   small print.
+   picture (`img/cover.jpg`, 3:4). The title alone in the `h1`, with no subtitle. Then
+   `<p class="generic">{{question}}</p>`, `<p class="allegory">{{how}}</p>` and
+   `<p class="source">{{source}}</p>`, which `assemble.py` fills from `meta.json`: the question
+   in machine terms, the "We find out by exploring…" line, and every paper as
+   `After <authors>, <i>title</i>, <year>` in small print.
 3. **In machine terms** (`section#machines`): the paper's problem and result in plain
    distributed-systems words, three `.terms` bullets at most, and one small interactive that
    shows the difficulty with machines. Apart from the cover's `.generic` line, this is the only
@@ -223,6 +232,7 @@ the picture first). A picture may disagree with the prose; never bend the prose 
 ## Finishing checklist
 
 - [ ] `python3 art/scroll/assemble.py <slug>` runs; `node --check` passes on `page.js`
+- [ ] `python3 art/scroll/cover.py` reports that cards and covers agree with `meta.json`
 - [ ] `shot.sh` at 500 and 1280: widths equal, `errors=[]`, screenshots looked at
 - [ ] every interactive pressed through in your head against the long edition's rules
 - [ ] every proof panel present, steps verbatim, each with a `given`
