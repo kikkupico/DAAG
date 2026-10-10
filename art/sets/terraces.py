@@ -24,7 +24,8 @@ it need not be described to an image model (the helpers are masonry.py's):
 - behind it the wall holding up the terrace above, in rubble under a coping of flat stones, and
   a stair of four steps up to that terrace;
 - the table: one marble slab on two upright blocks, each on its foot, its top cut with a
-  shallow groove for each column, five white and five black, a plain border round them;
+  shallow groove for each column, a set for the white pebbles and a set for the black, a plain
+  border round them;
 - the pebbles lying in the grooves, counted from the scribe's side, and a bowl of spare pebbles
   at each end of the table, white at the white set's end and black at the black;
 - the scribe's stool, on the side of the terrace above, so that he faces the sea.
@@ -39,11 +40,11 @@ NAME = sys.argv[sys.argv.index("--") + 1]
 SITE = json.load(open("art/sets/sets.json"))[NAME]
 PLAN = json.load(open(SITE["terraces"]["plan"]))["buildings"]
 P = dict(
-    table=(2.0, 0.8, 0.75),      # the table: long, across, high
-    set=0.74,                    # each set of columns, along the table
-    groove=(0.07, 0.6),          # a groove: across, long
-    made=[7, 5, 8, 4, 6],        # the count in full: copies made at each terrace
-    lost=[2, 1, 3, 0, 2],        # and copies lost
+    table=(1.7, 0.8, 0.75),      # the table: long, across, high
+    set=0.57,                    # each set of columns, along the table
+    groove=(0.08, 0.6),          # a groove: across, long
+    made=[7, 5, 8],              # the count in full: copies made at each terrace
+    lost=[2, 1, 3],              # and copies lost
 )
 N = len(PLAN)
 rnd = random.Random(5)
@@ -98,8 +99,8 @@ for n, b in enumerate(PLAN):
     # --- the table: a slab on two upright blocks, a groove for each column ---------------------
     T0 = TH - 0.012                                                        # the grooves' floor
     for s in (-1, 1):
-        bx(furn, (s * 0.62 - 0.2, TY - TW / 2 + 0.07, 0.04), (s * 0.62 + 0.2, TY + TW / 2 - 0.07, 0.13), rnd.choice(BLOCKS))
-        bx(furn, (s * 0.62 - 0.13, TY - TW / 2 + 0.12, 0.13), (s * 0.62 + 0.13, TY + TW / 2 - 0.12, TH - 0.1), rnd.choice(BLOCKS))
+        bx(furn, (s * TL * 0.31 - 0.2, TY - TW / 2 + 0.07, 0.04), (s * TL * 0.31 + 0.2, TY + TW / 2 - 0.07, 0.13), rnd.choice(BLOCKS))
+        bx(furn, (s * TL * 0.31 - 0.13, TY - TW / 2 + 0.12, 0.13), (s * TL * 0.31 + 0.13, TY + TW / 2 - 0.12, TH - 0.1), rnd.choice(BLOCKS))
     bx(furn, (-TL / 2, TY - TW / 2, TH - 0.1), (TL / 2, TY + TW / 2, T0 - 0.001), MARBLE)
     pitch = P["set"] / N
     xg = [s * (0.04 + pitch * (k + 0.5)) for s in (-1, 1) for k in range(N)]   # the grooves' middles: white set, then black
