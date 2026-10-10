@@ -52,7 +52,7 @@ function Hill(svg){
   btn[0].onclick=()=>{clear();T.forEach(k=>H.state(k,"holds"));
     checks([true,false,true],["All four hold.","They hold whatever anyone saw, so the evening was pointless.","Everyone commits at once."]);
     say.innerHTML="<b>Always hold</b> keeps the first and third demands, and gives up the second."};
-  btn[1].onclick=async()=>{lock(true);clear();checks([null,null,null],["","",""]);say.textContent="Every man sends what he saw to the other three, and waits until he holds all four sightings.";
+  btn[1].onclick=async()=>{lock(true);clear();checks([null,null,null],["","",""]);say.textContent="Every man sends what was seen to the other three, and waits until holding all four sightings.";
     await birds(T);const n=T.filter(k=>sight[k]==="A").length,att=n>=3;T.forEach(k=>H.state(k,att?"attacks":"holds"));
     checks([true,true,true],["All four apply one rule to the same four sightings.",`${n} of the 4 saw attack, so tonight the rule says ${att?"attack":"hold"}. Other sightings would say otherwise.`,"Everyone commits once the last bird is in."]);
     say.innerHTML="On a night when every man lives, <b>waiting for every report</b> keeps all three demands. The rule used here: attack if at least three saw attack, otherwise hold.";lock(false)};
@@ -107,7 +107,7 @@ function Hill(svg){
     $$("button",box).forEach(bt=>bt.onclick=()=>{const j=+bt.dataset.j;fate[j]=fate[j]==="H"?"A":"H";render(j)});
     if(focus!=null)$(`button[data-j="${focus}"]`,box).focus();
     const x=fate[i],y=fate[i+1];
-    say.innerHTML=`The two marked beginnings are settled opposite ways, and differ only in what <b>tent ${p}</b> saw. Take a night from the one settled for ${word[x]} in which tent ${p} never stirs, as the one silent man may. It ends in ${ing[x]}. Run the same night from its neighbour: tent ${p} has told nobody what he saw, so the other three see the same ravens in the same order, and it ends in ${ing[x]} there too. <span class="bad">But that beginning was settled for ${word[y]}.</span> However you settle the row, some pair splits like this. So some beginning is not settled at all.`;
+    say.innerHTML=`The two marked beginnings are settled opposite ways, and differ only in what <b>tent ${p}</b> saw. Take a night from the one settled for ${word[x]} in which tent ${p} never stirs, as the one silent man may. It ends in ${ing[x]}. Run the same night from its neighbour: tent ${p} has told nobody what was seen there, so the other three see the same ravens in the same order, and it ends in ${ing[x]} there too. <span class="bad">But that beginning was settled for ${word[y]}.</span> However you settle the row, some pair splits like this. So some beginning is not settled at all.`;
   }
   render();
 })();
@@ -128,7 +128,7 @@ function Hill(svg){
   const top=X.map(x=>node(x,YT)),bot=X.map(x=>node(x,YB));
   const l0=label(X[0]+46,YT+6,"one raven is waiting to land","start"),lt=label(320,YT-56,"the night goes on while the raven waits"),ld=label(X[0]+12,(YT+YB)/2+6,"the raven lands","start");
   const below=arrow(X[1]+34,YB,X[2]-38,YB),bx=mark(320,YB-24,false);
-  const quiet=node(320,64),qa=arrow(X[1]+16,YT-34,302,92,"dash"),ql=label(398,58,"the other three finish","start"),ql2=label(398,80,"without him: open still","start"),qx=mark(372,64,false),ok=mark(X[1]+46,YB-30,true);
+  const quiet=node(320,64),qa=arrow(X[1]+16,YT-34,302,92,"dash"),ql=label(398,58,"the other three finish","start"),ql2=label(398,80,"without that man: open still","start"),qx=mark(372,64,false),ok=mark(X[1]+46,YB-30,true);
   quiet.set("open");
   /* the key along the bottom */
   [["H","settled for holding",40],["A","settled for attacking",235],["open","open",445]].forEach(([k,s,x])=>{const n=node(x,440);n.setAttribute("transform",`translate(${x} 440) scale(.42)`);n.set(k);n.classList.add("on");n.lastChild.textContent="";label(x+20,445,s,"start").classList.add("on")});
@@ -153,16 +153,16 @@ function Hill(svg){
   const land=r=>tween(600,u=>H.fly(r.g,r.a,r.b,r.u+(.88-r.u)*u)).then(()=>r.g.remove());
   function stop(){clearInterval(timer);timer=null}
   function go(){if(!timer&&want){turn();timer=setInterval(turn,1700)}}
-  /* the man at the head of the queue takes in the raven longest aloft for him, or comes back empty-handed */
+  /* the man at the head of the queue takes in the raven longest aloft for that tent, or comes back empty-handed */
   async function turn(){
     if(busy)return;busy=true;const g0=gen,k=queue[0],r=aloft.filter(x=>x.b===k).sort((x,y)=>x.n-y.n)[0];
-    if(r){aloft.splice(aloft.indexOf(r),1);say.innerHTML=`<b>Tent ${k}</b> takes in the raven longest aloft for him, from tent ${r.a}, and writes one more. The night is open still.`;
+    if(r){aloft.splice(aloft.indexOf(r),1);say.innerHTML=`<b>Tent ${k}</b> takes in the raven longest aloft for that tent, from tent ${r.a}, and writes one more. The night is open still.`;
       await land(r);if(g0!==gen)return;arr++;await send(k)}
-    else{say.innerHTML=`Nothing is waiting for <b>tent ${k}</b>. He walks to his perch and back, empty-handed. The night is open still.`;await sleep(700)}
+    else{say.innerHTML=`Nothing is waiting for <b>tent ${k}</b>. The man walks to the perch and back, empty-handed. The night is open still.`;await sleep(700)}
     if(g0!==gen)return;queue.push(queue.shift());paint();busy=false;
   }
   function reset(){gen++;stop();want=busy=false;aloft.forEach(r=>r.g.remove());queue=[1,2,3,4];aloft=[];arr=com=0;T.forEach(k=>{H.state(k,"");send(k,true)});
-    mode.textContent="not yet begun";say.textContent="No man is starved of his turn, and every raven is taken in at last.";bRun.disabled=bB.disabled=false;paint()}
+    mode.textContent="not yet begun";say.textContent="No man is starved of a turn, and every raven is taken in at last.";bRun.disabled=bB.disabled=false;paint()}
   bRun.onclick=()=>{want=true;bRun.disabled=true;mode.textContent="open, and staying open";paint();go()};
   bB.onclick=async()=>{const g0=++gen;stop();want=false;busy=true;bRun.disabled=bB.disabled=true;paint();mode.textContent="the birds have a longest flight";
     say.innerHTML="Now no raven is ever aloft longer than a time all four know. Each man waits that long.";
@@ -175,4 +175,4 @@ function Hill(svg){
 })();
 
 /* ===== relevance map ===== */
-mapPairs($("#map"),[["Four tents, one man in each","Processes"],["Attack or hold","A decision between two values"],["What a man saw at dusk","His input value"],["Committing: leaving the tent","Deciding, once and for good"],["A raven","A message"],["No longest flight","Asynchrony: no bound on message delay"],["A tent that falls silent","A crash, which looks exactly like slowness"],["No drawing lots","A deterministic protocol"],["A standing","A configuration"],["An arrival","A step: one process receiving one message"],["Open / closed","Bivalent / univalent"],["The three demands","Agreement, validity, termination"]]);
+mapPairs($("#map"),[["Four tents, one man in each","Processes"],["Attack or hold","A decision between two values"],["What a man saw at dusk","Its input value"],["Committing: leaving the tent","Deciding, once and for good"],["A raven","A message"],["No longest flight","Asynchrony: no bound on message delay"],["A tent that falls silent","A crash, which looks exactly like slowness"],["No drawing lots","A deterministic protocol"],["A standing","A configuration"],["An arrival","A step: one process receiving one message"],["Open / closed","Bivalent / univalent"],["The three demands","Agreement, validity, termination"]]);
