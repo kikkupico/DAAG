@@ -984,16 +984,16 @@ function describe(rd){
 
 /* ===== one round at one tent ===== */
 (function(){
-  const rep=["H","H","H"],secBird=[null,false,false];let sel="H";
+  const rep=["H","H","H"],secBird=[null,false,false];
   const rEl=$("#rrep"),sEl=$("#rsec"),out=$("#rout"),pick=$("#rpick");
   function paint(){
     const sure=sureOf(rep),own=sure,names=["its own report","a raven from another tent","a raven from a third tent"];
     rEl.innerHTML=rep.map((a,i)=>`<button class="btn alt tg" data-i="${i}" aria-label="${names[i]}: ${W[a]}. Press to change.">${i?"Raven":"Own report"}: <b>${W[a]}</b></button>`).join("");
     $$("button",rEl).forEach(b=>b.onclick=()=>{const i=+b.dataset.i;rep[i]=rep[i]==="H"?"A":"H";paint()});
-    const ans=own||sel;
+    /* tent 1 read two reports of one answer, so the other has at most two among the four and nobody can be sure of it */
+    const ans=own||(rep.filter(a=>a==="H").length>=2?"H":"A"),other=ans==="H"?"A":"H";
     pick.innerHTML=own?`<span>The sure birds this round can only name <b>${W[own]}</b>: tent 1 has written sure of ${W[own]}.</span>`:
-      ["H","A"].map(a=>`<button class="btn alt tg${sel===a?" on":""}" data-a="${a}">Sure birds name ${W[a]}</button>`).join("");
-    $$("button",pick).forEach(b=>b.onclick=()=>{sel=b.dataset.a;paint()});
+      `<span>The sure birds this round can only name <b>${W[ans]}</b>: tent 1 read two reports of ${W[ans]}, so at most two of the four name ${W[other]}, and sure of ${W[other]} needs three.</span>`;
     const ownBird=own?`<span class="tg fixed">Own second bird: <b>sure of ${W[own]}</b></span>`:`<span class="tg fixed">Own second bird: <b>unsure</b></span>`;
     sEl.innerHTML=ownBird+[1,2].map(i=>`<button class="btn alt tg${secBird[i]?" on":""}" data-i="${i}">Raven ${i}: <b>${secBird[i]?"sure of "+W[ans]:"unsure"}</b></button>`).join("");
     $$("button",sEl).forEach(b=>b.onclick=()=>{const i=+b.dataset.i;secBird[i]=!secBird[i];paint()});

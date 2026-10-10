@@ -71,17 +71,21 @@ const oneIn=p=>p<=0?"none":p>=.95?"nearly all":p>=.095?`1 in ${Math.round(1/p)}`
    mode "ask":  each day every library asks one other, and a scholar still telling hands the scrap over.
    A telling is idle when the hearer already had the scrap. Attentive scholars lose interest only on idle
    tellings, blind ones on any; by toss at one chance in the allowance, or by count once the allowance is reached.
-   A scholar who is asked by several in one day counts that day as idle only if none of them needed the scrap. */
+   An attentive scholar who counts starts the count afresh after a telling that was needed, and judges a telling
+   by what the hearer held when the day began: with those two the runs give the paper's Table 1. Its figures for
+   the toss come from its continuous model, which a telling judged at the moment reproduces.
+   A scholar who is asked by several in one day counts that day as idle only if none of them needed the scrap,
+   and starts the count afresh if any did (the paper's note to Table 3). */
 function gossip(N,o){
   const st=new Uint8Array(N),cnt=new Uint16Array(N);let sent=0,day=0;st[rnd(N)]=1;       // 0 has not heard, 1 still telling, 2 has stopped
-  const tire=(i,idle)=>{if(o.attentive&&!idle)return;
+  const tire=(i,idle)=>{if(o.attentive&&!idle){if(o.count)cnt[i]=0;return}
     if(o.count){if(++cnt[i]>=o.k)st[i]=2}else if(Math.random()<1/o.k)st[i]=2};
   function step(){day++;const was=st.slice(),asked=new Uint8Array(N);                    // asked: 1 idle so far today, 2 someone needed it
     for(let i=0;i<N;i++){let j=rnd(N-1);if(j>=i)j++;
       if(o.mode==="ask"){if(was[j]!==1)continue;
         sent++;if(st[i]===0){st[i]=1;asked[j]=2}else if(!asked[j])asked[j]=1;continue}
       if(was[i]!==1||st[i]!==1)continue;
-      sent++;const idle=st[j]!==0;if(!idle)st[j]=1;tire(i,idle)}
+      sent++;const idle=(o.count?was[j]:st[j])!==0;if(st[j]===0)st[j]=1;tire(i,idle)}
     if(o.mode==="ask")for(let j=0;j<N;j++)if(asked[j])tire(j,asked[j]===1);
     return st.some(x=>x===1)}
   return {st,step,get day(){return day},get m(){return sent/N},get left(){return st.reduce((a,x)=>a+(x===0),0)}};
@@ -108,7 +112,7 @@ function gossipWell(ids,opts,line){
 })();
 (function(){
   const o={k:1,attentive:true,count:true,mode:"ask"};
-  const reset=gossipWell({cells:"#acells",say:"#asay",go:"#ago",res:"#ares",m:"#am",day:"#aday",label:"Start",idle:"Choose telling or asking, and an allowance. A scholar asked by several in a day counts the day as wasted only if none of them needed the scrap."},()=>({...o}),
+  const reset=gossipWell({cells:"#acells",say:"#asay",go:"#ago",res:"#ares",m:"#am",day:"#aday",label:"Start",idle:"Choose telling or asking, and an allowance. A scholar asked by several in a day counts the day as wasted only if none of them needed the scrap, and starts the count afresh if any did."},()=>({...o}),
     (G,N)=>`It ended on day ${G.day}. <b>${G.left}</b> of ${N} libraries never heard, after ${G.m.toFixed(1)} tellings a library. ${o.mode==="ask"?(G.left<=Math.round(N*Math.exp(-G.m))?"That is fewer than telling leaves for the same number of tellings.":"A run can fall either side of what telling leaves; run it again."):"Telling pays the price of one over the exponential."}`);
   seg($("#amode"),[["tell","telling"],["ask","asking"]],o.mode,v=>{o.mode=v;reset()});
   seg($("#ak"),[1,2,3].map(k=>[k,k]),o.k,v=>{o.k=+v;reset()});

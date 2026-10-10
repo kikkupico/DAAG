@@ -1055,7 +1055,7 @@ const cross=(g,x,y,r=17)=>el("path",{d:`M${x-r},${y-r} L${x+r},${y+r} M${x-r},${
     paint();
     const missed=K.filter(k=>truth[k]==="dead"&&!mark[k]).length,wrong=K.filter(k=>truth[k]!=="dead"&&mark[k]).length;
     say.innerHTML=!missed&&!wrong?"No mistake this time. But from where tent 1 sits, a dead man and a slow bird look the same, so a slate can only guess.":
-      `This slate went wrong ${missed?"by leaving "+missed+" dead man"+(missed>1?"s":"")+" clean":""}${missed&&wrong?" and ":""}${wrong?"by chalking "+wrong+" living man"+(wrong>1?"s":""):""}. <b>Those are the only two ways to go wrong.</b>`};
+      `This slate went wrong ${missed?"by leaving "+missed+" dead "+(missed>1?"men":"man")+" clean":""}${missed&&wrong?" and ":""}${wrong?"by chalking "+wrong+" living "+(wrong>1?"men":"man"):""}. <b>Those are the only two ways to go wrong.</b>`};
   bN.onclick=deal;deal();
 })();
 
@@ -1156,11 +1156,11 @@ const strongRun=(function(){
     if(o.kind==="deadowner"){ev(H+`Tent ${own} is dead. Every man chalks it in the end, and the round comes to nothing.`,"bad");say.textContent="A dead owner costs one round. Failing is always safe, and the next round begins with the next tent.";return}
     if(o.kind==="stuck"){ev(H+`The owner must wait for three estimates, and only two men live. It waits for ever.`,"bad");bN.disabled=true;
       say.innerHTML="Nobody can commit, and nobody commits to anything wrong. <b>With two of the four killed, this arrangement waits for ever.</b>";return}
-    const how=o.best===0?`all taken up in no round yet, so it takes the sighting of tent ${o.pick}`:`the one taken up most recently, in round ${o.best}, by tent ${o.pick}`;
+    const how=o.best===0?`the sighting of tent ${o.pick}, since none has been taken up in any round yet`:`the one taken up most recently, in round ${o.best}, by tent ${o.pick}`;
     const others=T.filter(k=>st.live.includes(k)&&k!==own);
     const chalked=others.filter(k=>!o.reply[k]);
     let h=H+`Tent ${own} gathers three estimates, from ${tents(o.gather)}, and takes ${how}: ${word2(o.e)}. It sends it to every tent. `;
-    h+=chalked.length?`${tents(chalked)} ${chalked.length>1?"have":"has"} chalked the owner and answer <i>not agreed</i>${others.length>chalked.length?"; "+tents(others.filter(k=>o.reply[k]))+" take"+(others.length-chalked.length>1?"":"s")+" it up and answer <i>agreed</i>":""}. `:
+    h+=chalked.length?`${cap(tents(chalked))} ${chalked.length>1?"have":"has"} chalked the owner and answer${chalked.length>1?"":"s"} <i>not agreed</i>${others.length>chalked.length?"; "+tents(others.filter(k=>o.reply[k]))+" take"+(others.length-chalked.length>1?"":"s")+" it up and answer"+(others.length-chalked.length>1?"":"s")+" <i>agreed</i>":""}. `:
       `Every man takes it up and answers <i>agreed</i>. `;
     h+=`The owner waits for the first three replies, from ${tents(o.three.slice().sort())}. `;
     if(o.ok){ev(h+"<span class='ok'>All three say agreed: the parting bird goes out.</span>","good");bN.disabled=true;paint(own);

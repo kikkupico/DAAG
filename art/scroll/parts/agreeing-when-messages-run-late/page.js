@@ -216,7 +216,7 @@ function Hill(svg){
       <span>${B==null?"Tents 3 and 4 are waiting.":`The same, with the pairs and answers swapped. They commit to <b>attack</b> in glass ${B}.`}</span></div>`;
     const n3=`<div class="nightc"><h5>Third night</h5><p>Nobody is silent. Tents 1 and 2 sighted hold, tents 3 and 4 attack, and the wind holds every bird between the pairs.</p>
       <div class="pairs"><div class="pair">${chips(1,2)}<br>sighted hold</div><div class="pair">${chips(3,4)}<br>sighted attack</div></div>${bar(g,A,B,both?top:g)}
-      <span>${both?`Tents 1 and 2 have heard nothing from the others for ${A} glasses, which is exactly what they saw in the first night, so they commit to <b>hold</b>. Tents 3 and 4 see the second night, and commit to <b>attack</b>. The wind drops after glass ${top}, too late. <span class="bad">Two answers: the first demand is broken.</span>`:"The birds between the pairs are in the pines."}</span></div>`;
+      <span>${both?`Tents 1 and 2 have heard nothing from the others for ${A} ${A===1?"glass":"glasses"}, which is exactly what they saw in the first night, so they commit to <b>hold</b>. Tents 3 and 4 see the second night, and commit to <b>attack</b>. The wind drops after glass ${top}, too late. <span class="bad">Two answers: the first demand is broken.</span>`:"The birds between the pairs are in the pines."}</span></div>`;
     box.innerHTML=n1+n2+n3;
     bg.disabled=g>=N||both;ba.disabled=g<1||A!=null;bb.disabled=g<1||B!=null;
     if(both)say.innerHTML=`Each pair gave up waiting at a glass you chose. The wind can hold every bird between the pairs for more than ${A} and more than ${B} glasses, so the pairs cannot tell the third night from their own. Whatever glasses the arrangement allows, the wind can do this.`;
