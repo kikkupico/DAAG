@@ -130,9 +130,9 @@ p{margin:0 0 .9rem;text-wrap:pretty}
   .bleed::after{display:none}
   .bleed img{position:static;width:calc(100% + 40px);max-width:none;height:min(58svh,460px);margin:0 -20px;transform:none!important;
     -webkit-mask-image:linear-gradient(transparent,#000 9%);mask-image:linear-gradient(transparent,#000 9%)}
-  .hall-title{position:relative;inset:auto;margin:-3.2rem 0 4px}
+  .hall-title{position:relative;inset:auto;width:100%;max-width:640px;margin:-3.2rem auto 4px}
   .hall-title .t{display:block;max-width:none}
-  .pin{position:static;max-width:none;box-shadow:5px 6px 0 var(--shadow)}
+  .pin{position:static;width:100%;max-width:640px;margin:0 auto;box-shadow:5px 6px 0 var(--shadow)}
   .pin::before,.pin::after{display:none}
 }
 
@@ -444,7 +444,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <div class="kicker">What can go wrong</div>
       <h2>Everyone is honest, and anyone may be absent</h2>
       <p class="lede">Legislators and messengers on Paxos are scrupulously honest, and they follow the rules of Parliament to the letter. What none of them can be counted on to do is stay.</p>
-      <p>Three facts follow from that, and Parliament has to work under all of them.</p>
+      <p>Parliament has to work under three facts.</p>
     </div>
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3" style="color:var(--ink)">
@@ -460,15 +460,15 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         <div class="body"><h3>Prompt inside, anything outside</h3><p>Inside the Chamber, messengers deliver at once and legislators answer promptly, and each legislator has a sandglass to tell how long that should take. Outside it, anything may take any length of time.</p></div>
       </div></div>
     </div>
-    <p class="tell" style="margin-top:2.4rem">The messengers are the hardest of the three to plan for. Send a few messages across the Chamber and see what becomes of them.</p>
-    <div class="pop"><div class="leaf"><div class="paper well" style="color:var(--ink);max-width:760px;margin:1.2rem 0 0">
+    <p class="tell" style="margin:2.4rem auto 0;max-width:760px">The messengers are the hardest of the three to plan for. Send a few messages across the Chamber and see what becomes of them.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="color:var(--ink);max-width:760px;margin:1.2rem auto 0">
       <h4>Send a message <em>try your luck</em></h4>
       <svg class="hall-svg" id="lane" style="width:min(100%,340px)" role="img" aria-label="Two legislators in the Chamber and a messenger between them"></svg>
       <div class="row" style="margin-top:0"><button class="btn" id="send">Send a message from A to B</button></div>
       <div class="tally"><span><b id="t-ok">0</b>delivered</span><span><b id="t-two">0</b>delivered twice</span><span><b id="t-lost">0</b>never arrived</span></div>
       <p class="say" id="sendsay">A message may arrive once, arrive twice, or never arrive.</p>
     </div></div></div>
-    <p class="tell" style="margin-top:2.4rem">A legislator who gets no answer cannot tell whether the messenger is slow or gone for good, and Parliament has to stay right without ever finding out. It can do so because of one fact that no amount of wandering undoes.</p>
+    <p class="tell" style="margin:2.4rem auto 0;max-width:760px">A legislator who gets no answer cannot tell whether the messenger is slow or gone for good, and Parliament has to stay right without ever finding out. It can do so because of one fact that no amount of wandering undoes.</p>
   </div>
 </section>
 
@@ -927,9 +927,9 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">Governing the island</div>
+      <div class="kicker">Years of practice</div>
       <h2>Governing the island asked for more</h2>
-      <p class="lede">Governing Paxos turned out to be harder than passing decrees in order. Three incidents each changed the way Parliament worked.</p>
+      <p class="lede">Running Paxos turned out to be harder than passing decrees in order. Three incidents each changed the way Parliament worked.</p>
     </div>
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3">
@@ -1155,7 +1155,7 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
   b2.onclick=async()=>{b2.disabled=true;
     [3,4,5].forEach(i=>{S[i].g.setAttribute("opacity",1);H.place(S[i],...H.at(home[i]));lbl(S[i],"37: art is free")});
     await sleep(reduce?0:900); S.forEach(s=>s.g.classList.add("clash"));
-    say.innerHTML="<span class='bad'>Two scrolls, two different decrees numbered 37.</span> Consistency is lost for good, because the ink is indelible. The protocol must stop this from ever happening.";br.hidden=false};
+    say.innerHTML="<span class='bad'>Two scrolls, two different decrees numbered 37.</span> Consistency is lost for good, because the ink is indelible. Parliament must never let this happen.";br.hidden=false};
   br.onclick=()=>{reset();say.textContent="Three legislators are in the Chamber, with decree 37 before them. The other three are away.";b1.disabled=false;br.hidden=true};
   reset();
 })();
@@ -1373,7 +1373,7 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
   b3.onclick=async()=>{b3.disabled=true;
     for(const [n,t] of [[127,"Lamps burn only olive oil"],[128,"Market opens at dawn"]]){
       ["B","G","D"].forEach(k=>{show(td[k],true);put(td[k],k,1)});row(n,"has",t);await sleep(reduce?0:1100);["B","G","D"].forEach(k=>{show(td[k],false);put(td[k],k,0)})}
-    say.innerHTML="Only now does the president pass new decrees, in order after everything already in the scroll. Each is a plain three-step ballot: ask the quorum to vote, hear their votes, announce the result.";st.textContent="governing";br.hidden=false};
+    say.innerHTML="Only now does the president pass new decrees, in order after everything already in the scroll.";st.textContent="governing";br.hidden=false};
   br.onclick=reset; reset();
 })();
 
