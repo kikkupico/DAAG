@@ -330,9 +330,11 @@ Before calling a book done (the brief's checklist has the mechanics):
   pass. Its other pictures are previs renders. Shots are in `art/panels/places/shots.json`,
   published to `assets/img/places/`.
 - [ ] A building that recurs across pictures is modelled in full before any picture is generated
-  (the Chamber, the Tholos and Arche's three houses, `art/sets/paxos_chamber.py`,
-  `schedia_tholos.py` and `house.py`, on the helpers in `masonry.py`: every block, joint, flute, capital, coffer, rafter, door board, tile
-  and paving slab is geometry), and its scene prompts say so: keep every modelled
+  (the Chamber, the Tholos, Arche's three houses, and on the scholars' coast the libraries, the
+  stoa with its festival ground and the far terraces' pebble tables: `art/sets/paxos_chamber.py`,
+  `schedia_tholos.py`, `house.py`, `libraries.py`, `stoa.py` and `terraces.py`, on the helpers in
+  `masonry.py`: every block, joint, flute, capital, coffer, rafter, door board, tile, paving slab,
+  scroll and pebble is geometry), and its scene prompts say so: keep every modelled
   part where it is, give it its real material, add no architecture. The image pass then adds
   only materials, light, people and props, and the building is the same in every picture.
 

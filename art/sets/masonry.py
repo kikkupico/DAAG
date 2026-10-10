@@ -4,6 +4,12 @@ joints, flutes, tiles and slabs are geometry: curved blocks (`arc`), slabs on a 
 coursed ashlar in running bond (`courses`), rings of paving (`paving`) and a conical roof tile by
 tile (`tiled`). A joint is a gap `GAP` wide showing a darker core behind blocks that stand `PROUD`
 of it. glTF carries no procedural shading, so everything is geometry and flat colour.
+
+For the straight-walled sets (libraries.py, stoa.py, terraces.py) there are also: boxes by their
+corners (`bx`) or along any three axes (`tilted`), a wall face of coursed blocks (`ashlar`) or of
+rubble (`rubble`), a floor of flagstones (`flags`), a roof plane tile by tile (`roof_plane`), a
+plain column of drums (`doric`) and a boarded door leaf (`leaf`). A set of many buildings lays
+each one up in its own frame and then stands it at its site with `Part.place`.
 """
 import bpy, bmesh, math, random
 from mathutils import Vector, Matrix
@@ -130,6 +136,14 @@ class Part:
         self.face(lo[::-1], s)
         self.face(hi, s)
 
+    def place(self, M):
+        """Move everything added since the last call by M: a building laid up in its own frame
+        is stood at its site."""
+        for v in self.bm.verts:
+            if not v.tag:
+                v.co = M @ v.co
+                v.tag = True
+
     def finish(self):
         me = bpy.data.meshes.new(self.name)
         bmesh.ops.recalc_face_normals(self.bm, faces=self.bm.faces)
@@ -223,3 +237,167 @@ def tiled(part, rA, zA, rB, zB, n0, course, cover, tiles, ridges, deck):
 
 
 polar = lambda r, a, z=0.0: Vector((r * math.cos(a), r * math.sin(a), z))
+
+
+# --- straight work --------------------------------------------------------------------------
+def bx(part, lo, hi, mat):
+    """An axis-aligned box from corner lo to corner hi."""
+    part.box([(a + b) / 2 for a, b in zip(lo, hi)], [abs(b - a) for a, b in zip(lo, hi)], mat)
+
+
+def tilted(part, c, u, v, n, size, mat):
+    """A box centred on c with its edges along the unit vectors u, v, n."""
+    M = Matrix.Translation(Vector(c)) @ Matrix([u, v, n]).transposed().to_4x4()
+    part.paint(bmesh.ops.create_cube(part.bm, size=1.0, matrix=M @ Matrix.Diagonal((*size, 1))), mat)
+
+
+def lengths(a, b, lo, hi, rng, close=0.15):
+    """Cut a..b into lengths between lo and hi, with no sliver left at the end."""
+    out, u = [], a
+    while u < b - 1e-6:
+        L = min(rng.uniform(lo, hi), b - u)
+        if b - u - L < close:
+            L = b - u
+        out.append((u, u + L))
+        u += L
+    return out
+
+
+def ashlar(part, p0, u, length, zs, block, mats, joint, rng=rnd, out=None, depth=0.12, bond=0.5, rake=None):
+    """A wall face of coursed blocks in running bond: from p0 along the unit vector u for
+    `length`, one course between each pair of heights in zs (measured from p0), every block
+    about `block` long and `depth` thick, standing out from the plane towards `out` (u turned a
+    quarter right if not given) over a core in the joint's colour. Under a sloping roof, `rake`
+    (the wall's height at p0, and its rise per metre along) stops each course where the slope
+    cuts it; the wall behind is then the caller's to build."""
+    p0, u = Vector(p0), Vector(u).normalized()
+    out = Vector(out) if out else Vector((u.y, -u.x, 0))
+    yaw = math.atan2(u.y, u.x)
+    if not rake:
+        part.box(p0 + u * (length / 2) + out * ((depth - PROUD) / 2) + Vector((0, 0, (zs[0] + zs[-1]) / 2)),
+                 (length - 0.004, depth - PROUD, zs[-1] - zs[0] - 0.004), joint, yaw=yaw)
+    n = max(1, round(length / block))
+    for c, (z0, z1) in enumerate(zip(zs, zs[1:])):
+        w = length / n
+        edges = [0.0] + [w * (k + bond) for k in range(n)] + [length] if c % 2 else [w * k for k in range(n + 1)]
+        for a, b in zip(edges, edges[1:]):
+            if rake and rake[1]:                       # keep only where the slope is above this course
+                cut = (z1 - rake[0]) / rake[1]
+                a, b = (max(a, cut), b) if rake[1] > 0 else (a, min(b, cut))
+            if b - a < 0.05:
+                continue
+            part.box(p0 + u * ((a + b) / 2) + out * (depth / 2) + Vector((0, 0, (z0 + z1) / 2)),
+                     (b - a - GAP, depth, z1 - z0 - GAP), rng.choice(mats), yaw=yaw)
+
+
+def rubble(part, p0, u, length, z0, z1, mats, joint, rng=rnd, out=None, course=0.22, stone=(0.22, 0.6)):
+    """A wall face of rubble: rough courses of uneven stones, each standing out a different
+    amount from a dark bed, from p0 along u for `length`, between heights z0 and z1."""
+    p0, u = Vector(p0), Vector(u).normalized()
+    out = Vector(out) if out else Vector((u.y, -u.x, 0))
+    yaw = math.atan2(u.y, u.x)
+    part.box(p0 + u * (length / 2) + out * 0.02 + Vector((0, 0, (z0 + z1) / 2)), (length, 0.04, z1 - z0), joint, yaw=yaw)
+    n = max(1, round((z1 - z0) / course))
+    edges = [z0] + sorted(z0 + (z1 - z0) * (k + rng.uniform(-0.18, 0.18)) / n for k in range(1, n)) + [z1]
+    for w0, w1 in zip(edges, edges[1:]):
+        for a, b in lengths(0.0, length, *stone, rng):
+            d = rng.uniform(0.05, 0.1)
+            part.box(p0 + u * ((a + b) / 2) + out * (d / 2) + Vector((0, 0, (w0 + w1) / 2)),
+                     (b - a - 0.024, d, w1 - w0 - 0.022), rng.choice(mats), yaw=yaw)
+
+
+def flags(part, x0, x1, y0, y1, z, mats, rng=rnd, row=0.7, size=(0.7, 1.3), thick=0.04, gap=0.012, bed=None):
+    """A floor of flagstones between the corners, its top at z: rows across Y, each breaking
+    joint with the last, over a bed in the joint's colour if one is given."""
+    if bed:
+        bx(part, (x0, y0, z - thick), (x1, y1, z - 0.008), bed)
+    n = max(1, round((y1 - y0) / row))
+    for r in range(n):
+        ya, yb = y0 + (y1 - y0) * r / n, y0 + (y1 - y0) * (r + 1) / n
+        for a, b in lengths(x0, x1, *size, rng, close=0.4):
+            bx(part, (a + gap / 2, ya + gap / 2, z - thick), (b - gap / 2, yb - gap / 2, z), rng.choice(mats))
+
+
+def roof_plane(part, p0, along, slope, width, length, tiles, covers, deck, rng=rnd, keep=None,
+               antefix=True, pan=0.42, course=0.62):
+    """A roof plane tile by tile. p0 is one end of its eave, `along` the unit vector along the
+    eave and `slope` the unit vector up the roof; the plane is `width` along the eave and
+    `length` up the slope. Boarding, then courses of pans each lying a little tilted on the one
+    below, a cover tile over every joint, and an antefix at each eave end. `keep(a, s)` may
+    leave out what lies under another roof (a along the eave, s up the slope)."""
+    p0, xu, sl = Vector(p0), Vector(along).normalized(), Vector(slope).normalized()
+    up = xu.cross(sl)
+    if up.z < 0:
+        up = -up
+    keep = keep or (lambda a, s: True)
+    n, rows = max(1, round(width / pan)), max(1, round(length / course))
+    w, h = width / n, length / rows
+    t = math.radians(3.5)
+    sl2, up2 = sl * math.cos(t) - up * math.sin(t), up * math.cos(t) + sl * math.sin(t)
+
+    def runs(a):
+        """The stretches up the slope that are kept, at the place a along the eave."""
+        out, r0 = [], None
+        for r in range(rows + 1):
+            ok = r < rows and keep(a, h * (r + 0.5))
+            if ok and r0 is None:
+                r0 = r
+            if not ok and r0 is not None:
+                out.append((r0 * h, r * h))
+                r0 = None
+        return out
+
+    for k in range(n):
+        a = w * (k + 0.5)
+        for s0, s1 in runs(a):
+            tilted(part, p0 + xu * a + sl * ((s0 + s1) / 2) + up * 0.025, xu, sl, up, (w, s1 - s0, 0.05), deck)
+        for r in range(rows):
+            if keep(a, h * (r + 0.5)):
+                tilted(part, p0 + xu * a + sl * (h * (r + 0.5)) + up * 0.085, xu, sl2, up2,
+                       (w - 0.008, h + 0.05, 0.035), rng.choice(tiles))
+    for k in range(n + 1):
+        a, m = w * k, rng.choice(covers)
+        ar = min(max(a, w * 0.5), width - w * 0.5)         # judge an end cover by the pan beside it
+        for s0, s1 in runs(ar):
+            c = p0 + xu * a + sl * ((s0 + s1) / 2) + up * 0.135
+            tilted(part, c, xu, sl, up, (0.14, s1 - s0, 0.06), m)
+            tilted(part, c + up * 0.045, xu, sl, up, (0.075, s1 - s0, 0.03), m)
+            if antefix and s0 == 0.0:
+                e = p0 + xu * a + up * 0.15 - sl * 0.02
+                part.box(e, (0.16, 0.05, 0.15), covers[0], yaw=math.atan2(xu.y, xu.x))
+                part.disc(e + Vector((0, 0, 0.075)), 0.08, 0.05, (xu.y, -xu.x, 0), covers[0], 10)
+
+
+def doric(part, c, d0, d1, height, drums, mats, joint, cap, rng=rnd, segs=22):
+    """A plain Doric column standing on c, `height` tall with its capital: unfluted drums with
+    a joint between each, tapering from d0 to d1 across, three annulets, an echinus, an abacus."""
+    c = Vector(c)
+    ab = 0.16 * d0 / 0.44 + 0.06
+    z1 = height - ab - 0.21
+    for k in range(drums):
+        t0, t1 = k / drums, (k + 1) / drums
+        part.lathe([(d0 / 2 + (d1 - d0) / 2 * t0, z1 * t0 + 0.006), (d0 / 2 + (d1 - d0) / 2 * t1, z1 * t1 - 0.006)],
+                   c, rng.choice(mats), segs)
+    part.cyl(c, d1 / 2 - 0.02, d1 / 2 - 0.02, z1, joint, 16)
+    r = d1 / 2
+    part.lathe([(r, z1), (r + 0.012, z1 + 0.02), (r, z1 + 0.04), (r + 0.012, z1 + 0.06), (r + 0.004, z1 + 0.08),
+                (r * 1.22, z1 + 0.14), (r * 1.46, z1 + 0.19), (r * 1.5, z1 + 0.21)], c, cap, segs)
+    part.box(c + Vector((0, 0, height - ab / 2)), (r * 3.1, r * 3.1, ab), cap)
+
+
+def leaf(part, hinge, u, width, height, z0, boards, back, ledge, stud=None, nb=4):
+    """A door leaf of upright boards on three ledges, from its hinge edge along the unit vector
+    u; the ledges are on the side the normal (u turned a quarter left) points to, and a row of
+    studs, if any, on the other. `boards`: the two tones the boards alternate between."""
+    u = Vector(u).normalized()
+    nrm = Vector((-u.y, u.x, 0))
+    yaw = math.atan2(u.y, u.x)
+    at = lambda a, z, o=0.0: Vector(hinge) + u * a + nrm * o + Vector((0, 0, z0 + z))
+    for k in range(nb):
+        part.box(at(width * (k + 0.5) / nb, height / 2), (width / nb - 0.008, 0.05, height), boards[k % 2], yaw=yaw)
+    part.box(at(width / 2, height / 2), (width - 0.01, 0.03, height - 0.02), back, yaw=yaw)
+    for z in (0.35, height / 2, height - 0.35):
+        part.box(at(width / 2, z, 0.045), (width - 0.06, 0.04, 0.14), ledge, yaw=yaw)
+        if stud:
+            for k in range(nb):
+                part.sphere(at(width * (k + 0.5) / nb, z, -0.03), 0.02, stud, 1.0, 8, 5)

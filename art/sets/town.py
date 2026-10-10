@@ -10,8 +10,7 @@ explorer's origin, so every building stands at its own place with no further pla
 Three kinds of building, all of rubble stone under terracotta tiles, told apart by size:
 - `house`: a town house, one storey, a gabled roof, a street door and a few small high windows;
 - `court`: a courtyard house, four ranges round an open court, roofs sloping inwards;
-- `hall`: a long storehouse on the waterfront, gabled, with wide doors in its long side;
-- `library`: a scholars' library, a small gabled hall with a two-column porch before its door.
+- `hall`: a long storehouse on the waterfront, gabled, with wide doors in its long side.
 Walls are lime-plastered, off-white or pale ochre, on a low base of bare rubble; houses face
 inwards, so the street side is mostly blank. Each varies a little by a seed: plaster tone, roof
 pitch, which side the door is on. A house on a
@@ -156,8 +155,8 @@ for n, b in enumerate(PLAN):
     wall = rng.choice(WALLS)
     tile = rng.choice(TILES)
     kind = b["kind"]
-    wh = {"house": rng.uniform(3.4, 4.2), "court": rng.uniform(3.6, 4.2), "hall": rng.uniform(4.6, 5.4),
-          "library": rng.uniform(3.8, 4.4)}[kind]
+    wh = {"house": rng.uniform(3.4, 4.2), "court": rng.uniform(3.6, 4.2), "hall": rng.uniform(4.6, 5.4)}[kind]
+    rng.random()                              # one draw spare, so that each building's later draws fall where they always have
     # a plinth down into the slope, and the walls
     # a terrace, never below sea level (the island stands on its lowest point, which must not move)
     floor.box((-hx - 0.7, -hy - 0.7, max(-4.5, 0.05 - g)), (hx + 0.7, hy + 0.7, 0.08), TERRACE, M)
@@ -233,26 +232,6 @@ for n, b in enumerate(PLAN):
                 else:
                     shell.box((hx - 0.02, u - 1.0, 0), (hx + 0.05, u + 1.0, 2.9), TIMBER, M)
                     shell.box((hx - 0.02, u - 1.2, 2.9), (hx + 0.1, u + 1.2, 3.2), DRESSED, M)
-        elif kind == "library":
-            # a scholars' library: a door at the middle of the front (-Y, facing `face` if given),
-            # under a porch of two columns carrying a small gabled roof
-            pd = 1.8
-            shell.box((-0.6, -hy - 0.04, 0.6), (0.6, -hy + 0.02, 2.8), DARK, M)
-            floor.box((-1.9, -hy - pd, 0.0), (1.9, -hy, 0.6), SOCLE, M)
-            for x in (-1.4, 1.4):
-                g2 = bmesh.ops.create_cone(shell.bm, cap_ends=True, segments=12, radius1=0.17, radius2=0.14,
-                                           depth=wh - 0.9, matrix=M @ Matrix.Translation((x, -hy - pd + 0.3, 0.6 + (wh - 0.9) / 2)))
-                kk = shell.slot(DRESSED)
-                for f in {f for v in g2["verts"] for f in v.link_faces}:
-                    f.material_index = kk
-            shell.box((-1.9, -hy - pd, wh - 0.3), (1.9, -hy, wh), DRESSED, M)
-            rise = 0.7
-            for sx in (-1, 1):
-                shell.solid([(0, -hy - pd - 0.2, wh + 0.12 + rise), (0, -hy, wh + 0.12 + rise),
-                             (sx * 2.1, -hy, wh + 0.12), (sx * 2.1, -hy - pd - 0.2, wh + 0.12)][::(1 if sx > 0 else -1)], 0.12, tile, M)
-            for sx in (-1, 1):                                    # high windows on the sides
-                for k in (-1, 1):
-                    shell.box((sx * hx - 0.04, k * hy * 0.45 - 0.2, 2.3), (sx * hx + 0.04, k * hy * 0.45 + 0.2, 2.8), DARK, M)
         else:
             openings(hx, hy, wh, rng, M, door_side=rng.randrange(4), windows=2)
     # clear Meshy's whole building; on a slope the house stands on its terrace, whose rubble
