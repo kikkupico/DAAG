@@ -1,6 +1,6 @@
 """Paxos's public buildings on open ground: parametric sets for the island model and the previs.
 
-    blender -b -P art/sets/civic.py -- <set name>        # hall, or stoa
+    blender -b -P art/sets/civic.py -- <set name>        # hall
 
 Reads the set's `civic` entry in art/sets/sets.json and writes art/sets/<name>.glb (in explorer
 coords, origin at the world's origin) and art/sets/<name>-strips.json, the ground
@@ -11,9 +11,8 @@ art/sets/bake.py levels under it. `civic.kind` picks the building:
   The north door, facing up the bay to the bodies that assemble, is framed with pilasters and a
   pediment; the south door, facing down the stem to the scholars' coast, has a plain lintel.
   Inside, a floor of black and white marble squares.
-- `stoa`, on the eastern shore of the scholars' coast: a long portico of plain Doric columns
-  under a lean-to tiled roof, its back wall to the slope and its colonnade facing the quay; and,
-  on the flat ground beside it, the festival ground, rows of long stone tables.
+
+The stoa and the festival ground of the scholars' coast are art/sets/stoa.py's.
 
 `civic`: `at` explorer [x, z] of the centre, `floor` the floor's height, `yaw` degrees (the
 building's length along its local X, turned about the vertical like the other sets), and
@@ -55,14 +54,6 @@ def box(lo, hi, mat):
     c = [(a + b) / 2 for a, b in zip(lo, hi)]
     s = [abs(b - a) for a, b in zip(lo, hi)]
     g = bmesh.ops.create_cube(bm, size=1.0, matrix=M @ Matrix.Translation(c) @ Matrix.Diagonal((*s, 1)))
-    k = MATS.index(mat)
-    for f in {f for v in g["verts"] for f in v.link_faces}:
-        f.material_index = k
-
-
-def cyl(c, r0, r1, h, mat):
-    g = bmesh.ops.create_cone(bm, cap_ends=True, segments=16, radius1=r0, radius2=r1, depth=h,
-                              matrix=M @ Matrix.Translation((c[0], c[1], c[2] + h / 2)))
     k = MATS.index(mat)
     for f in {f for v in g["verts"] for f in v.link_faces}:
         f.material_index = k
@@ -122,34 +113,6 @@ if C["kind"] == "hall":
     for x in (-hx, hx - T):
         gable_end(x, hy, H, rise, T, ASHLAR)
     strips.append({"at": [CX, CZ], "half": [hx + 1.0, hy + 1.0], "rot": math.degrees(-YAW), "pad": FL - 0.25})
-else:                                                                               # the stoa
-    T, H, n = 0.6, 4.6, C.get("columns", 13)
-    box((-hx - 0.3, -hy - 0.3, -2.5), (hx + 0.3, hy + 0.3, 0.0), ASHLAR)          # the terrace it stands on
-    box((-hx, -hy, 0.0), (hx, hy, 0.25), ASHLAR)                                    # a step up
-    box((-hx, hy - T, 0.25), (hx, hy, H), ASHLAR)                                   # back wall, to the slope (+Y)
-    for x in (-hx, hx - T):
-        box((x, -hy + 0.8, 0.25), (x + T, hy, H), ASHLAR)                           # end walls
-    for k in range(n):                                                              # the colonnade (-Y)
-        x = -hx + 0.5 + k * (L - 1.0) / (n - 1)
-        cyl((x, -hy + 0.4, 0.25), 0.26, 0.21, H - 0.75, ASHLAR)
-        box((x - 0.33, -hy + 0.07, H - 0.5), (x + 0.33, -hy + 0.73, H - 0.35), ASHLAR)
-    box((-hx, -hy, H - 0.35), (hx, -hy + 0.8, H), ASHLAR)                           # architrave
-    slab([(-hx - 0.3, -hy - 0.5, H + 0.05), (hx + 0.3, -hy - 0.5, H + 0.05),
-          (hx + 0.3, hy + 0.2, H + 0.05 + (W + 0.7) * 0.28), (-hx - 0.3, hy + 0.2, H + 0.05 + (W + 0.7) * 0.28)], 0.14, TILE)
-    strips.append({"at": [CX, CZ], "half": [hx + 0.8, hy + 0.8], "rot": math.degrees(-YAW), "pad": FL - 0.25})
-    fg = C.get("festival")
-    if fg:                                                                          # rows of long stone tables
-        (fx, fz), fl, fyaw = fg["at"], fg["floor"], math.radians(fg.get("yaw", 0.0))
-        M = Matrix.Translation((fx, -fz, fl)) @ Matrix.Rotation(fyaw, 4, "Z")
-        for r in range(fg.get("rows", 3)):
-            for c in range(fg.get("per_row", 2)):
-                x, y = (c - (fg.get("per_row", 2) - 1) / 2) * 5.0, -3.0 + r * 3.0
-                box((x - 1.8, y - 0.4, 0.72), (x + 1.8, y + 0.4, 0.8), ASHLAR)
-                for sx in (-1.4, 1.4):
-                    box((x + sx - 0.15, y - 0.3, 0.0), (x + sx + 0.15, y + 0.3, 0.72), ASHLAR)
-                for sy in (-0.8, 0.8):                                              # benches either side
-                    box((x - 1.8, y + sy - 0.15, 0.0), (x + 1.8, y + sy + 0.15, 0.45), ASHLAR)
-        strips.append({"at": fg["at"], "half": [2.5 * fg.get("per_row", 2) + 2.5, 5.5], "rot": math.degrees(-fyaw), "pad": fl - 0.05})
 
 me = bpy.data.meshes.new("shell")
 bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
