@@ -331,6 +331,11 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
 .meter{height:16px;border:3px solid var(--ink);background:#fff;margin-top:12px}
 .meter i{display:block;height:100%;width:0;background:#6583d6;transition:width .4s}
 .meter.full i{background:#c45448}
+.tell{max-width:40em;margin-top:1.6rem}
+.tell+.tell{margin-top:0}
+.cards3.pair{grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px}
+@media(max-width:860px){.cards3.pair{grid-template-columns:1fr}}
+.card3 h3:last-child{margin-bottom:0}
 </style>
 </head>
 <body>
@@ -368,13 +373,13 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>Many copies, one order</h2>
-      <p class="lede">A service is kept on several computers. Every honest copy must apply the same commands in the same order, even when some copies lie.</p>
+      <p class="lede">A service is kept on several computers, so that it survives the loss of some. Every honest copy must apply the same commands in the same order, even when some copies lie.</p>
+      <p>The order matters because the effect of a command depends on the commands before it, as the two copies beside this show. A faulty machine here may do worse than stop. It may lie, and the leader that hands out the order may be the one lying. Up to <var>f</var> of 3<var>f</var> + 1 machines may be faulty, which with four machines is one. Messages may take any time at all, so the order must hold whatever the delays, and progress is asked for only once delays stop growing without bound.</p>
       <ul class="terms">
-        <li><b>Up to <var>f</var> of 3<var>f</var> + 1 machines may be faulty,</b> and a faulty one may lie, the leader included. With four machines, one.</li>
-        <li><b>Messages may take any time at all.</b> Order must hold whatever the delays. Progress needs only that delays stop growing without bound.</li>
-        <li><b>Castro and Liskov</b> (1999): three phases of messages order each command, and a view change replaces a faulty leader without losing what was already committed.</li>
+        <li><b>Three phases of messages</b> (Castro and Liskov, 1999) order each command, so that no two honest copies put different commands in the same place.</li>
+        <li><b>A view change</b> replaces a faulty leader without losing what was already committed.</li>
       </ul>
-      <p style="margin-top:1.2rem">This edition tells it with four bandits, a scroll of their loot, and trained rats.</p>
+      <p style="margin-top:1.2rem">The first keeps the order under one leader, and the second carries it from one leader to the next. We tell it with four bandits, a scroll of their loot, and trained rats.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper logs">
@@ -395,11 +400,11 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="hall-title"><div class="t">
       <div class="kicker">The crown of Mount Phyle</div>
       <h2>Four posts, none in sight of another</h2>
-      <p>Number 1, the chief, sits inside the ring wall with the loot. Numbers 2, 3 and 4 hold posts out on the slopes.<sup class="xref"><a href="../../places/the-crown/index.html" title="The Setting: The Crown of Mount Phyle">*</a></sup> With four bandits, one may lie.</p>
+      <p>Number 1, the chief, sits inside the ring wall with the loot, and Numbers 2, 3 and 4 hold posts out on the slopes, none in sight of another.<sup class="xref"><a href="../../places/the-crown/index.html" title="The Setting: The Crown of Mount Phyle">*</a></sup> One of the four may lie, and with four bandits one is as many as the others can allow for.</p>
     </div></div>
-    <div class="pin pop" style="left:50%;top:46%;"><div class="leaf"><b>Only rats</b>Word goes by trained rat, under seal rings that no one can counterfeit.</div></div>
-    <div class="pin pop" style="left:6%;top:63%;"><div class="leaf"><b>Nobody learns who lies</b>Nobody on the crown, or below it, ever finds out which.</div></div>
-    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>A wind</b>On these nights a wind can hold the rats in their holes for as long as it blows. When it drops, runs are short again.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s1" title="Agreeing When Messages Run Late: A Windy Night">*</a></sup> Nobody can tell when it has dropped.</div></div>
+    <div class="pin pop" style="left:50%;top:46%;"><div class="leaf"><b>Only rats</b>Word passes between the posts only by trained rat, and every rat goes under a seal ring that no one can counterfeit.</div></div>
+    <div class="pin pop" style="left:6%;top:63%;"><div class="leaf"><b>Nobody learns who lies</b>Nobody on the crown, or below it, ever finds out which of the four it is.</div></div>
+    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>A wind</b>On these nights a wind can hold the rats in their holes for as long as it blows. When it drops, runs are short again.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s1" title="Agreeing When Messages Run Late: A Windy Night">*</a></sup> Nobody on the crown can tell when it has dropped.</div></div>
   </div>
 </section>
 
@@ -410,17 +415,19 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <div>
         <div class="kicker">What the four keep</div>
         <h2>The loot scroll</h2>
-        <p class="lede">The four keep a scroll of the loot, one copy at each post: where each strongbox lies, and whose share it is.</p>
-        <p>The scroll grows by entries. An entry is one record about the loot, <em>the third strongbox lies in the north cleft</em> or <em>the silver cups are Number 3's share</em>. Any bandit may file one. Why must every copy take the entries in the same order? Because an entry's effect depends on what the scroll already says.</p>
+        <p class="lede">The four keep a scroll of the loot, one copy at each post, since no post is in sight of another. The scroll says where each strongbox lies, and whose share it is.</p>
+        <p>The scroll grows by entries. An entry is one record about the loot, <em>the third strongbox lies in the north cleft</em> or <em>the silver cups are Number 3's share</em>, and any bandit may file one. Every copy must take the entries in the same order, because the effect of an entry depends on what the scroll already says. Two copies that took the same entries in different orders could come to say different things about the same strongbox.</p>
         <p>These are later nights of the siege. The sandglasses were turned together once, on the first night, and never again.<sup class="xref"><a href="../agreeing-among-liars/index.html#s3" title="Agreeing Among Liars: The Rats in the Wall">*</a></sup></p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/k01-wind.jpg" alt="At dusk in a strong wind, a rat with a cord round its neck and a tiny bronze tube waits in a chink between the great grey stones of a ruined wall, the grass streaming flat below" loading="lazy"></div></div></div>
     </div>
-    <div class="cards3" style="margin-top:2rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the four owe each other</div><h3>Order</h3><p>Every honest copy takes the same entries in the same order. The scroll behaves as though one keeper wrote every entry at a single moment between its filing and its standing.<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One: The Rule of the Board">*</a></sup></p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the four owe each other</div><h3>Going on</h3><p>Every entry an honest bandit files stands in the end, once the wind has dropped for long enough.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Why each of them</div><h3>Any wind, and no promise</h3><p>Order must hold in any wind, because nobody can see the wind drop. Going on cannot be promised while it blows: if four bandits could promise to agree on anything with the rats held in their holes for any time, the mercenaries at the foot could agree whether to attack.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup></p></div></div></div>
+    <p class="tell">The four owe each other two things about this scroll, and the two are owed on different terms.</p>
+    <div class="cards3" style="margin-top:1.2rem">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the four owe each other</div><h3>Order</h3><p>Every honest copy takes the same entries in the same order. The scroll then behaves as though one keeper wrote every entry at a single moment between its filing and its standing.<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One: The Rule of the Board">*</a></sup></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the four owe each other</div><h3>Going on</h3><p>Every entry that an honest bandit files stands in the end, once the wind has dropped for long enough.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Why each of them</div><h3>Any wind, and no promise</h3><p>Order must hold in any wind, because nobody can see the wind drop. Going on cannot be promised while the wind blows. If four bandits could promise to agree on anything with the rats held in their holes for any time, the mercenaries at the foot could agree whether to attack, and they cannot.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: What Cannot Be Promised">*</a></sup></p></div></div></div>
     </div>
+    <p class="tell">Four copies, then, with one liar among the keepers and a wind that nobody can see drop. Something has to decide what order the entries go in.</p>
     <details class="proof">
       <summary>Stated formally · what the four owe each other</summary>
       <p class="given">Safety: the service is linearizable. Liveness: clients eventually receive replies, provided at most ⌊(<var>n</var> − 1)/3⌋ replicas are faulty and delay(<var>t</var>) does not grow faster than <var>t</var> indefinitely. (Castro and Liskov, §2–3.)</p>
@@ -437,19 +444,20 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <div>
         <div class="kicker">Who numbers the entries</div>
         <h2>The chief's job</h2>
-        <p class="lede">Entries need numbers, so that every copy can take them in one order. Numbering is a job, held by one bandit at a time. Is it the chief's by right? No. The chief is a job, not a rank.<sup class="xref"><a href="../agreeing-among-liars/index.html#s2" title="Agreeing Among Liars: What the Bandits Want">*</a></sup></p>
-        <p>The job starts with Number 1, the chief inside the ring wall. When it passes, it passes in number order: 1, 2, 3, 4, then 1 again. Each spell in the job is a <b>term</b>, and terms are counted, so the count says who holds the job.</p>
+        <p class="lede">The order of the entries is decided by numbering them, so that every copy can take them in number order. Numbering is a job, held by one bandit at a time. The job does not belong to the chief by right, because on the crown the chief is a job and no rank.<sup class="xref"><a href="../agreeing-among-liars/index.html#s2" title="Agreeing Among Liars: What the Bandits Want">*</a></sup></p>
+        <p>The job starts with Number 1, the chief inside the ring wall. When it passes, it passes in number order: 1, 2, 3, 4, then 1 again. Each spell in the job is a <b>term</b>, and terms are counted, so the count alone says who holds the job.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on its top, a few white tents on the slopes below and the sea beyond" loading="lazy"></div></div></div>
     </div>
-    <p style="max-width:40em;margin-top:1.6rem">A bandit who wants an entry seals it and sends it to the holder. The holder gives it the next number. Then the others make sure of it, and at the end every honest bandit writes the entry into their copy, in number order, and sends the filer a sealed word that it stands.</p>
-    <p style="max-width:40em">Who may hold the job? Anyone, including the one who lies. So nothing the holder says is trusted on its own. Everything below is built against a holder who may:</p>
+    <p class="tell">A bandit who wants an entry seals it and sends it to the holder. The holder gives it the next number. Then the others make sure of it, and at the end every honest bandit writes the entry into their copy, in number order, and sends the filer a sealed word that it stands.</p>
+    <p class="tell">Anyone may hold the job, the one who lies included, so nothing the holder says is trusted on its own. Everything that follows is built against a holder who does any of three things.</p>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the holder</div><h3>Gives two entries the same number</h3><p>Two different entries, one number.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the holder</div><h3>Tells different bandits different things</h3><p>One entry to some, another to the rest.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the holder</div><h3>Sits on an entry</h3><p>The entry is filed and nothing is numbered.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the holder</div><h3>Gives two entries the same number</h3><p>Two different entries go out under one number.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the holder</div><h3>Tells different bandits different things</h3><p>One entry goes to some bandits, and another to the rest.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the holder</div><h3>Sits on an entry</h3><p>The entry is filed, and the holder numbers nothing.</p></div></div></div>
     </div>
-    <p style="max-width:40em;margin-top:1.6rem"><b>How does a bandit know their entry stands?</b> The paper's rule for a filer who is not one of the keepers is to wait for two matching sealed words from different bandits. With one liar, two matching words include an honest one. Do the four need that rule? No. An honest bandit keeps a copy, and when the entry stands in their own copy, they know it stands. The rule is for a filer from outside the four, and there is none.</p>
+    <p class="tell"><b>A bandit knows their entry stands when it stands in their own copy.</b> The paper has a rule for a filer who is not one of the keepers, which is to wait for two matching sealed words from different bandits. With one liar, two matching words include an honest one. The four do not need that rule, since each honest bandit keeps a copy and can read it. The rule is what a filer from outside the four would need, and there is none.</p>
+    <p class="tell">The holder may lie, then, in any of these three ways. The others need a way to make sure of a number before they write anything down.</p>
   </div>
 </section>
 
@@ -460,7 +468,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow">
       <div class="kicker">One entry, from filing to standing</div>
       <h2>Two echoes</h2>
-      <p class="lede">The bandits echo the holder's number, twice. An entry stands only after the holder has numbered it and the others have echoed it twice. Every rat here is sealed, and every bandit keeps every sealed rat they take in. Scroll slowly: the picture moves with you.</p>
+      <p class="lede">The others make sure of a number by echoing it, twice. An entry stands only after the holder has numbered it and the bandits have echoed it twice. Every rat here is sealed, and every bandit keeps every sealed rat they take in, so that each can later show what they were told. Follow one entry from its filing to its standing, and watch how many seals each post holds. Scroll slowly: the picture moves with you.</p>
     </div>
   </div>
   <div class="scrolly" id="echo">
@@ -478,9 +486,10 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
-    <p style="max-width:40em">A bandit writes a standing entry into their copy as soon as every lower number has been written, and sends the filer word that it stands. An entry stands without waiting for everyone: a post whose rats are held by the wind, or a liar who says nothing, cannot hold the others up.</p>
-    <p style="max-width:40em"><b>Why two echoes and not one?</b> They do different work. The first settles order <em>within</em> a term: once an entry is readied anywhere honest, no honest bandit can ready a different entry under the same number in that term, even if the holder lies. The second settles it <em>across</em> terms: once an entry stands at an honest post, enough honest bandits have it readied that any later holder will be made to keep it.</p>
-    <p style="max-width:40em"><b>And if entry 9 stands before entry 8?</b> Rats may come in any order, so it can. A bandit keeps it and waits, and writes nothing past a gap.</p>
+    <p class="tell" style="margin-top:0">A bandit writes a standing entry into their copy as soon as every lower number has been written, and sends the filer word that it stands. Rats may come in any order, so entry 9 can stand before entry 8. A bandit then keeps entry 9 and waits, and writes nothing past a gap.</p>
+    <p class="tell">An entry stands without waiting for everyone. Each step needs three matching seals out of four, so a post whose rats are held by the wind, or a liar who says nothing, cannot hold the others up.</p>
+    <p class="tell"><b>The two echoes do different work.</b> The first settles order <em>within</em> a term: once an entry is readied anywhere honest, no honest bandit can ready a different entry under the same number in that term, even if the holder lies. The second settles it <em>across</em> terms: once an entry stands at an honest post, enough honest bandits have it readied that any later holder will be made to keep it.</p>
+    <p class="tell">Both claims rest on three matching seals being enough, and one of the three seals may be the liar's.</p>
     <details class="proof">
       <summary>Stated formally · an entry, from numbering to standing</summary>
       <p class="given">In the paper's terms the holder is the primary, the numbering a pre-prepare, the first echo a prepare, readied is <i>prepared</i> (the pre-prepare and 2<var>f</var> matching prepares), the second echo a commit, and standing is <i>committed-local</i> (prepared and 2<var>f</var> + 1 matching commits). Writing in number order is execution in sequence-number order. (Castro and Liskov, §4.2.)</p>
@@ -502,8 +511,9 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The whole trick</div>
       <h2>Why three seals, and four bandits</h2>
-      <p class="lede">Why should three matching seals be enough, when one of the three may be the liar? Because any two groups of three, out of four, share two bandits. At most one of those two lies, so they share an honest one.</p>
-      <p>Suppose a lying holder tells two bandits that entry 7 is X and the others that it is Y. Can both be readied? For X to be readied at an honest post, three bandits sealed X for number 7 in this term. For Y, three sealed Y. The two threes share an honest bandit, and an honest bandit seals only one entry for a number in a term.</p>
+      <p class="lede">Three matching seals are enough, even with the seal of a liar among them, because any two groups of three, out of four, share two bandits. At most one of those two lies, so the two groups share an honest bandit.</p>
+      <p>Suppose a lying holder tells two bandits that entry 7 is X and the others that it is Y. For X to be readied at an honest post, three bandits sealed X for number 7 in this term. For Y to be readied, three sealed Y. The two threes share an honest bandit, and an honest bandit seals only one entry for a number in a term. So X and Y cannot both be readied.</p>
+      <p>Try it on the crown below. Choose which bandit each group leaves out and which one is supposed to lie, and watch who is left in both groups. Then take one bandit away, and see that groups drawn from three can fail.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Two groups <em>always share an honest bandit</em></h4>
@@ -530,8 +540,8 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         cannot be counterfeited, so the liar cannot have made it for him.<span class="qed">∎</span></li>
       </ol>
     </details>
-    <p style="max-width:40em;margin-top:1.8rem"><b>Why four bandits?</b> A bandit can never wait to hear from everyone, since one may be a liar who keeps quiet. So they act on hearing from all but one: three. But the one not heard from may be an honest bandit whose rat is held in its hole, and then the liar may be among the three heard. The honest must still outnumber the liars among those three: two honest against one liar. That needs four bandits for one liar, and in general more than three times as many as may lie.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s7" title="Agreeing When Messages Run Late: Liars and Seals">*</a></sup> Do seals lower it? No. They stop a liar forging another bandit's word, not answering promptly with their own.</p>
-    <p style="max-width:40em">Within a term, then, a lying holder cannot number one place two ways. But what if the holder numbers nothing at all?</p>
+    <p class="tell" style="margin-top:1.8rem"><b>Four bandits are the fewest that will do for one liar.</b> A bandit can never wait to hear from everyone, since one may be a liar who keeps quiet. So a bandit acts on hearing from all but one, which is three. But the one not heard from may be an honest bandit whose rat is held in its hole, and then the liar may be among the three heard. The honest must still outnumber the liars among those three: two honest against one liar. That needs four bandits for one liar, and in general more than three times as many as may lie.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s7" title="Agreeing When Messages Run Late: Liars and Seals">*</a></sup> Seals do not lower the number. A seal stops a liar forging the word of another bandit. It cannot make a liar answer promptly with their own.</p>
+    <p class="tell">Within a term, then, a lying holder cannot number one place two ways. A holder can still number nothing at all.</p>
   </div>
 </section>
 
@@ -543,8 +553,9 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">When nothing stands</div>
       <h2>Changing the job</h2>
-      <p class="lede">If the holder numbers nothing, nothing stands, and the job must pass. Can anyone tell a holder who stalls from one whose rats are held by the wind? Nobody can. So the bandits do not judge. Each simply stops waiting.</p>
-      <p>A bandit who has an entry filed that has not yet stood turns their sandglass. If it runs out first, they <b>ask for a change</b>: they stop taking part in this term and send every bandit a sealed request for the next term, carrying the proof of every entry readied at their post, each a numbering and two first echoes.</p>
+      <p class="lede">A holder who numbers nothing leaves every filed entry waiting, and then the job must pass. Nobody can tell a holder who stalls from one whose rats are held by the wind, so the bandits do not judge. Each simply stops waiting.</p>
+      <p>A bandit who has an entry filed that has not yet stood turns their sandglass. If it runs out first, they <b>ask for a change</b>: they stop taking part in this term and send every bandit a sealed request for the next term. The request carries the proof of every entry readied at their post, each a numbering and two first echoes.</p>
+      <p>In the picture below, file an entry and then choose what the holder does, once with the wind blowing and once with it dropped. Watch for the two cases that look the same from every post.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>The job passes <em id="jobinfo" data-live></em></h4>
@@ -564,8 +575,8 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         <button class="btn alt" id="jobreset">Start again</button>
       </div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.6rem">The next holder waits for requests for the new term from three bandits, their own among them, and sends every bandit the three requests and a new numbering. For each number, if some request shows an entry readied there, they number the one readied in the latest term. If none does, they number a <b>blank entry</b>, which does nothing. Each bandit checks that the requests are sealed and that the new numbering is what they call for, then echoes it twice, as before, in the new term.</p>
-    <p style="max-width:40em"><b>Could a new holder drop an entry that already stood?</b> Suppose an entry X stands at some honest post as number 7. Then three bandits sent second echoes for it, of whom at least two are honest, and X is readied at those two. The new holder must show three requests. Try it.</p>
+    <p class="tell">The next holder waits for requests for the new term from three bandits, their own among them, and sends every bandit the three requests and a new numbering. The requests decide the new numbering, and the holder has no choice in it. For each number, if some request shows an entry readied there, the holder numbers the one readied in the latest term. If none does, the holder numbers a <b>blank entry</b>, which does nothing. Each bandit checks that the requests are sealed and that the new numbering is what they call for, then echoes it twice, as before, in the new term.</p>
+    <p class="tell"><b>A new holder cannot drop an entry that already stood.</b> Suppose an entry X stands at some honest post as number 7. Then three bandits sent second echoes for it, of whom at least two are honest, and X is readied at those two. The new holder must show three requests, and three requests out of four always include one from those two. That request shows X readied under number 7, so the new holder must number X under 7 again. Try it: choose who sent the second echoes, who is supposed to lie, and whose request the new holder leaves out.</p>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Three requests <em>always meet the bandits who hold it</em></h4>
       <div class="hill-wrap">
@@ -604,7 +615,8 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         <li>Each man checks that the requests are sealed and that the new numbering is what they call for, then echoes it twice, as before, in the new term.</li>
       </ol>
     </details>
-    <p style="max-width:40em;margin-top:1.8rem">What keeps the job from being passed too easily, or too late? Two more rules. A bandit who sees requests from two others for a later term joins them, even before their own sandglass runs out, so an honest minority is not left behind. And can a single bandit force a change? No: a change needs three requests, and a liar alone can send only one. A lying holder can make their own term fail by stalling, but the job then passes, and with four bandits they hold it for at most one term in a row.</p>
+    <p class="tell" style="margin-top:1.8rem">Two more rules keep the job from passing too late or too easily. A bandit who sees requests from two others for a later term joins them, even before their own sandglass runs out, so an honest minority is not left behind. And no single bandit can force a change, because a change needs three requests and a liar alone can send only one. A lying holder can make their own term fail by stalling, but the job then passes, and with four bandits a liar holds it for at most one term in a row.</p>
+    <p class="tell">A stalled term ends this way whatever stalled it. While the wind blows, though, sandglasses run out on honest holders too, and the job passes again and again.</p>
   </div>
 </section>
 
@@ -616,8 +628,9 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">What stops the changes</div>
       <h2>Going on once the wind drops</h2>
-      <p class="lede">While the wind blows, sandglasses run out on honest holders whose rats are merely pinned, and the job passes again and again. Nothing stands, and nothing wrong stands either. What stops the changes going on for ever once the wind has dropped?</p>
-      <p>Each bandit doubles their sandglass at every change. A bandit who asked for a change and does not see the new term work within their sandglass asks for the next one, but waits twice as long before asking for the one after. In the end the sandglasses are longer than a whole term's worth of short runs. Then the first honest holder of a term that begins in still air numbers the waiting entries, the echoes come back in time, and the entries stand.</p>
+      <p class="lede">The job passes again and again while the wind blows, because sandglasses run out on honest holders whose rats are merely pinned. Nothing stands, and nothing wrong stands either. Once the wind has dropped the changes must stop, or no entry would ever stand.</p>
+      <p>The changes stop because each bandit doubles their sandglass at every change. A bandit who asked for a change and does not see the new term work within their sandglass asks for the next one, but waits twice as long before asking for the one after. In the end the sandglasses are longer than a whole term's worth of short runs. Then the first honest holder of a term that begins in still air numbers the waiting entries, the echoes come back in time, and the entries stand.</p>
+      <p>Pick a sandglass and a wind below and run the nights. Compare the doubling sandglass with one that stays the same, and see in which term the entries stand.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>The doubling sandglass <em>pick a wind, then run the nights</em></h4>
@@ -627,12 +640,12 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <p class="say" id="gotsay">Every holder is honest in this picture, and the first sandglass is the time a short run takes at most. A term's worth is counted as three short runs: the numbering and the two echoes.</p>
     </div></div></div>
     <div class="pop"><div class="leaf"><div class="paper" style="padding:14px 18px;max-width:40em;margin:1.4rem 0 0"><div class="num">Result · Going On</div><p style="margin:.35rem 0 0">If the wind, once it drops, stays down long enough, every entry an honest bandit files in the end stands.</p></div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">How long must the wind stay down? The paper puts the condition precisely, and the doubling sandglass outgrows any delay that does not keep outgrowing it. The paper argues this in outline; its full proof is in Castro's thesis.</p>
+    <p class="tell">The paper puts precisely how long the wind must stay down: the time a rat takes must not go on growing faster than the nights themselves pass. The doubling sandglass outgrows any delay that does not keep outgrowing it. The paper argues this in outline, and its full proof is in Castro's thesis.</p>
     <details class="proof">
       <summary>Stated formally · how long the wind must stay down</summary>
       <p class="given">In the paper's terms the time a rat takes, counted from its first sending and with resending, is delay(<var>t</var>), and it must not grow faster than <var>t</var> indefinitely. The view-change timeout doubles at each view change. (Castro and Liskov, §2 and §4.5.2.)</p>
     </details>
-    <p style="max-width:40em;margin-top:1.8rem">Every bandit keeps every sealed rat, since a change of job may call for them. Must the keeping grow for ever?</p>
+    <p class="tell" style="margin-top:1.8rem">The scroll now keeps its order and goes on. One cost is left. Every bandit keeps every sealed rat, since a change of job may call for them, and the keeping grows with every entry.</p>
   </div>
 </section>
 
@@ -644,8 +657,9 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">So the keeping does not grow for ever</div>
       <h2>Settling columns</h2>
-      <p class="lede">Every hundred entries, each bandit seals a short summary of their copy up to that number and sends it to everyone. When a bandit holds three matching summaries for the same number, that column is <b>settled</b>: at least two honest bandits have the same scroll up to there.</p>
-      <p>A settled column lets a bandit throw away every echo for numbers up to it. A bandit whose copy fell behind can take the settled column from any of the three and trust it. It also bounds the numbering: a holder may use only numbers from the last settled column up to some fixed distance beyond it, so a lying holder cannot use up the numbers by jumping to an enormous one.</p>
+      <p class="lede">The keeping of sealed rats need not grow for ever. Every hundred entries, each bandit seals a short summary of their copy up to that number and sends it to everyone. When a bandit holds three matching summaries for the same number, that column is <b>settled</b>: at least two honest bandits have the same scroll up to there.</p>
+      <p>A settled column lets a bandit throw away every echo for numbers up to it, since the three summaries now stand for those entries. A bandit whose copy fell behind can take the settled column from any of the three and trust it. The settled column also bounds the numbering. A holder may use only numbers from the last settled column up to some fixed distance beyond it, so a lying holder cannot use up the numbers by jumping to an enormous one.</p>
+      <p>In the picture below, let entries stand until the allowed numbers are used up, then settle a column, and see which numbers a holder may and may not use.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>The allowed numbers <em>press to file, settle and try</em></h4>
@@ -670,7 +684,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         <li>Numbers are allowed only between the last settled column and a fixed distance above it.</li>
       </ol>
     </details>
-    <p style="max-width:40em;margin-top:1.8rem">Order in any wind, progress once it drops, and a scroll that does not grow without end. What is left unprotected?</p>
+    <p class="tell" style="margin-top:1.8rem">The four now have order in any wind, progress once it drops, and a keeping that does not grow without end. It remains to say what the arrangement leaves unprotected.</p>
   </div>
 </section>
 
@@ -682,13 +696,13 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The edges of the promise</div>
       <h2>What it does not say</h2>
-      <p class="lede">Six questions a reader might ask of the loot scroll, and the plain answer to each.</p>
+      <p class="lede">The arrangement leaves several things unprotected, and each is better said plainly than left for a reader to find. Here are six questions a reader might ask of the loot scroll, and the answer to each.</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">One</div><h3>Does anything stand while the wind blows?</h3><p>Nothing. Order holds in any wind. Going on waits for the wind to drop and stay down. That is not a weakness of this arrangement; no arrangement could do better.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Two</div><h3>Can a liar still file nonsense?</h3><p>Yes. The scroll keeps order among entries, not good sense in them. An entry that makes no sense stands in the same place in every honest copy if a bandit may file it. Which entries a bandit may file is for the four to arrange themselves.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Three</div><h3>Does anyone learn who lies?</h3><p>No. The arrangement never needs to know. It works if any one of the four lies, and it never names them. A stalled term might be a liar or the wind.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Four</div><h3>Does it keep anything secret?</h3><p>No. Every bandit holds the whole scroll, and may show it to anyone.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">One</div><h3>Does anything stand while the wind blows?</h3><p>Nothing stands while it blows. Order holds in any wind, and going on waits for the wind to drop and stay down. That is no weakness of this arrangement, because no arrangement could do better.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Two</div><h3>Can a liar still file nonsense?</h3><p>A liar can. The scroll keeps the entries in order and does nothing for the sense in them. An entry that makes no sense stands in the same place in every honest copy if a bandit may file it. Which entries a bandit may file is for the four to arrange themselves.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Three</div><h3>Does anyone learn who lies?</h3><p>Nobody does, and the arrangement never needs to know. It works if any one of the four lies, and it never names them. A stalled term might be a liar or the wind.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Four</div><h3>Does it keep anything secret?</h3><p>Nothing is kept secret. Every bandit holds the whole scroll, and may show it to anyone.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Five</div><h3>Must every rat be sealed?</h3><p>Seals are costly, and the paper spends them sparingly. Every rat here is sealed. The paper's fast version seals only the requests for a change of job and the new numbering, and marks everything else with cheaper marks that the receiver alone can check. The order kept is the same.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Six</div><h3>What follows from any entry?</h3><p>Nothing. The scroll says where the loot lies and whose it is. What the four do with it is not the subject of this book.</p></div></div></div>
     </div>
@@ -703,7 +717,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The crown was a group of replicas</h2>
-      <p class="lede">Every bandit is a replica, every rat a message. Hover or tap to see who is who, and where the paper says it.</p>
+      <p class="lede">Read the crown again with machines at the four posts. Every bandit is a replica, every rat is a message, and the holder of the job is the leader that numbers the commands. Hover over a row, or tap it, to see who is who, and where the paper says it.</p>
     </div>
     <div class="map" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">On the crown</div><div></div><div class="hd">In the machine room</div>
