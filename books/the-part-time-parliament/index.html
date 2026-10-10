@@ -47,6 +47,9 @@ p{margin:0 0 .9rem;text-wrap:pretty}
 .spread h2{font-size:clamp(1.9rem,5vw,3.1rem);margin:.4rem 0 1rem}
 .lede{font-size:clamp(1.05rem,2.2vw,1.3rem);max-width:34em}
 .light .lede{color:#3a2d24}
+.tell{max-width:40em;margin-top:1.6rem}
+.tell+.tell{margin-top:0}
+.req{font-size:1.5rem;margin:2rem 0 .5rem}
 .meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
   background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
 
@@ -120,6 +123,18 @@ p{margin:0 0 .9rem;text-wrap:pretty}
 .hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
 .hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
 .hall-title p{margin:0}
+/* on a phone, or a screen too short to hold them, the title and the notes leave the photograph and stand under it */
+@media(max-width:900px),(max-height:680px){
+  #hall{background:var(--parch);padding-bottom:clamp(2.5rem,8vw,4rem)}
+  #hall .bleed{height:auto!important;overflow:visible;display:flex;flex-direction:column;gap:14px;padding:0 20px}
+  .bleed::after{display:none}
+  .bleed img{position:static;width:calc(100% + 40px);max-width:none;height:min(58svh,460px);margin:0 -20px;transform:none!important;
+    -webkit-mask-image:linear-gradient(transparent,#000 9%);mask-image:linear-gradient(transparent,#000 9%)}
+  .hall-title{position:relative;inset:auto;margin:-3.2rem 0 4px}
+  .hall-title .t{display:block;max-width:none}
+  .pin{position:static;max-width:none;box-shadow:5px 6px 0 var(--shadow)}
+  .pin::before,.pin::after{display:none}
+}
 
 /* ---------- scrollytelling ---------- */
 .scrolly{position:relative}
@@ -163,7 +178,7 @@ svg text{font-family:var(--serif)}
 
 /* ---------- interactive wells ---------- */
 .well{padding:clamp(16px,3vw,28px);margin:1.6rem 0}
-.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;justify-content:space-between;gap:10px}
+.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 10px}
 .well h4 em{font-style:normal;color:#6b5a48}
 .btn{background:var(--ink);color:var(--parch);border:3px solid var(--ink);padding:8px 16px;font-family:var(--sans);font-size:.88rem;letter-spacing:.03em;box-shadow:4px 4px 0 var(--blood);transition:transform .12s,box-shadow .12s}
 .btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--blood)}
@@ -354,13 +369,13 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>Many computers, one log</h2>
-      <p class="lede">A group of computers must keep the same log of commands, in the same order.</p>
+      <p class="lede">A group of computers must keep the same log of commands, in the same order. That is easy until something fails, and two kinds of failure are always possible.</p>
       <ul class="terms">
         <li><b>Machines stop and restart</b> at any moment.</li>
         <li><b>Messages</b> may be slow, lost, or delivered twice.</li>
-        <li><b>Paxos</b> (Lamport, 1998): the logs never disagree, and whenever a majority is up and steady, new commands get through.</li>
       </ul>
-      <p style="margin-top:1.2rem">Lamport told it as the story of an ancient island parliament. So will we.</p>
+      <p style="margin-top:1.2rem">Lamport's algorithm, <b>Paxos</b>, holds up under both. The logs never disagree, and whenever a majority of the machines is up and steady, new commands get through.</p>
+      <p>Lamport told it as the story of an ancient island parliament whose members would not stay in their seats. So will we.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper logs" id="logs">
@@ -380,12 +395,12 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <img src="img/p01-scrolls.jpg" alt="Inside the Chamber: a round marble hall with one tall door, a checkerboard floor and legislators sitting along the wall with scrolls" data-parallax>
     <div class="hall-title"><div class="t">
       <div class="kicker">The Chamber of the Paxon Parliament</div>
-      <h2>A round hall with no head of the room</h2>
-      <p>One conical roof. One door, and legislators come and go through it as they please.</p>
+      <h2>A parliament whose members come and go</h2>
+      <p>Paxos is an island of merchants, and trade comes before civic duty. Nobody will give a whole life to Parliament, so its legislators wander in and out of the round Chamber as their business allows.</p>
     </div></div>
-    <div class="pin pop" style="left:46%;top:40%;"><div class="leaf"><b>One door</b>Anyone may leave at any moment, and be gone for any length of time.</div></div>
-    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>A scroll each</b>Nobody will sit in the Chamber to keep the record, so each legislator keeps one.</div></div>
-    <div class="pin pop" style="left:56%;top:80%;"><div class="leaf"><b>No podium</b>The acoustics are poor. Nobody can address a crowd. Legislators talk only through messengers.</div></div>
+    <div class="pin pop" style="left:52%;top:50%;"><div class="leaf"><b>One door</b>Anyone may leave through it at any moment, and stay away for any length of time.</div></div>
+    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>A scroll each</b>Nobody will stay in the Chamber to keep the record, so each legislator keeps a scroll of their own.</div></div>
+    <div class="pin pop" style="left:56%;top:80%;"><div class="leaf"><b>No podium</b>The acoustics are poor and no speech carries, so legislators talk only through messengers.</div></div>
   </div>
 </section>
 
@@ -395,23 +410,26 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">What the Parliament must do</div>
       <h2>Settle the law, one numbered decree at a time</h2>
-      <p class="lede">Each legislator writes passed decrees into their own scroll, in order. Two things must hold.</p>
+      <p class="lede">The law of Paxos is the sequence of decrees its Parliament has passed. Each legislator writes them into their own scroll, by number, in indelible ink that can never be changed. Two things are required of those scrolls.</p>
+      <h3 class="req">Requirement one: consistency</h3>
+      <p>No two scrolls may ever disagree. If one scroll says that decree 132 orders lamps to burn only olive oil, no other scroll may hold a different decree 132. A scroll may still hold nothing at 132, if its keeper has not yet heard that the decree was passed.</p>
+      <p>Wandering legislators put this in danger. See what happens when one group passes a decree and leaves, and a second group comes in knowing nothing of it.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>Requirement one: consistency <em>no two scrolls may ever disagree</em></h4>
+      <h4>Two groups, one number <em>press the buttons in order</em></h4>
       <svg class="hall-svg" id="banq" role="img" aria-label="The Chamber, with a first group of legislators leaving for a banquet and a second group arriving"></svg>
-      <p class="say" id="scrsay">A scroll may lack an entry it hasn't heard of. It may never hold a different one.</p>
+      <p class="say" id="scrsay">Three legislators are in the Chamber, with decree 37 before them. The other three are away.</p>
       <div class="row">
         <button class="btn" id="bq1">A group passes decree 37, then leaves for a banquet</button>
         <button class="btn alt" id="bq2" disabled>A second group arrives, knowing nothing</button>
         <button class="btn alt" id="bqr" hidden>Again</button>
       </div>
     </div></div></div>
-    <div class="two" style="gap:24px;align-items:center;margin-top:1.4rem">
+    <div class="two" style="gap:24px;align-items:center;margin-top:2.4rem">
       <div>
-        <h3 style="font-size:1.5rem;margin-bottom:.5rem">Requirement two: progress</h3>
-        <p>Leaving every scroll blank would be consistent too. So: if a majority stays in the Chamber long enough, any proposed decree is passed and written down.</p>
-        <p><b>Both are hard</b> when anyone may vanish mid-vote. Trading the first for the second is easy. Keeping both is the whole game.</p>
+        <h3 class="req" style="margin-top:0">Requirement two: progress</h3>
+        <p>Consistency alone is easy to keep, since scrolls left blank never disagree. So Parliament requires progress as well. If a majority of the legislators stays in the Chamber for long enough, with nobody entering or leaving, then any decree proposed there is passed and reaches the scroll of everyone present.</p>
+        <p>Nobody can promise more than that, because no legislator will give up their business outside. The whole difficulty is to keep both requirements at once among people who may vanish in the middle of a vote. Before seeing how the Paxons managed it, we should know exactly what they had to work with.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p04-synod.jpg" alt="The Chamber from its terrace, priests in white with red sashes strolling round the colonnade" loading="lazy"></div></div></div>
     </div>
@@ -424,30 +442,33 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1.5rem">
       <div class="kicker">What can go wrong</div>
-      <h2>Absence. Never lies.</h2>
-      <p class="lede">Everyone on the island is honest. The danger is not lies. It is absence.</p>
+      <h2>Everyone is honest, and anyone may be absent</h2>
+      <p class="lede">Legislators and messengers on Paxos are scrupulously honest, and they follow the rules of Parliament to the letter. What none of them can be counted on to do is stay.</p>
+      <p>Three facts follow from that, and Parliament has to work under all of them.</p>
     </div>
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3" style="color:var(--ink)">
         <div class="photo" style="aspect-ratio:4/3;border:0;box-shadow:none"><img src="img/p02-hourglass.jpg" alt="A legislator holding up a sandglass beside another writing on a scroll" loading="lazy"></div>
-        <div class="body"><h3>Memory walks out the door</h3><p>A legislator who leaves may forget what they were doing. Key notes go in the back of the scroll, in indelible ink. A slip of paper may be lost.</p></div>
+        <div class="body"><h3>Memory walks out the door</h3><p>A legislator who leaves the Chamber may forget what they were doing. Whatever must be remembered goes in the back of the scroll, in indelible ink. Lesser notes go on a slip of paper, which may be lost on the way out.</p></div>
       </div></div>
       <div class="pop"><div class="leaf paper card3" style="color:var(--ink)">
         <div class="photo" style="aspect-ratio:4/3;border:0;box-shadow:none"><img src="img/p03-messengers.jpg" alt="A messenger hands a note to a seated legislator while two more messengers cross the Chamber floor" loading="lazy"></div>
-        <div class="body"><h3>Only messengers</h3><p>A messenger never garbles a message. But they may forget they delivered it, and deliver it again. Or set off on a long voyage and never arrive.</p></div>
+        <div class="body"><h3>Only messengers</h3><p>Legislators speak to each other only through messengers. A messenger never garbles a message, but may forget having delivered it and deliver it again, or may set off on a long voyage and never deliver it at all.</p></div>
       </div></div>
       <div class="pop"><div class="leaf paper card3" style="color:var(--ink)">
         <div class="photo" style="aspect-ratio:4/3;border:0;box-shadow:none"><img src="img/p01-scrolls.jpg" alt="Legislators sitting along the Chamber wall, each with a scroll" loading="lazy"></div>
-        <div class="body"><h3>Prompt inside, anything outside</h3><p>While in the Chamber, everyone acts promptly. Outside it, anything takes any amount of time.</p></div>
+        <div class="body"><h3>Prompt inside, anything outside</h3><p>Inside the Chamber, messengers deliver at once and legislators answer promptly, and each legislator has a sandglass to tell how long that should take. Outside it, anything may take any length of time.</p></div>
       </div></div>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well" style="color:var(--ink);max-width:760px;margin:2.4rem auto 0">
+    <p class="tell" style="margin-top:2.4rem">The messengers are the hardest of the three to plan for. Send a few messages across the Chamber and see what becomes of them.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="color:var(--ink);max-width:760px;margin:1.2rem 0 0">
       <h4>Send a message <em>try your luck</em></h4>
       <svg class="hall-svg" id="lane" style="width:min(100%,340px)" role="img" aria-label="Two legislators in the Chamber and a messenger between them"></svg>
       <div class="row" style="margin-top:0"><button class="btn" id="send">Send a message from A to B</button></div>
       <div class="tally"><span><b id="t-ok">0</b>delivered</span><span><b id="t-two">0</b>delivered twice</span><span><b id="t-lost">0</b>never arrived</span></div>
-      <p class="say" id="sendsay">Whatever the protocol does, it must be right under all three.</p>
+      <p class="say" id="sendsay">A message may arrive once, arrive twice, or never arrive.</p>
     </div></div></div>
+    <p class="tell" style="margin-top:2.4rem">A legislator who gets no answer cannot tell whether the messenger is slow or gone for good, and Parliament has to stay right without ever finding out. It can do so because of one fact that no amount of wandering undoes.</p>
   </div>
 </section>
 
@@ -458,9 +479,9 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div>
       <div class="kicker">The one fact everything rests on</div>
       <h2>Any two majorities share a member</h2>
-      <p class="lede">That shared member remembers what the first majority decided, even when everyone else has wandered off.</p>
-      <p>Seven legislators, seen from above the Chamber. Click anyone to send them out the door or call them back. Then see what the overlap does.</p>
-      <div class="say" id="majsay"></div>
+      <p class="lede">However the legislators wander, two majorities of the same Parliament can never be made up of entirely different people. Someone always sits in both.</p>
+      <p>That shared member carries what the first majority decided into the second, even when everyone else from the first has left. Here are seven legislators, seen from above the Chamber. Click any of them to send them out through the door or to call them back. Then let a majority pass a decree, and see who is still there when the next majority gathers.</p>
+      <div class="say" id="majsay">Send some legislators out through the door first, if you like.</div>
       <div class="row">
         <button class="btn" id="maj1">1 · A majority passes a decree</button>
         <button class="btn alt" id="maj2" disabled>2 · They leave; another majority gathers</button>
@@ -487,23 +508,27 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">A smaller puzzle first</div>
       <h2>One decree, once every nineteen years</h2>
-      <p class="lede">The Paxons began with a Synod of five priests choosing a single symbolic decree. They did it with <b>ballots</b>.</p>
-      <p>A ballot is a vote on one decree by a chosen group, its <b>quorum</b>. It succeeds if every member of the quorum votes for it. Three rules keep ballots safe.</p>
+      <p class="lede">Parliament grew out of an older body. Every nineteen years a Synod of priests met to choose a single symbolic decree. When the priests too began wandering in and out of the Chamber, a Synod ended with no decree chosen.</p>
+      <p>The mathematicians who were asked to prevent a second such disaster had the priests choose by <b>ballots</b>. A ballot has a number, and it puts one decree to a chosen group of priests, its <b>quorum</b>. Each of them either votes for the decree or does not vote, and the ballot succeeds if every one of them votes. Any number of ballots may be held, and the decree of a successful one is the Synod's choice.</p>
+      <p>Three rules make sure that no two successful ballots ever choose different decrees.</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)"><div class="body"><div class="num" style="font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood)">RULE ONE</div><h3>Every ballot has its own number</h3><p>No two ballots are ever confused, and they have a clear order.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)"><div class="body"><div class="num" style="font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood)">RULE TWO</div><h3>Any two quorums share a priest</h3><p>The same overlap as before, so a decision is never wholly forgotten.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)"><div class="body"><div class="num" style="font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood)">RULE THREE</div><h3>Carry the latest vote forward</h3><p>If anyone in a ballot's quorum has voted before, the ballot must carry the decree of the latest of those votes.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)"><div class="body"><div class="num" style="font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood)">RULE ONE</div><h3>Every ballot has its own number</h3><p>No two ballots share a number, so of any two it is always clear which is the later.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)"><div class="body"><div class="num" style="font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood)">RULE TWO</div><h3>Any two quorums share a priest</h3><p>A quorum is always a majority of the priests, so whatever one quorum did, someone in the next quorum was there for it.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)"><div class="body"><div class="num" style="font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood)">RULE THREE</div><h3>A ballot carries the latest vote forward</h3><p>If any priest in a ballot's quorum voted in an earlier ballot, the new ballot must be for the decree of the latest of those earlier ballots.</p></div></div></div>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well ms" id="ms" style="color:var(--ink);margin-top:2.4rem">
+    <p class="tell" style="margin-top:2.4rem">The third rule is the hard one, and a Paxon manuscript shows it at work. The manuscript lists five ballots held among the five priests Α, Β, Γ, Δ and Ε.</p>
+    <div class="pop"><div class="leaf"><div class="paper well ms" id="ms" style="color:var(--ink);margin-top:1.2rem">
       <h4>The manuscript <em>click a ballot</em></h4>
-      <p style="margin:0 0 10px;font-size:.92rem">Five ballots among five priests. A <span class="pc v">boxed</span> priest is one who voted. Which ballots had to copy an earlier decree, and from whom?</p>
+      <p style="margin:0 0 10px;font-size:.92rem">Each row is one ballot, with its number, its decree and its quorum. A <span class="pc v">boxed</span> priest is one who voted. Click a ballot to see whether it was free to choose its decree or had to copy an earlier one, and from whom.</p>
       <table>
         <thead><tr><th>Ballot</th><th>Decree</th><th>Quorum</th></tr></thead>
         <tbody id="msrows"></tbody>
       </table>
       <div class="explain" id="msx">Try ballot 27.</div>
     </div></div></div>
+    <p class="tell" style="margin-top:2.4rem">Together the rules do what was asked of them. Once a ballot has succeeded, the quorum of every later ballot holds a priest who voted in it, and the third rule hands its decree on to each later ballot in turn. So any two successful ballots are for the same decree, and no two scrolls can disagree.</p>
+    <p class="tell">What remains is to turn the rules into steps that a priest can follow.</p>
     <details class="proof">
       <summary>The three rules, formally · and the proofs that they give consistency</summary>
       <p class="given">Each ballot <var>B</var> has a number <var>B</var><sub>bal</sub>, a decree <var>B</var><sub>dec</sub>, a quorum <var>B</var><sub>qrm</sub> and a set of voters <var>B</var><sub>vot</sub>, and ℬ is a set of ballots. The three rules are the conditions <var>B</var>1(ℬ), <var>B</var>2(ℬ) and <var>B</var>3(ℬ). A ballot is successful when <var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub>.</p>
@@ -628,9 +653,9 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
 <section class="spread dark" id="ballot" data-name="One ballot" style="padding-bottom:0;background:var(--marble)">
   <div class="wrap" style="margin-bottom:-1rem">
     <div class="narrow">
-      <div class="kicker">The whole protocol</div>
+      <div class="kicker">The rules as steps</div>
       <h2>One ballot, step by step</h2>
-      <p class="lede">A priest runs a ballot. Scroll slowly: the picture moves with you.</p>
+      <p class="lede">A priest who wants a decree chosen starts a ballot, and the three rules settle what each step must be. Here priest Α runs ballot 27 among the five priests. Scroll slowly, and the picture moves with you.</p>
     </div>
   </div>
   <div class="scrolly" id="bal" data-steps="7">
@@ -638,16 +663,17 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <svg class="fig svg-dark" viewBox="0 0 900 490" id="balsvg" role="img" aria-label="Ballot 27 run by priest A with the quorum A, Gamma and Delta; B and E are outside it"></svg>
     </div></div>
     <div class="steps">
-      <div class="step on"><div class="card"><div class="num">1 · Choose</div><h3>Pick a fresh number and a quorum</h3><p>The initiator, A, picks ballot 27 and a quorum of three: A, Γ and Δ. B and E sit this one out.</p></div></div>
-      <div class="step"><div class="card"><div class="num">2 · Ask</div><h3>A question, with a price</h3><p>“Tell me the latest vote you ever cast, and promise never to vote in any ballot numbered below this one.”</p></div></div>
-      <div class="step"><div class="card"><div class="num">3 · Promise</div><h3>Each answers, and promises</h3><p>The promise goes in the back of their scroll, in indelible ink. The reply is the latest vote, or none.</p></div></div>
-      <div class="step"><div class="card"><div class="num">4 · Look back</div><h3>A now holds a fact about the past</h3><p>Γ voted in ballot 5, Δ in ballot 2, A never. The latest is ballot 5, so A <b>must</b> propose its decree: β. Only if nobody had ever voted could A choose freely.</p></div></div>
-      <div class="step"><div class="card"><div class="num">5 · Propose</div><h3>“Vote for this, in this ballot”</h3><p>A sends the forced decree to the quorum.</p></div></div>
-      <div class="step"><div class="card"><div class="num">6 · Vote</div><h3>Unless they promised something higher</h3><p>Each member votes, writes it in the back of their scroll, and reports back.</p></div></div>
-      <div class="step"><div class="card"><div class="num">7 · Done</div><h3>Every member voted: the ballot succeeded</h3><p>A writes the decree in their scroll and tells everyone. Anyone who hears writes it down. A decree, once chosen, is passed forward. That is the whole ballot.</p></div></div>
+      <div class="step on"><div class="card"><div class="num">1 · Choose</div><h3>Pick a fresh number and a quorum</h3><p>Α starts the ballot. Α picks the number 27, which no ballot has used, and a quorum of three: Α, Γ and Δ. Β and Ε sit this one out.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · Ask</div><h3>A question, with a price</h3><p>Α sends the quorum one message: “Tell me the latest vote you ever cast, and promise never to vote in any ballot numbered below this one.”</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · Promise</div><h3>Each answers, and promises</h3><p>Each member writes the promise in the back of their scroll, in indelible ink, and replies with the latest vote they have cast, or with none.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Look back</div><h3>Α now holds a fact about the past</h3><p>Γ last voted in ballot 5 and Δ in ballot 2. Α has never voted. The latest of these is ballot 5, so the third rule leaves Α no choice: ballot 27 <b>must</b> be for that ballot's decree, β. Α could have chosen freely only if nobody in the quorum had ever voted.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · Propose</div><h3>“Vote for this, in this ballot”</h3><p>Α sends decree β to the quorum and asks for their votes in ballot 27.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · Vote</div><h3>Unless they promised something higher</h3><p>Each member votes, unless they have since promised a higher ballot. They note the vote in the back of their scroll and report it to Α.</p></div></div>
+      <div class="step"><div class="card"><div class="num">7 · Done</div><h3>Every member voted, so the ballot succeeded</h3><p>Α writes β in their scroll as the Synod's decree and sends word to every priest, in the quorum or out of it. Whoever hears writes it down too.</p></div></div>
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <p class="tell" style="margin-top:3rem">Every step is something a priest may do, and none is something a priest must do. A priest who walks out, or a messenger who never arrives, only leaves a step undone, and a step left undone cannot break any of the three rules. A message delivered twice only repeats a step, and the second time it changes nothing. So the scrolls stay consistent whatever goes wrong.</p>
     <details class="proof">
       <summary>Appendix · proof of consistency of the Synod's protocol</summary>
       <p class="given">The one-ballot protocol above, stated as the actions a priest may take, with the invariant those actions maintain and its proof.</p>
@@ -839,8 +865,8 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Safe is not enough</div>
       <h2>Too many ballots block everything</h2>
-      <p class="lede">A ballot is safe. But nothing yet makes anyone start one, and starting too many can block everything.</p>
-      <p>Each new ballot makes its quorum promise never to vote in anything lower, so it can doom the one before it. Two priests, each sure they are in charge, keep starting higher ballots, and neither ever finishes.</p>
+      <p class="lede">The steps keep the scrolls consistent, but nothing in them makes any priest start a ballot. With no ballots, no decree is ever chosen. With too many, no decree is chosen either.</p>
+      <p>The trouble lies in the promise. Each new ballot has its quorum promise never to vote in a lower one, so a ballot started too soon dooms the one before it. Let two priests each believe they are the one to start ballots, and each keeps starting a higher one before the other's can finish.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well" id="duel">
       <h4>Two would-be presidents <em id="duelmode">no one is in charge</em></h4>
@@ -860,7 +886,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         <button class="btn alt" id="dreset">Reset</button>
       </div>
     </div></div></div>
-    <p style="max-width:40em;margin:1.8rem 0 0"><b>The cure:</b> choose one president who alone starts ballots, and have them start a new one only when the last has had time to succeed. <b>Safety never depended on any of this.</b> Only progress did.</p>
+    <p class="tell">The Paxons' cure was a <b>president</b>: one priest who alone starts ballots, and who starts a new one only when the last has had time to succeed. Most governments find a president hard to choose, because two at once would be a disaster. In the Synod, two presidents can only slow things down. They can never make the scrolls disagree, because consistency never depended on who starts the ballots.</p>
   </div>
 </section>
 
@@ -872,13 +898,13 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1.2rem">
       <div class="kicker">From one decree to a whole law</div>
       <h2>A separate Synod for every number</h2>
-      <p class="lede">The real Parliament passes a long series of decrees. Each number is its own little Synod, but one president runs them all.</p>
+      <p class="lede">Parliament has to pass a long series of numbered decrees, where the Synod chose only one. It treats each number as a small Synod of its own, and lets one president run them all.</p>
     </div>
     <div class="two wide-r" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div class="pop fromleft"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/p05-oki.jpg" alt="A newly made president sitting on the stone seat copying decrees onto a scroll while others wait" loading="lazy"></div></div></div>
       <div>
-        <p>A <b>new president</b> sends one question covering every open number at once. Each reply says what that legislator has voted for, and which later decrees are already in their scroll. Then it gets interesting.</p>
-        <p style="font-size:.95rem;color:#6b5a48">Press the buttons in order.</p>
+        <p>Anyone who wants a decree passed tells the president, who gives it the next free number and holds a ballot for it. The saving comes at the start. A president does not choose a decree until the quorum has answered, so a <b>new president</b> can ask the opening question once, for every number still open. Each legislator answers once too, with what they have voted for and with any later decrees already in their scroll.</p>
+        <p>What those answers can hold is best seen on a Monday morning, after everyone has been home for the weekend. Press the buttons in order.</p>
       </div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well" id="par" style="color:var(--ink);margin-top:2rem">
@@ -892,7 +918,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         <button class="btn alt" id="parr" hidden>Again</button>
       </div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">Once a president is chosen, each new decree takes just three steps: ask the quorum to vote, hear their votes, announce the result.</p>
+    <p class="tell">With a president settled and nobody coming or going, the opening question need not be asked again. Each new decree then takes three steps: the president asks a quorum to vote, the quorum votes, and the president announces the result.</p>
   </div>
 </section>
 
@@ -902,33 +928,35 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Governing the island</div>
-      <h2>Real life made the protocol grow</h2>
+      <h2>Governing the island asked for more</h2>
+      <p class="lede">Governing Paxos turned out to be harder than passing decrees in order. Three incidents each changed the way Parliament worked.</p>
     </div>
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3">
         <div class="photo"><img src="img/p05-oki.jpg" alt="A president copying decrees onto a scroll" loading="lazy"></div>
-        <div class="body"><h3>Better presidents</h3><p>At first the president was whoever came first alphabetically. A legislator back from months away had to copy six months of decrees while Parliament waited. A president who is already up to date would have spared everyone the wait.</p></div>
+        <div class="body"><h3>Better presidents</h3><p>At first the president was whoever stood last in the alphabet among those in the Chamber. One legislator came back from six months away and was made president at once, and Parliament stopped while the new president copied out six months of decrees. A president who was already up to date would have spared everyone the wait.</p></div>
       </div></div>
       <div class="pop"><div class="leaf paper card3">
         <div class="photo"><img src="img/p06-cheese.jpg" alt="Two inspectors giving conflicting verdicts on the same lot of cheese in the town square" loading="lazy"></div>
-        <div class="body"><h3>One office, one holder</h3><p>Two cheese inspectors, one after the other, both still sure of their post: conflicting verdicts. Each decree now carries the time it was proposed, so a post has at most one holder at a time.</p></div>
+        <div class="body"><h3>One office, one holder</h3><p>Parliament replaced a strict cheese inspector, who did not hear of it for some time. Meanwhile two inspectors gave conflicting verdicts on the same cheese. Every decree now carries the time it was proposed and every post runs for a fixed term, so a post has at most one holder at a time.</p></div>
       </div></div>
       <div class="pop"><div class="leaf paper card3">
         <div class="photo"><img src="img/p07-goats.jpg" alt="A legislator whose scroll stops at decree 76 advises a buyer about black goats" loading="lazy"></div>
-        <div class="body"><h3>Don't ask one scroll</h3><p>A legislator who had stepped out advised a buyer from a scroll that stopped at decree 76. Decree 77 had made the sale legal. Asking about the law now never returns an older state of it than before.</p></div>
+        <div class="body"><h3>Don't ask one scroll</h3><p>Decree 77 made it legal to sell black goats. A buyer asked a legislator who had been out of the Chamber, whose scroll stopped at decree 76, and was told the sale was illegal. Since then, a question about the law never returns an older state of it than an earlier question did.</p></div>
       </div></div>
     </div>
-    <div class="two" style="gap:24px;margin-top:2.4rem">
+    <p class="tell" style="margin-top:2.4rem">Two more changes came with the years, and neither needed anything new.</p>
+    <div class="two" style="gap:24px;margin-top:1.2rem">
       <div class="pop"><div class="leaf"><div class="paper well" style="margin:0">
         <h4>Scrolls grew too long <em>fold one</em></h4>
         <div class="fold" id="fold"><div class="digest">Current law + number of the last decree</div></div>
-        <p class="say" style="margin-top:12px">Keeping every decree forever became a burden. Scrolls shrank to the current law and the number of the last decree.</p>
+        <p class="say" style="margin-top:12px">As the decrees piled up, finding the current olive tax meant reading through years of them. The scrolls were cut down to the law as it now stands, with the number of the last decree it includes.</p>
         <div class="row"><button class="btn" id="foldb">Fold the scroll</button></div>
       </div></div></div>
       <div class="pop"><div class="leaf"><div class="paper well" style="margin:0">
-        <h4>Everyone can change <em>and heal</em></h4>
-        <p style="margin:0 0 10px">Legislators were added and removed by decree. And old decrees were passed again, so that a mistake in any scroll would heal.</p>
-        <p style="margin:0;font-size:.95rem;color:#6b5a48">The machinery is the same. It is the same ballot, applied to the membership list, and to the scrolls themselves.</p>
+        <h4>Members by decree <em>and scrolls put right</em></h4>
+        <p style="margin:0 0 10px">Legislators came to be added and removed by decree. Old decrees were also passed again from time to time, so that a scroll that had gone wrong would be put right.</p>
+        <p style="margin:0">Both are the same ballot as before, applied to the list of members and to the scrolls themselves.</p>
       </div></div></div>
     </div>
     <details class="proof">
@@ -959,7 +987,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The island was a replicated service</h2>
-      <p class="lede">Every server keeps the same log of commands, and the log is what the Parliament passes. Hover or tap to see who is who.</p>
+      <p class="lede">Read the island again with machines in the legislators' seats. Each server keeps its own copy of one log of commands, as each legislator keeps a scroll, and a command enters the log the way a decree is passed. Hover over a row, or tap it, to see who is who.</p>
     </div>
     <div class="map" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">On the island</div><div></div><div class="hd">In the machine room</div>
@@ -1128,7 +1156,7 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
     [3,4,5].forEach(i=>{S[i].g.setAttribute("opacity",1);H.place(S[i],...H.at(home[i]));lbl(S[i],"37: art is free")});
     await sleep(reduce?0:900); S.forEach(s=>s.g.classList.add("clash"));
     say.innerHTML="<span class='bad'>Two scrolls, two different decrees numbered 37.</span> Consistency is lost for good, because the ink is indelible. The protocol must stop this from ever happening.";br.hidden=false};
-  br.onclick=()=>{reset();say.textContent="A scroll may lack an entry it hasn't heard of. It may never hold a different one.";b1.disabled=false;br.hidden=true};
+  br.onclick=()=>{reset();say.textContent="Three legislators are in the Chamber, with decree 37 before them. The other three are away.";b1.disabled=false;br.hidden=true};
   reset();
 })();
 
@@ -1192,7 +1220,6 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
       paint(); b1.disabled=false; b1.textContent="Try another pair";
     },reduce?0:900);
   };
-"Try it: send some legislators out the door first.";
 })();
 
 /* ===== manuscript ===== */
@@ -1237,12 +1264,16 @@ addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",on
     const [ox,oy]=H.at(ang[k],H.R+52); const c=el("g",{class:"tag fade",transform:`translate(${ox} ${oy})`},O); el("rect",{x:-34,y:-14,width:68,height:28},c); const t=el("text",{},c); t.textContent="27: β"; chips[k]=c;
     if(q.includes(k)){const [px,py]=H.at(ang[k],H.R-56); const g=el("g",{class:"tag fade",transform:`translate(${px} ${py})`},O); el("rect",{x:-32,y:-14,width:64,height:28},g); const tt=el("text",{},g); tt.textContent="≥ 27"; tags[k]=g}});
   {const g=el("g",{class:"tag fade",transform:`translate(${S.A.x} ${S.A.y-50})`},O); el("rect",{x:-32,y:-14,width:64,height:28},g); el("text",{},g).textContent="≥ 27"; tags.A=g}
-  const rt=el("text",{x:520,y:100,class:"lab fade",style:"text-anchor:start"},O); rt.textContent="The quorum's latest votes"; 
-  const repg={}; [["A","Α: no vote yet"],["G","Γ: ballot 5, decree β"],["D","Δ: ballot 2, decree α"]].forEach(([k,t],i)=>{const g=el("g",{class:"reply fade",transform:`translate(520 ${118+i*46})`},O); el("rect",{width:270,height:36},g); const tx=el("text",{x:14,y:19},g); tx.textContent=t; repg[k]=g});
-  const forced=el("g",{class:"fade",transform:"translate(520 290)"},O);
+  // the replies stand beside the hall; a phone has no room for them, and the step cards say the same
+  const PG=el("g",{},O), tall=matchMedia("(max-width:640px)");
+  function lay(){svg.setAttribute("viewBox",tall.matches?"0 0 470 470":"0 0 900 490");PG.style.display=tall.matches?"none":""}
+  tall.addEventListener("change",lay); lay();
+  const rt=el("text",{x:520,y:100,class:"lab fade",style:"text-anchor:start"},PG); rt.textContent="The quorum's latest votes";
+  const repg={}; [["A","Α: no vote yet"],["G","Γ: ballot 5, decree β"],["D","Δ: ballot 2, decree α"]].forEach(([k,t],i)=>{const g=el("g",{class:"reply fade",transform:`translate(520 ${118+i*46})`},PG); el("rect",{width:270,height:36},g); const tx=el("text",{x:14,y:19},g); tx.textContent=t; repg[k]=g});
+  const forced=el("g",{class:"fade",transform:"translate(520 290)"},PG);
   el("rect",{width:150,height:70,rx:10,fill:"#e3ecc4",stroke:"#5f6e28","stroke-width":4},forced);
   const fb=el("text",{x:75,y:36,"text-anchor":"middle","dominant-baseline":"central",style:"font-size:40px;fill:#5f6e28"},forced); fb.textContent="β";
-  const ft=el("text",{x:520,y:392,class:"lab fade",style:"fill:#5f6e28;font-size:16px;text-anchor:start"},O); ft.textContent="forced by the latest vote";
+  const ft=el("text",{x:520,y:392,class:"lab fade",style:"fill:#5f6e28;font-size:16px;text-anchor:start"},PG); ft.textContent="forced by the latest vote";
   function mk(color,glyph){const g=el("g",{class:"tok",opacity:0},O); el("circle",{r:14,fill:color,stroke:"#1c1512","stroke-width":2},g); const t=el("text",{style:"fill:#1c1512;font-size:16px;text-anchor:middle;dominant-baseline:central;font-weight:700"},g); t.textContent=glyph; return g}
   const tq={},tr={},tpp={},tv={},tt={}; q.forEach(k=>{tq[k]=mk("#fffaf0","?");tr[k]=mk("#8fc4de","·");tpp[k]=mk("#a9c25a","β");tv[k]=mk("#a9c25a","✓")}); all.filter(k=>k!=="A").forEach(k=>tt[k]=mk("#a9c25a","β"));
   function put(g,k,u){const x=sp[k][0]+(tp[k][0]-sp[k][0])*u,y=sp[k][1]+(tp[k][1]-sp[k][1])*u;g.style.transform=`translate(${x}px,${y}px)`}
