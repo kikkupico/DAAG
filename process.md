@@ -145,7 +145,7 @@ The shape that has worked before:
 
 | | |
 |---|---|
-| **Cover** | Four pieces of text beside the picture: the title; the problem and its solution in plain machine terms; the same in the allegory's terms; and the source papers with their authors, in small print. |
+| **Cover** | Four pieces of text beside the picture: the title; the question from the book's home-page card; the card's "We find out by exploring…" line; and the source papers with their titles and every author, in small print. |
 | **In machine terms** | The paper's problem and result in plain distributed-systems words, with one small interactive that shows the difficulty with machines. |
 | **The setting** | A photograph of the place with the premise in two or three sentences. Link the setting page with a superscript; do not describe the place again. |
 | **The model** | One spread per device, each built up by an interactive. The reader should not notice they are being handed a formal system. |
