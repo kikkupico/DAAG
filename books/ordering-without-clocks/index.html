@@ -67,15 +67,14 @@ p{margin:0 0 .9rem;text-wrap:pretty}
 
 /* ---------- cover ---------- */
 #cover{min-height:100svh;display:grid;align-items:center;padding-top:5rem;
-  background:radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
+  background:linear-gradient(180deg,#e0d6bb00 calc(100% - 140px),#e0d6bb),radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
+/* the cover ends in one colour, and the torn edge under it is that colour */
+#cover+.spread>.tear path{fill:#e0d6bb}
 #cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
 #cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:.6rem 0 1rem;letter-spacing:-.01em}
 #cover h1 span{display:block;font-size:.34em;letter-spacing:.2em;text-transform:uppercase;color:var(--aegean-d);margin-top:.9rem;font-weight:400}
 #cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
 #cover .hook{font-size:clamp(1.1rem,2.4vw,1.45rem);font-style:italic;max-width:24em;color:#3a2d24}
-.scrollcue{margin-top:2rem;font-family:var(--sans);font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);display:flex;gap:10px;align-items:center}
-.scrollcue b{display:inline-block;animation:bob 1.6s ease-in-out infinite}
-@keyframes bob{50%{transform:translateY(7px)}}
 .cut{position:absolute;pointer-events:none;z-index:1}
 .cut svg{display:block;width:100%;height:auto}
 @media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
@@ -255,7 +254,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
   html{scroll-behavior:auto}
   .pop > .leaf{transition:opacity .3s;transform:none!important}
   [data-depth]{transform:none!important}
-  .scrollcue b,.pulse{animation:none}
+  .pulse{animation:none}
   .fig .tok{transition:none}
 }
 /* ---------- three clocks ---------- */
@@ -306,7 +305,6 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
       <h1>Ordering Without Clocks<span>how three houses agree on what came first</span></h1>
       <p class="hook">If no two houses agree on the hour, how can they agree on which order was placed first?</p>
       <p class="hook" style="color:var(--blood);font-style:normal;font-family:var(--sans);font-size:1.1rem">On the island of Arche, they stopped asking the sun.</p>
-      <div class="scrollcue"><b>↓</b> Scroll. Things unfold.</div>
     </div>
     <div class="pop" data-auto>
       <div class="leaf">

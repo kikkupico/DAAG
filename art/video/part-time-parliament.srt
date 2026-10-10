@@ -1,0 +1,231 @@
+1
+00:00:00,000 --> 00:00:07,167
+Can a parliament whose members wander in and out as they please still pass laws that never contradict one another?
+
+2
+00:00:07,433 --> 00:00:10,267
+On the island of Paxos, it did.
+
+3
+00:00:14,200 --> 00:00:20,700
+Take a group of computers that must all keep the same log of commands, in the same order.
+
+4
+00:00:20,967 --> 00:00:27,133
+Any machine may stop and restart at any moment. Messages may be slow, lost, or delivered twice.
+
+5
+00:00:27,400 --> 00:00:35,233
+In 1998 Leslie Lamport described Paxos: the logs never disagree, and when a majority is up and steady, new commands get through.
+
+6
+00:00:35,467 --> 00:00:41,300
+He told it as the story of an ancient island parliament. We will follow the story.
+
+7
+00:00:42,567 --> 00:00:48,733
+Paxos is shaped like a Y. Two arms reach north and face each other across a bay.
+
+8
+00:00:49,000 --> 00:00:57,500
+The western arm holds the Chamber of the Paxon Parliament. The eastern arm holds the city of Schedia, which keeps laws of its own.
+
+9
+00:00:57,767 --> 00:01:05,600
+Below the fork the stem widens into the island's southern coast. One road runs up the stem and out along both arms.
+
+10
+00:01:05,833 --> 00:01:13,667
+The Chamber is a round hall of hard stone under one conical roof, with no podium and no head of the room.
+
+11
+00:01:13,900 --> 00:01:23,067
+Its acoustics are poor, so oratory is impossible. Legislators can talk only through messengers, and the one door lets them come and go as they please.
+
+12
+00:01:24,367 --> 00:01:30,200
+The Parliament's task is to settle the law of the land: a numbered sequence of decrees.
+
+13
+00:01:30,467 --> 00:01:40,300
+Nobody will sit in the Chamber to keep the record, so each legislator keeps his own scroll, and writes into it the decrees that have passed, in order.
+
+14
+00:01:40,567 --> 00:01:49,067
+First, consistency: no two scrolls may ever give different decrees for one number. A scroll may only lack an entry it hasn't heard of.
+
+15
+00:01:49,300 --> 00:01:58,133
+Blank scrolls would be consistent too. So: progress. If a majority stays in the Chamber long enough, any proposed decree passes and is written down.
+
+16
+00:01:58,367 --> 00:02:06,200
+It is hard. One group could pass a decree and leave for a banquet, and another could pass the opposite, knowing nothing.
+
+17
+00:02:07,600 --> 00:02:18,100
+A legislator who leaves may forget what he was doing, so key notes go in the back of his scroll, in indelible ink. A slip of paper may be lost.
+
+18
+00:02:18,367 --> 00:02:25,867
+Legislators can only send messengers. A messenger never garbles a message, but may forget he delivered it, and deliver it again.
+
+19
+00:02:26,133 --> 00:02:34,300
+A messenger may leave on a long voyage and never deliver. Inside the Chamber everyone acts promptly; outside it, anything takes any time.
+
+20
+00:02:34,533 --> 00:02:39,033
+And everyone is honest. The danger is not lies. It is absence.
+
+21
+00:02:40,333 --> 00:02:45,167
+Everything rests on one fact: any two majorities of legislators share a member.
+
+22
+00:02:48,667 --> 00:02:54,500
+That shared member remembers what the first majority decided, even when everyone else has wandered off.
+
+23
+00:02:54,767 --> 00:03:01,600
+The Paxons first solved a smaller puzzle: a Synod of priests choosing one symbolic decree, once every nineteen years.
+
+24
+00:03:01,833 --> 00:03:10,667
+A ballot is a vote on one decree by a chosen group, its quorum. It succeeds if every member of the quorum votes for it.
+
+25
+00:03:12,167 --> 00:03:16,667
+Three conditions keep ballots safe. First, every ballot has its own number.
+
+26
+00:03:16,933 --> 00:03:19,767
+Second, any two quorums share a priest.
+
+27
+00:03:20,033 --> 00:03:28,200
+Third, if anyone in a ballot's quorum has voted before, the ballot must carry the decree of the latest of those earlier votes.
+
+28
+00:03:29,433 --> 00:03:37,267
+Here are five ballots among five priests. A boxed priest is one who voted. Ballot 27's quorum is Α, Γ and Δ.
+
+29
+00:03:37,500 --> 00:03:46,000
+Γ voted in ballot 5, and Δ in ballot 2. The latest is ballot 5, so ballot 27 must carry ballot 5's decree: β.
+
+30
+00:03:46,233 --> 00:03:52,733
+Ballot 29 reaches back to ballot 27 in the same way. A decree, once chosen, is passed forward.
+
+31
+00:03:54,167 --> 00:04:02,667
+A ballot is run by one priest, the initiator. He picks a fresh ballot number and a quorum, and sends each member a question.
+
+32
+00:04:02,933 --> 00:04:10,767
+The question: tell me the latest vote you ever cast, and promise never to vote in any ballot numbered below this one.
+
+33
+00:04:11,033 --> 00:04:18,867
+Each member who answers writes the promise in the back of his scroll, and replies with his latest vote, or with none.
+
+34
+00:04:19,100 --> 00:04:24,933
+Now the initiator holds a fact about the past: the latest vote of everyone he asked.
+
+35
+00:04:26,467 --> 00:04:35,633
+If anyone has voted before, he must propose the decree of the latest of those votes. Only if nobody ever voted is he free to choose.
+
+36
+00:04:35,900 --> 00:04:41,067
+He sends the ballot to the quorum: vote for this decree, in this ballot.
+
+37
+00:04:41,333 --> 00:04:49,500
+A member votes unless he has since promised something higher. His vote is written in the back of his scroll, and reported back.
+
+38
+00:04:49,733 --> 00:04:57,900
+When every member of the quorum has voted, the ballot has succeeded. The initiator writes the decree in his scroll, and tells everyone.
+
+39
+00:04:58,133 --> 00:05:02,300
+Anyone who hears writes it down. That is the whole ballot.
+
+40
+00:05:03,633 --> 00:05:10,133
+A ballot is safe. But nothing yet makes anyone start one, and starting too many can block everything.
+
+41
+00:05:10,400 --> 00:05:18,567
+A new ballot makes its quorum promise never to vote in anything lower, so each new ballot can doom the one before it.
+
+42
+00:05:18,833 --> 00:05:24,667
+Two priests, each sure he is in charge, keep starting higher ballots, and neither ever finishes.
+
+43
+00:05:27,367 --> 00:05:36,533
+The cure is to pick one president who alone starts ballots, and to start a new one only when the last has had time to succeed.
+
+44
+00:05:36,767 --> 00:05:40,600
+Safety never depended on any of this. Only progress did.
+
+45
+00:05:42,267 --> 00:05:47,433
+The real Parliament must pass a long series of decrees, numbered one after another.
+
+46
+00:05:47,700 --> 00:05:54,533
+It is really a separate Synod for each decree number, but with a single president for all of them.
+
+47
+00:05:54,800 --> 00:06:02,300
+A new president sends one question covering every open number at once. Each reply says what that legislator has voted for.
+
+48
+00:06:02,567 --> 00:06:12,400
+Suppose he learns of decree 126 but nothing at all about 125. He fills the gap with a harmless decree: the ides of February is national olive day.
+
+49
+00:06:12,633 --> 00:06:18,133
+Only then does he pass new decrees, in order after everything already in the book.
+
+50
+00:06:18,400 --> 00:06:26,233
+Once a president is chosen, a decree needs just three steps: ask the quorum to vote, hear their votes, announce the result.
+
+51
+00:06:27,867 --> 00:06:31,700
+Governing the island brought new problems, and the protocol grew.
+
+52
+00:06:31,967 --> 00:06:40,133
+At first the president was whoever came first alphabetically, so a legislator back from months away had to copy six months of decrees.
+
+53
+00:06:40,400 --> 00:06:48,900
+Scrolls of every decree grew too long, so they became law books holding only the current law and the number of the last decree.
+
+54
+00:06:49,167 --> 00:06:57,000
+Legislators were added and removed by decree. And old decrees were passed again, so that a mistake in any scroll would heal.
+
+55
+00:06:58,000 --> 00:07:06,833
+The island is a model of a replicated service: every server keeps the same log of commands, and the log is what the Parliament passes.
+
+56
+00:07:07,100 --> 00:07:15,933
+The protocol never lets two logs disagree, however machines come and go. It makes progress whenever a majority is present and steady for long enough.
+
+57
+00:07:16,200 --> 00:07:25,367
+This is how it lives with the limit we met on the hill: it never gives up safety, and asks for progress only once things settle.
+
+58
+00:07:25,600 --> 00:07:30,767
+Its ballot protocol lives on as Paxos, the foundation of modern fault-tolerant distributed computing.
