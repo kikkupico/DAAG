@@ -346,8 +346,8 @@ Before calling a book done (the brief's checklist has the mechanics):
 
 ## The papers after the first books
 
-From `buildings.md`, in the order they were written: later ones depend on vocabulary the earlier
-ones establish. Each note is the brief its book was written to.
+From `buildings.md`. Each row says what its book carries and what it must not contradict. A later
+book depends on vocabulary an earlier one establishes.
 
 | Building | Paper(s) | Note |
 |---|---|---|
