@@ -31,13 +31,13 @@
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>Many computers, no shared clock</h2>
-      <p class="lede">Computers that work together must often agree on the order in which things happened.</p>
+      <p class="lede">Computers that work together must often agree on the order in which things happened: which of two writes came first, or whose request is served next.</p>
+      <p>A clock on the wall would settle it. But every machine has a clock of its own, the clocks disagree, and no message tells how long it took to arrive. Two ideas get an order without a shared clock.</p>
       <ul class="terms">
-        <li><b>Their clocks disagree</b>, and no message tells the time it took to arrive.</li>
         <li><b>Logical clocks</b> (Lamport, 1978): a counter on each machine, sent along with every message, numbers events so that a cause always has a smaller number than its effect.</li>
         <li><b>Vector clocks</b> (Fidge and Mattern, 1988): one counter per machine tells exactly which events could have affected which.</li>
       </ul>
-      <p style="margin-top:1.2rem">This edition tells it with three trading houses on an island whose sundials have gone dark.</p>
+      <p style="margin-top:1.2rem">The first gives every machine the same order of events. The second also tells which events could have known of which. We tell it with three trading houses on an island whose sundials have gone dark.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper logs">
@@ -61,11 +61,11 @@
     <div class="hall-title"><div class="t">
       <div class="kicker">The ring road of Arche</div>
       <h2>Three houses, one narrow road</h2>
-      <p>House 1, House 2 and House 3 stand round the coast with a mountain between them. Word passes only on written slips, carried by messengers along the road.</p>
+      <p>House 1, House 2 and House 3 stand round the coast of Arche with a mountain between them. Word passes between them only on written slips, carried by messengers along the one road.</p>
     </div></div>
-    <div class="pin pop" style="left:50%;top:46%;"><div class="leaf"><b>No passing</b>No messenger may pass another, so slips from one house to another arrive in the order they were sent.</div></div>
-    <div class="pin pop" style="left:6%;top:64%;"><div class="leaf"><b>No longest journey</b>A slip arrives after a time nobody can bound.</div></div>
-    <div class="pin pop" style="left:54%;top:82%;"><div class="leaf"><b>No common hour</b>Cloud silences the sundials, and each counting room's water-clock keeps its own time.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></div></div>
+    <div class="pin pop" style="left:50%;top:46%;"><div class="leaf"><b>No passing</b>By the law of the road no messenger may pass another, so slips from one house to another arrive in the order they were sent.</div></div>
+    <div class="pin pop" style="left:6%;top:64%;"><div class="leaf"><b>No longest journey</b>Every slip arrives, but after a time that nobody can bound.</div></div>
+    <div class="pin pop" style="left:54%;top:82%;"><div class="leaf"><b>No common hour</b>In the trading season cloud silences the sundials, and each counting room's water-clock keeps its own time.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></div></div>
   </div>
 </section>
 
@@ -77,8 +77,8 @@
       <div>
         <div class="kicker">The question</div>
         <h2>Which order was placed first?</h2>
-        <p class="lede">House 3 has grain enough for one of the others. House 2 sends an order for it. House 1, knowing nothing of this, sends its own.</p>
-        <p>The houses have agreed that the order placed first is filled first. So House 3 must find out which one that was.</p>
+        <p class="lede">House 3 has grain in its storehouse, enough for one of the other houses, and both need it. House 2 sends a messenger with an order for it. House 1, knowing nothing of this, sends a messenger with an order of its own.</p>
+        <p>The houses have agreed that the order placed first is filled first, so House 3 must find out which one that was. The plain way is to see whose messenger reaches the gate first.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/t01-gate.jpg" alt="Two messengers meet before House 3's portico, each holding out a slip toward the gate" loading="lazy"></div></div></div>
     </div>
@@ -91,7 +91,8 @@
         <button class="btn alt" id="race1">House 1's messenger is quicker</button>
       </div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">Could House 3 ask each house the hour its order was written? It would get two readings of two water-clocks that were never set together. <b>Every way of settling it asks for a clock the island does not have.</b></p>
+    <p class="tell">The gate rewards the house with the quicker messenger, whichever house wrote first. House 3 could instead ask each house the hour its order was written, and it would get two readings of two water-clocks that were never set together. <b>Every way of settling it asks for a clock the island does not have.</b></p>
+    <p class="tell">The houses need not give up filling the first order first. They have been asking a question that nobody on Arche can answer, and beside it lies a narrower one that every house can.</p>
   </div>
 </section>
 
@@ -102,16 +103,17 @@
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">A narrower question</div>
-      <h2>Not what was first, but what could have led to what</h2>
-      <p class="lede">The keeper of House 1's accounts changed the question. No house can see which of two orders the sun saw first. Every house can see what could have <b>led to</b> what, because news moves on Arche only by slip.</p>
-      <p>One event <b>came before</b> another in exactly three cases.</p>
+      <h2>What could have led to what</h2>
+      <p class="lede">The narrower question came from the keeper of House 1's accounts. Which of two orders the sun saw first is something no house can see, and trade needs less than that: an order should never be filled before one that could have <b>led to</b> it.</p>
+      <p>What could have led to what is something every house can see, because news moves on Arche only by slip. The keeper set it down in three rules. One event <b>came before</b> another in exactly these three cases.</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Rule one</div><h3>Same house, higher up the scroll</h3><p>Both happened in one house, and its account scroll has the first written above the second.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Rule two</div><h3>Sending comes before receiving</h3><p>The first is a house sending a slip, and the second is another house receiving that same slip.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Rule three</div><h3>Chains count</h3><p>The first came before some third event, which came before the second.</p></div></div></div>
     </div>
-    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2.4rem">
+    <p class="tell" style="margin-top:2.4rem">Here is one morning's business at the three houses. Choose any two entries, and the rules say whether one came before the other.</p>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>One morning on Arche <em>click two entries</em></h4>
       <div class="st-wrap">
         <svg class="st-svg fig" id="cbsvg" role="group" aria-label="Three lines running outward, one for each house, with the morning's entries as dots and slips as arcs curving from house to house"></svg>
@@ -121,7 +123,8 @@
         </div>
       </div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">If none of the three rules joins two events, they are <b>unrelated</b>. That does not mean they happened at the same moment. It means neither could have known of the other.</p>
+    <p class="tell">If none of the three rules joins two events, they are <b>unrelated</b>. That does not mean they happened at the same moment. It means neither could have known of the other, since no chain of slips joins them. The sun may have seen one before the other, and nothing the houses hold can say which.</p>
+    <p class="tell">Three rules make a definition, and a clerk needs something to calculate with. For that the keeper gave every counting room a number.</p>
   </div>
 </section>
 
@@ -132,7 +135,7 @@
       <div>
         <div class="kicker">A number that respects every chain</div>
         <h2>The tally</h2>
-        <p class="lede">Every counting room keeps a tally: one number, written on every slip it sends, and raised by two mechanical rules. Scroll slowly: the picture moves with you.</p>
+        <p class="lede">The number is the <b>tally</b>. Every counting room keeps one, writes it on every slip it sends, and raises it by two mechanical rules. Scroll slowly, and the picture moves with you.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/t03-slip.jpg" alt="Before House 1's portico under low cloud, the keeper of the accounts hands a narrow slip to a messenger" loading="lazy"></div></div></div>
     </div>
@@ -151,6 +154,9 @@
       <div class="step"><div class="card"><div class="num">7 · The catch</div><h3>A smaller number is not an earlier event</h3><p>Look at the two ringed entries. No chain joins them. House 3's entry lies further out, later by the sun, yet it carries 2 and House 2's carries 3. The tally puts a sequence where nature left none.</p></div></div>
     </div>
   </div>
+  <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <p class="tell">So the tally respects every chain of slips, and it says nothing true about two entries that no chain joins. The two orders for House 3's grain are exactly such a pair, and House 3 still has to fill one of them first.</p>
+  </div>
 </section>
 
 <!-- ============================================================ precedence -->
@@ -161,8 +167,8 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">One sequence for everyone</div>
       <h2>Breaking ties</h2>
-      <p class="lede">“These two orders are unrelated” does not tell House 3 whose order to fill. The houses need a sequence that decides between every pair, that every house works out alike, and that never contradicts a chain of slips.</p>
-      <p><b>The rule of precedence:</b> compare tallies. Where they are equal, the lower house number goes first: House 1 before House 2 before House 3.</p>
+      <p class="lede">House 3 may know that the two orders are unrelated and still not know whose to fill. The houses need a sequence that decides between every pair, that every house works out alike, and that never contradicts a chain of slips.</p>
+      <p>The keeper of House 1's accounts got one by the plainest means there are. <b>The rule of precedence:</b> compare tallies, and where they are equal the lower house number goes first, House 1 before House 2 before House 3. The six entries below reached the three houses in different orders.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Three houses, six entries <em id="pqstate">as each heard of them</em></h4>
@@ -177,7 +183,8 @@
         <button class="btn alt" id="pqmix">Shuffle the arrivals</button>
       </div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">Does precedence find out which unrelated order was really first? No, and nothing the houses hold could. <b>It replaces the question with an answer every house reads the same way.</b> Where one order led to another, they are filled in that sequence, and no house wins by owning a quicker messenger.</p>
+    <p class="tell">Precedence does not find out which of two unrelated orders was really first, and nothing the houses hold could. <b>It replaces the question with an answer every house reads the same way.</b> The answer is fair in the one sense the houses can check: where one order led to another, they are filled in that sequence, and no house wins by owning a quicker messenger.</p>
+    <p class="tell">The houses can now agree on a sequence without a clock. A harder test is something that only one house may use at a time, with no master to hand out the turns.</p>
     <details class="proof">
       <summary>Proof · precedence is a total order that extends coming-before</summary>
       <p class="given">Write <var>a</var> → <var>b</var> when event <var>a</var> came before event <var>b</var>, and <var>C</var>(<var>a</var>) for the tally of <var>a</var>. The two rules of the tally give the Clock Condition: <var>a</var> → <var>b</var> implies <var>C</var>(<var>a</var>) &lt; <var>C</var>(<var>b</var>). For <var>a</var> at house <var>i</var> and <var>b</var> at house <var>j</var>, precedence <var>a</var> ⇒ <var>b</var> holds if (1) <var>C</var>(<var>a</var>) &lt; <var>C</var>(<var>b</var>), or (2) <var>C</var>(<var>a</var>) = <var>C</var>(<var>b</var>) and <var>i</var> &lt; <var>j</var>. <b>Claim.</b> ⇒ is a total order, and <var>a</var> → <var>b</var> implies <var>a</var> ⇒ <var>b</var>.</p>
@@ -206,8 +213,8 @@
     <div class="narrow">
       <div class="kicker">Putting the sequence to work</div>
       <h2>One storehouse, no keeper</h2>
-      <p class="lede">The island's common storehouse is cut into the rock beside the road, and only one house may load from it at a time. A keeper at the door would be fooled by a quick messenger, as House 3's gate was.</p>
-      <p>So there is no keeper. Each house keeps its own queue of requests, in order of precedence, and follows five rules. Scroll to watch two houses ask at once.</p>
+      <p class="lede">The island's common storehouse is such a thing. It is cut into the rock beside the road, and only one house may load from it at a time.</p>
+      <p>A keeper at the door who let in whoever asked first would be fooled as House 3's gate was, because a request can reach the door ahead of one sent earlier over a longer stretch of road. So there is no keeper. Each house keeps its own queue of requests, in order of precedence, and follows five rules. Scroll to watch two houses ask at once.</p>
     </div>
   </div>
   <div class="scrolly" id="store">
@@ -218,7 +225,7 @@
     <div class="steps">
       <div class="step on"><div class="card"><div class="num">1 · Quiet</div><h3>Three queues, all empty</h3><p>Every house holds a queue of its own. Nobody is asking for the storehouse.</p></div></div>
       <div class="step"><div class="card"><div class="num">2 · To request</div><h3>Two houses ask at once</h3><p>House 1 writes a request under its tally, 2, puts it in its own queue and sends it to both other houses. House 3, knowing nothing of this, does the same under its own tally, also 2.</p></div></div>
-      <div class="step"><div class="card"><div class="num">3 · Not yet</div><h3>First in your own queue is not enough</h3><p>House 3's request stands first in House 3's queue. May it load? No. An older request may be on the road right now, in a messenger's pouch.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · Not yet</div><h3>First in your own queue is not enough</h3><p>House 3's request stands first in House 3's queue, and still House 3 may not load. An older request may be on the road right now, in a messenger's pouch.</p></div></div>
       <div class="step"><div class="card"><div class="num">4 · On receiving a request</div><h3>Every queue comes out the same</h3><p>Each house enters the request it receives. The tallies tie at 2, so House 1's goes first by house number, in all three queues.</p></div></div>
       <div class="step"><div class="card"><div class="num">5 · The answer</div><h3>Each house sends an answer back</h3><p>A house that receives a request advances its tally and sends an answer. Every answer carries a tally above 2.</p></div></div>
       <div class="step"><div class="card"><div class="num">6 · To enter</div><h3>House 1 loads</h3><p>House 1's request stands first in its queue, and it has heard from both other houses with tallies above 2. Both halves of the rule hold. House 3 has heard from everyone too, but stands second, and waits.</p></div></div>
@@ -228,6 +235,7 @@
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <p class="tell" style="margin-top:0">The houses now share a storehouse by a sequence they all agree on, with no clock and no master. The sequence is their own, though, and it can part from what the sun saw. One way across Arche shows how far.</p>
     <details class="proof">
       <summary>Proof · two houses never hold the storehouse at once</summary>
       <p class="given"><var>R</var><sub><var>i</var></sub> is the request of house <var>i</var>, and <var>C</var>(<var>R</var><sub><var>i</var></sub>) the tally it was written under. Rule 5: house <var>i</var> enters when <var>R</var><sub><var>i</var></sub> stands first in its queue, ordered by ⇒, and it has received from every other house a message carrying a tally greater than <var>C</var>(<var>R</var><sub><var>i</var></sub>). Messages from one house to another arrive in the order sent. <b>Claim.</b> No two houses hold the storehouse at the same time.</p>
@@ -263,8 +271,8 @@
       <div>
         <div class="kicker">What the tally cannot see</div>
         <h2>Over the mountain</h2>
-        <p class="lede">A goatherd who knows the smugglers' tracks can cross the mountain in a couple of hours, if he is lucky. He may also take two days, or never come down, which is why no house sends its business that way.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></p>
-        <p>But news can still travel with him, and he carries no slip.</p>
+        <p class="lede">The way across is over the mountain. A goatherd who knows the smugglers' tracks can cross it in a couple of hours, with luck. The same goatherd may take two days, or never come down, which is why no house sends its business that way.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></p>
+        <p>News can still travel with a goatherd, who carries no slip. Suppose a trader at House 3 concludes a sale and pays a goatherd to take word of it to House 1, while the official slip goes round by the road.</p>
       </div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
@@ -273,7 +281,8 @@
       <p class="say" id="goatsay">House 3 has had a busy morning. House 1 has had a quiet one.</p>
       <div class="row"><button class="btn" id="goatgo">Conclude the sale and send both</button></div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">That is no fault in the tally, by its own rules. The rules touch only slips. As far as the houses' scrolls can tell, the sale and the order are unrelated, though one caused the other.</p>
+    <p class="tell">By its own rules the tally has done nothing wrong. The rules touch only slips, and the goatherd carried none. As far as the houses' scrolls can tell, the sale and the order are unrelated, though one caused the other as surely as if a messenger had carried the news.</p>
+    <p class="tell">The goatherd is one thing the tally misses. The clerk of House 2 has found another, and this one lies on the road itself.</p>
   </div>
 </section>
 
@@ -287,8 +296,8 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Joined, or made in ignorance?</div>
       <h2>One number for each house</h2>
-      <p class="lede">The clerk of House 2 has a doubt the tally cannot settle. Two entries carry 4 and 5. Did one lead to the other, or was each made knowing nothing of the other?</p>
-      <p>A single number mixes together everything a house has heard. When House 2 raises its tally past a slip, it forgets whose number it was raised past. So each house keeps a <b>column</b> of three rows instead: row by row, the latest count of each house's entries that it has heard of.</p>
+      <p class="lede">The clerk of House 2 has a doubt that the tally cannot settle. Two entries carry 4 and 5. One may have led to the other, or each may have been made knowing nothing of the other, and the two numbers read the same either way.</p>
+      <p>A single number cannot say which, because it mixes together everything a house has heard. When House 2 raises its tally past a slip, it forgets whose number it was raised past. Remembering takes one number for each house. So each house keeps a <b>column</b> of three rows: row by row, the latest count of each house's entries that it has heard of. Three rules keep the column.</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Rule one</div><h3>Count your own entries</h3><p>On every entry of its own, a sent slip included, a house adds one to its own row.</p></div></div></div>
@@ -305,7 +314,8 @@
         </div>
       </div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">One entry came before another exactly when its column is no greater in every row, and the two columns differ. Two entries are unrelated exactly when neither column is at least the other. <b>Where the tally could only fail to rule out a connection, the column finds it or rules it out.</b></p>
+    <p class="tell">Comparing two columns row by row settles the clerk's doubt. One entry came before another exactly when its column is no greater in every row, and the two columns differ. Two entries are unrelated exactly when neither column is at least the other. <b>Where the tally could only fail to rule out a connection, the column finds it or rules it out.</b></p>
+    <p class="tell">Only what never went by slip is left unseen, and that brings back the goatherd.</p>
     <details class="proof">
       <summary>Proof · the column detects coming-before and unrelatedness exactly</summary>
       <p class="given">House <var>i</var> keeps a vector <var>V</var><sub><var>i</var></sub> with one component for each house. Rule 1: on every event of its own, a send included, it increments <var>V</var><sub><var>i</var></sub>[<var>i</var>]. Rule 2: a message carries the sender's vector as it stands after that increment. Rule 3: on receiving a vector <var>U</var>, house <var>j</var> sets <var>V</var><sub><var>j</var></sub>[<var>k</var>] to max(<var>V</var><sub><var>j</var></sub>[<var>k</var>], <var>U</var>[<var>k</var>]) for every <var>k</var>, then increments <var>V</var><sub><var>j</var></sub>[<var>j</var>]. <var>V</var>(<var>a</var>) is the vector at event <var>a</var>; <var>V</var>(<var>a</var>) ≤ <var>V</var>(<var>b</var>) means no component is greater, and &lt; means ≤ and not equal. <b>Claim.</b> <var>a</var> → <var>b</var> if and only if <var>V</var>(<var>a</var>) &lt; <var>V</var>(<var>b</var>); and <var>a</var> ∥ <var>b</var> (unrelated) if and only if neither <var>V</var>(<var>a</var>) ≤ <var>V</var>(<var>b</var>) nor <var>V</var>(<var>b</var>) ≤ <var>V</var>(<var>a</var>).</p>
@@ -341,16 +351,16 @@
       <div>
         <div class="kicker">The goatherd again</div>
         <h2>Whose order do the houses keep?</h2>
-        <p class="lede">The column is built from slips and nothing else, so the goatherd escapes it too. Only clocks that run with the world could catch him.</p>
-        <p>Such clocks can be described. Each house keeps a true clock, every slip carries the sender's reading, and a house that is behind sets itself forward. If the clocks never disagree by more than the goatherd's fastest crossing, he can no longer arrive before he left.</p>
-        <p>Arche cannot keep them. They need a longest journey and messengers at regular hours, and the trading season gives neither.</p>
+        <p class="lede">The column is built from slips and nothing else, so the goatherd escapes it too. Catching the goatherd would take numbers that rise along every path in the world, slip or no slip, and only clocks that run with the world can promise that.</p>
+        <p>Such clocks can be described. Each house keeps a true clock, every slip carries the sender's reading, and a house that is behind sets itself forward. If the clocks never disagree by more than the goatherd's fastest crossing, the goatherd can no longer arrive before setting out.</p>
+        <p>Arche cannot keep them. They need a longest journey and messengers at regular hours, and the trading season gives neither. So the houses are left with the tally and the column, and it is worth saying plainly what each one sees.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/arche-island.jpg" alt="The island of Arche from the air under cloud: a wooded mountain ringed by a coast road and small harbour towns" loading="lazy"></div></div></div>
     </div>
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The tally</div><h3>Respects every chain of slips</h3><p>It gives every house the same sequence. It cannot say whether two entries were joined or unrelated.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The column</div><h3>Sees every chain of slips</h3><p>It tells joined from unrelated exactly, at the cost of one number for each house.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Neither</div><h3>Sees what never went by slip</h3><p>The sequence the houses keep is theirs, not the sun's. A sequence judged by the sun would be a different promise, and a harder one.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Neither</div><h3>Sees what never went by slip</h3><p>The sequence the houses keep is their own. A sequence judged by the sun would be a different promise, and a harder one.</p></div></div></div>
     </div>
   </div>
 </section>
@@ -363,7 +373,7 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The island was a network of machines</h2>
-      <p class="lede">Every house is a process, and every slip a message. Hover or tap to see who is who.</p>
+      <p class="lede">Read the island again with machines in the counting rooms. Every house is a process, every slip is a message, and the tally is a counter that each machine keeps. Hover over a row, or tap it, to see who is who.</p>
     </div>
     <div class="map" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">On the island</div><div></div><div class="hd">In the machine room</div>
