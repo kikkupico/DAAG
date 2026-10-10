@@ -468,7 +468,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <h4>One of the newest few <em>three keepers, the reader takes one reply</em></h4>
       <div class="seglab">The writer waits for</div><div class="seg" id="kw" role="group" aria-label="Keepers the writer waits for"></div>
       <div class="bars" id="kbars"></div>
-      <p class="note" style="margin:12px 0 0">Worked out from the rule: the chance of a miss, multiplied by itself once for each edition that will do.</p>
+      <p class="note" style="margin:12px 0 0">Worked out from the rule: one chance of a miss for each edition that will do, all multiplied together.</p>
     </div></div></div>
     <details class="proof">
       <summary>Proof · that PBS k-staleness is p<sub>sk</sub> = p<sub>s</sub><sup>k</sup></summary>
@@ -512,7 +512,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
         <li>The paper notes that this assumes instant reads and instant commitment after the <var>W</var>th copy arrives, so it is a conservative upper bound on the true probability of staleness. When the last <var>k</var> writes all happened at the same time the same argument gives the chance of missing all <var>k</var> as the <var>k</var>th power, the paper's ⟨<var>k</var>, <var>t</var>⟩-staleness.<span class="qed">∎</span></li>
       </ol>
     </details>
-    <p style="max-width:40em;margin-top:1.4rem">For <i>one of the newest few editions, a while after the announcement</i>, a cautious rule of thumb is the same answer multiplied by itself once for each edition. A reader may trade one kind of leeway for the other. What is left to understand is how many keepers hold the edition at a given moment.</p>
+    <p style="max-width:40em;margin-top:1.4rem">For <i>one of the newest few editions, a while after the announcement</i>, a cautious rule of thumb is one such answer for each edition, all multiplied together. A reader may trade one kind of leeway for the other. What is left to understand is how many keepers hold the edition at a given moment.</p>
   </div>
 </section>
 
@@ -919,7 +919,7 @@ $("#cbars").innerHTML=[["Quick roads, quick copying",97.4],["Long delays now and
 (function(){
   const p=miss(3,1,1);
   const paint=q=>{const k=1+q,bad=Math.pow(p,k);$("#bk").textContent=k;$("#bp").textContent=bad>.01?pct(bad):bad>1e-6?`1 in ${Math.round(1/bad).toLocaleString("en")}`:"less than 1 in a million";
-    $("#bsay").innerHTML=q===0?"A reader who comes back before anything new is announced needs the very edition seen before, or a newer one that is on its way.":`With ${q} announced between visits, any of the newest ${k} will do, and the chance of a miss is multiplied by itself ${k} times.`};
+    $("#bsay").innerHTML=q===0?"A reader who comes back before anything new is announced needs the very edition seen before, or a newer one that is on its way.":`With ${q} announced between visits, any of the newest ${k} will do: ${k} chances of a miss, multiplied together.`};
   seg($("#bq"),[[0,"none"],[1,"1"],[4,"4"],[9,"9"],[99,"99"]],1,v=>paint(+v));paint(1);
 })();
 

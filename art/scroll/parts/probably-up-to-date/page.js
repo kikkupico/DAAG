@@ -112,7 +112,7 @@ $("#cbars").innerHTML=[["Quick roads, quick copying",97.4],["Long delays now and
 (function(){
   const p=miss(3,1,1);
   const paint=q=>{const k=1+q,bad=Math.pow(p,k);$("#bk").textContent=k;$("#bp").textContent=bad>.01?pct(bad):bad>1e-6?`1 in ${Math.round(1/bad).toLocaleString("en")}`:"less than 1 in a million";
-    $("#bsay").innerHTML=q===0?"A reader who comes back before anything new is announced needs the very edition seen before, or a newer one that is on its way.":`With ${q} announced between visits, any of the newest ${k} will do, and the chance of a miss is multiplied by itself ${k} times.`};
+    $("#bsay").innerHTML=q===0?"A reader who comes back before anything new is announced needs the very edition seen before, or a newer one that is on its way.":`With ${q} announced between visits, any of the newest ${k} will do: ${k} chances of a miss, multiplied together.`};
   seg($("#bq"),[[0,"none"],[1,"1"],[4,"4"],[9,"9"],[99,"99"]],1,v=>paint(+v));paint(1);
 })();
 
