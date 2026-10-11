@@ -55,6 +55,10 @@ SIZES = (("bleed", "100vw"),
          ("", "(max-width: 700px) 90vw, 560px"))
 # pictures that are not scenes but are published all the same, and the file each is made from
 EXTRA = {"assets/img/map.jpg": "art/full-map-cartographic.jpeg"}  # the home page's chart
+# generated-looking pictures that are really previs and stay local, whatever scene*.png says
+LOCAL = {"assets/img/places/hall.jpg", "books/knowing-when-to-wait/img/hall.jpg",
+         "assets/img/places/scholars-coast.jpg", "books/spreading-by-word-of-mouth/img/scholars-coast.jpg",
+         "books/what-you-can-promise-alone/img/scholars-coast.jpg"}
 DRY = "--dry" in sys.argv
 
 
@@ -151,6 +155,13 @@ def main():
             name = local.relative_to(ROOT).as_posix()
             if not local.is_file():
                 skipped.add(name + " (missing)")
+                continue
+            if name in LOCAL:
+                skipped.add(name)
+                if attrs.get("data-local"):  # put a tag published earlier back on its local file
+                    new = re.sub(r'\s+(srcset|sizes|data-local)="[^"]*"', "", tag)
+                    new = re.sub(r'(\ssrc=")[^"]*"', lambda m: m.group(1) + src + '"', new, count=1)
+                    edits.setdefault((file, rebuild), []).append((offset, tag, new))
                 continue
             scene = ROOT / EXTRA[name] if name in EXTRA else scene_of(local, base.name if base.parent.name == "books" else None)
             if not scene:
