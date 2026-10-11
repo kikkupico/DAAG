@@ -6,7 +6,7 @@
 Run it again after a new scene is published; it only does what is not yet done.
 
 Which pictures: every <img> on the home page, the setting pages and the books whose file is a
-generated scene. It is recognised by comparing the page's picture with the renders in
+generated scene, and the few named in EXTRA (the home page's chart). A scene is recognised by comparing the page's picture with the renders in
 art/panels: one that matches a shot's scene*.png (or comic*.png) is photoreal, one that matches
 a previs render is left where it is. A picture used on several pages is uploaded once.
 
@@ -53,6 +53,8 @@ SIZES = (("bleed", "100vw"),
          ("setting-card", "110px"),
          ("cardlink", "(max-width: 700px) 80vw, 370px"),
          ("", "(max-width: 700px) 90vw, 560px"))
+# pictures that are not scenes but are published all the same, and the file each is made from
+EXTRA = {"assets/img/map.jpg": "art/full-map-cartographic.jpeg"}  # the home page's chart
 DRY = "--dry" in sys.argv
 
 
@@ -150,13 +152,13 @@ def main():
             if not local.is_file():
                 skipped.add(name + " (missing)")
                 continue
-            scene = scene_of(local, base.name if base.parent.name == "books" else None)
+            scene = ROOT / EXTRA[name] if name in EXTRA else scene_of(local, base.name if base.parent.name == "books" else None)
             if not scene:
                 skipped.add(name)
                 continue
             digest = hashlib.sha256(scene.read_bytes()).hexdigest()[:10]
             if digest not in images:
-                shot = scene.parent.relative_to(PANELS).as_posix().replace("/", "-")
+                shot = local.stem if name in EXTRA else scene.parent.relative_to(PANELS).as_posix().replace("/", "-")
                 width, height = Image.open(scene).size
                 images[digest] = {"name": shot, "scene": scene.relative_to(ROOT).as_posix(), "size": [width, height],
                                   "widths": sorted({min(w, width) for w in WIDTHS})}
