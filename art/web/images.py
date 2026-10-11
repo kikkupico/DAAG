@@ -9,6 +9,7 @@ Which pictures: every <img> on the home page, the setting pages and the books wh
 generated scene, and the few named in EXTRA (the home page's chart). A scene is recognised by comparing the page's picture with the renders in
 art/panels: one that matches a shot's scene*.png (or comic*.png) is photoreal, one that matches
 a previs render is left where it is. A picture used on several pages is uploaded once.
+The previs ones are listed in images.json under "previs"; the deploy does not publish them.
 
 What is made: from the matching scene.png, AVIF at each of WIDTHS no wider than the picture,
 in art/web/out/ (not in git). Each goes to the bucket under a name that carries the source's
@@ -59,6 +60,7 @@ EXTRA = {"assets/img/map.jpg": "art/full-map-cartographic.jpeg"}  # the home pag
 LOCAL = {"assets/img/places/hall.jpg", "books/knowing-when-to-wait/img/hall.jpg",
          "assets/img/places/scholars-coast.jpg", "books/spreading-by-word-of-mouth/img/scholars-coast.jpg",
          "books/what-you-can-promise-alone/img/scholars-coast.jpg"}
+previs = set()  # local pictures that are previs renders; the deploy leaves them out of the site
 DRY = "--dry" in sys.argv
 
 
@@ -119,7 +121,10 @@ def scene_of(local, book):
     mine = signature(local)
     diff = lambda path: sum(abs(a - b) for a, b in zip(mine, signature(path))) / len(mine)
     best, kind = min(renders, key=lambda r: diff(r[0]))
-    return best if kind != "previs" and diff(best) < 6 else None
+    if kind != "previs" and diff(best) < 6:
+        return best
+    previs.add(local.relative_to(ROOT).as_posix())  # it has renders, and this one is the previs
+    return None
 
 
 def exists(key):
@@ -158,6 +163,7 @@ def main():
                 continue
             if name in LOCAL:
                 skipped.add(name)
+                previs.add(name)
                 if attrs.get("data-local"):  # put a tag published earlier back on its local file
                     new = re.sub(r'\s+(srcset|sizes|data-local)="[^"]*"', "", tag)
                     new = re.sub(r'(\ssrc=")[^"]*"', lambda m: m.group(1) + src + '"', new, count=1)
@@ -214,7 +220,7 @@ def main():
             print("   ", key, why)
         sys.exit("some uploads failed; no link was changed")
 
-    MANIFEST.write_text(json.dumps({"base": BASE, "bucket": BUCKET, "images": used, "pages": dict(sorted(pages.items()))},
+    MANIFEST.write_text(json.dumps({"base": BASE, "bucket": BUCKET, "images": used, "previs": sorted(previs), "pages": dict(sorted(pages.items()))},
                                    indent=1) + "\n")
     for (file, rebuild), changes in edits.items():
         text = file.read_text(encoding="utf-8")
