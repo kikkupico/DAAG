@@ -9,7 +9,7 @@ Which pictures: every <img> on the home page, the setting pages and the books wh
 generated scene, and the few named in EXTRA (the home page's chart). A scene is recognised by comparing the page's picture with the renders in
 art/panels: one that matches a shot's scene*.png (or comic*.png) is photoreal, one that matches
 a previs render is left where it is. A picture used on several pages is uploaded once.
-The previs ones are listed in images.json under "previs"; the deploy does not publish them.
+The previs ones are listed in images.json under "previs" and in a block of .gitignore; they are not in git.
 
 What is made: from the matching scene.png, AVIF at each of WIDTHS no wider than the picture,
 in art/web/out/ (not in git). Each goes to the bucket under a name that carries the source's
@@ -222,6 +222,12 @@ def main():
 
     MANIFEST.write_text(json.dumps({"base": BASE, "bucket": BUCKET, "images": used, "previs": sorted(previs), "pages": dict(sorted(pages.items()))},
                                    indent=1) + "\n")
+    ignore = ROOT / ".gitignore"
+    block = "# previs pictures on the pages (art/web/images.py)\n" + "".join(f"/{n}\n" for n in sorted(previs))
+    text = ignore.read_text() if ignore.exists() else ""
+    text = re.sub(r"# previs pictures on the pages.*?(?=\n#|\Z)", "", text, flags=re.S).rstrip("\n")
+    ignore.write_text(text + "\n\n" + block)
+    subprocess.run(["git", "rm", "-r", "--cached", "-q", "--ignore-unmatch", *sorted(previs)], cwd=ROOT, check=True)
     for (file, rebuild), changes in edits.items():
         text = file.read_text(encoding="utf-8")
         for offset, old, new in sorted(changes, reverse=True):
