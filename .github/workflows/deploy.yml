@@ -41,12 +41,6 @@ jobs:
           cp art/sets/sets.json _site/art/sets/
           cp art/islands.json _site/art/
 
-      # Previs renders stay out of the site; art/web/images.py keeps the list.
-      - name: Leave out the previs pictures
-        run: |
-          python3 -c "import json; print(*json.load(open('art/web/images.json'))['previs'], sep='\n')" |
-            while read -r f; do rm -f "_site/$f"; done
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
