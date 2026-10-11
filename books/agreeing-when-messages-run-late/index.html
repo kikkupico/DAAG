@@ -400,7 +400,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
     </div>
     <div class="pop" data-auto>
       <div class="leaf">
-        <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" alt="On a moonlit night, with the wind bending the pines and cypresses, a mercenary in a blue cloak crouches at the mouth of a tent on a rocky headland above the sea, holding a sandglass up to the moon"></div>
+        <div class="photo tilt-r" data-depth="14"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-when-messages-run-late-cover-18b34ba932-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-when-messages-run-late-cover-18b34ba932-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-when-messages-run-late-cover-18b34ba932-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-when-messages-run-late-cover-18b34ba932-896.avif 896w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/cover.jpg" alt="On a moonlit night, with the wind bending the pines and cypresses, a mercenary in a blue cloak crouches at the mouth of a tent on a rocky headland above the sea, holding a sandglass up to the moon"></div>
         <div class="fold-shadow"></div>
       </div>
     </div>
@@ -437,7 +437,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
 <!-- ============================================================ the setting -->
 <section class="spread dark" id="hall" data-name="The Foot of Mount Phyle">
   <div class="bleed">
-    <img src="img/camp.jpg" alt="A lone linen tent with a shield and a chest on a rocky slope below a ring wall on the summit, cypresses and pines around it" data-parallax>
+    <img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-camp-fff9ab827b-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-camp-fff9ab827b-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-camp-fff9ab827b-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-camp-fff9ab827b-1200.avif 1200w" sizes="100vw" data-local="img/camp.jpg" alt="A lone linen tent with a shield and a chest on a rocky slope below a ring wall on the summit, cypresses and pines around it" data-parallax>
     <div class="hall-title"><div class="t">
       <div class="kicker">The foot of Mount Phyle</div>
       <h2>Four tents, out of sight of one another</h2>
@@ -480,7 +480,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
         <p class="lede">The thing that keeps a raven late is the wind. While it blows, a bird let go into the gullies goes down among the hill's crows and sits it out in the pines, for an hour or for the night, and nobody can say for how long. A bird that has gone down may stay there as long as it likes, even after the wind has dropped.</p>
         <p>A bird let go in still air comes straight. The promise is that the wind always drops in the end, and once down it stays down. From then on no bird let go in still air takes longer than a short span that every man knows. That is the whole change from a night on which nothing can be arranged. Without it nobody could count on the wind dropping, and here the four can. Below, tent 1 lets a bird go to tent 2 in each span. Let the spans pass, and try to tell from the birds alone when the wind dropped.</p>
       </div>
-      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p01-wind.jpg" alt="Under a full moon, with the wind bending the pines and cypresses of the hill, a raven with a message tied to its leg sits among a flock of crows on a bare branch, waiting out the wind" loading="lazy"></div></div></div>
+      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-when-messages-run-late-p01-wind-96779e8340-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-when-messages-run-late-p01-wind-96779e8340-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-when-messages-run-late-p01-wind-96779e8340-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-when-messages-run-late-p01-wind-96779e8340-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p01-wind.jpg" alt="Under a full moon, with the wind bending the pines and cypresses of the hill, a raven with a message tied to its leg sits among a flock of crows on a bare branch, waiting out the wind" loading="lazy"></div></div></div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
       <h4>Birds let go in the wind <em>one span at a time</em></h4>
@@ -967,7 +967,7 @@ function onscroll(){
     const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
     prog.style.width=(h>0?y/h*100:0)+"%";
     const mid=y+innerHeight*.4; let cur=secs[0];
-    for(const s of secs){ if(s.offsetTop<=mid) cur=s; }
+    for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
     now.textContent=cur.dataset.name||"";
     if(reduce)return;
     for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}

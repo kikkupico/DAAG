@@ -393,7 +393,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
 <!-- ============================================================ the setting -->
 <section class="spread dark" id="hall" data-name="The hall of two doors">
   <div class="bleed">
-    <img src="img/hall.jpg" alt="The hall of two doors from the air: a small gabled limestone hall under a tiled roof where the island road forks, a scholar walking to its door and a messenger walking up the road towards the white round hall on the height beyond" data-parallax>
+    <img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-hall-19e94ce2da-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-hall-19e94ce2da-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-hall-19e94ce2da-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-hall-19e94ce2da-1200.avif 1200w" sizes="100vw" data-local="img/hall.jpg" alt="The hall of two doors from the air: a small gabled limestone hall under a tiled roof where the island road forks, a scholar walking to its door and a messenger walking up the road towards the white round hall on the height beyond" data-parallax>
     <div class="hall-title"><div class="t">
       <div class="kicker">The hall of two doors</div>
       <h2>It sorts, and never rules</h2>
@@ -755,7 +755,7 @@ function onscroll(){
     const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
     prog.style.width=(h>0?y/h*100:0)+"%";
     const mid=y+innerHeight*.4; let cur=secs[0];
-    for(const s of secs){ if(s.offsetTop<=mid) cur=s; }
+    for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
     now.textContent=cur.dataset.name||"";
     if(reduce)return;
     for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}

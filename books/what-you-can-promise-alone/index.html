@@ -388,7 +388,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
 <!-- ============================================================ the setting -->
 <section class="spread dark" id="hall" data-name="The scholars' coast">
   <div class="bleed">
-    <img src="img/scholars-coast.jpg" alt="The scholars' coast from the air: small red-roofed libraries in clearings among olive groves, linked by a pale road and footpaths, the long stoa beside the shore and a town on the point beyond" data-parallax>
+    <img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-scholars-coast-3686136a21-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-scholars-coast-3686136a21-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-scholars-coast-3686136a21-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-scholars-coast-3686136a21-1200.avif 1200w" sizes="100vw" data-local="img/scholars-coast.jpg" alt="The scholars' coast from the air: small red-roofed libraries in clearings among olive groves, linked by a pale road and footpaths, the long stoa beside the shore and a town on the point beyond" data-parallax>
     <div class="hall-title"><div class="t">
       <div class="kicker">The reading rooms</div>
       <h2>A librarian, a reader, and no courier</h2>
@@ -773,7 +773,7 @@ function onscroll(){
     const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
     prog.style.width=(h>0?y/h*100:0)+"%";
     const mid=y+innerHeight*.4; let cur=secs[0];
-    for(const s of secs){ if(s.offsetTop<=mid) cur=s; }
+    for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
     now.textContent=cur.dataset.name||"";
     if(reduce)return;
     for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
