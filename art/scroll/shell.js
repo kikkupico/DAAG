@@ -25,7 +25,7 @@ function onscroll(){
     const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
     prog.style.width=(h>0?y/h*100:0)+"%";
     const mid=y+innerHeight*.4; let cur=secs[0];
-    for(const s of secs){ if(s.offsetTop<=mid) cur=s; }
+    for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
     now.textContent=cur.dataset.name||"";
     if(reduce)return;
     for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}

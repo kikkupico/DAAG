@@ -62,6 +62,18 @@ body:has(#cover.place) .spread h2{font-size:clamp(1.7rem,2.9vw,2.3rem)}
 #cover.home h1{font-size:clamp(2.2rem,5.6vw,4.4rem)}
 #cover.home .pub{font-size:clamp(1.05rem,2.2vw,1.3rem);max-width:30em;color:#3a2d24}
 #cover.home .pub a{color:var(--aegean-d)}
+/* the tour: which settings come first in the list below */
+.tour{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 0;border:0;padding:0;margin:2.4rem 0 0;font-family:var(--sans)}
+.tour legend{float:left;padding:0;margin-right:14px;letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--blood)}
+.tour input{position:absolute;opacity:0;pointer-events:none}
+.tour label{cursor:pointer}
+.tour label+label{margin-left:-3px}
+.tour span{display:block;padding:8px 16px;font-size:.88rem;letter-spacing:.03em;color:var(--ink);background:#fffaf0;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--shadow)}
+.tour small{font-size:.74rem;opacity:.7}
+.tour label:hover span{color:var(--aegean-d)}
+.tour input:checked+span{position:relative;background:var(--ink);color:var(--parch);box-shadow:4px 4px 0 var(--blood)}
+.tour input:focus-visible+span{outline:3px solid var(--aegean-d);outline-offset:2px}
+@media(max-width:520px){.tour legend{float:none;margin:0 auto 10px}.tour span{padding:8px 11px}}
 /* the setting is a place in the allegory, not a paper: no sheet, no frame, no unfolding. A medallion of the place, in its own colours, and a line of text lie on the page itself, closed by a meander that runs the page's whole width */
 .setting-card{display:grid;grid-template-columns:104px minmax(0,1fr);gap:0 20px;align-items:center;margin-top:1.2rem;color:inherit;text-decoration:none}
 .setting-card .photo{aspect-ratio:1/1;border:0;border-radius:50%;box-shadow:0 0 0 2px var(--ink),0 0 0 5px transparent,0 0 0 6px #1c151255;background:var(--parch-lo)}

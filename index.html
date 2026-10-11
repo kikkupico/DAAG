@@ -24,12 +24,19 @@
       <h1>Distributed Algorithms of Ancient Greece</h1>
       <p class="pub"><a href="papers/index.html">25 landmark papers</a> in distributed computing explained using the same ancient Greece allegory employed by Leslie Lamport in his seminal paper, “The Part-Time Parliament (Paxos)”.</p>
     </div>
+    <div>
     <div class="pop" data-auto>
       <div class="leaf">
         <div class="photo tilt-r" data-depth="14"><img src="assets/img/map.jpg"
        alt="An engraved chart in sepia ink of the two islands along the diagonal: Arche to the north-west, ringed by its road with three harbours and the ringed crown on its hill; Paxos to the south-east, a Y whose two arms open towards Arche, a round hall on each and a town beside the northern one. A compass rose in the top-right corner sends rhumb lines across the sea, with two small ships and wave marks between the islands."></div>
         <div class="fold-shadow"></div>
       </div>
+    </div>
+    <fieldset class="tour" id="tour">
+      <legend>Tour</legend>
+      <label><input type="radio" name="tour" value="paxos" checked><span>Paxos first <small>(default)</small></span></label>
+      <label><input type="radio" name="tour" value="basics"><span>Basics to advanced</span></label>
+    </fieldset>
     </div>
   </div>
 </header>
@@ -205,6 +212,29 @@
 </section>
 <footer>Distributed Algorithms of Ancient Greece</footer>
 
+<script>
+/* the tour: the settings in the order the reader chose, each with its books */
+(()=>{
+  const tours={
+    paxos:["the-chamber","schedia","the-ring-road","the-foot-of-mount-phyle","the-crown-of-mount-phyle","the-scholars-coast","the-hall-of-two-doors"],
+    basics:["the-ring-road","the-foot-of-mount-phyle","the-crown-of-mount-phyle","the-chamber","schedia","the-scholars-coast","the-hall-of-two-doors"]
+  };
+  const sel=document.getElementById("tour"), foot=document.querySelector("footer");
+  function lay(name){
+    tours[name].forEach((id,i)=>{
+      const s=document.getElementById(id), light=i%2===0;
+      foot.before(s);
+      s.classList.toggle("light",light); s.classList.toggle("dark",!light);
+      /* the torn edge is the colour of the spread above it */
+      s.querySelector(".tear").style.setProperty("--prev",light?"#eae4d4":"#f6eed6");
+    });
+    dispatchEvent(new Event("scroll"));
+  }
+  let saved; try{saved=localStorage.getItem("tour")}catch(e){}
+  if(tours[saved]&&saved!=="paxos"){sel.querySelector(`[value=${saved}]`).checked=true; lay(saved)}
+  sel.addEventListener("change",e=>{lay(e.target.value); try{localStorage.setItem("tour",e.target.value)}catch(e){}});
+})();
+</script>
 <script src="art/scroll/shell.js"></script>
 </body>
 </html>
