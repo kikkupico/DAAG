@@ -45,10 +45,8 @@
   "buchman-2018": {"label": "Buchman, Kwon & Milosevic 2018", "title": "The Latest Gossip on BFT Consensus"},
   "abadi-2012": {"label": "Abadi 2012", "title": "Consistency Tradeoffs in Modern Distributed Database System Design"},
   "wuu-bernstein-1984": {"label": "Wuu & Bernstein 1984", "title": "Efficient Solutions to the Replicated Log and Dictionary Problems"},
-  "thomas-1979": {"label": "Thomas 1979", "title": "A Majority Consensus Approach to Concurrency Control for Multiple Copy Databases"},
   "preguica-2009": {"label": "Preguiça et al. 2009", "title": "A Commutative Replicated Data Type for Cooperative Editing"},
   "buterin-griffith-2017": {"label": "Buterin & Griffith 2017", "title": "Casper the Friendly Finality Gadget"},
-  "gueta-2019": {"label": "Gueta et al. 2019", "title": "SBFT: A Scalable and Decentralized Trust Infrastructure"},
   "castro-2001": {"label": "Castro 2001", "title": "Practical Byzantine Fault Tolerance, doctoral thesis"},
   "alvaro-2011": {"label": "Alvaro et al. 2011", "title": "Consistency Analysis in Bloom: A CALM and Collected Approach"},
   "zinn-green-ludascher-2012": {"label": "Zinn, Green & Ludäscher 2012", "title": "Win-Move Is Coordination-Free (Sometimes)"},
@@ -66,7 +64,12 @@
   "howard-2016": {"label": "Howard, Malkhi & Spiegelman 2016", "title": "Flexible Paxos: Quorum Intersection Revisited"},
   "terry-1994": {"label": "Terry et al. 1994", "title": "Session Guarantees for Weakly Consistent Replicated Data"},
   "adya-1999": {"label": "Adya 1999", "title": "Weak Consistency: A Generalized Theory and Optimistic Implementations for Distributed Transactions"},
-  "berenson-1995": {"label": "Berenson et al. 1995", "title": "A Critique of ANSI SQL Isolation Levels"}
+  "berenson-1995": {"label": "Berenson et al. 1995", "title": "A Critique of ANSI SQL Isolation Levels"},
+  "johnson-thomas-1976": {"label": "Johnson & Thomas 1976", "title": "The Maintenance of Duplicate Databases"},
+  "yu-vahdat-2002": {"label": "Yu & Vahdat 2002", "title": "Design and Evaluation of a Conit-Based Continuous Consistency Model for Replicated Services"},
+  "attiya-1994": {"label": "Attiya, Dwork, Lynch & Stockmeyer 1994", "title": "Bounds on the Time to Reach Agreement in the Presence of Timing Uncertainty"},
+  "birman-joseph-1987": {"label": "Birman & Joseph 1987", "title": "Reliable Communication in the Presence of Failures"},
+  "koo-toueg-1987": {"label": "Koo & Toueg 1987", "title": "Checkpointing and Rollback-Recovery for Distributed Systems"}
  },
  "edges": [
   ["lamport-1978_time-clocks", "chandy-lamport-1985_distributed-snapshots", "cause-and-effect order", "Events ordered by cause and effect, the order a consistent snapshot has to respect."],
@@ -120,9 +123,8 @@
   ["oki-liskov-1988_viewstamped-replication", "ongaro-ousterhout-2014", "leader and terms", "A strong leader, and terms numbered as views are."],
   ["castro-liskov-1999_practical-byzantine-fault-tolerance", "yin-2019_hotstuff", "leader, quorums, view change", "A leader, votes gathered in quorums, and a view change, here made linear in messages."],
   ["castro-liskov-1999_practical-byzantine-fault-tolerance", "castro-2001", "the algorithm", "The algorithm, with its complete proofs."],
-  ["buchman-2018", "yin-2019_hotstuff", "locking a value", "A lock on one value, so that a new leader needs no proof of what the old one did."],
-  ["buterin-griffith-2017", "yin-2019_hotstuff", "a chained commit rule", "A commit rule read off a chain of blocks."],
-  ["gueta-2019", "yin-2019_hotstuff", "threshold signatures", "Threshold signatures, which make a quorum's votes the size of one."],
+  ["buchman-2018", "yin-2019_hotstuff", "a simple leader change", "A change of leader as simple as an ordinary round, here made to go at the speed of the network."],
+  ["buterin-griffith-2017", "yin-2019_hotstuff", "a simple leader change", "A change of leader as simple as an ordinary round, here made to go at the speed of the network."],
   ["brewer-2000_towards-robust-distributed-systems", "gilbert-lynch-2002_brewers-conjecture", "the CAP conjecture", "The conjecture that consistency, availability and partition tolerance cannot all be had, proved here."],
   ["gilbert-lynch-2002_brewers-conjecture", "gilbert-lynch-2012_perspectives-on-cap", "the CAP proof", "The CAP proof, looked back on by its authors."],
   ["brewer-2000_towards-robust-distributed-systems", "decandia-2007", "availability first", "The choice of availability over consistency, built as a store."],
@@ -139,7 +141,6 @@
   ["malkhi-2001", "bailis-2012_pbs", "probabilistic quorums", "Quorums that overlap only with high probability."],
   ["aiyer-2005", "bailis-2012_pbs", "non-strict quorums", "Quorums that need not overlap, and what they still guarantee."],
   ["wuu-bernstein-1984", "shapiro-2011_crdt-comprehensive", "converging logs", "Replicated logs and dictionaries that converge by exchanging what each copy has seen."],
-  ["thomas-1979", "shapiro-2011_crdt-comprehensive", "last writer wins", "The last writer wins, decided by timestamp."],
   ["preguica-2009", "shapiro-2011_crdt-comprehensive", "commutative operations", "A sequence for shared editing, built from operations that commute."],
   ["shapiro-2011_crdt-comprehensive", "shapiro-2011_crdt", "the catalogue of types", "The catalogue of replicated data types, reduced here to two conditions and their proof."],
   ["shapiro-2011_crdt", "hellerstein-alvaro-2020_keeping-calm", "monotone data types", "Replicated data types whose merge only grows: monotonicity built into the data."],
@@ -150,6 +151,11 @@
   ["ameloot-2011_relational-transducers-calm-proof", "zinn-green-ludascher-2012", "coordination-freeness", "Coordination-freeness, tested on a query that is not monotone."],
   ["terry-1994", "bailis-2014_hats", "session guarantees", "Session guarantees: what one client may expect from replicas that disagree."],
   ["adya-1999", "bailis-2014_hats", "isolation levels", "Isolation levels, defined by the patterns each one forbids."],
-  ["berenson-1995", "bailis-2014_hats", "isolation levels", "The ANSI isolation levels, made precise."]
+  ["berenson-1995", "bailis-2014_hats", "isolation levels", "The ANSI isolation levels, made precise."],
+  ["johnson-thomas-1976", "shapiro-2011_crdt-comprehensive", "last writer wins", "The last writer wins, decided by timestamp."],
+  ["yu-vahdat-2002", "gilbert-lynch-2012_perspectives-on-cap", "continuous consistency", "Consistency as a quantity, which an application can give up by degrees."],
+  ["dwork-lynch-stockmeyer-1988_consensus-partial-synchrony", "attiya-1994", "timing uncertainty", "Delays that are bounded but uncertain, and how long agreement must then take."],
+  ["lamport-1978_time-clocks", "birman-joseph-1987", "cause-and-effect order", "Delivery in the order of cause and effect, built into a broadcast."],
+  ["chandy-lamport-1985_distributed-snapshots", "koo-toueg-1987", "consistent global states", "Consistent global states, saved as checkpoints to return to after a failure."]
  ]
 }

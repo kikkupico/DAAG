@@ -61,7 +61,11 @@ def block(slug):
     info = lambda p: papers.get(p) or data["outside"][p]
     label = lambda p: info(p)["label"]
     order = lambda ps: sorted(ps, key=lambda p: (year(label(p)), list(papers).index(p) if p in papers else 99, label(p)))
-    mids = order(p for p in papers if papers[p]["book"] == slug)
+    mids, left = [], order(p for p in papers if papers[p]["book"] == slug)
+    while left:  # by year, but a paper never stands above one of the book's own that it draws on
+        nxt = next(p for p in left if not any(a in left and b == p for a, b, *_ in data["edges"]))
+        mids.append(nxt)
+        left.remove(nxt)
     edges = [e for e in data["edges"] if e[0] in mids or e[1] in mids]
     ins = order({a for a, b, *_ in edges if a not in mids})
     outs = order({b for a, b, *_ in edges if b not in mids})
