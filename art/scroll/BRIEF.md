@@ -265,7 +265,7 @@ the picture first). A picture may disagree with the prose; never bend the prose 
 - [ ] `shot.sh` at 500 and 1280: widths equal, `errors=[]`, screenshots looked at
 - [ ] every interactive pressed through in your head against the long edition's rules
 - [ ] every proof panel present, steps verbatim, each with a `given`
-- [ ] every old `sN` anchor present once; references carried; `{{lineage}}` at the top of the first spread, and the book's papers and their links in `papers/lineage.json`
+- [ ] every old `sN` anchor present once; references carried; `{{lineage}}` between the cover and the first spread, and the book's papers and their links in `papers/lineage.json`
 - [ ] no id used twice on the page
 - [ ] grep the body outside proof panels for `<var`, `σ`, `⟹`, `book`, `ledger`, `Chapter`,
       `metre`, ` m ` and personal names

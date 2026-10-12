@@ -14,8 +14,9 @@ Lineage is kept by paper, never by book, in papers/lineage.json:
               the years in print: a result often circulated long before its journal carried it.
 
 A book's lineage is that of its papers: they stand in the middle column, one node each, with
-what they draw on to the left and what they lead to on the right. Where a book's body.html says
-{{lineage}}, assemble.py puts the graph; lineage.css lays it out and lineage.js draws its edges.
+what they draw on to the left and what they lead to on the right. The graph is a spread of its
+own, between the cover and the first spread: where a book's body.html says {{lineage}},
+assemble.py puts it; lineage.css lays it out and lineage.js draws its edges.
 The Part-Time Parliament's page, written by hand, is kept in step by cover.py --write.
 """
 import html
@@ -29,6 +30,9 @@ ROOT = HERE.parents[1]
 PARTS = HERE / "parts"
 OPEN, CLOSE = "<!-- lineage -->", "<!-- /lineage -->"
 esc = html.escape
+# the torn edge every spread opens with; the one after the cover is coloured by shell.css
+TEAR = ('<svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11'
+        '-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>')
 
 
 def load():
@@ -112,7 +116,8 @@ def block(slug):
         return (f'    <div class="{cls}">\n      <h5>{head}</h5>\n      <ul class="lin-nodes">\n'
                 + "".join(f"        {node(p, side)}\n" for p in ps) + "      </ul>\n    </div>\n")
 
-    return (f'{OPEN}\n  <div class="wrap lin-wrap">\n    <div class="kicker">Where this book sits</div>\n'
+    return (f'{OPEN}\n<section class="spread dark" id="lineage" data-name="Where this book sits">\n  {TEAR}\n'
+            f'  <div class="wrap lin-wrap">\n    <div class="kicker">Where this book sits</div>\n'
             f'    <div class="lin{" multi" if multi else ""}">\n    <svg class="lin-edges" aria-hidden="true"></svg>\n'
             + column("lin-side in", "Draws on", ins, "in")
             + column("lin-mid", "This book retells", mids, "mid")
@@ -120,7 +125,7 @@ def block(slug):
             + '    <p class="lin-say">Each link is an idea one paper took from another. Point at one, or tap it, to read how.</p>\n'
             + '    <p class="lin-key"><i class="k here"></i>a paper this book retells <i class="k book"></i>a paper retold in another book '
               '<i class="k ext"></i>a paper outside the series</p>\n'
-            + f'    </div>\n    <div class="meander lin-end"></div>\n  </div>\n  {CLOSE}')
+            + f'    </div>\n  </div>\n</section>\n{CLOSE}')
 
 
 def check():
