@@ -4,7 +4,7 @@
 
 Every .html page under the folder gets tutor/overlay.js added before </body>, as tutor/server.py
 adds it, but with data-mode="web": no tutor, only notes the reader writes on a passage, kept in
-their browser. The script and its styles are copied to <folder>/tutor/. The links are relative,
+their browser and carried to another device as a file. The script and its styles are copied to <folder>/tutor/. The links are relative,
 since the site is not published at the root of its address. A page has the same name here as
 under the server, so a note written in one place can be matched to the page in the other.
 """
