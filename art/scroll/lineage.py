@@ -120,7 +120,7 @@ def block(slug):
             + '    <p class="lin-say">Each link is an idea one paper took from another. Point at one, or tap it, to read how.</p>\n'
             + '    <p class="lin-key"><i class="k here"></i>a paper this book retells <i class="k book"></i>a paper retold in another book '
               '<i class="k ext"></i>a paper outside the series</p>\n'
-            + f'    </div>\n  </div>\n  {CLOSE}')
+            + f'    </div>\n    <div class="meander lin-end"></div>\n  </div>\n  {CLOSE}')
 
 
 def check():
