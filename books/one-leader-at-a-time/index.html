@@ -297,7 +297,9 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
 .rep5 .op.done{border-left-color:#5f6e28;background:#e3ecc4}
 .logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:3.6em;font-style:italic}
 /* ---------- the Tholos from above ---------- */
-.seat{cursor:default}
+.seat{cursor:default;transition:transform .6s ease}
+.seat-ghost{fill:none;stroke:#b5602c;stroke-width:2;stroke-dasharray:3 5;opacity:0;transition:opacity .4s}
+.seat-ghost.on{opacity:.8}
 .seat circle.b{stroke:var(--ink);stroke-width:4;transition:opacity .4s}
 .seat text.g{font-family:var(--sans);font-weight:700;font-size:17px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
 .seat text.s{font-family:var(--sans);font-size:12.5px;text-anchor:middle;fill:#1c1512}
@@ -472,9 +474,9 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>The runners go out <em>and come back with a word</em></h4>
       <div class="hill-wrap">
-        <svg class="isle-svg fig" id="passsvg" role="group" aria-label="The Tholos from above: the podium at the centre, five benches round the wall, and runners carrying lines out and words back"></svg>
+        <svg class="isle-svg fig" id="passsvg" role="group" aria-label="The Tholos from above: the holder at the podium in the centre, the other benches round the wall, and runners carrying lines out and words back"></svg>
         <div>
-          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">The Tholos from above. The ringed legislator holds the podium. Click a bench to have its legislator step out of reach, or come back.</p>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">The Tholos from above. The legislator at the centre holds the podium. Click a bench to have its legislator step out of reach, or come back.</p>
           <div class="counts"><span><b id="pline">11</b>last line written</span><span><b id="ppass">11</b>passed up to</span></div>
           <p class="say" id="passsay">Okios holds the podium. Theron has stepped out. Write the next line.</p>
         </div>
@@ -944,7 +946,7 @@ $("#cast").innerHTML=ALL.map(who).join("");
   reset();
 })();
 
-/* ===== the Tholos, seen from above: the podium at the centre, five benches round the wall, the porch door below ===== */
+/* ===== the Tholos, seen from above: the holder at the podium in the centre, the other benches round the wall, the porch door below ===== */
 function Tholos(svg,o={}){
   const cx=220,cy=215,rr=204,R=138,A={O:-90,L:-18,K:54,M:126,T:198};
   svg.innerHTML="";svg.setAttribute("viewBox","0 0 440 470");
@@ -953,7 +955,7 @@ function Tholos(svg,o={}){
   el("rect",{x:cx-26,y:cy+rr-2,width:52,height:26,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3},svg);
   el("text",{x:cx,y:cy+rr+42,class:"lab",style:"font-size:12px"},svg).textContent="the porch";
   const under=el("g",{},svg),pod=el("g",{class:"podium"},svg),seats=el("g",{},svg),over=el("g",{},svg);
-  const disc=el("circle",{cx,cy,r:34,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":4},pod),bt=el("text",{x:cx,y:cy},pod);
+  const disc=el("circle",{cx,cy,r:48,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":4},pod),bt=el("text",{x:cx,y:cy},pod);
   const T={svg,cx,cy,under,over,seat:{},porch:[cx,cy+rr+12],
     at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
     put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
@@ -961,13 +963,16 @@ function Tholos(svg,o={}){
     token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
     /* a runner or a note u of the way from one place to another */
     run(g,a,b,u){const [x1,y1]=T.pos(a),[x2,y2]=T.pos(b);T.put(g,x1+(x2-x1)*u,y1+(y2-y1)*u)},
-    board(text,k){bt.textContent=text;disc.setAttribute("fill",k?WHO[k].c:"#d9cfb4");ALL.forEach(x=>T.seat[x].g.classList.toggle("holder",x===k))},
+    /* the holder takes the podium, and their bench at the wall is left as an empty outline */
+    board(text,k){bt.textContent=text;bt.setAttribute("y",k?cy-30:cy);disc.setAttribute("fill","#d9cfb4");
+      ALL.forEach(x=>{const S=T.seat[x],h=x===k;S.g.classList.toggle("holder",h);S.ghost.classList.toggle("on",h);
+        S.x=h?cx:S.wx;S.y=h?cy+12:S.wy;S.g.style.transform=`translate(${S.x}px,${S.y}px)`;S.s.setAttribute("y",h?43:S.sy)})},
     note(k,s){T.seat[k].s.textContent=s},
     out(k,on){T.seat[k].g.classList.toggle("out",!!on)}
   };
-  ALL.forEach(k=>{const [x,y]=T.at(A[k]),g=el("g",{class:"seat"},seats);T.put(g,x,y);
+  ALL.forEach(k=>{const [x,y]=T.at(A[k]),ghost=el("circle",{class:"seat-ghost",cx:x,cy:y,r:24},under),g=el("g",{class:"seat"},seats);T.put(g,x,y);
     el("circle",{class:"ring",r:31},g);el("circle",{class:"b",r:24,fill:WHO[k].c},g);el("text",{class:"g"},g).textContent=WHO[k].g;
-    const s=el("text",{class:"s halo",y:A[k]<0&&A[k]>-180?-34:43},g);T.seat[k]={x,y,g,s}});
+    const sy=A[k]<0&&A[k]>-180?-34:43,s=el("text",{class:"s halo",y:sy},g);T.seat[k]={x,y,wx:x,wy:y,sy,g,s,ghost}});
   return T;
 }
 
