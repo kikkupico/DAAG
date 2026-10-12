@@ -1,9 +1,14 @@
 /* The reader's side of the tutor: a chat panel that floats over the page. Text selected on the
    page goes with the next message as its context. The reader's own changes to the page (a reply
    pinned under a passage, a rewording, a passage hidden) are laid over it and marked in the left
-   margin. tutor/server.py adds this script to every page it serves. */
+   margin. tutor/server.py adds this script to every page it serves.
+
+   On the published site there is no tutor. tutor/web.py adds the script with data-mode="web",
+   and it then does one thing: the reader can write notes of their own on a passage, and they are
+   kept in the browser. */
 (() => {
   const page = document.currentScript.dataset.page;
+  const web = document.currentScript.dataset.mode === 'web';
   const QUICK = {
     Simpler: 'Can you say this more simply?',
     'An example': 'Can you give me an example of this?',
@@ -30,13 +35,59 @@
     return norm(copy.textContent);
   };
   const elementOf = node => (node.nodeType === 1 ? node : node.parentElement);
-  const post = (path, body) => fetch('/tutor/api/' + path, {
+  const post = (path, body) => (web ? keepHere(path, body) : fetch('/tutor/api/' + path, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ page, ...body }),
-  });
+  }));
   const remembered = {
     get open() { try { return localStorage.getItem('tutor-open') === '1'; } catch { return false; } },
     set open(v) { try { localStorage.setItem('tutor-open', v ? '1' : '0'); } catch { /* private window */ } },
   };
+
+  /* ---------- on the web: the reader's notes, kept in this browser ---------- */
+
+  // With no server behind the page, a note lives in localStorage, in the shape the server gives
+  // one. Each carries the time it last changed, and a removed note leaves its id and that time
+  // behind, so that the notes of two devices can be merged without a removed one coming back.
+  const KEY = 'daag-notes:' + page;  // the site shares its origin with others, so the name says whose
+  let kept = [], asked = false;
+
+  function load() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(KEY));
+      if (Array.isArray(raw)) kept = raw;
+    } catch { /* nothing stored, or no storage: keep what this page has */ }
+    return kept.filter(n => !n.deleted);
+  }
+
+  function keep(note) {
+    load();
+    kept = kept.filter(n => n.id !== note.id).concat(note).sort((a, b) => (a.id < b.id ? -1 : 1));
+    try {
+      localStorage.setItem(KEY, JSON.stringify(kept));
+      KIND.own = 'Your own note';
+      // ask the browser not to clear the notes when it runs short of room
+      if (!asked && navigator.storage && navigator.storage.persist) { asked = true; navigator.storage.persist().catch(() => {}); }
+    } catch { KIND.own = 'Your own note · not saved: this browser is not keeping data'; }
+    renderNotes(kept.filter(n => !n.deleted));
+  }
+
+  function keepHere(path, body) {
+    const now = new Date(), two = n => String(n).padStart(2, '0');
+    const updated = now.toISOString();
+    if (path === 'drop') return keep({ id: body.id, updated, deleted: true });
+    const day = [now.getFullYear(), two(now.getMonth() + 1), two(now.getDate())];
+    const time = [two(now.getHours()), two(now.getMinutes()), two(now.getSeconds())];
+    const old = kept.find(n => n.id === body.id);
+    const escaped = s => s.replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';');
+    keep({
+      id: body.id || day.join('') + '-' + time.join('') + '-' + crypto.getRandomValues(new Uint16Array(1))[0].toString(16).padStart(4, '0'),
+      page, section: body.section || '', kind: 'own',
+      asked: old ? old.asked : day.join('-') + ' ' + time.slice(0, 2).join(':'),
+      updated, quote: body.quote, prefix: body.prefix || '', suffix: body.suffix || '',
+      html: body.text.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean)
+        .map(p => '<p>' + escaped(p).replace(/\n/g, '<br>') + '</p>').join('\n'),
+    });
+  }
 
   /* ---------- finding a quote in the page ---------- */
 
@@ -269,8 +320,9 @@
 
   /* ---------- the chat panel ---------- */
 
-  const chip = document.body.appendChild(el('button', 'tutor-chip'));
-  const panel = document.body.appendChild(el('div', 'tutor-panel'));
+  const chip = el('button', 'tutor-chip');
+  const panel = el('div', 'tutor-panel');
+  if (!web) document.body.append(chip, panel);
   const top = panel.appendChild(el('div', 'tutor-top'));
   const status = top.appendChild(el('span'));
   const fold = top.appendChild(el('button', '', '–'));
@@ -380,10 +432,16 @@
   }
 
   let last = { listening: false, turns: [], notes: [] };
-  const stream = new EventSource('/tutor/api/stream?page=' + page);
-  stream.onmessage = e => { alive = true; last = JSON.parse(e.data); show(last); };
-  // the server stops when the agent's session does; the chat stays readable but cannot be added to
-  stream.onerror = () => { alive = false; show(last); };
+  if (web) {
+    last.notes = load();
+    // a note written in another tab of this browser
+    addEventListener('storage', e => { if (e.key === KEY) renderNotes(load()); });
+  } else {
+    const stream = new EventSource('/tutor/api/stream?page=' + page);
+    stream.onmessage = e => { alive = true; last = JSON.parse(e.data); show(last); };
+    // the server stops when the agent's session does; the chat stays readable but cannot be added to
+    stream.onerror = () => { alive = false; show(last); };
+  }
 
   /* ---------- selecting text to ask about ---------- */
 
