@@ -16,6 +16,11 @@ from an earlier session (--resume keeps the chat, for restarting the server mid-
 can also write a note of their own on a passage; it is kept beside the pinned ones. The agent (see .claude/skills/tutor) reads messages through watch.py.
 A pinned note is a header of "key: value" lines, a line of ---, then an HTML fragment.
 The pages themselves are never written to.
+
+The reader's own notes can be saved to a file and merged with a file from another device, the
+published site among them (overlay.js does the merging). For that, each carries the time it last
+changed (updated) and the times of the versions it was made from (past), and one that is removed
+leaves its header behind with deleted: true.
 """
 import html
 import json
@@ -27,6 +32,7 @@ import subprocess
 import sys
 import threading
 import time
+from datetime import datetime, timedelta, timezone
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -43,6 +49,7 @@ HOSTS = {f"127.0.0.1:{PORT}", f"localhost:{PORT}"}
 PAGE = re.compile(r"[a-z0-9-]+(/[a-z0-9-]+)*")
 NOTE_ID = re.compile(r"\d{8}-\d{6}-[0-9a-f]{4}")
 TURN_ID = re.compile(r"\d{4}")
+STAMP = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z")  # a time as a browser writes it
 HIDDEN = {"bespoke"}  # top-level folders the server will not hand out, with anything dotted
 INJECT = '<link rel="stylesheet" href="/tutor/overlay.css"><script src="/tutor/overlay.js" data-page="%s" defer></script>\n'
 writing = threading.Lock()
@@ -67,6 +74,30 @@ def as_html(text):
     return text
 
 
+def stamp(when=None, after=""):
+    """A time as a browser writes it: now, or when; never earlier than the change before it."""
+    when = when or datetime.now(timezone.utc)
+    if STAMP.fullmatch(after):
+        when = max(when, datetime.fromisoformat(after[:-1] + "+00:00") + timedelta(milliseconds=1))
+    return when.strftime("%Y-%m-%dT%H:%M:%S.") + f"{when.microsecond // 1000:03d}Z"
+
+
+def plain(fragment):
+    """A note's paragraphs with nothing left in them that a browser would act on."""
+    out = []
+    for part in re.split(r"</p\s*>", fragment):
+        text = html.unescape(re.sub(r"<[^>]*>", "", re.sub(r"<br\s*/?>", "\n", part))).strip()
+        if text:
+            out.append("<p>" + html.escape(text).replace("\n", "<br>") + "</p>")
+    return "\n".join(out)
+
+
+def write_note(key, head, body=""):
+    path = BESPOKE / key / f"{head['id']}.md"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("".join(f"{k}: {v}\n" for k, v in head.items()) + "---\n" + body + "\n", encoding="utf-8")
+
+
 def read_note(path):
     head, _, body = path.read_text(encoding="utf-8").partition("\n---")
     note = {}
@@ -85,7 +116,28 @@ def notes(key):
             note = read_note(path)
         except (OSError, UnicodeDecodeError):
             continue  # half-written; the next poll picks it up
-        if NOTE_ID.fullmatch(note.get("id", "")) and note["html"]:
+        if NOTE_ID.fullmatch(note.get("id", "")) and note["html"] and "deleted" not in note:
+            out.append(note)
+    return out
+
+
+def own_notes():
+    """Every note the reader wrote, on every page, with the removed ones: what a file of notes holds."""
+    out = []
+    for path in sorted(BESPOKE.glob("**/*.md")):
+        key = path.parent.relative_to(BESPOKE).as_posix()
+        try:
+            note = read_note(path)
+        except (OSError, UnicodeDecodeError):
+            continue
+        if not PAGE.fullmatch(key) or not NOTE_ID.fullmatch(note.get("id", "")):
+            continue
+        note["page"], note["past"] = key, note.get("past", "").split()
+        if not STAMP.fullmatch(note.get("updated", "")):  # written before notes kept their times
+            note["updated"] = stamp(datetime.fromtimestamp(path.stat().st_mtime, timezone.utc))
+        if "deleted" in note:
+            out.append({"id": note["id"], "page": key, "updated": note["updated"], "past": note["past"], "deleted": True})
+        elif note.get("kind") == "own" and note["html"]:
             out.append(note)
     return out
 
@@ -148,6 +200,8 @@ class Handler(SimpleHTTPRequestHandler):
         top = url.path.strip("/").split("/")[0]
         if top.startswith(".") or top in HIDDEN:
             return self.send_error(404)
+        if url.path == "/tutor/api/notes":
+            return self.send_json(json.dumps(own_notes()))
         if url.path == "/tutor/api/stream":
             key = parse_qs(url.query).get("page", [""])[0]
             return self.stream(key) if PAGE.fullmatch(key) else self.send_error(400)
@@ -201,14 +255,15 @@ class Handler(SimpleHTTPRequestHandler):
                 or not self.headers.get("Content-Type", "").startswith("application/json")):
             return self.send_error(403)
         try:
-            body = json.loads(self.rfile.read(min(int(self.headers.get("Content-Length", 0)), 20000)))
+            most = 4000000 if self.path == "/tutor/api/merge" else 20000  # a file of notes is many notes
+            body = json.loads(self.rfile.read(min(int(self.headers.get("Content-Length", 0)), most)))
             key = body["page"]
         except (ValueError, KeyError, TypeError):
             return self.send_error(400)
         if not isinstance(key, str) or not PAGE.fullmatch(key):
             return self.send_error(400)
         action = {"/tutor/api/say": self.say, "/tutor/api/pin": self.pin, "/tutor/api/drop": self.drop,
-                  "/tutor/api/note": self.note}.get(self.path)
+                  "/tutor/api/note": self.note, "/tutor/api/merge": self.merge}.get(self.path)
         if not action:
             return self.send_error(404)
         with writing:
@@ -221,7 +276,7 @@ class Handler(SimpleHTTPRequestHandler):
             return self.send_error(400)
         if not listening():
             return self.send_error(409)  # no agent to answer; the page says so
-        section = one_line(body.get("section"), 80)
+        section, viewing = one_line(body.get("section"), 80), one_line(body.get("viewing"), 80)
         url = one_line(body.get("url"), 200)
         turn = {
             "id": f"{max([int(p.stem) for p in folder.glob('*.json')], default=0) + 1:04d}",
@@ -229,6 +284,7 @@ class Handler(SimpleHTTPRequestHandler):
             "url": url if re.fullmatch(r"/[\w./-]*", url) else "/",
             "title": one_line(body.get("title"), 120),
             "section": section if re.fullmatch(r"[\w-]*", section) else "",
+            "viewing": viewing if re.fullmatch(r"[\w-]*", viewing) else "",
             "asked": time.strftime("%Y-%m-%d %H:%M"),
             "text": text,
             "quote": one_line(body.get("quote"), 1500),
@@ -263,6 +319,16 @@ class Handler(SimpleHTTPRequestHandler):
         path.write_text(json.dumps(turn, ensure_ascii=False, indent=1), encoding="utf-8")
         self.send_json("{}")
 
+    def before(self, key, note_id):
+        """The note as it stands, if there is one, and the times of its versions up to now."""
+        try:
+            old = read_note(BESPOKE / key / f"{note_id}.md")
+        except (OSError, UnicodeDecodeError):
+            return {}, ""
+        if not STAMP.fullmatch(old.get("updated", "")):
+            old["updated"] = stamp(datetime.fromtimestamp((BESPOKE / key / f"{note_id}.md").stat().st_mtime, timezone.utc))
+        return old, " ".join(old.get("past", "").split() + [old["updated"]])
+
     def note(self, key, body):
         """A note the reader wrote themselves about a passage; with an id, a rewrite of one."""
         quote, text = one_line(body.get("quote"), 1500), str(body.get("text") or "").strip()[:4000]
@@ -270,21 +336,53 @@ class Handler(SimpleHTTPRequestHandler):
         if len(quote) < 3 or not text or not isinstance(note_id, str) or not NOTE_ID.fullmatch(note_id):
             return self.send_error(400)
         section = one_line(body.get("section"), 80)
+        old, past = self.before(key, note_id)
         head = {"id": note_id, "page": key, "section": section if re.fullmatch(r"[\w-]*", section) else "",
-                "kind": "own", "asked": time.strftime("%Y-%m-%d %H:%M"), "quote": quote,
+                "kind": "own", "asked": old.get("asked") or time.strftime("%Y-%m-%d %H:%M"),
+                "updated": stamp(after=old.get("updated", "")), "past": past, "quote": quote,
                 "prefix": one_line(body.get("prefix"), 60), "suffix": one_line(body.get("suffix"), 60)}
         paragraphs = [html.escape(p.strip()).replace("\n", "<br>") for p in re.split(r"\n\s*\n", text) if p.strip()]
-        path = BESPOKE / key / f"{note_id}.md"
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text("".join(f"{k}: {v}\n" for k, v in head.items()) + "---\n"
-                        + "\n".join(f"<p>{p}</p>" for p in paragraphs) + "\n", encoding="utf-8")
+        write_note(key, head, "\n".join(f"<p>{p}</p>" for p in paragraphs))
         self.send_json(json.dumps({"id": note_id}))
 
     def drop(self, key, body):
         note_id = body.get("id", "")
         if not isinstance(note_id, str) or not NOTE_ID.fullmatch(note_id):
             return self.send_error(400)
-        (BESPOKE / key / f"{note_id}.md").unlink(missing_ok=True)
+        old, past = self.before(key, note_id)
+        if old.get("kind") == "own":  # stays removed when a file from another device still has it
+            write_note(key, {"id": note_id, "page": key, "updated": stamp(after=old["updated"]), "past": past, "deleted": "true"})
+        else:
+            (BESPOKE / key / f"{note_id}.md").unlink(missing_ok=True)
+        self.send_json("{}")
+
+    def merge(self, key, body):
+        """The reader's notes after a file from another device was merged into them, by the page."""
+        given = body.get("notes")
+        if not isinstance(given, list):
+            return self.send_error(400)
+        for n in given:
+            if not isinstance(n, dict):
+                continue
+            text = {k: one_line(v, 1500) if isinstance(v, str) else "" for k, v in n.items()}
+            past = " ".join(t for t in (n.get("past") if isinstance(n.get("past"), list) else []) if isinstance(t, str) and STAMP.fullmatch(t))
+            if not (NOTE_ID.fullmatch(text.get("id", "")) and PAGE.fullmatch(text.get("page", "")) and STAMP.fullmatch(text.get("updated", ""))):
+                continue
+            if self.before(text["page"], text["id"])[0].get("kind", "own") != "own":
+                continue  # the id of something the tutor wrote: not the reader's to replace
+            head = {"id": text["id"], "page": text["page"], "updated": text["updated"], "past": past}
+            if n.get("deleted"):
+                write_note(text["page"], {**head, "deleted": "true"})
+                continue
+            fragment = plain(str(n.get("html") or "")[:20000])
+            section = text.get("section", "")
+            if len(text.get("quote", "")) < 3 or not fragment:
+                continue
+            if NOTE_ID.fullmatch(text.get("clash", "")):
+                head["clash"] = text["clash"]
+            write_note(text["page"], {**head, "section": section if re.fullmatch(r"[\w-]*", section) else "", "kind": "own",
+                                      "asked": text.get("asked", "")[:16], "quote": text["quote"],
+                                      "prefix": text.get("prefix", "")[:60], "suffix": text.get("suffix", "")[:60]}, fragment)
         self.send_json("{}")
 
 

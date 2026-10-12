@@ -37,10 +37,11 @@ the reader says to stop; then stop the Monitor and the server, which ends the ch
 Each event looks like this:
 
     {"reply": "bespoke/chat/<session>/0003.html", "message": "bespoke/chat/<session>/0003.json",
-     "page": "books/<slug>", "section": "coin", "text": "…", "selected": "…"}
+     "page": "books/<slug>", "section": "coin", "viewing": "coin", "text": "…", "selected": "…"}
 
 - `text` is what the reader typed. `selected` is the start of the passage they had selected, if
-  any; `section` is the id of the spread it sits in.
+  any; `section` is the id of the spread it sits in. `viewing` is the id of the spread that was
+  on their screen when they sent it, which is what "here" means when nothing is selected.
 - A long event is cut short on its way to you. The `message` file holds all of it, with the
   whole selected passage as `quote` and the paragraph around it as `block`; read it whenever
   the event looks cut or the passage matters to the answer.
@@ -97,8 +98,32 @@ for changed, which shows the old and new words when clicked and can undo the cha
 Every header value stays on one line. Then say in the chat reply what you did, and that the
 page in the repository is unchanged: changing that is asked for in the terminal.
 
-The reader can also write notes of their own on a passage (`kind: own`, shown with a blue
-line). Those are theirs: never edit or remove one unless they ask.
+## Add a note for the reader
+
+When the reader asks for a note to be added, whether on a selected passage, "here", or at a
+section they name, write it as a note of their own: `bespoke/<page>/<id>.md` as above, with
+`kind: own` and no `question`. The body is the note, as `<p>` paragraphs of plain text: their
+words if they gave them, yours if they asked you to write it (a summary, a reminder, a link
+between two ideas), kept as short as a note in a margin.
+
+A note hangs on a passage, and appears after the paragraph that passage is in:
+
+- With a selection, copy `quote`, `prefix`, `suffix` and `section` from the message file.
+- Without one, the section is the one they named, or `viewing`. Read it in the page and choose
+  the paragraph the note belongs after: the one it is about, or the section's last paragraph of
+  prose when it is about the section as a whole. For `quote`, copy four to ten consecutive words
+  from that paragraph exactly as they read on the page: plain text, no tags, entities written as
+  the characters they stand for. Leave `prefix` and `suffix` empty unless those words occur
+  twice in the section. Choose a paragraph of running prose; a note on words inside a figure,
+  a table, a card or a stepped picture is shown at the foot of the section.
+
+Then say in the chat reply where you put it. The reader can edit or remove it on the page, and
+it travels with their other notes when they save them to a file.
+
+Notes of the reader's own, written by them or by you for them, are shown with a blue line.
+They are theirs: never edit or remove one unless they ask. A file in `bespoke/<page>/`
+with `deleted: true` and no body is one they removed; leave it, since it keeps the note from
+coming back when they merge in notes from another device.
 
 ## How to write a reply
 
