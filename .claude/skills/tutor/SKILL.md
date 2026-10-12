@@ -18,6 +18,8 @@ everything the tutor writes lives in `bespoke/`, which is not in git.
        python3 tutor/server.py
 
    Starting it opens a new, empty chat and stops any server left from an earlier session.
+   It listens on every interface, so the reader's phone can use it over Tailscale; it has no
+   protection of its own. Add `--host 127.0.0.1` to keep it to this machine.
 2. Open the page the reader wants, or the home page: `open http://127.0.0.1:8765/`
 3. Arm the Monitor tool with `timeout_ms: 1800000`:
 
