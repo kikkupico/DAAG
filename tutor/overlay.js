@@ -73,11 +73,12 @@
 
   function keepHere(path, body) {
     const now = new Date(), two = n => String(n).padStart(2, '0');
-    const updated = now.toISOString();
+    const old = kept.find(n => n.id === body.id);
+    // never earlier than the change before it, whatever the clock says
+    const updated = new Date(Math.max(now, old ? Date.parse(old.updated) + 1 || 0 : 0)).toISOString();
     if (path === 'drop') return keep({ id: body.id, updated, deleted: true });
     const day = [now.getFullYear(), two(now.getMonth() + 1), two(now.getDate())];
     const time = [two(now.getHours()), two(now.getMinutes()), two(now.getSeconds())];
-    const old = kept.find(n => n.id === body.id);
     const escaped = s => s.replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';');
     keep({
       id: body.id || day.join('') + '-' + time.join('') + '-' + crypto.getRandomValues(new Uint16Array(1))[0].toString(16).padStart(4, '0'),
