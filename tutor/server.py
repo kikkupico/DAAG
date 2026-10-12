@@ -55,7 +55,7 @@ PAGE = re.compile(r"[a-z0-9-]+(/[a-z0-9-]+)*")
 NOTE_ID = re.compile(r"\d{8}-\d{6}-[0-9a-f]{4}")
 TURN_ID = re.compile(r"\d{4}")
 STAMP = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z")  # a time as a browser writes it
-HIDDEN = {"bespoke"}  # top-level folders the server will not hand out, with anything dotted
+HIDDEN = {"bespoke", "sources"}  # top-level folders the server will not hand out, with anything dotted
 INJECT = '<link rel="stylesheet" href="/tutor/overlay.css"><script src="/tutor/overlay.js" data-page="%s" defer></script>\n'
 writing = threading.Lock()
 
