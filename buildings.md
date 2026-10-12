@@ -127,6 +127,12 @@ duplicates (checked by MD5), and every filename's lead surname appears on page 1
 file. `demers-1989` is a byte-identical copy of `demers-1987`, so there is one Demers paper.
 `sources/_misfiled/` holds files that carried a paper's name but not its content.
 
+**`papers/index.html` is the list of where each one comes from.** Every paper there links to a
+copy that can be read freely, and the link's `data-file` is the paper's filename here.
+`python3 tutor/prepare.py` fetches whichever of them are missing and writes each one's text
+beside it as `.txt`; `--check` reports the links that have stopped serving a PDF. The Zinn
+companion is not on the list and is not fetched.
+
 **Verify by opening the file, never by the URL or the filename.** MIT's TDS group serves
 Gilbert & Lynch's 2012 retrospective at a URL named `Brewer2.pdf`; the 2002 proof has to come
 from Gilbert's own page at NUS.

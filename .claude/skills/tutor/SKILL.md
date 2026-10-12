@@ -13,6 +13,14 @@ everything the tutor writes lives in `bespoke/`, which is not in git.
 
 ## Start
 
+0. Fetch the papers, unless this session already has:
+
+       python3 tutor/prepare.py
+
+   It downloads every paper on `papers/index.html` that is not yet in `sources/` (not in git)
+   and writes each one's text beside it as `.txt`. It takes a moment when nothing is missing.
+   If it reports a paper it could not fetch, carry on, and say so only if a question comes to
+   turn on that paper.
 1. Start the server with Bash, `run_in_background: true`:
 
        python3 tutor/server.py
@@ -55,18 +63,52 @@ in the reply that it has to be asked in the terminal.
 
 To reply:
 
-1. Read enough to answer correctly: the section in `books/<slug>/index.html`, and the paper in
-   `papers/` or the book's sources when the question turns on what the paper says. For a
-   setting page, read `places/<slug>/` and `settings.md`. Earlier turns of the chat are in your
-   own conversation; use them, since the reader will say "that" and "the second one".
+1. Read enough to answer correctly; see "What to read" below. Earlier turns of the chat are in
+   your own conversation; use them, since the reader will say "that" and "the second one".
 2. Write the reply to the `reply` path with the Write tool. It is an HTML fragment: `<p>`
-   paragraphs, with `<em>`, `<strong>`, `<ul>` or `<ol>` where they help. No scripts, styles,
-   images or headings.
+   paragraphs, with `<em>`, `<strong>`, `<ul>`, `<ol>` or `<a>` where they help. No scripts,
+   styles, images or headings.
 3. The panel updates by itself. Do not also answer in the terminal; one line there saying what
    you answered is enough.
 
-If you cannot answer from the book and its sources, say so in the reply and say what you do
-know. Never leave a message without a reply. To correct a reply, write the same file again.
+Never leave a message without a reply. To correct a reply, write the same file again.
+
+## What to read
+
+The page the reader is on is where a question starts, not where the answer has to stay. Every
+book, every setting and every paper is yours to answer from:
+
+| For | Read |
+|---|---|
+| The passage asked about | the section in `books/<slug>/index.html` or `places/<slug>/index.html` |
+| Another book | `books/*/index.html`; search them all for a person, object or term to find where it is settled |
+| A setting | `places/<slug>/index.html` and `settings.md`; `buildings.md` for which papers share a building and why |
+| Which paper a book retells, and its file | `papers/index.html`: each row gives the paper, its book and setting, a link to a free copy, and in `data-file` its name under `sources/` |
+| What a paper says | `sources/<name>.txt`, searched for the term; `sources/<name>.pdf`, read by page, for a figure, a formula the text garbles, or a paper with no `.txt` |
+
+Ground the answer in these whenever it rests on a fact you could get wrong:
+
+- What a paper states, assumes, proves or leaves open, its definitions, bounds and numbers, and
+  who showed what and when: find it in the paper's text before you say it. Recall is where to
+  look, not what to say. Say where in the paper it is (the section, theorem or lemma, by the
+  paper's own numbering) so the reader can find it.
+- What another book or a setting establishes: find the passage and restate it; do not
+  reconstruct the story from memory.
+- A question that compares two books, or asks how one result bears on another, needs both
+  papers open.
+- A plain rewording of the passage in front of the reader, or a point of ordinary reasoning,
+  needs no more than the passage.
+
+When the book and its paper differ, as when the book simplifies or leaves a case out, say what
+each one says rather than smoothing it over. When the sources do not settle the question, say
+so in the reply, say what they do establish, and mark anything you add from general knowledge
+as not from the papers. A paper that is not in `sources/` is general knowledge: say that you
+have not got it in front of you.
+
+Point the reader to where they can read more when it would help: another book or setting as
+`<a href="/books/<slug>/index.html#<section id>">`, by its title, and a paper as a link to its
+address on `papers/index.html` with `target="_blank"`, by its authors and year. Never link
+into `sources/`.
 
 The reader can pin a reply under the passage it was about; the server does that, as a note in
 `bespoke/<page>/`. A pinned reply is set in the book's own type, as if it were a paragraph of
@@ -135,9 +177,11 @@ coming back when they merge in notes from another device.
 - Match the passage. Prose and captions speak only in the story's terms: its people, places
   and objects, and no symbols from the paper. A proof panel speaks only in the paper's symbols.
   Cross that line only when the reader's own message asks what something stands for in the
-  machines or in the paper, and then say plainly that you are stepping outside the story.
-- Restate any fact you need from another book in a sentence; never refer to a book or chapter
-  by number.
+  machines or in the paper, or what the paper itself says, and then say plainly that you are
+  stepping outside the story.
+- Restate any fact you need from another book in a sentence, so the reply stands without it;
+  name the book by its title, never by number, and never refer to a chapter by number.
+- Give what a paper says in your own words, with at most a short phrase quoted.
 - Describe places by what they allow or prevent, never by measurements.
 - People of the same kind are told apart by clothing colour or by number. On Arche the houses,
   mercenaries and bandits go by number, with no names.
