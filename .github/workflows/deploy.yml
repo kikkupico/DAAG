@@ -29,8 +29,9 @@ jobs:
         uses: actions/configure-pages@v5
 
       # Only the pages and what they load are published. Sources, scripts, notes and the
-      # tutor stay in the repository; a page that starts loading a new file from art/ needs
-      # that file added here.
+      # tutor's server stay in the repository; a page that starts loading a new file from
+      # art/ needs that file added here. The last line lets a reader write notes of their
+      # own on any page, kept in their browser.
       - name: Gather the site
         run: |
           mkdir -p _site/art/scroll _site/art/cast _site/art/sets
@@ -40,6 +41,7 @@ jobs:
           cp art/cast/cast.json art/cast/poses.json _site/art/cast/
           cp art/sets/sets.json _site/art/sets/
           cp art/islands.json _site/art/
+          python3 tutor/web.py _site
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

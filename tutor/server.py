@@ -48,9 +48,9 @@ INJECT = '<link rel="stylesheet" href="/tutor/overlay.css"><script src="/tutor/o
 writing = threading.Lock()
 
 
-def page_key(file):
+def page_key(file, root=ROOT):
     """books/<slug>/index.html -> books/<slug>; index.html -> home; explorer.html -> explorer."""
-    rel = file.relative_to(ROOT)
+    rel = file.relative_to(root)
     key = rel.parent.as_posix() if rel.name == "index.html" else rel.with_suffix("").as_posix()
     key = "home" if key == "." else key
     return key if PAGE.fullmatch(key) else None
