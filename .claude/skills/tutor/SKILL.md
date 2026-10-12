@@ -106,8 +106,9 @@ as not from the papers. A paper that is not in `sources/` is general knowledge: 
 have not got it in front of you.
 
 Point the reader to where they can read more when it would help: another book or setting as
-`<a href="/books/<slug>/index.html#<section id>">`, by its title, and a paper as a link to its
-address on `papers/index.html` with `target="_blank"`, by its authors and year. Never link
+`<a href="/books/<slug>/index.html#<section id>">`, by its title, and a paper as a link to the
+paper's own address, the one its row on `papers/index.html` gives, with `target="_blank"
+rel="noopener"`, by its authors and year. Never link
 into `sources/`.
 
 The reader can pin a reply under the passage it was about; the server does that, as a note in
