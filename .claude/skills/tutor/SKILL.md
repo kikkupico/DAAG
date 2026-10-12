@@ -84,6 +84,7 @@ book, every setting and every paper is yours to answer from:
 | Another book | `books/*/index.html`; search them all for a person, object or term to find where it is settled |
 | A setting | `places/<slug>/index.html` and `settings.md`; `buildings.md` for which papers share a building and why |
 | Which paper a book retells, and its file | `papers/index.html`: each row gives the paper, its book and setting, a link to a free copy, and in `data-file` its name under `sources/` |
+| How papers bear on one another | `papers/lineage.json`: each edge is an idea one paper took from another, with a sentence saying how; a book's lineage is that of its papers |
 | What a paper says | `sources/<name>.txt`, searched for the term; `sources/<name>.pdf`, read by page, for a figure, a formula the text garbles, or a paper with no `.txt` |
 
 Ground the answer in these whenever it rests on a fact you could get wrong:

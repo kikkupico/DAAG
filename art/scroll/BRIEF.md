@@ -3,7 +3,7 @@
 A book is one scrolling page at `books/<slug>/index.html`: allegory prose that reads as one
 continuous argument, photographs that unfold as they enter view, one live interactive per mechanism, and the proofs in collapsed panels.
 It replaces the older long edition (chapters of prose with static figures) completely. Nothing
-may be lost that a reader needs: every proof, the references, the lineage lines and every chapter
+may be lost that a reader needs: every proof, the references and every chapter
 anchor carry over.
 
 Three finished books are the models. Read them before writing anything:
@@ -164,8 +164,7 @@ notation. See the models.
 
 ## The closing apparatus
 
-In `.apparatus`, after `.end`: lineage lines as links (`Setting`, `Builds on` if the long edition
-has it, `Leads to`), the `Outside this series` line, and a proof-style panel "The paper behind
+In `.apparatus`, after `.end`: the `Setting` line as a link, and a proof-style panel "The paper behind
 this book" with the long edition's references and its "ideas" paragraph if it has one.
 
 ## Anchors and links
@@ -266,7 +265,7 @@ the picture first). A picture may disagree with the prose; never bend the prose 
 - [ ] `shot.sh` at 500 and 1280: widths equal, `errors=[]`, screenshots looked at
 - [ ] every interactive pressed through in your head against the long edition's rules
 - [ ] every proof panel present, steps verbatim, each with a `given`
-- [ ] every old `sN` anchor present once; references, lineage and Outside-this-series carried
+- [ ] every old `sN` anchor present once; references carried; `{{lineage}}` at the top of the first spread, and the book's papers and their links in `papers/lineage.json`
 - [ ] no id used twice on the page
 - [ ] grep the body outside proof panels for `<var`, `σ`, `⟹`, `book`, `ledger`, `Chapter`,
       `metre`, ` m ` and personal names
