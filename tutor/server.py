@@ -1,6 +1,9 @@
 """Serve the repo with a tutor's chat panel, and the reader's pinned notes, laid over each page.
 
-    python3 tutor/server.py [port] [--resume]
+    python3 tutor/server.py [port] [--host ADDRESS] [--resume]
+
+The server binds to every interface (0.0.0.0) and accepts any Host header on its port, so a phone
+over a private network can use it; it has no other protection. --host 127.0.0.1 keeps it to this machine.
 
 Every .html page goes out with tutor/overlay.js added before </body>. The overlay is a chat
 panel: the reader types a message, and any text selected on the page goes with it as context.
@@ -45,7 +48,9 @@ CURRENT = CHAT / "current"  # names the live session's folder
 HEART = BESPOKE / ".watching"  # touched by watch.py while an agent is listening
 PID = BESPOKE / ".server.pid"
 PORT = int(next((a for a in sys.argv[1:] if a.isdigit()), 8765))
+HOST = sys.argv[sys.argv.index("--host") + 1] if "--host" in sys.argv[1:-1] else "0.0.0.0"
 HOSTS = {f"127.0.0.1:{PORT}", f"localhost:{PORT}"}
+OPEN = HOST not in ("127.0.0.1", "localhost")  # bound beyond loopback: any address the network reaches us by
 PAGE = re.compile(r"[a-z0-9-]+(/[a-z0-9-]+)*")
 NOTE_ID = re.compile(r"\d{8}-\d{6}-[0-9a-f]{4}")
 TURN_ID = re.compile(r"\d{4}")
@@ -181,8 +186,9 @@ class Handler(SimpleHTTPRequestHandler):
         pass
 
     def local(self):
-        """Only this machine's browser, on this server's own address."""
-        return self.headers.get("Host") in HOSTS
+        """Only this machine's browser, on this server's own address (any, with --host)."""
+        host = self.headers.get("Host", "")
+        return host in HOSTS or (OPEN and host.rpartition(":")[2] == str(PORT))
 
     def send_json(self, text, status=200):
         data = text.encode()
@@ -251,7 +257,7 @@ class Handler(SimpleHTTPRequestHandler):
         # Another site open in the browser must not be able to put words in front of the agent:
         # only this server's own pages may post, and only as JSON (which a foreign form cannot send).
         origin = self.headers.get("Origin", "")
-        if (not self.local() or origin.removeprefix("http://") not in HOSTS
+        if (not self.local() or origin.removeprefix("http://") != self.headers.get("Host")
                 or not self.headers.get("Content-Type", "").startswith("application/json")):
             return self.send_error(403)
         try:
@@ -401,12 +407,12 @@ def retire_old_server():
 if __name__ == "__main__":
     CHAT.mkdir(parents=True, exist_ok=True)
     retire_old_server()
-    server = ThreadingHTTPServer(("127.0.0.1", PORT), partial(Handler, directory=str(ROOT)))
+    server = ThreadingHTTPServer((HOST, PORT), partial(Handler, directory=str(ROOT)))
     server.daemon_threads = True
     PID.write_text(str(os.getpid()))
     if "--resume" not in sys.argv or not session():
         name = time.strftime("%Y%m%d-%H%M%S")
         (CHAT / name).mkdir()
         CURRENT.write_text(name)
-    print(f"tutor: http://127.0.0.1:{PORT}/", flush=True)
+    print(f"tutor: http://{HOST}:{PORT}/", flush=True)
     server.serve_forever()
