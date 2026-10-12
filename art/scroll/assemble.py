@@ -5,8 +5,8 @@
 Parts live in art/scroll/parts/<slug>/:
     meta.json   {"title": "...", "description": "..."} and the cover's words (see cover.py)
     body.html   everything inside <body>, from the top bar to the footer; its cover says
-                {{question}}, {{how}} and {{source}}, filled in from meta.json, and its first
-                spread says {{lineage}}, the graph of its papers (see lineage.py)
+                {{question}}, {{how}} and {{source}}, filled in from meta.json, and after the
+                cover it says {{lineage}}, the spread with the graph of its papers (see lineage.py)
     page.css    styles only this book needs (may be empty)
     page.js     this book's interactives; runs after shell.js, inside one function scope
 
