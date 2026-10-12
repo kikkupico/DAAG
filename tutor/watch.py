@@ -35,6 +35,7 @@ while True:
             "message": path.relative_to(ROOT).as_posix(),
             "page": turn.get("page", ""),
             "section": turn.get("section", ""),
+            "viewing": turn.get("viewing", ""),
             "text": turn.get("text", ""),
             "selected": quote[:200] + ("…" if len(quote) > 200 else ""),
         }, ensure_ascii=False), flush=True)

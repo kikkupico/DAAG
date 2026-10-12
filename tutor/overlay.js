@@ -5,8 +5,10 @@
 
    On the published site there is no tutor. tutor/web.py adds the script with data-mode="web",
    and it then does one thing: the reader can write notes of their own on a passage, and they are
-   kept in the browser. A Notes button in the corner saves them all to a file and merges in a file
-   saved on another device. */
+   kept in the browser.
+
+   Either way, a Notes button in the corner saves the reader's own notes to a file and merges in a
+   file saved on another device, so notes written beside the tutor and on the site can meet. */
 (() => {
   const page = document.currentScript.dataset.page;
   const web = document.currentScript.dataset.mode === 'web';
@@ -98,9 +100,10 @@
       .map(p => '<p>' + escaped(p).replace(/\n/g, '<br>') + '</p>').join('\n');
   }
 
-  /* ---------- on the web: carrying the notes to another device ---------- */
+  /* ---------- carrying the notes to another device ---------- */
 
-  // The notes of every page go out as one file, and a file from another device is merged in.
+  // The reader's own notes on every page go out as one file, and a file from another device is
+  // merged in. The file is the same from the site and from the tutor's server.
   // Two versions of a note are compared as two commits are. If one was made from the other, the
   // newer replaces the older. If each was changed without the other, neither is lost: a note
   // outlives its removal, and of two different texts the later keeps the place while the other
@@ -132,7 +135,9 @@
     return { notes: [...all.values()].sort((x, y) => (x.id < y.id ? -1 : 1)), count };
   }
 
-  function everyNote() {
+  // wherever they are kept: with the tutor's server, or on the web in this browser
+  async function everyNote() {
+    if (!web) return (await fetch('/tutor/api/notes')).json();
     const out = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
@@ -159,8 +164,19 @@
       quote, prefix: line(n.prefix, 60), suffix: line(n.suffix, 60), html };
   }
 
-  function exportNotes() {
-    const file = new Blob([JSON.stringify({ 'daag-notes': 1, notes: everyNote() }, null, 1)], { type: 'application/json' });
+  async function keepAll(notes) {
+    if (!web) {
+      if (!(await post('merge', { notes })).ok) throw new Error('not kept');
+      return;  // the server's stream brings the page up to date
+    }
+    const pages = {};
+    for (const n of notes) (pages[n.page] = pages[n.page] || []).push(n);
+    for (const key in pages) localStorage.setItem('daag-notes:' + key, JSON.stringify(pages[key]));
+    renderNotes(load());
+  }
+
+  async function exportNotes() {
+    const file = new Blob([JSON.stringify({ 'daag-notes': 1, notes: await everyNote() }, null, 1)], { type: 'application/json' });
     const link = el('a');
     link.href = URL.createObjectURL(file);
     link.download = 'daag-notes-' + new Date().toISOString().slice(0, 10) + '.json';
@@ -169,21 +185,20 @@
   }
 
   // returns what to tell the reader
-  function importNotes(text) {
+  async function importNotes(text) {
     let theirs;
     try { theirs = JSON.parse(text); } catch { return 'That file could not be read.'; }
     if (!theirs || theirs['daag-notes'] !== 1 || !Array.isArray(theirs.notes)) return 'That is not a file of notes from this site.';
-    const { notes, count } = merge(everyNote(), theirs.notes.map(checked).filter(Boolean));
-    const pages = {};
-    for (const n of notes) (pages[n.page] = pages[n.page] || []).push(n);
+    let count;
     try {
-      for (const key in pages) localStorage.setItem('daag-notes:' + key, JSON.stringify(pages[key]));
-    } catch { return 'This browser is not keeping data, so the notes could not be brought in.'; }
-    renderNotes(load());
+      const merged = merge(await everyNote(), theirs.notes.map(checked).filter(Boolean));
+      await keepAll(merged.notes);
+      count = merged.count;
+    } catch { return 'The notes could not be brought in: ' + (web ? 'this browser is not keeping data.' : 'the tutor is not running.'); }
     const said = [[count.added, 'added'], [count.changed, 'changed'], [count.removed, 'removed']]
       .filter(([n]) => n).map(([n, what]) => n + ' ' + what);
     const clashed = count.clashed ? count.clashed + ' changed on both devices: both versions are kept.' : '';
-    return said.length ? 'Notes ' + said.join(', ') + '. ' + clashed : clashed || 'Nothing new in that file.';
+    return said.length ? ('Notes ' + said.join(', ') + '. ' + clashed).trim() : clashed || 'Nothing new in that file.';
   }
 
   /* ---------- finding a quote in the page ---------- */
@@ -445,6 +460,8 @@
     remembered.open = yes;
     panel.classList.toggle('tutor-open', yes);
     chip.classList.toggle('tutor-away', yes);
+    notesChip.classList.toggle('tutor-away', yes && !web);  // the open panel covers that corner
+    if (yes && !web) menu.remove();
     if (yes) {
       chip.classList.remove('tutor-new');
       list.scrollTop = list.scrollHeight;
@@ -465,7 +482,13 @@
   function send(text) {
     text = text.trim();
     if (!text || !listening) return;
-    post('say', { ...(draft || {}), text, url: location.pathname, title: document.title });
+    // with the spread on screen, so that "here" means something when no passage is selected
+    const line = innerHeight * 0.4;
+    const viewing = [...document.querySelectorAll('section[id], header[id], footer[id]')].find(s => {
+      const box = s.getBoundingClientRect();
+      return box.top <= line && box.bottom > line;
+    });
+    post('say', { ...(draft || {}), text, url: location.pathname, title: document.title, viewing: viewing ? viewing.id : '' });
     input.value = '';
     setDraft(null);
     hideAsk();
@@ -534,44 +557,48 @@
     last.notes = load();
     // a note written in another tab of this browser
     addEventListener('storage', e => { if (e.key === KEY) renderNotes(load()); });
-
-    // in the corner, where the tutor's chip would be: the notes as a file, out and in
-    const notesChip = document.body.appendChild(el('button', 'tutor-chip tutor-notes', 'Notes'));
-    const menu = el('div', 'tutor-diff tutor-menu');
-    const told = el('p', 'tutor-told');
-    const out = el('button', 'tutor-undo', 'Save my notes to a file');
-    const into = el('button', 'tutor-undo', 'Bring in notes from a file');
-    const picker = el('input');
-    picker.type = 'file';
-    picker.accept = '.json,application/json';
-    picker.hidden = true;
-    menu.append(el('div', 'tutor-head', 'Your notes'), told, out, into, picker);
-    const tell = text => {
-      const live = everyNote().filter(n => !n.deleted);
-      told.textContent = text || (live.length
-        ? live.length + (live.length === 1 ? ' note' : ' notes') + ' in this browser. To read them on another device, save them to a file and bring that file in there.'
-        : 'Select text on a page to write a note on it. Notes stay in this browser; a file carries them to another.');
-      out.hidden = !live.length;
-    };
-    notesChip.onclick = e => {
-      e.stopPropagation();
-      if (menu.isConnected) return menu.remove();
-      tell();
-      document.body.appendChild(menu);
-    };
-    document.addEventListener('click', e => { if (!menu.contains(e.target)) menu.remove(); });
-    out.onclick = exportNotes;
-    into.onclick = () => picker.click();
-    picker.onchange = async () => {
-      if (picker.files[0]) tell(importNotes(await picker.files[0].text()));
-      picker.value = '';
-    };
   } else {
     const stream = new EventSource('/tutor/api/stream?page=' + page);
     stream.onmessage = e => { alive = true; last = JSON.parse(e.data); show(last); };
     // the server stops when the agent's session does; the chat stays readable but cannot be added to
     stream.onerror = () => { alive = false; show(last); };
   }
+
+  /* ---------- the notes as a file, out and in ---------- */
+
+  // in the corner; beside the tutor it sits above the tutor's chip
+  const notesChip = document.body.appendChild(el('button', 'tutor-chip tutor-notes', 'Notes'));
+  const menu = el('div', 'tutor-diff tutor-menu');
+  if (!web) [notesChip, menu].forEach(e => e.classList.add('tutor-above'));
+  const told = el('p', 'tutor-told');
+  const out = el('button', 'tutor-undo', 'Save my notes to a file');
+  const into = el('button', 'tutor-undo', 'Bring in notes from a file');
+  const picker = el('input');
+  picker.type = 'file';
+  picker.accept = '.json,application/json';
+  picker.hidden = true;
+  menu.append(el('div', 'tutor-head', 'Your notes'), told, out, into, picker);
+  const tell = async text => {
+    let live = [];
+    try { live = (await everyNote()).filter(n => !n.deleted); } catch { /* the tutor has stopped */ }
+    const here = web ? 'in this browser' : 'on this computer';
+    told.textContent = text || (live.length
+      ? live.length + (live.length === 1 ? ' note of your own ' : ' notes of your own ') + here + '. To read them on another device, save them to a file and bring that file in there.'
+      : 'Select text on a page to write a note on it. Notes stay ' + here + '; a file carries them to another device.');
+    out.hidden = !live.length;
+  };
+  notesChip.onclick = e => {
+    e.stopPropagation();
+    if (menu.isConnected) return menu.remove();
+    tell().then(() => document.body.appendChild(menu));
+  };
+  document.addEventListener('click', e => { if (!menu.contains(e.target)) menu.remove(); });
+  out.onclick = exportNotes;
+  into.onclick = () => picker.click();
+  picker.onchange = async () => {
+    if (picker.files[0]) tell(await importNotes(await picker.files[0].text()));
+    picker.value = '';
+  };
 
   /* ---------- selecting text to ask about ---------- */
 
