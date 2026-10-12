@@ -5,7 +5,8 @@
 
    On the published site there is no tutor. tutor/web.py adds the script with data-mode="web",
    and it then does one thing: the reader can write notes of their own on a passage, and they are
-   kept in the browser. */
+   kept in the browser. A Notes button in the corner saves them all to a file and merges in a file
+   saved on another device. */
 (() => {
   const page = document.currentScript.dataset.page;
   const web = document.currentScript.dataset.mode === 'web';
@@ -18,7 +19,7 @@
   const BLOCK = 'p, li, h1, h2, h3, blockquote, figcaption';
   // ...unless it sits in a layout that an extra box would break; then it goes to the section's end
   const FRAGILE = '.scrolly, .pop, .card, .leaf, .cards3, .row, .bar, svg, button, figure, nav, table';
-  const OURS = '.tutor-note, .tutor-shelf, .tutor-ask, .tutor-panel, .tutor-chip, .tutor-line, .tutor-gone, .tutor-diff';
+  const OURS = '.tutor-note, .tutor-shelf, .tutor-ask, .tutor-panel, .tutor-chip, .tutor-menu, .tutor-line, .tutor-gone, .tutor-diff';
 
   const norm = s => s.replace(/\s+/g, ' ').trim();
   const clip = (s, n) => (s.length > n ? s.slice(0, n) + '…' : s);
@@ -46,8 +47,9 @@
   /* ---------- on the web: the reader's notes, kept in this browser ---------- */
 
   // With no server behind the page, a note lives in localStorage, in the shape the server gives
-  // one. Each carries the time it last changed, and a removed note leaves its id and that time
-  // behind, so that the notes of two devices can be merged without a removed one coming back.
+  // one. Each carries the time it last changed and, in past, the times of the versions it was
+  // made from; a removed note leaves its id and those times behind. That is what lets the notes
+  // of two devices be merged: see merge() below.
   const KEY = 'daag-notes:' + page;  // the site shares its origin with others, so the name says whose
   let kept = [], asked = false;
 
@@ -76,18 +78,112 @@
     const old = kept.find(n => n.id === body.id);
     // never earlier than the change before it, whatever the clock says
     const updated = new Date(Math.max(now, old ? Date.parse(old.updated) + 1 || 0 : 0)).toISOString();
-    if (path === 'drop') return keep({ id: body.id, updated, deleted: true });
+    const past = old ? [...(old.past || []), old.updated] : [];
+    if (path === 'drop') return keep({ id: body.id, page, updated, past, deleted: true });
     const day = [now.getFullYear(), two(now.getMonth() + 1), two(now.getDate())];
     const time = [two(now.getHours()), two(now.getMinutes()), two(now.getSeconds())];
-    const escaped = s => s.replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';');
     keep({
       id: body.id || day.join('') + '-' + time.join('') + '-' + crypto.getRandomValues(new Uint16Array(1))[0].toString(16).padStart(4, '0'),
       page, section: body.section || '', kind: 'own',
       asked: old ? old.asked : day.join('-') + ' ' + time.slice(0, 2).join(':'),
-      updated, quote: body.quote, prefix: body.prefix || '', suffix: body.suffix || '',
-      html: body.text.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean)
-        .map(p => '<p>' + escaped(p).replace(/\n/g, '<br>') + '</p>').join('\n'),
+      updated, past, quote: body.quote, prefix: body.prefix || '', suffix: body.suffix || '',
+      html: asHtml(body.text),
     });
+  }
+
+  // typed text as the paragraphs of a note, with nothing in it that a browser would act on
+  function asHtml(text) {
+    const escaped = s => s.replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';');
+    return text.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean)
+      .map(p => '<p>' + escaped(p).replace(/\n/g, '<br>') + '</p>').join('\n');
+  }
+
+  /* ---------- on the web: carrying the notes to another device ---------- */
+
+  // The notes of every page go out as one file, and a file from another device is merged in.
+  // Two versions of a note are compared as two commits are. If one was made from the other, the
+  // newer replaces the older. If each was changed without the other, neither is lost: a note
+  // outlives its removal, and of two different texts the later keeps the place while the other
+  // is kept beside it, marked. Merging the same file twice, or in either direction, ends the same.
+  const NOTE_ID = /^\d{8}-\d{6}-[0-9a-f]{4}$/, PAGE = /^[a-z0-9-]+(\/[a-z0-9-]+)*$/;
+  const union = (...lists) => [...new Set(lists.flat())].sort();
+
+  function merge(mine, theirs) {
+    const all = new Map(mine.map(n => [n.id, n]));
+    const count = { added: 0, changed: 0, removed: 0, clashed: 0 };
+    for (const b of theirs) {
+      const a = all.get(b.id), pastA = (a && a.past) || [], pastB = b.past || [];
+      if (!a) { all.set(b.id, b); if (!b.deleted) count.added++; continue; }
+      const both = union(pastA, pastB, a.updated === b.updated ? [] : [a.updated, b.updated]);
+      if (a.updated === b.updated || pastA.includes(b.updated)) continue;
+      if (pastB.includes(a.updated)) { all.set(b.id, b); count[b.deleted ? 'removed' : 'changed']++; continue; }
+      // each side changed it without seeing the other's change
+      const later = b.updated > a.updated ? b : a, other = later === a ? b : a;
+      const same = !a.deleted && !b.deleted && a.html === b.html;
+      const win = a.deleted === b.deleted ? later : a.deleted ? b : a;
+      all.set(b.id, { ...win, past: both.filter(t => t !== win.updated) });
+      if (win === b) count.changed++;
+      if (a.deleted || b.deleted || same) continue;
+      let hash = 0;
+      for (const c of other.id + other.updated) hash = (hash * 31 + c.charCodeAt(0)) & 0xffff;
+      const copy = other.id.slice(0, 16) + hash.toString(16).padStart(4, '0');
+      if (!all.has(copy)) { all.set(copy, { ...other, id: copy, clash: b.id, past: [] }); count.clashed++; }
+    }
+    return { notes: [...all.values()].sort((x, y) => (x.id < y.id ? -1 : 1)), count };
+  }
+
+  function everyNote() {
+    const out = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key.startsWith('daag-notes:')) continue;
+      try { out.push(...JSON.parse(localStorage.getItem(key)).map(n => ({ ...n, page: key.slice(11) }))); } catch { /* not ours */ }
+    }
+    return out;
+  }
+
+  // a note from a file is someone else's words until checked: only what a note may hold is kept
+  function checked(n) {
+    const line = (v, max) => (typeof v === 'string' ? v.slice(0, max) : '');
+    const stamp = v => typeof v === 'string' && !isNaN(Date.parse(v)) && new Date(v).toISOString() === v;
+    if (!n || !NOTE_ID.test(n.id) || !PAGE.test(n.page) || !stamp(n.updated)) return null;
+    const head = { id: n.id, page: n.page, updated: n.updated, past: (Array.isArray(n.past) ? n.past : []).filter(stamp).slice(-200) };
+    if (n.deleted) return { ...head, deleted: true };
+    const made = document.createElement('template');  // parsed, but nothing in it runs or loads
+    made.innerHTML = line(n.html, 20000).replace(/<br\s*\/?>/gi, '\n');
+    const html = asHtml([...made.content.children].map(e => e.textContent).join('\n\n') || made.content.textContent);
+    const quote = norm(line(n.quote, 1500));
+    if (quote.length < 3 || !html) return null;
+    if (NOTE_ID.test(n.clash)) head.clash = n.clash;
+    return { ...head, section: /^[\w-]*$/.test(n.section) ? line(n.section, 80) : '', kind: 'own', asked: line(n.asked, 16),
+      quote, prefix: line(n.prefix, 60), suffix: line(n.suffix, 60), html };
+  }
+
+  function exportNotes() {
+    const file = new Blob([JSON.stringify({ 'daag-notes': 1, notes: everyNote() }, null, 1)], { type: 'application/json' });
+    const link = el('a');
+    link.href = URL.createObjectURL(file);
+    link.download = 'daag-notes-' + new Date().toISOString().slice(0, 10) + '.json';
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+  }
+
+  // returns what to tell the reader
+  function importNotes(text) {
+    let theirs;
+    try { theirs = JSON.parse(text); } catch { return 'That file could not be read.'; }
+    if (!theirs || theirs['daag-notes'] !== 1 || !Array.isArray(theirs.notes)) return 'That is not a file of notes from this site.';
+    const { notes, count } = merge(everyNote(), theirs.notes.map(checked).filter(Boolean));
+    const pages = {};
+    for (const n of notes) (pages[n.page] = pages[n.page] || []).push(n);
+    try {
+      for (const key in pages) localStorage.setItem('daag-notes:' + key, JSON.stringify(pages[key]));
+    } catch { return 'This browser is not keeping data, so the notes could not be brought in.'; }
+    renderNotes(load());
+    const said = [[count.added, 'added'], [count.changed, 'changed'], [count.removed, 'removed']]
+      .filter(([n]) => n).map(([n, what]) => n + ' ' + what);
+    const clashed = count.clashed ? count.clashed + ' changed on both devices: both versions are kept.' : '';
+    return said.length ? 'Notes ' + said.join(', ') + '. ' + clashed : clashed || 'Nothing new in that file.';
   }
 
   /* ---------- finding a quote in the page ---------- */
@@ -206,6 +302,7 @@
     if (note.question) diffBox.appendChild(el('p', 'tutor-q', note.question));
     if (note.kind === 'aside' || note.kind === 'own') diffBox.appendChild(el('blockquote', 'tutor-on', clip(note.quote, 220)));
     if (note.kind === 'own') {
+      if (note.clash) diffBox.appendChild(el('p', 'tutor-q', 'This note was changed on two devices. This is the other version; both are kept.'));
       diffBox.appendChild(el('div', 'tutor-body')).innerHTML = note.html;
       const edit = diffBox.appendChild(el('button', 'tutor-undo', 'Edit'));
       edit.onclick = e => { e.stopPropagation(); writeNote(note, line, note); };
@@ -437,6 +534,38 @@
     last.notes = load();
     // a note written in another tab of this browser
     addEventListener('storage', e => { if (e.key === KEY) renderNotes(load()); });
+
+    // in the corner, where the tutor's chip would be: the notes as a file, out and in
+    const notesChip = document.body.appendChild(el('button', 'tutor-chip tutor-notes', 'Notes'));
+    const menu = el('div', 'tutor-diff tutor-menu');
+    const told = el('p', 'tutor-told');
+    const out = el('button', 'tutor-undo', 'Save my notes to a file');
+    const into = el('button', 'tutor-undo', 'Bring in notes from a file');
+    const picker = el('input');
+    picker.type = 'file';
+    picker.accept = '.json,application/json';
+    picker.hidden = true;
+    menu.append(el('div', 'tutor-head', 'Your notes'), told, out, into, picker);
+    const tell = text => {
+      const live = everyNote().filter(n => !n.deleted);
+      told.textContent = text || (live.length
+        ? live.length + (live.length === 1 ? ' note' : ' notes') + ' in this browser. To read them on another device, save them to a file and bring that file in there.'
+        : 'Select text on a page to write a note on it. Notes stay in this browser; a file carries them to another.');
+      out.hidden = !live.length;
+    };
+    notesChip.onclick = e => {
+      e.stopPropagation();
+      if (menu.isConnected) return menu.remove();
+      tell();
+      document.body.appendChild(menu);
+    };
+    document.addEventListener('click', e => { if (!menu.contains(e.target)) menu.remove(); });
+    out.onclick = exportNotes;
+    into.onclick = () => picker.click();
+    picker.onchange = async () => {
+      if (picker.files[0]) tell(importNotes(await picker.files[0].text()));
+      picker.value = '';
+    };
   } else {
     const stream = new EventSource('/tutor/api/stream?page=' + page);
     stream.onmessage = e => { alive = true; last = JSON.parse(e.data); show(last); };
