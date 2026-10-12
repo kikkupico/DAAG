@@ -5,11 +5,13 @@
 Parts live in art/scroll/parts/<slug>/:
     meta.json   {"title": "...", "description": "..."} and the cover's words (see cover.py)
     body.html   everything inside <body>, from the top bar to the footer; its cover says
-                {{question}}, {{how}} and {{source}}, filled in from meta.json
+                {{question}}, {{how}} and {{source}}, filled in from meta.json, and its first
+                spread says {{lineage}}, the graph of its papers (see lineage.py)
     page.css    styles only this book needs (may be empty)
     page.js     this book's interactives; runs after shell.js, inside one function scope
 
-The page that comes out is self-contained: shell.css and shell.js are copied into it.
+The page that comes out is self-contained: shell.css and shell.js are copied into it, with
+lineage.css and lineage.js.
 The Part-Time Parliament is not built this way; its page is edited directly, and cover.py keeps
 its cover in step with its meta.json.
 """
@@ -24,9 +26,9 @@ part = HERE / "parts" / slug
 if not (part / "body.html").exists():
     sys.exit(f"{slug} has no body.html: its page is edited directly")
 meta = load(slug)
-css = (HERE / "shell.css").read_text() + (part / "page.css").read_text()
-js = (HERE / "shell.js").read_text() + "\n" + (part / "page.js").read_text()
-body = fill((part / "body.html").read_text(), meta)
+css = (HERE / "shell.css").read_text() + (HERE / "lineage.css").read_text() + (part / "page.css").read_text()
+js = (HERE / "shell.js").read_text() + "\n" + (HERE / "lineage.js").read_text() + "\n" + (part / "page.js").read_text()
+body = fill((part / "body.html").read_text(), meta, slug)
 out = f'''<!DOCTYPE html>
 <html lang="en">
 <head>

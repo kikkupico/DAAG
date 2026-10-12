@@ -285,6 +285,68 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
   .pulse{animation:none}
   .fig .tok{transition:none}
 }
+/* ---------- lineage: the papers a book's papers draw on and lead to (lineage.py) ---------- */
+.lin-wrap{margin-bottom:clamp(3rem,7vw,5rem)}
+.lin{--gap:134px;position:relative;margin-top:1.2rem}
+.lin ul{list-style:none;margin:0;padding:0}
+.lin h5{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#6b5a48;margin:0 0 6px;font-weight:700}
+.lin-edges{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.lin-edges path{fill:none;stroke:var(--ink);stroke-width:1.6}
+.lin-edges polygon{fill:var(--ink)}
+.lin-nodes>li{padding:6px 0}
+.lin-node{position:relative;z-index:1;display:block;padding:9px 12px;color:var(--ink);text-decoration:none;line-height:1.28}
+.lin-node b{display:block;font-size:.93rem}
+.lin-node .by{display:block;font-family:var(--sans);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--blood);margin-top:4px}
+.lin-node.book{background:#fffaf0;border:2px solid var(--ink);box-shadow:4px 5px 0 var(--shadow)}
+.lin-node.ext{background:#f6eed6;border:2px dashed #1c151288}
+.lin-node.ext b{font-weight:400;font-style:italic}
+a.lin-node:hover b{text-decoration:underline}
+.lin-node.here{background:var(--ink);color:var(--parch);border:2px solid var(--ink);box-shadow:5px 6px 0 var(--shadow);padding:13px 14px}
+.lin-node.here b{font-size:1rem}
+.lin-node.here .by{color:var(--gold)}
+.lin-link{position:relative;z-index:1;cursor:default;outline:0}
+.lin-link em{display:inline-block;font-family:var(--sans);font-style:normal;font-size:.72rem;line-height:1.2;background:#f6eed6;border:1px solid #1c151255;border-radius:10px;padding:2px 8px;color:var(--ink)}
+.lin-link .ends{font-family:var(--sans);font-size:.72rem;color:#6b5a48;margin-left:6px}
+.lin-link .why{display:block;font-size:.84rem;color:#3a2d24;margin:3px 0 0}
+.lin-say{font-size:.9rem;color:#3a2d24;margin:16px 0 0;max-width:none}
+.lin-say b{font-family:var(--sans);font-size:.74rem;letter-spacing:.06em;color:var(--blood);margin-right:8px}
+.lin-key{margin:10px 0 0;font-family:var(--sans);font-size:.74rem;color:#6b5a48}
+.lin-key .k{display:inline-block;width:20px;height:11px;vertical-align:-1px;margin:0 6px 0 16px;border:2px solid var(--ink)}
+.lin-key .k:first-child{margin-left:0}
+.lin-key .k.here{background:var(--ink)}
+.lin-key .k.book{background:#fffaf0}
+.lin-key .k.ext{border-style:dashed;border-color:#1c151288}
+@media(min-width:860px){
+  /* three columns; each paper at the sides keeps its links beside it, in the gap the edges cross */
+  .lin{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.92fr) minmax(0,1.2fr);align-items:center}
+  .lin-side.in h5{margin-right:var(--gap)}
+  .lin-side.out h5{margin-left:var(--gap)}
+  .lin-side .lin-nodes>li{display:grid;align-items:center}
+  .lin-side.in .lin-nodes>li{grid-template-columns:minmax(0,1fr) var(--gap)}
+  .lin-side.out .lin-nodes>li{grid-template-columns:var(--gap) minmax(0,1fr)}
+  .lin-side.out .lin-links{order:-1}
+  .lin-side .lin-links{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 10px;text-align:center}
+  .lin-mid{padding:0 56px}
+  .lin-mid .lin-nodes>li{padding:0}
+  .lin-mid .lin-nodes>li+li{margin-top:26px}
+  .lin-mid .lin-links{display:flex;justify-content:center;gap:8px;margin:-8px 0 18px;text-align:center}
+  .lin-link .ends,.lin-link .why{display:none}
+  .lin-say,.lin-key{grid-column:1/-1}
+  .lin-say{min-height:2.7em}
+  .lin-link em{transition:background .15s,color .15s}
+  .lin.hot .lin-node,.lin.hot .lin-link,.lin.hot .lin-edges g{opacity:.28}
+  .lin.hot .lin-node.on,.lin.hot .lin-link.on,.lin.hot .lin-edges g.on{opacity:1}
+  .lin.hot .lin-link.on em{background:var(--ink);color:var(--parch);border-color:var(--ink)}
+}
+@media(max-width:859px){
+  /* one column: each paper's links are written out under it */
+  .lin-side,.lin-mid{margin-bottom:1.4rem}
+  .lin-nodes>li{padding:7px 0}
+  .lin-links{margin:8px 0 4px 6px;padding-left:12px!important;border-left:2px solid #1c151255}
+  .lin-mid .lin-links{margin:0 0 8px 6px}
+  .lin-link+.lin-link{margin-top:8px}
+  .lin-say{display:none}
+}
 /* ---------- five logs ---------- */
 .logs{padding:18px 18px 14px}
 .logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
@@ -297,9 +359,7 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
 .rep5 .op.done{border-left-color:#5f6e28;background:#e3ecc4}
 .logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:3.6em;font-style:italic}
 /* ---------- the Tholos from above ---------- */
-.seat{cursor:default;transition:transform .6s ease}
-.seat-ghost{fill:none;stroke:#b5602c;stroke-width:2;stroke-dasharray:3 5;opacity:0;transition:opacity .4s}
-.seat-ghost.on{opacity:.8}
+.seat{cursor:default}
 .seat circle.b{stroke:var(--ink);stroke-width:4;transition:opacity .4s}
 .seat text.g{font-family:var(--sans);font-weight:700;font-size:17px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
 .seat text.s{font-family:var(--sans);font-size:12.5px;text-anchor:middle;fill:#1c1512}
@@ -371,6 +431,31 @@ table.terms2 td:first-child{width:40%;font-weight:700}
 <!-- ============================================================ machines -->
 <section class="spread light" id="machines" data-name="In machine terms">
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <!-- lineage -->
+  <div class="wrap lin-wrap">
+    <div class="kicker">Where this book sits</div>
+    <div class="lin">
+    <svg class="lin-edges" aria-hidden="true"></svg>
+    <div class="lin-side in"></div>
+    <div class="lin-mid">
+      <h5>This book retells</h5>
+      <ul class="lin-nodes">
+        <li><a class="lin-node here" data-n="m:oki-liskov-1988_viewstamped-replication" data-label="Oki &amp; Liskov 1988" href="https://www.cs.princeton.edu/courses/archive/fall09/cos518/papers/viewstamped.pdf"><b>Viewstamped Replication: A New Primary Copy Method to Support Highly-Available Distributed Systems</b><span class="by">Oki &amp; Liskov 1988</span></a></li>
+      </ul>
+    </div>
+    <div class="lin-side out">
+      <h5>Leads to</h5>
+      <ul class="lin-nodes">
+        <li><a class="lin-node book" data-n="o:castro-liskov-1999_practical-byzantine-fault-tolerance" data-label="Castro &amp; Liskov 1999" href="../keeping-order-among-liars/index.html"><b>Practical Byzantine Fault Tolerance</b><span class="by">Castro &amp; Liskov 1999 · Keeping Order Among Liars</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:oki-liskov-1988_viewstamped-replication" data-to="o:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>primary and view change</em><span class="ends"></span><span class="why">A primary, its backups, and a view change that replaces a faulty primary.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:liskov-cowling-2012" data-label="Liskov &amp; Cowling 2012"><b>Viewstamped Replication Revisited</b><span class="by">Liskov &amp; Cowling 2012</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:oki-liskov-1988_viewstamped-replication" data-to="o:liskov-cowling-2012" tabindex="0"><em>the protocol</em><span class="ends"></span><span class="why">The protocol, restated without transactions.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:ongaro-ousterhout-2014" data-label="Ongaro &amp; Ousterhout 2014"><b>In Search of an Understandable Consensus Algorithm</b><span class="by">Ongaro &amp; Ousterhout 2014</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:oki-liskov-1988_viewstamped-replication" data-to="o:ongaro-ousterhout-2014" tabindex="0"><em>leader and terms</em><span class="ends"></span><span class="why">A strong leader, and terms numbered as views are.</span></li></ul></li>
+      </ul>
+    </div>
+    <p class="lin-say">Each link is an idea one paper took from another. Point at one, or tap it, to read how.</p>
+    <p class="lin-key"><i class="k here"></i>a paper this book retells <i class="k book"></i>a paper retold in another book <i class="k ext"></i>a paper outside the series</p>
+    </div>
+  </div>
+  <!-- /lineage -->
   <div class="wrap two" style="gap:clamp(24px,5vw,60px);align-items:center">
     <div>
       <div class="kicker">First, in machine terms</div>
@@ -474,9 +559,9 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>The runners go out <em>and come back with a word</em></h4>
       <div class="hill-wrap">
-        <svg class="isle-svg fig" id="passsvg" role="group" aria-label="The Tholos from above: the holder at the podium in the centre, the other benches round the wall, and runners carrying lines out and words back"></svg>
+        <svg class="isle-svg fig" id="passsvg" role="group" aria-label="The Tholos from above: the podium at the centre, five benches round the wall, and runners carrying lines out and words back"></svg>
         <div>
-          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">The Tholos from above. The legislator at the centre holds the podium. Click a bench to have its legislator step out of reach, or come back.</p>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">The Tholos from above. The ringed legislator holds the podium. Click a bench to have its legislator step out of reach, or come back.</p>
           <div class="counts"><span><b id="pline">11</b>last line written</span><span><b id="ppass">11</b>passed up to</span></div>
           <p class="say" id="passsay">Okios holds the podium. Theron has stepped out. Write the next line.</p>
         </div>
@@ -775,8 +860,6 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     </div>
     <div class="apparatus">
       <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/schedia/index.html">Schedia and the Tholos</a></p>
-      <p class="lineage"><span class="lbl">Leads to</span> <a href="../keeping-order-among-liars/index.html">Keeping Order Among Liars</a></p>
-      <p class="lineage"><span class="lbl">Outside this series</span> Liskov &amp; Cowling 2012, <i>Viewstamped Replication Revisited</i> · Ongaro &amp; Ousterhout 2014, <i>Raft</i></p>
       <details class="proof">
         <summary>The paper behind this book</summary>
         <p>Brian M. Oki and Barbara H. Liskov, <i>Viewstamped Replication: A New Primary Copy Method to Support Highly-Available Distributed Systems</i>. Proceedings of the Seventh Annual ACM Symposium on Principles of Distributed Computing (PODC), Toronto, August 1988, 8–17. — The primary copy method, viewstamps, forcing to a sub-majority, the view change algorithm and its formation rule, and transaction processing with two-phase commit.</p>
@@ -914,6 +997,73 @@ function Polar(svg,o){
   return P;
 }
 
+/* lineage: draw the edges of a book's graph of papers, and say what an edge carries (lineage.py) */
+(function(){
+const NS="http://www.w3.org/2000/svg",wide=matchMedia("(min-width:860px)");
+document.querySelectorAll(".lin").forEach(lin=>{
+  const svg=lin.querySelector(".lin-edges"),say=lin.querySelector(".lin-say"),idle=say.innerHTML;
+  const node=n=>lin.querySelector('[data-n="'+n+'"]');
+  const links=[...lin.querySelectorAll(".lin-link")].map(el=>({el,side:el.dataset.side,from:el.dataset.from.split(" "),to:el.dataset.to.split(" "),g:null}));
+  const box=el=>{const a=el.getBoundingClientRect(),b=lin.getBoundingClientRect();
+    return {l:a.left-b.left,r:a.right-b.left,t:a.top-b.top,b:a.bottom-b.top,cx:(a.left+a.right)/2-b.left,cy:(a.top+a.bottom)/2-b.top}};
+  const mk=(tag,at,to)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);to.appendChild(e);return e};
+  const f=v=>v.toFixed(1);
+  const path=(g,d)=>mk("path",{d},g);
+  const flat=(g,x1,y1,x2,y2)=>path(g,`M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}`);
+  const bend=(g,x1,y1,x2,y2)=>{const m=(x1+x2)/2;path(g,`M${f(x1)} ${f(y1)}C${f(m)} ${f(y1)} ${f(m)} ${f(y2)} ${f(x2)} ${f(y2)}`)};
+  const head=(g,x,y,down)=>mk("polygon",{points:down?`${f(x-5)},${f(y-8)} ${f(x+5)},${f(y-8)} ${f(x)},${f(y)}`:`${f(x-8)},${f(y-5)} ${f(x-8)},${f(y+5)} ${f(x)},${f(y)}`},g);
+  function draw(){
+    svg.textContent="";
+    if(!wide.matches)return;
+    const R=lin.getBoundingClientRect();
+    svg.setAttribute("width",R.width);svg.setAttribute("height",R.height);svg.setAttribute("viewBox",`0 0 ${f(R.width)} ${f(R.height)}`);
+    const ports={};   // the edges that meet one side of a middle node share it out between them, in the order they come from
+    const port=(n,side,y,then)=>(ports[n+side]=ports[n+side]||[]).push({n,side,y,then});
+    links.forEach(k=>{
+      const g=k.g=mk("g",{},svg),c=box(k.el.querySelector("em"));
+      if(k.side==="in"){
+        flat(g,box(node(k.from[0])).r,c.cy,c.l,c.cy);
+        k.to.forEach(n=>port(n,"l",c.cy,(x,y)=>{bend(g,c.r,c.cy,x-7,y);head(g,x,y)}));
+      }else if(k.side==="out"){
+        const b=box(node(k.to[0]));
+        flat(g,c.r,c.cy,b.l-7,c.cy);head(g,b.l,c.cy);
+        k.from.forEach(n=>port(n,"r",c.cy,(x,y)=>bend(g,x,y,c.l,c.cy)));
+      }else{
+        const s=node(k.from[0]),t=node(k.to[0]),sb=box(s),tb=box(t);
+        if(t.parentNode.previousElementSibling===s.parentNode)flat(g,c.cx,sb.b,c.cx,c.t);
+        else{const y=sb.b-12,x=sb.r+20;   // round the papers between, outside their right edge
+          path(g,`M${f(sb.r)} ${f(y)}H${f(x-10)}Q${f(x)} ${f(y)} ${f(x)} ${f(y+10)}V${f(c.cy-10)}Q${f(x)} ${f(c.cy)} ${f(x-10)} ${f(c.cy)}H${f(c.r)}`)}
+        flat(g,c.cx,c.b,c.cx,tb.t-7);head(g,c.cx,tb.t,true);
+      }
+    });
+    for(const key in ports){
+      const list=ports[key].sort((a,b)=>a.y-b.y),b=box(node(list[0].n)),h=b.b-b.t;
+      list.forEach((p,i)=>p.then(p.side==="l"?b.l:b.r,b.t+h*(.2+.6*(i+.5)/list.length)));
+    }
+  }
+  function light(on,words){
+    lin.classList.toggle("hot",on.length>0);
+    const nodes=new Set(on.flatMap(k=>k.from.concat(k.to)));
+    links.forEach(k=>{const is=on.includes(k);k.el.classList.toggle("on",is);if(k.g)k.g.classList.toggle("on",is)});
+    lin.querySelectorAll(".lin-node").forEach(n=>n.classList.toggle("on",nodes.has(n.dataset.n)));
+    say.innerHTML=words||idle;
+  }
+  const name=ns=>ns.map(n=>node(n).dataset.label).join(", ");
+  links.forEach(k=>{
+    const tell=()=>light([k],"<b>"+name(k.from)+" → "+name(k.to)+"</b>"+k.el.querySelector(".why").innerHTML);
+    k.el.addEventListener("mouseenter",tell);k.el.addEventListener("focus",tell);k.el.addEventListener("click",tell);
+  });
+  lin.querySelectorAll(".lin-node").forEach(n=>{
+    const mine=()=>light(links.filter(k=>k.from.concat(k.to).includes(n.dataset.n)));
+    n.addEventListener("mouseenter",mine);n.addEventListener("focus",mine);
+  });
+  lin.addEventListener("mouseleave",()=>light([]));
+  new ResizeObserver(draw).observe(lin);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
+  draw();
+});
+})();
+
 /* Schedia's five legislators, told apart by colour */
 const WHO={O:{n:"Okios",g:"Ο",c:"#8fa3b8"},L:{n:"Liskovia",g:"Λ",c:"#e8b03a"},K:{n:"Kleon",g:"Κ",c:"#8fb35a"},M:{n:"Melissa",g:"Μ",c:"#cf5a4a"},T:{n:"Theron",g:"Θ",c:"#b3aea4"}};
 const ALL=["O","L","K","M","T"];
@@ -946,7 +1096,7 @@ $("#cast").innerHTML=ALL.map(who).join("");
   reset();
 })();
 
-/* ===== the Tholos, seen from above: the holder at the podium in the centre, the other benches round the wall, the porch door below ===== */
+/* ===== the Tholos, seen from above: the podium at the centre, five benches round the wall, the porch door below ===== */
 function Tholos(svg,o={}){
   const cx=220,cy=215,rr=204,R=138,A={O:-90,L:-18,K:54,M:126,T:198};
   svg.innerHTML="";svg.setAttribute("viewBox","0 0 440 470");
@@ -955,7 +1105,7 @@ function Tholos(svg,o={}){
   el("rect",{x:cx-26,y:cy+rr-2,width:52,height:26,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3},svg);
   el("text",{x:cx,y:cy+rr+42,class:"lab",style:"font-size:12px"},svg).textContent="the porch";
   const under=el("g",{},svg),pod=el("g",{class:"podium"},svg),seats=el("g",{},svg),over=el("g",{},svg);
-  const disc=el("circle",{cx,cy,r:48,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":4},pod),bt=el("text",{x:cx,y:cy},pod);
+  const disc=el("circle",{cx,cy,r:34,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":4},pod),bt=el("text",{x:cx,y:cy},pod);
   const T={svg,cx,cy,under,over,seat:{},porch:[cx,cy+rr+12],
     at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
     put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
@@ -963,16 +1113,13 @@ function Tholos(svg,o={}){
     token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
     /* a runner or a note u of the way from one place to another */
     run(g,a,b,u){const [x1,y1]=T.pos(a),[x2,y2]=T.pos(b);T.put(g,x1+(x2-x1)*u,y1+(y2-y1)*u)},
-    /* the holder takes the podium, and their bench at the wall is left as an empty outline */
-    board(text,k){bt.textContent=text;bt.setAttribute("y",k?cy-30:cy);disc.setAttribute("fill","#d9cfb4");
-      ALL.forEach(x=>{const S=T.seat[x],h=x===k;S.g.classList.toggle("holder",h);S.ghost.classList.toggle("on",h);
-        S.x=h?cx:S.wx;S.y=h?cy+12:S.wy;S.g.style.transform=`translate(${S.x}px,${S.y}px)`;S.s.setAttribute("y",h?43:S.sy)})},
+    board(text,k){bt.textContent=text;disc.setAttribute("fill",k?WHO[k].c:"#d9cfb4");ALL.forEach(x=>T.seat[x].g.classList.toggle("holder",x===k))},
     note(k,s){T.seat[k].s.textContent=s},
     out(k,on){T.seat[k].g.classList.toggle("out",!!on)}
   };
-  ALL.forEach(k=>{const [x,y]=T.at(A[k]),ghost=el("circle",{class:"seat-ghost",cx:x,cy:y,r:24},under),g=el("g",{class:"seat"},seats);T.put(g,x,y);
+  ALL.forEach(k=>{const [x,y]=T.at(A[k]),g=el("g",{class:"seat"},seats);T.put(g,x,y);
     el("circle",{class:"ring",r:31},g);el("circle",{class:"b",r:24,fill:WHO[k].c},g);el("text",{class:"g"},g).textContent=WHO[k].g;
-    const sy=A[k]<0&&A[k]>-180?-34:43,s=el("text",{class:"s halo",y:sy},g);T.seat[k]={x,y,wx:x,wy:y,sy,g,s,ghost}});
+    const s=el("text",{class:"s halo",y:A[k]<0&&A[k]>-180?-34:43},g);T.seat[k]={x,y,g,s}});
   return T;
 }
 

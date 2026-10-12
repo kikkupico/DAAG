@@ -10,11 +10,14 @@ art/scroll/parts/<slug>/meta.json holds, beside the page's title and description
     papers     [{"authors": "...", "title": "...", "year": 1998}, ...], written out on the cover
 
 A book's body.html says {{question}}, {{how}} and {{source}} on its cover, and assemble.py fills
-them in. The home page, index.html, and the Part-Time Parliament's page, which has no body.html,
-are written by hand: the check compares them, and --write puts meta.json's words into them.
+them in, with {{lineage}}, the graph of the book's papers (see lineage.py). The home page, index.html, and the Part-Time Parliament's page, which has no body.html,
+are written by hand: the check compares them, and --write puts meta.json's words into them,
+and into the Parliament's page its graph, between <!-- lineage --> and <!-- /lineage -->, with
+lineage.css and lineage.js.
 """
 import json, re, sys
 from pathlib import Path
+from lineage import OPEN, CLOSE, block
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
@@ -29,15 +32,31 @@ def source(meta):
     return "After " + " · ".join(f'{p["authors"]}, <i>{p["title"]}</i>, {p["year"]}' for p in meta["papers"])
 
 
-def fill(body, meta):
-    """Put the cover's words into a body.html."""
+def fill(body, meta, slug):
+    """Put the cover's words and the graph of the book's papers into a body.html."""
     words = {"question": meta["question"], "how": meta["how"], "source": source(meta)}
     for key, text in words.items():
         mark = "{{" + key + "}}"
         if body.count(mark) != 1:
             sys.exit(f"body.html must say {mark} exactly once")
         body = body.replace(mark, text)
-    return body
+    if body.count("{{lineage}}") != 1:
+        sys.exit("body.html must say {{lineage}} exactly once")
+    return body.replace("{{lineage}}", block(slug))
+
+
+GRAPH = re.compile(re.escape(OPEN) + ".*?" + re.escape(CLOSE), re.S)
+STYLE = re.compile(r"/\* lineage\.css \*/.*?/\* end lineage\.css \*/\n", re.S)
+SCRIPT = re.compile(r"<script>/\* lineage\.js \*/.*?</script>\n", re.S)
+
+
+def by_hand(page, slug):
+    """A page written by hand, with the graph, its styles and its script as they should be now."""
+    css = "/* lineage.css */\n" + (HERE / "lineage.css").read_text() + "/* end lineage.css */\n"
+    js = "<script>/* lineage.js */\n" + (HERE / "lineage.js").read_text() + "</script>\n"
+    page = GRAPH.sub(lambda m: block(slug), page, 1)
+    page = STYLE.sub(lambda m: css, page, 1) if STYLE.search(page) else page.replace("</style>", css + "</style>", 1)
+    return SCRIPT.sub(lambda m: js, page, 1) if SCRIPT.search(page) else page.replace("</body>", js + "</body>", 1)
 
 
 def card_re(slug):
@@ -79,10 +98,16 @@ def main():
         if (PARTS / slug / "body.html").exists():
             # an assembled page is never edited: a difference means it needs building again
             m = COVER.search(page)
-            if not m or m.group(2, 4, 6) != want:
-                bad.append(f"books/{slug}: cover is stale, run assemble.py {slug}")
+            g = GRAPH.search(page)
+            if not m or m.group(2, 4, 6) != want or not g or g.group(0) != block(slug):
+                bad.append(f"books/{slug}: cover or graph is stale, run assemble.py {slug}")
         else:
             new = sync(page, COVER, want, f"books/{slug} cover", write, bad)
+            if by_hand(new, slug) != new:
+                if write:
+                    new = by_hand(new, slug)
+                else:
+                    bad.append(f"books/{slug}: graph of papers is stale, run cover.py --write")
             if new != page:
                 page_path.write_text(new)
                 print("wrote", page_path.relative_to(ROOT))

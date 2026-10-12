@@ -145,12 +145,12 @@ The shape that has worked before:
 | | |
 |---|---|
 | **Cover** | Four pieces of text beside the picture: the title; the book's question in machine terms; its "We find out by exploring…" line; and the source papers with their titles and every author, in small print. The last three come from `meta.json`. |
-| **In machine terms** | The paper's problem and result in plain distributed-systems words, with one small interactive that shows the difficulty with machines. |
+| **In machine terms** | First the graph of the book's papers: what each draws on and what it leads to, with the idea that passes along every link. It is built from `papers/lineage.json`, which keeps lineage by paper and records only the reuse of an idea, never an order of reading; a new paper or link is added there (see `art/scroll/lineage.py`). Then the paper's problem and result in plain distributed-systems words, with one small interactive that shows the difficulty with machines. |
 | **The setting** | A photograph of the place with the premise in two or three sentences. Link the setting page with a superscript; do not describe the place again. |
 | **The model** | One spread per device, each built up by an interactive. The reader should not notice they are being handed a formal system. |
 | **The results** | One spread per result, each stated in the setting's own words, shown by an interactive, and proved in a collapsed panel. |
 | **What it does not say** | What the result does *not* claim, or what it costs, or what it assumes and never verifies. It is often the best spread in a book. |
-| **Back to machines** | The who-is-who table, the result in one sentence, then lineage, the papers and the ideas. |
+| **Back to machines** | The who-is-who table, the result in one sentence, then the link to the setting, the papers and the ideas. |
 
 **The book is carried by questions, written as statements.** Write down the questions a careful
 reader would ask, in order, and let them drive the spreads. Each spread answers what the one
@@ -197,7 +197,7 @@ Concretely:
   restated in this book's own words, as a fact of the island, and linked to the book that
   established it by a superscript:
   `<sup class="xref"><a href="../ordering-without-clocks/index.html#s3" title="Ordering Without Clocks: Breaking Ties">*</a></sup>`,
-  placed after the fact. The apparatus may name books: the lineage lines and the closing panels.
+  placed after the fact. The apparatus may name books: the graph of papers at the start and the closing panels.
 - **People are neutral.** A numbered figure or a role is never "he" or "she": repeat the role or
   use "they". Picture `alt` text may describe what the picture shows.
 - Say what is *not* claimed, out loud, immediately after saying what is. The gap between a
