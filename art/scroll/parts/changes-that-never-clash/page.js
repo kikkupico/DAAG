@@ -108,7 +108,7 @@ const sum=v=>v.reduce((a,b)=>a+b,0),larger=(x,y)=>x.map((n,i)=>Math.max(n,y[i]))
   seg($("#hord"),[[0,"Library 1"],[1,"Library 2"]],first,v=>{first=+v;paint()});paint();
 })();
 
-/* ===== a list where every writing of a title has its own mark: what is held is the marks written and the marks struck ===== */
+/* ===== a list where every writing of a title has its own tag: what is held is the tags written and the tags struck ===== */
 function Marks(name){return {name,add:new Set(),struck:new Set(),n:0,
   write(title){const m=`${title}·${name}·${++this.n}`;this.add.add(m);return m},
   live(title){return [...this.add].filter(m=>m.startsWith(title+"·")&&!this.struck.has(m))},
@@ -116,15 +116,15 @@ function Marks(name){return {name,add:new Set(),struck:new Set(),n:0,
   take(o){o.add.forEach(m=>this.add.add(m));o.struck.forEach(m=>this.struck.add(m))}}}
 (function(){
   const box=$("#olibs"),say=$("#osay");let L;
-  const lab=m=>{const [t,l,n]=m.split("·");return `mark ${l}-${n}`};
+  const lab=m=>{const [t,l,n]=m.split("·");return `tag ${l}-${n}`};
   const shelf=l=>`<div class="shelf"><h5>Library ${l.name}'s list</h5>${[...l.add].map(m=>`<span class="it${l.struck.has(m)?" gone":""}">the title, ${lab(m)}</span>`).join("")||'<span class="it none">nothing written yet</span>'}<div style="margin-top:6px">${l.live("T").length?'<span class="ok">The title is on the catalogue.</span>':'The title is not on the catalogue.'}</div></div>`;
   const paint=()=>box.innerHTML=L.map(shelf).join("");
   function reset(){L=[Marks("1"),Marks("2")];paint();say.textContent="Each library sees only its own list until the two exchange."}
   const add=i=>{const m=L[i].write("T");paint();say.innerHTML=`Library ${i+1} writes the title, with ${lab(m)}.`};
-  const strike=i=>{const s=L[i].strike("T");paint();say.innerHTML=s.length?`Library ${i+1} strikes every mark of the title it can see: ${s.map(lab).join(", ")}.`:`Library ${i+1} sees no mark of the title, so there is nothing for it to strike.`};
+  const strike=i=>{const s=L[i].strike("T");paint();say.innerHTML=s.length?`Library ${i+1} strikes every tag of the title it can see: ${s.map(lab).join(", ")}.`:`Library ${i+1} sees no tag of the title, so there is nothing for it to strike.`};
   $("#oa1").onclick=()=>add(0);$("#oa2").onclick=()=>add(1);$("#os1").onclick=()=>strike(0);$("#os2").onclick=()=>strike(1);
   $("#omeet").onclick=()=>{L[0].take(L[1]);L[1].take(L[0]);paint();const on=L[0].live("T");
-    say.innerHTML=on.length?`Each takes in the other's marks and strikes. ${on.map(lab).join(", ")} ${on.length>1?"were":"was"} never struck, so <span class="ok">the title is on the catalogue</span> at both.`:"Each takes in the other's marks and strikes. Every mark has been struck, so the title is off the catalogue at both."};
+    say.innerHTML=on.length?`Each takes in the other's tags and strikes. ${on.map(lab).join(", ")} ${on.length>1?"were":"was"} never struck, so <span class="ok">the title is on the catalogue</span> at both.`:"Each takes in the other's tags and strikes. Every tag has been struck, so the title is off the catalogue at both."};
   $("#oreset").onclick=reset;reset();
 })();
 
@@ -143,8 +143,8 @@ function Marks(name){return {name,add:new Set(),struck:new Set(),n:0,
   (function go(done,ia,ib){if(done.length===4){orders.push(done);return}
     if(ia<2)go([...done,acts[ia]],ia+1,ib);if(ib<2)go([...done,acts[2+ib]],ia,ib+1)})([],0,0);
   const both=orders.filter(o=>{const s=new Set();o.forEach(([,k,x])=>k==="add"?s.add(x):s.delete(x));return s.has("E")&&s.has("F")}).length;
-  $("#ordlist").innerHTML=`<li><b>L1</b> Library 1 · <b>L2</b> Library 2 · <b>T</b> a terrace</li><li>Library 1 adds E, then strikes F. It sees ${sf.length} ${sf.length===1?"mark":"marks"} of F.</li><li>Library 2 adds F, then strikes E. It sees ${se.length} ${se.length===1?"mark":"marks"} of E.</li><li>The terrace takes in both lists.</li>`;
+  $("#ordlist").innerHTML=`<li><b>L1</b> Library 1 · <b>L2</b> Library 2 · <b>T</b> a terrace</li><li>Library 1 adds E, then strikes F. It sees ${sf.length} ${sf.length===1?"tag":"tags"} of F.</li><li>Library 2 adds F, then strikes E. It sees ${se.length} ${se.length===1?"tag":"tags"} of E.</li><li>The terrace takes in both lists.</li>`;
   $("#ordsay").innerHTML=`On the terrace's list: <b>${on.join(" and ")||"neither"}</b>. Of the ${orders.length} single orders in which the four acts could be done one after another, ${both||"none"} ${both===1?"ends":"end"} with both titles on the list.`;
 })();
 
-mapPairs($("#map"),[["A terrace, its scribe and its table","A replica and its state"],["Terraces that heard the same news show the same count","Strong eventual consistency"],["A column for each terrace, written only by its own scribe","A vector with one entry per replica"],["Taking the larger pile in each column","Merge: the per-entry maximum"],["Any order, any grouping, as often as you like","Commutative, associative, idempotent"],["The table way","State-based replication"],["The notice way: exactly once, in order of dependence","Operation-based replication over reliable causal delivery"],["White pebbles and black","A counter that goes up and down: two grow-only counters"],["The later edition wins","A last-writer-wins register"],["Keeping both corrections","A multi-value register"],["The catalogue of titles","A grow-only set"],["The struck-off list","A two-phase set"],["A mark for every writing; a strike removes the marks seen","An observed-remove set"],["A limit on the whole coast's count","A global invariant, which needs coordination"]]);
+mapPairs($("#map"),[["A terrace, its scribe and its table","A replica and its state"],["Terraces that heard the same news show the same count","Strong eventual consistency"],["A column for each terrace, written only by its own scribe","A vector with one entry per replica"],["Taking the larger pile in each column","Merge: the per-entry maximum"],["Any order, any grouping, as often as you like","Commutative, associative, idempotent"],["The table way","State-based replication"],["The notice way: exactly once, in order of dependence","Operation-based replication over reliable causal delivery"],["White pebbles and black","A counter that goes up and down: two grow-only counters"],["The later edition wins","A last-writer-wins register"],["Keeping both corrections","A multi-value register"],["The catalogue of titles","A grow-only set"],["The struck-off list","A two-phase set"],["A tag for every writing; a strike removes the tags seen","An observed-remove set"],["A limit on the whole coast's count","A global invariant, which needs coordination"]]);

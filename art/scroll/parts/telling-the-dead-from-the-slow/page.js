@@ -188,7 +188,7 @@ const strongRun=(function(){
   });
 })();
 
-/* ===== any night: deaths, wrong slates, and every tally still ends the same ===== */
+/* ===== any night: deaths, wrong slates, and every sheet still ends the same ===== */
 (function(){
   const out=$("#tryout"),say=$("#trysay"),btns=$$("[data-dead]");
   function go(n){
@@ -198,13 +198,13 @@ const strongRun=(function(){
     const skips={},o={sight,c,dies,part,skip:(p,r)=>skips[p+"-"+r]||(skips[p+"-"+r]=T.filter(q=>q!==p&&q!==c&&rnd(2)))};
     const R=runStrong(o),fin=R.finish,tallies=new Set(fin.map(p=>JSON.stringify(R.V[p]))),ans=new Set(Object.values(R.commit));
     const when=r=>r===0?"killed before sending anything":r<4?`killed in round ${r}`:"killed while comparing";
-    out.innerHTML=`<div class="chead t"><span>tent</span><span>saw</span><span>fate</span><span>final tally</span><span>commits to</span></div>`+
+    out.innerHTML=`<div class="chead t"><span>tent</span><span>saw</span><span>fate</span><span>final sheet</span><span>commits to</span></div>`+
       T.map(p=>{const d=dies[p]!=null,V=R.V[p];
         return `<div class="crow t${d?" dead":""}">${tentChip(p)}<span><b>${sight[p]}</b></span><span>${d?when(dies[p]):p===c?"alive, never chalked":"alive"}</span>`+
           (d?`<span></span><span>–</span>`:`<span><div class="tally">${T.map(k=>`<span class="tc ${V[k]?"f":""}">${V[k]||"–"}</span>`).join("")}</div></span><span><b>${word[R.commit[p]]}</b></span>`)+`</div>`}).join("");
     const same=tallies.size===1,one=ans.size===1,seen=[...ans].every(a=>Object.values(sight).includes(a));
     say.innerHTML=`${n?cap(tents(dead))+(n>1?" are":" is")+" killed.":"Nobody is killed."} Tent ${c} lives and is never chalked, and every other living man may be chalked by anyone, over and over. `+
-      `<span class="${same?"ok":"bad"}">${same?"Every living man ends with the same tally.":"The tallies differ."}</span> `+
+      `<span class="${same?"ok":"bad"}">${same?"Every living man ends with the same sheet.":"The sheets differ."}</span> `+
       `<span class="${one&&seen?"ok":"bad"}">${one&&seen?"All commit to "+word[[...ans][0]]+", an answer someone sighted.":"The answers differ."}</span>`;
   }
   btns.forEach(b=>b.onclick=()=>go(+b.dataset.dead));go(1);
@@ -322,7 +322,7 @@ mapPairs($("#map"),[
  ["The four ways of sparing the living","Strong, weak, eventual strong and eventual weak accuracy (§2.3)"],
  ["The eight kinds of slate","P, S, ◇P, ◇S, Q, W, ◇Q, ◇W (Fig. 1)"],
  ["Copying marks","The reduction from weak to strong completeness, preserving accuracy (Fig. 3, Theorem 1, Corollary 1)"],
- ["The tally of sightings; spreading; comparing","The vector V_p; Phase 1's n − 1 rounds; Phase 2 (Fig. 5)"],
+ ["The sheet of sightings; spreading; comparing","The vector V_p; Phase 1's n − 1 rounds; Phase 2 (Fig. 5)"],
  ["One Man Never Chalked","Consensus is solvable with S, tolerating up to n − 1 crashes (Theorem 2; Corollary 2 for W)"],
  ["Turns in number order; the owner","The rotating coordinator, c = (r mod n) + 1 (§6.2)"],
  ["An estimate and the round it was taken up","estimate_p and its timestamp ts_p (Fig. 6)"],
