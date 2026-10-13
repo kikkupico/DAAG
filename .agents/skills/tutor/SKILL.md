@@ -13,6 +13,9 @@ everything the tutor writes lives in `bespoke/`, which is not in git.
 
 ## Start
 
+Your tool names differ by agent; the steps below say what to do, and the file for your agent
+gives the tools: `claude.md` for Claude Code, `agy.md` for Antigravity.
+
 0. Fetch the papers, unless this session already has:
 
        python3 tutor/prepare.py
@@ -21,9 +24,6 @@ everything the tutor writes lives in `bespoke/`, which is not in git.
    and writes each one's text beside it as `.txt`. It takes a moment when nothing is missing.
    If it reports a paper it could not fetch, carry on, and say so only if a question comes to
    turn on that paper.
-Your tool names differ by agent; the steps below say what to do, and the file for your agent
-gives the tools: `claude.md` for Claude Code, `agy.md` for Antigravity.
-
 1. Start the server as a long-running background process:
 
        python3 tutor/server.py
