@@ -16,7 +16,7 @@ Everything it produces is kept under bespoke/, which is not in git:
 
 A session is one run of this server: starting it opens an empty chat and stops any server left
 from an earlier session (--resume keeps the chat, for restarting the server mid-session). The reader
-can also write a note of their own on a passage; it is kept beside the pinned ones. The agent (see .claude/skills/tutor) reads messages through watch.py.
+can also write a note of their own on a passage; it is kept beside the pinned ones. The agent (see .agents/skills/tutor, also reached as .claude/skills/tutor) reads messages through watch.py.
 A pinned note is a header of "key: value" lines, a line of ---, then an HTML fragment.
 The pages themselves are never written to.
 

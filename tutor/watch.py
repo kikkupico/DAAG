@@ -1,12 +1,15 @@
 """Hand the reader's unanswered chat messages to the agent, one JSON line each.
 
-    python3 tutor/watch.py
+    python3 tutor/watch.py [--loop]
 
-Run it under the Monitor tool. It prints every message of the live session that has no reply
+Without --loop it prints the first such message and exits, for an agent that is woken when a
+background task finishes. With --loop it keeps running, for a streaming monitor (Claude Code's
+Monitor). It prints every message of the live session that has no reply
 yet, including ones sent while nobody was watching, then each new one as it arrives. While it
 runs it touches bespoke/.watching, which is how the page knows a tutor is listening.
 """
 import json
+import sys
 import time
 
 from server import BESPOKE, HEART, ROOT, session
@@ -39,4 +42,6 @@ while True:
             "text": turn.get("text", ""),
             "selected": quote[:200] + ("…" if len(quote) > 200 else ""),
         }, ensure_ascii=False), flush=True)
+        if "--loop" not in sys.argv:
+            sys.exit(0)
     time.sleep(1)

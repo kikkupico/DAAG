@@ -538,7 +538,7 @@
     input.disabled = sendButton.disabled = !listening;
     if (!listening) {
       input.placeholder = alive
-        ? 'No tutor is listening. Run /tutor in Claude Code in this repo.'
+        ? 'No tutor is listening. Run /tutor in an agent in this repo.'
         : 'This tutor session has ended.';
     } else setDraft(draft);
     const turns = JSON.stringify(state.turns), notes = JSON.stringify(state.notes);
