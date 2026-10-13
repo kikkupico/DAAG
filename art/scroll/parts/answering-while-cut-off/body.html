@@ -69,7 +69,7 @@
       <h2>Four tents, out of sight of one another</h2>
       <p>Four mercenaries are camped at the foot of Mount Phyle, one to a tent and under nobody's command.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> Bandits hold the top of the hill, and the four must all attack or all hold. The tents cannot see one another, so word passes between them only by raven.</p>
     </div></div>
-    <div class="pin pop" style="left:50%;top:44%;"><div class="leaf"><b>A known flight</b>No wind blows on these nights, so a raven that arrives does so within a span that all four know.</div></div>
+    <div class="pin pop" style="left:50%;top:44%;"><div class="leaf"><b>A known flight</b>No wind blows on these nights, so a raven that arrives does so within a time that all four know.</div></div>
     <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>A hawk may take any bird</b>A hawk may take a raven in the folds of the hill. Nobody sees it taken, and the bird never arrives.</div></div>
     <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>Nobody stops, nobody commits</b>On these nights no man stops, no man lies, and nothing is decided. The four only share a plan and answer one another about it.</div></div>
   </div>
@@ -122,7 +122,7 @@
       <p>The first debt is about what an answer says, and the second is about getting an answer at all. The condition is the hawks.</p>
     </div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First debt</div><h3>Answering as one</h3><p>Each tent has its own note, but the plan behaves as one plan. Every move and every question, at all four tents, fits one order in which a single record would have given every answer, each taking effect at a moment within its own span, and anything finished before another began coming first.<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One: The Rule of the Board">*</a></sup> If Number 2 has moved the plan to attack and been told it stands, a man who asks afterwards must hear attack, or a later move.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First debt</div><h3>Answering as one</h3><p>Each tent has its own note, but the plan behaves as one plan. Every move and every question, at all four tents, fits one order in which a single record would have given every answer, each taking effect at a moment between its start and its answer, and anything finished before another began coming first.<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One: The Rule of the Board">*</a></sup> If Number 2 has moved the plan to attack and been told it stands, a man who asks afterwards must hear attack, or a later move.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second debt</div><h3>Every man is answered</h3><p>A man who asks, or moves the plan, is answered in the end, from what their tent holds. No limit is set on how soon, only that the answer come.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The condition</div><h3>Birds may be lost</h3><p>A hawk may take any bird, on any night. The two debts must be paid all the same.</p></div></div></div>
     </div>
@@ -153,7 +153,7 @@
     <details class="proof">
       <summary>The camps of this book, stated formally</summary>
       <ol class="proofsteps">
-        <li>On these nights there is no wind. A bird that arrives does so within a known span, a <b>flight</b>; a man answers a bird within a known span of that man's own.</li>
+        <li>On these nights there is no wind. A bird that arrives does so within a known time, a <b>flight</b>; a man answers a bird within a known time of that man's own.</li>
         <li>Any bird may be lost, and between a cut-off tent and the rest every bird is lost, for as long as that lasts.</li>
         <li>Each tent has a sandglass. The glasses run alike, so a man can measure the length of a wait, but no man can tell what another's glass shows.</li>
       </ol>
@@ -208,8 +208,7 @@
         as one gives hold.</li>
         <li><b>Put them together.</b> Let the first night happen among the three and the second at
         tent 4, at the same time. The three cannot tell this from the first night, since nothing reaches
-        them from tent 4 in either, so Number 2's move is made and answered as before. Because of the
-        quiet span, Number 4 asks after Number 2's move was finished.</li>
+        them from tent 4 in either, so Number 2's move is made and answered as before. Because of the quiet time, Number 4 asks after Number 2's move was finished.</li>
         <li>Number 4 cannot tell this from the second night. Number 4 began with the same note, the glass has run the same, and no bird has reached tent 4 in either. So Number 4 answers hold.</li>
         <li>But Number 2's move was finished before Number 4 asked, so it comes first in any order that
         answers as one, and a single record would have said attack. That contradicts the
@@ -266,14 +265,14 @@
     </details>
     <details class="proof">
       <summary>Proof · that the muster-master's arrangement answers as one</summary>
-      <p class="given">In the paper's terms the muster-master is the designated node of the centralized algorithm, and answering as one is atomic consistency. <b>Claim.</b> Ordering all moves and questions by the moment the muster-master dealt with them, every answer is what a single record would say, each takes effect within its own span, and anything finished before another began comes first.</p>
+      <p class="given">In the paper's terms the muster-master is the designated node of the centralized algorithm, and answering as one is atomic consistency. <b>Claim.</b> Ordering all moves and questions by the moment the muster-master dealt with them, every answer is what a single record would say, each takes effect between its start and its answer, and anything finished before another began comes first.</p>
       <ol class="proofsteps">
         <li>Order all moves and questions by the moment the muster-master dealt with them. This is one order,
         the same whichever tent the man was at.</li>
         <li>Every answer is the muster-master's, from the muster-master's one note in that order, so each is what a single
         record would say.</li>
         <li>The muster-master deals with a man's business after it began, since the bird was sent then, and
-        before it ends, since the answer waits for the muster-master. So each takes effect within its span,
+        before it ends, since the answer waits for the muster-master. So each takes effect between its start and its answer,
         and anything finished before another began was dealt with first.<span class="qed">∎</span></li>
       </ol>
     </details>
@@ -341,7 +340,7 @@
       <div class="kicker">The damage ends</div>
       <h2>How stale, and for how long</h2>
       <p class="lede">The four can promise the damage ends, and the promise has a span of time in it, fixed in advance and measured by the glass. A loss does its damage only while it lasts and for the span after. Nobody can promise how long the hawks stay. The four promise only how long they take to catch up.</p>
-      <p>Catching up means that a move made without the muster-master reaches the muster-master, and then every tent. At the camps birds come in any order, so a man cannot count on an earlier bird arriving first. Every bird a man sends the muster-master therefore carries, before anything else, all the moves that man has made that the muster-master has not yet acknowledged, in the order they were made. The muster-master numbers each move as it comes in, and every bird from the muster-master carries the plan and its number, so that a man can go by the highest-numbered plan to have come. Scroll to watch a move that Number 4 made while cut off find its way round.</p>
+      <p>Catching up means that a move made without the muster-master reaches the muster-master, and then every tent. At the camps birds come in any order, so a man cannot count on an earlier bird arriving first. Every bird a man sends the muster-master therefore carries, before anything else, all the moves that man has made that the muster-master has not yet acknowledged, in the order they were made. The muster-master stamps each move as it comes in, and every bird from the muster-master carries the plan and its stamp, so that a man can go by the plan with the highest stamp to have come. Scroll to watch a move that Number 4 made while cut off find its way round.</p>
     </div>
   </div>
   <div class="scrolly" id="span">
@@ -352,8 +351,8 @@
     <div class="steps">
       <div class="step on"><div class="card"><div class="num">1 · Cut off</div><h3>Number 4 moves the plan</h3><p>Hawks are in the fold of tent 4. Number 4 moves the plan to attack and sends the move to the muster-master. The bird is lost. After a glass Number 4 is told it stands.</p></div></div>
       <div class="step"><div class="card"><div class="num">2 · Sent again</div><h3>Until acknowledged, send it again</h3><p>Number 4 sends the move again and again, often enough that with no bird lost it would reach the muster-master within half the span. Each bird is lost while the hawks stay.</p></div></div>
-      <div class="step"><div class="card"><div class="num">3 · The hawks leave</div><h3>One bird gets through</h3><p>The next bird after the hawks leave reaches the muster-master. The muster-master changes the note and gives the move the next number.</p></div></div>
-      <div class="step"><div class="card"><div class="num">4 · The muster-master sends it round</div><h3>Every tent learns the plan</h3><p>The muster-master sends the plan and its number to every tent, again to any that has not acknowledged it, often enough that with no bird lost they arrive within half the span.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · The hawks leave</div><h3>One bird gets through</h3><p>The next bird after the hawks leave reaches the muster-master. The muster-master changes the note and gives the move the next stamp.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · The muster-master sends it round</div><h3>Every tent learns the plan</h3><p>The muster-master sends the plan and its stamp to every tent, again to any that has not acknowledged it, often enough that with no bird lost they arrive within half the span.</p></div></div>
       <div class="step"><div class="card"><div class="num">5 · A span</div><h3>No bird is lost for a span</h3><p>From the moment the hawks left, a span longer than the promised one passes with no bird lost. Everything the loss did is now mended.</p></div></div>
       <div class="step"><div class="card"><div class="num">6 · A question</div><h3>Anyone asking now hears attack</h3><p>A question begun after that span is answered with Number 4's move or a later one. Here Number 3 asks, and is told attack.</p></div></div>
     </div>
@@ -361,10 +360,10 @@
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
       <p><b>The Span.</b> The muster-master's arrangement with a span answers every man, answers as one on any night on which no bird is lost, and on every night keeps the promise of the span. The damage lasts only as long as the loss and a span after.</p>
-      <p>The picture leaves one thing out. All through the loss, the three went on moving and asking through the muster-master. Take Number 2 moving the plan to hold while Number 4, cut off, moves it to attack. The muster-master numbers both once Number 4's bird arrives, and the plan ends at whichever move was numbered later, so the promise is kept. For a while, though, two men are each told a different plan stands, and no promise about when they learn of it undoes that. Step through it below.</p>
+      <p>The picture leaves one thing out. All through the loss, the three went on moving and asking through the muster-master. Take Number 2 moving the plan to hold while Number 4, cut off, moves it to attack. The muster-master stamps both once Number 4's bird arrives, and the plan ends at whichever move was stamped later, so the promise is kept. For a while, though, two men are each told a different plan stands, and no promise about when they learn of it undoes that. Step through it below.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.4rem">
-      <h4>Two men move the plan <em>the plan stood at attack, number 1</em></h4>
+      <h4>Two men move the plan <em>the plan stood at attack, stamp 1</em></h4>
       <table class="dtab" id="twotab"></table>
       <p class="say" id="twosay"></p>
       <div class="row"><button class="btn" id="twonext">Next</button><button class="btn alt" id="tworeset">Start again</button></div>
@@ -386,30 +385,28 @@
     </details>
     <details class="proof">
       <summary>The muster-master's arrangement with a span, stated formally</summary>
-      <p><b>At every tent, always:</b> every bird from the muster-master carries the plan and its number, and a man goes by the highest-numbered one to have come. Every bird a man sends the muster-master carries all that man's unacknowledged moves, in order.</p>
-      <p><b>A question:</b> send to the muster-master and wait a glass. If the muster-master answers in time, give that answer. If not, give the latest of the asker's own unacknowledged moves, or if there is none, the highest-numbered plan the asker holds.</p>
+      <p><b>At every tent, always:</b> every bird from the muster-master carries the plan and its stamp, and a man goes by the one with the highest stamp to have come. Every bird a man sends the muster-master carries all that man's unacknowledged moves, in order.</p>
+      <p><b>A question:</b> send to the muster-master and wait a glass. If the muster-master answers in time, give that answer. If not, give the latest of the asker's own unacknowledged moves, or if there is none, the plan with the highest stamp the asker holds.</p>
       <p><b>A move:</b> send to the muster-master and wait a glass. It stands when the muster-master acknowledges it or the glass runs out, whichever is first. Until acknowledged, send it again, often enough that with no bird lost it reaches the muster-master within half of <var>t</var>.</p>
-      <p><b>At the muster-master:</b> each move that reaches the muster-master, taken in its sender's order, changes the muster-master's note and takes the next number. The muster-master sends the plan and number to every tent, again and again to any that has not acknowledged it, often enough that with no bird lost they arrive within half of <var>t</var>.</p>
+      <p><b>At the muster-master:</b> each move that reaches the muster-master, taken in its sender's order, changes the muster-master's note and takes the next stamp. The muster-master sends the plan and stamp to every tent, again and again to any that has not acknowledged it, often enough that with no bird lost they arrive within half of <var>t</var>.</p>
       <p class="fnote">The modified centralized algorithm, Theorem 4.</p>
     </details>
     <details class="proof">
       <summary>Proof · that the muster-master's arrangement with a span keeps the promise</summary>
       <p class="given">In the paper's terms (Definition 3 and Theorem 4), <var>t</var> is the span, fixed in advance and measured by the local timers, and <var>P</var> is an order on all the moves and questions of a night. <b>Claim.</b> On every night the muster-master's arrangement with a span answers every man, and admits an order <var>P</var> satisfying clauses (1) to (5) of the promise of the span, stated above.</p>
       <ol class="proofsteps">
-        <li><b>The order.</b> Order the moves by the muster-master's numbers; a move that never reaches the muster-master goes after all the numbered ones, in the order it was made. Place each question immediately
+        <li><b>The order.</b> Order the moves by the muster-master's stamps; a move that never reaches the muster-master goes after all the stamped ones, in the order it was made. Place each question immediately
         after the move whose plan it was given, or at the start if it was given hold from dusk. Then
         every question is answered with the last move before it: clauses (1) and (2).</li>
         <li><b>Each man's own order.</b> A man's moves reach the muster-master in the order they were made, since
-        each bird carries all the earlier unacknowledged ones first; so the muster-master numbers them in that
-        order, and has numbered them before answering that man's question. A man never answers with a lower number than one already held, and that man's own unacknowledged moves are newer than anything the muster-master has sent. So each man's questions land after that man's earlier business: clause (3).</li>
+        each bird carries all the earlier unacknowledged ones first; so the muster-master stamps them in that order, and has stamped them before answering that man's question. A man never answers with a lower stamp than one already held, and that man's own unacknowledged moves are newer than anything the muster-master has sent. So each man's questions land after that man's earlier business: clause (3).</li>
         <li><b>No bird lost.</b> Then no glass runs out, every answer is the muster-master's, and this is the plain muster-master's arrangement, which answers as one: clause (4).</li>
         <li><b>A move, then a span.</b> Suppose a move by Number 4 was finished, then more than
-        <var>t</var> passed with no bird lost. In that span the move reaches the muster-master and the muster-master's
-        number for it reaches every tent, each within half of <var>t</var>. So any move begun after
-        the span gets a higher number, and any question begun after it is answered with this move or a
+        <var>t</var> passed with no bird lost. In that span the move reaches the muster-master and the muster-master's stamp for it reaches every tent, each within half of <var>t</var>. So any move begun after
+        the span gets a higher stamp, and any question begun after it is answered with this move or a
         later one.</li>
         <li><b>A question, then a span.</b> The plan a finished question was given came from the muster-master
-        or from a move of the asker's own. Either way, within the span that move is numbered and sent to
+        or from a move of the asker's own. Either way, within the span that move is stamped and sent to
         every tent, and the last step places everything begun after the span later in <var>P</var>:
         clause (5).<span class="qed">∎</span></li>
       </ol>
