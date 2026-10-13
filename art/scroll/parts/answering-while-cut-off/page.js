@@ -141,14 +141,14 @@ const record=(moves,askAt)=>{const done=moves.filter(m=>m.end<askAt).sort((a,b)=
   if(!same||ans===rec1)throw new Error("the two nights must look alike to tent 4 and the answer must break answering as one");
 })();
 
-/* ===== the scribe's arrangement: any two ===== */
+/* ===== the muster-master's arrangement: any two ===== */
 (function(){
   const H=Hill($("#keepsvg")),hk=hawkFold(H,4),say=$("#keepsay"),D=[1,2,3].map(i=>$("#kd"+i)),bt=["#kp1","#kp2","#kp3"].map(s=>$(s));
-  H.state(1,"scribe");
+  H.state(1,"muster-master");
   const names=["Answering as one","Every man is answered","Carrying on while birds can be lost"];
   const right=record([{plan:"attack",end:1}],2);
   function line(i,v,why){D[i].innerHTML=`<b>${names[i]}</b> ${v==null?dash:yesno(v)}<br>${why}`}
-  async function run(kind){bt.forEach(b=>b.disabled=true);const hawks=kind!=="scribe-clear";hk.show(hawks);
+  async function run(kind){bt.forEach(b=>b.disabled=true);const hawks=kind!=="muster-master-clear";hk.show(hawks);
     [2,3,4].forEach(k=>H.state(k,""));D.forEach((d,i)=>d.innerHTML=`<b>${names[i]}</b>`);
     let ans;
     say.textContent="Number 2 moves the plan to attack.";
@@ -156,35 +156,35 @@ const record=(moves,askAt)=>{const done=moves.filter(m=>m.end<askAt).sort((a,b)=
     else{await trip(H,2,1,false);await trip(H,1,2,false);H.state(2,"told: stands")}
     say.textContent="Later, Number 4 asks which plan stands.";
     if(kind==="own"){ans="hold";await sleep(700);H.state(4,"says hold")}
-    else if(kind==="scribe-clear"){await trip(H,4,1,false);await trip(H,1,4,false);ans="attack";H.state(4,"told: attack")}
+    else if(kind==="muster-master-clear"){await trip(H,4,1,false);await trip(H,1,4,false);ans="attack";H.state(4,"told: attack")}
     else{await trip(H,4,1,true);ans=null;H.state(4,"no answer")}
     const one=ans==null?true:ans===right,every=ans!=null;
     line(0,one,ans==null?"Every answer that is given is right.":one?"Number 4 hears attack, which is what a single record says.":`Number 4 says ${ans}, though Number 2's move was finished before they asked. A single record says ${right}.`);
     line(1,every,every?(kind==="own"?"Number 4 is answered at once, from their own note.":"Both men are answered."):"Number 4 is alive and well and is not answered.");
     line(2,hawks?true:null,hawks?(kind==="own"?"Nobody waits for a bird.":"Tent 4 is cut off, and nothing the four say is wrong."):"No bird is lost tonight, so this night does not test it.");
-    say.innerHTML=kind==="scribe-clear"?"With no hawks, the scribe's arrangement gives <b>answering as one</b> and an answer for every man.":kind==="scribe"?"With tent 4 cut off, the scribe's arrangement gives up <b>answering every man</b>.":"Answering from their own notes gives up <b>answering as one</b>.";
+    say.innerHTML=kind==="muster-master-clear"?"With no hawks, the muster-master's arrangement gives <b>answering as one</b> and an answer for every man.":kind==="muster-master"?"With tent 4 cut off, the muster-master's arrangement gives up <b>answering every man</b>.":"Answering from their own notes gives up <b>answering as one</b>.";
     bt.forEach(b=>b.disabled=false)}
-  bt[0].onclick=()=>run("scribe-clear");bt[1].onclick=()=>run("scribe");bt[2].onclick=()=>run("own");
+  bt[0].onclick=()=>run("muster-master-clear");bt[1].onclick=()=>run("muster-master");bt[2].onclick=()=>run("own");
   D.forEach((d,i)=>d.innerHTML=`<b>${names[i]}</b>`);
 })();
 
 /* ===== waiting a glass ===== */
 (function(){
   const H=Hill($("#glasssvg")),hk=hawkFold(H,4),say=$("#gsay"),stand=$("#gstand"),fill=$("#gfill"),bs={ask:$("#gask"),move:$("#gmove"),ask2:$("#gask2"),hawk:$("#ghawk"),reset:$("#greset")};
-  H.state(1,"scribe");
+  H.state(1,"muster-master");
   let hawks,K,N,own,done,answers,everLost,busy;
   function init(){hawks=false;K="attack";N={4:"hold"};own={4:null};done=[{by:2,plan:"attack"}];answers=[];everLost=false;busy=false;hk.show(false);
     bs.hawk.textContent="Hawks come to tent 4's fold";fill.style.width="0";fill.classList.remove("out");
     say.textContent="Number 4 may ask, or move the plan. With hawks in the fold, the glass will run out.";paint()}
   function paint(){
-    stand.innerHTML=`<div>Scribe's note: <b>${K}</b></div><div>Tent 4's note: <b>${N[4]}</b>${own[4]?`; their own move, not known to the scribe: <b>${own[4]}</b>`:""}</div>
+    stand.innerHTML=`<div>Muster-master's note: <b>${K}</b></div><div>Tent 4's note: <b>${N[4]}</b>${own[4]?`; their own move, not known to the muster-master: <b>${own[4]}</b>`:""}</div>
       <div>Hawks in the fold of tent 4: <b>${hawks?"yes":"no"}</b></div>
       <div style="margin-top:6px">Answers given: ${answers.length?answers.map(a=>`Number ${a.k}: ${a.given} ${yesno(a.ok)}`).join("; "):"none"}</div>`;
     Object.values(bs).forEach(b=>b.disabled=busy)}
   async function ask(k){busy=true;paint();const lost=hawks&&k===4,right=record(done.map(m=>({plan:m.plan,end:0})),1);let given;
-    fill.classList.remove("out");fill.style.width="0";say.textContent=`Number ${k} asks, sends a bird to the scribe and turns the glass.`;
+    fill.classList.remove("out");fill.style.width="0";say.textContent=`Number ${k} asks, sends a bird to the muster-master and turns the glass.`;
     if(!lost){const w=35+rnd(45);await trip(H,k,1,false);await trip(H,1,k,false);fill.style.width=w+"%";given=K;if(k===4)N[4]=K;
-      say.innerHTML=`The scribe's answer came <b>before the glass ran out</b>, and Number ${k} takes it: ${given}.`}
+      say.innerHTML=`The muster-master's answer came <b>before the glass ran out</b>, and Number ${k} takes it: ${given}.`}
     else{everLost=true;const p=trip(H,4,1,true);fill.style.width="100%";await p;await sleep(600);fill.classList.add("out");
       given=own[4]!=null?own[4]:N[4];
       say.innerHTML=`<b>The glass ran out.</b> Number 4 answers from their own note: ${given}${own[4]!=null?", their own move, since they have moved the plan since":""}.`}
@@ -192,14 +192,14 @@ const record=(moves,askAt)=>{const done=moves.filter(m=>m.end<askAt).sort((a,b)=
     answers.push({k,given,ok});if(!ok)say.innerHTML+=` <span class="bad">A single record says ${right}.</span>`+(everLost&&!hawks?" The hawks are gone, but a bird was lost earlier tonight.":" This happens only because a bird is lost.");
     busy=false;paint()}
   async function move(p){busy=true;paint();const lost=hawks;fill.classList.remove("out");fill.style.width="0";
-    say.textContent=`Number 4 moves the plan to ${p}, sends the move to the scribe and turns the glass.`;
-    if(!lost){await trip(H,4,1,false);await trip(H,1,4,false);K=p;own[4]=null;N[4]=p;fill.style.width=(35+rnd(45))+"%";say.innerHTML="The scribe answered in time: the move stands, and the scribe's note changes."}
+    say.textContent=`Number 4 moves the plan to ${p}, sends the move to the muster-master and turns the glass.`;
+    if(!lost){await trip(H,4,1,false);await trip(H,1,4,false);K=p;own[4]=null;N[4]=p;fill.style.width=(35+rnd(45))+"%";say.innerHTML="The muster-master answered in time: the move stands, and the muster-master's note changes."}
     else{everLost=true;const q=trip(H,4,1,true);fill.style.width="100%";await q;await sleep(600);fill.classList.add("out");own[4]=p;
-      say.innerHTML="<b>The glass ran out.</b> Number 4 is told the move stands. The scribe never heard of it."}
+      say.innerHTML="<b>The glass ran out.</b> Number 4 is told the move stands. The muster-master never heard of it."}
     done.push({by:4,plan:p});busy=false;paint()}
   bs.ask.onclick=()=>ask(4);bs.ask2.onclick=()=>ask(2);bs.move.onclick=()=>move("hold");
   bs.hawk.onclick=()=>{hawks=!hawks;hk.show(hawks);bs.hawk.textContent=hawks?"Hawks leave tent 4's fold":"Hawks come to tent 4's fold";
-    say.textContent=hawks?"Hawks keep to the fold of tent 4.":"The hawks have gone. Nothing here tells the scribe what Number 4 may have moved while they stayed.";paint()};
+    say.textContent=hawks?"Hawks keep to the fold of tent 4.":"The hawks have gone. Nothing here tells the muster-master what Number 4 may have moved while they stayed.";paint()};
   bs.reset.onclick=init;init();
 })();
 
@@ -207,7 +207,7 @@ const record=(moves,askAt)=>{const done=moves.filter(m=>m.end<askAt).sort((a,b)=
 (function(){
   const svg=$("#spansvg"),side=$("#spanside");
   const P=Polar(svg,{vb:"0 0 620 600",cx:310,cy:300,r0:44,step:30,rings:9,tEnd:9.4,note:[14,24],nodes:{1:[225,"T1",TC[1]],2:[135,"T2",TC[2]],3:[315,"T3",TC[3]],4:[45,"T4",TC[4]]}});
-  /* the times, in glass units: a flight, the scribe's time to answer, the span, the moment the hawks leave */
+  /* the times, in glass units: a flight, the muster-master's time to answer, the span, the moment the hawks leave */
   const f=.7,aT=.2,S=3.2,G=2*f+aT,rs=S/2-f,mv=1.4,h=3.5;
   const sends=[];for(let t=mv;;t+=rs){sends.push({t,lost:t<h});if(t>=h)break}
   const first=sends.find(x=>!x.lost),arrK=first.t+f,arrAll=arrK+f,spanEnd=h+S,askT=spanEnd+.2,ansT=askT+G;
@@ -230,12 +230,12 @@ const record=(moves,askAt)=>{const done=moves.filter(m=>m.end<askAt).sort((a,b)=
   const gs=[G1,G2,G3,G4,G5,G6];
   const mk=(h,r)=>`<div class="hc"><h5>${h}</h5><div class="rc">${r}</div></div>`;
   const cards=[
-    [mk("Tent 1, the scribe","note: hold<br>nothing heard"),mk("Tent 3","note: hold"),mk("Tent 4","moved the plan to attack<br>told it stands")],
-    [mk("Tent 1, the scribe","note: hold<br>nothing heard"),mk("Tent 3","note: hold"),mk("Tent 4","sends the move again<br>no bird gets through")],
-    [mk("Tent 1, the scribe","attack, number 1"),mk("Tent 3","note: hold"),mk("Tent 4","not yet acknowledged")],
-    [mk("Tent 1, the scribe","attack, number 1"),mk("Tent 3","attack, number 1"),mk("Tent 4","attack, number 1<br>acknowledged")],
-    [mk("Tent 1, the scribe","attack, number 1"),mk("Tent 3","attack, number 1"),mk("Tent 4","attack, number 1<br>a span has passed, no bird lost")],
-    [mk("Tent 1, the scribe","attack, number 1"),mk("Tent 3","asks<br>answered <b>attack</b>"),mk("Tent 4","attack, number 1")]];
+    [mk("Tent 1, the muster-master","note: hold<br>nothing heard"),mk("Tent 3","note: hold"),mk("Tent 4","moved the plan to attack<br>told it stands")],
+    [mk("Tent 1, the muster-master","note: hold<br>nothing heard"),mk("Tent 3","note: hold"),mk("Tent 4","sends the move again<br>no bird gets through")],
+    [mk("Tent 1, the muster-master","attack, number 1"),mk("Tent 3","note: hold"),mk("Tent 4","not yet acknowledged")],
+    [mk("Tent 1, the muster-master","attack, number 1"),mk("Tent 3","attack, number 1"),mk("Tent 4","attack, number 1<br>acknowledged")],
+    [mk("Tent 1, the muster-master","attack, number 1"),mk("Tent 3","attack, number 1"),mk("Tent 4","attack, number 1<br>a span has passed, no bird lost")],
+    [mk("Tent 1, the muster-master","attack, number 1"),mk("Tent 3","asks<br>answered <b>attack</b>"),mk("Tent 4","attack, number 1")]];
   scrolly($("#span"),s=>{gs.forEach((g,i)=>g.classList.toggle("on",i<=s));side.innerHTML=cards[s].join("")});
 })();
 
@@ -246,10 +246,10 @@ const record=(moves,askAt)=>{const done=moves.filter(m=>m.end<askAt).sort((a,b)=
   const beats=[
     ()=>"The plan stands at attack, number 1, at every tent. Hawks are in the fold of tent 4.",
     ()=>{K={plan:"hold",n:2};[1,2,3].forEach(k=>view[k]={plan:"hold",n:2});view[4]={plan:"attack",n:"own move"};
-      return "Number 2 moves the plan to hold. The scribe numbers it 2 and sends it round, and Number 2 is told it stands. Number 4, cut off, moves it to attack and after a glass is told it stands too. Two men are each told a different plan stands."},
-    ()=>{K={plan:"attack",n:3};return "The hawks leave. Number 4's move reaches the scribe, who numbers it 3."},
-    ()=>{[1,2,3,4].forEach(k=>view[k]={plan:K.plan,n:K.n});return "The scribe sends attack, number 3, to every tent. The plan ends at whichever move was numbered later."}];
-  function paint(t){tab.innerHTML="<tr><th>Tent</th><th>Holds, or was told</th><th>Number</th></tr>"+[1,2,3,4].map(k=>`<tr><td>${tentChip(k)}${k===1?" scribe":""}</td><td>${k===1?K.plan:view[k].plan}</td><td>${k===1?K.n:view[k].n}</td></tr>`).join("");say.textContent=t;bn.disabled=i>=beats.length-1}
+      return "Number 2 moves the plan to hold. The muster-master numbers it 2 and sends it round, and Number 2 is told it stands. Number 4, cut off, moves it to attack and after a glass is told it stands too. Two men are each told a different plan stands."},
+    ()=>{K={plan:"attack",n:3};return "The hawks leave. Number 4's move reaches the muster-master, who numbers it 3."},
+    ()=>{[1,2,3,4].forEach(k=>view[k]={plan:K.plan,n:K.n});return "The muster-master sends attack, number 3, to every tent. The plan ends at whichever move was numbered later."}];
+  function paint(t){tab.innerHTML="<tr><th>Tent</th><th>Holds, or was told</th><th>Number</th></tr>"+[1,2,3,4].map(k=>`<tr><td>${tentChip(k)}${k===1?" muster-master":""}</td><td>${k===1?K.plan:view[k].plan}</td><td>${k===1?K.n:view[k].n}</td></tr>`).join("");say.textContent=t;bn.disabled=i>=beats.length-1}
   function reset(){K={plan:"attack",n:1};view={};[1,2,3,4].forEach(k=>view[k]={plan:"attack",n:1});i=0;paint(beats[0]())}
   bn.onclick=()=>{i++;paint(beats[i]())};
   br.onclick=reset;reset();
@@ -288,11 +288,11 @@ mapPairs($("#map"),[
  ["Glasses that run alike","Local timers at the same rate, not synchronised: the partially synchronous model (§4.1)"],
  ["The claim, any two of three","At most two of consistency, availability and partition tolerance: Brewer's conjecture, PODC 2000"],
  ["The Cut-Off Tent; the two nights","No algorithm guarantees availability and atomic consistency when messages may be lost, even with timers and a delivery bound; the executions α and α′₂ (Theorem 2; Theorem 1 in the asynchronous model)"],
- ["The scribe's arrangement","A designated node holds the object; others forward requests and wait: the centralized algorithm (§3.2)"],
+ ["The muster-master's arrangement","A designated node holds the object; others forward requests and wait: the centralized algorithm (§3.2)"],
  ["Answering from one's own note","Returning local, possibly stale, data: available and partition tolerant (§3.2.3)"],
  ["Waiting a glass","A timeout after which the node answers with the best value it knows: 2 t_msg + t_local (§4.3)"],
  ["The promise of the span","A partial order that is atomic when no message is lost, and that orders any operation completed before a loss-free interval longer than t ahead of any operation begun after it: delayed-t consistency (Definition 3)"],
- ["The scribe's numbers; sending again; every bird carrying the unacknowledged moves","The central node's sequence numbers and retransmission. Carrying the unacknowledged writes on every message stands in for ordered channels, which ravens do not give (Theorem 4)"],
+ ["The muster-master's numbers; sending again; every bird carrying the unacknowledged moves","The central node's sequence numbers and retransmission. Carrying the unacknowledged writes on every message stands in for ordered channels, which ravens do not give (Theorem 4)"],
  ["The wind; the Wind result","No bound on message delay: availability cannot be combined with atomicity even in executions where no messages are lost (asynchronous model, §3; Corollary 1.1)"],
  ["Which number each tent bears","A service needing no coordination: a trivial service, outside the theorem (2012, §2)"],
  ["The camps' impossibility","FLP: consensus with one crash, no message loss. Neither FLP nor CAP implies the other (2012, footnote 2)"],
