@@ -428,7 +428,7 @@ a.lin-node:hover b{text-decoration:underline}
     <div>
       <h1>Keeping Order Among Liars</h1>
       <p class="generic">Can a replicated service keep its commands in order when some of its machines lie, the leader included, and messages take arbitrarily long?</p>
-      <p class="allegory">We find out by exploring how four bandits holding a hilltop kept one book of their loot when any of them, their chief included, might be lying.</p>
+      <p class="allegory">We find out by exploring how four bandits holding a hilltop held one book of their loot when any of them, their chief included, might be lying.</p>
       <p class="source">After Miguel Castro and Barbara Liskov, <i>Practical Byzantine Fault Tolerance</i>, 1999</p>
     </div>
     <div class="pop" data-auto>
@@ -484,7 +484,7 @@ a.lin-node:hover b{text-decoration:underline}
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>Many copies, one order</h2>
-      <p class="lede">A service is kept on several computers, so that it survives the loss of some. Every honest copy must apply the same commands in the same order, even when some copies lie.</p>
+      <p class="lede">A service is run on several computers, so that it survives the loss of some. Every honest copy must apply the same commands in the same order, even when some copies lie.</p>
       <p>The order matters because the effect of a command depends on the commands before it, as the two copies beside this show. A faulty machine here may do worse than stop. It may lie, and the leader that hands out the order may be the one lying. Up to <var>f</var> of 3<var>f</var> + 1 machines may be faulty, which with four machines is one. Messages may take any time at all, so the order must hold whatever the delays, and progress is asked for only once delays stop growing without bound.</p>
       <ul class="terms">
         <li><b>Three phases of messages</b> (Castro and Liskov, 1999) order each command, so that no two honest copies put different commands in the same place.</li>
@@ -524,9 +524,9 @@ a.lin-node:hover b{text-decoration:underline}
   <div class="wrap">
     <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
-        <div class="kicker">What the four keep</div>
+        <div class="kicker">What the four hold</div>
         <h2>The loot scroll</h2>
-        <p class="lede">The four keep a scroll of the loot, one copy at each post, since no post is in sight of another. The scroll says where each strongbox lies, and whose share it is.</p>
+        <p class="lede">The four hold a scroll of the loot, one copy at each post, since no post is in sight of another. The scroll says where each strongbox lies, and whose share it is.</p>
         <p>The scroll grows by entries. An entry is one record about the loot, <em>the third strongbox lies in the north cleft</em> or <em>the silver cups are Number 3's share</em>, and any bandit may file one. Every copy must take the entries in the same order, because the effect of an entry depends on what the scroll already says. Two copies that took the same entries in different orders could come to say different things about the same strongbox.</p>
         <p>These are later nights of the siege. The sandglasses were turned together once, on the first night, and never again.<sup class="xref"><a href="../agreeing-among-liars/index.html#s3" title="Agreeing Among Liars: The Rats in the Wall">*</a></sup></p>
       </div>
@@ -534,11 +534,11 @@ a.lin-node:hover b{text-decoration:underline}
     </div>
     <p class="tell">The four owe each other two things about this scroll, and the two are owed on different terms.</p>
     <div class="cards3" style="margin-top:1.2rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the four owe each other</div><h3>Order</h3><p>Every honest copy takes the same entries in the same order. The scroll then behaves as though one keeper wrote every entry at a single moment between its filing and its standing.<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One: The Rule of the Board">*</a></sup></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the four owe each other</div><h3>Order</h3><p>Every honest copy takes the same entries in the same order. The scroll then behaves as though one hand wrote every entry at a single moment between its filing and its standing.<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One: The Rule of the Board">*</a></sup></p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the four owe each other</div><h3>Going on</h3><p>Every entry that an honest bandit files stands in the end, once the wind has dropped for long enough.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Why each of them</div><h3>Any wind, and no promise</h3><p>Order must hold in any wind, because nobody can see the wind drop. Going on cannot be promised while the wind blows. If four bandits could promise to agree on anything with the rats held in their holes for any time, the mercenaries at the foot could agree whether to attack, and they cannot.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: A Fair Night in Which Nothing Is Ever Settled">*</a></sup></p></div></div></div>
     </div>
-    <p class="tell">Four copies, then, with one liar among the keepers and a wind that nobody can see drop. Something has to decide what order the entries go in.</p>
+    <p class="tell">Four copies, then, with one liar among the four and a wind that nobody can see drop. Something has to decide what order the entries go in.</p>
     <details class="proof">
       <summary>Stated formally · what the four owe each other</summary>
       <p class="given">Safety: the service is linearizable. Liveness: clients eventually receive replies, provided at most ⌊(<var>n</var> − 1)/3⌋ replicas are faulty and delay(<var>t</var>) does not grow faster than <var>t</var> indefinitely. (Castro and Liskov, §2–3.)</p>
@@ -555,20 +555,20 @@ a.lin-node:hover b{text-decoration:underline}
       <div>
         <div class="kicker">Who numbers the entries</div>
         <h2>The chief's job</h2>
-        <p class="lede">The order of the entries is decided by numbering them, so that every copy can take them in number order. Numbering is a job, held by one bandit at a time. The job does not belong to the chief by right, because on the crown the chief is a job and no rank.<sup class="xref"><a href="../agreeing-among-liars/index.html#s2" title="Agreeing Among Liars: Hold, or Scatter">*</a></sup></p>
-        <p>The job starts with Number 1, the chief inside the ring wall. When it passes, it passes in number order: 1, 2, 3, 4, then 1 again. Each spell in the job is a <b>term</b>, and terms are counted, so the count alone says who holds the job.</p>
+        <p class="lede">The order of the entries is decided by numbering them, so that every copy can take them in number order. Numbering is a job, taken by one bandit at a time. The job does not belong to the chief by right, because on the crown the chief is a job and no rank.<sup class="xref"><a href="../agreeing-among-liars/index.html#s2" title="Agreeing Among Liars: Hold, or Scatter">*</a></sup></p>
+        <p>The job starts with Number 1, the chief inside the ring wall. When it passes, it passes in number order: 1, 2, 3, 4, then 1 again. Each spell in the job is a <b>term</b>, and terms are counted, so the count alone says who has the job.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on its top, a few white tents on the slopes below and the sea beyond" loading="lazy"></div></div></div>
     </div>
-    <p class="tell">A bandit who wants an entry seals it and sends it to the holder. The holder gives it the next number. Then the others make sure of it, and at the end every honest bandit writes the entry into their copy, in number order, and sends the filer a sealed word that it stands.</p>
-    <p class="tell">Anyone may hold the job, the one who lies included, so nothing the holder says is trusted on its own. Everything that follows is built against a holder who does any of three things.</p>
+    <p class="tell">A bandit who wants an entry seals it and sends it to the registrar. The registrar gives it the next number. Then the others make sure of it, and at the end every honest bandit writes the entry into their copy, in number order, and sends the filer a sealed word that it stands.</p>
+    <p class="tell">Anyone may have the job, the one who lies included, so nothing the registrar says is trusted on its own. Everything that follows is built against a registrar who does any of three things.</p>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the holder</div><h3>Gives two entries the same number</h3><p>Two different entries go out under one number.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the holder</div><h3>Tells different bandits different things</h3><p>One entry goes to some bandits, and another to the rest.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the holder</div><h3>Sits on an entry</h3><p>The entry is filed, and the holder numbers nothing.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the registrar</div><h3>Gives two entries the same number</h3><p>Two different entries go out under one number.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the registrar</div><h3>Tells different bandits different things</h3><p>One entry goes to some bandits, and another to the rest.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the registrar</div><h3>Sits on an entry</h3><p>The entry is filed, and the registrar numbers nothing.</p></div></div></div>
     </div>
-    <p class="tell"><b>A bandit knows their entry stands when it stands in their own copy.</b> The paper has a rule for a filer who is not one of the keepers, which is to wait for two matching sealed words from different bandits. With one liar, two matching words include an honest one. The four do not need that rule, since each honest bandit keeps a copy and can read it. The rule is what a filer from outside the four would need, and there is none.</p>
-    <p class="tell">The holder may lie, then, in any of these three ways. The others need a way to make sure of a number before they write anything down.</p>
+    <p class="tell"><b>A bandit knows their entry stands when it stands in their own copy.</b> The paper has a rule for a filer who is not one of the four, which is to wait for two matching sealed words from different bandits. With one liar, two matching words include an honest one. The four do not need that rule, since each honest bandit holds a copy and can read it. The rule is what a filer from outside the four would need, and there is none.</p>
+    <p class="tell">The registrar may lie, then, in any of these three ways. The others need a way to make sure of a number before they write anything down.</p>
   </div>
 </section>
 
@@ -579,7 +579,7 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow">
       <div class="kicker">One entry, from filing to standing</div>
       <h2>Two echoes</h2>
-      <p class="lede">The others make sure of a number by echoing it, twice. An entry stands only after the holder has numbered it and the bandits have echoed it twice. Every rat here is sealed, and every bandit keeps every sealed rat they take in, so that each can later show what they were told. Follow one entry from its filing to its standing, and watch how many seals each post holds. Scroll slowly: the picture moves with you.</p>
+      <p class="lede">The others make sure of a number by echoing it, twice. An entry stands only after the registrar has numbered it and the bandits have echoed it twice. Every rat here is sealed, and every bandit holds every sealed rat they take in, so that each can later show what they were told. Follow one entry from its filing to its standing, and watch how many seals each post holds. Scroll slowly: the picture moves with you.</p>
     </div>
   </div>
   <div class="scrolly" id="echo">
@@ -588,25 +588,25 @@ a.lin-node:hover b{text-decoration:underline}
       <div class="side four" id="echoside" data-live></div>
     </div></div>
     <div class="steps">
-      <div class="step on"><div class="card"><div class="num">1 · The filing</div><h3>An entry is filed</h3><p>Number 2 wants an entry written. They seal it and send it to the holder of the job, Number 1.</p></div></div>
-      <div class="step"><div class="card"><div class="num">2 · The numbering</div><h3>Number 1 numbers it</h3><p>The holder gives the entry a number, 7, and sends the numbering to the others. The wind holds back the rat to Number 4, and nobody waits for it.</p></div></div>
+      <div class="step on"><div class="card"><div class="num">1 · The filing</div><h3>An entry is filed</h3><p>Number 2 wants an entry written. They seal it and send it to the registrar, Number 1.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · The numbering</div><h3>Number 1 numbers it</h3><p>The registrar gives the entry a number, 7, and sends the numbering to the others. The wind holds back the rat to Number 4, and nobody waits for it.</p></div></div>
       <div class="step"><div class="card"><div class="num">3 · The first echo</div><h3>The numbering is echoed</h3><p>Numbers 2 and 3 accept it. Each tells the others: <em>in this term, I heard that entry 7 is this one</em>.</p></div></div>
-      <div class="step"><div class="card"><div class="num">4 · Readied</div><h3>Three seals on one entry</h3><p>A bandit who holds the numbering and two matching first echoes, from bandits other than the holder, has the entry <b>readied</b>. Numbers 1, 2 and 3 now do.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Readied</div><h3>Three seals on one entry</h3><p>A bandit who holds the numbering and two matching first echoes, from bandits other than the registrar, has the entry <b>readied</b>. Numbers 1, 2 and 3 now do.</p></div></div>
       <div class="step"><div class="card"><div class="num">5 · The second echo</div><h3>Readied is echoed too</h3><p>Each bandit with the entry readied tells the others: <em>in this term, entry 7 is readied here</em>.</p></div></div>
       <div class="step"><div class="card"><div class="num">6 · Standing</div><h3>The entry stands</h3><p>A bandit with three matching second echoes, their own among them, has the entry <b>standing</b>. It stands at Numbers 1, 2 and 3, and nobody waited for Number 4.</p></div></div>
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
-    <p class="tell" style="margin-top:0">A bandit writes a standing entry into their copy as soon as every lower number has been written, and sends the filer word that it stands. Rats may come in any order, so entry 9 can stand before entry 8. A bandit then keeps entry 9 and waits, and writes nothing past a gap.</p>
+    <p class="tell" style="margin-top:0">A bandit writes a standing entry into their copy as soon as every lower number has been written, and sends the filer word that it stands. Rats may come in any order, so entry 9 can stand before entry 8. A bandit then holds entry 9 and waits, and writes nothing past a gap.</p>
     <p class="tell">An entry stands without waiting for everyone. Each step needs three matching seals out of four, so a post whose rats are held by the wind, or a liar who says nothing, cannot hold the others up.</p>
-    <p class="tell"><b>The two echoes do different work.</b> The first settles order <em>within</em> a term: once an entry is readied anywhere honest, no honest bandit can ready a different entry under the same number in that term, even if the holder lies. The second settles it <em>across</em> terms: once an entry stands at an honest post, enough honest bandits have it readied that any later holder will be made to keep it.</p>
+    <p class="tell"><b>The two echoes do different work.</b> The first settles order <em>within</em> a term: once an entry is readied anywhere honest, no honest bandit can ready a different entry under the same number in that term, even if the registrar lies. The second settles it <em>across</em> terms: once an entry stands at an honest post, enough honest bandits have it readied that any later registrar will be made to keep it.</p>
     <p class="tell">Both claims rest on three matching seals being enough, and one of the three seals may be the liar's.</p>
     <details class="proof">
       <summary>Stated formally · an entry, from numbering to standing</summary>
-      <p class="given">In the paper's terms the holder is the primary, the numbering a pre-prepare, the first echo a prepare, readied is <i>prepared</i> (the pre-prepare and 2<var>f</var> matching prepares), the second echo a commit, and standing is <i>committed-local</i> (prepared and 2<var>f</var> + 1 matching commits). Writing in number order is execution in sequence-number order. (Castro and Liskov, §4.2.)</p>
+      <p class="given">In the paper's terms the registrar is the primary, the numbering a pre-prepare, the first echo a prepare, readied is <i>prepared</i> (the pre-prepare and 2<var>f</var> matching prepares), the second echo a commit, and standing is <i>committed-local</i> (prepared and 2<var>f</var> + 1 matching commits). Writing in number order is execution in sequence-number order. (Castro and Liskov, §4.2.)</p>
       <ol class="proofsteps">
-        <li><b>Numbering.</b> The holder sends every man <em>in this term, entry 7 is X</em>.</li>
-        <li><b>First echo.</b> A man accepts the numbering if it is from this term's holder, the man has not accepted a different entry for number 7 in this term, and 7 is within the numbers now allowed (see settling columns, below). That man sends every man <em>in this term, I heard entry 7 is X</em>. On holding the numbering and two matching first echoes from men other than the holder, the man's own possibly among them, three seals on the same entry and number, the entry is <b>readied</b> at that post.</li>
+        <li><b>Numbering.</b> The registrar sends every man <em>in this term, entry 7 is X</em>.</li>
+        <li><b>First echo.</b> A man accepts the numbering if it is from this term's registrar, the man has not accepted a different entry for number 7 in this term, and 7 is within the numbers now allowed (see settling columns, below). That man sends every man <em>in this term, I heard entry 7 is X</em>. On holding the numbering and two matching first echoes from men other than the registrar, the man's own possibly among them, three seals on the same entry and number, the entry is <b>readied</b> at that post.</li>
         <li><b>Second echo.</b> Once it is readied, that man sends every man <em>in this term, entry 7 is X is readied here</em>. On three matching second echoes, the man's own among them, the entry <b>stands</b> at that post.</li>
         <li><b>Carrying out.</b> The man writes a standing entry into the post's copy as soon as every lower number has been written, and sends the filer word that it stands.</li>
       </ol>
@@ -623,7 +623,7 @@ a.lin-node:hover b{text-decoration:underline}
       <div class="kicker">The whole trick</div>
       <h2>Why three seals, and four bandits</h2>
       <p class="lede">Three matching seals are enough, even with the seal of a liar among them, because any two groups of three, out of four, share two bandits. At most one of those two lies, so the two groups share an honest bandit.</p>
-      <p>Suppose a lying holder tells two bandits that entry 7 is X and the others that it is Y. For X to be readied at an honest post, three bandits sealed X for number 7 in this term. For Y to be readied, three sealed Y. The two threes share an honest bandit, and an honest bandit seals only one entry for a number in a term. So X and Y cannot both be readied.</p>
+      <p>Suppose a lying registrar tells two bandits that entry 7 is X and the others that it is Y. For X to be readied at an honest post, three bandits sealed X for number 7 in this term. For Y to be readied, three sealed Y. The two threes share an honest bandit, and an honest bandit seals only one entry for a number in a term. So X and Y cannot both be readied.</p>
       <p>Try it on the crown below. Choose which bandit each group leaves out and which one is supposed to lie, and watch who is left in both groups. Then take one bandit away, and see that groups drawn from three can fail.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
@@ -643,7 +643,7 @@ a.lin-node:hover b{text-decoration:underline}
       <p class="given">In the paper's terms an entry is a request <var>m</var>, a term is a view <var>v</var>, a number is a sequence number <var>n</var>, and there are four replicas (3<var>f</var> + 1 with <var>f</var> = 1). <b>Invariant of §4.2.</b> If prepared(<var>m</var>, <var>v</var>, <var>n</var>, <var>i</var>) is true, then prepared(<var>m</var>′, <var>v</var>, <var>n</var>, <var>j</var>) is false for every non-faulty replica <var>j</var> and every <var>m</var>′ ≠ <var>m</var>.</p>
       <ol class="proofsteps">
         <li>An entry readied at a post carries the seals of three different men for it, under that
-        number and term: the holder's numbering and two first echoes.</li>
+        number and term: the registrar's numbering and two first echoes.</li>
         <li>If X and Y were both readied for number 7 in one term, the two sets of three would share at
         least two men among four, and at least one of them is honest.</li>
         <li>That honest man sealed both X and Y for number 7 in the same term. But an honest man accepts
@@ -651,7 +651,7 @@ a.lin-node:hover b{text-decoration:underline}
       </ol>
     </details>
     <p class="tell" style="margin-top:1.8rem"><b>Four bandits are the fewest that will do for one liar.</b> A bandit can never wait to hear from everyone, since one may be a liar who keeps quiet. So a bandit acts on hearing from all but one, which is three. But the one not heard from may be an honest bandit whose rat is held in its hole, and then the liar may be among the three heard. The honest must still outnumber the liars among those three: two honest against one liar. That needs four bandits for one liar, and in general more than three times as many as may lie.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s7" title="Agreeing When Messages Run Late: Liars and Seals">*</a></sup> Seals do not lower the number. A seal stops a liar forging the word of another bandit. It cannot make a liar answer promptly with their own.</p>
-    <p class="tell">Within a term, then, a lying holder cannot number one place two ways. A holder can still number nothing at all.</p>
+    <p class="tell">Within a term, then, a lying registrar cannot number one place two ways. A registrar can still number nothing at all.</p>
   </div>
 </section>
 
@@ -663,34 +663,34 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">When nothing stands</div>
       <h2>Changing the job</h2>
-      <p class="lede">A holder who numbers nothing leaves every filed entry waiting, and then the job must pass. Nobody can tell a holder who stalls from one whose rats are held by the wind, so the bandits do not judge. Each simply stops waiting.</p>
+      <p class="lede">A registrar who numbers nothing leaves every filed entry waiting, and then the job must pass. Nobody can tell a registrar who stalls from one whose rats are held by the wind, so the bandits do not judge. Each simply stops waiting.</p>
       <p>A bandit who has an entry filed that has not yet stood turns their sandglass. If it runs out first, they <b>ask for a change</b>: they stop taking part in this term and send every bandit a sealed request for the next term. The request carries the proof of every entry readied at their post, each a numbering and two first echoes.</p>
-      <p>In the picture below, file an entry and then choose what the holder does, once with the wind blowing and once with it dropped. Watch for the two cases that look the same from every post.</p>
+      <p>In the picture below, file an entry and then choose what the registrar does, once with the wind blowing and once with it dropped. Watch for the two cases that look the same from every post.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>The job passes <em id="jobinfo" data-live></em></h4>
       <div class="hill-wrap">
-        <svg class="isle-svg fig" id="jobsvg" role="img" aria-label="The crown from above, with the ring wall and Number 1 at the centre and posts for Numbers 2, 3 and 4 on the slopes; the holder of the job has a thick outline and sealed requests run to the next holder"></svg>
+        <svg class="isle-svg fig" id="jobsvg" role="img" aria-label="The crown from above, with the ring wall and Number 1 at the centre and posts for Numbers 2, 3 and 4 on the slopes; the registrar has a thick outline and sealed requests run to the next registrar"></svg>
         <div>
-          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">The crown from above. The holder has the thick outline. Each press is one thing that can happen in a term.</p>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">The crown from above. The registrar has the thick outline. Each press is one thing that can happen in a term.</p>
           <div class="counts"><span><b id="jobterm">1</b>term</span><span><b id="jobstood">0</b>entries standing</span></div>
           <p class="say" id="jobsay">An entry is filed and waits to be numbered. The wind is blowing.</p>
         </div>
       </div>
       <div class="row">
         <button class="btn" id="jobfile">An entry is filed</button>
-        <button class="btn" id="jobnum">The holder numbers it</button>
-        <button class="btn alt" id="jobsilent">The holder says nothing</button>
+        <button class="btn" id="jobnum">The registrar numbers it</button>
+        <button class="btn alt" id="jobsilent">The registrar says nothing</button>
         <button class="btn alt" id="jobwind" aria-pressed="true">The wind is blowing</button>
         <button class="btn alt" id="jobreset">Start again</button>
       </div>
     </div></div></div>
-    <p class="tell">The next holder waits for requests for the new term from three bandits, their own among them, and sends every bandit the three requests and a new numbering. The requests decide the new numbering, and the holder has no choice in it. For each number, if some request shows an entry readied there, the holder numbers the one readied in the latest term. If none does, the holder numbers a <b>blank entry</b>, which does nothing. Each bandit checks that the requests are sealed and that the new numbering is what they call for, then echoes it twice, as before, in the new term.</p>
-    <p class="tell"><b>A new holder cannot drop an entry that already stood.</b> Suppose an entry X stands at some honest post as number 7. Then three bandits sent second echoes for it, of whom at least two are honest, and X is readied at those two. The new holder must show three requests, and three requests out of four always include one from those two. That request shows X readied under number 7, so the new holder must number X under 7 again. Try it: choose who sent the second echoes, who is supposed to lie, and whose request the new holder leaves out.</p>
+    <p class="tell">The next registrar waits for requests for the new term from three bandits, their own among them, and sends every bandit the three requests and a new numbering. The requests decide the new numbering, and the registrar has no choice in it. For each number, if some request shows an entry readied there, the registrar numbers the one readied in the latest term. If none does, the registrar numbers a <b>blank entry</b>, which does nothing. Each bandit checks that the requests are sealed and that the new numbering is what they call for, then echoes it twice, as before, in the new term.</p>
+    <p class="tell"><b>A new registrar cannot drop an entry that already stood.</b> Suppose an entry X stands at some honest post as number 7. Then three bandits sent second echoes for it, of whom at least two are honest, and X is readied at those two. The new registrar must show three requests, and three requests out of four always include one from those two. That request shows X readied under number 7, so the new registrar must number X under 7 again. Try it: choose who sent the second echoes, who is supposed to lie, and whose request the new registrar leaves out.</p>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Three requests <em>always meet the bandits who hold it</em></h4>
       <div class="hill-wrap">
-        <svg class="isle-svg fig" id="reqsvg" role="img" aria-label="The crown from above. The bandits that sent second echoes for the entry are outlined; the one supposed to lie is marked with a dashed red outline; the one whose request the new holder leaves out is faded."></svg>
+        <svg class="isle-svg fig" id="reqsvg" role="img" aria-label="The crown from above. The bandits that sent second echoes for the entry are outlined; the one supposed to lie is marked with a dashed red outline; the one whose request the new registrar leaves out is faded."></svg>
         <div>
           <div class="stand" id="reqstand" data-live></div>
           <p class="say" id="reqsay"></p>
@@ -700,16 +700,16 @@ a.lin-node:hover b{text-decoration:underline}
     </div></div></div>
     <div class="pop"><div class="leaf"><div class="paper" style="padding:14px 18px;max-width:40em;margin:1.4rem 0 0"><div class="num">Result · Order Across Terms</div><p style="margin:.35rem 0 0">If an entry stands under a number at any honest post, every honest post that ever has an entry stand under that number has the same one, whatever terms they stood in.</p></div></div></div>
     <details class="proof">
-      <summary>Proof · that a new holder must keep what stood before</summary>
+      <summary>Proof · that a new registrar must keep what stood before</summary>
       <p class="given">In the paper's terms: <b>§4.5.1.</b> Non-faulty replicas agree on the sequence numbers of requests that commit locally, even if they commit in different views at different replicas. Let committed-local(<var>m</var>, <var>v</var>, <var>n</var>, <var>i</var>) hold when prepared(<var>m</var>, <var>v</var>, <var>n</var>, <var>i</var>) and 2<var>f</var> + 1 matching commits are held; the paper gives this argument as a sketch.</p>
       <ol class="proofsteps">
         <li>Let X stand as number 7 at an honest post in term <var>v</var>. Then three second echoes for X
         were sealed, so X is readied, in term <var>v</var>, at at least two honest posts.</li>
-        <li>The holder of any later term shows three requests, which share an honest man with the two.
+        <li>The registrar of any later term shows three requests, which share an honest man with the two.
         That man's request shows X readied under 7 in term <var>v</var>, or some entry readied under 7 in a
-        later term. The holder must number the entry readied in the latest term shown.</li>
+        later term. The registrar must number the entry readied in the latest term shown.</li>
         <li>By induction over the terms after <var>v</var>, every entry that can be shown readied under 7
-        in such a term is X, so every later holder must number X under 7, honest men check that the holder does,
+        in such a term is X, so every later registrar must number X under 7, honest men check that the registrar does,
         and only X is readied or stands under 7 at honest posts. The induction, which must also handle
         requests from the liar, is carried out in full in Castro's thesis; this is the paper's
         sketch.<span class="qed">∎</span></li>
@@ -720,13 +720,13 @@ a.lin-node:hover b{text-decoration:underline}
       <summary>Stated formally · changing the job</summary>
       <p class="given">In the paper's terms: view-change with the set <var>P</var> of prepared certificates; new-view with 2<var>f</var> + 1 view-changes and the set <var>O</var> of pre-prepares; null requests fill gaps. (Castro and Liskov, §4.4.)</p>
       <ol class="proofsteps">
-        <li>The next holder waits for requests for the new term from three men, the holder's own among them.</li>
-        <li>The holder sends every man the three requests and a new numbering. For each number, if some request shows an entry readied there, the holder numbers the one readied in the latest term; if none does, the holder numbers a <b>blank entry</b>, which does nothing.</li>
+        <li>The next registrar waits for requests for the new term from three men, the registrar's own among them.</li>
+        <li>The registrar sends every man the three requests and a new numbering. For each number, if some request shows an entry readied there, the registrar numbers the one readied in the latest term; if none does, the registrar numbers a <b>blank entry</b>, which does nothing.</li>
         <li>Each man checks that the requests are sealed and that the new numbering is what they call for, then echoes it twice, as before, in the new term.</li>
       </ol>
     </details>
-    <p class="tell" style="margin-top:1.8rem">Two more rules keep the job from passing too late or too easily. A bandit who sees requests from two others for a later term joins them, even before their own sandglass runs out, so an honest minority is not left behind. And no single bandit can force a change, because a change needs three requests and a liar alone can send only one. A lying holder can make their own term fail by stalling, but the job then passes, and with four bandits a liar holds it for at most one term in a row.</p>
-    <p class="tell">A stalled term ends this way whatever stalled it. While the wind blows, though, sandglasses run out on honest holders too, and the job passes again and again.</p>
+    <p class="tell" style="margin-top:1.8rem">Two more rules keep the job from passing too late or too easily. A bandit who sees requests from two others for a later term joins them, even before their own sandglass runs out, so an honest minority is not left behind. And no single bandit can force a change, because a change needs three requests and a liar alone can send only one. A lying registrar can make their own term fail by stalling, but the job then passes, and with four bandits a liar holds it for at most one term in a row.</p>
+    <p class="tell">A stalled term ends this way whatever stalled it. While the wind blows, though, sandglasses run out on honest registrars too, and the job passes again and again.</p>
   </div>
 </section>
 
@@ -738,8 +738,8 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">What stops the changes</div>
       <h2>Going on once the wind drops</h2>
-      <p class="lede">The job passes again and again while the wind blows, because sandglasses run out on honest holders whose rats are merely pinned. Nothing stands, and nothing wrong stands either. Once the wind has dropped the changes must stop, or no entry would ever stand.</p>
-      <p>The changes stop because each bandit doubles their sandglass at every change. A bandit who asked for a change and does not see the new term work within their sandglass asks for the next one, but waits twice as long before asking for the one after. In the end the sandglasses are longer than a whole term's worth of short runs. Then the first honest holder of a term that begins in still air numbers the waiting entries, the echoes come back in time, and the entries stand.</p>
+      <p class="lede">The job passes again and again while the wind blows, because sandglasses run out on honest registrars whose rats are merely pinned. Nothing stands, and nothing wrong stands either. Once the wind has dropped the changes must stop, or no entry would ever stand.</p>
+      <p>The changes stop because each bandit doubles their sandglass at every change. A bandit who asked for a change and does not see the new term work within their sandglass asks for the next one, but waits twice as long before asking for the one after. In the end the sandglasses are longer than a whole term's worth of short runs. Then the first honest registrar of a term that begins in still air numbers the waiting entries, the echoes come back in time, and the entries stand.</p>
       <p>Pick a sandglass and a wind below and run the nights. Compare the doubling sandglass with one that stays the same, and see in which term the entries stand.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
@@ -747,7 +747,7 @@ a.lin-node:hover b{text-decoration:underline}
       <div id="gotctl"></div>
       <div class="row"><button class="btn" id="gotrun">Run the nights</button></div>
       <div class="terms-list" id="gotlist" data-live></div>
-      <p class="say" id="gotsay">Every holder is honest in this picture, and the first sandglass is the time a short run takes at most. A term's worth is counted as three short runs: the numbering and the two echoes.</p>
+      <p class="say" id="gotsay">Every registrar is honest in this picture, and the first sandglass is the time a short run takes at most. A term's worth is counted as three short runs: the numbering and the two echoes.</p>
     </div></div></div>
     <div class="pop"><div class="leaf"><div class="paper" style="padding:14px 18px;max-width:40em;margin:1.4rem 0 0"><div class="num">Result · Going On</div><p style="margin:.35rem 0 0">If the wind, once it drops, stays down long enough, every entry an honest bandit files in the end stands.</p></div></div></div>
     <p class="tell">The paper puts precisely how long the wind must stay down: the time a rat takes must not go on growing faster than the nights themselves pass. The doubling sandglass outgrows any delay that does not keep outgrowing it. The paper argues this in outline, and its full proof is in Castro's thesis.</p>
@@ -755,7 +755,7 @@ a.lin-node:hover b{text-decoration:underline}
       <summary>Stated formally · how long the wind must stay down</summary>
       <p class="given">In the paper's terms the time a rat takes, counted from its first sending and with resending, is delay(<var>t</var>), and it must not grow faster than <var>t</var> indefinitely. The view-change timeout doubles at each view change. (Castro and Liskov, §2 and §4.5.2.)</p>
     </details>
-    <p class="tell" style="margin-top:1.8rem">The scroll now keeps its order and goes on. One cost is left. Every bandit keeps every sealed rat, since a change of job may call for them, and the keeping grows with every entry.</p>
+    <p class="tell" style="margin-top:1.8rem">The scroll now keeps its order and goes on. One cost is left. Every bandit holds every sealed rat, since a change of job may call for them, and the store grows with every entry.</p>
   </div>
 </section>
 
@@ -765,23 +765,23 @@ a.lin-node:hover b{text-decoration:underline}
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">So the keeping does not grow for ever</div>
+      <div class="kicker">So the store does not grow for ever</div>
       <h2>Settling columns</h2>
-      <p class="lede">The keeping of sealed rats need not grow for ever. Every hundred entries, each bandit seals a short summary of their copy up to that number and sends it to everyone. When a bandit holds three matching summaries for the same number, that column is <b>settled</b>: at least two honest bandits have the same scroll up to there.</p>
-      <p>A settled column lets a bandit throw away every echo for numbers up to it, since the three summaries now stand for those entries. A bandit whose copy fell behind can take the settled column from any of the three and trust it. The settled column also bounds the numbering. A holder may use only numbers from the last settled column up to some fixed distance beyond it, so a lying holder cannot use up the numbers by jumping to an enormous one.</p>
-      <p>In the picture below, let entries stand until the allowed numbers are used up, then settle a column, and see which numbers a holder may and may not use.</p>
+      <p class="lede">The store of sealed rats need not grow for ever. Every hundred entries, each bandit seals a short summary of their copy up to that number and sends it to everyone. When a bandit holds three matching summaries for the same number, that column is <b>settled</b>: at least two honest bandits have the same scroll up to there.</p>
+      <p>A settled column lets a bandit throw away every echo for numbers up to it, since the three summaries now stand for those entries. A bandit whose copy fell behind can take the settled column from any of the three and trust it. The settled column also bounds the numbering. A registrar may use only numbers from the last settled column up to some fixed distance beyond it, so a lying registrar cannot use up the numbers by jumping to an enormous one.</p>
+      <p>In the picture below, let entries stand until the allowed numbers are used up, then settle a column, and see which numbers a registrar may and may not use.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>The allowed numbers <em>press to file, settle and try</em></h4>
-      <div class="counts"><span><b id="setN">0</b>written up to</span><span><b id="setS">0</b>settled up to</span><span><b id="setK">0</b>echoes still kept</span></div>
+      <div class="counts"><span><b id="setN">0</b>written up to</span><span><b id="setS">0</b>settled up to</span><span><b id="setK">0</b>echoes still held</span></div>
       <div class="meter" aria-hidden="true"><i id="setbar"></i></div>
       <p style="font-size:.84rem;color:#6b5a48;margin:.4rem 0 0" id="setrange"></p>
       <p class="say" id="setsay" data-live>Nothing is written yet. The picture's allowed numbers run two hundred beyond the last settled column.</p>
       <div class="row">
         <button class="btn" id="setfile">Fifty more entries stand</button>
         <button class="btn" id="setsettle">Settle the column</button>
-        <button class="btn alt" id="setbad">A holder tries number 1,000,000</button>
-        <button class="btn alt" id="setgood">A holder tries the next number</button>
+        <button class="btn alt" id="setbad">A registrar tries number 1,000,000</button>
+        <button class="btn alt" id="setgood">A registrar tries the next number</button>
         <button class="btn alt" id="setreset">Start again</button>
       </div>
     </div></div></div>
@@ -794,7 +794,7 @@ a.lin-node:hover b{text-decoration:underline}
         <li>Numbers are allowed only between the last settled column and a fixed distance above it.</li>
       </ol>
     </details>
-    <p class="tell" style="margin-top:1.8rem">The four now have order in any wind, progress once it drops, and a keeping that does not grow without end. It remains to say what the arrangement leaves unprotected.</p>
+    <p class="tell" style="margin-top:1.8rem">The four now have order in any wind, progress once it drops, and a store that does not grow without end. It remains to say what the arrangement leaves unprotected.</p>
   </div>
 </section>
 
@@ -827,7 +827,7 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The crown was a group of replicas</h2>
-      <p class="lede">Read the crown again with machines at the four posts. Every bandit is a replica, every rat is a message, and the holder of the job is the leader that numbers the commands. Hover over a row, or tap it, to see who is who, and where the paper says it.</p>
+      <p class="lede">Read the crown again with machines at the four posts. Every bandit is a replica, every rat is a message, and the registrar is the leader that numbers the commands. Hover over a row, or tap it, to see who is who, and where the paper says it.</p>
     </div>
     <div class="map" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">On the crown</div><div></div><div class="hd">In the machine room</div>
@@ -1105,27 +1105,27 @@ function Crown(svg){
   const C=Crown($("#jobsvg")),say=$("#jobsay"),info=$("#jobinfo"),tEl=$("#jobterm"),sEl=$("#jobstood"),
     bF=$("#jobfile"),bN=$("#jobnum"),bS=$("#jobsilent"),bW=$("#jobwind"),bR=$("#jobreset");
   let term=1,waiting=false,wind=true,stood=0,busy=false;
-  const holder=t=>((t-1)%4)+1;
+  const registrar=t=>((t-1)%4)+1;
   function paint(){
-    const h=holder(term);[1,2,3,4].forEach(k=>C.tent[k].g.classList.toggle("turn",k===h));
-    tEl.textContent=term;sEl.textContent=stood;info.textContent=`term ${term}, held by Number ${h}`;
+    const h=registrar(term);[1,2,3,4].forEach(k=>C.tent[k].g.classList.toggle("turn",k===h));
+    tEl.textContent=term;sEl.textContent=stood;info.textContent=`term ${term}, taken by Number ${h}`;
     bF.disabled=busy||waiting;bN.disabled=bS.disabled=busy||!waiting;bW.disabled=bR.disabled=busy;
     bW.textContent=wind?"The wind is blowing":"The wind has dropped";bW.setAttribute("aria-pressed",wind);
   }
   async function change(){
-    busy=true;paint();const h=holder(term),next=holder(term+1),others=[1,2,3,4].filter(k=>k!==next);
+    busy=true;paint();const h=registrar(term),next=registrar(term+1),others=[1,2,3,4].filter(k=>k!==next);
     say.innerHTML=`The sandglasses run out. Each bandit who is waiting asks for a change: a sealed request for the next term, with proof of every entry readied at their post, goes to <b>Number ${next}</b>.`;
     const toks=others.map(k=>{const g=C.token(BC[k],"");g.setAttribute("opacity",1);C.fly(g,k,next,.1);return [k,g]});
     await Promise.all(toks.map(([k,g])=>tween(1100+rnd(700),u=>C.fly(g,k,next,.1+.8*u)).then(()=>g.remove())));
     term++;busy=false;paint();
-    say.innerHTML=`Three requests are in, and three are enough. <b>Number ${next}</b> now holds the job, in term ${term}. The entry is still waiting. Nobody judged whether Number ${h} stalled or the wind held the rats back.`;
+    say.innerHTML=`Three requests are in, and three are enough. <b>Number ${next}</b> now has the job, in term ${term}. The entry is still waiting. Nobody judged whether Number ${h} stalled or the wind held the rats back.`;
   }
-  bF.onclick=()=>{waiting=true;paint();say.innerHTML=`An entry is filed with <b>Number ${holder(term)}</b>, who holds the job, and the filer turns a sandglass. ${wind?"The wind is blowing.":"The wind has dropped."}`};
-  bN.onclick=async()=>{const h=holder(term);
-    if(wind){say.innerHTML=`<b>Number ${h}</b> numbers the entry and sends the numbering out, but the wind holds the rats in their holes. The sandglass runs out first. From where anyone sits, this looks exactly like a holder who said nothing.`;await sleep(900);await change();return}
+  bF.onclick=()=>{waiting=true;paint();say.innerHTML=`An entry is filed with <b>Number ${registrar(term)}</b>, who has the job, and the filer turns a sandglass. ${wind?"The wind is blowing.":"The wind has dropped."}`};
+  bN.onclick=async()=>{const h=registrar(term);
+    if(wind){say.innerHTML=`<b>Number ${h}</b> numbers the entry and sends the numbering out, but the wind holds the rats in their holes. The sandglass runs out first. From where anyone sits, this looks exactly like a registrar who said nothing.`;await sleep(900);await change();return}
     waiting=false;stood++;paint();
     say.innerHTML=`<b>Number ${h}</b> numbers the entry, the others echo it twice, and it <span class="ok">stands</span> before the sandglass runs out. The job stays where it is.`};
-  bS.onclick=async()=>{const h=holder(term);say.innerHTML=`<b>Number ${h}</b> numbers nothing. The sandglass runs out, and nobody can say whether that is a stall or the wind.`;await sleep(900);await change()};
+  bS.onclick=async()=>{const h=registrar(term);say.innerHTML=`<b>Number ${h}</b> numbers nothing. The sandglass runs out, and nobody can say whether that is a stall or the wind.`;await sleep(900);await change()};
   bW.onclick=()=>{wind=!wind;paint();say.innerHTML=wind?"The wind is blowing. Nobody can see it drop, and nobody can see it start.":"The wind has dropped, though nobody on the crown can tell. Runs are short again."};
   bR.onclick=()=>{term=1;waiting=false;wind=true;stood=0;paint();say.innerHTML="An entry is filed and waits to be numbered. The wind is blowing."};
   paint();
@@ -1134,20 +1134,20 @@ function Crown(svg){
 /* ===== three requests always meet the bandits who hold the entry ===== */
 (function(){
   const C=Crown($("#reqsvg")),ctl=$("#reqctl"),stand=$("#reqstand"),say=$("#reqsay");
-  let out=4,liar=null,left=1;const holder=2,all=[1,2,3,4];
+  let out=4,liar=null,left=1;const registrar=2,all=[1,2,3,4];
   const mk=id=>{const d=document.createElement("div");d.id=id;ctl.appendChild(d);return d};
   function paint(){
     const E=all.filter(k=>k!==out),honE=E.filter(k=>k!==liar),R=all.filter(k=>k!==left),show=R.filter(k=>honE.includes(k));
     all.forEach(k=>{const g=C.tent[k].g;g.classList.toggle("shared",E.includes(k));g.classList.toggle("sus",k===liar);g.classList.toggle("out",k===left)});
     const line=k=>{const yes=honE.includes(k),isL=k===liar;
       return `<div class="rq${yes?" yes":""}">${chip(k)} ${yes?"shows X readied under 7, in term 1":isL?"may say anything at all":"may show it, or may show nothing"}</div>`};
-    stand.innerHTML=`<div>Sent second echoes for X ${chips(E)}</div><div>Of them, honest ${liar==null?chips(E):chips(honE)} (they have X readied)</div><div>Number ${holder} holds the job in term 2, and collects requests from ${chips(R)}</div><div class="req">${R.map(line).join("")}</div>`;
-    if(show.length)say.innerHTML=`<span class="ok">At least one request shows X readied under 7.</span> The new holder must number X under 7, and the other bandits check that they do. For number 8 no request shows anything readied, so the new holder numbers a blank entry there.`;
+    stand.innerHTML=`<div>Sent second echoes for X ${chips(E)}</div><div>Of them, honest ${liar==null?chips(E):chips(honE)} (they have X readied)</div><div>Number ${registrar} has the job in term 2, and collects requests from ${chips(R)}</div><div class="req">${R.map(line).join("")}</div>`;
+    if(show.length)say.innerHTML=`<span class="ok">At least one request shows X readied under 7.</span> The new registrar must number X under 7, and the other bandits check that they do. For number 8 no request shows anything readied, so the new registrar numbers a blank entry there.`;
     else say.innerHTML=`<span class="bad">No request shows X.</span> This cannot happen: two honest bandits have X readied, and three requests out of four always include one of them.`;
     const opts=all.map(k=>[k,"Number "+k]);
     picker($("#reqp1")||mk("reqp1"),"Second echoes for X came from everyone but:",opts,out,v=>{out=v;paint()});
     picker($("#reqp2")||mk("reqp2"),"Suppose this one lies:",[[null,"Nobody"]].concat(opts),liar,v=>{liar=v;paint()});
-    picker($("#reqp3")||mk("reqp3"),"The new holder leaves out the request of:",all.filter(k=>k!==holder).map(k=>[k,"Number "+k]),left,v=>{left=v;paint()});
+    picker($("#reqp3")||mk("reqp3"),"The new registrar leaves out the request of:",all.filter(k=>k!==registrar).map(k=>[k,"Number "+k]),left,v=>{left=v;paint()});
   }
   paint();
 })();
@@ -1158,19 +1158,19 @@ function Crown(svg){
   const NEED=3;   /* a term's worth of short runs: the numbering and the two echoes, each at most one first glass */
   const winds=[[2,"The wind drops soon"],[20,"The wind blows a long time"],[Infinity,"The wind never drops"]];
   let dbl=true,W=2,gen=0;
-  const holder=k=>((k-1)%4)+1;
+  const registrar=k=>((k-1)%4)+1;
   function sim(){const rows=[];let t=0;for(let k=1;k<=12;k++){const g=dbl?2**(k-1):1,still=t>=W,ok=still&&g>=NEED;
-    rows.push({k,h:holder(k),t,g,kind:ok?"ok":!still?"wind":"short"});if(ok)break;t+=g}return rows}
+    rows.push({k,h:registrar(k),t,g,kind:ok?"ok":!still?"wind":"short"});if(ok)break;t+=g}return rows}
   const why={ok:g=>`Still air, and the sandglass of ${g} outlasts three short runs. The entries stand.`,wind:()=>"The wind is still blowing when the term begins. Nothing stands.",short:g=>`Still air, but a sandglass of ${g} runs out before three short runs can finish. The job passes again.`};
   function pickers(){
     picker($("#gotp1")||mk("gotp1"),"The sandglass:",[[true,"Doubles at every change"],[false,"The same every time"]],dbl,v=>{dbl=v;reset()});
     picker($("#gotp2")||mk("gotp2"),"The wind:",winds.map(([w,t])=>[w,t]),W,v=>{W=v;reset()});
   }
   function mk(id){const d=document.createElement("div");d.id=id;ctl.appendChild(d);return d}
-  function reset(){gen++;list.innerHTML="";run.disabled=false;pickers();say.textContent="Every holder is honest in this picture, and the first sandglass is the time a short run takes at most. A term's worth is counted as three short runs: the numbering and the two echoes."}
+  function reset(){gen++;list.innerHTML="";run.disabled=false;pickers();say.textContent="Every registrar is honest in this picture, and the first sandglass is the time a short run takes at most. A term's worth is counted as three short runs: the numbering and the two echoes."}
   run.onclick=async()=>{const g0=++gen,rows=sim(),max=Math.max(...rows.map(r=>r.g));run.disabled=true;list.innerHTML="";
     for(const r of rows){if(g0!==gen)return;const d=document.createElement("div");d.className="trow "+r.kind;
-      d.innerHTML=`<b>Term ${r.k}</b><span class="gl"><i style="width:${Math.max(4,r.g/max*100)}%"></i></span><em>Number ${r.h} holds the job, glass ${r.g}. ${why[r.kind](r.g)}</em>`;list.appendChild(d);await sleep(450)}
+      d.innerHTML=`<b>Term ${r.k}</b><span class="gl"><i style="width:${Math.max(4,r.g/max*100)}%"></i></span><em>Number ${r.h} has the job, glass ${r.g}. ${why[r.kind](r.g)}</em>`;list.appendChild(d);await sleep(450)}
     if(g0!==gen)return;const last=rows[rows.length-1];
     if(last.kind==="ok")say.innerHTML=`<span class="ok">The entries stand at term ${last.k}.</span> ${dbl?"The doubling sandglass grew past a term's worth of short runs, and the first term to begin in still air after that one worked.":"The sandglass never changed, and still air was enough because it was long enough from the start."}`;
     else{const d=document.createElement("div");d.className="trow more";d.textContent="…and so on, for ever";list.appendChild(d);
@@ -1179,7 +1179,7 @@ function Crown(svg){
   reset();
 })();
 
-/* ===== settling columns: the allowed numbers, and a holder who jumps ahead ===== */
+/* ===== settling columns: the allowed numbers, and a registrar who jumps ahead ===== */
 (function(){
   const nE=$("#setN"),sE=$("#setS"),kE=$("#setK"),bar=$("#setbar"),meter=bar.parentNode,rng=$("#setrange"),say=$("#setsay"),
     bF=$("#setfile"),bS=$("#setsettle"),bB=$("#setbad"),bG=$("#setgood"),bR=$("#setreset");
@@ -1190,9 +1190,9 @@ function Crown(svg){
     rng.textContent=`Allowed numbers: ${S+1} to ${S+DIST}. ${N-S} of the ${DIST} ${N-S===1?"is":"are"} used.`;
     bF.disabled=N+50>S+DIST;bS.disabled=Math.floor(N/100)*100<=S;bG.disabled=N>=S+DIST;
   }
-  bF.onclick=()=>{N+=50;paint();say.innerHTML=`Fifty more entries stand, up to number ${N}. Every echo for them is kept, in case a change of job calls for it.${N+50>S+DIST?" <span class='bad'>No more numbers are allowed until a column settles.</span>":""}`};
+  bF.onclick=()=>{N+=50;paint();say.innerHTML=`Fifty more entries stand, up to number ${N}. Every echo for them is held, in case a change of job calls for it.${N+50>S+DIST?" <span class='bad'>No more numbers are allowed until a column settles.</span>":""}`};
   bS.onclick=()=>{const to=Math.floor(N/100)*100;S=to;paint();say.innerHTML=`Each bandit sealed a summary of their copy up to <b>${to}</b>. Three matching summaries settle the column: at least two honest bandits have the same scroll up to there. Every echo for numbers up to ${to} is thrown away, and the allowed numbers move up.`};
-  bB.onclick=()=>{say.innerHTML=`<span class="bad">Refused.</span> Number 1,000,000 lies far beyond the last settled column plus ${DIST}. A holder cannot use up the numbers by jumping to an enormous one.`};
+  bB.onclick=()=>{say.innerHTML=`<span class="bad">Refused.</span> Number 1,000,000 lies far beyond the last settled column plus ${DIST}. A registrar cannot use up the numbers by jumping to an enormous one.`};
   bG.onclick=()=>{N++;paint();say.innerHTML=`Number ${N} lies between the last settled column and ${S+DIST}, so it is allowed.`};
   bR.onclick=()=>{N=0;S=0;paint();say.innerHTML="Nothing is written yet. The picture's allowed numbers run two hundred beyond the last settled column."};
   paint();
@@ -1226,7 +1226,7 @@ function Crown(svg){
   const lbl=(k,t,s,from,to,col)=>{const [x,y]=P.pt(k,t),a=nodes[k][0],t2=el("text",{class:"lab halo",x:x+(a===-90||a===90?-14:0),y:y+(a===-90||a===90?5:-16)},P.over);t2.textContent=s;
     t2.style.textAnchor=a===-90||a===90?"end":"middle";if(col)t2.style.fill=col;return add(t2,from,to)};
   const slip=(m,from,col,mk,dash)=>{const p=P.slip(m.a,m.s,m.b,m.r,12);p.setAttribute("style",`stroke:${col};stroke-width:3.4`);p.setAttribute("marker-end",`url(#${svg.id}-${mk})`);if(dash)p.style.strokeDasharray="7 5";return add(p,from)};
-  const holds=el("text",{class:"lab halo",x:292,y:261,style:"text-anchor:end"},P.over);holds.textContent="holds the job";
+  const holds=el("text",{class:"lab halo",x:292,y:261,style:"text-anchor:end"},P.over);holds.textContent="has the job";
   dot(2,1.4,"#fffaf0",0);M.filter(m=>m.kind==="file").forEach(m=>slip(m,0,"#136f9e","b"));lbl(2,1.4,"files",0,0);
   dot(1,2.4,"#fffaf0",1);lbl(1,2.4,"no. 7",1,1,"#bf4a26");
   M.filter(m=>m.kind==="num").forEach(m=>slip(m,1,"#bf4a26","r",m.held));
@@ -1238,7 +1238,7 @@ function Crown(svg){
   [1,2,3].forEach(k=>dot(k,5.4,"#9cb648",5));lbl(2,5.4,"stands",5,5,"#2f5a1c");
   const Ts=[2.4,3.4,3.4,4.4,4.4,5.4];
   function card(k,s){
-    const T=Ts[s],K=know(k,T),role=k===HOLD?"holds the job":"";
+    const T=Ts[s],K=know(k,T),role=k===HOLD?"has the job":"";
     const note=[];
     if(k===4)return `<div class="hc dim"><h5><span><i class="dot" style="background:${BC[k]}"></i>Number 4</span></h5><div class="chk">${s>=1?"Rats held by the wind. Nobody waits for them.":"—"}</div></div>`;
     if(s===0&&k===2)note.push("filed the entry");
@@ -1263,7 +1263,7 @@ mapPairs($("#map"),[
   ["Seal rings","Public-key signatures that an adversary cannot forge (§2); message digests are folded into the seal here"],
   ["The loot scroll; an entry","A deterministic replicated state machine; an operation request (§3–4)"],
   ["Order; going on","Safety (linearizability) and liveness (§3)"],
-  ["The job; a term; the fixed order of holders","The primary; a view; primary = v mod |R| (§4)"],
+  ["The job; a term; the fixed order of registrars","The primary; a view; primary = v mod |R| (§4)"],
   ["Two matching sealed words to trust an entry","The client waits for f + 1 matching replies (§4.1); redundant for a replica acting as its own client"],
   ["Numbering; first echo; readied","Pre-prepare; prepare; prepared = pre-prepare + 2f matching prepares (§4.2)"],
   ["Second echo; stands","Commit; committed-local = prepared + 2f + 1 matching commits (§4.2)"],
@@ -1271,7 +1271,7 @@ mapPairs($("#map"),[
   ["Why four bandits","3f + 1 is optimal for asynchronous safety and liveness (§2, citing Bracha and Toueg)"],
   ["Asking for a change; the three requests; the new numbering; blank entries","View-change; new-view with 2f + 1 view-changes; the set O; null requests (§4.4)"],
   ["Order Across Terms","Non-faulty replicas agree on the sequence numbers of requests that commit locally, even in different views (§4.5.1; a sketch, with the full proof in Castro's thesis)"],
-  ["Joining on two requests; no bandit forces a change; a lying holder's single term","Join a view change on f + 1 view-changes; a change needs f + 1; a faulty primary for at most f consecutive views (§4.5.2)"],
+  ["Joining on two requests; no bandit forces a change; a lying registrar's single term","Join a view change on f + 1 view-changes; a change needs f + 1; a faulty primary for at most f consecutive views (§4.5.2)"],
   ["Doubling the sandglass","The view-change timeout doubles (§4.5.2)"],
   ["Settled columns; the allowed numbers","Stable checkpoints with 2f + 1 matching messages; low and high water marks (§4.3)"],
   ["A nonsense entry","Faulty clients are observed consistently but can write garbage; access control limits them (§3)"],

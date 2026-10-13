@@ -82,27 +82,27 @@ function Crown(svg){
   const C=Crown($("#jobsvg")),say=$("#jobsay"),info=$("#jobinfo"),tEl=$("#jobterm"),sEl=$("#jobstood"),
     bF=$("#jobfile"),bN=$("#jobnum"),bS=$("#jobsilent"),bW=$("#jobwind"),bR=$("#jobreset");
   let term=1,waiting=false,wind=true,stood=0,busy=false;
-  const holder=t=>((t-1)%4)+1;
+  const registrar=t=>((t-1)%4)+1;
   function paint(){
-    const h=holder(term);[1,2,3,4].forEach(k=>C.tent[k].g.classList.toggle("turn",k===h));
-    tEl.textContent=term;sEl.textContent=stood;info.textContent=`term ${term}, held by Number ${h}`;
+    const h=registrar(term);[1,2,3,4].forEach(k=>C.tent[k].g.classList.toggle("turn",k===h));
+    tEl.textContent=term;sEl.textContent=stood;info.textContent=`term ${term}, taken by Number ${h}`;
     bF.disabled=busy||waiting;bN.disabled=bS.disabled=busy||!waiting;bW.disabled=bR.disabled=busy;
     bW.textContent=wind?"The wind is blowing":"The wind has dropped";bW.setAttribute("aria-pressed",wind);
   }
   async function change(){
-    busy=true;paint();const h=holder(term),next=holder(term+1),others=[1,2,3,4].filter(k=>k!==next);
+    busy=true;paint();const h=registrar(term),next=registrar(term+1),others=[1,2,3,4].filter(k=>k!==next);
     say.innerHTML=`The sandglasses run out. Each bandit who is waiting asks for a change: a sealed request for the next term, with proof of every entry readied at their post, goes to <b>Number ${next}</b>.`;
     const toks=others.map(k=>{const g=C.token(BC[k],"");g.setAttribute("opacity",1);C.fly(g,k,next,.1);return [k,g]});
     await Promise.all(toks.map(([k,g])=>tween(1100+rnd(700),u=>C.fly(g,k,next,.1+.8*u)).then(()=>g.remove())));
     term++;busy=false;paint();
-    say.innerHTML=`Three requests are in, and three are enough. <b>Number ${next}</b> now holds the job, in term ${term}. The entry is still waiting. Nobody judged whether Number ${h} stalled or the wind held the rats back.`;
+    say.innerHTML=`Three requests are in, and three are enough. <b>Number ${next}</b> now has the job, in term ${term}. The entry is still waiting. Nobody judged whether Number ${h} stalled or the wind held the rats back.`;
   }
-  bF.onclick=()=>{waiting=true;paint();say.innerHTML=`An entry is filed with <b>Number ${holder(term)}</b>, who holds the job, and the filer turns a sandglass. ${wind?"The wind is blowing.":"The wind has dropped."}`};
-  bN.onclick=async()=>{const h=holder(term);
-    if(wind){say.innerHTML=`<b>Number ${h}</b> numbers the entry and sends the numbering out, but the wind holds the rats in their holes. The sandglass runs out first. From where anyone sits, this looks exactly like a holder who said nothing.`;await sleep(900);await change();return}
+  bF.onclick=()=>{waiting=true;paint();say.innerHTML=`An entry is filed with <b>Number ${registrar(term)}</b>, who has the job, and the filer turns a sandglass. ${wind?"The wind is blowing.":"The wind has dropped."}`};
+  bN.onclick=async()=>{const h=registrar(term);
+    if(wind){say.innerHTML=`<b>Number ${h}</b> numbers the entry and sends the numbering out, but the wind holds the rats in their holes. The sandglass runs out first. From where anyone sits, this looks exactly like a registrar who said nothing.`;await sleep(900);await change();return}
     waiting=false;stood++;paint();
     say.innerHTML=`<b>Number ${h}</b> numbers the entry, the others echo it twice, and it <span class="ok">stands</span> before the sandglass runs out. The job stays where it is.`};
-  bS.onclick=async()=>{const h=holder(term);say.innerHTML=`<b>Number ${h}</b> numbers nothing. The sandglass runs out, and nobody can say whether that is a stall or the wind.`;await sleep(900);await change()};
+  bS.onclick=async()=>{const h=registrar(term);say.innerHTML=`<b>Number ${h}</b> numbers nothing. The sandglass runs out, and nobody can say whether that is a stall or the wind.`;await sleep(900);await change()};
   bW.onclick=()=>{wind=!wind;paint();say.innerHTML=wind?"The wind is blowing. Nobody can see it drop, and nobody can see it start.":"The wind has dropped, though nobody on the crown can tell. Runs are short again."};
   bR.onclick=()=>{term=1;waiting=false;wind=true;stood=0;paint();say.innerHTML="An entry is filed and waits to be numbered. The wind is blowing."};
   paint();
@@ -111,20 +111,20 @@ function Crown(svg){
 /* ===== three requests always meet the bandits who hold the entry ===== */
 (function(){
   const C=Crown($("#reqsvg")),ctl=$("#reqctl"),stand=$("#reqstand"),say=$("#reqsay");
-  let out=4,liar=null,left=1;const holder=2,all=[1,2,3,4];
+  let out=4,liar=null,left=1;const registrar=2,all=[1,2,3,4];
   const mk=id=>{const d=document.createElement("div");d.id=id;ctl.appendChild(d);return d};
   function paint(){
     const E=all.filter(k=>k!==out),honE=E.filter(k=>k!==liar),R=all.filter(k=>k!==left),show=R.filter(k=>honE.includes(k));
     all.forEach(k=>{const g=C.tent[k].g;g.classList.toggle("shared",E.includes(k));g.classList.toggle("sus",k===liar);g.classList.toggle("out",k===left)});
     const line=k=>{const yes=honE.includes(k),isL=k===liar;
       return `<div class="rq${yes?" yes":""}">${chip(k)} ${yes?"shows X readied under 7, in term 1":isL?"may say anything at all":"may show it, or may show nothing"}</div>`};
-    stand.innerHTML=`<div>Sent second echoes for X ${chips(E)}</div><div>Of them, honest ${liar==null?chips(E):chips(honE)} (they have X readied)</div><div>Number ${holder} holds the job in term 2, and collects requests from ${chips(R)}</div><div class="req">${R.map(line).join("")}</div>`;
-    if(show.length)say.innerHTML=`<span class="ok">At least one request shows X readied under 7.</span> The new holder must number X under 7, and the other bandits check that they do. For number 8 no request shows anything readied, so the new holder numbers a blank entry there.`;
+    stand.innerHTML=`<div>Sent second echoes for X ${chips(E)}</div><div>Of them, honest ${liar==null?chips(E):chips(honE)} (they have X readied)</div><div>Number ${registrar} has the job in term 2, and collects requests from ${chips(R)}</div><div class="req">${R.map(line).join("")}</div>`;
+    if(show.length)say.innerHTML=`<span class="ok">At least one request shows X readied under 7.</span> The new registrar must number X under 7, and the other bandits check that they do. For number 8 no request shows anything readied, so the new registrar numbers a blank entry there.`;
     else say.innerHTML=`<span class="bad">No request shows X.</span> This cannot happen: two honest bandits have X readied, and three requests out of four always include one of them.`;
     const opts=all.map(k=>[k,"Number "+k]);
     picker($("#reqp1")||mk("reqp1"),"Second echoes for X came from everyone but:",opts,out,v=>{out=v;paint()});
     picker($("#reqp2")||mk("reqp2"),"Suppose this one lies:",[[null,"Nobody"]].concat(opts),liar,v=>{liar=v;paint()});
-    picker($("#reqp3")||mk("reqp3"),"The new holder leaves out the request of:",all.filter(k=>k!==holder).map(k=>[k,"Number "+k]),left,v=>{left=v;paint()});
+    picker($("#reqp3")||mk("reqp3"),"The new registrar leaves out the request of:",all.filter(k=>k!==registrar).map(k=>[k,"Number "+k]),left,v=>{left=v;paint()});
   }
   paint();
 })();
@@ -135,19 +135,19 @@ function Crown(svg){
   const NEED=3;   /* a term's worth of short runs: the numbering and the two echoes, each at most one first glass */
   const winds=[[2,"The wind drops soon"],[20,"The wind blows a long time"],[Infinity,"The wind never drops"]];
   let dbl=true,W=2,gen=0;
-  const holder=k=>((k-1)%4)+1;
+  const registrar=k=>((k-1)%4)+1;
   function sim(){const rows=[];let t=0;for(let k=1;k<=12;k++){const g=dbl?2**(k-1):1,still=t>=W,ok=still&&g>=NEED;
-    rows.push({k,h:holder(k),t,g,kind:ok?"ok":!still?"wind":"short"});if(ok)break;t+=g}return rows}
+    rows.push({k,h:registrar(k),t,g,kind:ok?"ok":!still?"wind":"short"});if(ok)break;t+=g}return rows}
   const why={ok:g=>`Still air, and the sandglass of ${g} outlasts three short runs. The entries stand.`,wind:()=>"The wind is still blowing when the term begins. Nothing stands.",short:g=>`Still air, but a sandglass of ${g} runs out before three short runs can finish. The job passes again.`};
   function pickers(){
     picker($("#gotp1")||mk("gotp1"),"The sandglass:",[[true,"Doubles at every change"],[false,"The same every time"]],dbl,v=>{dbl=v;reset()});
     picker($("#gotp2")||mk("gotp2"),"The wind:",winds.map(([w,t])=>[w,t]),W,v=>{W=v;reset()});
   }
   function mk(id){const d=document.createElement("div");d.id=id;ctl.appendChild(d);return d}
-  function reset(){gen++;list.innerHTML="";run.disabled=false;pickers();say.textContent="Every holder is honest in this picture, and the first sandglass is the time a short run takes at most. A term's worth is counted as three short runs: the numbering and the two echoes."}
+  function reset(){gen++;list.innerHTML="";run.disabled=false;pickers();say.textContent="Every registrar is honest in this picture, and the first sandglass is the time a short run takes at most. A term's worth is counted as three short runs: the numbering and the two echoes."}
   run.onclick=async()=>{const g0=++gen,rows=sim(),max=Math.max(...rows.map(r=>r.g));run.disabled=true;list.innerHTML="";
     for(const r of rows){if(g0!==gen)return;const d=document.createElement("div");d.className="trow "+r.kind;
-      d.innerHTML=`<b>Term ${r.k}</b><span class="gl"><i style="width:${Math.max(4,r.g/max*100)}%"></i></span><em>Number ${r.h} holds the job, glass ${r.g}. ${why[r.kind](r.g)}</em>`;list.appendChild(d);await sleep(450)}
+      d.innerHTML=`<b>Term ${r.k}</b><span class="gl"><i style="width:${Math.max(4,r.g/max*100)}%"></i></span><em>Number ${r.h} has the job, glass ${r.g}. ${why[r.kind](r.g)}</em>`;list.appendChild(d);await sleep(450)}
     if(g0!==gen)return;const last=rows[rows.length-1];
     if(last.kind==="ok")say.innerHTML=`<span class="ok">The entries stand at term ${last.k}.</span> ${dbl?"The doubling sandglass grew past a term's worth of short runs, and the first term to begin in still air after that one worked.":"The sandglass never changed, and still air was enough because it was long enough from the start."}`;
     else{const d=document.createElement("div");d.className="trow more";d.textContent="…and so on, for ever";list.appendChild(d);
@@ -156,7 +156,7 @@ function Crown(svg){
   reset();
 })();
 
-/* ===== settling columns: the allowed numbers, and a holder who jumps ahead ===== */
+/* ===== settling columns: the allowed numbers, and a registrar who jumps ahead ===== */
 (function(){
   const nE=$("#setN"),sE=$("#setS"),kE=$("#setK"),bar=$("#setbar"),meter=bar.parentNode,rng=$("#setrange"),say=$("#setsay"),
     bF=$("#setfile"),bS=$("#setsettle"),bB=$("#setbad"),bG=$("#setgood"),bR=$("#setreset");
@@ -167,9 +167,9 @@ function Crown(svg){
     rng.textContent=`Allowed numbers: ${S+1} to ${S+DIST}. ${N-S} of the ${DIST} ${N-S===1?"is":"are"} used.`;
     bF.disabled=N+50>S+DIST;bS.disabled=Math.floor(N/100)*100<=S;bG.disabled=N>=S+DIST;
   }
-  bF.onclick=()=>{N+=50;paint();say.innerHTML=`Fifty more entries stand, up to number ${N}. Every echo for them is kept, in case a change of job calls for it.${N+50>S+DIST?" <span class='bad'>No more numbers are allowed until a column settles.</span>":""}`};
+  bF.onclick=()=>{N+=50;paint();say.innerHTML=`Fifty more entries stand, up to number ${N}. Every echo for them is held, in case a change of job calls for it.${N+50>S+DIST?" <span class='bad'>No more numbers are allowed until a column settles.</span>":""}`};
   bS.onclick=()=>{const to=Math.floor(N/100)*100;S=to;paint();say.innerHTML=`Each bandit sealed a summary of their copy up to <b>${to}</b>. Three matching summaries settle the column: at least two honest bandits have the same scroll up to there. Every echo for numbers up to ${to} is thrown away, and the allowed numbers move up.`};
-  bB.onclick=()=>{say.innerHTML=`<span class="bad">Refused.</span> Number 1,000,000 lies far beyond the last settled column plus ${DIST}. A holder cannot use up the numbers by jumping to an enormous one.`};
+  bB.onclick=()=>{say.innerHTML=`<span class="bad">Refused.</span> Number 1,000,000 lies far beyond the last settled column plus ${DIST}. A registrar cannot use up the numbers by jumping to an enormous one.`};
   bG.onclick=()=>{N++;paint();say.innerHTML=`Number ${N} lies between the last settled column and ${S+DIST}, so it is allowed.`};
   bR.onclick=()=>{N=0;S=0;paint();say.innerHTML="Nothing is written yet. The picture's allowed numbers run two hundred beyond the last settled column."};
   paint();
@@ -203,7 +203,7 @@ function Crown(svg){
   const lbl=(k,t,s,from,to,col)=>{const [x,y]=P.pt(k,t),a=nodes[k][0],t2=el("text",{class:"lab halo",x:x+(a===-90||a===90?-14:0),y:y+(a===-90||a===90?5:-16)},P.over);t2.textContent=s;
     t2.style.textAnchor=a===-90||a===90?"end":"middle";if(col)t2.style.fill=col;return add(t2,from,to)};
   const slip=(m,from,col,mk,dash)=>{const p=P.slip(m.a,m.s,m.b,m.r,12);p.setAttribute("style",`stroke:${col};stroke-width:3.4`);p.setAttribute("marker-end",`url(#${svg.id}-${mk})`);if(dash)p.style.strokeDasharray="7 5";return add(p,from)};
-  const holds=el("text",{class:"lab halo",x:292,y:261,style:"text-anchor:end"},P.over);holds.textContent="holds the job";
+  const holds=el("text",{class:"lab halo",x:292,y:261,style:"text-anchor:end"},P.over);holds.textContent="has the job";
   dot(2,1.4,"#fffaf0",0);M.filter(m=>m.kind==="file").forEach(m=>slip(m,0,"#136f9e","b"));lbl(2,1.4,"files",0,0);
   dot(1,2.4,"#fffaf0",1);lbl(1,2.4,"no. 7",1,1,"#bf4a26");
   M.filter(m=>m.kind==="num").forEach(m=>slip(m,1,"#bf4a26","r",m.held));
@@ -215,7 +215,7 @@ function Crown(svg){
   [1,2,3].forEach(k=>dot(k,5.4,"#9cb648",5));lbl(2,5.4,"stands",5,5,"#2f5a1c");
   const Ts=[2.4,3.4,3.4,4.4,4.4,5.4];
   function card(k,s){
-    const T=Ts[s],K=know(k,T),role=k===HOLD?"holds the job":"";
+    const T=Ts[s],K=know(k,T),role=k===HOLD?"has the job":"";
     const note=[];
     if(k===4)return `<div class="hc dim"><h5><span><i class="dot" style="background:${BC[k]}"></i>Number 4</span></h5><div class="chk">${s>=1?"Rats held by the wind. Nobody waits for them.":"—"}</div></div>`;
     if(s===0&&k===2)note.push("filed the entry");
@@ -240,7 +240,7 @@ mapPairs($("#map"),[
   ["Seal rings","Public-key signatures that an adversary cannot forge (§2); message digests are folded into the seal here"],
   ["The loot scroll; an entry","A deterministic replicated state machine; an operation request (§3–4)"],
   ["Order; going on","Safety (linearizability) and liveness (§3)"],
-  ["The job; a term; the fixed order of holders","The primary; a view; primary = v mod |R| (§4)"],
+  ["The job; a term; the fixed order of registrars","The primary; a view; primary = v mod |R| (§4)"],
   ["Two matching sealed words to trust an entry","The client waits for f + 1 matching replies (§4.1); redundant for a replica acting as its own client"],
   ["Numbering; first echo; readied","Pre-prepare; prepare; prepared = pre-prepare + 2f matching prepares (§4.2)"],
   ["Second echo; stands","Commit; committed-local = prepared + 2f + 1 matching commits (§4.2)"],
@@ -248,7 +248,7 @@ mapPairs($("#map"),[
   ["Why four bandits","3f + 1 is optimal for asynchronous safety and liveness (§2, citing Bracha and Toueg)"],
   ["Asking for a change; the three requests; the new numbering; blank entries","View-change; new-view with 2f + 1 view-changes; the set O; null requests (§4.4)"],
   ["Order Across Terms","Non-faulty replicas agree on the sequence numbers of requests that commit locally, even in different views (§4.5.1; a sketch, with the full proof in Castro's thesis)"],
-  ["Joining on two requests; no bandit forces a change; a lying holder's single term","Join a view change on f + 1 view-changes; a change needs f + 1; a faulty primary for at most f consecutive views (§4.5.2)"],
+  ["Joining on two requests; no bandit forces a change; a lying registrar's single term","Join a view change on f + 1 view-changes; a change needs f + 1; a faulty primary for at most f consecutive views (§4.5.2)"],
   ["Doubling the sandglass","The view-change timeout doubles (§4.5.2)"],
   ["Settled columns; the allowed numbers","Stable checkpoints with 2f + 1 matching messages; low and high water marks (§4.3)"],
   ["A nonsense entry","Faulty clients are observed consistently but can write garbage; access control limits them (§3)"],

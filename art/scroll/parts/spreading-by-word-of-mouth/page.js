@@ -136,11 +136,11 @@ function meet(a,b){if(!a)return [b,b,"take"];if(!b)return [a,a,"take"];return a.
 })();
 (function(){
   const box=$("#tshelves"),say=$("#tsay"),old={t:3},back={t:8};
-  const start=()=>box.innerHTML=shelfHtml("A keeper",[{notice:true,t:5},old])+shelfHtml("Another library",[back]);
+  const start=()=>box.innerHTML=shelfHtml("A warden",[{notice:true,t:5},old])+shelfHtml("Another library",[back]);
   /* a notice strikes an edition exactly when the notice's first tally is the later */
   function wake(fresh){const n=fresh?{notice:true,t:10}:{notice:true,t:5,woke:10},hit=e=>({...e,gone:n.t>e.t});
     const o=hit(old),bk=hit(back);
-    box.innerHTML=shelfHtml("A keeper",[n,o])+shelfHtml("Another library",[n,bk]);
+    box.innerHTML=shelfHtml("A warden",[n,o])+shelfHtml("Another library",[n,bk]);
     say.innerHTML=fresh?`The woken notice carries day 10. It strikes the old edition of day 3, and ${bk.gone?`<span class="bad">it strikes the edition of day 8 as well</span>, which was written after the withdrawal to bring the work back.`:"spares the edition of day 8."}`
       :`The woken notice still says the work was withdrawn on day 5, and is awake since day 10, so it is carried again. It strikes the old edition of day 3. ${bk.gone?"It strikes day 8 as well.":`<span class="ok">The edition of day 8 stands.</span>`}`}
   $("#tone").onclick=()=>wake(true);$("#ttwo").onclick=()=>wake(false);start();
@@ -155,4 +155,4 @@ function meet(a,b){if(!a)return [b,b,"take"];if(!b)return [a,a,"take"];return a.
 })();
 
 /* ===== relevance map ===== */
-mapPairs($("#map"),[["A library, holding copies","A site with a replica of the database"],["A work; an edition","A key; its value"],["The tally; the larger tally wins","A timestamp; the later write wins"],["A scrap of papyrus","An update"],["Letters to every library","Direct mail"],["The festival: pairs by lot compare collections","Anti-entropy"],["Giving, asking, or both","Push, pull, push-pull"],["The catalogue mark","A checksum of the database"],["The scholars telling in the stoa","Rumor mongering"],["Has not heard; still telling; has stopped","Susceptible; infective; removed"],["The allowance","How often a site retries before losing interest"],["Those who never hear","The residue"],["A notice of withdrawal","A death certificate"],["A sleeping notice and its keepers","A dormant certificate at its retention sites"],["Preferring near partners; the ferry","A spatial distribution; a critical link"]]);
+mapPairs($("#map"),[["A library, holding copies","A site with a replica of the database"],["A work; an edition","A key; its value"],["The tally; the larger tally wins","A timestamp; the later write wins"],["A scrap of papyrus","An update"],["Letters to every library","Direct mail"],["The festival: pairs by lot compare collections","Anti-entropy"],["Giving, asking, or both","Push, pull, push-pull"],["The catalogue mark","A checksum of the database"],["The scholars telling in the stoa","Rumor mongering"],["Has not heard; still telling; has stopped","Susceptible; infective; removed"],["The allowance","How often a site retries before losing interest"],["Those who never hear","The residue"],["A notice of withdrawal","A death certificate"],["A sleeping notice and its wardens","A dormant certificate at its retention sites"],["Preferring near partners; the ferry","A spatial distribution; a critical link"]]);
