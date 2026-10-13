@@ -577,7 +577,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
         <li>The order is <var>X</var> ≤ <var>Y</var> ⇔ ∀<var>i</var>, <var>X</var>.<var>P</var>[<var>i</var>] ≤ <var>Y</var>.<var>P</var>[<var>i</var>]. Componentwise maximum is the least upper bound of two vectors under this order, since it is an upper bound of both and any other upper bound is at least as large in every entry. So the states form a semilattice, and merge is its join.</li>
         <li>Each update increases one entry and leaves the rest, so the state never decreases: <var>s</var> ≤ <var>s</var> • <var>increment</var>. The object is a monotonic semilattice, hence a CvRDT (Theorem 1 of the short paper).</li>
         <li>Now let <var>x<sub>i</sub></var> and <var>x<sub>j</sub></var> be any two replicas that can exchange states infinitely often by some channel that eventually delivers (Proposition 2.1 of the report). Let <var>x<sub>i</sub></var>′ = <var>x<sub>i</sub></var> ⊔ <var>x<sub>j</sub></var> and <var>x<sub>j</sub></var>′ = <var>x<sub>j</sub></var> ⊔ <var>x<sub>i</sub></var>. By the commutativity of ⊔, <var>x<sub>i</sub></var>′ = <var>x<sub>j</sub></var>′, and by idempotence and associativity further merges of the same states change nothing. Both replicas have the same causal history, C(<var>x<sub>i</sub></var>) ∪ C(<var>x<sub>j</sub></var>), and the same state.</li>
-        <li>The report states two assumptions of this vector form: the payload does not overflow, and the set of replicas is known. A grow-only set of unique marks, one per increment, can serve as the same counter without knowing the replicas.<span class="qed">∎</span></li>
+        <li>The report states two assumptions of this vector form: the payload does not overflow, and the set of replicas is known. A grow-only set of unique tags, one per increment, can serve as the same counter without knowing the replicas.<span class="qed">∎</span></li>
       </ol>
     </details>
   </div>
@@ -691,16 +691,16 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     </div>
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The cheap way</div><h3>A struck-off list</h3><p>Keep a second list, the <b>struck-off list</b>. A title is on the catalogue if it is on the first list and not on the second. Both lists only grow, so both merge. A title once struck can never come back: a strike beats an add, for good.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The way most like an ordinary list</div><h3>A mark for every writing</h3><p>Each time a title is written, it gets a <b>mark</b> that nobody else will ever use. A title is on the catalogue if any mark of it is. To strike a title, a scribe strikes <em>all the marks in sight</em>, and only those.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The way most like an ordinary list</div><h3>A tag for every writing</h3><p>Each time a title is written, it gets a <b>tag</b> that nobody else will ever use. A title is on the catalogue if any tag of it is. To strike a title, a scribe strikes <em>all the tags in sight</em>, and only those.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Other ways</div><h3>A tally, or a count</h3><p>Each title can carry a tally, so that the later of its last add and last strike wins. Or a count, up with adds and down with strikes, which settles but behaves oddly: a title struck twice needs two adds to return.</p></div></div></div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>One title, two libraries, a mark for every writing <em>add and strike in any order, then let the two exchange</em></h4>
+      <h4>One title, two libraries, a tag for every writing <em>add and strike in any order, then let the two exchange</em></h4>
       <div class="shelves" id="olibs" data-live></div>
       <p class="say" id="osay">Each library sees only its own list until the two exchange.</p>
       <div class="row"><button class="btn" id="oa1">Library 1 adds the title</button><button class="btn" id="os1">Library 1 strikes it</button><button class="btn" id="oa2">Library 2 adds the title</button><button class="btn" id="os2">Library 2 strikes it</button><button class="btn alt" id="omeet">The two exchange lists</button><button class="btn alt" id="oreset">Start again</button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">A strike takes away only the marks it has seen</div><h3>An add and a strike made in ignorance of each other leave the add standing</h3><p>If one library strikes a title while another writes it again, the new writing carries a mark the striker never saw, so the title stays. A title added after a strike is on the catalogue. The paper names this list after what it does: a strike removes what it has observed.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">A strike takes away only the tags it has seen</div><h3>An add and a strike made in ignorance of each other leave the add standing</h3><p>If one library strikes a title while another writes it again, the new writing carries a tag the striker never saw, so the title stays. A title added after a strike is on the catalogue. The paper names this list after what it does: a strike removes what it has observed.</p></div></div></div>
   </div>
 </section>
 
@@ -755,8 +755,8 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="cards3 five">
       <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it keep a limit?</h3><p>No. A count that must never go below zero, or a catalogue that must never hold two titles together, is a rule about the whole coast, and no terrace can see the whole coast from its own table. Keeping such a rule means agreeing, beforehand or at times.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it say which result is right?</h3><p>No. Every terrace settles the same way, and the way is chosen by whoever designs the list: the strike may beat the add or the add the strike, the later correction may win or both be kept. Any of them may be reasonable for some use.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it keep the tables small?</h3><p>Not by itself. The struck-off list only grows, every mark stays until it is struck, and there is a column for every terrace. To throw old notices away a terrace must know every other has taken them in, which it can learn only while no terrace is silent.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What does it assume?</h3><p>That no scribe lies: one who adds to another's column, or reuses someone's mark, can break it. That the terraces are known and the piles never outgrow their grooves. That on the notice way each notice arrives exactly once, in order of dependence. That tallies follow the order of events.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it keep the tables small?</h3><p>Not by itself. The struck-off list only grows, every tag stays until it is struck, and there is a column for every terrace. To throw old notices away a terrace must know every other has taken them in, which it can learn only while no terrace is silent.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What does it assume?</h3><p>That no scribe lies: one who adds to another's column, or reuses someone's tag, can break it. That the terraces are known and the piles never outgrow their grooves. That on the notice way each notice arrives exactly once, in order of dependence. That tallies follow the order of events.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is the list of examples complete?</h3><p>No. The paper also gives designs for cross-references between works and for ordered sequences, which are left to the paper. What it shows is the shape of the idea: the merge must take the least that holds both, and changes must only go up, or else they must not mind their order.</p></div></div></div>
     </div>
   </div>
@@ -818,7 +818,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
           <tr><td><span class="term">keeping both corrections, each with what it was written after</span></td><td>MV-Register, with version vectors. <span class="paper">Report §3.2.2, spec. 10.</span></td></tr>
           <tr><td><span class="term">the catalogue of titles, only added to</span></td><td>G-Set: union. <span class="paper">Report §3.3.1, spec. 11.</span></td></tr>
           <tr><td><span class="term">the struck-off list: once struck, never restored</span></td><td>2P-Set, with a tombstone set; remove only what is present. <span class="paper">Report §3.3.2, spec. 12.</span></td></tr>
-          <tr><td><span class="term">each title with its own mark; a strike removes the marks it has seen</span></td><td>OR-Set (observed-remove, add wins). <span class="paper">Report §3.3.5, spec. 15.</span></td></tr>
+          <tr><td><span class="term">each title with its own tag; a strike removes the tags it has seen</span></td><td>OR-Set (observed-remove, add wins). <span class="paper">Report §3.3.5, spec. 15.</span></td></tr>
           <tr><td><span class="term">a title carrying a tally; a title carrying a count</span></td><td>LWW-element-Set; PN-Set. <span class="paper">Report §3.3.3, §3.3.4.</span></td></tr>
           <tr><td><span class="term">two libraries each adding one title and striking the other's, ending with both</span></td><td>SEC is incomparable with sequential consistency. <span class="paper">Short paper §3.3.</span></td></tr>
           <tr><td><span class="term">throwing away old notices needs every terrace heard from</span></td><td>Distributed garbage collection of the log or tombstones (Wuu and Bernstein). <span class="paper">Short paper §4.2.</span></td></tr>
@@ -1101,7 +1101,7 @@ const sum=v=>v.reduce((a,b)=>a+b,0),larger=(x,y)=>x.map((n,i)=>Math.max(n,y[i]))
   seg($("#hord"),[[0,"Library 1"],[1,"Library 2"]],first,v=>{first=+v;paint()});paint();
 })();
 
-/* ===== a list where every writing of a title has its own mark: what is held is the marks written and the marks struck ===== */
+/* ===== a list where every writing of a title has its own tag: what is held is the tags written and the tags struck ===== */
 function Marks(name){return {name,add:new Set(),struck:new Set(),n:0,
   write(title){const m=`${title}·${name}·${++this.n}`;this.add.add(m);return m},
   live(title){return [...this.add].filter(m=>m.startsWith(title+"·")&&!this.struck.has(m))},
@@ -1109,15 +1109,15 @@ function Marks(name){return {name,add:new Set(),struck:new Set(),n:0,
   take(o){o.add.forEach(m=>this.add.add(m));o.struck.forEach(m=>this.struck.add(m))}}}
 (function(){
   const box=$("#olibs"),say=$("#osay");let L;
-  const lab=m=>{const [t,l,n]=m.split("·");return `mark ${l}-${n}`};
+  const lab=m=>{const [t,l,n]=m.split("·");return `tag ${l}-${n}`};
   const shelf=l=>`<div class="shelf"><h5>Library ${l.name}'s list</h5>${[...l.add].map(m=>`<span class="it${l.struck.has(m)?" gone":""}">the title, ${lab(m)}</span>`).join("")||'<span class="it none">nothing written yet</span>'}<div style="margin-top:6px">${l.live("T").length?'<span class="ok">The title is on the catalogue.</span>':'The title is not on the catalogue.'}</div></div>`;
   const paint=()=>box.innerHTML=L.map(shelf).join("");
   function reset(){L=[Marks("1"),Marks("2")];paint();say.textContent="Each library sees only its own list until the two exchange."}
   const add=i=>{const m=L[i].write("T");paint();say.innerHTML=`Library ${i+1} writes the title, with ${lab(m)}.`};
-  const strike=i=>{const s=L[i].strike("T");paint();say.innerHTML=s.length?`Library ${i+1} strikes every mark of the title it can see: ${s.map(lab).join(", ")}.`:`Library ${i+1} sees no mark of the title, so there is nothing for it to strike.`};
+  const strike=i=>{const s=L[i].strike("T");paint();say.innerHTML=s.length?`Library ${i+1} strikes every tag of the title it can see: ${s.map(lab).join(", ")}.`:`Library ${i+1} sees no tag of the title, so there is nothing for it to strike.`};
   $("#oa1").onclick=()=>add(0);$("#oa2").onclick=()=>add(1);$("#os1").onclick=()=>strike(0);$("#os2").onclick=()=>strike(1);
   $("#omeet").onclick=()=>{L[0].take(L[1]);L[1].take(L[0]);paint();const on=L[0].live("T");
-    say.innerHTML=on.length?`Each takes in the other's marks and strikes. ${on.map(lab).join(", ")} ${on.length>1?"were":"was"} never struck, so <span class="ok">the title is on the catalogue</span> at both.`:"Each takes in the other's marks and strikes. Every mark has been struck, so the title is off the catalogue at both."};
+    say.innerHTML=on.length?`Each takes in the other's tags and strikes. ${on.map(lab).join(", ")} ${on.length>1?"were":"was"} never struck, so <span class="ok">the title is on the catalogue</span> at both.`:"Each takes in the other's tags and strikes. Every tag has been struck, so the title is off the catalogue at both."};
   $("#oreset").onclick=reset;reset();
 })();
 
@@ -1136,11 +1136,11 @@ function Marks(name){return {name,add:new Set(),struck:new Set(),n:0,
   (function go(done,ia,ib){if(done.length===4){orders.push(done);return}
     if(ia<2)go([...done,acts[ia]],ia+1,ib);if(ib<2)go([...done,acts[2+ib]],ia,ib+1)})([],0,0);
   const both=orders.filter(o=>{const s=new Set();o.forEach(([,k,x])=>k==="add"?s.add(x):s.delete(x));return s.has("E")&&s.has("F")}).length;
-  $("#ordlist").innerHTML=`<li><b>L1</b> Library 1 · <b>L2</b> Library 2 · <b>T</b> a terrace</li><li>Library 1 adds E, then strikes F. It sees ${sf.length} ${sf.length===1?"mark":"marks"} of F.</li><li>Library 2 adds F, then strikes E. It sees ${se.length} ${se.length===1?"mark":"marks"} of E.</li><li>The terrace takes in both lists.</li>`;
+  $("#ordlist").innerHTML=`<li><b>L1</b> Library 1 · <b>L2</b> Library 2 · <b>T</b> a terrace</li><li>Library 1 adds E, then strikes F. It sees ${sf.length} ${sf.length===1?"tag":"tags"} of F.</li><li>Library 2 adds F, then strikes E. It sees ${se.length} ${se.length===1?"tag":"tags"} of E.</li><li>The terrace takes in both lists.</li>`;
   $("#ordsay").innerHTML=`On the terrace's list: <b>${on.join(" and ")||"neither"}</b>. Of the ${orders.length} single orders in which the four acts could be done one after another, ${both||"none"} ${both===1?"ends":"end"} with both titles on the list.`;
 })();
 
-mapPairs($("#map"),[["A terrace, its scribe and its table","A replica and its state"],["Terraces that heard the same news show the same count","Strong eventual consistency"],["A column for each terrace, written only by its own scribe","A vector with one entry per replica"],["Taking the larger pile in each column","Merge: the per-entry maximum"],["Any order, any grouping, as often as you like","Commutative, associative, idempotent"],["The table way","State-based replication"],["The notice way: exactly once, in order of dependence","Operation-based replication over reliable causal delivery"],["White pebbles and black","A counter that goes up and down: two grow-only counters"],["The later edition wins","A last-writer-wins register"],["Keeping both corrections","A multi-value register"],["The catalogue of titles","A grow-only set"],["The struck-off list","A two-phase set"],["A mark for every writing; a strike removes the marks seen","An observed-remove set"],["A limit on the whole coast's count","A global invariant, which needs coordination"]]);
+mapPairs($("#map"),[["A terrace, its scribe and its table","A replica and its state"],["Terraces that heard the same news show the same count","Strong eventual consistency"],["A column for each terrace, written only by its own scribe","A vector with one entry per replica"],["Taking the larger pile in each column","Merge: the per-entry maximum"],["Any order, any grouping, as often as you like","Commutative, associative, idempotent"],["The table way","State-based replication"],["The notice way: exactly once, in order of dependence","Operation-based replication over reliable causal delivery"],["White pebbles and black","A counter that goes up and down: two grow-only counters"],["The later edition wins","A last-writer-wins register"],["Keeping both corrections","A multi-value register"],["The catalogue of titles","A grow-only set"],["The struck-off list","A two-phase set"],["A tag for every writing; a strike removes the tags seen","An observed-remove set"],["A limit on the whole coast's count","A global invariant, which needs coordination"]]);
 })();
 </script>
 </body>

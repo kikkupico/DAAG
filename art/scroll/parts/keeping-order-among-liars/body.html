@@ -155,7 +155,7 @@
       <p class="given">In the paper's terms the registrar is the primary, the numbering a pre-prepare, the first echo a prepare, readied is <i>prepared</i> (the pre-prepare and 2<var>f</var> matching prepares), the second echo a commit, and standing is <i>committed-local</i> (prepared and 2<var>f</var> + 1 matching commits). Writing in number order is execution in sequence-number order. (Castro and Liskov, §4.2.)</p>
       <ol class="proofsteps">
         <li><b>Numbering.</b> The registrar sends every man <em>in this term, entry 7 is X</em>.</li>
-        <li><b>First echo.</b> A man accepts the numbering if it is from this term's registrar, the man has not accepted a different entry for number 7 in this term, and 7 is within the numbers now allowed (see settling columns, below). That man sends every man <em>in this term, I heard entry 7 is X</em>. On holding the numbering and two matching first echoes from men other than the registrar, the man's own possibly among them, three seals on the same entry and number, the entry is <b>readied</b> at that post.</li>
+        <li><b>First echo.</b> A man accepts the numbering if it is from this term's registrar, the man has not accepted a different entry for number 7 in this term, and 7 is within the numbers now allowed (see settling checkpoints, below). That man sends every man <em>in this term, I heard entry 7 is X</em>. On holding the numbering and two matching first echoes from men other than the registrar, the man's own possibly among them, three seals on the same entry and number, the entry is <b>readied</b> at that post.</li>
         <li><b>Second echo.</b> Once it is readied, that man sends every man <em>in this term, entry 7 is X is readied here</em>. On three matching second echoes, the man's own among them, the entry <b>stands</b> at that post.</li>
         <li><b>Carrying out.</b> The man writes a standing entry into the post's copy as soon as every lower number has been written, and sends the filer word that it stands.</li>
       </ol>
@@ -263,7 +263,7 @@
         requests from the liar, is carried out in full in Castro's thesis; this is the paper's
         sketch.<span class="qed">∎</span></li>
       </ol>
-      <p class="fnote">The paper's proof is a sketch, with the full argument in Castro's thesis. This version leaves out the settled columns described below, which let a request show a settled column in place of the entries below it.</p>
+      <p class="fnote">The paper's proof is a sketch, with the full argument in Castro's thesis. This version leaves out the settled checkpoints described below, which let a request show a settled checkpoint in place of the entries below it.</p>
     </details>
     <details class="proof">
       <summary>Stated formally · changing the job</summary>
@@ -308,39 +308,39 @@
   </div>
 </section>
 
-<!-- ============================================================ settling columns -->
-<section class="spread dark" id="settlesec" data-name="Settling columns">
+<!-- ============================================================ settling checkpoints -->
+<section class="spread dark" id="settlesec" data-name="Settling checkpoints">
   <a class="anchor" id="s7"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">So the store does not grow for ever</div>
-      <h2>Settling columns</h2>
-      <p class="lede">The store of sealed rats need not grow for ever. Every hundred entries, each bandit seals a short summary of their copy up to that number and sends it to everyone. When a bandit holds three matching summaries for the same number, that column is <b>settled</b>: at least two honest bandits have the same scroll up to there.</p>
-      <p>A settled column lets a bandit throw away every echo for numbers up to it, since the three summaries now stand for those entries. A bandit whose copy fell behind can take the settled column from any of the three and trust it. The settled column also bounds the numbering. A registrar may use only numbers from the last settled column up to some fixed distance beyond it, so a lying registrar cannot use up the numbers by jumping to an enormous one.</p>
-      <p>In the picture below, let entries stand until the allowed numbers are used up, then settle a column, and see which numbers a registrar may and may not use.</p>
+      <h2>Settling checkpoints</h2>
+      <p class="lede">The store of sealed rats need not grow for ever. Every hundred entries, each bandit seals a short summary of their copy up to that number and sends it to everyone. When a bandit holds three matching summaries for the same number, that point is a <b>settled checkpoint</b>: at least two honest bandits have the same scroll up to there.</p>
+      <p>A settled checkpoint lets a bandit throw away every echo for numbers up to it, since the three summaries now stand for those entries. A bandit whose copy fell behind can take the settled checkpoint from any of the three and trust it. The settled checkpoint also bounds the numbering. A registrar may use only numbers from the last settled checkpoint up to some fixed distance beyond it, so a lying registrar cannot use up the numbers by jumping to an enormous one.</p>
+      <p>In the picture below, let entries stand until the allowed numbers are used up, then settle a checkpoint, and see which numbers a registrar may and may not use.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>The allowed numbers <em>press to file, settle and try</em></h4>
       <div class="counts"><span><b id="setN">0</b>written up to</span><span><b id="setS">0</b>settled up to</span><span><b id="setK">0</b>echoes still held</span></div>
       <div class="meter" aria-hidden="true"><i id="setbar"></i></div>
       <p style="font-size:.84rem;color:#6b5a48;margin:.4rem 0 0" id="setrange"></p>
-      <p class="say" id="setsay" data-live>Nothing is written yet. The picture's allowed numbers run two hundred beyond the last settled column.</p>
+      <p class="say" id="setsay" data-live>Nothing is written yet. The picture's allowed numbers run two hundred beyond the last settled checkpoint.</p>
       <div class="row">
         <button class="btn" id="setfile">Fifty more entries stand</button>
-        <button class="btn" id="setsettle">Settle the column</button>
+        <button class="btn" id="setsettle">Settle the checkpoint</button>
         <button class="btn alt" id="setbad">A registrar tries number 1,000,000</button>
         <button class="btn alt" id="setgood">A registrar tries the next number</button>
         <button class="btn alt" id="setreset">Start again</button>
       </div>
     </div></div></div>
     <details class="proof">
-      <summary>Stated formally · settling a column</summary>
+      <summary>Stated formally · settling a checkpoint</summary>
       <p class="given">In the paper's terms: checkpoints every <var>K</var> requests; a stable checkpoint needs 2<var>f</var> + 1 matching checkpoint messages; low and high water marks <var>h</var> and <var>H</var> = <var>h</var> + <var>k</var>. (Castro and Liskov, §4.3.)</p>
       <ol class="proofsteps">
         <li>Every hundred entries, send a sealed summary of your copy.</li>
-        <li>Three matching summaries settle the column; discard what lies below it.</li>
-        <li>Numbers are allowed only between the last settled column and a fixed distance above it.</li>
+        <li>Three matching summaries settle the checkpoint; discard what lies below it.</li>
+        <li>Numbers are allowed only between the last settled checkpoint and a fixed distance above it.</li>
       </ol>
     </details>
     <p class="tell" style="margin-top:1.8rem">The four now have order in any wind, progress once it drops, and a store that does not grow without end. It remains to say what the arrangement leaves unprotected.</p>

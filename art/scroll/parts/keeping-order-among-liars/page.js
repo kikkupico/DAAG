@@ -156,22 +156,22 @@ function Crown(svg){
   reset();
 })();
 
-/* ===== settling columns: the allowed numbers, and a registrar who jumps ahead ===== */
+/* ===== settling checkpoints: the allowed numbers, and a registrar who jumps ahead ===== */
 (function(){
   const nE=$("#setN"),sE=$("#setS"),kE=$("#setK"),bar=$("#setbar"),meter=bar.parentNode,rng=$("#setrange"),say=$("#setsay"),
     bF=$("#setfile"),bS=$("#setsettle"),bB=$("#setbad"),bG=$("#setgood"),bR=$("#setreset");
-  const DIST=200;   /* the picture's fixed distance beyond the last settled column */
+  const DIST=200;   /* the picture's fixed distance beyond the last settled checkpoint */
   let N=0,S=0;
   function paint(){
     nE.textContent=N;sE.textContent=S;kE.textContent=N-S;bar.style.width=((N-S)/DIST*100)+"%";meter.classList.toggle("full",N-S>=DIST);
     rng.textContent=`Allowed numbers: ${S+1} to ${S+DIST}. ${N-S} of the ${DIST} ${N-S===1?"is":"are"} used.`;
     bF.disabled=N+50>S+DIST;bS.disabled=Math.floor(N/100)*100<=S;bG.disabled=N>=S+DIST;
   }
-  bF.onclick=()=>{N+=50;paint();say.innerHTML=`Fifty more entries stand, up to number ${N}. Every echo for them is held, in case a change of job calls for it.${N+50>S+DIST?" <span class='bad'>No more numbers are allowed until a column settles.</span>":""}`};
-  bS.onclick=()=>{const to=Math.floor(N/100)*100;S=to;paint();say.innerHTML=`Each bandit sealed a summary of their copy up to <b>${to}</b>. Three matching summaries settle the column: at least two honest bandits have the same scroll up to there. Every echo for numbers up to ${to} is thrown away, and the allowed numbers move up.`};
-  bB.onclick=()=>{say.innerHTML=`<span class="bad">Refused.</span> Number 1,000,000 lies far beyond the last settled column plus ${DIST}. A registrar cannot use up the numbers by jumping to an enormous one.`};
-  bG.onclick=()=>{N++;paint();say.innerHTML=`Number ${N} lies between the last settled column and ${S+DIST}, so it is allowed.`};
-  bR.onclick=()=>{N=0;S=0;paint();say.innerHTML="Nothing is written yet. The picture's allowed numbers run two hundred beyond the last settled column."};
+  bF.onclick=()=>{N+=50;paint();say.innerHTML=`Fifty more entries stand, up to number ${N}. Every echo for them is held, in case a change of job calls for it.${N+50>S+DIST?" <span class='bad'>No more numbers are allowed until a checkpoint settles.</span>":""}`};
+  bS.onclick=()=>{const to=Math.floor(N/100)*100;S=to;paint();say.innerHTML=`Each bandit sealed a summary of their copy up to <b>${to}</b>. Three matching summaries settle the checkpoint: at least two honest bandits have the same scroll up to there. Every echo for numbers up to ${to} is thrown away, and the allowed numbers move up.`};
+  bB.onclick=()=>{say.innerHTML=`<span class="bad">Refused.</span> Number 1,000,000 lies far beyond the last settled checkpoint plus ${DIST}. A registrar cannot use up the numbers by jumping to an enormous one.`};
+  bG.onclick=()=>{N++;paint();say.innerHTML=`Number ${N} lies between the last settled checkpoint and ${S+DIST}, so it is allowed.`};
+  bR.onclick=()=>{N=0;S=0;paint();say.innerHTML="Nothing is written yet. The picture's allowed numbers run two hundred beyond the last settled checkpoint."};
   paint();
 })();
 
@@ -250,7 +250,7 @@ mapPairs($("#map"),[
   ["Order Across Terms","Non-faulty replicas agree on the sequence numbers of requests that commit locally, even in different views (§4.5.1; a sketch, with the full proof in Castro's thesis)"],
   ["Joining on two requests; no bandit forces a change; a lying registrar's single term","Join a view change on f + 1 view-changes; a change needs f + 1; a faulty primary for at most f consecutive views (§4.5.2)"],
   ["Doubling the sandglass","The view-change timeout doubles (§4.5.2)"],
-  ["Settled columns; the allowed numbers","Stable checkpoints with 2f + 1 matching messages; low and high water marks (§4.3)"],
+  ["Settled checkpoints; the allowed numbers","Stable checkpoints with 2f + 1 matching messages; low and high water marks (§4.3)"],
   ["A nonsense entry","Faulty clients are observed consistently but can write garbage; access control limits them (§3)"],
   ["Keeps nothing secret","No fault-tolerant privacy (§2)"],
   ["Cheaper marks only the receiver can check","Message authentication codes and authenticators, with signatures kept for view changes (§5.2)"]]);

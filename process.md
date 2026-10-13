@@ -246,7 +246,7 @@ A book speaks in two registers, and each belongs to its own places.
 - **Proofs use the math.** Everything inside `<details class="proof">` is written in the
   paper's abstractions, as the paper states them.
 - **Prose, captions, button labels and figures use the allegory.** No σ, no *A* and *B*, no set
-  notation, no "process" or "message": tents, ravens, standings, courses, houses, slips. A figure
+  notation, no "process" or "message": tents, ravens, positions, courses, houses, slips. A figure
   labels what the setting's people do (*tents 1 and 2 trade ravens*).
 - **Machine words have four places:** the machine-terms spread, the right-hand column of the
   closing table (where the technical term meets the device), the closing statement of the result,

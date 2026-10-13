@@ -182,7 +182,7 @@ const record=(moves,askAt)=>{const done=moves.filter(m=>m.end<askAt).sort((a,b)=
       <div style="margin-top:6px">Answers given: ${answers.length?answers.map(a=>`Number ${a.k}: ${a.given} ${yesno(a.ok)}`).join("; "):"none"}</div>`;
     Object.values(bs).forEach(b=>b.disabled=busy)}
   async function ask(k){busy=true;paint();const lost=hawks&&k===4,right=record(done.map(m=>({plan:m.plan,end:0})),1);let given;
-    fill.classList.remove("out");fill.style.width="0";say.textContent=`Number ${k} asks, sends a bird to the muster-master and turns the glass.`;
+    fill.classList.remove("out");fill.style.width="0";say.textContent=`Number ${k} asks, sends a bird to the muster-master and starts the glass.`;
     if(!lost){const w=35+rnd(45);await trip(H,k,1,false);await trip(H,1,k,false);fill.style.width=w+"%";given=K;if(k===4)N[4]=K;
       say.innerHTML=`The muster-master's answer came <b>before the glass ran out</b>, and Number ${k} takes it: ${given}.`}
     else{everLost=true;const p=trip(H,4,1,true);fill.style.width="100%";await p;await sleep(600);fill.classList.add("out");
@@ -192,7 +192,7 @@ const record=(moves,askAt)=>{const done=moves.filter(m=>m.end<askAt).sort((a,b)=
     answers.push({k,given,ok});if(!ok)say.innerHTML+=` <span class="bad">A single record says ${right}.</span>`+(everLost&&!hawks?" The hawks are gone, but a bird was lost earlier tonight.":" This happens only because a bird is lost.");
     busy=false;paint()}
   async function move(p){busy=true;paint();const lost=hawks;fill.classList.remove("out");fill.style.width="0";
-    say.textContent=`Number 4 moves the plan to ${p}, sends the move to the muster-master and turns the glass.`;
+    say.textContent=`Number 4 moves the plan to ${p}, sends the move to the muster-master and starts the glass.`;
     if(!lost){await trip(H,4,1,false);await trip(H,1,4,false);K=p;own[4]=null;N[4]=p;fill.style.width=(35+rnd(45))+"%";say.innerHTML="The muster-master answered in time: the move stands, and the muster-master's note changes."}
     else{everLost=true;const q=trip(H,4,1,true);fill.style.width="100%";await q;await sleep(600);fill.classList.add("out");own[4]=p;
       say.innerHTML="<b>The glass ran out.</b> Number 4 is told the move stands. The muster-master never heard of it."}
