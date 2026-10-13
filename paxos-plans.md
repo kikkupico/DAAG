@@ -67,12 +67,12 @@ see `settings.md`.
 
 | Device | In the paper | Also in |
 |---|---|---|
-| a work's keepers: the same N libraries hold every copy of it | The replication factor N. |  |
-| a new edition sent to all N keepers, announced as done once W have acknowledged it | The write quorum W. |  |
-| a reader who asks R keepers and takes the newest copy handed over | The read quorum R. |  |
+| a work's home libraries: the same N libraries hold every copy of it | The replication factor N. |  |
+| a new edition sent to all N home libraries, announced as done once W have acknowledged it | The write quorum W. |  |
+| a reader who asks R home libraries and takes the newest copy handed over | The read quorum R. |  |
 | the Chamber's rule: R + W > N, so the two groups always share a library | A strict quorum; intersection. | The Chamber's majorities; the camps' pledges, where two pledged and three needed to call the other gate exceed four (*Agreeing When Messages Run Late*) |
 | the scholars' rule: R + W ≤ N, quicker, and the groups may miss | A partial quorum. |  |
-| the edition still on its way to the other keepers after it is announced | Expanding quorums; anti-entropy. | The festival (*Spreading by Word of Mouth*) |
+| the edition still on its way to the other home libraries after it is announced | Expanding quorums; anti-entropy. | The festival (*Spreading by Word of Mouth*) |
 | "one of the last k editions" | k-staleness. |  |
 | "t hours after it was announced" | t-visibility. |  |
 | the four legs: the edition out, the acknowledgement back, the reader's request out, the copy back | WARS: the four message delays. |  |
@@ -81,7 +81,7 @@ see `settings.md`.
 | a promise with odds: "nine chances in ten it is current after a day" | PBS consistency: an expected bound, not a guarantee. | The promise of the span t (*Answering While Cut Off*): a bound held for certain |
 
 **Chapters.**
-1. A work and its keepers.
+1. A work and its home libraries.
 2. How many to wait for.
 3. When the groups miss each other.
 4. How many editions behind.
@@ -91,7 +91,7 @@ see `settings.md`.
 8. What it does not say: a probability, not a promise.
 9. In the Book, In the Paper.
 
-**Must not exist:** any certainty that a copy is current; a reader who asks every keeper; a store in the book (the paper is a model); an assembly.
+**Must not exist:** any certainty that a copy is current; a reader who asks every home library; a store in the book (the paper is a model); an assembly.
 
 **Open.**
 1. **Clocks.** t-visibility is in hours. Paxos tells time by the sun (the Chamber's meridian), so the scholars can read an hour; confirm that the scholars' coast is not under Arche's cloud.
@@ -172,7 +172,7 @@ see `settings.md`.
 2. A reader's visit.
 3. No half-made corrections.
 4. The same answer twice.
-5. Keeping to one library.
+5. Staying with one library.
 6. Letters and replies.
 7. The last copy.
 8. What no librarian can promise alone.

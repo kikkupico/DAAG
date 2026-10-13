@@ -225,7 +225,7 @@ for effect.
   their styling.
 - **On Arche, personal names become roles** (Paxos books keep their named, colour-coded
   figures, as *One Leader at a Time* does). The Arche long editions give the paper's authors Hellenised names
-  (Lamportios, Chandyos). The scroll says "the keeper of House 1's accounts", "the keeper of the
+  (Lamportios, Chandyos). The scroll says "House 1's accountant", "the recorder of the
   customs rolls". Their old footnote is dropped.
 - **Prose stays neutral about people.** No "he", "his", "she" for a numbered figure or a role;
   repeat the role or use "they". `alt` text may describe what the picture shows.

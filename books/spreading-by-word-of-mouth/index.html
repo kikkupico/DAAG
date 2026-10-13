@@ -592,7 +592,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <div class="kicker">The last few libraries</div>
       <h2>When few remain, asking beats giving</h2>
       <p class="lede">Suppose the news has already reached nearly everyone, and only a few libraries still lack it.</p>
-      <p>A library that lacks the edition and asks is told at once by any partner who has it. A library that waits to be given it gets it only if a holder happens to draw its name. So with asking, the share of libraries without the news falls <em>as the square of itself</em> at every festival. With giving it shrinks by about the same factor each time, a little over a third. Doing both behaves like asking.</p>
+      <p>A library that lacks the edition and asks is told at once by any partner who has it. A library that waits to be given it gets it only if a partner happens to draw its name. So with asking, the share of libraries without the news falls <em>as the square of itself</em> at every festival. With giving it shrinks by about the same factor each time, a little over a third. Doing both behaves like asking.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>One library in ten lacks the news <em>worked out from the two rules, for a coast of a thousand libraries</em></h4>
@@ -797,7 +797,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What notices cost</div><h3>They pile up</h3><p>A library cannot keep every notice for good. It could throw one away once every library has it, but nobody on the coast knows that: it asks for everyone to be heard from, and some library is nearly always closed or cut off.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The plain answer</div><h3>A fixed span</h3><p>Throw a notice away after a fixed span, a month say. Then an old edition that turns up after the notice is gone is let back in. A longer span lessens the risk and uses more shelf.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A far longer span</div><h3>Dormant notices</h3><p>A notice names a few <b>keepers</b>, libraries drawn by lot. After a first span most libraries throw it away, and the keepers keep a copy <b>asleep</b>, carried to no one. After a second span they discard it too. If an old edition turns up at a keeper, the notice wakes and is spread afresh.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A far longer span</div><h3>Dormant notices</h3><p>A notice names a few <b>wardens</b>, libraries drawn by lot. After a first span most libraries throw it away, and the wardens keep a copy <b>asleep</b>, carried to no one. After a second span they discard it too. If an old edition turns up at a warden, the notice wakes and is spread afresh.</p></div></div></div>
     </div>
     <div class="narrow" style="margin:2.4rem 0 1rem">
       <div class="kicker">What a woken notice carries</div>
@@ -808,7 +808,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>A sleeping notice wakes <em>the work was withdrawn on day 5, and brought back by a new edition on day 8</em></h4>
       <div class="shelves" id="tshelves" data-live></div>
-      <p class="say" id="tsay">An old edition from day 3 turns up at a keeper on day 10. Wake the notice.</p>
+      <p class="say" id="tsay">An old edition from day 3 turns up at a warden on day 10. Wake the notice.</p>
       <div class="row"><button class="btn" id="tone">Wake it with a fresh tally</button><button class="btn" id="ttwo">Wake it keeping the first tally</button></div>
     </div></div></div>
     <details class="proof">
@@ -940,7 +940,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
           <tr><td><span class="term">the list kept in order of use; swapping batches until the marks agree</span></td><td>Peel back combined with rumor mongering by a doubly-linked list. <span class="paper">§1.5.</span></td></tr>
           <tr><td><span class="term">a notice of withdrawal</span></td><td>A death certificate. <span class="paper">§2.</span></td></tr>
           <tr><td><span class="term">a fixed span; asking whether everyone has the notice</span></td><td>A fixed threshold; Sarin and Lynch's snapshot-based discarding. <span class="paper">§2.</span></td></tr>
-          <tr><td><span class="term">the keepers named by lot; a sleeping notice; the first and second spans</span></td><td>Dormant death certificates; retention sites; thresholds τ₁ and τ₂; the history kept grows by a factor of O(n), and τ₁ must grow as O(log n). <span class="paper">§2.1.</span></td></tr>
+          <tr><td><span class="term">the wardens named by lot; a sleeping notice; the first and second spans</span></td><td>Dormant death certificates; retention sites; thresholds τ₁ and τ₂; the history kept grows by a factor of O(n), and τ₁ must grow as O(log n). <span class="paper">§2.1.</span></td></tr>
           <tr><td><span class="term">the two tallies of a notice; waking</span></td><td>Ordinary and activation timestamps; reactivation. <span class="paper">§2.2, §2.3.</span></td></tr>
           <tr><td><span class="term">preferring near partners; the ferry</span></td><td>Spatial distributions; critical links. On a line, a d<sup>−2</sup> distribution gives traffic per link of O(log n). <span class="paper">§3, §3.1.</span></td></tr>
           <tr><td><span class="term">chance falling with a place in the list</span></td><td>A distribution parameterised by Q<sub>s</sub>(d), the number of sites within distance d. <span class="paper">§3.</span></td></tr>
@@ -1251,11 +1251,11 @@ function meet(a,b){if(!a)return [b,b,"take"];if(!b)return [a,a,"take"];return a.
 })();
 (function(){
   const box=$("#tshelves"),say=$("#tsay"),old={t:3},back={t:8};
-  const start=()=>box.innerHTML=shelfHtml("A keeper",[{notice:true,t:5},old])+shelfHtml("Another library",[back]);
+  const start=()=>box.innerHTML=shelfHtml("A warden",[{notice:true,t:5},old])+shelfHtml("Another library",[back]);
   /* a notice strikes an edition exactly when the notice's first tally is the later */
   function wake(fresh){const n=fresh?{notice:true,t:10}:{notice:true,t:5,woke:10},hit=e=>({...e,gone:n.t>e.t});
     const o=hit(old),bk=hit(back);
-    box.innerHTML=shelfHtml("A keeper",[n,o])+shelfHtml("Another library",[n,bk]);
+    box.innerHTML=shelfHtml("A warden",[n,o])+shelfHtml("Another library",[n,bk]);
     say.innerHTML=fresh?`The woken notice carries day 10. It strikes the old edition of day 3, and ${bk.gone?`<span class="bad">it strikes the edition of day 8 as well</span>, which was written after the withdrawal to bring the work back.`:"spares the edition of day 8."}`
       :`The woken notice still says the work was withdrawn on day 5, and is awake since day 10, so it is carried again. It strikes the old edition of day 3. ${bk.gone?"It strikes day 8 as well.":`<span class="ok">The edition of day 8 stands.</span>`}`}
   $("#tone").onclick=()=>wake(true);$("#ttwo").onclick=()=>wake(false);start();
@@ -1270,7 +1270,7 @@ function meet(a,b){if(!a)return [b,b,"take"];if(!b)return [a,a,"take"];return a.
 })();
 
 /* ===== relevance map ===== */
-mapPairs($("#map"),[["A library, holding copies","A site with a replica of the database"],["A work; an edition","A key; its value"],["The tally; the larger tally wins","A timestamp; the later write wins"],["A scrap of papyrus","An update"],["Letters to every library","Direct mail"],["The festival: pairs by lot compare collections","Anti-entropy"],["Giving, asking, or both","Push, pull, push-pull"],["The catalogue mark","A checksum of the database"],["The scholars telling in the stoa","Rumor mongering"],["Has not heard; still telling; has stopped","Susceptible; infective; removed"],["The allowance","How often a site retries before losing interest"],["Those who never hear","The residue"],["A notice of withdrawal","A death certificate"],["A sleeping notice and its keepers","A dormant certificate at its retention sites"],["Preferring near partners; the ferry","A spatial distribution; a critical link"]]);
+mapPairs($("#map"),[["A library, holding copies","A site with a replica of the database"],["A work; an edition","A key; its value"],["The tally; the larger tally wins","A timestamp; the later write wins"],["A scrap of papyrus","An update"],["Letters to every library","Direct mail"],["The festival: pairs by lot compare collections","Anti-entropy"],["Giving, asking, or both","Push, pull, push-pull"],["The catalogue mark","A checksum of the database"],["The scholars telling in the stoa","Rumor mongering"],["Has not heard; still telling; has stopped","Susceptible; infective; removed"],["The allowance","How often a site retries before losing interest"],["Those who never hear","The residue"],["A notice of withdrawal","A death certificate"],["A sleeping notice and its wardens","A dormant certificate at its retention sites"],["Preferring near partners; the ferry","A spatial distribution; a critical link"]]);
 })();
 </script>
 </body>

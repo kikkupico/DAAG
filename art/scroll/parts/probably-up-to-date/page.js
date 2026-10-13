@@ -27,7 +27,7 @@ const seg=(box,opts,cur,fn)=>{box.innerHTML=opts.map(([v,t])=>`<button data-v="$
   $$("button",box).forEach(bt=>bt.onclick=()=>{$$("button",box).forEach(x=>x.setAttribute("aria-pressed",x===bt));fn(bt.dataset.v)})};
 const oneIn=p=>p<=0?"none":p>=.95?"nearly all":p>=.095?`1 in ${Math.round(1/p)}`:`1 in ${Math.round(1/p).toLocaleString("en")}`;
 
-/* the number of ways to choose r of n, and the chance that r keepers heard from all lie among the n-w the edition has not reached */
+/* the number of ways to choose r of n, and the chance that r home libraries heard from all lie among the n-w the edition has not reached */
 const choose=(n,r)=>{if(r<0||r>n)return 0;let c=1;for(let i=1;i<=r;i++)c=c*(n-r+i)/i;return c};
 const miss=(n,w,r)=>choose(n-w,r)/choose(n,r);
 const pick=(n,k)=>{const a=[...Array(n).keys()];for(let i=0;i<k;i++){const j=i+rnd(n-i);[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,k)};
@@ -44,13 +44,13 @@ const pct=p=>p>=.9995?"more than 999 in 1,000":p>=.995?`${Math.round(p*1000)} in
   reset();
 })();
 
-/* ===== how many to wait for: three keepers on the coast ===== */
+/* ===== how many to wait for: three home libraries on the coast ===== */
 (function(){
   const C=Coast($("#waitsvg"),{n:3,stoa:false}),say=$("#waitsay");let W=1,R=1;
   const clear=()=>{[0,1,2].forEach(i=>{C.fill(i,"#fffaf0");C.lib[i].g.classList.remove("mark");C.note(i,"")});
-    say.innerHTML=W+R>3?`${W} and ${R} add up to more than three. The two groups must share a keeper.`:`${W} and ${R} do not add up to more than three. The groups may miss each other.`};
+    say.innerHTML=W+R>3?`${W} and ${R} add up to more than three. The two groups must share a home library.`:`${W} and ${R} do not add up to more than three. The groups may miss each other.`};
   seg($("#ww"),[1,2,3].map(k=>[k,k]),W,v=>{W=+v;clear()});seg($("#wr"),[1,2,3].map(k=>[k,k]),R,v=>{R=+v;clear()});
-  $("#waitgo").onclick=()=>{clear();const w=pick(3,W),r=pick(3,R);          // which keepers answered the writer first, and which the reader hears from first
+  $("#waitgo").onclick=()=>{clear();const w=pick(3,W),r=pick(3,R);          // which home libraries answered the writer first, and which the reader hears from first
     w.forEach(i=>{C.fill(i,"#e0b84a");C.note(i,"new edition")});[0,1,2].filter(i=>!w.includes(i)).forEach(i=>C.note(i,"old copy"));
     r.forEach(i=>C.lib[i].g.classList.add("mark"));
     const both=r.filter(i=>w.includes(i));
@@ -59,8 +59,8 @@ const pct=p=>p>=.9995?"more than 999 in 1,000":p>=.995?`${Math.round(p*1000)} in
   clear();
 })();
 
-/* ===== the chance of a miss as the keepers grow ===== */
-$("#misstbl").innerHTML="<tr><th>Keepers</th><th>Waited for, and asked</th><th>Chance of an old copy</th></tr>"+
+/* ===== the chance of a miss as the home libraries grow ===== */
+$("#misstbl").innerHTML="<tr><th>Home libraries</th><th>Waited for, and asked</th><th>Chance of an old copy</th></tr>"+
   [[3,1],[10,3],[30,9],[100,30]].map(([n,k])=>{const p=miss(n,k,k);return `<tr><td>${n}</td><td>${k} and ${k}</td><td>${p>.05?pct(p):p>1e-4?`about 1 in ${Math.round(1/p)}`:`about ${(p*1e6).toFixed(1)} in a million`}</td></tr>`}).join("");
 
 /* ===== leeway in editions ===== */
@@ -68,7 +68,7 @@ $("#misstbl").innerHTML="<tr><th>Keepers</th><th>Waited for, and asked</th><th>C
   let W=1;const box=$("#kbars");
   const paint=()=>{const p=miss(3,W,1);box.innerHTML=[1,2,3,5,10].map(k=>{const ok=1-Math.pow(p,k);
     return `<div class="b"><span>${k===1?"the newest edition":`one of the newest ${k}`}</span><span class="v"><i style="width:${(ok*72).toFixed(1)}%"></i>${pct(ok)}</span></div>`}).join("")};
-  seg($("#kw"),[[1,"one keeper"],[2,"two keepers"]],W,v=>{W=+v;paint()});paint();
+  seg($("#kw"),[[1,"one home library"],[2,"two home libraries"]],W,v=>{W=+v;paint()});paint();
 })();
 
 /* ===== the four legs, drawn in the round ===== */
@@ -80,9 +80,9 @@ $("#misstbl").innerHTML="<tr><th>Keepers</th><th>Waited for, and asked</th><th>C
   ev("W",1.5,"#e0b84a",1);ev("W",2.7,"#e0b84a",2);ev("R",3.6,"#8fb3d9",3);ev("K",4.9,"#fde0d4",4);ev("K",6.6,"#e0b84a",5);
 })();
 
-/* ===== the replay (the paper's method): for each keeper draw the four journeys; the edition is announced when the
+/* ===== the replay (the paper's method): for each home library draw the four journeys; the edition is announced when the
    chosen number of acknowledgments is back; the reader asks t later and takes the first replies; the reader is
-   behind when every one of those keepers got the request before the edition. Journey times are drawn so that
+   behind when every one of those home libraries got the request before the edition. Journey times are drawn so that
    short ones are common and long ones rare (an exponential), with the edition's way out slowed by a chosen factor. ===== */
 function replay(W,R,slow,t,runs){
   const ex=m=>-m*Math.log(1-Math.random());let stale=0;
@@ -99,13 +99,13 @@ function replay(W,R,slow,t,runs){
   seg($("#lw"),[1,2,3].map(k=>[k,k]),W,v=>{W=+v;blank()});seg($("#lr"),[1,2,3].map(k=>[k,k]),R,v=>{R=+v;blank()});
   seg($("#lslow"),[[.2,"five times quicker"],[1,"the same"],[10,"ten times slower"]],slow,v=>{slow=+v;blank()});
   $("#lgo").onclick=()=>{const ts=[0,1,3,10,30],res=ts.map(t=>replay(W,R,slow,t,10000));
-    if(W+R>3&&res.some(p=>p<1))throw new Error("a stale reading with groups that must share a keeper");
+    if(W+R>3&&res.some(p=>p<1))throw new Error("a stale reading with groups that must share a home library");
     box.innerHTML="<h5>Chance of the new edition, a while after it is announced</h5>"+ts.map((t,k)=>`<div class="b"><span>${t?`${t} ${t>1?"journeys":"journey"} later`:"at once"}</span><span class="v"><i style="width:${(res[k]*68).toFixed(1)}%"></i>${pct(res[k])}</span></div>`).join("");
-    say.innerHTML=W+R>3?`<span class="ok">Never behind.</span> The groups share a keeper, however the journeys fall.`:`At once the reader is handed the new edition ${pct(res[0])}. A while is counted in ordinary journeys: the average time of one of the other three legs.`};
+    say.innerHTML=W+R>3?`<span class="ok">Never behind.</span> The groups share a home library, however the journeys fall.`:`At once the reader is handed the new edition ${pct(res[0])}. A while is counted in ordinary journeys: the average time of one of the other three legs.`};
 })();
 
 /* ===== the four coasts: the paper's measures ===== */
-$("#cbars").innerHTML=[["Quick roads, quick copying",97.4],["Long delays now and then",89.3],["Slow copying onto papyrus",43.9],["Keepers on both sides of a sea",33]]
+$("#cbars").innerHTML=[["Quick roads, quick copying",97.4],["Long delays now and then",89.3],["Slow copying onto papyrus",43.9],["Home libraries on both sides of a sea",33]]
   .map(([t,v])=>`<div class="b"><span>${t}</span><span class="v"><i style="width:${(v*.7).toFixed(1)}%"></i>${v} in 100</span></div>`).join("");
 
 /* ===== never going backwards ===== */
@@ -116,4 +116,4 @@ $("#cbars").innerHTML=[["Quick roads, quick copying",97.4],["Long delays now and
   seg($("#bq"),[[0,"none"],[1,"1"],[4,"4"],[9,"9"],[99,"99"]],1,v=>paint(+v));paint(1);
 })();
 
-mapPairs($("#map"),[["A work's three keepers","A data item's N replicas"],["An edition and its tally","A version and its timestamp"],["The writer sends the edition to every keeper","The coordinator sends the write to all N replicas"],["Announced when enough keepers have answered","The write commits after W acknowledgments"],["The reader takes the first few replies","The read returns after R responses"],["The two numbers add up to more than the keepers","A strict quorum: R + W > N"],["The quick way: wait for one, ask one","A partial quorum"],["One of the newest few editions","k-staleness"],["The odds a while after the announcement","t-visibility"],["The four legs","The WARS model of message delays"],["The couriers' logbook, played over by lot","Measured latencies and Monte Carlo simulation"],["Never going backwards","Monotonic reads"],["Keeping to one keeper","A sticky replica"]]);
+mapPairs($("#map"),[["A work's three home libraries","A data item's N replicas"],["An edition and its tally","A version and its timestamp"],["The writer sends the edition to every home library","The coordinator sends the write to all N replicas"],["Announced when enough home libraries have answered","The write commits after W acknowledgments"],["The reader takes the first few replies","The read returns after R responses"],["The two numbers add up to more than the home libraries","A strict quorum: R + W > N"],["The quick way: wait for one, ask one","A partial quorum"],["One of the newest few editions","k-staleness"],["The odds a while after the announcement","t-visibility"],["The four legs","The WARS model of message delays"],["The couriers' logbook, played over by lot","Measured latencies and Monte Carlo simulation"],["Never going backwards","Monotonic reads"],["Keeping to one home library","A sticky replica"]]);

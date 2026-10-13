@@ -22,10 +22,10 @@ function lin(ops,rt=true,free=false){
     return false}
   const ok=go(0);return {ok,seq:ok?seq.slice():null};
 }
-/* why a history fails: no single keeper could have produced it at all, or only the sun forbids it */
+/* why a history fails: no single steward could have produced it at all, or only the sun forbids it */
 function verdict(ops){
   if(lin(ops,true).ok)return "ok";
-  return lin(ops,true,true).ok?"sun":"keeper";
+  return lin(ops,true,true).ok?"sun":"steward";
 }
 /* is this exact sequence one the rule allows? */
 function validSeq(seq,rt=true){
@@ -179,10 +179,10 @@ function Isle(svg){
   const E=(id,h,s,e)=>({id,obj:"b",p:id,i:0,kind:"enq",item:h,h,pl:h,s,e,off:0});
   const D=(id,h,s,e,off=0)=>({id,obj:"b",p:id,i:0,kind:"deq",ret:h,h,pl:3,s,e,off});
   const M=[
-    {n:"Two orders sent at the same time",v:"ok",ops:[E("a",1,1.6,4.0),E("b",2,2.4,4.8),D("c",2,6,7),D("d",1,7.5,8.5)],t:"Neither order is confirmed before the other is sent, and a loader serves House 2 first. The orders overlap, and the keeper may have entered House 2's first."},
+    {n:"Two orders sent at the same time",v:"ok",ops:[E("a",1,1.6,4.0),E("b",2,2.4,4.8),D("c",2,6,7),D("d",1,7.5,8.5)],t:"Neither order is confirmed before the other is sent, and a loader serves House 2 first. The orders overlap, and the steward may have entered House 2's first."},
     {n:"One order after the other",v:"sun",ops:[E("a",1,1.6,3.4),E("b",2,4.4,6.2),D("c",2,7,8),D("d",1,8.5,9.5)],t:"House 1's order is confirmed before House 2's is sent, and House 2 is served first. That is the goatherd's morning."},
     {n:"Served before the confirmation arrives",v:"ok",ops:[E("a",1,1.6,6.0),D("c",1,3.4,4.6)],t:"House 1's order is entered, and a loader serves it while word of the entry is still on the road. The order's moment came at its entry, and the house simply has not heard yet."},
-    {n:"One order served twice",v:"keeper",ops:[E("b",2,1.6,3.4),D("c",2,4.4,5.4,-5),D("d",2,4.8,6.0,5)],t:"Two loaders each take House 2's single order and load grain for it."}];
+    {n:"One order served twice",v:"steward",ops:[E("b",2,1.6,3.4),D("c",2,4.4,5.4,-5),D("d",2,4.8,6.0,5)],t:"Two loaders each take House 2's single order and load grain for it."}];
   M.forEach(m=>{if(verdict(m.ops)!==m.v)throw new Error("a morning does not match the rule: "+m.n)});
   function show(n){const m=M[n],ops=m.ops;bs.forEach((b,i)=>{b.classList.toggle("on",i===n);b.classList.toggle("alt",i!==n)});nm.textContent=m.n;
     const P=Polar(svg,{vb:"0 0 640 470",cx:320,cy:290,r0:44,step:22,rings:10,tEnd:10.4,note:[14,24],nodes:NODES});
@@ -191,9 +191,9 @@ function Isle(svg){
       else{mark(P,o.pl,o.s,col,"",o.off,6);mark(P,o.pl,o.e,HC[o.h],o.h,o.off)}});
     const v=verdict(ops);say.textContent=m.t;
     const lab=o=>chip(o.kind==="enq"?`enters House ${o.h}'s order`:`serves House ${o.h}'s order`,o.h);
-    vd.innerHTML=v==="ok"?`<p class="say"><span class="ok">Allowed.</span> A single keeper could have produced it, in this sequence:</p><div class="seqline">${lin(ops,true).seq.map(lab).join(" ")}</div>`
+    vd.innerHTML=v==="ok"?`<p class="say"><span class="ok">Allowed.</span> A single steward could have produced it, in this sequence:</p><div class="seqline">${lin(ops,true).seq.map(lab).join(" ")}</div>`
       :v==="sun"?`<p class="say"><span class="bad">Forbidden.</span> Whatever sequence is tried, an order that was over before another began is served after it. That breaks the third demand.</p>`
-      :`<p class="say"><span class="bad">Forbidden.</span> No single keeper serves one order twice, however the times fall. That breaks the first demand.</p>`}
+      :`<p class="say"><span class="bad">Forbidden.</span> No single steward serves one order twice, however the times fall. That breaks the first demand.</p>`}
   bs.forEach((b,i)=>b.onclick=()=>show(i));
 })();
 
@@ -263,7 +263,7 @@ function Isle(svg){
         say:`<span class="ok">Nothing earlier changes, and nothing began after it finished.</span> The sequence still keeps the rule, so the order can be entered now.`}},
     ()=>{const done=[enq("a",1,1,2),deq("c",1,3,4)],seq=lin(done,true).seq,left=[];seq.forEach(o=>{if(o.kind==="enq")left.push(o.item);else left.shift()});
       return {name:"an empty board",html:`<div class="e">House 1's order was entered and served, so the board is empty.</div><div class="e bad">A loader comes and asks for the oldest order. Orders the board holds: ${left.length}. Answers it could give: ${left.length?left[0]:"none"}.</div>`,
-        say:`<span class="bad">There is nothing to answer with.</span> A single keeper would make the loader wait until an order comes. That wait is asked for, not forced: <i>serve the oldest order</i> has no answer while there are no orders.`}},
+        say:`<span class="bad">There is nothing to answer with.</span> A single steward would make the loader wait until an order comes. That wait is asked for, not forced: <i>serve the oldest order</i> has no answer while there are no orders.`}},
     ()=>{/* House 1 looks at the oil board and, if empty, orders grain; House 2 looks at the grain board and, if empty, orders oil. Both look and find empty. */
       const groups={1:{look:"o",put:"g"},2:{look:"g",put:"o"}};let fits=0;
       for(const order of [[1,2],[2,1]]){const board={g:0,o:0};let ok=true;for(const h of order){const G=groups[h];if(board[G.look]!==0)ok=false;board[G.put]++}if(ok)fits++}
@@ -326,4 +326,4 @@ function Isle(svg){
 })();
 
 /* ===== who is who ===== */
-mapPairs($("#map"),[["A trading house; a loader; a clerk","A process: it waits for each answer before its next call"],["The board; placed first, filled first","A shared FIFO queue"],["An order; a serving","Enq; Deq"],["Sending an order; its confirmation","An invocation and its response"],["Before; overlap","Real-time order; concurrent calls"],["A single keeper with a single board","The object's sequential specification"],["The rule of the board","Linearizability"],["A moment inside the span","The linearization point"],["The tallies' first","Happened-before, extended by process number"],["The looser rule","Sequential consistency"],["One Board at a Time","Locality: check each object alone"],["No Order Waits on Another","The nonblocking property"],["Several things done as one","A transaction; serializability"],["The busy board: slots and a peg","A lock-free queue on an array and a counter"],["What the board could mean","An abstraction function to a set of values"],["A rule that only forbids","A safety property, with no promise of progress"]]);
+mapPairs($("#map"),[["A trading house; a loader; a clerk","A process: it waits for each answer before its next call"],["The board; placed first, filled first","A shared FIFO queue"],["An order; a serving","Enq; Deq"],["Sending an order; its confirmation","An invocation and its response"],["Before; overlap","Real-time order; concurrent calls"],["A single steward with a single board","The object's sequential specification"],["The rule of the board","Linearizability"],["A moment inside the span","The linearization point"],["The tallies' first","Happened-before, extended by process number"],["The looser rule","Sequential consistency"],["One Board at a Time","Locality: check each object alone"],["No Order Waits on Another","The nonblocking property"],["Several things done as one","A transaction; serializability"],["The busy board: slots and a peg","A lock-free queue on an array and a counter"],["What the board could mean","An abstraction function to a set of values"],["A rule that only forbids","A safety property, with no promise of progress"]]);

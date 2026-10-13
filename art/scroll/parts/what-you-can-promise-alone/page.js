@@ -66,7 +66,7 @@ const it=(t,c="")=>`<span class="it${c?" "+c:""}">${t}</span>`;
   $("#fc2").onclick=()=>courier(1);$("#fc3").onclick=()=>courier(2);paint();
 })();
 
-/* ===== keeping to one library ===== */
+/* ===== staying with one library ===== */
 (function(){
   const C=Coast($("#onesvg"),{n:2,stoa:false}),say=$("#onesay");let left=false;
   C.way(0,1,"way cut");C.note(0,"the old copy");C.note(1,"the old copy");
@@ -112,4 +112,4 @@ const it=(t,c="")=>`<span class="it${c?" "+c:""}">${t}</span>`;
   seg($("#tstop"),[["day","a day"],["week","a week"],["month","a month"]],stop,v=>{stop=v;paint()});paint();
 })();
 
-mapPairs($("#map"),[["A library's reading room","A replica"],["A reader's visit","A transaction"],["The couriers stopped","A network partition"],["Answering alone, from one's own shelves","High availability"],["Keeping to one library","Sticky availability"],["No half-made correction shown","Read committed"],["Corrections bound under one cord","Monotonic atomic view"],["The same answer twice in a visit","Repeatable reads of items and predicates"],["The floor of what every library holds","Reading at a lower bound every replica has"],["Never older than before","Monotonic reads"],["A reader finds their own corrections","Read your writes"],["A reply held for its letter","Writes follow reads"],["Two readers borrow the last copy","Lost update"],["A shelf left bare","Write skew"],["\"This is the latest edition\"","A recency guarantee; linearizability"]]);
+mapPairs($("#map"),[["A library's reading room","A replica"],["A reader's visit","A transaction"],["The couriers stopped","A network partition"],["Answering alone, from one's own shelves","High availability"],["Staying with one library","Sticky availability"],["No half-made correction shown","Read committed"],["Corrections bound under one cord","Monotonic atomic view"],["The same answer twice in a visit","Repeatable reads of items and predicates"],["The floor of what every library holds","Reading at a lower bound every replica has"],["Never older than before","Monotonic reads"],["A reader finds their own corrections","Read your writes"],["A reply held for its letter","Writes follow reads"],["Two readers borrow the last copy","Lost update"],["A shelf left bare","Write skew"],["\"This is the latest edition\"","A recency guarantee; linearizability"]]);
