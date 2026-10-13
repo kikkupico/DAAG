@@ -37,7 +37,7 @@ What each place, building, character, prop and practice of the setting has in co
 | a portico of plain Doric columns along the road | Greek Doric columns had no base: the shaft stands directly on the top step of the platform, the stylobate†. | Close |
 | a gabled tile roof of flat pan tiles under narrow cover tiles, with a decorated tile at each eave end | The Corinthian roof system: flat terracotta pan tiles, ridged cover tiles over the joints, and antefixes at the eave†. Sparta's Laconian roofs used curved tiles throughout†, so a curved tile is Greek too, but the flat and cover pair is the standard. The timbers beneath were hewn by adze and saw-pit, not milled†. | Close |
 | port-town houses facing inward, blank street walls, a door and a few small high windows | The courtyard houses of Olynthus and Delos present blank walls to the street and open onto a court†. | Close |
-| the board of orders at House 3's gate, numbered slots and a peg | The *klērotērion*, a stone slab with columns of slots into which citizens' bronze tokens were set, used in Athens to allot jurors and officials. It sorted by lot, not by arrival, so the board is a loose borrowing. | Loose |
+| the board of requests at House 3's gate, numbered slots and a peg | The *klērotērion*, a stone slab with columns of slots into which citizens' bronze tokens were set, used in Athens to allot jurors and officials. It sorted by lot, not by arrival, so the board is a loose borrowing. | Loose |
 | the customs seat | Greek harbours levied a tax on goods landed; Athens took a fiftieth at the Piraeus†. | Close |
 | the shared storehouse cut into the rock beside the road | Greek rock-cut cisterns and store-rooms exist, but a store shared between rival trading houses is the setting's own device. | Invented |
 
@@ -68,7 +68,7 @@ What each place, building, character, prop and practice of the setting has in co
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| orders served in the sequence placed | Athens preferred the lot and the rota to a queue; first come, first served is the setting's own rule. | Invented |
+| requests served in the sequence placed | Athens preferred the lot and the rota to a queue; first come, first served is the setting's own rule. | Invented |
 | one house at a time in the shared storehouse | The president of the Athenian prytaneis, chosen by lot for a day and a night, kept the keys of the treasuries and the public seal (Aristotle, Constitution of Athens 44). A single key-holder is the real form of mutual exclusion. | Loose |
 | counting the stock without stopping the trade | Temples and fleets were inventoried each year (the Delian temple accounts, the Athenian naval lists)†, but those were counted at rest. Counting a moving trade is the setting's problem. | Loose |
 | trade in the cloudy season | Hesiod advises against sailing in winter (Works and Days 618–694)†, so the houses' trade is by road, which fits. | Close |

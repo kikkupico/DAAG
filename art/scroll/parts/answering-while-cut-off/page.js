@@ -232,10 +232,10 @@ const record=(moves,askAt)=>{const done=moves.filter(m=>m.end<askAt).sort((a,b)=
   const cards=[
     [mk("Tent 1, the muster-master","note: hold<br>nothing heard"),mk("Tent 3","note: hold"),mk("Tent 4","moved the plan to attack<br>told it stands")],
     [mk("Tent 1, the muster-master","note: hold<br>nothing heard"),mk("Tent 3","note: hold"),mk("Tent 4","sends the move again<br>no bird gets through")],
-    [mk("Tent 1, the muster-master","attack, number 1"),mk("Tent 3","note: hold"),mk("Tent 4","not yet acknowledged")],
-    [mk("Tent 1, the muster-master","attack, number 1"),mk("Tent 3","attack, number 1"),mk("Tent 4","attack, number 1<br>acknowledged")],
-    [mk("Tent 1, the muster-master","attack, number 1"),mk("Tent 3","attack, number 1"),mk("Tent 4","attack, number 1<br>a span has passed, no bird lost")],
-    [mk("Tent 1, the muster-master","attack, number 1"),mk("Tent 3","asks<br>answered <b>attack</b>"),mk("Tent 4","attack, number 1")]];
+    [mk("Tent 1, the muster-master","attack, stamp 1"),mk("Tent 3","note: hold"),mk("Tent 4","not yet acknowledged")],
+    [mk("Tent 1, the muster-master","attack, stamp 1"),mk("Tent 3","attack, stamp 1"),mk("Tent 4","attack, stamp 1<br>acknowledged")],
+    [mk("Tent 1, the muster-master","attack, stamp 1"),mk("Tent 3","attack, stamp 1"),mk("Tent 4","attack, stamp 1<br>a span has passed, no bird lost")],
+    [mk("Tent 1, the muster-master","attack, stamp 1"),mk("Tent 3","asks<br>answered <b>attack</b>"),mk("Tent 4","attack, stamp 1")]];
   scrolly($("#span"),s=>{gs.forEach((g,i)=>g.classList.toggle("on",i<=s));side.innerHTML=cards[s].join("")});
 })();
 
@@ -244,12 +244,12 @@ const record=(moves,askAt)=>{const done=moves.filter(m=>m.end<askAt).sort((a,b)=
   const tab=$("#twotab"),say=$("#twosay"),bn=$("#twonext"),br=$("#tworeset");
   let K,view,i;
   const beats=[
-    ()=>"The plan stands at attack, number 1, at every tent. Hawks are in the fold of tent 4.",
+    ()=>"The plan stands at attack, stamp 1, at every tent. Hawks are in the fold of tent 4.",
     ()=>{K={plan:"hold",n:2};[1,2,3].forEach(k=>view[k]={plan:"hold",n:2});view[4]={plan:"attack",n:"own move"};
-      return "Number 2 moves the plan to hold. The muster-master numbers it 2 and sends it round, and Number 2 is told it stands. Number 4, cut off, moves it to attack and after a glass is told it stands too. Two men are each told a different plan stands."},
-    ()=>{K={plan:"attack",n:3};return "The hawks leave. Number 4's move reaches the muster-master, who numbers it 3."},
-    ()=>{[1,2,3,4].forEach(k=>view[k]={plan:K.plan,n:K.n});return "The muster-master sends attack, number 3, to every tent. The plan ends at whichever move was numbered later."}];
-  function paint(t){tab.innerHTML="<tr><th>Tent</th><th>Holds, or was told</th><th>Number</th></tr>"+[1,2,3,4].map(k=>`<tr><td>${tentChip(k)}${k===1?" muster-master":""}</td><td>${k===1?K.plan:view[k].plan}</td><td>${k===1?K.n:view[k].n}</td></tr>`).join("");say.textContent=t;bn.disabled=i>=beats.length-1}
+      return "Number 2 moves the plan to hold. The muster-master stamps it 2 and sends it round, and Number 2 is told it stands. Number 4, cut off, moves it to attack and after a glass is told it stands too. Two men are each told a different plan stands."},
+    ()=>{K={plan:"attack",n:3};return "The hawks leave. Number 4's move reaches the muster-master, who stamps it 3."},
+    ()=>{[1,2,3,4].forEach(k=>view[k]={plan:K.plan,n:K.n});return "The muster-master sends attack, stamp 3, to every tent. The plan ends at whichever move was stamped later."}];
+  function paint(t){tab.innerHTML="<tr><th>Tent</th><th>Holds, or was told</th><th>Stamp</th></tr>"+[1,2,3,4].map(k=>`<tr><td>${tentChip(k)}${k===1?" muster-master":""}</td><td>${k===1?K.plan:view[k].plan}</td><td>${k===1?K.n:view[k].n}</td></tr>`).join("");say.textContent=t;bn.disabled=i>=beats.length-1}
   function reset(){K={plan:"attack",n:1};view={};[1,2,3,4].forEach(k=>view[k]={plan:"attack",n:1});i=0;paint(beats[0]())}
   bn.onclick=()=>{i++;paint(beats[i]())};
   br.onclick=reset;reset();
@@ -292,7 +292,7 @@ mapPairs($("#map"),[
  ["Answering from one's own note","Returning local, possibly stale, data: available and partition tolerant (§3.2.3)"],
  ["Waiting a glass","A timeout after which the node answers with the best value it knows: 2 t_msg + t_local (§4.3)"],
  ["The promise of the span","A partial order that is atomic when no message is lost, and that orders any operation completed before a loss-free interval longer than t ahead of any operation begun after it: delayed-t consistency (Definition 3)"],
- ["The muster-master's numbers; sending again; every bird carrying the unacknowledged moves","The central node's sequence numbers and retransmission. Carrying the unacknowledged writes on every message stands in for ordered channels, which ravens do not give (Theorem 4)"],
+ ["The muster-master's stamps; sending again; every bird carrying the unacknowledged moves","The central node's sequence numbers and retransmission. Carrying the unacknowledged writes on every message stands in for ordered channels, which ravens do not give (Theorem 4)"],
  ["The wind; the Wind result","No bound on message delay: availability cannot be combined with atomicity even in executions where no messages are lost (asynchronous model, §3; Corollary 1.1)"],
  ["Which number each tent bears","A service needing no coordination: a trivial service, outside the theorem (2012, §2)"],
  ["The camps' impossibility","FLP: consensus with one crash, no message loss. Neither FLP nor CAP implies the other (2012, footnote 2)"],

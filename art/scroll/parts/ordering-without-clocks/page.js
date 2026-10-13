@@ -39,7 +39,7 @@ function Isle(svg){
   return I;
 }
 
-/* ===== the gate of House 3: arrival follows the quicker legs, not the earlier order ===== */
+/* ===== the gate of House 3: arrival follows the quicker legs, not the earlier request ===== */
 (function(){
   const I=Isle($("#race")),m1=I.token(HC[1],"✉"),m2=I.token(HC[2],"✉"),say=$("#racesay"),b1=$("#race1"),b2=$("#race2");
   const w1=el("text",{class:"lab halo",x:I.house[1].x,y:I.house[1].y+40},I.over),w2=el("text",{class:"lab halo",x:I.house[2].x-16,y:I.house[2].y-28},I.over);
@@ -47,14 +47,14 @@ function Isle(svg){
   async function run(fast){
     b1.disabled=b2.disabled=true;w1.textContent=w2.textContent="";m1.setAttribute("opacity",0);m2.setAttribute("opacity",0);
     const ms=h=>h===fast?1700:3600;
-    w2.textContent="wrote first";say.textContent="House 2 writes its order and sends a messenger.";
+    w2.textContent="wrote first";say.textContent="House 2 writes its request and sends a messenger.";
     I.road(m2,2,3,.1);m2.setAttribute("opacity",1);const p2=tween(ms(2),u=>I.road(m2,2,3,.1+.78*u));
     await sleep(700);
-    w1.textContent="wrote second";say.textContent="A little later House 1 writes its own order and sends a messenger.";
+    w1.textContent="wrote second";say.textContent="A little later House 1 writes its own request and sends a messenger.";
     I.road(m1,1,3,.1);m1.setAttribute("opacity",1);const p1=tween(ms(1),u=>I.road(m1,1,3,.1+.78*u));
     await Promise.all([p1,p2]);seen|=fast;
-    say.innerHTML=(fast===1?"<b>House 1's slip reaches the gate first.</b> Yet House 2 wrote first: the quicker messenger won.":"<b>House 2's slip reaches the gate first.</b> This time the order written first also arrives first, but only because its messenger kept ahead.")
-      +(seen===3?" The same two orders, written in the same sequence; only the legs changed. Arrival at the gate cannot be the test.":"");
+    say.innerHTML=(fast===1?"<b>House 1's slip reaches the gate first.</b> Yet House 2 wrote first: the quicker messenger won.":"<b>House 2's slip reaches the gate first.</b> This time the request written first also arrives first, but only because its messenger kept ahead.")
+      +(seen===3?" The same two requests, written in the same sequence; only the legs changed. Arrival at the gate cannot be the test.":"");
     b1.disabled=b2.disabled=false;
   }
   b1.onclick=()=>run(1);b2.onclick=()=>run(2);
@@ -67,13 +67,13 @@ function Morning(svg){
   const P=Polar(svg,{vb:"0 0 620 596",cx:310,cy:350,r0:44,step:30,rings:9,tEnd:9.5,note:[14,24],
     nodes:{1:[-90,"H1",HC[1]],2:[30,"H2",HC[2]],3:[150,"H3",HC[3]]}});
   const E=[
-    {id:"a",h:1,t:1.2,d:"House 1 enters an order"},
+    {id:"a",h:1,t:1.2,d:"House 1 enters a request"},
     {id:"b",h:1,t:2.4,d:"House 1 sends a slip to House 2"},
     {id:"c",h:2,t:1.6,d:"House 2 enters a sale"},
     {id:"d",h:2,t:3.8,d:"House 2 receives House 1's slip",from:"b"},
     {id:"e",h:2,t:5,d:"House 2 sends a slip to House 3"},
     {id:"f",h:3,t:3,d:"House 3 enters a delivery"},
-    {id:"g",h:3,t:4.6,d:"House 3 enters an order"},
+    {id:"g",h:3,t:4.6,d:"House 3 enters a request"},
     {id:"i",h:3,t:6.6,d:"House 3 receives House 2's slip",from:"e"},
     {id:"j",h:3,t:7.6,d:"House 3 sends a slip to House 1"},
     {id:"l",h:1,t:9,d:"House 1 receives House 3's slip",from:"j"}];
@@ -191,9 +191,9 @@ function Morning(svg){
     I.road(ms,3,1,.1);ms.setAttribute("opacity",1);over(.12);gt.setAttribute("opacity",1);
     const road=tween(6200,u=>I.road(ms,3,1,.1+.78*u));
     await tween(1900,u=>over(.12+.76*u));
-    l1.textContent="order: tally 4";say.innerHTML="The goatherd is lucky. House 1 hears of the sale and at once enters an order because of it. Its quiet tally stood at 3, so the order goes in under <b>4</b>.";
+    l1.textContent="request: tally 4";say.innerHTML="The goatherd is lucky. House 1 hears of the sale and at once enters a request because of it. Its quiet tally stood at 3, so the request goes in under <b>4</b>.";
     await road;ms.setAttribute("opacity",0);
-    say.innerHTML="Hours later the official slip arrives, marked 9, too late to correct anything. <span class='bad'>By the tallies, the order (4) came before the sale (9) that caused it.</span> The goatherd carried no slip, so the rules never saw the goatherd.";
+    say.innerHTML="Hours later the official slip arrives, marked 9, too late to correct anything. <span class='bad'>By the tallies, the request (4) came before the sale (9) that caused it.</span> The goatherd carried no slip, so the rules never saw the goatherd.";
     btn.textContent="Again";btn.disabled=false};
   reset();
 })();

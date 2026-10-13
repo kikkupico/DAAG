@@ -68,7 +68,7 @@ cut into the slope above its harbour, facing the quay across the waterfront road
 office at one end; the **gate**, a deep entrance opening onto the road, where slips come in;
 the storehouse at the other end, with loading doors onto the road. A portico of plain Doric
 columns, standing straight on the paving with no bases, under a lean-to roof runs the length of the range along the road's edge, and under it, by the
-gate, hangs the house's **board** of orders, a row of numbered slots with the peg beside it (House
+gate, hangs the house's **board** of requests, a row of numbered slots with the peg beside it (House
 3's is Herlios' board). Each port town round it is a compact cluster on terraces cut into the slopes round the
 harbour, of one-storey houses, courtyard houses and long storehouses, plastered off-white or pale ochre under gabled terracotta roofs. Houses
 face inwards, so the streets, of beaten earth, see mostly blank walls with a door and a few
@@ -76,7 +76,7 @@ small high windows. Nothing sets one town apart.
 
 - *Ordering Without Clocks* (`lamport-1978_time-clocks`, `fidge-1988_timestamps`,
   `mattern-1988_virtual-time`). When overcast winter skies silence the headland sundials,
-  houses serve distribution orders strictly in the sequence they were placed using logical tallies (Lamport
+  houses serve distribution requests strictly in the sequence they were placed using logical tallies (Lamport
   scalar clocks), resolve ties by house number (total order), coordinate mutual exclusion for a
   shared storehouse (§5), and use multi-house column rooms (vector clocks) to detect true
   causal independence. Lamport's physical clocks (§6) are described and not kept: they need a
@@ -94,18 +94,16 @@ small high windows. Nothing sets one town apart.
   with the port towns' buying and selling set aside; the census is taken at no one moment, so the book counts no
   hours.
 - *Many Copies, Acting as One* (`herlihy-wing-1990_linearizability`). The same premise as
-  *Ordering Without Clocks*: the houses send one another **orders**, and House 3 fills first the order for its grain placed first. The tallies put orders in sequence by chains of slips; this book by the sun (one
+  *Ordering Without Clocks*: the houses send one another **requests**, and House 3 fills first the request for its grain placed first. The tallies put requests in sequence by chains of slips; this book by the sun (one
   piece of business came **before** another if it finished before the other began), which is
-  linearizability. The object is House 3's **board** of orders, a FIFO queue: an order is `Enq`, a
-  loader's **serving** is `Deq`. The running example is the goatherd's morning: House 1's order is
-  entered and confirmed, the goatherd tells House 2, House 2 orders at noon with a lower tally and
+  linearizability. The object is House 3's **board** of requests, a FIFO queue: a request is `Enq`, a
+  loader's **serving** is `Deq`. The running example is the goatherd's morning: House 1's request is entered and confirmed, the goatherd tells House 2, House 2 makes its request at noon with a lower tally and
   is served first (the paper's H7). **Two kinds of first:** serving by entry at House 3's gate keeps
   the rule; serving by tally need not; neither sequence contains the other. Locality is shown with two
   boards, grain at House 3 and oil at House 2, ordered by all three houses (H8 for the looser rule). The **looser rule**
   (sequential consistency) passes each board and fails both together; several things done as one
   (serializability) is one plain paragraph, with no device. The
-  paper's §4 queue is **Herlios' board** itself: numbered **slots**, a **peg** (`INC`), clerks
-  entering orders (Glaukos, Mikon) and a loader serving (Sosias) with `SWAP`, all at one house. The
+  paper's §4 queue is **Herlios' board** itself: numbered **slots**, a **peg** (`INC`), clerks entering requests (Glaukos, Mikon) and a loader serving (Sosias) with `SWAP`, all at one house. The
   rule is judged only at the houses' gates, so it cannot tell one board from copies acting as one;
   no way of keeping copies is described. Herlios keeps the board.
 **Why linearizability is on Arche.** It is defined by real time: one operation finished before
@@ -113,7 +111,7 @@ another began. Arche has real time — the sun rises over it whether or not a di
 but in the trading season no one can read it, and no house can learn of another's order except
 by slip. That is not an objection but the point. The tallies of *Ordering Without Clocks* put
 orders in sequence by chains of slips, and it shows a causal path they cannot see: the goatherd who
-carries word over the mountain. Linearizability puts the same orders in sequence by the sun, so that no
+carries word over the mountain. Linearizability puts the same requests in sequence by the sun, so that no
 goatherd could ever catch the houses out, though they can never see one coming. It is judged by
 the sun, not computed from it. The two books share the orders premise the way the camps' books
 share the mercenaries. On Paxos, Lamport's black-goat story (§3.3.4) states both readings of
@@ -341,7 +339,7 @@ of mouth; couriers are delayed or stopped, and libraries close.
 
 **The line between the scholars and Arche is how much disagreement each can live with**, not
 what is recorded: both keep records, and on Arche it is the stock of the storehouses that is
-snapshotted and the orders on its grain that are put in sequence. At the camps, answering from a stale
+snapshotted and the requests for its grain that are put in sequence. At the camps, answering from a stale
 note is done knowingly and only while birds are lost, because two men told different plans is a
 real harm. The
 scholars answer from whatever copy they hold as a matter of course, and live with copies that
