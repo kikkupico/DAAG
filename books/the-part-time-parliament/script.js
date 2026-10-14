@@ -1,0 +1,414 @@
+"use strict";
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const NS="http://www.w3.org/2000/svg";
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function rnd(n){return Math.floor(Math.random()*n)}
+
+/* ===== the Chamber, seen from above: one picture reused wherever people sit in the hall ===== */
+function Hall(svg,o={}){
+  const cx=o.cx||220, cy=o.cy||220, rr=o.rr||204, R=o.R||135;
+  svg.innerHTML=""; svg.setAttribute("viewBox",o.vb||"0 0 440 460");
+  el("circle",{cx,cy,r:rr,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
+  el("circle",{cx,cy,r:R+34,fill:"none",stroke:"#b5602c","stroke-width":3,"stroke-dasharray":"3 8"},svg);
+  el("rect",{x:cx-24,y:cy+rr-2,width:48,height:12,fill:"#6b4a2a",stroke:"#1c1512","stroke-width":3},svg);
+  if(o.doorText!==false){const t=el("text",{x:cx,y:cy+rr+26,"text-anchor":"middle","font-size":12,"font-style":"italic",fill:"#6b5a48"},svg);t.textContent="the one door"}
+  const under=el("g",{},svg), seatsG=el("g",{},svg), over=el("g",{},svg);
+  const H={svg,cx,cy,rr,R,under,over,
+    at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
+    place(s,x,y){s.x=x;s.y=y;s.g.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`},
+    seat(label,color,deg){const g=el("g",{class:"seat"},seatsG);el("circle",{class:"b",r:24,fill:color},g);const t=el("text",{},g);t.textContent=label;const s={g,color,deg};H.place(s,...H.at(deg));return s}
+  };
+  return H;
+}
+
+/* ===== pop-ups unfold when they enter view ===== */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
+$$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
+
+$$(".say,#count,#msx,#lognote").forEach(e=>e.setAttribute("aria-live","polite"));
+
+/* ===== scroll: progress bar, section name, parallax ===== */
+const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
+const dep=$$("[data-depth]"), par=$$("[data-parallax]");
+let tick=false;
+function onscroll(){
+  if(tick)return; tick=true;
+  requestAnimationFrame(()=>{
+    tick=false;
+    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
+    prog.style.width=(h>0?y/h*100:0)+"%";
+    const mid=y+innerHeight*.4; let cur=secs[0];
+    for(const s of secs){ if(s.offsetTop<=mid) cur=s; }
+    now.textContent=cur.dataset.name||"";
+    if(reduce)return;
+    for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
+    for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
+  });
+}
+addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
+
+/* ===== machines: three replicas, one log ===== */
+(function(){
+  const cmds=["set colour = blue","add 40 to total","delete item 9","set colour = red","add 5 to total","delete item 2"];
+  const reps=[0,1,2].map(i=>({i,next:0,down:false,catching:false})); const box=$("#reps");
+  reps.forEach(r=>{r.el=document.createElement("div");r.el.className="rep";r.el.innerHTML=`<h5><span>MACHINE ${"ABC"[r.i]}</span><span class="st">up</span></h5><div class="l"></div>`;box.appendChild(r.el)});
+  const KEEP=8; let n=0,end=cmds.length*2,timer=null,seen=false;
+  function sync(r){r.el.classList.toggle("down",r.down);$(".st",r.el).textContent=r.down?"stopped":"up"}
+  function add(r){const k=r.next++,l=$(".l",r.el),d=document.createElement("div");d.className="e";d.textContent=`${k+1} ▸ ${cmds[k%cmds.length]}`;l.appendChild(d);while(l.children.length>KEEP)l.firstChild.remove()}
+  function step(){
+    if(n>=end){stop();return}
+    n++; reps.forEach(r=>{if(!r.down&&!r.catching)add(r)});
+  }
+  function run(){ if(timer||!seen||n>=end)return; if(!n)step(); timer=setInterval(step,1300) }
+  function stop(){ clearInterval(timer); timer=null }
+  new IntersectionObserver(es=>{seen=es[0].isIntersecting; if(seen)run(); else stop()},{threshold:.4}).observe($("#logs"));
+  const note=$("#lognote"),cr=$("#crash"),rv=$("#revive");
+  cr.onclick=()=>{ const up=reps.filter(r=>!r.down); const r=up[rnd(up.length)]; r.down=true; r.catching=false; sync(r); cr.disabled=true; rv.disabled=false;
+    note.textContent=`Machine ${"ABC"[r.i]} stopped. The others carry on: a majority is still up, so new commands still get through.`; end=Math.max(end,n+5); run() };
+  rv.onclick=()=>{ const r=reps.find(r=>r.down); r.down=false; r.catching=true; sync(r); rv.disabled=true; cr.disabled=false;
+    const t=setInterval(()=>{ if(r.down||r.next>=n){clearInterval(t);r.catching=false;return} add(r) },260);
+    note.textContent=`Machine ${"ABC"[r.i]} is back, and catches up on everything it missed, in order.`; end=Math.max(end,n+3); run() };
+})();
+
+/* ===== consistency: two banquets, in the Chamber ===== */
+(function(){
+  const H=Hall($("#banq"),{vb:"0 0 440 545"});
+  const C=["#e0b84a","#5b9be0","#e2564e","#9cb648","#b58be0","#e89a4d"], gl=["Α","Β","Γ","Δ","Ε","Ζ"];
+  const home=[215,270,325,20,70,160], away=[[45,495],[130,495],[215,495],[290,495],[340,495],[390,495]];
+  const S=gl.map((l,i)=>H.seat(l,C[i],home[i]));
+  const bn=el("text",{x:130,y:448,"text-anchor":"middle","font-size":13,"font-style":"italic",fill:"#6b5a48",opacity:0},H.over); bn.textContent="at the banquet";
+  function lbl(s,t){let x=s.g.querySelector(".lbl");if(!x){x=el("text",{class:"lbl",y:40},s.g)}x.textContent=t}
+  function reset(){S.forEach((s,i)=>{H.place(s,...(i<3?H.at(home[i]):away[i]));s.g.setAttribute("opacity",i<3?1:0);s.g.classList.remove("clash");const x=s.g.querySelector(".lbl");if(x)x.remove()});bn.setAttribute("opacity",0)}
+  const say=$("#scrsay"),b1=$("#bq1"),b2=$("#bq2"),br=$("#bqr");
+  b1.onclick=async()=>{b1.disabled=true;
+    [0,1,2].forEach(i=>lbl(S[i],"37: no painting"));
+    say.innerHTML="Three legislators pass decree 37 and write it in their scrolls. Then they leave for a banquet.";
+    await sleep(reduce?0:1300); [0,1,2].forEach(i=>{H.place(S[i],...away[i]);S[i].g.setAttribute("opacity",.55)}); bn.setAttribute("opacity",1);
+    say.innerHTML="The first group is at the banquet. Everyone left in the Chamber knows nothing of decree 37, and that is allowed.";b2.disabled=false};
+  b2.onclick=async()=>{b2.disabled=true;
+    [3,4,5].forEach(i=>{S[i].g.setAttribute("opacity",1);H.place(S[i],...H.at(home[i]));lbl(S[i],"37: art is free")});
+    await sleep(reduce?0:900); S.forEach(s=>s.g.classList.add("clash"));
+    say.innerHTML="<span class='bad'>Two scrolls, two different decrees numbered 37.</span> Consistency is lost for good, because the ink is indelible. Parliament must never let this happen.";br.hidden=false};
+  br.onclick=()=>{reset();say.textContent="Three legislators are in the Chamber, with decree 37 before them. The other three are away.";b1.disabled=false;br.hidden=true};
+  reset();
+})();
+
+/* ===== messenger lottery, across the Chamber ===== */
+(function(){
+  const H=Hall($("#lane"),{vb:"0 0 440 490"});
+  const A=H.seat("Α","#e0b84a",200), B=H.seat("Β","#5b9be0",340);
+  const door=[H.cx,H.cy+H.rr+6];
+  const voy=el("text",{x:H.cx,y:480,"text-anchor":"middle","font-size":14,"font-style":"italic",fill:"#bf4a26",opacity:0},H.over); voy.textContent="…off on a long voyage";
+  function mkm(){const g=el("g",{opacity:0},H.over);el("circle",{r:13,fill:"#fffaf0",stroke:"#1c1512","stroke-width":3},g);const t=el("text",{"text-anchor":"middle","dominant-baseline":"central","font-size":14},g);t.textContent="✉";return g}
+  const m1=mkm(),m2=mkm(),btn=$("#send"),say=$("#sendsay"),T={ok:0,two:0,lost:0};
+  function fly(g,p,q,ms){return new Promise(res=>{const t0=performance.now();g.setAttribute("opacity",1);
+    (function f(t){const u=Math.min(1,(t-t0)/ms),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;g.setAttribute("transform",`translate(${p[0]+(q[0]-p[0])*e} ${p[1]+(q[1]-p[1])*e})`);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
+  const pa=[A.x+34,A.y+6], pb=[B.x-34,B.y+6];
+  btn.onclick=async()=>{
+    btn.disabled=true;voy.setAttribute("opacity",0);m1.setAttribute("opacity",0);m2.setAttribute("opacity",0);
+    const r=Math.random(),dur=reduce?1:1500;
+    if(r<.4){await fly(m1,pa,pb,dur);m1.setAttribute("opacity",0);T.ok++;say.innerHTML="<b>Delivered, once.</b> The easy case."}
+    else if(r<.7){await fly(m1,pa,pb,dur);m1.setAttribute("opacity",0);say.innerHTML="Delivered… ";await sleep(reduce?1:500);await fly(m2,pa,pb,dur);m2.setAttribute("opacity",0);T.two++;say.innerHTML="<b>Delivered twice.</b> The messenger forgot they'd already been."}
+    else{await fly(m1,pa,[pa[0]+(pb[0]-pa[0])*.25,pa[1]+(pb[1]-pa[1])*.25],dur*.4);await fly(m1,[pa[0]+(pb[0]-pa[0])*.25,pa[1]],door,dur*.7);voy.setAttribute("opacity",1);await sleep(reduce?1:700);m1.setAttribute("opacity",0);T.lost++;say.innerHTML="<b>Never arrived.</b> The messenger walked out of the one door and set off on a long voyage. Nobody can tell this from “very slow”."}
+    $("#t-ok").textContent=T.ok;$("#t-two").textContent=T.two;$("#t-lost").textContent=T.lost;btn.disabled=false};
+})();
+
+/* ===== majorities ===== */
+(function(){
+  const N=7,cx=220,cy=205,R=135; const cols=["#e0b84a","#5b9be0","#e2564e","#9cb648","#b58be0","#e89a4d","#5fbfae"]; const gl=["Α","Β","Γ","Δ","Ε","Ζ","Η"];
+  const g=$("#seats"); const seats=[];
+  for(let i=0;i<N;i++){
+    const a=-Math.PI/2+i*2*Math.PI/N+.2, x=cx+R*Math.cos(a), y=cy+R*Math.sin(a);
+    const s=el("g",{class:"seat",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},g);
+    el("circle",{class:"glow",r:33},s); el("circle",{class:"m ringA",r:30},s); el("circle",{class:"m ringB",r:30},s);
+    el("circle",{class:"b",r:24,fill:cols[i]},s); const t=el("text",{},s); t.textContent=gl[i];
+    el("rect",{class:"ink",x:-9,y:30,width:18,height:22,rx:3},s);
+    s.setAttribute("tabindex",0); s.setAttribute("role","button");
+    seats.push({el:s,name:gl[i],in:true,A:false,B:false,knows:false});
+  }
+  const say=$("#majsay"),count=$("#count"),b1=$("#maj1"),b2=$("#maj2");
+  function paint(){
+    seats.forEach(s=>{s.el.setAttribute("aria-label",`Legislator ${s.name}, ${s.in?"in the Chamber":"out of the Chamber"}`);s.el.classList.toggle("out",!s.in);s.el.classList.toggle("inA",s.A);s.el.classList.toggle("inB",s.B);s.el.classList.toggle("both",s.A&&s.B);s.el.classList.toggle("knows",s.knows)});
+    const n=seats.filter(s=>s.in).length; count.innerHTML=`<b>${n}</b> of 7 in the Chamber · `+(n>=4?"<span class='ok'>a majority</span>":"<span class='bad'>not a majority</span>");
+  }
+  seats.forEach(s=>{const flip=()=>{s.in=!s.in;paint()};s.el.addEventListener("click",flip);s.el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip()}})});
+  function pick(pool,k){const a=[...pool];for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,k)}
+  let fresh=true;
+  b1.onclick=()=>{
+    seats.forEach(s=>{s.A=s.B=s.knows=false; if(!fresh)s.in=true});
+    const here=seats.filter(s=>s.in);
+    if(here.length<4){say.innerHTML=`Only ${here.length} of 7 ${here.length===1?"is":"are"} in the Chamber. <span class='bad'>That is not a majority, so nothing can pass.</span> Call someone back.`;paint();return}
+    pick(here,4).forEach(s=>{s.A=true;s.knows=true});
+    say.innerHTML="Four of those present (blue rings) pass a decree and ink it into their scrolls.";
+    fresh=false;b1.disabled=true;b2.disabled=false;paint();
+  };
+  b2.onclick=()=>{
+    b2.disabled=true;
+    seats.forEach(s=>{s.in=!s.A}); paint();
+    setTimeout(()=>{
+      let B; do{B=pick(seats,4)}while(B.every(s=>s.A));
+      seats.forEach(s=>{s.B=B.includes(s);s.in=s.B});
+      const both=seats.filter(s=>s.A&&s.B).length;
+      say.innerHTML=`The first four wander off. A different four (red rings) gather. <b>${both} of them ${both>1?"were":"was"} in the first majority</b> (gold), and ${both>1?"they remember":"that one remembers"} the decree. It could not have been otherwise: two groups of four cannot fit among seven without sharing someone.`;
+      paint(); b1.disabled=false; b1.textContent="Try another pair";
+    },reduce?0:900);
+  };
+})();
+
+/* ===== manuscript ===== */
+(function(){
+  const P=["Α","Β","Γ","Δ","Ε"];
+  const B=[{n:2,d:"α",q:["Α","Β","Γ","Δ"],v:["Δ"]},{n:5,d:"β",q:["Α","Β","Γ","Ε"],v:["Γ"]},{n:14,d:"α",q:["Β","Δ","Ε"],v:["Β","Ε"]},{n:27,d:"β",q:["Α","Γ","Δ"],v:["Α","Γ","Δ"]},{n:29,d:"β",q:["Β","Γ","Δ"],v:["Β"]}];
+  const body=$("#msrows"),x=$("#msx"); let sel=null;
+  function chips(b,hl){return b.q.map(p=>`<span class="pc ${b.v.includes(p)?"v":""} ${hl&&hl.includes(p)?"hl":""}">${p}</span>`).join("")}
+  function render(){
+    body.innerHTML=B.map(b=>`<tr data-n="${b.n}" tabindex="0" class="${sel===b.n?"sel":""}"><td><b>${b.n}</b></td><td><span class="pc dec">${b.d}</span></td><td>${chips(b)}</td></tr>`).join("");
+    $$("tr",body).forEach(tr=>{tr.onclick=()=>{sel=+tr.dataset.n;explain()};tr.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();sel=+tr.dataset.n;explain();$(`tr[data-n="${sel}"]`,body).focus()}}});
+  }
+  function explain(){
+    const b=B.find(b=>b.n===sel);
+    const prev=b.q.map(p=>{let best=null;B.forEach(e=>{if(e.n<b.n&&e.v.includes(p)&&(!best||e.n>best.n))best=e});return best?{p,e:best}:null}).filter(Boolean);
+    let h;
+    if(!prev.length) h=`<b>Ballot ${b.n}</b>: nobody in its quorum had voted before, so it was free to carry <i>any</i> decree.`;
+    else{const latest=prev.reduce((a,c)=>c.e.n>a.e.n?c:a);
+      h=`<b>Ballot ${b.n}</b> looks back: `+prev.map(o=>`${o.p} voted in ballot ${o.e.n} (${o.e.d})`).join(", ")+`. The latest is ballot ${latest.e.n}, so ballot ${b.n} <b>must</b> carry <span class="pc dec">${latest.e.d}</span>. `+(latest.e.d===b.d?"<span class='ok'>It does.</span>":"<span class='bad'>It doesn't!</span>");
+      h+=` <i>(${b.q.every(p=>b.v.includes(p))?"Everyone voted: this ballot succeeded.":"Not everyone voted, so this ballot has not succeeded."})</i>`;
+      render(); $$("tr",body).find(tr=>+tr.dataset.n===sel).children[2].innerHTML=chips(b,prev.filter(o=>o.e.n===latest.e.n).map(o=>o.p)); }
+    if(!prev.length) render();
+    $$("tr",body).forEach(tr=>tr.classList.toggle("sel",+tr.dataset.n===sel));
+    x.innerHTML=h;
+  }
+  render();
+})();
+
+/* ===== the dots under a scroll-driven picture ===== */
+function stepDots(root,steps){
+  const stage=$(".stage",root),nav=document.createElement("div"); nav.className="dots"; nav.setAttribute("role","group"); nav.setAttribute("aria-label","The steps of this picture");
+  let cur=0; const go=i=>steps[i]&&steps[i].scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
+  const ctl=(cls,label,d,fn)=>{const b=document.createElement("button"); b.type="button"; b.className=cls; b.setAttribute("aria-label",label); b.title=label;
+    if(d) b.innerHTML='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="'+d+'"/></svg>'; b.addEventListener("click",fn); return b};
+  const prev=ctl("arr","Previous step","M7.5 2 3.5 6l4 4",()=>go(cur-1)), next=ctl("arr","Next step","M4.5 2l4 4-4 4",()=>go(cur+1)),
+        back=ctl("arr back","Back to the first step","M2.6 6.4a3.5 3.5 0 1 0 1-2.8M2.4 1.6v2.2h2.2",()=>go(0));
+  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""),"",()=>go(i))});
+  nav.append(prev,...dots,next,back);
+  if(stage&&steps.length>1) stage.append(nav);
+  return i=>{cur=i; prev.disabled=back.disabled=i===0; next.disabled=i===steps.length-1;
+    dots.forEach((d,j)=>{d.classList.toggle("on",j===i); if(j===i)d.setAttribute("aria-current","step"); else d.removeAttribute("aria-current")})};
+}
+
+/* ===== scrollytelling: one ballot, in the Chamber ===== */
+(function(){
+  const svg=$("#balsvg"); const H=Hall(svg,{vb:"0 0 900 490",cx:235,cy:235,rr:215,R:140,doorText:false}); svg.classList.add("fig");
+  const C={A:"#e0b84a",B:"#5b9be0",G:"#e2564e",D:"#9cb648",E:"#b58be0"}, ang={A:200,B:270,G:340,D:40,E:140}, lab={A:"Α",B:"Β",G:"Γ",D:"Δ",E:"Ε"};
+  const Q=["A","G","D"], q=["G","D"], all=["A","B","G","D","E"]; const S={}; all.forEach(k=>S[k]=H.seat(lab[k],C[k],ang[k]));
+  const O=H.over; const set=(e,on)=>e.classList.toggle("on",!!on);
+  const rings={}; Q.forEach(k=>rings[k]=el("circle",{cx:S[k].x,cy:S[k].y,r:36,class:"ring"},H.under));
+  const iniT=el("text",{x:S.A.x,y:S.A.y+46,class:"lab"},O); iniT.textContent="initiator";
+  const balT=el("text",{x:H.cx,y:H.cy+8,class:"lab fade",style:"font-size:26px;fill:#1c1512"},O); balT.textContent="ballot 27";
+  const quT=el("text",{x:H.cx,y:H.cy+34,class:"lab fade"},O); quT.textContent="quorum: Α, Γ, Δ";
+  const tags={},chips={},sp={},tp={};
+  all.forEach(k=>{const [ax,ay]=[S.A.x,S.A.y],[bx,by]=[S[k].x,S[k].y];const d=Math.hypot(bx-ax,by-ay)||1,ux=(bx-ax)/d,uy=(by-ay)/d;
+    sp[k]=[ax+ux*40,ay+uy*40]; tp[k]=[bx-ux*40,by-uy*40];
+    const [ox,oy]=H.at(ang[k],H.R+52); const c=el("g",{class:"tag fade",transform:`translate(${ox} ${oy})`},O); el("rect",{x:-34,y:-14,width:68,height:28},c); const t=el("text",{},c); t.textContent="27: β"; chips[k]=c;
+    if(q.includes(k)){const [px,py]=H.at(ang[k],H.R-56); const g=el("g",{class:"tag fade",transform:`translate(${px} ${py})`},O); el("rect",{x:-32,y:-14,width:64,height:28},g); const tt=el("text",{},g); tt.textContent="≥ 27"; tags[k]=g}});
+  {const g=el("g",{class:"tag fade",transform:`translate(${S.A.x} ${S.A.y-50})`},O); el("rect",{x:-32,y:-14,width:64,height:28},g); el("text",{},g).textContent="≥ 27"; tags.A=g}
+  // the replies stand beside the hall; a phone has no room for them, and the step cards say the same
+  const PG=el("g",{},O), tall=matchMedia("(max-width:640px)");
+  function lay(){svg.setAttribute("viewBox",tall.matches?"0 0 470 470":"0 0 900 490");PG.style.display=tall.matches?"none":""}
+  tall.addEventListener("change",lay); lay();
+  const rt=el("text",{x:520,y:100,class:"lab fade",style:"text-anchor:start"},PG); rt.textContent="The quorum's latest votes";
+  const repg={}; [["A","Α: no vote yet"],["G","Γ: ballot 5, decree β"],["D","Δ: ballot 2, decree α"]].forEach(([k,t],i)=>{const g=el("g",{class:"reply fade",transform:`translate(520 ${118+i*46})`},PG); el("rect",{width:270,height:36},g); const tx=el("text",{x:14,y:19},g); tx.textContent=t; repg[k]=g});
+  const forced=el("g",{class:"fade",transform:"translate(520 290)"},PG);
+  el("rect",{width:150,height:70,rx:10,fill:"#e3ecc4",stroke:"#5f6e28","stroke-width":4},forced);
+  const fb=el("text",{x:75,y:36,"text-anchor":"middle","dominant-baseline":"central",style:"font-size:40px;fill:#5f6e28"},forced); fb.textContent="β";
+  const ft=el("text",{x:520,y:392,class:"lab fade",style:"fill:#5f6e28;font-size:16px;text-anchor:start"},PG); ft.textContent="forced by the latest vote";
+  function mk(color,glyph){const g=el("g",{class:"tok",opacity:0},O); el("circle",{r:14,fill:color,stroke:"#1c1512","stroke-width":2},g); const t=el("text",{style:"fill:#1c1512;font-size:16px;text-anchor:middle;dominant-baseline:central;font-weight:700"},g); t.textContent=glyph; return g}
+  const tq={},tr={},tpp={},tv={},tt={}; q.forEach(k=>{tq[k]=mk("#fffaf0","?");tr[k]=mk("#8fc4de","·");tpp[k]=mk("#a9c25a","β");tv[k]=mk("#a9c25a","✓")}); all.filter(k=>k!=="A").forEach(k=>tt[k]=mk("#a9c25a","β"));
+  function put(g,k,u){const x=sp[k][0]+(tp[k][0]-sp[k][0])*u,y=sp[k][1]+(tp[k][1]-sp[k][1])*u;g.style.transform=`translate(${x}px,${y}px)`}
+  const show=(g,on)=>g.setAttribute("opacity",on?1:0);
+  function render(s){
+    Q.forEach(k=>{set(rings[k],true);set(tags[k],s>=2);set(repg[k],s>=2);set(chips[k],s>=5)});
+    q.forEach(k=>{
+      show(tq[k],s>=1&&s<2);put(tq[k],k,s>=1?1:0);
+      show(tr[k],s>=2&&s<3);put(tr[k],k,s>=2?0:1);
+      show(tpp[k],s>=4&&s<5);put(tpp[k],k,s>=4?1:0);
+      show(tv[k],s>=5&&s<6);put(tv[k],k,s>=5?0:1)});
+    ["B","E"].forEach(k=>S[k].g.setAttribute("opacity",s>=6?1:.4));
+    set(balT,true);set(quT,true);set(rt,s>=2);
+    repg.G.classList.toggle("hi",s>=3);set(forced,s>=3);set(ft,s>=3);
+    set(chips.B,s>=6);set(chips.E,s>=6);
+    Object.keys(tt).forEach(k=>{show(tt[k],s>=6&&s<7);put(tt[k],k,s>=6?1:0)});
+  }
+  const steps=$$("#bal .step"),mark=stepDots($("#bal"),steps);
+  render(0); mark(0);
+  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); mark(i); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
+  steps.forEach(s=>so.observe(s));
+})();
+
+/* ===== rival presidents, in the Chamber ===== */
+(function(){
+  const svg=$("#duelsvg"), log=$("#dlog"), pass=$("#dpassed"), hb=$("#dballot"), mode=$("#duelmode");
+  const H=Hall(svg,{vb:"0 0 440 450"});
+  const C={A:"#e0b84a",E:"#b58be0",B:"#5b9be0",G:"#e2564e",D:"#9cb648"};
+  const S={A:H.seat("Α",C.A,205),E:H.seat("Ε",C.E,335),B:H.seat("Β",C.B,20),G:H.seat("Γ",C.G,160),D:H.seat("Δ",C.D,270)};
+  const lines=[]; ["A","E"].forEach(p=>["B","G","D"].forEach(k=>{const l=el("line",{x1:S[p].x,y1:S[p].y,x2:S[k].x,y2:S[k].y,stroke:C[p],"stroke-width":3,opacity:.3},H.under);lines.push({p,l})}));
+  const meters={}; ["B","G","D"].forEach(k=>{const [x,y]=H.at(S[k].deg,H.R-72);const t=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":14,"font-family":"Optima,sans-serif",fill:"#1c1512"},H.over);t.textContent="promised ≥ 0";meters[k]=t});
+  const who={A:"Α",E:"Ε"};
+  let ballot=0,passed=0,timer=null,want=false,pres=null,turn="A",phase=0,pending={A:null,E:null};
+  function say(h){const d=document.createElement("div");d.innerHTML=h;log.prepend(d);while(log.children.length>40)log.lastChild.remove()}
+  function flash(p,on){lines.forEach(o=>{if(o.p===p)o.l.setAttribute("opacity",on?.95:.3)})}
+  function setMeters(n){["B","G","D"].forEach(k=>meters[k].textContent="promised ≥ "+n)}
+  function tickF(){
+    const p=pres||turn, other=p==="A"?"E":"A", nm=who[p];
+    if(!pres){
+      ballot++;setMeters(ballot);hb.textContent=ballot;flash(p,true);setTimeout(()=>flash(p,false),500);
+      say(`<b>${nm}</b> starts ballot ${ballot}: everyone promises nothing lower.`);
+      if(pending[other]!==null)say(`<span class="bad">…${who[other]}'s ballot ${pending[other]} is refused: they already promised ${ballot}.</span>`);
+      pending[p]=ballot;pending[other]=null;turn=other;
+    }else{
+      if(phase===0){ballot++;setMeters(ballot);hb.textContent=ballot;flash(p,true);say(`<b>${nm}</b> starts ballot ${ballot}. Nobody else is starting any.`);phase=1}
+      else if(phase===1){say(`The quorum votes in ballot ${ballot}.`);phase=2}
+      else{passed++;pass.textContent=passed;flash(p,false);say(`<span class="ok">Ballot ${ballot} succeeded: decree ${passed} is passed.</span>`);phase=0}
+    }
+  }
+  function go(){if(timer)return;timer=setInterval(tickF,reduce?500:950)}
+  function stop(){clearInterval(timer);timer=null}
+  $("#drun").onclick=()=>{if(pres){flash(pres,false);say("<i>Ε no longer accepts that Α is president.</i>")}pres=null;turn="A";pending={A:null,E:null};S.E.g.setAttribute("opacity",1);mode.textContent="two priests each sure they are in charge";want=true;go();$("#drun").disabled=true};
+  $("#dpres").onclick=()=>{pres="A";phase=0;pending={A:null,E:null};S.E.g.setAttribute("opacity",.35);mode.textContent="Α is president, Ε waits";say("<i>Α is appointed president. Ε no longer starts ballots.</i>");want=true;go();$("#drun").disabled=false};
+  $("#dreset").onclick=()=>{stop();want=false;flash("A",false);flash("E",false);ballot=0;passed=0;pres=null;phase=0;pending={A:null,E:null};turn="A";hb.textContent=0;pass.textContent=0;setMeters(0);log.innerHTML="";S.E.g.setAttribute("opacity",1);mode.textContent="no one is in charge";$("#drun").disabled=false};
+  new IntersectionObserver(es=>{if(!es[0].isIntersecting)stop();else if(want)go()},{threshold:.1}).observe($("#duel"));
+})();
+
+/* ===== parliament: the president asks the Chamber, then fills the gap ===== */
+(function(){
+  const svg=$("#parsvg"); const H=Hall(svg,{vb:"0 0 900 490",cx:235,cy:235,rr:215,R:140,doorText:false});
+  const C={P:"#e0b84a",B:"#5b9be0",G:"#e2564e",D:"#9cb648",E:"#b58be0"}, ang={P:200,B:270,G:340,D:40,E:140}, lab={P:"Α",B:"Β",G:"Γ",D:"Δ",E:"Ε"};
+  const others=["B","G","D","E"], S={}; Object.keys(ang).forEach(k=>S[k]=H.seat(lab[k],C[k],ang[k]));
+  const O=H.over, set=(e,on)=>e.classList.toggle("on",!!on), show=(g,on)=>g.setAttribute("opacity",on?1:0);
+  const pt=el("text",{x:S.P.x,y:S.P.y+46,class:"lab"},O); pt.textContent="new president";
+  // what each legislator reports
+  const rep={B:["holds decree 126",true],G:["nothing past 124",false],D:["nothing past 124",false],E:["nothing past 124",false]};
+  const sp={},tp={},chips={};
+  others.forEach(k=>{const dx=S[k].x-S.P.x,dy=S[k].y-S.P.y,d=Math.hypot(dx,dy),ux=dx/d,uy=dy/d;sp[k]=[S.P.x+ux*40,S.P.y+uy*40];tp[k]=[S[k].x-ux*40,S[k].y-uy*40];
+    const ox=S[k].x,oy=S[k].y+(S[k].y<H.cy?-42:42);const c=el("g",{class:"tag fade",transform:`translate(${ox} ${oy})`},O);el("rect",{x:-62,y:-14,width:124,height:28},c);const t=el("text",{},c);t.textContent=rep[k][0];chips[k]=c});
+  function mk(color,glyph){const g=el("g",{class:"tok",opacity:0},O);el("circle",{r:14,fill:color,stroke:"#1c1512","stroke-width":2},g);const t=el("text",{style:"fill:#1c1512;font-size:15px;text-anchor:middle;dominant-baseline:central;font-weight:700"},g);t.textContent=glyph;return g}
+  const tq={},tr={},td={};others.forEach(k=>{tq[k]=mk("#fffaf0","?");tr[k]=mk("#8fc4de","·");td[k]=mk("#c9d98a","✎")});
+  function put(g,k,u){const x=sp[k][0]+(tp[k][0]-sp[k][0])*u,y=sp[k][1]+(tp[k][1]-sp[k][1])*u;g.style.transform=`translate(${x}px,${y}px)`}
+  others.forEach(k=>{put(tq[k],k,0);put(tr[k],k,1);put(td[k],k,0)});
+  // the president's scroll
+  const SG=el("g",{},O), tall=matchMedia("(max-width:640px)");
+  function lay(){svg.setAttribute("viewBox",tall.matches?"0 0 470 960":"0 0 900 490");SG.setAttribute("transform",tall.matches?"translate(-455 460)":"")}
+  tall.addEventListener("change",lay); lay();
+  const title=el("text",{x:520,y:42,class:"lab",style:"text-anchor:start;font-size:18px"},SG);title.textContent="The president's scroll";
+  const rows={}; const base=[[122,"Tax on olives"],[123,"Lamps burn olive oil"],[124,"Roads kept by the town"],[125,""],[126,""],[127,""],[128,""],[129,""],[130,""]];
+  base.forEach(([n,t],i)=>{const g=el("g",{transform:`translate(520 ${58+i*46})`,class:"row"},SG);const r=el("rect",{width:340,height:38,rx:6},g);const nn=el("text",{x:14,y:20,style:"font-family:Optima,sans-serif;font-weight:700;font-size:17px;dominant-baseline:central;fill:#1c1512"},g);nn.textContent=n;const tx=el("text",{x:62,y:20,style:"font-size:16px;dominant-baseline:central;fill:#1c1512"},g);tx.textContent=t;rows[n]={g,r,tx}});
+  function row(n,cls,text){const o=rows[n];o.r.setAttribute("class","r "+cls);if(text!==undefined)o.tx.textContent=text;o.g.classList.remove("pop2");void o.g.getBoundingClientRect();o.g.classList.add("pop2")}
+  function reset(){
+    base.forEach(([n,t])=>row(n,n<=124?"has":"future",t));
+    others.forEach(k=>{set(chips[k],false);show(tq[k],false);show(tr[k],false);show(td[k],false);put(tq[k],k,0);put(tr[k],k,1);put(td[k],k,0)});
+    Object.values(rows).forEach(o=>o.g.classList.remove("pop2"));
+    say.textContent="Decrees 122 to 124 are in everyone's scroll. The new president knows nothing beyond that. Press the first button.";st.textContent="newly appointed";b1.disabled=false;b2.disabled=b3.disabled=true;br.hidden=true}
+  const say=$("#parsay"),st=$("#parstate"),b1=$("#par1"),b2=$("#par2"),b3=$("#par3"),br=$("#parr");
+  b1.onclick=async()=>{b1.disabled=true;
+    others.forEach(k=>{show(tq[k],true);put(tq[k],k,1)});say.innerHTML="One question goes to everyone, covering every open number at once: <i>what have you voted for, and what is already in your scroll?</i>";
+    await sleep(reduce?0:1300);
+    others.forEach(k=>{show(tq[k],false);show(tr[k],true);put(tr[k],k,0);set(chips[k],true)});await sleep(reduce?0:1300);others.forEach(k=>show(tr[k],false));
+    row(126,"has","Port dues set");row(125,"gap","? nobody has voted for 125");
+    say.innerHTML="Replies are in. Β's scroll already holds decree <b>126</b>, passed before everyone went home. Nobody has any vote at all for <b class='bad'>125</b>. A hole in the law.";st.textContent="holding the replies";b2.disabled=false};
+  b2.onclick=async()=>{b2.disabled=true;
+    row(125,"fill","Ides of February: olive day");others.forEach(k=>{show(td[k],true);put(td[k],k,1)});await sleep(reduce?0:1300);others.forEach(k=>{show(td[k],false);put(td[k],k,0)});
+    say.innerHTML="The president fills the gap with a harmless decree: <i>the ides of February is national olive day.</i> The hole is closed, and nothing that mattered is lost.";st.textContent="gap filled";b3.disabled=false};
+  b3.onclick=async()=>{b3.disabled=true;
+    for(const [n,t] of [[127,"Lamps burn only olive oil"],[128,"Market opens at dawn"]]){
+      ["B","G","D"].forEach(k=>{show(td[k],true);put(td[k],k,1)});row(n,"has",t);await sleep(reduce?0:1100);["B","G","D"].forEach(k=>{show(td[k],false);put(td[k],k,0)})}
+    say.innerHTML="Only now does the president pass new decrees, in order after everything already in the scroll.";st.textContent="governing";br.hidden=false};
+  br.onclick=reset; reset();
+})();
+
+/* ===== fold the scroll ===== */
+(function(){
+  const f=$("#fold"); for(let i=0;i<30;i++){const e=document.createElement("div");e.className="e";f.insertBefore(e,f.lastElementChild)}
+  let on=false; const b=$("#foldb");
+  b.onclick=()=>{on=!on; const es=$$(".e",f); es.forEach((e,i)=>setTimeout(()=>e.classList.toggle("gone",on),reduce?0:i*20)); f.classList.toggle("folded",on); b.textContent=on?"Unfold it again":"Fold the scroll"};
+})();
+
+/* ===== relevance map ===== */
+(function(){
+  const pairs=[["A legislator","A server"],["Leaving the Chamber","A crash or a partition"],["A messenger","A network message"],["A scroll of decrees","The log of commands"],["A majority in the Chamber","A quorum of servers"],["The president","The leader"],["A ballot number","A proposal or term number"],["A decree","A command in the log"]];
+  const m=$("#map"); pairs.forEach(([a,b])=>{
+    const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
+    const grp=[l,mid,r]; grp.forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)});
+})();
+
+})();
+
+/* lineage.js */
+/* lineage: draw the edges of a book's graph of papers, and say what an edge carries (lineage.py) */
+(function(){
+const NS="http://www.w3.org/2000/svg",wide=matchMedia("(min-width:860px)");
+document.querySelectorAll(".lin").forEach(lin=>{
+  const svg=lin.querySelector(".lin-edges"),say=lin.querySelector(".lin-say"),idle=say.innerHTML;
+  const node=n=>lin.querySelector('[data-n="'+n+'"]');
+  const links=[...lin.querySelectorAll(".lin-link")].map(el=>({el,side:el.dataset.side,from:el.dataset.from.split(" "),to:el.dataset.to.split(" "),g:null}));
+  const box=el=>{const a=el.getBoundingClientRect(),b=lin.getBoundingClientRect();
+    return {l:a.left-b.left,r:a.right-b.left,t:a.top-b.top,b:a.bottom-b.top,cx:(a.left+a.right)/2-b.left,cy:(a.top+a.bottom)/2-b.top}};
+  const mk=(tag,at,to)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);to.appendChild(e);return e};
+  const f=v=>v.toFixed(1);
+  const path=(g,d)=>mk("path",{d},g);
+  const flat=(g,x1,y1,x2,y2)=>path(g,`M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}`);
+  const bend=(g,x1,y1,x2,y2)=>{const m=(x1+x2)/2;path(g,`M${f(x1)} ${f(y1)}C${f(m)} ${f(y1)} ${f(m)} ${f(y2)} ${f(x2)} ${f(y2)}`)};
+  const head=(g,x,y,down)=>mk("polygon",{points:down?`${f(x-5)},${f(y-8)} ${f(x+5)},${f(y-8)} ${f(x)},${f(y)}`:`${f(x-8)},${f(y-5)} ${f(x-8)},${f(y+5)} ${f(x)},${f(y)}`},g);
+  function draw(){
+    svg.textContent="";
+    if(!wide.matches)return;
+    const R=lin.getBoundingClientRect();
+    svg.setAttribute("width",R.width);svg.setAttribute("height",R.height);svg.setAttribute("viewBox",`0 0 ${f(R.width)} ${f(R.height)}`);
+    const ports={};   // the edges that meet one side of a middle node share it out between them, in the order they come from
+    const port=(n,side,y,then)=>(ports[n+side]=ports[n+side]||[]).push({n,side,y,then});
+    links.forEach(k=>{
+      const g=k.g=mk("g",{},svg),c=box(k.el.querySelector("em"));
+      if(k.side==="in"){
+        flat(g,box(node(k.from[0])).r,c.cy,c.l,c.cy);
+        k.to.forEach(n=>port(n,"l",c.cy,(x,y)=>{bend(g,c.r,c.cy,x-7,y);head(g,x,y)}));
+      }else if(k.side==="out"){
+        const b=box(node(k.to[0]));
+        flat(g,c.r,c.cy,b.l-7,c.cy);head(g,b.l,c.cy);
+        k.from.forEach(n=>port(n,"r",c.cy,(x,y)=>bend(g,x,y,c.l,c.cy)));
+      }else{
+        const s=node(k.from[0]),t=node(k.to[0]),sb=box(s),tb=box(t);
+        if(t.parentNode.previousElementSibling===s.parentNode)flat(g,c.cx,sb.b,c.cx,c.t);
+        else{const y=sb.b-12,x=sb.r+20;   // round the papers between, outside their right edge
+          path(g,`M${f(sb.r)} ${f(y)}H${f(x-10)}Q${f(x)} ${f(y)} ${f(x)} ${f(y+10)}V${f(c.cy-10)}Q${f(x)} ${f(c.cy)} ${f(x-10)} ${f(c.cy)}H${f(c.r)}`)}
+        flat(g,c.cx,c.b,c.cx,tb.t-7);head(g,c.cx,tb.t,true);
+      }
+    });
+    for(const key in ports){
+      const list=ports[key].sort((a,b)=>a.y-b.y),b=box(node(list[0].n)),h=b.b-b.t;
+      list.forEach((p,i)=>p.then(p.side==="l"?b.l:b.r,b.t+h*(.2+.6*(i+.5)/list.length)));
+    }
+  }
+  function light(on,words){
+    lin.classList.toggle("hot",on.length>0);
+    const nodes=new Set(on.flatMap(k=>k.from.concat(k.to)));
+    links.forEach(k=>{const is=on.includes(k);k.el.classList.toggle("on",is);if(k.g)k.g.classList.toggle("on",is)});
+    lin.querySelectorAll(".lin-node").forEach(n=>n.classList.toggle("on",nodes.has(n.dataset.n)));
+    say.innerHTML=words||idle;
+  }
+  const name=ns=>ns.map(n=>node(n).dataset.label).join(", ");
+  links.forEach(k=>{
+    const tell=()=>light([k],"<b>"+name(k.from)+" → "+name(k.to)+"</b>"+k.el.querySelector(".why").innerHTML);
+    k.el.addEventListener("mouseenter",tell);k.el.addEventListener("focus",tell);k.el.addEventListener("click",tell);
+  });
+  lin.querySelectorAll(".lin-node").forEach(n=>{
+    const mine=()=>light(links.filter(k=>k.from.concat(k.to).includes(n.dataset.n)));
+    n.addEventListener("mouseenter",mine);n.addEventListener("focus",mine);
+  });
+  lin.addEventListener("mouseleave",()=>light([]));
+  new ResizeObserver(draw).observe(lin);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
+  draw();
+});
+})();
