@@ -287,20 +287,19 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
 /* ================================================================ the bird's-eye view */
 :root{--arche:#b5602c; --paxos:#136f9e; --schedia:#c8961c}
 /* the ring of ideas on the cover */
-#cover .ringwrap{max-width:640px;width:100%;margin:0 auto}
 .ring-svg{width:100%;height:auto;display:block;overflow:visible}
 .ring-svg .st{cursor:pointer}
 .ring-svg .st circle{stroke:var(--ink);stroke-width:2.5;transition:r .2s}
 .ring-svg .st text{font-family:var(--sans);font-weight:700;font-size:12px;text-anchor:middle;dominant-baseline:central;fill:#fffaf0;pointer-events:none}
-.ring-svg .st .lab{font-family:var(--sans);font-weight:400;font-size:15px;fill:var(--ink);dominant-baseline:central}
+.ring-svg .lab{cursor:pointer;font-family:var(--sans);font-weight:400;font-size:15px;fill:var(--ink);dominant-baseline:central}
 .ring-svg .st:hover circle.b,.ring-svg .st:focus-visible circle.b{r:15}
 .ring-svg .st:focus-visible{outline:none}
-.ring-svg .st:focus-visible .lab{text-decoration:underline}
 .ring-svg .bookname{font-family:var(--sans);font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:700}
 .ring-svg .ctr{font-family:var(--sans);text-anchor:middle;fill:var(--ink)}
 .ring-svg .chord{fill:none;stroke-width:3;opacity:0;transition:opacity .35s,stroke-width .35s}
 .ring-svg .chord.on{opacity:.9;stroke-width:4}
-.ring-svg .st.dim{opacity:.28}
+.ring-svg .st.dim,.ring-svg .lab.dim{opacity:.28}
+.ring-svg .lab.lit{font-weight:700}
 .ring-svg .st.lit circle.b{stroke:var(--ink);stroke-width:4}
 
 /* three medallions */
@@ -322,13 +321,6 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
 .dial{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(18px,3.5vw,44px);align-items:center;margin-top:2rem}
 .dial .face{background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);padding:6px;border-radius:50%;aspect-ratio:1;display:grid;place-items:center}
 .dial svg.fig{width:100%;height:auto;display:block;overflow:visible}
-.dial .rim{cursor:pointer}
-.dial .rim circle{fill:#fffaf0;stroke:var(--ink);stroke-width:2.5;transition:fill .3s}
-.dial .rim text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:var(--ink);pointer-events:none}
-.dial .rim.on text{fill:#fffaf0}
-.dial .rim:focus-visible{outline:none}.dial .rim:focus-visible circle{stroke:var(--aegean-d);stroke-width:5}
-.dial .art{transition:opacity .35s}
-.dial .art.hide{opacity:0}
 .idea{padding:20px 22px 18px;min-height:360px;display:flex;flex-direction:column}
 .idea .num{margin-bottom:.3rem}
 .idea h3{font-size:clamp(1.3rem,2.6vw,1.65rem);margin:0 0 .7rem}
@@ -336,8 +328,8 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
 .idea .mach{font-family:var(--sans);font-size:.92rem;line-height:1.5;background:#e9f2f7;border:2px solid var(--ink);padding:9px 12px;margin:.2rem 0 1rem}
 .idea .mach b{display:block;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--aegean-d);margin-bottom:2px}
 .idea .nav{margin-top:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.idea .nav .more{margin-left:auto;font-family:var(--sans);font-size:.82rem;color:var(--aegean-d);text-decoration:none}
-.idea .nav .more:hover{text-decoration:underline}
+.idea .more{display:inline-block;margin-top:14px;font-family:var(--sans);font-size:.82rem;color:var(--aegean-d);text-decoration:none}
+.idea .more:hover{text-decoration:underline}
 .idea.swap{animation:swapin .45s ease}
 @keyframes swapin{from{opacity:.2;transform:translateY(6px)}}
 @media(max-width:859px){.dial{grid-template-columns:minmax(0,1fr)}.dial .face{max-width:520px;width:100%;margin:0 auto}.idea{min-height:0}}
@@ -371,3 +363,41 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
 .fig .band{stroke-width:11;stroke-linecap:round;opacity:.75}
 @media(prefers-reduced-motion:reduce){.idea.swap{animation:none}.dial .art{transition:none}.ring-svg .chord{transition:none}}
 @media(max-width:600px){.fig .tag text,.fig .sm{font-size:14px}.fig .lab{font-size:16px}.dial .face{padding:2px;border-width:3px}}
+
+/* ---------- the explorer: one circle of every idea, a panel of books and ideas ---------- */
+#cover{min-height:0;display:block;padding-bottom:clamp(4rem,9vw,6rem)}
+#cover .intro{max-width:46em}
+#cover .intro h1{font-size:clamp(2.3rem,5.4vw,3.8rem);margin-bottom:.8rem}
+#cover .intro .generic{margin-bottom:.5rem}
+#cover .hint{font-family:var(--sans);font-size:.92rem;color:#6b5d4f;margin:0}
+#cover{padding-top:clamp(4rem,8vw,5.5rem)}
+.explore{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(18px,3.5vw,44px);align-items:start;margin-top:2.2rem}
+.wheel-face{position:sticky;top:58px;background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);border-radius:50%;aspect-ratio:1;padding:4px}
+.wheel-face svg{width:100%;height:auto;display:block;overflow:visible}
+.wheel .labs,.wheel .ctr-g{transition:opacity .3s}
+.wheel.open .labs,.wheel.open .ctr-g{opacity:0;pointer-events:none}
+.wheel .art{transition:opacity .3s}
+.wheel .art.hide{opacity:0}
+.wheel .st circle.b{transition:r .2s,stroke-width .2s}
+.wheel .st.hi circle.b{r:16;stroke-width:4}
+.wheel .st.on circle.b{r:18;stroke-width:4.5}
+.wheel.open .st:not(.on):not(:hover){opacity:.7}
+.panel{padding:18px 20px 20px}
+.panel .idea{padding:0;min-height:0}
+.tree details{border-top:2px solid #e3d6b3;padding:.6rem 0 .2rem}
+.tree details:first-of-type{border-top:0}
+.tree summary{cursor:pointer;font-family:var(--sans);font-size:1.02rem;list-style:none;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.tree summary::-webkit-details-marker{display:none}
+.tree summary::before{content:"▸";color:var(--c);transition:transform .2s;display:inline-block}
+.tree details[open] summary::before{transform:rotate(90deg)}
+.tree summary .bk{font-weight:700;color:var(--c);letter-spacing:.06em;text-transform:uppercase;font-size:.8rem}
+.tree summary i{font-family:var(--serif)}
+.tree .set{font-size:.88rem;color:#5b4c3e;margin:.25rem 0 .3rem 1.2rem;line-height:1.45}
+.tree ol{list-style:none;padding:0;margin:0 0 .4rem .6rem}
+.tree button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:4px 6px;border-radius:4px;font-family:var(--serif);font-size:1rem;color:var(--ink)}
+.tree button:hover,.tree button.hi{background:#f3e7c4}
+.tree button:focus-visible{outline:2px solid var(--aegean-d);outline-offset:0}
+.tree .n{flex:0 0 auto;width:24px;height:24px;border-radius:50%;background:var(--c);color:#fffaf0;border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--sans);font-weight:700;font-size:.72rem}
+.detail .close{margin-left:auto}
+@media(max-width:859px){.explore{grid-template-columns:minmax(0,1fr)}.wheel-face{position:relative;top:0;max-width:560px;width:100%;margin:0 auto}}
+@media(prefers-reduced-motion:reduce){.wheel .art,.wheel .labs,.wheel .ctr-g,.wheel .st circle.b{transition:none}}
