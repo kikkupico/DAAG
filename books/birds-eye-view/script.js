@@ -111,9 +111,9 @@ const narrow=matchMedia("(max-width:600px)");   // on a phone the figure fills m
 /* ---------- small drawing parts ---------- */
 function txt(p,x,y,s,cls="lab",extra={}){const ex=Object.assign({},extra);if(ex["text-anchor"]){ex.style=(ex.style?ex.style+";":"")+"text-anchor:"+ex["text-anchor"];delete ex["text-anchor"]}
   const t=el("text",Object.assign({x,y,class:cls},ex),p);t.textContent=s;return t}
-function tag(p,x,y,s,cls=""){const g=el("g",{class:"tag "+cls,transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},p),w=s.length*(narrow.matches?7.6:6.7)+16;
-  el("rect",{x:-w/2,y:-12,width:w,height:24,rx:4},g);el("text",{},g).textContent=s;return g}
-function cross(p,x,y,s=7){el("path",{class:"cross",d:`M${x-s},${y-s}L${x+s},${y+s}M${x+s},${y-s}L${x-s},${y+s}`},p)}
+function tag(p,x,y,s,cls=""){const g=el("g",{class:"tag "+cls,transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},p),r=el("rect",{y:-12,height:24,rx:4},g),t=el("text",{},g);
+  g.set=(s,c)=>{t.textContent=s;const w=s.length*(narrow.matches?7.6:6.7)+16;r.setAttribute("x",-w/2);r.setAttribute("width",w);if(c!==undefined)g.setAttribute("class","tag "+c)};g.set(s);return g}
+function cross(p,x,y,s=7){return el("path",{class:"cross",d:`M${x-s},${y-s}L${x+s},${y+s}M${x+s},${y-s}L${x-s},${y+s}`},p)}
 function token(p,x,y,fill,glyph){const g=el("g",{class:"tok",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},p);
   el("circle",{r:13,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g}
 
@@ -147,7 +147,7 @@ function Room(svg,o){
     at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
     /* a tag on the far side of a seat from the middle */
     note(k,s,cls="",d=56){const q=H.S[k],dx=q.x-cx,dy=q.y-cy,n=Math.hypot(dx,dy)||1;return tag(over,q.x+dx/n*d,q.y+dy/n*d,s,cls)}};
-  if(o.podium){el("circle",{cx,cy,r:36,fill:o.podiumFill||"#d9cfb4",stroke:"#1c1512","stroke-width":4},mid);txt(mid,cx,cy+5,o.podium,"lab ink sm")}
+  if(o.podium){H.pod=el("g",{class:"podium"},mid);H.podD=el("circle",{cx,cy,r:36,fill:o.podiumFill||"#d9cfb4",stroke:"#1c1512","stroke-width":4},H.pod);H.podT=txt(H.pod,cx,cy+5,o.podium,"lab ink sm")}
   for(const k in o.seats){const [deg,glyph,fill]=o.seats[k],[x,y]=(o.place&&o.place[k])||H.at(deg);
     const g=el("g",{class:"seat"+((o.out||[]).includes(k)?" out":"")+((o.wax||[]).includes(k)?" wax":""),transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},seats);
     if((o.ring||[]).includes(k))el("circle",{class:"ring",r:31},g);
@@ -160,7 +160,7 @@ const chamberSeats=(keys,ang)=>Object.fromEntries(keys.map((k,i)=>[k,[ang[i],PG[
 /* slips that never arrive, and words carried by a slip */
 function slip(P,a,ta,b,tb){const p=P.slip(a,ta,b,tb);p.pts=P.arc(a,ta,b,tb);return p}
 function lostSlip(P,a,ta,b,tb,frac=.55){const pts=P.arc(a,ta,b,tb),n=Math.max(2,Math.round(pts.length*frac)),q=pts.slice(0,n),e=q[q.length-1];
-  el("path",{class:"st-slip lost",d:"M"+q.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" L")},P.slips);cross(P.over,e[0],e[1])}
+  return [el("path",{class:"st-slip lost",d:"M"+q.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" L")},P.slips),cross(P.over,e[0],e[1])]}
 function slipTag(P,p,s,cls,at){const q=at?p.pts[Math.floor(p.pts.length*at)]:p.mid;return tag(P.over,q[0],q[1],s,cls)}
 
 /* one morning on Arche: ten entries and three slips (the books' own morning) */
@@ -169,22 +169,7 @@ const MORN=[
   {id:"c",h:2,t:1.6,tally:1,col:[0,1,0]},{id:"d",h:2,t:3.8,tally:3,col:[2,2,0]},{id:"e",h:2,t:5,tally:4,col:[2,3,0]},
   {id:"f",h:3,t:3,tally:1,col:[0,0,1]},{id:"g",h:3,t:4.6,tally:2,col:[0,0,2]},{id:"i",h:3,t:6.6,tally:5,col:[2,3,3]},{id:"j",h:3,t:7.6,tally:6,col:[2,3,4]},
   {id:"l",h:1,t:9,tally:7,col:[3,3,4]}];
-const MSLIPS=[["b","d"],["e","i"],["j","l"]], CHAIN=["a","b","d","e","i","j","l"];
-function Morning(svg,mode){
-  const P=Polar(svg,{vb:"0 0 620 596",cx:310,cy:350,r0:44,step:30,rings:9,tEnd:9.5,note:[14,24],
-    nodes:{1:[-90,"H1",HC[1]],2:[30,"H2",HC[2]],3:[150,"H3",HC[3]]}});
-  const E=Object.fromEntries(MORN.map(e=>[e.id,e])), chain=mode!=="column";
-  if(chain){for(let i=0;i+1<CHAIN.length;i++){const a=E[CHAIN[i]],b=E[CHAIN[i+1]];if(a.h===b.h)P.seg(a.h,a.t,b.t).classList.add("hi")}}
-  MSLIPS.forEach(([s,r])=>{const p=P.slip(E[s].h,E[s].t,E[r].h,E[r].t);if(chain)p.classList.add("hi")});
-  const rank=[...MORN].sort((x,y)=>x.tally-y.tally||x.h-y.h).map(e=>e.id);
-  MORN.forEach(e=>{const g=P.event(e.h,e.t,HC[e.h],13);
-    if(mode==="tally")g.label.textContent=e.tally;
-    if(mode==="rank"){g.label.textContent=rank.indexOf(e.id)+1}
-    if(mode==="before"||mode==="tally"||mode==="column"){if(e.id==="d"||e.id==="g")g.classList.add("mark")}
-    if(mode==="rank"||mode==="column"){const own=MORN.filter(q=>q.h===e.h),side=own.indexOf(e)%2?-90:90,a=(e.h===1?-90:e.h===2?30:150)+side,[x,y]=P.pt(e.h,e.t),r=mode==="column"?46:38;
-      tag(P.over,x+r*Math.cos(a*Math.PI/180),y+r*Math.sin(a*Math.PI/180),mode==="column"?e.col.join(" · "):e.tally+" · H"+e.h,(mode==="column"&&(e.id==="d"||e.id==="g"))?"hot":"")}});
-  return P;
-}
+const MSLIPS=[["b","d"],["e","i"],["j","l"]];
 
 /* ---------- the ideas, book by book ----------
    k: the short name on the ring; t: the title; p: on the island; m: in the machine room; a: where the book tells it */
@@ -192,173 +177,368 @@ const IDEAS={
 arche:[
  {k:"The quicker legs",t:"The quicker legs win",a:"gate",
   p:["House 3 has grain for one buyer and will fill whichever request was placed first. Judging by whose slip reaches the gate first rewards the quicker messenger, and comparing hours written on slips compares two water-clocks that were never set together."],
-  m:"Arrival order, and readings from clocks that drift apart, cannot say which of two events on different machines happened first.",
-  f(svg){const I=Isle(svg),[x2,y2]=I.road(2,3,.42),[x1,y1]=I.road(1,3,.86);
-    token(I.over,x2,y2,HC[2],"✉");token(I.over,x1,y1,HC[1],"✉");
-    tag(I.over,x2+6,y2+34,"H2 wrote first");tag(I.over,x1-30,y1-30,"H1 arrives first","red");txt(I.over,235,262,"the gate of House 3 sees","lab sm");txt(I.over,235,280,"only who arrives","lab sm")}},
+  m:"Arrival order, and readings from clocks that drift apart, cannot say which of two events on different machines happened first."},
  {k:"What led to what",t:"What could have led to what",a:"before",
   p:["The houses trade the question nobody can answer for one every house can: could one entry have led to another? It did if it stands higher on the same scroll, if it sent the slip the other received, or through a chain of such steps.","Entries with no chain of slips between them, like the two circled, are unrelated, in whichever order the sun saw them."],
-  m:"Lamport's happened-before relation: order within one machine, a send before its receipt, and chains of the two. Events it does not connect are concurrent.",
-  f(svg){Morning(svg,"before")}},
+  m:"Lamport's happened-before relation: order within one machine, a send before its receipt, and chains of the two. Events it does not connect are concurrent."},
  {k:"The tally",t:"The tally",a:"tallysec",
   p:["Each counting room keeps a rising number. Every entry raises it, every slip carries it, and a house that receives a slip jumps past the number on it. Along any chain the tallies rise, so a cause always carries a smaller tally than its effect.","The reverse fails: the circled entries are unrelated, yet the later one by the sun carries the smaller tally."],
-  m:"A Lamport logical clock. If one event happened before another it has the smaller timestamp, but a smaller timestamp does not show that two events are related.",
-  f(svg){Morning(svg,"tally")}},
+  m:"A Lamport logical clock. If one event happened before another it has the smaller timestamp, but a smaller timestamp does not show that two events are related."},
  {k:"Precedence",t:"Precedence",a:"ties",
   p:["To fill requests in one agreed sequence, every house sorts entries by the rule of precedence: the smaller tally first, and on a tie the lower house number. The number in each dot is its place in that sequence.","Every house computes the same sequence from the same entries, and it never puts an effect before its cause."],
-  m:"Ordering by timestamp, then by process number, gives a total order that every machine computes alike and that respects cause and effect.",
-  f(svg){Morning(svg,"rank")}},
+  m:"Ordering by timestamp, then by process number, gives a total order that every machine computes alike and that respects cause and effect."},
  {k:"The storehouse",t:"One storehouse, no gatekeeper",a:"storesec",
   p:["Only one house may load at the common storehouse at a time, and nobody keeps the door. Each house sends its request to the others, keeps a waiting list in precedence, and answers every request it receives.","A house may enter only when its request stands first on its own list and it has heard a higher tally from every other house; when done, it sends a release. Since no messenger passes another, an earlier request is always on the list in time."],
-  m:"Mutual exclusion with no coordinator, built from logical clocks and channels that deliver in order: request, acknowledge, release.",
-  f(svg){const I=Isle(svg),[sx,sy]=I.at(90,I.R);
-    el("rect",{x:sx-38,y:sy-20,width:76,height:40,rx:4,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3},I.under);
-    txt(I.over,sx,sy+40,"the storehouse","lab sm");token(I.over,sx,sy,HC[1],"1");
-    for(const h of [1,2,3]){const q=I.house[h],dx=h===1?0:h===2?-12:12,dy=h===1?62:-66;
-      const g=el("g",{transform:`translate(${q.x+dx} ${q.y+dy})`},I.over);
-      el("rect",{x:-44,y:-24,width:88,height:48,rx:4,fill:"#fffaf0",stroke:"#1c1512","stroke-width":2},g);
-      txt(g,0,-5,"1. H1 · 2","lab ink sm");txt(g,0,14,"2. H3 · 2","lab sm")}
-    txt(I.over,235,262,"the same list","lab sm");txt(I.over,235,280,"at every house","lab sm")}},
+  m:"Mutual exclusion with no coordinator, built from logical clocks and channels that deliver in order: request, acknowledge, release."},
  {k:"The column",t:"One number for each house",a:"column",
   p:["A single tally forgets whose news it carried, so each house keeps a column of three counts, one for each house. Count your own entries, send the whole column with every slip, and on receiving keep the larger of each row.","One entry came before another exactly when its column is nowhere larger. The circled pair are each larger in a different row, so they are unrelated."],
-  m:"Vector clocks, from Fidge and Mattern: one event happened before another exactly when its vector is no larger in any entry; otherwise the two are concurrent.",
-  f(svg){Morning(svg,"column")}},
+  m:"Vector clocks, from Fidge and Mattern: one event happened before another exactly when its vector is no larger in any entry; otherwise the two are concurrent."},
  {k:"The goatherd",t:"What no slip carries",a:"mountain",
   p:["A goatherd who scrambles over the mountain carries news that no slip records. A sale at House 3 can then cause a request at House 1 that carries the smaller tally.","Neither tally nor column can see a path that never went by slip. Only clocks kept in step with the sun could, and on cloudy Arche nobody can keep them so."],
-  m:"Logical and vector clocks see only the messages inside the system. Matching causes that travel outside it needs physical clocks kept closely in step.",
-  f(svg){const I=Isle(svg),q1=I.house[1],q3=I.house[3],p0=[q3.x+20,q3.y-12],c=[300,250],p2=[q1.x+4,q1.y+22],
-      bz=t=>[0,1].map(k=>(1-t)*(1-t)*p0[k]+2*t*(1-t)*c[k]+t*t*p2[k]),[gx,gy]=bz(.3);
-    el("path",{d:`M${p0} Q${c} ${p2}`,fill:"none",stroke:"#bf4a26","stroke-width":3,"stroke-dasharray":"7 6"},I.under);
-    token(I.over,gx,gy,"#d9cfb4","g");tag(I.over,gx+6,gy+30,"the goatherd","red");
-    const [sx,sy]=I.road(3,1,.45);token(I.over,sx,sy,HC[3],"✉");tag(I.over,sx+80,sy+4,"slip, by the road");
-    tag(I.over,q3.x+8,q3.y+38,"sale · tally 9");tag(I.over,q1.x+92,q1.y+4,"request · tally 3","red")}}
+  m:"Logical and vector clocks see only the messages inside the system. Matching causes that travel outside it needs physical clocks kept closely in step."}
 ],
 paxos:[
  {k:"Two requirements",t:"Consistency, and progress",a:"law",
   p:["No two scrolls may ever hold different decrees under the same number. And if a majority stays in the Chamber long enough, with nobody coming or going, every decree proposed there must pass.","Wandering is the danger: a group that passes decree 37 and leaves for a banquet leaves a second group that knows nothing of it."],
-  m:"Safety always: the logs never disagree. Progress only when a majority of machines is up and steady for long enough.",
-  f(svg){const H=Room(svg,{seats:chamberSeats(["A","B","G","D","E","Z"],[215,270,325,20,70,160]),out:["A","B","G"]});
-    ["A","B","G"].forEach(k=>H.note(k,"37 written, away",""));["D","E","Z"].forEach(k=>H.note(k,"37: knows nothing","red"));
-    txt(H.over,H.cx,H.cy-4,"decree 37","lab ink");txt(H.over,H.cx,H.cy+18,"must not be passed twice","lab sm")}},
+  m:"Safety always: the logs never disagree. Progress only when a majority of machines is up and steady for long enough."},
  {k:"Shared member",t:"Any two majorities share a member",a:"majorities",
   p:["However the legislators wander, two majorities of the same Parliament can never be made of entirely different people.","The legislator who sits in both carries what the first majority decided into the second, even after everyone else from the first has gone."],
-  m:"Quorum intersection: any two majorities of the machines share at least one, which carries forward what the earlier majority accepted.",
-  f(svg){const ks=["A","B","G","D","E","Z","H"],ang=ks.map((_,i)=>-90+i*360/7+11.5),H=Room(svg,{seats:chamberSeats(ks,ang)});
-    ks.forEach((k,i)=>{const q=H.S[k];if(i<4)el("circle",{cx:q.x,cy:q.y,r:31,fill:"none",stroke:"#136f9e","stroke-width":5},H.under);
-      if(i>=3)el("circle",{cx:q.x,cy:q.y,r:37,fill:"none",stroke:"#5f6e28","stroke-width":5},H.under)});
-    H.note("D","in both","hot",60);txt(H.over,H.cx,H.cy-12,"first majority","lab ink",{style:"fill:#136f9e"});txt(H.over,H.cx,H.cy+12,"second majority","lab ink",{style:"fill:#5f6e28"})}},
+  m:"Quorum intersection: any two majorities of the machines share at least one, which carries forward what the earlier majority accepted."},
  {k:"Ballot rules",t:"The three rules of the ballot",a:"synod",
   p:["The priests of the Synod choose one decree by ballots. Every ballot has its own number, its quorum is a majority, and if anyone in the quorum has voted before, the ballot must be for the decree of the latest of those votes.","Here Γ last voted for β in ballot 5 and Δ for α in ballot 2, so ballot 27 must be for β."],
-  m:"Unique ballot numbers, majority quorums, and a proposer bound to the value of the highest-numbered vote its quorum reports.",
-  f(svg){const H=Room(svg,{seats:chamberSeats(["A","B","G","D","E"],[200,270,340,40,140]),ring:["A","G","D"]});
-    H.note("G","voted β in 5","hot",58);H.note("D","voted α in 2","",58);H.note("A","never voted","",58);
-    txt(H.over,H.cx,H.cy-6,"ballot 27","lab ink",{style:"font-size:22px"});txt(H.over,H.cx,H.cy+20,"must be for β","lab red")}},
+  m:"Unique ballot numbers, majority quorums, and a proposer bound to the value of the highest-numbered vote its quorum reports."},
  {k:"One ballot",t:"One ballot, step by step",a:"ballot",
   p:["Α asks the quorum for the latest vote each has cast and a promise never to vote in a lower ballot. Each writes the promise in ink and answers. Α proposes the decree the third rule allows, each member votes unless they have promised higher, and once every member has voted Α writes the decree down and tells everyone.","A lost messenger or a vanished priest only leaves a step undone, and a step done twice changes nothing."],
-  m:"Two round trips, prepare and promise, then accept and accepted, followed by announcing the chosen value. Lost or repeated messages cannot break safety.",
-  f(svg){const P=Polar(svg,{vb:"0 0 560 560",cx:280,cy:290,r0:58,step:25,rings:8,tEnd:8.2,note:[10,22],
-      nodes:{A:[-90,"Α",PC.A],G:[-18,"Γ",PC.G],B:[54,"Β",PC.B],E:[126,"Ε",PC.E],D:[198,"Δ",PC.D]}});
-    ["G","D"].forEach(k=>{P.slip("A",.9,k,1.9);P.slip(k,2.1,"A",3.1);P.slip("A",3.4,k,4.4);P.slip(k,4.6,"A",5.6)});
-    ["B","G","D","E"].forEach(k=>P.slip("A",6,k,7));
-    P.event("A",.9,PC.A,9);P.event("A",3.4,PC.A,9);P.event("A",6,"#bf4a26",11);
-    [["1 · ask",.9],["2 · promise",3.1],["3 · propose",3.4],["4 · vote",5.6],["5 · β chosen, tell all",6]].forEach(([s,t],i)=>{const [x,y]=P.pt("A",t);tag(P.over,x+(i%2?58:-58)+(i===4?-30:0),y,s,i===4?"hot":"")})}},
+  m:"Two round trips, prepare and promise, then accept and accepted, followed by announcing the chosen value. Lost or repeated messages cannot break safety."},
  {k:"Rival presidents",t:"Two would-be presidents",a:"progress",
   p:["Each new ballot makes its quorum promise never to vote in a lower one, so two priests who keep starting higher ballots doom each other's, and nothing passes.","One president who alone starts ballots cures it. Two presidents at once only slow things down, because consistency never depended on who starts ballots."],
-  m:"Duelling proposers can stall Paxos for ever; a single leader restores progress, while safety never relied on there being one.",
-  f(svg){const P=Polar(svg,{vb:"0 0 560 560",cx:280,cy:300,r0:48,step:34,rings:6,tEnd:6.2,note:[10,22],
-      nodes:{A:[150,"Α",PC.A],G:[-90,"Γ",PC.G],E:[30,"Ε",PC.E]}});
-    slipTag(P,slip(P,"A",.6,"G",1.6),"ask 27");P.slip("G",1.8,"A",2.8);
-    slipTag(P,slip(P,"E",2,"G",3),"ask 28","",.62);P.slip("G",3.2,"E",4.2);
-    const r1=slip(P,"A",3.1,"G",4.1);slipTag(P,r1,"vote 27?","red",.3);{const [x,y]=P.pt("G",4.1);cross(P.over,x-16,y)}
-    slipTag(P,slip(P,"A",4.4,"G",5.4),"ask 29","",.72);
-    const r2=slip(P,"E",4.6,"G",5.6);slipTag(P,r2,"vote 28?","red",.3);{const [x,y]=P.pt("G",5.6);cross(P.over,x+16,y)}
-    txt(P.over,280,552,"each ask dooms the other's ballot","lab sm")}},
+  m:"Duelling proposers can stall Paxos for ever; a single leader restores progress, while safety never relied on there being one."},
  {k:"A Synod per number",t:"A separate Synod for every number",a:"parliament",
   p:["Parliament runs one small Synod for each decree number, all under one president. A new president asks the opening question once, for every number still open, and each legislator answers once. Where an answer reports a vote for a number, the third rule binds the president to it; a number nobody has voted for is filled with a decree that changes nothing.","Here 126 is already in a scroll and 125 is a gap, filled with an olive day. From then on each new decree takes one ask, one vote and one announcement."],
-  m:"Multi-Paxos: one prepare phase covers every open slot, gaps are filled with no-ops, and each further command costs one round trip from a stable leader.",
-  f(svg){const H=Room(svg,{seats:chamberSeats(["D","A","B","G","E"],[-90,-30,60,120,210]),ring:["D"]});
-    const kinds=[["122","k"],["123","k"],["124","k"],["125","o"],["126","v"],["127","n"],["128","n"]],
-      fill={k:"#d9cfb4",v:"#bfd6e6",o:"#e0b84a",n:"#fffaf0"};
-    kinds.forEach(([n,c],i)=>{const g=el("g",{class:"slot",transform:`translate(${H.cx-114+i*38} 238)`},H.over);
-      el("rect",{x:-16,y:-16,width:32,height:32,rx:3,fill:fill[c],"stroke-dasharray":c==="n"?"4 3":"none"},g);el("text",{},g).textContent=n});
-    txt(H.over,H.cx,206,"the president's scroll","lab sm");
-    [["known",-76,274],["olive day",0,292],["in a scroll",38,274],["new",95,292]].forEach(([s,dx,y])=>txt(H.over,H.cx+dx,y,s,"lab sm"))}},
+  m:"Multi-Paxos: one prepare phase covers every open slot, gaps are filled with no-ops, and each further command costs one round trip from a stable leader."},
  {k:"Years of practice",t:"Governing asked for more",a:"grew",
   p:["Years of running the island added four habits. Every office runs for a fixed term, so it has one holder at a time. A question about the law never gets an older answer than an earlier question did.","Scrolls are folded down to the law as it stands with the number of its last decree, and legislators are added and removed by decree, through the same ballots."],
-  m:"Leases, reads that never go back in time, snapshots of the state, and changes of membership made through the log itself.",
-  f(svg){svg.innerHTML="";svg.setAttribute("viewBox","0 0 440 440");const cx=220,cy=220;
-    el("circle",{cx,cy,r:204,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
-    el("path",{d:`M${cx},18 V422 M18,${cy} H422`,stroke:"#b5602c","stroke-width":3,"stroke-dasharray":"3 8"},svg);
-    el("circle",{cx,cy,r:30,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3},svg);
-    [[-1,-1,"One office,","one holder","fixed terms"],[1,-1,"Never an","older law","answers never go back"],
-     [-1,1,"Fold the","scroll","the law as it stands"],[1,1,"Members","by decree","the same ballots"]].forEach(([sx,sy,a,b,c])=>{
-      const x=cx+sx*96,y=cy+sy*84;txt(svg,x,y-14,a,"lab ink");txt(svg,x,y+8,b,"lab ink");txt(svg,x,y+32,c,"lab sm")})}}
+  m:"Leases, reads that never go back in time, snapshots of the state, and changes of membership made through the log itself."}
 ],
 schedia:[
  {k:"The podium",t:"The podium",a:"podium",
   p:["One legislator at a time holds the podium. The holder writes each line, gives it the next number and hands it to the runners, one for each bench, who bring the lines in order and never skip one.","The benches copy what they are sent and nothing else, so a bench that holds line 12 holds lines 1 to 11 as well."],
-  m:"One primary orders every operation and sends them to the backups in order.",
-  f(svg){const H=Room(svg,{porch:true,podium:"board 6",podiumFill:WHO.O.c,seats:tholosSeats(),ring:["O"]});
-    ["L","K","M","T"].forEach(k=>{const q=H.S[k];el("line",{x1:H.cx,y1:H.cy,x2:q.x,y2:q.y,stroke:"#6b5a48","stroke-width":2,"stroke-dasharray":"4 5"},H.under);
-      token(H.over,H.cx+(q.x-H.cx)*.55,H.cy+(q.y-H.cy)*.55,"#fffaf0","12");H.note(k,"copies line 12")});H.note("O","writes line 12","hot")}},
+  m:"One primary orders every operation and sends them to the backups in order."},
  {k:"Three hold it",t:"Passed means three hold it",a:"passes",
   p:["A line passes once a majority holds it and every line before it: the holder and two others. Only then does the holder tell the petitioner that the petition is law.","Lines no majority holds yet are drafts. A change of holder may lose one, and that harms nobody, because nobody was told it was law."],
-  m:"An operation commits once a majority of replicas hold it, and only then is the client answered.",
-  f(svg){const H=Room(svg,{porch:true,podium:"board 6",podiumFill:WHO.O.c,seats:tholosSeats(),ring:["O"],out:["T"]});
-    H.note("O","to line 12","hot");H.note("L","to line 12","hot");H.note("K","to line 12","hot");H.note("M","to line 10");H.note("T","stepped out");
-    txt(H.over,H.cx,H.cy+62,"line 12 has passed","lab ink sm");txt(H.over,H.cx,H.cy+80,"three of five hold it","lab sm")}},
+  m:"An operation commits once a majority of replicas hold it, and only then is the client answered."},
  {k:"Board and line",t:"Board and line",a:"board",
   p:["Every spell at the podium gets a board, a count and the name of whoever raised it, ordered by count and then by name. A line is known by its board and its line.","Board 6, line 40 may hold far more lines than board 7, line 1, and it is still the older copy. Every board opens with the whole law as its holder has it, so a later mark holds everything that passed before it."],
-  m:"A viewstamp pairs the view number with the position in the view, compared view first. Each new view starts from everything committed before it.",
-  f(svg){svg.innerHTML="";svg.setAttribute("viewBox","0 0 440 440");const cx=220,cy=220,
-      at=(r,line)=>{const a=(-90+line*6)*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
-      arc=(r,l0,l1,col,w)=>{const [x0,y0]=at(r,l0),[x1,y1]=at(r,l1);el("path",{d:`M${x0},${y0} A${r},${r} 0 ${(l1-l0)*6>180?1:0} 1 ${x1},${y1}`,fill:"none",stroke:col,"stroke-width":w,"stroke-linecap":"round"},svg)};
-    el("circle",{cx,cy,r:204,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
-    [[70,"board 5 · Okios",28,"#b9a77e"],[120,"board 6 · Okios",40,WHO.O.c],[170,"board 7 · Liskovia",1,WHO.L.c]].forEach(([r,s,l,c])=>{
-      el("circle",{cx,cy,r,fill:"none",stroke:"#b9a77e","stroke-width":1,"stroke-dasharray":"3 4"},svg);arc(r,0,Math.max(l,.6),c,10);
-      txt(svg,cx-18,cy-r+4,s,"lab sm",{"text-anchor":"end"})});
-    const [ax,ay]=at(120,40),[bx,by]=at(170,1);
-    el("circle",{cx:ax,cy:ay,r:8,fill:WHO.O.c,stroke:"#1c1512","stroke-width":2.5},svg);el("circle",{cx:bx,cy:by,r:8,fill:WHO.L.c,stroke:"#1c1512","stroke-width":2.5},svg);
-    tag(svg,ax-10,ay+30,"board 6, line 40");tag(svg,bx+86,by+22,"board 7, line 1: later","hot");
-    txt(svg,cx,cy-4,"later boards","lab sm");txt(svg,cx,cy+14,"further out","lab sm");txt(svg,cx,cy+50,"lines run round","lab sm")}},
+  m:"A viewstamp pairs the view number with the position in the view, compared view first. Each new view starts from everything committed before it."},
  {k:"A new holder",t:"Who takes the podium",a:"takes",
   p:["When the roll goes unanswered, a caller raises a board higher than any they have seen and invites everyone. Once a majority has answered with their latest board and line, the answer showing the latest takes the podium and opens the board by sending the whole law.","Every passed line is held by three, and any two threes share a legislator, so nothing that passed is lost."],
-  m:"A view change: collect a majority of viewstamps; the replica with the latest becomes primary and starts the view by sending its whole state.",
-  f(svg){const P=Polar(svg,{vb:"0 0 560 560",cx:280,cy:285,r0:62,step:26,rings:7,tEnd:7.3,note:[10,22],
-      nodes:Object.fromEntries(Object.keys(WHO).map(k=>[k,[THA[k],WHO[k].g,WHO[k].c]]))});
-    lostSlip(P,"L",1,"O",2);["K","M","T"].forEach(k=>P.slip("L",1,k,2));
-    slipTag(P,P.slip("K",2.3,"L",3.3),"6 · line 12");slipTag(P,P.slip("M",2.3,"L",3.5),"6 · line 10");
-    const sl=P.slip("T",2.3,"L",6.8);sl.classList.add("lost");
-    const ws=["K","M","T"].map(k=>P.slip("L",3.9,k,4.9));slipTag(P,ws[1],"the whole law","hot");
-    P.event("L",1,WHO.L.c,9);P.event("L",3.7,"#bf4a26",11);
-    {const [x,y]=P.pt("L",1);tag(P.over,x+30,y-26,"invites board 7")}{const [x,y]=P.pt("L",3.7);tag(P.over,x+18,y-28,"takes the podium","red")}
-    {const [x,y]=P.pt("O",2.2);tag(P.over,x-58,y,"stepped out")}}},
+  m:"A view change: collect a majority of viewstamps; the replica with the latest becomes primary and starts the view by sending its whole state."},
  {k:"Lost tablets",t:"When tablets are lost",a:"lost",
   p:["A legislator back from home has smooth wax and answers with only a board. A majority of answers is then not enough. The board may form only if a majority still has tablets, or the lost tablets were older than the latest shown, or the old holder still has theirs.","Here none holds, so the caller waits until Liskovia or Kleon is back."],
-  m:"A replica that crashes loses its state. Extra conditions stop a view forming on answers that cannot show everything that was committed.",
-  f(svg){const H=Room(svg,{porch:true,podium:"board 7?",seats:tholosSeats(),out:["L","K"],wax:["O"]});
-    H.note("O","no tablets · board 6","red");H.note("M","6 · line 10");H.note("T","6 · line 10");H.note("L","away");H.note("K","away");
-    txt(H.over,H.cx,H.cy+62,"line 12 passed, but no","lab sm");txt(H.over,H.cx,H.cy+80,"answer shows it: may not form","lab red sm")}},
+  m:"A replica that crashes loses its state. Extra conditions stop a view forming on answers that cannot show everything that was committed."},
  {k:"The porch",t:"The holder who has not noticed",a:"porch",
   p:["Okios steps onto the porch and misses the change: inside, a majority has raised board 7 and Liskovia holds the podium. Okios still believes board 6 is his and may go on writing lines.","Passing needs three, and a majority has already moved on, so nothing he writes can pass."],
-  m:"A primary cut off from the rest can keep taking requests but cannot commit any, because it can no longer reach a majority.",
-  f(svg){const place={O:[220,422]},H=Room(svg,{porch:true,podium:"board 7",podiumFill:WHO.L.c,seats:tholosSeats(),ring:["L"],place});
-    {const [x,y]=H.at(-90);el("circle",{cx:x,cy:y,r:24,fill:"none",stroke:"#b9a77e","stroke-width":2,"stroke-dasharray":"4 4"},H.under)}
-    const q=H.S.O,t=H.S.T;el("line",{x1:q.x,y1:q.y,x2:t.x,y2:t.y,stroke:"#6b5a48","stroke-width":2,"stroke-dasharray":"4 5"},H.under);
-    tag(H.over,q.x+112,q.y-6,"board 6: passes nothing","red");H.note("T","not yet heard of 7");
-    ["L","K","M"].forEach(k=>H.note(k,"board 7","hot"))}},
+  m:"A primary cut off from the rest can keep taking requests but cannot commit any, because it can no longer reach a majority."},
  {k:"Wax and ink",t:"Wax, not ink",a:"wax",
   p:["Schedia's wax is quick, but if a majority go home on the same night the council stops for good. It never goes on with a passed law missing.","Across the bay the Parliament's ink survives any absence, while any legislator may start a ballot. Both halls rest on one fact: any two majorities share a legislator."],
-  m:"Viewstamped Replication keeps its state in memory and stops if a majority crash at once; Paxos writes to lasting storage. Both rely on overlapping majorities, and were found independently.",
-  f(svg){svg.innerHTML="";svg.setAttribute("viewBox","0 0 440 440");const cx=220,cy=220;
-    el("path",{d:`M${cx},16 A204,204 0 0 0 ${cx},424 Z`,fill:"#f7e7bd"},svg);el("path",{d:`M${cx},16 A204,204 0 0 1 ${cx},424 Z`,fill:"#dceaf2"},svg);
-    el("circle",{cx,cy,r:204,fill:"none",stroke:"#1c1512","stroke-width":5},svg);el("line",{x1:cx,y1:16,x2:cx,y2:424,stroke:"#1c1512","stroke-width":3},svg);
-    [[-1,"Schedia","wax tablets","one trip out and back","passes a law","a majority gone home","stops it for good"],
-     [1,"Paxos","ink scrolls","survives any absence","","any legislator","may start a ballot"]].forEach(([s,a,b,c,d,e,f])=>{
-      const x=cx+s*102;txt(svg,x,104,a,"lab ink",{style:"font-size:20px"});txt(svg,x,128,b,"lab sm");
-      txt(svg,x,182,c,"lab sm");txt(svg,x,200,d,"lab sm");txt(svg,x,250,e,"lab sm");txt(svg,x,268,f,"lab sm")});
-    tag(svg,cx,330,"any two majorities share a legislator","hot")}}
+  m:"Viewstamped Replication keeps its state in memory and stops if a majority crash at once; Paxos writes to lasting storage. Both rely on overlapping majorities, and were found independently."}
 ]};
+
+/* ---------- animation ----------
+   A figure marks its parts with the step they appear at, and play() shows them in turn: a slip draws itself along,
+   anything else fades in. A.at(k,fn) runs fn at step k, and the next step waits for any promise it returns.
+   A.hint(s) is the line under the picture that says what the reader can do with it; A.again() draws it afresh. */
+const STEP=650;
+function Anim(){
+  const steps={},get=k=>steps[k]=steps[k]||{els:[],fns:[]},A={hintText:"",
+    step(k,...els){els.flat().forEach(e=>{if(e)get(k).els.push(e)});return els[0]},
+    at(k,fn){get(k).fns.push(fn)},
+    hint(s){A.hintText=s},
+    async play(){const id=++Anim.run,keys=Object.keys(steps).map(Number).sort((a,b)=>a-b);
+      keys.forEach(k=>steps[k].els.forEach(hideEl));
+      for(const k of keys){if(id!==Anim.run)return;steps[k].els.forEach(showEl);await Promise.all([sleep(STEP),...steps[k].fns.map(f=>f(id))])}}};
+  return A;
+}
+Anim.run=0;
+const live=id=>id===Anim.run;
+const drawn=e=>e.tagName==="path"&&e.classList.contains("st-slip")&&!e.classList.contains("lost");
+function hideEl(e){e.style.transition="none";
+  if(drawn(e)){const L=e.getTotalLength();e._m=e.getAttribute("marker-end");e.removeAttribute("marker-end");e.style.strokeDasharray=L;e.style.strokeDashoffset=L}
+  else e.style.opacity=0}
+function showEl(e){void e.getBoundingClientRect();const t=reduce?0:1;
+  if(drawn(e)){e.style.transition=`stroke-dashoffset ${.6*t}s ease`;e.style.strokeDashoffset=0;
+    setTimeout(()=>{if(e._m)e.setAttribute("marker-end",e._m);e.style.strokeDasharray="";e.style.strokeDashoffset=""},600*t)}
+  else{e.style.transition=`opacity ${.4*t}s`;e.style.opacity=1}}
+const mv=(g,[x,y])=>g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`);
+const trip=(g,path,ms)=>tween(ms,u=>mv(g,path(u)));
+const line=([x1,y1],[x2,y2])=>u=>[x1+(x2-x1)*u,y1+(y2-y1)*u];
+function pick(g,label,fn){g.classList.add("pick");button(g,label,fn)}
+const FS={};   // what the reader has changed in the figure on show; cleared when another idea is chosen
+
+/* one morning on Arche, drawn in the round; in every mode but precedence the reader can compare two entries */
+const MEV=Object.fromEntries(MORN.map(e=>[e.id,e]));
+const MNEXT=(()=>{const n={};MORN.forEach(e=>n[e.id]=[]);
+  [1,2,3].forEach(h=>{const own=MORN.filter(e=>e.h===h).sort((a,b)=>a.t-b.t);own.slice(1).forEach((e,i)=>n[own[i].id].push(e.id))});
+  MSLIPS.forEach(([s,r])=>n[s].push(r));return n})();
+/* a chain from a to b, along a house's own scroll or by a slip, or null */
+function mpath(a,b){const prev={[a]:null},q=[a];while(q.length){const x=q.shift();if(x===b){const p=[];for(let y=b;y;y=prev[y])p.unshift(y);return p}
+  for(const y of MNEXT[x])if(!(y in prev)){prev[y]=x;q.push(y)}}return null}
+function Morning(svg,A,mode){
+  const P=Polar(svg,{vb:"0 0 620 596",cx:310,cy:350,r0:44,step:30,rings:9,tEnd:9.5,note:[14,24],
+    nodes:{1:[-90,"H1",HC[1]],2:[30,"H2",HC[2]],3:[150,"H3",HC[3]]}});
+  const rank=[...MORN].sort((x,y)=>x.tally-y.tally||x.h-y.h).map(e=>e.id),
+    order=mode==="rank"?rank:[...MORN].sort((x,y)=>x.t-y.t).map(e=>e.id),slipTo={},G={};
+  MSLIPS.forEach(([s,r])=>slipTo[r]=P.slip(MEV[s].h,MEV[s].t,MEV[r].h,MEV[r].t));
+  order.forEach((id,k)=>{const e=MEV[id],g=P.event(e.h,e.t,HC[e.h],13);G[id]=g;A.step(k,g,slipTo[id]);
+    if(mode==="tally")g.label.textContent=e.tally;
+    if(mode==="rank")g.label.textContent=k+1;
+    if(mode==="rank"||mode==="column"){const own=MORN.filter(q=>q.h===e.h),a=(e.h===1?-90:e.h===2?30:150)+(own.indexOf(e)%2?-90:90),[x,y]=P.pt(e.h,e.t),r=mode==="column"?46:38;
+      A.step(k,tag(P.over,x+r*Math.cos(a*Math.PI/180),y+r*Math.sin(a*Math.PI/180),mode==="column"?e.col.join(" · "):e.tally+" · H"+e.h))}});
+  if(mode==="rank"){A.hint("The entries light up in precedence order: smaller tally first, then the lower house.");return P}
+  const say1=txt(P.over,310,556,"","lab ink"),say2=txt(P.over,310,577,"","lab sm");let segs=[],sel=[];
+  const clear=()=>{segs.forEach(x=>x.remove());segs=[];Object.values(slipTo).forEach(x=>x.classList.remove("hi"));Object.values(G).forEach(g=>g.classList.remove("sel"))};
+  function compare(a,b){clear();sel=[a,b];G[a].classList.add("sel");G[b].classList.add("sel");
+    let p=mpath(a,b);if(!p&&(p=mpath(b,a)))[a,b]=[b,a];
+    const x=MEV[a],y=MEV[b];
+    if(p){for(let i=0;i+1<p.length;i++){const u=MEV[p[i]],v=MEV[p[i+1]];if(u.h===v.h){const sg=P.seg(u.h,u.t,v.t);sg.classList.add("hi");segs.push(sg)}else slipTo[v.id].classList.add("hi")}
+      say1.textContent="Came before";
+      say2.textContent=mode==="tally"?`a chain of slips joins them, and the tally rises from ${x.tally} to ${y.tally}`:mode==="column"?`its column ${x.col.join(" · ")} is nowhere larger than ${y.col.join(" · ")}`:"a chain of slips joins them"}
+    else{say1.textContent="Unrelated";
+      say2.textContent=mode==="tally"?`no chain of slips joins them, yet the tallies are ${x.tally} and ${y.tally}`:mode==="column"?`${x.col.join(" · ")} and ${y.col.join(" · ")}: each is larger in some row`:"no chain of slips joins them"}}
+  Object.entries(G).forEach(([id,g])=>pick(g,`House ${MEV[id].h}'s entry`,()=>{
+    if(sel.length!==1){clear();sel=[id];g.classList.add("sel");say1.textContent="";say2.textContent="now choose a second entry"}else if(sel[0]!==id)compare(sel[0],id)}));
+  A.hint("Click any two entries to see whether one came before the other.");
+  if(mode!=="column")A.at(order.length,()=>compare("a","l"));
+  A.at(order.length+(mode==="column"?0:2),()=>compare("d","g"));
+  return P;
+}
+
+/* Schedia's rule for when a board may form, from the book: with tablets, without, or no answer */
+const HELD5={O:12,L:12,K:12,M:10,T:10},KS5=["O","L","K","M","T"];
+function mayForm(ans){const w=KS5.filter(k=>ans[k]==="with"),x=KS5.filter(k=>ans[k]==="without");
+  const maj=w.length+x.length>=3,forms=maj&&(w.length>=3||(x.length>0&&ans.O==="with"));
+  let holder=null;if(forms){const top=Math.max(...w.map(k=>HELD5[k])),best=w.filter(k=>HELD5[k]===top);holder=best.includes("O")?"O":best[0]}
+  return {maj,forms,holder,w,x}}
+
+const FIGS={
+arche:[
+ /* the gate: two messengers race, and the reader chooses who has the quicker legs */
+ function(svg,A){const I=Isle(svg);FS.quick=FS.quick||1;
+   const m1=token(I.over,0,0,HC[1],"✉"),m2=token(I.over,0,0,HC[2],"✉"),q2=I.house[2],q1=I.house[1],q3=I.house[3];
+   const w2=tag(I.over,q2.x,q2.y-38,"H2 writes first"),w1=tag(I.over,q1.x+92,q1.y,"H1 writes second");tag(I.over,q3.x,q3.y+38,"the gate");
+   const r1=txt(I.over,235,258,"","lab red sm"),r2=txt(I.over,235,276,"","lab sm");
+   mv(m1,I.road(1,3,.08));mv(m2,I.road(2,3,.08));
+   const ms=h=>h===FS.quick?1500:3200;
+   async function race(){r1.textContent=r2.textContent="";mv(m1,I.road(1,3,.08));mv(m2,I.road(2,3,.08));w1.style.opacity=0;
+     const p2=trip(m2,u=>I.road(2,3,.08+.8*u),ms(2));await sleep(700);w1.style.opacity=1;
+     const p1=trip(m1,u=>I.road(1,3,.08+.8*u),ms(1));
+     const first=await Promise.race([p1.then(()=>1),p2.then(()=>2)]);
+     r1.textContent=`H${first}'s slip arrives first`;r2.textContent=first===1?"though H2 wrote first":"only because its legs were quicker";await Promise.all([p1,p2])}
+   pick(m1,"Give House 1's messenger the quicker legs",()=>{FS.quick=1;race()});pick(m2,"Give House 2's messenger the quicker legs",()=>{FS.quick=2;race()});
+   A.step(0,w2);A.at(0,race);A.hint("Click a messenger to give it the quicker legs, and the race is run again.")},
+ function(svg,A){Morning(svg,A,"before")},
+ function(svg,A){Morning(svg,A,"tally")},
+ function(svg,A){Morning(svg,A,"rank")},
+ /* the storehouse: requests, replies, entry and release, run through once */
+ function(svg,A){const I=Isle(svg),[sx,sy]=I.at(90,I.R);
+   el("rect",{x:sx-38,y:sy-20,width:76,height:40,rx:4,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3},I.under);
+   txt(I.over,sx,sy+40,"the storehouse","lab sm");
+   const L={};for(const h of [1,2,3]){const q=I.house[h],g=el("g",{transform:`translate(${q.x+(h===1?0:h===2?-12:12)} ${q.y+(h===1?62:-66)})`},I.over);
+     el("rect",{x:-44,y:-24,width:88,height:48,rx:4,fill:"#fffaf0",stroke:"#1c1512","stroke-width":2},g);L[h]=[txt(g,0,-5,"","lab ink sm"),txt(g,0,14,"","lab sm")]}
+   const list=(h,rows)=>L[h].forEach((t,i)=>t.textContent=rows[i]?`${i+1}. ${rows[i]}`:"");
+   const s1=txt(I.over,235,250,"","lab sm"),s2=txt(I.over,235,268,"","lab sm"),say=(a,b="")=>{s1.textContent=a;s2.textContent=b};
+   const h1=token(I.over,0,0,HC[1],"1"),h3=token(I.over,0,0,HC[3],"3"),home1=[I.house[1].x,I.house[1].y+28];mv(h1,home1);mv(h3,[I.house[3].x+30,I.house[3].y]);
+   const send=(glyph,a,b,ms=1700)=>{const g=token(I.over,0,0,"#fffaf0",glyph);return trip(g,u=>I.road(a,b,u),ms).then(()=>g.remove())};
+   const along=(g,a0,a1,ms)=>trip(g,u=>I.at(a0+(a1-a0)*u),ms);
+   A.at(0,async id=>{[1,2,3].forEach(h=>list(h,[]));
+     say("H1 and H3 ask at once,","both under tally 2");list(1,["H1 · 2"]);list(3,["H3 · 2"]);
+     await Promise.all([send("✉",1,2),send("✉",1,3),send("✉",3,1),send("✉",3,2)]);if(!live(id))return;
+     [1,2,3].forEach(h=>list(h,["H1 · 2","H3 · 2"]));say("a tie goes to the lower house:","every list reads the same");await sleep(1200);if(!live(id))return;
+     say("every request is answered,","with a higher tally");
+     await Promise.all([send("✓",2,1,1400),send("✓",2,3,1400),send("✓",3,1,1400),send("✓",1,3,1400)]);if(!live(id))return;
+     say("H1 is first on its list and has","heard from both: it enters");await along(h1,-90,90,1600);if(!live(id))return;
+     say("H3 has heard from both too,","but stands second: it waits");await sleep(1300);if(!live(id))return;
+     say("H1 sends a release,","and every list crosses it off");
+     const back=along(h1,90,-90,1600);await Promise.all([send("↩",1,2,1300),send("↩",1,3,1300)]);[1,2,3].forEach(h=>list(h,["H3 · 2"]));await back;mv(h1,home1);if(!live(id))return;
+     say("now H3 stands first,","and enters");await along(h3,150,90,1100)})},
+ function(svg,A){Morning(svg,A,"column")},
+ /* the goatherd beats the slip over the mountain */
+ function(svg,A){const I=Isle(svg),q1=I.house[1],q3=I.house[3],p0=[q3.x+20,q3.y-12],c=[300,250],p2=[q1.x+4,q1.y+22],
+     bz=t=>[0,1].map(k=>(1-t)*(1-t)*p0[k]+2*t*(1-t)*c[k]+t*t*p2[k]);
+   A.step(0,el("path",{d:`M${p0} Q${c} ${p2}`,fill:"none",stroke:"#bf4a26","stroke-width":3,"stroke-dasharray":"7 6"},I.under));
+   A.step(0,tag(I.over,q3.x+8,q3.y+38,"sale · tally 9"));A.step(2,tag(I.over,q1.x+92,q1.y+4,"request · tally 3","red"));
+   const gt=token(I.over,...p0,"#d9cfb4","g"),st=token(I.over,...I.road(3,1,0),HC[3],"✉"),gl=tag(I.over,0,0,"the goatherd","red"),sl=tag(I.over,0,0,"slip, by the road");
+   const s1=txt(I.over,235,346,"","lab sm"),s2=txt(I.over,235,364,"","lab sm");
+   A.at(1,async id=>{const pg=trip(gt,bz,1500),ps=trip(st,u=>I.road(3,1,.9*u),4200);tween(1500,u=>mv(gl,bz(u).map((v,k)=>v+(k?28:6)))).then(()=>gl.remove());
+     tween(4200,u=>{const [x,y]=I.road(3,1,.9*u);mv(sl,[x+80,y+4])}).then(()=>sl.remove());
+     await pg;if(!live(id))return;s1.textContent="the request comes from the sale,";s2.textContent="yet carries the smaller tally";await ps});
+   A.hint("A goatherd's news travels outside every slip, so no tally or column can see it.")}
+],
+paxos:[
+ /* a group passes decree 37 and leaves; the reader sends legislators in and out */
+ function(svg,A){const ks=["A","B","G","D","E","Z"],H=Room(svg,{seats:chamberSeats(ks,[215,270,325,20,70,160])}),out=new Set(["D","E","Z"]),N={};
+   ks.forEach(k=>N[k]=H.note(k,out.has(k)?"away":"passes 37"));
+   txt(H.over,H.cx,H.cy-14,"decree 37","lab ink");const c=txt(H.over,H.cx,H.cy+8,"","lab sm");A.step(2,txt(H.over,H.cx,H.cy+30,"must not be passed twice","lab red sm"));
+   const paint=()=>{ks.forEach(k=>H.S[k].g.classList.toggle("out",out.has(k)));const n=6-out.size;c.textContent=`${n} of 6 here: ${n>=4?"a majority":"not a majority"}`};paint();
+   A.step(0,ks.map(k=>N[k]));
+   A.at(1,()=>{["A","B","G"].forEach(k=>{out.add(k);N[k].set("37 written, away","")});["D","E","Z"].forEach(k=>{out.delete(k);N[k].set("37: knows nothing","red")});paint()});
+   ks.forEach(k=>pick(H.S[k].g,`Send ${PG[k]} out, or call them back`,()=>{out.has(k)?out.delete(k):out.add(k);paint()}));
+   A.hint("Click a legislator to send them out or call them back.")},
+ /* two majorities, drawn afresh at random whenever the reader asks */
+ function(svg,A){const ks=["A","B","G","D","E","Z","H"],ang=ks.map((_,i)=>-90+i*360/7+11.5),H=Room(svg,{seats:chamberSeats(ks,ang)}),R=el("g",{},H.under),T=el("g",{},H.over);
+   txt(H.over,H.cx,H.cy-20,"first majority","lab ink",{style:"fill:#136f9e"});txt(H.over,H.cx,H.cy+4,"second majority","lab ink",{style:"fill:#5f6e28"});const c=txt(H.over,H.cx,H.cy+28,"","lab sm");
+   FS.maj=FS.maj||[["A","B","G","D"],["D","E","Z","H"]];
+   const ring=(k,r,col)=>{const q=H.S[k];return el("circle",{cx:q.x,cy:q.y,r,fill:"none",stroke:col,"stroke-width":5},R)};
+   async function show(){const id=Anim.run,[m1,m2]=FS.maj;R.innerHTML="";T.innerHTML="";c.textContent="";
+     m1.forEach(k=>ring(k,31,"#136f9e"));await sleep(500);if(!live(id))return;m2.forEach(k=>ring(k,37,"#5f6e28"));await sleep(500);if(!live(id))return;
+     const both=m1.filter(k=>m2.includes(k));both.forEach(k=>{ring(k,43,"#e0b84a");const q=H.S[k],dx=q.x-H.cx,dy=q.y-H.cy,n=Math.hypot(dx,dy);tag(T,q.x+dx/n*66,q.y+dy/n*66,"in both","hot")});
+     c.textContent=`${both.length} sit${both.length===1?"s":""} in both`}
+   const shuffle=()=>{const r=()=>[...ks].sort(()=>Math.random()-.5).slice(0,4);FS.maj=[r(),r()];show()};
+   ks.forEach(k=>pick(H.S[k].g,"Gather two new majorities",shuffle));
+   A.at(0,show);A.hint("Click any legislator to gather two new majorities at random. They always share someone.")},
+ /* the quorum of ballot 27, which the reader may choose */
+ function(svg,A){const ks=["A","B","G","D","E"],LAST={A:null,B:[14,"α"],G:[5,"β"],D:[2,"α"],E:[14,"α"]},H=Room(svg,{seats:chamberSeats(ks,[200,270,340,40,140])}),RG={},N={};
+   FS.q=FS.q||["A","G","D"];
+   ks.forEach(k=>{const q=H.S[k];RG[k]=el("circle",{cx:q.x,cy:q.y,r:31,fill:"none",stroke:"#e0b84a","stroke-width":6},H.under);N[k]=H.note(k,LAST[k]?`voted ${LAST[k][1]} in ${LAST[k][0]}`:"never voted","",58)});
+   const b=txt(H.over,H.cx,H.cy-10,"ballot 27","lab ink",{style:"font-size:22px"}),r1=txt(H.over,H.cx,H.cy+16,"","lab red"),r2=txt(H.over,H.cx,H.cy+36,"","lab sm");
+   function paint(){ks.forEach(k=>{RG[k].style.opacity=FS.q.includes(k)?1:0;N[k].set(N[k].querySelector("text").textContent,"")});
+     if(FS.q.length<3){r1.textContent="";r2.textContent="choose a quorum of three";return}
+     const v=FS.q.filter(k=>LAST[k]).sort((x,y)=>LAST[y][0]-LAST[x][0])[0];
+     if(v){r1.textContent=`must be for ${LAST[v][1]}`;r2.textContent=`${PG[v]}'s vote in ballot ${LAST[v][0]} is the latest`;N[v].set(N[v].querySelector("text").textContent,"hot")}
+     else{r1.textContent="free to choose";r2.textContent="nobody in the quorum has voted"}}
+   ks.forEach(k=>pick(H.S[k].g,`Put ${PG[k]} in the quorum or take them out`,()=>{const q=FS.q;q.includes(k)?q.splice(q.indexOf(k),1):(q.push(k),q.length>3&&q.shift());paint()}));
+   paint();A.step(0,ks.map(k=>RG[k]).filter(e=>FS.q.length&&e.style.opacity==="1"));ks.forEach((k,i)=>A.step(1+i,N[k]));A.step(6,b);A.step(7,r1,r2);
+   A.hint("Click legislators to choose another quorum of three: the latest vote among them decides the decree.")},
+ /* one ballot, phase by phase; the reader may send Γ out before the vote */
+ function(svg,A){const gone=!!FS.gone,P=Polar(svg,{vb:"0 0 560 560",cx:280,cy:290,r0:58,step:25,rings:8,tEnd:8.2,note:[10,22],
+     nodes:{A:[-90,"Α",PC.A],G:[-18,"Γ",PC.G],B:[54,"Β",PC.B],E:[126,"Ε",PC.E],D:[198,"Δ",PC.D]}});
+   const ph=(k,s,t,side,cls="")=>{const [x,y]=P.pt("A",t);A.step(k,tag(P.over,x+side,y,s,cls))};
+   A.step(0,P.event("A",.9,PC.A,9));["G","D"].forEach(k=>A.step(0,P.slip("A",.9,k,1.9)));ph(0,"1 · ask",.9,-58);
+   ["G","D"].forEach(k=>A.step(1,P.slip(k,2.1,"A",3.1)));ph(1,"2 · promise",3.1,58);
+   A.step(2,P.event("A",3.4,PC.A,9));["G","D"].forEach(k=>A.step(2,P.slip("A",3.4,k,4.4)));ph(2,"3 · propose",3.4,-58);
+   A.step(3,P.slip("D",4.6,"A",5.6));A.step(3,gone?lostSlip(P,"G",4.6,"A",5.6,.5):P.slip("G",4.6,"A",5.6));ph(3,gone?"4 · Γ walked out":"4 · vote",5.6,58,gone?"red":"");
+   if(gone)ph(4,"no decree yet: a step left undone",6.2,-50,"red");
+   else{A.step(4,P.event("A",6,"#bf4a26",11));["B","G","D","E"].forEach(k=>A.step(4,P.slip("A",6,k,7)));ph(4,"5 · β chosen, tell all",6,-88,"hot")}
+   const nd=$$(".st-node",svg)[1];pick(nd,gone?"Bring Γ back":"Send Γ out before the vote",()=>{FS.gone=!gone;A.again()});
+   A.hint(gone?"Γ walked out, so the ballot waits; nothing goes wrong. Click Γ to bring them back.":"Click Γ to send them out before they vote.")},
+ /* rival presidents; the reader may leave Α the only one */
+ function(svg,A){const one=!!FS.one,P=Polar(svg,{vb:"0 0 560 560",cx:280,cy:300,r0:48,step:34,rings:6,tEnd:6.2,note:[10,22],
+     nodes:{A:[150,"Α",PC.A],G:[-90,"Γ",PC.G],E:[30,"Ε",PC.E]}});
+   const s=(k,a,ta,b,tb,label,cls,at)=>{const p=slip(P,a,ta,b,tb);A.step(k,p);if(label)A.step(k,slipTag(P,p,label,cls,at));return p};
+   const x=(k,t,dx)=>{const [cx,cy]=P.pt("G",t);A.step(k,cross(P.over,cx+dx,cy))};
+   if(!one){s(0,"A",.6,"G",1.6,"ask 27");s(1,"G",1.8,"A",2.8);s(2,"E",2,"G",3,"ask 28","",.62);s(3,"G",3.2,"E",4.2);
+     s(4,"A",3.1,"G",4.1,"vote 27?","red",.3);x(4,4.1,-16);s(5,"A",4.4,"G",5.4,"ask 29","",.72);s(6,"E",4.6,"G",5.6,"vote 28?","red",.3);x(6,5.6,16);
+     A.step(7,txt(P.over,280,552,"each ask dooms the other's ballot","lab sm"))}
+   else{s(0,"A",.6,"G",1.6,"ask 27");s(1,"G",1.8,"A",2.8);s(2,"A",3,"G",4,"vote 27");s(3,"G",4.2,"A",5.2);A.step(4,P.event("A",5.4,"#bf4a26",11));
+     const [ax,ay]=P.pt("A",5.4);A.step(4,tag(P.over,ax-10,ay+30,"27 passes","hot"));A.step(4,txt(P.over,280,552,"one president: the ballot runs undisturbed","lab sm"))}
+   const nd=$$(".st-node",svg)[2];if(one)nd.style.opacity=.4;
+   pick(nd,one?"Let Ε start ballots again":"Stop Ε starting ballots",()=>{FS.one=!one;A.again()});
+   A.hint(one?"Only Α starts ballots now, and ballot 27 passes. Click Ε to let it compete again.":"Click Ε to stop it starting ballots, leaving Α the only president.")},
+ /* a new president's scroll, filled in order */
+ function(svg,A){const H=Room(svg,{seats:chamberSeats(["D","A","B","G","E"],[-90,-30,60,120,210]),ring:["D"]}),fill={k:"#d9cfb4",v:"#bfd6e6",o:"#e0b84a",n:"#fffaf0"};
+   const q=H.S.D;A.step(1,["A","B","G","E"].map(k=>el("line",{x1:q.x,y1:q.y,x2:H.S[k].x,y2:H.S[k].y,stroke:"#6b5a48","stroke-width":2,"stroke-dasharray":"4 5"},H.under)));
+   A.step(1,txt(H.over,H.cx,182,"one question, for every open number","lab sm"));
+   const slot=(n,c,i)=>{const g=el("g",{class:"slot",transform:`translate(${H.cx-114+i*38} 238)`},H.over);el("rect",{x:-16,y:-16,width:32,height:32,rx:3,fill:fill[c],"stroke-dasharray":c==="n"?"4 3":"none"},g);el("text",{},g).textContent=n;return g};
+   txt(H.over,H.cx,206,"the president's scroll","lab sm");
+   A.step(0,[0,1,2].map(i=>slot(122+i,"k",i)),txt(H.over,H.cx-76,274,"known","lab sm"));
+   A.step(2,slot(126,"v",4),txt(H.over,H.cx+38,274,"in a scroll","lab sm"));
+   A.step(3,slot(125,"o",3),txt(H.over,H.cx,292,"olive day","lab sm"));
+   A.step(4,slot(127,"n",5));A.step(5,slot(128,"n",6),txt(H.over,H.cx+95,292,"new","lab sm"));
+   A.hint("The scroll fills in order: what everyone knows, what the answers bring back, the gap, then new decrees.")},
+ /* four habits; each quarter lights under the pointer */
+ function(svg,A){svg.innerHTML="";svg.setAttribute("viewBox","0 0 440 440");const cx=220,cy=220,r=200;
+   el("circle",{cx,cy,r:204,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
+   [[-1,-1,"One office,","one holder","fixed terms"],[1,-1,"Never an","older law","answers never go back"],[1,1,"Members","by decree","the same ballots"],[-1,1,"Fold the","scroll","the law as it stands"]].forEach(([sx,sy,a,b,c],i)=>{
+     const g=el("g",{class:"quad"},svg),a0=-180+i*90,p=d=>[cx+r*Math.cos(d*Math.PI/180),cy+r*Math.sin(d*Math.PI/180)],[x0,y0]=p(a0),[x1,y1]=p(a0+90);
+     el("path",{d:`M${cx},${cy} L${x0.toFixed(1)},${y0.toFixed(1)} A${r},${r} 0 0 1 ${x1.toFixed(1)},${y1.toFixed(1)} Z`,fill:"#efe6cf"},g);
+     const x=cx+sx*96,y=cy+sy*84;txt(g,x,y-14,a,"lab ink");txt(g,x,y+8,b,"lab ink");txt(g,x,y+32,c,"lab sm");A.step(i,g)});
+   el("path",{d:`M${cx},18 V422 M18,${cy} H422`,stroke:"#b5602c","stroke-width":3,"stroke-dasharray":"3 8","pointer-events":"none"},svg);
+   el("circle",{cx,cy,r:30,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3},svg)}
+],
+schedia:[
+ /* the podium sends each line out by runner; the reader writes the next */
+ function(svg,A){const H=Room(svg,{porch:true,podium:"board 6",podiumFill:WHO.O.c,seats:tholosSeats(),ring:["O"]}),N={},B=["L","K","M","T"];FS.line=FS.line||12;let busy=false;
+   B.forEach(k=>{const q=H.S[k];el("line",{x1:H.cx,y1:H.cy,x2:q.x,y2:q.y,stroke:"#6b5a48","stroke-width":2,"stroke-dasharray":"4 5"},H.under);N[k]=H.note(k,`holds line ${FS.line}`)});
+   N.O=H.note("O",`wrote line ${FS.line}`,"hot");
+   async function write(){if(busy)return;busy=true;const n=++FS.line;N.O.set(`writes line ${n}`,"hot");
+     await Promise.all(B.map(k=>{const g=token(H.over,H.cx,H.cy,"#fffaf0",String(n)),q=H.S[k];return trip(g,line([H.cx,H.cy],[q.x,q.y]),1000+rnd(1600)).then(()=>{g.remove();N[k].set(`holds line ${n}`)})}));busy=false}
+   pick(H.pod,"Write the next line",write);A.step(0,[N.O,...B.map(k=>N[k])]);A.at(1,write);
+   A.hint("Click the podium to write the next line and send it out.")},
+ /* a line passes on the second word back; the reader steps benches out and writes more lines */
+ function(svg,A){FS.out=FS.out||["T"];FS.held=FS.held||{O:12,L:12,K:12,M:12,T:10};const H=Room(svg,{porch:true,podium:"board 6",podiumFill:WHO.O.c,seats:tholosSeats(),ring:["O"]}),N={};let busy=false;
+   const r1=txt(H.over,H.cx,H.cy+62,"","lab ink sm"),r2=txt(H.over,H.cx,H.cy+80,"","lab sm");
+   const note=k=>FS.out.includes(k)?"stepped out":`to line ${FS.held[k]}`;
+   KS5.forEach(k=>{N[k]=H.note(k,note(k));H.S[k].g.classList.toggle("out",FS.out.includes(k))});
+   async function write(){if(busy)return;busy=true;const n=FS.held.O+1;FS.held.O=n;N.O.set(`to line ${n}`,"hot");r1.textContent=`line ${n} is a draft`;r2.textContent="the holder alone has it";
+     let have=1;const reach=["L","K","M","T"].filter(k=>!FS.out.includes(k));
+     await Promise.all(reach.map(k=>{const q=H.S[k],g=token(H.over,H.cx,H.cy,"#fffaf0",String(n)),ms=900+rnd(1500);
+       return trip(g,line([H.cx,H.cy],[q.x,q.y]),ms).then(()=>{FS.held[k]=n;N[k].set(note(k));g.querySelector("text").textContent="✓";return trip(g,line([q.x,q.y],[H.cx,H.cy]),ms)})
+         .then(()=>{g.remove();if(++have===3){r1.textContent=`line ${n} has passed`;r2.textContent="the holder and two others hold it";KS5.forEach(x=>{if(FS.held[x]>=n&&!FS.out.includes(x))N[x].set(note(x),"hot")})}})}));
+     if(have<3){r1.textContent=`line ${n} waits`;r2.textContent=`only ${have} hold${have===1?"s":""} it, and nobody is told it is law`}busy=false}
+   ["L","K","M","T"].forEach(k=>pick(H.S[k].g,`Step ${WHO[k].n} out, or bring them back`,()=>{const o=FS.out;o.includes(k)?o.splice(o.indexOf(k),1):o.push(k);H.S[k].g.classList.toggle("out",o.includes(k));N[k].set(note(k),"")}));
+   pick(H.pod,"Write the next line",write);A.step(0,KS5.map(k=>N[k]));A.at(1,write);
+   A.hint("Click a bench to step its legislator out or back, and the podium to write the next line.")},
+ /* the boards grow outward, each line round its ring */
+ function(svg,A){svg.innerHTML="";svg.setAttribute("viewBox","0 0 440 440");const cx=220,cy=220,
+     at=(r,l)=>{const a=(-90+l*6)*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
+     arcD=(r,l)=>{const [x0,y0]=at(r,0),[x1,y1]=at(r,Math.max(l,.3));return `M${x0},${y0} A${r},${r} 0 ${l*6>180?1:0} 1 ${x1.toFixed(1)},${y1.toFixed(1)}`};
+   el("circle",{cx,cy,r:204,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
+   [[70,"board 5 · Okios",28,"#b9a77e",900],[120,"board 6 · Okios",40,WHO.O.c,1300],[170,"board 7 · Liskovia",1,WHO.L.c,400]].forEach(([r,s,l,c,ms],i)=>{
+     el("circle",{cx,cy,r,fill:"none",stroke:"#b9a77e","stroke-width":1,"stroke-dasharray":"3 4"},svg);
+     const p=el("path",{d:arcD(r,.3),fill:"none",stroke:c,"stroke-width":10,"stroke-linecap":"round"},svg);
+     A.step(i,p,txt(svg,cx-18,cy-r+4,s,"lab sm",{"text-anchor":"end"}));A.at(i,()=>tween(ms,u=>p.setAttribute("d",arcD(r,l*u))))});
+   const [ax,ay]=at(120,40),[bx,by]=at(170,1);
+   A.step(3,el("circle",{cx:ax,cy:ay,r:8,fill:WHO.O.c,stroke:"#1c1512","stroke-width":2.5},svg),tag(svg,ax-10,ay+30,"board 6, line 40"));
+   A.step(4,el("circle",{cx:bx,cy:by,r:8,fill:WHO.L.c,stroke:"#1c1512","stroke-width":2.5},svg),tag(svg,bx+86,by+22,"board 7, line 1: later","hot"));
+   txt(svg,cx,cy-4,"later boards","lab sm");txt(svg,cx,cy+14,"further out","lab sm");txt(svg,cx,cy+50,"lines run round","lab sm");
+   A.hint("Each board starts afresh at line 1, and a later board always outranks an earlier one.")},
+ /* a change of board, message by message */
+ function(svg,A){const P=Polar(svg,{vb:"0 0 560 560",cx:280,cy:285,r0:62,step:26,rings:7,tEnd:7.3,note:[10,22],
+     nodes:Object.fromEntries(Object.keys(WHO).map(k=>[k,[THA[k],WHO[k].g,WHO[k].c]]))});
+   const tagAt=(k,key,t,dx,dy,s,cls)=>{const [x,y]=P.pt(key,t);A.step(k,tag(P.over,x+dx,y+dy,s,cls))};
+   tagAt(0,"O",2.2,-58,0,"stepped out");
+   A.step(1,P.event("L",1,WHO.L.c,9),lostSlip(P,"L",1,"O",2));["K","M","T"].forEach(k=>A.step(1,P.slip("L",1,k,2)));tagAt(1,"L",1,30,-26,"invites board 7");
+   const k1=slip(P,"K",2.3,"L",3.3),m1=slip(P,"M",2.3,"L",3.5);A.step(2,k1,m1,slipTag(P,k1,"6 · line 12"),slipTag(P,m1,"6 · line 10"));
+   const sl=P.slip("T",2.3,"L",6.8);sl.classList.add("lost");A.step(2,sl);
+   A.step(3,P.event("L",3.7,"#bf4a26",11));tagAt(3,"L",3.7,18,-28,"takes the podium","red");
+   const ws=["K","M","T"].map(k=>P.slip("L",3.9,k,4.9));A.step(4,ws,slipTag(P,ws[1],"the whole law","hot"));
+   A.hint("Theron's answer is slow, and nobody waits for it: three answers are a majority.")},
+ /* when may board 7 form? the reader sets each answer */
+ function(svg,A){FS.ans=FS.ans||{O:"without",L:"none",K:"none",M:"with",T:"with"};const H=Room(svg,{porch:true,podium:"board 7?",seats:tholosSeats()}),N={},RG={};
+   KS5.forEach(k=>{const q=H.S[k];RG[k]=el("circle",{cx:q.x,cy:q.y,r:31,fill:"none",stroke:"#e0b84a","stroke-width":6,opacity:0},H.under);N[k]=H.note(k,"")});
+   const r1=txt(H.over,H.cx,H.cy+62,"","lab ink sm"),r2=txt(H.over,H.cx,H.cy+80,"","lab sm");
+   const lab={with:k=>`tablets · 6 · line ${HELD5[k]}`,without:()=>"no tablets · board 6",none:()=>"out of reach"};
+   function paint(){const a=FS.ans,r=mayForm(a);
+     KS5.forEach(k=>{H.S[k].g.classList.toggle("out",a[k]==="none");H.S[k].g.classList.toggle("wax",a[k]==="without");N[k].set(lab[a[k]](k),a[k]==="without"?"red":"");RG[k].setAttribute("opacity",r.holder===k?1:0)});
+     H.podT.textContent=r.forms?"board 7":"board 7?";H.podD.setAttribute("fill",r.forms?WHO[r.holder].c:"#d9cfb4");
+     if(r.forms){r1.textContent=`board 7 forms: ${WHO[r.holder].n} takes the podium`;r1.setAttribute("class","lab ink sm");r2.textContent=`holding line ${HELD5[r.holder]}, so line 12 survives`}
+     else{r1.textContent="board 7 may not form";r1.setAttribute("class","lab red sm");r2.textContent=r.maj?"a majority answered, but none can show line 12":"fewer than three have answered"}}
+   const next={with:"without",without:"none",none:"with"};
+   KS5.forEach(k=>pick(H.S[k].g,`Change ${WHO[k].n}'s answer`,()=>{FS.ans[k]=next[FS.ans[k]];paint()}));
+   paint();KS5.forEach((k,i)=>A.step(i,N[k]));A.step(5,r1,r2);
+   A.hint("Line 12 passed with Okios, Liskovia and Kleon. Click a legislator to change their answer: with tablets, without, or out of reach.")},
+ /* the holder on the porch writes a line nobody can pass */
+ function(svg,A){const heard=!!FS.heard,H=Room(svg,{porch:true,podium:"board 7",podiumFill:WHO.L.c,seats:tholosSeats(),ring:["L"],place:{O:[220,422]}});
+   {const [x,y]=H.at(-90);el("circle",{cx:x,cy:y,r:24,fill:"none",stroke:"#b9a77e","stroke-width":2,"stroke-dasharray":"4 4"},H.under)}
+   const q=H.S.O,t=H.S.T;el("line",{x1:q.x,y1:q.y,x2:t.x,y2:t.y,stroke:"#6b5a48","stroke-width":2,"stroke-dasharray":"4 5"},H.under);
+   const o=tag(H.over,H.cx,H.cy+70,"Okios, under board 6, writes line 13"),nt=H.note("T",heard?"board 7":"not yet heard of 7",heard?"hot":"");
+   ["L","K","M"].forEach(k=>A.step(0,H.note(k,"board 7","hot")));A.step(0,o,nt);
+   A.at(1,async id=>{const g=token(H.over,q.x,q.y,"#fffaf0","13");await trip(g,line([q.x,q.y],[t.x,t.y]),1400);if(!live(id))return;
+     g.querySelector("text").textContent=heard?"✗":"✓";nt.set(heard?"refuses: board 7 stands":"holds line 13 of board 6",heard?"red":"");
+     await trip(g,line([t.x,t.y],[q.x,q.y]),1400);g.remove();if(!live(id))return;o.set(heard?"nobody accepts line 13: it cannot pass":"only two hold line 13: it cannot pass","red")});
+   pick(H.S.T.g,heard?"Theron has not heard of board 7":"Theron has heard of board 7",()=>{FS.heard=!heard;A.again()});
+   A.hint("Click Θ to choose whether he has heard of board 7. Either way, nothing Okios writes can pass.")},
+ /* wax and ink, row by row */
+ function(svg,A){svg.innerHTML="";svg.setAttribute("viewBox","0 0 440 440");const cx=220,cy=220;
+   el("path",{d:`M${cx},16 A204,204 0 0 0 ${cx},424 Z`,fill:"#f7e7bd"},svg);el("path",{d:`M${cx},16 A204,204 0 0 1 ${cx},424 Z`,fill:"#dceaf2"},svg);
+   el("circle",{cx,cy,r:204,fill:"none",stroke:"#1c1512","stroke-width":5},svg);el("line",{x1:cx,y1:16,x2:cx,y2:424,stroke:"#1c1512","stroke-width":3},svg);
+   [[-1,"Schedia","wax tablets","one trip out and back","passes a law","a majority gone home","stops it for good"],
+    [1,"Paxos","ink scrolls","survives any absence","","any legislator","may start a ballot"]].forEach(([s,a,b,c,d,e,f])=>{
+     const x=cx+s*102;A.step(0,txt(svg,x,104,a,"lab ink",{style:"font-size:20px"}),txt(svg,x,128,b,"lab sm"));
+     A.step(1,txt(svg,x,182,c,"lab sm"),txt(svg,x,200,d,"lab sm"));A.step(2,txt(svg,x,250,e,"lab sm"),txt(svg,x,268,f,"lab sm"))});
+   A.step(3,tag(svg,cx,330,"any two majorities share a legislator","hot"))}
+]};
+ORDER.forEach(b=>FIGS[b].forEach((f,i)=>IDEAS[b][i].f=f));
 
 /* ---------- the ring of ideas: every book's ideas round one circle ---------- */
 /* slots round the ring: each book's ideas in a run, a gap after each book, the first gap at the top */
@@ -408,25 +588,28 @@ const goIdea=(function(){
   for(const key in G.st){const q=ALL[idx(key.replace(/\d+$/,""),+key.match(/\d+$/)[0])],btn=items[ALL.indexOf(q)];
     G.st[key].addEventListener("mouseenter",()=>btn.classList.add("hi"));G.st[key].addEventListener("mouseleave",()=>btn.classList.remove("hi"))}
   function mark(){for(const key in G.st)G.st[key].classList.toggle("on",cur>=0&&key===ALL[cur].b+ALL[cur].i);fig.classList.toggle("open",cur>=0)}
+  function draw(){const A=Anim(),d=ALL[cur].d;A.again=draw;art.innerHTML="";d.f(art,A);
+    const h=$(".hint",detail);if(h)h.textContent=A.hintText;A.play()}
   function open(k){
-    cur=Math.max(0,Math.min(ALL.length-1,k));const {b,i,d}=ALL[cur],B=BOOK[b];mark();
-    clearTimeout(timer);art.classList.add("hide");timer=setTimeout(()=>{d.f(art);art.classList.remove("hide")},reduce?0:180);
-    detail.innerHTML=`<div class="num" style="color:${B.c}">${B.name} · ${B.title} · idea ${i+1} of ${IDEAS[b].length}</div><h3>${d.t}</h3>`+d.p.map(x=>`<p>${x}</p>`).join("")+
+    const next=Math.max(0,Math.min(ALL.length-1,k));if(next!==cur)for(const x in FS)delete FS[x];
+    cur=next;const {b,i,d}=ALL[cur],B=BOOK[b];mark();
+    clearTimeout(timer);Anim.run++;art.classList.add("hide");timer=setTimeout(()=>{draw();art.classList.remove("hide")},reduce?0:180);
+    detail.innerHTML=`<div class="num" style="color:${B.c}">${B.name} · ${B.title} · idea ${i+1} of ${IDEAS[b].length}</div><h3>${d.t}</h3><div class="figbar"><button class="btn alt replay" type="button">↻ Play again</button><span class="hint"></span></div>`+d.p.map(x=>`<p>${x}</p>`).join("")+
       `<div class="mach"><b>In the machine room</b>${d.m}</div>`+
       `<div class="nav"><button class="btn alt" type="button" data-go="-1"${cur===0?" disabled":""}>← Back</button><button class="btn" type="button" data-go="1"${cur===ALL.length-1?" disabled":""}>Next →</button>`+
       `<button class="btn alt close" type="button" data-go="0">Close</button></div><a class="more" href="${B.href}#${d.a}">Read it in the book ↗</a>`;
-    $$("button[data-go]",detail).forEach(x=>x.onclick=()=>+x.dataset.go?open(cur+ +x.dataset.go):close());
+    $$("button[data-go]",detail).forEach(x=>x.onclick=()=>+x.dataset.go?open(cur+ +x.dataset.go):close());$(".replay",detail).onclick=draw;
     tree.hidden=true;detail.hidden=false;detail.classList.remove("swap");void detail.offsetWidth;detail.classList.add("swap");
     try{history.replaceState(null,"","#"+b+"-"+(i+1))}catch(e){}
   }
   function close(){
-    const was=cur;cur=-1;mark();clearTimeout(timer);art.classList.add("hide");detail.hidden=true;tree.hidden=false;
+    const was=cur;cur=-1;mark();clearTimeout(timer);Anim.run++;art.classList.add("hide");detail.hidden=true;tree.hidden=false;
     if(was>=0){const btn=items[was];btn.closest("details").open=true;btn.focus({preventScroll:true})}
     try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
   }
   $("#explore").addEventListener("keydown",e=>{if(cur<0||e.target.closest("a,summary"))return;
     if(e.key==="ArrowRight"){e.preventDefault();open(cur+1)}if(e.key==="ArrowLeft"){e.preventDefault();open(cur-1)}if(e.key==="Escape"){e.preventDefault();close()}});
-  narrow.addEventListener("change",()=>{fit();if(cur>=0)ALL[cur].d.f(art)});
+  narrow.addEventListener("change",()=>{fit();if(cur>=0)draw()});
   /* a link to #paxos-3 opens that idea */
   const fromHash=scroll=>{const m=/^#([a-z]+)-(\d+)$/.exec(location.hash),k=m?idx(m[1],+m[2]-1):-1;
     if(k>=0){open(k);if(scroll)$("#explore").scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})}};
