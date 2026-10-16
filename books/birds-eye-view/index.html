@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Bird's-Eye View — Distributed Algorithms of Ancient Greece</title>
+<meta name="description" content="Every idea in the books at a glance: the ring road of Arche, the Chamber of Paxos and the Tholos of Schedia, each idea in a sentence or two and a round picture.">
+<link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <span class="now" id="now"></span>
+  <i id="prog"></i>
+</div>
+
+<!-- ============================================================ cover -->
+<header class="spread dark" id="cover" data-name="Cover">
+  <div class="wrap grid">
+    <div>
+      <h1>A Bird's-Eye View</h1>
+      <p class="generic">Every idea in the books, each in two or three sentences and a round picture, for a reader who wants the whole shelf before opening a single book.</p>
+      <p class="allegory">Three settings so far: the ring road of Arche, the Chamber of Paxos and the Tholos of Schedia. Each dot on the ring is one idea. Choose one to go straight to it, or scroll and take them in order.</p>
+      <p class="source">Ordering Without Clocks · The Part-Time Parliament · One Leader at a Time</p>
+    </div>
+    <div class="pop" data-auto><div class="leaf ringwrap">
+      <svg class="ring-svg" id="ring" role="img" aria-label="The ring of ideas: seven ideas from each of three books, set round one circle"></svg>
+    </div></div>
+  </div>
+</header>
+
+<!-- ============================================================ the thread -->
+<section class="spread light" id="thread" data-name="One problem, three settings">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#e0d6bb"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0">
+      <div class="kicker">One problem, three settings</div>
+      <h2>Many machines, acting as one</h2>
+      <p class="lede">Every book in the series asks how a group of machines, each with its own memory and joined only by messages, can behave as a single trustworthy one. These three books take the question in order.</p>
+      <p>Arche finds an order of events that machines can agree on without a shared clock. Paxos keeps one log of commands in such an order while machines stop, restart and lose messages. Schedia keeps the same log with one machine in charge at a time, and shows how another takes over when it falls silent without losing anything the last one promised.</p>
+    </div>
+    <div class="flow3" aria-hidden="true"><span>agree on an order</span><b>→</b><span>keep one log through failures</span><b>→</b><span>one leader at a time</span></div>
+    <div class="medals">
+      <a class="medal pop" href="#arche"><span class="leaf">
+        <span class="disc"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/ordering-without-clocks-cover-740f8fa32f-800.avif" alt="A scribe writes a number on a slip beside a sundial that casts no shadow, while three messengers jog along the road" loading="lazy"></span>
+        <span class="num">Arche · the ring road</span><h3>Ordering Without Clocks</h3>
+        <p>Three trading houses round a mountain, slips carried on one road, and no sun to tell the hour.</p>
+      </span></a>
+      <a class="medal pop" href="#paxos"><span class="leaf">
+        <span class="disc"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-cover-8a2d2c4426-800.avif" alt="The Chamber of the Paxon Parliament from above, legislators walking in and out by its one door" loading="lazy"></span>
+        <span class="num">Paxos · the Chamber</span><h3>The Part-Time Parliament</h3>
+        <p>Legislators who wander in and out, scrolls in indelible ink, and decrees passed by ballot.</p>
+      </span></a>
+      <a class="medal pop" href="#schedia"><span class="leaf">
+        <span class="disc"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-cover-dd6fa3054e-800.avif" alt="Inside the Tholos of Schedia, a legislator in saffron at the desk on the round podium, runners setting off across the floor" loading="lazy"></span>
+        <span class="num">Schedia · the Tholos</span><h3>One Leader at a Time</h3>
+        <p>Five legislators, a law on wax tablets, and a podium that one of them holds at a time.</p>
+      </span></a>
+    </div>
+    <p class="tell" style="margin-top:2.4rem">Each setting below is drawn as a dial. The picture in the middle shows one idea, and the numbers round its rim are the book's ideas in the order the book takes them.</p>
+  </div>
+</section>
+
+<!-- ============================================================ Arche -->
+<section class="spread dark" id="arche" data-name="Arche: Ordering Without Clocks">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
+  <div class="wrap">
+    <div class="setting">
+      <div class="kicker">Arche · the ring road</div>
+      <h2>Ordering Without Clocks</h2>
+      <p class="lede">Three trading houses sit round a mountain, and news passes between them only on slips carried along one ring road, where no messenger passes another and no journey has a known length. Clouds hide the sun, so no house can read the hour.</p>
+      <p class="src">After Leslie Lamport, <i>Time, Clocks, and the Ordering of Events in a Distributed System</i>, 1978 · Colin J. Fidge and Friedemann Mattern, 1988</p>
+    </div>
+    <div class="dial" data-book="arche">
+      <div class="face"><svg class="fig" role="img" aria-label="The current idea from Ordering Without Clocks, drawn in the round"></svg></div>
+      <div class="pop"><div class="leaf paper idea" aria-live="polite"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ Paxos -->
+<section class="spread light" id="paxos" data-name="Paxos: The Part-Time Parliament">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
+  <div class="wrap">
+    <div class="setting">
+      <div class="kicker">Paxos · the Chamber</div>
+      <h2>The Part-Time Parliament</h2>
+      <p class="lede">The legislators of Paxos wander in and out of a round Chamber as their trade allows, and speak only through messengers who may be slow, lose a message, or deliver it twice. Each keeps the law in a scroll of their own, in ink that never changes.</p>
+      <p class="src">After Leslie Lamport, <i>The Part-Time Parliament</i>, 1998</p>
+    </div>
+    <div class="dial" data-book="paxos">
+      <div class="face"><svg class="fig" role="img" aria-label="The current idea from The Part-Time Parliament, drawn in the round"></svg></div>
+      <div class="pop"><div class="leaf paper idea" aria-live="polite"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ Schedia -->
+<section class="spread dark" id="schedia" data-name="Schedia: One Leader at a Time">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
+  <div class="wrap">
+    <div class="setting">
+      <div class="kicker">Schedia · the Tholos</div>
+      <h2>One Leader at a Time</h2>
+      <p class="lede">Schedia, a city on the eastern arm of Paxos, makes its law in the Tholos, a round hall where five legislators keep copies of the law on wax tablets. One of them at a time holds the podium and alone adds lines, and going home smooths the wax.</p>
+      <p class="src">After Brian M. Oki and Barbara H. Liskov, <i>Viewstamped Replication</i>, 1988</p>
+    </div>
+    <div class="dial" data-book="schedia">
+      <div class="face"><svg class="fig" role="img" aria-label="The current idea from One Leader at a Time, drawn in the round"></svg></div>
+      <div class="pop"><div class="leaf paper idea" aria-live="polite"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ threads -->
+<section class="spread light" id="threads" data-name="The same trick, more than once">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0">
+      <div class="kicker">What the three settings share</div>
+      <h2>The same trick, more than once</h2>
+      <p class="lede">Read side by side, the three books keep reaching for the same few ideas. Choose a thread to see where each one turns up.</p>
+    </div>
+    <div class="dial threads">
+      <div class="face"><svg class="ring-svg" id="ring2" role="img" aria-label="The ring of ideas with threads drawn between ideas that share a device"></svg></div>
+      <div class="pop"><div class="leaf paper idea" id="threadcard" aria-live="polite"></div></div>
+    </div>
+    <div class="meander" style="margin:3.4rem auto"></div>
+    <div class="end">
+      <p class="big">Agree on an order without a clock, keep it in one log while members come and go, and let one holder at a time write it.</p>
+      <div class="links">
+        <a href="../ordering-without-clocks/index.html">Ordering Without Clocks</a>
+        <a href="../the-part-time-parliament/index.html">The Part-Time Parliament</a>
+        <a href="../one-leader-at-a-time/index.html">One Leader at a Time</a>
+        <a href="../../papers/index.html">All the papers</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>Distributed Algorithms of Ancient Greece · A Bird's-Eye View</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

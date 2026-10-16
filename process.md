@@ -342,6 +342,12 @@ Before calling a book done (the brief's checklist has the mechanics):
   scroll and pebble is geometry), and its scene prompts say so: keep every modelled
   part where it is, give it its real material, add no architecture. The image pass then adds
   only materials, light, people and props, and the building is the same in every picture.
+- [ ] The book has a dial on the bird's-eye view, `books/birds-eye-view/`: its ideas in the
+  book's order, each with a title, two or three sentences in the allegory, one in machine terms,
+  a round figure and the anchor of the spread that tells it. The page holds Ordering Without
+  Clocks, The Part-Time Parliament and One Leader at a Time so far; a new book adds an entry to
+  `IDEAS` in its `script.js`, a dial section in its `index.html`, and its ideas to any thread in
+  `THREADS` that it shares.
 
 ---
 
