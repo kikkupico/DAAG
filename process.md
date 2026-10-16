@@ -342,13 +342,14 @@ Before calling a book done (the brief's checklist has the mechanics):
   scroll and pebble is geometry), and its scene prompts say so: keep every modelled
   part where it is, give it its real material, add no architecture. The image pass then adds
   only materials, light, people and props, and the building is the same in every picture.
-- [ ] The book has a dial on the bird's-eye view, `books/birds-eye-view/`: its ideas in the
-  book's order, each with a title, two or three sentences in the allegory, one in machine terms,
-  a round figure and the anchor of the spread that tells it. The page holds Ordering Without
-  Clocks, The Part-Time Parliament and One Leader at a Time so far; a new book adds itself to
-  `ORDER` and `BOOK` and its ideas to `IDEAS` in its `script.js` (the ring of ideas sizes itself
-  from these), a dial section in its `index.html`, and its ideas to any thread in `THREADS` that
-  it shares with another setting.
+- [ ] The book's ideas are on the bird's-eye view, `books/birds-eye-view/`: one circle holds every
+  idea of every book round its rim, with a tree of books and ideas beside it. Each idea has a
+  title, two or three sentences in the allegory, one in machine terms, a round figure drawn in the
+  middle of the circle, and the anchor of the spread that tells it. The page holds Ordering
+  Without Clocks, The Part-Time Parliament and One Leader at a Time so far; a new book adds itself
+  to `ORDER` and `BOOK` (with its setting in one `line`) and its ideas to `IDEAS` in the page's
+  `script.js`, which sizes the circle and the tree from them, and its ideas to any thread in
+  `THREADS` that it shares with another setting.
 
 ---
 

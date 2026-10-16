@@ -102,9 +102,9 @@ const PG={A:"Α",B:"Β",G:"Γ",D:"Δ",E:"Ε",Z:"Ζ",H:"Η"};
 const WHO={O:{n:"Okios",g:"Ο",c:"#8fa3b8"},L:{n:"Liskovia",g:"Λ",c:"#e8b03a"},K:{n:"Kleon",g:"Κ",c:"#8fb35a"},M:{n:"Melissa",g:"Μ",c:"#cf5a4a"},T:{n:"Theron",g:"Θ",c:"#b3aea4"}};
 const THA={O:-90,L:-18,K:54,M:126,T:198};
 const BOOK={
-  arche:{c:"#b5602c",name:"Arche",title:"Ordering Without Clocks",href:"../ordering-without-clocks/index.html"},
-  paxos:{c:"#136f9e",name:"Paxos",title:"The Part-Time Parliament",href:"../the-part-time-parliament/index.html"},
-  schedia:{c:"#c8961c",name:"Schedia",title:"One Leader at a Time",href:"../one-leader-at-a-time/index.html"}};
+  arche:{c:"#b5602c",name:"Arche",title:"Ordering Without Clocks",line:"Three trading houses round a mountain, slips carried on one road, and no sun to tell the hour.",href:"../ordering-without-clocks/index.html"},
+  paxos:{c:"#136f9e",name:"Paxos",title:"The Part-Time Parliament",line:"Legislators who wander in and out, scrolls in indelible ink, and decrees passed by ballot.",href:"../the-part-time-parliament/index.html"},
+  schedia:{c:"#c8961c",name:"Schedia",title:"One Leader at a Time",line:"Five legislators, a law on wax tablets, and a podium that one of them holds at a time.",href:"../one-leader-at-a-time/index.html"}};
 const ORDER=["arche","paxos","schedia"];
 const narrow=matchMedia("(max-width:600px)");   // on a phone the figure fills more of the dial and its words are larger
 
@@ -360,58 +360,80 @@ schedia:[
     tag(svg,cx,330,"any two majorities share a legislator","hot")}}
 ]};
 
-/* ---------- a dial ---------- */
-const DIALS={};
-function Dial(root,book){
-  const ideas=IDEAS[book],B=BOOK[book],n=ideas.length,fig=$("svg.fig",root),card=$(".idea",root);let cur=0,timer=0;
-  fig.setAttribute("viewBox","0 0 640 640");
-  const art=el("svg",{class:"art",id:book+"-art"},fig);
-  const fit=()=>{const m=narrow.matches?40:76;art.setAttribute("x",m);art.setAttribute("y",m);art.setAttribute("width",640-2*m);art.setAttribute("height",640-2*m)};
-  const rims=ideas.map((d,i)=>{const a=(-90+i*360/n)*Math.PI/180,g=el("g",{class:"rim",transform:`translate(${(320+298*Math.cos(a)).toFixed(1)} ${(320+298*Math.sin(a)).toFixed(1)})`},fig);
-    el("circle",{r:19},g);el("text",{},g).textContent=i+1;button(g,`Idea ${i+1}: ${d.t}`,()=>show(i));return g});
-  const nextBook=ORDER[ORDER.indexOf(book)+1];
-  function show(i){
-    cur=(i+n)%n;const d=ideas[cur];
-    rims.forEach((g,j)=>{g.classList.toggle("on",j===cur);$("circle",g).style.fill=j===cur?B.c:""});
-    clearTimeout(timer);art.classList.add("hide");
-    timer=setTimeout(()=>{d.f(art);art.classList.remove("hide")},reduce?0:200);
-    const last=cur===n-1,nx=last?(nextBook?`On to ${BOOK[nextBook].name} ↓`:"What they share ↓"):"Next →";
-    card.innerHTML=`<div class="num" style="color:${B.c}">${B.name} · idea ${cur+1} of ${n}</div><h3>${d.t}</h3>`+d.p.map(x=>`<p>${x}</p>`).join("")+
-      `<div class="mach"><b>In the machine room</b>${d.m}</div><div class="nav"><button class="btn alt" type="button"${cur===0?" disabled":""}>← Back</button><button class="btn" type="button">${nx}</button>`+
-      `<a class="more" href="${B.href}#${d.a}">Read it in the book ↗</a></div>`;
-    const [bp,bn]=$$("button",card);bp.onclick=()=>show(cur-1);
-    bn.onclick=()=>{if(!last)return show(cur+1);$(nextBook?"#"+nextBook:"#threads").scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})};
-    card.classList.remove("swap");void card.offsetWidth;card.classList.add("swap");
-  }
-  root.addEventListener("keydown",e=>{if(e.target.closest("a"))return;if(e.key==="ArrowRight"){e.preventDefault();show(cur+1)}if(e.key==="ArrowLeft"){e.preventDefault();show(cur-1)}});
-  fit();show(0);DIALS[book]=show;narrow.addEventListener("change",()=>{fit();show(cur)});
-}
-$$(".dial[data-book]").forEach(d=>Dial(d,d.dataset.book));
-function goIdea(book,i){DIALS[book](i);$("#"+book).scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})}
-
 /* ---------- the ring of ideas: every book's ideas round one circle ---------- */
 /* slots round the ring: each book's ideas in a run, a gap after each book, the first gap at the top */
 const SLOT={},SLOTS=ORDER.reduce((n,b)=>{SLOT[b]=n;return n+IDEAS[b].length+1},0),COUNT=SLOTS-ORDER.length;
 const slot=(b,i)=>SLOT[b]+i;
-function Ring(svg,onPick){
-  svg.innerHTML="";svg.setAttribute("viewBox","0 0 720 720");const C=360,R=205,ang=s=>-90+360/SLOTS*(s+1),
+/* labels run outward from the dots, with the books' names inside; or, with inward, the other way round */
+function Ring(svg,onPick,o={}){
+  svg.setAttribute("viewBox","0 0 720 720");const C=360,R=o.R||205,inward=!!o.inward,ang=s=>-90+360/SLOTS*(s+1),
     xy=(deg,r)=>[C+r*Math.cos(deg*Math.PI/180),C+r*Math.sin(deg*Math.PI/180)];
-  const chords=el("g",{},svg),arcs=el("g",{},svg),sts=el("g",{},svg),ctr=el("g",{},svg),G={svg,C,R,xy,ang,chords,ctr,st:{}};
+  const chords=el("g",{},svg),arcs=el("g",{},svg),labs=el("g",{class:"labs"},svg),art=o.art?o.art(svg):null,sts=el("g",{},svg),ctr=el("g",{class:"ctr-g"},svg),G={svg,C,R,xy,ang,chords,ctr,art,st:{}};
   el("circle",{cx:C,cy:C,r:R,fill:"none",stroke:"#b9a77e","stroke-width":1.2,"stroke-dasharray":"3 5"},arcs);
   ORDER.forEach((b,bi)=>{const B=BOOK[b],a0=ang(slot(b,0))-5,a1=ang(slot(b,IDEAS[b].length-1))+5,[x0,y0]=xy(a0,R),[x1,y1]=xy(a1,R);
     el("path",{d:`M${x0.toFixed(1)},${y0.toFixed(1)} A${R},${R} 0 0 1 ${x1.toFixed(1)},${y1.toFixed(1)}`,fill:"none",stroke:B.c,"stroke-width":10,"stroke-linecap":"round",opacity:.3},arcs);
-    const midA=(a0+a1)/2,low=Math.sin(midA*Math.PI/180)>.3,rn=low?R-44:R-34,[p0x,p0y]=xy(low?a1:a0,rn),[p1x,p1y]=xy(low?a0:a1,rn),pid=svg.id+"-bk"+bi;
+    const midA=(a0+a1)/2,low=Math.sin(midA*Math.PI/180)>.3,rn=inward?(low?R+33:R+22):(low?R-44:R-34),[p0x,p0y]=xy(low?a1:a0,rn),[p1x,p1y]=xy(low?a0:a1,rn),pid=svg.id+"-bk"+bi;
     el("path",{id:pid,fill:"none",d:`M${p0x.toFixed(1)},${p0y.toFixed(1)} A${rn},${rn} 0 0 ${low?0:1} ${p1x.toFixed(1)},${p1y.toFixed(1)}`},arcs);
     const t=el("text",{class:"bookname",fill:B.c},arcs),tp=el("textPath",{href:"#"+pid,startOffset:"50%","text-anchor":"middle"},t);tp.textContent=B.name;
-    IDEAS[b].forEach((d,i)=>{const a=ang(slot(b,i)),[x,y]=xy(a,R),g=el("g",{class:"st",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},sts);
+    IDEAS[b].forEach((d,i)=>{const a=ang(slot(b,i)),[x,y]=xy(a,R),pos=`translate(${x.toFixed(1)} ${y.toFixed(1)})`,g=el("g",{class:"st",transform:pos},sts);
+      el("title",{},g).textContent=`${B.name} ${i+1} · ${d.t}`;
       el("circle",{class:"b",r:12,fill:B.c},g);el("text",{},g).textContent=i+1;
-      const right=Math.cos(a*Math.PI/180)>-1e-6,l=el("text",{class:"lab",style:"text-anchor:"+(right?"start":"end"),transform:`rotate(${(right?a:a+180).toFixed(1)}) translate(${right?20:-20} 0)`},g);l.textContent=d.k;
-      button(g,`${B.title}, idea ${i+1}: ${d.t}`,()=>onPick(b,i));G.st[b+i]=g})});
+      const right=Math.cos(a*Math.PI/180)>-1e-6,out=right!==inward,
+        l=el("text",{class:"lab",style:"text-anchor:"+(out?"start":"end"),transform:`${pos} rotate(${(right?a:a+180).toFixed(1)}) translate(${out?20:-20} 0)`},labs);l.textContent=d.k;
+      l.addEventListener("click",()=>onPick(b,i));
+      button(g,`${B.title}, idea ${i+1}: ${d.t}`,()=>onPick(b,i));G.st[b+i]=g;g.label=l})});
   return G;
 }
-(function(){const G=Ring($("#ring"),goIdea);
+
+/* ---------- the explorer: every idea round one circle, and beside it a tree of books and ideas ----------
+   Choosing an idea draws it in the middle of the circle and reads it out in the panel; Close goes back to the tree. */
+const ALL=ORDER.flatMap(b=>IDEAS[b].map((d,i)=>({b,i,d})));
+const goIdea=(function(){
+  const fig=$("#wheel"),tree=$("#tree"),detail=$("#detail");let cur=-1,timer=0;
+  const stacked=matchMedia("(max-width:859px)");   // the circle stands above the list, so choosing from the list brings it back into view
+  const G=Ring(fig,(b,i)=>open(idx(b,i)),{R:318,inward:true,art:svg=>el("svg",{class:"art fig",id:"wheel-art"},svg)}),art=G.art;
   const words=["no","one","two","three","four","five","six","seven","eight","nine"];
-  txt(G.ctr,360,352,String(COUNT),"ctr",{style:"font-size:64px;font-weight:700"});txt(G.ctr,360,388,`ideas, ${words[ORDER.length]||ORDER.length} settings`,"ctr",{style:"font-size:15px"})})();
+  txt(G.ctr,360,346,String(COUNT),"ctr",{style:"font-size:64px;font-weight:700"});
+  txt(G.ctr,360,382,`ideas, ${words[ORDER.length]||ORDER.length} settings`,"ctr",{style:"font-size:15px"});
+  txt(G.ctr,360,406,"choose one","ctr",{style:"font-size:13px;font-style:italic;fill:#6b5a48"});
+  const fit=()=>{const m=narrow.matches?60:84;art.setAttribute("x",m);art.setAttribute("y",m);art.setAttribute("width",720-2*m);art.setAttribute("height",720-2*m)};
+  const idx=(b,i)=>ALL.findIndex(q=>q.b===b&&q.i===i);
+  /* the tree: each book, its setting in a line, and its ideas */
+  tree.innerHTML=`<div class="kicker">The books and their ideas</div>`+ORDER.map(b=>{const B=BOOK[b];
+    return `<details open style="--c:${B.c}"><summary><span class="bk">${B.name}</span> <i>${B.title}</i></summary><p class="set">${B.line}</p><ol>`+
+      IDEAS[b].map((d,i)=>`<li><button type="button" data-k="${idx(b,i)}"><span class="n">${i+1}</span>${d.t}</button></li>`).join("")+`</ol></details>`}).join("");
+  const items=$$("button[data-k]",tree);
+  items.forEach(btn=>{const q=ALL[+btn.dataset.k],st=G.st[q.b+q.i];btn.onclick=()=>{open(+btn.dataset.k);if(stacked.matches)$("#explore").scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})};
+    btn.onmouseenter=btn.onfocus=()=>st.classList.add("hi");btn.onmouseleave=btn.onblur=()=>st.classList.remove("hi")});
+  for(const key in G.st){const q=ALL[idx(key.replace(/\d+$/,""),+key.match(/\d+$/)[0])],btn=items[ALL.indexOf(q)];
+    G.st[key].addEventListener("mouseenter",()=>btn.classList.add("hi"));G.st[key].addEventListener("mouseleave",()=>btn.classList.remove("hi"))}
+  function mark(){for(const key in G.st)G.st[key].classList.toggle("on",cur>=0&&key===ALL[cur].b+ALL[cur].i);fig.classList.toggle("open",cur>=0)}
+  function open(k){
+    cur=Math.max(0,Math.min(ALL.length-1,k));const {b,i,d}=ALL[cur],B=BOOK[b];mark();
+    clearTimeout(timer);art.classList.add("hide");timer=setTimeout(()=>{d.f(art);art.classList.remove("hide")},reduce?0:180);
+    detail.innerHTML=`<div class="num" style="color:${B.c}">${B.name} · ${B.title} · idea ${i+1} of ${IDEAS[b].length}</div><h3>${d.t}</h3>`+d.p.map(x=>`<p>${x}</p>`).join("")+
+      `<div class="mach"><b>In the machine room</b>${d.m}</div>`+
+      `<div class="nav"><button class="btn alt" type="button" data-go="-1"${cur===0?" disabled":""}>← Back</button><button class="btn" type="button" data-go="1"${cur===ALL.length-1?" disabled":""}>Next →</button>`+
+      `<button class="btn alt close" type="button" data-go="0">Close</button></div><a class="more" href="${B.href}#${d.a}">Read it in the book ↗</a>`;
+    $$("button[data-go]",detail).forEach(x=>x.onclick=()=>+x.dataset.go?open(cur+ +x.dataset.go):close());
+    tree.hidden=true;detail.hidden=false;detail.classList.remove("swap");void detail.offsetWidth;detail.classList.add("swap");
+    try{history.replaceState(null,"","#"+b+"-"+(i+1))}catch(e){}
+  }
+  function close(){
+    const was=cur;cur=-1;mark();clearTimeout(timer);art.classList.add("hide");detail.hidden=true;tree.hidden=false;
+    if(was>=0){const btn=items[was];btn.closest("details").open=true;btn.focus({preventScroll:true})}
+    try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
+  }
+  $("#explore").addEventListener("keydown",e=>{if(cur<0||e.target.closest("a,summary"))return;
+    if(e.key==="ArrowRight"){e.preventDefault();open(cur+1)}if(e.key==="ArrowLeft"){e.preventDefault();open(cur-1)}if(e.key==="Escape"){e.preventDefault();close()}});
+  narrow.addEventListener("change",()=>{fit();if(cur>=0)ALL[cur].d.f(art)});
+  /* a link to #paxos-3 opens that idea */
+  const fromHash=scroll=>{const m=/^#([a-z]+)-(\d+)$/.exec(location.hash),k=m?idx(m[1],+m[2]-1):-1;
+    if(k>=0){open(k);if(scroll)$("#explore").scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})}};
+  addEventListener("hashchange",()=>fromHash(true));
+  fit();art.classList.add("hide");fromHash(false);
+  return (b,i)=>{open(idx(b,i));$("#explore").scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})};
+})();
 
 /* ---------- threads: the same device in more than one setting ---------- */
 const THREADS=[
@@ -439,7 +461,7 @@ const THREADS=[
   const title=txt(G.ctr,360,366,"","ctr",{style:"font-size:15px;font-weight:700"});
   function show(i){cur=(i+THREADS.length)%THREADS.length;const T=THREADS[cur],on=new Set(T.at.map(([b,k])=>b+k));
     lines.forEach((ls,j)=>ls.forEach(p=>p.classList.toggle("on",j===cur)));
-    for(const key in G.st){G.st[key].classList.toggle("dim",!on.has(key));G.st[key].classList.toggle("lit",on.has(key))}
+    for(const key in G.st)for(const x of [G.st[key],G.st[key].label]){x.classList.toggle("dim",!on.has(key));x.classList.toggle("lit",on.has(key))}
     title.textContent="thread "+(cur+1)+" of "+THREADS.length;title.style.fill=T.c;
     card.innerHTML=`<div class="num" style="color:${T.c}">Thread ${cur+1} of ${THREADS.length}</div><h3>${T.t}</h3><p>${T.p}</p>`+T.each.map(x=>`<p style="font-size:.96rem">${x}</p>`).join("")+
       `<div class="nav"><button class="btn alt" type="button">← Back</button><button class="btn" type="button">Next thread →</button></div>`;
