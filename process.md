@@ -345,9 +345,10 @@ Before calling a book done (the brief's checklist has the mechanics):
 - [ ] The book has a dial on the bird's-eye view, `books/birds-eye-view/`: its ideas in the
   book's order, each with a title, two or three sentences in the allegory, one in machine terms,
   a round figure and the anchor of the spread that tells it. The page holds Ordering Without
-  Clocks, The Part-Time Parliament and One Leader at a Time so far; a new book adds an entry to
-  `IDEAS` in its `script.js`, a dial section in its `index.html`, and its ideas to any thread in
-  `THREADS` that it shares.
+  Clocks, The Part-Time Parliament and One Leader at a Time so far; a new book adds itself to
+  `ORDER` and `BOOK` and its ideas to `IDEAS` in its `script.js` (the ring of ideas sizes itself
+  from these), a dial section in its `index.html`, and its ideas to any thread in `THREADS` that
+  it shares with another setting.
 
 ---
 
