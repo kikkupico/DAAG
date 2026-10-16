@@ -401,3 +401,14 @@ sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
 .detail .close{margin-left:auto}
 @media(max-width:859px){.explore{grid-template-columns:minmax(0,1fr)}.wheel-face{position:relative;top:0;max-width:560px;width:100%;margin:0 auto}}
 @media(prefers-reduced-motion:reduce){.wheel .art,.wheel .labs,.wheel .ctr-g,.wheel .st circle.b{transition:none}}
+/* the figures: what the reader can press, and the bar of Play again and its hint */
+.fig .pick{cursor:pointer}
+.fig .pick:focus-visible{outline:none}
+.fig .pick:focus-visible circle.b,.fig .pick:focus-visible rect,.fig .pick.tok:focus-visible circle{stroke:var(--aegean-d);stroke-width:5}
+.fig .seat.pick:hover circle.b,.fig .st-ev.pick:hover circle.b{stroke-width:5.5}
+.fig .podium.pick:hover circle{stroke-width:6}
+.fig .quad path{transition:fill .25s}
+.fig .quad:hover path{fill:#f7e3a8}
+.figbar{display:flex;gap:12px;align-items:center;margin:-.2rem 0 .9rem}
+.figbar .btn{padding:4px 12px;font-size:.8rem;box-shadow:3px 3px 0 var(--blood);flex:0 0 auto}
+.figbar .hint{font-family:var(--sans);font-size:.82rem;line-height:1.35;color:#6b5a48}
