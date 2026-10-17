@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Against the Sandglass — Distributed Algorithms of Ancient Greece</title>
+<meta name="description" content="A timed run through thirteen books: guess what happens in each short setup, then read why, while the sand runs.">
+<link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-view="cover">
+
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <span class="now" id="now">Against the Sandglass</span>
+  <i id="prog"></i>
+</div>
+
+<!-- ============================================================ cover: choose a run -->
+<header class="spread dark" id="cover" data-name="Against the Sandglass">
+  <div class="wrap">
+    <div class="hero">
+      <div class="intro">
+        <div class="kicker">A timed run through thirteen books</div>
+        <h1>Against the Sandglass</h1>
+        <p class="generic">Thirteen books, a setup at a time. Guess what happens, then see why, while the sand runs.</p>
+        <p class="hint">Press a number to answer. The sand does not wait while you read.</p>
+      </div>
+      <div class="bigglass" aria-hidden="true"><svg id="coverglass" class="glass" viewBox="0 0 120 180"></svg></div>
+    </div>
+
+    <div class="cats" id="cats"></div>
+
+    <label class="switch" for="timeme">
+      <input type="checkbox" id="timeme" role="switch" checked>
+      <span class="track" aria-hidden="true"><i></i></span>
+      <span class="swt"><b>Time me</b><small id="timehelp">The clock runs, each book is split, and a best time is kept.</small></span>
+    </label>
+
+    <div class="routehead"><div class="kicker">The route</div><p class="rsub">Five settings, in the order of the run.</p></div>
+    <div class="route" id="routeprev"></div>
+    <noscript><p class="hint">This page needs scripts to run.</p></noscript>
+  </div>
+</header>
+
+<!-- ============================================================ the run -->
+<section class="spread light" id="run" data-name="The run" hidden>
+  <div class="wrap">
+    <div class="strip" id="strip">
+      <span class="sclock" id="sclock">0:00.0</span>
+      <span class="sn" id="sn"></span>
+      <span class="ticks" id="ticks" aria-hidden="true"></span>
+      <button class="sbt" id="pause2" type="button">Pause</button>
+      <button class="sbt" id="leave2" type="button">Leave</button>
+    </div>
+    <div class="runwrap">
+      <article class="trial paper" id="trial" aria-label="The trial">
+        <button class="veil" id="veil" type="button" hidden><span class="v1">Paused</span><span class="v2">Press Esc or click to go on.</span></button>
+        <div class="tfig" id="tfig">
+          <svg id="fig" class="fig isle-svg" role="img" aria-label=""></svg>
+          <p class="figcap" id="figcap" hidden></p>
+        </div>
+        <div class="ttext">
+          <div class="kick" id="kick"></div>
+          <p class="setup" id="setup"></p>
+          <p class="q" id="q"></p>
+          <div class="opts" id="opts" role="group" aria-label="Your answer"></div>
+          <div class="reveal" id="reveal" aria-live="polite">
+            <p class="verdict" id="verdict"></p>
+            <p class="why" id="why"></p>
+            <div class="mach" id="mach"><b>In the machine room</b><span id="machtext"></span></div>
+            <p class="rd"><a id="booklink" href="#" rel="noopener">Read it in the book ↗</a></p>
+          </div>
+          <div class="nav"><button class="btn" id="next" type="button" disabled>Next →</button><span class="keys">1–4 answer · Enter or → goes on · Esc pauses</span></div>
+        </div>
+      </article>
+
+      <aside class="panel paper" id="panel" aria-label="The sandglass and the splits">
+        <div class="glassbox">
+          <svg id="glass" class="glass" viewBox="0 0 120 180" aria-hidden="true"></svg>
+          <div class="clockbox">
+            <div class="clock" id="clock">0:00.0</div>
+            <div class="clockcap" id="clockcap">elapsed</div>
+          </div>
+        </div>
+        <ol class="splits" id="splits"></ol>
+        <div class="panelfoot"><span class="pcount" id="pcount"></span><span class="bt"><button class="btn alt small" id="pause" type="button">Pause</button><button class="btn alt small" id="leave" type="button">Leave the run</button></span></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ the finish -->
+<section class="spread dark" id="finish" data-name="The finish" hidden>
+  <div class="wrap">
+    <div class="result">
+      <div class="kicker" id="fkick">The finish</div>
+      <h2 class="score" id="score"></h2>
+      <p class="newbest" id="newbest" hidden>New best</p>
+      <p class="fsub" id="fsub"></p>
+      <div class="row fbtns" id="fbtns"></div>
+    </div>
+
+    <div class="splitsec" id="splitsec">
+      <div class="kicker">The splits</div>
+      <table class="stable" id="stable"></table>
+    </div>
+
+    <div class="routesec">
+      <div class="kicker">The route</div>
+      <p class="rsub">One line for each setup: what it taught. A setup you missed is tinted.</p>
+      <div id="routelist"></div>
+    </div>
+
+    <div class="meander" style="margin:3rem auto"></div>
+    <div class="end">
+      <p class="big">Every setup here comes from one of these books, and each book tells the reason in full.</p>
+      <div class="links" id="booklinks"></div>
+      <div class="links">
+        <a href="../birds-eye-view/index.html">A Bird's-Eye View</a>
+        <a href="../one-sentence-unfolded/index.html">One Sentence, Unfolded</a>
+        <a href="../../papers/index.html">All the papers</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>Distributed Algorithms of Ancient Greece · Against the Sandglass</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
