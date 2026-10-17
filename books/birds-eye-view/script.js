@@ -240,8 +240,8 @@ schedia:[
   p:["Okios steps onto the porch and misses the change: inside, a majority has raised board 7 and Liskovia holds the podium. Okios still believes board 6 is his and may go on writing lines.","Passing needs three, and a majority has already moved on, so nothing he writes can pass."],
   m:"A primary cut off from the rest can keep taking requests but cannot commit any, because it can no longer reach a majority."},
  {k:"Wax and ink",t:"Wax, not ink",a:"wax",
-  p:["Schedia's wax is quick, but if a majority go home on the same night the council stops for good. It never goes on with a passed law missing.","Across the bay the Parliament's ink survives any absence, while any legislator may start a ballot. Both halls rest on one fact: any two majorities share a legislator."],
-  m:"Viewstamped Replication keeps its state in memory and stops if a majority crash at once; Paxos writes to lasting storage. Both rely on overlapping majorities, and were found independently."}
+  p:["Schedia's wax is quick, but going home smooths it. If a majority go home on the same night, the council can stop for good: lost tablets can stop it for ever, but never let a board start without a law that passed.","Across the bay the Parliament's ink survives any absence, while any legislator may start a ballot. Both halls rest on one fact: any two majorities share a legislator."],
+  m:"Viewstamped Replication keeps its state in memory and can stop for good if a majority crash at once; Paxos writes to lasting storage. Both rely on overlapping majorities, and were found independently."}
 ]};
 
 /* ---------- animation ----------
@@ -532,7 +532,7 @@ schedia:[
  function(svg,A){svg.innerHTML="";svg.setAttribute("viewBox","0 0 440 440");const cx=220,cy=220;
    el("path",{d:`M${cx},16 A204,204 0 0 0 ${cx},424 Z`,fill:"#f7e7bd"},svg);el("path",{d:`M${cx},16 A204,204 0 0 1 ${cx},424 Z`,fill:"#dceaf2"},svg);
    el("circle",{cx,cy,r:204,fill:"none",stroke:"#1c1512","stroke-width":5},svg);el("line",{x1:cx,y1:16,x2:cx,y2:424,stroke:"#1c1512","stroke-width":3},svg);
-   [[-1,"Schedia","wax tablets","one trip out and back","passes a law","a majority gone home","stops it for good"],
+   [[-1,"Schedia","wax tablets","one trip out and back","passes a law","a majority gone home","can stop it for good"],
     [1,"Paxos","ink scrolls","survives any absence","","any legislator","may start a ballot"]].forEach(([s,a,b,c,d,e,f])=>{
      const x=cx+s*102;A.step(0,txt(svg,x,104,a,"lab ink",{style:"font-size:20px"}),txt(svg,x,128,b,"lab sm"));
      A.step(1,txt(svg,x,182,c,"lab sm"),txt(svg,x,200,d,"lab sm"));A.step(2,txt(svg,x,250,e,"lab sm"),txt(svg,x,268,f,"lab sm"))});
