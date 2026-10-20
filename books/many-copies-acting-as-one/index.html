@@ -23,8 +23,8 @@
   <div class="wrap grid">
     <div>
       <h1>Many Copies, Acting as One</h1>
-      <p class="generic">When data is held in several copies, what does it take for them to act as one? And who could ever tell the difference?</p>
-      <p class="allegory">We find out by exploring how three ancient Greek trading houses filled one another's requests in the sequence they really came, though none of them could read the hour.</p>
+      <p class="generic">When data is stored across multiple copies—or handled by many workers at once—what does it take for the whole system to behave as if there were only a single copy? And who could ever tell the difference?</p>
+      <p class="allegory">To find out, we return to the ancient Greek island of Arche, where three trading houses must fill one another's grain requests in the exact order they were truly placed—even when heavy clouds hide the sun.</p>
       <p class="source">After Maurice P. Herlihy and Jeannette M. Wing, <i>Linearizability: A Correctness Condition for Concurrent Objects</i>, 1990</p>
     </div>
     <div class="pop" data-auto>
@@ -46,8 +46,8 @@
     <div class="lin-side in">
       <h5>Draws on</h5>
       <ul class="lin-nodes">
-        <li><a href="https://lamport.azurewebsites.net/pubs/multi.pdf" class="lin-node ext" data-n="i:lamport-1979" data-label="Lamport 1979"><b>How to Make a Multiprocessor Computer That Correctly Executes Multiprocess Programs</b><span class="by">Lamport 1979</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:lamport-1979" data-to="m:herlihy-wing-1990_linearizability" tabindex="0"><em>sequential consistency</em><span class="ends"></span><span class="why">Sequential consistency: the calls fit some one-at-a-time order, with no regard for real time.</span></li></ul></li>
-        <li><div class="lin-node ext" data-n="i:papadimitriou-1979" data-label="Papadimitriou 1979"><b>The Serializability of Concurrent Database Updates</b><span class="by">Papadimitriou 1979</span></div><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:papadimitriou-1979" data-to="m:herlihy-wing-1990_linearizability" tabindex="0"><em>serializability</em><span class="ends"></span><span class="why">Serializability: the same demand made of whole transactions, which may have to wait.</span></li></ul></li>
+        <li><a href="https://lamport.azurewebsites.net/pubs/multi.pdf" class="lin-node ext" data-n="i:lamport-1979" data-label="Lamport 1979"><b>How to Make a Multiprocessor Computer That Correctly Executes Multiprocess Programs</b><span class="by">Lamport 1979</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:lamport-1979" data-to="m:herlihy-wing-1990_linearizability" tabindex="0"><em>sequential consistency</em><span class="ends"></span><span class="why">Sequential consistency: operations behave as if they happened in some one-at-a-time order, without requiring that order to match real-world time.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="i:papadimitriou-1979" data-label="Papadimitriou 1979"><b>The Serializability of Concurrent Database Updates</b><span class="by">Papadimitriou 1979</span></div><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:papadimitriou-1979" data-to="m:herlihy-wing-1990_linearizability" tabindex="0"><em>serializability</em><span class="ends"></span><span class="why">Serializability: the same one-at-a-time requirement applied to multi-step database transactions, which can force callers to wait or abort.</span></li></ul></li>
       </ul>
     </div>
     <div class="lin-mid">
@@ -59,12 +59,12 @@
     <div class="lin-side out">
       <h5>Leads to</h5>
       <ul class="lin-nodes">
-        <li><a href="https://cs.brown.edu/~mph/Herlihy91/p124-herlihy.pdf" class="lin-node ext" data-n="o:herlihy-1991" data-label="Herlihy 1991"><b>Wait-Free Synchronization</b><span class="by">Herlihy 1991</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:herlihy-wing-1990_linearizability" data-to="o:herlihy-1991" tabindex="0"><em>linearizable objects</em><span class="ends"></span><span class="why">Linearizable objects: which can be built from which, with no caller made to wait for another.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="o:gilbert-lynch-2002_brewers-conjecture" data-label="Gilbert &amp; Lynch 2002" href="../answering-while-cut-off/index.html"><b>Brewer’s Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services</b><span class="by">Gilbert &amp; Lynch 2002 · Answering While Cut Off</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:herlihy-wing-1990_linearizability" data-to="o:gilbert-lynch-2002_brewers-conjecture" tabindex="0"><em>linearizability</em><span class="ends"></span><span class="why">Linearizability, taken as the definition of consistency.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="o:bailis-2014_hats" data-label="Bailis et al. 2014" href="../what-you-can-promise-alone/index.html"><b>Highly Available Transactions: Virtues and Limitations</b><span class="by">Bailis et al. 2014 · What You Can Promise Alone</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:herlihy-wing-1990_linearizability" data-to="o:bailis-2014_hats" tabindex="0"><em>linearizability</em><span class="ends"></span><span class="why">Linearizability, the guarantee shown to be out of reach of a highly available system.</span></li></ul></li>
+        <li><a href="https://cs.brown.edu/~mph/Herlihy91/p124-herlihy.pdf" class="lin-node ext" data-n="o:herlihy-1991" data-label="Herlihy 1991"><b>Wait-Free Synchronization</b><span class="by">Herlihy 1991</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:herlihy-wing-1990_linearizability" data-to="o:herlihy-1991" tabindex="0"><em>linearizable objects</em><span class="ends"></span><span class="why">Linearizable objects: establishes a hierarchy of which concurrent objects can be built from which, without ever forcing one process to wait for another.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="o:gilbert-lynch-2002_brewers-conjecture" data-label="Gilbert &amp; Lynch 2002" href="../answering-while-cut-off/index.html"><b>Brewer’s Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services</b><span class="by">Gilbert &amp; Lynch 2002 · Answering While Cut Off</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:herlihy-wing-1990_linearizability" data-to="o:gilbert-lynch-2002_brewers-conjecture" tabindex="0"><em>linearizability</em><span class="ends"></span><span class="why">Uses linearizability as the exact formal definition of "Consistency" in the CAP theorem.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="o:bailis-2014_hats" data-label="Bailis et al. 2014" href="../what-you-can-promise-alone/index.html"><b>Highly Available Transactions: Virtues and Limitations</b><span class="by">Bailis et al. 2014 · What You Can Promise Alone</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:herlihy-wing-1990_linearizability" data-to="o:bailis-2014_hats" tabindex="0"><em>linearizability</em><span class="ends"></span><span class="why">Shows that linearizability is one of the guarantees a system must give up if it wants to stay available during network partitions.</span></li></ul></li>
       </ul>
     </div>
-    <p class="lin-say">Each link is an idea one paper took from another. Point at one, or tap it, to read how.</p>
+    <p class="lin-say">Each link shows how one paper built on an idea from another. Hover over or tap any link to read how.</p>
     <p class="lin-key"><i class="k here"></i>a paper this book retells <i class="k book"></i>a paper retold in another book <i class="k ext"></i>a paper outside the series</p>
     </div>
   </div>
@@ -78,14 +78,14 @@
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>Copies that must act as one</h2>
-      <p class="lede">A shared object, such as a queue, may be held in several copies on several machines. Programmers want it to behave as if there were one copy.</p>
-      <p>The difficulty is that calls on the object overlap in time, and each takes time to answer. Agreeing on some one-at-a-time order of the calls is not enough, because a call that finished before another began must come first. The condition that Herlihy and Wing gave in 1990, linearizability, asks for exactly that: every call appears to take effect at one instant between its start and its answer, and the answers are those of a single copy. Three results make the condition usable.</p>
+      <p class="lede">When a shared data structure—like a queue or a database record—is replicated across several machines or accessed by many threads at once, programmers want a simple guarantee: it should behave as if there were only a single copy handling one request at a time.</p>
+      <p>The trouble is that real operations are not instantaneous. Every call takes time between the moment a client sends it and the moment the answer comes back, and calls from different clients often overlap. Merely putting all calls into <i>some</i> one-at-a-time order isn't enough: if one client's operation completely finished before a second client's operation even started, everyone expects the first one to take effect first. In 1990, Maurice Herlihy and Jeannette Wing defined <b>linearizability</b> to capture this exact guarantee: every operation must appear to take effect instantaneously at some single moment between its start and its completion. Three properties make linearizability especially powerful:</p>
       <ul class="terms">
-        <li><b>Locality:</b> each object can be checked alone.</li>
-        <li><b>Nonblocking:</b> a caller is never made to wait where the call is always defined.</li>
-        <li><b>A proof method:</b> the condition can be proved even for a queue no one can pause.</li>
+        <li><b>Locality:</b> You can verify each shared object on its own. If every individual object is linearizable, the entire system is automatically linearizable.</li>
+        <li><b>Nonblocking:</b> A linearizable object never forces a client to wait for another client's operation just to preserve the ordering rules.</li>
+        <li><b>A general proof method:</b> Even when a highly concurrent data structure has no single line of code where an operation "takes effect," we can still prove it is linearizable by tracking the set of possible orders it could represent.</li>
       </ul>
-      <p style="margin-top:1.2rem">We tell it with three trading houses and the board where House 3 holds its waiting requests.</p>
+      <p style="margin-top:1.2rem">We explore all three through the story of three trading houses on the island of Arche and the request board outside House 3's storehouse.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper mach">
@@ -116,13 +116,13 @@
     <img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-ring-road-3bde70e994-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-ring-road-3bde70e994-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-ring-road-3bde70e994-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-ring-road-3bde70e994-1200.avif 1200w" sizes="100vw" data-local="img/ring-road.jpg" alt="A narrow road cut into a sea cliff, with loaded mules walking one behind another between dry-stone walls and olive trees" data-parallax>
     <div class="hall-title"><div class="t">
       <div class="kicker">The ring road of Arche</div>
-      <h2>Three houses, and no hour</h2>
-      <p>House 1, House 2 and House 3 stand round the coast of Arche with a mountain between them. Word passes between them only on slips carried along the one road, and in the trading season nobody on the island can read the hour.</p>
+      <h2>Three houses, and no shared clock</h2>
+      <p>House 1, House 2, and House 3 sit along the coast of the island of Arche, separated by a steep central mountain. Official word travels between them only on written slips carried along a single coastal road, and during the cloudy trading season nobody on the island can read the sundials.</p>
     </div></div>
     <div class="pins">
-      <div class="pin pop"><div class="leaf"><b>No passing</b>By the law of the road nothing overtakes, and every slip arrives in the end.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></div></div>
-      <div class="pin pop"><div class="leaf"><b>No common hour</b>In the trading season cloud silences the sundials, and each counting room's water-clock keeps its own time.</div></div>
-      <div class="pin pop"><div class="leaf"><b>The goatherd</b>A goatherd who knows the smugglers' tracks sometimes crosses the mountain, and brings news that no slip carries.</div></div>
+      <div class="pin pop"><div class="leaf"><b>No overtaking</b>By the law of the narrow road, no messenger may pass another, and every slip eventually arrives.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></div></div>
+      <div class="pin pop"><div class="leaf"><b>No shared clock</b>During the cloudy trading season, shadows vanish from the sundials, and each counting room's indoor water-clock keeps its own separate time.</div></div>
+      <div class="pin pop"><div class="leaf"><b>The goatherd</b>A goatherd who knows the steep smugglers' tracks sometimes scrambles straight across the mountain, carrying word of mouth that no official slip records.</div></div>
     </div>
   </div>
 </section>
@@ -135,9 +135,9 @@
       <div>
         <div class="kicker">The goatherd's morning</div>
         <h2>Which request was placed first?</h2>
-        <p class="lede">House 3 has grain in its storehouse, and both other houses need it. The houses have agreed that the request placed first is filled first, so House 3 has to know which request that was.</p>
-        <p>With no hour to go by, House 3 reads the tallies: a number written on every slip and raised on every arrival, with the houses' numbers to break ties. The tallies never put a request ahead of one that led to it, and no house can win by having a quicker messenger.<sup class="xref"><a href="../ordering-without-clocks/index.html#s3" title="Ordering Without Clocks: Breaking Ties">*</a></sup></p>
-        <p>The tallies are built from slips and nothing else, though, and news also crosses the mountain. One morning shows what that allows. Scroll to follow it.</p>
+        <p class="lede">House 3 has grain in its storehouse, and both other houses need it. All three houses have agreed on a fair rule: whichever request was placed first must be filled first.</p>
+        <p>With no shared clock to consult, House 3 has been ordering requests using <b>tallies</b> (logical clocks): a rising number stamped on every slip and advanced whenever a slip arrives, with house numbers used to break ties. Tallies guarantee that an effect never comes before its cause along the road, and that no house can jump the queue simply by hiring a faster runner.<sup class="xref"><a href="../ordering-without-clocks/index.html#s3" title="Ordering Without Clocks: Breaking Ties">*</a></sup></p>
+        <p>However, tallies only track official slips travelling along the coastal road—and news can also cross the mountain by word of mouth. Scroll through the morning below to see how an unrecorded shortcut can turn the tally order upside down.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b01-goatherd-2766d710f5-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b01-goatherd-2766d710f5-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b01-goatherd-2766d710f5-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b01-goatherd-2766d710f5-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/b01-goatherd.jpg" alt="High on a hillside above a harbour town, a goatherd in a sheepskin cape points down with his staff among his goats, with white houses, red roofs and a stone pier below" loading="lazy"></div></div></div>
     </div>
@@ -150,7 +150,7 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">One morning on the road</div>
       <h2>House 2 is served first</h2>
-      <p class="lede">House 1 sends a request and has its confirmation back before the sun is high. A goatherd carries the news over the mountain to House 2, and at noon House 2 sends a request of its own.</p>
+      <p class="lede">Early in the morning, House 1 sends a request for grain and receives its confirmation back from House 3 before the sun is high. Then a goatherd carries the news over the mountain to House 2, and at noon House 2 sends a request of its own.</p>
     </div>
   </div>
   <div class="scrolly" id="goat">
@@ -159,19 +159,19 @@
       <div class="side" id="goatside" data-live></div>
     </div></div>
     <div class="steps">
-      <div class="step on"><div class="card"><div class="num">1 · The morning</div><h3>Three houses, three tallies</h3><p>House 1 has made two entries this morning. Houses 2 and 3 have made none, and every house has heard nothing. Each house's tally is shown beside its name.</p></div></div>
-      <div class="step"><div class="card"><div class="num">2 · The request</div><h3>House 1 sends a request</h3><p>House 1 writes the request as its third entry, so the request's tally is <b id="gt1"></b>. A messenger takes the slip to House 3.</p></div></div>
-      <div class="step"><div class="card"><div class="num">3 · The entry</div><h3>House 3 enters it</h3><p>The slip reaches House 3, which puts the request on its board and raises its own tally past the slip's. It sends back word that the request is entered, marked with its new tally, <b id="gt2"></b>.</p></div></div>
-      <div class="step"><div class="card"><div class="num">4 · The confirmation</div><h3>House 1 has its word</h3><p>The confirmation reaches House 1 before the sun is high, and House 1's tally is raised past it.</p></div></div>
-      <div class="step"><div class="card"><div class="num">5 · The goatherd</div><h3>News over the mountain</h3><p>A goatherd crossing Mount Phyle by the smugglers' tracks mentions the request at House 2. The goatherd carries no slip, and House 2 has had none all morning, so its tally has not moved.</p></div></div>
-      <div class="step"><div class="card"><div class="num">6 · Noon</div><h3>House 2 sends a request</h3><p>House 2 writes a request of its own. Its tally is <b id="gt3"></b>, low, since no slip has reached it for hours, and lower than House 1's request's.</p></div></div>
-      <div class="step"><div class="card"><div class="num">7 · The serving</div><h3>The lower tally goes first</h3><p>House 3 enters the second request and serves the lower tally first, which is House 2's. That is fair by the tallies. Yet House 1's request had been entered and confirmed before House 2 even asked.</p></div></div>
+      <div class="step on"><div class="card"><div class="num">1 · The morning</div><h3>Three houses, three tallies</h3><p>House 1 has already logged two local entries this morning. Houses 2 and 3 have logged none, and no slips have travelled yet. Each house's current tally is shown beside its name.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · The request</div><h3>House 1 sends a request</h3><p>House 1 writes a grain request as its third entry, stamping the slip with a tally of <b id="gt1"></b>. A messenger sets off along the road to House 3.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · The entry</div><h3>House 3 enters it</h3><p>The slip reaches House 3, which places the request on its waiting board and jumps its own tally past the slip's number. It sends back a confirmation marked with its new tally, <b id="gt2"></b>.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · The confirmation</div><h3>House 1 has its word</h3><p>The confirmation reaches House 1 well before noon, and House 1 advances its tally past the confirmation's number. House 1's request is now completely finished and confirmed.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · The goatherd</div><h3>News over the mountain</h3><p>A goatherd scrambles over Mount Phyle and mentions House 1's finished request to a clerk at House 2. Because the goatherd carries no official slip—and House 2 has had a completely quiet morning—House 2's tally is still sitting at 0.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · Noon</div><h3>House 2 sends a request</h3><p>At noon, House 2 writes a grain request of its own. Because no official slip has reached it all morning, its request carries a tally of <b id="gt3"></b>—smaller than House 1's!</p></div></div>
+      <div class="step"><div class="card"><div class="num">7 · The serving</div><h3>The lower tally goes first</h3><p>House 3 puts the second request on its board and serves the smaller tally first—giving the grain to House 2. By the rules of the tally, nothing went wrong. Yet House 1's request was completely entered and confirmed before House 2 even asked!</p></div></div>
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
-    <p class="tell" style="margin-top:0">By the tallies nothing went wrong. No slip joined the two requests, so either could come first. But House 2 knows, and so does anyone who talked to the goatherd, that House 1's request had been entered and confirmed before House 2 even asked. By what the sun saw, House 1 was first.</p>
-    <p class="tell">The tallies have always had this gap. They respect every slip, and the goatherd carries none. One answer is to make better clocks, kept so close together by the slips that nobody crossing the mountain can arrive before setting out.<sup class="xref"><a href="../ordering-without-clocks/index.html#s9" title="Ordering Without Clocks: Whose Order Do the Houses Keep?">*</a></sup> That is a way of catching the goatherd. The houses want something else: a promise about how requests are filled that no goatherd can ever catch them breaking, whatever clocks they keep or do without.</p>
-    <p class="tell">Such a promise would be to fill first the request placed first as the sun saw it. Nobody on Arche can read the sun, so it is not yet clear what the promise would even say.</p>
+    <p class="tell" style="margin-top:0">As far as the tallies can tell, no official slip connected the two requests, so either one could go first. But House 2 knows—and so does anyone who spoke with the goatherd—that House 1's request was completely finished and confirmed before House 2 even picked up a stylus. In real time, under the sun, House 1 was indisputably first.</p>
+    <p class="tell">We saw earlier that tallies have this blind spot because they only track official slips.<sup class="xref"><a href="../ordering-without-clocks/index.html#s9" title="Ordering Without Clocks: Whose Order Do the Houses Keep?">*</a></sup> Instead of trying to build synchronized clocks, the houses want a stronger guarantee about how their request board behaves: a promise that <b>any request that finishes before another begins is always served first</b>, so that no goatherd crossing the mountain can ever catch the board out of order.</p>
+    <p class="tell">Since nobody on cloudy Arche can read a sundial, how can the houses even state—much less keep—a promise based on real time?</p>
   </div>
 </section>
 
@@ -183,42 +183,42 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">A promise in what the houses see</div>
       <h2>The rule of the board</h2>
-      <p class="lede">A promise about requests has to be said in terms of what the houses themselves see. A house sees two moments of its request: when it sends the request, and when the confirmation comes back. Somewhere in between, the request was put on the board where House 3 holds its waiting requests.</p>
-      <p>Serving has two ends as well. A loader at House 3 goes to the board, takes a request and loads the grain for it, and that too begins and ends. Each house, and each loader, does one thing at a time.</p>
-      <p>So every piece of business has a span, from its beginning to its end. One piece of business comes <b>before</b> another when it was over before the other began. Otherwise the two <b>overlap</b>, and neither came first. This is judged by the sun, whether or not anyone could see it. Three requests are drawn below. Choose any two, and see whether one came before the other.</p>
+      <p class="lede">Any promise about the board must be stated in terms of what the houses actually observe at their gates. For a request, a house observes two events: the moment it sends the request slip out, and the moment the confirmation slip arrives back. Somewhere between those two moments, the request took its place on House 3's waiting board.</p>
+      <p>Serving a request has a start and a finish too: a loader at House 3 walks up to the board, takes the oldest waiting request, and loads the grain sacks onto a cart. Each house—and each loader—performs one piece of business at a time.</p>
+      <p>Every piece of business therefore spans an interval of real time, from its start to its completion. One piece of business comes <b>before</b> another if it completely finished before the other began; otherwise, the two <b>overlap</b> in time, and neither is strictly first. Click any two requests in the diagram below to see whether one came before the other or if their spans overlap.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Before, or overlap? <em>choose two requests</em></h4>
       <div class="st-wrap">
         <svg class="st-svg fig" id="spansvg" role="group" aria-label="Three lines running outward, one for each house, with the spans of three requests as thick stretches of House 1's and House 2's lines"></svg>
         <div>
-          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each line is one house. A thick stretch is the span of one request, from its sending to its confirmation. Later moments are further out. Choose the first dot of any two requests.</p>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each line tracks one house over time, moving outward. Each thick bar shows the span of a request from sending to confirmation. Click the starting dot of any two requests to compare them.</p>
           <p class="say" id="spansay">A is House 1's request, B is House 2's first request and C is House 2's second.</p>
         </div>
       </div>
     </div></div></div>
     <div class="narrow" style="margin:2rem 0 0">
-      <p>Now the promise. Picture a single steward with a single board, doing one thing at a time: they enter a request, or they serve the oldest waiting one. No request goes onto their board and none comes off it except through their own hands. The houses cannot see the steward and do not need to. They need only that everything they got could have come from such a steward, with each thing the steward did falling somewhere inside the span of the business it belonged to. Said exactly, all the requests and all the servings can be set in one sequence such that three demands hold.</p>
+      <p>Now we can state the promise—which computer scientists call <b>linearizability</b>, and which the houses call <b>the rule of the board</b>. Imagine a single, unhurried steward standing beside a single board, doing one thing at a time: either entering a new request at the back of the board, or handing the oldest waiting request to a loader. The houses don't need to see this steward; they only ask that everything they experience at their gates could have come from such a steward, with each action taking effect at a single instant inside its real-time span. More precisely, all requests and servings must fit into a single sequence that satisfies three demands:</p>
     </div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First demand</div><h3>The same as one steward</h3><p>Every serving takes the request that a single steward, with a single board, taking everything in that sequence, would have served.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second demand</div><h3>A moment inside the span</h3><p>Each piece of business takes its place in the sequence at some moment between its beginning and its end.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third demand</div><h3>Finished first, comes first</h3><p>Anything finished before another began comes before it.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First demand</div><h3>The same as one steward</h3><p>Every serving hands out the exact request that a single steward, managing a single board in that one-at-a-time sequence, would have handed out.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second demand</div><h3>A moment inside the span</h3><p>Each request or serving takes effect at a single instant (its <i>linearization point</i>) somewhere between its start and its completion.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third demand</div><h3>Finished first, comes first</h3><p>If one piece of business completely finished before another began, it must appear earlier in the sequence.</p></div></div></div>
     </div>
     <div class="narrow" style="margin:2rem 0 0">
-      <p>The second demand is what ties the promise to the sun. Without it the steward could act whenever it suited them, and the promise would say nothing about when anything happened. With it, the third follows: if House 1's request was over before House 2's began, the steward's moment for House 1 came first, and a single steward serves the older request first. So the goatherd's morning breaks the rule.</p>
-      <p class="tell" style="margin-top:0">A rule can fail in two ways. It can be too strict and forbid mornings that are plainly fine, or too loose and allow mornings that are plainly wrong. Four mornings test this one both ways.</p>
+      <p>Notice how the second demand ties the promise to real time under the sun—and automatically guarantees the third! If House 1's request finished before House 2's request even began, then the single instant inside House 1's span must come earlier than the single instant inside House 2's span. A single steward therefore enters House 1's request first and serves it first—which is why the goatherd's morning violates the rule of the board.</p>
+      <p class="tell" style="margin-top:0">A correctness rule can fail by being too strict (forbidding runs that make complete sense) or too loose (allowing runs that are clearly broken). Let's test the rule of the board against four different mornings.</p>
     </div>
     <details class="proof">
       <summary>The rule of the board, stated formally</summary>
-      <p class="given">Write &lt;<sub>H</sub> for the real-time order of a history <var>H</var>: <var>a</var> &lt;<sub>H</sub> <var>b</var> when <var>a</var> responds before <var>b</var> is invoked. The board is a FIFO queue: a request is <code>Enq</code>, a serving is <code>Deq</code>.</p>
-      <p>All the requests and all the servings can be set in a single sequence such that:</p>
+      <p class="given">Write &lt;<sub>H</sub> for the real-time order of a history <var>H</var>: <var>a</var> &lt;<sub>H</sub> <var>b</var> when operation <var>a</var> receives its response before operation <var>b</var> is invoked. The board is a FIFO queue: placing a request is <code>Enq</code>, and serving a request is <code>Deq</code>.</p>
+      <p>A history of requests and servings satisfies the rule of the board (linearizability) if all completed operations—plus whichever still-pending operations have already taken effect—can be placed into a single sequential order such that:</p>
       <ol class="proofsteps">
-        <li>every serving takes the request that a single steward, with a single board, taking everything in that sequence, would have served;</li>
-        <li>each piece of business takes its place in the sequence at some moment between its beginning and its end; so that</li>
-        <li>anything finished before another began comes before it.</li>
+        <li><b>Legal sequential behavior:</b> Every serving (<code>Deq</code>) returns the exact request that a single FIFO queue, executing operations one at a time in that sequence, would return.</li>
+        <li><b>One instant per span:</b> Each operation takes its place in the sequence at a single moment between its invocation and its response.</li>
+        <li><b>Preserves real-time order:</b> Consequently, any operation that completed before another was invoked appears earlier in the sequence (<var>a</var> &lt;<sub>H</sub> <var>b</var> implies <var>a</var> precedes <var>b</var>).</li>
       </ol>
-      <p class="fnote">Linearizability, §2.2: a history is linearizable if, after adding responses to some pending invocations and dropping the rest, it is equivalent to a legal sequential history that respects the real-time order &lt;<sub>H</sub>.</p>
+      <p class="fnote">Herlihy &amp; Wing 1990, §2.2: a history <var>H</var> is linearizable if, after appending responses to some pending invocations and discarding the rest, it is equivalent to a legal sequential history <var>S</var> that preserves the real-time order &lt;<sub>H</sub>.</p>
     </details>
   </div>
 </section>
@@ -231,15 +231,15 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Is the rule too strict, or too loose?</div>
       <h2>Four mornings, tried against the rule</h2>
-      <p class="lede">Each of the four mornings is put to the rule in the same way: could a single steward have produced it, with every piece of business falling inside its span?</p>
-      <p>Two of the mornings the rule has to allow if it is not too strict, and two it has to forbid if it is not too loose. Choose a morning and read the verdict.</p>
+      <p class="lede">We judge each of the four mornings below by asking the exact same question: can we pick one single moment inside the span of every request and every serving so that a single steward would have handed out the exact same grain?</p>
+      <p>Two of these mornings ought to pass if our rule is flexible enough for real life, and two ought to fail if our rule catches genuine mistakes. Click each morning below to see the verdict.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Four mornings <em id="fmname">choose one</em></h4>
       <div class="st-wrap">
         <svg class="st-svg fig" id="fmsvg" role="group" aria-label="Three lines running outward: House 1 and House 2, which send requests, and House 3, where the board and its loaders are; the spans of the requests and of the servings are thick stretches"></svg>
         <div>
-          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Requests are thick stretches on House 1's and House 2's lines, from sending to confirmation. A serving is a grey stretch on House 3's line, ending in a dot for the request it took. Later moments are further out.</p>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Requests are shown as thick bars on House 1's and House 2's lines, from sending to confirmation. A serving is a grey bar on House 3's line, ending with a colored dot showing which house's request it filled.</p>
           <p class="say" id="fmsay">Choose a morning.</p>
           <div id="fmverd"></div>
         </div>
@@ -251,9 +251,9 @@
         <button class="btn alt" data-m="3">One request served twice</button>
       </div>
     </div></div></div>
-    <p class="tell">The four verdicts show where the rule draws its line. Overlapping requests may be served either way round, and requests one after the other may not. A request may be served while word of its entry is still on the road, because its moment came at its entry. No fall of the times excuses serving one request twice.</p>
-    <p class="tell">Business still unfinished when a morning is judged needs one allowance. A request sent but not yet confirmed may be counted as on the board or not, whichever fits what happens next.</p>
-    <p class="tell">The rule and the tallies now both claim to say which request came first. They might be the same answer, or one a stricter form of the other.</p>
+    <p class="tell">These four mornings show why the rule draws its boundary right where it does. When two requests overlap in time, either one may legitimately be served first; when one finishes before the other begins, their order is fixed. A request can even be served while its confirmation slip is still travelling back along the road, because the request took effect the moment it was placed on the board. And no timing overlap can ever excuse serving the same request twice.</p>
+    <p class="tell">What if we stop and judge a morning while some request is still in flight—sent, but not yet confirmed? The rule makes a natural allowance: an unfinished request may either be counted as already on the board or left out, whichever fits what the loaders have already served.</p>
+    <p class="tell">We now have two ways of defining "which request came first": the tallies from our previous book, and the rule of the board. How do they compare?</p>
   </div>
 </section>
 
@@ -265,15 +265,15 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The rule and the tallies</div>
       <h2>The tallies' first, and the sun's first</h2>
-      <p class="lede">The rule and the tallies do not give the same answer about which request came first, and neither answer includes the other.</p>
-      <p>For the tallies, one request is first if a chain of slips leads from it to the other. Requests no chain joins are put in sequence by tally and house number, fairly but arbitrarily.<sup class="xref"><a href="../ordering-without-clocks/index.html#s2" title="Ordering Without Clocks: What Could Have Led to What">*</a></sup> For the sun, one request is first if it was over before the other began, whether or not any slip joined them. Each of the two mornings below sets one answer against the other.</p>
+      <p class="lede">Surprisingly, the tallies (causal order) and the rule of the board (real-time order) give genuinely different answers about which request came first—and neither rule is a stricter version of the other.</p>
+      <p>For the tallies, one request must precede another if a chain of official slips leads from the first to the second; otherwise, ties are broken by tally and house number.<sup class="xref"><a href="../ordering-without-clocks/index.html#s2" title="Ordering Without Clocks: What Could Have Led to What">*</a></sup> For the rule of the board, one request must precede another if the first received its confirmation before the second was sent, regardless of whether any slips passed between the two houses. Compare the two mornings below to see how each rule can require an order the other does not.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Two mornings <em id="fkname">choose one</em></h4>
       <div class="st-wrap">
         <svg class="st-svg fig" id="fksvg" role="group" aria-label="Three lines running outward, one for each house, with the spans of House 1's and House 2's requests and the slips between the houses"></svg>
         <div>
-          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">The number in a dot is the tally the request was written under. A thick stretch is a request's span. An arc is a slip. Later moments are further out.</p>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">The number inside a dot shows the tally under which that request was written. Thick bars show the real-time span of each request, and curved arcs show slips on the road.</p>
           <table class="vt" id="fktab"></table>
           <p class="say" id="fksay">Choose a morning.</p>
         </div>
@@ -284,19 +284,19 @@
       </div>
     </div></div></div>
     <div class="narrow" style="margin:2rem 0 0">
-      <p>On the goatherd's morning no slip joined the two requests, so the tallies could put House 2 first, and the sun put House 1 first. Turn it round: House 1 sends a request, and before it is confirmed sends House 2 a slip about it, and House 2 then makes a request. A chain of slips joins them, so the tallies put House 1 first. But House 1's request was not over when House 2's began, so for the sun they overlap, and the rule would let House 2 go first.</p>
-      <p>The rule can be kept, and easily, by the arrangement the tallies were invented to avoid. Let House 3 have the only board and enter each request when its slip reaches the gate. The entry falls after the slip was written and before the confirmation leaves, so it lies inside the request's span. Serve in order of entry, and House 3 itself keeps the rule.</p>
+      <p>On the goatherd's morning, no official slip connects the two requests, so the tallies allow House 2 to be served first—whereas the rule of the board forces House 1 to go first because its confirmation arrived before House 2 asked. Now flip the situation: suppose House 1 sends a grain request to House 3, and immediately sends a second slip telling House 2 about it. Upon reading that slip, House 2 sends its own grain request while House 1 is still waiting for its confirmation. Because a slip connects them, the tallies force House 1 to be served first—whereas their real-time spans overlap, so the rule of the board allows either house to be served first!</p>
+      <p>Even without a sundial, House 3 can satisfy the rule of the board in a remarkably simple way: keep a single board at House 3's gate, enter each request the moment its messenger arrives, and send the confirmation slip back right after. Because the entry happens after the request left and before the confirmation returns, that entry is guaranteed to fall inside the request's real-time span.</p>
     </div>
-    <div class="slab" style="max-width:640px;margin:1.4rem 0 0"><div class="slab-head">Two Kinds of First</div><p style="margin:0">Serving requests in the sequence they reach House 3's gate keeps the rule of the board. Serving them in the sequence of their tallies need not. And the tallies' sequence can put one request before another where the rule of the board would allow either.</p></div>
-    <p class="tell">Serving by arrival had one fault: the house with the shorter road wins every pair of requests that overlap. The rule does not mind, because it says nothing about requests that overlap. The tallies do mind, and pay for it by sometimes serving a later request first. The two answers protect different things.</p>
-    <p class="tell">So one board at House 3's gate keeps the rule. Each house might rather hold a copy of the board close at hand, and the rule has to say whether that is allowed.</p>
+    <div class="slab" style="max-width:640px;margin:1.4rem 0 0"><div class="slab-head">Two Kinds of First</div><p style="margin:0">Entering requests in the order their messengers reach House 3's gate satisfies the rule of the board (linearizability). Serving them by tally order need not. Conversely, tally order can fix the sequence of two overlapping requests where the rule of the board allows either order.</p></div>
+    <p class="tell">Why did the houses ever bother with tallies in the first place? Because when two requests overlap in time, serving by arrival at the gate always favors whichever house has the faster runner or the shorter stretch of road. The rule of the board doesn't mind that—when two requests overlap, it allows either order. Tallies, by contrast, protect causal chains and prevent faster runners from winning, at the cost of ignoring real-time order when no slip connects two events. The two rules simply protect different guarantees.</p>
+    <p class="tell">We just saw that a single board at House 3's gate satisfies the rule of the board. What if all three houses want to keep copies of the board locally? Does the rule allow multiple copies?</p>
     <details class="proof">
-      <summary>Proof — that serving by entry keeps the rule</summary>
-      <p class="given">Write &lt;<sub>H</sub> for the real-time order of a history <var>H</var>: <var>a</var> &lt;<sub>H</sub> <var>b</var> when <var>a</var> responds before <var>b</var> is invoked. <var>H</var> is linearizable if it can be extended to a history equivalent to a legal sequential history <var>S</var> with &lt;<sub>H</sub> ⊆ &lt;<sub>S</sub>. For the board, a FIFO queue, legal means each <code>Deq</code> returns the oldest item <code>Enq</code>-ed and not yet returned. The implementation is one copy at House 3's gate, and an operation takes effect at the step where its request is applied. <b>Claim.</b> The operations in the order of those steps form such an <var>S</var>.</p>
+      <summary>Proof · that serving by arrival at House 3's gate satisfies linearizability</summary>
+      <p class="given">Write &lt;<sub>H</sub> for the real-time order of a history <var>H</var>: <var>a</var> &lt;<sub>H</sub> <var>b</var> when <var>a</var> responds before <var>b</var> is invoked. <var>H</var> is linearizable if it can be extended to a history equivalent to a legal sequential history <var>S</var> with &lt;<sub>H</sub> ⊆ &lt;<sub>S</sub>. For the board (a FIFO queue), legal means each <code>Deq</code> returns the oldest item <code>Enq</code>-ed and not yet returned. Suppose a single copy sits at House 3's gate, and each operation takes effect at the exact instant it is applied to that board. <b>Claim.</b> Ordering operations by the instant they are applied at House 3's gate forms a valid linearization <var>S</var>.</p>
       <ol class="proofsteps">
-        <li>Put all requests and servings in sequence by the moment each is done at the board: a request when the steward enters it, a serving when a loader takes a request. This is one sequence.</li>
-        <li>Each serving takes the earliest request entered and not yet served, which is what a single steward with a single board would serve, so clause (1) holds.</li>
-        <li>A request is entered after its slip was written and before word of its entry leaves, so its moment lies within it. A serving's moment lies within the loader's business. That is clause (2), and clause (3) follows: whatever was finished before another began had its moment first.<span class="qed">∎</span></li>
+        <li>Order all requests and servings by the exact instant each is performed on House 3's board: a request when the clerk enters it, and a serving when a loader takes a request from the board. Because the board handles one action at a time, this defines a strict sequence <var>S</var>.</li>
+        <li>Each serving takes the earliest request entered on the board and not yet served, matching the behavior of a single sequential FIFO queue (Demand 1).</li>
+        <li>A request can only reach House 3's gate after its slip was sent, and its confirmation only arrives back at the sender after leaving House 3's gate. Thus, the instant of entry always lies strictly inside the request's real-time span, and a serving's instant lies inside the loader's span (Demand 2). Demand 3 follows immediately: if <var>a</var> finished before <var>b</var> began, <var>a</var>'s instant at the board occurred before <var>b</var>'s.<span class="qed">∎</span></li>
       </ol>
     </details>
 
@@ -304,17 +304,17 @@
       <a class="anchor" id="s5"></a>
       <div class="kicker">One board, or three</div>
       <h2>Copies nobody can count</h2>
-      <p class="lede">Whether there may be more than one board is settled by what the rule mentions. It speaks only of sendings, confirmations and servings, all things that happen at the houses' gates.</p>
-      <p>The rule never mentions the board itself. So it cannot tell one board from three copies held in step by slips, or from any other arrangement behind the gates. Whatever stands behind them is judged by what comes out of them.</p>
+      <p class="lede">Whether the island uses one central board or three separate copies is settled by what the rule of the board talks about: it speaks <i>only</i> of requests sent, confirmations received, and grain served at the houses' gates.</p>
+      <p>The rule never mentions how the board is built inside the counting rooms. As long as the confirmations and servings seen at the gates match what a single steward with a single board could have produced, the rule is satisfied—whether there is one wooden board at House 3, or three copies kept in sync by messengers behind the scenes.</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">At the gate</div><h3>What a house sees</h3><p>A house sends a request, gets its confirmation, and sees loaders serve. The rule speaks of these and of nothing else.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Behind the gate</div><h3>What it cannot see</h3><p>One board, three copies held in step by slips, or any other arrangement. The rule is silent on all of them.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Acting as one</div><h3>No way to tell</h3><p>No house, comparing notes with every other and with anyone who watched the sun, could tell that there is more than one board. That is what it means for many copies to act as one.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">At the gate</div><h3>What a house sees</h3><p>A house sends a request, receives a confirmation, and sees loaders fill orders. The rule of the board is defined entirely by these external events.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Behind the gate</div><h3>What stays hidden</h3><p>One central board, three replicated boards coordinated by slips, or a busy room of clerks: the rule leaves the internal machinery completely open.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Acting as one</div><h3>Indistinguishable from one copy</h3><p>Even if the houses compared all their logs alongside an observer who watched the sun, no one could ever prove there was more than a single board. That is what it means for many copies to act as one.</p></div></div></div>
     </div>
     <div class="narrow" style="margin:1.4rem 0 0">
-      <p>How copies might be held so is another matter, and this book does not take it up. What it takes up is what the promise gives to a house that relies on it.</p>
-      <p class="tell" style="margin-top:0">The first thing to settle is how far one check reaches. Grain is not the only thing asked for, and if the houses have several boards, the rule might have to be checked across all of them at once.</p>
+      <p>Other books in this series explore the protocols that keep replicated copies in sync. Here, we focus on what the guarantee of linearizability itself gives to anyone who relies on it.</p>
+      <p class="tell" style="margin-top:0">First, what happens when the island has more than one kind of trade? Grain is not the only commodity on Arche—and if the houses run separate boards for grain and olive oil, do they have to coordinate the two boards with each other?</p>
     </div>
   </div>
 </section>
@@ -325,19 +325,19 @@
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">Grain is not the only thing asked for</div>
+      <div class="kicker">Modularity · Locality</div>
       <h2>Grain and oil</h2>
-      <p class="lede">House 2 presses oil, and all three houses ask for it the same way, on a board of its own at House 2. If the rule had to hold over both boards together, every change to how one board is run would have to be weighed against the other.</p>
-      <p>It does not have to. It is enough that each board keeps the rule by itself.</p>
+      <p class="lede">While House 3 stores grain, House 2 presses olive oil and manages oil requests on a separate board of its own. If adding a second board meant the two boards had to coordinate with each other, building large systems out of smaller parts would be a nightmare.</p>
+      <p>With the rule of the board, they don't have to coordinate at all. Checking each board on its own is enough to guarantee that the whole island's business is linearizable.</p>
     </div>
-    <div class="slab" style="max-width:640px;margin:0 0 1.4rem"><div class="slab-head">One Board at a Time</div><p style="margin:0">All the business keeps the rule if and only if, for every board, the business on that board, taken by itself, keeps it.</p></div>
+    <div class="slab" style="max-width:640px;margin:0 0 1.4rem"><div class="slab-head">One Board at a Time (Locality)</div><p style="margin:0">The combined history of all business across the island satisfies the rule of the board if and only if each individual board's history satisfies the rule on its own.</p></div>
     <div class="narrow" style="margin:0 0 1rem">
-      <p>Two boards fit together without anyone arranging it because the sun ties them, and the sun never contradicts itself. Two boards could fail to fit only through a loop: one request before another on the grain board, that one before a third by the sun, and so round to the start. The proof shows that such a loop would need the sun to put something before itself.</p>
-      <p>Other sensible rules lack this property, and taking the sun out shows it. Ask only that everything could have come from a single steward, with each house's own business in the order the house did it, and nothing said about moments. Under that looser rule the goatherd's morning is fine. Now let House 1 ask for grain and then oil, and House 2 ask for oil and then grain. Choose a rule, and see whether each board passes it alone and whether the two pass it together.</p>
+      <p>Why do separate boards automatically fit together without any cross-board coordination? Because every board is anchored to the same real-world timeline—the sun—and real time never loops back on itself. Once you pick a valid instant inside the span of each grain operation and a valid instant inside the span of each oil operation, those instants naturally sit in a single timeline across the whole island.</p>
+      <p>To see why anchoring to real time is essential, consider a slightly weaker rule called <b>sequential consistency</b> (which we'll call <b>the looser rule</b>). It requires that operations behave as if executed by a single steward in an order that respects each individual house's own sequence of actions, <i>without</i> requiring an operation finished earlier in real time to go before one started later. On its own, the looser rule sounds reasonable—it even allows the goatherd's morning. Yet as the interactive below shows, two boards can each pass the looser rule individually while contradicting each other when combined!</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Grain and oil <em id="locname">choose a rule</em></h4>
-      <p style="font-size:.92rem;color:#6b5a48;margin:0 0 .6rem">House 1 asks for grain, then oil. House 2 asks for oil, then grain. House 1's oil reaches the oil board before House 2 places its own, so the oil board serves House 1's first. The grain board serves House 2's grain first, though House 1's grain was finished long before.</p>
+      <p style="font-size:.92rem;color:#6b5a48;margin:0 0 .6rem">House 1 places a grain request (and waits for its confirmation) and then an oil request. Meanwhile, House 2 places an oil request (and waits for its confirmation) and then a grain request. Suppose the oil board serves House 1 first, while the grain board serves House 2 first.</p>
       <table class="vt" id="loctab"></table>
       <p class="say" id="locsay">Choose a rule.</p>
       <div class="row">
@@ -345,19 +345,19 @@
         <button class="btn alt" id="locSun">The rule of the board</button>
       </div>
     </div></div></div>
-    <p class="tell">Each board passes the looser rule alone, and together they fail it. Houses that kept only the looser rule would need one plan spanning every board. Under the rule of the board the fault shows on the grain board by itself, where it lies. The sun's demand is what lets each board be kept, and judged, on its own.</p>
-    <p class="tell">Each board can be judged alone, then. A house may still fear that keeping the rule could force it to stand at the gate and wait on someone else's business.</p>
+    <p class="tell">Under the looser rule, the grain board looks fine on its own, and the oil board looks fine on its own—yet together they form an impossible cycle where neither house's first request could have happened first! Systems that rely only on sequential consistency cannot be verified one component at a time. Under the rule of the board (linearizability), real time breaks the cycle and pinpoints the exact culprit on the grain board.</p>
+    <p class="tell">So each board can be built and verified independently. Next, could obeying the rule of the board ever force a house to stand waiting at the gate while someone else's request finishes?</p>
     <details class="proof">
-      <summary>Proof — that if every board keeps the rule, all the business does</summary>
-      <p class="given">For a history <var>H</var> and an object <var>x</var>, write <var>H</var>|<var>x</var> for the subhistory of operations on <var>x</var>, and &lt;<sub>H</sub> for the real-time order: <var>a</var> &lt;<sub>H</sub> <var>b</var> when <var>a</var> responds before <var>b</var> is invoked. <b>Claim</b> (locality, Theorem 1, the "if" direction): if every <var>H</var>|<var>x</var> is linearizable, then <var>H</var> is.</p>
+      <summary>Proof · that if every board is linearizable, the whole system is linearizable (Locality)</summary>
+      <p class="given">For a history <var>H</var> and an object <var>x</var>, write <var>H</var>|<var>x</var> for the subhistory of operations on <var>x</var>, and &lt;<sub>H</sub> for the real-time order: <var>a</var> &lt;<sub>H</sub> <var>b</var> when <var>a</var> responds before <var>b</var> is invoked. <b>Claim</b> (Locality, Theorem 1, the "if" direction): if every <var>H</var>|<var>x</var> is linearizable, then <var>H</var> is linearizable.</p>
       <ol class="proofsteps">
-        <li>For each board, choose a sequence and moments that show it keeps the rule. Say one piece of business <em>must go before</em> another if they are on the same board and its sequence puts the first earlier, or if the sun does: the first finished before the second began. Follow chains of these.</li>
-        <li>If no chain leads from a piece of business back to itself, set everything in any single sequence that keeps every <em>must go before</em>. It keeps each board's own sequence, so every serving is what a single steward would do; and it keeps the sun's sequence, which is clause (3), and clause (2) with it. So it remains to show there is no loop.</li>
-        <li>Suppose there is one, <var>e</var>₁, …, <var>e</var><sub>n</sub>, back to <var>e</var>₁, as short as any loop can be.</li>
-        <li><b>All on one board.</b> A board's sequence puts any two of its pieces one way or the other, so some step of the loop runs against it, and that step must be the sun's: <var>b</var> finished before <var>a</var> began, though the board put <var>a</var> first. Then that board did not keep clause (3). So the loop touches at least two boards.</li>
-        <li>Number it so that <var>e</var>₁ is on board <var>x</var> and <var>e</var>₂ on another. The step between them crosses boards, so it is the sun's: <var>e</var>₁ finished before <var>e</var>₂ began.</li>
-        <li><b>Nothing else in the loop is on board <var>x</var>.</b> Suppose something is, and let <var>e</var><sub>i</sub> be the first after <var>e</var>₂. The step into it crosses boards, so <var>e</var><sub>i−1</sub> finished before <var>e</var><sub>i</sub> began. And <var>e</var>₂ began before <var>e</var><sub>i−1</sub> finished, or else <var>e</var>₂, …, <var>e</var><sub>i−1</sub> would be a shorter loop. So <var>e</var>₁ finished before <var>e</var>₂ began, before <var>e</var><sub>i−1</sub> finished, before <var>e</var><sub>i</sub> began: <var>e</var>₁ came before <var>e</var><sub>i</sub> by the sun, and <var>e</var>₁, <var>e</var><sub>i</sub>, …, <var>e</var><sub>n</sub> is a shorter loop.</li>
-        <li>So the last step, into <var>e</var>₁, also crosses boards: <var>e</var><sub>n</sub> finished before <var>e</var>₁ began, and therefore before <var>e</var>₂ began, making <var>e</var>₂, …, <var>e</var><sub>n</sub> a shorter loop. Every case contradicts the choice of a shortest loop.<span class="qed">∎</span></li>
+        <li>For each object <var>x</var>, choose a valid linearization order &lt;<sub>x</sub> of <var>H</var>|<var>x</var>. Define a combined relation &lt; as the transitive closure of the union of all &lt;<sub>x</sub> together with the real-time order &lt;<sub>H</sub>.</li>
+        <li>If &lt; is acyclic (contains no loops), we can extend it to a single total order that preserves every &lt;<sub>x</sub> (satisfying Demand 1 on each object) and preserves &lt;<sub>H</sub> (satisfying Demands 2 and 3). Thus, it suffices to prove that &lt; contains no cycle.</li>
+        <li>Suppose for contradiction that a cycle exists, and choose a cycle <var>e</var>₁ &lt; <var>e</var>₂ &lt; … &lt; <var>e</var><sub>n</sub> &lt; <var>e</var>₁ of minimal length.</li>
+        <li><b>The cycle cannot lie entirely on one object <var>x</var>.</b> Because &lt;<sub>x</sub> is a strict total order on <var>x</var>, any cycle on <var>x</var> would have to use at least one real-time edge <var>b</var> &lt;<sub>H</sub> <var>a</var> where <var>a</var> &lt;<sub>x</sub> <var>b</var>—contradicting the fact that &lt;<sub>x</sub> respects &lt;<sub>H</sub>. Thus, the cycle must touch at least two objects.</li>
+        <li>Relabel the cycle so that <var>e</var>₁ is on object <var>x</var> and <var>e</var>₂ is on another object. Since the step from <var>e</var>₁ to <var>e</var>₂ crosses objects, it must be a real-time edge: <var>e</var>₁ &lt;<sub>H</sub> <var>e</var>₂ (meaning <var>e</var>₁ finished before <var>e</var>₂ began).</li>
+        <li><b>No other operation in the minimal cycle can be on object <var>x</var>.</b> Suppose some <var>e</var><sub>i</sub> (for <var>i</var> &gt; 2) is the first operation after <var>e</var>₁ on object <var>x</var>. The edge entering <var>e</var><sub>i</sub> crosses objects, so <var>e</var><sub>i−1</sub> &lt;<sub>H</sub> <var>e</var><sub>i</sub>. Furthermore, <var>e</var>₂ must have begun before <var>e</var><sub>i−1</sub> finished (otherwise <var>e</var><sub>i−1</sub> &lt;<sub>H</sub> <var>e</var>₂, giving a shorter cycle <var>e</var>₂ &lt; … &lt; <var>e</var><sub>i−1</sub> &lt; <var>e</var>₂). Chaining these timestamps gives: <var>e</var>₁ finished before <var>e</var>₂ began, which was before <var>e</var><sub>i−1</sub> finished, which was before <var>e</var><sub>i</sub> began. Hence <var>e</var>₁ &lt;<sub>H</sub> <var>e</var><sub>i</sub>, yielding a shorter cycle <var>e</var>₁ &lt; <var>e</var><sub>i</sub> &lt; … &lt; <var>e</var><sub>n</sub> &lt; <var>e</var>₁—a contradiction.</li>
+        <li>Therefore, the final edge <var>e</var><sub>n</sub> &lt; <var>e</var>₁ also crosses objects and must be a real-time edge <var>e</var><sub>n</sub> &lt;<sub>H</sub> <var>e</var>₁. By the same timestamp chain with <var>i</var> = 1, we get <var>e</var><sub>n</sub> &lt;<sub>H</sub> <var>e</var>₂, which produces a shorter cycle <var>e</var>₂ &lt; … &lt; <var>e</var><sub>n</sub> &lt; <var>e</var>₂. Every case contradicts minimality, proving no cycle exists.<span class="qed">∎</span></li>
       </ol>
     </details>
   </div>
@@ -371,12 +371,12 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Could the rule make a house stand at the gate?</div>
       <h2>Nobody made to wait</h2>
-      <p class="lede">Standing at the gate is something the rule never asks of a house with a request. Whatever is on the board, a single steward can always put a new request at the end, so the rule never makes a request wait on anyone else's business.</p>
+      <p class="lede">The rule of the board never forces a house placing a request to wait for another house's operation to finish. Whatever is currently on the board, a single steward can always append a new request to the end right now—so completing a pending request immediately can never violate the rule.</p>
     </div>
-    <div class="slab" style="max-width:640px;margin:0 0 1.4rem"><div class="slab-head">No Request Waits on Another</div><p style="margin:0">If the business so far keeps the rule, a waiting request can be entered now and the rule still kept.</p></div>
+    <div class="slab" style="max-width:640px;margin:0 0 1.4rem"><div class="slab-head">No Request Waits on Another (Nonblocking)</div><p style="margin:0">Whenever the history so far satisfies the rule of the board, any pending operation that has a valid answer in every state (like placing a request) can complete immediately without breaking the rule.</p></div>
     <div class="narrow" style="margin:0 0 1rem">
-      <p>So when a house does wait for its confirmation, the cause is the arrangement behind the board, a slip still on the road, and never the rule. Serving is different. A loader who comes to an empty board has nothing to take, and a single steward would make the loader wait until a request comes. That wait is asked for, not forced: <i>serve the oldest request</i> has no answer while there are no requests.</p>
-      <p>A stronger promise does not always keep this. Suppose a house wanted several things done as one, with nothing else between them. The three cases below take a waiting request, a loader at an empty board, and two such groups in turn.</p>
+      <p>That means if a house ever has to wait for its confirmation, the delay comes from the physical road or the way the counting room was organized—never from the rule of the board itself. What about a loader trying to serve grain when the board is completely empty? In that case, a single steward would naturally have nothing to hand over until a request arrives. Waiting at an empty board is part of what "serve the next request" means, not an artificial delay imposed by the ordering rule.</p>
+      <p>By contrast, database <b>transactions</b> (<i>serializability</i>)—where a house asks to perform a bundle of several actions all together as one unit—<i>can</i> force callers to wait or even abort. Compare the three scenarios below to see the difference.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Waiting <em id="wtname">choose a case</em></h4>
@@ -388,15 +388,16 @@
         <button class="btn alt" data-w="2">Two houses each do two things as one</button>
       </div>
     </div></div></div>
-    <p class="tell">In the last case each group must have gone before the other's request, so one of the two has to be called off. Promises about such groups can force a house to undo its business. The rule of the board, whose business is always single, never does.</p>
-    <p class="tell">All of this has supposed one steward, doing one thing at a time. House 3's real board has many hands on it at once.</p>
+    <p class="tell">In the third case, each house's two-step transaction saw an empty board before the other house's request was entered, making it impossible to place either transaction wholly before the other. At least one house must have its transaction called off (aborted). Because the rule of the board applies to single operations rather than multi-step transactions, it never forces an operation to abort or block.</p>
+    <p class="tell">Up to now, we have imagined a single steward working alone at the board. In reality, House 3's board is bustling with multiple clerks and loaders working simultaneously—and proving that such a busy board still obeys the rule brings one last surprise.</p>
     <details class="proof">
-      <summary>Proof — that a waiting request can always be entered</summary>
-      <p class="given">A total operation, such as <code>Enq</code>, has a response in every state. <b>Claim</b> (the nonblocking property, Theorem 2): if <var>H</var> is linearizable and <var>p</var> is a pending invocation of a total operation, then there is a response <var>r</var> such that <var>H</var> extended by <var>p</var> and <var>r</var> is linearizable.</p>
+      <summary>Proof · that a pending total operation can always complete immediately (Nonblocking)</summary>
+      <p class="given">A total operation (such as <code>Enq</code> on an unbounded queue) is defined in every object state. <b>Claim</b> (Nonblocking property, Theorem 2): if <var>H</var> is linearizable and <var>p</var> is a pending invocation of a total operation in <var>H</var>, then there exists a response <var>r</var> such that <var>H</var> extended by <var>r</var> is also linearizable.</p>
       <ol class="proofsteps">
-        <li>Take a single sequence that shows the business so far keeps the rule.</li>
-        <li>If it already counts the request as entered, confirm it now; the same sequence still works.</li>
-        <li>If not, put the request at the end of the sequence and confirm it now. Nothing earlier changes, so clause (1) holds. Its moment is now, within its span, which is clause (2). Nothing began after it finished, so putting it last breaks no <em>before</em>, which is clause (3).<span class="qed">∎</span></li>
+        <li>Let <var>S</var> be a legal sequential history that witnesses the linearizability of <var>H</var>.</li>
+        <li>If <var>S</var> already includes the pending invocation <var>p</var> along with some response <var>r</var>, then returning <var>r</var> right now is valid and witnessed by the exact same <var>S</var>.</li>
+        <li>If <var>S</var> does not include <var>p</var>, because the operation is total, there is some response <var>r</var> that is legal in the state reached at the very end of <var>S</var>. Append (<var>p</var>, <var>r</var>) to the end of <var>S</var>.</li>
+        <li>Because (<var>p</var>, <var>r</var>) is placed at the end, earlier operations in <var>S</var> are unaffected (Demand 1 holds), its linearization point is right now, which lies inside <var>p</var>'s span (Demand 2 holds), and since no operation in <var>H</var> was invoked after right now, placing (<var>p</var>, <var>r</var>) last cannot violate any real-time precedence (Demand 3 holds).<span class="qed">∎</span></li>
       </ol>
     </details>
   </div>
@@ -409,14 +410,14 @@
   <div class="wrap" style="margin-bottom:-1rem">
     <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
-        <div class="kicker">So far one steward, one thing at a time</div>
+        <div class="kicker">Concurrent implementation · The lock-free queue</div>
         <h2>The busy board</h2>
-        <p class="lede">House 3's real board is busy, with many clerks and loaders at work at once. The master of the board has arranged it so that nobody ever stands aside for anybody.</p>
-        <p>The board has numbered slots, each holding one request tablet or nothing, and a peg at the first slot nobody has been given yet. A clerk takes the number at the peg and moves the peg on, then puts a tablet in that slot. A loader reads the peg, goes along the slots from the first, and takes the first tablet there is. No clerk or loader waits for another, and a clerk who stops halfway stops no one else.</p>
+        <p class="lede">At House 3's actual portico, several clerks and loaders work at the board at the same time. To keep everyone moving briskly, the master of the board designed a lock-free procedure where no worker ever has to stand aside and wait for another.</p>
+        <p>The wooden board consists of a long row of numbered <b>slots</b>—each large enough for one clay request tablet—and a movable <b>peg</b> marking the next unused slot number. To enter a request, a clerk performs two steps: first, in one swift motion, they read the slot number at the peg and advance the peg by one; second, they walk to that slot and place their tablet inside. To serve a request, a loader reads the peg, scans the slots starting from slot 1, and takes the first tablet they find. Even if a slow clerk pauses between taking a slot number and placing a tablet, nobody else is held up.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b08-board-cdc497e14f-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b08-board-cdc497e14f-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b08-board-cdc497e14f-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b08-board-cdc497e14f-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/b08-board.jpg" alt="Along the portico of a trading house, two clerks reach for the pigeonholes of a long wooden board that hold stacks of clay tablets, while a loader carries a grain sack past the columns from an open storehouse" loading="lazy"></div></div></div>
     </div>
-    <p class="tell">Everything happens at one board at one house, and no slip crosses the road. With a single steward, each request had its moment at its entry. Here an entry is two movements by one of many hands, and it is no longer plain that a request has a moment at all. Watch a race: the clerk entering House 1's request and the clerk entering House 2's begin at the same time, and a loader comes by.</p>
+    <p class="tell">With a single steward, it was easy to point to the exact step where each request joined the board. On this busy board, entering a request takes two separate steps (moving the peg, then placing the tablet)—and as the scroll below reveals, neither step by itself can always be called the exact instant the request took effect!</p>
   </div>
   <div class="scrolly" id="board">
     <div class="stage"><div class="stage-inner split">
@@ -424,24 +425,24 @@
       <div class="side" id="boardside" data-live></div>
     </div></div>
     <div class="steps">
-      <div class="step on"><div class="card"><div class="num">1 · The board</div><h3>Slots and a peg</h3><p>Four slots are shown, all empty, and the peg stands at the first. Two clerks are about to enter requests, one for House 1 and one for House 2.</p></div></div>
-      <div class="step"><div class="card"><div class="num">2 · A number</div><h3>The first clerk takes number 1</h3><p>The clerk entering House 1's request takes the number at the peg and moves the peg on, in a single movement. The tablet is not yet in its slot.</p></div></div>
-      <div class="step"><div class="card"><div class="num">3 · A number</div><h3>The second clerk takes number 2</h3><p>The clerk entering House 2's request takes the next number, and the peg moves on again.</p></div></div>
-      <div class="step"><div class="card"><div class="num">4 · A tablet</div><h3>House 2's tablet goes in</h3><p>The second clerk puts House 2's tablet in slot 2 and is done. The first clerk has not yet reached slot 1.</p></div></div>
-      <div class="step"><div class="card"><div class="num">5 · The question</div><h3>Is House 1's request on the board?</h3><p>Say yes, ahead of House 2's. Then a loader who comes now finds slot 1 empty and serves House 2. Say no, and let the first clerk put the tablet in first. Then a loader finds it in slot 1 and serves House 1. Both runs follow.</p></div></div>
-      <div class="step"><div class="card"><div class="num">6 · One way it runs</div><h3>The loader comes first</h3><p>The loader reads the peg, looks at slot 1, finds it empty, and takes House 2's tablet from slot 2.</p></div></div>
-      <div class="step"><div class="card"><div class="num">7 · The other way</div><h3>The first clerk is quicker</h3><p>The first clerk puts House 1's tablet in slot 1 before the loader looks. The loader reads the peg, finds the tablet in slot 1, and serves House 1.</p></div></div>
+      <div class="step on"><div class="card"><div class="num">1 · The board</div><h3>Slots and a peg</h3><p>Four empty slots sit on the wall, with the peg resting above slot 1. Two clerks arrive at the same time—one carrying a request for House 1, the other for House 2.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · A number</div><h3>The first clerk takes slot 1</h3><p>The clerk for House 1 claims slot 1 at the peg and slides the peg to slot 2. However, the clerk has not yet placed House 1's tablet into slot 1.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · A number</div><h3>The second clerk takes slot 2</h3><p>Right behind them, the clerk for House 2 claims slot 2 at the peg and slides the peg to slot 3.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · A tablet</div><h3>House 2's tablet goes in first</h3><p>Moving quickly, the second clerk places House 2's tablet into slot 2 and finishes up—while the first clerk is still walking toward slot 1.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · The puzzle</div><h3>Which request is first on the board right now?</h3><p>At this exact moment, is House 1's request already on the board ahead of House 2's? We can't say yet! Which request gets served first depends entirely on who reaches slot 1 next: a loader, or the slow first clerk.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · Ending A</div><h3>If the loader reaches slot 1 first</h3><p>Suppose a loader checks the peg, looks into slot 1, finds it still empty, and moves on to slot 2—taking House 2's tablet! In this ending, House 2's request effectively joined the board ahead of House 1's.</p></div></div>
+      <div class="step"><div class="card"><div class="num">7 · Ending B</div><h3>If the first clerk reaches slot 1 first</h3><p>Now suppose instead that the first clerk slips House 1's tablet into slot 1 just before the loader looks. The loader scans from slot 1, finds House 1's tablet waiting, and serves House 1 first!</p></div></div>
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
-    <p class="tell" style="margin-top:0">Nothing has gone wrong in either run. The two requests overlapped, so either sequence keeps the rule. The trouble is only that when the second clerk is done, which sequence it will be is not yet settled. A race still to be run will settle it, so no step anyone has taken so far can be called the moment House 1's request joined the board.</p>
-    <p class="tell">At House 3's gate the rule was shown to be kept by pointing to each request's moment. On the busy board there is no moment to point to, and showing that it keeps the rule needs another way.</p>
+    <p class="tell" style="margin-top:0">Neither ending violates the rule of the board: because the two clerks' spans overlapped, either House 1 or House 2 may legitimately go first. What makes this board fascinating is that at Step 4—when the second clerk has already finished—<i>which order the board is in has not yet been decided</i>! A future race between the first clerk and the loader will settle it, which means no single fixed step in the clerk's routine can be pointed to as the one moment a request takes effect.</p>
+    <p class="tell">If we cannot point to a single step in the clerk's routine as the moment of entry, how can we prove that the busy board always obeys the rule of the board?</p>
     <details class="proof">
       <summary>The busy board, stated formally</summary>
-      <p class="given">The queue of §4.2. The board is an array <code>items</code> and an index <code>back</code>; slots are never reused.</p>
+      <p class="given">Herlihy and Wing's concurrent lock-free queue (§4.2). The board is represented by an unbounded array <code>items</code> initialized to <code>null</code> and a counter <code>back</code> initialized to 1; array slots are never reused.</p>
       <ol class="proofsteps">
-        <li><b>To enter a request:</b> note the peg's number and move the peg on one, in a single movement. Put the request tablet in that slot. <code>Enq</code> is <code>INC(back)</code> then <code>STORE</code>.</li>
-        <li><b>To serve:</b> look at the peg. Go along the slots from 1 up to the one before the peg, and take the first tablet you find, emptying its slot in a single movement. If you find none, go back to the peg and start again. <code>Deq</code> is <code>READ(back)</code> then <code>SWAP</code> along the array.</li>
+        <li><b>To enter a request (<code>Enq(x)</code>):</b> Atomically read the current slot index at the peg and increment it by 1 (<code>i := INC(q.back)</code>), then store the request tablet in that slot (<code>STORE(q.items[i], x)</code>).</li>
+        <li><b>To serve a request (<code>Deq()</code>):</b> Read the peg's current position (<code>range := READ(q.back) - 1</code>). Scan slots <code>1</code> through <code>range</code> in ascending order, atomically swapping each slot with <code>null</code> (<code>SWAP(q.items[i], null)</code>), and return the first non-null tablet found. If all scanned slots are empty, repeat from the beginning.</li>
       </ol>
     </details>
   </div>
@@ -453,10 +454,10 @@
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">When no moment can be pointed to</div>
+      <div class="kicker">Proving correctness · Set-valued abstraction</div>
       <h2>What the board could mean</h2>
-      <p class="lede">The other way is to ask what the board <i>could</i> mean at each moment, and to stop asking what it does mean. Once the first clerk's tablet is in, the board could stand for House 2, then House 1, or for House 1, then House 2.</p>
-      <p>The slots record one thing for certain, and it limits the sequences. A tablet put in before another clerk even took a number must come first. Any two not so placed may go either way. Choose a run to see what the board could stand for once every tablet is in, then send a loader up and see which tablet is taken.</p>
+      <p class="lede">Herlihy and Wing solved this puzzle with an elegant shift in perspective: instead of insisting that the board represent <i>one</i> specific queue order at every instant, ask for the <b>set of all possible sequences</b> the board could legitimately stand for right now.</p>
+      <p>Which sequences can the slots on the wall stand for? Only one strict rule constrains them: if tablet <var>A</var> was already sitting in its slot <i>before</i> clerk <var>B</var> even touched the peg, then <var>A</var> must appear before <var>B</var>. Any two tablets whose clerks overlapped while using the peg and filling their slots may appear in either order! Try both scenarios below to see the set of sequences the board can represent, and watch what happens when a loader scans from slot 1.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>What could the board stand for? <em id="mnname">choose a run</em></h4>
@@ -472,23 +473,21 @@
       </div>
     </div></div></div>
     <div class="narrow" style="margin:2rem 0 0">
-      <p>The thing to show is this: at every moment, every sequence the board could stand for is one the business so far could honestly have produced. Two facts carry it. A tablet just put in never has to stand ahead of anything already waiting, because a tablet that had to stand behind it would belong to a clerk who took a number after it went in, and it is only now going in. And a loader going up from slot 1 always takes a tablet that could be first, because a tablet that had to come before it would lie in a lower slot, and the loader would have taken that one.</p>
+      <p>To prove the busy board is linearizable, we only need to show that at every step, <b>every sequence the board could stand for is a sequence that a single steward could legally have reached so far</b>. Two simple facts guarantee this. First, when a clerk places a new tablet into a slot, that tablet can always be placed at the very back of every sequence—because no other tablet could have taken a peg number <i>after</i> an action that is only happening right now. Second, when a loader scans upward from slot 1 and takes the first tablet they see, that tablet is guaranteed to stand at the front of at least one valid sequence—because any tablet required to precede it would sit in an earlier slot that the loader already checked!</p>
     </div>
-    <div class="slab" style="max-width:640px;margin:1.4rem 0 0"><div class="slab-head">The Board Keeps the Rule</div><p style="margin:0">At every moment, every sequence of waiting requests the board could stand for is one the business so far could have produced, so the busy board keeps the rule.</p></div>
-    <p class="tell">A house that relies on a board known to keep the rule gets everything a single steward would guarantee: requests are served in the sequence they came by the sun, none vanishes, and none is served that nobody made. The obvious one-line promise, <i>no later request is served before an earlier one</i>, would not have done as well, since a board that lost tablets would keep that promise.</p>
-    <p class="tell">The rule can be kept, then, even by a board that no one can pause. What it leaves unpromised should be set down as plainly as what it gives.</p>
+    <div class="slab" style="max-width:640px;margin:1.4rem 0 0"><div class="slab-head">The Board Keeps the Rule</div><p style="margin:0">At every moment, every sequence of waiting requests the board's slots could stand for is also a valid linearizable sequence of the business so far. Therefore, the busy lock-free board satisfies the rule of the board.</p></div>
+    <p class="tell">Because the busy board satisfies the rule of the board, any house using it gets the exact same safety guarantees as if a single steward managed everything one step at a time: requests are served in real-time order, no confirmed request ever vanishes, and no phantom request is ever invented.</p>
+    <p class="tell">We have seen what the rule of the board promises and how even a lock-free board keeps it. To finish, let's state plainly the four things the rule of the board does <i>not</i> promise.</p>
     <details class="proof">
-      <summary>Proof — that the board keeps the rule, in outline</summary>
-      <p class="given">Let <var>A</var>: REP → 2<sup>ABS</sup> map each state of the array and index to the set of queue values it could stand for, and let Lin(<var>H</var>|ABS) be the queue values the business so far could have produced. Write <var>x</var> &lt;<sub>r</sub> <var>y</var> when the <code>STORE</code> of <var>x</var> precedes the <code>INC</code> of <var>y</var>. <b>Claim</b> (§4.3.2, Theorem 17): for every linearized representation value <var>r</var>, <var>A</var>(<var>r</var>) ⊆ Lin(<var>H</var>|ABS).</p>
+      <summary>Proof · that the busy board is linearizable, in outline</summary>
+      <p class="given">Let <var>A</var>: REP → 2<sup>ABS</sup> map each state <var>r</var> of the array and peg to the set of abstract FIFO queues it could represent: namely, all permutations of the tablets currently in slots that respect the partial order <var>x</var> &lt;<sub>r</sub> <var>y</var> (where the <code>STORE</code> of <var>x</var> preceded the <code>INC</code> of <var>y</var>). Let Lin(<var>H</var>|ABS) be the set of abstract queue states reachable by valid linearizations of the history so far. <b>Claim</b> (§4.3.2, Theorem 17): for every reachable state <var>r</var>, <var>A</var>(<var>r</var>) ⊆ Lin(<var>H</var>|ABS).</p>
       <ol class="proofsteps">
-        <li>An empty board stands only for no requests, which is what no business produces. It is enough to show that every single movement, and every beginning and end of a clerk's or loader's business, keeps it so.</li>
-        <li><b>Beginnings and ends</b> put nothing in a slot and take nothing out. A beginning adds business that may or may not have had its moment yet; an end settles one such choice. Neither removes a sequence the board could stand for.</li>
-        <li><b>Moving the peg and looking at it</b> move no tablet, so they change nothing.</li>
-        <li><b>Putting a tablet in.</b> For a waiting tablet to have to stand behind this one, its clerk would have taken their number after this one was put in, and this one is only now being put in. So the new tablet may go last in every sequence, and the business agrees: an entry may have its moment now, at the back.</li>
-        <li><b>Emptying a slot.</b> Say the loader, going up from slot 1, empties slot <var>i</var> and finds tablet <var>x</var>, and some waiting tablet <var>z</var> must come before <var>x</var> because <var>z</var> was put in before <var>x</var>'s clerk took their number. Then <var>z</var>'s slot is lower, so the loader has already passed it. They went only as far as the peg showed when they looked, so <var>x</var>'s number was taken before they looked, and <var>z</var> was put in before that. So <var>z</var> was in its slot when the loader passed it, and they would have taken it. Hence <var>x</var> could be first, and a serving may have its moment now, with <var>x</var>.</li>
-        <li>Every movement keeps the order, so it holds at every moment.<span class="qed">∎</span></li>
+        <li><b>Base case:</b> Initially the board is empty, representing only the empty queue, which belongs to Lin(<var>H</var>|ABS). We show by induction that every step preserves <var>A</var>(<var>r</var>) ⊆ Lin(<var>H</var>|ABS).</li>
+        <li><b>Invocations, responses, <code>INC</code>, and <code>READ</code>:</b> None of these steps adds or removes a tablet from a slot, so <var>A</var>(<var>r</var>) is unchanged (or constrained only in ways consistent with the ongoing operation spans).</li>
+        <li><b>Placing a tablet (<code>STORE</code> of <var>x</var>):</b> For another tablet <var>y</var> to be required to follow <var>x</var> (<var>x</var> &lt;<sub>r</sub> <var>y</var>), <var>y</var>'s <code>INC</code> would have to occur after <var>x</var>'s <code>STORE</code>—which is happening right now. Thus <var>x</var> is maximal in &lt;<sub>r</sub> and can be appended to the back of any sequence, matching a legal <code>Enq(x)</code> taking effect right now.</li>
+        <li><b>Taking a tablet (<code>SWAP</code> of <var>x</var> at slot <var>i</var>):</b> Suppose the loader scans upward from slot 1 and takes <var>x</var> from slot <var>i</var>. Could some other remaining tablet <var>z</var> satisfy <var>z</var> &lt;<sub>r</sub> <var>x</var>? If so, <var>z</var>'s <code>STORE</code> preceded <var>x</var>'s <code>INC</code>, which implies both that <var>z</var> sits in a lower slot (<var>j</var> &lt; <var>i</var>) and that <var>z</var> was already in slot <var>j</var> before the loader began scanning. But then the loader would have encountered and taken <var>z</var> before ever reaching slot <var>i</var>! Thus <var>x</var> is minimal in &lt;<sub>r</sub> and stands first in at least one valid sequence, matching a legal <code>Deq()</code> returning <var>x</var>.<span class="qed">∎</span></li>
       </ol>
-      <p class="fnote">This is an outline, and so is the paper's. Herlihy and Wing give the two facts of steps 4 and 5 and the shape of the argument; the lemmas that make it airtight are in their technical report.</p>
+      <p class="fnote">This outlines Herlihy and Wing's proof in §4.3.2 (Lemmas 15–16 and Theorem 17); full formal details appear in their companion technical report.</p>
     </details>
   </div>
 </section>
@@ -499,17 +498,17 @@
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-9-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">What has the rule left unpromised?</div>
+      <div class="kicker">Boundaries of the guarantee</div>
       <h2>What the rule does not say</h2>
-      <p class="lede">The rule leaves four things unpromised, and a house that relies on it should know each of them.</p>
+      <p class="lede">The rule of the board is a clean, powerful guarantee—but a house that relies on it should also know the four things it deliberately leaves out:</p>
     </div>
     <div class="cards3 cards2" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Checking the rule</div><h3>No one can check it</h3><p>The rule is judged by the sun, which nobody on Arche can read in the trading season. A house knows the rule is kept only because the arrangement behind the board has been shown to keep it, as House 3's gate and the busy board were. The rule gives the island no hour and needs none.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Serving</div><h3>Not promised</h3><p>Every demand says what must not happen, so a board that never served anyone would break none of them. A loader may even be overtaken on every round, finding each tablet taken just before reaching it, and go round for ever while the rule holds. That every request is served in the end is a separate promise.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Holding copies</div><h3>Not said</h3><p>The rule says what copies must look like from the gates, and nothing about the slips that would keep them in step.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The tallies</div><h3>Not made wrong</h3><p>The tallies keep a different promise, fairness between requests that overlap, and give up the sun to keep it. Which first the houses want is theirs to choose.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Checking from outside</div><h3>Proved by design, not by clocks</h3><p>Although the rule is defined using real time under the sun, the houses don't need sundials to keep it. They know the rule holds because the design of the board (like House 3's gate or the busy slot board) mathematically guarantees it.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Liveness</div><h3>Safety only, not eventual service</h3><p>Linearizability is a <i>safety</i> property: it forbids wrong answers, but doesn't guarantee that an operation eventually finishes. On the busy board, a slow loader could theoretically see every slot emptied by faster loaders just before reaching it. Guaranteeing progress (<i>wait-freedom</i> or <i>starvation-freedom</i>) is a separate requirement.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Replication protocol</div><h3>What to promise, not how to copy</h3><p>The rule defines what multiple copies must look like from the outside, but leaves the replication protocol—the messages that keep copies synchronized across a network—to consensus and replication algorithms.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Overlapping fairness</div><h3>Real time, not causal fairness</h3><p>When two requests overlap in real time, linearizability allows either one to go first—even if a message passed between them. Systems that care about message chains rather than wall-clock spans use causal ordering (tallies) instead.</p></div></div></div>
     </div>
-    <p class="tell">What the rule does promise is enough for a house to rely on. Whatever stands behind the gate, the requests are filled as one steward with one board would have filled them, in the sequence they came by the sun.</p>
+    <p class="tell">What the rule of the board <i>does</i> promise is the gold standard for single-object consistency: whatever concurrency or replication hides behind the gate, every request is filled as though a single steward with a single board handled them one at a time in real-world order.</p>
   </div>
 </section>
 
@@ -521,15 +520,15 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The island was a set of shared objects</h2>
-      <p class="lede">Read the island again with machines in the counting rooms. Each house, loader and clerk is a process, each board is a shared object, and the rule of the board is linearizability. Hover over a row, or tap it, to see who is who.</p>
+      <p class="lede">Now picture the island again with computers inside the counting rooms. Each house, loader, and clerk is a concurrent process or thread, each board is a shared data structure, and the rule of the board is linearizability. Hover over or tap any row below to see how the two worlds match up.</p>
     </div>
     <div class="map" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">On the island</div><div></div><div class="hd">In the machine room</div>
     </div>
     <div class="meander" style="margin:3rem auto"></div>
     <div class="end">
-      <p class="big">A shared object is correct if every call appears to take effect at one instant between its start and its answer, in an order that respects real time.</p>
-      <p class="lede" style="margin:0 auto">Then one copy or many are judged alike, each object can be checked alone, and no caller is made to wait where the call is always defined.</p>
+      <p class="big">A shared object is linearizable if every operation appears to take effect at a single instant between its invocation and its response, in an order that respects real time.</p>
+      <p class="lede" style="margin:0 auto">Whether backed by one copy or many, each linearizable object can be verified in isolation, and no caller is forced to wait when an operation is always defined.</p>
       <div class="links">
         <a href="../../places/ring-road/index.html">The Ring Road, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
@@ -572,11 +571,11 @@
       </details>
       <details class="proof">
         <summary>The paper behind this book</summary>
-        <p><b>The paper behind this book.</b> Maurice P. Herlihy and Jeannette M. Wing, <i>Linearizability: A Correctness Condition for Concurrent Objects</i>. ACM Transactions on Programming Languages and Systems <b>12</b>, 3 (July 1990), 463–492. The definition, locality (Theorem 1), the nonblocking property (Theorem 2), the comparison with sequential consistency and serializability, the proof method with set-valued abstraction functions, and the concurrent queue.</p>
-        <p><b>The ideas.</b> A shared object is correct, Herlihy and Wing propose, if every operation appears to take effect at a single instant somewhere between its call and its return. Then the results are those of some one-at-a-time execution, and that execution respects real time: an operation that finished before another started comes first. This is linearizability. It lets a concurrent queue be specified as an ordinary queue, and it says nothing about how the object is built, so one copy or many are judged alike.</p>
-        <p>Real-time order is not Lamport's causal order. An operation can finish before another starts with no message between them, and operations joined by messages can still overlap. Neither order contains the other, and linearizability is the one an outside observer comparing notes would expect.</p>
-        <p>Linearizability is local: a system is linearizable exactly when each object is. And it is nonblocking: a pending call of an operation that is always defined can always be completed. Sequential consistency drops real time and loses locality; serializability, over multi-operation transactions, loses both and needs a way to abort.</p>
-        <p>When no single step of an implementation can be named as an operation's instant, Herlihy and Wing map each state to the set of abstract values it could stand for, and show that set is always among the values the history could have produced. Their example is a lock-free queue built from fetch-and-increment and swap.</p>
+        <p><b>The paper behind this book.</b> Maurice P. Herlihy and Jeannette M. Wing, <i>Linearizability: A Correctness Condition for Concurrent Objects</i>. ACM Transactions on Programming Languages and Systems <b>12</b>, 3 (July 1990), 463–492. Covers the definition of linearizability, locality (Theorem 1), the nonblocking property (Theorem 2), the comparison with sequential consistency and serializability, the proof method using set-valued abstraction functions, and the lock-free concurrent queue.</p>
+        <p><b>The ideas.</b> Herlihy and Wing propose that a concurrent object is correct if every operation appears to take effect instantaneously at some single moment between its invocation and its response. That ensures the object behaves like a single copy executing operations one at a time, while respecting real-time order: any operation that finishes before another begins must take effect first. Because linearizability is defined purely in terms of external calls and responses, clients cannot tell whether an object is implemented by a single copy, replicated across machines, or shared without locks.</p>
+        <p>Crucially, real-time order is distinct from Lamport's causal order. One operation can finish before another starts without any system message passing between them (as when information travels out-of-band, like our goatherd), and conversely, two operations linked by a message can still overlap in real time. Neither ordering contains the other.</p>
+        <p>Two properties make linearizability ideal for building modular systems: it is <i>local</i> (a system is linearizable if and only if each individual object is linearizable) and <i>nonblocking</i> (a pending total operation is never forced to wait for another operation). Dropping the real-time requirement gives sequential consistency, which loses locality; applying the one-at-a-time requirement to multi-operation transactions gives serializability, which loses both locality and the nonblocking property.</p>
+        <p>Finally, when concurrent races make it impossible to point to a single line of code as an operation's linearization point—as in Herlihy and Wing's lock-free queue—we can still prove linearizability by mapping each concrete state to the <i>set</i> of abstract queue orders it could represent, and showing that every such order is valid.</p>
         <div class="refs">
           <p>Herlihy, M. P., and Wing, J. M. Linearizability: a correctness condition for concurrent objects. <i>ACM Trans. Program. Lang. Syst.</i> <b>12</b>, 3 (1990), 463–492.</p>
         </div>

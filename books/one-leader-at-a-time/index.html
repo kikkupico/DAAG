@@ -23,8 +23,8 @@
   <div class="wrap grid">
     <div>
       <h1>One Leader at a Time</h1>
-      <p class="generic">Many systems put one leader in charge at a time. When the leader falls silent, how does another take over without losing anything the last one promised?</p>
-      <p class="allegory">We find out by exploring how Schedia, a Greek city on Paxos with laws of its own, kept its law from a podium that one legislator held at a time, and how a new holder took over when the last one fell silent.</p>
+      <p class="generic">Many replicated systems put a single leader in charge at a time so that operations can be ordered without dueling ballots. When that leader crashes or falls silent, how does a new leader take over without losing anything the previous leader promised?</p>
+      <p class="allegory">To find out, we visit Schedia — a sister city on the eastern arm of Paxos with laws of its own — where five legislators maintain the city's law from a central podium held by one person at a time, and see how a new holder takes the podium whenever the previous one goes silent.</p>
       <p class="source">After Brian M. Oki and Barbara H. Liskov, <i>Viewstamped Replication: A New Primary Copy Method to Support Highly-Available Distributed Systems</i>, 1988</p>
     </div>
     <div class="pop" data-auto>
@@ -53,12 +53,12 @@
     <div class="lin-side out">
       <h5>Leads to</h5>
       <ul class="lin-nodes">
-        <li><a class="lin-node book" data-n="o:castro-liskov-1999_practical-byzantine-fault-tolerance" data-label="Castro &amp; Liskov 1999" href="../keeping-order-among-liars/index.html"><b>Practical Byzantine Fault Tolerance</b><span class="by">Castro &amp; Liskov 1999 · Keeping Order Among Liars</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:oki-liskov-1988_viewstamped-replication" data-to="o:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>primary and view change</em><span class="ends"></span><span class="why">A primary, its backups, and a view change that replaces a faulty primary.</span></li></ul></li>
-        <li><div class="lin-node ext" data-n="o:liskov-cowling-2012" data-label="Liskov &amp; Cowling 2012"><b>Viewstamped Replication Revisited</b><span class="by">Liskov &amp; Cowling 2012</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:oki-liskov-1988_viewstamped-replication" data-to="o:liskov-cowling-2012" tabindex="0"><em>the protocol</em><span class="ends"></span><span class="why">The protocol, restated without transactions.</span></li></ul></li>
-        <li><div class="lin-node ext" data-n="o:ongaro-ousterhout-2014" data-label="Ongaro &amp; Ousterhout 2014"><b>In Search of an Understandable Consensus Algorithm</b><span class="by">Ongaro &amp; Ousterhout 2014</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:oki-liskov-1988_viewstamped-replication" data-to="o:ongaro-ousterhout-2014" tabindex="0"><em>leader and terms</em><span class="ends"></span><span class="why">A strong leader, and terms numbered as views are.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="o:castro-liskov-1999_practical-byzantine-fault-tolerance" data-label="Castro &amp; Liskov 1999" href="../keeping-order-among-liars/index.html"><b>Practical Byzantine Fault Tolerance</b><span class="by">Castro &amp; Liskov 1999 · Keeping Order Among Liars</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:oki-liskov-1988_viewstamped-replication" data-to="o:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>primary and view change</em><span class="ends"></span><span class="why">Carries VR's primary-backup architecture and numbered view changes into a world where faulty machines may lie rather than merely crash.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:liskov-cowling-2012" data-label="Liskov &amp; Cowling 2012"><b>Viewstamped Replication Revisited</b><span class="by">Liskov &amp; Cowling 2012</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:oki-liskov-1988_viewstamped-replication" data-to="o:liskov-cowling-2012" tabindex="0"><em>the protocol</em><span class="ends"></span><span class="why">Restates Viewstamped Replication as a standalone state-machine replication protocol separated from distributed transactions.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:ongaro-ousterhout-2014" data-label="Ongaro &amp; Ousterhout 2014"><b>In Search of an Understandable Consensus Algorithm</b><span class="by">Ongaro &amp; Ousterhout 2014</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:oki-liskov-1988_viewstamped-replication" data-to="o:ongaro-ousterhout-2014" tabindex="0"><em>leader and terms</em><span class="ends"></span><span class="why">Uses the same strong-leader, numbered-view architecture (under the name Raft) where logs flow solely from the leader to followers and the most up-to-date log wins election.</span></li></ul></li>
       </ul>
     </div>
-    <p class="lin-say">Each link is an idea one paper took from another. Point at one, or tap it, to read how.</p>
+    <p class="lin-say">Each link traces an idea that one paper borrowed from another. Point at a link, or tap it, to see how.</p>
     <p class="lin-key"><i class="k here"></i>a paper this book retells <i class="k book"></i>a paper retold in another book <i class="k ext"></i>a paper outside the series</p>
     </div>
   </div>
@@ -72,13 +72,13 @@
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>One primary, and what happens when it goes</h2>
-      <p class="lede">A service is kept on several machines, so that it outlives the loss of some of them. One machine, the primary, orders every operation and sends it to the others, the backups.</p>
-      <p>The trouble comes when the primary goes. Machines crash and come back, sometimes having lost what they held, and messages are slow or lost, though no machine lies. Viewstamped Replication, which Oki and Liskov published in 1988, gets through it on two rules.</p>
+      <p class="lede">Suppose a service is replicated across several machines so that it survives individual crashes. Instead of letting every machine propose commands, one machine acts as the leader — the <b>primary</b> — executing operations in order and streaming the resulting log to the other machines, the <b>backups</b>.</p>
+      <p>Normal operation is fast and simple, because backups only copy what the primary sends. The real difficulty comes when the primary crashes or gets cut off by the network. Worse still, in **Viewstamped Replication** — published by Brian Oki and Barbara Liskov in 1988, a year before Paxos first circulated — machines keep their logs in fast volatile memory rather than on disk, so a machine that crashes and reboots comes back having forgotten its log! Even so, two rules guarantee that no committed operation is ever lost:</p>
       <ul class="terms">
-        <li><b>An operation is committed</b> once a majority of the machines hold it.</li>
-        <li><b>A new primary</b> starts from the fullest log a majority can show.</li>
+        <li><b>An operation is committed</b> as soon as a majority of the machines hold it in their logs.</li>
+        <li><b>When changing views</b> to replace a silent primary, the new primary is chosen from a majority of replicas as the one holding the most up-to-date log (the highest <i>viewstamp</i>), provided enough replicas still have their logs intact.</li>
       </ul>
-      <p style="margin-top:1.2rem">Together they mean that nothing committed is ever lost. We tell it with five legislators in a round hall who keep one law, and a podium that only one of them may write from.</p>
+      <p style="margin-top:1.2rem">Because any two majorities overlap, a majority of intact logs is guaranteed to contain at least one machine that holds every committed operation. We tell the story in the Tholos of Schedia, where five legislators keep one law from a central podium.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper logs">
@@ -98,12 +98,12 @@
     <div class="hall-title"><div class="t">
       <div class="kicker">The Tholos of Schedia</div>
       <h2>Five legislators, one law</h2>
-      <p>Schedia, the city on the eastern arm of Paxos, keeps its own law. The law is made in the Tholos, a round hall where nobody can be heard across the floor, so everything goes by messenger.<sup class="xref"><a href="../../places/schedia/index.html" title="The Setting: Schedia and the Tholos">*</a></sup></p>
+      <p>Schedia, the independent city on the eastern arm of Paxos, makes its own laws in the Tholos — a round stone hall looking across the bay toward the Paxon Chamber. Just as in the Chamber, the acoustics are so poor that no voice carries across the floor, so every word goes by messenger.<sup class="xref"><a href="../../places/schedia/index.html" title="The Setting: Schedia and the Tholos">*</a></sup></p>
     </div></div>
     <div class="pins">
-      <div class="pin pop"><div class="leaf"><b>Slow messengers</b>Messengers are slow, and some never arrive.</div></div>
-      <div class="pin pop"><div class="leaf"><b>Stepping out, going home</b>A legislator may step out for a while, or go home and come back later.</div></div>
-      <div class="pin pop"><div class="leaf"><b>Nobody lies</b>Whatever a legislator writes or answers is true, and nobody forges a note.</div></div>
+      <div class="pin pop"><div class="leaf"><b>Slow messengers</b>Messengers across the floor can be delayed, reordered, or lost altogether.</div></div>
+      <div class="pin pop"><div class="leaf"><b>Stepping out, going home</b>A legislator may step out onto the porch for a while (a network partition) or go home for the night and return to smooth wax tablets in the morning (a crash and recovery).</div></div>
+      <div class="pin pop"><div class="leaf"><b>Nobody lies</b>Every legislator and messenger is honest: whatever they write or report is truthful, and no one ever forges a note.</div></div>
     </div>
   </div>
 </section>
@@ -115,19 +115,19 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">What is kept</div>
       <h2>The council and its law</h2>
-      <p class="lede">The council has five legislators. Each keeps a copy of the law on wax tablets, at a bench of their own.</p>
+      <p class="lede">Schedia's council has five legislators — Okios, Liskovia, Kleon, Melissa, and Theron. Each sits at their own stone bench along the wall and keeps a complete copy of the city's law on wax tablets:</p>
       <div class="cast" id="cast"></div>
-      <p>The law is a list of lines, written one after another: <i>harbour dues are two obols a hull</i>; <i>the cove is closed to nets in spring</i>; <i>the dues above are halved for boats of Schedia</i>. Every copy must hold the same lines in the same order, because a line can depend on the lines before it. The halving means nothing without the dues it halves.</p>
-      <p>Legislators come and go, and their messengers are slow. Through all of it the council owes the city two things.</p>
+      <p>The law grows line by line: <i>harbour dues are two obols a hull</i>; <i>the cove is closed to nets in spring</i>; <i>the dues above are halved for boats of Schedia</i>. Every bench's copy must record the exact same lines in the exact same order, because later lines depend on earlier ones — halving the harbour dues means nothing unless the dues have already been set.</p>
+      <p>Even as legislators step out or go home and messengers dawdle across the floor, the council owes the citizens of Schedia two strict guarantees:</p>
     </div>
     <div class="cards3 pair">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the council owes the city</div><h3>One law</h3><p>The five copies behave as a single record kept in a single place. A citizen never sees two different laws standing in the same place.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the council owes the city</div><h3>Passed stays passed</h3><p>Once a law has passed, it stands for good, in its place, whoever holds the podium afterwards.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First guarantee · Consistency</div><h3>One law</h3><p>All five copies act as if they were a single law scroll kept in a single place. No citizen ever sees two different laws occupying the same line.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second guarantee · Durability</div><h3>Passed stays passed</h3><p>Once a law has been declared <b>passed</b> (committed), it stands permanently in its place, no matter who holds the podium afterward.</p></div></div></div>
     </div>
-    <p class="tell">Five copies, then, and legislators forever coming and going. Somebody has to decide what goes into the law, and in what order.</p>
+    <p class="tell">With five copies of the law and legislators constantly coming and going, how does the council decide what goes into the law next without conflicting ballots?</p>
     <details class="proof">
       <summary>In the paper · the group and its failures</summary>
-      <p class="given">A module group of cohorts behaves as a single logical entity; nodes crash (fail-stop) and recover; the network may lose, delay, duplicate and reorder messages and may partition; failures are not Byzantine. Events known to a majority of cohorts survive view changes. §1–2, §4.</p>
+      <p class="given">A module group of cohorts behaves as a single logical entity; nodes may crash (fail-stop) and recover; the network may lose, delay, duplicate, and reorder messages and may partition; failures are non-Byzantine. Events known to a majority of cohorts survive view changes. (§§1–2, §4.)</p>
     </details>
   </div>
 </section>
@@ -141,20 +141,20 @@
       <div>
         <div class="kicker">Who decides what goes in</div>
         <h2>The podium</h2>
-        <p class="lede">What goes into the law is decided at the podium. It stands at the centre of the Tholos, and one legislator at a time holds it: the <b>holder</b>. Only the holder adds lines to the law.</p>
-        <p>The podium is no pulpit, since nobody can be heard from it either. It is an office. The holder writes each line at the desk and gives it the next number, and the others copy what they are sent and do nothing else with the law. Three kinds of work pass through it.</p>
+        <p class="lede">Unlike the Chamber across the bay — where any legislator can start a ballot at any time — the Tholos has a <b>podium</b> at its center. Only one legislator holds the podium at a time: the <b>holder</b> (the paper's <i>primary</i>). Only the holder may write new lines into the law.</p>
+        <p>The podium is an office, not a speaker's pulpit, since no voice carries from it either. The holder sits at the podium's desk, assigns each new line its number, and sends it out by runner; the other four legislators sit passively at their benches (as <i>backups</i>) and simply copy the lines the podium's runners bring them. Three rules govern the podium's work:</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-o02-podium-991c37083a-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-o02-podium-991c37083a-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-o02-podium-991c37083a-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-o02-podium-991c37083a-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/o02-podium.jpg" alt="At the podium a figure in saffron writes at the desk beside a board on its post while two young runners set off in different directions towards benches where council members wait" loading="lazy"></div></div></div>
     </div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The podium's work</div><h3>Writing</h3><p>The holder weighs each petition, writes the lines it calls for, numbers each in turn and gives it to the runners.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The podium's work</div><h3>Running</h3><p>Each bench has its own <b>runner</b>, who brings it the lines in the order they were written and never skips one. A runner may be held up, but a bench that holds line 12 always holds lines 1 to 11 as well.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The podium's work</div><h3>Petitions</h3><p>Citizens at the doors send <b>petitions</b> to the podium: new dues, a closed season, a ruling on a quay. A petition that reaches a bench instead is sent back with the holder's name.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First · Writing</div><h3>Only the holder writes</h3><p>The holder receives each citizen's petition, writes the new line of law on their own tablet, gives it the next line number, and hands it to the podium's runners.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second · Running</div><h3>Runners never skip a line</h3><p>Each bench has a dedicated <b>runner</b> (the paper's <i>communication buffer</i>) who delivers lines strictly in order without ever skipping a number. A runner may be delayed, but any bench that holds Line 12 is guaranteed to hold Lines 1 through 11 as well.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third · Petitions</div><h3>Citizens petition the podium</h3><p>Citizens at the door send their <b>petitions</b> (client calls) to the podium. If a petition accidentally goes to a bench instead, that bench simply sends it back with the current holder's name.</p></div></div></div>
     </div>
-    <p class="tell">The holder writes a line and hands it to the runners. The petitioner is still waiting at the door, and the holder has to know when it is safe to answer that the petition is law.</p>
+    <p class="tell">Once the holder writes a new line and dispatches the runners to the benches, the citizen who petitioned is waiting at the door for an answer. How many runners must return before the holder can safely declare that the new line has passed into law?</p>
     <details class="proof">
       <summary>In the paper · primary, backups and the communication buffer</summary>
-      <p class="given">The primary executes calls; backups are passive and receive event records. The communication buffer delivers event records reliably, in timestamp order, to every backup in the view; a failure to deliver leads to a view change. A cohort that is not the active primary rejects calls with the current viewid and primary. §2, §3.3.</p>
+      <p class="given">The primary executes client calls and generates event records; backups are passive and apply event records received from the primary. The primary's communication buffer delivers event records reliably and in timestamp order to every backup in the current view; if delivery fails for too long, a view change is triggered. Any cohort that is not the active primary rejects client calls, returning the current <code>viewid</code> and primary identity. (§2, §3.3.)</p>
     </details>
   </div>
 </section>
@@ -167,8 +167,8 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">When the holder may say “it is law”</div>
       <h2>When a law passes</h2>
-      <p class="lede">A petition becomes law when its line is safe, and a line is safe once a majority of the council hold it. That is three of the five: the holder and two others.</p>
-      <p>So the holder does not wait for everyone. Each runner comes back with the bench's word, <i>I hold everything up to line 12</i>. As soon as two benches have said so, line 12 <b>passes</b>, and only then does the holder answer the petitioner. Here Okios holds the podium, and Theron has stepped out.</p>
+      <p class="lede">A new line becomes law as soon as it is held by a <b>majority of the council</b> — which out of five legislators means at least <b>three</b>: the holder at the podium plus at least two benches (a <i>sub-majority</i> of backups).</p>
+      <p>Because three out of five is enough, the holder never has to wait for everyone. As each runner returns from a bench, they bring the bench's confirmation: <i>"I hold everything up to Line 12."</i> The moment two benches have confirmed Line 12, three legislators in all (the holder plus those two benches) hold it: Line 12 <b>passes</b>, and the holder tells the waiting petitioner that it is law. Try it below with Okios at the podium while Theron has stepped out.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>The runners go out <em>and come back with a word</em></h4>
@@ -182,13 +182,13 @@
       </div>
       <div class="row"><button class="btn" id="pwrite">Okios writes the next line</button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Passed means three hold it</div><h3>A law has passed when its line, and every line before it, is held by the holder and at least two others</h3></div></div></div>
-    <p class="tell">Three is the right number for two reasons. Someone is nearly always out of reach, and a council that waited for all five would pass nothing. And the holder may be gone tomorrow, when the next holder will start from what a majority can show. Any two majorities of five share a legislator, as any two majorities in the Chamber across the bay share a member.<sup class="xref"><a href="../the-part-time-parliament/index.html#s2" title="The Part-Time Parliament: One Decree, Once Every Nineteen Years">*</a></sup> So a line that three hold is always found again.</p>
-    <p class="tell">Lines that no majority holds yet are <b>drafts</b>. A change of holder may lose them, and that does no harm, because nobody was told they were law.</p>
-    <p class="tell">The holder numbers the lines, but holders change. A number written under one holder has to be told apart from the same number written under the next.</p>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Passed means three hold it</div><h3>A law has passed when its line — and every line before it — is held by the holder and at least two other legislators</h3></div></div></div>
+    <p class="tell">Waiting for three out of five solves two problems at once. First, up to two legislators can step out of reach without stalling the city's business. Second, if the holder steps out tomorrow and a new holder takes the podium after polling a majority of three legislators, any two majorities of five must overlap in at least one legislator — the exact same quorum-intersection principle used in the Chamber across the bay.<sup class="xref"><a href="../the-part-time-parliament/index.html#s2" title="The Part-Time Parliament: One Decree, Once Every Nineteen Years">*</a></sup></p>
+    <p class="tell">Any line that the holder has written at the desk but that has not yet reached two benches is merely a <b>draft</b>. If the holder steps out before a draft reaches a majority, a change of holder may discard that draft — which is completely harmless, because no citizen was ever told it had passed.</p>
+    <p class="tell">There is a catch, however: if every holder numbers their lines starting from 1, or continues numbering while another holder takes over, how do we tell "Line 12 written by Okios" apart from "Line 12 written by Liskovia"?</p>
     <details class="proof">
       <summary>In the paper · waiting for a sub-majority</summary>
-      <p class="given">force-to(<var>v</var>) waits until a sub-majority of backups, one fewer than a majority of the configuration, know every event of the current view up to <var>v</var>.ts; with the primary, a majority then knows it. §3. In the paper the moments that must wait are a transaction's prepare and commit; this book, keeping one law, has only one, the passing of a law.</p>
+      <p class="given">The operation <code>force-to(v)</code> waits until a sub-majority of backups (one fewer than a majority of the group configuration) acknowledge receiving every event of the current view up to timestamp <code>v.ts</code>; together with the primary itself, a full majority then holds the event. (§3. In Oki and Liskov's full distributed-transaction system, <code>force-to</code> is invoked at transaction prepare and commit; in our single-group telling, passing a law stands for committing an operation.)</p>
     </details>
   </div>
 </section>
@@ -201,21 +201,21 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Numbers that survive a change of holder</div>
       <h2>Board and line</h2>
-      <p class="lede">A line's number means something only under one holder. So every spell at the podium gets a mark of its own: a <b>board</b>, which hangs on its post beside the desk.</p>
-      <p>A board bears a count and the name of the legislator who raised it: <i>board 7, Liskovia</i>. Boards are ordered by count, and two with the same count by name, in the order of the alphabet. Each legislator raises boards only in their own name, so no two boards are ever the same.</p>
-      <p>Line numbers start again under every board, so a line is known by <b>board and line</b>. The later board is always the later mark, and under one board the higher line is the later. Each legislator also keeps a <b>note</b> in the margin of their tablets: for every board they have served under, the last line they hold.</p>
+      <p class="lede">Because a line number makes sense only under a single holder's term at the podium, every spell at the podium is given its own unique identifier: a <b>board</b> (a <i>view</i>, identified by a <code>viewid</code>), which hangs on a post beside the podium's desk.</p>
+      <p>Each board is stamped with a rising counter and the name of the legislator who called it — such as <i>Board 7, Liskovia</i>. Boards are ordered first by their counter, and if two legislators happen to call a board with the same counter at the same time, ties are broken alphabetically by the legislator's name. Because each legislator only ever puts their own name on a board they call, no two boards are ever identical.</p>
+      <p>Whenever a new board is raised at the podium, line numbers start fresh from 1. Thus every line of law is uniquely identified by its <b>board and line</b> (a <i>viewstamp</i> = ⟨<code>viewid</code>, <code>ts</code>⟩). When comparing two marks, the one from the <b>later board</b> always wins; within the same board, the <b>higher line number</b> wins. Each legislator also keeps a compact <b>note</b> (their <i>history</i>) in the margin of their tablets recording the last line they hold for each board they have served under. Pick any two marks below to see how they compare:</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Which is the later? <em>choose two marks</em></h4>
       <div class="marks" id="marks"></div>
       <p class="say" id="marksay">Choose any two.</p>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">The later line knows more</div><h3>A later mark holds everything an earlier one does</h3></div></div></div>
-    <p class="tell">Under one board this is so because runners never skip a line: whoever holds a later line holds every earlier one. Across boards it is so because every board opens with its holder sending out the whole law, so whoever holds any line of a later board holds everything that board started with. A higher line number proves nothing by itself. Board 6, line 40 may hold far more lines than board 7, line 1, and it is still the older copy.</p>
-    <p class="tell">A board changes when the podium falls silent. Somebody has to notice, and then do something about it.</p>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">The later line knows more</div><h3>A copy with a later board-and-line mark holds every passed law that an earlier mark holds</h3></div></div></div>
+    <p class="tell">Why does a later mark <em>always</em> know at least as much passed law as an earlier one? Within a single board, it is true because runners never skip a line: anyone who holds Line 12 of Board 6 necessarily holds Lines 1 through 11 of Board 6 as well. Across different boards, it is true because every new board opens with its new holder sending their entire law copy out as the new board's opening line — so anyone who holds even Line 1 of Board 7 already holds everything Board 7 started with! Notice that a raw line number means nothing without its board: <i>Board 6, Line 40</i> may have a bigger line number than <i>Board 7, Line 1</i>, yet <i>Board 7, Line 1</i> is the later mark.</p>
+    <p class="tell">Now, what happens when the holder at the podium steps out or falls silent? Someone at the benches has to notice — and call for a new board.</p>
     <details class="proof">
       <summary>In the paper · viewids and viewstamps</summary>
-      <p class="given">viewid = ⟨cnt, mid⟩, totally ordered and unique to its creator; a timestamp, unique and ordered within a view; viewstamp = ⟨viewid, ts⟩; each cohort's history is a sequence of viewstamps, one per viewid, and its state reflects exactly the events up to each. §2, Figures 1 and 4.</p>
+      <p class="given">A view identifier is a pair <code>viewid = ⟨cnt, mid⟩</code>, totally ordered lexicographically and unique to its creator <code>mid</code>; a timestamp <code>ts</code> is unique and ordered within a view; a <code>viewstamp = ⟨viewid, ts⟩</code> pairs the two. Each cohort's <code>history</code> is a sequence of viewstamps (the largest timestamp it holds for each view it has participated in), and because event records arrive in order without gaps, its state reflects every event up to each viewstamp in its history. (§2, Figures 1 and 4.)</p>
     </details>
   </div>
 </section>
@@ -229,21 +229,21 @@
       <div>
         <div class="kicker">Who notices, and what they do</div>
         <h2>An empty podium</h2>
-        <p class="lede">A silent podium is noticed through the <b>roll</b>. Every so often each legislator sends each of the others a note, <i>I am here</i>.</p>
-        <p>A legislator who stops hearing from someone, or hears again from someone who was away, or has just come back from home, calls for a new board and is its <b>caller</b>. The silent one may have gone home, or stepped out, or their notes may only be slow. The caller cannot tell and does not need to, because a board is called either way.</p>
-        <p>The caller takes a count higher than any board they have seen, adds their own name, and sends every legislator an <b>invitation</b>. A legislator invited to a board higher than any they have seen accepts it, stops working under the old board, and answers in one of two ways.</p>
+        <p class="lede">The council keeps track of who is reachable through a periodic heartbeat called the <b>roll</b>: every so often, each legislator sends a brief note — <i>"I am here"</i> (<code>I'm alive</code>) — to the others.</p>
+        <p>Whenever a legislator stops hearing from the podium (or from another member), hears again from someone who was away, or has just walked back in from home, they call for a new board and become its <b>caller</b> (the <i>view manager</i>). Of course, the caller cannot tell whether a silent holder actually went home, stepped out onto the porch, or merely had slow messengers — and the caller does not need to know, because calling a new board is safe in every case.</p>
+        <p>To call a new board, the caller picks a board counter one higher than any board they have ever seen, attaches their own name, and sends an <b>invitation</b> to every legislator. Any legislator who receives an invitation for a board higher than their current one immediately accepts it, stops working under the old board, and replies in one of two ways depending on whether they still have their wax tablets:</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-o03-caller-d57c82dca5-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-o03-caller-d57c82dca5-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-o03-caller-d57c82dca5-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-o03-caller-d57c82dca5-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/o03-caller.jpg" alt="A figure in green sits writing on small wax tablets with a blank board propped beside him and two young runners waiting; across the floor the podium's seat and desk stand empty" loading="lazy"></div></div></div>
     </div>
     <div class="cards3 pair">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The two answers</div><h3>With tablets</h3><p><i>I hold up to board 6, line 40</i>, and whether they held the podium under board 6.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The two answers</div><h3>Without</h3><p><i>I have lost my tablets. My bench says board 6.</i></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First kind of reply · Normal acceptance</div><h3>With tablets intact</h3><p><i>"I accept, and my tablets hold up to Board 6, Line 40"</i> — along with whether they were the holder of Board 6.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second kind of reply · Crash acceptance</div><h3>Without tablets (after going home)</h3><p><i>"I accept, but I went home and my tablets were smoothed; the stone on my bench says I last served under Board 6."</i></p></div></div></div>
     </div>
-    <p class="tell">Two legislators may call at once. Then the higher board wins: the lower caller is invited to it, accepts it, and answers like anyone else. Several callers slow the council down, but they never confuse it.</p>
-    <p class="tell">Invitations go out and answers come in. The caller now has to judge when the new board may form, and who takes the podium.</p>
+    <p class="tell">What if two legislators notice the silent podium at the same time and both send out invitations? Because no two boards ever have the same mark, the higher board simply wins: the caller of the lower board receives the invitation to the higher board, abandons their own call, and replies to the higher board like everyone else.</p>
+    <p class="tell">Once invitations go out and replies come back to the caller, how does the caller decide whether the new board is allowed to form — and who gets to take the podium?</p>
     <details class="proof">
       <summary>In the paper · the view manager and its invitations</summary>
-      <p class="given">“I'm alive” messages; the view manager's invitations with a new viewid; a normal acceptance carries the cohort's viewstamp and whether it was primary, a crash-accept only its viewid. §4.</p>
+      <p class="given">Periodic <code>“I'm alive”</code> messages detect changes in reachability; the cohort that initiates a view change acts as the <i>view manager</i> and sends invitations carrying a higher <code>viewid</code>. A cohort with intact volatile state replies with a <i>normal-accept</i> carrying its latest <code>viewstamp</code> and whether it was the primary; a cohort recovering from a crash replies with a <i>crash-accept</i> carrying only the <code>cur-viewid</code> recorded on stable storage. (§4.)</p>
     </details>
   </div>
 </section>
@@ -256,7 +256,7 @@
     <div class="narrow">
       <div class="kicker">A change of board</div>
       <h2>Who takes the podium</h2>
-      <p class="lede">A new board forms when a majority of the council has answered, and among the answers is someone sure to hold every law that has ever passed. While everyone keeps their tablets, the second follows from the first. Scroll slowly, and the picture moves with you.</p>
+      <p class="lede">A new board can form as soon as a <b>majority of the council</b> has accepted the invitation, provided we can be sure that at least one of those respondents holds every law that has ever passed. When nobody has gone home and lost their wax tablets, any majority of três out of five automatically satisfies that requirement! Scroll through the seven steps below to watch Board 7 take over from Board 6.</p>
     </div>
   </div>
   <div class="scrolly" id="change">
@@ -265,34 +265,29 @@
       <div class="side five" id="changeside" data-live></div>
     </div></div>
     <div class="steps">
-      <div class="step on"><div class="card"><div class="num">1 · Board 6</div><h3>Okios holds the podium</h3><p>Line 12 has passed: Okios, Liskovia and Kleon hold it. Melissa and Theron hold up to line 10. Okios has written line 13, a draft that no bench holds yet.</p></div></div>
-      <div class="step"><div class="card"><div class="num">2 · Silence</div><h3>The roll goes unanswered</h3><p>Okios steps out, and no note from him reaches the benches. Liskovia stops hearing from the podium.</p></div></div>
-      <div class="step"><div class="card"><div class="num">3 · The caller</div><h3>Liskovia calls board 7</h3><p>She takes a count higher than any board she has seen, adds her own name, and sends every legislator an invitation.</p></div></div>
-      <div class="step"><div class="card"><div class="num">4 · The answers</div><h3>A majority answers, all with tablets</h3><p>Kleon answers <i>board 6, line 12</i>. Melissa answers <i>board 6, line 10</i>. With Liskovia's own, that is three of five. Theron's answer is slow, and nobody waits for it.</p></div></div>
-      <div class="step"><div class="card"><div class="num">5 · The holder</div><h3>The latest board and line takes the podium</h3><p>Three answers are a majority, and every passed law is held by three, so the two threes share someone. The answer showing the latest board and line therefore holds everything that passed. Here Liskovia and Kleon both show line 12, and Liskovia takes the podium.</p></div></div>
-      <div class="step"><div class="card"><div class="num">6 · The opening line</div><h3>The whole law, as the board's first line</h3><p>Liskovia opens board 7 by sending every member the whole law as she holds it, with its notes. Melissa now holds everything that passed.</p></div></div>
-      <div class="step"><div class="card"><div class="num">7 · A draft is lost</div><h3>Okios comes back in</h3><p>Okios sees board 7 and joins it. His tablets ran past the opening line with a draft that never passed, so he smooths line 13 away. Nobody was told it was law.</p></div></div>
+      <div class="step on"><div class="card"><div class="num">1 · Board 6</div><h3>Okios holds the podium</h3><p>Under Board 6, Line 12 has <b>passed</b>: Okios, Liskovia, and Kleon all hold it on their tablets. Melissa and Theron are slightly behind, holding up to Line 10. Meanwhile, Okios has just written Line 13 at the podium — an unconfirmed <b>draft</b> that has not yet reached any bench.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · Silence</div><h3>The roll goes unanswered</h3><p>Okios steps out onto the porch, and his notes stop reaching the floor. At her bench, Liskovia stops hearing from the podium.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · The caller</div><h3>Liskovia calls Board 7</h3><p>Liskovia picks a counter one higher than Board 6, adds her own name (<i>Board 7, Liskovia</i>), and sends an invitation to every bench.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · The answers</div><h3>A majority replies with intact tablets</h3><p>Kleon replies <i>Board 6, Line 12</i>, and Melissa replies <i>Board 6, Line 10</i>. Together with Liskovia's own <i>Board 6, Line 12</i>, that makes a majority of three out of five! Theron's reply is slow, and nobody needs to wait for it.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · Choosing the holder</div><h3>The latest board-and-line takes the podium</h3><p>Because three legislators held passed Line 12 and three legislators replied to the call, the two majorities must overlap. Therefore, whichever respondent reports the <b>latest board and line</b> is guaranteed to hold Line 12 and every earlier passed law! Here Liskovia and Kleon are tied at <i>Board 6, Line 12</i>, so Liskovia takes the podium.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · The opening line</div><h3>Sending out the whole law to open Board 7</h3><p>Liskovia opens Board 7 by sending every member of the new board her complete copy of the law (through Line 12) as Board 7's opening state (a <code>newview</code> message). Melissa's tablets are immediately brought up to Line 12.</p></div></div>
+      <div class="step"><div class="card"><div class="num">7 · A draft is smoothed away</div><h3>Okios walks back in</h3><p>When Okios returns from the porch, he sees Board 7 in progress and joins it, replacing his tablets with Board 7's law. His unconfirmed draft (Line 13 of Board 6) is smoothed away — which is completely safe, because it never reached a majority and no citizen was ever told it had passed.</p></div></div>
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px"><div class="body"><div class="num">What passed survives</div><h3>A law that passed under any board stands under every later board</h3><p>If the old holder is among those with the latest line, the old holder is preferred, and nothing then changes but the board.</p></div></div></div>
-    <p class="tell">All of this supposed that everyone who answered still had their tablets. Some answers come without.</p>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px"><div class="body"><div class="num">What passed survives</div><h3>Any law that passed under an earlier board is preserved in every later board</h3><p>Notice one nice detail: if the old holder happens to be tied for the latest board-and-line among the respondents, the old holder is chosen to keep the podium so that no tablets need to be copied unnecessarily.</p></div></div></div>
+    <p class="tell">In the walkthrough above, every legislator who answered the call still had their wax tablets intact. What happens when someone has gone home for the night, had their wax tablets smoothed clean, and answers the call <em>without</em> tablets?</p>
     <details class="proof">
       <summary>Sketch · that what passed survives, while everyone keeps their tablets</summary>
-      <p class="given">Write <var>b</var> and <var>c</var> for boards (views), ordered as boards are. A line has passed under <var>b</var> when the holder of <var>b</var> and two other members hold it and every line before it. <b>Claim.</b> A line that passed under <var>b</var> is held by every member of every board that forms after <var>b</var>.</p>
+      <p class="given">Let <var>b</var> and <var>c</var> be boards (views), ordered by their board marks. A line has passed under <var>b</var> when the holder of <var>b</var> and at least two other legislators hold that line and every line before it. <b>Claim.</b> Any line that passed under board <var>b</var> is held by every member of every board that forms after <var>b</var>.</p>
 
     <ol class="proofsteps">
-      <li>The paper argues this informally (§2, §4); what follows is that argument, laid out by board.</li>
-      <li>Suppose a law's line passed under board <var>b</var>: the holder and two others held it, and
-      every line before it.</li>
-      <li>The next board to form, <var>c</var>, formed on answers from a majority. Those answers and the
-      three who held the law share at least one legislator, who answered with board <var>b</var> and a
-      line at or past the law's line.</li>
-      <li>The new holder is the answerer with the latest board and line. By The Later Line Knows More,
-      their copy holds everything the shared legislator's does, the law included.</li>
-      <li>Board <var>c</var> opens with the new holder's whole law, so every member of <var>c</var> holds
-      the law, and any later line of <var>c</var> is written after it.</li>
-      <li>The same step carries the law from <var>c</var> to the board after, and so on to every later board.<span class="qed">∎</span></li>
+      <li>Oki and Liskov state this argument in §§2 and 4; here we lay it out step by step across consecutive boards.</li>
+      <li>Suppose a law's line passed under board <var>b</var>: at least three of the five legislators held that line (and every line before it) under board <var>b</var>.</li>
+      <li>Let <var>c</var> (&gt; <var>b</var>) be the very next board that successfully forms. Board <var>c</var> forms on replies from at least three of the five legislators. By majority intersection, those three respondents share at least one legislator with the three who held the passed line; assuming no tablets were lost, that shared legislator replies with board <var>b</var> and a line number at or past the passed line.</li>
+      <li>The new holder of board <var>c</var> is chosen as the respondent with the largest board-and-line mark (<code>viewstamp</code>). By <em>The Later Line Knows More</em>, the new holder's tablets contain everything the shared legislator's tablets contain, including the passed line.</li>
+      <li>Board <var>c</var> opens with the new holder sending their complete law state to every member of <var>c</var>, so every member of <var>c</var> holds the passed line, and any new lines in <var>c</var> are ordered after it.</li>
+      <li>By induction from board <var>c</var> to every subsequent board that forms, the passed line survives in every later board.<span class="qed">∎</span></li>
     </ol>
     </details>
   </div>
@@ -305,13 +300,13 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">A majority of answers is not always enough</div>
       <h2>When tablets are lost</h2>
-      <p class="lede">An answer without tablets changes things. Take board 6 again, with line 12 passed and held by Okios, Liskovia and Kleon. Okios goes home and comes back to smooth wax, and Liskovia and Kleon step out. Okios, Melissa and Theron answer the next call, and three is a majority.</p>
-      <p>This board must not form. The only answers with tablets stop at line 10, and a board formed on them would start without a law the city was told had passed. So a lost tablet cannot simply be left out of the count. A board may form when a majority of the council has answered and one of three things also holds.</p>
+      <p class="lede">When a legislator goes home and returns to smooth wax, a simple majority of three replies is no longer enough on its own! To see why, look at Board 6 again: suppose Line 12 passed because Okios, Liskovia, and Kleon held it, while Melissa and Theron held only up to Line 10. Now suppose Okios goes home (losing his tablets) and comes back, while Liskovia and Kleon step out. When a call for Board 7 goes out, Okios (without tablets), Melissa (at Line 10), and Theron (at Line 10) answer — three out of five!</p>
+      <p>If Board 7 were allowed to form from those three replies, the best intact tablet among them would stop at Line 10, and passed Line 12 would be lost forever! Why did quorum intersection fail? Because the one person in the overlap between {Okios, Liskovia, Kleon} and {Okios, Melissa, Theron} was Okios — and Okios lost his tablets! To prevent this, Oki and Liskov require that a new board may form only when a majority of the council has answered <b>and at least one of three safety conditions holds</b>:</p>
     </div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First</div><h3>A majority still has its tablets</h3><p>A majority of the whole council answered with tablets. The overlap works as before.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second</div><h3>The lost tablets were old</h3><p>Every answer without tablets names an older board than the latest shown by an answer with tablets. Whatever passed before that older board ended was carried into every later one.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third</div><h3>The holder still has theirs</h3><p>They name the same board, and that board's holder answered with tablets. Every line starts at the podium, so the holder's tablets cover anyone else's that were lost.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Condition 1</div><h3>A majority still has its tablets</h3><p>At least three of the five legislators replied <em>with intact tablets</em> (normal acceptances). Then the three intact replies alone form a majority and overlap the three who passed Line 12.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Condition 2</div><h3>The lost tablets are from an older board</h3><p>Every reply <em>without</em> tablets names an older board on its bench stone than the latest board shown by a reply <em>with</em> tablets. Since that later board already formed safely, everything from the older board was already carried forward into it!</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Condition 3</div><h3>That board's holder still has their tablets</h3><p>A reply without tablets names the same board as the latest reply with tablets, <b>and that board's holder replied with intact tablets</b>. Because every line under a board is written at the podium first, the holder's intact tablets hold every line of that board, covering for any bench whose tablets were smoothed!</p></div></div></div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
       <h4>May board 7 form? <em>set each answer</em></h4>
@@ -326,13 +321,13 @@
         </div>
       </div>
       <div class="row"><button class="btn alt" id="formreset">The example above</button></div>
-      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">Everyone here last served under board 6, so the second condition has nothing to apply to. The page has tried every one of the 243 ways the five can answer: whenever a board forms, its holder has line 12.</p>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">Everyone here last served under Board 6, so Condition 2 does not apply in this scenario. You can test all 243 combinations of how the five legislators might answer: in every single case where the rules allow Board 7 to form, its new holder has Line 12!</p>
     </div></div></div>
-    <p class="tell">When no board may form, nothing happens for now. The caller waits and calls again. Once Liskovia or Kleon comes back within reach, a board forms, and line 12 is in it.</p>
-    <p class="tell">The old holder may have heard none of this, and may still believe the podium is theirs.</p>
+    <p class="tell">When none of the three conditions is met, Board 7 simply waits and does not form yet. The caller keeps trying until Liskovia or Kleon steps back inside with their intact tablets, satisfying Condition 1 so Board 7 can safely form with Line 12 intact.</p>
+    <p class="tell">Now consider one more hazard: what if the old holder, Okios, is still standing out on the porch and has no idea that Board 7 has formed inside?</p>
     <details class="proof">
       <summary>In the paper · when a view may form</summary>
-      <p class="given">A majority accepted, and (1) a majority accepted normally, or (2) crash-viewid &lt; normal-viewid, or (3) crash-viewid = normal-viewid and the primary of that view accepted normally. The new primary is the cohort with the largest viewstamp, the old primary if possible. §4.</p>
+      <p class="given">A new view may form when the view manager has received acceptances from a majority of cohorts in the group configuration, and either: (1) a majority of the group sent normal-accepts, or (2) every crash-accept has <code>crash-viewid &lt; normal-viewid</code> (the highest viewid among normal-accepts), or (3) the highest <code>crash-viewid</code> equals <code>normal-viewid</code> and the primary of that view sent a normal-accept. The new primary is chosen as the respondent with the largest viewstamp (preferring the old primary on a tie). (§4.)</p>
     </details>
   </div>
 </section>
@@ -347,8 +342,8 @@
       <div>
         <div class="kicker">Two who believe they hold the podium</div>
         <h2>The holder who has not noticed</h2>
-        <p class="lede">Okios holds board 6 and steps out onto the porch. For a while no runner reaches him, and none of his reaches the benches. Inside, the others raise board 7 and Liskovia takes the podium. As far as Okios knows, board 6 still stands.</p>
-        <p>Two legislators now each believe they hold the podium, and nothing stops Okios from acting on it. The holding rides on the board's count, which every note carries, so he may go on taking petitions at the porch door and writing lines under board 6. Whether he can pass any of them is another matter.</p>
+        <p class="lede">Suppose Okios, the holder of Board 6, steps out onto the porch. While no messages pass through the doorway, Liskovia, Kleon, and Melissa inside the hall raise Board 7 and make Liskovia the new holder. Out on the porch, Okios knows nothing of this and still believes he holds the podium under Board 6.</p>
+        <p>Now two legislators simultaneously believe they hold the podium (<i>split brain</i>)! What stops Okios from passing conflicting laws out on the porch? Authority rides on the <b>board number</b> carried by every runner's note. Even if Okios takes a petition at the porch and sends his runners into the hall under Board 6, watch what happens when those runners reach the benches:</p>
       </div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
@@ -363,12 +358,12 @@
       </div>
       <div class="row"><button class="btn" id="porchwrite">Okios writes a line under board 6</button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Two holders, one law</div><h3>A holder who has missed a later board can still write lines, but can pass none of them</h3></div></div></div>
-    <p class="tell">While it lasts, a citizen at the porch who asks Okios what the law says hears the answer of his copy, which may lack laws passed under board 7. He answers from what he holds and passes nothing new. As soon as a runner reaches him, or he walks back in, he sees board 7 and joins it.</p>
-    <p class="tell">So only a majority can pass a law, and only a holder's tablets can cover for lost ones. Both lean on enough legislators keeping what they hold.</p>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Two holders, one law</div><h3>A deposed holder who has missed a later board can still write drafts, but can never pass them</h3></div></div></div>
+    <p class="tell">Because Board 7 required a majority of three (Liskovia, Kleon, and Melissa) to form, all three of them have already moved to Board 7 and reject any note bearing the old mark of Board 6! Even if Theron has not yet heard of Board 7 and accepts Okios's note, Okios + Theron is only two out of five — one short of a majority. Okios can never get two benches to confirm his draft, so he can never tell a petitioner that a new law has passed. And the moment any message from inside reaches him, he learns of Board 7 and steps down.</p>
+    <p class="tell">Notice how everything we have seen — passing laws by majority and recovering safely when a holder steps out — relies on enough legislators keeping their wax tablets intact. Let us look closely at the price of writing in wax rather than indelible ink.</p>
     <details class="proof">
       <summary>In the paper · several active primaries</summary>
-      <p class="given">“The system performs correctly even if there are several active primaries … The old primary will not be able to prepare and commit user transactions, however, since it cannot force their effects to the backups.” §4.1.</p>
+      <p class="given">“The system performs correctly even if there are several active primaries (in different partitions) at the same time… The old primary will not be able to prepare and commit user transactions, however, since it cannot force their effects to the backups.” (§4.1.)</p>
     </details>
   </div>
 </section>
@@ -382,9 +377,9 @@
       <div>
         <div class="kicker">What going home costs</div>
         <h2>Wax, not ink</h2>
-        <p class="lede">Schedia keeps its law in wax. The tablets stay on the bench, and they are smoothed when their legislator goes home.</p>
-        <p>Only two things are cut into the bench's stone: the legislator's name, and the last board they served under, recut whenever a board forms. That is the <b>stone</b>. Stepping out keeps the tablets, and going home loses them. A legislator back from home knows their name and their last board and nothing of the law. They call for a new board at once, answer without tablets, and are brought up to date only by the new board's opening line.</p>
-        <p>Wax is quick, and cutting every line in stone would be slow, so Schedia counts on a majority remembering. See what that costs when too many go home on the same night.</p>
+        <p class="lede">Schedia's legislators write the law on <b>wax tablets</b> (<i>volatile memory</i>) that remain on their benches and are smoothed clean whenever their owner goes home for the night (a <i>crash</i>).</p>
+        <p>Only two facts are chiselled into the <b>stone</b> of the bench itself (<i>stable storage</i>): the legislator's name, and the mark of the last board they joined, which is recut only when a new board forms. Stepping out onto the porch leaves a legislator's wax tablets untouched, whereas going home wipes them clean. When a legislator returns from home to smooth wax, they know only their name and the last board carved into their bench: they immediately call for a new board, answer <em>without tablets</em>, and recover the law from the new holder's opening line.</p>
+        <p>Writing in wax is fast — because nobody has to chisel every single line of law into stone before answering a runner! Instead, Schedia relies on the assumption that a majority of the council will not all go home on the same night. Click the benches below to send legislators home for the night and see when the council can recover in the morning — and when it halts for good:</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-o05-bench-287bfd08c5-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-o05-bench-287bfd08c5-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-o05-bench-287bfd08c5-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-o05-bench-287bfd08c5-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/o05-bench.jpg" alt="A figure in grey sits on a stone bench against the Tholos wall with a wax tablet open on his knees, running a finger over the bare wax; a name in Greek letters is cut into the edge of the seat, and a stack of tablets lies on the stand beside it" loading="lazy"></div></div></div>
     </div>
@@ -400,11 +395,11 @@
       </div>
       <div class="row"><button class="btn alt" id="waxreset">Nobody goes home</button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Stopped, never wrong</div><h3>Lost tablets can stop the council for ever. They can never make a board start without a law that passed</h3><p>The paper names ways to make this rarer: keep a lasting record at the holder only, or give each member a supply that lets it write to lasting storage in the background. It leaves the choice to how much the law is worth.</p></div></div></div>
-    <p class="tell">Across the bay, the Parliament keeps its law in ink, and its Chamber has no podium. Each arrangement buys something the other lacks.</p>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Stopped, never wrong</div><h3>If too many tablets are smoothed at once, the council stops forever — it never starts a new board with a passed law missing</h3><p>Oki and Liskov note two ways to make this catastrophe arbitrarily unlikely in practice: have the primary alone log to disk, or equip each machine with an uninterruptible power supply (UPS) so it can flush its volatile memory to disk when power fails.</p></div></div></div>
+    <p class="tell">Across the bay, the Paxon Parliament makes the opposite trade-off: its legislators write every promise and vote in indelible ink on parchment scrolls, and its Chamber has no podium. Let us set the two halls side by side.</p>
     <details class="proof">
       <summary>In the paper · what survives a crash</summary>
-      <p class="given">Most of a cohort's state is volatile. Only mymid, configuration and mygroupid, written when the cohort is created, and cur-viewid, written at the end of each view change, are on stable storage. A recovered cohort sets up-to-date to false and starts a view change. A catastrophe, a majority crashed at once, “does not cause a group to enter a new view missing some needed information. Rather, it causes the algorithm to never again form a new view.” §4, §4.2.</p>
+      <p class="given">Almost all of a cohort's state is kept in volatile memory. Only <code>mymid</code>, <code>configuration</code>, and <code>mygroupid</code> (written when the cohort is created) and <code>cur-viewid</code> (written once at the end of each view change) reside on stable storage. When a cohort recovers from a crash, it sets <code>up-to-date = false</code> and initiates a view change. A simultaneous crash of a majority (a “catastrophe”) “does not cause a group to enter a new view missing some needed information. Rather, it causes the algorithm to never again form a new view.” (§4, §4.2.)</p>
     </details>
   </div>
 </section>
@@ -417,15 +412,15 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The other hall</div>
       <h2>Across the bay</h2>
-      <p class="lede">The Parliament across the bay keeps the law of the rest of Paxos in a hall of the same kind: a rotunda where nobody can be heard, with legislators who come and go and messengers who take as long as they take.<sup class="xref"><a href="../../places/the-chamber/index.html" title="The Setting: The Chamber">*</a></sup></p>
-      <p>The two laws never meet, since each covers its own city.<sup class="xref"><a href="../../places/schedia/index.html#s2" title="Schedia and the Tholos: A City of Its Own">*</a></sup> So the two halls can be compared like with like.</p>
+      <p class="lede">Across the water on the western arm of the island stands the Paxon Chamber — another round stone hall where speeches cannot be heard, legislators wander in and out, and messengers take as long as they take.<sup class="xref"><a href="../../places/the-chamber/index.html" title="The Setting: The Chamber">*</a></sup></p>
+      <p>Because each hall legislates only for its own city, their two law scrolls never conflict.<sup class="xref"><a href="../../places/schedia/index.html#s2" title="Schedia and the Tholos: A City of Its Own">*</a></sup> Comparing the two halls side by side shows how closely related Viewstamped Replication and Paxos really are — and where each makes its own design choice:</p>
     </div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the Chamber's ink buys</div><h3>It cannot be stopped by going home</h3><p>A Paxon legislator writes the decrees in indelible ink in a scroll of their own, and a legislator back from any absence still has everything.<sup class="xref"><a href="../the-part-time-parliament/index.html#s1" title="The Part-Time Parliament: A Parliament Whose Members Come and Go">*</a></sup> Schedia's wax is quicker, and it asks that a majority not go home at once.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What Schedia's podium buys</div><h3>One trip out and back passes a law</h3><p>In the Chamber any legislator may start a ballot, and several may believe themselves president for a while, which costs time but never makes two scrolls disagree.<sup class="xref"><a href="../the-part-time-parliament/index.html#s2" title="The Part-Time Parliament: One Decree, Once Every Nineteen Years">*</a></sup> In Schedia only the holder writes, the benches only copy, and a change of holder is a step of its own.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the two halls share</div><h3>Any two majorities share a legislator</h3><p>The Chamber uses that fact for each decree's ballot. The Tholos uses it for each change of holder.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the Chamber's ink buys</div><h3>Immunity to everyone going home at once</h3><p>Because a Paxon legislator writes every promise, vote, and decree in indelible ink on their scroll (<i>stable storage on every step</i>), the entire Parliament can go home for the weekend and resume on Monday morning with nothing lost.<sup class="xref"><a href="../the-part-time-parliament/index.html#s1" title="The Part-Time Parliament: A Parliament Whose Members Come and Go">*</a></sup> Schedia's wax tablets avoid disk writes during normal operation, at the cost of requiring that a majority not lose their wax at once.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What Schedia's podium buys</div><h3>Strict primary-to-backup streaming</h3><p>In the Chamber, any legislator can initiate a ballot for any decree slot, and a newly elected president runs Phase 1 across open slots.<sup class="xref"><a href="../the-part-time-parliament/index.html#s2" title="The Part-Time Parliament: One Decree, Once Every Nineteen Years">*</a></sup> In Schedia's Tholos, only the podium holder ever writes lines, benches receive them strictly in order without gaps, and switching holders is an explicit view-change step that transfers the most up-to-date log.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the two halls share</div><h3>Overlapping majorities</h3><p>Both protocols rest on the exact same mathematical foundation: any two majorities of a group share at least one member, ensuring that whatever a majority committed in the past is discovered and preserved in the future.</p></div></div></div>
     </div>
-    <p class="tell">The two arrangements were found apart. Oki and Liskov published theirs in 1988; Lamport's account of the Parliament first circulated in 1989 and was not printed until 1998. That is why Schedia has a hall of its own on its own arm of the island.</p>
+    <p class="tell">Remarkably, the two protocols were invented independently at almost the same time: Oki and Liskov published Viewstamped Replication in 1988, while Lamport's Paxos manuscript began circulating in 1989 and was published in 1998. That is why Schedia has a city and a Tholos of its own on the eastern arm of the island.</p>
   </div>
 </section>
 
@@ -437,14 +432,14 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The limits</div>
       <h2>What it does not say</h2>
-      <p class="lede">The Tholos keeps every passed law through any change of holder. That is all it promises, and five questions show where the promise ends.</p>
+      <p class="lede">The Tholos guarantees that every passed law survives any change of holder. Five questions mark the exact boundaries of what Oki and Liskov's 1988 paper promises:</p>
     </div>
     <div class="cards3 five">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does the council always get a new board in the end?</h3><p>No. If notes keep going astray, a caller who stops waiting too soon forms a board without someone who could have answered, that legislator soon calls again, and the council can go on changing boards. The paper says so plainly and advises long waits and duplicate notes. Getting a new board is hoped for, not promised.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What of a petitioner who gets no answer?</h3><p>They cannot tell whether their petition was written down before the holder fell silent, and sending it again to the new holder might put it in the law twice. The paper's answer is to abandon the whole piece of work rather than risk doing it twice.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is one law the paper's case?</h3><p>No. The paper builds all this for pieces of work that call on several councils and are settled together. There, work lost in a change of holder is abandoned. This telling keeps one council and one law, and lets the passing of a law stand for those moments.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Could a legislator lie?</h3><p>Not here. Legislators stop, go home, come back and miss notes, but what they write and answer is true. Keeping order when some members lie is a harder task, with more members and more rounds of notes.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>How does a citizen know who holds the podium?</h3><p>They ask. A petition that reaches the wrong bench comes back with the holder's name. The paper leans on a directory, always available, that says who belongs to each council, and notes that no council can be more available than it.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does the council always form a new board right away?</h3><p>Not if messages keep getting delayed or lost. If a caller stops waiting too early and forms a board without a reachable colleague, that colleague may soon call a still higher board, causing repeated view changes. The paper notes this explicitly and recommends generous timeouts and message retransmissions: progress requires the network to settle long enough for a view to complete.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What if a petitioner gets no answer before the holder changes?</h3><p>A citizen waiting at the door cannot tell whether their petition was passed just before the old holder stepped out or lost as an unconfirmed draft. In Oki and Liskov's transaction system, rather than risk running a non-idempotent operation twice, an unanswered call causes the enclosing transaction to abort cleanly.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Was the paper written for a single council alone?</h3><p>In the 1988 paper, each council (module group) is one shard of a larger distributed transaction system coordinated by two-phase commit (`prepare` and `commit`). In 2012, Liskov and Cowling's <i>Viewstamped Replication Revisited</i> presented VR in the standalone state-machine replication form told here.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Could a legislator lie?</h3><p>Not in the Tholos. Here legislators may step out, go home, or miss messages, but everything they write and report is honest (<i>crash-recovery faults</i>). Tolerating lying legislators requires the $3f + 1$ quorums and two-echo cross-checks of Castro and Liskov's PBFT.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s3" title="Keeping Order Among Liars: Two Echoes">*</a></sup></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>How does a citizen find out who holds the podium?</h3><p>Clients cache the current holder's identity; if they send a petition to a bench by mistake, the bench redirects them to the current holder, or they consult a location directory service.</p></div></div></div>
     </div>
   </div>
 </section>
@@ -458,15 +453,15 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The Tholos was a replicated service</h2>
-      <p class="lede">Read the Tholos again with machines on the benches. Every legislator is a replica, the holder of the podium is the primary, and the law is the log they keep. Hover over a row, or tap it, to see who is who.</p>
+      <p class="lede">Now read the story of the Tholos again with servers on the benches. Every legislator is a replica, the holder of the podium is the primary, and the law is the replicated event log they maintain. Hover over a row, or tap it, to see how each part of Schedia's council maps to Oki and Liskov's paper.</p>
     </div>
     <div class="map" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">In the Tholos</div><div></div><div class="hd">In the machine room</div>
     </div>
     <div class="meander" style="margin:3rem auto"></div>
     <div class="end">
-      <p class="big">One primary orders everything, and a new primary starts from the fullest log a majority can show, so nothing committed is ever lost.</p>
-      <p class="lede" style="margin:0 auto">Replicas that lose their state can stop the group for good. They can never make it go on with something missing.</p>
+      <p class="big">One primary orders every operation, and a new primary starts from the fullest log a majority can show, so nothing committed is ever lost.</p>
+      <p class="lede" style="margin:0 auto">Keeping logs in volatile memory means that simultaneous crashes can halt the group — but the view-formation rules ensure it will never resume with a committed operation missing.</p>
       <div class="links">
         <a href="../../places/schedia/index.html">Schedia and the Tholos, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
@@ -476,12 +471,12 @@
       <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/schedia/index.html">Schedia and the Tholos</a></p>
       <details class="proof">
         <summary>The paper behind this book</summary>
-        <p>Brian M. Oki and Barbara H. Liskov, <i>Viewstamped Replication: A New Primary Copy Method to Support Highly-Available Distributed Systems</i>. Proceedings of the Seventh Annual ACM Symposium on Principles of Distributed Computing (PODC), Toronto, August 1988, 8–17. — The primary copy method, viewstamps, forcing to a sub-majority, the view change algorithm and its formation rule, and transaction processing with two-phase commit.</p>
+        <p>Brian M. Oki and Barbara H. Liskov, <i>Viewstamped Replication: A New Primary Copy Method to Support Highly-Available Distributed Systems</i>. Proceedings of the Seventh Annual ACM Symposium on Principles of Distributed Computing (PODC), Toronto, August 1988, 8–17. — Introduces the primary-copy replication method, viewids and viewstamps, forcing event records to a sub-majority of backups, the view-change algorithm and its crash-safe formation conditions, and integration with two-phase commit.</p>
         <p><b>The ideas, plainly.</b></p>
-        <p>Oki and Liskov replicate a service over a small group of machines that may crash, recover and be cut off from one another, but never lie. One machine, the primary, does all the work and sends a record of each step to the backups, in order. A step is safe once a majority of the group knows it, so the primary waits for enough backups before it tells anyone a result is final.</p>
-        <p>Each period with one primary is a view, named by a view number, and each step is stamped with the view and its position in it: a viewstamp. When the primary seems to be gone, or the group's members change, any member can call a view change. It collects the viewstamps of a majority, and the member with the latest one becomes the new primary and starts the view by sending its whole state. Because any two majorities overlap, and because a later viewstamp implies knowledge of everything earlier, whatever a majority knew survives.</p>
-        <p>The machines keep almost everything in memory, so a crash loses a member's state; three extra conditions stop a view from forming on answers that cannot show what was made final. If a majority lose their state at once, the group can stop for good, but it never goes on with something missing. An old primary that has not noticed a change can do no harm, because it can no longer reach a majority.</p>
-        <p class="fnote">Brian Oki and Barbara Liskov are credited as Okios and Liskovia. Kleon, Melissa and Theron are ordinary Greek names for seats no author fills. Schedia's legislators are told apart by colour: Okios blue-grey, Liskovia saffron, Kleon green, Melissa madder red, Theron grey.</p>
+        <p>Oki and Liskov replicate a service across a group of cohorts that may crash, recover, and suffer network partitions or lost messages, but never lie. In each view, a single cohort acts as the <i>primary</i>, executing client calls and streaming event records in timestamp order to the passive <i>backups</i>. An event is committed once a majority of the group holds it (the primary plus a sub-majority of backups via <code>force-to</code>).</p>
+        <p>Each period under a single primary is a <i>view</i> identified by a unique, totally ordered <code>viewid = ⟨cnt, mid⟩</code>, and each event is tagged with a <code>viewstamp = ⟨viewid, ts⟩</code>. When the primary appears unreachable or membership changes, any cohort can act as a <i>view manager</i> and invite the group into a higher view. It collects responses from a majority of cohorts, chooses the respondent with the latest viewstamp as the new primary, and starts the new view by broadcasting that primary's full state. Because any two majorities intersect and event records arrive in order without gaps, the respondent with the largest viewstamp in a majority is guaranteed to hold every committed event.</p>
+        <p>Because cohorts keep their logs and state in volatile memory rather than writing every event to disk, a cohort that crashes and recovers loses its log and remembers only the <code>cur-viewid</code> stored on disk. Three view-formation conditions prevent a new view from forming if too many cohorts have lost their volatile state to guarantee that all committed events are present: if a majority crash at once, the group halts safely rather than starting a view with missing history. Meanwhile, a deposed primary in a minority partition can do no harm because its old <code>viewid</code> is rejected by the majority in the new view.</p>
+        <p class="fnote">Brian Oki and Barbara Liskov appear in the council as Okios and Liskovia; Kleon, Melissa, and Theron fill the remaining three seats. The five legislators are distinguished by cloak colour: Okios in blue-grey, Liskovia in saffron, Kleon in green, Melissa in madder red, and Theron in grey.</p>
       </details>
       <details class="proof">
         <summary>In the paper, term by term</summary>
