@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Round of Your Own — Distributed Algorithms of Ancient Greece</title>
+<meta name="description" content="A playground for every idea in the eighteen books: choose how many places sit on the round, what the road and the messengers may do, who may fall silent or lie, and what the places want, and see which ideas answer, which walls stand in the way, and which books to read next.">
+<link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add("js")</script>
+</head>
+<body data-reg="i">
+
+<div class="bar">
+  <a href="../../index.html" class="home">← The Books</a>
+  <nav class="jump" aria-label="Parts of this page">
+    <a href="#play">The round</a>
+    <a href="#reading">What it allows</a>
+    <a href="#books-sec">Books</a>
+  </nav>
+  <div class="seg" role="group" aria-label="Which words to read">
+    <button type="button" class="segb" data-reg="i" aria-pressed="true">On the islands</button>
+    <button type="button" class="segb" data-reg="m" aria-pressed="false">In the machine room</button>
+  </div>
+</div>
+
+<header class="cover" id="top">
+  <div class="cover-in">
+    <div class="kicker">A playground · eighteen books · one round</div>
+    <h1>A Round of Your Own</h1>
+    <p class="lede i">Set places round a ring, decide how long their messengers may take and what the road may do to them, who may fall silent and who may lie, and what the places want together. The round acts your world out, and beside it every idea from the books that answers it, every wall that stands in the way, and the book to read next.</p>
+    <p class="lede m">Pick the number of processes, the timing and channel model, the fault model and the guarantees you want. The round simulates the model, and the panel gives every result from the papers that applies: achievable bounds, impossibility results, the techniques at work, and the paper that covers it.</p>
+  </div>
+</header>
+
+<noscript><p class="nojs">The round and its reading are drawn by a script. <a href="../one-change-apart/index.html">One Change Apart</a> walks the same ideas without one.</p></noscript>
+
+<main class="play" id="play">
+  <!-- ============================================ the round -->
+  <div class="stage" id="stage">
+    <div class="stage-in">
+      <svg id="round" viewBox="-300 -300 600 600" role="img" aria-label="The places set round a ring road, messengers crossing between them"></svg>
+      <div class="legend">
+        <span class="i">Each box on the road is a place; each dot crossing the round is a messenger. A cross is a place fallen silent, a red ring one that may lie; the shaded loop is a cut. The bands outside show two groups and, in gold, who they share. Press a place to change it.</span>
+        <span class="m">Each box is a process; each dot a message in flight. A cross marks a crash, a red ring a Byzantine process; the hatched loop is a partition. Outer bands show two quorums, their intersection in gold. Click a process to cycle its fault.</span>
+      </div>
+      <div class="stage-ctl">
+        <button type="button" class="btn alt small" id="pause" aria-pressed="false"><span class="i">Hold the round</span><span class="m">Pause</span></button>
+        <button type="button" class="btn alt small" id="replay"><span class="i">Run it again</span><span class="m">Restart</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ the controls and the reading -->
+  <div class="side">
+    <section class="panel paper" id="controls" aria-label="Set the world">
+      <div class="start">
+        <label for="c-book"><span class="i">Start from a book's world</span><span class="m">Load a paper's model</span></label>
+        <select id="c-book"><option value="">—</option></select>
+        <button type="button" class="btn alt small" id="c-reset"><span class="i">Begin again</span><span class="m">Reset</span></button>
+      </div>
+
+      <fieldset>
+        <legend class="kicker"><span class="i">The places</span><span class="m">Processes</span></legend>
+        <div class="row"><span class="lab"><span class="i">How many on the round</span><span class="m">n</span></span><div class="stepper" id="c-n"></div></div>
+      </fieldset>
+
+      <fieldset>
+        <legend class="kicker"><span class="i">Conditions: the road</span><span class="m">Conditions: timing and channels</span></legend>
+        <div class="lab"><span class="i">How long a messenger may take</span><span class="m">Timing</span></div>
+        <div class="chips" id="c-timing" role="group" aria-label="Timing"></div>
+        <div class="lab"><span class="i">What the road may do</span><span class="m">Channels</span></div>
+        <div class="chips" id="c-road" role="group" aria-label="Channels"></div>
+        <div class="row" id="row-cut" hidden><span class="lab"><span class="i">Places cut off</span><span class="m">Minority side size</span></span><div class="stepper" id="c-cut"></div></div>
+        <div class="chips" id="c-fifo" role="group" aria-label="Order on each track"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend class="kicker"><span class="i">Conditions: what each place carries</span><span class="m">Conditions: primitives</span></legend>
+        <div class="chips" id="c-tools" role="group" aria-label="Primitives"></div>
+        <div class="lab"><span class="i">A slate of suspects</span><span class="m">Failure detector</span></div>
+        <div class="chips" id="c-slate" role="group" aria-label="Failure detector"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend class="kicker"><span class="i">Constraints: who may fail</span><span class="m">Constraints: fault model</span></legend>
+        <div class="row"><span class="lab"><span class="i">May fall silent</span><span class="m">Crash faults t</span></span><div class="stepper" id="c-dead"></div></div>
+        <div class="row"><span class="lab"><span class="i">May lie</span><span class="m">Byzantine faults m</span></span><div class="stepper" id="c-liar"></div></div>
+        <div class="lab"><span class="i">Members who come and go</span><span class="m">Crash-recovery</span></div>
+        <div class="chips" id="c-come" role="group" aria-label="Crash-recovery"></div>
+        <div class="chips" id="c-roster" role="group" aria-label="Membership"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend class="kicker"><span class="i">Goals: what the places want</span><span class="m">Goals: guarantees</span></legend>
+        <div class="chips goals" id="c-goals" role="group" aria-label="Goals"></div>
+        <div class="subs" id="subs">
+          <div id="sub-merge" hidden><div class="lab"><span class="i">When two copies meet</span><span class="m">Merge rule</span></div><div class="chips" id="c-merge" role="group" aria-label="Merge rule"></div></div>
+          <div id="sub-fresh" hidden>
+            <div class="row"><span class="lab"><span class="i">Announce once this many hold it</span><span class="m">Write quorum W</span></span><div class="stepper" id="c-W"></div></div>
+            <div class="row"><span class="lab"><span class="i">Read the newest of this many replies</span><span class="m">Read quorum R</span></span><div class="stepper" id="c-R"></div></div>
+          </div>
+          <div id="sub-visits" hidden><div class="chips" id="c-sticky" role="group" aria-label="Sticky clients"></div></div>
+          <div id="sub-query" hidden><div class="lab"><span class="i">The question</span><span class="m">Query class</span></div><div class="chips" id="c-question" role="group" aria-label="Query class"></div></div>
+        </div>
+      </fieldset>
+    </section>
+
+    <section class="reading" id="reading" aria-live="polite">
+      <div class="kicker sec-k"><span class="i">What this world allows</span><span class="m">Verdicts</span></div>
+      <div id="verdicts"></div>
+
+      <div id="walls-sec">
+        <div class="kicker sec-k"><span class="i">Walls nearby</span><span class="m">Impossibility results</span></div>
+        <div id="walls"></div>
+      </div>
+
+      <div id="ideas-sec">
+        <div class="kicker sec-k"><span class="i">The ideas at work</span><span class="m">Techniques</span></div>
+        <div id="ideas" class="ideas"></div>
+      </div>
+
+      <div id="books-sec">
+        <div class="kicker sec-k"><span class="i">Books for this world</span><span class="m">Papers for this model</span></div>
+        <p class="hint"><span class="i">The nearest books first. Press a change to make it and see the world the book is set in.</span><span class="m">Closest papers first. Click an assumption to apply it.</span></p>
+        <div id="books" class="books"></div>
+      </div>
+
+      <div class="kicker sec-k"><span class="i">Threads in play</span><span class="m">Recurring techniques</span></div>
+      <div id="threads" class="threads"></div>
+
+      <div class="kicker sec-k"><span class="i">What it costs</span><span class="m">Costs</span></div>
+      <div id="costs" class="costs"></div>
+    </section>
+  </div>
+</main>
+
+<footer class="end">
+  <div class="end-in">
+    <div class="kicker">Other ways through the series</div>
+    <nav>
+      <a href="../one-change-apart/index.html">One Change Apart</a>
+      <a href="../birds-eye-view/index.html">A Bird's-Eye View</a>
+      <a href="../one-sentence-unfolded/index.html">One Sentence, Unfolded</a>
+      <a href="../one-table-eighteen-books/index.html">One Table, Eighteen Books</a>
+      <a href="../against-the-sandglass/index.html">Against the Sandglass</a>
+      <a href="../../papers/index.html">All the papers</a>
+    </nav>
+    <p>Distributed Algorithms of Ancient Greece · A Round of Your Own</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
