@@ -57,14 +57,14 @@
     { a: 'flp', b: 'bo',   d: function () { return arcPath('flp', 'bo', R_FOOT, 0); },  i: 'a coin in each tent',         m: 'local coins', at: [432, 312] },
     { a: 'dls', b: 'ct',   d: function () { return arcPath('dls', 'ct', R_FOOT, 1); },  i: 'a slate for the wind',        m: 'a failure detector' },
     { a: 'mc',  b: 'cap',  d: function () { return line('mc', 'cap'); },                i: 'hawks take birds',            m: 'message loss' },
-    { a: 'flp', b: 'bgp',  d: function () { return line('flp', 'bgp'); },               i: 'the doubt moves to the men',  m: 'Byzantine, in rounds', at: [478, 290] },
-    { a: 'dls', b: 'ptp',  d: function () { return bend('dls', 'ptp', -0.08); },        i: 'decrees, and members return', m: 'a log; recovery' },
-    { a: 'ptp', b: 'vr',   d: function () { return bend('ptp', 'vr', 0.06); },          i: 'a podium; wax for ink',       m: 'a primary; volatile state' },
+    { a: 'flp', b: 'bgp',  d: function () { return line('flp', 'bgp'); },               i: 'liars, not the dead',        m: 'Byzantine faults', at: [452, 290] },
+    { a: 'dls', b: 'ptp',  d: function () { return bend('dls', 'ptp', -0.08); },        i: 'members who come and go',     m: 'crash and recovery' },
+    { a: 'ptp', b: 'vr',   d: function () { return bend('ptp', 'vr', 0.06); },          i: 'a podium',                    m: 'a primary' },
     { a: 'vr',  b: 'pbft', d: function () {
         var p = NODES.vr, q = NODES.pbft;
         return 'M' + p.x + ',' + p.y + 'C800,700 700,430 ' + q.x + ',' + q.y; },     i: 'the holder may lie',          m: 'a Byzantine primary', lt: 0.38 },
     { a: 'bgp', b: 'pbft', d: function () { return line('bgp', 'pbft'); },              i: 'wind, and one scroll',        m: 'partial synchrony; a log', hide: true },
-    { a: 'pbft', b: 'hs',  d: function () { return line('pbft', 'hs'); },               i: 'votes to one; a third stage', m: 'linear; three phases', side: 1 },
+    { a: 'pbft', b: 'hs',  d: function () { return line('pbft', 'hs'); },               i: 'votes tied into bundles',     m: 'quorum certificates', side: 1 },
     { a: 'cap', b: 'gos',  d: function () { return line('cap', 'gos'); },               i: 'copies may differ a while',   m: 'eventual consistency', lt: 0.4 },
     { a: 'gos', b: 'pbs',  d: function () { return line('gos', 'pbs'); },               i: 'ask only some copies',        m: 'partial quorums' },
     { a: 'gos', b: 'crdt', d: function () { return line('gos', 'crdt'); },              i: 'merge, not the later',        m: 'merge by join' },
@@ -77,7 +77,7 @@
 
   var WALLS = {
     w1: { x: 590, y: 196,  i: 'No plan is sure to finish', m: 'FLP' },
-    w2: { x: 592, y: 382,  i: 'Half cannot speak for all', m: 'Quorum bounds' },
+    w2: { x: 612, y: 362,  i: 'Half cannot speak for all', m: 'Quorum bounds' },
     w3: { x: 590, y: 664,  i: 'Answer, or be right',       m: 'CAP' },
     w4: { x: 550, y: 1004, i: 'An absence needs everyone', m: 'CALM' }
   };

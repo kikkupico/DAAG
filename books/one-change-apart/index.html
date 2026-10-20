@@ -56,8 +56,8 @@
       <article class="step paper" id="s-start" data-kind="intro">
         <div class="kicker">How to read the chart</div>
         <h3>Two islands, eighteen books</h3>
-        <p class="i">Arche is drawn in rings: the ring road round its coast, the camps at the foot of Mount Phyle, the bandits on its crown. Paxos is a Y: the Chamber and the Tholos on its two arms, the hall of two doors at the fork, the scholars' coast down the stem. A line between two books names the one thing that changes between them. Red marks are walls.</p>
-        <p class="m">Arche holds the foundations: ordering on the ring road, crash-fault consensus at the foot, Byzantine faults on the crown. Paxos holds replication: Paxos and Viewstamped Replication on its two arms, the CALM theorem at the fork, weakly consistent replication down the stem. A line between two papers names the one assumption or demand that changes. Red marks are impossibility results.</p>
+        <p class="i">Arche is drawn in rings: the ring road round its coast, the camps at the foot of Mount Phyle, the bandits on its crown. Paxos is a Y: the Chamber and the Tholos on its two arms, the hall of two doors at the fork, the scholars' coast down the stem. A line between two books names what changes between them. Red marks are walls.</p>
+        <p class="m">Arche holds the foundations: ordering on the ring road, crash-fault consensus at the foot, Byzantine faults on the crown. Paxos holds replication: Paxos and Viewstamped Replication on its two arms, the CALM theorem at the fork, weakly consistent replication down the stem. A line between two papers names what changes between them. Red marks are impossibility results.</p>
         <p class="hint">Scroll to walk. Tap any book on the chart to jump to it.</p>
       </article>
 
@@ -135,7 +135,7 @@
 
       <article class="step paper" id="s-bgp" data-kind="book" data-node="bgp" data-edges="flp-bgp" data-walls="w2">
         <div class="kicker"><span class="i">The crown of Mount Phyle</span><span class="m">Lamport, Shostak &amp; Pease 1982 · Pease, Shostak &amp; Lamport 1980</span></div>
-        <p class="change"><a href="#s-flp">The Limits of Agreement</a>, with one change: <em class="i">the doubt moves from the birds to the men</em><em class="m">Byzantine faults in synchronous rounds</em></p>
+        <p class="change"><a href="#s-flp">The Limits of Agreement</a>, with one change: <em class="i">liars in place of the dead</em><em class="m">Byzantine faults in place of crashes</em></p>
         <h3>Agreeing Among Liars</h3>
         <p class="i">On the crown, rats run within a sandglass and nobody dies, but a bandit may lie, telling one post one thing and another the opposite. An honest guard cannot tell a lying chief from a lying peer, so three cannot bear one liar; four can, and seven can bear two, by relaying every order and taking the greater count. With seal rings no one can forge, the number of liars stops mattering. Nobody need ever learn who lied.</p>
         <p class="m">In synchronous rounds with oral messages, Byzantine agreement needs n ≥ 3m + 1, and OM(m) reaches it in m + 1 rounds of relaying and majority vote. With unforgeable signatures, SM(m) works for any number of traitors. Both rely on detecting a missing message by the end of a round, and neither needs to identify a traitor.</p>
@@ -144,7 +144,7 @@
 
       <article class="step paper" id="s-ptp" data-kind="book" data-node="ptp" data-edges="dls-ptp">
         <div class="kicker"><span class="i">The Chamber, on Paxos</span><span class="m">Lamport 1998 · Lamport 2001</span></div>
-        <p class="change"><a href="#s-dls">Agreeing When Messages Run Late</a>, with one change: <em class="i">a scroll of decrees, and members who come back</em><em class="m">a replicated log, with crash and recovery</em></p>
+        <p class="change"><a href="#s-dls">Agreeing When Messages Run Late</a>, with one change: <em class="i">members who come and go</em><em class="m">crash and recovery</em></p>
         <h3>The Part-Time Parliament</h3>
         <p class="i">Legislators wander in and out, messengers may be slow, lost or twice delivered, and every promise goes into a scroll in indelible ink. Any two majorities share a legislator, so each numbered ballot first asks a majority for their latest votes and a promise to ignore lower ballots, then proposes the decree of the latest vote among them. One president runs ballots for every decree number at once; two presidents only slow things down.</p>
         <p class="m">Paxos: numbered ballots with majority quorums. Phase 1 (prepare and promise) learns the highest-numbered accepted value; phase 2 (accept) proposes it. It is safe under any delay, loss, duplication, crash or recovery, and live when one leader and a majority stay up long enough. Multi-Paxos runs phase 1 once for every open log slot, filling gaps with no-ops, and leases make reads linearizable.</p>
@@ -153,7 +153,7 @@
 
       <article class="step paper" id="s-vr" data-kind="book" data-node="vr" data-edges="ptp-vr">
         <div class="kicker"><span class="i">The Tholos of Schedia, on Paxos</span><span class="m">Oki &amp; Liskov 1988</span></div>
-        <p class="change"><a href="#s-ptp">The Part-Time Parliament</a>, with one change: <em class="i">a podium, and wax for ink</em><em class="m">a primary, and volatile state</em></p>
+        <p class="change"><a href="#s-ptp">The Part-Time Parliament</a>, with one change: <em class="i">a podium</em><em class="m">a primary</em></p>
         <h3>One Leader at a Time</h3>
         <p class="i">Only the legislator at the podium writes the law, and a line passes once the holder and two of the four benches hold it. When the podium falls silent, a caller raises a higher board, and whoever answers with the latest board-and-line takes the podium and sends out the whole law. A holder left on the porch can write, never pass. Wax is fast but forgets: if most go home at once, the council can stop for good, never wrong.</p>
         <p class="m">Viewstamped Replication: a primary orders operations and commits once a majority holds them. On a view change, the member of a responding majority with the highest viewstamp becomes primary and sends its whole state; a deposed primary cannot commit. State is volatile, so view-formation rules guard against lost logs, and a simultaneous crash of a majority halts the group rather than losing a commit.</p>
@@ -171,7 +171,7 @@
 
       <article class="step paper" id="s-hs" data-kind="book" data-node="hs" data-edges="pbft-hs">
         <div class="kicker"><span class="i">The crown of Mount Phyle</span><span class="m">Yin, Malkhi, Reiter, Gueta &amp; Abraham 2019</span></div>
-        <p class="change"><a href="#s-pbft">Keeping Order Among Liars</a>, with one change: <em class="i">votes to one man, and a third stage</em><em class="m">votes to the leader, and a third phase</em></p>
+        <p class="change"><a href="#s-pbft">Keeping Order Among Liars</a>, with one change: <em class="i">votes tied into bundles</em><em class="m">votes aggregated into certificates</em></p>
         <h3>Changing Leaders Among Liars</h3>
         <p class="i">Instead of every bandit writing to every other, each sends his sealed vote to the registrar, who ties three into one bundle. A third stage of bundles means any man's lock is backed by two honest men holding its first bundle, so a new registrar learns of it from the first three replies and goes at the rats' pace, not a sandglass's. A change of hands now costs no more than an entry, so the job can pass at every entry.</p>
         <p class="m">HotStuff: replicas vote only to the leader, which aggregates 2f + 1 votes into a quorum certificate, so each phase is linear. A third phase makes the view change linear and optimistically responsive: a locked QC implies f + 1 correct replicas hold its prepare QC, so a new leader learns it from any n − f replies. Chained HotStuff pipelines the phases and rotates the leader every block.</p>
@@ -353,7 +353,6 @@
           <li data-n="dls"><b><span class="i">Running Late</span><span class="m">Partial synchrony</span></b> <span class="i">commits after the wind drops</span><span class="m">decides after GST</span></li>
           <li data-n="bo"><b><span class="i">By Chance</span><span class="m">Ben-Or</span></b> <span class="i">done, with probability one</span><span class="m">termination w.p. 1</span></li>
           <li data-n="ct"><b><span class="i">Dead or Slow</span><span class="m">Failure detectors</span></b> <span class="i">bad slates stall, never split</span><span class="m">safe under any detector</span></li>
-          <li data-n="cap"><b><span class="i">Cut Off</span><span class="m">CAP</span></b> <span class="i">waiting a glass</span><span class="m">timeouts; Delayed-t</span></li>
           <li data-n="ptp"><b><span class="i">Parliament</span><span class="m">Paxos</span></b> <span class="i">progress when most stay</span><span class="m">live with a stable majority</span></li>
           <li data-n="vr"><b><span class="i">One Leader</span><span class="m">Viewstamped</span></b> <span class="i">stopped, never wrong</span><span class="m">catastrophe halts safely</span></li>
           <li data-n="pbft"><b><span class="i">Keeping Order</span><span class="m">PBFT</span></b> <span class="i">the doubling sandglass</span><span class="m">exponential view timeouts</span></li>
@@ -430,10 +429,10 @@
         </ul>
       </article>
 
-      <article class="step paper coins" id="s-end" data-kind="end">
+      <article class="step paper costs" id="s-end" data-kind="end">
         <div class="kicker">What it all costs</div>
-        <h3><span class="i">Four coins</span><span class="m">Four costs</span></h3>
-        <p class="i">Every promise on the islands is bought with one of four coins, and the walls say which promises no coin buys together.</p>
+        <h3><span class="i">Four prices</span><span class="m">Four costs</span></h3>
+        <p class="i">Every promise on the islands is paid for in one of four ways, and the walls say which promises nothing can buy together.</p>
         <p class="m">Every guarantee is paid for in one of four costs, and the impossibility results say which combinations no cost can buy.</p>
         <dl class="price">
           <dt><span class="i">Waiting</span><span class="m">Coordination</span></dt>
