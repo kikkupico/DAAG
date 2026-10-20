@@ -311,15 +311,16 @@ function keepLog(S) {
       h: V(`${Word(n)} posts cannot keep one scroll against ${word(F)} ${pl(F, "liar", "liars")}`, `n = ${n} < 3f + 1 = ${3 * F + 1}`),
       b: V(`An entry stands on groups of ${word(n - F)}; two such groups of ${word(n)} share ${word(Math.max(0, 2 * (n - F) - n))}, which may all be liars, so one number could hold two entries. It takes ${word(3 * F + 1)} posts.`,
            `Quorums of n − f = ${n - F} intersect in ${Math.max(0, 2 * (n - F) - n)} replicas, which may all be faulty; PBFT needs n ≥ 3f + 1 = ${3 * F + 1}.`) });
-    const q = 2 * F + 1;
+    /* groups of n − f: two of them share 2(n − f) − n, more than f exactly when n ≥ 3f + 1 */
+    const q = n - F;
     const out = { st: calm ? "ok" : "safe", wall: calm ? null : "flp",
-      h: V(`Two echoes of ${word(q)} seals`, `quorums of 2f + 1 = ${q} of n = ${n}`),
-      b: V(`An entry stands only after two echoes, each gathering ${word(q)} seals of ${word(n)}; any two groups of ${word(q)} share an honest man, so no number can hold two entries. A registrar who stalls loses the job to the next post, who must keep every entry readied before.${calm ? "" : " With no limit on the birds, the scroll stays right but may stall: it goes on once the wind drops."}`,
-           `Pre-prepare, prepare and commit each need 2f + 1 matching signed messages, and any two such quorums share a correct replica; a view change carries prepared certificates.${calm ? "" : " Asynchronously PBFT is always safe, but live only once delays stop growing."}`) };
+      h: V(`Two echoes of ${word(q)} seals`, `quorums of n − f = ${q} of n = ${n}`),
+      b: V(`An entry stands only after two echoes, each gathering ${word(q)} seals of ${word(n)}; any two groups of ${word(q)} share ${word(2 * q - n)}, more than the ${word(F)} who may lie, so at least one honest man, so no number can hold two entries. A registrar who stalls loses the job to the next post, who must keep every entry readied before.${calm ? "" : " With no limit on the birds, the scroll stays right but may stall: it goes on once the wind drops."}`,
+           `Pre-prepare, prepare and commit each need n − f = ${q} matching signed messages (2f + 1 when n = 3f + 1); two such quorums share 2q − n = ${2 * q - n} > f replicas, so a correct one; a view change carries prepared certificates.${calm ? "" : " Asynchronously PBFT is always safe, but live only once delays stop growing."}`) };
     if (!S.seal) r.notes.push(V("The crown's scroll seals every echo; carry seal rings to keep it as the books do.", "PBFT and HotStuff authenticate every vote; turn on signatures to match the papers."));
     if (!S.podium) r.notes.push(V("One registrar at a time numbers the entries; carry a podium to keep it as the books do.", "Both papers number requests through one primary; turn on a leader to match them."));
     if (S.bundle) out.b = V(`Each bandit sends a sealed vote to the registrar, who ties ${word(q)} into one bundle; a third stage of bundles lets a new registrar learn any lock from the first ${word(n - F)} replies and go at the rats' pace. A change of hands costs no more than an entry, so the job can pass at every entry.`,
-        `Replicas vote only to the leader, which aggregates 2f + 1 = ${q} votes into a quorum certificate, so each phase is linear; a third phase makes the view change linear and optimistically responsive. Chained HotStuff rotates the leader every block.`);
+        `Replicas vote only to the leader, which aggregates n − f = ${q} votes into a quorum certificate, so each phase is linear; a third phase makes the view change linear and optimistically responsive. Chained HotStuff rotates the leader every block.`);
     return Object.assign(r, out);
   }
   if (t > 0 || S.come !== "none") {
