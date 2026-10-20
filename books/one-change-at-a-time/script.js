@@ -833,7 +833,7 @@ function whereFrame() {
     if (sec.classList.contains("walk") && activeCard) {
       const c = activeCard, b = c.dataset.book ? c : (c.nextElementSibling && c.nextElementSibling.dataset.book ? c.nextElementSibling : null);
       const n = b ? bookIndex[b.id] : 0;
-      html = `<b>${sec.dataset.label}</b>` + (n ? `<span class="ct">${T2(`Book ${n} of ${BOOKS}`, `Paper ${n} of ${BOOKS}`)}</span>` : (c.classList.contains("wall") ? `<span class="ct">${T2("A wall", "An impossibility")}</span>` : ""));
+      html = `<b>${sec.dataset.label}</b>` + (n ? `<span class="ct">${T2(`Book ${n} of ${BOOKS}`, `Book ${n} of ${BOOKS}`)}</span>` : (c.classList.contains("wall") ? `<span class="ct">${T2("A wall", "An impossibility")}</span>` : ""));
     } else if (sec.classList.contains("interlude")) html = `<b>${$(".place", sec).textContent}</b>`;
     else if (sec.classList.contains("feature")) { let p = sec.previousElementSibling; while (p && !p.dataset.label) p = p.previousElementSibling; html = p ? `<b>${p.dataset.label}</b><span class="ct">${T2("Try it", "Try it")}</span>` : html; }
     else if (sec.id === "threads") html = `<b>${T2("The whole family", "The whole family")}</b><span class="ct">${T2("ten threads", "ten techniques")}</span>`;
@@ -1125,7 +1125,7 @@ onReg.push(() => { lastWhere = ""; onScroll(); });
     if (!seals.checked) {
       num.innerHTML = T2(`${cap(WORD[n])} men<small>to bear ${WORD[f]} ${f === 1 ? "liar" : "liars"}. ${cap(WORD[n - 1])} cannot.</small>`, `n ≥ ${n}<small>for m = ${f}: n ≥ 3m + 1, with oral messages</small>`);
       men.innerHTML = Array.from({ length: n }, (_, i) => `<i class="${i < f ? "liar" : ""}" style="animation-delay:${i * 40}ms"></i>`).join("");
-      note.innerHTML = T2("Relay every order and take the greater count. An honest guard cannot tell a lying chief from a lying peer, so a third of the posts can never be enough.", "OM(m): m + 1 rounds of relaying and majority vote. A loyal lieutenant cannot tell a faulty commander from a faulty peer.");
+      note.innerHTML = T2("Relay every order and take the greater count. An honest guard cannot tell a lying chief from a lying peer, so the liars must be fewer than a third of the posts.", "OM(m): m + 1 rounds of relaying and majority vote. A loyal lieutenant cannot tell a faulty commander from a faulty peer.");
     } else {
       num.innerHTML = T2(`Any number<small>of liars, with seal rings, while time can be kept</small>`, `Any number<small>of traitors: SM(m), in synchronous rounds</small>`);
       men.innerHTML = Array.from({ length: f + 2 }, (_, i) => `<i class="${i < f ? "liar" : ""}" style="animation-delay:${i * 40}ms"></i>`).join("") + `<i class="more">${T2("and any more", "any n")}</i>`;
@@ -1415,8 +1415,8 @@ const treeFrame = (function family() {
     Object.keys(nodes).forEach(k => nodes[k].classList.toggle("lit", lit.includes(k)));
     const c = cards.find(x => x.dataset.thread === id);
     cards.forEach(x => x.classList.toggle("on", x === c));
-    if (lit.length) { const h = $("h3", c); cap.innerHTML = `${T2("Thread", "Technique")}: <b>${T2($(".i", h).textContent, $(".m", h).textContent)}</b> · ${T2(lit.length + " books", lit.length + " papers")}`; }
-    else cap.innerHTML = T2("Each red arc is one change. Point at a book to see which.", "Each red arc is one changed assumption. Point at a paper to see it.");
+    if (lit.length) { const h = $("h3", c); cap.innerHTML = `${T2("Thread", "Technique")}: <b>${T2($(".i", h).textContent, $(".m", h).textContent)}</b> · ${T2(lit.length + " books", lit.length + " books")}`; }
+    else cap.innerHTML = narrowQ.matches ? T2("Each red arc is one change. Tap a book to read it.", "Each red arc is one changed assumption. Tap a node to read its book.") : T2("Each red arc is one change. Point at a book to see which.", "Each red arc is one changed assumption. Point at a node to see it.");
   }
   setThread("all");
   return function () {
