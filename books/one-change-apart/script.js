@@ -351,7 +351,7 @@ function grow(id, parent, o) {
 /* a thread shown on one book's scene: some of its marks lit in gold, and a word or two */
 function thread(id, base, o) {
   const p = SC[base], hl = new Set(o.hl || []), drop = new Set(o.drop || []);
-  const marks = p.marks.filter(m => !drop.has(m.k) && !m.own).map(m => X(m, { c: 0, hl: hl.has(m.k) ? 1 : 0, base: hl.has(m.k) ? 0 : 1 }));
+  const marks = p.marks.filter(m => !drop.has(m.k) && !m.own).map(m => X(m, { c: 0, labc: 0, hl: hl.has(m.k) ? 1 : 0, base: hl.has(m.k) ? 0 : 1 }));
   (o.add || []).forEach((m, i) => marks.push(X({ hl: 1 }, m, { k: id + "." + (m.id || "a" + i) })));
   SC[id] = { id, cast: p.cast, marks };
 }
@@ -476,15 +476,16 @@ def("ptp", "priests", [
 /* One Leader at a Time: a podium; a line passes on the holder and two benches; a silent podium is replaced */
 def("vr", "tholos", [
   { t: "halo", n: "O", cls: "gold", c: 1, id: "pod" },
-  sl("O", .7, "L", 1.4, { c: 1, id: "o1" }), sl("O", .7, "K", 1.7, { c: 1, id: "o2" }), sl("O", .7, "M", 1.7, { c: 1, id: "o3" }), sl("O", .7, "Th", 1.4, { c: 1, id: "o4" }),
+  { t: "gap", n: "Th", t1: .5, t2: 3.3, id: "away" },
+  sl("O", .7, "L", 1.4, { c: 1, id: "o1" }), sl("O", .7, "K", 1.7, { c: 1, id: "o2" }), sl("O", .7, "M", 1.7, { c: 1, id: "o3" }),
   sl("L", 1.6, "O", 2.3, { id: "r1" }), sl("K", 1.9, "O", 2.6, { id: "r2" }),
   ev("O", 2.6, { num: "✓", big: 1, id: "pass" }),
   { t: "x", n: "O", at: 3.45, id: "sil" },
-  sl("L", 3.7, "K", 4.4, { id: "n1" }), sl("L", 3.7, "Th", 4.5, { dir: -1, id: "n2" }),
-  sl("K", 4.6, "L", 5.3, { id: "n3" }), sl("Th", 4.7, "L", 5.5, { dir: 1, id: "n4" }),
-  ev("L", 5.75, { num: "", fill: "#e0b84a", big: 1, ring: 1, id: "newp" }),
+  sl("Th", 3.6, "L", 4.4, { dir: 1, lab: V("board 7?", "view 7?"), la: .26, id: "n1" }), sl("Th", 3.6, "M", 4.2, { id: "n2" }),
+  sl("L", 4.55, "Th", 5.35, { dir: -1, lab: V("board 6, line 12", "viewstamp 6.12"), la: .3, id: "n3" }), sl("M", 4.4, "Th", 5.0, { id: "n4" }),
+  ev("L", 5.8, { num: "", fill: "#e0b84a", big: 1, ring: 1, id: "newp" }),
   tg(on("O", 1.2, -100, -20), V("only the podium writes", "only the primary orders"), { c: 1, own: 1, id: "t1" }),
-  tg(on("L", 5.75, 10, 34), V("the latest takes the podium", "view change"), { own: 1, id: "t2" })
+  tg(on("L", 5.8, 10, 34), V("the latest takes the podium", "highest viewstamp: primary"), { own: 1, id: "t2" })
 ]);
 
 /* Keeping Order Among Liars: the registrar may lie, and an entry stands only on three seals of four */
@@ -501,13 +502,14 @@ def("pbft", "b4", [
 
 /* Changing Leaders Among Liars: votes go only to the registrar, tied into bundles of three */
 grow("hs", "pbft", { drop: ["pbft.e23", "pbft.e24", "pbft.e32", "pbft.e34", "pbft.e42", "pbft.e43", "pbft.k2", "pbft.k3", "pbft.k4"], add: [
-  sl("B2", 1.6, "B1", 2.2, { c: 1, id: "v12" }), sl("B3", 1.8, "B1", 2.5, { c: 1, dir: 1, id: "v13" }),
-  { t: "bun", n: "B1", at: 2.75, c: 1, id: "q1" },
-  sl("B1", 2.9, "B2", 3.5, { id: "u2" }), sl("B1", 2.9, "B3", 3.7, { dir: 1, id: "u3" }), sl("B1", 2.9, "B4", 3.5, { id: "u4" }),
-  sl("B2", 3.8, "B1", 4.4, { c: 1, id: "v22" }), sl("B4", 3.8, "B1", 4.4, { c: 1, id: "v24" }), sl("B3", 4.0, "B1", 4.7, { c: 1, dir: 1, id: "v23" }),
-  { t: "bun", n: "B1", at: 4.95, c: 1, id: "q2" },
-  sl("B2", 5.3, "B1", 5.9, { c: 1, id: "v32" }), sl("B4", 5.3, "B1", 5.9, { c: 1, id: "v34" }),
-  { t: "bun", n: "B1", at: 6.15, c: 1, id: "q3" },
+  sl("B2", 1.55, "B1", 2.05, { c: 1, id: "v12" }), sl("B3", 1.7, "B1", 2.2, { c: 1, dir: 1, id: "v13" }),
+  { t: "bun", n: "B1", at: 2.35, c: 1, id: "q1" },
+  sl("B1", 2.5, "B2", 3.0, { id: "u2" }), sl("B1", 2.5, "B3", 3.1, { dir: 1, id: "u3" }), sl("B1", 2.5, "B4", 3.0, { id: "u4" }),
+  sl("B2", 3.1, "B1", 3.6, { c: 1, id: "v22" }), sl("B4", 3.1, "B1", 3.6, { c: 1, id: "v24" }), sl("B3", 3.15, "B1", 3.7, { c: 1, dir: 1, id: "v23" }),
+  { t: "bun", n: "B1", at: 3.9, c: 1, id: "q2" },
+  sl("B1", 4.05, "B2", 4.55, { id: "x2" }), sl("B1", 4.05, "B3", 4.65, { dir: 1, id: "x3" }), sl("B1", 4.05, "B4", 4.55, { id: "x4" }),
+  sl("B2", 4.65, "B1", 5.15, { c: 1, id: "v32" }), sl("B4", 4.65, "B1", 5.15, { c: 1, id: "v34" }), sl("B3", 4.7, "B1", 5.25, { c: 1, dir: 1, id: "v33" }),
+  { t: "bun", n: "B1", at: 5.45, c: 1, id: "q3" },
   tg(on("B1", 4.5, 110, 0), V("votes to the registrar only", "votes to the leader only"), { c: 1, own: 1, id: "t1" }),
   tg([0, 236], V("tied in bundles of three", "quorum certificates"), { c: 1, own: 1, id: "t2" })
 ] });
