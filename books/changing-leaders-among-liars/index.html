@@ -23,8 +23,8 @@
   <div class="wrap grid">
     <div>
       <h1>Changing Leaders Among Liars</h1>
-      <p class="generic">When some machines may lie, replacing a leader has been slow and costly. Can a new leader take over as cheaply as any ordinary step, and at the pace of the messages rather than of a timer?</p>
-      <p class="allegory">We find out by exploring how four bandits holding a hilltop took turns keeping their loot scroll, each gathering the others' seals into one bundle instead of every man writing to every other.</p>
+      <p class="generic">When some machines in a replicated system may lie, replacing a stalled leader has traditionally been complex and expensive. Can a new leader take over as cheaply as any ordinary step — and move at the speed of the network rather than waiting out a timer?</p>
+      <p class="allegory">To find out, we follow four bandits on a hilltop who rotate the job of keeping their loot scroll at every single entry, with each leader gathering the others' wax seals into a compact bundle instead of everyone writing to everyone else.</p>
       <p class="source">After Maofan Yin, Dahlia Malkhi, Michael K. Reiter, Guy Golan Gueta and Ittai Abraham, <i>HotStuff: BFT Consensus with Linearity and Responsiveness</i>, 2019</p>
     </div>
     <div class="pop" data-auto>
@@ -46,10 +46,10 @@
     <div class="lin-side in">
       <h5>Draws on</h5>
       <ul class="lin-nodes">
-        <li><a class="lin-node book" data-n="i:dwork-lynch-stockmeyer-1988_consensus-partial-synchrony" data-label="Dwork, Lynch &amp; Stockmeyer 1988" href="../agreeing-when-messages-run-late/index.html"><b>Consensus in the Presence of Partial Synchrony</b><span class="by">Dwork, Lynch &amp; Stockmeyer 1988 · Agreeing When Messages Run Late</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:dwork-lynch-stockmeyer-1988_consensus-partial-synchrony" data-to="m:yin-2019_hotstuff" tabindex="0"><em>partial synchrony</em><span class="ends"></span><span class="why">Partial synchrony: safe always, and live once the network settles.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="i:castro-liskov-1999_practical-byzantine-fault-tolerance" data-label="Castro &amp; Liskov 1999" href="../keeping-order-among-liars/index.html"><b>Practical Byzantine Fault Tolerance</b><span class="by">Castro &amp; Liskov 1999 · Keeping Order Among Liars</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:castro-liskov-1999_practical-byzantine-fault-tolerance" data-to="m:yin-2019_hotstuff" tabindex="0"><em>leader, quorums, view change</em><span class="ends"></span><span class="why">A leader, votes gathered in quorums, and a view change, here made linear in messages.</span></li></ul></li>
-        <li><div class="lin-node ext" data-n="i:buterin-griffith-2017" data-label="Buterin &amp; Griffith 2017"><b>Casper the Friendly Finality Gadget</b><span class="by">Buterin &amp; Griffith 2017</span></div><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:buterin-griffith-2017" data-to="m:yin-2019_hotstuff" tabindex="0"><em>a simple leader change</em><span class="ends"></span><span class="why">A change of leader as simple as an ordinary round, here made to go at the speed of the network.</span></li></ul></li>
-        <li><div class="lin-node ext" data-n="i:buchman-2018" data-label="Buchman, Kwon &amp; Milosevic 2018"><b>The Latest Gossip on BFT Consensus</b><span class="by">Buchman, Kwon &amp; Milosevic 2018</span></div><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:buchman-2018" data-to="m:yin-2019_hotstuff" tabindex="0"><em>a simple leader change</em><span class="ends"></span><span class="why">A change of leader as simple as an ordinary round, here made to go at the speed of the network.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="i:dwork-lynch-stockmeyer-1988_consensus-partial-synchrony" data-label="Dwork, Lynch &amp; Stockmeyer 1988" href="../agreeing-when-messages-run-late/index.html"><b>Consensus in the Presence of Partial Synchrony</b><span class="by">Dwork, Lynch &amp; Stockmeyer 1988 · Agreeing When Messages Run Late</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:dwork-lynch-stockmeyer-1988_consensus-partial-synchrony" data-to="m:yin-2019_hotstuff" tabindex="0"><em>partial synchrony</em><span class="ends"></span><span class="why">The partial-synchrony timing model: safety holds regardless of network delays, while liveness holds once message delays stabilize.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="i:castro-liskov-1999_practical-byzantine-fault-tolerance" data-label="Castro &amp; Liskov 1999" href="../keeping-order-among-liars/index.html"><b>Practical Byzantine Fault Tolerance</b><span class="by">Castro &amp; Liskov 1999 · Keeping Order Among Liars</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:castro-liskov-1999_practical-byzantine-fault-tolerance" data-to="m:yin-2019_hotstuff" tabindex="0"><em>leader, quorums, view change</em><span class="ends"></span><span class="why">Leader-driven state-machine replication with 2f + 1 quorums and view changes, redesigned here so that both normal steps and leader changes use a linear number of messages.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="i:buterin-griffith-2017" data-label="Buterin &amp; Griffith 2017"><b>Casper the Friendly Finality Gadget</b><span class="by">Buterin &amp; Griffith 2017</span></div><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:buterin-griffith-2017" data-to="m:yin-2019_hotstuff" tabindex="0"><em>a simple leader change</em><span class="ends"></span><span class="why">Pipelining voting phases along a chain of blocks so that switching leaders is as simple as proposing the next block.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="i:buchman-2018" data-label="Buchman, Kwon &amp; Milosevic 2018"><b>The Latest Gossip on BFT Consensus</b><span class="by">Buchman, Kwon &amp; Milosevic 2018</span></div><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:buchman-2018" data-to="m:yin-2019_hotstuff" tabindex="0"><em>a simple leader change</em><span class="ends"></span><span class="why">Simplifying leader rotation in two-phase BFT (Tendermint), which HotStuff extends to three phases so a new leader never has to wait out a fixed timer before proposing.</span></li></ul></li>
       </ul>
     </div>
     <div class="lin-mid">
@@ -59,7 +59,7 @@
       </ul>
     </div>
     <div class="lin-side out"></div>
-    <p class="lin-say">Each link is an idea one paper took from another. Point at one, or tap it, to read how.</p>
+    <p class="lin-say">Each link traces an idea that one paper borrowed from another. Point at a link, or tap it, to see how.</p>
     <p class="lin-key"><i class="k here"></i>a paper this book retells <i class="k book"></i>a paper retold in another book <i class="k ext"></i>a paper outside the series</p>
     </div>
   </div>
@@ -73,13 +73,13 @@
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>Replacing a leader that may lie</h2>
-      <p class="lede">A group of computers keeps one log in the same order, led by one machine at a time, and some of them may lie.</p>
-      <p>When a leader stalls, the group must replace it, and in earlier protocols that is the costly part. Every machine tells every other machine, so the messages in one step grow with every pair of machines, and a change of leader costs far more than an ordinary step. HotStuff, which Yin, Malkhi, Reiter, Gueta and Abraham published in 2019, removes both costs with two ideas.</p>
+      <p class="lede">Suppose a group of computers maintains a shared log of commands, led by one machine at a time, when up to a third of the machines may be faulty or actively lying.</p>
+      <p>Whenever a leader stalls or misbehaves, the group must replace it. In classic protocols like PBFT, normal rounds and leader changes are both expensive: every replica broadcasts its votes to every other replica — so message traffic grows quadratically with the number of machines — and replacing a leader requires gathering and broadcasting even heavier sets of proofs. In 2019, Maofan Yin, Dahlia Malkhi, Michael K. Reiter, Guy Golan Gueta, and Ittai Abraham introduced <b>HotStuff</b>, removing both bottlenecks with two ideas:</p>
       <ul class="terms">
-        <li><b>Votes go only to the leader</b>, who combines them into one certificate and sends it back out, so the messages in a step grow only with the number of machines.</li>
-        <li><b>One more phase</b> of voting lets a new leader take over as cheaply as an old one.</li>
+        <li><b>Star communication through the leader:</b> instead of everyone broadcasting to everyone, replicas send their signed votes only to the leader, who combines them into a single compact <i>quorum certificate</i> (<i>QC</i>) and broadcasts it out — so the number of messages per phase grows <em>linearly</em> with the number of machines.</li>
+        <li><b>One extra phase of voting:</b> adding a third phase before a command commits ensures that a new leader can take over using just a single round of messages and without waiting out a worst-case timer (<i>optimistic responsiveness</i>).</li>
       </ul>
-      <p style="margin-top:1.2rem">Together they let the leader change at every step, at the pace of the messages and not of a timer. We tell it with four bandits on a hilltop and their trained rats.</p>
+      <p style="margin-top:1.2rem">Together, these two ideas make switching leaders so cheap and uniform that the group can rotate the leader on every single command. We tell the story with our four bandits on the crown of Mount Phyle and their trained rats.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper logs">
@@ -102,12 +102,12 @@
     <div class="hall-title"><div class="t">
       <div class="kicker">The crown of Mount Phyle</div>
       <h2>Four bandits, out of sight of one another</h2>
-      <p>Bandit 1 sits inside the ring wall on the crown of Mount Phyle, and bandits 2, 3 and 4 hold posts on the slopes below it. The four keep one loot scroll, with a copy at each post, and send word to one another only by rat.<sup class="xref"><a href="../../places/the-crown/index.html" title="The Setting: The Crown of Mount Phyle">*</a></sup></p>
+      <p>Bandit 1 sits inside the stone ring wall on the crown of Mount Phyle, while Bandits 2, 3, and 4 hold lookout posts on the slopes below. Together the four bandits maintain one shared loot scroll, with a copy at each post, and send word to one another only by trained rat.<sup class="xref"><a href="../../places/the-crown/index.html" title="The Setting: The Crown of Mount Phyle">*</a></sup></p>
     </div></div>
     <div class="pins">
-      <div class="pin pop"><div class="leaf"><b>Rats and seals</b>A rat arrives with exactly what was written on its strip. Every strip is sealed with the sender's ring, and nobody can forge a ring.</div></div>
-      <div class="pin pop"><div class="leaf"><b>One may lie</b>One of the four may lie in what they send, and nobody ever learns which.</div></div>
-      <div class="pin pop"><div class="leaf"><b>The wind</b>A wind can hold the rats in their holes for as long as it blows, so each post keeps a sandglass to wait by.</div></div>
+      <div class="pin pop"><div class="leaf"><b>Rats and seals</b>Every rat arrives with whatever was written on its slip intact, and every slip is stamped in wax with the sender's signet ring, which nobody can forge.</div></div>
+      <div class="pin pop"><div class="leaf"><b>One may lie</b>Up to one of the four bandits may lie or disobey the rules in any way, and nobody ever learns which of the four it is.</div></div>
+      <div class="pin pop"><div class="leaf"><b>The wind</b>A high wind can hold the rats in their holes for as long as it blows, so each post keeps a sandglass to bound how long it waits on a stalled term.</div></div>
     </div>
   </div>
 </section>
@@ -119,15 +119,15 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The arrangement so far</div>
       <h2>What a change of job cost</h2>
-      <p class="lede">Each entry in the loot scroll is numbered by whoever has the job, echoed twice by the men, and written in the same order at every honest post. When the registrar stalls, the job passes.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s3" title="Keeping Order Among Liars: Two Echoes">*</a></sup></p>
-      <p>That arrangement keeps the scroll in one order whoever lies, and the four men pay for it in two ways.</p>
+      <p class="lede">In our previous book, each entry in the loot scroll was numbered by whoever held the registrar's job, echoed twice across all the posts, and written in number order at every honest post. Whenever the registrar stalled, the job passed to the next bandit.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s3" title="Keeping Order Among Liars: Two Echoes">*</a></sup></p>
+      <p>That two-echo arrangement (PBFT) keeps the scroll completely safe regardless of who lies or how hard the wind blows, but the bandits pay for it in two heavy costs:</p>
     </div>
     <div class="cards3 cards2" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First cost</div><h3>Every man writes to every man</h3><p>Each echo goes from each man to all the others. With four men that is a dozen rats a stage. With forty it would be over fifteen hundred.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second cost</div><h3>A change of job is heavy</h3><p>The new registrar must gather requests from three men, each carrying sealed proof of every entry readied at their post, and send all of it on, so that each man can check the new numbering.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s5" title="Keeping Order Among Liars: Changing the Job">*</a></sup> A change costs far more than an ordinary entry, and the more often the job passes, the more that matters.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First cost · All-to-all echoes</div><h3>Every man writes to every man</h3><p>In each echo phase, every bandit sends a rat to every other bandit. With 4 bandits, that is 12 rat trips per stage; with 40 bandits, a single stage would take more than 1,500 trips.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second cost · Heavy handovers</div><h3>A change of job is complicated</h3><p>To take over, a new registrar must gather change-of-job requests from three bandits — each stuffed with sealed proofs of readied entries — and broadcast all of that evidence back out so the other posts can verify the new numbering.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s5" title="Keeping Order Among Liars: Changing the Job">*</a></sup> Changing leaders costs far more than ordering an entry, and the more often the job rotates, the worse that penalty becomes.</p></div></div></div>
     </div>
-    <p class="tell">The crown, the scroll, the seals, the wind and the four men all stay as they are. Only the procedure changes, and it aims at both costs. The job should be able to pass at every entry, whether or not anyone suspects its registrar, with a change of registrar costing no more than an entry.</p>
-    <p class="tell">The rats come first. A dozen of them run in every stage because every man writes to every man, and the four can do without that.</p>
+    <p class="tell">The crown, the scroll, the wax seals, the wind, and the four bandits all stay exactly as they were. Only the protocol changes — and it eliminates both costs at once. Our goal is to make changing the registrar as simple and cheap as proposing an ordinary entry, so that the bandits can pass the registrar's job around the circle at every single entry.</p>
+    <p class="tell">Let us tackle the rat traffic first. Why send a dozen rats criss-crossing the hill in every stage when the registrar can act as a hub?</p>
   </div>
 </section>
 
@@ -140,12 +140,12 @@
       <div>
         <div class="kicker">One stage, two ways</div>
         <h2>Votes to one man, bundles to all</h2>
-        <p class="lede">Every man need not write to every man. Each man sends their sealed <span class="coin">vote</span> to the registrar alone, and the registrar tells the rest what the votes came to.</p>
-        <p>When the registrar has three matching votes, the registrar ties them into a <span class="coin">bundle</span> and sends the bundle to everyone. A bundle can be trusted because nobody can forge a seal. Three seals prove that three men voted, and so, with one liar among the four, that at least two honest men did.</p>
+        <p class="lede">Every bandit does not need to write to every other bandit. Instead, each bandit sends their sealed <span class="coin">vote</span> to the registrar alone, and the registrar sends back the combined proof.</p>
+        <p>As soon as the registrar holds three matching sealed votes (including their own), they tie those three seals together into a single <span class="coin">bundle</span> (a <i>quorum certificate</i>, or <i>QC</i>) and send that bundle out to the other three posts. Any bandit who receives the bundle can trust it immediately, because no one can forge an honest bandit's wax seal: three distinct seals on one entry prove that three bandits voted for it — and with at most one liar among the four, at least two honest bandits must have approved it.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/changing-leaders-among-liars-c01-bundle-4bb33a2ead-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/changing-leaders-among-liars-c01-bundle-4bb33a2ead-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/changing-leaders-among-liars-c01-bundle-4bb33a2ead-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/changing-leaders-among-liars-c01-bundle-4bb33a2ead-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/c01-bundle.jpg" alt="At dusk at a chink in the foot of a ruined ring wall, a rat with several cords knotted together across its back, each cord ending in a dab of sealing wax stamped with its own mark" loading="lazy"></div></div></div>
     </div>
-    <p class="tell" style="margin-top:2.4rem">The crown below runs one stage each way, with bandit 1 as registrar. Press each button in turn and watch the count of rats.</p>
+    <p class="tell" style="margin-top:2.4rem">Compare the two communication patterns on the crown below, with Bandit 1 acting as registrar. Press each button and watch the rat count.</p>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>One stage on the crown <em>count the rats</em></h4>
       <div class="hill-wrap">
@@ -161,8 +161,8 @@
         <button class="btn alt" id="voteone">Votes to the registrar, a bundle to all</button>
       </div>
     </div></div></div>
-    <p class="tell">Twelve rats become six. Each man writes only to the registrar, and the registrar's bundle carries proof of all three votes, so a stage costs rats in step with the number of men and no longer with every pair of them. On the crown a bundle is three seals tied together.</p>
-    <p class="tell">The rats were the lighter of the two costs. The heavy one was the change of registrar, where a new registrar gathered everyone's sealed proofs before numbering anything. A new registrar needs a way to pick up where the last left off with far less in hand.</p>
+    <p class="tell">Twelve rat trips drop to six (three votes in, three bundles out). Because every post talks only to the registrar and back, the number of rats in a stage grows linearly with the number of bandits rather than with every pair of them.</p>
+    <p class="tell">Cutting the rat traffic in each stage was the easier half of the problem. The harder half is simplifying the change of registrar: how can a new registrar take over without having to gather and re-broadcast a huge pile of past proofs from every post?</p>
   </div>
 </section>
 
@@ -173,8 +173,8 @@
     <div class="narrow">
       <div class="kicker">The new registrar asks for one thing</div>
       <h2>Three stages and a lock</h2>
-      <p class="lede">A new registrar can pick up where the last left off if every man sends the new registrar their latest bundle, and nothing more. For one bundle to be enough, entries now form a chain: each entry names the one before it, so an entry stands only with everything behind it. Two entries <span class="coin">conflict</span> if neither lies on the other's chain.</p>
-      <p>An entry now goes through three stages of voting, and each stage ends in a bundle: a first, a second and a third. Each man keeps two bundles: the latest <em>first bundle</em> they have seen, and their <span class="coin">lock</span>, the latest <em>second bundle</em> they have voted on. A term is one registrar's turn at the job, and it goes in six steps. Scroll slowly, and the crown moves with you.</p>
+      <p class="lede">A new registrar can pick up cleanly where the previous one left off if each bandit needs to send the new registrar only a <em>single</em> item: the latest bundle they have seen. To make one bundle summarize the entire history behind it, entries are linked into a <b>tree of chains</b>: every new entry explicitly names its parent entry, so committing an entry automatically commits the entire chain of ancestors behind it. Two entries <span class="coin">conflict</span> if neither is an ancestor of the other (they lie on different branches).</p>
+      <p>In Basic HotStuff, each entry passes through <b>three stages of voting</b> (<i>prepare</i>, <i>pre-commit</i>, and <i>commit</i>), producing a <b>first bundle</b> (<i>prepareQC</i>), a <b>second bundle</b> (<i>precommitQC</i>), and a <b>third bundle</b> (<i>commitQC</i>). Each bandit needs to remember only two bundles at their post: the highest-term <em>first bundle</em> they have ever seen (<i>highQC</i>), and their <span class="coin">lock</span> — the highest-term <em>second bundle</em> they have ever voted on (<i>lockedQC</i>). Scroll through the six steps of a term below to watch how an entry progresses through the three bundles.</p>
     </div>
   </div>
   <div class="scrolly" id="term">
@@ -182,20 +182,20 @@
       <svg class="isle-svg fig svg-dark" id="termsvg" role="img" aria-label="The crown from above: bandit 1 inside the ring wall and bandits 2, 3 and 4 at their posts, with rats carrying votes in and bundles out"></svg>
     </div></div>
     <div class="steps">
-      <div class="step on"><div class="card"><div class="num">1 · Starting</div><h3>Every man sends the registrar their latest first bundle</h3><p>The registrar waits for three, takes the latest of them, and proposes a new entry on top of the entry it names, sending the proposal and that bundle to all.</p></div></div>
-      <div class="step"><div class="card"><div class="num">2 · First vote</div><h3>A man votes if the proposal is safe for them</h3><p>A man votes for the proposal if it lies on the chain of the entry they are locked on, or if the bundle it carries is from a later term than their lock.</p></div></div>
-      <div class="step"><div class="card"><div class="num">3 · Second vote</div><h3>The first bundle</h3><p>The registrar ties three first votes into a first bundle and sends it. Every man keeps it and votes again.</p></div></div>
-      <div class="step"><div class="card"><div class="num">4 · Third vote</div><h3>The second bundle, and the lock</h3><p>The registrar ties three second votes into a second bundle and sends it. Every man locks on it and votes again.</p></div></div>
-      <div class="step"><div class="card"><div class="num">5 · Standing</div><h3>The third bundle</h3><p>The registrar ties three third votes into a third bundle and sends it. Every man writes the entry and everything behind it into their copy.</p></div></div>
-      <div class="step"><div class="card"><div class="num">6 · Moving on</div><h3>A sandglass runs out</h3><p>If a man's sandglass runs out before the term ends, they move to the next term and send its registrar their latest first bundle.</p></div></div>
+      <div class="step on"><div class="card"><div class="num">1 · Starting the term</div><h3>Every man sends the registrar their latest first bundle</h3><p>To begin a term, each bandit sends the new registrar the highest-term <b>first bundle</b> (<i>prepareQC</i>) they hold. The registrar waits for three such reports, picks the one from the latest term (<i>highQC</i>), and proposes a new entry extending the entry named in that bundle — sending the proposal and that justifying bundle out to all posts.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · First vote (Prepare)</div><h3>A man votes if the proposal is safe for his lock</h3><p>Each bandit checks whether the proposal is safe with respect to their current <b>lock</b>: they send a sealed <b>first vote</b> if the proposal extends the entry they are locked on, <em>or</em> if the justifying bundle carried by the proposal comes from a later term than their lock.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · Second vote (Pre-commit)</div><h3>The first bundle</h3><p>Once the registrar collects three first votes, they tie them into a <b>first bundle</b> (<i>prepareQC</i>) and send it to all posts. Every bandit who receives this first bundle saves it as their latest first bundle and replies with a sealed <b>second vote</b>.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Third vote (Commit)</div><h3>The second bundle, and setting the lock</h3><p>Once the registrar collects three second votes, they tie them into a <b>second bundle</b> (<i>precommitQC</i>) and send it out. Every bandit who receives this second bundle sets their <b>lock</b> to it and replies with a sealed <b>third vote</b>.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · Standing (Decide)</div><h3>The third bundle</h3><p>Once the registrar collects three third votes, they tie them into a <b>third bundle</b> (<i>commitQC</i>) and send it out. Upon receiving the third bundle, every bandit writes the entry — and all of its ancestors in the chain — into their loot scroll: the entry <b>stands</b>.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · Moving on</div><h3>If a sandglass runs out</h3><p>If a bandit's sandglass expires before the term finishes, they abandon the current term, advance to the next term, and send the next registrar their latest first bundle — starting Step 1 all over again.</p></div></div>
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
-    <p class="tell" style="margin-top:0">A term that goes well ends with the entry written at every post. A term that stalls leaves each man with whatever first bundle and lock they had reached, and the next registrar is owed only the first bundles. Whether the men then vote for the next registrar's proposal is decided by the rule for the first vote, and that rule has two halves.</p>
+    <p class="tell" style="margin-top:0">When a term runs smoothly, it ends with the new entry standing at every honest post. When a term stalls partway through, each bandit is left holding whatever latest first bundle and lock they reached, and the incoming registrar needs only the latest first bundles from three posts to propose the next entry. Everything hinges on when an honest bandit is willing to cast a first vote for a new proposal — and that rule has two halves.</p>
     <details class="proof">
       <summary>Where the term is in the paper</summary>
-      <p class="given">The steps above are the paper's Basic HotStuff: a first, second and third vote are the prepare, pre-commit and commit votes, and a first, second and third bundle are prepareQC, precommitQC and commitQC.</p>
-      <p><span class="cite">Basic HotStuff, Algorithm 2: new-view, prepare, pre-commit, commit, decide; highQC; lockedQC; safeNode, Algorithm 1; nextView.</span></p>
+      <p class="given">The six steps above correspond to <b>Basic HotStuff</b> (Algorithm 2 in Yin et al., 2019): the first, second, and third votes are <code>prepare</code>, <code>pre-commit</code>, and <code>commit</code> votes, and the first, second, and third bundles are <code>prepareQC</code>, <code>precommitQC</code>, and <code>commitQC</code>.</p>
+      <p><span class="cite">Basic HotStuff, Algorithm 2: new-view, prepare, pre-commit, commit, decide; highQC; lockedQC; safeNode predicate (Algorithm 1); nextView.</span></p>
     </details>
   </div>
 </section>
@@ -207,15 +207,15 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The rule for the first vote</div>
       <h2>Two halves, two jobs</h2>
-      <p class="lede">The rule for the first vote has two halves because it has two jobs to do. A man votes for a proposal if either half holds.</p>
+      <p class="lede">The voting rule for Step 2 (the paper's <code>safeNode</code> predicate) has two halves because it must balance two competing duties: protecting entries that have already stood (<i>safety</i>) and freeing posts whose locks are out of date (<i>liveness</i>). A bandit votes for a proposal if <b>either</b> half holds:</p>
     </div>
     <div class="cards3 cards2" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First half</div><h3>Lies on my locked entry's chain</h3></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second half</div><h3>Carries a later bundle than my lock</h3></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First half · Safety branch</div><h3>The proposal extends my locked entry's chain</h3></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second half · Liveness branch</div><h3>The proposal carries a bundle from a later term than my lock</h3></div></div></div>
     </div>
-    <p class="tell">The first half keeps the scroll safe. A proposal on the locked entry's chain builds on that entry, so a locked man who votes for it helps nothing conflicting forward, and a locked man votes for nothing else on the strength of this half.</p>
-    <p class="tell">The second half keeps the scroll moving. A man may be locked on something the rest have gone past. A bundle from a later term than the lock shows that three men have voted for something since, and a man who is shown this lets the lock go.</p>
-    <p class="tell" style="margin-top:2.4rem">The four proposals below put the rule to one man. Pick each in turn and watch which half, if either, lets the man vote.</p>
+    <p class="tell">The <b>first half</b> protects a committed chain. If a proposal builds directly on top of the entry a bandit is locked on, voting for it continues that exact same chain and cannot help any conflicting branch win.</p>
+    <p class="tell">The <b>second half</b> prevents a stranded bandit from staying stuck forever. Suppose one bandit locked on an entry in an old term that stalled before standing, while the rest of the hill moved on in a later term. If a new proposal carries a valid first bundle from a term <em>later</em> than the bandit's lock, that bundle proves that three bandits (including at least two honest ones) already voted for a later branch — so it is safe for the locked bandit to unlock and vote for the new proposal.</p>
+    <p class="tell" style="margin-top:2.4rem">Test this two-part rule on four different proposals below. Suppose a bandit's current lock comes from <b>Term 4</b>. Click each proposal in turn to see which half of the rule — if either — permits the bandit to vote.</p>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>One man's first vote <em>lock: term 4</em></h4>
       <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">A proposal reaches a man whose lock is the second bundle of term 4. Which proposal is it?</p>
@@ -223,7 +223,7 @@
       <ul class="checks" data-live hidden><li id="rule1"></li><li id="rule2"></li><li id="rule3"></li></ul>
       <p class="say" id="rulesay">Pick a proposal. The man votes if either half holds.</p>
     </div></div></div>
-    <p class="tell">A lock, then, can be let go. The worry is that a man who lets go might help a conflicting entry to stand beside the one they had locked on.</p>
+    <p class="tell">Because the second half of the rule allows a bandit to override an old lock, we must be certain of one thing: can unlocking ever allow a conflicting entry to stand alongside an entry that already stood?</p>
   </div>
 </section>
 
@@ -235,11 +235,12 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The first promise</div>
       <h2>Never two entries</h2>
-      <p class="lede">Letting a lock go can never let a conflicting entry stand. The reason comes in two parts, one for a single term and one for the terms that follow it.</p>
-      <p>Within a term, two bundles of the same stage cannot vouch for conflicting entries. Each needs three seals out of four, so the two threes share an honest man, and an honest man votes once a stage a term.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s4" title="Keeping Order Among Liars: Why Three Seals, and Four Bandits">*</a></sup> Across terms the lock does the work. An entry stands only on a third bundle, and a man casts a third vote only after locking, so an entry that stands has honest men locked on it. A later bundle for a conflicting entry needs three seals too, and so the vote of one of those locked men, who gives it only to a proposal that carries a bundle later than the lock.</p>
+      <p class="lede">The second half of the voting rule can <em>never</em> allow two conflicting entries to stand. The proof comes in two steps: first within a single term, and then across terms.</p>
+      <p><b>Within a single term</b>, two bundles of the same stage can never vouch for conflicting entries. Every bundle requires three seals out of four, any two sets of three out of four share at least two bandits (at least one of whom is honest), and an honest bandit votes only once per stage in any given term.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s4" title="Keeping Order Among Liars: Why Three Seals, and Four Bandits">*</a></sup></p>
+      <p><b>Across different terms</b>, the locks prevent a split. Suppose entry <var>W</var> stands in Term <var>a</var>. Because <var>W</var> reached a <b>third bundle</b> in Term <var>a</var>, three bandits cast third votes for <var>W</var> — and a bandit casts a third vote only after setting their <b>lock</b> on <var>W</var>'s second bundle in Term <var>a</var>. Thus at least two honest bandits are locked on <var>W</var> at the end of Term <var>a</var>. For any conflicting entry to ever get a first bundle in a later term, three bandits would have to cast first votes for it, which requires the vote of at least one of those two honest bandits locked on <var>W</var>. Yet the first time a conflicting proposal appears after Term <var>a</var>, it neither extends <var>W</var> nor carries a first bundle from a term later than <var>a</var> — so neither half of the voting rule allows a locked honest bandit to vote for it!</p>
     </div>
-    <div class="result"><span class="name">Never Two Entries</span><p>However the wind blows and whoever lies, no two conflicting entries both stand at honest posts.</p></div>
-    <p class="tell" style="margin-top:2.4rem">The part within a term can be checked by hand. Choose the missing seal of each bundle below, and see how many men sealed both.</p>
+    <div class="result"><span class="name">Never Two Entries</span><p>No matter how the wind blows or which bandit lies, no two conflicting entries can ever both stand at honest posts.</p></div>
+    <p class="tell" style="margin-top:2.4rem">You can verify the single-term overlap by hand below. Pick which bandit's seal is missing from each three-seal bundle, and see who signed both.</p>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>Two bundles of the same stage <em>who is in both?</em></h4>
       <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each bundle has three seals out of four. For each bundle, pick the man whose seal it lacks.</p>
@@ -250,24 +251,15 @@
       <div class="stand" id="lackstand" data-live></div>
       <p class="say" id="lacksay">Pick one man for each bundle.</p>
     </div></div></div>
-    <p class="tell">The scroll is safe with three stages, then. Two echoes were enough to keep it safe before, so the third stage has to earn its place some other way. The plain test is to take it away.</p>
+    <p class="tell">Notice something curious about the safety proof above: to prove that <var>W</var> could never be contradicted in a later term, we used the fact that <var>W</var>'s bundle put honest bandits under a <b>lock</b>. Why, then, did we need <em>three</em> stages of bundles instead of just two? The clearest way to see what the third stage buys is to take it away.</p>
     <details class="proof">
       <summary>Proof — that the locks keep conflicting entries from both standing</summary>
-      <p class="given"><b>Theorem 2.</b> Conflicting nodes cannot both be committed by correct replicas. Here W and B are conflicting entries (nodes); <var>a</var>, <var>b</var> and <var>s</var> are terms (views); and <var>r</var> is an honest man (a correct replica). A third bundle is a commitQC, a first bundle a prepareQC.</p>
+      <p class="given"><b>Theorem 2 (Safety).</b> Conflicting nodes cannot both be committed by correct replicas. Here <var>W</var> and <var>B</var> are conflicting entries (tree nodes); <var>a</var>, <var>b</var>, and <var>s</var> are terms (views); and <var>r</var> is an honest bandit (correct replica). A third bundle is a <code>commitQC</code>, and a first bundle is a <code>prepareQC</code>.</p>
       <ol class="proofsteps">
-        <li>Suppose W stands on a third bundle from term <var>a</var>, and a conflicting B on one from term
-        <var>b</var>. They are not the same term, so say <var>a</var> is earlier.</li>
-        <li>B's standing needed a first bundle for B, or for something on B's chain, in term <var>b</var>.
-        Among all first bundles from terms after <var>a</var>, up to <var>b</var>, for entries that
-        conflict with W, take the one from the earliest term, <var>s</var>.</li>
-        <li>W's third bundle in term <var>a</var> and that first bundle in term <var>s</var> each carry three
-        seals, so they share an honest man, <var>r</var>. A man casts a third vote only after locking, so
-        in term <var>a</var>, <var>r</var> locked on W's second bundle. Nothing between <var>a</var> and <var>s</var> can have moved that lock off W's chain,
-        since that would need a first bundle for a conflicting entry earlier than <var>s</var>.</li>
-        <li>So in term <var>s</var>, <var>r</var> was locked on W, and the proposal conflicted with W. It
-        carried a bundle from no later than term <var>a</var>, again because <var>s</var> is the earliest.
-        Neither half of the rule lets <var>r</var> vote for it. But <var>r</var> did vote, since <var>r</var>'s seal is in the
-        term-<var>s</var> bundle. Contradiction.<span class="qed">∎</span></li>
+        <li>Suppose for contradiction that <var>W</var> stands on a third bundle (<code>commitQC</code>) from term <var>a</var>, and a conflicting entry <var>B</var> stands on a third bundle from term <var>b</var>. By single-term quorum intersection (<var>Lemma 1</var>), <var>a</var> ≠ <var>b</var>; without loss of generality, assume <var>a</var> &lt; <var>b</var>.</li>
+        <li>For <var>B</var> to stand in term <var>b</var>, there must be a first bundle (<code>prepareQC</code>) in term <var>b</var> for <var>B</var>. Among all first bundles from terms strictly after <var>a</var> for entries that conflict with <var>W</var>, let term <var>s</var> (&gt; <var>a</var>) be the earliest term that produced such a conflicting first bundle, say for entry <var>C</var>.</li>
+        <li><var>W</var>'s third bundle from term <var>a</var> and <var>C</var>'s first bundle from term <var>s</var> each carry three seals out of four, so they share at least one honest bandit <var>r</var>. Because an honest bandit casts a third vote in term <var>a</var> only after locking on <var>W</var>'s second bundle in term <var>a</var>, bandit <var>r</var> held a lock on <var>W</var> (at term <var>a</var>) at the end of term <var>a</var>. Moreover, by the minimality of <var>s</var>, no first bundle (and hence no second bundle) for any entry conflicting with <var>W</var> was formed in any term between <var>a</var> and <var>s</var>, so <var>r</var>'s lock at the time of voting in term <var>s</var> was still on <var>W</var> (or a descendant of <var>W</var>) at a term ≥ <var>a</var>.</li>
+        <li>Now inspect <var>r</var>'s first vote for <var>C</var> in term <var>s</var>: by construction, <var>C</var> conflicts with <var>W</var> (so the first half of <code>safeNode</code> is false), and by the minimality of <var>s</var>, the justifying first bundle carried by <var>C</var>'s proposal cannot come from a term &gt; <var>a</var> (unless it is on <var>W</var>'s branch, in which case <var>C</var> extending it would not conflict with <var>W</var>). Thus neither half of <code>safeNode</code> allowed <var>r</var> to vote for <var>C</var> in term <var>s</var>, contradicting <var>r</var>'s seal in <var>C</var>'s first bundle.<span class="qed">∎</span></li>
       </ol>
     </details>
   </div>
@@ -281,11 +273,11 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">What two stages would do</div>
       <h2>The hidden lock</h2>
-      <p class="lede">Take the third stage away, and a lock can hide from the next registrar. With two stages a man locks as soon as they see a first bundle, and an entry stands on the bundle after it.</p>
-      <p>Suppose that in some term an entry reaches its first bundle, and only one man, say bandit 3, sees that bundle before the others' sandglasses run out. Bandit 3 locks on it. The next registrar need only wait for three men, and hears from three who do not include bandit 3. None of the three has that bundle, so the registrar proposes an entry that conflicts with bandit 3's lock.</p>
-      <p>The two other honest men vote for it. Bandit 3 refuses, because the proposal conflicts with bandit 3's lock and carries no later bundle. That makes two votes where three are needed. The sandglasses run out, and just then a liar adds a vote, so the registrar forms a first bundle that one man sees and locks on. The next term begins the same way, and nothing stops the terms from going on like this for ever.</p>
+      <p class="lede">If we cut the protocol down to just <em>two</em> stages — so that a bandit locks as soon as they see a <b>first bundle</b>, and an entry stands on the <b>second bundle</b> — safety still holds, but a fatal liveness trap appears: a lock can <b>hide</b> from the next registrar.</p>
+      <p>Here is how the trap springs under two stages. Suppose an entry reaches its first bundle in some term, and the registrar sends that first bundle to Bandit 3 alone just before everyone's sandglasses run out. Bandit 3 sees the first bundle and <b>locks</b> on it, while Bandits 1, 2, and 4 have never seen it. Now the next term starts. The new registrar waits for the first three reports to arrive — and hears from Bandits 1, 2, and 4 (missing slow Bandit 3). None of those three knows about Bandit 3's first bundle! So the new registrar innocently proposes an entry built on an older bundle, conflicting with Bandit 3's lock.</p>
+      <p>What happens next? Only two honest bandits can vote for the new proposal, because Bandit 3 is locked on a conflicting branch from a later term and refuses to vote. If the liar withholds their vote while the honest men wait, the sandglasses run out — and at the last instant the liar slips in a third vote to form a new first bundle that only one honest bandit sees and locks on! Under two stages, this deadlock can repeat forever.</p>
     </div>
-    <p class="tell" style="margin-top:2.4rem">The panel below sets up that moment. Choose whose answer comes last under two stages, then switch to three stages and choose again.</p>
+    <p class="tell" style="margin-top:2.4rem">Explore that exact moment in the interactive panel below. Under <b>Two stages</b>, pick which bandit's message arrives last so the new registrar misses it. Then switch to <b>Three stages</b> and try to hide the lock again.</p>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>The new registrar listens <em id="hidmode">two stages</em></h4>
       <div class="row" style="margin:0 0 .8rem"><button class="btn on" id="hid2">Two stages</button><button class="btn alt" id="hid3">Three stages</button></div>
@@ -295,9 +287,9 @@
       <div class="row" id="hidslow" style="margin-top:.8rem"></div>
       <p class="say" id="hidsay">Pick the slowest man.</p>
     </div></div></div>
-    <p class="tell">Two stages can be mended. Each new registrar waits out a full sandglass before proposing, which is long enough, once the wind drops, to be sure of hearing every man's latest bundle. The remedy works, and it ties every change of registrar to the length of a sandglass, however fast the rats run.</p>
-    <p class="tell">The third stage does the same work without the wait. With three stages a man locks only on a second bundle, and a second bundle exists only because three men voted on a first bundle and kept it. So a lock at any honest post means at least two honest men hold the matching first bundle. A new registrar who hears from any three men hears from at least one of those two, and learns the latest bundle without waiting out anything.</p>
-    <p class="tell">A lock that cannot hide is what the third stage buys. With it an honest registrar can go as fast as the rats bring answers, and that can be stated as a promise.</p>
+    <p class="tell">Two-stage protocols (like Tendermint) can avoid this deadlock only by forcing every new registrar to <b>wait out a full sandglass</b> (the worst-case network delay) before proposing, ensuring that even the slowest honest bandit's report has arrived. That fix works, but it chains every leader change to the length of a worst-case timer, no matter how fast the rats are actually running.</p>
+    <p class="tell"><b>How the third stage eliminates the wait:</b> with three stages, a bandit locks only when they see a <b>second bundle</b>. And how could a second bundle exist in the first place? Only because three bandits saw the <b>first bundle</b>, saved it, and cast second votes! At least two of those three bandits are honest. Therefore, whenever <em>any</em> honest bandit holds a lock (a second bundle), at least <b>two honest bandits</b> already hold the matching <b>first bundle</b>. When the next registrar waits for the first three reports out of four posts, those three reports are guaranteed to include at least one of those two honest bandits! The new registrar learns of the highest first bundle immediately from the first three replies, without ever waiting for a timer.</p>
+    <p class="tell">A lock that can never hide is the exact prize that the third stage buys. It lets every honest registrar move at the natural speed of the rats.</p>
   </div>
 </section>
 
@@ -308,24 +300,18 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The second promise</div>
       <h2>Going at the rats' pace</h2>
-      <p class="tell" style="margin-top:0">The promise is about pace. Order holds in any wind, but an entry can stand only when the rats run, so the promise speaks of the time after the wind has dropped.</p>
+      <p class="tell" style="margin-top:0">We can now state our second promise (which the paper calls <i>optimistic responsiveness</i>). While safety holds in any wind, progress requires the rats to arrive, so this promise describes what happens once the wind has dropped:</p>
     </div>
-    <div class="result"><span class="name">Going at the Rats' Pace</span><p>Once the wind has dropped, a term whose registrar is honest, with every honest man in it long enough, ends with an entry standing, and it needs to wait only for the first three answers at each stage, never for a full sandglass.</p></div>
-    <p class="tell">The promise asks for the honest men to be in the same term for long enough, and the sandglasses see to that. The registrars pass in a fixed order by term number, and each man doubles their sandglass whenever a term ends with nothing standing, as before.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s6" title="Keeping Order Among Liars: Going On Once the Wind Drops">*</a></sup> In the end the sandglasses overlap for long enough under an honest registrar. The paper keeps this part, which it calls the pacemaker, apart from the rest, because it affects only whether entries stand and never which.</p>
-    <p class="tell">Pace seems to have a price. Each entry now waits three stages where two echoes did before, which looks as though the scroll must take in entries more slowly.</p>
+    <div class="result"><span class="name">Going at the Rats' Pace</span><p>Once the wind has dropped, any term led by an honest registrar in which all honest bandits remain long enough ends with an entry standing — and each stage waits only for the first three replies to arrive, never for a sandglass timer to run out.</p></div>
+    <p class="tell">Notice the phrase "in which all honest bandits remain long enough." As in PBFT, the sandglasses ensure that the honest bandits synchronize onto the same term: the registrar's job rotates in a fixed order by term number, and each bandit doubles their sandglass whenever a term expires without progress.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s6" title="Keeping Order Among Liars: Going On Once the Wind Drops">*</a></sup> HotStuff cleanly separates this view-synchronization mechanism — which it calls the <b>pacemaker</b> — from the core voting rules, because the pacemaker affects only liveness and can never violate safety.</p>
+    <p class="tell">Still, adding a third stage of voting seems to carry a latency price: if every entry must wait through three stages of bundles instead of two, won't the scroll take in entries more slowly?</p>
     <details class="proof">
       <summary>Proof — that an honest registrar after the wind drops gets their entry through</summary>
-      <p class="given"><b>Lemma 3, Theorem 4 (optimistic responsiveness).</b> After GST, in a view with a correct leader and every correct replica in it long enough, the leader obtains a highQC at least as high as every correct replica's lockedQC, every correct replica votes for its proposal, and each phase completes on the first <var>n</var> − <var>f</var> answers, so the proposal commits. A second bundle is a precommitQC, and a lock is lockedQC.</p>
+      <p class="given"><b>Lemma 3 &amp; Theorem 4 (Optimistic Responsiveness).</b> After GST (once the wind drops), in any view with a correct leader in which all correct replicas remain long enough, the leader collects a <code>highQC</code> at least as high as every correct replica's <code>lockedQC</code>, every correct replica votes for the leader's proposal, and each phase completes upon receiving the first <var>n</var> − <var>f</var> = 3 responses without waiting for any timeout.</p>
       <ol class="proofsteps">
-        <li>Take the latest lock held by any honest man: a second bundle. It exists because three men voted
-        on its first bundle, at least two of them honest, and each keeps it.</li>
-        <li>The registrar hears the latest first bundles of three men, which include at least one of those two.
-        So the registrar takes a bundle at least as late as every honest lock.</li>
-        <li>Every honest man then votes for the proposal. A man whose lock is from the same term as the
-        bundle the registrar took is locked on that very entry, since one term has only one second bundle, and
-        the proposal lies on its chain. Every other honest man's lock is earlier, and the proposal carries a
-        later bundle. In still air all votes and bundles arrive, and each stage completes on three answers.
-        So the entry stands.<span class="qed">∎</span></li>
+        <li>Consider the highest-term lock (<code>lockedQC</code>, a second bundle) held by any honest bandit at the start of the term, say from term <var>v*</var>. For that second bundle to exist, three bandits must have cast second votes in term <var>v*</var> after receiving and storing the matching first bundle (<code>prepareQC</code>) of term <var>v*</var>. At least two of those three bandits are honest.</li>
+        <li>To open the new term, the honest registrar waits for the first three <code>new-view</code> messages, each carrying that sender's highest first bundle. Any three bandits out of four share at least one bandit with the two honest bandits holding term <var>v*</var>'s first bundle, so the registrar's selected <code>highQC</code> comes from a term ≥ <var>v*</var>.</li>
+        <li>When the registrar proposes a new entry extending <code>highQC</code>, every honest bandit votes for it: if an honest bandit's lock is from term <var>v*</var> and <code>highQC</code> is also from term <var>v*</var>, by single-term quorum intersection they refer to the exact same entry, so the proposal extends the bandit's lock (satisfying the first half of <code>safeNode</code>); otherwise the bandit's lock is from a term &lt; <code>highQC</code>'s term (satisfying the second half of <code>safeNode</code>). In calm air all three stages complete as fast as the first three honest responses travel.<span class="qed">∎</span></li>
       </ol>
     </details>
   </div>
@@ -339,10 +325,10 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The stages run on top of one another</div>
       <h2>A new registrar every entry</h2>
-      <p class="lede">The scroll need not take in entries more slowly. Each entry still waits three stages, but the three stages all look alike: the registrar sends something, the men vote, the registrar bundles the votes. So they can be run on top of one another.</p>
-      <p>Each term the job passes to the next man, who proposes a new entry carrying the latest first bundle. A vote for it is also a second vote for the entry before it, and a third vote for the one before that. Each new proposal moves the entries before it one stage on, so one vote a term does the work of three stages, spread over three terms.</p>
+      <p class="lede">The scroll does not have to take in entries more slowly at all. Although each individual entry still passes through three stages of bundles before it stands, notice that all three stages have the <em>exact same shape</em>: the registrar sends a proposal with a bundle, the bandits send votes, and the registrar ties three votes into the next bundle. Because the three stages are identical, we can <b>pipeline</b> them along the chain of entries (<i>Chained HotStuff</i>)!</p>
+      <p>In Chained HotStuff, every term has only a <b>single stage of voting</b>, and the registrar's job passes to the next bandit at every term. Each term's registrar proposes a new entry carrying the latest bundle they collected. When the bandits vote for that new entry, their single vote simultaneously serves as the <b>first vote</b> for the new entry, the <b>second vote</b> for its parent entry, and the <b>third vote</b> for its grandparent entry! Every new bundle advances the three entries behind it by one stage at once.</p>
     </div>
-    <p class="tell" style="margin-top:2.4rem">Run the terms below one at a time. The job starts at bandit 1 and goes round the four posts, and from the fourth term on an entry stands at every term.</p>
+    <p class="tell" style="margin-top:2.4rem">Step through the chained terms one at a time below. The registrar's job starts at Bandit 1 and rotates around all four posts; once the three-stage pipeline fills up in Term 4, a new entry stands at every single term.</p>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>Terms in a row <em id="chainterm">no term yet</em></h4>
       <div class="st-wrap">
@@ -355,9 +341,9 @@
       </div>
       <div class="row"><button class="btn" id="chainnext">Run the next term</button><button class="btn alt" id="chainreset">Start again</button></div>
     </div></div></div>
-    <p class="tell">A man tells what stands by reading the chain behind each new proposal. If the proposal carries a bundle for its direct parent, the parent has its first bundle. If that parent carries one for its own direct parent, the grandparent is ready to lock on. If the grandparent carries one for its own direct parent too, that entry, the one behind all three, stands. Where a registrar failed and a term left nothing, the chain has a gap, and counting starts again.</p>
-    <p class="tell">The job now passes at every entry, suspected or not, and the passing costs nothing more, for the same reason a change of registrar is cheap: a new registrar only proposes on the latest bundle they hear of, like any other.</p>
-    <p class="tell">The crown now has a new registrar at every entry, going at the rats' pace. Some things the new procedure leaves exactly as they were, and some it gains only on conditions.</p>
+    <p class="tell">In this chained pipeline, a bandit can tell which entries are locked or standing simply by inspecting the chain of bundles behind each new proposal (the <i>Three-Chain rule</i>): if a proposal carries a direct bundle for its parent, that parent has its <b>first bundle</b>; if the parent also carries a direct bundle for the grandparent, the grandparent has its <b>second bundle</b> (so the bandit locks on the grandparent); and if the grandparent also carries a direct bundle for the great-grandparent, that great-grandparent has completed all three stages and <b>stands</b>! (If a term stalled and left a gap in the term numbers, the contiguous three-chain is interrupted and the three-step count simply resumes after the gap.)</p>
+    <p class="tell">Because starting a new term under a new registrar requires nothing more than proposing on top of the latest bundle — the exact same step an existing registrar takes — rotating the registrar at every single entry costs zero extra messages.</p>
+    <p class="tell">With Chained HotStuff, the four bandits rotate the registrar's job on every entry and move at the speed of their rats. Let us finish by noting five practical questions about what this design changes and what remains the same.</p>
   </div>
 </section>
 
@@ -370,13 +356,13 @@
       <div>
         <div class="kicker">Five questions</div>
         <h2>What it does not say</h2>
-        <p class="tell" style="margin-top:0">What the new procedure leaves alone, and what it gains only on conditions, can be set down under five questions.</p>
+        <p class="tell" style="margin-top:0">Here are five questions that clarify what HotStuff changes compared to earlier protocols and what conditions it relies on:</p>
         <ul class="terms">
-          <li><b>Does anything stand before the wind drops?</b> Order holds in any wind, but no entry stands until the wind has dropped, and that is so for any arrangement.</li>
-          <li><b>Is the bundle always small?</b> The bundle is small only with a threshold seal, where each man holds a piece and any three pieces combine into one seal that anyone can check. Then the bundle is the size of a single seal however many men there are, and each stage costs a number of seals that grows only in step with the number of men. The crown's rings are ordinary seals and make a bundle of three, so the saving here is in rats and leaves the size of what they carry as it was.</li>
-          <li><b>Is an entry slower?</b> An entry takes one more stage than before to stand. Chained, the stages overlap, so a new entry still stands at every term.</li>
-          <li><b>Does anyone learn who lies?</b> Nobody learns who lies, and a liar may still file nonsense that stands in order.</li>
-          <li><b>What follows from any entry?</b> Nothing follows from it.</li>
+          <li><b>Does anything stand before the wind drops?</b> No. Safety (Never Two Entries) holds in any wind, but no entry can finish its three stages until the wind drops and the rats can complete their runs — a fundamental limit shared by every partially synchronous consensus protocol.</li>
+          <li><b>Is a bundle always the size of a single seal?</b> A bundle is as small as a single signature if the bandits use a <i>threshold signature scheme</i>, where any three partial seals combine mathematically into one fixed-size signature. With ordinary individual signet rings, a bundle is simply three wax seals tied together — which still cuts the number of rat trips from quadratic (<var>O(n²)</var>) to linear (<var>O(n)</var>), while threshold signatures make the total number of signature verifications linear as well.</li>
+          <li><b>Does the third stage make entries slower?</b> An individual entry takes three stages of voting rather than two to stand, adding one round-trip of latency from filing to standing. Because Chained HotStuff pipelines those three stages across consecutive entries, however, throughput remains one committed entry per stage.</li>
+          <li><b>Does anyone learn who lies?</b> No. Just as before, the protocol never needs to identify the liar, and an authorized liar can still propose valid-format nonsense that gets ordered along with everything else.</li>
+          <li><b>What follows once an entry stands?</b> As always, the protocol guarantees only that every honest post writes the exact same sequence of entries into its scroll.</li>
         </ul>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/mount-phyle.jpg" alt="Mount Phyle from the air under a grey sky: a steep wooded crag with a ruined ring wall on top, a few small white tents on the slope below, and tiled roofs among the trees on either side" loading="lazy"></div></div></div>
@@ -392,15 +378,15 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The crown was a group of machines</h2>
-      <p class="lede">Read the crown again with machines at the posts. Every bandit is a replica and every rat a message, a term is a view and its registrar the leader, and a bundle of three votes is a quorum certificate. Hover over a row, or tap it, to see who is who.</p>
+      <p class="lede">Now read the story of the crown again with machines at the posts. Every bandit is a replica, every rat is a network message, a term is a view, its registrar is the view's leader, and a bundle of three seals is a quorum certificate (<i>QC</i>). Hover over a row, or tap it, to see how each element maps to the HotStuff paper.</p>
     </div>
     <div class="map" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">On the crown</div><div></div><div class="hd">In the machine room</div>
     </div>
     <div class="meander" style="margin:3rem auto"></div>
     <div class="end">
-      <p class="big">A leader costs only linear traffic per decision, and a new leader can take over as cheaply as an old one.</p>
-      <p class="lede" style="margin:0 auto">HotStuff gets there by having replicas send votes only to the leader, who aggregates them into a quorum certificate, and by chaining three phases of such certificates so that leader replacement is just another round. Once the network behaves, it runs as fast as the network allows.</p>
+      <p class="big">A leader uses only linear message traffic per decision, and a new leader can take over as cheaply as an old one.</p>
+      <p class="lede" style="margin:0 auto">HotStuff achieves this by having replicas send votes only to the leader — who aggregates them into a quorum certificate — and by chaining three uniform phases of certificates so that leader replacement is just another round. Once the network stabilizes, it moves as fast as the network carries messages.</p>
       <div class="links">
         <a href="../../places/the-crown/index.html">The Crown of Mount Phyle, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
@@ -412,11 +398,11 @@
       <details class="proof">
         <summary>The paper behind this book</summary>
         <div class="refs">
-          <p>Maofan Yin, Dahlia Malkhi, Michael K. Reiter, Guy Golan Gueta and Ittai Abraham, <i>HotStuff: BFT Consensus with Linearity and Responsiveness</i>. Proceedings of the 38th ACM Symposium on Principles of Distributed Computing (PODC), 2019. — Basic and Chained HotStuff, the safety and liveness arguments, the two-phase liveness failure, and the comparison with PBFT, Tendermint and Casper.</p>
+          <p>Maofan Yin, Dahlia Malkhi, Michael K. Reiter, Guy Golan Gueta and Ittai Abraham, <i>HotStuff: BFT Consensus with Linearity and Responsiveness</i>. Proceedings of the 38th ACM Symposium on Principles of Distributed Computing (PODC), 2019. — Introduces Basic and Chained HotStuff, proves safety and optimistic responsiveness, demonstrates the two-phase hidden-lock liveness failure, and compares communication complexity with PBFT, Tendermint, and Casper.</p>
         </div>
-        <p><b>The ideas.</b> HotStuff is a Byzantine state machine replication protocol for <var>n</var> = 3<var>f</var> + 1 replicas under partial synchrony, like PBFT, with two properties together: a new leader costs no more than an ordinary step (linear view change), and after the network stabilizes a correct leader proceeds at the speed of actual messages rather than a timeout (optimistic responsiveness).</p>
-        <p>Votes go only to the leader, who combines <var>n</var> − <var>f</var> of them into a quorum certificate, one threshold signature, so each phase is linear. There are three phases where PBFT had two. Replicas lock on the second certificate, and vote for a proposal if it extends their lock or carries a certificate from a later view. Because a lock implies that <var>f</var> + 1 correct replicas hold the matching first certificate, a new leader hearing from any <var>n</var> − <var>f</var> replicas learns it without waiting; with two phases a lock can hide, and progress needs a wait for the maximum delay.</p>
-        <p>Because the phases are identical, they pipeline: every view proposes a new block, the leader rotates every view, and a block commits when three consecutive views extend it.</p>
+        <p><b>The ideas.</b> HotStuff is a Byzantine fault-tolerant state-machine replication protocol for <var>n</var> = 3<var>f</var> + 1 replicas under partial synchrony that achieves two properties simultaneously: <i>linear view change</i> (a new leader takes over using only <var>O(n)</var> messages and authenticators, no more than an ordinary round) and <i>optimistic responsiveness</i> (once the network stabilizes, a correct leader drives consensus at actual network speed rather than waiting out a worst-case timeout Δ).</p>
+        <p>Instead of all-to-all broadcasts, replicas send signed votes solely to the leader, who combines <var>n</var> − <var>f</var> = 2<var>f</var> + 1 votes into a single <i>quorum certificate</i> (<i>QC</i>, implemented with threshold signatures) and broadcasts it out. Where PBFT and Tendermint use two voting phases (prepare and commit), HotStuff uses three (prepare, pre-commit, and commit). Replicas update their lock (<code>lockedQC</code>) only upon receiving a second-phase <code>precommitQC</code>, and vote for a new proposal if it extends their locked node or carries a <code>prepareQC</code> from a higher view than their lock (<code>safeNode</code>). Because any replica's lock on a <code>precommitQC</code> implies that at least <var>f</var> + 1 correct replicas hold the matching <code>prepareQC</code>, a new leader hearing from any <var>n</var> − <var>f</var> replicas is guaranteed to learn of a <code>prepareQC</code> at least as high as every correct replica's lock without waiting for a timeout. In two-phase protocols, by contrast, a single replica can lock on a first-phase QC that no other replica has seen, creating a "hidden lock" that forces either a liveness deadlock or a mandatory Δ timeout wait on every leader change.</p>
+        <p>Because all three phases of Basic HotStuff have identical structure, <i>Chained HotStuff</i> pipelines them across views: every view proposes a new block carrying a single QC, the leader can rotate on every view at no extra cost, and a block commits as soon as it is followed by a contiguous <i>Three-Chain</i> of blocks.</p>
       </details>
     </div>
   </div>
