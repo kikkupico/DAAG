@@ -20,6 +20,14 @@ p{margin:0 0 1rem;font-size:1.125rem;line-height:1.65;text-wrap:pretty}
 .bar a{color:#f0e6cc;text-decoration:none;opacity:.8;white-space:nowrap} .bar a:hover{opacity:1}
 .bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:520px){.bar a+a{display:none}}
+/* the two registers: allegory (i) by default, so the page reads without a script; computing (m) */
+body[data-reg="i"] .m{display:none!important}
+body[data-reg="m"] .i{display:none!important}
+.bar .now{min-width:0}
+.seg{display:inline-flex;background:rgba(255,255,255,.14);border-radius:999px;padding:2px;flex:0 0 auto}
+.segb{appearance:none;border:0;background:transparent;color:#f0e6cc;font:inherit;font-size:.7rem;letter-spacing:.05em;padding:4px 11px;border-radius:999px;white-space:nowrap;transition:background .25s,color .25s}
+.segb[aria-pressed="true"]{background:#f6eed6;color:var(--ink)}
+@media(max-width:520px){.segb{padding:4px 8px;font-size:.66rem}.bar{gap:10px;padding:9px 12px}}
 .bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
 
 /* ---------- spreads ---------- */
@@ -111,6 +119,18 @@ p{margin:0 0 1rem;font-size:1.125rem;line-height:1.65;text-wrap:pretty}
   .pin,.pin:nth-child(n){width:100%;max-width:640px;margin:0 auto;box-shadow:5px 6px 0 var(--shadow);transform:none}
   .pin::before{display:none}
 }
+
+/* the model section without its photograph: title and notes stand in a column */
+body[data-reg="m"] #hall{background:var(--parch);padding:clamp(4.5rem,11vw,8rem) 20px clamp(2.5rem,8vw,4rem)}
+body[data-reg="m"] .bleed{height:auto;overflow:visible;display:flex;flex-direction:column;gap:14px;padding:0}
+body[data-reg="m"] .bleed::after,body[data-reg="m"] .pin::before{display:none}
+body[data-reg="m"] .hall-title{position:relative;inset:auto;width:100%;max-width:640px;margin:0 auto 4px}
+body[data-reg="m"] .hall-title .t{display:block;max-width:none}
+body[data-reg="m"] .pins{position:static;display:contents}
+body[data-reg="m"] .pin,body[data-reg="m"] .pin:nth-child(n){flex:0 0 auto;width:100%;max-width:640px;margin:0 auto;box-shadow:5px 6px 0 var(--shadow);transform:none}
+/* a two-column spread whose picture belongs to the allegory reads as one column */
+body[data-reg="m"] .two.solo{grid-template-columns:minmax(0,1fr);max-width:46rem;margin-left:auto;margin-right:auto}
+#cover .pop.m .leaf{max-width:440px;margin:0 auto}
 
 /* ---------- scrollytelling ---------- */
 .scrolly{position:relative}
@@ -348,8 +368,8 @@ a.lin-node:hover b{text-decoration:underline}
 .logs{padding:18px 18px 14px}
 .logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
 .wire{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700}
-.wire .m{flex:0 0 auto;border:3px solid var(--ink);background:#fff;padding:10px 14px;font-size:.8rem;letter-spacing:.06em}
-.wire .m.q{background:#ddd;color:#6b5a48}
+.wire .mc{flex:0 0 auto;border:3px solid var(--ink);background:#fff;padding:10px 14px;font-size:.8rem;letter-spacing:.06em}
+.wire .mc.q{background:#ddd;color:#6b5a48}
 .wire .w{flex:1;border-top:3px dotted var(--ink);position:relative;height:0}
 .wire .w span{position:absolute;left:50%;top:-1.05em;transform:translateX(-50%);color:var(--blood)}
 .e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both;font-family:var(--sans)}
