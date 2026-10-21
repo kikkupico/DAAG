@@ -39,6 +39,7 @@ while True:
             "page": turn.get("page", ""),
             "section": turn.get("section", ""),
             "viewing": turn.get("viewing", ""),
+            **({"reading": turn["reading"]} if turn.get("reading") else {}),
             "text": turn.get("text", ""),
             "selected": quote[:200] + ("…" if len(quote) > 200 else ""),
         }, ensure_ascii=False), flush=True)

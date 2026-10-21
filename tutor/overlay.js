@@ -31,10 +31,16 @@
     if (text) e.textContent = text;
     return e;
   };
-  // what a range holds, without any of our own boxes that sit inside it
+  // the parts of a page a passage can belong to: the books' spreads, and the cards of a page
+  // that nests them, where the innermost is the one meant
+  const SPOTS = 'article[id], section[id], header[id], footer[id]';
+  // a page with two registers (body[data-reg]: i the allegory, m computing) shows one at a time
+  const REGISTER = { i: 'allegory', m: 'computing' };
+  const unseen = () => ({ i: ', .m', m: ', .i' })[document.body.dataset.reg] || '';
+  // what a range holds, without any of our own boxes that sit inside it, or the register not shown
   const textIn = range => {
     const copy = range.cloneContents();
-    copy.querySelectorAll(OURS + ', script, style').forEach(e => e.remove());
+    copy.querySelectorAll(OURS + ', script, style' + unseen()).forEach(e => e.remove());
     return norm(copy.textContent);
   };
   const elementOf = node => (node.nodeType === 1 ? node : node.parentElement);
@@ -482,13 +488,17 @@
   function send(text) {
     text = text.trim();
     if (!text || !listening) return;
-    // with the spread on screen, so that "here" means something when no passage is selected
+    // with the spread on screen, so that "here" means something when no passage is selected:
+    // the part the page marks as current while it is on screen, else the innermost across the line
     const line = innerHeight * 0.4;
-    const viewing = [...document.querySelectorAll('section[id], header[id], footer[id]')].find(s => {
+    const onScreen = s => { const box = s.getBoundingClientRect(); return box.bottom > 0 && box.top < innerHeight; };
+    const current = document.querySelector('[aria-current][id]');
+    const viewing = current && onScreen(current) ? current : [...document.querySelectorAll(SPOTS)].filter(s => {
       const box = s.getBoundingClientRect();
       return box.top <= line && box.bottom > line;
-    });
-    post('say', { ...(draft || {}), text, url: location.pathname, title: document.title, viewing: viewing ? viewing.id : '' });
+    }).pop();
+    post('say', { ...(draft || {}), text, url: location.pathname, title: document.title, viewing: viewing ? viewing.id : '',
+      reading: REGISTER[document.body.dataset.reg] || '' });
     input.value = '';
     setDraft(null);
     hideAsk();
@@ -623,7 +633,7 @@
       if (!panel.classList.contains('tutor-open')) setDraft(null);
       return;
     }
-    const section = start.closest('section[id], header[id], footer[id]');
+    const section = start.closest(SPOTS);
     const root = section || document.body;
     const block = elementOf(range.endContainer).closest(BLOCK);
     const before = document.createRange(), after = document.createRange();

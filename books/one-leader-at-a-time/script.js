@@ -56,7 +56,7 @@ function scrolly(root,render){
   steps.forEach(s=>so.observe(s));
 }
 
-/* ===== who is who: the setting on the left, the machine room on the right ===== */
+/* ===== who is who: the setting on the left, computing on the right ===== */
 function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
   const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
   [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}

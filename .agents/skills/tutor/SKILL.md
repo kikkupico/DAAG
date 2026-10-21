@@ -53,6 +53,13 @@ Each event looks like this:
 - `text` is what the reader typed. `selected` is the start of the passage they had selected, if
   any; `section` is the id of the spread it sits in. `viewing` is the id of the spread that was
   on their screen when they sent it, which is what "here" means when nothing is selected.
+- `reading` comes only from a page with two registers, Eighteen Books in One Scroll
+  (`books/eighteen-books-in-one-scroll`): `allegory` or `computing`, whichever the reader has
+  showing. On that page `section` and `viewing` are cards: `s-<book>` is a book (the keys are
+  those of `B` in its `script.js`, such as `s-owc` for Ordering Without Clocks), `e-<book>` the
+  change that leads to it, `w1` to `w4` the walls, `f-<name>` a thing to try by hand, and
+  `walk-<n>` a stretch of the walk between cards. Each card holds both registers, as `.i` and
+  `.m` elements; answer from the one the reader is reading.
 - A long event is cut short on its way to you. The `message` file holds all of it, with the
   whole selected passage as `quote` and the paragraph around it as `block`; read it whenever the event looks cut or the passage matters to the answer.
 
@@ -180,7 +187,8 @@ coming back when they merge in notes from another device.
   and objects, and no symbols from the paper. A proof panel speaks only in the paper's symbols.
   Cross that line only when the reader's own message asks what something stands for in the
   machines or in the paper, or what the paper itself says, and then say plainly that you are
-  stepping outside the story.
+  stepping outside the story. A reader `reading` computing is reading the machines already:
+  answer them in computing terms, and step into the story only when they ask.
 - Restate any fact you need from another book in a sentence, so the reply stands without it;
   name the book by its title, never by number, and never refer to a chapter by number.
 - Give what a paper says in your own words, with at most a short phrase quoted.

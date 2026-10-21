@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>One Change at a Time — Distributed Algorithms of Ancient Greece</title>
+<title>Eighteen Books in One Scroll — Distributed Algorithms of Ancient Greece</title>
 <meta name="description" content="All eighteen books in one long scroll across two islands: each book is the one before it with one thing changed, drawn on one round of places and messengers, with the ideas to try by hand, four walls no change gets through, and ten threads that run through the whole family.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <link rel="stylesheet" href="style.css">
@@ -14,23 +14,37 @@
 <!-- ============================================================ BAR -->
 <div class="bar" id="bar">
   <a href="../../index.html" class="home">‹ The Books</a>
-  <span class="where" id="where" aria-live="polite"><b>One Change at a Time</b></span>
+  <span class="where" id="where" aria-live="polite"><b>Eighteen Books in One Scroll</b></span>
   <div class="seg" role="group" aria-label="Which words to read">
-    <button type="button" class="segb" data-reg="i" aria-pressed="true">Islands</button>
-    <button type="button" class="segb" data-reg="m" aria-pressed="false">Machine room</button>
+    <button type="button" class="segb" data-reg="i" aria-pressed="true">Allegory</button>
+    <button type="button" class="segb" data-reg="m" aria-pressed="false">Computing</button>
   </div>
   <i class="prog" id="prog"></i>
 </div>
 
-<!-- the round stays behind the page; the walk's cards scroll over it, and every solid section covers it -->
-<div class="stage" id="stage" data-setting="ring" aria-hidden="true">
+<!-- the round stays behind the page; the walk's cards scroll over it, and every solid section covers it.
+     Each scene plays through time; the controls under it pause it and move through it -->
+<div class="stage" id="stage" data-setting="ring">
   <div class="stage-in">
-    <svg id="round" viewBox="-262 -262 524 524" preserveAspectRatio="xMidYMid meet"></svg>
+    <svg id="round" viewBox="-262 -262 524 524" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+    <div class="tctl" role="group" aria-label="Play the diagram through time">
+      <button type="button" class="tplay" data-state="again" aria-label="Play again">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path class="ic-pause" d="M5 3h3.6v14H5zM11.4 3H15v14h-3.6z"/><path class="ic-play" d="M6 3l11 7-11 7z"/><g class="ic-again"><path d="M15.6 7.2A6.4 6.4 0 1 0 16.4 11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M17.4 2.6v5.6h-5.6z"/></g></svg>
+      </button>
+      <input type="range" class="tseek" min="0" max="1000" step="1" value="1000" aria-label="Moment shown">
+    </div>
     <p class="legend">
       <span class="lg-walk"><span class="i">Spokes are places, later as they run outward · arcs are messengers · <b class="r">red</b> is the one change</span><span class="m">Spokes are processes, time outward · arcs are messages · <b class="r">red</b> is the changed assumption</span></span>
       <span class="lg-wall"><span class="i"><b class="g">Gold</b> is what one post sees, the same on both nights · <b class="r">red</b> is what differs</span><span class="m"><b class="g">Gold</b> is one process's view, the same in both runs · <b class="r">red</b> is what differs</span></span>
     </p>
   </div>
+</div>
+<!-- on phones the cards cover the stage, so the same controls float above them while a walk is on screen -->
+<div class="tctl tmini" role="group" aria-label="Play the diagram through time">
+  <button type="button" class="tplay" data-state="again" aria-label="Play again">
+    <svg viewBox="0 0 20 20" aria-hidden="true"><path class="ic-pause" d="M5 3h3.6v14H5zM11.4 3H15v14h-3.6z"/><path class="ic-play" d="M6 3l11 7-11 7z"/><g class="ic-again"><path d="M15.6 7.2A6.4 6.4 0 1 0 16.4 11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M17.4 2.6v5.6h-5.6z"/></g></svg>
+  </button>
+  <input type="range" class="tseek" min="0" max="1000" step="1" value="1000" aria-label="Moment shown">
 </div>
 
 <main id="main">
@@ -39,7 +53,7 @@
 <header class="hero solid" id="top">
   <canvas id="heroCanvas" aria-hidden="true"></canvas>
   <div class="hero-in">
-    <p class="eyebrow">Distributed Algorithms of Ancient Greece</p>
+    <p class="eyebrow">Eighteen Books in One Scroll</p>
     <h1><span class="h1a">One change</span> <span class="h1b">at a time.</span></h1>
     <p class="hero-sub i">Eighteen books, two islands. Each book in the series grows out of another by changing one thing: <em>a wind that drops</em>, <em>a coin in each tent</em>, <em>a holder who may lie</em>.</p>
     <p class="hero-sub m">Eighteen books, one family of papers. Each paper grows out of another by changing one assumption or one demand: <em>partial synchrony</em>, <em>randomization</em>, <em>Byzantine faults</em>.</p>
@@ -82,7 +96,7 @@
   </div>
 </section>
 
-<section class="walk" data-setting="ring" data-label="The ring road">
+<section class="walk" id="walk-1" data-setting="ring" data-label="The ring road">
   <article class="card intro" id="s-start" data-scene="start">
     <p class="kicker">How to read the round</p>
     <h3 class="punch"><span class="i">Each spoke is a place. Each arc, a messenger.</span><span class="m">Each spoke is a process. Each arc, a message.</span></h3>
@@ -91,12 +105,19 @@
   </article>
 
   <article class="card book" id="s-owc" data-scene="owc" data-book="owc">
-    <p class="kicker"><span class="i">Where the walk starts</span><span class="m">Lamport 1978 · Fidge 1988 · Mattern 1988</span></p>
     <h3 class="punch"><span class="i">A cause always carries the smaller number.</span><span class="m">If a → b, then C(a) &lt; C(b).</span></h3>
     <h4 class="title">Ordering Without Clocks</h4>
     <p class="i">The three houses share no hour and trade only by slip. Each keeps <b>a tally that rises with every entry and jumps past any number a slip brings</b>. With ties going to the lower house, all three keep one order, enough to share one storehouse. A column of three tallies, one per house, tells cause from coincidence. Neither sees news a goatherd carries over the mountain.</p>
     <p class="m">With no shared clock, <b>Lamport clocks make a → b imply C(a) &lt; C(b)</b>, and breaking ties by process number gives one total order, enough for mutual exclusion without a coordinator. Vector clocks capture causality exactly: a → b if and only if V(a) &lt; V(b). Neither sees causality that travels outside the messages.</p>
     <a class="read" href="../ordering-without-clocks/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The papers</div>
+      <ul>
+        <li><a href="https://lamport.azurewebsites.net/pubs/time-clocks.pdf">Time, Clocks, and the Ordering of Events in a Distributed System</a><span class="by">Lamport · 1978</span></li>
+        <li><a href="https://web.archive.org/web/20190917212618id_/https://zoo.cs.yale.edu/classes/cs426/2012/lab/bib/fidge88timestamps.pdf">Timestamps in Message-Passing Systems That Preserve the Partial Ordering</a><span class="by">Fidge · 1988</span></li>
+        <li><a href="https://www.vs.inf.ethz.ch/publ/papers/VirtTimeGlobStates.pdf">Virtual Time and Global States of Distributed Systems</a><span class="by">Mattern · 1988</span></li>
+      </ul>
+    </div>
   </article>
 </section>
 
@@ -118,19 +139,24 @@
   </div>
 </section>
 
-<section class="walk" data-setting="ring" data-label="The ring road">
+<section class="walk" id="walk-2" data-setting="ring" data-label="The ring road">
   <article class="card eq" id="e-mc" data-scene="owc">
     <p class="eq-from">Ordering Without Clocks, <span>with one change:</span></p>
     <p class="eq-change"><span class="i">first by the sun, not by the slips</span><span class="m">real-time order instead of causal order</span></p>
     <p class="eq-to">→ Many Copies, Acting as One</p>
   </article>
   <article class="card book" id="s-mc" data-scene="mc" data-book="mc">
-    <p class="kicker"><span class="i">The ring road</span><span class="m">Herlihy &amp; Wing 1990</span></p>
     <h3 class="punch"><span class="i">As if one steward kept one board.</span><span class="m">One instant inside every span.</span></h3>
     <h4 class="title">Many Copies, Acting as One</h4>
     <p class="i">The houses now ask that a request confirmed before another was even sent be filled first: <b>first by the sun, which no tally can see</b>. The rule of the board asks that every request and every serving seem to take effect at one moment inside its span; then nobody can tell one board from three copies. The rule can be checked board by board, and it never makes one house wait on another's business.</p>
     <p class="m">Linearizability: <b>every operation appears to take effect at one instant between its invocation and its response</b>, so real-time order is respected and no client can tell one copy from many. It is local, since a system of linearizable objects is linearizable, and nonblocking; sequential consistency is not local, and real-time and causal order are incomparable.</p>
     <a class="read" href="../many-copies-acting-as-one/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The paper</div>
+      <ul>
+        <li><a href="https://cs.brown.edu/~mph/HerlihyW90/p463-herlihy.pdf">Linearizability: A Correctness Condition for Concurrent Objects</a><span class="by">Herlihy &amp; Wing · 1990</span></li>
+      </ul>
+    </div>
   </article>
 
   <article class="card eq" id="e-ts" data-scene="owc">
@@ -139,12 +165,17 @@
     <p class="eq-to">→ Taking Stock Without Stopping</p>
   </article>
   <article class="card book" id="s-ts" data-scene="ts" data-book="ts">
-    <p class="kicker"><span class="i">The ring road</span><span class="m">Chandy &amp; Lamport 1985</span></p>
     <h3 class="punch"><span class="i">A morning nobody lived.</span><span class="m">A consistent cut, never an instant.</span></h3>
     <h4 class="title">Taking Stock Without Stopping</h4>
     <p class="i">To learn whether bandits took a cart, the houses count every jar, in the storehouses and on the tracks, without halting trade. A house counts its storehouse and sends <b>a messenger in a red sash</b> down each track before any more carts; a house that meets a sash counts at once if it has not; each logs the carts arriving on a track until that track's sash comes. The total describes a morning nobody lived, yet one the island could have passed through, so whatever stays true once true, such as a deficit, can be read from it.</p>
     <p class="m">A process records its state and sends <b>a marker on every outgoing FIFO channel</b> before any other message; a process receiving its first marker records at once; each records an incoming channel until that channel's marker arrives. The snapshot is a consistent cut, perhaps never an instantaneous state but reachable from the start and leading to the end, so it decides stable properties such as deadlock or termination.</p>
     <a class="read" href="../taking-stock-without-stopping/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The paper</div>
+      <ul>
+        <li><a href="https://lamport.azurewebsites.net/pubs/chandy.pdf">Distributed Snapshots: Determining Global States of Distributed Systems</a><span class="by">Chandy &amp; Lamport · 1985</span></li>
+      </ul>
+    </div>
   </article>
 </section>
 
@@ -161,19 +192,24 @@
   </div>
 </section>
 
-<section class="walk dark" data-setting="foot" data-label="The foot of Mount Phyle">
+<section class="walk dark" id="walk-3" data-setting="foot" data-label="The foot of Mount Phyle">
   <article class="card eq" id="e-flp" data-scene="owc">
     <p class="eq-from">Ordering Without Clocks, <span>with one change:</span></p>
     <p class="eq-change"><span class="i">a man may fall silent</span><span class="m">one process may crash</span></p>
     <p class="eq-to">→ The Limits of Agreement</p>
   </article>
   <article class="card book" id="s-flp" data-scene="flp" data-book="flp">
-    <p class="kicker"><span class="i">The foot of Mount Phyle</span><span class="m">Fischer, Lynch &amp; Paterson 1985</span></p>
     <h3 class="punch big"><span class="i">A dead man looks exactly like a slow bird.</span><span class="m">A crashed process looks exactly like a slow one.</span></h3>
     <h4 class="title">The Limits of Agreement</h4>
     <p class="i">The ravens always arrive but may take any time, and one man may die without a sound. So <b>no plan may wait for all four</b>, and then the birds can always be timed to keep the night open. No fixed plan can be sure that anyone ever commits, even on a night when nobody dies.</p>
     <p class="m">In an asynchronous system where one process may crash, <b>no deterministic consensus protocol guarantees termination</b>. Some initial configuration is bivalent, and any pending message can be delayed so that its delivery keeps the system bivalent. Safety is never violated; termination is what is lost, even when none actually crashes.</p>
     <a class="read" href="../the-limits-of-agreement/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The paper</div>
+      <ul>
+        <li><a href="https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf">Impossibility of Distributed Consensus with One Faulty Process</a><span class="by">Fischer, Lynch &amp; Paterson · 1985</span></li>
+      </ul>
+    </div>
   </article>
 
   <article class="card wall" id="w1" data-scene="w1">
@@ -190,12 +226,17 @@
     <p class="eq-to">→ Agreeing When Messages Run Late</p>
   </article>
   <article class="card book" id="s-dls" data-scene="dls" data-book="dls">
-    <p class="kicker"><span class="i">The foot of Mount Phyle</span><span class="m">Dwork, Lynch &amp; Stockmeyer 1988</span></p>
     <h3 class="punch"><span class="i">Safe in any wind. Done once it drops.</span><span class="m">Safe always. Live after GST.</span></h3>
     <h4 class="title">Agreeing When Messages Run Late</h4>
     <p class="i">On windy nights a raven may sit in the pines for any time, but <b>the wind always drops, at a moment no one sees</b>, and a bird let go in still air arrives within a glass. Turns pass from tent to tent: the turn's owner calls an answer three men can accept, and commits on two pledges, which lock the other answer out.</p>
     <p class="m">Partial synchrony: <b>delay is unbounded until an unknown global stabilization time and bounded after it</b>. A rotating coordinator proposes a value acceptable to n − t processes and decides on t + 1 acknowledgments; locks keep agreement under any delay, and every correct process decides soon after stabilization.</p>
     <a class="read" href="../agreeing-when-messages-run-late/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The paper</div>
+      <ul>
+        <li><a href="https://groups.csail.mit.edu/tds/papers/Lynch/jacm88.pdf">Consensus in the Presence of Partial Synchrony</a><span class="by">Dwork, Lynch &amp; Stockmeyer · 1988</span></li>
+      </ul>
+    </div>
   </article>
 
   <article class="card eq" id="e-bo" data-scene="flp">
@@ -204,12 +245,17 @@
     <p class="eq-to">→ Agreeing by Chance</p>
   </article>
   <article class="card book" id="s-bo" data-scene="bo" data-book="bo">
-    <p class="kicker"><span class="i">The foot of Mount Phyle</span><span class="m">Ben-Or 1983</span></p>
     <h3 class="punch"><span class="i">Sooner or later, the coins land alike.</span><span class="m">Termination with probability 1.</span></h3>
     <h4 class="title">Agreeing by Chance</h4>
     <p class="i">Each man may now toss his own silver coin: owl for hold, goddess for attack. In numbered rounds he reports what he favours, then sends a second bird, sure of an answer only if three reports agree; on two sure birds he settles, on one he follows it, on none he tosses. <b>Two sure answers never meet in one round</b>, so the coins never divide the camp.</p>
     <p class="m">Each round, a process broadcasts its preference and waits for n − t reports; it proposes a value held by a strict majority, decides on t + 1 proposals, adopts a value on one, and flips a local coin on none. <b>The adversary schedules every message but cannot foresee a coin.</b></p>
     <a class="read" href="../agreeing-by-chance/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The paper</div>
+      <ul>
+        <li><a href="https://homepage.cs.uiowa.edu/~ghosh/BenOr.pdf">Another Advantage of Free Choice: Completely Asynchronous Agreement Protocols</a><span class="by">Ben-Or · 1983</span></li>
+      </ul>
+    </div>
   </article>
 </section>
 
@@ -234,19 +280,24 @@
   </div>
 </section>
 
-<section class="walk dark" data-setting="foot" data-label="The foot of Mount Phyle">
+<section class="walk dark" id="walk-4" data-setting="foot" data-label="The foot of Mount Phyle">
   <article class="card eq" id="e-ct" data-scene="dls">
     <p class="eq-from">Agreeing When Messages Run Late, <span>with one change:</span></p>
     <p class="eq-change"><span class="i">a slate in place of the wind</span><span class="m">a failure detector in place of a timing assumption</span></p>
     <p class="eq-to">→ Telling the Dead from the Slow</p>
   </article>
   <article class="card book" id="s-ct" data-scene="ct" data-book="ct">
-    <p class="kicker"><span class="i">The foot of Mount Phyle</span><span class="m">Chandra &amp; Toueg 1996</span></p>
     <h3 class="punch"><span class="i">Bad slates can stall the camp, never split it.</span><span class="m">Safe under any detector.</span></h3>
     <h4 class="title">Telling the Dead from the Slow</h4>
     <p class="i">Each tent keeps a slate, chalking men it thinks dead and rubbing a man out when his bird comes. Slates are often wrong; they are judged by how they chalk the dead and how they spare the living. <b>If one living man is never chalked, the camp agrees however many die</b>; if that holds only in the end, owners take turns as on windy nights, and more than half must live.</p>
     <p class="m">Failure detectors are classified by completeness and accuracy. <b>With S, consensus tolerates any number of crashes</b>; with ◇S, a rotating coordinator solves it with a correct majority, and stays safe even if the detector misbehaves for ever. ◇W is the weakest detector that solves consensus, and consensus is equivalent to atomic broadcast.</p>
     <a class="read" href="../telling-the-dead-from-the-slow/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The paper</div>
+      <ul>
+        <li><a href="https://www.cs.utexas.edu/~lorenzo/corsi/cs380d/papers/p225-chandra.pdf">Unreliable Failure Detectors for Reliable Distributed Systems</a><span class="by">Chandra &amp; Toueg · 1996</span></li>
+      </ul>
+    </div>
   </article>
 
   <article class="card eq" id="e-cap" data-scene="mc">
@@ -255,12 +306,18 @@
     <p class="eq-to">→ Answering While Cut Off</p>
   </article>
   <article class="card book" id="s-cap" data-scene="cap" data-book="cap">
-    <p class="kicker"><span class="i">The foot of Mount Phyle</span><span class="m">Brewer 2000 · Gilbert &amp; Lynch 2002</span></p>
     <h3 class="punch"><span class="i">Answer, or answer as one.</span><span class="m">Available, or linearizable.</span></h3>
     <h4 class="title">Answering While Cut Off</h4>
     <p class="i">The four tents now keep one standing plan that any man may move or ask about, and they would answer as one, by the rule of the board; but hawks may take any bird, cutting a tent off. <b>A cut-off tent that must answer cannot also answer as one</b>, for it cannot tell a night when the plan was moved from one when it was not.</p>
     <p class="m"><b>A read/write register under message loss cannot be both linearizable and available.</b> A single primary gives consistency without availability; answering locally gives availability without consistency. With known delay bounds, timeouts give consistency in every loss-free run; in an asynchronous network even loss-free runs can be stale.</p>
     <a class="read" href="../answering-while-cut-off/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The papers</div>
+      <ul>
+        <li><a href="https://people.eecs.berkeley.edu/~brewer/cs262b-2004/PODC-keynote.pdf">Towards Robust Distributed Systems</a><span class="by">Brewer · 2000</span></li>
+        <li><a href="https://www.comp.nus.edu.sg/~gilbert/pubs/BrewersConjecture-SigAct.pdf">Brewer’s Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services</a><span class="by">Gilbert &amp; Lynch · 2002</span></li>
+      </ul>
+    </div>
   </article>
 </section>
 
@@ -307,19 +364,25 @@
   </div>
 </section>
 
-<section class="walk" data-setting="chamber" data-label="The Chamber">
+<section class="walk" id="walk-5" data-setting="chamber" data-label="The Chamber">
   <article class="card eq" id="e-ptp" data-scene="dls">
     <p class="eq-from">Agreeing When Messages Run Late, <span>with one change:</span></p>
     <p class="eq-change"><span class="i">members who come and go</span><span class="m">crash and recovery</span></p>
     <p class="eq-to">→ The Part-Time Parliament</p>
   </article>
   <article class="card book" id="s-ptp" data-scene="ptp" data-book="ptp">
-    <p class="kicker"><span class="i">The Chamber, on Paxos</span><span class="m">Lamport 1998 · Lamport 2001</span></p>
     <h3 class="punch big"><span class="i">Any two majorities share a legislator.</span><span class="m">Any two majorities intersect.</span></h3>
     <h4 class="title">The Part-Time Parliament</h4>
     <p class="i">Legislators wander in and out, messengers may be slow, lost or twice delivered, and every promise goes into a scroll in indelible ink. Each numbered ballot first <b>asks a majority for their latest votes</b> and a promise to ignore lower ballots, then <b>proposes the decree of the latest vote among them</b>. One president runs ballots for every decree number at once; two presidents only slow things down.</p>
     <p class="m">Paxos: numbered ballots with majority quorums. <b>Phase 1 (prepare and promise) learns the highest-numbered accepted value; phase 2 (accept) proposes it.</b> It is safe under any delay, loss, duplication, crash or recovery, and live when one leader and a majority stay up long enough. Multi-Paxos runs phase 1 once for every open slot.</p>
     <a class="read" href="../the-part-time-parliament/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The papers</div>
+      <ul>
+        <li><a href="https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf">The Part-Time Parliament</a><span class="by">Lamport · 1998</span></li>
+        <li><a href="https://lamport.azurewebsites.net/pubs/paxos-simple.pdf">Paxos Made Simple</a><span class="by">Lamport · 2001</span></li>
+      </ul>
+    </div>
   </article>
 </section>
 
@@ -354,19 +417,24 @@
   </div>
 </section>
 
-<section class="walk" data-setting="tholos" data-label="The Tholos of Schedia">
+<section class="walk" id="walk-6" data-setting="tholos" data-label="The Tholos of Schedia">
   <article class="card eq" id="e-vr" data-scene="ptp">
     <p class="eq-from">The Part-Time Parliament, <span>with one change:</span></p>
     <p class="eq-change"><span class="i">a podium</span><span class="m">a primary</span></p>
     <p class="eq-to">→ One Leader at a Time</p>
   </article>
   <article class="card book" id="s-vr" data-scene="vr" data-book="vr">
-    <p class="kicker"><span class="i">The Tholos of Schedia, on Paxos</span><span class="m">Oki &amp; Liskov 1988</span></p>
     <h3 class="punch"><span class="i">The latest board and line takes the podium.</span><span class="m">The highest viewstamp becomes primary.</span></h3>
     <h4 class="title">One Leader at a Time</h4>
     <p class="i">Only the legislator at the podium writes the law, and <b>a line passes once the holder and two of the four benches hold it</b>. When the podium falls silent, a caller raises a higher board, and whoever answers with the latest board-and-line takes the podium and sends out the whole law. A holder left on the porch can write, never pass. Wax is fast but forgets: if most go home at once, the council can stop for good, never wrong.</p>
     <p class="m">Viewstamped Replication: a primary orders operations and <b>commits once a majority holds them</b>. On a view change, the member of a responding majority with the highest viewstamp becomes primary and sends its whole state; a deposed primary cannot commit. A simultaneous crash of a majority halts the group rather than losing a commit.</p>
     <a class="read" href="../one-leader-at-a-time/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The paper</div>
+      <ul>
+        <li><a href="https://www.cs.princeton.edu/courses/archive/fall09/cos518/papers/viewstamped.pdf">Viewstamped Replication: A New Primary Copy Method to Support Highly-Available Distributed Systems</a><span class="by">Oki &amp; Liskov · 1988</span></li>
+      </ul>
+    </div>
   </article>
 </section>
 
@@ -383,19 +451,25 @@
   </div>
 </section>
 
-<section class="walk dark" data-setting="crown" data-label="The crown of Mount Phyle">
+<section class="walk dark" id="walk-7" data-setting="crown" data-label="The crown of Mount Phyle">
   <article class="card eq" id="e-bgp" data-scene="flp">
     <p class="eq-from">The Limits of Agreement, <span>with one change:</span></p>
     <p class="eq-change"><span class="i">liars in place of the dead</span><span class="m">Byzantine faults in place of crashes</span></p>
     <p class="eq-to">→ Agreeing Among Liars</p>
   </article>
   <article class="card book" id="s-bgp" data-scene="bgp" data-book="bgp">
-    <p class="kicker"><span class="i">The crown of Mount Phyle</span><span class="m">Lamport, Shostak &amp; Pease 1982 · Pease, Shostak &amp; Lamport 1980</span></p>
     <h3 class="punch big"><span class="i">Three cannot bear one liar. Four can.</span><span class="m">n ≥ 3m + 1.</span></h3>
     <h4 class="title">Agreeing Among Liars</h4>
     <p class="i">On the crown, rats run within a sandglass, but a bandit may lie, telling one post one thing and another the opposite. <b>An honest guard cannot tell a lying chief from a lying peer</b>, so three cannot bear one liar; four can, and seven can bear two, by relaying every order and taking the greater count. With seal rings no one can forge, the number of liars stops mattering. Nobody need ever learn who lied.</p>
     <p class="m">In synchronous rounds with oral messages, <b>Byzantine agreement needs n ≥ 3m + 1</b>, and OM(m) reaches it in m + 1 rounds of relaying and majority vote. With unforgeable signatures, SM(m) works for any number of traitors. Both rely on detecting a missing message by the end of a round, and neither needs to identify a traitor.</p>
     <a class="read" href="../agreeing-among-liars/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The papers</div>
+      <ul>
+        <li><a href="https://lamport.azurewebsites.net/pubs/reaching.pdf">Reaching Agreement in the Presence of Faults</a><span class="by">Pease, Shostak &amp; Lamport · 1980</span></li>
+        <li><a href="https://lamport.azurewebsites.net/pubs/byz.pdf">The Byzantine Generals Problem</a><span class="by">Lamport, Shostak &amp; Pease · 1982</span></li>
+      </ul>
+    </div>
   </article>
 
   <article class="card wall" id="w2" data-scene="w2">
@@ -427,19 +501,24 @@
   </div>
 </section>
 
-<section class="walk dark" data-setting="crown" data-label="The crown of Mount Phyle">
+<section class="walk dark" id="walk-8" data-setting="crown" data-label="The crown of Mount Phyle">
   <article class="card eq" id="e-pbft" data-scene="vr">
     <p class="eq-from">One Leader at a Time, <span>with one change:</span></p>
     <p class="eq-change"><span class="i">the holder may lie</span><span class="m">a Byzantine primary</span></p>
     <p class="eq-to">→ Keeping Order Among Liars</p>
   </article>
   <article class="card book" id="s-pbft" data-scene="pbft" data-book="pbft">
-    <p class="kicker"><span class="i">The crown of Mount Phyle</span><span class="m">Castro &amp; Liskov 1999</span></p>
     <h3 class="punch"><span class="i">Any two groups of three share an honest man.</span><span class="m">Any two quorums of 2f + 1 share a correct replica.</span></h3>
     <h4 class="title">Keeping Order Among Liars</h4>
     <p class="i">On windy nights now, the four keep one loot scroll, a copy at each post, and the registrar who numbers its entries may lie. <b>An entry stands only after two echoes, each gathering three seals of four</b>; any two groups of three share an honest man, so no number can hold two entries. A registrar who stalls loses the job to the next post, who must keep every entry readied before.</p>
     <p class="m">PBFT: 3f + 1 replicas; the primary assigns sequence numbers; <b>pre-prepare, prepare and commit each need 2f + 1 matching signed messages</b>, and any two such quorums share a correct replica. A view change carries prepared certificates, so committed requests survive; doubling timeouts give liveness once delays stop growing.</p>
     <a class="read" href="../keeping-order-among-liars/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The paper</div>
+      <ul>
+        <li><a href="https://css.csail.mit.edu/6.824/2014/papers/castro-practicalbft.pdf">Practical Byzantine Fault Tolerance</a><span class="by">Castro &amp; Liskov · 1999</span></li>
+      </ul>
+    </div>
   </article>
 
   <article class="card eq" id="e-hs" data-scene="pbft">
@@ -448,12 +527,17 @@
     <p class="eq-to">→ Changing Leaders Among Liars</p>
   </article>
   <article class="card book" id="s-hs" data-scene="hs" data-book="hs">
-    <p class="kicker"><span class="i">The crown of Mount Phyle</span><span class="m">Yin, Malkhi, Reiter, Gueta &amp; Abraham 2019</span></p>
     <h3 class="punch"><span class="i">A change of hands costs no more than an entry.</span><span class="m">A linear, responsive view change.</span></h3>
     <h4 class="title">Changing Leaders Among Liars</h4>
     <p class="i">Instead of every bandit writing to every other, <b>each sends his sealed vote to the registrar, who ties three into one bundle</b>. A third stage of bundles means any man's lock is backed by two honest men holding its first bundle, so a new registrar learns of it from the first three replies and goes at the rats' pace, not a sandglass's. The job can pass at every entry.</p>
     <p class="m">HotStuff: <b>replicas vote only to the leader, which aggregates 2f + 1 votes into a quorum certificate</b>, so each phase is linear. A third phase makes the view change linear and optimistically responsive: a new leader learns the lock from any n − f replies. Chained HotStuff pipelines the phases and rotates the leader every block.</p>
     <a class="read" href="../changing-leaders-among-liars/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The paper</div>
+      <ul>
+        <li><a href="https://arxiv.org/pdf/1803.05069">HotStuff: BFT Consensus with Linearity and Responsiveness</a><span class="by">Yin, Malkhi, Reiter, Gueta &amp; Abraham · 2019</span></li>
+      </ul>
+    </div>
   </article>
 </section>
 
@@ -495,19 +579,24 @@
   </div>
 </section>
 
-<section class="walk" data-setting="coast" data-label="The scholars' coast">
+<section class="walk" id="walk-9" data-setting="coast" data-label="The scholars' coast">
   <article class="card eq" id="e-gos" data-scene="cap">
     <p class="eq-from">Answering While Cut Off, <span>with one change:</span></p>
     <p class="eq-change"><span class="i">copies may differ for a while</span><span class="m">eventual consistency</span></p>
     <p class="eq-to">→ Spreading by Word of Mouth</p>
   </article>
   <article class="card book" id="s-gos" data-scene="gos" data-book="gos">
-    <p class="kicker"><span class="i">The scholars' coast, on Paxos</span><span class="m">Demers et al. 1987</span></p>
     <h3 class="punch"><span class="i">Rumour is quick. The festival is thorough.</span><span class="m">Rumor is fast; anti-entropy is complete.</span></h3>
     <h4 class="title">Spreading by Word of Mouth</h4>
     <p class="i">Libraries answer from their own shelves and agree only in the end; of two editions, the larger tally wins. <b>Scholars in the stoa pass fresh news on until most of those they meet already know it</b>, which leaves a few unheard; at the festival, copyists drawn by lot compare whole collections and catch the rest. A withdrawal must travel as a notice, or an old copy brings the work back.</p>
     <p class="m">Epidemic replication with last-writer-wins timestamps. <b>Rumor mongering is fast and cheap but leaves a residue of about e<sup>−m</sup> sites</b> for m messages per site; anti-entropy, pairwise reconciliation with random partners, reaches every site. Deletions spread as death certificates.</p>
     <a class="read" href="../spreading-by-word-of-mouth/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The paper</div>
+      <ul>
+        <li><a href="http://bitsavers.org/pdf/xerox/parc/techReports/CSL-89-1_Epidemic_Algorithms_for_Replicated_Database_Maintenance.pdf">Epidemic Algorithms for Replicated Database Maintenance</a><span class="by">Demers et al. · 1987</span></li>
+      </ul>
+    </div>
   </article>
 </section>
 
@@ -531,19 +620,24 @@
   </div>
 </section>
 
-<section class="walk" data-setting="coast" data-label="The scholars' coast">
+<section class="walk" id="walk-10" data-setting="coast" data-label="The scholars' coast">
   <article class="card eq" id="e-pbs" data-scene="gos">
     <p class="eq-from">Spreading by Word of Mouth, <span>with one change:</span></p>
     <p class="eq-change"><span class="i">ask only some of the copies</span><span class="m">partial quorums</span></p>
     <p class="eq-to">→ Probably Up to Date</p>
   </article>
   <article class="card book" id="s-pbs" data-scene="pbs" data-book="pbs">
-    <p class="kicker"><span class="i">The scholars' coast, on Paxos</span><span class="m">Bailis et al. 2012</span></p>
     <h3 class="punch"><span class="i">The odds of an old copy fall with every moment.</span><span class="m">Staleness, in probability.</span></h3>
     <h4 class="title">Probably Up to Date</h4>
     <p class="i">A work lives at three home libraries. The writer announces an edition once some of them hold it, and a reader takes the newest of the first few replies. <b>If the two counts add to more than three, the two groups must share a library</b>; many choose one and one, for speed. The odds of an old copy fall with every edition the reader will accept and every moment after the announcement.</p>
     <p class="m">With write quorum W and read quorum R over N replicas, <b>R + W &gt; N guarantees intersection</b>, while partial quorums (R + W ≤ N) may read stale data. PBS gives the odds: within k versions, staleness falls as p<sup>k</sup>; in time, t-visibility comes from the WARS latency model by Monte Carlo.</p>
     <a class="read" href="../probably-up-to-date/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The paper</div>
+      <ul>
+        <li><a href="http://vldb.org/pvldb/vol5/p776_peterbailis_vldb2012.pdf">Probabilistically Bounded Staleness for Practical Partial Quorums</a><span class="by">Bailis et al. · 2012</span></li>
+      </ul>
+    </div>
   </article>
 </section>
 
@@ -566,19 +660,25 @@
   </div>
 </section>
 
-<section class="walk" data-setting="coast" data-label="The scholars' coast">
+<section class="walk" id="walk-11" data-setting="coast" data-label="The scholars' coast">
   <article class="card eq" id="e-crdt" data-scene="gos">
     <p class="eq-from">Spreading by Word of Mouth, <span>with one change:</span></p>
     <p class="eq-change"><span class="i">merge instead of keeping the later</span><span class="m">merge by join instead of last writer wins</span></p>
     <p class="eq-to">→ Changes That Never Clash</p>
   </article>
   <article class="card book" id="s-crdt" data-scene="crdt" data-book="crdt">
-    <p class="kicker"><span class="i">The far terraces, on Paxos</span><span class="m">Shapiro, Preguiça, Baquero &amp; Zawirski 2011</span></p>
     <h3 class="punch"><span class="i">Any order. Any number of times. Always agree.</span><span class="m">Commutative, associative, idempotent.</span></h3>
     <h4 class="title">Changes That Never Clash</h4>
     <p class="i">Scribes count copies in pebbles, one column per terrace, each written only by its own scribe. <b>Merging two tables keeps the larger pile in each column</b>, so tables can meet in any order, any number of times, and always agree. Losses go in black pebbles; a struck title loses only the tags its striker saw. No table alone can keep a count from falling below zero.</p>
     <p class="m">CRDTs reach strong eventual consistency without coordination. <b>State-based types merge by least upper bound</b>, which is commutative, associative and idempotent; operation-based types need commuting operations delivered exactly once in causal order. Global invariants, such as a count that never drops below zero, still need coordination.</p>
     <a class="read" href="../changes-that-never-clash/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The papers</div>
+      <ul>
+        <li><a href="https://www.cs.tufts.edu/~nr/cs257/archive/marc-shapiro/CRDTs_SSS-2011.pdf">Conflict-Free Replicated Data Types</a><span class="by">Shapiro, Preguiça, Baquero &amp; Zawirski · 2011</span></li>
+        <li><a href="https://www.csa.iisc.ac.in/~raghavan/CleanedPods2021/crdt-shapiro-2011-techreport.pdf">A Comprehensive Study of Convergent and Commutative Replicated Data Types</a><span class="by">Shapiro, Preguiça, Baquero &amp; Zawirski · 2011</span></li>
+      </ul>
+    </div>
   </article>
 </section>
 
@@ -598,19 +698,24 @@
   </div>
 </section>
 
-<section class="walk" data-setting="coast" data-label="The scholars' coast">
+<section class="walk" id="walk-12" data-setting="coast" data-label="The scholars' coast">
   <article class="card eq" id="e-hat" data-scene="cap">
     <p class="eq-from">Answering While Cut Off, <span>with one change:</span></p>
     <p class="eq-change"><span class="i">whole visits, while cut off</span><span class="m">transactions under partition</span></p>
     <p class="eq-to">→ What You Can Promise Alone</p>
   </article>
   <article class="card book" id="s-hat" data-scene="hat" data-book="hat">
-    <p class="kicker"><span class="i">The reading rooms, on Paxos</span><span class="m">Bailis et al. 2014</span></p>
     <h3 class="punch"><span class="i">What a librarian can promise alone.</span><span class="m">What survives a partition.</span></h3>
     <h4 class="title">What You Can Promise Alone</h4>
     <p class="i">A librarian cut off from every other library must still finish each visit. Alone, a librarian can hide unfinished corrections, show a visit's corrections all or none, and hold a reply until its letter arrives; if a reader keeps to one library, the reader also sees their own corrections. <b>No librarian alone can stop two readers taking the last copy, or promise the newest edition.</b></p>
     <p class="m">Highly available transactions: read committed, monotonic atomic view, cut isolation, monotonic reads and writes-follow-reads are achievable under partition; read-your-writes, PRAM and causal consistency need sticky clients; <b>preventing lost update or write skew, and so snapshot isolation and serializability, is impossible</b>, as is any recency bound.</p>
     <a class="read" href="../what-you-can-promise-alone/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The paper</div>
+      <ul>
+        <li><a href="http://www.vldb.org/pvldb/vol7/p181-bailis.pdf">Highly Available Transactions: Virtues and Limitations</a><span class="by">Bailis et al. · 2014</span></li>
+      </ul>
+    </div>
   </article>
 </section>
 
@@ -630,7 +735,7 @@
   </div>
 </section>
 
-<section class="walk" data-setting="coast" data-label="The scholars' coast">
+<section class="walk" id="walk-13" data-setting="coast" data-label="The scholars' coast">
   <article class="card wall" id="w3" data-scene="w3">
     <p class="kicker">The third wall</p>
     <h3 class="punch"><span class="i">Answer, or be right.</span><span class="m">CAP.</span></h3>
@@ -653,19 +758,25 @@
   </div>
 </section>
 
-<section class="walk" data-setting="hall" data-label="The hall of two doors">
+<section class="walk" id="walk-14" data-setting="hall" data-label="The hall of two doors">
   <article class="card eq" id="e-calm" data-scene="crdt">
     <p class="eq-from">Changes That Never Clash, <span>with one change:</span></p>
     <p class="eq-change"><span class="i">from data that only grows to questions that only grow</span><span class="m">from monotone data to monotone programs</span></p>
     <p class="eq-to">→ Knowing When to Wait</p>
   </article>
   <article class="card book" id="s-calm" data-scene="calm" data-book="calm">
-    <p class="kicker"><span class="i">The hall of two doors, on Paxos</span><span class="m">Hellerstein 2010 · Ameloot, Neven &amp; Van den Bussche 2011</span></p>
     <h3 class="punch big"><span class="i">Some questions only grow.</span><span class="m">Monotone means coordination-free.</span></h3>
     <h4 class="title">Knowing When to Wait</h4>
     <p class="i">A question that only grows, such as whether any copy has been made, <b>can be answered as news comes in and is never taken back</b>. One that rests on an absence, such as whether these are all the copies, must hear from everyone, which a librarian with no roster never can. So the hall sends each question out by the door its shape decides: south to the coast, or north to the assemblies.</p>
     <p class="m">CALM: <b>a program has a consistent, coordination-free distributed implementation if and only if it is monotone</b>, equivalently if it can be computed without knowing the membership. Deadlock detection is monotone; garbage collection is not. A non-monotone step can be isolated and sealed with a manifest, moved off the critical path, or compensated afterwards.</p>
     <a class="read" href="../knowing-when-to-wait/index.html">Read the book ›</a>
+    <div class="papers">
+      <div class="papers-k">The papers</div>
+      <ul>
+        <li><a href="https://dsf.berkeley.edu/papers/sigrec10-declimperative.pdf">The Declarative Imperative: Experiences and Conjectures in Distributed Logic</a><span class="by">Hellerstein · 2010</span></li>
+        <li><a href="https://arxiv.org/pdf/1012.2858">Relational Transducers for Declarative Networking</a><span class="by">Ameloot, Neven &amp; Van den Bussche · 2011</span></li>
+      </ul>
+    </div>
   </article>
 </section>
 
@@ -690,7 +801,7 @@
   </div>
 </section>
 
-<section class="walk" data-setting="hall" data-label="The hall of two doors">
+<section class="walk" id="walk-15" data-setting="hall" data-label="The hall of two doors">
   <article class="card wall" id="w4" data-scene="w4">
     <p class="kicker">The fourth wall</p>
     <h3 class="punch"><span class="i">An absence needs everyone.</span><span class="m">CALM.</span></h3>
@@ -896,17 +1007,12 @@
 
 <footer class="foot solid">
   <div class="f-in">
-    <p class="kicker">Other ways through the series</p>
+    <p class="kicker">Distributed Algorithms of Ancient Greece</p>
     <nav>
-      <a href="../one-change-apart/index.html">One Change Apart</a>
-      <a href="../birds-eye-view/index.html">A Bird's-Eye View</a>
-      <a href="../one-sentence-unfolded/index.html">One Sentence, Unfolded</a>
-      <a href="../one-table-eighteen-books/index.html">One Table, Eighteen Books</a>
-      <a href="../a-round-of-your-own/index.html">A Round of Your Own</a>
-      <a href="../against-the-sandglass/index.html">Against the Sandglass</a>
+      <a href="../../index.html">All the books</a>
       <a href="../../papers/index.html">All the papers</a>
     </nav>
-    <p class="fine">Distributed Algorithms of Ancient Greece · One Change at a Time</p>
+    <p class="fine">Distributed Algorithms of Ancient Greece · Eighteen Books in One Scroll</p>
   </div>
 </footer>
 

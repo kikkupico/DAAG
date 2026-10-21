@@ -56,7 +56,7 @@ function scrolly(root,render){
   steps.forEach(s=>so.observe(s));
 }
 
-/* ===== who is who: the setting on the left, the machine room on the right ===== */
+/* ===== who is who: the setting on the left, computing on the right ===== */
 function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
   const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
   [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}
@@ -228,10 +228,17 @@ function meanings(tabs){
 /*LOGIC-END*/
 
 /* ===== drawing helpers: a span is a thick stretch of a place's line, a dot marks a moment ===== */
+/* a faint ring round the whole round for the same stretch of time, under everything but the frame, so that
+   spans on different lines can be compared: where two rings overlap, so do their spans */
+function spanRing(P,t1,t2,col){
+  const R=P.rings||(P.rings=P.svg.insertBefore(el("g",{class:"st-spanrings"}),P.under));
+  const ring=r=>`M${(P.cx+r).toFixed(1)},${P.cy} a${r.toFixed(1)},${r.toFixed(1)} 0 1 0 ${(-2*r).toFixed(1)},0 a${r.toFixed(1)},${r.toFixed(1)} 0 1 0 ${(2*r).toFixed(1)},0 Z`;
+  return el("path",{class:"st-spanring",d:ring(P.r(t2))+" "+ring(P.r(t1)),"fill-rule":"evenodd",fill:col,stroke:col},R)}
 function mark(P,pl,t,fill,label,off=0,rad=12){
   const [x,y]=P.xy(ANG[pl]+off,P.r(t)),g=el("g",{class:"st-ev",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},P.evs);
   el("circle",{class:"halo2",r:rad+5},g);el("circle",{class:"b",r:rad,fill},g);el("text",{},g).textContent=label;el("circle",{r:rad+8,fill:"transparent"},g);return g}
 function band(P,pl,t1,t2,col,off=0,w=8){
+  spanRing(P,t1,t2,col);
   const [x1,y1]=P.xy(ANG[pl]+off,P.r(t1)),[x2,y2]=P.xy(ANG[pl]+off,P.r(t2));
   return el("line",{x1:x1.toFixed(1),y1:y1.toFixed(1),x2:x2.toFixed(1),y2:y2.toFixed(1),stroke:col,"stroke-width":w,"stroke-linecap":"round",opacity:.5},P.under)}
 
@@ -323,7 +330,7 @@ function Isle(svg){
 /* ===== before, or overlap: choose two requests ===== */
 (function(){
   const svg=$("#spansvg"),say=$("#spansay");
-  const P=Polar(svg,{vb:"0 0 640 470",cx:320,cy:290,r0:44,step:22,rings:10,tEnd:10.4,note:[14,24],nodes:NODES});
+  const P=Polar(svg,{vb:"0 0 640 570",cx:320,cy:290,r0:44,step:22,rings:10,tEnd:10.4,note:[14,24],nodes:NODES});
   const O=[{k:"A",pl:1,s:1.6,e:4.2,name:"House 1's request"},{k:"B",pl:2,s:3.0,e:5.4,name:"House 2's first request"},{k:"C",pl:2,s:7.0,e:9.4,name:"House 2's second request"}];
   O.forEach(o=>{band(P,o.pl,o.s,o.e,HC[o.pl]);mark(P,o.pl,o.e,HC[o.pl],"",0,6);o.g=mark(P,o.pl,o.s,HC[o.pl],o.k)});
   let sel=[];
@@ -346,7 +353,7 @@ function Isle(svg){
     {n:"One request served twice",v:"steward",ops:[E("b",2,1.6,3.4),D("c",2,4.4,5.4,-5),D("d",2,4.8,6.0,5)],t:"Two loaders each take House 2's single request and load grain for it."}];
   M.forEach(m=>{if(verdict(m.ops)!==m.v)throw new Error("a morning does not match the rule: "+m.n)});
   function show(n){const m=M[n],ops=m.ops;bs.forEach((b,i)=>{b.classList.toggle("on",i===n);b.classList.toggle("alt",i!==n)});nm.textContent=m.n;
-    const P=Polar(svg,{vb:"0 0 640 470",cx:320,cy:290,r0:44,step:22,rings:10,tEnd:10.4,note:[14,24],nodes:NODES});
+    const P=Polar(svg,{vb:"0 0 640 570",cx:320,cy:290,r0:44,step:22,rings:10,tEnd:10.4,note:[14,24],nodes:NODES});
     ops.forEach(o=>{const col=o.kind==="enq"?HC[o.h]:"#8a7a62";band(P,o.pl,o.s,o.e,col,o.off);
       if(o.kind==="enq"){mark(P,o.pl,o.e,col,"",o.off,6);mark(P,o.pl,o.s,col,o.h,o.off)}
       else{mark(P,o.pl,o.s,col,"",o.off,6);mark(P,o.pl,o.e,HC[o.h],o.h,o.off)}});
@@ -370,7 +377,7 @@ function Isle(svg){
   {const f0=facts(K[0]),f1=facts(K[1]);
    if(f0.ch||f0.tFirst!==2||!f0.sunBefore||!f1.ch||f1.tFirst!==1||f1.sunBefore)throw new Error("the two mornings do not behave as the book says")}
   function show(i){const k=K[i],f=facts(k);bs.forEach((b,j)=>{b.classList.toggle("on",j===i);b.classList.toggle("alt",j!==i)});nm.textContent=k.n;
-    const P=Polar(svg,{vb:"0 0 640 470",cx:320,cy:290,r0:44,step:22,rings:10,tEnd:10.4,note:[14,24],nodes:NODES});
+    const P=Polar(svg,{vb:"0 0 640 570",cx:320,cy:290,r0:44,step:22,rings:10,tEnd:10.4,note:[14,24],nodes:NODES});
     [["o1",1],["o2",2]].forEach(([id,h])=>band(P,h,k.sp[id][0],k.sp[id][1],HC[h]));
     k.ev.forEach(e=>{if(e.id==="o1"||e.id==="o2")mark(P,e.h,e.t,HC[e.h],f.tal[e.id]);else mark(P,e.h,e.t,HC[e.h],"",0,6)});
     k.ev.filter(e=>e.from).forEach(e=>{const s=k.ev.find(x=>x.id===e.from);P.slip(s.h,s.t,e.h,e.t)});
