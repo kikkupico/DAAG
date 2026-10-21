@@ -93,7 +93,7 @@ These are correctness constraints, not preferences.
 6. **Read the paper, not your memory of it.** Open the PDF. Quote the theorem. See
    *Verification* below.
 7. **Close with the mapping.** Every book ends with a who-is-who table, the setting on the left
-   and the machine room on the right, a plain statement of the result, and a panel with the paper
+   and computing on the right, a plain statement of the result, and a panel with the paper
    and its ideas, so a reader can check the allegory rather than trust it.
 8. **Records are scrolls and tablets.** Nothing in the setting is a bound book. Lasting
    records (the houses' accounts, the loot scroll, a legislator's scroll) are papyrus scrolls,
@@ -342,14 +342,14 @@ Before calling a book done (the brief's checklist has the mechanics):
   scroll and pebble is geometry), and its scene prompts say so: keep every modelled
   part where it is, give it its real material, add no architecture. The image pass then adds
   only materials, light, people and props, and the building is the same in every picture.
-- [ ] The book's ideas are on the bird's-eye view, `books/birds-eye-view/`: one circle holds every
-  idea of every book round its rim, with a tree of books and ideas beside it. Each idea has a
-  title, two or three sentences in the allegory, one in machine terms, a round figure drawn in the
-  middle of the circle, and the anchor of the spread that tells it. The page holds Ordering
-  Without Clocks, The Part-Time Parliament and One Leader at a Time so far; a new book adds itself
-  to `ORDER` and `BOOK` (with its setting in one `line`) and its ideas to `IDEAS` in the page's
-  `script.js`, which sizes the circle and the tree from them, and its ideas to any thread in
-  `THREADS` that it shares with another setting.
+- [ ] The book is on Eighteen Books in One Scroll, `books/eighteen-books-in-one-scroll/`: every
+  book in one long page, each drawn on one round as the book it grows from with one change in red.
+  A new book adds, in the page's `index.html`, a change card (`card eq`: the parent, the change in
+  both registers, the child) and a book card (`card book`: a punch line and a paragraph in each
+  register, the link to the book, and its papers with their authors at the foot, copied from
+  `papers/index.html`); in its `script.js`, a scene in the round (`def`, or `grow` from the parent's
+  scene, with the change marked `c: 1`), its place in the family (`B`, `KIDS` and `LAY` in the
+  family tree), and its key in every `THREAD` that it uses.
 
 ---
 

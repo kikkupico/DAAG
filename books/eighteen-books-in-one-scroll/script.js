@@ -1,9 +1,9 @@
-/* One Change at a Time: the eighteen books as one long scroll across two islands.
-   The round behind the walk is One Change Apart's: each place a spoke running outward, later and later; each dashed
+/* Eighteen Books in One Scroll: the eighteen books as one long scroll across two islands, one change at a time.
+   The round behind the walk: each place a spoke running outward, later and later; each dashed
    ring one moment everywhere; each arc a messenger. Every book's scene is the scene of the book it grows from with one
-   change, drawn in red; a wall shows its two nights in turn. Its scenes and drawing are copied from
-   books/one-change-apart/script.js unchanged; the page code after it drives the scroll, the hero, the widgets and the
-   family tree. */
+   change, drawn in red; a wall shows its two nights in turn. Each scene plays through time, outward from the centre,
+   and the reader can pause it, drag the slider, or drag on the round itself. The page code after it drives the
+   scroll, the hero, the widgets and the family tree. */
 "use strict";
 (function () {
 const NS = "http://www.w3.org/2000/svg";
@@ -64,12 +64,14 @@ const defs = el("defs", {}, svg);
 });
 const hatch = el("pattern", { id: "hatch", patternUnits: "userSpaceOnUse", width: 8, height: 8, patternTransform: "rotate(45)" }, defs);
 el("line", { x1: 0, y1: 0, x2: 0, y2: 8, stroke: "#bf4a26", "stroke-width": 2.2, "stroke-opacity": .35 }, hatch);
-const clip = el("clipPath", { id: "sweep" }, defs), clipC = el("circle", { cx: 0, cy: 0, r: 999 }, clip);
+/* everything that has happened by now lies inside one circle: marks drawn over time are clipped to it */
+const clip = el("clipPath", { id: "upto" }, defs), clipC = el("circle", { cx: 0, cy: 0, r: 999 }, clip);
 const frame = el("g", { class: "frame" }, svg);
 el("circle", { class: "disc", r: rad(TEND) + 24 }, frame);
 for (let i = 1; i <= RINGS; i++) el("circle", { class: "rg", r: rad(i) }, frame);
 const marksG = el("g", { class: "marks" }, svg);
 const LY = {}; ["u", "s", "e", "t"].forEach(k => { LY[k] = el("g", { class: "ly-" + k }, marksG); });
+const nowG = el("g", { class: "now off" }, svg), nowC = el("circle", { r: R0 }, nowG);
 const nodesG = el("g", { class: "nodes" }, svg);
 const meas = el("text", { class: "tgt meas", x: 0, y: -2000 }, svg);
 
@@ -152,8 +154,10 @@ function tagBox(s, cls) {
 }
 function tagAt(p, x, y, s, cls, box) {
   box = box || tagBox(s, cls);
+  box.els = [];
   ["i", "m"].forEach(reg => {
     const g = el("g", { class: "tg " + (cls || "") + " " + reg, transform: `translate(${f(x)} ${f(y)})` }, p), b = box[reg];
+    box.els.push(g);
     el("rect", { x: f(-b.W / 2), y: f(-b.H / 2), width: f(b.W), height: f(b.H), rx: 5 }, g);
     b.lines.forEach((l, i) => { el("text", { class: "tgt", x: 0, y: f((i - (b.lines.length - 1) / 2) * box.lh) }, g).textContent = l; });
   });
@@ -206,21 +210,27 @@ function placeTag(m, box, ob, taken) {
 }
 
 const DRAW = {
-  /* a messenger: from a at ta to b at tb; lost ones stop part-way at a cross, held ones are dashed */
+  /* a messenger: from a at ta to b at tb; lost ones stop part-way at a cross, held ones are dashed.
+     While the round plays, the line is clipped to now, a head rides its tip, and the cross and label wait their moment. */
   sl(m) {
     const g = wrap("s", tone(m) + " sl" + (m.held ? " held" : "") + (m.lost ? " lost" : ""));
-    const full = arc(m.a, m.ta, m.b, m.tb, m.dir);
+    const full = arc(m.a, m.ta, m.b, m.tb, m.dir), when = u => m.ta + (m.tb - m.ta) * u;
     let pts = full.slice();
     if (m.lost) pts = pts.slice(0, Math.max(2, Math.round(pts.length * m.lost)));
     else { const end = pts[pts.length - 1], trim = m.trim || 10; while (pts.length > 2 && Math.hypot(pts[pts.length - 1][0] - end[0], pts[pts.length - 1][1] - end[1]) < trim) pts.pop(); }
     const mk = m.lost ? "" : (m.c ? "r" : m.hl ? "g" : "b");
-    el("path", Object.assign({ class: "ln", d: dpath(pts) }, mk ? { "marker-end": `url(#ar-${mk})` } : {}), g);
-    if (m.lost) { const q = pts[pts.length - 1]; cross(g, q[0], q[1]); if (m.hawk) hawk(g, q[0] + m.hawk[0], q[1] + m.hawk[1]); }
-    if (m.lab) {
-      const q = full[Math.round((full.length - 1) * (m.la || .5))];
-      if (VAL[m.lab]) token(g, q[0], q[1], m.lab, 9);
-      else tagAt(g, q[0] + (m.ldx || 0), q[1] + (m.ldy || 0), m.lab, "sm" + (m.c || m.labc ? " red" : m.hl ? " gold" : ""));
+    el("path", Object.assign({ class: "ln", d: dpath(pts) }, mk ? { "marker-end": `url(#ar-${mk})` } : {}), g)._clip = 1;
+    if (m.lost) {
+      const q = pts[pts.length - 1];
+      cross(g, q[0], q[1])._at = when(m.lost);
+      if (m.hawk) hawk(g, q[0] + m.hawk[0], q[1] + m.hawk[1])._at = when(m.lost);
     }
+    if (m.lab) {
+      const la = m.la || .5, q = full[Math.round((full.length - 1) * la)];
+      if (VAL[m.lab]) token(g, q[0], q[1], m.lab, 9)._at = when(la);
+      else tagAt(g, q[0] + (m.ldx || 0), q[1] + (m.ldy || 0), m.lab, "sm" + (m.c || m.labc ? " red" : m.hl ? " gold" : "")).els.forEach(e => { e._at = when(la); });
+    }
+    g._head = { c: el("circle", { class: "head", r: 4.6 }, g), full, ta: m.ta, tb: m.tb, end: m.lost || 1 };
     return g;
   },
   /* an event on a place's spoke: a dot, a hollow dot, a number, or a plan */
@@ -251,7 +261,13 @@ const DRAW = {
   /* a stretch of a place's spoke: a piece of business from start to finish */
   sp(m) {
     const g = wrap("u", tone(m) + " span"), [x1, y1] = P(m.n, m.t1), [x2, y2] = P(m.n, m.t2);
-    el("line", { x1: f(x1), y1: f(y1), x2: f(x2), y2: f(y2), stroke: m.col || CA.col[m.n] }, g);
+    /* with "around", a faint ring carries the same stretch of time round the whole round, so spans on
+       different spokes can be compared: where two rings overlap, so do their spans */
+    if (m.around) {
+      const ring = r => `M${f(r)},0 A${f(r)},${f(r)} 0 1 0 ${f(-r)},0 A${f(r)},${f(r)} 0 1 0 ${f(r)},0 Z`;
+      el("path", { class: "around", d: ring(rad(m.t2)) + " " + ring(rad(m.t1)), "fill-rule": "evenodd", fill: m.col || CA.col[m.n], stroke: m.col || CA.col[m.n] }, g);
+    }
+    el("line",{ x1: f(x1), y1: f(y1), x2: f(x2), y2: f(y2), stroke: m.col || CA.col[m.n] }, g);
     return g;
   },
   /* what one post sees: a gold stretch of its spoke */
@@ -371,7 +387,7 @@ def("owc", "houses", [
 /* Many Copies: first by the sun, which no tally sees */
 grow("mc", "owc", { lit: ["owc.b3"], add: [
   ev("H3", 5.05, { num: 3, id: "c25" }),
-  { t: "sp", n: "H2", t1: 3.7, t2: 4.45, c: 1, id: "q2" }, { t: "sp", n: "H3", t1: 4.75, t2: 5.35, c: 1, id: "q3" },
+  { t: "sp", n: "H2", t1: 3.7, t2: 4.45, c: 1, around: 1, id: "q2" }, { t: "sp", n: "H3", t1: 4.75, t2: 5.35, c: 1, around: 1, id: "q3" },
   { t: "ring", at: 4.6, cls: "sun", c: 1, id: "sun" },
   tg(on("H2", 4.1, 62, 34), V("tally 4, first by the sun", "C = 4, first in real time"), { c: 1, id: "t1" }),
   tg(on("H3", 5.05, -6, 34), V("tally 3, yet later", "C = 3, yet later"), { c: 1, id: "t2" })
@@ -612,47 +628,119 @@ def("w4", "libs4", [
 ] });
 
 
-/* ---------- showing a scene: marks that stay, stay; the change sweeps outward ---------- */
-const live = {};
-let cur = { scene: null, cast: null, night: -1 }, seq = 0, sweep = null;
-const sig = m => JSON.stringify(m, (k, v) => (k === "c" || k === "hl" || k === "own" || k === "base" ? undefined : v));
-function remove(g, now) { if (now) { g.remove(); return; } g.classList.add("hid"); setTimeout(() => g.remove(), 360); }
-function finishSweep() {
-  if (!sweep) return;
-  cancelAnimationFrame(sweep.raf);
-  sweep.items.forEach(g => { g.removeAttribute("clip-path"); g.classList.remove("hid"); });
-  clipC.setAttribute("r", 999); sweep = null;
+/* ---------- time: a moment runs outward, and what lies inside its ring has happened ----------
+   Lines and stretches are clipped to the ring; dots, coins, slates and labels appear as it reaches them; a head rides
+   each messenger in flight. Arriving at a scene, marks carried over from the last one stay drawn ("forced") and only
+   what is new plays in; once the reader seeks or plays it again, everything keeps time alike. */
+const TL = { T: TEND, play: false, raf: 0, last: 0, items: [], heads: [], forced: new Set(), onEnd: null };
+const SPEED = 1.15; /* moments of the round per second: a whole scene in under six seconds */
+const CLIPPED = new Set(["x", "gap", "sp", "obs", "wedge", "band", "ring", "cut", "hawk"]);
+const tagTime = m => /\bnight\b/.test(m.cls || "") ? 0 : m.at != null ? m.at : m.x != null ? (Math.hypot(m.x, m.y) - R0) / ST : TEND;
+const POPS = { ev: m => m.at, coin: m => m.at, bun: m => m.at, slate: m => m.at, tg: tagTime };
+const btns = [...document.querySelectorAll(".tplay")], seeks = [...document.querySelectorAll(".tseek")];
+function unclip(g) { g.removeAttribute("clip-path"); g.querySelectorAll("[clip-path]").forEach(e => e.removeAttribute("clip-path")); }
+function build() {
+  TL.items = []; TL.heads = [];
+  for (const k in live) {
+    const { m, g } = live[k], forced = TL.forced.has(k);
+    const clipIt = e => { if (forced) e.removeAttribute("clip-path"); else e.setAttribute("clip-path", "url(#upto)"); };
+    const pop = (e, at, cls) => { e.classList.add(cls); TL.items.push({ e, at: Math.min(Math.max(at, 0), TEND - .02), forced, pre: null }); };
+    if (CLIPPED.has(m.t)) clipIt(g);
+    else if (POPS[m.t]) pop(g, POPS[m.t](m), "tlp");
+    if (m.t === "sl") {
+      g.querySelectorAll("*").forEach(e => { if (e._clip) clipIt(e); if (e._at != null) pop(e, e._at, "tlf"); });
+      TL.heads.push(X(g._head, { forced }));
+    }
+  }
+  apply();
 }
-function startSweep(items, delay) {
-  const tags = items.filter(g => g.rr != null), rest = items.filter(g => g.rr == null);
-  rest.forEach(g => g.setAttribute("clip-path", "url(#sweep)"));
-  tags.forEach(g => g.classList.add("hid"));
-  clipC.setAttribute("r", R0 - 8);
-  const t0 = performance.now() + delay, dur = 1150, r1 = rad(TEND) + 60;
-  sweep = { items, raf: 0 };
-  const fr = now => {
-    const u = Math.max(0, Math.min(1, (now - t0) / dur)), e = 1 - (1 - u) * (1 - u), rr = R0 - 8 + (r1 - R0 + 8) * e;
-    clipC.setAttribute("r", f(rr));
-    tags.forEach(g => { if (rr >= g.rr - 20) g.classList.remove("hid"); });
-    if (u < 1) sweep.raf = requestAnimationFrame(fr); else finishSweep();
-  };
-  sweep.raf = requestAnimationFrame(fr);
+function apply() {
+  const T = TL.T, end = T >= TEND - 1e-3;
+  clipC.setAttribute("r", end ? 999 : f(rad(T) + 1.5));
+  for (const it of TL.items) {
+    const pre = !it.forced && T < it.at;
+    if (pre !== it.pre) { it.pre = pre; it.e.classList.toggle("pre", pre); }
+  }
+  for (const h of TL.heads) {
+    const u = (T - h.ta) / (h.tb - h.ta), on = !h.forced && u > 0 && u < h.end;
+    if (on) {
+      const n = h.full.length - 1, k = u * n, i = Math.min(n - 1, Math.floor(k)), w = k - i, a = h.full[i], b = h.full[i + 1];
+      h.c.setAttribute("cx", f(a[0] + (b[0] - a[0]) * w)); h.c.setAttribute("cy", f(a[1] + (b[1] - a[1]) * w));
+    }
+    h.c.style.display = on ? "" : "none";
+  }
+  nowC.setAttribute("r", f(rad(T)));
+  nowG.classList.toggle("off", end || T <= 0);
+  const v = Math.round(1000 * T / TEND);
+  seeks.forEach(s => { s.value = v; s.style.setProperty("--v", v / 10 + "%"); });
+}
+function state() {
+  const s = TL.play ? "pause" : TL.T >= TEND - 1e-3 ? "again" : "play";
+  btns.forEach(b => { b.dataset.state = s; b.setAttribute("aria-label", s === "pause" ? "Pause" : s === "again" ? "Play again" : "Play"); });
+}
+function unforce() { if (TL.forced.size) { TL.forced = new Set(); build(); } }
+function tick(now) {
+  TL.T = Math.min(TEND, TL.T + Math.min(.1, (now - TL.last) / 1000) * SPEED); TL.last = now;
+  apply();
+  if (TL.T < TEND) { TL.raf = requestAnimationFrame(tick); return; }
+  TL.play = false; TL.raf = 0; unforce(); state();
+  if (TL.onEnd) TL.onEnd();
+}
+function play() {
+  if (TL.T >= TEND - 1e-3) { TL.T = 0; unforce(); }
+  TL.play = true; TL.last = performance.now();
+  cancelAnimationFrame(TL.raf); TL.raf = requestAnimationFrame(tick); state();
+}
+function pause() { TL.play = false; cancelAnimationFrame(TL.raf); TL.raf = 0; state(); }
+function seek(T) { pause(); unforce(); TL.T = Math.max(0, Math.min(TEND, T)); apply(); state(); }
+
+/* the controls under the round, and dragging on the round itself: further out is later */
+btns.forEach(b => b.addEventListener("click", () => (TL.play ? pause() : play())));
+seeks.forEach(s => {
+  s.addEventListener("input", () => { svg.classList.add("scrub"); seek(s.value / 1000 * TEND); });
+  s.addEventListener("change", () => svg.classList.remove("scrub"));
+});
+let drag = null;
+const distAt = e => { const q = new DOMPoint(e.clientX, e.clientY).matrixTransform(svg.getScreenCTM().inverse()); return Math.hypot(q.x, q.y); };
+svg.addEventListener("pointerdown", e => {
+  /* touch keeps scrolling the page; the slider is there for fingers */
+  if (e.pointerType === "touch" || e.button !== 0 || cur.scene === null) return;
+  const d = distAt(e); if (d > rad(TEND) + 24) return;
+  drag = e.pointerId; svg.setPointerCapture(drag); svg.classList.add("scrub"); seek((d - R0) / ST); e.preventDefault();
+});
+svg.addEventListener("pointermove", e => { if (drag === e.pointerId) seek((distAt(e) - R0) / ST); });
+const endDrag = e => { if (drag === e.pointerId) { drag = null; svg.classList.remove("scrub"); } };
+svg.addEventListener("pointerup", endDrag); svg.addEventListener("pointercancel", endDrag);
+
+/* ---------- showing a scene: marks that stay, stay; what is new plays in through time ----------
+   opt.keep holds the time and the play state (a night chosen by hand); opt.redraw draws everything afresh in place */
+const live = {};
+let cur = { scene: null, cast: null, night: -1 }, seq = 0;
+const sig = m => JSON.stringify(m, (k, v) => (k === "c" || k === "hl" || k === "own" || k === "base" ? undefined : v));
+function remove(g, now) {
+  if (now) { g.remove(); return; }
+  if (TL.T >= TEND - 1e-3) unclip(g);
+  g.classList.add("hid"); setTimeout(() => g.remove(), 360);
 }
 function show(id, night, opt) {
   opt = opt || {};
   const S = SC[id]; if (!S) return;
+  night = night || 0;
+  const arrive = !opt.keep && !opt.redraw;
+  if (arrive && id === cur.scene && night === cur.night) return;
   const my = ++seq;
-  finishSweep();
-  const list = S.marks.concat(S.nights ? S.nights[night || 0] : []);
+  const list = S.marks.concat(S.nights ? S.nights[night] : []);
   const castChange = cur.cast !== S.cast, instant = !!opt.instant || reduce || cur.cast === null;
   const keep = new Set();
   if (!castChange && !opt.redraw) list.forEach(m => { const o = live[m.k]; if (o && sig(o.m) === sig(m)) keep.add(m.k); });
   for (const k in live) if (!keep.has(k)) { remove(live[k].g, instant); delete live[k]; }
-  cur = { scene: id, cast: S.cast, night: night || 0 };
+  if (arrive) { pause(); TL.forced = keep; }
+  else if (!opt.redraw) TL.forced = new Set([...TL.forced].filter(k => keep.has(k)));
+  cur = { scene: id, cast: S.cast, night };
   const go = () => {
     if (my !== seq) return;
     CA = CASTS[S.cast];
-    const fade = [], sw = [], taken = [];
+    const fade = [], taken = [];
     const put = (m, at) => {
       const o = live[m.k];
       if (o) {
@@ -665,8 +753,7 @@ function show(id, night, opt) {
       try { g = DRAW[m.t](m, at); } catch (e) { console.error("mark", m.k, e); return; }
       if (m.base && m.t !== "tg") g.classList.add("base");
       live[m.k] = { m, g };
-      if (instant) return;
-      (m.c || m.hl ? sw : fade).push(g);
+      if (!instant) fade.push(g);
     };
     const tags = list.filter(m => m.t === "tg"), rest = list.filter(m => m.t !== "tg");
     rest.forEach(m => put(m));
@@ -675,7 +762,12 @@ function show(id, night, opt) {
     tags.forEach(m => { if (live[m.k]) put(m); else put(m, placeTag(m, tagBox(m.txt, tagCls(m)), ob, taken)); });
     fade.forEach(g => g.classList.add("hid"));
     requestAnimationFrame(() => requestAnimationFrame(() => fade.forEach(g => g.classList.remove("hid"))));
-    if (sw.length) startSweep(sw, fade.length ? 260 : 60);
+    if (!arrive) { build(); return; }
+    /* something new to show plays in from the start; with motion reduced, or nothing new, the scene stands whole */
+    const fresh = Object.keys(live).some(k => !TL.forced.has(k));
+    TL.T = fresh && !reduce ? 0 : TEND;
+    build();
+    if (TL.T < TEND) play(); else { unforce(); state(); }
   };
   if (castChange) { setCast(S.cast, instant ? 0 : 480); if (instant) go(); else setTimeout(go, 500); }
   else go();
@@ -690,7 +782,7 @@ function scaleText() {
   svg.style.setProperty("--k", k.toFixed(3));
   return Math.abs(old - k) > .01;
 }
-window.__ROUND = { show, scaleText, SC };
+window.__ROUND = { show, scaleText, SC, onEnd: fn => { TL.onEnd = fn; } };
 })();
 
 /* ====================================================================== THE PAGE */
@@ -787,22 +879,33 @@ function markNight(c, n) {
   $$(".nights b.on").forEach(b => { b.classList.remove("on"); b.setAttribute("aria-pressed", "false"); });
   nightBtns(c).forEach((b, i) => { const mine = Math.floor(i / 2) === n; b.classList.toggle("on", mine); b.setAttribute("aria-pressed", String(mine)); });
 }
-function showCard(c) {
+function showCard(c, opt) {
   if (!R) return;
   const wall = c.classList.contains("wall");
-  R.show(c.dataset.scene, wall ? night : 0);
+  R.show(c.dataset.scene, wall ? night : 0, opt);
   if (wall) markNight(c, night);
 }
 function activate(c, w) {
   activeCard = c;
-  $$(".card.on").forEach(x => x.classList.remove("on"));
-  c.classList.add("on");
+  $$(".card.on").forEach(x => { x.classList.remove("on"); x.removeAttribute("aria-current"); });
+  /* the card being read is the current step of the walk; the tutor's panel takes it as "here" */
+  c.classList.add("on"); c.setAttribute("aria-current", "step");
   stage.dataset.setting = w.dataset.setting;
   stage.dataset.mode = c.classList.contains("wall") ? "wall" : "walk";
-  night = 0; manualNight = false; clearInterval(nightTimer);
+  night = 0; manualNight = false; clearTimeout(nightTimer);
   showCard(c);
-  if (c.classList.contains("wall") && !reduce) nightTimer = setInterval(() => { if (manualNight || activeCard !== c) return; night = 1 - night; showCard(c); }, 3200);
 }
+/* a wall plays one night, rests, then plays the other, for as long as it is on screen and nobody picks a night */
+if (R) R.onEnd(() => {
+  const c = activeCard;
+  if (!c || !c.classList.contains("wall") || manualNight || reduce) return;
+  clearTimeout(nightTimer);
+  nightTimer = setTimeout(() => {
+    const r = c.closest(".walk").getBoundingClientRect();
+    if (activeCard !== c || manualNight || r.bottom < 0 || r.top > innerHeight) return;
+    night = 1 - night; showCard(c);
+  }, 1800);
+});
 function pickCard() {
   const vh = innerHeight, L = vh * (narrowQ.matches ? .7 : .52);
   let best = null, bestA = 0;
@@ -815,7 +918,7 @@ function pickCard() {
 }
 walks.forEach(w => $$(".card", w).forEach(c => nightBtns(c).forEach((b, i) => {
   b.setAttribute("role", "button"); b.setAttribute("tabindex", "0");
-  const go = () => { if (activeCard !== c) { c.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" }); return; } manualNight = true; night = Math.floor(i / 2); showCard(c); };
+  const go = () => { if (activeCard !== c) { c.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" }); return; } manualNight = true; clearTimeout(nightTimer); night = Math.floor(i / 2); showCard(c, { keep: true }); };
   b.addEventListener("click", go);
   b.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
 })));
@@ -828,19 +931,20 @@ function whereFrame() {
   const y = innerHeight * .45;
   let sec = null;
   for (const s of secs) { const r = s.getBoundingClientRect(); if (r.top <= y && r.bottom > y) { sec = s; break; } }
-  let html = T2("<b>One Change at a Time</b>", "<b>One Change at a Time</b>");
+  let html = T2("<b>Eighteen Books in One Scroll</b>", "<b>Eighteen Books in One Scroll</b>");
   if (sec) {
     if (sec.classList.contains("walk") && activeCard) {
       const c = activeCard, b = c.dataset.book ? c : (c.nextElementSibling && c.nextElementSibling.dataset.book ? c.nextElementSibling : null);
       const n = b ? bookIndex[b.id] : 0;
-      html = `<b>${sec.dataset.label}</b>` + (n ? `<span class="ct">${T2(`Book ${n} of ${BOOKS}`, `Book ${n} of ${BOOKS}`)}</span>` : (c.classList.contains("wall") ? `<span class="ct">${T2("A wall", "An impossibility")}</span>` : ""));
-    } else if (sec.classList.contains("interlude")) html = `<b>${$(".place", sec).textContent}</b>`;
-    else if (sec.classList.contains("feature")) { let p = sec.previousElementSibling; while (p && !p.dataset.label) p = p.previousElementSibling; html = p ? `<b>${p.dataset.label}</b><span class="ct">${T2("Try it", "Try it")}</span>` : html; }
+      html = `<b>${isM() ? "Eighteen Books in One Scroll" : sec.dataset.label}</b>` + (n ? `<span class="ct">${T2(`Book ${n} of ${BOOKS}`, `Book ${n} of ${BOOKS}`)}</span>` : (c.classList.contains("wall") ? `<span class="ct">${T2("A wall", "An impossibility")}</span>` : ""));
+    } else if (sec.classList.contains("interlude")) { if (!isM()) html = `<b>${$(".place", sec).textContent}</b>`; }
+    else if (sec.classList.contains("feature")) { let p = sec.previousElementSibling; while (p && !p.dataset.label) p = p.previousElementSibling; html = p ? `<b>${isM() ? "Eighteen Books in One Scroll" : p.dataset.label}</b><span class="ct">${T2("Try it", "Try it")}</span>` : html; }
     else if (sec.id === "threads") html = `<b>${T2("The whole family", "The whole family")}</b><span class="ct">${T2("ten threads", "ten techniques")}</span>`;
     else if (sec.id === "costs") html = `<b>${T2("Four prices", "Four costs")}</b>`;
     else if (sec.id === "finale") html = `<b>${T2("In one breath", "In one breath")}</b>`;
   }
   if (html !== lastWhere) { where.innerHTML = html; lastWhere = html; }
+  document.body.classList.toggle("in-walk", !!sec && sec.classList.contains("walk"));
   const max = document.documentElement.scrollHeight - innerHeight;
   prog.style.width = (max > 0 ? 100 * scrollY / max : 0) + "%";
 }
@@ -876,7 +980,7 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
     const S = Math.min(W, H), R0 = S * .06, R1 = Math.max(W, H) * .62, rot = el * .000012, rad = t => R0 + (R1 - R0) * t;
     const ang = i => rot + i * 2 * Math.PI / N - Math.PI / 2;
     const fade = u > .9 ? (1 - u) / .1 : u < .04 ? u / .04 : 1;
-    /* the islands draw it like a black-figure vase: terracotta on black; the machine room in cool light */
+    /* the allegory draws it like a black-figure vase: terracotta on black; computing in cool light */
     const gr = isM() ? { ring: "rgba(255,255,255,.07)", spoke: "rgba(255,255,255,.16)", now: "224,184,74", msg: "58,160,255", tip: "160,210,255", red: "239,106,63" }
       : { ring: "rgba(200,105,58,.16)", spoke: "rgba(224,138,85,.32)", now: "224,184,74", msg: "240,230,204", tip: "246,238,214", red: "224,138,85" };
     cx.setTransform(dpr, 0, 0, dpr, 0, 0); cx.clearRect(0, 0, W, H); cx.translate(W / 2, H / 2);
