@@ -6,411 +6,7 @@
 <title>Keeping Order Among Liars — The Crown of Mount Phyle</title>
 <meta name="description" content="The Castro and Liskov protocol: four bandits on the crown, one who may lie, trained rats, and a loot scroll whose entries must stand in the same order in every honest copy.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<style>
-:root{
-  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4;
-  --aegean:#2e88b5; --aegean-d:#136f9e; --blood:#bf4a26; --olive:#7c8f3a; --terra:#b5602c;
-  --gold:#e0b84a; --shadow:#b9a77e;
-  --serif:Georgia,'Iowan Old Style','Palatino Linotype',serif;
-  --sans:Optima,'Gill Sans','Gill Sans MT',sans-serif;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;background:#d8cba6}
-body{margin:0;background:#d8cba6;color:var(--ink);font-family:var(--serif);line-height:1.55;overflow-x:hidden}
-img{max-width:100%;display:block}
-button{font:inherit;cursor:pointer}
-h1,h2,h3{font-family:var(--sans);line-height:1.12;margin:0;text-wrap:balance}
-p{margin:0 0 1rem;font-size:1.125rem;line-height:1.65;text-wrap:pretty}
-.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--blood)}
-
-/* ---------- top bar ---------- */
-.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
-  font-family:var(--sans);font-size:.78rem;letter-spacing:.05em;background:linear-gradient(180deg,#3a2a1a,#241a10)}
-.bar a{color:#f0e6cc;text-decoration:none;opacity:.8;white-space:nowrap} .bar a:hover{opacity:1}
-.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:520px){.bar a+a{display:none}}
-.bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
-
-/* ---------- spreads ---------- */
-.spread{position:relative;padding:clamp(4.5rem,11vw,8rem) 20px;overflow:clip}
-.spread.has-scrolly{overflow:visible;padding-bottom:0;background:var(--marble)}
-.dark{background:var(--marble);color:var(--ink);background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
-.light{background:var(--parch);color:var(--ink);
-  background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
-/* torn-paper edge between spreads */
-.tear{position:absolute;left:0;right:0;top:-1px;height:26px;z-index:3;pointer-events:none}
-.tear path{fill:var(--prev)}
-.wrap{max-width:1080px;margin:0 auto;position:relative;z-index:2}
-.narrow{max-width:640px;margin:0 auto}
-.spread h2{font-size:clamp(1.9rem,5vw,3.1rem);margin:.4rem 0 1rem}
-.lede{max-width:34em}
-.light .lede{color:#3a2d24}
-.meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
-  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
-
-/* ---------- the pop-up: a card that unfolds from its hinge ---------- */
-.pop{perspective:1400px}
-.pop > .leaf{transform-origin:50% 100%;transform:rotateX(78deg) translateY(30px);opacity:0;
-  transition:transform 1.1s cubic-bezier(.2,.9,.25,1.12),opacity .6s ease}
-.pop.up > .leaf{transform:rotateX(0) translateY(0);opacity:1}
-.pop.fromleft > .leaf{transform-origin:0 50%;transform:rotateY(-80deg)}
-.pop.fromright > .leaf{transform-origin:100% 50%;transform:rotateY(80deg)}
-.pop.up.fromleft > .leaf,.pop.up.fromright > .leaf{transform:none}
-.paper{background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);position:relative}
-.light .paper{box-shadow:9px 11px 0 #b9a77e}
-.photo{border:5px solid #fffaf0;box-shadow:0 0 0 3px var(--ink),12px 16px 0 var(--shadow);background:#222;overflow:hidden;position:relative}
-.photo img{width:100%;height:100%;object-fit:cover}
-.tilt-l{transform:rotate(-1.4deg)} .tilt-r{transform:rotate(1.2deg)}
-[data-depth]{will-change:transform}
-.fold-shadow{position:absolute;left:6%;right:6%;bottom:-18px;height:26px;background:radial-gradient(ellipse at center,#0008,transparent 70%);opacity:0;transition:opacity 1s .4s;z-index:-1}
-.up .fold-shadow{opacity:1}
-
-/* ---------- cover ---------- */
-#cover{min-height:100svh;display:grid;align-items:center;padding-top:5rem;
-  background:linear-gradient(180deg,#e0d6bb00 calc(100% - 140px),#e0d6bb),radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
-/* the cover ends in one colour, and the torn edge under it is that colour */
-#cover+.spread>.tear path{fill:#e0d6bb}
-#cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
-#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:0 0 1.4rem;letter-spacing:-.01em}
-#cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
-#cover .generic,#cover .allegory{max-width:26em;margin:0 0 1rem}
-#cover .generic,#cover .allegory{color:var(--ink)}
-#cover .generic{font-style:italic;font-size:clamp(1.15rem,2.3vw,1.4rem)}
-#cover .source{font-family:var(--sans);font-size:.74rem;line-height:1.5;max-width:36em;margin:1.6rem 0 0;color:#6b5d4f}
-#cover .source i{color:var(--blood)}
-.cut{position:absolute;pointer-events:none;z-index:1}
-.cut svg{display:block;width:100%;height:auto}
-@media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
-
-/* ---------- two-column spreads ---------- */
-.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-.two.wide-r{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
-@media(max-width:859px){.two,.two.wide-r{grid-template-columns:minmax(0,1fr)}}
-
-/* ---------- the hall (full-bleed photo with pins) ---------- */
-#hall{padding:0;background:var(--marble)}
-.bleed{position:relative;height:min(100svh,880px);overflow:hidden}
-.bleed img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover}
-.bleed::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--parch) 0,transparent 8%,transparent 92%,var(--parch) 100%);pointer-events:none}
-.pin{position:absolute;z-index:4;max-width:min(250px,44vw);padding:10px 14px;background:#fffaf0;color:var(--ink);border:3px solid var(--ink);
-  box-shadow:5px 6px 0 #0007;font-size:.92rem;line-height:1.35;transform-origin:0 100%}
-.pin b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood)}
-.pin::after{content:"";position:absolute;left:-3px;bottom:-26px;width:3px;height:26px;background:var(--ink)}
-.pin::before{content:"";position:absolute;left:-8px;bottom:-34px;width:13px;height:13px;border-radius:50%;background:var(--blood);border:3px solid var(--ink)}
-.hall-title{position:absolute;z-index:5;left:20px;right:20px;top:clamp(5rem,12vh,8rem);max-width:1080px;margin:0 auto}
-.hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
-.hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
-.hall-title p{margin:0}
-/* on a phone, or a screen too short to hold them, the title and the notes leave the photograph and stand under it */
-@media(max-width:900px),(max-height:680px){
-  #hall{background:var(--parch);padding-bottom:clamp(2.5rem,8vw,4rem)}
-  .bleed{height:auto!important;overflow:visible;display:flex;flex-direction:column;gap:14px;padding:0 20px}
-  .bleed::after{display:none}
-  .bleed img{position:static;width:calc(100% + 40px);max-width:none;height:min(58svh,460px);margin:0 -20px;transform:none!important;
-    -webkit-mask-image:linear-gradient(transparent,#000 9%);mask-image:linear-gradient(transparent,#000 9%)}
-  .hall-title{position:relative;inset:auto;width:100%;max-width:640px;margin:-3.2rem auto 4px}
-  .hall-title .t{display:block;max-width:none}
-  .pin{position:static;width:100%;max-width:640px;margin:0 auto;box-shadow:5px 6px 0 var(--shadow)}
-  .pin::before,.pin::after{display:none}
-}
-
-/* ---------- scrollytelling ---------- */
-.scrolly{position:relative}
-.scrolly .stage{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;padding:70px 20px 20px;overflow:hidden}
-.scrolly .steps{position:relative;z-index:6;margin-top:-100svh;pointer-events:none}
-.step{min-height:100svh;display:flex;align-items:center;padding:0 20px}
-.step .card{pointer-events:auto;max-width:360px;padding:16px 20px;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);
-  transform:translateY(24px) rotate(-.6deg);opacity:.25;transition:transform .7s cubic-bezier(.2,.9,.25,1.1),opacity .5s}
-.step.on .card{transform:none;opacity:1}
-.step .card h3{font-size:1.1rem;margin-bottom:.35rem}
-.step .card p{margin:0;font-size:.98rem}
-.step .num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
-.step.r{justify-content:flex-end}
-.scrolly svg.fig{width:min(100%,820px);height:auto;max-height:calc(100svh - 120px);overflow:visible}
-.scrolly .stage-inner{width:100%;display:flex;justify-content:center}
-/* under the picture: previous, one dot per step (the current one long), next, and back to the first; each scrolls the page to its step */
-.scrolly .stage{flex-direction:column;gap:12px}
-.dots{flex:0 0 auto;display:flex;justify-content:center;align-items:center;gap:1px;position:relative;z-index:7}
-.dots button{appearance:none;border:0;background:none;padding:8px 4px;line-height:0;cursor:pointer;color:var(--ink)}
-.dots .dot::before{content:"";display:block;width:7px;height:7px;border-radius:7px;background:var(--ink);opacity:.22;transition:width .3s,opacity .3s,background .3s}
-.dots .dot:hover::before{opacity:.5}
-.dots .dot.on::before{width:20px;opacity:1;background:var(--blood)}
-.dots .arr{padding:6px;opacity:.5;transition:opacity .3s}
-.dots .arr svg{display:block;width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.dots .arr:hover{opacity:1}
-.dots .arr:disabled{opacity:.14;cursor:default}
-.dots .back{margin-left:8px}
-.dots button:focus-visible{outline:2px solid var(--aegean-d);outline-offset:-3px}
-@media(min-width:900px){.scrolly .stage{padding-left:380px} .step .card{max-width:320px} .step{padding-left:max(24px,calc((100vw - 1080px)/2))}}
-@media(max-width:899px){
-  .scrolly .stage{justify-content:flex-start;padding-top:64px}
-  .scrolly svg.fig{max-height:46svh}
-  .step{align-items:flex-end;padding-bottom:22px}
-  .step .card{max-width:none;width:100%}
-}
-svg text{font-family:var(--serif)}
-.svg-dark{background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
-
-/* ---------- interactive wells ---------- */
-.well{padding:clamp(16px,3vw,28px);margin:1.6rem 0}
-.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;justify-content:space-between;gap:10px}
-.well h4 em{font-style:normal;color:#6b5a48}
-.btn{background:var(--ink);color:var(--parch);border:3px solid var(--ink);padding:8px 16px;font-family:var(--sans);font-size:.88rem;letter-spacing:.03em;box-shadow:4px 4px 0 var(--blood);transition:transform .12s,box-shadow .12s}
-.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--blood)}
-.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--blood)}
-.btn:disabled{opacity:.35;cursor:default;box-shadow:none}
-.btn.alt{background:#fffaf0;color:var(--ink)}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.say{margin:12px 0 0;font-size:.98rem;min-height:3.1em}
-.say b{color:var(--blood)}
-.ok{color:#3f7a2a;font-weight:700}.bad{color:var(--blood);font-weight:700}
-
-/* cards row */
-.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
-.card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
-.card3 .body{padding:16px 18px 18px}
-.card3 h3{font-size:1.15rem;margin-bottom:.4rem}
-.card3 p{font-size:.95rem;margin:0}
-.card3 .fx{margin-top:12px}
-/* cards in a row stand as tall as the tallest */
-.cards3>.pop>.leaf{height:100%}
-@media(max-width:860px){.cards3{grid-template-columns:1fr}}
-/* relevance */
-.map{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px 0;align-items:stretch;max-width:760px;margin:2rem auto 0}
-.map .l,.map .r{padding:11px 16px;font-size:1rem;border:3px solid var(--ink);background:#fffaf0;color:var(--ink);transition:background .25s,transform .25s;cursor:default}
-.map .r{font-family:var(--sans);background:#e9f2f7}
-.map .mid{display:grid;place-items:center;color:var(--blood);font-size:1.3rem}
-.map .hi{background:var(--gold)!important;transform:scale(1.03)}
-.map .hd{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood)}
-.end{text-align:center}
-.end .big{font-size:clamp(1.5rem,4.2vw,2.5rem);max-width:19em;margin:0 auto 1.4rem;color:var(--ink);text-wrap:balance}
-.links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
-.links a{color:var(--ink);background:#fffaf0;border:3px solid var(--ink);padding:9px 18px;text-decoration:none;font-family:var(--sans);font-size:.9rem;box-shadow:4px 4px 0 var(--shadow)}
-.links a:hover{background:var(--gold)}
-footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;font-family:var(--sans);background:#d8cba6}
-
-/* ---------- lists, small parts ---------- */
-.terms{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:12px}
-.terms li{padding:12px 16px;background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 #b9a77e;font-size:.98rem}
-.terms b{font-family:var(--sans)}
-@keyframes slotin{from{transform:translateY(-8px);opacity:0}}
-.btn:focus-visible,.links a:focus-visible,[role=button]:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
-.num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
-.chip{display:inline-block;padding:1px 7px;margin:2px 3px 2px 0;border:2px solid var(--ink);border-radius:5px;background:#fff;font-family:var(--sans);font-weight:700;font-size:.86rem;white-space:nowrap}
-.chip i{display:inline-block;width:.7em;height:.7em;border-radius:50%;border:1.5px solid var(--ink);margin-right:5px;vertical-align:-.02em}
-.isle-svg{width:min(100%,440px);display:block;margin:0 auto}
-.fig .fade{opacity:0;transition:opacity .6s}
-.fig .fade.on{opacity:1}
-.fig .lab{fill:#6b5a48;font-size:15px;font-style:italic;text-anchor:middle}
-.fig .halo{paint-order:stroke;stroke:#fffaf0;stroke-width:5px;stroke-linejoin:round}
-.tok text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.site rect,.site circle{stroke:var(--ink);stroke-width:4}
-.site text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-
-/* ---------- space-time, drawn in the round ---------- */
-.st-ring{fill:none;stroke:#b9a77e;stroke-opacity:.7;stroke-width:1;stroke-dasharray:3 4}
-.st-spoke{stroke:#1c1512;stroke-width:2.5;stroke-opacity:.45}
-.st-node rect{fill:#f6eed6;stroke:#1c1512;stroke-width:2}
-.st-node text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.st-slip{fill:none;stroke:#136f9e;stroke-width:2.6;transition:stroke .3s,stroke-width .3s,opacity .5s}
-.st-seg{stroke:#bf4a26;stroke-width:7;stroke-linecap:round;opacity:0;transition:opacity .3s}
-.st-seg.hi{opacity:.85}
-.st-slip.hi{stroke:#bf4a26;stroke-width:5}
-.st-ev{cursor:pointer}
-.st-ev circle.b{stroke:#1c1512;stroke-width:3;transition:stroke .3s,stroke-width .3s}
-.st-ev text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
-.st-ev .halo2{fill:none;stroke:#e0b84a;stroke-width:7;opacity:0;transition:opacity .3s}
-.st-ev.sel .halo2,.st-ev.mark .halo2{opacity:1}
-.st-ev.sel circle.b{stroke-width:4.5}
-.st-ev.dim{opacity:.3}
-.st-ev:focus-visible{outline:none}.st-ev:focus-visible circle.b{stroke:#136f9e;stroke-width:6}
-.st-note{fill:#6b5a48;font-size:13px;font-style:italic}
-
-/* ---------- a stage with a figure and a side panel ---------- */
-.stage-inner.split{gap:18px;align-items:center}
-.stage-inner.split svg.fig{flex:1 1 300px;min-width:0;max-width:470px}
-.side{flex:0 0 240px;display:grid;gap:10px;font-family:var(--sans);font-size:.84rem}
-.side .hc{background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--shadow);padding:8px 10px;min-height:92px;transition:background .4s}
-.side .hc h5{margin:0 0 5px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:6px}
-.side .hc h5 span{color:#6b5a48;letter-spacing:.02em;text-transform:none}
-.side .hc .chk{font-size:.78rem;margin-top:4px;line-height:1.35}
-.side .hc.in{background:#e3ecc4}
-@media(max-width:899px){
-  .stage-inner.split{flex-direction:column;gap:10px}
-  .stage-inner.split svg.fig{flex:0 0 auto;max-height:30svh;width:auto;max-width:100%}
-  .side{flex:0 0 auto;width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;font-size:.7rem}
-  .side .hc{padding:5px 6px;min-height:0;box-shadow:3px 3px 0 var(--shadow)}
-  .side .hc h5{font-size:.62rem;flex-direction:column;gap:0}
-  .side .hc .chk{font-size:.66rem}
-  .side .chip{font-size:.68rem;padding:0 4px}
-}
-.tear{width:100%}
-.scrolly svg.fig.svg-dark{overflow:hidden}
-
-/* ---------- proofs, in the paper's own terms ---------- */
-details.proof{max-width:760px;margin:1.8rem 0 0;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);padding:0 clamp(14px,3vw,22px);font-size:.95rem}
-details.proof>summary{cursor:pointer;padding:12px 0;font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--aegean-d)}
-details.proof>summary:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
-details.proof[open]{padding-bottom:14px}
-details.proof details.proof{border-width:3px;box-shadow:none;background:#fff;margin:1rem 0;max-width:none}
-details.proof .given{padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean);margin:0 0 .8rem}
-details.proof h3,details.proof h4{font-size:1.02rem;margin:1.4rem 0 .5rem}
-details.proof .hlink{color:inherit;text-decoration:none}
-details.proof .fnote{font-size:.84rem;color:#6b5a48}
-ol.proofsteps{padding-left:1.4em;margin:.4rem 0 0}
-ol.proofsteps li{margin:.55em 0}
-.qed{float:right;font-family:var(--sans);letter-spacing:.15em;color:#5f6e28}
-.mathblock{margin:.8rem 0;padding:8px 12px;overflow-x:auto;text-align:center;font-style:italic;background:#fff;border:2px solid #1c151233}
-.slab{margin:1rem 0;padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean)}
-.slab-head{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
-.stmt{font-style:italic}
-
-/* ---------- closing apparatus: lineage, papers, links to where a fact comes from ---------- */
-a.anchor{display:block;height:0;scroll-margin-top:56px}
-sup.xref{font-size:.8em;line-height:0;margin-left:1px}
-sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
-.apparatus{max-width:760px;margin:3rem auto 0;text-align:left;font-size:.94rem}
-.apparatus .lineage{margin:0 0 .6rem}
-.apparatus .lbl{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-right:8px}
-.apparatus a{color:var(--aegean-d)}
-.apparatus details.proof{margin-top:1.2rem}
-.apparatus .refs p,.apparatus ol.refs li{font-size:.9rem;margin:.45em 0}
-.apparatus table{width:100%;border-collapse:collapse;font-size:.9rem}
-.apparatus td{padding:5px 8px 5px 0;border-top:2px solid #1c151222;vertical-align:top}
-
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  .pop > .leaf{transition:opacity .3s;transform:none!important}
-  [data-depth]{transform:none!important}
-  .pulse{animation:none}
-  .fig .tok{transition:none}
-}
-/* ---------- lineage: the papers a book's papers draw on and lead to (lineage.py) ---------- */
-.lin{--gap:134px;position:relative;margin-top:1.2rem}
-.lin ul{list-style:none;margin:0;padding:0}
-.lin h5{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#6b5a48;margin:0 0 6px;font-weight:700}
-.lin-edges{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-.lin-edges path{fill:none;stroke:var(--ink);stroke-width:1.6}
-.lin-edges polygon{fill:var(--ink)}
-.lin-nodes>li{padding:6px 0}
-.lin-node{position:relative;z-index:1;display:block;padding:9px 12px;color:var(--ink);text-decoration:none;line-height:1.28}
-.lin-node b{display:block;font-size:.93rem}
-.lin-node .by{display:block;font-family:var(--sans);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--blood);margin-top:4px}
-.lin-node.book{background:#fffaf0;border:2px solid var(--ink);box-shadow:4px 5px 0 var(--shadow)}
-.lin-node.ext{background:#f6eed6;border:2px dashed #1c151288}
-.lin-node.ext b{font-weight:400;font-style:italic}
-a.lin-node:hover b{text-decoration:underline}
-.lin-node.here{background:var(--ink);color:var(--parch);border:2px solid var(--ink);box-shadow:5px 6px 0 var(--shadow);padding:13px 14px}
-.lin-node.here b{font-size:1rem}
-.lin-node.here .by{color:var(--gold)}
-.lin-link{position:relative;z-index:1;cursor:default;outline:0}
-.lin-link em{display:inline-block;font-family:var(--sans);font-style:normal;font-size:.72rem;line-height:1.2;background:#f6eed6;border:1px solid #1c151255;border-radius:10px;padding:2px 8px;color:var(--ink)}
-.lin-link .ends{font-family:var(--sans);font-size:.72rem;color:#6b5a48;margin-left:6px}
-.lin-link .why{display:block;font-size:.84rem;color:#3a2d24;margin:3px 0 0}
-.lin-say{font-size:.9rem;color:#3a2d24;margin:16px 0 0;max-width:none}
-.lin-say b{font-family:var(--sans);font-size:.74rem;letter-spacing:.06em;color:var(--blood);margin-right:8px}
-.lin-key{margin:10px 0 0;font-family:var(--sans);font-size:.74rem;color:#6b5a48}
-.lin-key .k{display:inline-block;width:20px;height:11px;vertical-align:-1px;margin:0 6px 0 16px;border:2px solid var(--ink)}
-.lin-key .k:first-child{margin-left:0}
-.lin-key .k.here{background:var(--ink)}
-.lin-key .k.book{background:#fffaf0}
-.lin-key .k.ext{border-style:dashed;border-color:#1c151288}
-@media(min-width:860px){
-  /* three columns; each paper at the sides keeps its links beside it, in the gap the edges cross */
-  .lin{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.92fr) minmax(0,1.2fr);align-items:center}
-  .lin-side.in h5{margin-right:var(--gap)}
-  .lin-side.out h5{margin-left:var(--gap)}
-  .lin-side .lin-nodes>li{display:grid;align-items:center}
-  .lin-side.in .lin-nodes>li{grid-template-columns:minmax(0,1fr) var(--gap)}
-  .lin-side.out .lin-nodes>li{grid-template-columns:var(--gap) minmax(0,1fr)}
-  .lin-side.out .lin-links{order:-1}
-  .lin-side .lin-links{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 10px;text-align:center}
-  .lin-mid{padding:0 56px}
-  .lin-mid .lin-nodes>li{padding:0}
-  .lin-mid .lin-nodes>li+li{margin-top:26px}
-  .lin-mid .lin-links{display:flex;justify-content:center;gap:8px;margin:-8px 0 18px;text-align:center}
-  .lin-link .ends,.lin-link .why{display:none}
-  .lin-say,.lin-key{grid-column:1/-1}
-  .lin-say{min-height:2.7em}
-  .lin-link em{transition:background .15s,color .15s}
-  .lin.hot .lin-node,.lin.hot .lin-link,.lin.hot .lin-edges g{opacity:.28}
-  .lin.hot .lin-node.on,.lin.hot .lin-link.on,.lin.hot .lin-edges g.on{opacity:1}
-  .lin.hot .lin-link.on em{background:var(--ink);color:var(--parch);border-color:var(--ink)}
-}
-@media(max-width:859px){
-  /* one column: each paper's links are written out under it */
-  .lin-side,.lin-mid{margin-bottom:1.4rem}
-  .lin-nodes>li{padding:7px 0}
-  .lin-links{margin:8px 0 4px 6px;padding-left:12px!important;border-left:2px solid #1c151255}
-  .lin-mid .lin-links{margin:0 0 8px 6px}
-  .lin-link+.lin-link{margin-top:8px}
-  .lin-say{display:none}
-}
-/* ---------- two copies of a service ---------- */
-.logs{padding:18px 18px 14px}
-.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
-.copies{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
-.copy{border:3px solid var(--ink);background:#fff;padding:8px 10px;font-family:var(--sans);font-size:.82rem;min-height:9.5em}
-.copy h5{margin:0 0 6px;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#6b5a48}
-.copy .e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both}
-.copy .fin{margin-top:6px;font-weight:700;font-size:1rem}
-.copy.bad{background:#fde8de}
-.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:3.6em;font-style:italic}
-/* ---------- the crown figure and its controls ---------- */
-.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
-@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
-.site.out{opacity:.35}
-.site.gone{display:none}
-.site.turn rect{stroke-width:7}
-.site.shared rect{stroke:#136f9e;stroke-width:7}
-.site.sus rect{stroke:#bf4a26;stroke-width:5;stroke-dasharray:7 4}
-.site .state{font-family:var(--serif);font-weight:400;font-style:italic;font-size:14px;fill:#1c1512;text-anchor:middle}
-.stand{font-family:var(--sans);font-size:.88rem;border:3px solid var(--ink);background:#fff;padding:8px 12px;margin-bottom:10px}
-.stand div{padding:2px 0}
-.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0}
-.counts span b{font-size:1.4rem;margin-right:5px}
-.pick{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 0}
-.pick .plab{font-family:var(--sans);font-size:.78rem;color:#6b5a48;flex:0 0 100%}
-.pick .btn{padding:6px 12px;font-size:.82rem}
-.pick .btn.alt[aria-pressed=false]{opacity:.85}
-.st-new{animation:rowin .6s both}
-@keyframes rowin{from{opacity:0}}
-.req{display:grid;gap:4px}
-.req .rq{padding:3px 8px;border-left:6px solid var(--ink);background:#f6eed6;font-size:.84rem}
-.req .rq.yes{background:#e3ecc4}
-/* ---------- the four posts beside the stage ---------- */
-.side.four .hc{min-height:0}
-.side.four .hc h5{align-items:center}
-.side.four .hc i.dot{display:inline-block;width:.8em;height:.8em;border-radius:50%;border:1.5px solid var(--ink);margin-right:5px}
-.side.four .hc.done{background:#e3ecc4}
-.side.four .hc.dim{opacity:.6}
-.side.four .hc .chk{min-height:2.6em}
-@media(max-width:899px){
-  .side.four{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .side.four .hc .chk{min-height:0}
-}
-/* ---------- terms, as a run of sandglasses ---------- */
-.terms-list{display:grid;gap:5px;margin-top:12px}
-.trow{display:grid;grid-template-columns:5.2rem minmax(0,1fr);gap:2px 10px;align-items:center;font-family:var(--sans);font-size:.8rem;border:3px solid var(--ink);background:#fff;padding:5px 8px;animation:slotin .35s ease both}
-.trow b{font-size:.8rem}
-.trow .gl{display:block;height:10px;background:#f6eed6;border:2px solid var(--ink)}
-.trow .gl i{display:block;height:100%;background:#9cb648}
-.trow em{grid-column:1/-1;font-style:normal;font-size:.78rem;color:#6b5a48}
-.trow.ok{background:#e3ecc4}
-.trow.ok em{color:#2f5a1c}
-.trow.wind .gl i{background:#6583d6}
-.trow.short .gl i{background:#e0b84a}
-.trow.more{border-style:dashed;text-align:center;display:block}
-/* ---------- the allowed numbers ---------- */
-.meter{height:16px;border:3px solid var(--ink);background:#fff;margin-top:12px}
-.meter i{display:block;height:100%;width:0;background:#6583d6;transition:width .4s}
-.meter.full i{background:#c45448}
-.tell{max-width:40em;margin-top:1.6rem}
-.tell+.tell{margin-top:0}
-.cards3.pair{grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px}
-@media(max-width:860px){.cards3.pair{grid-template-columns:1fr}}
-.card3 h3:last-child{margin-bottom:0}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -427,8 +23,8 @@ a.lin-node:hover b{text-decoration:underline}
   <div class="wrap grid">
     <div>
       <h1>Keeping Order Among Liars</h1>
-      <p class="generic">Can a replicated service keep its commands in order when some of its machines lie, the leader included, and messages take arbitrarily long?</p>
-      <p class="allegory">We find out by exploring how four bandits holding a hilltop held one book of their loot when any of them, their chief included, might be lying.</p>
+      <p class="generic">Can a replicated service keep all of its commands in the exact same order when some of its machines lie — including the leader — and when messages across the network can be delayed for arbitrarily long?</p>
+      <p class="allegory">To find out, we follow four bandits on a hilltop who maintain four separate copies of their loot scroll, ensuring that every honest copy records the same entries in the same order even when one of them — their chief included — is a liar.</p>
       <p class="source">After Miguel Castro and Barbara Liskov, <i>Practical Byzantine Fault Tolerance</i>, 1999</p>
     </div>
     <div class="pop" data-auto>
@@ -450,11 +46,11 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="lin-side in">
       <h5>Draws on</h5>
       <ul class="lin-nodes">
-        <li><a class="lin-node book" data-n="i:lamport-1978_time-clocks" data-label="Lamport 1978" href="../ordering-without-clocks/index.html"><b>Time, Clocks, and the Ordering of Events in a Distributed System</b><span class="by">Lamport 1978 · Ordering Without Clocks</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:lamport-1978_time-clocks" data-to="m:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>state machine replication</em><span class="ends"></span><span class="why">State machine replication: every copy applies the same commands in the same order.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="i:lamport-shostak-pease-1982_byzantine-generals" data-label="Lamport, Shostak &amp; Pease 1982" href="../agreeing-among-liars/index.html"><b>The Byzantine Generals Problem</b><span class="by">Lamport, Shostak &amp; Pease 1982 · Agreeing Among Liars</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:lamport-shostak-pease-1982_byzantine-generals" data-to="m:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>Byzantine faults</em><span class="ends"></span><span class="why">Byzantine faults, and the bound of more than three replicas for each faulty one.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="i:fischer-lynch-paterson-1985_flp-impossibility" data-label="Fischer, Lynch &amp; Paterson 1985" href="../the-limits-of-agreement/index.html"><b>Impossibility of Distributed Consensus with One Faulty Process</b><span class="by">Fischer, Lynch &amp; Paterson 1985 · The Limits of Agreement</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:fischer-lynch-paterson-1985_flp-impossibility" data-to="m:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>the need for timing bounds</em><span class="ends"></span><span class="why">Agreement needs some bound on delay, so safety holds always and progress only when delays are bounded.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="i:oki-liskov-1988_viewstamped-replication" data-label="Oki &amp; Liskov 1988" href="../one-leader-at-a-time/index.html"><b>Viewstamped Replication: A New Primary Copy Method to Support Highly-Available Distributed Systems</b><span class="by">Oki &amp; Liskov 1988 · One Leader at a Time</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:oki-liskov-1988_viewstamped-replication" data-to="m:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>primary and view change</em><span class="ends"></span><span class="why">A primary, its backups, and a view change that replaces a faulty primary.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="i:lamport-1998_part-time-parliament" data-label="Lamport 1998" href="../the-part-time-parliament/index.html"><b>The Part-Time Parliament</b><span class="by">Lamport 1998 · The Part-Time Parliament</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:lamport-1998_part-time-parliament" data-to="m:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>overlapping quorums</em><span class="ends"></span><span class="why">Agreement on a sequence of commands by quorums that overlap, under a primary that can be replaced.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="i:lamport-1978_time-clocks" data-label="Lamport 1978" href="../ordering-without-clocks/index.html"><b>Time, Clocks, and the Ordering of Events in a Distributed System</b><span class="by">Lamport 1978 · Ordering Without Clocks</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:lamport-1978_time-clocks" data-to="m:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>state machine replication</em><span class="ends"></span><span class="why">State machine replication: every honest replica starts in the same state and applies the exact same sequence of commands in the same order.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="i:lamport-shostak-pease-1982_byzantine-generals" data-label="Lamport, Shostak &amp; Pease 1982" href="../agreeing-among-liars/index.html"><b>The Byzantine Generals Problem</b><span class="by">Lamport, Shostak &amp; Pease 1982 · Agreeing Among Liars</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:lamport-shostak-pease-1982_byzantine-generals" data-to="m:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>Byzantine faults</em><span class="ends"></span><span class="why">The Byzantine fault model — where faulty nodes may lie or collude arbitrarily — and the need for at least 3f + 1 replicas to tolerate f traitors.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="i:fischer-lynch-paterson-1985_flp-impossibility" data-label="Fischer, Lynch &amp; Paterson 1985" href="../the-limits-of-agreement/index.html"><b>Impossibility of Distributed Consensus with One Faulty Process</b><span class="by">Fischer, Lynch &amp; Paterson 1985 · The Limits of Agreement</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:fischer-lynch-paterson-1985_flp-impossibility" data-to="m:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>the need for timing bounds</em><span class="ends"></span><span class="why">Because consensus cannot guarantee progress in a completely asynchronous network, PBFT guarantees safety regardless of message delays and relies on bounded delays only for liveness.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="i:oki-liskov-1988_viewstamped-replication" data-label="Oki &amp; Liskov 1988" href="../one-leader-at-a-time/index.html"><b>Viewstamped Replication: A New Primary Copy Method to Support Highly-Available Distributed Systems</b><span class="by">Oki &amp; Liskov 1988 · One Leader at a Time</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:oki-liskov-1988_viewstamped-replication" data-to="m:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>primary and view change</em><span class="ends"></span><span class="why">Organizing replication into numbered views with a single primary ordering requests, plus a view-change protocol to replace a silent or faulty primary.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="i:lamport-1998_part-time-parliament" data-label="Lamport 1998" href="../the-part-time-parliament/index.html"><b>The Part-Time Parliament</b><span class="by">Lamport 1998 · The Part-Time Parliament</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:lamport-1998_part-time-parliament" data-to="m:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>overlapping quorums</em><span class="ends"></span><span class="why">Using overlapping quorums across views so that any decision committed in an earlier view is guaranteed to be seen and preserved by the next view's leader.</span></li></ul></li>
       </ul>
     </div>
     <div class="lin-mid">
@@ -466,11 +62,11 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="lin-side out">
       <h5>Leads to</h5>
       <ul class="lin-nodes">
-        <li><div class="lin-node ext" data-n="o:castro-2001" data-label="Castro 2001"><b>Practical Byzantine Fault Tolerance, doctoral thesis</b><span class="by">Castro 2001</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:castro-liskov-1999_practical-byzantine-fault-tolerance" data-to="o:castro-2001" tabindex="0"><em>the algorithm</em><span class="ends"></span><span class="why">The algorithm, with its complete proofs.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="o:yin-2019_hotstuff" data-label="Yin et al. 2019" href="../changing-leaders-among-liars/index.html"><b>HotStuff: BFT Consensus with Linearity and Responsiveness</b><span class="by">Yin et al. 2019 · Changing Leaders Among Liars</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:castro-liskov-1999_practical-byzantine-fault-tolerance" data-to="o:yin-2019_hotstuff" tabindex="0"><em>leader, quorums, view change</em><span class="ends"></span><span class="why">A leader, votes gathered in quorums, and a view change, here made linear in messages.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:castro-2001" data-label="Castro 2001"><b>Practical Byzantine Fault Tolerance, doctoral thesis</b><span class="by">Castro 2001</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:castro-liskov-1999_practical-byzantine-fault-tolerance" data-to="o:castro-2001" tabindex="0"><em>the algorithm</em><span class="ends"></span><span class="why">Presents the full specification and complete formal safety and liveness proofs of the PBFT protocol.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="o:yin-2019_hotstuff" data-label="Yin et al. 2019" href="../changing-leaders-among-liars/index.html"><b>HotStuff: BFT Consensus with Linearity and Responsiveness</b><span class="by">Yin et al. 2019 · Changing Leaders Among Liars</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:castro-liskov-1999_practical-byzantine-fault-tolerance" data-to="o:yin-2019_hotstuff" tabindex="0"><em>leader, quorums, view change</em><span class="ends"></span><span class="why">Replaces PBFT's all-to-all broadcasts and heavy view-change messages with a three-phase leader-driven pipeline whose communication cost grows linearly with the number of replicas.</span></li></ul></li>
       </ul>
     </div>
-    <p class="lin-say">Each link is an idea one paper took from another. Point at one, or tap it, to read how.</p>
+    <p class="lin-say">Each link traces an idea that one paper borrowed from another. Point at a link, or tap it, to see how.</p>
     <p class="lin-key"><i class="k here"></i>a paper this book retells <i class="k book"></i>a paper retold in another book <i class="k ext"></i>a paper outside the series</p>
     </div>
   </div>
@@ -484,13 +80,13 @@ a.lin-node:hover b{text-decoration:underline}
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>Many copies, one order</h2>
-      <p class="lede">A service is run on several computers, so that it survives the loss of some. Every honest copy must apply the same commands in the same order, even when some copies lie.</p>
-      <p>The order matters because the effect of a command depends on the commands before it, as the two copies beside this show. A faulty machine here may do worse than stop. It may lie, and the leader that hands out the order may be the one lying. Up to <var>f</var> of 3<var>f</var> + 1 machines may be faulty, which with four machines is one. Messages may take any time at all, so the order must hold whatever the delays, and progress is asked for only once delays stop growing without bound.</p>
+      <p class="lede">To survive hardware failures or break-ins, a critical service can be run on several computers at once (<i>state machine replication</i>). For the copies to stay in sync, every honest machine must execute the exact same commands in the exact same order — even when some of the machines actively lie.</p>
+      <p>Order matters because the outcome of a command depends on what ran before it, as the interactive example on the right shows. And here a faulty machine may do far worse than crash: it may send conflicting messages to different peers, and the leader (the <i>primary</i>) responsible for numbering commands may itself be the traitor. Up to <var>f</var> out of 3<var>f</var> + 1 machines may be faulty — which for a group of four machines means one liar. Worse still, messages across the network can take arbitrarily long, so the protocol must never allow two honest copies to disagree on the order (<i>safety</i>), while guaranteeing that commands still go through once network delays stop growing without bound (<i>liveness</i>).</p>
       <ul class="terms">
-        <li><b>Three phases of messages</b> (Castro and Liskov, 1999) order each command, so that no two honest copies put different commands in the same place.</li>
-        <li><b>A view change</b> replaces a faulty leader without losing what was already committed.</li>
+        <li><b>Three phases of messages</b> (Castro and Liskov, 1999 — <i>pre-prepare</i>, <i>prepare</i>, and <i>commit</i>) lock in the sequence number of each command so that no two honest copies ever put different commands in the same slot.</li>
+        <li><b>A view change</b> replaces a silent or lying leader without losing any command that an honest copy has already committed.</li>
       </ul>
-      <p style="margin-top:1.2rem">The first keeps the order under one leader, and the second carries it from one leader to the next. We tell it with four bandits, a scroll of their loot, and trained rats.</p>
+      <p style="margin-top:1.2rem">The first mechanism keeps the log in order under a single leader; the second carries that order safely across leaders. We tell the story with four bandits on the crown of Mount Phyle, a shared scroll of their loot, and their trained rats.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper logs">
@@ -511,11 +107,13 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="hall-title"><div class="t">
       <div class="kicker">The crown of Mount Phyle</div>
       <h2>Four posts, none in sight of another</h2>
-      <p>Number 1, the chief, sits inside the ring wall with the loot, and Numbers 2, 3 and 4 hold posts out on the slopes, none in sight of another.<sup class="xref"><a href="../../places/the-crown/index.html" title="The Setting: The Crown of Mount Phyle">*</a></sup> One of the four may lie, and with four bandits one is as many as the others can allow for.</p>
+      <p>Number 1, the chief, sits inside the stone ring wall with the strongboxes of loot, while Numbers 2, 3, and 4 keep lookout posts out on the slopes, none within sight or earshot of another.<sup class="xref"><a href="../../places/the-crown/index.html" title="The Setting: The Crown of Mount Phyle">*</a></sup> Any one of the four bandits may be a liar, and with four posts in all, a single liar is the most the honest three can tolerate.</p>
     </div></div>
-    <div class="pin pop" style="left:50%;top:46%;"><div class="leaf"><b>Only rats</b>Word passes between the posts only by trained rat, and every rat goes under a seal ring that no one can counterfeit.</div></div>
-    <div class="pin pop" style="left:6%;top:63%;"><div class="leaf"><b>Nobody learns who lies</b>Nobody on the crown, or below it, ever finds out which of the four it is.</div></div>
-    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>A wind</b>On these nights a wind can hold the rats in their holes for as long as it blows. When it drops, runs are short again.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s1" title="Agreeing When Messages Run Late: The Wind Keeps the Ravens in the Folds">*</a></sup> Nobody on the crown can tell when it has dropped.</div></div>
+    <div class="pins">
+      <div class="pin pop"><div class="leaf"><b>Only rats and seals</b>Word passes between the posts only by trained rat, and every message is stamped in wax with the sender's signet ring, which no one else can forge.</div></div>
+      <div class="pin pop"><div class="leaf"><b>Nobody learns who lies</b>Neither the honest bandits on the hill nor we as observers ever find out which of the four is the traitor.</div></div>
+      <div class="pin pop"><div class="leaf"><b>A fierce wind</b>On these later nights of the siege, a high wind can pin the rats in their holes for as long as it blows. When the wind drops, the rat runs are short and quick again — though nobody on the crown can tell simply by looking when the wind has dropped.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s1" title="Agreeing When Messages Run Late: The Wind Keeps the Ravens in the Folds">*</a></sup></div></div>
+    </div>
   </div>
 </section>
 
@@ -526,22 +124,22 @@ a.lin-node:hover b{text-decoration:underline}
       <div>
         <div class="kicker">What the four hold</div>
         <h2>The loot scroll</h2>
-        <p class="lede">The four hold a scroll of the loot, one copy at each post, since no post is in sight of another. The scroll says where each strongbox lies, and whose share it is.</p>
-        <p>The scroll grows by entries. An entry is one record about the loot, <em>the third strongbox lies in the north cleft</em> or <em>the silver cups are Number 3's share</em>, and any bandit may file one. Every copy must take the entries in the same order, because the effect of an entry depends on what the scroll already says. Two copies that took the same entries in different orders could come to say different things about the same strongbox.</p>
-        <p>These are later nights of the siege. The sandglasses were turned together once, on the first night, and never again.<sup class="xref"><a href="../agreeing-among-liars/index.html#s3" title="Agreeing Among Liars: The Rats in the Wall">*</a></sup></p>
+        <p class="lede">Because no post can see another, the four bandits keep a <b>loot scroll</b> — one complete copy at each post — recording where every strongbox is hidden and whose share each piece of treasure is.</p>
+        <p>The scroll grows one <b>entry</b> at a time. An entry is a single update to the ledger — such as <em>the third strongbox lies in the north cleft</em> or <em>the silver cups belong to Number 3</em> — and any bandit may file one. Crucially, every honest copy of the scroll must record the entries in the exact same order, because the meaning of a new entry depends on what the scroll already says. Two copies that wrote the same entries in different orders could end up giving the same strongbox to two different bandits.</p>
+        <p>Furthermore, these are later nights of the siege. The four bandits turned their sandglasses together once on the first night, and their glasses have long since drifted out of step.<sup class="xref"><a href="../agreeing-among-liars/index.html#s3" title="Agreeing Among Liars: The Rats in the Wall">*</a></sup></p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/keeping-order-among-liars-k01-wind-07a5353893-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/keeping-order-among-liars-k01-wind-07a5353893-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/keeping-order-among-liars-k01-wind-07a5353893-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/keeping-order-among-liars-k01-wind-07a5353893-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/k01-wind.jpg" alt="At dusk in a strong wind, a rat with a cord round its neck and a tiny bronze tube waits in a chink between the great grey stones of a ruined wall, the grass streaming flat below" loading="lazy"></div></div></div>
     </div>
-    <p class="tell">The four owe each other two things about this scroll, and the two are owed on different terms.</p>
+    <p class="tell">The four bandits require two guarantees for their loot scroll, and the two guarantees hold under very different conditions:</p>
     <div class="cards3" style="margin-top:1.2rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the four owe each other</div><h3>Order</h3><p>Every honest copy takes the same entries in the same order. The scroll then behaves as though one hand wrote every entry at a single moment between its filing and its standing.<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One: The Rule of the Board">*</a></sup></p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the four owe each other</div><h3>Going on</h3><p>Every entry that an honest bandit files stands in the end, once the wind has dropped for long enough.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Why each of them</div><h3>Any wind, and no promise</h3><p>Order must hold in any wind, because nobody can see the wind drop. Going on cannot be promised while the wind blows. If four bandits could promise to agree on anything with the rats held in their holes for any time, the mercenaries at the foot could agree whether to attack, and they cannot.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: A Fair Night in Which Nothing Is Ever Settled">*</a></sup></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First guarantee · Safety</div><h3>Order</h3><p>Every honest copy writes the exact same entries in the exact same order. Together, the copies behave as if there were only a single scroll written by one hand at a single moment between when an entry is filed and when it stands (<i>linearizability</i>).<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One: The Rule of the Board">*</a></sup></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second guarantee · Liveness</div><h3>Going on</h3><p>Every entry filed by an honest bandit eventually <b>stands</b> (commits) in the scroll, provided the wind drops and stays calm for long enough.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Why the conditions differ</div><h3>Safe in any wind, live in calm air</h3><p>Order must never be violated, no matter how hard or how long the wind blows, because nobody can tell when the wind has dropped. Progress, by contrast, cannot be guaranteed while the wind pins the rats in their holes — otherwise the mercenaries at the foot of the hill could solve consensus with arbitrarily slow birds, which is impossible.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: A Fair Night in Which Nothing Is Ever Settled">*</a></sup></p></div></div></div>
     </div>
-    <p class="tell">Four copies, then, with one liar among the four and a wind that nobody can see drop. Something has to decide what order the entries go in.</p>
+    <p class="tell">We have four copies of the scroll, one liar among the four bandits, and a wind that can delay any rat for an unknown time. First, someone must be put in charge of assigning each entry its place in line.</p>
     <details class="proof">
       <summary>Stated formally · what the four owe each other</summary>
-      <p class="given">Safety: the service is linearizable. Liveness: clients eventually receive replies, provided at most ⌊(<var>n</var> − 1)/3⌋ replicas are faulty and delay(<var>t</var>) does not grow faster than <var>t</var> indefinitely. (Castro and Liskov, §2–3.)</p>
+      <p class="given"><b>Safety:</b> the replicated service is linearizable (no two non-faulty replicas execute different requests at the same sequence number). <b>Liveness:</b> clients eventually receive replies to their requests, provided at most ⌊(<var>n</var> − 1)/3⌋ replicas are faulty and network delay(<var>t</var>) does not grow faster than <var>t</var> indefinitely. (Castro and Liskov, §§2–3.)</p>
     </details>
   </div>
 </section>
@@ -555,20 +153,20 @@ a.lin-node:hover b{text-decoration:underline}
       <div>
         <div class="kicker">Who numbers the entries</div>
         <h2>The chief's job</h2>
-        <p class="lede">The order of the entries is decided by numbering them, so that every copy can take them in number order. Numbering is a job, taken by one bandit at a time. The job does not belong to the chief by right, because on the crown the chief is a job and no rank.<sup class="xref"><a href="../agreeing-among-liars/index.html#s2" title="Agreeing Among Liars: Hold, or Scatter">*</a></sup></p>
-        <p>The job starts with Number 1, the chief inside the ring wall. When it passes, it passes in number order: 1, 2, 3, 4, then 1 again. Each spell in the job is a <b>term</b>, and terms are counted, so the count alone says who has the job.</p>
+        <p class="lede">To keep every copy of the scroll in the same order, each entry is given a sequential number (1, 2, 3, …) so that every post can write entries in number order. Assigning those numbers is the job of a single leader at a time, whom we call the <b>registrar</b> (the paper's <i>primary</i>). The job does not belong permanently to Bandit 1, because on the crown leadership is a rotating job, not a fixed rank.<sup class="xref"><a href="../agreeing-among-liars/index.html#s2" title="Agreeing Among Liars: Hold, or Scatter">*</a></sup></p>
+        <p>The registrar's job starts with Number 1 inside the ring wall. Whenever the job passes, it rotates around the posts in number order: 1, 2, 3, 4, and back to 1. Each spell under a single registrar is called a <b>term</b> (a <i>view</i> <var>v</var>), and because terms are numbered sequentially, the term number alone tells every bandit who the current registrar is.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on its top, a few white tents on the slopes below and the sea beyond" loading="lazy"></div></div></div>
     </div>
-    <p class="tell">A bandit who wants an entry seals it and sends it to the registrar. The registrar gives it the next number. Then the others make sure of it, and at the end every honest bandit writes the entry into their copy, in number order, and sends the filer a sealed word that it stands.</p>
-    <p class="tell">Anyone may have the job, the one who lies included, so nothing the registrar says is trusted on its own. Everything that follows is built against a registrar who does any of three things.</p>
+    <p class="tell">When a bandit wants to add an entry to the scroll, they seal it and send it to the current registrar. The registrar assigns it the next sequence number and announces that numbering to the other posts. Once the four posts have cross-checked the numbering, every honest bandit writes the entry into their scroll in number order and sends the filer a sealed confirmation that the entry <b>stands</b>.</p>
+    <p class="tell">Because any of the four bandits may hold the registrar's job — including the liar — no one can trust the registrar's word alone. Every part of the protocol that follows is designed to defend against a lying registrar who tries any of three tricks:</p>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the registrar</div><h3>Gives two entries the same number</h3><p>Two different entries go out under one number.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the registrar</div><h3>Tells different bandits different things</h3><p>One entry goes to some bandits, and another to the rest.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Suppose the registrar</div><h3>Sits on an entry</h3><p>The entry is filed, and the registrar numbers nothing.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First trick · Equivocation</div><h3>Giving two entries the same number</h3><p>The registrar assigns the same sequence number (say, entry 7) to two different updates.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second trick · Splitting</div><h3>Telling different posts different things</h3><p>The registrar sends one numbering to some posts and a conflicting numbering (or nothing at all) to the rest.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third trick · Stalling</div><h3>Sitting on a filed entry</h3><p>An honest bandit files an entry, and the registrar simply ignores it and numbers nothing.</p></div></div></div>
     </div>
-    <p class="tell"><b>A bandit knows their entry stands when it stands in their own copy.</b> The paper has a rule for a filer who is not one of the four, which is to wait for two matching sealed words from different bandits. With one liar, two matching words include an honest one. The four do not need that rule, since each honest bandit holds a copy and can read it. The rule is what a filer from outside the four would need, and there is none.</p>
-    <p class="tell">The registrar may lie, then, in any of these three ways. The others need a way to make sure of a number before they write anything down.</p>
+    <p class="tell"><b>How a filer knows their entry stands:</b> on the crown, each bandit is one of the four replicas, so an honest bandit knows their entry stands the moment it stands in their own copy of the scroll. (In the paper's general client-server setup, an outside client that does not hold a copy of the log waits for <var>f</var> + 1 = 2 matching sealed replies from different replicas; since at most one replica lies, two matching confirmations guarantee that at least one honest replica has committed the entry.)</p>
+    <p class="tell">To defeat the registrar's first two tricks — numbering two different entries with the same number or splitting the posts — the bandits must cross-check every numbering before they write anything into their scrolls.</p>
   </div>
 </section>
 
@@ -579,7 +177,7 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow">
       <div class="kicker">One entry, from filing to standing</div>
       <h2>Two echoes</h2>
-      <p class="lede">The others make sure of a number by echoing it, twice. An entry stands only after the registrar has numbered it and the bandits have echoed it twice. Every rat here is sealed, and every bandit holds every sealed rat they take in, so that each can later show what they were told. Follow one entry from its filing to its standing, and watch how many seals each post holds. Scroll slowly: the picture moves with you.</p>
+      <p class="lede">The bandits verify the registrar's numbering by echoing it to one another <em>twice</em>. An entry stands only after the registrar has numbered it (<i>pre-prepare</i>) and the bandits have completed a <b>first echo</b> (<i>prepare</i>) and a <b>second echo</b> (<i>commit</i>). Every message is sealed in wax, and every bandit keeps the sealed messages they receive in a log so they can prove what happened later. Scroll through the six steps below to follow a single entry from filing to standing.</p>
     </div>
   </div>
   <div class="scrolly" id="echo">
@@ -588,27 +186,27 @@ a.lin-node:hover b{text-decoration:underline}
       <div class="side four" id="echoside" data-live></div>
     </div></div>
     <div class="steps">
-      <div class="step on"><div class="card"><div class="num">1 · The filing</div><h3>An entry is filed</h3><p>Number 2 wants an entry written. They seal it and send it to the registrar, Number 1.</p></div></div>
-      <div class="step"><div class="card"><div class="num">2 · The numbering</div><h3>Number 1 numbers it</h3><p>The registrar gives the entry a number, 7, and sends the numbering to the others. The wind holds back the rat to Number 4, and nobody waits for it.</p></div></div>
-      <div class="step"><div class="card"><div class="num">3 · The first echo</div><h3>The numbering is echoed</h3><p>Numbers 2 and 3 accept it. Each tells the others: <em>in this term, I heard that entry 7 is this one</em>.</p></div></div>
-      <div class="step"><div class="card"><div class="num">4 · Readied</div><h3>Three seals on one entry</h3><p>A bandit who holds the numbering and two matching first echoes, from bandits other than the registrar, has the entry <b>readied</b>. Numbers 1, 2 and 3 now do.</p></div></div>
-      <div class="step"><div class="card"><div class="num">5 · The second echo</div><h3>Readied is echoed too</h3><p>Each bandit with the entry readied tells the others: <em>in this term, entry 7 is readied here</em>.</p></div></div>
-      <div class="step"><div class="card"><div class="num">6 · Standing</div><h3>The entry stands</h3><p>A bandit with three matching second echoes, their own among them, has the entry <b>standing</b>. It stands at Numbers 1, 2 and 3, and nobody waited for Number 4.</p></div></div>
+      <div class="step on"><div class="card"><div class="num">1 · The filing</div><h3>An entry is filed</h3><p>Number 2 wants to record an entry in the scroll. They stamp the entry with their seal and send it by rat to the current registrar, Number 1.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · The numbering</div><h3>Number 1 assigns a number</h3><p>The registrar assigns the entry sequence number 7 and sends a sealed numbering (<i>pre-prepare</i>) to all the other posts. Suppose the wind holds back the rat heading to Number 4 — nobody waits for it.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · The first echo</div><h3>The numbering is echoed</h3><p>Numbers 2 and 3 check that they have not already accepted a different entry for number 7 in this term. Each accepts the numbering and sends a sealed <b>first echo</b> (<i>prepare</i>) to every post: <em>"In this term, I heard that entry 7 is this update."</em></p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Readied</div><h3>Three matching seals ready the entry</h3><p>Once a bandit holds the registrar's numbering plus two matching first echoes from posts other than the registrar — three distinct seals in all on the same entry and number — the entry is <b>readied</b> (<i>prepared</i>) at that post. Posts 1, 2, and 3 now have entry 7 readied.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · The second echo</div><h3>Readiness is echoed</h3><p>Each bandit who has the entry readied sends a sealed <b>second echo</b> (<i>commit</i>) to every post: <em>"In this term, entry 7 is readied at my post."</em></p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · Standing</div><h3>The entry stands</h3><p>Once a bandit holds a readied entry plus three matching second echoes (including their own), the entry <b>stands</b> (<i>committed-local</i>) at that post. Entry 7 now stands at Posts 1, 2, and 3 — even though Number 4 was cut off by the wind the entire time.</p></div></div>
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
-    <p class="tell" style="margin-top:0">A bandit writes a standing entry into their copy as soon as every lower number has been written, and sends the filer word that it stands. Rats may come in any order, so entry 9 can stand before entry 8. A bandit then holds entry 9 and waits, and writes nothing past a gap.</p>
-    <p class="tell">An entry stands without waiting for everyone. Each step needs three matching seals out of four, so a post whose rats are held by the wind, or a liar who says nothing, cannot hold the others up.</p>
-    <p class="tell"><b>The two echoes do different work.</b> The first settles order <em>within</em> a term: once an entry is readied anywhere honest, no honest bandit can ready a different entry under the same number in that term, even if the registrar lies. The second settles it <em>across</em> terms: once an entry stands at an honest post, enough honest bandits have it readied that any later registrar will be made to keep it.</p>
-    <p class="tell">Both claims rest on three matching seals being enough, and one of the three seals may be the liar's.</p>
+    <p class="tell" style="margin-top:0">As soon as an entry stands at a post and every lower-numbered entry (1 through 6) has already been written, the bandit writes entry 7 into their scroll and sends a sealed confirmation to the filer. Because rats can arrive out of order, entry 9 might stand before entry 8; when that happens, the bandit holds entry 9 in memory and waits to write it until entry 8 stands as well, never leaving a gap in the scroll.</p>
+    <p class="tell">Notice that no step ever waits for all four posts. Every stage requires only <b>three matching seals out of four</b> (2<var>f</var> + 1), so a single post whose rats are pinned by the wind — or a single liar who refuses to answer — can never block the other three from making progress.</p>
+    <p class="tell"><b>Why two echoes are needed:</b> the two echoes solve two distinct problems. The <b>first echo</b> (reaching <i>readied</i>) locks in the order <em>within a single term</em>: even if the registrar lies and sends different entries for number 7 to different posts, no two honest posts can ever ready different entries for number 7 in the same term. The <b>second echo</b> (reaching <i>standing</i>) locks in the order <em>across terms</em>: once an entry stands at even one honest post, enough honest bandits have it readied that any future registrar in a later term will be forced to keep it.</p>
+    <p class="tell">Both guarantees rest on a single arithmetic fact: why three matching seals out of four are always enough, even when one of those three seals belongs to a liar.</p>
     <details class="proof">
       <summary>Stated formally · an entry, from numbering to standing</summary>
-      <p class="given">In the paper's terms the registrar is the primary, the numbering a pre-prepare, the first echo a prepare, readied is <i>prepared</i> (the pre-prepare and 2<var>f</var> matching prepares), the second echo a commit, and standing is <i>committed-local</i> (prepared and 2<var>f</var> + 1 matching commits). Writing in number order is execution in sequence-number order. (Castro and Liskov, §4.2.)</p>
+      <p class="given">In the paper's terminology, the registrar is the <i>primary</i>, the numbering is a <code>PRE-PREPARE</code>, the first echo is a <code>PREPARE</code>, readied is the predicate <code>prepared(m, v, n, i)</code> (holding the pre-prepare and 2<var>f</var> matching prepares from backups), the second echo is a <code>COMMIT</code>, and standing is <code>committed-local(m, v, n, i)</code> (<code>prepared</code> plus 2<var>f</var> + 1 matching commits). Writing in number order is deterministic state-machine execution in sequence-number order. (Castro and Liskov, §4.2.)</p>
       <ol class="proofsteps">
-        <li><b>Numbering.</b> The registrar sends every man <em>in this term, entry 7 is X</em>.</li>
-        <li><b>First echo.</b> A man accepts the numbering if it is from this term's registrar, the man has not accepted a different entry for number 7 in this term, and 7 is within the numbers now allowed (see settling checkpoints, below). That man sends every man <em>in this term, I heard entry 7 is X</em>. On holding the numbering and two matching first echoes from men other than the registrar, the man's own possibly among them, three seals on the same entry and number, the entry is <b>readied</b> at that post.</li>
-        <li><b>Second echo.</b> Once it is readied, that man sends every man <em>in this term, entry 7 is X is readied here</em>. On three matching second echoes, the man's own among them, the entry <b>stands</b> at that post.</li>
-        <li><b>Carrying out.</b> The man writes a standing entry into the post's copy as soon as every lower number has been written, and sends the filer word that it stands.</li>
+        <li><b>Numbering (Pre-prepare).</b> The registrar of term <var>v</var> assigns sequence number 7 to entry <var>X</var> and sends a sealed message <em>⟨PRE-PREPARE, v, 7, X⟩</em> to all posts.</li>
+        <li><b>First echo (Prepare).</b> A post accepts the numbering if the seal belongs to term <var>v</var>'s registrar, the post is currently in term <var>v</var>, it has not already accepted a different entry for number 7 in term <var>v</var>, and 7 lies within the allowed sequence-number window (see settling checkpoints below). Upon accepting, the post sends <em>⟨PREPARE, v, 7, X⟩</em> to all posts. Once a post holds the numbering and two matching first echoes from posts other than the registrar — three distinct seals on (<var>v</var>, 7, <var>X</var>) — the entry is <b>readied</b> at that post.</li>
+        <li><b>Second echo (Commit).</b> Once (<var>v</var>, 7, <var>X</var>) is readied at a post, that post sends <em>⟨COMMIT, v, 7, X⟩</em> to all posts. Once a post holds the readied entry and three matching second echoes (possibly including its own), the entry <b>stands</b> at that post.</li>
+        <li><b>Execution.</b> Each post writes a standing entry into its copy of the scroll as soon as every lower sequence number has been written, and sends a sealed confirmation to the filer.</li>
       </ol>
     </details>
   </div>
@@ -622,9 +220,9 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The whole trick</div>
       <h2>Why three seals, and four bandits</h2>
-      <p class="lede">Three matching seals are enough, even with the seal of a liar among them, because any two groups of three, out of four, share two bandits. At most one of those two lies, so the two groups share an honest bandit.</p>
-      <p>Suppose a lying registrar tells two bandits that entry 7 is X and the others that it is Y. For X to be readied at an honest post, three bandits sealed X for number 7 in this term. For Y to be readied, three sealed Y. The two threes share an honest bandit, and an honest bandit seals only one entry for a number in a term. So X and Y cannot both be readied.</p>
-      <p>Try it on the crown below. Choose which bandit each group leaves out and which one is supposed to lie, and watch who is left in both groups. Then take one bandit away, and see that groups drawn from three can fail.</p>
+      <p class="lede">Three matching seals out of four are always trustworthy — even when one of the seals is a liar's — because any two groups of three chosen from four bandits must overlap in at least <em>two</em> bandits. Since at most one bandit on the crown is a liar, at least one of the two bandits in the overlap is guaranteed to be honest (<i>quorum intersection</i>).</p>
+      <p>Suppose a lying registrar tries to split the hill by telling two posts that entry 7 is <var>X</var> and telling the other posts that entry 7 is <var>Y</var>. For <var>X</var> to become readied anywhere, three distinct bandits must seal <var>X</var> for number 7 in this term. For <var>Y</var> to become readied anywhere, three distinct bandits must seal <var>Y</var> for number 7 in this term. Those two groups of three necessarily share at least one honest bandit — and an honest bandit never seals two different entries for the same sequence number in the same term! Therefore, <var>X</var> and <var>Y</var> can never both become readied.</p>
+      <p>Test this overlap on the crown below. Pick which bandit each group of three leaves out and choose which bandit is the liar, then see who sits in the overlap of both groups. Next, switch to a party of three bandits and see why quorums of two out of three fail.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Two groups <em>always share an honest bandit</em></h4>
@@ -637,21 +235,18 @@ a.lin-node:hover b{text-decoration:underline}
       </div>
       <div id="sealctl"></div>
     </div></div></div>
-    <div class="pop"><div class="leaf"><div class="paper" style="padding:14px 18px;max-width:40em;margin:1.4rem 0 0"><div class="num">Result · One Entry to a Number</div><p style="margin:.35rem 0 0">In any term, no two different entries are readied under the same number at honest posts.</p></div></div></div>
+    <div class="pop"><div class="leaf"><div class="paper" style="padding:14px 18px;max-width:40em;margin:1.4rem 0 0"><div class="num">Result · One Entry to a Number</div><p style="margin:.35rem 0 0">Within any single term, no two conflicting entries can both become readied under the same sequence number at honest posts.</p></div></div></div>
     <details class="proof">
       <summary>Proof · that the three seals of readiness cannot be split</summary>
-      <p class="given">In the paper's terms an entry is a request <var>m</var>, a term is a view <var>v</var>, a number is a sequence number <var>n</var>, and there are four replicas (3<var>f</var> + 1 with <var>f</var> = 1). <b>Invariant of §4.2.</b> If prepared(<var>m</var>, <var>v</var>, <var>n</var>, <var>i</var>) is true, then prepared(<var>m</var>′, <var>v</var>, <var>n</var>, <var>j</var>) is false for every non-faulty replica <var>j</var> and every <var>m</var>′ ≠ <var>m</var>.</p>
+      <p class="given">In the paper's terms, an entry is a request <var>m</var>, a term is a view <var>v</var>, a sequence number is <var>n</var>, and there are 3<var>f</var> + 1 = 4 replicas (<var>f</var> = 1). <b>Invariant (§4.2).</b> If <code>prepared(m, v, n, i)</code> is true, then <code>prepared(m′, v, n, j)</code> is false for every non-faulty replica <var>j</var> and every <var>m′</var> ≠ <var>m</var> with different digest.</p>
       <ol class="proofsteps">
-        <li>An entry readied at a post carries the seals of three different men for it, under that
-        number and term: the registrar's numbering and two first echoes.</li>
-        <li>If X and Y were both readied for number 7 in one term, the two sets of three would share at
-        least two men among four, and at least one of them is honest.</li>
-        <li>That honest man sealed both X and Y for number 7 in the same term. But an honest man accepts
-        only one numbering for a number in a term, and seals only what was accepted. Contradiction. An honest man's seal cannot be counterfeited, so the liar cannot have made it.<span class="qed">∎</span></li>
+        <li>For an entry to be readied at any post in term <var>v</var>, that post must hold seals for that entry, sequence number, and term from three distinct bandits (the registrar's numbering plus two first echoes from other posts).</li>
+        <li>Suppose for contradiction that two different entries <var>X</var> and <var>Y</var> were both readied for sequence number 7 in term <var>v</var>. The set of three bandits who sealed <var>X</var> and the set of three bandits who sealed <var>Y</var> are subsets of four bandits, so by the pigeonhole principle they share at least 3 + 3 − 4 = 2 bandits. Since at most one bandit is a liar, at least one bandit in their intersection is honest.</li>
+        <li>That honest bandit must have sealed both <var>X</var> and <var>Y</var> for sequence number 7 in term <var>v</var>. However, an honest bandit accepts and echoes at most one entry per sequence number in any given term, and an honest bandit's wax seal cannot be forged. Contradiction.<span class="qed">∎</span></li>
       </ol>
     </details>
-    <p class="tell" style="margin-top:1.8rem"><b>Four bandits are the fewest that will do for one liar.</b> A bandit can never wait to hear from everyone, since one may be a liar who keeps quiet. So a bandit acts on hearing from all but one, which is three. But the one not heard from may be an honest bandit whose rat is held in its hole, and then the liar may be among the three heard. The honest must still outnumber the liars among those three: two honest against one liar. That needs four bandits for one liar, and in general more than three times as many as may lie.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s7" title="Agreeing When Messages Run Late: Liars and Seals">*</a></sup> Seals do not lower the number. A seal stops a liar forging the word of another bandit. It cannot make a liar answer promptly with their own.</p>
-    <p class="tell">Within a term, then, a lying registrar cannot number one place two ways. A registrar can still number nothing at all.</p>
+    <p class="tell" style="margin-top:1.8rem"><b>Why four bandits are the minimum for one liar — even with seals:</b> earlier we saw that on the first night of the siege, when the sandglasses were synchronized and every rat arrived within a known round, wax seals allowed just <em>three</em> bandits to agree despite one liar. Why do we need <em>four</em> bandits (3<var>f</var> + 1) now? Because now the wind can delay rats for an unknown time! Since one bandit might be a liar who stays deliberately silent, no post can ever afford to wait for all <var>n</var> bandits; it must be able to act after hearing from <var>n</var> − <var>f</var> of them. And because the wind might delay an honest bandit's rat while the liar answers promptly, the <var>n</var> − <var>f</var> replies a post hears may include all <var>f</var> liars and miss <var>f</var> honest bandits. Worse still, two different quorums of size <var>n</var> − <var>f</var> must still overlap in at least <var>f</var> + 1 bandits so that their intersection is guaranteed to contain at least one honest bandit: (<var>n</var> − <var>f</var>) + (<var>n</var> − <var>f</var>) − <var>n</var> ≥ <var>f</var> + 1, which simplifies to <var>n</var> ≥ 3<var>f</var> + 1.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s7" title="Agreeing When Messages Run Late: Liars and Seals">*</a></sup> Wax seals stop a liar from forging someone else's word, but they cannot tell you whether a missing rat was held back by a liar or by the wind.</p>
+    <p class="tell">Within a single term, then, a lying registrar can never get two different entries readied under the same number. What a lying registrar can still do is stall — refusing to number anything at all.</p>
   </div>
 </section>
 
@@ -663,9 +258,9 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">When nothing stands</div>
       <h2>Changing the job</h2>
-      <p class="lede">A registrar who numbers nothing leaves every filed entry waiting, and then the job must pass. Nobody can tell a registrar who stalls from one whose rats are held by the wind, so the bandits do not judge. Each simply stops waiting.</p>
-      <p>A bandit who has an entry filed that has not yet stood turns their sandglass. If it runs out first, they <b>ask for a change</b>: they stop taking part in this term and send every bandit a sealed request for the next term. The request carries the proof of every entry readied at their post, each a numbering and two first echoes.</p>
-      <p>In the picture below, file an entry and then choose what the registrar does, once with the wind blowing and once with it dropped. Watch for the two cases that look the same from every post.</p>
+      <p class="lede">If a registrar sits on filed entries and numbers nothing, the registrar's job must pass to the next bandit (a <i>view change</i>). Because nobody on the crown can tell a registrar who is deliberately stalling from an honest registrar whose rats are pinned by the wind, the bandits do not try to judge guilt. Each post simply limits how long it will wait.</p>
+      <p>Whenever a bandit has a filed entry waiting that has not yet stood, they turn their sandglass. If the sand runs out before the entry stands, the bandit <b>asks for a change</b>: they stop accepting messages for the current term and send every post a sealed request to move to the next term (a <code>VIEW-CHANGE</code> message). Attached to that request is the sealed proof of every entry that has been <b>readied</b> at their post — namely, the registrar's numbering and its two matching first echoes.</p>
+      <p>In the interactive diagram below, file an entry and choose how the registrar behaves, both when the wind is blowing and when the air is calm. Notice how a stalling liar and a wind-pinned honest registrar look identical to the waiting posts.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>The job passes <em id="jobinfo" data-live></em></h4>
@@ -685,8 +280,8 @@ a.lin-node:hover b{text-decoration:underline}
         <button class="btn alt" id="jobreset">Start again</button>
       </div>
     </div></div></div>
-    <p class="tell">The next registrar waits for requests for the new term from three bandits, their own among them, and sends every bandit the three requests and a new numbering. The requests decide the new numbering, and the registrar has no choice in it. For each number, if some request shows an entry readied there, the registrar numbers the one readied in the latest term. If none does, the registrar numbers a <b>blank entry</b>, which does nothing. Each bandit checks that the requests are sealed and that the new numbering is what they call for, then echoes it twice, as before, in the new term.</p>
-    <p class="tell"><b>A new registrar cannot drop an entry that already stood.</b> Suppose an entry X stands at some honest post as number 7. Then three bandits sent second echoes for it, of whom at least two are honest, and X is readied at those two. The new registrar must show three requests, and three requests out of four always include one from those two. That request shows X readied under number 7, so the new registrar must number X under 7 again. Try it: choose who sent the second echoes, who is supposed to lie, and whose request the new registrar leaves out.</p>
+    <p class="tell">Once the next term's registrar has collected three sealed requests for the new term (including their own), they open the new term by sending every post a bundle containing those three requests together with a fresh numbering (a <code>NEW-VIEW</code> message). Crucially, the new registrar has no freedom to invent this numbering: it is completely dictated by the three sealed requests! For each sequence number, if any of the three requests proves that an entry was readied at that number, the new registrar must re-propose the entry readied in the latest term; if no request shows an entry for a number below the highest readied slot, the registrar must fill that gap with a harmless <b>blank entry</b> (a <i>null request</i>). Because the three sealed requests travel along with the new numbering, every bandit can independently verify that the new registrar followed the rule to the letter before echoing anything in the new term.</p>
+    <p class="tell"><b>Why a new registrar can never erase an entry that already stood:</b> suppose entry <var>X</var> stood at some honest post as number 7 in an earlier term. Before <var>X</var> could stand there, three bandits had to seal second echoes for it. At least two of those three bandits are honest, which means <var>X</var> was <b>readied</b> at both of their posts. Now, to start the new term, the new registrar must present three sealed change-of-job requests out of four posts. Any three posts out of four must include at least one of those two honest bandits! That honest bandit's request carries the sealed proof that <var>X</var> was readied as number 7, forcing the new registrar to keep <var>X</var> as number 7. Test this overlap below: pick which three bandits sent second echoes, who is lying, and whose request the new registrar leaves out.</p>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Three requests <em>always meet the bandits who hold it</em></h4>
       <div class="hill-wrap">
@@ -698,35 +293,28 @@ a.lin-node:hover b{text-decoration:underline}
       </div>
       <div id="reqctl"></div>
     </div></div></div>
-    <div class="pop"><div class="leaf"><div class="paper" style="padding:14px 18px;max-width:40em;margin:1.4rem 0 0"><div class="num">Result · Order Across Terms</div><p style="margin:.35rem 0 0">If an entry stands under a number at any honest post, every honest post that ever has an entry stand under that number has the same one, whatever terms they stood in.</p></div></div></div>
+    <div class="pop"><div class="leaf"><div class="paper" style="padding:14px 18px;max-width:40em;margin:1.4rem 0 0"><div class="num">Result · Order Across Terms</div><p style="margin:.35rem 0 0">If an entry stands under a sequence number at any honest post, every honest post that ever has an entry stand under that sequence number is guaranteed to have the exact same entry, regardless of which terms they stood in.</p></div></div></div>
     <details class="proof">
       <summary>Proof · that a new registrar must keep what stood before</summary>
-      <p class="given">In the paper's terms: <b>§4.5.1.</b> Non-faulty replicas agree on the sequence numbers of requests that commit locally, even if they commit in different views at different replicas. Let committed-local(<var>m</var>, <var>v</var>, <var>n</var>, <var>i</var>) hold when prepared(<var>m</var>, <var>v</var>, <var>n</var>, <var>i</var>) and 2<var>f</var> + 1 matching commits are held; the paper gives this argument as a sketch.</p>
+      <p class="given">In the paper's terms (§4.5.1): non-faulty replicas agree on the sequence numbers of requests that commit locally, even if they commit in different views at different replicas. Recall that <code>committed-local(m, v, n, i)</code> holds when <code>prepared(m, v, n, i)</code> holds and replica <var>i</var> has collected 2<var>f</var> + 1 matching <code>COMMIT</code> messages.</p>
       <ol class="proofsteps">
-        <li>Let X stand as number 7 at an honest post in term <var>v</var>. Then three second echoes for X
-        were sealed, so X is readied, in term <var>v</var>, at at least two honest posts.</li>
-        <li>The registrar of any later term shows three requests, which share an honest man with the two.
-        That man's request shows X readied under 7 in term <var>v</var>, or some entry readied under 7 in a
-        later term. The registrar must number the entry readied in the latest term shown.</li>
-        <li>By induction over the terms after <var>v</var>, every entry that can be shown readied under 7
-        in such a term is X, so every later registrar must number X under 7, honest men check that the registrar does,
-        and only X is readied or stands under 7 at honest posts. The induction, which must also handle
-        requests from the liar, is carried out in full in Castro's thesis; this is the paper's
-        sketch.<span class="qed">∎</span></li>
+        <li>Suppose entry <var>X</var> stands (commits locally) as sequence number 7 at some honest post in term <var>v</var>. Then three distinct posts sent second echoes (<code>COMMIT</code>) for (<var>v</var>, 7, <var>X</var>). Since at most one bandit lies, at least two honest bandits had (<var>v</var>, 7, <var>X</var>) <b>readied</b> (<code>prepared</code>) in term <var>v</var>.</li>
+        <li>Consider the earliest term <var>v′</var> &gt; <var>v</var> in which any entry is readied for sequence number 7. To open term <var>v′</var>, its registrar must present three signed <code>VIEW-CHANGE</code> requests. By pigeonhole intersection among four posts, those three requests share at least one honest bandit with the two honest bandits who readied <var>X</var> in term <var>v</var>.</li>
+        <li>Because no entry was readied for number 7 in any term strictly between <var>v</var> and <var>v′</var>, the highest-term readied proof for number 7 in the three <code>VIEW-CHANGE</code> requests is (<var>v</var>, 7, <var>X</var>) (since by the single-term invariant no conflicting entry could have been readied in term <var>v</var>). Therefore, the rule of <code>NEW-VIEW</code> forces the registrar of term <var>v′</var> to re-propose <var>X</var> for number 7, and honest posts verify this proof before echoing. By induction over all subsequent terms, only <var>X</var> can ever be readied or stand for number 7.<span class="qed">∎</span></li>
       </ol>
-      <p class="fnote">The paper's proof is a sketch, with the full argument in Castro's thesis. This version leaves out the settled checkpoints described below, which let a request show a settled checkpoint in place of the entries below it.</p>
+      <p class="fnote">The paper sketches this inductive invariant in §4.5.1; the complete formal proof (including checkpoint truncation) appears in Castro's doctoral thesis.</p>
     </details>
     <details class="proof">
       <summary>Stated formally · changing the job</summary>
-      <p class="given">In the paper's terms: view-change with the set <var>P</var> of prepared certificates; new-view with 2<var>f</var> + 1 view-changes and the set <var>O</var> of pre-prepares; null requests fill gaps. (Castro and Liskov, §4.4.)</p>
+      <p class="given">In the paper's terms: <code>VIEW-CHANGE</code> messages carry the set <var>P</var> of prepared certificates; <code>NEW-VIEW</code> carries 2<var>f</var> + 1 signed <code>VIEW-CHANGE</code> messages and the deterministically computed set <var>O</var> of new <code>PRE-PREPARE</code> messages, using null requests to fill any gaps. (Castro and Liskov, §4.4.)</p>
       <ol class="proofsteps">
-        <li>The next registrar waits for requests for the new term from three men, the registrar's own among them.</li>
-        <li>The registrar sends every man the three requests and a new numbering. For each number, if some request shows an entry readied there, the registrar numbers the one readied in the latest term; if none does, the registrar numbers a <b>blank entry</b>, which does nothing.</li>
-        <li>Each man checks that the requests are sealed and that the new numbering is what they call for, then echoes it twice, as before, in the new term.</li>
+        <li>The registrar of term <var>v</var> + 1 waits to receive three valid <code>VIEW-CHANGE</code> requests for term <var>v</var> + 1 (including its own).</li>
+        <li>The new registrar broadcasts <code>NEW-VIEW</code> containing those three signed requests together with a fresh numbering <var>O</var>. For each sequence number between the highest stable checkpoint and the highest sequence number in <var>P</var>, if some request proves an entry was readied at that number, the registrar re-numbers the one readied in the latest term; otherwise it numbers a no-op <b>blank entry</b>.</li>
+        <li>Each post verifies the signatures on the three requests and checks that <var>O</var> was computed according to the deterministic rule, then enters term <var>v</var> + 1 and runs the two-echo protocol for the entries in <var>O</var>.</li>
       </ol>
     </details>
-    <p class="tell" style="margin-top:1.8rem">Two more rules keep the job from passing too late or too easily. A bandit who sees requests from two others for a later term joins them, even before their own sandglass runs out, so an honest minority is not left behind. And no single bandit can force a change, because a change needs three requests and a liar alone can send only one. A lying registrar can make their own term fail by stalling, but the job then passes, and with four bandits a liar holds it for at most one term in a row.</p>
-    <p class="tell">A stalled term ends this way whatever stalled it. While the wind blows, though, sandglasses run out on honest registrars too, and the job passes again and again.</p>
+    <p class="tell" style="margin-top:1.8rem">Two additional safeguards keep term changes from happening too slowly or too easily. First, if an honest bandit receives two change-of-job requests for a higher term from other posts, they immediately join that change even if their own sandglass has not yet run out (since at least one of those two requests came from an honest comrade); this keeps a lagging post from being left behind. Second, no single liar can force a change of job on their own, because entering a new term requires three requests. A lying registrar can sabotage their own term by stalling, but the job then rotates away to an honest bandit in the very next term.</p>
+    <p class="tell">While a fierce wind blows, however, sandglasses will also run out on honest registrars whose rats are simply delayed by the gale, causing the job to pass again and again. How do the bandits stop changing terms once the wind finally drops?</p>
   </div>
 </section>
 
@@ -738,9 +326,9 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">What stops the changes</div>
       <h2>Going on once the wind drops</h2>
-      <p class="lede">The job passes again and again while the wind blows, because sandglasses run out on honest registrars whose rats are merely pinned. Nothing stands, and nothing wrong stands either. Once the wind has dropped the changes must stop, or no entry would ever stand.</p>
-      <p>The changes stop because each bandit doubles their sandglass at every change. A bandit who asked for a change and does not see the new term work within their sandglass asks for the next one, but waits twice as long before asking for the one after. In the end the sandglasses are longer than a whole term's worth of short runs. Then the first honest registrar of a term that begins in still air numbers the waiting entries, the echoes come back in time, and the entries stand.</p>
-      <p>Pick a sandglass and a wind below and run the nights. Compare the doubling sandglass with one that stays the same, and see in which term the entries stand.</p>
+      <p class="lede">While the wind pins the rats in their holes, sandglasses expire on honest registrars and the job rotates from post to post. No entries stand during the gale — yet no conflicting entries ever stand either. Once the wind calms down, however, the premature term changes must stop, or the posts would keep interrupting each other before any entry could finish its two echoes.</p>
+      <p>To make sure the changes stop, each bandit <b>doubles their sandglass</b> (<i>exponential backoff</i>) every time a term ends without progress. If a bandit asks for Term 2 and their glass runs out before Term 2 starts or finishes, they ask for Term 3 — but they wait twice as long before giving up on Term 3. Eventually, the sandglasses grow longer than the time it takes to complete the three rat runs of a term (the numbering and the two echoes). As soon as an honest registrar takes office with a long enough sandglass in calm air, all three steps finish before the glass runs out, and the waiting entries stand.</p>
+      <p>Choose an initial sandglass and wind duration below, then run the nights. Compare how a doubling sandglass recovers while a fixed-length sandglass that is too short stays stuck forever.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>The doubling sandglass <em>pick a wind, then run the nights</em></h4>
@@ -749,13 +337,13 @@ a.lin-node:hover b{text-decoration:underline}
       <div class="terms-list" id="gotlist" data-live></div>
       <p class="say" id="gotsay">Every registrar is honest in this picture, and the first sandglass is the time a short run takes at most. A term's worth is counted as three short runs: the numbering and the two echoes.</p>
     </div></div></div>
-    <div class="pop"><div class="leaf"><div class="paper" style="padding:14px 18px;max-width:40em;margin:1.4rem 0 0"><div class="num">Result · Going On</div><p style="margin:.35rem 0 0">If the wind, once it drops, stays down long enough, every entry an honest bandit files in the end stands.</p></div></div></div>
-    <p class="tell">The paper puts precisely how long the wind must stay down: the time a rat takes must not go on growing faster than the nights themselves pass. The doubling sandglass outgrows any delay that does not keep outgrowing it. The paper argues this in outline, and its full proof is in Castro's thesis.</p>
+    <div class="pop"><div class="leaf"><div class="paper" style="padding:14px 18px;max-width:40em;margin:1.4rem 0 0"><div class="num">Result · Going On</div><p style="margin:.35rem 0 0">Once the wind drops and stays calm for long enough, every entry filed by an honest bandit eventually stands.</p></div></div></div>
+    <p class="tell">Castro and Liskov state the exact mathematical condition required for progress: the time a message takes to arrive (counted from when it was first sent, with retransmissions) must not grow faster than elapsed time <var>t</var> indefinitely. Because the sandglass doubles at every failed term, an exponentially growing timeout will eventually overtake any delay that does not itself grow exponentially.</p>
     <details class="proof">
       <summary>Stated formally · how long the wind must stay down</summary>
-      <p class="given">In the paper's terms the time a rat takes, counted from its first sending and with resending, is delay(<var>t</var>), and it must not grow faster than <var>t</var> indefinitely. The view-change timeout doubles at each view change. (Castro and Liskov, §2 and §4.5.2.)</p>
+      <p class="given">In the paper's terms, if <var>t</var> is the time when a message is first sent (with periodic retransmission until acknowledged) and it arrives at time <var>t</var> + delay(<var>t</var>), liveness requires only that delay(<var>t</var>) does not grow faster than <var>t</var> indefinitely. Because the view-change timeout doubles on each consecutive view change, the timeout eventually exceeds the time required to complete a viewchange and execute a request under a non-faulty primary. (Castro and Liskov, §2 and §4.5.2.)</p>
     </details>
-    <p class="tell" style="margin-top:1.8rem">The scroll now keeps its order and goes on. One cost is left. Every bandit holds every sealed rat, since a change of job may call for them, and the store grows with every entry.</p>
+    <p class="tell" style="margin-top:1.8rem">The four bandits now have guaranteed order in any wind and guaranteed progress once the wind drops. One practical problem remains: because a future change of job might require proof of old readied entries, every bandit has been saving every sealed rat they ever received. Left unchecked, that pile of wax seals would grow forever.</p>
   </div>
 </section>
 
@@ -767,9 +355,9 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">So the store does not grow for ever</div>
       <h2>Settling checkpoints</h2>
-      <p class="lede">The store of sealed rats need not grow for ever. Every hundred entries, each bandit seals a short summary of their copy up to that number and sends it to everyone. When a bandit holds three matching summaries for the same number, that point is a <b>settled checkpoint</b>: at least two honest bandits have the same scroll up to there.</p>
-      <p>A settled checkpoint lets a bandit throw away every echo for numbers up to it, since the three summaries now stand for those entries. A bandit whose copy fell behind can take the settled checkpoint from any of the three and trust it. The settled checkpoint also bounds the numbering. A registrar may use only numbers from the last settled checkpoint up to some fixed distance beyond it, so a lying registrar cannot use up the numbers by jumping to an enormous one.</p>
-      <p>In the picture below, let entries stand until the allowed numbers are used up, then settle a checkpoint, and see which numbers a registrar may and may not use.</p>
+      <p class="lede">To keep their store of old messages from growing without bound, the bandits periodically prune their logs using <b>settled checkpoints</b> (<i>stable checkpoints</i>). Every hundred entries (say, at entry 100, 200, 300, …), each bandit writes a compact summary (a <i>cryptographic digest</i>) of their scroll's state up to that entry, stamps it with their seal, and sends it to every post. Once a bandit holds <b>three matching sealed summaries</b> for entry 100, that summary becomes a <b>settled checkpoint</b>: it proves that at least two honest bandits have the exact same scroll state through entry 100.</p>
+      <p>A settled checkpoint does three jobs at once. First, it lets a bandit <b>throw away</b> all stored numberings and echoes for sequence numbers 100 and below, replacing hundreds of old messages with a single three-seal checkpoint proof (which is also sent in any future change-of-job request). Second, it lets a slow post that fell behind catch up simply by fetching the state at the settled checkpoint from any of the three posts that sealed it. Third, it bounds the sequence numbers a registrar is allowed to assign (between a <i>low water mark</i> at the last settled checkpoint and a <i>high water mark</i> a fixed distance above it, such as +200), preventing a lying registrar from exhausting the numbering space by jumping to sequence number 1,000,000.</p>
+      <p>Use the controls below to let entries stand until the allowed window fills up, settle a checkpoint to slide the window forward and clear out old echoes, and see what happens when a registrar tries to use an out-of-range sequence number.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>The allowed numbers <em>press to file, settle and try</em></h4>
@@ -787,14 +375,14 @@ a.lin-node:hover b{text-decoration:underline}
     </div></div></div>
     <details class="proof">
       <summary>Stated formally · settling a checkpoint</summary>
-      <p class="given">In the paper's terms: checkpoints every <var>K</var> requests; a stable checkpoint needs 2<var>f</var> + 1 matching checkpoint messages; low and high water marks <var>h</var> and <var>H</var> = <var>h</var> + <var>k</var>. (Castro and Liskov, §4.3.)</p>
+      <p class="given">In the paper's terms: replicas generate checkpoints every <var>K</var> requests (e.g., <var>K</var> = 100); a checkpoint becomes a <i>stable checkpoint</i> once a replica collects 2<var>f</var> + 1 matching signed <code>CHECKPOINT</code> messages for its state digest; the stable checkpoint sequence number sets the low water mark <var>h</var>, and the high water mark is <var>H</var> = <var>h</var> + <var>k</var> (e.g., <var>k</var> = 200). (Castro and Liskov, §4.3.)</p>
       <ol class="proofsteps">
-        <li>Every hundred entries, send a sealed summary of your copy.</li>
-        <li>Three matching summaries settle the checkpoint; discard what lies below it.</li>
-        <li>Numbers are allowed only between the last settled checkpoint and a fixed distance above it.</li>
+        <li>Every 100 entries executed, each post broadcasts a signed <code>CHECKPOINT</code> message containing the sequence number and a digest of its scroll state.</li>
+        <li>Collecting three matching <code>CHECKPOINT</code> messages makes that checkpoint <b>settled</b> (stable), allowing the post to discard all pre-prepare, prepare, and commit logs at or below that sequence number.</li>
+        <li>A post accepts a numbering from the registrar only if its sequence number lies strictly above the last settled checkpoint <var>h</var> and at or below <var>H</var> = <var>h</var> + 200.</li>
       </ol>
     </details>
-    <p class="tell" style="margin-top:1.8rem">The four now have order in any wind, progress once it drops, and a store that does not grow without end. It remains to say what the arrangement leaves unprotected.</p>
+    <p class="tell" style="margin-top:1.8rem">With two echoes, a view-change rule, doubling sandglasses, and settled checkpoints, the four bandits have a complete, practical system. Before we return to the machine room, let us be clear about the boundaries of what this protocol does and does not promise.</p>
   </div>
 </section>
 
@@ -806,15 +394,15 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The edges of the promise</div>
       <h2>What it does not say</h2>
-      <p class="lede">The arrangement leaves several things unprotected, and each is better said plainly than left for a reader to find. Here are six questions a reader might ask of the loot scroll, and the answer to each.</p>
+      <p class="lede">Every protocol has boundaries that are better stated plainly than left for the reader to guess. Here are six questions about what the loot scroll guarantees — and what it leaves outside its scope:</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">One</div><h3>Does anything stand while the wind blows?</h3><p>Nothing stands while it blows. Order holds in any wind, and going on waits for the wind to drop and stay down. That is no weakness of this arrangement, because no arrangement could do better.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Two</div><h3>Can a liar still file nonsense?</h3><p>A liar can. The scroll keeps the entries in order and does nothing for the sense in them. An entry that makes no sense stands in the same place in every honest copy if a bandit may file it. Which entries a bandit may file is for the four to arrange themselves.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Three</div><h3>Does anyone learn who lies?</h3><p>Nobody does, and the arrangement never needs to know. It works if any one of the four lies, and it never names them. A stalled term might be a liar or the wind.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Four</div><h3>Does it keep anything secret?</h3><p>Nothing is kept secret. Every bandit holds the whole scroll, and may show it to anyone.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Five</div><h3>Must every rat be sealed?</h3><p>Seals are costly, and the paper spends them sparingly. Every rat here is sealed. The paper's fast version seals only the requests for a change of job and the new numbering, and marks everything else with cheaper marks that the receiver alone can check. The order kept is the same.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Six</div><h3>What follows from any entry?</h3><p>Nothing. The scroll says where the loot lies and whose it is. What the four do with it is not the subject of this book.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">One</div><h3>Does anything stand while the wind blows?</h3><p>No. While the wind pins the rats, no new entry can finish its echoes. Safety (order) holds in any wind, while liveness (progress) waits for the wind to drop — and by the FLP impossibility theorem, no deterministic protocol could ever do better.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Two</div><h3>Can a liar file a false entry?</h3><p>Yes. Consensus guarantees that every honest copy records the <em>same</em> entries in the <em>same</em> order; it cannot judge whether an entry that an authorized bandit files is truthful about the outside world. Access control and validation rules are separate checks applied by the state machine.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Three</div><h3>Does anyone learn who the liar is?</h3><p>No, and the protocol never needs to know. It works regardless of which of the four bandits is lying, without ever convicting them — because a silent post or a stalled term might just as easily be the work of the wind.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Four</div><h3>Does it keep the scroll secret?</h3><p>No. Every replica holds the full scroll in order to verify and execute entries, so a lying bandit can read everything in it. Confidentiality requires separate encryption.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Five</div><h3>Must every rat carry a public-key wax seal?</h3><p>In our story every rat is sealed for simplicity, which corresponds to public-key digital signatures. Because public-key signatures were slow in 1999, Castro and Liskov's practical optimization uses them only for rare <code>VIEW-CHANGE</code> and <code>NEW-VIEW</code> messages, replacing all everyday echoes with much faster symmetric message authentication codes (<i>MAC vectors</i>) — which is why the paper is called <em>Practical</em> BFT.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Six</div><h3>What follows once an entry stands?</h3><p>The scroll simply keeps the agreed record of where the loot lies and whose share it is; what the bandits do with their shares afterward lies outside the protocol.</p></div></div></div>
     </div>
   </div>
 </section>
@@ -827,16 +415,16 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The crown was a group of replicas</h2>
-      <p class="lede">Read the crown again with machines at the four posts. Every bandit is a replica, every rat is a message, and the registrar is the leader that numbers the commands. Hover over a row, or tap it, to see who is who, and where the paper says it.</p>
+      <p class="lede">Now read the story of the crown again with servers at the four posts. Every bandit is a state-machine replica, every rat is a network message, and the registrar is the primary replica that assigns sequence numbers in the current view. Hover over a row, or tap it, to see how each part of the allegory maps to Castro and Liskov's paper.</p>
     </div>
     <div class="map" id="map">
-      <div class="hd" style="text-align:right;padding-right:6px">On the crown</div><div></div><div class="hd">In the machine room</div>
+      <div class="hd" style="text-align:right;padding-right:6px">On the crown</div><div></div><div class="hd">In computing</div>
     </div>
     <div class="meander" style="margin:3rem auto"></div>
     <div class="end">
-      <p class="big">A service on 3<var>f</var> + 1 machines keeps every honest copy in the same order whatever the delays and whoever lies, and goes on once delays stop growing.</p>
-      <p class="lede" style="margin:0 auto">Safety needs no timing assumption at all. Progress needs only that message delays do not grow without bound.</p>
-      <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">In practice, cheap message authentication codes replace most signatures.</p>
+      <p class="big">A service replicated across 3<var>f</var> + 1 machines keeps every honest copy in the exact same order regardless of network delays or up to <var>f</var> liars, and makes progress as soon as delays stabilize.</p>
+      <p class="lede" style="margin:0 auto">Safety requires no timing assumptions at all; liveness requires only that message delays do not grow faster than time indefinitely.</p>
+      <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">In practice, fast symmetric message authentication codes (MACs) replace almost all public-key signatures during normal operation.</p>
       <div class="links">
         <a href="../../places/the-crown/index.html">The Crown of Mount Phyle, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
@@ -847,10 +435,10 @@ a.lin-node:hover b{text-decoration:underline}
       <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/the-crown/index.html">The Crown of Mount Phyle</a></p>
       <details class="proof">
         <summary>The paper behind this book</summary>
-        <p><b>The paper behind this book.</b> Miguel Castro and Barbara Liskov, <i>Practical Byzantine Fault Tolerance</i>. Proceedings of the Third Symposium on Operating Systems Design and Implementation (OSDI), New Orleans, February 1999. The three-phase protocol, view changes, checkpoints, the liveness argument and the MAC-based optimization.</p>
-        <p><b>The ideas.</b> Castro and Liskov give a state machine replication protocol that tolerates <var>f</var> Byzantine replicas out of 3<var>f</var> + 1, keeps safety with no timing assumptions at all, and makes progress once message delays stop growing without bound.</p>
-        <p>In each view one replica is the primary and assigns sequence numbers. Replicas then echo twice. The prepare phase, completed when 2<var>f</var> + 1 replicas vouch for the same request and number, fixes the order within a view even if the primary lies, because any two quorums of 2<var>f</var> + 1 share an honest replica. The commit phase, also 2<var>f</var> + 1, ensures that a request committed anywhere was prepared at enough honest replicas that every later view must carry it forward.</p>
-        <p>When the primary seems stuck, replicas time out and move to the next view, sending proof of what they prepared; the new primary must re-propose it. Doubling timeouts and joining view changes on <var>f</var> + 1 requests keep the system from changing views forever once delays are bounded. Checkpoints bound the log. In practice, cheap message authentication codes replace most signatures.</p>
+        <p><b>The paper behind this book.</b> Miguel Castro and Barbara Liskov, <i>Practical Byzantine Fault Tolerance</i>. Proceedings of the Third Symposium on Operating Systems Design and Implementation (OSDI), New Orleans, February 1999. Introduces the three-phase normal-case protocol, view changes, stable checkpoints, the partial-synchrony liveness mechanism, and the MAC-based cryptographic optimization.</p>
+        <p><b>The ideas.</b> Castro and Liskov present the first practical state-machine replication protocol that tolerates <var>f</var> arbitrary (Byzantine) faults out of 3<var>f</var> + 1 replicas in an asynchronous network, guaranteeing linearizable safety with no timing assumptions at all and liveness once message delays stop growing faster than time indefinitely.</p>
+        <p>Computation proceeds through numbered <i>views</i>, in each of which a single replica acts as the <i>primary</i> (chosen round-robin as <var>p</var> = <var>v</var> mod <var>n</var>) and assigns sequence numbers to client requests. Normal-case operation uses three phases: <code>PRE-PREPARE</code> (the primary proposes a sequence number for a request), <code>PREPARE</code> (replicas broadcast their agreement on that numbering), and <code>COMMIT</code> (replicas broadcast that they hold a prepared certificate of 2<var>f</var> + 1 matching messages). Because any two quorums of size 2<var>f</var> + 1 out of 3<var>f</var> + 1 overlap in at least <var>f</var> + 1 replicas — at least one of which is non-faulty — the prepare phase guarantees that no two conflicting requests can ever prepare at the same sequence number within a view. The commit phase ensures that if any non-faulty replica commits a request locally, at least <var>f</var> + 1 non-faulty replicas have prepared it.</p>
+        <p>When a backup's timer expires waiting for a request to execute, it votes for a <i>view change</i>, sending its prepared certificates to the next primary. The new primary gathers 2<var>f</var> + 1 signed <code>VIEW-CHANGE</code> messages into a <code>NEW-VIEW</code> message and re-proposes the highest-view prepared request for each sequence number. Because 2<var>f</var> + 1 view-change messages must intersect the <var>f</var> + 1 non-faulty replicas that prepared any locally committed request, committed requests are preserved across views. Exponentially doubling view-change timeouts and joining a higher view upon seeing <var>f</var> + 1 view-change messages ensure liveness once delays stabilize, while periodic 2<var>f</var> + 1 <i>stable checkpoints</i> garbage-collect the log and bound acceptable sequence numbers between water marks <var>h</var> and <var>H</var>.</p>
         <div class="refs">
           <p>Castro, M., and Liskov, B. Practical Byzantine fault tolerance. <i>Proceedings of the Third Symposium on Operating Systems Design and Implementation (OSDI)</i>, New Orleans, February 1999.</p>
         </div>
@@ -859,425 +447,6 @@ a.lin-node:hover b{text-decoration:underline}
   </div>
 </section>
 <footer>Distributed Algorithms of Ancient Greece · “Keeping Order Among Liars”, after Castro and Liskov, OSDI 1999.</footer>
-<script>
-"use strict";
-(function(){
-const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-const NS="http://www.w3.org/2000/svg";
-const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
-function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
-function rnd(n){return Math.floor(Math.random()*n)}
-/* run fn(0..1) over ms, eased */
-function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();return}const t0=performance.now();
-  (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
-function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
-
-/* ===== pop-ups unfold when they enter view ===== */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
-$$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
-$$(".say,[data-live]").forEach(e=>e.setAttribute("aria-live","polite"));
-
-/* ===== scroll: progress bar, section name, parallax ===== */
-const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
-const dep=$$("[data-depth]"), par=$$("[data-parallax]");
-let tick=false;
-function onscroll(){
-  if(tick)return; tick=true;
-  requestAnimationFrame(()=>{
-    tick=false;
-    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
-    prog.style.width=(h>0?y/h*100:0)+"%";
-    const mid=y+innerHeight*.4; let cur=secs[0];
-    for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
-    now.textContent=cur.dataset.name||"";
-    if(reduce)return;
-    for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
-    for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
-  });
-}
-addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
-
-/* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
-function stepDots(root,steps){
-  const stage=$(".stage",root),nav=document.createElement("div"); nav.className="dots"; nav.setAttribute("role","group"); nav.setAttribute("aria-label","The steps of this picture");
-  let cur=0; const go=i=>steps[i]&&steps[i].scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
-  const ctl=(cls,label,d,fn)=>{const b=document.createElement("button"); b.type="button"; b.className=cls; b.setAttribute("aria-label",label); b.title=label;
-    if(d) b.innerHTML='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="'+d+'"/></svg>'; b.addEventListener("click",fn); return b};
-  const prev=ctl("arr","Previous step","M7.5 2 3.5 6l4 4",()=>go(cur-1)), next=ctl("arr","Next step","M4.5 2l4 4-4 4",()=>go(cur+1)),
-        back=ctl("arr back","Back to the first step","M2.6 6.4a3.5 3.5 0 1 0 1-2.8M2.4 1.6v2.2h2.2",()=>go(0));
-  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""),"",()=>go(i))});
-  nav.append(prev,...dots,next,back);
-  if(stage&&steps.length>1) stage.append(nav);
-  return i=>{cur=i; prev.disabled=back.disabled=i===0; next.disabled=i===steps.length-1;
-    dots.forEach((d,j)=>{d.classList.toggle("on",j===i); if(j===i)d.setAttribute("aria-current","step"); else d.removeAttribute("aria-current")})};
-}
-function scrolly(root,render){
-  const steps=$$(".step",root),mark=stepDots(root,steps); render(0); mark(0);
-  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); mark(i); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
-  steps.forEach(s=>so.observe(s));
-}
-
-/* ===== who is who: the setting on the left, the machine room on the right ===== */
-function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
-  const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
-  [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}
-
-/* ===== space-time drawn in the round: each place is a line running outward, each ring a later moment,
-         and whatever is carried from place to place is an arc curving round and outward ===== */
-function Polar(svg,o){
-  const {cx,cy,r0,step,nodes,rings,tEnd}=o; svg.innerHTML=""; svg.setAttribute("viewBox",o.vb);
-  const defs=el("defs",{},svg);
-  const mk=(key,col)=>{const m=el("marker",{id:`${svg.id}-${key}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:col},m)};
-  mk("b","#136f9e"); mk("r","#bf4a26");
-  const frame=el("g",{},svg), under=el("g",{},svg), slips=el("g",{},svg), evs=el("g",{},svg), over=el("g",{},svg);
-  const P={svg,under,slips,evs,over,cx,cy,
-    r:t=>r0+step*t,
-    xy(deg,rr){const a=deg*Math.PI/180;return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)]},
-    pt(k,t){return P.xy(nodes[k][0],P.r(t))},
-    /* the points of an arc from place a at time ta to place b at time tb, the short way round */
-    arc(a,ta,b,tb){const a0=nodes[a][0],d=((nodes[b][0]-a0+540)%360)-180,n=Math.max(12,Math.round(Math.abs(d)/3)),pts=[];
-      for(let i=0;i<=n;i++)pts.push(P.xy(a0+d*i/n,P.r(ta+(tb-ta)*i/n)));return pts},
-    slip(a,ta,b,tb,trim=17){const pts=P.arc(a,ta,b,tb),end=pts[pts.length-1];
-      while(pts.length>2&&Math.hypot(pts[pts.length-1][0]-end[0],pts[pts.length-1][1]-end[1])<trim)pts.pop();
-      const p=el("path",{class:"st-slip","marker-end":`url(#${svg.id}-b)`,d:"M"+pts.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" L")},slips);
-      p.mid=P.arc(a,ta,b,tb); p.mid=p.mid[Math.floor(p.mid.length/2)]; return p},
-    seg(k,t1,t2){const [x1,y1]=P.pt(k,t1),[x2,y2]=P.pt(k,t2);return el("line",{class:"st-seg",x1,y1,x2,y2},under)},
-    event(k,t,fill,rad=13){const [x,y]=P.pt(k,t),g=el("g",{class:"st-ev",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},evs);
-      el("circle",{class:"halo2",r:rad+5},g);el("circle",{class:"b",r:rad,fill},g);g.label=el("text",{},g);el("circle",{r:rad+8,fill:"transparent"},g);return g}
-  };
-  for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
-  for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
-  for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
-    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
-  if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
-  return P;
-}
-
-/* lineage: draw the edges of a book's graph of papers, and say what an edge carries (lineage.py) */
-(function(){
-const NS="http://www.w3.org/2000/svg",wide=matchMedia("(min-width:860px)");
-document.querySelectorAll(".lin").forEach(lin=>{
-  const svg=lin.querySelector(".lin-edges"),say=lin.querySelector(".lin-say"),idle=say.innerHTML;
-  const node=n=>lin.querySelector('[data-n="'+n+'"]');
-  const links=[...lin.querySelectorAll(".lin-link")].map(el=>({el,side:el.dataset.side,from:el.dataset.from.split(" "),to:el.dataset.to.split(" "),g:null}));
-  const box=el=>{const a=el.getBoundingClientRect(),b=lin.getBoundingClientRect();
-    return {l:a.left-b.left,r:a.right-b.left,t:a.top-b.top,b:a.bottom-b.top,cx:(a.left+a.right)/2-b.left,cy:(a.top+a.bottom)/2-b.top}};
-  const mk=(tag,at,to)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);to.appendChild(e);return e};
-  const f=v=>v.toFixed(1);
-  const path=(g,d)=>mk("path",{d},g);
-  const flat=(g,x1,y1,x2,y2)=>path(g,`M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}`);
-  const bend=(g,x1,y1,x2,y2)=>{const m=(x1+x2)/2;path(g,`M${f(x1)} ${f(y1)}C${f(m)} ${f(y1)} ${f(m)} ${f(y2)} ${f(x2)} ${f(y2)}`)};
-  const head=(g,x,y,down)=>mk("polygon",{points:down?`${f(x-5)},${f(y-8)} ${f(x+5)},${f(y-8)} ${f(x)},${f(y)}`:`${f(x-8)},${f(y-5)} ${f(x-8)},${f(y+5)} ${f(x)},${f(y)}`},g);
-  function draw(){
-    svg.textContent="";
-    if(!wide.matches)return;
-    const R=lin.getBoundingClientRect();
-    svg.setAttribute("width",R.width);svg.setAttribute("height",R.height);svg.setAttribute("viewBox",`0 0 ${f(R.width)} ${f(R.height)}`);
-    const ports={};   // the edges that meet one side of a middle node share it out between them, in the order they come from
-    const port=(n,side,y,then)=>(ports[n+side]=ports[n+side]||[]).push({n,side,y,then});
-    links.forEach(k=>{
-      const g=k.g=mk("g",{},svg),c=box(k.el.querySelector("em"));
-      if(k.side==="in"){
-        flat(g,box(node(k.from[0])).r,c.cy,c.l,c.cy);
-        k.to.forEach(n=>port(n,"l",c.cy,(x,y)=>{bend(g,c.r,c.cy,x-7,y);head(g,x,y)}));
-      }else if(k.side==="out"){
-        const b=box(node(k.to[0]));
-        flat(g,c.r,c.cy,b.l-7,c.cy);head(g,b.l,c.cy);
-        k.from.forEach(n=>port(n,"r",c.cy,(x,y)=>bend(g,x,y,c.l,c.cy)));
-      }else{
-        const s=node(k.from[0]),t=node(k.to[0]),sb=box(s),tb=box(t);
-        if(t.parentNode.previousElementSibling===s.parentNode)flat(g,c.cx,sb.b,c.cx,c.t);
-        else{const y=sb.b-12,x=sb.r+20;   // round the papers between, outside their right edge
-          path(g,`M${f(sb.r)} ${f(y)}H${f(x-10)}Q${f(x)} ${f(y)} ${f(x)} ${f(y+10)}V${f(c.cy-10)}Q${f(x)} ${f(c.cy)} ${f(x-10)} ${f(c.cy)}H${f(c.r)}`)}
-        flat(g,c.cx,c.b,c.cx,tb.t-7);head(g,c.cx,tb.t,true);
-      }
-    });
-    for(const key in ports){
-      const list=ports[key].sort((a,b)=>a.y-b.y),b=box(node(list[0].n)),h=b.b-b.t;
-      list.forEach((p,i)=>p.then(p.side==="l"?b.l:b.r,b.t+h*(.2+.6*(i+.5)/list.length)));
-    }
-  }
-  function light(on,words){
-    lin.classList.toggle("hot",on.length>0);
-    const nodes=new Set(on.flatMap(k=>k.from.concat(k.to)));
-    links.forEach(k=>{const is=on.includes(k);k.el.classList.toggle("on",is);if(k.g)k.g.classList.toggle("on",is)});
-    lin.querySelectorAll(".lin-node").forEach(n=>n.classList.toggle("on",nodes.has(n.dataset.n)));
-    say.innerHTML=words||idle;
-  }
-  const name=ns=>ns.map(n=>node(n).dataset.label).join(", ");
-  links.forEach(k=>{
-    const tell=()=>light([k],"<b>"+name(k.from)+" → "+name(k.to)+"</b>"+k.el.querySelector(".why").innerHTML);
-    k.el.addEventListener("mouseenter",tell);k.el.addEventListener("focus",tell);k.el.addEventListener("click",tell);
-  });
-  lin.querySelectorAll(".lin-node").forEach(n=>{
-    const mine=()=>light(links.filter(k=>k.from.concat(k.to).includes(n.dataset.n)));
-    n.addEventListener("mouseenter",mine);n.addEventListener("focus",mine);
-  });
-  lin.addEventListener("mouseleave",()=>light([]));
-  new ResizeObserver(draw).observe(lin);
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
-  draw();
-});
-})();
-
-/* the four bandits, told apart by colour; Number 1 is the chief */
-const BC={1:"#a57fc0",2:"#9aa0a8",3:"#e8964d",4:"#b07a55"};
-const chip=k=>`<span class="chip"><i style="background:${BC[k]}"></i>Number ${k}</span>`;
-const chips=a=>a.length?a.map(chip).join(""):"<i>nobody</i>";
-
-/* a row of buttons for choosing one thing; keeps keyboard focus when it redraws */
-function picker(host,label,opts,cur,on){
-  const keep=host.dataset.f;delete host.dataset.f;host.innerHTML="";host.className="pick";
-  const l=document.createElement("span");l.className="plab";l.textContent=label;host.appendChild(l);
-  opts.forEach(([v,t],i)=>{const b=document.createElement("button");b.className="btn"+(v===cur?"":" alt");b.textContent=t;b.setAttribute("aria-pressed",v===cur);
-    b.onclick=()=>{host.dataset.f=i;on(v)};host.appendChild(b);if(keep!=null&&+keep===i)b.focus()});
-}
-
-/* ===== machines: the same commands in two orders ===== */
-(function(){
-  const cmds={add:{t:"add 1",f:x=>x+1},dbl:{t:"double it",f:x=>x*2}},rows=$("#ordrows"),say=$("#ordsay"),bs=$("#ordsame"),bw=$("#ordswap");
-  const run=order=>{let x=3;const lines=[`start at ${x}`];order.forEach(k=>{x=cmds[k].f(x);lines.push(`${cmds[k].t} → ${x}`)});return {x,lines}};
-  const card=(n,r,bad)=>`<div class="copy${bad?" bad":""}"><h5>Copy ${n}</h5>${r.lines.map(l=>`<div class="e">${l}</div>`).join("")}<div class="fin">holds ${r.x}</div></div>`;
-  function show(o2,which){
-    const a=run(["add","dbl"]),b=run(o2),bad=a.x!==b.x;
-    rows.innerHTML=card(1,a,bad)+card(2,b,bad);
-    bs.classList.toggle("alt",which!=="same");bw.classList.toggle("alt",which!=="swap");
-    say.innerHTML=bad?`<span class="bad">The copies now hold ${a.x} and ${b.x}.</span> The commands were the same. Only their order differed, and an honest copy cannot tell which order is the right one unless the replicas agree on it.`:`Both copies hold ${a.x}. Same commands in the same order, same result.`;
-  }
-  bs.onclick=()=>show(["add","dbl"],"same");bw.onclick=()=>show(["dbl","add"],"swap");
-  rows.innerHTML=card(1,{x:3,lines:["start at 3"]})+card(2,{x:3,lines:["start at 3"]});
-  rows.querySelectorAll(".fin").forEach(f=>f.textContent="holds 3");
-})();
-
-/* ===== the crown, seen from above: ring wall at the centre with Number 1, three posts on the slopes ===== */
-function Crown(svg){
-  const cx=235,cy=235,R=150,A={2:-90,3:30,4:150}; svg.innerHTML=""; svg.setAttribute("viewBox","0 0 470 470");
-  el("circle",{cx,cy,r:215,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
-  el("circle",{cx,cy,r:105,fill:"none",stroke:"#6b5a48","stroke-width":2.5,"stroke-dasharray":"2 6"},svg);
-  el("circle",{cx,cy,r:48,fill:"#d9cfb4",stroke:"#6b5a48","stroke-width":9},svg);
-  const sites=el("g",{},svg),over=el("g",{},svg);
-  const C={svg,cx,cy,R,A,over,tent:{},
-    pos(k){if(k===1)return [cx,cy];const a=A[k]*Math.PI/180;return [cx+R*Math.cos(a),cy+R*Math.sin(a)]},
-    put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
-    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:11,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph||"";return g},
-    /* a rat u of the way from post a to post b; each direction keeps to its own side of the line */
-    fly(g,a,b,u){const [x1,y1]=C.pos(a),[x2,y2]=C.pos(b),dx=x2-x1,dy=y2-y1,l=Math.hypot(dx,dy),o=30*Math.sin(Math.PI*u);
-      C.put(g,x1+dx*u-dy/l*o,y1+dy*u+dx/l*o)},
-    state(k,s){C.tent[k].st.textContent=s}
-  };
-  for(const k of [1,2,3,4]){const [x,y]=C.pos(k),g=el("g",{class:"site"},sites);C.put(g,x,y);
-    el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:BC[k]},g);el("text",{},g).textContent="B"+k;
-    const a=k===1?Math.PI/2:A[k]*Math.PI/180,r=k===1?68:48;
-    const st=el("text",{class:"state halo",x:r*Math.cos(a)*(k===1?0:1),y:k===1?66:r*Math.sin(a)},g);
-    C.tent[k]={x,y,g,st}}
-  return C;
-}
-
-/* ===== why three seals, and four bandits: two groups always share an honest bandit ===== */
-(function(){
-  const C=Crown($("#sealsvg")),ctl=$("#sealctl"),stand=$("#sealstand"),say=$("#sealsay");
-  let n=4,liar=null,x=1,y=3;
-  const all=m=>[...Array(m)].map((_,i)=>i+1);
-  /* the least number of honest bandits two groups can share, over every choice of leaving out, and every supposed liar */
-  const least=m=>{let lo=99;all(m).forEach(a=>all(m).forEach(b=>all(m).forEach(l=>{
-    const sh=all(m).filter(k=>k!==a&&k!==b&&k!==l);lo=Math.min(lo,sh.length)})));return lo};
-  function paint(){
-    const A=all(n),gx=A.filter(k=>k!==x),gy=A.filter(k=>k!==y),sh=gx.filter(k=>gy.includes(k)),hon=sh.filter(k=>k!==liar);
-    [1,2,3,4].forEach(k=>{const g=C.tent[k].g;g.classList.toggle("gone",k>n);g.classList.toggle("shared",sh.includes(k));g.classList.toggle("sus",k===liar)});
-    stand.innerHTML=`<div>First group (everyone but ${chip(x)}) ${gx.map(chip).join("")}</div><div>Second group (everyone but ${chip(y)}) ${gy.map(chip).join("")}</div><div>In both groups ${chips(sh)}</div><div>Honest, and in both ${liar==null?"<i>suppose one bandit lies</i>":chips(hon)}</div>`;
-    if(liar==null)say.innerHTML=`Each group is three bandits out of four: all but one, since one may be a silent liar. Suppose one bandit lies, and see who is left in both groups.`.replace("three bandits out of four",n===4?"three bandits out of four":"two bandits out of three");
-    else if(hon.length)say.innerHTML=`<span class="ok">An honest bandit sits in both groups.</span> An honest bandit seals only one entry for a number in a term, so the two groups cannot have sealed different entries.`;
-    else say.innerHTML=`<span class="bad">The only bandit in both groups is the one who lies.</span> They could seal one entry to the first group and a different one to the second. With ${n} bandits, the groups can fail.`;
-    say.innerHTML+=` Over every choice, the fewest honest bandits two groups can share is <b>${least(n)}</b>${n===4?"":", so three bandits are too few"}.`;
-    const opts=A.map(k=>[k,"Number "+k]);
-    picker($("#sealp1")||mk("sealp1"),"How many bandits?",[[3,"Three bandits"],[4,"Four bandits"]],n,v=>{n=v;if(liar>n)liar=null;if(x>n)x=1;if(y>n)y=n;paint()});
-    picker($("#sealp2")||mk("sealp2"),"Suppose this one lies:",opts,liar,v=>{liar=v;paint()});
-    picker($("#sealp3")||mk("sealp3"),"The first group leaves out:",opts,x,v=>{x=v;paint()});
-    picker($("#sealp4")||mk("sealp4"),"The second group leaves out:",opts,y,v=>{y=v;paint()});
-  }
-  function mk(id){const d=document.createElement("div");d.id=id;ctl.appendChild(d);return d}
-  paint();
-})();
-
-/* ===== changing the job: a term that stalls, and the wind that looks the same ===== */
-(function(){
-  const C=Crown($("#jobsvg")),say=$("#jobsay"),info=$("#jobinfo"),tEl=$("#jobterm"),sEl=$("#jobstood"),
-    bF=$("#jobfile"),bN=$("#jobnum"),bS=$("#jobsilent"),bW=$("#jobwind"),bR=$("#jobreset");
-  let term=1,waiting=false,wind=true,stood=0,busy=false;
-  const registrar=t=>((t-1)%4)+1;
-  function paint(){
-    const h=registrar(term);[1,2,3,4].forEach(k=>C.tent[k].g.classList.toggle("turn",k===h));
-    tEl.textContent=term;sEl.textContent=stood;info.textContent=`term ${term}, taken by Number ${h}`;
-    bF.disabled=busy||waiting;bN.disabled=bS.disabled=busy||!waiting;bW.disabled=bR.disabled=busy;
-    bW.textContent=wind?"The wind is blowing":"The wind has dropped";bW.setAttribute("aria-pressed",wind);
-  }
-  async function change(){
-    busy=true;paint();const h=registrar(term),next=registrar(term+1),others=[1,2,3,4].filter(k=>k!==next);
-    say.innerHTML=`The sandglasses run out. Each bandit who is waiting asks for a change: a sealed request for the next term, with proof of every entry readied at their post, goes to <b>Number ${next}</b>.`;
-    const toks=others.map(k=>{const g=C.token(BC[k],"");g.setAttribute("opacity",1);C.fly(g,k,next,.1);return [k,g]});
-    await Promise.all(toks.map(([k,g])=>tween(1100+rnd(700),u=>C.fly(g,k,next,.1+.8*u)).then(()=>g.remove())));
-    term++;busy=false;paint();
-    say.innerHTML=`Three requests are in, and three are enough. <b>Number ${next}</b> now has the job, in term ${term}. The entry is still waiting. Nobody judged whether Number ${h} stalled or the wind held the rats back.`;
-  }
-  bF.onclick=()=>{waiting=true;paint();say.innerHTML=`An entry is filed with <b>Number ${registrar(term)}</b>, who has the job, and the filer turns a sandglass. ${wind?"The wind is blowing.":"The wind has dropped."}`};
-  bN.onclick=async()=>{const h=registrar(term);
-    if(wind){say.innerHTML=`<b>Number ${h}</b> numbers the entry and sends the numbering out, but the wind holds the rats in their holes. The sandglass runs out first. From where anyone sits, this looks exactly like a registrar who said nothing.`;await sleep(900);await change();return}
-    waiting=false;stood++;paint();
-    say.innerHTML=`<b>Number ${h}</b> numbers the entry, the others echo it twice, and it <span class="ok">stands</span> before the sandglass runs out. The job stays where it is.`};
-  bS.onclick=async()=>{const h=registrar(term);say.innerHTML=`<b>Number ${h}</b> numbers nothing. The sandglass runs out, and nobody can say whether that is a stall or the wind.`;await sleep(900);await change()};
-  bW.onclick=()=>{wind=!wind;paint();say.innerHTML=wind?"The wind is blowing. Nobody can see it drop, and nobody can see it start.":"The wind has dropped, though nobody on the crown can tell. Runs are short again."};
-  bR.onclick=()=>{term=1;waiting=false;wind=true;stood=0;paint();say.innerHTML="An entry is filed and waits to be numbered. The wind is blowing."};
-  paint();
-})();
-
-/* ===== three requests always meet the bandits who hold the entry ===== */
-(function(){
-  const C=Crown($("#reqsvg")),ctl=$("#reqctl"),stand=$("#reqstand"),say=$("#reqsay");
-  let out=4,liar=null,left=1;const registrar=2,all=[1,2,3,4];
-  const mk=id=>{const d=document.createElement("div");d.id=id;ctl.appendChild(d);return d};
-  function paint(){
-    const E=all.filter(k=>k!==out),honE=E.filter(k=>k!==liar),R=all.filter(k=>k!==left),show=R.filter(k=>honE.includes(k));
-    all.forEach(k=>{const g=C.tent[k].g;g.classList.toggle("shared",E.includes(k));g.classList.toggle("sus",k===liar);g.classList.toggle("out",k===left)});
-    const line=k=>{const yes=honE.includes(k),isL=k===liar;
-      return `<div class="rq${yes?" yes":""}">${chip(k)} ${yes?"shows X readied under 7, in term 1":isL?"may say anything at all":"may show it, or may show nothing"}</div>`};
-    stand.innerHTML=`<div>Sent second echoes for X ${chips(E)}</div><div>Of them, honest ${liar==null?chips(E):chips(honE)} (they have X readied)</div><div>Number ${registrar} has the job in term 2, and collects requests from ${chips(R)}</div><div class="req">${R.map(line).join("")}</div>`;
-    if(show.length)say.innerHTML=`<span class="ok">At least one request shows X readied under 7.</span> The new registrar must number X under 7, and the other bandits check that they do. For number 8 no request shows anything readied, so the new registrar numbers a blank entry there.`;
-    else say.innerHTML=`<span class="bad">No request shows X.</span> This cannot happen: two honest bandits have X readied, and three requests out of four always include one of them.`;
-    const opts=all.map(k=>[k,"Number "+k]);
-    picker($("#reqp1")||mk("reqp1"),"Second echoes for X came from everyone but:",opts,out,v=>{out=v;paint()});
-    picker($("#reqp2")||mk("reqp2"),"Suppose this one lies:",[[null,"Nobody"]].concat(opts),liar,v=>{liar=v;paint()});
-    picker($("#reqp3")||mk("reqp3"),"The new registrar leaves out the request of:",all.filter(k=>k!==registrar).map(k=>[k,"Number "+k]),left,v=>{left=v;paint()});
-  }
-  paint();
-})();
-
-/* ===== going on once the wind drops: a doubling sandglass against a fixed one ===== */
-(function(){
-  const ctl=$("#gotctl"),list=$("#gotlist"),say=$("#gotsay"),run=$("#gotrun");
-  const NEED=3;   /* a term's worth of short runs: the numbering and the two echoes, each at most one first glass */
-  const winds=[[2,"The wind drops soon"],[20,"The wind blows a long time"],[Infinity,"The wind never drops"]];
-  let dbl=true,W=2,gen=0;
-  const registrar=k=>((k-1)%4)+1;
-  function sim(){const rows=[];let t=0;for(let k=1;k<=12;k++){const g=dbl?2**(k-1):1,still=t>=W,ok=still&&g>=NEED;
-    rows.push({k,h:registrar(k),t,g,kind:ok?"ok":!still?"wind":"short"});if(ok)break;t+=g}return rows}
-  const why={ok:g=>`Still air, and the sandglass of ${g} outlasts three short runs. The entries stand.`,wind:()=>"The wind is still blowing when the term begins. Nothing stands.",short:g=>`Still air, but a sandglass of ${g} runs out before three short runs can finish. The job passes again.`};
-  function pickers(){
-    picker($("#gotp1")||mk("gotp1"),"The sandglass:",[[true,"Doubles at every change"],[false,"The same every time"]],dbl,v=>{dbl=v;reset()});
-    picker($("#gotp2")||mk("gotp2"),"The wind:",winds.map(([w,t])=>[w,t]),W,v=>{W=v;reset()});
-  }
-  function mk(id){const d=document.createElement("div");d.id=id;ctl.appendChild(d);return d}
-  function reset(){gen++;list.innerHTML="";run.disabled=false;pickers();say.textContent="Every registrar is honest in this picture, and the first sandglass is the time a short run takes at most. A term's worth is counted as three short runs: the numbering and the two echoes."}
-  run.onclick=async()=>{const g0=++gen,rows=sim(),max=Math.max(...rows.map(r=>r.g));run.disabled=true;list.innerHTML="";
-    for(const r of rows){if(g0!==gen)return;const d=document.createElement("div");d.className="trow "+r.kind;
-      d.innerHTML=`<b>Term ${r.k}</b><span class="gl"><i style="width:${Math.max(4,r.g/max*100)}%"></i></span><em>Number ${r.h} has the job, glass ${r.g}. ${why[r.kind](r.g)}</em>`;list.appendChild(d);await sleep(450)}
-    if(g0!==gen)return;const last=rows[rows.length-1];
-    if(last.kind==="ok")say.innerHTML=`<span class="ok">The entries stand at term ${last.k}.</span> ${dbl?"The doubling sandglass grew past a term's worth of short runs, and the first term to begin in still air after that one worked.":"The sandglass never changed, and still air was enough because it was long enough from the start."}`;
-    else{const d=document.createElement("div");d.className="trow more";d.textContent="…and so on, for ever";list.appendChild(d);
-      say.innerHTML=W===Infinity?`<span class="bad">Nothing ever stands, and nothing wrong stands either.</span> Going on waits for the wind to drop.`:`<span class="bad">The changes never stop.</span> A sandglass that stays the same is always shorter than a term's worth of short runs, so every term runs out before it can finish.`}
-    run.disabled=false};
-  reset();
-})();
-
-/* ===== settling checkpoints: the allowed numbers, and a registrar who jumps ahead ===== */
-(function(){
-  const nE=$("#setN"),sE=$("#setS"),kE=$("#setK"),bar=$("#setbar"),meter=bar.parentNode,rng=$("#setrange"),say=$("#setsay"),
-    bF=$("#setfile"),bS=$("#setsettle"),bB=$("#setbad"),bG=$("#setgood"),bR=$("#setreset");
-  const DIST=200;   /* the picture's fixed distance beyond the last settled checkpoint */
-  let N=0,S=0;
-  function paint(){
-    nE.textContent=N;sE.textContent=S;kE.textContent=N-S;bar.style.width=((N-S)/DIST*100)+"%";meter.classList.toggle("full",N-S>=DIST);
-    rng.textContent=`Allowed numbers: ${S+1} to ${S+DIST}. ${N-S} of the ${DIST} ${N-S===1?"is":"are"} used.`;
-    bF.disabled=N+50>S+DIST;bS.disabled=Math.floor(N/100)*100<=S;bG.disabled=N>=S+DIST;
-  }
-  bF.onclick=()=>{N+=50;paint();say.innerHTML=`Fifty more entries stand, up to number ${N}. Every echo for them is held, in case a change of job calls for it.${N+50>S+DIST?" <span class='bad'>No more numbers are allowed until a checkpoint settles.</span>":""}`};
-  bS.onclick=()=>{const to=Math.floor(N/100)*100;S=to;paint();say.innerHTML=`Each bandit sealed a summary of their copy up to <b>${to}</b>. Three matching summaries settle the checkpoint: at least two honest bandits have the same scroll up to there. Every echo for numbers up to ${to} is thrown away, and the allowed numbers move up.`};
-  bB.onclick=()=>{say.innerHTML=`<span class="bad">Refused.</span> Number 1,000,000 lies far beyond the last settled checkpoint plus ${DIST}. A registrar cannot use up the numbers by jumping to an enormous one.`};
-  bG.onclick=()=>{N++;paint();say.innerHTML=`Number ${N} lies between the last settled checkpoint and ${S+DIST}, so it is allowed.`};
-  bR.onclick=()=>{N=0;S=0;paint();say.innerHTML="Nothing is written yet. The picture's allowed numbers run two hundred beyond the last settled checkpoint."};
-  paint();
-})();
-
-/* ===== scrollytelling: one entry, from filing to standing ===== */
-(function(){
-  const svg=$("#echosvg"),side=$("#echoside");
-  const nodes={1:[-90,"B1",BC[1]],2:[0,"B2",BC[2]],3:[90,"B3",BC[3]],4:[180,"B4",BC[4]]};
-  const P=Polar(svg,{vb:"0 0 620 600",cx:310,cy:300,r0:46,step:34,rings:7,tEnd:6.6,note:[14,24],nodes});
-  const defs=$("defs",svg);
-  [["o","#a8741a"],["g","#5f6e28"]].forEach(([k,c])=>{const m=el("marker",{id:`${svg.id}-${k}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:c},m)});
-  /* the rule: every rat is a row, sent at s and taken in at r */
-  const HOLD=1,M=[];
-  M.push({kind:"file",a:2,b:1,s:1.4,r:2.4});
-  [2,3,4].forEach(b=>M.push({kind:"num",a:HOLD,b,s:2.4,r:3.4,held:b===4}));
-  [2,3].forEach(a=>[1,2,3].filter(b=>b!==a).forEach(b=>M.push({kind:"first",a,b,s:3.4,r:4.4})));
-  [1,2,3].forEach(a=>[1,2,3].filter(b=>b!==a).forEach(b=>M.push({kind:"second",a,b,s:4.4,r:5.4})));
-  /* what each bandit holds at moment T, by the rules of the book */
-  function know(k,T){
-    const has=k===HOLD?T>=2.4:M.some(m=>m.kind==="num"&&m.b===k&&!m.held&&m.r<=T);
-    const fe=M.filter(m=>m.kind==="first"&&m.b===k&&m.r<=T).map(m=>m.a),own1=k!==HOLD&&k!==4&&has&&T>=3.4;
-    const first=fe.length+(own1?1:0),ready=has&&first>=2&&k!==4;
-    const se=M.filter(m=>m.kind==="second"&&m.b===k&&m.r<=T).length,own2=ready&&T>=4.4,second=se+(own2?1:0);
-    return {has,first,ready,second,stands:ready&&second>=3};
-  }
-  /* the picture: each mark appears at one step and stays */
-  const items=[];const add=(e,from,to=99)=>{e.classList.add("fade");items.push({e,from,to});return e};
-  const hot=p=>p;
-  const dot=(k,t,fill,from)=>add(P.event(k,t,fill,9),from);
-  const lbl=(k,t,s,from,to,col)=>{const [x,y]=P.pt(k,t),a=nodes[k][0],t2=el("text",{class:"lab halo",x:x+(a===-90||a===90?-14:0),y:y+(a===-90||a===90?5:-16)},P.over);t2.textContent=s;
-    t2.style.textAnchor=a===-90||a===90?"end":"middle";if(col)t2.style.fill=col;return add(t2,from,to)};
-  const slip=(m,from,col,mk,dash)=>{const p=P.slip(m.a,m.s,m.b,m.r,12);p.setAttribute("style",`stroke:${col};stroke-width:3.4`);p.setAttribute("marker-end",`url(#${svg.id}-${mk})`);if(dash)p.style.strokeDasharray="7 5";return add(p,from)};
-  const holds=el("text",{class:"lab halo",x:292,y:261,style:"text-anchor:end"},P.over);holds.textContent="has the job";
-  dot(2,1.4,"#fffaf0",0);M.filter(m=>m.kind==="file").forEach(m=>slip(m,0,"#136f9e","b"));lbl(2,1.4,"files",0,0);
-  dot(1,2.4,"#fffaf0",1);lbl(1,2.4,"no. 7",1,1,"#bf4a26");
-  M.filter(m=>m.kind==="num").forEach(m=>slip(m,1,"#bf4a26","r",m.held));
-  lbl(4,4.9,"held by the wind",1,99);
-  [2,3].forEach(k=>dot(k,3.4,"#fffaf0",2));
-  M.filter(m=>m.kind==="first").forEach(m=>slip(m,2,"#a8741a","o"));
-  [1,2,3].forEach(k=>dot(k,4.4,"#e0b84a",3));lbl(2,4.4,"readied",3,3);
-  M.filter(m=>m.kind==="second").forEach(m=>slip(m,4,"#5f6e28","g"));
-  [1,2,3].forEach(k=>dot(k,5.4,"#9cb648",5));lbl(2,5.4,"stands",5,5,"#2f5a1c");
-  const Ts=[2.4,3.4,3.4,4.4,4.4,5.4];
-  function card(k,s){
-    const T=Ts[s],K=know(k,T),role=k===HOLD?"has the job":"";
-    const note=[];
-    if(k===4)return `<div class="hc dim"><h5><span><i class="dot" style="background:${BC[k]}"></i>Number 4</span></h5><div class="chk">${s>=1?"Rats held by the wind. Nobody waits for them.":"—"}</div></div>`;
-    if(s===0&&k===2)note.push("filed the entry");
-    note.push(K.has?(k===HOLD?"has numbered it":"holds the numbering"):"no numbering yet");
-    if(s>=2&&k!==HOLD)note.push(`first echoes ${Math.min(K.first,2)} of 2`);
-    else if(s>=2)note.push(`first echoes ${Math.min(K.first,2)} of 2`);
-    if(s>=3&&K.ready)note.push("readied");
-    if(s>=4)note.push(`second echoes ${Math.min(K.second,3)} of 3`);
-    if(K.stands)note.push("<b>stands</b>");
-    return `<div class="hc${K.stands?" done":""}"><h5><span><i class="dot" style="background:${BC[k]}"></i>Number ${k}</span><span>${role}</span></h5><div class="chk">${note.join("<br>")}</div></div>`;
-  }
-  scrolly($("#echo"),s=>{
-    items.forEach(it=>it.e.classList.toggle("on",s>=it.from&&s<=it.to));
-    side.innerHTML=[1,2,3,4].map(k=>card(k,s)).join("");
-  });
-})();
-
-/* ===== who is who ===== */
-mapPairs($("#map"),[
-  ["Four bandits; one may lie","Replicas: n = 3f + 1 = 4, with f = 1 Byzantine (§2, §4)"],
-  ["The wind, and its dropping","An asynchronous network; progress needs delay(t) not to outgrow t for ever (§2)"],
-  ["Seal rings","Public-key signatures that an adversary cannot forge (§2); message digests are folded into the seal here"],
-  ["The loot scroll; an entry","A deterministic replicated state machine; an operation request (§3–4)"],
-  ["Order; going on","Safety (linearizability) and liveness (§3)"],
-  ["The job; a term; the fixed order of registrars","The primary; a view; primary = v mod |R| (§4)"],
-  ["Two matching sealed words to trust an entry","The client waits for f + 1 matching replies (§4.1); redundant for a replica acting as its own client"],
-  ["Numbering; first echo; readied","Pre-prepare; prepare; prepared = pre-prepare + 2f matching prepares (§4.2)"],
-  ["Second echo; stands","Commit; committed-local = prepared + 2f + 1 matching commits (§4.2)"],
-  ["One Entry to a Number","If prepared(m, v, n, i) then not prepared(m′, v, n, j) for non-faulty j and m′ ≠ m (§4.2)"],
-  ["Why four bandits","3f + 1 is optimal for asynchronous safety and liveness (§2, citing Bracha and Toueg)"],
-  ["Asking for a change; the three requests; the new numbering; blank entries","View-change; new-view with 2f + 1 view-changes; the set O; null requests (§4.4)"],
-  ["Order Across Terms","Non-faulty replicas agree on the sequence numbers of requests that commit locally, even in different views (§4.5.1; a sketch, with the full proof in Castro's thesis)"],
-  ["Joining on two requests; no bandit forces a change; a lying registrar's single term","Join a view change on f + 1 view-changes; a change needs f + 1; a faulty primary for at most f consecutive views (§4.5.2)"],
-  ["Doubling the sandglass","The view-change timeout doubles (§4.5.2)"],
-  ["Settled checkpoints; the allowed numbers","Stable checkpoints with 2f + 1 matching messages; low and high water marks (§4.3)"],
-  ["A nonsense entry","Faulty clients are observed consistently but can write garbage; access control limits them (§3)"],
-  ["Keeps nothing secret","No fault-tolerant privacy (§2)"],
-  ["Cheaper marks only the receiver can check","Message authentication codes and authenticators, with signatures kept for view changes (§5.2)"]]);
-})();
-</script>
+<script src="script.js"></script>
 </body>
 </html>

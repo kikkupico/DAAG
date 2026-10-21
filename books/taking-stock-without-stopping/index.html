@@ -6,402 +6,7 @@
 <title>Taking Stock Without Stopping — Arche</title>
 <meta name="description" content="Chandy and Lamport's distributed snapshots: three trading houses count what they hold while the carts keep moving, with messengers in red sashes, and the total describes a morning nobody lived through.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<style>
-:root{
-  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4;
-  --aegean:#2e88b5; --aegean-d:#136f9e; --blood:#bf4a26; --olive:#7c8f3a; --terra:#b5602c;
-  --gold:#e0b84a; --shadow:#b9a77e;
-  --serif:Georgia,'Iowan Old Style','Palatino Linotype',serif;
-  --sans:Optima,'Gill Sans','Gill Sans MT',sans-serif;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;background:#d8cba6}
-body{margin:0;background:#d8cba6;color:var(--ink);font-family:var(--serif);line-height:1.55;overflow-x:hidden}
-img{max-width:100%;display:block}
-button{font:inherit;cursor:pointer}
-h1,h2,h3{font-family:var(--sans);line-height:1.12;margin:0;text-wrap:balance}
-p{margin:0 0 1rem;font-size:1.125rem;line-height:1.65;text-wrap:pretty}
-.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--blood)}
-
-/* ---------- top bar ---------- */
-.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
-  font-family:var(--sans);font-size:.78rem;letter-spacing:.05em;background:linear-gradient(180deg,#3a2a1a,#241a10)}
-.bar a{color:#f0e6cc;text-decoration:none;opacity:.8;white-space:nowrap} .bar a:hover{opacity:1}
-.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:520px){.bar a+a{display:none}}
-.bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
-
-/* ---------- spreads ---------- */
-.spread{position:relative;padding:clamp(4.5rem,11vw,8rem) 20px;overflow:clip}
-.spread.has-scrolly{overflow:visible;padding-bottom:0;background:var(--marble)}
-.dark{background:var(--marble);color:var(--ink);background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
-.light{background:var(--parch);color:var(--ink);
-  background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
-/* torn-paper edge between spreads */
-.tear{position:absolute;left:0;right:0;top:-1px;height:26px;z-index:3;pointer-events:none}
-.tear path{fill:var(--prev)}
-.wrap{max-width:1080px;margin:0 auto;position:relative;z-index:2}
-.narrow{max-width:640px;margin:0 auto}
-.spread h2{font-size:clamp(1.9rem,5vw,3.1rem);margin:.4rem 0 1rem}
-.lede{max-width:34em}
-.light .lede{color:#3a2d24}
-.meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
-  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
-
-/* ---------- the pop-up: a card that unfolds from its hinge ---------- */
-.pop{perspective:1400px}
-.pop > .leaf{transform-origin:50% 100%;transform:rotateX(78deg) translateY(30px);opacity:0;
-  transition:transform 1.1s cubic-bezier(.2,.9,.25,1.12),opacity .6s ease}
-.pop.up > .leaf{transform:rotateX(0) translateY(0);opacity:1}
-.pop.fromleft > .leaf{transform-origin:0 50%;transform:rotateY(-80deg)}
-.pop.fromright > .leaf{transform-origin:100% 50%;transform:rotateY(80deg)}
-.pop.up.fromleft > .leaf,.pop.up.fromright > .leaf{transform:none}
-.paper{background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);position:relative}
-.light .paper{box-shadow:9px 11px 0 #b9a77e}
-.photo{border:5px solid #fffaf0;box-shadow:0 0 0 3px var(--ink),12px 16px 0 var(--shadow);background:#222;overflow:hidden;position:relative}
-.photo img{width:100%;height:100%;object-fit:cover}
-.tilt-l{transform:rotate(-1.4deg)} .tilt-r{transform:rotate(1.2deg)}
-[data-depth]{will-change:transform}
-.fold-shadow{position:absolute;left:6%;right:6%;bottom:-18px;height:26px;background:radial-gradient(ellipse at center,#0008,transparent 70%);opacity:0;transition:opacity 1s .4s;z-index:-1}
-.up .fold-shadow{opacity:1}
-
-/* ---------- cover ---------- */
-#cover{min-height:100svh;display:grid;align-items:center;padding-top:5rem;
-  background:linear-gradient(180deg,#e0d6bb00 calc(100% - 140px),#e0d6bb),radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
-/* the cover ends in one colour, and the torn edge under it is that colour */
-#cover+.spread>.tear path{fill:#e0d6bb}
-#cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
-#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:0 0 1.4rem;letter-spacing:-.01em}
-#cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
-#cover .generic,#cover .allegory{max-width:26em;margin:0 0 1rem}
-#cover .generic,#cover .allegory{color:var(--ink)}
-#cover .generic{font-style:italic;font-size:clamp(1.15rem,2.3vw,1.4rem)}
-#cover .source{font-family:var(--sans);font-size:.74rem;line-height:1.5;max-width:36em;margin:1.6rem 0 0;color:#6b5d4f}
-#cover .source i{color:var(--blood)}
-.cut{position:absolute;pointer-events:none;z-index:1}
-.cut svg{display:block;width:100%;height:auto}
-@media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
-
-/* ---------- two-column spreads ---------- */
-.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-.two.wide-r{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
-@media(max-width:859px){.two,.two.wide-r{grid-template-columns:minmax(0,1fr)}}
-
-/* ---------- the hall (full-bleed photo with pins) ---------- */
-#hall{padding:0;background:var(--marble)}
-.bleed{position:relative;height:min(100svh,880px);overflow:hidden}
-.bleed img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover}
-.bleed::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--parch) 0,transparent 8%,transparent 92%,var(--parch) 100%);pointer-events:none}
-.pin{position:absolute;z-index:4;max-width:min(250px,44vw);padding:10px 14px;background:#fffaf0;color:var(--ink);border:3px solid var(--ink);
-  box-shadow:5px 6px 0 #0007;font-size:.92rem;line-height:1.35;transform-origin:0 100%}
-.pin b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood)}
-.pin::after{content:"";position:absolute;left:-3px;bottom:-26px;width:3px;height:26px;background:var(--ink)}
-.pin::before{content:"";position:absolute;left:-8px;bottom:-34px;width:13px;height:13px;border-radius:50%;background:var(--blood);border:3px solid var(--ink)}
-.hall-title{position:absolute;z-index:5;left:20px;right:20px;top:clamp(5rem,12vh,8rem);max-width:1080px;margin:0 auto}
-.hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
-.hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
-.hall-title p{margin:0}
-/* on a phone, or a screen too short to hold them, the title and the notes leave the photograph and stand under it */
-@media(max-width:900px),(max-height:680px){
-  #hall{background:var(--parch);padding-bottom:clamp(2.5rem,8vw,4rem)}
-  .bleed{height:auto!important;overflow:visible;display:flex;flex-direction:column;gap:14px;padding:0 20px}
-  .bleed::after{display:none}
-  .bleed img{position:static;width:calc(100% + 40px);max-width:none;height:min(58svh,460px);margin:0 -20px;transform:none!important;
-    -webkit-mask-image:linear-gradient(transparent,#000 9%);mask-image:linear-gradient(transparent,#000 9%)}
-  .hall-title{position:relative;inset:auto;width:100%;max-width:640px;margin:-3.2rem auto 4px}
-  .hall-title .t{display:block;max-width:none}
-  .pin{position:static;width:100%;max-width:640px;margin:0 auto;box-shadow:5px 6px 0 var(--shadow)}
-  .pin::before,.pin::after{display:none}
-}
-
-/* ---------- scrollytelling ---------- */
-.scrolly{position:relative}
-.scrolly .stage{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;padding:70px 20px 20px;overflow:hidden}
-.scrolly .steps{position:relative;z-index:6;margin-top:-100svh;pointer-events:none}
-.step{min-height:100svh;display:flex;align-items:center;padding:0 20px}
-.step .card{pointer-events:auto;max-width:360px;padding:16px 20px;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);
-  transform:translateY(24px) rotate(-.6deg);opacity:.25;transition:transform .7s cubic-bezier(.2,.9,.25,1.1),opacity .5s}
-.step.on .card{transform:none;opacity:1}
-.step .card h3{font-size:1.1rem;margin-bottom:.35rem}
-.step .card p{margin:0;font-size:.98rem}
-.step .num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
-.step.r{justify-content:flex-end}
-.scrolly svg.fig{width:min(100%,820px);height:auto;max-height:calc(100svh - 120px);overflow:visible}
-.scrolly .stage-inner{width:100%;display:flex;justify-content:center}
-/* under the picture: previous, one dot per step (the current one long), next, and back to the first; each scrolls the page to its step */
-.scrolly .stage{flex-direction:column;gap:12px}
-.dots{flex:0 0 auto;display:flex;justify-content:center;align-items:center;gap:1px;position:relative;z-index:7}
-.dots button{appearance:none;border:0;background:none;padding:8px 4px;line-height:0;cursor:pointer;color:var(--ink)}
-.dots .dot::before{content:"";display:block;width:7px;height:7px;border-radius:7px;background:var(--ink);opacity:.22;transition:width .3s,opacity .3s,background .3s}
-.dots .dot:hover::before{opacity:.5}
-.dots .dot.on::before{width:20px;opacity:1;background:var(--blood)}
-.dots .arr{padding:6px;opacity:.5;transition:opacity .3s}
-.dots .arr svg{display:block;width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.dots .arr:hover{opacity:1}
-.dots .arr:disabled{opacity:.14;cursor:default}
-.dots .back{margin-left:8px}
-.dots button:focus-visible{outline:2px solid var(--aegean-d);outline-offset:-3px}
-@media(min-width:900px){.scrolly .stage{padding-left:380px} .step .card{max-width:320px} .step{padding-left:max(24px,calc((100vw - 1080px)/2))}}
-@media(max-width:899px){
-  .scrolly .stage{justify-content:flex-start;padding-top:64px}
-  .scrolly svg.fig{max-height:46svh}
-  .step{align-items:flex-end;padding-bottom:22px}
-  .step .card{max-width:none;width:100%}
-}
-svg text{font-family:var(--serif)}
-.svg-dark{background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
-
-/* ---------- interactive wells ---------- */
-.well{padding:clamp(16px,3vw,28px);margin:1.6rem 0}
-.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;justify-content:space-between;gap:10px}
-.well h4 em{font-style:normal;color:#6b5a48}
-.btn{background:var(--ink);color:var(--parch);border:3px solid var(--ink);padding:8px 16px;font-family:var(--sans);font-size:.88rem;letter-spacing:.03em;box-shadow:4px 4px 0 var(--blood);transition:transform .12s,box-shadow .12s}
-.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--blood)}
-.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--blood)}
-.btn:disabled{opacity:.35;cursor:default;box-shadow:none}
-.btn.alt{background:#fffaf0;color:var(--ink)}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.say{margin:12px 0 0;font-size:.98rem;min-height:3.1em}
-.say b{color:var(--blood)}
-.ok{color:#3f7a2a;font-weight:700}.bad{color:var(--blood);font-weight:700}
-
-/* cards row */
-.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
-.card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
-.card3 .body{padding:16px 18px 18px}
-.card3 h3{font-size:1.15rem;margin-bottom:.4rem}
-.card3 p{font-size:.95rem;margin:0}
-.card3 .fx{margin-top:12px}
-/* cards in a row stand as tall as the tallest */
-.cards3>.pop>.leaf{height:100%}
-@media(max-width:860px){.cards3{grid-template-columns:1fr}}
-/* relevance */
-.map{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px 0;align-items:stretch;max-width:760px;margin:2rem auto 0}
-.map .l,.map .r{padding:11px 16px;font-size:1rem;border:3px solid var(--ink);background:#fffaf0;color:var(--ink);transition:background .25s,transform .25s;cursor:default}
-.map .r{font-family:var(--sans);background:#e9f2f7}
-.map .mid{display:grid;place-items:center;color:var(--blood);font-size:1.3rem}
-.map .hi{background:var(--gold)!important;transform:scale(1.03)}
-.map .hd{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood)}
-.end{text-align:center}
-.end .big{font-size:clamp(1.5rem,4.2vw,2.5rem);max-width:19em;margin:0 auto 1.4rem;color:var(--ink);text-wrap:balance}
-.links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
-.links a{color:var(--ink);background:#fffaf0;border:3px solid var(--ink);padding:9px 18px;text-decoration:none;font-family:var(--sans);font-size:.9rem;box-shadow:4px 4px 0 var(--shadow)}
-.links a:hover{background:var(--gold)}
-footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;font-family:var(--sans);background:#d8cba6}
-
-/* ---------- lists, small parts ---------- */
-.terms{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:12px}
-.terms li{padding:12px 16px;background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 #b9a77e;font-size:.98rem}
-.terms b{font-family:var(--sans)}
-@keyframes slotin{from{transform:translateY(-8px);opacity:0}}
-.btn:focus-visible,.links a:focus-visible,[role=button]:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
-.num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
-.chip{display:inline-block;padding:1px 7px;margin:2px 3px 2px 0;border:2px solid var(--ink);border-radius:5px;background:#fff;font-family:var(--sans);font-weight:700;font-size:.86rem;white-space:nowrap}
-.chip i{display:inline-block;width:.7em;height:.7em;border-radius:50%;border:1.5px solid var(--ink);margin-right:5px;vertical-align:-.02em}
-.isle-svg{width:min(100%,440px);display:block;margin:0 auto}
-.fig .fade{opacity:0;transition:opacity .6s}
-.fig .fade.on{opacity:1}
-.fig .lab{fill:#6b5a48;font-size:15px;font-style:italic;text-anchor:middle}
-.fig .halo{paint-order:stroke;stroke:#fffaf0;stroke-width:5px;stroke-linejoin:round}
-.tok text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.site rect,.site circle{stroke:var(--ink);stroke-width:4}
-.site text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-
-/* ---------- space-time, drawn in the round ---------- */
-.st-ring{fill:none;stroke:#b9a77e;stroke-opacity:.7;stroke-width:1;stroke-dasharray:3 4}
-.st-spoke{stroke:#1c1512;stroke-width:2.5;stroke-opacity:.45}
-.st-node rect{fill:#f6eed6;stroke:#1c1512;stroke-width:2}
-.st-node text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.st-slip{fill:none;stroke:#136f9e;stroke-width:2.6;transition:stroke .3s,stroke-width .3s,opacity .5s}
-.st-seg{stroke:#bf4a26;stroke-width:7;stroke-linecap:round;opacity:0;transition:opacity .3s}
-.st-seg.hi{opacity:.85}
-.st-slip.hi{stroke:#bf4a26;stroke-width:5}
-.st-ev{cursor:pointer}
-.st-ev circle.b{stroke:#1c1512;stroke-width:3;transition:stroke .3s,stroke-width .3s}
-.st-ev text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
-.st-ev .halo2{fill:none;stroke:#e0b84a;stroke-width:7;opacity:0;transition:opacity .3s}
-.st-ev.sel .halo2,.st-ev.mark .halo2{opacity:1}
-.st-ev.sel circle.b{stroke-width:4.5}
-.st-ev.dim{opacity:.3}
-.st-ev:focus-visible{outline:none}.st-ev:focus-visible circle.b{stroke:#136f9e;stroke-width:6}
-.st-note{fill:#6b5a48;font-size:13px;font-style:italic}
-
-/* ---------- a stage with a figure and a side panel ---------- */
-.stage-inner.split{gap:18px;align-items:center}
-.stage-inner.split svg.fig{flex:1 1 300px;min-width:0;max-width:470px}
-.side{flex:0 0 240px;display:grid;gap:10px;font-family:var(--sans);font-size:.84rem}
-.side .hc{background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--shadow);padding:8px 10px;min-height:92px;transition:background .4s}
-.side .hc h5{margin:0 0 5px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:6px}
-.side .hc h5 span{color:#6b5a48;letter-spacing:.02em;text-transform:none}
-.side .hc .chk{font-size:.78rem;margin-top:4px;line-height:1.35}
-.side .hc.in{background:#e3ecc4}
-@media(max-width:899px){
-  .stage-inner.split{flex-direction:column;gap:10px}
-  .stage-inner.split svg.fig{flex:0 0 auto;max-height:30svh;width:auto;max-width:100%}
-  .side{flex:0 0 auto;width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;font-size:.7rem}
-  .side .hc{padding:5px 6px;min-height:0;box-shadow:3px 3px 0 var(--shadow)}
-  .side .hc h5{font-size:.62rem;flex-direction:column;gap:0}
-  .side .hc .chk{font-size:.66rem}
-  .side .chip{font-size:.68rem;padding:0 4px}
-}
-.tear{width:100%}
-.scrolly svg.fig.svg-dark{overflow:hidden}
-
-/* ---------- proofs, in the paper's own terms ---------- */
-details.proof{max-width:760px;margin:1.8rem 0 0;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);padding:0 clamp(14px,3vw,22px);font-size:.95rem}
-details.proof>summary{cursor:pointer;padding:12px 0;font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--aegean-d)}
-details.proof>summary:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
-details.proof[open]{padding-bottom:14px}
-details.proof details.proof{border-width:3px;box-shadow:none;background:#fff;margin:1rem 0;max-width:none}
-details.proof .given{padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean);margin:0 0 .8rem}
-details.proof h3,details.proof h4{font-size:1.02rem;margin:1.4rem 0 .5rem}
-details.proof .hlink{color:inherit;text-decoration:none}
-details.proof .fnote{font-size:.84rem;color:#6b5a48}
-ol.proofsteps{padding-left:1.4em;margin:.4rem 0 0}
-ol.proofsteps li{margin:.55em 0}
-.qed{float:right;font-family:var(--sans);letter-spacing:.15em;color:#5f6e28}
-.mathblock{margin:.8rem 0;padding:8px 12px;overflow-x:auto;text-align:center;font-style:italic;background:#fff;border:2px solid #1c151233}
-.slab{margin:1rem 0;padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean)}
-.slab-head{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
-.stmt{font-style:italic}
-
-/* ---------- closing apparatus: lineage, papers, links to where a fact comes from ---------- */
-a.anchor{display:block;height:0;scroll-margin-top:56px}
-sup.xref{font-size:.8em;line-height:0;margin-left:1px}
-sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
-.apparatus{max-width:760px;margin:3rem auto 0;text-align:left;font-size:.94rem}
-.apparatus .lineage{margin:0 0 .6rem}
-.apparatus .lbl{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-right:8px}
-.apparatus a{color:var(--aegean-d)}
-.apparatus details.proof{margin-top:1.2rem}
-.apparatus .refs p,.apparatus ol.refs li{font-size:.9rem;margin:.45em 0}
-.apparatus table{width:100%;border-collapse:collapse;font-size:.9rem}
-.apparatus td{padding:5px 8px 5px 0;border-top:2px solid #1c151222;vertical-align:top}
-
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  .pop > .leaf{transition:opacity .3s;transform:none!important}
-  [data-depth]{transform:none!important}
-  .pulse{animation:none}
-  .fig .tok{transition:none}
-}
-/* ---------- lineage: the papers a book's papers draw on and lead to (lineage.py) ---------- */
-.lin{--gap:134px;position:relative;margin-top:1.2rem}
-.lin ul{list-style:none;margin:0;padding:0}
-.lin h5{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#6b5a48;margin:0 0 6px;font-weight:700}
-.lin-edges{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-.lin-edges path{fill:none;stroke:var(--ink);stroke-width:1.6}
-.lin-edges polygon{fill:var(--ink)}
-.lin-nodes>li{padding:6px 0}
-.lin-node{position:relative;z-index:1;display:block;padding:9px 12px;color:var(--ink);text-decoration:none;line-height:1.28}
-.lin-node b{display:block;font-size:.93rem}
-.lin-node .by{display:block;font-family:var(--sans);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--blood);margin-top:4px}
-.lin-node.book{background:#fffaf0;border:2px solid var(--ink);box-shadow:4px 5px 0 var(--shadow)}
-.lin-node.ext{background:#f6eed6;border:2px dashed #1c151288}
-.lin-node.ext b{font-weight:400;font-style:italic}
-a.lin-node:hover b{text-decoration:underline}
-.lin-node.here{background:var(--ink);color:var(--parch);border:2px solid var(--ink);box-shadow:5px 6px 0 var(--shadow);padding:13px 14px}
-.lin-node.here b{font-size:1rem}
-.lin-node.here .by{color:var(--gold)}
-.lin-link{position:relative;z-index:1;cursor:default;outline:0}
-.lin-link em{display:inline-block;font-family:var(--sans);font-style:normal;font-size:.72rem;line-height:1.2;background:#f6eed6;border:1px solid #1c151255;border-radius:10px;padding:2px 8px;color:var(--ink)}
-.lin-link .ends{font-family:var(--sans);font-size:.72rem;color:#6b5a48;margin-left:6px}
-.lin-link .why{display:block;font-size:.84rem;color:#3a2d24;margin:3px 0 0}
-.lin-say{font-size:.9rem;color:#3a2d24;margin:16px 0 0;max-width:none}
-.lin-say b{font-family:var(--sans);font-size:.74rem;letter-spacing:.06em;color:var(--blood);margin-right:8px}
-.lin-key{margin:10px 0 0;font-family:var(--sans);font-size:.74rem;color:#6b5a48}
-.lin-key .k{display:inline-block;width:20px;height:11px;vertical-align:-1px;margin:0 6px 0 16px;border:2px solid var(--ink)}
-.lin-key .k:first-child{margin-left:0}
-.lin-key .k.here{background:var(--ink)}
-.lin-key .k.book{background:#fffaf0}
-.lin-key .k.ext{border-style:dashed;border-color:#1c151288}
-@media(min-width:860px){
-  /* three columns; each paper at the sides keeps its links beside it, in the gap the edges cross */
-  .lin{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.92fr) minmax(0,1.2fr);align-items:center}
-  .lin-side.in h5{margin-right:var(--gap)}
-  .lin-side.out h5{margin-left:var(--gap)}
-  .lin-side .lin-nodes>li{display:grid;align-items:center}
-  .lin-side.in .lin-nodes>li{grid-template-columns:minmax(0,1fr) var(--gap)}
-  .lin-side.out .lin-nodes>li{grid-template-columns:var(--gap) minmax(0,1fr)}
-  .lin-side.out .lin-links{order:-1}
-  .lin-side .lin-links{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 10px;text-align:center}
-  .lin-mid{padding:0 56px}
-  .lin-mid .lin-nodes>li{padding:0}
-  .lin-mid .lin-nodes>li+li{margin-top:26px}
-  .lin-mid .lin-links{display:flex;justify-content:center;gap:8px;margin:-8px 0 18px;text-align:center}
-  .lin-link .ends,.lin-link .why{display:none}
-  .lin-say,.lin-key{grid-column:1/-1}
-  .lin-say{min-height:2.7em}
-  .lin-link em{transition:background .15s,color .15s}
-  .lin.hot .lin-node,.lin.hot .lin-link,.lin.hot .lin-edges g{opacity:.28}
-  .lin.hot .lin-node.on,.lin.hot .lin-link.on,.lin.hot .lin-edges g.on{opacity:1}
-  .lin.hot .lin-link.on em{background:var(--ink);color:var(--parch);border-color:var(--ink)}
-}
-@media(max-width:859px){
-  /* one column: each paper's links are written out under it */
-  .lin-side,.lin-mid{margin-bottom:1.4rem}
-  .lin-nodes>li{padding:7px 0}
-  .lin-links{margin:8px 0 4px 6px;padding-left:12px!important;border-left:2px solid #1c151255}
-  .lin-mid .lin-links{margin:0 0 8px 6px}
-  .lin-link+.lin-link{margin-top:8px}
-  .lin-say{display:none}
-}
-/* ---------- two machines counted in turn ---------- */
-.mach{padding:18px 18px 14px}
-.mpair{display:grid;grid-template-columns:1fr 54px 1fr;gap:6px;align-items:center}
-.mbox{border:3px solid var(--ink);background:#fff;padding:8px;text-align:center;transition:background .3s}
-.mbox h5{margin:0 0 4px;font-family:var(--sans);font-size:.7rem;letter-spacing:.08em}
-.mbox b{font-family:var(--sans);font-size:1.4rem;font-variant-numeric:tabular-nums}
-.mbox.on{background:var(--gold)}
-.marrow{text-align:center;font-family:var(--sans);font-size:.78rem;color:var(--blood);min-height:1.2em}
-.lists{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.lists h5{margin:0 0 6px;font-family:var(--sans);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48}
-.lists>div{border:3px solid var(--ink);background:#fff;padding:8px;min-height:120px}
-.e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both;font-family:var(--sans)}
-.e.bad{border-left-color:var(--blood)}
-.e.good{border-left-color:#3f7a2a}
-.e.hit{background:#f3dc92}
-@media(max-width:520px){.lists{grid-template-columns:1fr}.lists>div{min-height:0}}
-/* ---------- figures beside text ---------- */
-.st-wrap{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:clamp(14px,3vw,28px);align-items:center}
-@media(max-width:760px){.st-wrap{grid-template-columns:minmax(0,1fr)}}
-.st-svg{width:100%;height:auto;display:block}
-.st-slip.pick{stroke:#b5602c;stroke-width:4}
-.tok-l{font-family:var(--sans);font-size:15px;font-weight:700;fill:#136f9e;text-anchor:middle;paint-order:stroke;stroke:#fffaf0;stroke-width:5px;stroke-linejoin:round}
-.tok-l.in{fill:#bf4a26}
-.isle-svg .rp{fill:none;stroke-width:5;stroke-linecap:round;transition:stroke-width .3s}
-.isle-svg .rd{opacity:.85;transition:opacity .3s}
-.isle-svg .rd.dim{opacity:.3}
-.isle-svg .rd.pick{opacity:1}
-.isle-svg .rd.pick .rp{stroke-width:9}
-.isle-svg .site.pick rect{stroke:#bf4a26}
-.isle-svg [role=button]{cursor:pointer}
-.isle-svg [role=button]:focus-visible{outline:none}
-.isle-svg [role=button]:focus-visible rect,.isle-svg [role=button]:focus-visible path{stroke:#136f9e}
-.count9{font-family:var(--sans);font-size:.8rem;margin-top:8px;color:#6b5a48}
-/* ---------- the side cards of the sash census ---------- */
-.side .hc .rc{font-size:.8rem}
-.side .hc.done{background:#e3ecc4}
-.side .hc .chk{min-height:2.7em}
-/* ---------- the reordering ---------- */
-.ev{display:flex;gap:6px;align-items:baseline;font-family:var(--sans);font-size:.82rem;padding:3px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--ink)}
-.ev .st{margin-left:auto;font-size:.7rem;color:#6b5a48;text-align:right}
-.ev.hit{background:#f3dc92}
-.ev.mv{outline:2px dashed var(--blood)}
-/* ---------- verdict table ---------- */
-.dtab{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.92rem;margin-top:12px}
-.dtab td{padding:6px;border-top:2px solid #1c151222}
-.dtab td:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
-.dtab tr:first-child td{border-top:0}
-.btn.on{background:var(--gold);color:var(--ink)}
-.quote{font-style:italic;font-size:clamp(1.1rem,2.6vw,1.5rem);max-width:28em;margin:2rem 0 0;border-left:5px solid var(--blood);padding-left:16px}
-.stack{display:grid;gap:10px;max-width:640px}
-.tell{max-width:40em;margin-top:1.6rem}
-.tell+.tell{margin-top:0}
-.cards3.pair{grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px}
-@media(max-width:860px){.cards3.pair{grid-template-columns:1fr}}
-.card3 h3:last-child{margin-bottom:0}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -418,8 +23,8 @@ a.lin-node:hover b{text-decoration:underline}
   <div class="wrap grid">
     <div>
       <h1>Taking Stock Without Stopping</h1>
-      <p class="generic">How do you take stock of a whole system that never stops moving, when no one can see all of it at once? And what can such a count reliably tell you?</p>
-      <p class="allegory">We find out by exploring how ancient Greek trading houses, hearing that bandits were taking their carts, counted every jar they owned, including those in transit, without interrupting ongoing trades.</p>
+      <p class="generic">How do you take an accurate snapshot of an entire distributed system while it keeps running, when no single machine can see the whole network at once? And what can such a snapshot reliably tell you?</p>
+      <p class="allegory">To find out, we follow three ancient Greek trading houses that suspect bandits are robbing their carts on the coastal road—and must count every jar they own, including those in transit, without halting trade.</p>
       <p class="source">After K. Mani Chandy and Leslie Lamport, <i>Distributed Snapshots: Determining Global States of Distributed Systems</i>, 1985</p>
     </div>
     <div class="pop" data-auto>
@@ -441,7 +46,7 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="lin-side in">
       <h5>Draws on</h5>
       <ul class="lin-nodes">
-        <li><a class="lin-node book" data-n="i:lamport-1978_time-clocks" data-label="Lamport 1978" href="../ordering-without-clocks/index.html"><b>Time, Clocks, and the Ordering of Events in a Distributed System</b><span class="by">Lamport 1978 · Ordering Without Clocks</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:lamport-1978_time-clocks" data-to="m:chandy-lamport-1985_distributed-snapshots" tabindex="0"><em>cause-and-effect order</em><span class="ends"></span><span class="why">Events ordered by cause and effect, the order a consistent snapshot has to respect.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="i:lamport-1978_time-clocks" data-label="Lamport 1978" href="../ordering-without-clocks/index.html"><b>Time, Clocks, and the Ordering of Events in a Distributed System</b><span class="by">Lamport 1978 · Ordering Without Clocks</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:lamport-1978_time-clocks" data-to="m:chandy-lamport-1985_distributed-snapshots" tabindex="0"><em>cause-and-effect order</em><span class="ends"></span><span class="why">Events ordered by cause and effect—the exact rule a consistent system snapshot must respect.</span></li></ul></li>
       </ul>
     </div>
     <div class="lin-mid">
@@ -453,14 +58,14 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="lin-side out">
       <h5>Leads to</h5>
       <ul class="lin-nodes">
-        <li><div class="lin-node ext" data-n="o:koo-toueg-1987" data-label="Koo &amp; Toueg 1987"><b>Checkpointing and Rollback-Recovery for Distributed Systems</b><span class="by">Koo &amp; Toueg 1987</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:chandy-lamport-1985_distributed-snapshots" data-to="o:koo-toueg-1987" tabindex="0"><em>consistent global states</em><span class="ends"></span><span class="why">Consistent global states, saved as checkpoints to return to after a failure.</span></li></ul></li>
-        <li><div class="lin-node ext" data-n="o:lai-yang-1987" data-label="Lai &amp; Yang 1987"><b>On Distributed Snapshots</b><span class="by">Lai &amp; Yang 1987</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:chandy-lamport-1985_distributed-snapshots" data-to="o:lai-yang-1987" tabindex="0"><em>snapshots</em><span class="ends"></span><span class="why">Snapshots for channels that may deliver messages out of order.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="o:mattern-1988_virtual-time" data-label="Mattern 1988" href="../ordering-without-clocks/index.html"><b>Virtual Time and Global States of Distributed Systems</b><span class="by">Mattern 1988 · Ordering Without Clocks</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:chandy-lamport-1985_distributed-snapshots" data-to="o:mattern-1988_virtual-time" tabindex="0"><em>consistent global states</em><span class="ends"></span><span class="why">Consistent global states, which vector time describes exactly.</span></li></ul></li>
-        <li><div class="lin-node ext" data-n="o:cooper-marzullo-1991" data-label="Cooper &amp; Marzullo 1991"><b>Consistent Detection of Global Predicates</b><span class="by">Cooper &amp; Marzullo 1991</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:chandy-lamport-1985_distributed-snapshots" data-to="o:cooper-marzullo-1991" tabindex="0"><em>global states</em><span class="ends"></span><span class="why">Consistent global states, searched to detect whether a condition ever held.</span></li></ul></li>
-        <li><div class="lin-node ext" data-n="o:carbone-2015" data-label="Carbone et al. 2015"><b>Lightweight Asynchronous Snapshots for Distributed Dataflows</b><span class="by">Carbone et al. 2015</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:chandy-lamport-1985_distributed-snapshots" data-to="o:carbone-2015" tabindex="0"><em>marker snapshots</em><span class="ends"></span><span class="why">Marker-based snapshots, used as the checkpoints of a stream processor.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:koo-toueg-1987" data-label="Koo &amp; Toueg 1987"><b>Checkpointing and Rollback-Recovery for Distributed Systems</b><span class="by">Koo &amp; Toueg 1987</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:chandy-lamport-1985_distributed-snapshots" data-to="o:koo-toueg-1987" tabindex="0"><em>consistent global states</em><span class="ends"></span><span class="why">Saves consistent global snapshots as checkpoints that a system can roll back to after a crash.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:lai-yang-1987" data-label="Lai &amp; Yang 1987"><b>On Distributed Snapshots</b><span class="by">Lai &amp; Yang 1987</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:chandy-lamport-1985_distributed-snapshots" data-to="o:lai-yang-1987" tabindex="0"><em>snapshots</em><span class="ends"></span><span class="why">Adapts distributed snapshots to networks where messages can arrive out of order.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="o:mattern-1988_virtual-time" data-label="Mattern 1988" href="../ordering-without-clocks/index.html"><b>Virtual Time and Global States of Distributed Systems</b><span class="by">Mattern 1988 · Ordering Without Clocks</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:chandy-lamport-1985_distributed-snapshots" data-to="o:mattern-1988_virtual-time" tabindex="0"><em>consistent global states</em><span class="ends"></span><span class="why">Shows that vector clocks can characterize these exact consistent global snapshots with mathematical precision.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:cooper-marzullo-1991" data-label="Cooper &amp; Marzullo 1991"><b>Consistent Detection of Global Predicates</b><span class="by">Cooper &amp; Marzullo 1991</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:chandy-lamport-1985_distributed-snapshots" data-to="o:cooper-marzullo-1991" tabindex="0"><em>global states</em><span class="ends"></span><span class="why">Searches through the lattice of consistent global snapshots to detect whether a transient condition ever held.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:carbone-2015" data-label="Carbone et al. 2015"><b>Lightweight Asynchronous Snapshots for Distributed Dataflows</b><span class="by">Carbone et al. 2015</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:chandy-lamport-1985_distributed-snapshots" data-to="o:carbone-2015" tabindex="0"><em>marker snapshots</em><span class="ends"></span><span class="why">Uses Chandy–Lamport markers to take lightweight checkpoints in modern stream processors like Apache Flink.</span></li></ul></li>
       </ul>
     </div>
-    <p class="lin-say">Each link is an idea one paper took from another. Point at one, or tap it, to read how.</p>
+    <p class="lin-say">Each link shows how one paper built on an idea from another. Hover over or tap any link to read how.</p>
     <p class="lin-key"><i class="k here"></i>a paper this book retells <i class="k book"></i>a paper retold in another book <i class="k ext"></i>a paper outside the series</p>
     </div>
   </div>
@@ -474,13 +79,13 @@ a.lin-node:hover b{text-decoration:underline}
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>Recording a system that is still running</h2>
-      <p class="lede">A distributed system is many machines passing messages. Some questions about it need its global state: every machine's own state, plus the messages still on their way between machines.</p>
-      <p>No machine can see all the others. Reading them one after another gives a total that is wrong by whatever moved between one reading and the next, as the two machines here show. Stopping the whole system to look does work, but it is costly, and knowing that the channels have drained already needs a marker on every channel. One method records the state while the system runs.</p>
+      <p class="lede">In a distributed system, many computers pass messages to one another across a network. Answering basic questions about the whole system—like whether it has deadlocked, finished a job, or lost data—requires knowing its <b>global state</b>: the internal state of every machine <i>plus</i> all messages currently in flight across the network.</p>
+      <p>Because there is no shared clock, no machine can photograph the entire network at a single instant. If you simply inspect the machines one after another while the system is running, anything that moves between two inspections gets double-counted or missed entirely—as you can see in the interactive on the right. Freezing the whole system and waiting for the network pipes to drain is too disruptive, and even knowing when a pipe is empty already requires sending a special end-of-stream marker. In 1985, K. Mani Chandy and Leslie Lamport showed how to capture an accurate global snapshot without ever stopping the system:</p>
       <ul class="terms">
-        <li><b>The method</b> (Chandy and Lamport, 1985): each machine records its own state, then sends a marker down every outgoing channel. Messages that arrive on a channel after the machine recorded and before that channel's marker are the channel's state.</li>
-        <li><b>The result</b> may be a state the system never passed through, yet it settles every stable property, such as deadlock or termination.</li>
+        <li><b>The marker algorithm</b> (Chandy and Lamport, 1985): When a machine records its own local state, it immediately sends a special <i>marker</i> message down every outgoing channel. Each machine then records the messages arriving on each incoming channel until that channel's marker arrives.</li>
+        <li><b>What the snapshot means:</b> Because machines record at slightly different times, the combined snapshot might describe a global state the system never actually inhabited at any single wall-clock instant. Even so, it is guaranteed to be a state the system <i>could</i> have passed through—which is enough to reliably detect any <b>stable property</b> (a condition that, once true, stays true forever, like deadlock or data loss).</li>
       </ul>
-      <p style="margin-top:1.2rem">The recorded state is one the system could have passed through, and that is enough for those properties. We tell it with three trading houses and their carts on the ring road of Arche.</p>
+      <p style="margin-top:1.2rem">We explore how this works through the story of three trading houses on the island of Arche and their loaded carts along the coastal road.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper mach">
@@ -511,11 +116,13 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="hall-title"><div class="t">
       <div class="kicker">The ring road of Arche</div>
       <h2>Three houses, carts on one cliff road</h2>
-      <p>House 1, House 2 and House 3 stand round the coast of Arche with a mountain between them. Carts and messengers go from house to house by the cliff road, and there are bandits about the island.</p>
+      <p>House 1, House 2, and House 3 sit along the coast of Arche, separated by a steep mountain. Carts of jars and messengers travel from house to house along the coastal cliff road—and bandits have been spotted on the island.</p>
     </div></div>
-    <div class="pin pop" style="left:50%;top:46%;"><div class="leaf"><b>No passing</b>Nothing overtakes on a track, so carts and messengers come in at the far end in the order they set out.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></div></div>
-    <div class="pin pop" style="left:6%;top:64%;"><div class="leaf"><b>One track each way</b>Each house has a track of its own to each other house, and each of the six tracks carries only its own traffic.</div></div>
-    <div class="pin pop" style="left:54%;top:82%;"><div class="leaf"><b>Bandits take carts</b>A cart may be taken on the road. A messenger with nothing on their back is not worth a bandit's while, and every messenger arrives.</div></div>
+    <div class="pins">
+      <div class="pin pop"><div class="leaf"><b>No overtaking</b>Nothing may pass another on a road track, so carts and messengers always reach the far gate in the exact order they set out.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></div></div>
+      <div class="pin pop"><div class="leaf"><b>One track each way</b>Each house has a direct one-way track to each of the other two houses, making six directed road tracks in all.</div></div>
+      <div class="pin pop"><div class="leaf"><b>Bandits take carts, not messengers</b>Bandits may ambush a loaded cart on the road. A messenger carrying no goods is not worth a bandit's trouble, so every messenger arrives safely.</div></div>
+    </div>
   </div>
 </section>
 
@@ -527,20 +134,19 @@ a.lin-node:hover b{text-decoration:underline}
       <div>
         <div class="kicker">The houses' question</div>
         <h2>How much do we hold between us?</h2>
-        <p class="lede">In a winter of busy trade, the three houses kept hearing that their goods had been stolen. A cart that left one house and had not come in at the next was said to have been taken on the cliff road, and no house could tell a cart that was taken from one that was only late.</p>
-        <p>To find out, the houses want to know how much grain and oil is really there, everywhere at once, to set against what the account scrolls say they should hold. Whatever falls short is what the bandits took.</p>
-        <p>The goods lie in two kinds of place. Some sit in the three storehouses. The rest are on the road, in carts and pack-trains that take as long as they take.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></p>
+        <p class="lede">During a busy winter of trade, rumors spread that bandits were seizing carts along the cliff road. Whenever a cart left one house and took a long time to reach the next, nobody could tell whether it had been stolen by bandits or was merely delayed behind a slow mule.</p>
+        <p>To find out whether they have actually been robbed, the three houses want to take a complete inventory of every jar of oil and grain they hold across the island, and compare that count against what their account scrolls say they ought to own. Any shortfall will prove what the bandits took.</p>
+        <p>The catch is that the houses' jars sit in two different kinds of places: some rest inside the three storehouses, while the rest are out on the road, strapped to carts and pack-mules in transit.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-arche-island-24dabcd397-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-arche-island-24dabcd397-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-arche-island-24dabcd397-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-arche-island-24dabcd397-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/arche-island.jpg" alt="The island of Arche from the air under cloud: a wooded mountain with a ruined wall on its crown, ringed by a coast road and small harbour towns" loading="lazy"></div></div></div>
     </div>
-    <p class="tell">The scribes' first plan is the plain one: send an auditor to each house, count each storehouse, and add the three counts. The recorder of the customs rolls sent the auditors out, went down to the cliff road to watch the carts pass, and came back to say that the plan would not do. Two mornings show why.</p>
+    <p class="tell">The scribes' first idea is the obvious one: send an auditor to each of the three storehouses, count the jars inside each one, and add the three numbers together. The recorder of the customs rolls watched the carts moving along the cliff road and immediately saw why that plan fails:</p>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Morning one</div><h3>Counted twice</h3><p>House 3's auditor counts at dawn and House 2's late in the day. In between, a cart carries two hundred jars of oil from House 3 to House 2. House 3 counted them before they left, and House 2 counts them again when they arrive. The total is two hundred jars too high, though nothing was added to the island.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Morning two</div><h3>Counted by nobody</h3><p>The counts are taken as before, but the cart carries two hundred jars from House 2 to House 3. They left House 2's storehouse before its auditor looked, and had not reached House 3 when its auditor closed the slate. Nobody counted them. The jars have vanished from the total, and no bandit took them.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The error, stated once</div><h3>Wrong by what moved</h3><p>Counting the houses one after another is wrong by exactly the goods that moved along the road between one counting and the next. It can run either way, no one can say in advance by how much, and no account scroll shows that it happened.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Morning one</div><h3>Counted twice</h3><p>Suppose House 3's auditor counts at dawn and House 2's counts in the afternoon. In between, a cart carries 200 jars of oil from House 3 to House 2. House 3 counted those jars before they left, and House 2 counts them a second time after they arrive—making the total 200 jars too high!</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Morning two</div><h3>Counted by nobody</h3><p>Suppose the auditors count at the same hours as before, but a cart of 200 jars leaves House 2 in the morning and hasn't reached House 3 by dawn. Those jars left House 2 before its auditor looked, and arrived at House 3 after its auditor finished—so 200 jars vanish from the count even though no bandit touched them!</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The root cause</div><h3>Wrong by whatever moved</h3><p>Counting the storehouses one after another is always off by the net goods that travelled between an already-counted house and an uncounted one—and without a shared clock, nobody can tell how much moved in between.</p></div></div></div>
     </div>
-    <p class="tell">On both mornings the auditors counted the storehouses rightly and the road wrongly. The goods that slipped through their counts were goods on the move, and a count taken house by house has no place to put them.</p>
-    <p class="tell">The plain remedy is to stop the road, so that nothing is on it to count.</p>
+    <p class="tell">In both mornings, the auditors counted the storehouses accurately, but missed or double-counted the goods moving along the road. The most obvious way to keep moving carts from spoiling the count is simply to halt all road traffic while the auditors work.</p>
   </div>
 </section>
 
@@ -551,18 +157,18 @@ a.lin-node:hover b{text-decoration:underline}
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The first thought</div>
-      <h2>A road that cannot be stopped all at once</h2>
-      <p class="lede">Stopping the road is the houses' first thought. From a given morning no cart moves, every storehouse is counted while everything stands still, and then the trains move again. With nothing on the road, the three counts add up.</p>
-      <p>Two objections stand against the plan. The first is its price. The second can be answered, and answering it turns up a catch that changes the whole plan.</p>
+      <h2>Why not stop the road?</h2>
+      <p class="lede">Suppose the houses agree to freeze all trade: stop sending carts, wait until every cart already on the road has rolled into a gate, count the three storehouses while the roads sit empty, and then resume business.</p>
+      <p>Thinking through how to actually carry out that freeze reveals two problems—and a surprising shortcut that eliminates the need to stop at all:</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First objection</div><h3>It is costly</h3><p>The houses feed the three port towns, and a road that stops moving food stops serving the island. A count that halts all trade will be tolerated once and never repeated.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second objection</div><h3>The order travels by road</h3><p>The order to stop goes by messenger and takes as long as the road takes. House 2 may hear it before House 3, and House 3, knowing nothing, quite properly sends a cart. That does no harm. Each house stops sending when the order reaches it, keeps taking in whatever arrives, and counts when its incoming roads are empty. Houses that stop at different hours still give a true total, so long as each waits until nothing more is coming.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The catch</div><h3>Empty how?</h3><p>A house has to know that nothing more is coming. It cannot see the road, and a cart may be out round the next headland behind a lame mule. So each house, the moment it stops, sends down each of its roads a last messenger who means <i>nothing behind me</i>. Nobody overtakes, so when that messenger comes in, the road behind them is empty.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First problem</div><h3>Halting trade is expensive</h3><p>The three houses supply the island's port towns every day. Freezing all shipments until the longest stretch of road empties out brings the island's commerce to a standstill.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second problem</div><h3>The stop order travels by road</h3><p>Without a shared clock, the order to stop must travel by messenger. Each house stops sending new carts when the messenger arrives, keeps receiving carts still on the road, and counts once its incoming tracks are empty.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The hidden catch</div><h3>How do you know a road is empty?</h3><p>Standing at a gate, a clerk cannot see around the sea cliffs to tell whether another cart is still lumbering along the road. To prove a track is empty, each house must send a final messenger the moment it stops—meaning <i>"no more carts behind me."</i></p></div></div></div>
     </div>
-    <p class="tell">So stopping the island needs a messenger on every road anyway. The recorder of the customs rolls saw what follows from that. A messenger who can mark the end of a road's traffic for a stopped house can mark a place in that traffic for a house that keeps trading, and once the houses have such messengers they have no need to stop at all.</p>
-    <p class="tell">The accountant of House 1 took away a second burden. The stopped road was meant to catch the island at one instant, and the count need not do that. What the houses need is a total that is <b>sound</b>: no cart counted twice, none gone missing. Whether the total was ever true of the island at a single moment is a separate question, and the houses have no practical need to ask it.</p>
-    <p class="tell">The houses want a sound total, then, taken while the carts keep moving. The goods on the road are exactly what the auditors got wrong, and no house ever sees the road.</p>
+    <p class="tell">Look closely at that third card. Even if the houses stopped all trade, they would <i>still</i> need to send a special messenger down every track to mark the end of the carts sent before the freeze! The recorder of the customs rolls realized what that meant: <b>if a messenger can mark the boundary between pre-count carts and post-count carts on a narrow road where nobody overtakes, the houses don't need to stop sending carts behind that messenger at all.</b></p>
+    <p class="tell">House 1's accountant added a second insight. Freezing the road was an attempt to capture the island at a single simultaneous instant. In truth, the houses don't need a simultaneous instant; they only need a <b>sound</b> (<i>consistent</i>) inventory where no jar is counted twice and no jar slips through the cracks.</p>
+    <p class="tell">To build that sound inventory while the carts keep rolling, we first have to be crystal clear about all the places on Arche that can hold jars.</p>
   </div>
 </section>
 
@@ -574,18 +180,17 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">What is being counted</div>
       <h2>Nine places, not three</h2>
-      <p class="lede">The goods on the road must first be admitted as part of what is counted. Each house thinks of its stock as what sits under its own roof. Oil in a cellar is stock, while oil in jars lashed to a mule on the cliff road is in no house's storehouse and on no house's slate. Yet it exists, it is owned, and it is exactly what the auditors counted twice or lost.</p>
-      <p>So the island is counted in nine places: the three storehouses, and, separately, what each of the six tracks is holding. Each house has a track to each other house, and each track carries only its own traffic.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup></p>
+      <p class="lede">Every house naturally thinks of its inventory as the jars sitting under its own roof. But jars strapped to a cart out on the cliff road belong to the island's stock just as surely as jars in a cellar—and ignoring the road is precisely why the auditors' first attempt went wrong.</p>
+      <p>A complete snapshot of Arche therefore consists of <b>nine numbers</b>: the stock inside each of the <b>three storehouses</b>, plus the jars currently travelling along each of the <b>six one-way road tracks</b> connecting pairs of houses.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup> Click each of the nine places on the map below.</p>
     </div>
-    <p class="tell">The picture shows all nine. Choose each in turn, and notice which of them a scribe could count from a desk.</p>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>Nine places to count <em id="ninecount">0 of nine looked at</em></h4>
       <svg class="isle-svg fig" id="nine" role="group" aria-label="Arche from above: three houses on a ring road round a mountain, with a track drawn from each house to each other house, one lane for each direction"></svg>
       <p class="say" id="ninesay">Three storehouses and six tracks. Choose any of them.</p>
     </div></div></div>
-    <p class="tell">Three of the nine can be counted from a desk, and the auditors counted only those. A method that records only the storehouses gives a complete account of a different island, one where carts take no time to travel. On Arche the six tracks have to be recorded as well.</p>
-    <p class="tell">A scribe at a desk cannot count a road. A cart rounding a headland is hidden behind rock, and nobody can post watchers along the surf. What a house can do is write down what comes in at its own gate. The recorder of the customs rolls saw that this is enough, provided the house knows exactly when to start writing down arrivals and when to stop.</p>
-    <p class="tell">When to start is easy: a house starts when it counts its own storehouse. When to stop is harder. Something has to tell a house, standing at its gate, that the last cart sent before the count has now come in.</p>
+    <p class="tell">Counting a storehouse is easy—a clerk can tally the shelves in a few minutes. But how can a clerk standing at a house's gate count the jars on a winding cliff road they cannot see?</p>
+    <p class="tell">The recorder of the customs rolls saw the answer: <b>you don't have to look at the road to count what is on it, because every cart on a road track eventually rolls through the receiving house's gate.</b> A receiving house simply needs to record on a wax slate every cart that arrives along that track after the house counted its own storehouse, and stop recording the moment the last cart sent before the sender's count has arrived.</p>
+    <p class="tell">And to tell the receiving gate the exact moment that last pre-count cart has arrived, the houses use the messenger in the <b>red sash</b>.</p>
   </div>
 </section>
 
@@ -596,20 +201,20 @@ a.lin-node:hover b{text-decoration:underline}
   <div class="wrap" style="margin-bottom:-1rem">
     <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
-        <div class="kicker">When to start, and when to stop</div>
+        <div class="kicker">Chandy and Lamport's marker algorithm</div>
         <h2>The red sash</h2>
-        <p class="lede">The signal to stop is the same messenger the stopped road needed, now wearing a plain red sash. Nothing overtakes on a track, so when the sash comes in at a gate, everything sent down that track ahead of it has already arrived.</p>
-        <p>The messenger carries no goods, no orders and no tallies. The messenger's whole purpose is to divide what was sent down a track before the sash from what was sent after.</p>
+        <p class="lede">The signal that divides pre-count carts from post-count carts is a messenger wearing a bright <b>red sash</b> (a <i>marker</i>). Because no one can overtake on the narrow road, when a red-sashed messenger walks through a gate, every cart sent down that track before the sash has already arrived.</p>
+        <p>The messenger carries no jars, no orders, and no timestamps. Their sole job is to mark the boundary in a road track's stream of traffic.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/taking-stock-without-stopping-c04-sash-554d2aab89-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/taking-stock-without-stopping-c04-sash-554d2aab89-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/taking-stock-without-stopping-c04-sash-554d2aab89-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/taking-stock-without-stopping-c04-sash-554d2aab89-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/c04-sash.jpg" alt="A messenger in an undyed tunic with a broad red sash sets off along the road through a white-walled town, while a loaded oil cart and its mule wait at a doorway" loading="lazy"></div></div></div>
     </div>
-    <p class="tell">Two rules govern the sash, one for sending and one for receiving, and the rule of receiving depends on whether the house has already recorded. The three cards are the entire method.</p>
+    <p class="tell">The entire snapshot procedure comes down to one rule for sending a red sash and two cases for receiving one:</p>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The rule of sending</div><h3>Record, then send the sash first</h3><p>A house records the inventory of its own storehouse. At once, before it sends any further cart or order down any road, it sends one messenger in a red sash down each of its roads.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The rule of receiving</div><h3>A sash, and no record yet</h3><p>The house records its storehouse at once, writes down that this road holds nothing, and then follows the rule of sending, with a sash down each of its own roads.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The rule of receiving</div><h3>A sash, and a record already made</h3><p>The house writes down, as that road's holding, every item that came in along that road between its own recording and this sash's arrival.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The rule of sending</div><h3>Count your storehouse, then send sashes</h3><p>When a house counts its own storehouse, it immediately dispatches one messenger in a red sash down each of its two outgoing tracks—before sending any further carts.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Receiving · Case 1</div><h3>First sash seen (not yet counted)</h3><p>If a red sash arrives at a house that has not yet counted its own storehouse, the house immediately counts its storehouse, records that this incoming track held <b>0 jars</b>, and sends red sashes down its outgoing tracks.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Receiving · Case 2</div><h3>Later sash seen (already counted)</h3><p>If a red sash arrives at a house that has <i>already</i> counted its storehouse, the house closes its wax slate for that incoming track: the jars that arrived on that track between the house's own count and this sash are that track's recorded holding.</p></div></div></div>
     </div>
-    <p class="tell">Any house may start the count, and it makes no difference which. No cart is delayed and no mule stopped, and no house needs to know another's stock. Scroll to watch one morning's count. Beside the picture, each house shows its stock, its record, and the slate it keeps for each incoming road.</p>
+    <p class="tell">Any house can initiate the count without coordinating beforehand, and no cart or mule ever has to stop. Scroll through the eleven steps below to watch a full count unfold while carts keep moving across the island.</p>
   </div>
   <div class="scrolly" id="sash">
     <div class="stage"><div class="stage-inner split">
@@ -617,24 +222,23 @@ a.lin-node:hover b{text-decoration:underline}
       <div class="side" id="sashside" data-live></div>
     </div></div>
     <div class="steps">
-      <div class="step on"><div class="card"><div class="num">1 · The morning</div><h3>Carts on the road</h3><p>Three storehouses, and two carts on the road. A cart of 30 jars is on the track from House 3 to House 2, and one of 10 on the track from House 2 to House 3. A coloured dot is a cart, and its number is the jars it carries.</p></div></div>
-      <div class="step"><div class="card"><div class="num">2 · Business goes on</div><h3>Another cart leaves</h3><p>House 3 sends a cart of 15 jars to House 2. Nobody has started a count. House 3 now holds 45.</p></div></div>
-      <div class="step"><div class="card"><div class="num">3 · The rule of sending</div><h3>House 1 starts</h3><p>House 1 writes down its stock, 100, and at once sends a messenger in a red sash down each of its roads, before anything else. The red dots are the sashes.</p></div></div>
-      <div class="step"><div class="card"><div class="num">4 · Business goes on</div><h3>A cart behind the sash</h3><p>House 1 sends a cart of 20 jars to House 2. It holds 80 now, but its record says 100, so these jars are already counted at House 1. The cart cannot pass the sash.</p></div></div>
-      <div class="step"><div class="card"><div class="num">5 · The rule of receiving</div><h3>House 2 has not recorded</h3><p>The cart of 30 arrives, and then the sash. House 2 records 100, the 30 jars included. It writes that the road from House 1 holds nothing, and sends sashes down its own roads.</p></div></div>
-      <div class="step"><div class="card"><div class="num">6 · Behind the sash</div><h3>The cart of 20 arrives</h3><p>That slate is closed. The 20 jars were sent after House 1 recorded, so House 1 already counted them. House 2 does not count them again.</p></div></div>
-      <div class="step"><div class="card"><div class="num">7 · The slate</div><h3>A cart caught on the road</h3><p>House 2 has recorded, and its slate for the road from House 3 is open. The cart of 15 arrives, and the slate says 15.</p></div></div>
-      <div class="step"><div class="card"><div class="num">8 · The rule of receiving</div><h3>House 3 has not recorded</h3><p>The sash from House 1 reaches House 3. It records 45, which leaves out the 15 already sent, writes that the road from House 1 holds nothing, and sends sashes of its own.</p></div></div>
-      <div class="step"><div class="card"><div class="num">9 · The slate</div><h3>Another cart caught</h3><p>The cart of 10 from House 2 reaches House 3 after it recorded. Its slate for that road says 10.</p></div></div>
-      <div class="step"><div class="card"><div class="num">10 · The slates close</div><h3>Every sash arrives</h3><p>The last sashes come in, and each closes the slate for the road it came along. Every slate is closed, and no cart stopped.</p></div></div>
-      <div class="step"><div class="card"><div class="num">11 · The total</div><h3>Nine numbers, added</h3><p>Three stocks and two slates: <span id="sashsum"></span> jars. Before anything began, the stocks and carts on the road came to <b id="sashtruth"></b>. Nothing was bought, sold or taken on this day. No jar was counted twice and none was missed.</p></div></div>
+      <div class="step on"><div class="card"><div class="num">1 · The morning</div><h3>Carts on the road</h3><p>Trade is already underway: a cart of 30 jars is rolling from House 3 to House 2, and a cart of 10 jars is rolling from House 2 to House 3. Each colored circle on the road is a cart showing how many jars it carries.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · Business goes on</div><h3>Another cart leaves</h3><p>Before anyone starts a count, House 3 dispatches a second cart carrying 15 jars toward House 2, leaving 45 jars in House 3's storehouse.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · The rule of sending</div><h3>House 1 starts the count</h3><p>House 1 decides to start the inventory: it records its own storehouse stock (100 jars), opens wax slates to log incoming carts on its two incoming tracks, and immediately sends a red-sashed messenger (red dot) down each of its two outgoing tracks.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Business goes on</div><h3>A cart behind the sash</h3><p>Right after sending its sashes, House 1 dispatches a cart of 20 jars to House 2. House 1's current stock drops to 80, but its recorded snapshot remains 100—and because nobody overtakes on the road, this cart travels <i>behind</i> the red sash.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · Receiving (Case 1)</div><h3>House 2 receives its first sash</h3><p>First the 30-jar cart from House 3 rolls into House 2, raising House 2's stock to 100. Moments later, the red sash from House 1 arrives. Since House 2 hasn't counted yet, it records its storehouse at 100 (including those 30 jars), records <b>0</b> for the track from House 1, opens a slate for the track from House 3, and sends out its own red sashes.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · Behind the sash</div><h3>The 20-jar cart arrives</h3><p>Now House 1's 20-jar cart reaches House 2. Because House 2 already closed the slate for the track from House 1 when the sash arrived, it does not add these 20 jars to the snapshot—avoiding a double-count, since House 1 already included them in its 100!</p></div></div>
+      <div class="step"><div class="card"><div class="num">7 · On the open slate</div><h3>A cart caught in transit</h3><p>Next, the 15-jar cart from House 3 rolls into House 2. Because House 2 has already counted its storehouse and has not yet seen a red sash from House 3, it logs these 15 jars on its open slate for the track from House 3.</p></div></div>
+      <div class="step"><div class="card"><div class="num">8 · Receiving (Case 1)</div><h3>House 3 receives its first sash</h3><p>House 1's other red sash reaches House 3. House 3 immediately records its storehouse at 45 (which excludes the 15 jars it sent earlier), records <b>0</b> for the track from House 1, opens a slate for the track from House 2, and sends out its own red sashes.</p></div></div>
+      <div class="step"><div class="card"><div class="num">9 · On the open slate</div><h3>Another cart caught in transit</h3><p>The 10-jar cart from House 2 rolls into House 3. Because House 3 has already counted its storehouse and is still waiting for House 2's red sash, it logs these 10 jars on its slate for the track from House 2.</p></div></div>
+      <div class="step"><div class="card"><div class="num">10 · Receiving (Case 2)</div><h3>Every remaining sash arrives</h3><p>The remaining red sashes reach their destinations, closing the open slates at all three houses. Every storehouse has been counted and every road slate is now closed.</p></div></div>
+      <div class="step"><div class="card"><div class="num">11 · The total</div><h3>Nine numbers, added together</h3><p>Adding the three recorded storehouses and six road slates gives <span id="sashsum"></span> jars—matching the exact <b id="sashtruth"></b> jars on the island when the morning began! Not a single jar was counted twice, and not a single jar in transit was missed.</p></div></div>
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
-    <p class="tell" style="margin-top:0">The second case of the rule of receiving does the work. A house that has recorded goes on taking in carts as usual, but from then on it keeps a slate for each incoming road, listing every jar and sack that arrives along it. When the sash comes through the gate, that road's slate is closed, and its sum <i>is</i> the road's holding. The house never saw the road. It only needed to know when to open the slate and when to close it, and the sash marked both.</p>
-    <p class="tell">The method relies on two things about the road.<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup> <b>Nothing overtakes on a track.</b> A sash sent after a cart cannot pass that cart, and a cart sent after the sash cannot pass the sash, so the sash divides a track's traffic cleanly in two. <b>Every sash arrives.</b> A messenger with a sash and nothing on their back is not worth a bandit's while, and none falls from the cliff. If either fails, the count fails.</p>
-    <p class="tell">Carts are another matter, because bandits do take them. A taken cart does not spoil the count. Its jars leave the island's goods as surely as jars sold into a port town, and the count counts what is left. A taken messenger would spoil it, because the slate that messenger was to close would never be closed.</p>
-    <p class="tell">Each slate is closed by a sash, and every house records at its own hour. It remains to show that nine numbers taken at different hours fit together, and that the auditors' error cannot come back in another form.</p>
+    <p class="tell" style="margin-top:0">Notice how the wax slates and red sashes work together. Once a house counts its storehouse, it starts logging every cart arriving on an incoming track until that track's red sash walks through the gate. Those logged carts are precisely the ones that left the neighboring house <i>before</i> the neighbor counted its storehouse, and arrived <i>after</i> this house counted its own—in other words, the exact carts that were in transit across the boundary of the count!</p>
+    <p class="tell">This guarantee relies on two physical facts about the ring road:<sup class="xref"><a href="../../places/ring-road/index.html" title="The Setting: The Ring Road">*</a></sup> <b>no overtaking on any track</b> (FIFO delivery, so a sash cleanly separates pre-count carts from post-count carts), and <b>every red sash eventually arrives</b>. What if bandits hijack a loaded cart during the count? That does not break the algorithm: a stolen cart vanishes from the island's stock just like goods sold away, whereas a red-sashed messenger carries no loot and always gets through to close the slate.</p>
+    <p class="tell">Because each house records its storehouse whenever the first sash reaches it, the three houses take their counts at different hours. Why can we be certain that combining counts from different hours never reproduces the auditors' double-counting mistake?</p>
   </div>
 </section>
 
@@ -644,19 +248,19 @@ a.lin-node:hover b{text-decoration:underline}
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">Do the nine numbers fit together?</div>
+      <div class="kicker">Consistent global states · Cuts</div>
       <h2>Cuts that hold and cuts that do not</h2>
-      <p class="lede">To see whether the nine numbers fit together, draw the island's morning in the round: each house a line running outward, later moments further out, each cart an arc from its departure to its arrival.</p>
-      <p>The count draws a loop through each house at the moment it recorded. The recorder of the customs rolls called the loop a <b>cut</b>. Everything inside it is counted as past, and everything outside it comes after. The houses record at different moments, so the loop is not round.</p>
-      <p>A cart that leaves from inside the loop and arrives outside it was sent before its sender recorded and came in after its receiver recorded. Such carts are exactly the goods on the road, and the slates catch them. A cart that crosses the loop <i>inward</i> is the fatal error: goods received that, by the other house's record, had not yet been sent. Those jars stand in both records, which is the auditors' first morning over again.</p>
+      <p class="lede">To see why the nine numbers always fit together, we can draw the morning on a circular timeline: each house is a line radiating outward as time passes, and each cart is a curved arrow from the moment it leaves one house to the moment it reaches the next.</p>
+      <p>Joining the three dots where the three houses recorded their storehouses forms a dashed loop called a <b>cut</b>. Everything inside the loop happened before the local count at that house; everything outside the loop happened after.</p>
+      <p>A cart that starts <i>inside</i> the loop and lands <i>outside</i> it left before its sender counted and arrived after its receiver counted—which is completely natural and is caught on the receiver's road slate. The only thing that can ruin a cut is an <b>inward-crossing cart</b>: a cart sent <i>after</i> the sender counted its storehouse that somehow arrives <i>before</i> the receiver counts its own! Such a cart would include an effect inside the cut while leaving its cause outside, double-counting those jars in both storehouses.</p>
     </div>
-    <p class="tell">The figure draws the morning of the red sashes, with its four carts. Choose any cart to see where its jars were counted. Then let each house count at an hour of its own choosing, and one cart crosses the loop inward.</p>
+    <p class="tell">Click any cart in the diagram below to see how it is counted under the red sash rules—and then switch to an uncoordinated count to see an inward-crossing cart ruin the total.</p>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>The morning's carts <em>choose a cart</em></h4>
       <div class="st-wrap">
         <svg class="st-svg fig" id="cutsvg" role="group" aria-label="Three lines running outward, one for each house, with a dashed loop through each house at the moment it recorded, and the morning's carts as arcs from house to house"></svg>
         <div>
-          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each line is one house. Each dot marks when that house recorded its storehouse, and the dashed loop joins the dots. Each arc is a cart, and the number is its jars.</p>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each line tracks one house moving outward over time. The dashed loop (the cut) connects the moments when each house recorded its storehouse, and each numbered arc is a cart.</p>
           <p class="say" id="cutsay"></p>
           <div class="row">
             <button class="btn on" id="cutok">With the red sashes</button>
@@ -665,28 +269,18 @@ a.lin-node:hover b{text-decoration:underline}
         </div>
       </div>
     </div></div></div>
-    <p class="tell">Nobody has to watch for the inward crossing, because the rule of sending rules it out. A house sends the sash down a track <i>before</i> any further cart. No cart can overtake the messenger, so no cart sent after a house records can reach a neighbour before the sash does, and none can be counted as arrived before the neighbour recorded.</p>
-    <p class="tell">The count also finishes. Every house has a road to every other, so a sash sent by any one house reaches both the others. Each house that receives one records and sends sashes down all its roads. The island is finite and every messenger arrives in the end, so every house records and every slate is closed.</p>
-    <p class="tell">No cart is counted twice, none is lost, and the count ends. The nine numbers therefore describe the island. At what moment they describe it is still to be said, since each house recorded at a different hour.</p>
+    <p class="tell">Why can no cart ever cross the cut inward when the houses use red sashes? Because the moment a house counts its storehouse, it sends a red sash down every outgoing track <i>before</i> sending any post-count cart. Since no cart can overtake the sash on the narrow road, the red sash always reaches the neighboring house first—forcing that neighbor to count its storehouse <i>before</i> the post-count cart can arrive!</p>
+    <p class="tell">So the nine numbers form a completely consistent cut with no double-counting and no missing carts. Yet because the three houses counted at different times, what moment of the morning does this snapshot actually describe?</p>
     <details class="proof">
-      <summary>Proof · no message crosses the cut inward</summary>
-      <p class="given">The marker-sending rule: a process records its state, then sends a marker on each outgoing channel before sending any further message on it. The marker-receiving rule: on receiving a marker, a process that has not recorded records its state, and a process that has recorded closes that channel's record. Channels are FIFO and every marker arrives. <b>Claim.</b> No message is sent after its sender recorded and received before its receiver recorded.</p>
+      <summary>Proof · no message ever crosses the snapshot cut inward</summary>
+      <p class="given">Marker-sending rule: a process records its local state and immediately sends a marker on every outgoing channel before sending any further messages. Marker-receiving rule: upon receiving a marker, a process that has not yet recorded its state does so immediately; a process that has already recorded closes that incoming channel's state. Channels are FIFO and every marker eventually arrives. <b>Claim.</b> No message sent after its sender recorded is ever received before its receiver recorded.</p>
 <ol class="proofsteps">
-      <li>Call an event at a house <b>early</b> if it occurred before that house recorded its own
-      storehouse, and <b>late</b> otherwise.</li>
-      <li>Suppose some cart were dispatched late at House 2 and arrived early at House 1.
-      This is the inward crossing.</li>
-      <li>House 2 recorded its storehouse before dispatching that cart, since the dispatch was
-      late. By the rule of sending, House 2 dispatched a red sash messenger down the track to
-      House 1 at the moment of recording — prior to dispatching any further carts down that
-      track.</li>
-      <li>The ring road is strict FIFO: carts and messengers cannot pass one another. Therefore, the
-      red sash messenger reached House 1 before that cart did.</li>
-      <li>By the rule of receiving, House 1 recorded its storehouse no later than the arrival
-      of that red sash messenger — either it had already recorded, or the sash forced it to record
-      then.</li>
-      <li>Thus, House 1 had recorded before the cart arrived, making the cart's arrival
-      <b>late</b>, not early — contradicting step 2.<span class="qed">∎</span></li>
+      <li>Call an event at a house <b>early</b> (inside the cut) if it occurred before that house recorded its storehouse, and <b>late</b> (outside the cut) if it occurred after.</li>
+      <li>Suppose for contradiction that some cart crosses the cut inward: it is dispatched <b>late</b> at House <var>i</var> and arrives <b>early</b> at House <var>j</var>.</li>
+      <li>Because the cart was dispatched late, House <var>i</var> had already recorded its storehouse. By the marker-sending rule, House <var>i</var> sent a red sash down the track to House <var>j</var> before dispatching that cart.</li>
+      <li>Because the track from House <var>i</var> to House <var>j</var> is FIFO, the red sash must arrive at House <var>j</var> before the cart does.</li>
+      <li>By the marker-receiving rule, House <var>j</var> records its storehouse no later than the arrival of that red sash.</li>
+      <li>Therefore, House <var>j</var> had already recorded its storehouse before the cart arrived—meaning the cart's arrival was <b>late</b>, not early. This contradiction proves that no cart can cross the cut inward.<span class="qed">∎</span></li>
     </ol>
     </details>
   </div>
@@ -700,14 +294,14 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div class="pop fromleft"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on top and red-roofed houses on the slopes" loading="lazy"></div></div></div>
       <div>
-        <div class="kicker">At what moment?</div>
+        <div class="kicker">What the snapshot represents</div>
         <h2>A morning nobody lived through</h2>
-        <p class="lede">The nine numbers describe the island at no single moment. When they came in, the recorder of the customs rolls summed them for the houses, and then showed that the total described a morning the island never had.</p>
-        <p>House 1 recorded first and House 2 some while later. Soon after House 1 recorded, it sold forty jars of oil into its own port town. Later, and still before House 2 recorded, House 2 milled eighty measures of barley into flour. Neither touched a road, a cart or a sash.</p>
-        <p>So the total describes an island in which House 1 still holds the forty jars and House 2 has already milled its barley. The island was never in that state. While House 1 still held the jars, the barley was not yet milled, and by the time it was, the jars were gone.</p>
+        <p class="lede">Remarkably, the nine numbers may describe a state of the island that never existed at any single moment in real time!</p>
+        <p>To see how, suppose House 1 records its storehouse first, and House 2 records a little while later. Right after House 1 records, it sells 40 jars of oil into its own port town. A few minutes later—still before House 2 has recorded—House 2 mills 80 measures of barley into flour. Neither local action touches a road, a cart, or a sash.</p>
+        <p>Look at what the combined snapshot records: it captures House 1 <i>before</i> the oil sale (still holding the 40 jars), and House 2 <i>after</i> the milling (with the barley already turned into flour). Yet in real time under the sun, the island was never in that combined state: while House 1 still held the 40 jars, the barley had not yet been milled; by the time the barley was milled, the 40 jars were already gone!</p>
       </div>
     </div>
-    <p class="tell">The four entries are set out below in the order they were lived. Put the milling ahead of the sale, and see which of the two mornings passes through the picture the count recorded.</p>
+    <p class="tell">Try swapping the order of those two independent local events in the interactive below to see how the recorded snapshot relates to the morning the houses actually lived through.</p>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>The same four entries <em>in two orders</em></h4>
       <div class="lists">
@@ -722,44 +316,20 @@ a.lin-node:hover b{text-decoration:underline}
       </div>
     </div></div></div>
     <div class="narrow" style="margin:2rem 0 0">
-      <p class="lede">The total is still not false, and saying why takes three names. Call the island as it stood when the count began its <b>start</b>, the island as the scribes recorded it the <b>recorded island</b>, and the island when the last slate closed its <b>end</b>.</p>
-      <p><b>First,</b> the recorded island can be reached from the start by the very events that happened, taken in an order that keeps every chain of carts and messengers intact. <b>Second,</b> the end can be reached from the recorded island by the rest of those same events.</p>
-      <p>So the recorded island lies on a lawful path from the start to the end. It is not an idle fiction. It is a state Arche <i>could have passed through</i>, had independent events on opposite sides of Mount Phyle come in another, equally lawful order.</p>
-      <p>The count may reorder the sale and the milling because nothing joins them. Neither touched a road, so neither could have known of the other. Two events at different houses with no chain of messengers between them stand in no natural order,<sup class="xref"><a href="../ordering-without-clocks/index.html#s2" title="Ordering Without Clocks: What Could Have Led to What">*</a></sup> and the count may take either first. What it may never do is reverse events that one chain of messengers joins, and the red sash sees to it that it never does.</p>
-      <p>The houses hold a morning that could have happened and did not. What they can do with such a total is the last thing to settle.</p>
+      <p class="lede">Why is the snapshot still trustworthy if it describes a state the island never actually passed through? To state the guarantee precisely, call the island's true state when the first sash went out the <b>start</b> (<var>S</var><sub>begin</sub>), the nine-number snapshot the <b>recorded island</b> (<var>S</var>*), and the island's true state when the last slate closed the <b>end</b> (<var>S</var><sub>end</sub>).</p>
+      <p>Chandy and Lamport proved two things: <b>first</b>, the recorded island can be reached from the start simply by running the pre-cut events in a causally valid order; <b>second</b>, the end can be reached from the recorded island by running the remaining post-cut events.</p>
+      <p>In other words, the recorded island lies on a completely valid execution path from the start of the count to the end! Because the oil sale at House 1 and the barley milling at House 2 occurred on opposite sides of the mountain with no messages between them, they were <b>concurrent</b> (unrelated)<sup class="xref"><a href="../ordering-without-clocks/index.html#s2" title="Ordering Without Clocks: What Could Have Led to What">*</a></sup>—so swapping their order changes nothing about any house's final state or any chain of cause and effect.</p>
+      <p>Now that we know the snapshot captures a valid state the island <i>could</i> have passed through between the start and the end of the count, what questions can such a snapshot reliably answer?</p>
     </div>
     <details class="proof">
-      <summary>Proof · the recorded state lies on a valid execution path</summary>
-      <p class="given">Let <var>S</var><sub>begin</sub> be the global state when the snapshot was initiated, <var>S</var>* the global state recorded, and <var>S</var><sub>end</sub> the global state when the last channel's record was closed. <b>Theorem.</b> (1) <var>S</var>* is reachable from <var>S</var><sub>begin</sub> by a valid execution sequence consisting of the events that actually occurred, in an order that preserves causality. (2) <var>S</var><sub>end</sub> is reachable from <var>S</var>* by the remainder of those events. Hence <var>S</var>* lies on a valid path from <var>S</var><sub>begin</sub> to <var>S</var><sub>end</sub>.</p>
+      <summary>Proof · the recorded snapshot lies on a valid execution path</summary>
+      <p class="given">Let <var>S</var><sub>begin</sub> be the global state when the snapshot began, <var>S</var>* the recorded snapshot state, and <var>S</var><sub>end</sub> the global state when the final channel record closed. <b>Theorem.</b> There exists a causally valid permutation of the actual events between <var>S</var><sub>begin</sub> and <var>S</var><sub>end</sub> that passes directly through <var>S</var>*: <var>S</var><sub>begin</sub> →* <var>S</var>* →* <var>S</var><sub>end</sub>.</p>
 <ol class="proofsteps">
-      <li>Write down the complete sequence of actual events that occurred on the island during the
-      census: <var>e</var><sub>1</sub>, <var>e</var><sub>2</sub>, …, <var>e</var><sub>m</sub>.
-      Each event is classified as <b>early</b> or <b>late</b>, depending on whether the house at
-      which it occurred had already recorded its storehouse.</li>
-      <li>In the actual execution, some late events may precede early events (for example, if
-      House 1 records early while House 2 continues normal operations before recording).</li>
-      <li><b>Claim:</b> If a late event <var>e</var><sub>i</sub> is immediately followed by an
-      early event <var>e</var><sub>i+1</sub>, they may be transposed in the sequence without
-      altering any resulting state.</li>
-      <li>They cannot occur at the same house: a house transitions from unrecorded to recorded
-      exactly once, so at any single house, every early event precedes every late event.</li>
-      <li>Neither can depend on the other. <var>e</var><sub>i</sub> cannot have caused
-      <var>e</var><sub>i+1</sub>: that would require a cart dispatched after recording at one house
-      to arrive before recording at another, which we proved impossible. And
-      <var>e</var><sub>i+1</sub> cannot have caused <var>e</var><sub>i</sub>, because it follows it
-      in physical time.</li>
-      <li>Because <var>e</var><sub>i</sub> and <var>e</var><sub>i+1</sub> are concurrent events at
-      different houses, they commute: executing them in reverse order produces the identical
-      state at all houses and on all roads.</li>
-      <li>Repeatedly transpose adjacent (late, early) pairs. Each swap shifts an early event to
-      the left. This sorting terminates in a valid sequence where <em>all early events precede
-      all late events</em>.</li>
-      <li>Execute the early events from <b>S<sub>begin</sub></b>. Because every early event has
-      occurred and no late event has occurred, each house reaches its recorded local state, and
-      each road segment contains exactly the items recorded on its slate. This state is
-      precisely <b>S*</b>.</li>
-      <li>Executing the remaining late events from <b>S*</b> leads directly to
-      <b>S<sub>end</sub></b>.<span class="qed">∎</span></li>
+      <li>List the actual sequence of events that occurred on the island between <var>S</var><sub>begin</sub> and <var>S</var><sub>end</sub>: <var>e</var>₁, <var>e</var>₂, …, <var>e</var><sub>m</sub>. Classify each event as <b>early</b> (occurring at a house before that house recorded its state) or <b>late</b> (occurring after that house recorded its state).</li>
+      <li>In the real-time execution, some late event at one house may occur before an early event at another house. Suppose a late event <var>e</var><sub>i</sub> is immediately followed by an early event <var>e</var><sub>i+1</sub>.</li>
+      <li><b>Claim: <var>e</var><sub>i</sub> and <var>e</var><sub>i+1</sub> can be swapped without changing any process or channel state.</b> First, they cannot belong to the same house, because at any single house all early events precede the recording and all late events follow it. Second, <var>e</var><sub>i</sub> cannot have caused <var>e</var><sub>i+1</sub>, because that would require a message sent after recording (late) to arrive before recording (early), which our cut-consistency proof ruled out. Thus <var>e</var><sub>i</sub> and <var>e</var><sub>i+1</sub> are independent events at different houses and commute.</li>
+      <li>Repeatedly swap adjacent (late, early) pairs until all early events precede all late events.</li>
+      <li>Executing all early events starting from <var>S</var><sub>begin</sub> brings every house to the exact state it had when it recorded, and leaves on each channel the exact messages sent early and received late—which is precisely the recorded snapshot <var>S</var>*. Executing the remaining late events from <var>S</var>* then reaches <var>S</var><sub>end</sub>.<span class="qed">∎</span></li>
     </ol>
     </details>
     <p class="quote">“You asked for a morning, and I have given you a morning. It is only not the particular morning you lived through.”<br><span style="font-size:.8rem;font-style:normal;font-family:var(--sans);letter-spacing:.06em">What the recorder of the customs rolls told the houses</span></p>
@@ -772,23 +342,22 @@ a.lin-node:hover b{text-decoration:underline}
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">A morning that could have happened</div>
+      <div class="kicker">Detecting stable properties</div>
       <h2>What such a total is good for</h2>
-      <p class="lede">A total that describes a morning nobody lived through is good for some questions and useless for others, and it is best to start with what it cannot do. If a merchant swears that House 2 held three hundred jars of oil at the moment a ship dropped anchor, the count cannot settle it. The count was taken at no one moment, so it cannot speak for that moment.</p>
-      <p>The questions it can answer are those whose answer, <i>once it becomes true, stays true for ever.</i> The recorder of the customs rolls called these <b>settled properties</b>. Counting only the trade between the houses, with the port towns' buying and selling set aside, some examples are:</p>
+      <p class="lede">Because a snapshot describes a morning nobody actually lived through, it cannot answer questions about fleeting moments—such as whether House 2 held 300 jars at the exact instant a ship dropped anchor. Without synchronized clocks, no distributed count can speak for a single wall-clock instant.</p>
+      <p>Instead, the snapshot is built to answer questions about <b>settled properties</b> (<i>stable properties</i>): conditions that, <i>once they become true, stay true forever.</i> If we look only at the closed network of trade between the three houses (setting aside outside port-town sales), classic examples include:</p>
       <ul class="terms">
-        <li><b>Everything delivered:</b> every cart has arrived and all houses are idle.</li>
-        <li><b>Standstill:</b> every house is waiting for carts from another.</li>
-        <li><b>Exhaustion of supply:</b> a vintage has run out, and no trade between the houses can bring it back.</li>
-        <li><b>Deficit:</b> jars are gone that no trade between the houses can bring back, as jars taken by bandits are.</li>
+        <li><b>Everything delivered (Termination):</b> Every cart has arrived and all three houses have finished their work.</li>
+        <li><b>Standstill (Deadlock):</b> Every house is waiting for a cart from another house before it can send one of its own.</li>
+        <li><b>Exhaustion of supply:</b> A vintage has run out across the island, and no trade between the houses can create more.</li>
+        <li><b>Deficit (Data loss / theft):</b> Jars have disappeared from the closed trading loop—as when bandits seize a cart on the road.</li>
       </ul>
-      <p style="margin-top:1.2rem">For these, the count decides. <b>If the property holds on the recorded island,</b> it holds on the island now, because the end can be reached from the recorded island and a settled property, once true, remains true. <b>If it does not hold there,</b> it did not hold when the count began, because had it held at the start, it would still hold on the recorded island.</p>
-      <p>Either way, the count gives a sure answer about a real state of the island. That the recorded island itself never happened does not matter, because a settled property cannot tell the path the island took from a path it could have taken.</p>
+      <p style="margin-top:1.2rem">For any settled property, the recorded snapshot gives an ironclad answer about the real island: <b>if the property holds in the snapshot, it definitely holds on the real island by the time the count finishes</b> (since the end state is reachable from the snapshot, and once true, a settled property stays true). Conversely, <b>if the property does not hold in the snapshot, it definitely did not hold when the count began</b> (since the snapshot is reachable from the start state).</p>
     </div>
-    <p class="tell">The houses' own question, whether the bandits have robbed them, is of this kind on the right day. Below, the count is taken on a day with no buying or selling. Choose when a bandit takes one cart off the road, and compare what the count says with how the island stood when the count began and when it ended.</p>
+    <p class="tell">That directly solves the houses' bandit problem! By running a red-sash count on a day with no port-town buying or selling, normal shipments merely move jars from one of the nine places to another without changing the sum. Test the three cases below to see what the snapshot tells the houses when bandits strike.</p>
     <div class="pop"><div class="leaf"><div class="paper well" id="dec" style="margin-top:1.2rem">
       <h4>Have the bandits robbed us? <em>a day with no buying or selling</em></h4>
-      <p style="font-size:.92rem;color:#6b5a48;margin:0 0 .6rem">The account scrolls say the houses hold 270 jars between them. Choose when a bandit takes one cart of 30 jars off the road.</p>
+      <p style="font-size:.92rem;color:#6b5a48;margin:0 0 .6rem">The account scrolls say the three houses should hold 270 jars between them. Choose when a bandit ambushes a cart of 30 jars on the road.</p>
       <div class="row" style="margin-top:0">
         <button class="btn" data-case="before">Before the count begins</button>
         <button class="btn alt" data-case="after">After the count has ended</button>
@@ -798,18 +367,16 @@ a.lin-node:hover b{text-decoration:underline}
       <p class="say" id="decsay"></p>
     </div></div></div>
     <div class="narrow" style="margin:2rem 0 0">
-      <p>The count can answer the houses' own question because it gives a sound inventory, with no jar lost and none counted twice. A cart that was only late turns up on a road slate and is counted. A cart that was taken turns up nowhere.</p>
-      <p>So the houses take their count on a day when nothing is bought from or sold into the port towns. Then goods only move between the houses, and every move takes jars from one of the nine places and adds the same jars to another. Only the bandits can change the total. The account scrolls say what the houses should hold between them, and the houses set the count against it. A shortfall is a deficit, and a deficit is settled. If the count shows one, the houses have been robbed, and the shortfall is what the bandits hold now. If it shows none, nothing had been taken when the count began.</p>
-      <p>On a day of buying and selling, the account scrolls move with every sale, and the recorded total is true of the recorded island and of no moment anyone lived through. What was true at one particular moment, nothing on an island without a common hour will ever tell.</p>
+      <p>Because the red-sash count captures every jar in the storehouses and every jar in transit on the road, a cart that is merely slow turns up on a wax slate and is counted, whereas a stolen cart vanishes from the sum. If the nine numbers fall short of the account scrolls, the houses know for certain that bandits have robbed them by the time the count ends; if the nine numbers match the scrolls, they know for certain that not a single jar had been stolen when the count began.</p>
     </div>
     <details class="proof">
-      <summary>The decision rule, in the paper's terms</summary>
-      <p class="given">A property <var>y</var> is stable if for every state <var>S</var> where <var>y</var>(<var>S</var>) holds, <var>y</var>(<var>S'</var>) holds for all states <var>S'</var> reachable from <var>S</var>. Let <var>S</var><sub>begin</sub>, <var>S</var>* and <var>S</var><sub>end</sub> be as in the theorem. <b>Rule.</b> Evaluate the stable property <var>y</var> on <var>S</var>*. If <var>y</var>(<var>S</var>*) is true, then <var>y</var>(<var>S</var><sub>end</sub>) is true. If <var>y</var>(<var>S</var>*) is false, then <var>y</var>(<var>S</var><sub>begin</sub>) is false.</p>
+      <summary>The decision rule for stable properties, in the paper's terms</summary>
+      <p class="given">A global predicate <var>y</var> is <i>stable</i> if for every global state <var>S</var> where <var>y</var>(<var>S</var>) is true, <var>y</var>(<var>S'</var>) remains true for all states <var>S'</var> reachable from <var>S</var>. Let <var>S</var><sub>begin</sub> →* <var>S</var>* →* <var>S</var><sub>end</sub> be as in the reachability theorem. <b>Decision rule.</b> Evaluate the stable predicate <var>y</var> on the recorded snapshot <var>S</var>*:</p>
       <ol class="proofsteps">
-        <li><b>If <var>y</var>(<var>S</var>*) is true:</b> <var>S</var><sub>end</sub> is reachable from <var>S</var>*, and a stable property, once true, remains true. So <var>y</var> is true of the system now, at <var>S</var><sub>end</sub>.</li>
-        <li><b>If <var>y</var>(<var>S</var>*) is false:</b> <var>S</var>* is reachable from <var>S</var><sub>begin</sub>. Had <var>y</var> been true at <var>S</var><sub>begin</sub>, it would still hold at <var>S</var>*. So <var>y</var> was false when the snapshot began.<span class="qed">∎</span></li>
+        <li><b>If <var>y</var>(<var>S</var>*) is true:</b> Since <var>S</var><sub>end</sub> is reachable from <var>S</var>* and <var>y</var> is stable, <var>y</var>(<var>S</var><sub>end</sub>) must be true. The property definitely holds in the real system when the snapshot completes.</li>
+        <li><b>If <var>y</var>(<var>S</var>*) is false:</b> Since <var>S</var>* is reachable from <var>S</var><sub>begin</sub>, if <var>y</var>(<var>S</var><sub>begin</sub>) had been true, stability would force <var>y</var>(<var>S</var>*) to be true as well. Thus <var>y</var>(<var>S</var><sub>begin</sub>) must be false: the property definitely did not hold when the snapshot began.<span class="qed">∎</span></li>
       </ol>
-      <p class="fnote">Examples counting only the trade between the houses: distribution termination (every cart has arrived and all houses are idle), deadlock (every house is blocked waiting for carts from another), exhaustion of supply, and deficit.</p>
+      <p class="fnote">Examples of stable properties include distributed termination, deadlock, loss of tokens or conserved quantities (deficit), and unreachability of objects (garbage collection).</p>
     </details>
   </div>
 </section>
@@ -822,16 +389,16 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The island was a network of machines</h2>
-      <p class="lede">Read the island again with machines in the storehouses. Every house is a process, every track is a channel, and the messenger in the red sash is a marker. Hover over a row, or tap it, to see who is who.</p>
+      <p class="lede">Now picture the island again with computers inside the storehouses. Every trading house is a process, every one-way road track is a FIFO communication channel, and the messenger in the red sash is a snapshot marker. Hover over or tap any row below to see how the two worlds match up.</p>
     </div>
     <div class="map" id="map">
-      <div class="hd" style="text-align:right;padding-right:6px">On the island</div><div></div><div class="hd">In the machine room</div>
+      <div class="hd" style="text-align:right;padding-right:6px">On the island</div><div></div><div class="hd">In computing</div>
     </div>
     <div class="meander" style="margin:3rem auto"></div>
     <div class="end">
-      <p class="big">A running system can be recorded without stopping it, in a state it may never have passed through but could have.</p>
-      <p class="lede" style="margin:0 auto">Because that state lies on a lawful path from the start to the end, it settles every question whose answer, once true, stays true.</p>
-      <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">Distributed snapshots are still how running systems record a global state without halting, for instance in Apache Flink.</p>
+      <p class="big">A running distributed system can record a consistent global snapshot without ever pausing its work—capturing a state it may never have inhabited at one instant, but could have passed through.</p>
+      <p class="lede" style="margin:0 auto">Because that recorded snapshot lies on a valid causal path from the start of the count to the end, it reliably settles every question whose answer, once true, stays true.</p>
+      <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">The Chandy–Lamport snapshot algorithm remains the foundation for how distributed databases and stream processors—such as Apache Flink—take live checkpoints today.</p>
       <div class="links">
         <a href="../../places/ring-road/index.html">The Ring Road, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
@@ -842,14 +409,14 @@ a.lin-node:hover b{text-decoration:underline}
       <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/ring-road/index.html">The Ring Road</a></p>
       <details class="proof">
         <summary>The system, stated formally</summary>
-        <p>The system is a set of <i>processes</i> (the houses) connected by directed <i>channels</i> (the one-way tracks of the ring road). A channel delivers messages in the order sent (FIFO), without corruption, after an arbitrary but finite delay, and never loses a marker. There is no shared clock, and no process can directly observe another's state. A <i>global state</i> consists of the local state of every process together with the state of every channel.</p>
+        <p>The system consists of a finite set of <i>processes</i> (the houses) connected by directed <i>channels</i> (the six one-way tracks of the ring road). Each channel delivers messages in the exact order sent (FIFO), without corruption, after an arbitrary finite delay, and never loses a marker. There is no shared global clock, and no process can directly inspect another process's memory or a channel's in-flight messages. A <i>global state</i> consists of the local state of every process together with the sequence of messages currently in transit on every channel.</p>
       </details>
       <details class="proof">
         <summary>The paper behind this book</summary>
-        <p><b>The paper behind this book.</b> K. Mani Chandy and Leslie Lamport, “Distributed Snapshots: Determining Global States of Distributed Systems,” <i>ACM Transactions on Computer Systems</i> <b>3</b>, 1 (February 1985), 63–75. The definition of global state, the marker rules, the theorem, and the detection of stable properties.</p>
-        <p><b>The ideas.</b> A distributed system has no single vantage point from which its total state can be observed simultaneously. Halting all processes and waiting for the channels to drain does work, but it is costly, and detecting the drain already needs a marker on every channel. The Chandy–Lamport snapshot algorithm records a consistent global state, both process states and channel states, while normal computation proceeds uninterrupted.</p>
-        <p>By dispatching markers along all outgoing channels immediately upon recording local state, and before sending further application messages, processes partition each channel's stream. Because channels are FIFO, markers cannot overtake messages, and messages cannot overtake markers. This guarantees that no message sent after a sender records can be received before a receiver records, the fundamental condition of cut consistency.</p>
-        <p>The resulting snapshot <var>S</var>* may never have occurred in physical time. However, it is causally valid: reachable from the initial state <var>S</var><sub>begin</sub>, with the final state <var>S</var><sub>end</sub> reachable from it. This makes it sufficient to evaluate stable properties like deadlock, garbage collection, and termination: if the property holds in <var>S</var>*, it holds in the running system.</p>
+        <p><b>The paper behind this book.</b> K. Mani Chandy and Leslie Lamport, “Distributed Snapshots: Determining Global States of Distributed Systems,” <i>ACM Transactions on Computer Systems</i> <b>3</b>, 1 (February 1985), 63–75. Covers the formal definition of global state, the marker-sending and marker-receiving rules, the reachability theorem, and stable property detection.</p>
+        <p><b>The ideas.</b> In a distributed system, no single observer can view the state of all processes and channels at the same instant. Freezing the system and waiting for all channels to drain is expensive—and knowing when a channel has drained already requires sending an end-of-stream marker. Chandy and Lamport showed how those same markers can capture a consistent global snapshot while normal computation continues without interruption.</p>
+        <p>Whenever a process records its local state, it immediately sends a marker down every outgoing channel before sending any further application messages. Because channels are FIFO, markers cleanly partition each channel's message stream into pre-snapshot and post-snapshot messages. A receiving process records the messages arriving on each incoming channel between its own state recording and the arrival of that channel's marker, guaranteeing that no message crosses the snapshot cut inward (sent after the sender recorded, yet received before the receiver recorded).</p>
+        <p>Although the recorded snapshot <var>S</var>* may never have occurred at any single instant of physical time, it is causally consistent: reachable from the state <var>S</var><sub>begin</sub> when the snapshot started, and able to reach the state <var>S</var><sub>end</sub> when the snapshot finished. That makes <var>S</var>* sufficient to detect any <i>stable property</i>—such as deadlock, termination, garbage collection, or token loss—whose truth is preserved under all future steps.</p>
         <div class="refs">
           <p>Chandy, K. M., and Lamport, L. Distributed snapshots: determining global states of distributed systems. <i>ACM Trans. Comput. Syst.</i> <b>3</b>, 1 (1985), 63–75.</p>
         </div>
@@ -858,370 +425,6 @@ a.lin-node:hover b{text-decoration:underline}
   </div>
 </section>
 <footer>Distributed Algorithms of Ancient Greece · “Taking Stock Without Stopping”, after K. Mani Chandy and Leslie Lamport, ACM TOCS 3(1), 1985.</footer>
-<script>
-"use strict";
-(function(){
-const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-const NS="http://www.w3.org/2000/svg";
-const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
-function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
-function rnd(n){return Math.floor(Math.random()*n)}
-/* run fn(0..1) over ms, eased */
-function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();return}const t0=performance.now();
-  (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
-function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
-
-/* ===== pop-ups unfold when they enter view ===== */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
-$$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
-$$(".say,[data-live]").forEach(e=>e.setAttribute("aria-live","polite"));
-
-/* ===== scroll: progress bar, section name, parallax ===== */
-const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
-const dep=$$("[data-depth]"), par=$$("[data-parallax]");
-let tick=false;
-function onscroll(){
-  if(tick)return; tick=true;
-  requestAnimationFrame(()=>{
-    tick=false;
-    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
-    prog.style.width=(h>0?y/h*100:0)+"%";
-    const mid=y+innerHeight*.4; let cur=secs[0];
-    for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
-    now.textContent=cur.dataset.name||"";
-    if(reduce)return;
-    for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
-    for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
-  });
-}
-addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
-
-/* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
-function stepDots(root,steps){
-  const stage=$(".stage",root),nav=document.createElement("div"); nav.className="dots"; nav.setAttribute("role","group"); nav.setAttribute("aria-label","The steps of this picture");
-  let cur=0; const go=i=>steps[i]&&steps[i].scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
-  const ctl=(cls,label,d,fn)=>{const b=document.createElement("button"); b.type="button"; b.className=cls; b.setAttribute("aria-label",label); b.title=label;
-    if(d) b.innerHTML='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="'+d+'"/></svg>'; b.addEventListener("click",fn); return b};
-  const prev=ctl("arr","Previous step","M7.5 2 3.5 6l4 4",()=>go(cur-1)), next=ctl("arr","Next step","M4.5 2l4 4-4 4",()=>go(cur+1)),
-        back=ctl("arr back","Back to the first step","M2.6 6.4a3.5 3.5 0 1 0 1-2.8M2.4 1.6v2.2h2.2",()=>go(0));
-  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""),"",()=>go(i))});
-  nav.append(prev,...dots,next,back);
-  if(stage&&steps.length>1) stage.append(nav);
-  return i=>{cur=i; prev.disabled=back.disabled=i===0; next.disabled=i===steps.length-1;
-    dots.forEach((d,j)=>{d.classList.toggle("on",j===i); if(j===i)d.setAttribute("aria-current","step"); else d.removeAttribute("aria-current")})};
-}
-function scrolly(root,render){
-  const steps=$$(".step",root),mark=stepDots(root,steps); render(0); mark(0);
-  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); mark(i); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
-  steps.forEach(s=>so.observe(s));
-}
-
-/* ===== who is who: the setting on the left, the machine room on the right ===== */
-function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
-  const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
-  [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}
-
-/* ===== space-time drawn in the round: each place is a line running outward, each ring a later moment,
-         and whatever is carried from place to place is an arc curving round and outward ===== */
-function Polar(svg,o){
-  const {cx,cy,r0,step,nodes,rings,tEnd}=o; svg.innerHTML=""; svg.setAttribute("viewBox",o.vb);
-  const defs=el("defs",{},svg);
-  const mk=(key,col)=>{const m=el("marker",{id:`${svg.id}-${key}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:col},m)};
-  mk("b","#136f9e"); mk("r","#bf4a26");
-  const frame=el("g",{},svg), under=el("g",{},svg), slips=el("g",{},svg), evs=el("g",{},svg), over=el("g",{},svg);
-  const P={svg,under,slips,evs,over,cx,cy,
-    r:t=>r0+step*t,
-    xy(deg,rr){const a=deg*Math.PI/180;return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)]},
-    pt(k,t){return P.xy(nodes[k][0],P.r(t))},
-    /* the points of an arc from place a at time ta to place b at time tb, the short way round */
-    arc(a,ta,b,tb){const a0=nodes[a][0],d=((nodes[b][0]-a0+540)%360)-180,n=Math.max(12,Math.round(Math.abs(d)/3)),pts=[];
-      for(let i=0;i<=n;i++)pts.push(P.xy(a0+d*i/n,P.r(ta+(tb-ta)*i/n)));return pts},
-    slip(a,ta,b,tb,trim=17){const pts=P.arc(a,ta,b,tb),end=pts[pts.length-1];
-      while(pts.length>2&&Math.hypot(pts[pts.length-1][0]-end[0],pts[pts.length-1][1]-end[1])<trim)pts.pop();
-      const p=el("path",{class:"st-slip","marker-end":`url(#${svg.id}-b)`,d:"M"+pts.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" L")},slips);
-      p.mid=P.arc(a,ta,b,tb); p.mid=p.mid[Math.floor(p.mid.length/2)]; return p},
-    seg(k,t1,t2){const [x1,y1]=P.pt(k,t1),[x2,y2]=P.pt(k,t2);return el("line",{class:"st-seg",x1,y1,x2,y2},under)},
-    event(k,t,fill,rad=13){const [x,y]=P.pt(k,t),g=el("g",{class:"st-ev",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},evs);
-      el("circle",{class:"halo2",r:rad+5},g);el("circle",{class:"b",r:rad,fill},g);g.label=el("text",{},g);el("circle",{r:rad+8,fill:"transparent"},g);return g}
-  };
-  for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
-  for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
-  for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
-    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
-  if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
-  return P;
-}
-
-/* lineage: draw the edges of a book's graph of papers, and say what an edge carries (lineage.py) */
-(function(){
-const NS="http://www.w3.org/2000/svg",wide=matchMedia("(min-width:860px)");
-document.querySelectorAll(".lin").forEach(lin=>{
-  const svg=lin.querySelector(".lin-edges"),say=lin.querySelector(".lin-say"),idle=say.innerHTML;
-  const node=n=>lin.querySelector('[data-n="'+n+'"]');
-  const links=[...lin.querySelectorAll(".lin-link")].map(el=>({el,side:el.dataset.side,from:el.dataset.from.split(" "),to:el.dataset.to.split(" "),g:null}));
-  const box=el=>{const a=el.getBoundingClientRect(),b=lin.getBoundingClientRect();
-    return {l:a.left-b.left,r:a.right-b.left,t:a.top-b.top,b:a.bottom-b.top,cx:(a.left+a.right)/2-b.left,cy:(a.top+a.bottom)/2-b.top}};
-  const mk=(tag,at,to)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);to.appendChild(e);return e};
-  const f=v=>v.toFixed(1);
-  const path=(g,d)=>mk("path",{d},g);
-  const flat=(g,x1,y1,x2,y2)=>path(g,`M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}`);
-  const bend=(g,x1,y1,x2,y2)=>{const m=(x1+x2)/2;path(g,`M${f(x1)} ${f(y1)}C${f(m)} ${f(y1)} ${f(m)} ${f(y2)} ${f(x2)} ${f(y2)}`)};
-  const head=(g,x,y,down)=>mk("polygon",{points:down?`${f(x-5)},${f(y-8)} ${f(x+5)},${f(y-8)} ${f(x)},${f(y)}`:`${f(x-8)},${f(y-5)} ${f(x-8)},${f(y+5)} ${f(x)},${f(y)}`},g);
-  function draw(){
-    svg.textContent="";
-    if(!wide.matches)return;
-    const R=lin.getBoundingClientRect();
-    svg.setAttribute("width",R.width);svg.setAttribute("height",R.height);svg.setAttribute("viewBox",`0 0 ${f(R.width)} ${f(R.height)}`);
-    const ports={};   // the edges that meet one side of a middle node share it out between them, in the order they come from
-    const port=(n,side,y,then)=>(ports[n+side]=ports[n+side]||[]).push({n,side,y,then});
-    links.forEach(k=>{
-      const g=k.g=mk("g",{},svg),c=box(k.el.querySelector("em"));
-      if(k.side==="in"){
-        flat(g,box(node(k.from[0])).r,c.cy,c.l,c.cy);
-        k.to.forEach(n=>port(n,"l",c.cy,(x,y)=>{bend(g,c.r,c.cy,x-7,y);head(g,x,y)}));
-      }else if(k.side==="out"){
-        const b=box(node(k.to[0]));
-        flat(g,c.r,c.cy,b.l-7,c.cy);head(g,b.l,c.cy);
-        k.from.forEach(n=>port(n,"r",c.cy,(x,y)=>bend(g,x,y,c.l,c.cy)));
-      }else{
-        const s=node(k.from[0]),t=node(k.to[0]),sb=box(s),tb=box(t);
-        if(t.parentNode.previousElementSibling===s.parentNode)flat(g,c.cx,sb.b,c.cx,c.t);
-        else{const y=sb.b-12,x=sb.r+20;   // round the papers between, outside their right edge
-          path(g,`M${f(sb.r)} ${f(y)}H${f(x-10)}Q${f(x)} ${f(y)} ${f(x)} ${f(y+10)}V${f(c.cy-10)}Q${f(x)} ${f(c.cy)} ${f(x-10)} ${f(c.cy)}H${f(c.r)}`)}
-        flat(g,c.cx,c.b,c.cx,tb.t-7);head(g,c.cx,tb.t,true);
-      }
-    });
-    for(const key in ports){
-      const list=ports[key].sort((a,b)=>a.y-b.y),b=box(node(list[0].n)),h=b.b-b.t;
-      list.forEach((p,i)=>p.then(p.side==="l"?b.l:b.r,b.t+h*(.2+.6*(i+.5)/list.length)));
-    }
-  }
-  function light(on,words){
-    lin.classList.toggle("hot",on.length>0);
-    const nodes=new Set(on.flatMap(k=>k.from.concat(k.to)));
-    links.forEach(k=>{const is=on.includes(k);k.el.classList.toggle("on",is);if(k.g)k.g.classList.toggle("on",is)});
-    lin.querySelectorAll(".lin-node").forEach(n=>n.classList.toggle("on",nodes.has(n.dataset.n)));
-    say.innerHTML=words||idle;
-  }
-  const name=ns=>ns.map(n=>node(n).dataset.label).join(", ");
-  links.forEach(k=>{
-    const tell=()=>light([k],"<b>"+name(k.from)+" → "+name(k.to)+"</b>"+k.el.querySelector(".why").innerHTML);
-    k.el.addEventListener("mouseenter",tell);k.el.addEventListener("focus",tell);k.el.addEventListener("click",tell);
-  });
-  lin.querySelectorAll(".lin-node").forEach(n=>{
-    const mine=()=>light(links.filter(k=>k.from.concat(k.to).includes(n.dataset.n)));
-    n.addEventListener("mouseenter",mine);n.addEventListener("focus",mine);
-  });
-  lin.addEventListener("mouseleave",()=>light([]));
-  new ResizeObserver(draw).observe(lin);
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
-  draw();
-});
-})();
-
-const HC={1:"#9cb648",2:"#e0b84a",3:"#5b9be0"};
-const chip=(t,h)=>`<span class="chip"><i style="background:${HC[h]}"></i>${t}</span>`;
-
-/* ===== machines: counting one machine after another, with units moving in between ===== */
-(function(){
-  const A=$("#mA"),B=$("#mB"),va=$("b",A),vb=$("b",B),ar=$("#marrow"),log=$("#mlog"),sum=$("#msum"),say=$("#msay"),b1=$("#mab"),b2=$("#mba");
-  const start=300,move=200;
-  const show=(a,b)=>{va.textContent=a;vb.textContent=b};
-  async function run(from){
-    b1.disabled=b2.disabled=true;let a=start,b=start;show(a,b);log.innerHTML=sum.innerHTML="";
-    const add=(t,c="")=>log.insertAdjacentHTML("beforeend",`<div class="e ${c}">${t}</div>`);
-    A.classList.add("on");say.textContent="A is counted first.";await sleep(900);add(`Count A: ${a}`);const ca=a;A.classList.remove("on");await sleep(900);
-    const to=from==="A"?"B":"A";say.textContent=`While the counting goes on, ${move} units move from ${from} to ${to}.`;
-    ar.textContent=from==="A"?"→ "+move:move+" ←";
-    if(from==="A"){a-=move;b+=move}else{b-=move;a+=move}show(a,b);add(`${move} units move ${from} → ${to}`);await sleep(1300);
-    B.classList.add("on");say.textContent="Then B is counted.";await sleep(900);add(`Count B: ${b}`);const cb=b;B.classList.remove("on");ar.textContent="";await sleep(700);
-    const real=start*2,got=ca+cb;
-    sum.innerHTML=`<div class="e bad">${ca} + ${cb} = <b>${got}</b></div><div class="e good">Really there: <b>${real}</b></div>`;
-    say.innerHTML=got>real?`<span class="bad">Too high by ${got-real}.</span> The ${move} units were counted on A, and again on B.`:`<span class="bad">Too low by ${real-got}.</span> The ${move} units had left B before B was counted, and reached A after A was counted. Nobody counted them.`;
-    b1.disabled=b2.disabled=false;
-  }
-  b1.onclick=()=>run("A");b2.onclick=()=>run("B");show(start,start);
-})();
-
-/* ===== Arche, seen from above: the same picture as every book on the ring road ===== */
-function Isle(svg){
-  const cx=235,cy=235,R=165,A={1:-90,2:30,3:150}; svg.innerHTML=""; svg.setAttribute("viewBox","0 0 470 470");
-  el("circle",{cx,cy,r:215,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
-  el("circle",{cx,cy,r:86,fill:"#d9cfb4",stroke:"#6b5a48","stroke-width":2.5,"stroke-dasharray":"2 6"},svg);
-  el("text",{x:cx,y:cy-8,class:"lab"},svg).textContent="Mount Phyle";
-  el("circle",{cx,cy,r:R,fill:"none",stroke:"#b5602c","stroke-width":3,"stroke-dasharray":"3 8"},svg);
-  const under=el("g",{},svg),sites=el("g",{},svg),over=el("g",{},svg);
-  const I={svg,cx,cy,R,A,under,over,house:{},
-    at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
-    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:13,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
-    put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
-    /* u of the way along the direct stretch from house a to house b; each direction keeps to its own lane */
-    road(g,a,b,u){const d=((A[b]-A[a]+540)%360)-180;I.put(g,...I.at(A[a]+d*u,R+(d>0?9:-9)))}
-  };
-  for(const h of [1,2,3]){const [x,y]=I.at(A[h]),g=el("g",{class:"site"},sites);I.put(g,x,y);el("rect",{x:-25,y:-17,width:50,height:34,rx:5,fill:HC[h]},g);el("text",{},g).textContent="H"+h;I.house[h]={x,y,g}}
-  return I;
-}
-
-/* ===== the count, run by the book's own rules =====
-   Three houses, six one-way tracks, nothing overtaking on a track. Every event of the morning is
-   listed with its time; the houses' records, the slates and the total are worked out by the
-   rules of sending and receiving, so the page checks itself. */
-function Census(){
-  const S={1:100,2:80,3:90},truth=S[1]+S[2]+S[3],ch={},rec={},recT={},slate={},items=[],snaps=[],key=(a,b)=>a+">"+b;
-  for(const a of [1,2,3])for(const b of [1,2,3])if(a!==b)ch[key(a,b)]=[];
-  const send=(a,b,x,t)=>{x.id=items.length;x.a=a;x.b=b;x.sent=t;items.push(x);ch[key(a,b)].push(x);if(x.k==="cart")S[a]-=x.n};
-  const cart=n=>({k:"cart",n}),sash=()=>({k:"sash"});
-  /* the rule of sending: record the storehouse, then a sash down every road before anything else */
-  function record(h,t){rec[h]=S[h];recT[h]=t;slate[h]={};for(const o of [1,2,3])if(o!==h)slate[h][o]={sum:0,closed:false};for(const o of [1,2,3])if(o!==h)send(h,o,sash(),t)}
-  /* the rule of receiving */
-  function arrive(a,b,t,want){const x=ch[key(a,b)].shift();if(!x||x.k!==want[0]||(x.n||0)!==(want[1]||0))throw new Error("a track was not first-in first-out at "+t);x.arr=t;
-    if(x.k==="cart"){S[b]+=x.n;if(rec[b]!=null&&!slate[b][a].closed)slate[b][a].sum+=x.n}
-    else if(rec[b]==null){record(b,t);slate[b][a].closed=true}else slate[b][a].closed=true}
-  const ev=[[1.4,()=>send(3,2,cart(30),1.4)],[1.6,()=>send(2,3,cart(10),1.6)],[2.2,()=>send(3,2,cart(15),2.2)],
-    [2.6,()=>record(1,2.6)],[3.0,()=>send(1,2,cart(20),3.0)],
-    [3.6,()=>arrive(3,2,3.6,["cart",30])],[3.8,()=>arrive(1,2,3.8,["sash"])],
-    [4.6,()=>arrive(1,2,4.6,["cart",20])],[5.4,()=>arrive(3,2,5.4,["cart",15])],
-    [5.8,()=>arrive(1,3,5.8,["sash"])],[6.2,()=>arrive(2,3,6.2,["cart",10])],
-    [6.8,()=>arrive(2,3,6.8,["sash"])],[7.0,()=>arrive(3,2,7.0,["sash"])],[7.2,()=>arrive(2,1,7.2,["sash"])],[7.4,()=>arrive(3,1,7.4,["sash"])]];
-  const ends=[1.6,2.2,2.6,3.0,3.8,4.6,5.4,5.8,6.2,7.4,7.4];
-  const snap=t=>({t,S:{...S},rec:{...rec},slate:JSON.parse(JSON.stringify(slate)),ch:Object.fromEntries(Object.entries(ch).map(([k,v])=>[k,v.map(x=>x.id)]))});
-  let i=0;for(const e of ends){while(i<ev.length&&ev[i][0]<=e)ev[i++][1]();snaps.push(snap(e))}
-  const R=[1,2,3].map(h=>rec[h]),L=[];for(const h of [1,2,3])for(const o of [1,2,3])if(o!==h)L.push(slate[h][o].sum);
-  const total=R.reduce((a,b)=>a+b,0)+L.reduce((a,b)=>a+b,0);
-  if(total!==truth||[1,2,3].some(h=>[1,2,3].some(o=>o!==h&&!slate[h][o].closed)))throw new Error("the count does not add up");
-  return {items,snaps,ends,rec:R,recT,slate,truth,total};
-}
-
-/* ===== the nine places to count ===== */
-(function(){
-  const I=Isle($("#nine")),say=$("#ninesay"),cnt=$("#ninecount"),svg=I.svg,seen=new Set(),all=[];
-  const defs=el("defs",{},svg),mk=el("marker",{id:"nine-ar",markerUnits:"userSpaceOnUse",markerWidth:11,markerHeight:11,refX:9,refY:5.5,orient:"auto"},defs);el("path",{d:"M0,0 L11,5.5 L0,11 z",fill:"#1c1512"},mk);
-  const clear=()=>all.forEach(x=>{x.el.classList.remove("pick");if(x.road)x.el.classList.add("dim")});
-  function pick(x,text){clear();x.el.classList.remove("dim");x.el.classList.add("pick");seen.add(x.id);
-    say.innerHTML=text+(seen.size===9?" <span class='ok'>All nine looked at.</span> A scribe can count three of them from a desk.":"");cnt.textContent=seen.size+" of nine looked at"}
-  for(const [a,b] of [[1,2],[2,1],[1,3],[3,1],[2,3],[3,2]]){
-    const d=((I.A[b]-I.A[a]+540)%360)-180,r=I.R+(d>0?9:-9),pts=[];
-    for(let k=0;k<=14;k++)pts.push(I.at(I.A[a]+d*(.24+.52*k/14),r));
-    const dd="M"+pts.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" L");
-    const g=el("g",{class:"rd"},I.under);
-    el("path",{d:dd,class:"rp",stroke:HC[a],"marker-end":"url(#nine-ar)"},g);
-    el("path",{d:dd,fill:"none",stroke:"transparent","stroke-width":18,"pointer-events":"stroke"},g);
-    const x={id:a+">"+b,el:g,road:true};all.push(x);
-    button(g,`The track from House ${a} to House ${b}`,()=>pick(x,`<b>The track from House ${a} to House ${b}.</b> The carts that have left House ${a} and not yet reached House ${b}. Nobody at either house can see it.`));
-  }
-  for(const h of [1,2,3]){const g=I.house[h].g,x={id:"h"+h,el:g};all.push(x);
-    button(g,`House ${h}'s storehouse`,()=>pick(x,`<b>House ${h}'s storehouse.</b> What sits under its roof. A scribe at that house can count it.`))}
-})();
-
-/* ===== scroll: the count with red sashes ===== */
-(function(){
-  const C=Census(),I=Isle($("#sashsvg")),side=$("#sashside"),{items,snaps,ends}=C;
-  const toks=items.map(x=>({x,g:I.token(x.k==="sash"?"#bf4a26":HC[x.a],x.k==="cart"?x.n:""),u:.1,run:0,shown:false}));
-  const pos=(s,id)=>{for(const k in snaps[s].ch){const i=snaps[s].ch[k].indexOf(id);if(i>=0)return i}return -1};
-  function card(h,S,done){
-    const o=[1,2,3].filter(k=>k!==h),r=S.rec[h],sl=S.slate[h];
-    const lines=r==null?"no slates yet":o.map(k=>`from H${k}: ${sl[k].closed?"closed":"open"} ${sl[k].sum}`).join("<br>");
-    return `<div class="hc${done?" done":""}"><h5>House ${h}<span>stock ${S.S[h]}</span></h5><div class="rc">${r==null?"not yet recorded":"recorded <b>"+r+"</b>"}</div><div class="chk">${lines}</div></div>`;
-  }
-  const last=snaps.length-1;
-  $("#sashsum").innerHTML=`${C.rec.join(" + ")} + ${C.slate[2][3].sum} + ${C.slate[3][2].sum} = <b>${C.total}</b>`;
-  $("#sashtruth").textContent=C.truth;
-  scrolly($("#sash"),s=>{
-    const S=snaps[s];side.innerHTML=[1,2,3].map(h=>card(h,S,s===last)).join("");
-    toks.forEach(k=>{const p=pos(s,k.x.id),id=++k.run;
-      if(p>=0){const u1=Math.max(.14,.86-.2*p);if(!k.shown){k.shown=true;k.u=.06}k.g.setAttribute("opacity",1);const u0=k.u;
-        tween(800,e=>{if(k.run!==id)return;k.u=u0+(u1-u0)*e;I.road(k.g,k.x.a,k.x.b,k.u)});return}
-      const arrived=k.x.arr!=null&&k.x.arr<=ends[s];
-      if(arrived&&k.shown){const u0=k.u;tween(700,e=>{if(k.run!==id)return;k.u=u0+(.96-u0)*e;I.road(k.g,k.x.a,k.x.b,k.u)}).then(()=>{if(k.run===id)k.g.setAttribute("opacity",0)})}
-      else k.g.setAttribute("opacity",0);
-      k.shown=false});
-  });
-})();
-
-/* ===== a cut: where each cart of the morning was counted ===== */
-(function(){
-  const C=Census(),svg=$("#cutsvg"),say=$("#cutsay"),b1=$("#cutok"),b2=$("#cutbad");
-  const nodes={1:[-90,"H1",HC[1]],2:[30,"H2",HC[2]],3:[150,"H3",HC[3]]};
-  const P=Polar(svg,{vb:"0 0 620 600",cx:310,cy:330,r0:44,step:30,rings:7,tEnd:7.6,note:[14,24],nodes});
-  const carts=C.items.filter(x=>x.k==="cart"),sashRec=C.recT;
-  const whimRec={1:C.recT[1],2:4.8,3:C.recT[3]};   // House 2 counts after the cart of 20 came in
-  const loop=el("path",{fill:"#e0b84a","fill-opacity":.22,stroke:"#1c1512","stroke-width":2.4,"stroke-dasharray":"7 5"},P.under);
-  const dots=[1,2,3].map(h=>P.event(h,1.4,HC[h],8));
-  const ang=[-90,30,150];
-  function loopPath(rec){const pts=[];
-    for(let a=-90;a<270;a+=4){const i=Math.min(2,Math.floor((a+90)/120)),j=(i+1)%3,f=(a-ang[i])/120,w=(1-Math.cos(Math.PI*f))/2,
-      r=P.r(rec[i+1]+(rec[j+1]-rec[i+1])*w);pts.push(P.xy(a,r))}
-    return "M"+pts.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" L")+"Z"}
-  const lbl=[.5,.2,.8,.5];
-  const arcs=carts.map((x,n)=>{const p=P.slip(x.a,x.sent,x.b,x.arr),d=p.getAttribute("d");
-    const hit=el("path",{d,fill:"none",stroke:"transparent","stroke-width":18,"pointer-events":"stroke"},P.slips);
-    const pts=P.arc(x.a,x.sent,x.b,x.arr),q=pts[Math.round((pts.length-1)*lbl[n])],t=el("text",{class:"tok-l",x:q[0],y:q[1]+5},P.over);t.textContent=x.n;
-    return {x,p,hit,t}});
-  /* where a cart was counted, given when each house recorded */
-  const cls=(x,rec)=>{const early=x.sent<rec[x.a],arrIn=x.arr<rec[x.b];
-    return early&&arrIn?"in":early&&!arrIn?"out":!early&&!arrIn?"after":"inward"};
-  const says={
-    in:x=>`<b>The cart of ${x.n} jars from House ${x.a} to House ${x.b}</b> left before House ${x.a} recorded and arrived before House ${x.b} recorded. It lies wholly inside the loop, and the ${x.n} jars are counted in House ${x.b}'s stock.`,
-    out:x=>`<b>The cart of ${x.n} jars from House ${x.a} to House ${x.b}</b> left before House ${x.a} recorded and arrived after House ${x.b} recorded. It crosses the loop outward: it was on the road at the time, and House ${x.b}'s slate for that road catches the ${x.n} jars.`,
-    after:x=>`<b>The cart of ${x.n} jars from House ${x.a} to House ${x.b}</b> left after House ${x.a} recorded and arrived after House ${x.b} recorded. It lies wholly outside the loop. The ${x.n} jars are already in House ${x.a}'s recorded stock, and House ${x.b}'s slate for that road was closed before they came.`,
-    inward:x=>`<b>The cart of ${x.n} jars from House ${x.a} to House ${x.b}</b> left after House ${x.a} recorded and arrived before House ${x.b} recorded. <span class="bad">It crosses the loop inward.</span> The ${x.n} jars are in House ${x.a}'s recorded stock, and counted again in House ${x.b}'s. Such an island never existed.`};
-  let rec=sashRec,sel=null,mode="ok";
-  function paint(){
-    loop.setAttribute("d",loopPath(rec));
-    dots.forEach((g,i)=>{const [x,y]=P.pt(i+1,rec[i+1]);g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)});
-    arcs.forEach(a=>{const c=cls(a.x,rec);a.c=c;a.p.classList.toggle("hi",c==="inward");a.p.classList.toggle("pick",a===sel&&c!=="inward");
-      a.p.setAttribute("marker-end",`url(#${svg.id}-${c==="inward"?"r":"b"})`);a.t.classList.toggle("in",c==="inward")});
-    const bad=arcs.filter(a=>a.c==="inward");
-    if(sel)say.innerHTML=says[sel.c](sel.x);
-    else if(bad.length)say.innerHTML=`<b>Each house counted at an hour of its own choosing.</b> One cart crosses the loop inward. Choose it to see what that does to the count.`;
-    else say.innerHTML=`<b>Each house recorded when the red sash reached it.</b> Every cart is wholly inside the loop, wholly outside it, or crosses it outward. Choose any cart to see where its jars were counted.`}
-  arcs.forEach(a=>button(a.hit,`The cart of ${a.x.n} jars from House ${a.x.a} to House ${a.x.b}`,()=>{sel=a;paint()}));
-  function setMode(m){mode=m;rec=m==="ok"?sashRec:whimRec;sel=null;b1.classList.toggle("on",m==="ok");b2.classList.toggle("on",m!=="ok");
-    if(m!=="ok")sel=arcs.find(a=>cls(a.x,rec)==="inward")||null;paint()}
-  b1.onclick=()=>setMode("ok");b2.onclick=()=>setMode("bad");setMode("ok");
-  if(arcs.some(a=>cls(a.x,sashRec)==="inward"))throw new Error("a cart crosses the cut upward under the sashes");
-})();
-
-/* ===== a morning nobody lived through: the sale and the milling ===== */
-(function(){
-  const lived=$("#mlived"),cens=$("#mcens"),say=$("#mosay"),bs=$("#moswap"),bj=$("#mojoin"),bb=$("#moback");
-  const E={a:{h:1,t:"House 1 records its storehouse"},b:{h:1,t:"House 1 sells forty jars into its port town"},
-           c:{h:2,t:"House 2 mills eighty measures of barley"},d:{h:2,t:"House 2 records its storehouse"}};
-  const livedOrder=["a","b","c","d"],censusOrder=["a","c","d","b"];
-  /* the state of the two goods after each entry: House 1's jars, House 2's barley */
-  const states=order=>{let j="held",m="unmilled";return order.map(k=>{if(k==="b")j="sold";if(k==="c")m="milled";return {j,m}})};
-  const matches=(o,s)=>states(o).some(x=>x.j===s.j&&x.m===s.m);
-  const recorded={j:"held",m:"milled"};
-  const html=(order,mark)=>{const st=states(order);return order.map((k,i)=>`<div class="ev ${mark&&mark.includes(k)?"mv":""} ${st[i].j===recorded.j&&st[i].m===recorded.m?"hit":""}" style="border-left-color:${HC[E[k].h]}"><span>${E[k].t}</span><span class="st">jars ${st[i].j}<br>barley ${st[i].m}</span></div>`).join("")};
-  const base=()=>{lived.innerHTML=html(livedOrder);cens.innerHTML="<p style='font-size:.85rem;color:#6b5a48;margin:0'>Not yet drawn.</p>";bb.disabled=true;bs.disabled=false;
-    say.innerHTML="House 1 recorded first, and House 2 some while later. The count wrote down: House 1 still holds the jars, and House 2 has already milled its barley. Did the island ever stand so?"};
-  bs.onclick=()=>{cens.innerHTML=html(censusOrder,["b","c"]);lived.innerHTML=html(livedOrder);bs.disabled=true;bb.disabled=false;
-    say.innerHTML=`Nothing joins the sale and the milling, so the count may take either first. <span class="${matches(livedOrder,recorded)?"bad":"ok"}">${matches(livedOrder,recorded)?"The morning as lived":"The morning as lived never"}</span> passed through the recorded picture; <span class="${matches(censusOrder,recorded)?"ok":"bad"}">the rearranged morning ${matches(censusOrder,recorded)?"does":"does not"}</span>, in the rows marked. Every one of its entries still happened, each house's own entries in their own order.`};
-  bj.onclick=()=>{say.innerHTML="Could a cart tie the sale to the milling? A cart sent after House 1 recorded cannot reach House 2 before House 2 has recorded: the red sash is ahead of it on the track. So nothing joins an entry made after one house recorded to an entry made before the other recorded, and the two can always be swapped."};
-  bb.onclick=base;base();
-})();
-
-/* ===== what the total is good for: have the bandits robbed us? ===== */
-(function(){
-  const bs=$$("#dec .btn[data-case]"),tab=$("#dtab"),say=$("#decsay"),scrolls=270,cartSize=30;
-  const cases={before:{name:"before",took:cartSize,after:0},after:{name:"after",took:0,after:cartSize},none:{name:"none",took:0,after:0}};
-  /* a day with no buying or selling: only bandits can change the total */
-  const deficit=held=>held<scrolls;
-  function show(key){const c=cases[key];bs.forEach(b=>{b.classList.toggle("on",b.dataset.case===key);b.classList.toggle("alt",b.dataset.case!==key)});
-    const atStart=scrolls-c.took,atCensus=scrolls-c.took,atEnd=scrolls-c.took-c.after;
-    tab.innerHTML=`<tr><td>What the account scrolls say the houses hold</td><td>${scrolls}</td></tr><tr><td>The count's total, nine places</td><td>${atCensus}</td></tr><tr><td>Short by</td><td>${scrolls-atCensus}</td></tr><tr><td>The island when the count began</td><td>${deficit(atStart)?"short":"whole"}</td></tr><tr><td>The island when the count ended</td><td>${deficit(atEnd)?"short":"whole"}</td></tr>`;
-    if(deficit(atCensus)){if(!deficit(atEnd))throw new Error("a deficit was undone");
-      say.innerHTML=`<span class="bad">The count is short, so the houses have been robbed.</span> Being short is a settled property: once jars are gone that no trade between the houses can bring back, they stay gone. What is true of the recorded island is true of the island now, and the shortfall is what the bandits hold.`}
-    else{if(deficit(atStart))throw new Error("the rule failed");
-      say.innerHTML=`<span class="ok">The count is whole, so nothing had been taken when it began.</span> That is all it says.${deficit(atEnd)?` <span class="bad">Here the bandits struck after the count ended, and the island is short now.</span> The count could not know, and does not claim to.`:" Here nothing has been taken since, either."}`}
-  }
-  bs.forEach(b=>b.onclick=()=>show(b.dataset.case));show("before");
-})();
-
-/* ===== who is who ===== */
-mapPairs($("#map"),[["A trading house","A process"],["A track, one way","A channel: FIFO, reliable, unbounded delay"],["What the road is holding","Channel state"],["The nine places","A global state: process states plus channel states"],["The red-sashed messenger","A marker message"],["The rule of sending","The marker-sending rule"],["The rule of receiving","The marker-receiving rule"],["A cut","A cut in a space-time diagram"],["Crossing the loop inward","An inconsistent cut"],["A settled property","A stable property"],["The island at the start, as recorded, at the end","S_begin, S*, S_end (S_ι, S*, S_φ in the paper)"]]);
-})();
-</script>
+<script src="script.js"></script>
 </body>
 </html>

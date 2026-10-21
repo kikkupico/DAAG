@@ -6,402 +6,7 @@
 <title>Changes That Never Clash — The Scholars' Coast</title>
 <meta name="description" content="Conflict-free replicated data types told on the far terraces of Paxos: tables of pebbles with one column for each terrace, merged by taking the larger pile, and what counts, corrections and lists can and cannot be kept that way.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<style>
-:root{
-  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4;
-  --aegean:#2e88b5; --aegean-d:#136f9e; --blood:#bf4a26; --olive:#7c8f3a; --terra:#b5602c;
-  --gold:#e0b84a; --shadow:#b9a77e;
-  --serif:Georgia,'Iowan Old Style','Palatino Linotype',serif;
-  --sans:Optima,'Gill Sans','Gill Sans MT',sans-serif;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;background:#d8cba6}
-body{margin:0;background:#d8cba6;color:var(--ink);font-family:var(--serif);line-height:1.55;overflow-x:hidden}
-img{max-width:100%;display:block}
-button{font:inherit;cursor:pointer}
-h1,h2,h3{font-family:var(--sans);line-height:1.12;margin:0;text-wrap:balance}
-p{margin:0 0 1rem;font-size:1.125rem;line-height:1.65;text-wrap:pretty}
-.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--blood)}
-
-/* ---------- top bar ---------- */
-.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
-  font-family:var(--sans);font-size:.78rem;letter-spacing:.05em;background:linear-gradient(180deg,#3a2a1a,#241a10)}
-.bar a{color:#f0e6cc;text-decoration:none;opacity:.8;white-space:nowrap} .bar a:hover{opacity:1}
-.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:520px){.bar a+a{display:none}}
-.bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
-
-/* ---------- spreads ---------- */
-.spread{position:relative;padding:clamp(4.5rem,11vw,8rem) 20px;overflow:clip}
-.spread.has-scrolly{overflow:visible;padding-bottom:0;background:var(--marble)}
-.dark{background:var(--marble);color:var(--ink);background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
-.light{background:var(--parch);color:var(--ink);
-  background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
-/* torn-paper edge between spreads */
-.tear{position:absolute;left:0;right:0;top:-1px;height:26px;z-index:3;pointer-events:none}
-.tear path{fill:var(--prev)}
-.wrap{max-width:1080px;margin:0 auto;position:relative;z-index:2}
-.narrow{max-width:640px;margin:0 auto}
-.spread h2{font-size:clamp(1.9rem,5vw,3.1rem);margin:.4rem 0 1rem}
-.lede{max-width:34em}
-.light .lede{color:#3a2d24}
-.meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
-  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
-
-/* ---------- the pop-up: a card that unfolds from its hinge ---------- */
-.pop{perspective:1400px}
-.pop > .leaf{transform-origin:50% 100%;transform:rotateX(78deg) translateY(30px);opacity:0;
-  transition:transform 1.1s cubic-bezier(.2,.9,.25,1.12),opacity .6s ease}
-.pop.up > .leaf{transform:rotateX(0) translateY(0);opacity:1}
-.pop.fromleft > .leaf{transform-origin:0 50%;transform:rotateY(-80deg)}
-.pop.fromright > .leaf{transform-origin:100% 50%;transform:rotateY(80deg)}
-.pop.up.fromleft > .leaf,.pop.up.fromright > .leaf{transform:none}
-.paper{background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);position:relative}
-.light .paper{box-shadow:9px 11px 0 #b9a77e}
-.photo{border:5px solid #fffaf0;box-shadow:0 0 0 3px var(--ink),12px 16px 0 var(--shadow);background:#222;overflow:hidden;position:relative}
-.photo img{width:100%;height:100%;object-fit:cover}
-.tilt-l{transform:rotate(-1.4deg)} .tilt-r{transform:rotate(1.2deg)}
-[data-depth]{will-change:transform}
-.fold-shadow{position:absolute;left:6%;right:6%;bottom:-18px;height:26px;background:radial-gradient(ellipse at center,#0008,transparent 70%);opacity:0;transition:opacity 1s .4s;z-index:-1}
-.up .fold-shadow{opacity:1}
-
-/* ---------- cover ---------- */
-#cover{min-height:100svh;display:grid;align-items:center;padding-top:5rem;
-  background:linear-gradient(180deg,#e0d6bb00 calc(100% - 140px),#e0d6bb),radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
-/* the cover ends in one colour, and the torn edge under it is that colour */
-#cover+.spread>.tear path{fill:#e0d6bb}
-#cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
-#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:0 0 1.4rem;letter-spacing:-.01em}
-#cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
-#cover .generic,#cover .allegory{max-width:26em;margin:0 0 1rem}
-#cover .generic,#cover .allegory{color:var(--ink)}
-#cover .generic{font-style:italic;font-size:clamp(1.15rem,2.3vw,1.4rem)}
-#cover .source{font-family:var(--sans);font-size:.74rem;line-height:1.5;max-width:36em;margin:1.6rem 0 0;color:#6b5d4f}
-#cover .source i{color:var(--blood)}
-.cut{position:absolute;pointer-events:none;z-index:1}
-.cut svg{display:block;width:100%;height:auto}
-@media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
-
-/* ---------- two-column spreads ---------- */
-.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-.two.wide-r{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
-@media(max-width:859px){.two,.two.wide-r{grid-template-columns:minmax(0,1fr)}}
-
-/* ---------- the hall (full-bleed photo with pins) ---------- */
-#hall{padding:0;background:var(--marble)}
-.bleed{position:relative;height:min(100svh,880px);overflow:hidden}
-.bleed img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover}
-.bleed::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--parch) 0,transparent 8%,transparent 92%,var(--parch) 100%);pointer-events:none}
-.pin{position:absolute;z-index:4;max-width:min(250px,44vw);padding:10px 14px;background:#fffaf0;color:var(--ink);border:3px solid var(--ink);
-  box-shadow:5px 6px 0 #0007;font-size:.92rem;line-height:1.35;transform-origin:0 100%}
-.pin b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood)}
-.pin::after{content:"";position:absolute;left:-3px;bottom:-26px;width:3px;height:26px;background:var(--ink)}
-.pin::before{content:"";position:absolute;left:-8px;bottom:-34px;width:13px;height:13px;border-radius:50%;background:var(--blood);border:3px solid var(--ink)}
-.hall-title{position:absolute;z-index:5;left:20px;right:20px;top:clamp(5rem,12vh,8rem);max-width:1080px;margin:0 auto}
-.hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
-.hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
-.hall-title p{margin:0}
-/* on a phone, or a screen too short to hold them, the title and the notes leave the photograph and stand under it */
-@media(max-width:900px),(max-height:680px){
-  #hall{background:var(--parch);padding-bottom:clamp(2.5rem,8vw,4rem)}
-  .bleed{height:auto!important;overflow:visible;display:flex;flex-direction:column;gap:14px;padding:0 20px}
-  .bleed::after{display:none}
-  .bleed img{position:static;width:calc(100% + 40px);max-width:none;height:min(58svh,460px);margin:0 -20px;transform:none!important;
-    -webkit-mask-image:linear-gradient(transparent,#000 9%);mask-image:linear-gradient(transparent,#000 9%)}
-  .hall-title{position:relative;inset:auto;width:100%;max-width:640px;margin:-3.2rem auto 4px}
-  .hall-title .t{display:block;max-width:none}
-  .pin{position:static;width:100%;max-width:640px;margin:0 auto;box-shadow:5px 6px 0 var(--shadow)}
-  .pin::before,.pin::after{display:none}
-}
-
-/* ---------- scrollytelling ---------- */
-.scrolly{position:relative}
-.scrolly .stage{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;padding:70px 20px 20px;overflow:hidden}
-.scrolly .steps{position:relative;z-index:6;margin-top:-100svh;pointer-events:none}
-.step{min-height:100svh;display:flex;align-items:center;padding:0 20px}
-.step .card{pointer-events:auto;max-width:360px;padding:16px 20px;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);
-  transform:translateY(24px) rotate(-.6deg);opacity:.25;transition:transform .7s cubic-bezier(.2,.9,.25,1.1),opacity .5s}
-.step.on .card{transform:none;opacity:1}
-.step .card h3{font-size:1.1rem;margin-bottom:.35rem}
-.step .card p{margin:0;font-size:.98rem}
-.step .num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
-.step.r{justify-content:flex-end}
-.scrolly svg.fig{width:min(100%,820px);height:auto;max-height:calc(100svh - 120px);overflow:visible}
-.scrolly .stage-inner{width:100%;display:flex;justify-content:center}
-/* under the picture: previous, one dot per step (the current one long), next, and back to the first; each scrolls the page to its step */
-.scrolly .stage{flex-direction:column;gap:12px}
-.dots{flex:0 0 auto;display:flex;justify-content:center;align-items:center;gap:1px;position:relative;z-index:7}
-.dots button{appearance:none;border:0;background:none;padding:8px 4px;line-height:0;cursor:pointer;color:var(--ink)}
-.dots .dot::before{content:"";display:block;width:7px;height:7px;border-radius:7px;background:var(--ink);opacity:.22;transition:width .3s,opacity .3s,background .3s}
-.dots .dot:hover::before{opacity:.5}
-.dots .dot.on::before{width:20px;opacity:1;background:var(--blood)}
-.dots .arr{padding:6px;opacity:.5;transition:opacity .3s}
-.dots .arr svg{display:block;width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.dots .arr:hover{opacity:1}
-.dots .arr:disabled{opacity:.14;cursor:default}
-.dots .back{margin-left:8px}
-.dots button:focus-visible{outline:2px solid var(--aegean-d);outline-offset:-3px}
-@media(min-width:900px){.scrolly .stage{padding-left:380px} .step .card{max-width:320px} .step{padding-left:max(24px,calc((100vw - 1080px)/2))}}
-@media(max-width:899px){
-  .scrolly .stage{justify-content:flex-start;padding-top:64px}
-  .scrolly svg.fig{max-height:46svh}
-  .step{align-items:flex-end;padding-bottom:22px}
-  .step .card{max-width:none;width:100%}
-}
-svg text{font-family:var(--serif)}
-.svg-dark{background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
-
-/* ---------- interactive wells ---------- */
-.well{padding:clamp(16px,3vw,28px);margin:1.6rem 0}
-.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;justify-content:space-between;gap:10px}
-.well h4 em{font-style:normal;color:#6b5a48}
-.btn{background:var(--ink);color:var(--parch);border:3px solid var(--ink);padding:8px 16px;font-family:var(--sans);font-size:.88rem;letter-spacing:.03em;box-shadow:4px 4px 0 var(--blood);transition:transform .12s,box-shadow .12s}
-.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--blood)}
-.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--blood)}
-.btn:disabled{opacity:.35;cursor:default;box-shadow:none}
-.btn.alt{background:#fffaf0;color:var(--ink)}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.say{margin:12px 0 0;font-size:.98rem;min-height:3.1em}
-.say b{color:var(--blood)}
-.ok{color:#3f7a2a;font-weight:700}.bad{color:var(--blood);font-weight:700}
-
-/* cards row */
-.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
-.card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
-.card3 .body{padding:16px 18px 18px}
-.card3 h3{font-size:1.15rem;margin-bottom:.4rem}
-.card3 p{font-size:.95rem;margin:0}
-.card3 .fx{margin-top:12px}
-/* cards in a row stand as tall as the tallest */
-.cards3>.pop>.leaf{height:100%}
-@media(max-width:860px){.cards3{grid-template-columns:1fr}}
-/* relevance */
-.map{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px 0;align-items:stretch;max-width:760px;margin:2rem auto 0}
-.map .l,.map .r{padding:11px 16px;font-size:1rem;border:3px solid var(--ink);background:#fffaf0;color:var(--ink);transition:background .25s,transform .25s;cursor:default}
-.map .r{font-family:var(--sans);background:#e9f2f7}
-.map .mid{display:grid;place-items:center;color:var(--blood);font-size:1.3rem}
-.map .hi{background:var(--gold)!important;transform:scale(1.03)}
-.map .hd{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood)}
-.end{text-align:center}
-.end .big{font-size:clamp(1.5rem,4.2vw,2.5rem);max-width:19em;margin:0 auto 1.4rem;color:var(--ink);text-wrap:balance}
-.links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
-.links a{color:var(--ink);background:#fffaf0;border:3px solid var(--ink);padding:9px 18px;text-decoration:none;font-family:var(--sans);font-size:.9rem;box-shadow:4px 4px 0 var(--shadow)}
-.links a:hover{background:var(--gold)}
-footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;font-family:var(--sans);background:#d8cba6}
-
-/* ---------- lists, small parts ---------- */
-.terms{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:12px}
-.terms li{padding:12px 16px;background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 #b9a77e;font-size:.98rem}
-.terms b{font-family:var(--sans)}
-@keyframes slotin{from{transform:translateY(-8px);opacity:0}}
-.btn:focus-visible,.links a:focus-visible,[role=button]:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
-.num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
-.chip{display:inline-block;padding:1px 7px;margin:2px 3px 2px 0;border:2px solid var(--ink);border-radius:5px;background:#fff;font-family:var(--sans);font-weight:700;font-size:.86rem;white-space:nowrap}
-.chip i{display:inline-block;width:.7em;height:.7em;border-radius:50%;border:1.5px solid var(--ink);margin-right:5px;vertical-align:-.02em}
-.isle-svg{width:min(100%,440px);display:block;margin:0 auto}
-.fig .fade{opacity:0;transition:opacity .6s}
-.fig .fade.on{opacity:1}
-.fig .lab{fill:#6b5a48;font-size:15px;font-style:italic;text-anchor:middle}
-.fig .halo{paint-order:stroke;stroke:#fffaf0;stroke-width:5px;stroke-linejoin:round}
-.tok text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.site rect,.site circle{stroke:var(--ink);stroke-width:4}
-.site text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-
-/* ---------- space-time, drawn in the round ---------- */
-.st-ring{fill:none;stroke:#b9a77e;stroke-opacity:.7;stroke-width:1;stroke-dasharray:3 4}
-.st-spoke{stroke:#1c1512;stroke-width:2.5;stroke-opacity:.45}
-.st-node rect{fill:#f6eed6;stroke:#1c1512;stroke-width:2}
-.st-node text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.st-slip{fill:none;stroke:#136f9e;stroke-width:2.6;transition:stroke .3s,stroke-width .3s,opacity .5s}
-.st-seg{stroke:#bf4a26;stroke-width:7;stroke-linecap:round;opacity:0;transition:opacity .3s}
-.st-seg.hi{opacity:.85}
-.st-slip.hi{stroke:#bf4a26;stroke-width:5}
-.st-ev{cursor:pointer}
-.st-ev circle.b{stroke:#1c1512;stroke-width:3;transition:stroke .3s,stroke-width .3s}
-.st-ev text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
-.st-ev .halo2{fill:none;stroke:#e0b84a;stroke-width:7;opacity:0;transition:opacity .3s}
-.st-ev.sel .halo2,.st-ev.mark .halo2{opacity:1}
-.st-ev.sel circle.b{stroke-width:4.5}
-.st-ev.dim{opacity:.3}
-.st-ev:focus-visible{outline:none}.st-ev:focus-visible circle.b{stroke:#136f9e;stroke-width:6}
-.st-note{fill:#6b5a48;font-size:13px;font-style:italic}
-
-/* ---------- a stage with a figure and a side panel ---------- */
-.stage-inner.split{gap:18px;align-items:center}
-.stage-inner.split svg.fig{flex:1 1 300px;min-width:0;max-width:470px}
-.side{flex:0 0 240px;display:grid;gap:10px;font-family:var(--sans);font-size:.84rem}
-.side .hc{background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--shadow);padding:8px 10px;min-height:92px;transition:background .4s}
-.side .hc h5{margin:0 0 5px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:6px}
-.side .hc h5 span{color:#6b5a48;letter-spacing:.02em;text-transform:none}
-.side .hc .chk{font-size:.78rem;margin-top:4px;line-height:1.35}
-.side .hc.in{background:#e3ecc4}
-@media(max-width:899px){
-  .stage-inner.split{flex-direction:column;gap:10px}
-  .stage-inner.split svg.fig{flex:0 0 auto;max-height:30svh;width:auto;max-width:100%}
-  .side{flex:0 0 auto;width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;font-size:.7rem}
-  .side .hc{padding:5px 6px;min-height:0;box-shadow:3px 3px 0 var(--shadow)}
-  .side .hc h5{font-size:.62rem;flex-direction:column;gap:0}
-  .side .hc .chk{font-size:.66rem}
-  .side .chip{font-size:.68rem;padding:0 4px}
-}
-.tear{width:100%}
-.scrolly svg.fig.svg-dark{overflow:hidden}
-
-/* ---------- proofs, in the paper's own terms ---------- */
-details.proof{max-width:760px;margin:1.8rem 0 0;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);padding:0 clamp(14px,3vw,22px);font-size:.95rem}
-details.proof>summary{cursor:pointer;padding:12px 0;font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--aegean-d)}
-details.proof>summary:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
-details.proof[open]{padding-bottom:14px}
-details.proof details.proof{border-width:3px;box-shadow:none;background:#fff;margin:1rem 0;max-width:none}
-details.proof .given{padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean);margin:0 0 .8rem}
-details.proof h3,details.proof h4{font-size:1.02rem;margin:1.4rem 0 .5rem}
-details.proof .hlink{color:inherit;text-decoration:none}
-details.proof .fnote{font-size:.84rem;color:#6b5a48}
-ol.proofsteps{padding-left:1.4em;margin:.4rem 0 0}
-ol.proofsteps li{margin:.55em 0}
-.qed{float:right;font-family:var(--sans);letter-spacing:.15em;color:#5f6e28}
-.mathblock{margin:.8rem 0;padding:8px 12px;overflow-x:auto;text-align:center;font-style:italic;background:#fff;border:2px solid #1c151233}
-.slab{margin:1rem 0;padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean)}
-.slab-head{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
-.stmt{font-style:italic}
-
-/* ---------- closing apparatus: lineage, papers, links to where a fact comes from ---------- */
-a.anchor{display:block;height:0;scroll-margin-top:56px}
-sup.xref{font-size:.8em;line-height:0;margin-left:1px}
-sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
-.apparatus{max-width:760px;margin:3rem auto 0;text-align:left;font-size:.94rem}
-.apparatus .lineage{margin:0 0 .6rem}
-.apparatus .lbl{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-right:8px}
-.apparatus a{color:var(--aegean-d)}
-.apparatus details.proof{margin-top:1.2rem}
-.apparatus .refs p,.apparatus ol.refs li{font-size:.9rem;margin:.45em 0}
-.apparatus table{width:100%;border-collapse:collapse;font-size:.9rem}
-.apparatus td{padding:5px 8px 5px 0;border-top:2px solid #1c151222;vertical-align:top}
-
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  .pop > .leaf{transition:opacity .3s;transform:none!important}
-  [data-depth]{transform:none!important}
-  .pulse{animation:none}
-  .fig .tok{transition:none}
-}
-/* ---------- lineage: the papers a book's papers draw on and lead to (lineage.py) ---------- */
-.lin{--gap:134px;position:relative;margin-top:1.2rem}
-.lin ul{list-style:none;margin:0;padding:0}
-.lin h5{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#6b5a48;margin:0 0 6px;font-weight:700}
-.lin-edges{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-.lin-edges path{fill:none;stroke:var(--ink);stroke-width:1.6}
-.lin-edges polygon{fill:var(--ink)}
-.lin-nodes>li{padding:6px 0}
-.lin-node{position:relative;z-index:1;display:block;padding:9px 12px;color:var(--ink);text-decoration:none;line-height:1.28}
-.lin-node b{display:block;font-size:.93rem}
-.lin-node .by{display:block;font-family:var(--sans);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--blood);margin-top:4px}
-.lin-node.book{background:#fffaf0;border:2px solid var(--ink);box-shadow:4px 5px 0 var(--shadow)}
-.lin-node.ext{background:#f6eed6;border:2px dashed #1c151288}
-.lin-node.ext b{font-weight:400;font-style:italic}
-a.lin-node:hover b{text-decoration:underline}
-.lin-node.here{background:var(--ink);color:var(--parch);border:2px solid var(--ink);box-shadow:5px 6px 0 var(--shadow);padding:13px 14px}
-.lin-node.here b{font-size:1rem}
-.lin-node.here .by{color:var(--gold)}
-.lin-link{position:relative;z-index:1;cursor:default;outline:0}
-.lin-link em{display:inline-block;font-family:var(--sans);font-style:normal;font-size:.72rem;line-height:1.2;background:#f6eed6;border:1px solid #1c151255;border-radius:10px;padding:2px 8px;color:var(--ink)}
-.lin-link .ends{font-family:var(--sans);font-size:.72rem;color:#6b5a48;margin-left:6px}
-.lin-link .why{display:block;font-size:.84rem;color:#3a2d24;margin:3px 0 0}
-.lin-say{font-size:.9rem;color:#3a2d24;margin:16px 0 0;max-width:none}
-.lin-say b{font-family:var(--sans);font-size:.74rem;letter-spacing:.06em;color:var(--blood);margin-right:8px}
-.lin-key{margin:10px 0 0;font-family:var(--sans);font-size:.74rem;color:#6b5a48}
-.lin-key .k{display:inline-block;width:20px;height:11px;vertical-align:-1px;margin:0 6px 0 16px;border:2px solid var(--ink)}
-.lin-key .k:first-child{margin-left:0}
-.lin-key .k.here{background:var(--ink)}
-.lin-key .k.book{background:#fffaf0}
-.lin-key .k.ext{border-style:dashed;border-color:#1c151288}
-@media(min-width:860px){
-  /* three columns; each paper at the sides keeps its links beside it, in the gap the edges cross */
-  .lin{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.92fr) minmax(0,1.2fr);align-items:center}
-  .lin-side.in h5{margin-right:var(--gap)}
-  .lin-side.out h5{margin-left:var(--gap)}
-  .lin-side .lin-nodes>li{display:grid;align-items:center}
-  .lin-side.in .lin-nodes>li{grid-template-columns:minmax(0,1fr) var(--gap)}
-  .lin-side.out .lin-nodes>li{grid-template-columns:var(--gap) minmax(0,1fr)}
-  .lin-side.out .lin-links{order:-1}
-  .lin-side .lin-links{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 10px;text-align:center}
-  .lin-mid{padding:0 56px}
-  .lin-mid .lin-nodes>li{padding:0}
-  .lin-mid .lin-nodes>li+li{margin-top:26px}
-  .lin-mid .lin-links{display:flex;justify-content:center;gap:8px;margin:-8px 0 18px;text-align:center}
-  .lin-link .ends,.lin-link .why{display:none}
-  .lin-say,.lin-key{grid-column:1/-1}
-  .lin-say{min-height:2.7em}
-  .lin-link em{transition:background .15s,color .15s}
-  .lin.hot .lin-node,.lin.hot .lin-link,.lin.hot .lin-edges g{opacity:.28}
-  .lin.hot .lin-node.on,.lin.hot .lin-link.on,.lin.hot .lin-edges g.on{opacity:1}
-  .lin.hot .lin-link.on em{background:var(--ink);color:var(--parch);border-color:var(--ink)}
-}
-@media(max-width:859px){
-  /* one column: each paper's links are written out under it */
-  .lin-side,.lin-mid{margin-bottom:1.4rem}
-  .lin-nodes>li{padding:7px 0}
-  .lin-links{margin:8px 0 4px 6px;padding-left:12px!important;border-left:2px solid #1c151255}
-  .lin-mid .lin-links{margin:0 0 8px 6px}
-  .lin-link+.lin-link{margin-top:8px}
-  .lin-say{display:none}
-}
-/* ---------- shared by the coast books ---------- */
-.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
-@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
-.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0}
-.counts span b{font-size:1.4rem;margin-right:5px}
-.cards3.five{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-table.terms2{width:100%;border-collapse:collapse;font-size:.88rem}
-table.terms2 td{padding:6px 8px 6px 0;border-top:2px solid #1c151222;vertical-align:top}
-table.terms2 td:first-child{width:40%;font-weight:700}
-.seg{display:flex;flex-wrap:wrap;gap:0;margin:0 0 8px}
-.seg button{background:#fff;border:3px solid var(--ink);margin-right:-3px;margin-bottom:-3px;padding:4px 9px;font-family:var(--sans);font-size:.78rem}
-.seg button[aria-pressed=true]{background:var(--ink);color:var(--parch)}
-.seglab{font-family:var(--sans);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:#6b5a48;margin:8px 0 4px}
-.checks{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px;font-size:.92rem}
-.checks li{padding:6px 10px;background:#fff;border:3px solid var(--ink)}
-.note{font-size:.9rem;color:#6b5a48;font-style:italic}
-.lib circle.b,.lib rect.b{stroke:var(--ink);stroke-width:3.5;transition:fill .4s,opacity .4s}
-.lib text{font-family:var(--sans);font-weight:700;font-size:13px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
-.lib.pick{cursor:pointer}
-.lib.pick:focus-visible{outline:none}.lib.pick:focus-visible .b{stroke:var(--aegean-d);stroke-width:6}
-.lib.off .b{opacity:.3}
-.lib .ring{fill:none;stroke:var(--gold);stroke-width:5;opacity:0;transition:opacity .3s}
-.lib.mark .ring{opacity:1}
-.way{fill:none;stroke:#b5602c;stroke-width:2.5;stroke-dasharray:3 7;opacity:.7}
-.way.cut{stroke:#bf4a26;stroke-dasharray:2 9;opacity:.35}
-.bars{display:grid;gap:10px;margin:.4rem 0 0}
-.bars .b{display:grid;grid-template-columns:minmax(0,11em) minmax(0,1fr);gap:10px;align-items:center;font-family:var(--sans);font-size:.82rem}
-.bars .b i{display:block;height:16px;background:var(--aegean);border:2px solid var(--ink);min-width:3px}
-.bars .b i.n{background:var(--gold)}
-.bars .b span.v{display:flex;align-items:center;gap:8px}
-.bars h5{font-family:var(--sans);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;margin:10px 0 0;color:#6b5a48}
-.tbl{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.86rem}
-.tbl th,.tbl td{padding:5px 8px;border-top:2px solid #1c151222;text-align:left}
-.tbl th{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48;border-top:0}
-/* ---------- tables of pebbles ---------- */
-.tables3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.tables3.two{grid-template-columns:repeat(2,minmax(0,1fr))}
-.ptab{border:3px solid var(--ink);background:#fff;padding:8px 8px 6px;font-family:var(--sans);font-size:.78rem}
-.ptab h5{margin:0 0 6px;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:6px}
-.ptab h5 b{font-size:.95rem;letter-spacing:0}
-.ptab .cols{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px;align-items:end;min-height:92px}
-.ptab .col{display:flex;flex-direction:column-reverse;align-items:center;gap:2px;padding:4px 0 2px;border-bottom:3px solid var(--ink);min-height:86px;background:#f6eed6}
-.ptab .col.own{background:#f3dc9a}
-.ptab .col i{display:block;width:11px;height:8px;border-radius:50%;background:#fffaf0;border:1.5px solid var(--ink)}
-.ptab .col.k i{background:#1c1512}
-.ptab .lbl{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px;text-align:center;color:#6b5a48;font-size:.68rem;margin-top:2px}
-.ptab .sets{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.ptab .sets span.t{display:block;text-align:center;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:#6b5a48}
-@media(max-width:560px){.tables3{grid-template-columns:minmax(0,1fr)}.tables3.two{grid-template-columns:repeat(2,minmax(0,1fr))}.ptab .col{min-height:60px}.ptab .cols{min-height:64px}}
-.shelves{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:8px 0 0}
-.shelf{border:3px solid var(--ink);background:#fff;padding:8px 10px;font-family:var(--sans);font-size:.84rem;min-height:86px}
-.shelf h5{margin:0 0 6px;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48}
-.shelf .it{display:block;padding:3px 6px;margin:3px 0;border-left:5px solid var(--aegean);background:var(--parch-lo)}
-.shelf .it.gone{text-decoration:line-through;opacity:.5;border-left-color:var(--blood)}
-.shelf .it.none{border-left-color:#b9a77e;background:none;font-style:italic;color:#6b5a48}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -418,8 +23,8 @@ table.terms2 td:first-child{width:40%;font-weight:700}
   <div class="wrap grid">
     <div>
       <h1>Changes That Never Clash</h1>
-      <p class="generic">Can some changes be combined in any order, any number of times, and still come out the same everywhere, so that they never clash and no one ever needs to coordinate?</p>
-      <p class="allegory">We find out by exploring how Greek scholars far apart kept a shared count that always came out the same, without ever meeting to settle it.</p>
+      <p class="generic">Can updates made independently at different machines be combined in any order, any number of times, and always produce the exact same state everywhere—without anyone ever stopping to coordinate?</p>
+      <p class="allegory">We find out by exploring how scribes on the far southern terraces of Paxos kept a shared count of books in grooves of pebbles that always merged to the same answer.</p>
       <p class="source">After Marc Shapiro, Nuno Preguiça, Carlos Baquero and Marek Zawirski, <i>Conflict-free Replicated Data Types</i>, 2011 · the same authors, <i>A Comprehensive Study of Convergent and Commutative Replicated Data Types</i>, 2011</p>
     </div>
     <div class="pop" data-auto>
@@ -478,13 +83,13 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <div>
         <div class="kicker">First, in machine terms</div>
         <h2>Replicas that never ask first</h2>
-        <p class="lede">Several replicas hold the same data. Each accepts updates on its own, with no coordination, and the replicas exchange what they have afterwards.</p>
+        <p class="lede">Suppose several replicas hold copies of the same data object. Each replica accepts updates locally and immediately, without asking any other replica first, and the replicas exchange their states or operations in the background.</p>
         <ul class="terms">
-          <li><b>Strong eventual consistency</b>: replicas that have received the same updates are in the same state.</li>
-          <li><b>State-based</b>: merging two states must be commutative, associative and idempotent, and updates must only move a state upward.</li>
-          <li><b>Conflict-free replicated data types</b> (Shapiro et al., 2011): counters, registers and sets built that way, and what cannot be.</li>
+          <li><b>Strong Eventual Consistency (SEC)</b>: any two replicas that have received the same set of updates—in whatever order—are guaranteed to be in the exact same state immediately, with no rollbacks and no consensus.</li>
+          <li><b>State-based (`CvRDT`)</b> and <b>Operation-based (`CmRDT`)</b>: in the state-based form, states form a monotonic semilattice where updates only move the state upward and merging two states takes their least upper bound (which is commutative, associative, and idempotent). In the operation-based form, concurrent operations commute.</li>
+          <li><b>Conflict-Free Replicated Data Types (CRDTs)</b> (Shapiro et al., 2011) show how to build counters, registers, sets, and graphs that satisfy these rules—and prove what kinds of invariants cannot be maintained without coordination.</li>
         </ul>
-        <p style="margin-top:1.2rem">We tell it with pebbles on stone tables, one table on each terrace of a hillside.</p>
+        <p style="margin-top:1.2rem">We tell this story on the far southern terraces of Paxos, where scribes keep the coast's counts in grooves of pebbles on stone tables.</p>
       </div>
       <div class="pop fromright"><div class="leaf">
         <div class="paper well" style="margin:0">
@@ -505,11 +110,13 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="hall-title"><div class="t">
       <div class="kicker">The far terraces</div>
       <h2>A table of pebbles on every terrace</h2>
-      <p>At the island's southern tip, as far from the Chamber and the Tholos as Paxos goes, a hillside is cut into terraces, and on each a scribe keeps a table that counts the copies made of each work.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: The Scholars' Coast">*</a></sup></p>
+      <p>At the southern tip of Paxos, as far from the Chamber and the Tholos as the island goes, a hillside above the sea is cut into three stone terraces. On each terrace sits a grooved marble counting table where a scribe tracks how many copies of each work have been made on the coast.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: The Scholars' Coast">*</a></sup></p>
     </div></div>
-    <div class="pin pop" style="left:54%;top:36%;"><div class="leaf"><b>No waiting</b>A scribe adds a pebble the moment a copy is made, without asking anyone.</div></div>
-    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>Tables by courier</b>The terraces send one another their tables. A courier may be late, lost, or arrive twice.</div></div>
-    <div class="pin pop" style="left:56%;top:80%;"><div class="leaf"><b>The same count</b>Terraces that have heard of the same copies must show the same count.</div></div>
+    <div class="pins">
+      <div class="pin pop"><div class="leaf"><b>No waiting</b>Whenever a copy is made at the library nearest him, a scribe adds a pebble to his table immediately, without asking the other terraces.</div></div>
+      <div class="pin pop"><div class="leaf"><b>Tables by courier</b>The terraces send copies of their tables to one another by courier. A courier may arrive late, out of order, or twice.</div></div>
+      <div class="pin pop"><div class="leaf"><b>The same count</b>Any two terraces that have heard of the same copies must show the exact same total.</div></div>
+    </div>
   </div>
 </section>
 
@@ -522,10 +129,10 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <div>
         <div class="kicker">What is wanted</div>
         <h2>The count no one settles</h2>
-        <p class="lede">The table counts how many copies of each work have been made on the coast, in <b>pebbles</b> set in grooves on a stone slab. The scribe of the first terrace is Shapirios.</p>
-        <p>Start with one pile for each work. Two terraces each add a pebble for the same work at the same time, each unaware of the other. Each table shows one copy made, and two were made.</p>
-        <p>When the tables meet, keeping the larger pile keeps one, and a copy is lost. Adding the two piles gives two, which is right this once. At the next meeting the same piles are added again, and the count rises for ever on copies that were made once.</p>
-        <p>The terraces could take turns, but then they wait for one another, and a stopped courier stops them all. What is wanted is narrower than agreement: add at once, show the same count for the same news in whatever order it came, and never take anything back.</p>
+        <p class="lede">The tables on the three terraces count how many copies of a work have been made, using <b>pebbles</b> (`psēphoi`) laid in grooves on a stone slab. The scribe of the first terrace is Shapirios.</p>
+        <p>Suppose at first that each table kept only a single pile of pebbles for the work. Now watch what goes wrong when Terrace 1 and Terrace 2 each make one new copy of the work at the same time: each scribe puts one pebble on his own table, so both tables show `1` even though `2` copies were actually made.</p>
+        <p>When a courier carries Terrace 1's count (`1`) to Terrace 2 (`1`), how should Terrace 2 combine them? If it keeps the <em>larger</em> of the two numbers (`max(1, 1) = 1`), one of the two copies vanishes from the count forever. If instead it <em>adds</em> the two numbers (`1 + 1 = 2`), the count is right this once—until a second courier arrives with the table again, or the two terraces exchange tables a second time (`2 + 2 = 4`), inflating the count endlessly on copies that were made only once!</p>
+        <p>The scribes could avoid this by taking turns or holding a vote before adding a pebble, as the assemblies in the north do—but then every stopped courier would freeze the tables. What Shapirios wants is a way to add pebbles immediately, merge tables in any order and any number of times, and always land on the true count.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p01-terraces.jpg" alt="The stepped hillside at the southern tip seen from over the sea: a stone table on each of three terraces, each with a wall of rough stone behind it and a short flight of steps up to the terrace above, trees round the height" loading="lazy"></div></div></div>
     </div>
@@ -540,16 +147,19 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">One writer to a column</div>
       <h2>One column each</h2>
-      <p class="lede">The trouble was that two scribes added to the same pile. So each table is kept with a <b>column</b> for every terrace, and a scribe adds white pebbles only to the column of the scribe's own terrace.</p>
-      <p>A column then has one writer, and it only goes up. When two scribes each add a pebble, they add to different columns, and neither can overwrite or double the other. On any table, a column is the number of copies its terrace has made, as far as that table has heard. The count of copies made is the sum of the columns.</p>
-      <p>A terrace learns another's pile by being sent its table. Its own table has its own column up to date and the others as old as the news that has reached it. The table that arrives is out of date in a different way. The terrace needs a rule for which pile in each column to keep.</p>
+      <p class="lede">Why did a single pile fail? Because two different scribes were adding pebbles to the same pile, making it impossible to tell a new pebble from one already counted.</p>
+      <p>The cure is to carve a separate <b>column</b> (`groove`) on every table for each of the three terraces—just like the column rooms of Arche.<sup class="xref"><a href="../ordering-without-clocks/index.html" title="Ordering Without Clocks">*</a></sup> When a copy is made at Terrace 1, Shapirios adds a white pebble <em>only to Column 1</em>. The scribe at Terrace 2 adds pebbles only to Column 2, and the scribe at Terrace 3 adds pebbles only to Column 3.</p>
+      <p>Now each column has only a single writer, and each column only ever grows. On any terrace's table, Column <var>i</var> records how many copies Terrace <var>i</var> has made according to the latest news that has reached this table. And the total number of copies made across the coast is simply the <b>sum of all three columns</b>.</p>
     </div>
     <a class="anchor" id="s3"></a>
     <div class="narrow" style="margin:2.4rem 0 1rem">
       <div class="kicker">When two tables meet</div>
       <h2>Take the larger</h2>
-      <p class="lede">A terrace keeps the larger pile in each column. A column only ever grows, so of two piles in the same column the larger is the later, and holds everything the smaller holds and more.</p>
-      <p>Three things are then true of merging, and the whole idea rests on them. It does not matter <em>which</em> table is merged into which. It does not matter <em>how</em> several tables are grouped. And merging the same table twice changes nothing. A table can be lost, delayed, copied, or arrive out of turn, and the terrace that takes it in ends at the same place.</p>
+      <p class="lede">When a courier brings another terrace's table, the receiving scribe compares the incoming table with his own column by column, and in each column he <b>keeps the larger pile</b> (`max`).</p>
+      <p>Why does taking the larger pile in each column never lose a pebble and never double-count one? Because only Terrace <var>i</var> ever adds pebbles to Column <var>i</var>! In Column <var>i</var>, a pile of `4` pebbles is not a separate set of copies from a pile of `3` pebbles; it is the exact same `3` copies plus `1` newer copy. Taking the larger pile in each column therefore satisfies three golden laws:</p>
+      <p>• <b>Order does not matter (`commutative`)</b>: merging Table A into Table B gives the exact same result as merging Table B into Table A.<br>
+         • <b>Grouping does not matter (`associative`)</b>: merging A with B and then C gives the same result as merging B with C and then A.<br>
+         • <b>Repetition does not matter (`idempotent`)</b>: merging the same table a second or third time changes nothing at all.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Three terraces, three tables <em>make copies, send tables, in any order you like</em></h4>
@@ -567,8 +177,8 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       </div>
       <p class="say" id="tsay">Each table has a column for every terrace. The shaded column is the one its own scribe may add to.</p>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Why adding the totals is wrong</div><h3>Two tables each hold part of the same piles</h3><p>Adding them counts the shared part twice, and again at every later meeting. Taking the larger in each column counts each pile once, because it never combines two piles of the same column.</p></div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">None of this needs the terraces to agree on anything. Terraces that can still pass tables to one another come to show the same count among themselves, even if the roads to the rest are cut, and when the roads open the rest join them. Any number of terraces can fall silent without stopping the others.</p>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Why adding the totals is wrong</div><h3>Two tables each hold part of the same piles</h3><p>If two tables both know about the first two copies made at Terrace 1, adding their columns would count those two pebbles twice—and would count them again at every subsequent meeting. Taking the maximum in each column counts every pebble once, no matter how many times or by how many paths the tables meet.</p></div></div></div>
+    <p style="max-width:40em;margin-top:1.4rem">Notice how little this requires from the world: even if couriers between Terrace 1 and Terrace 2 are completely stopped, both terraces can keep adding pebbles and answering readers, and as soon as a single courier eventually gets through in each direction, their tables converge to the exact same state.</p>
     <details class="proof">
       <summary>Proof · that the state-based counter is a CvRDT, and that every pair of replicas converges</summary>
       <p class="given">The payload is a vector <var>P</var> of <var>n</var> naturals, one entry per replica. The update <var>increment</var> at replica <var>g</var> sets <var>P</var>[<var>g</var>] := <var>P</var>[<var>g</var>] + 1; the query <var>value</var> returns Σ<sub><var>i</var></sub> <var>P</var>[<var>i</var>]; the merge of <var>X</var> and <var>Y</var> is the entry-by-entry maximum. A CvRDT is an object whose states form a semilattice under an order ≤, whose merge ⊔ is the least upper bound, and whose updates never decrease the state. <b>Claim.</b> This counter is a CvRDT, and any two replicas that keep exchanging states converge.</p>
@@ -591,8 +201,8 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">What a courier carries</div>
       <h2>Sending the table or the change</h2>
-      <p class="lede">A terrace can send its whole table, or it can send a short notice of each change: <i>one more copy at terrace 1</i>. The first is the <b>table way</b> and the second the <b>notice way</b>.</p>
-      <p>Both can keep every terrace's count the same. They ask very different things of the couriers.</p>
+      <p class="lede">There are two ways for terraces to share updates: a courier can carry a copy of the terrace's <em>entire table</em> (the <b>table way</b>, or <i>state-based</i> `CvRDT`), or a short slip announcing just the single operation <i>add one pebble for Terrace 1</i> (the <b>notice way</b>, or <i>operation-based</i> `CmRDT`).</p>
+      <p>Both approaches reach the exact same state, but they place very different demands on the couriers.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Terrace 1 has one more copy to report <em>send it either way, as often as you like</em></h4>
@@ -606,9 +216,9 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <div class="row"><button class="btn" id="wtable">The courier brings the whole table</button><button class="btn" id="wnote">The courier brings the notice</button><button class="btn alt" id="wreset">Start again</button></div>
     </div></div></div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the table way asks</div><h3>Almost nothing</h3><p>A table may arrive twice, late, or before an older one, and it makes no difference. A courier may be lost and nobody need know, provided some later table gets through. The cost is size: every table, to carry a handful of changes.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the notice way asks</div><h3>Exactly once, in order</h3><p>A notice taken in twice counts twice, and a notice lost leaves a pile short for good. Notices that depend on one another must arrive in that order: a strike must not arrive before the addition it strikes. That needs no vote and no leader, but it is a promise about the roads.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Each is the other in disguise</div><h3>A table as a notice, notices in a table</h3><p>A terrace can send a whole table as a notice, <i>take this table in</i>. And a terrace can keep in its table every notice it has received and every one it has acted on, so that merging tables merges the notices. The paper proves it both ways.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the table way asks</div><h3>Almost nothing</h3><p>Because merging two tables by taking the larger pile is idempotent, a courier carrying a whole table can arrive twice, arrive out of order, or be lost completely (as long as some later table gets through), and the count is still right. The only downside is size: carrying the entire table just to report one new pebble.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the notice way asks</div><h3>Exactly once, in causal order</h3><p>Adding one pebble commutes with adding another pebble, so notices from different terraces can arrive in any order. However, applying the <em>same</em> notice twice counts the copy twice, and losing a notice loses the copy forever! For general operation-based CRDTs, the delivery channel must deliver every notice <b>exactly once</b> and in <b>causal order</b> (so a removal notice never arrives before the addition it removes).</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Each is the other in disguise</div><h3>A table as a notice, notices in a table</h3><p>Mathematically, the two forms are equivalent: any state-based CRDT can be turned into an op-based one by sending its state as an operation (`merge this state`), and any op-based CRDT can be turned into a state-based one by keeping the set of known and delivered notices as part of the table.</p></div></div></div>
     </div>
     <details class="proof">
       <summary>Proof · that every SEC state-based object can be emulated by an op-based one, and conversely</summary>
@@ -621,7 +231,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
         <li>Every update is delivered exactly once to the embedded object, in an order satisfying <var>P</var>, and the triple forms a monotonic semilattice (the merge is a union, hence a least upper bound). So the emulation is a CvRDT, and it is SEC because the embedded CmRDT is.<span class="qed">∎</span></li>
       </ol>
     </details>
-    <p style="max-width:40em;margin-top:1.4rem">So a count that can be kept one way can be kept the other, and the choice is about the roads and the cost.</p>
+    <p style="max-width:40em;margin-top:1.4rem">Whether a system sends full states or individual notices is therefore a practical trade-off between message size and channel bookkeeping, not a difference in what can be computed.</p>
   </div>
 </section>
 
@@ -635,9 +245,9 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <div>
         <div class="kicker">A count that goes down</div>
         <h2>Made and lost</h2>
-        <p class="lede">Taking the larger pile works because a pile never shrinks. A scribe who took a pebble out would be undone at the next meeting, by any table that still had the larger pile.</p>
-        <p>So the tables keep a second kind of pebble. White pebbles stand for copies made, and black for copies <em>lost</em>. Each terrace has a white set of columns and a black set, and a scribe adds only to the scribe's own column of each.</p>
-        <p>Each set merges by the larger pile in every column. The count of copies there are is the white pebbles less the black. Both sets only grow, so both merge safely, and their difference can fall.</p>
+        <p class="lede">Taking the larger pile in each column works because a column only ever grows. What if copies can also be <em>lost</em> or worn out, so the total count of surviving copies has to go down?</p>
+        <p>If a scribe simply took a white pebble <em>out</em> of his column when a copy was lost, the very next table arriving from another terrace—which still remembers the larger pile—would put that white pebble right back! Just as with withdrawing a work in <a href="../spreading-by-word-of-mouth/index.html">Spreading by Word of Mouth</a>, a subtraction cannot travel as a missing pebble.</p>
+        <p>Instead, each table is carved with two sets of three columns (`PN-Counter`): three columns of <b>white pebbles</b> for copies made, and three columns of <b>black pebbles</b> for copies lost. When a copy is lost at Terrace <var>i</var>, its scribe <em>adds</em> a black pebble to his own black column. Both the white columns and the black columns only ever grow, so both merge cleanly by taking the larger pile in each column—while the net number of surviving copies (white total minus black total) can go either up or down!</p>
       </div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
@@ -647,7 +257,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <p class="say" id="lsay">The one copy was made at terrace 1. Both tables show it.</p>
       <div class="row"><button class="btn" id="l1">Terrace 1 marks it lost</button><button class="btn" id="l2">Terrace 2 marks it lost</button><button class="btn" id="lmeet">The tables meet</button><button class="btn alt" id="lreset">Start again</button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">The first thing the idea cannot do</div><h3>A limit on the whole coast's count cannot be seen from any one terrace's table</h3><p>A stricter rule that each scribe can keep alone does work: mark no more copies lost than were made at one's own terrace. But a terrace whose library never made a copy could then mark none lost, however many it held. The other cures are to agree before marking a copy lost, which is to wait, or to share out beforehand how many losses each terrace may mark, which is agreeing in advance. The paper's verdict is that there is no cheap way.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">The first thing the idea cannot do</div><h3>A global floor—such as “the total count must never go below zero”—cannot be enforced locally</h3><p>Suppose only `1` copy remains on the coast, and both Terrace 1 and Terrace 2 see `1` on their tables. If each scribe is allowed to mark a copy lost whenever his table shows at least `1`, both scribes can add a black pebble at the same time—and when their tables merge, the count drops to `−1`! A scribe can avoid this only if he restricts himself to a <em>local</em> rule (such as never marking more copies lost than his own terrace made, or pre-allocating a quota of losses by escrow), or if the terraces stop and coordinate before decrementing.</p></div></div></div>
   </div>
 </section>
 
@@ -659,8 +269,8 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Corrections that meet</div>
       <h2>Two hands on one work</h2>
-      <p class="lede">A table of corrections holds a work's text with the tally of the edition that wrote it. Two libraries correct the same work, each unaware of the other, and the terraces must end with one result.</p>
-      <p>Neither rule below is forced by the idea. Both merge in any order and any number of times, and both leave every terrace with the same result.</p>
+      <p class="lede">What if the record being kept is not a count of pebbles, but the text of a work itself (`a register`)? When two libraries revise the same work independently, how can the terraces merge them so that every terrace ends with the exact same result?</p>
+      <p>Here the mathematics of CRDTs leaves the designer a choice between two different rules—both of which merge in any order and any number of times.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Library 1 writes at noon, Library 2 later that day <em>choose the rule, and the order in which the two corrections reach a terrace</em></h4>
@@ -670,11 +280,11 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <p class="say" id="hsay"></p>
     </div></div></div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The plain rule</div><h3>Keep the later</h3><p>The edition with the larger tally wins and the other is thrown away.<sup class="xref"><a href="../spreading-by-word-of-mouth/index.html" title="Spreading by Word of Mouth">*</a></sup> It is the larger pile again, applied to a number that only rises. The loser is lost for good. Nothing says the later edition was the better, only that it is later.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What it needs</div><h3>Tallies that follow events</h3><p>An edition written by someone who had seen another must carry a larger tally than the one it answers, or the rule would throw away the answer and keep the question.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The other rule</div><h3>Keep both</h3><p>Each edition is kept with a note of which editions it was written after, and is dropped only when some kept edition was written after it. Two corrections written in ignorance of each other are both kept, and the reader chooses.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The plain rule</div><h3>Keep the later (`LWW-Register`)</h3><p>Attach a unique tally (timestamp plus library number) to each edition, and when two editions meet, keep the one with the larger tally.<sup class="xref"><a href="../spreading-by-word-of-mouth/index.html" title="Spreading by Word of Mouth">*</a></sup> Because `max` on timestamps is commutative, associative, and idempotent, every terrace converges—at the price of silently discarding the earlier concurrent edit.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What it needs</div><h3>Tallies that respect causality</h3><p>For `keep the later` to make sense when one scholar revises another scholar's edition, the second scholar's tally must be guaranteed to be larger than the first's (for instance, by using Lamport clocks).</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The other rule</div><h3>Keep both (`MV-Register`)</h3><p>To avoid silently throwing away concurrent work, each edition carries a vector of column counts (`version vector`) showing which editions its writer had already seen. When two tables merge, an edition is replaced only by an edition that causally supersedes it; two concurrent editions are <em>both</em> kept side by side until a scholar reads both and writes a combined edition.</p></div></div></div>
     </div>
-    <p style="max-width:40em;margin-top:1.4rem">The paper lists several such choices for one kind of record, each a different meaning for the same clash, and all of them settle. What the idea guarantees is that every terrace settles <em>the same way</em>. It does not say the way is the right one.</p>
+    <p style="max-width:40em;margin-top:1.4rem">Both rules guarantee that every terrace converges to the same shelf. What separates them is what the designer wants a concurrent clash to mean: pick a winner automatically, or preserve both branches for a human to reconcile.</p>
   </div>
 </section>
 
@@ -686,13 +296,13 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">A list of titles</div>
       <h2>Titles added and struck</h2>
-      <p class="lede">The terraces also keep a list of the titles of the works made on the coast. The simplest list is only ever added to. Two such lists merge by joining their titles, and joining is the same either way round, in any grouping, and twice over. That is the <b>catalogue of titles</b>.</p>
-      <p>Striking a title off is harder. Three ways follow, and each gives a different meaning to the same clash.</p>
+      <p class="lede">Suppose the terraces also maintain a shared <b>catalogue of titles</b> (`a set`). If titles are only ever added and never removed (`G-Set`), merging two catalogues is just taking their set union (`A ∪ B`), which is automatically commutative, associative, and idempotent.</p>
+      <p>What if scribes can also <em>strike</em> (remove) a title from the catalogue? If a scribe simply erased a title from his scroll, the next merge with another scroll would union it right back in! And if Library 1 adds a title at the same time Library 2 strikes it, who should win? The paper gives three ways to build a conflict-free set with removals:</p>
     </div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The cheap way</div><h3>A struck-off list</h3><p>Keep a second list, the <b>struck-off list</b>. A title is on the catalogue if it is on the first list and not on the second. Both lists only grow, so both merge. A title once struck can never come back: a strike beats an add, for good.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The way most like an ordinary list</div><h3>A tag for every writing</h3><p>Each time a title is written, it gets a <b>tag</b> that nobody else will ever use. A title is on the catalogue if any tag of it is. To strike a title, a scribe strikes <em>all the tags in sight</em>, and only those.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Other ways</div><h3>A tally, or a count</h3><p>Each title can carry a tally, so that the later of its last add and last strike wins. Or a count, up with adds and down with strikes, which settles but behaves oddly: a title struck twice needs two adds to return.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The cheap way</div><h3>A struck-off list (`2P-Set`)</h3><p>Keep two grow-only lists: an <b>added list</b> and a <b>struck-off list</b> (`tombstone set`). A title is in the catalogue if it is on the added list and not on the struck-off list. Both lists only grow, so both merge by union—but once a title is struck off, it can <em>never</em> be added again!</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The way most like an ordinary list</div><h3>A tag for every writing (`OR-Set`)</h3><p>Every time a library adds a title, it attaches a fresh, globally unique <b>tag</b> to that entry. A title is in the catalogue as long as at least one of its tags remains un-struck. When a scribe strikes a title, he adds to the struck-off list <em>only the specific tags he can currently see</em> on his table (`observed-remove`).</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Other ways</div><h3>A tally, or a count (`LWW-Set` / `PN-Set`)</h3><p>Alternatively, each title can carry a timestamp on its latest add and latest strike (`LWW-element-Set`), or a pebble counter incremented on add and decremented on strike (`PN-Set`—though striking a title twice then anomalously requires adding it twice to bring it back!).</p></div></div></div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>One title, two libraries, a tag for every writing <em>add and strike in any order, then let the two exchange</em></h4>
@@ -700,7 +310,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <p class="say" id="osay">Each library sees only its own list until the two exchange.</p>
       <div class="row"><button class="btn" id="oa1">Library 1 adds the title</button><button class="btn" id="os1">Library 1 strikes it</button><button class="btn" id="oa2">Library 2 adds the title</button><button class="btn" id="os2">Library 2 strikes it</button><button class="btn alt" id="omeet">The two exchange lists</button><button class="btn alt" id="oreset">Start again</button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">A strike takes away only the tags it has seen</div><h3>An add and a strike made in ignorance of each other leave the add standing</h3><p>If one library strikes a title while another writes it again, the new writing carries a tag the striker never saw, so the title stays. A title added after a strike is on the catalogue. The paper names this list after what it does: a strike removes what it has observed.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">A strike takes away only the tags it has seen</div><h3>When an add and a strike happen in ignorance of each other, the add wins</h3><p>Why does tagging every writing (`OR-Set`) feel so natural? Because if a title is struck at Library 1 and later re-added, the re-addition gets a brand-new tag that is not on the struck-off list, so the title comes back cleanly. And if Library 1 strikes a title while Library 2 concurrently adds it, Library 1's strike only cancels the old tags it knew about, leaving Library 2's fresh tag—and the title—standing (`add-wins`).</p></div></div></div>
   </div>
 </section>
 
@@ -712,8 +322,9 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Something different in kind</div>
       <h2>Not the same as one order</h2>
-      <p class="lede">An ordinary list is kept with every act in one order that every terrace shares. Such a list is simple to reason about, and it asks the terraces to settle that order between them, which means everyone waits.</p>
-      <p>The lists of titles can give a result that no single order could. Library 1 adds title E and then strikes title F. At the same time, Library 2 adds title F and then strikes title E. A terrace takes in both.</p>
+      <p class="lede">On Arche, we met the looser rule of <b>sequential consistency</b>:<sup class="xref"><a href="../many-copies-acting-as-one/index.html" title="Many Copies, Acting as One">*</a></sup> every replica behaves as if all operations across the island were executed in a single global sequence. Does Strong Eventual Consistency (`SEC`) mean the same thing?</p>
+      <p>No! Watch what happens with our tagged catalogue (`OR-Set`) when two libraries act concurrently: Library 1 adds title <var>E</var> and then strikes title <var>F</var>; at the exact same time, Library 2 adds title <var>F</var> and then strikes title <var>E</var>. When the two lists merge at a terrace, each library's strike saw nothing of the other library's concurrent add, so <em>both <var>E</var> and <var>F</var> remain on the catalogue</em>!</p>
+      <p>Yet if you tried to arrange those four operations into any single one-at-a-time sequence, whichever operation came fourth (`strike F` or `strike E`) would have to remove its title, leaving at most one title on the list. Thus CRDTs can converge to a state that <em>no single sequential order could ever produce</em>.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Four acts, no single order <em>two libraries and a terrace, later moments further out</em></h4>
@@ -725,7 +336,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
         </div>
       </div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Neither contains the other</div><h3>Each kind of promise allows results the other does not</h3><p>If the terraces did settle one order they would all end with the same list, so they would agree too. But settling one order needs agreement, and agreement cannot be had if many terraces may fall silent. Here a terrace is always free to read and to add, whatever the roads, with all but one of the terraces silent.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Neither contains the other</div><h3>Why giving up a single global order is a bargain</h3><p>Putting concurrent operations into a single global sequence requires consensus—which, as we saw on Mount Phyle,<sup class="xref"><a href="../the-limits-of-agreement/index.html" title="The Limits of Agreement">*</a></sup> cannot tolerate even half the replicas going silent or being cut off. By giving up a single global sequence and requiring only that concurrent operations merge deterministically, CRDTs stay `100%` available for both reads and writes even when all but one terrace is silent or cut off.</p></div></div></div>
     <details class="proof">
       <summary>Proof · that SEC and sequential consistency are incomparable</summary>
       <p class="given">SEC is strong eventual consistency: replicas that have delivered the same updates have the same state. Sequential consistency asks that the result be that of all updates executed in some single order. Take a Set CRDT with add-wins semantics: after add(<var>e</var>) ∥ remove(<var>e</var>), where ∥ means concurrent, <var>e</var> ∈ <var>S</var>. <b>Claim.</b> Neither property implies the other.</p>
@@ -748,16 +359,16 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <div>
         <div class="kicker">The limits</div>
         <h2>What it does not say</h2>
-        <p class="lede">The terraces get a count and a catalogue that can always be read and written, that never wait on a courier, and that settle by merging alone. Five things they do not get.</p>
+        <p class="lede">The terraces get counts, registers, and catalogues that can always be read and updated locally and that converge by merging alone. Here are five things they do not get.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p04-tip.jpg" alt="Two of the terraces seen from below: a table on each, pebbles in its grooves, a wall of rough stone behind it and steps up to the terrace above, with trees on the height" loading="lazy"></div></div></div>
     </div>
     <div class="cards3 five">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it keep a limit?</h3><p>No. A count that must never go below zero, or a catalogue that must never hold two titles together, is a rule about the whole coast, and no terrace can see the whole coast from its own table. Keeping such a rule means agreeing, beforehand or at times.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it say which result is right?</h3><p>No. Every terrace settles the same way, and the way is chosen by whoever designs the list: the strike may beat the add or the add the strike, the later correction may win or both be kept. Any of them may be reasonable for some use.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it keep the tables small?</h3><p>Not by itself. The struck-off list only grows, every tag stays until it is struck, and there is a column for every terrace. To throw old notices away a terrace must know every other has taken them in, which it can learn only while no terrace is silent.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What does it assume?</h3><p>That no scribe lies: one who adds to another's column, or reuses someone's tag, can break it. That the terraces are known and the piles never outgrow their grooves. That on the notice way each notice arrives exactly once, in order of dependence. That tallies follow the order of events.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is the list of examples complete?</h3><p>No. The paper also gives designs for cross-references between works and for ordered sequences, which are left to the paper. What it shows is the shape of the idea: the merge must take the least that holds both, and changes must only go up, or else they must not mind their order.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it enforce global limits?</h3><p>No. Any invariant that restricts the combined state across replicas—such as a count that must never dip below zero, or two titles that must never appear together—cannot be enforced locally without coordination or pre-allocated escrow quotas.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it decide which clash rule is “right”?</h3><p>No. Mathematical convergence guarantees only that every terrace lands on the <em>same</em> answer—whether that answer is `add-wins`, `remove-wins`, `last-writer-wins`, or `keep-both` is a choice the system designer must make for each domain.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Do the tables stay small on their own?</h3><p>Not automatically. A counter has a column for every replica, and sets with removals accumulate tombstones or tags over time. Safely pruning old tombstones requires knowing that <em>every</em> replica has already seen them—which requires background coordination while all replicas are reachable.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What does it assume?</h3><p>It assumes honest scribes (no Byzantine faults): a scribe who tampers with another terrace's column or forges tags can corrupt the state. And for operation-based (`notice-way`) CRDTs, it assumes the messaging layer delivers every notice exactly once in causal order.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Are counters, registers, and sets the only CRDTs?</h3><p>Not at all. The comprehensive report also builds conflict-free directed graphs (such as cross-references between works) and cooperative text-editing sequences (`treedoc` / `RGA`) using the exact same semilattice and commutativity principles.</p></div></div></div>
     </div>
   </div>
 </section>
@@ -774,7 +385,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <p class="lede">Every terrace is a replica, and its table is the replica's state. Hover or tap to see who is who.</p>
     </div>
     <div class="map" id="map">
-      <div class="hd" style="text-align:right;padding-right:6px">On the terraces</div><div></div><div class="hd">In the machine room</div>
+      <div class="hd" style="text-align:right;padding-right:6px">On the terraces</div><div></div><div class="hd">In computing</div>
     </div>
     <div class="meander" style="margin:3rem auto"></div>
     <div class="end">
@@ -829,319 +440,6 @@ table.terms2 td:first-child{width:40%;font-weight:700}
   </div>
 </section>
 <footer>Distributed Algorithms of Ancient Greece · “Changes That Never Clash”, after Shapiro, Preguiça, Baquero and Zawirski, 2011.</footer>
-<script>
-"use strict";
-(function(){
-const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-const NS="http://www.w3.org/2000/svg";
-const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
-function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
-function rnd(n){return Math.floor(Math.random()*n)}
-/* run fn(0..1) over ms, eased */
-function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();return}const t0=performance.now();
-  (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
-function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
-
-/* ===== pop-ups unfold when they enter view ===== */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
-$$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
-$$(".say,[data-live]").forEach(e=>e.setAttribute("aria-live","polite"));
-
-/* ===== scroll: progress bar, section name, parallax ===== */
-const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
-const dep=$$("[data-depth]"), par=$$("[data-parallax]");
-let tick=false;
-function onscroll(){
-  if(tick)return; tick=true;
-  requestAnimationFrame(()=>{
-    tick=false;
-    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
-    prog.style.width=(h>0?y/h*100:0)+"%";
-    const mid=y+innerHeight*.4; let cur=secs[0];
-    for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
-    now.textContent=cur.dataset.name||"";
-    if(reduce)return;
-    for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
-    for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
-  });
-}
-addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
-
-/* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
-function stepDots(root,steps){
-  const stage=$(".stage",root),nav=document.createElement("div"); nav.className="dots"; nav.setAttribute("role","group"); nav.setAttribute("aria-label","The steps of this picture");
-  let cur=0; const go=i=>steps[i]&&steps[i].scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
-  const ctl=(cls,label,d,fn)=>{const b=document.createElement("button"); b.type="button"; b.className=cls; b.setAttribute("aria-label",label); b.title=label;
-    if(d) b.innerHTML='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="'+d+'"/></svg>'; b.addEventListener("click",fn); return b};
-  const prev=ctl("arr","Previous step","M7.5 2 3.5 6l4 4",()=>go(cur-1)), next=ctl("arr","Next step","M4.5 2l4 4-4 4",()=>go(cur+1)),
-        back=ctl("arr back","Back to the first step","M2.6 6.4a3.5 3.5 0 1 0 1-2.8M2.4 1.6v2.2h2.2",()=>go(0));
-  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""),"",()=>go(i))});
-  nav.append(prev,...dots,next,back);
-  if(stage&&steps.length>1) stage.append(nav);
-  return i=>{cur=i; prev.disabled=back.disabled=i===0; next.disabled=i===steps.length-1;
-    dots.forEach((d,j)=>{d.classList.toggle("on",j===i); if(j===i)d.setAttribute("aria-current","step"); else d.removeAttribute("aria-current")})};
-}
-function scrolly(root,render){
-  const steps=$$(".step",root),mark=stepDots(root,steps); render(0); mark(0);
-  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); mark(i); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
-  steps.forEach(s=>so.observe(s));
-}
-
-/* ===== who is who: the setting on the left, the machine room on the right ===== */
-function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
-  const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
-  [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}
-
-/* ===== space-time drawn in the round: each place is a line running outward, each ring a later moment,
-         and whatever is carried from place to place is an arc curving round and outward ===== */
-function Polar(svg,o){
-  const {cx,cy,r0,step,nodes,rings,tEnd}=o; svg.innerHTML=""; svg.setAttribute("viewBox",o.vb);
-  const defs=el("defs",{},svg);
-  const mk=(key,col)=>{const m=el("marker",{id:`${svg.id}-${key}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:col},m)};
-  mk("b","#136f9e"); mk("r","#bf4a26");
-  const frame=el("g",{},svg), under=el("g",{},svg), slips=el("g",{},svg), evs=el("g",{},svg), over=el("g",{},svg);
-  const P={svg,under,slips,evs,over,cx,cy,
-    r:t=>r0+step*t,
-    xy(deg,rr){const a=deg*Math.PI/180;return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)]},
-    pt(k,t){return P.xy(nodes[k][0],P.r(t))},
-    /* the points of an arc from place a at time ta to place b at time tb, the short way round */
-    arc(a,ta,b,tb){const a0=nodes[a][0],d=((nodes[b][0]-a0+540)%360)-180,n=Math.max(12,Math.round(Math.abs(d)/3)),pts=[];
-      for(let i=0;i<=n;i++)pts.push(P.xy(a0+d*i/n,P.r(ta+(tb-ta)*i/n)));return pts},
-    slip(a,ta,b,tb,trim=17){const pts=P.arc(a,ta,b,tb),end=pts[pts.length-1];
-      while(pts.length>2&&Math.hypot(pts[pts.length-1][0]-end[0],pts[pts.length-1][1]-end[1])<trim)pts.pop();
-      const p=el("path",{class:"st-slip","marker-end":`url(#${svg.id}-b)`,d:"M"+pts.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" L")},slips);
-      p.mid=P.arc(a,ta,b,tb); p.mid=p.mid[Math.floor(p.mid.length/2)]; return p},
-    seg(k,t1,t2){const [x1,y1]=P.pt(k,t1),[x2,y2]=P.pt(k,t2);return el("line",{class:"st-seg",x1,y1,x2,y2},under)},
-    event(k,t,fill,rad=13){const [x,y]=P.pt(k,t),g=el("g",{class:"st-ev",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},evs);
-      el("circle",{class:"halo2",r:rad+5},g);el("circle",{class:"b",r:rad,fill},g);g.label=el("text",{},g);el("circle",{r:rad+8,fill:"transparent"},g);return g}
-  };
-  for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
-  for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
-  for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
-    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
-  if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
-  return P;
-}
-
-/* lineage: draw the edges of a book's graph of papers, and say what an edge carries (lineage.py) */
-(function(){
-const NS="http://www.w3.org/2000/svg",wide=matchMedia("(min-width:860px)");
-document.querySelectorAll(".lin").forEach(lin=>{
-  const svg=lin.querySelector(".lin-edges"),say=lin.querySelector(".lin-say"),idle=say.innerHTML;
-  const node=n=>lin.querySelector('[data-n="'+n+'"]');
-  const links=[...lin.querySelectorAll(".lin-link")].map(el=>({el,side:el.dataset.side,from:el.dataset.from.split(" "),to:el.dataset.to.split(" "),g:null}));
-  const box=el=>{const a=el.getBoundingClientRect(),b=lin.getBoundingClientRect();
-    return {l:a.left-b.left,r:a.right-b.left,t:a.top-b.top,b:a.bottom-b.top,cx:(a.left+a.right)/2-b.left,cy:(a.top+a.bottom)/2-b.top}};
-  const mk=(tag,at,to)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);to.appendChild(e);return e};
-  const f=v=>v.toFixed(1);
-  const path=(g,d)=>mk("path",{d},g);
-  const flat=(g,x1,y1,x2,y2)=>path(g,`M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}`);
-  const bend=(g,x1,y1,x2,y2)=>{const m=(x1+x2)/2;path(g,`M${f(x1)} ${f(y1)}C${f(m)} ${f(y1)} ${f(m)} ${f(y2)} ${f(x2)} ${f(y2)}`)};
-  const head=(g,x,y,down)=>mk("polygon",{points:down?`${f(x-5)},${f(y-8)} ${f(x+5)},${f(y-8)} ${f(x)},${f(y)}`:`${f(x-8)},${f(y-5)} ${f(x-8)},${f(y+5)} ${f(x)},${f(y)}`},g);
-  function draw(){
-    svg.textContent="";
-    if(!wide.matches)return;
-    const R=lin.getBoundingClientRect();
-    svg.setAttribute("width",R.width);svg.setAttribute("height",R.height);svg.setAttribute("viewBox",`0 0 ${f(R.width)} ${f(R.height)}`);
-    const ports={};   // the edges that meet one side of a middle node share it out between them, in the order they come from
-    const port=(n,side,y,then)=>(ports[n+side]=ports[n+side]||[]).push({n,side,y,then});
-    links.forEach(k=>{
-      const g=k.g=mk("g",{},svg),c=box(k.el.querySelector("em"));
-      if(k.side==="in"){
-        flat(g,box(node(k.from[0])).r,c.cy,c.l,c.cy);
-        k.to.forEach(n=>port(n,"l",c.cy,(x,y)=>{bend(g,c.r,c.cy,x-7,y);head(g,x,y)}));
-      }else if(k.side==="out"){
-        const b=box(node(k.to[0]));
-        flat(g,c.r,c.cy,b.l-7,c.cy);head(g,b.l,c.cy);
-        k.from.forEach(n=>port(n,"r",c.cy,(x,y)=>bend(g,x,y,c.l,c.cy)));
-      }else{
-        const s=node(k.from[0]),t=node(k.to[0]),sb=box(s),tb=box(t);
-        if(t.parentNode.previousElementSibling===s.parentNode)flat(g,c.cx,sb.b,c.cx,c.t);
-        else{const y=sb.b-12,x=sb.r+20;   // round the papers between, outside their right edge
-          path(g,`M${f(sb.r)} ${f(y)}H${f(x-10)}Q${f(x)} ${f(y)} ${f(x)} ${f(y+10)}V${f(c.cy-10)}Q${f(x)} ${f(c.cy)} ${f(x-10)} ${f(c.cy)}H${f(c.r)}`)}
-        flat(g,c.cx,c.b,c.cx,tb.t-7);head(g,c.cx,tb.t,true);
-      }
-    });
-    for(const key in ports){
-      const list=ports[key].sort((a,b)=>a.y-b.y),b=box(node(list[0].n)),h=b.b-b.t;
-      list.forEach((p,i)=>p.then(p.side==="l"?b.l:b.r,b.t+h*(.2+.6*(i+.5)/list.length)));
-    }
-  }
-  function light(on,words){
-    lin.classList.toggle("hot",on.length>0);
-    const nodes=new Set(on.flatMap(k=>k.from.concat(k.to)));
-    links.forEach(k=>{const is=on.includes(k);k.el.classList.toggle("on",is);if(k.g)k.g.classList.toggle("on",is)});
-    lin.querySelectorAll(".lin-node").forEach(n=>n.classList.toggle("on",nodes.has(n.dataset.n)));
-    say.innerHTML=words||idle;
-  }
-  const name=ns=>ns.map(n=>node(n).dataset.label).join(", ");
-  links.forEach(k=>{
-    const tell=()=>light([k],"<b>"+name(k.from)+" → "+name(k.to)+"</b>"+k.el.querySelector(".why").innerHTML);
-    k.el.addEventListener("mouseenter",tell);k.el.addEventListener("focus",tell);k.el.addEventListener("click",tell);
-  });
-  lin.querySelectorAll(".lin-node").forEach(n=>{
-    const mine=()=>light(links.filter(k=>k.from.concat(k.to).includes(n.dataset.n)));
-    n.addEventListener("mouseenter",mine);n.addEventListener("focus",mine);
-  });
-  lin.addEventListener("mouseleave",()=>light([]));
-  new ResizeObserver(draw).observe(lin);
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
-  draw();
-});
-})();
-
-/* ===== the scholars' coast from above: the body of the island, its libraries each in a clearing, the stoa on the eastern shore ===== */
-function Coast(svg,o={}){
-  const n=o.n||8,W=440,H=340;
-  svg.innerHTML="";svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
-  el("path",{d:"M52 86C70 40 150 22 214 34c40 8 56-14 104 0 52 16 86 60 76 112-6 34 14 52-4 96-20 50-92 72-150 62-36-6-50 14-96 2C86 292 40 262 40 204c0-34-8-70 12-118z",fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
-  const under=el("g",{},svg),libs=el("g",{},svg),over=el("g",{},svg);
-  /* the libraries' places, by number; the first few lie nearest the stoa */
-  const AT=[[150,96],[262,84],[330,150],[306,236],[214,268],[112,236],[96,160],[212,168],[188,60],[356,96],[150,292],[66,112]];
-  const C={svg,under,over,lib:[],stoa:[372,196],
-    put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
-    pos(i){return i==="stoa"?C.stoa:[C.lib[i].x,C.lib[i].y]},
-    fill(i,c){C.lib[i].b.setAttribute("fill",c)},
-    note(i,s){C.lib[i].s.textContent=s},
-    way(a,b,cls="way"){const [x1,y1]=C.pos(a),[x2,y2]=C.pos(b);return el("path",{class:cls,d:`M${x1} ${y1}L${x2} ${y2}`},under)},
-    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:11,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
-    run(g,a,b,u){const [x1,y1]=C.pos(a),[x2,y2]=C.pos(b);C.put(g,x1+(x2-x1)*u,y1+(y2-y1)*u)}
-  };
-  if(o.stoa!==false){el("rect",{x:C.stoa[0]-9,y:C.stoa[1]-26,width:18,height:52,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3},svg);
-    el("text",{x:C.stoa[0]+2,y:C.stoa[1]+44,class:"lab halo",style:"font-size:12px"},svg).textContent="the stoa";}
-  for(let i=0;i<n;i++){const [x,y]=AT[i],g=el("g",{class:"lib"},libs);C.put(g,x,y);
-    el("circle",{class:"ring",r:24},g);const b=el("circle",{class:"b",r:17,fill:"#fffaf0"},g);el("text",{},g).textContent=i+1;
-    const s=el("text",{class:"lab halo",y:33,style:"font-size:12px;font-style:normal;font-family:var(--sans);font-weight:400"},g);
-    C.lib.push({x,y,g,b,s})}
-  return C;
-}
-const seg=(box,opts,cur,fn)=>{box.innerHTML=opts.map(([v,t])=>`<button data-v="${v}" aria-pressed="${String(v)===String(cur)}">${t}</button>`).join("");
-  $$("button",box).forEach(bt=>bt.onclick=()=>{$$("button",box).forEach(x=>x.setAttribute("aria-pressed",x===bt));fn(bt.dataset.v)})};
-const oneIn=p=>p<=0?"none":p>=.95?"nearly all":p>=.095?`1 in ${Math.round(1/p)}`:`1 in ${Math.round(1/p).toLocaleString("en")}`;
-
-/* ===== machines: a plain counter merged two wrong ways ===== */
-(function(){
-  let a=0,b=0,t=0;const note=$("#mnote"),paint=()=>{$("#ma").textContent=a;$("#mb").textContent=b;$("#mt").textContent=t};
-  $("#minc").onclick=()=>{a++;b++;t+=2;paint();note.textContent="Each replica counted one more. Neither knows of the other's."};
-  $("#mmax").onclick=()=>{a=b=Math.max(a,b);paint();note.innerHTML=a<t?`Both now say ${a}. <span class="bad">${t} increments were made.</span> Keeping the larger loses the other replica's.`:`Both say ${a}.`};
-  $("#madd").onclick=()=>{a=b=a+b;paint();note.innerHTML=a===t?`Both now say ${a}, which is right this once. Merge again.`:`Both now say ${a}. <span class="bad">${t} increments were made.</span> Adding counts the shared part again at every merge.`};
-  paint();
-})();
-
-/* ===== a table of pebbles: a pile for every terrace, in white (made) and, when used, black (lost) ===== */
-const TN=["terrace 1","terrace 2","terrace 3"];
-const pile=(n,own,k)=>`<div class="col${own?" own":""}${k?" k":""}">${"<i></i>".repeat(Math.min(n,9))}</div>`;
-function tableHtml(name,own,white,black,total){
-  const cols=(v,k)=>`<div class="cols">${v.map((n,i)=>pile(n,i===own,k)).join("")}</div><div class="lbl">${v.map((n,i)=>`<span>${i+1}: ${n}</span>`).join("")}</div>`;
-  return `<div class="ptab"><h5><span>${name}</span><span>count <b>${total}</b></span></h5>`+
-    (black?`<div class="sets"><div><span class="t">made</span>${cols(white,false)}</div><div><span class="t">lost</span>${cols(black,true)}</div></div>`:cols(white,false))+`</div>`;
-}
-const sum=v=>v.reduce((a,b)=>a+b,0),larger=(x,y)=>x.map((n,i)=>Math.max(n,y[i]));
-
-/* ===== one column each, take the larger ===== */
-(function(){
-  const box=$("#tabs"),say=$("#tsay");let T,made,rule="max",from=0,to=1;
-  const paint=()=>{box.innerHTML=T.map((v,i)=>tableHtml("Table at "+TN[i],i,v,null,sum(v))).join("")};
-  const verdict=()=>{const c=T.map(sum),same=c.every(x=>x===c[0]);
-    return c.some(x=>x>made)?` <span class="bad">A table now shows more copies than the ${made} that were made.</span>`:same&&c[0]===made&&made?` <span class="ok">All three tables show ${made}, the copies made.</span>`:""};
-  function reset(){T=[[0,0,0],[0,0,0],[0,0,0]];made=0;paint();say.textContent="Each table has a column for every terrace. The shaded column is the one its own scribe may add to."}
-  $("#tmake").innerHTML=TN.map((n,i)=>`<button class="btn" data-i="${i}">${n}</button>`).join("");
-  $$("button",$("#tmake")).forEach(bt=>bt.onclick=()=>{const i=+bt.dataset.i;T[i][i]++;made++;paint();say.innerHTML=`The scribe at ${TN[i]} adds a white pebble to column ${i+1} of the table there, and to no other.`});
-  seg($("#trule"),[["max","takes the larger pile in each column"],["add","adds the piles together"]],rule,v=>{rule=v;reset()});
-  seg($("#tfrom"),TN.map((n,i)=>[i,n]),from,v=>{from=+v});seg($("#tto"),TN.map((n,i)=>[i,n]),to,v=>{to=+v});
-  $("#tsend").onclick=()=>{if(from===to){say.textContent="Choose two different terraces.";return}
-    const before=T[to].join();T[to]=rule==="max"?larger(T[to],T[from]):T[to].map((n,i)=>n+T[from][i]);paint();
-    say.innerHTML=(rule==="max"?(T[to].join()===before?`The table of ${TN[from]} reaches ${TN[to]} and changes nothing: ${TN[to]} already held all of it.`:`${TN[to]} takes the larger pile in each column.`):`${TN[to]} adds each arriving pile to its own.`)+verdict()};
-  $("#treset").onclick=reset;reset();
-})();
-
-/* ===== the table or the change ===== */
-(function(){
-  const box=$("#wtabs"),say=$("#wsay");let t1,t2;
-  const paint=()=>{box.innerHTML=tableHtml("Table at terrace 1",0,t1,null,sum(t1))+tableHtml("Table at terrace 2",1,t2,null,sum(t2));$("#wshown").textContent=sum(t2)};
-  function reset(){t1=[1,0,0];t2=[0,0,0];paint();say.textContent="Terrace 2 has not heard yet."}
-  $("#wtable").onclick=()=>{const b=t2.join();t2=larger(t2,t1);paint();say.innerHTML=t2.join()===b?`The same table again. Terrace 2 takes the larger pile in each column, and nothing changes. <span class="ok">Still ${sum(t2)}.</span>`:"Terrace 2 takes the larger pile in each column."};
-  $("#wnote").onclick=()=>{t2[0]++;paint();say.innerHTML=sum(t2)>1?`<i>One more copy at terrace 1</i>, taken in again. Nothing in the notice says which copy. <span class="bad">Terrace 2 now shows ${sum(t2)} for one copy made.</span>`:"<i>One more copy at terrace 1.</i> Terrace 2 adds a pebble to column 1."};
-  $("#wreset").onclick=reset;reset();
-})();
-
-/* ===== made and lost ===== */
-(function(){
-  const box=$("#ltabs"),say=$("#lsay");let W,K,rule="seen";
-  const count=i=>sum(W[i])-sum(K[i]);
-  const paint=()=>{box.innerHTML=[0,1].map(i=>tableHtml("Table at "+TN[i],i,W[i],K[i],count(i))).join("")};
-  function reset(){W=[[1,0,0],[1,0,0]];K=[[0,0,0],[0,0,0]];paint();say.textContent="The one copy was made at terrace 1. Both tables show it."}
-  /* seen: only if the scribe's own table shows a copy left; own: no more lost than were made at the scribe's own terrace */
-  const may=i=>rule==="seen"?count(i)>0:W[i][i]-K[i][i]>0;
-  const lose=i=>{if(!may(i)){say.innerHTML=rule==="seen"?`The table at ${TN[i]} shows no copy left, so its scribe may not mark one lost.`:`No copy was made at ${TN[i]} that is not already marked lost there, so its scribe may mark none, whatever the library holds.`;return}
-    K[i][i]++;paint();say.innerHTML=`The scribe at ${TN[i]} adds a black pebble to column ${i+1}. That table now shows ${count(i)}.`};
-  $("#l1").onclick=()=>lose(0);$("#l2").onclick=()=>lose(1);
-  $("#lmeet").onclick=()=>{const w=larger(W[0],W[1]),k=larger(K[0],K[1]);W=[w.slice(),w.slice()];K=[k.slice(),k.slice()];paint();const c=count(0);
-    say.innerHTML=c<0?`Each set of columns takes the larger pile. One made, ${sum(k)} lost: <span class="bad">the count is ${c}.</span> Each scribe kept the rule the table allowed.`:`Each set of columns takes the larger pile. Both tables show ${c}.`};
-  seg($("#lrule"),[["seen","if the table shows a copy left"],["own","no more than were made at the scribe's own terrace"]],rule,v=>{rule=v;reset()});
-  $("#lreset").onclick=reset;reset();
-})();
-
-/* ===== two hands on one work: the later wins, or both are kept ===== */
-(function(){
-  const E=[{by:"Library 1",t:"noon",n:1,after:[]},{by:"Library 2",t:"later that day",n:2,after:[]}];let rule="later",first=0;
-  /* take in editions one at a time, in the order they arrive */
-  function settle(order){let kept=[];
-    order.forEach(i=>{const e=E[i];
-      if(rule==="later"){if(!kept.length||e.n>kept[0].n)kept=[e]}
-      else{if(kept.some(k=>k.after.includes(e)))return;kept=kept.filter(k=>!e.after.includes(k));kept.push(e)}});
-    return kept.sort((a,b)=>a.n-b.n)}
-  const show=k=>k.map(e=>`<span class="it">correction by ${e.by}, tally: ${e.t}</span>`).join("");
-  function paint(){const a=settle([first,1-first]),b=settle([1-first,first]);
-    if(a.map(e=>e.n).join()!==b.map(e=>e.n).join())throw new Error("the terraces settled differently");
-    $("#hout").innerHTML=`<div class="shelf"><h5>A terrace that hears from ${E[first].by} first</h5>${show(a)}</div><div class="shelf"><h5>A terrace that hears from ${E[1-first].by} first</h5>${show(b)}</div>`;
-    $("#hsay").innerHTML=rule==="later"?"Both terraces keep Library 2's correction, whichever arrived first. Library 1's is lost for good.":"Neither correction was written after the other, so both terraces keep both, and a reader is shown the two."}
-  seg($("#hrule"),[["later","keep the later"],["both","keep both"]],rule,v=>{rule=v;paint()});
-  seg($("#hord"),[[0,"Library 1"],[1,"Library 2"]],first,v=>{first=+v;paint()});paint();
-})();
-
-/* ===== a list where every writing of a title has its own tag: what is held is the tags written and the tags struck ===== */
-function Marks(name){return {name,add:new Set(),struck:new Set(),n:0,
-  write(title){const m=`${title}·${name}·${++this.n}`;this.add.add(m);return m},
-  live(title){return [...this.add].filter(m=>m.startsWith(title+"·")&&!this.struck.has(m))},
-  strike(title){const seen=this.live(title);seen.forEach(m=>this.struck.add(m));return seen},
-  take(o){o.add.forEach(m=>this.add.add(m));o.struck.forEach(m=>this.struck.add(m))}}}
-(function(){
-  const box=$("#olibs"),say=$("#osay");let L;
-  const lab=m=>{const [t,l,n]=m.split("·");return `tag ${l}-${n}`};
-  const shelf=l=>`<div class="shelf"><h5>Library ${l.name}'s list</h5>${[...l.add].map(m=>`<span class="it${l.struck.has(m)?" gone":""}">the title, ${lab(m)}</span>`).join("")||'<span class="it none">nothing written yet</span>'}<div style="margin-top:6px">${l.live("T").length?'<span class="ok">The title is on the catalogue.</span>':'The title is not on the catalogue.'}</div></div>`;
-  const paint=()=>box.innerHTML=L.map(shelf).join("");
-  function reset(){L=[Marks("1"),Marks("2")];paint();say.textContent="Each library sees only its own list until the two exchange."}
-  const add=i=>{const m=L[i].write("T");paint();say.innerHTML=`Library ${i+1} writes the title, with ${lab(m)}.`};
-  const strike=i=>{const s=L[i].strike("T");paint();say.innerHTML=s.length?`Library ${i+1} strikes every tag of the title it can see: ${s.map(lab).join(", ")}.`:`Library ${i+1} sees no tag of the title, so there is nothing for it to strike.`};
-  $("#oa1").onclick=()=>add(0);$("#oa2").onclick=()=>add(1);$("#os1").onclick=()=>strike(0);$("#os2").onclick=()=>strike(1);
-  $("#omeet").onclick=()=>{L[0].take(L[1]);L[1].take(L[0]);paint();const on=L[0].live("T");
-    say.innerHTML=on.length?`Each takes in the other's tags and strikes. ${on.map(lab).join(", ")} ${on.length>1?"were":"was"} never struck, so <span class="ok">the title is on the catalogue</span> at both.`:"Each takes in the other's tags and strikes. Every tag has been struck, so the title is off the catalogue at both."};
-  $("#oreset").onclick=reset;reset();
-})();
-
-/* ===== not the same as one order: the four acts, worked by the same rule ===== */
-(function(){
-  const P=Polar($("#ordsvg"),{vb:"0 0 520 500",cx:260,cy:262,r0:40,step:26,rings:7,tEnd:7.6,note:[12,22],
-    nodes:{A:[-90,"L1","#e0b84a"],B:[30,"L2","#8fb3d9"],T:[150,"T","#f6eed6"]}});
-  const ev=(k,t,f,s)=>{P.event(k,t,f).label.textContent=s};
-  ev("A",1.6,"#e0b84a","+E");ev("A",3.2,"#fde0d4","−F");ev("B",1.6,"#8fb3d9","+F");ev("B",3.2,"#fde0d4","−E");
-  P.slip("A",3.6,"T",5.4);P.slip("B",3.6,"T",6.2);ev("T",5.4,"#f6eed6","");ev("T",6.2,"#a9c25a","");
-  const a=Marks("1"),b=Marks("2"),t=Marks("T");
-  a.write("E");const sf=a.strike("F");b.write("F");const se=b.strike("E");t.take(a);t.take(b);
-  const on=["E","F"].filter(x=>t.live(x).length);
-  /* every single order of the four acts that keeps each library's own two in turn */
-  const acts=[["a","add","E"],["a","strike","F"],["b","add","F"],["b","strike","E"]],orders=[];
-  (function go(done,ia,ib){if(done.length===4){orders.push(done);return}
-    if(ia<2)go([...done,acts[ia]],ia+1,ib);if(ib<2)go([...done,acts[2+ib]],ia,ib+1)})([],0,0);
-  const both=orders.filter(o=>{const s=new Set();o.forEach(([,k,x])=>k==="add"?s.add(x):s.delete(x));return s.has("E")&&s.has("F")}).length;
-  $("#ordlist").innerHTML=`<li><b>L1</b> Library 1 · <b>L2</b> Library 2 · <b>T</b> a terrace</li><li>Library 1 adds E, then strikes F. It sees ${sf.length} ${sf.length===1?"tag":"tags"} of F.</li><li>Library 2 adds F, then strikes E. It sees ${se.length} ${se.length===1?"tag":"tags"} of E.</li><li>The terrace takes in both lists.</li>`;
-  $("#ordsay").innerHTML=`On the terrace's list: <b>${on.join(" and ")||"neither"}</b>. Of the ${orders.length} single orders in which the four acts could be done one after another, ${both||"none"} ${both===1?"ends":"end"} with both titles on the list.`;
-})();
-
-mapPairs($("#map"),[["A terrace, its scribe and its table","A replica and its state"],["Terraces that heard the same news show the same count","Strong eventual consistency"],["A column for each terrace, written only by its own scribe","A vector with one entry per replica"],["Taking the larger pile in each column","Merge: the per-entry maximum"],["Any order, any grouping, as often as you like","Commutative, associative, idempotent"],["The table way","State-based replication"],["The notice way: exactly once, in order of dependence","Operation-based replication over reliable causal delivery"],["White pebbles and black","A counter that goes up and down: two grow-only counters"],["The later edition wins","A last-writer-wins register"],["Keeping both corrections","A multi-value register"],["The catalogue of titles","A grow-only set"],["The struck-off list","A two-phase set"],["A tag for every writing; a strike removes the tags seen","An observed-remove set"],["A limit on the whole coast's count","A global invariant, which needs coordination"]]);
-})();
-</script>
+<script src="script.js"></script>
 </body>
 </html>
