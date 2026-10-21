@@ -309,8 +309,9 @@ tablets that stay on their bench and are smoothed when their holder goes home, w
 name and the last board it served under are cut into its stone. A legislator who steps out
 comes back to their tablets; one who goes home comes back to smooth wax, calls for a new board at
 once, and is brought up to date only by that board's opening line. If a majority go home at
-once, no board can ever form again: the council stops for good, but never starts a board missing
-a law that passed. VR keeps its group state in volatile memory, and a majority remembering is
+once, the council can stop for good: a board may then form only on answers that still show every
+law that passed, as the old holder's tablets would, and it never starts a board missing a law
+that passed. VR keeps its group state in volatile memory, and a majority remembering is
 what makes that safe.
 
 **The council.** Five legislators: Okios and Liskovia (Oki and Liskov), and Kleon, Melissa and

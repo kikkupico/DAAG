@@ -4,413 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Limits of Agreement — The Foot of Mount Phyle</title>
-<meta name="description" content="The Fischer, Lynch and Paterson impossibility result: four mercenaries, their ravens, and why no plan can promise that anyone ever commits.">
+<meta name="description" content="The Fischer, Lynch, and Paterson impossibility result: four mercenaries, their messenger ravens, and why no deterministic plan can guarantee that anyone ever commits.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<style>
-:root{
-  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4;
-  --aegean:#2e88b5; --aegean-d:#136f9e; --blood:#bf4a26; --olive:#7c8f3a; --terra:#b5602c;
-  --gold:#e0b84a; --shadow:#b9a77e;
-  --serif:Georgia,'Iowan Old Style','Palatino Linotype',serif;
-  --sans:Optima,'Gill Sans','Gill Sans MT',sans-serif;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;background:#d8cba6}
-body{margin:0;background:#d8cba6;color:var(--ink);font-family:var(--serif);line-height:1.55;overflow-x:hidden}
-img{max-width:100%;display:block}
-button{font:inherit;cursor:pointer}
-h1,h2,h3{font-family:var(--sans);line-height:1.12;margin:0;text-wrap:balance}
-p{margin:0 0 1rem;font-size:1.125rem;line-height:1.65;text-wrap:pretty}
-.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--blood)}
-
-/* ---------- top bar ---------- */
-.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
-  font-family:var(--sans);font-size:.78rem;letter-spacing:.05em;background:linear-gradient(180deg,#3a2a1a,#241a10)}
-.bar a{color:#f0e6cc;text-decoration:none;opacity:.8;white-space:nowrap} .bar a:hover{opacity:1}
-.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:520px){.bar a+a{display:none}}
-.bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
-
-/* ---------- spreads ---------- */
-.spread{position:relative;padding:clamp(4.5rem,11vw,8rem) 20px;overflow:clip}
-.spread.has-scrolly{overflow:visible;padding-bottom:0;background:var(--marble)}
-.dark{background:var(--marble);color:var(--ink);background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
-.light{background:var(--parch);color:var(--ink);
-  background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
-/* torn-paper edge between spreads */
-.tear{position:absolute;left:0;right:0;top:-1px;height:26px;z-index:3;pointer-events:none}
-.tear path{fill:var(--prev)}
-.wrap{max-width:1080px;margin:0 auto;position:relative;z-index:2}
-.narrow{max-width:640px;margin:0 auto}
-.spread h2{font-size:clamp(1.9rem,5vw,3.1rem);margin:.4rem 0 1rem}
-.lede{max-width:34em}
-.light .lede{color:#3a2d24}
-.meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
-  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
-
-/* ---------- the pop-up: a card that unfolds from its hinge ---------- */
-.pop{perspective:1400px}
-.pop > .leaf{transform-origin:50% 100%;transform:rotateX(78deg) translateY(30px);opacity:0;
-  transition:transform 1.1s cubic-bezier(.2,.9,.25,1.12),opacity .6s ease}
-.pop.up > .leaf{transform:rotateX(0) translateY(0);opacity:1}
-.pop.fromleft > .leaf{transform-origin:0 50%;transform:rotateY(-80deg)}
-.pop.fromright > .leaf{transform-origin:100% 50%;transform:rotateY(80deg)}
-.pop.up.fromleft > .leaf,.pop.up.fromright > .leaf{transform:none}
-.paper{background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);position:relative}
-.light .paper{box-shadow:9px 11px 0 #b9a77e}
-.photo{border:5px solid #fffaf0;box-shadow:0 0 0 3px var(--ink),12px 16px 0 var(--shadow);background:#222;overflow:hidden;position:relative}
-.photo img{width:100%;height:100%;object-fit:cover}
-.tilt-l{transform:rotate(-1.4deg)} .tilt-r{transform:rotate(1.2deg)}
-[data-depth]{will-change:transform}
-.fold-shadow{position:absolute;left:6%;right:6%;bottom:-18px;height:26px;background:radial-gradient(ellipse at center,#0008,transparent 70%);opacity:0;transition:opacity 1s .4s;z-index:-1}
-.up .fold-shadow{opacity:1}
-
-/* ---------- cover ---------- */
-#cover{min-height:100svh;display:grid;align-items:center;padding-top:5rem;
-  background:linear-gradient(180deg,#e0d6bb00 calc(100% - 140px),#e0d6bb),radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
-/* the cover ends in one colour, and the torn edge under it is that colour */
-#cover+.spread>.tear path{fill:#e0d6bb}
-#cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
-#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:0 0 1.4rem;letter-spacing:-.01em}
-#cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
-#cover .generic,#cover .allegory{max-width:26em;margin:0 0 1rem}
-#cover .generic,#cover .allegory{color:var(--ink)}
-#cover .generic{font-style:italic;font-size:clamp(1.15rem,2.3vw,1.4rem)}
-#cover .source{font-family:var(--sans);font-size:.74rem;line-height:1.5;max-width:36em;margin:1.6rem 0 0;color:#6b5d4f}
-#cover .source i{color:var(--blood)}
-.cut{position:absolute;pointer-events:none;z-index:1}
-.cut svg{display:block;width:100%;height:auto}
-@media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
-
-/* ---------- two-column spreads ---------- */
-.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-.two.wide-r{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
-@media(max-width:859px){.two,.two.wide-r{grid-template-columns:minmax(0,1fr)}}
-
-/* ---------- the hall (full-bleed photo with pins) ---------- */
-#hall{padding:0;background:var(--marble)}
-.bleed{position:relative;height:min(100svh,880px);overflow:hidden}
-.bleed img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover}
-.bleed::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--parch) 0,transparent 8%,transparent 92%,var(--parch) 100%);pointer-events:none}
-.pin{position:absolute;z-index:4;max-width:min(250px,44vw);padding:10px 14px;background:#fffaf0;color:var(--ink);border:3px solid var(--ink);
-  box-shadow:5px 6px 0 #0007;font-size:.92rem;line-height:1.35;transform-origin:0 100%}
-.pin b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood)}
-.pin::after{content:"";position:absolute;left:-3px;bottom:-26px;width:3px;height:26px;background:var(--ink)}
-.pin::before{content:"";position:absolute;left:-8px;bottom:-34px;width:13px;height:13px;border-radius:50%;background:var(--blood);border:3px solid var(--ink)}
-.hall-title{position:absolute;z-index:5;left:20px;right:20px;top:clamp(5rem,12vh,8rem);max-width:1080px;margin:0 auto}
-.hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
-.hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
-.hall-title p{margin:0}
-/* on a phone, or a screen too short to hold them, the title and the notes leave the photograph and stand under it */
-@media(max-width:900px),(max-height:680px){
-  #hall{background:var(--parch);padding-bottom:clamp(2.5rem,8vw,4rem)}
-  .bleed{height:auto!important;overflow:visible;display:flex;flex-direction:column;gap:14px;padding:0 20px}
-  .bleed::after{display:none}
-  .bleed img{position:static;width:calc(100% + 40px);max-width:none;height:min(58svh,460px);margin:0 -20px;transform:none!important;
-    -webkit-mask-image:linear-gradient(transparent,#000 9%);mask-image:linear-gradient(transparent,#000 9%)}
-  .hall-title{position:relative;inset:auto;width:100%;max-width:640px;margin:-3.2rem auto 4px}
-  .hall-title .t{display:block;max-width:none}
-  .pin{position:static;width:100%;max-width:640px;margin:0 auto;box-shadow:5px 6px 0 var(--shadow)}
-  .pin::before,.pin::after{display:none}
-}
-
-/* ---------- scrollytelling ---------- */
-.scrolly{position:relative}
-.scrolly .stage{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;padding:70px 20px 20px;overflow:hidden}
-.scrolly .steps{position:relative;z-index:6;margin-top:-100svh;pointer-events:none}
-.step{min-height:100svh;display:flex;align-items:center;padding:0 20px}
-.step .card{pointer-events:auto;max-width:360px;padding:16px 20px;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);
-  transform:translateY(24px) rotate(-.6deg);opacity:.25;transition:transform .7s cubic-bezier(.2,.9,.25,1.1),opacity .5s}
-.step.on .card{transform:none;opacity:1}
-.step .card h3{font-size:1.1rem;margin-bottom:.35rem}
-.step .card p{margin:0;font-size:.98rem}
-.step .num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
-.step.r{justify-content:flex-end}
-.scrolly svg.fig{width:min(100%,820px);height:auto;max-height:calc(100svh - 120px);overflow:visible}
-.scrolly .stage-inner{width:100%;display:flex;justify-content:center}
-/* under the picture: previous, one dot per step (the current one long), next, and back to the first; each scrolls the page to its step */
-.scrolly .stage{flex-direction:column;gap:12px}
-.dots{flex:0 0 auto;display:flex;justify-content:center;align-items:center;gap:1px;position:relative;z-index:7}
-.dots button{appearance:none;border:0;background:none;padding:8px 4px;line-height:0;cursor:pointer;color:var(--ink)}
-.dots .dot::before{content:"";display:block;width:7px;height:7px;border-radius:7px;background:var(--ink);opacity:.22;transition:width .3s,opacity .3s,background .3s}
-.dots .dot:hover::before{opacity:.5}
-.dots .dot.on::before{width:20px;opacity:1;background:var(--blood)}
-.dots .arr{padding:6px;opacity:.5;transition:opacity .3s}
-.dots .arr svg{display:block;width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.dots .arr:hover{opacity:1}
-.dots .arr:disabled{opacity:.14;cursor:default}
-.dots .back{margin-left:8px}
-.dots button:focus-visible{outline:2px solid var(--aegean-d);outline-offset:-3px}
-@media(min-width:900px){.scrolly .stage{padding-left:380px} .step .card{max-width:320px} .step{padding-left:max(24px,calc((100vw - 1080px)/2))}}
-@media(max-width:899px){
-  .scrolly .stage{justify-content:flex-start;padding-top:64px}
-  .scrolly svg.fig{max-height:46svh}
-  .step{align-items:flex-end;padding-bottom:22px}
-  .step .card{max-width:none;width:100%}
-}
-svg text{font-family:var(--serif)}
-.svg-dark{background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
-
-/* ---------- interactive wells ---------- */
-.well{padding:clamp(16px,3vw,28px);margin:1.6rem 0}
-.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;justify-content:space-between;gap:10px}
-.well h4 em{font-style:normal;color:#6b5a48}
-.btn{background:var(--ink);color:var(--parch);border:3px solid var(--ink);padding:8px 16px;font-family:var(--sans);font-size:.88rem;letter-spacing:.03em;box-shadow:4px 4px 0 var(--blood);transition:transform .12s,box-shadow .12s}
-.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--blood)}
-.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--blood)}
-.btn:disabled{opacity:.35;cursor:default;box-shadow:none}
-.btn.alt{background:#fffaf0;color:var(--ink)}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.say{margin:12px 0 0;font-size:.98rem;min-height:3.1em}
-.say b{color:var(--blood)}
-.ok{color:#3f7a2a;font-weight:700}.bad{color:var(--blood);font-weight:700}
-
-/* cards row */
-.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
-.card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
-.card3 .body{padding:16px 18px 18px}
-.card3 h3{font-size:1.15rem;margin-bottom:.4rem}
-.card3 p{font-size:.95rem;margin:0}
-.card3 .fx{margin-top:12px}
-/* cards in a row stand as tall as the tallest */
-.cards3>.pop>.leaf{height:100%}
-@media(max-width:860px){.cards3{grid-template-columns:1fr}}
-/* relevance */
-.map{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px 0;align-items:stretch;max-width:760px;margin:2rem auto 0}
-.map .l,.map .r{padding:11px 16px;font-size:1rem;border:3px solid var(--ink);background:#fffaf0;color:var(--ink);transition:background .25s,transform .25s;cursor:default}
-.map .r{font-family:var(--sans);background:#e9f2f7}
-.map .mid{display:grid;place-items:center;color:var(--blood);font-size:1.3rem}
-.map .hi{background:var(--gold)!important;transform:scale(1.03)}
-.map .hd{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood)}
-.end{text-align:center}
-.end .big{font-size:clamp(1.5rem,4.2vw,2.5rem);max-width:19em;margin:0 auto 1.4rem;color:var(--ink);text-wrap:balance}
-.links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
-.links a{color:var(--ink);background:#fffaf0;border:3px solid var(--ink);padding:9px 18px;text-decoration:none;font-family:var(--sans);font-size:.9rem;box-shadow:4px 4px 0 var(--shadow)}
-.links a:hover{background:var(--gold)}
-footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;font-family:var(--sans);background:#d8cba6}
-
-/* ---------- lists, small parts ---------- */
-.terms{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:12px}
-.terms li{padding:12px 16px;background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 #b9a77e;font-size:.98rem}
-.terms b{font-family:var(--sans)}
-@keyframes slotin{from{transform:translateY(-8px);opacity:0}}
-.btn:focus-visible,.links a:focus-visible,[role=button]:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
-.num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
-.chip{display:inline-block;padding:1px 7px;margin:2px 3px 2px 0;border:2px solid var(--ink);border-radius:5px;background:#fff;font-family:var(--sans);font-weight:700;font-size:.86rem;white-space:nowrap}
-.chip i{display:inline-block;width:.7em;height:.7em;border-radius:50%;border:1.5px solid var(--ink);margin-right:5px;vertical-align:-.02em}
-.isle-svg{width:min(100%,440px);display:block;margin:0 auto}
-.fig .fade{opacity:0;transition:opacity .6s}
-.fig .fade.on{opacity:1}
-.fig .lab{fill:#6b5a48;font-size:15px;font-style:italic;text-anchor:middle}
-.fig .halo{paint-order:stroke;stroke:#fffaf0;stroke-width:5px;stroke-linejoin:round}
-.tok text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.site rect,.site circle{stroke:var(--ink);stroke-width:4}
-.site text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-
-/* ---------- space-time, drawn in the round ---------- */
-.st-ring{fill:none;stroke:#b9a77e;stroke-opacity:.7;stroke-width:1;stroke-dasharray:3 4}
-.st-spoke{stroke:#1c1512;stroke-width:2.5;stroke-opacity:.45}
-.st-node rect{fill:#f6eed6;stroke:#1c1512;stroke-width:2}
-.st-node text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.st-slip{fill:none;stroke:#136f9e;stroke-width:2.6;transition:stroke .3s,stroke-width .3s,opacity .5s}
-.st-seg{stroke:#bf4a26;stroke-width:7;stroke-linecap:round;opacity:0;transition:opacity .3s}
-.st-seg.hi{opacity:.85}
-.st-slip.hi{stroke:#bf4a26;stroke-width:5}
-.st-ev{cursor:pointer}
-.st-ev circle.b{stroke:#1c1512;stroke-width:3;transition:stroke .3s,stroke-width .3s}
-.st-ev text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
-.st-ev .halo2{fill:none;stroke:#e0b84a;stroke-width:7;opacity:0;transition:opacity .3s}
-.st-ev.sel .halo2,.st-ev.mark .halo2{opacity:1}
-.st-ev.sel circle.b{stroke-width:4.5}
-.st-ev.dim{opacity:.3}
-.st-ev:focus-visible{outline:none}.st-ev:focus-visible circle.b{stroke:#136f9e;stroke-width:6}
-.st-note{fill:#6b5a48;font-size:13px;font-style:italic}
-
-/* ---------- a stage with a figure and a side panel ---------- */
-.stage-inner.split{gap:18px;align-items:center}
-.stage-inner.split svg.fig{flex:1 1 300px;min-width:0;max-width:470px}
-.side{flex:0 0 240px;display:grid;gap:10px;font-family:var(--sans);font-size:.84rem}
-.side .hc{background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--shadow);padding:8px 10px;min-height:92px;transition:background .4s}
-.side .hc h5{margin:0 0 5px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:6px}
-.side .hc h5 span{color:#6b5a48;letter-spacing:.02em;text-transform:none}
-.side .hc .chk{font-size:.78rem;margin-top:4px;line-height:1.35}
-.side .hc.in{background:#e3ecc4}
-@media(max-width:899px){
-  .stage-inner.split{flex-direction:column;gap:10px}
-  .stage-inner.split svg.fig{flex:0 0 auto;max-height:30svh;width:auto;max-width:100%}
-  .side{flex:0 0 auto;width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;font-size:.7rem}
-  .side .hc{padding:5px 6px;min-height:0;box-shadow:3px 3px 0 var(--shadow)}
-  .side .hc h5{font-size:.62rem;flex-direction:column;gap:0}
-  .side .hc .chk{font-size:.66rem}
-  .side .chip{font-size:.68rem;padding:0 4px}
-}
-.tear{width:100%}
-.scrolly svg.fig.svg-dark{overflow:hidden}
-
-/* ---------- proofs, in the paper's own terms ---------- */
-details.proof{max-width:760px;margin:1.8rem 0 0;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);padding:0 clamp(14px,3vw,22px);font-size:.95rem}
-details.proof>summary{cursor:pointer;padding:12px 0;font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--aegean-d)}
-details.proof>summary:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
-details.proof[open]{padding-bottom:14px}
-details.proof details.proof{border-width:3px;box-shadow:none;background:#fff;margin:1rem 0;max-width:none}
-details.proof .given{padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean);margin:0 0 .8rem}
-details.proof h3,details.proof h4{font-size:1.02rem;margin:1.4rem 0 .5rem}
-details.proof .hlink{color:inherit;text-decoration:none}
-details.proof .fnote{font-size:.84rem;color:#6b5a48}
-ol.proofsteps{padding-left:1.4em;margin:.4rem 0 0}
-ol.proofsteps li{margin:.55em 0}
-.qed{float:right;font-family:var(--sans);letter-spacing:.15em;color:#5f6e28}
-.mathblock{margin:.8rem 0;padding:8px 12px;overflow-x:auto;text-align:center;font-style:italic;background:#fff;border:2px solid #1c151233}
-.slab{margin:1rem 0;padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean)}
-.slab-head{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
-.stmt{font-style:italic}
-
-/* ---------- closing apparatus: lineage, papers, links to where a fact comes from ---------- */
-a.anchor{display:block;height:0;scroll-margin-top:56px}
-sup.xref{font-size:.8em;line-height:0;margin-left:1px}
-sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
-.apparatus{max-width:760px;margin:3rem auto 0;text-align:left;font-size:.94rem}
-.apparatus .lineage{margin:0 0 .6rem}
-.apparatus .lbl{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-right:8px}
-.apparatus a{color:var(--aegean-d)}
-.apparatus details.proof{margin-top:1.2rem}
-.apparatus .refs p,.apparatus ol.refs li{font-size:.9rem;margin:.45em 0}
-.apparatus table{width:100%;border-collapse:collapse;font-size:.9rem}
-.apparatus td{padding:5px 8px 5px 0;border-top:2px solid #1c151222;vertical-align:top}
-
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  .pop > .leaf{transition:opacity .3s;transform:none!important}
-  [data-depth]{transform:none!important}
-  .pulse{animation:none}
-  .fig .tok{transition:none}
-}
-/* ---------- lineage: the papers a book's papers draw on and lead to (lineage.py) ---------- */
-.lin{--gap:134px;position:relative;margin-top:1.2rem}
-.lin ul{list-style:none;margin:0;padding:0}
-.lin h5{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#6b5a48;margin:0 0 6px;font-weight:700}
-.lin-edges{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-.lin-edges path{fill:none;stroke:var(--ink);stroke-width:1.6}
-.lin-edges polygon{fill:var(--ink)}
-.lin-nodes>li{padding:6px 0}
-.lin-node{position:relative;z-index:1;display:block;padding:9px 12px;color:var(--ink);text-decoration:none;line-height:1.28}
-.lin-node b{display:block;font-size:.93rem}
-.lin-node .by{display:block;font-family:var(--sans);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--blood);margin-top:4px}
-.lin-node.book{background:#fffaf0;border:2px solid var(--ink);box-shadow:4px 5px 0 var(--shadow)}
-.lin-node.ext{background:#f6eed6;border:2px dashed #1c151288}
-.lin-node.ext b{font-weight:400;font-style:italic}
-a.lin-node:hover b{text-decoration:underline}
-.lin-node.here{background:var(--ink);color:var(--parch);border:2px solid var(--ink);box-shadow:5px 6px 0 var(--shadow);padding:13px 14px}
-.lin-node.here b{font-size:1rem}
-.lin-node.here .by{color:var(--gold)}
-.lin-link{position:relative;z-index:1;cursor:default;outline:0}
-.lin-link em{display:inline-block;font-family:var(--sans);font-style:normal;font-size:.72rem;line-height:1.2;background:#f6eed6;border:1px solid #1c151255;border-radius:10px;padding:2px 8px;color:var(--ink)}
-.lin-link .ends{font-family:var(--sans);font-size:.72rem;color:#6b5a48;margin-left:6px}
-.lin-link .why{display:block;font-size:.84rem;color:#3a2d24;margin:3px 0 0}
-.lin-say{font-size:.9rem;color:#3a2d24;margin:16px 0 0;max-width:none}
-.lin-say b{font-family:var(--sans);font-size:.74rem;letter-spacing:.06em;color:var(--blood);margin-right:8px}
-.lin-key{margin:10px 0 0;font-family:var(--sans);font-size:.74rem;color:#6b5a48}
-.lin-key .k{display:inline-block;width:20px;height:11px;vertical-align:-1px;margin:0 6px 0 16px;border:2px solid var(--ink)}
-.lin-key .k:first-child{margin-left:0}
-.lin-key .k.here{background:var(--ink)}
-.lin-key .k.book{background:#fffaf0}
-.lin-key .k.ext{border-style:dashed;border-color:#1c151288}
-@media(min-width:860px){
-  /* three columns; each paper at the sides keeps its links beside it, in the gap the edges cross */
-  .lin{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.92fr) minmax(0,1.2fr);align-items:center}
-  .lin-side.in h5{margin-right:var(--gap)}
-  .lin-side.out h5{margin-left:var(--gap)}
-  .lin-side .lin-nodes>li{display:grid;align-items:center}
-  .lin-side.in .lin-nodes>li{grid-template-columns:minmax(0,1fr) var(--gap)}
-  .lin-side.out .lin-nodes>li{grid-template-columns:var(--gap) minmax(0,1fr)}
-  .lin-side.out .lin-links{order:-1}
-  .lin-side .lin-links{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 10px;text-align:center}
-  .lin-mid{padding:0 56px}
-  .lin-mid .lin-nodes>li{padding:0}
-  .lin-mid .lin-nodes>li+li{margin-top:26px}
-  .lin-mid .lin-links{display:flex;justify-content:center;gap:8px;margin:-8px 0 18px;text-align:center}
-  .lin-link .ends,.lin-link .why{display:none}
-  .lin-say,.lin-key{grid-column:1/-1}
-  .lin-say{min-height:2.7em}
-  .lin-link em{transition:background .15s,color .15s}
-  .lin.hot .lin-node,.lin.hot .lin-link,.lin.hot .lin-edges g{opacity:.28}
-  .lin.hot .lin-node.on,.lin.hot .lin-link.on,.lin.hot .lin-edges g.on{opacity:1}
-  .lin.hot .lin-link.on em{background:var(--ink);color:var(--parch);border-color:var(--ink)}
-}
-@media(max-width:859px){
-  /* one column: each paper's links are written out under it */
-  .lin-side,.lin-mid{margin-bottom:1.4rem}
-  .lin-nodes>li{padding:7px 0}
-  .lin-links{margin:8px 0 4px 6px;padding-left:12px!important;border-left:2px solid #1c151255}
-  .lin-mid .lin-links{margin:0 0 8px 6px}
-  .lin-link+.lin-link{margin-top:8px}
-  .lin-say{display:none}
-}
-/* ---------- waiting on a machine ---------- */
-.logs{padding:18px 18px 14px}
-.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
-.wire{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700}
-.wire .m{flex:0 0 auto;border:3px solid var(--ink);background:#fff;padding:10px 14px;font-size:.8rem;letter-spacing:.06em}
-.wire .m.q{background:#ddd;color:#6b5a48}
-.wire .w{flex:1;border-top:3px dotted var(--ink);position:relative;height:0}
-.wire .w span{position:absolute;left:50%;top:-1.05em;transform:translateX(-50%);color:var(--blood)}
-.e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both;font-family:var(--sans)}
-.waitlog{border:3px solid var(--ink);background:#fff;padding:8px;min-height:128px;margin-top:12px}
-.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:3.2em;font-style:italic}
-/* ---------- the three demands, ticked off ---------- */
-.checks{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:.95rem}
-.checks li{padding:8px 12px;background:#fff;border:3px solid var(--ink);min-height:3.4em}
-.checks b{font-family:var(--sans)}
-.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
-@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
-.site.out{opacity:.35}
-.site.turn rect{stroke-width:7}
-.site .state{font-family:var(--serif);font-weight:400;font-style:italic;font-size:14px;fill:#1c1512}
-.badge circle{fill:#fffaf0;stroke:#1c1512;stroke-width:2.5}
-.badge text{font-family:var(--sans);font-weight:700;font-size:13px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-/* ---------- two nights side by side ---------- */
-.worlds{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(8px,2vw,22px)}
-.world h5{margin:0 0 6px;font-family:var(--sans);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#6b5a48;text-align:center}
-.world{display:flex;flex-direction:column}
-.world p{font-size:.86rem;margin:6px 0 0;text-align:center;min-height:3.9em}
-.world .perch{margin-top:auto}
-.perch{margin-top:6px;border:3px solid var(--ink);background:#fff;font-family:var(--sans);font-size:.82rem;text-align:center;padding:6px 4px}
-.perch b{display:block;font-size:1rem}
-/* ---------- the row of beginnings ---------- */
-.dusk{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(4px,1.4vw,12px)}
-.beg{border:3px solid var(--ink);background:#fff;padding:8px 4px;text-align:center;font-family:var(--sans);transition:background .3s,box-shadow .3s;color:var(--ink)}
-button.beg{cursor:pointer}
-.beg.split{background:#fde8de;box-shadow:0 0 0 3px var(--blood)}
-.beg .sq{display:grid;grid-template-columns:1fr 1fr;gap:3px;max-width:64px;margin:0 auto 6px}
-.beg .sq span{border:2px solid var(--ink);font-weight:700;font-size:.8rem;line-height:1.5}
-.beg .sq span.p{outline:3px solid var(--blood);outline-offset:1px}
-.beg small{display:block;font-size:.66rem;letter-spacing:.04em;line-height:1.25}
-.beg small b{display:block;font-size:.8rem}
-.beg .hold{color:var(--aegean-d)}.beg .att{color:var(--blood)}
-/* ---------- standings, drawn as a small map ---------- */
-.gr-arrow{stroke:#1c1512;stroke-width:2.5;fill:none}
-.gr-arrow.dash{stroke-dasharray:6 5}
-.gr-lab{font-size:16px;font-style:italic;fill:#6b5a48;text-anchor:middle}
-.gr-node circle.rim{fill:none;stroke:#1c1512;stroke-width:3.5}
-.gr-node text{font-family:var(--sans);font-weight:700;font-size:19px;text-anchor:middle;dominant-baseline:central;fill:#fffaf0}
-.gr-box{fill:#e0b84a;fill-opacity:.22;stroke:#bf4a26;stroke-width:3;stroke-dasharray:8 5}
-.gr-x{font-family:var(--sans);font-weight:700;font-size:30px;fill:#bf4a26;text-anchor:middle;dominant-baseline:central}
-.gr-ok{font-family:var(--sans);font-weight:700;font-size:30px;fill:#3f7a2a;text-anchor:middle;dominant-baseline:central}
-/* ---------- counters ---------- */
-.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0}
-.counts span b{font-size:1.4rem;margin-right:5px}
-.counts .open{color:var(--blood)}.counts .closed{color:#3f7a2a}
-.queue{font-family:var(--sans);font-size:.85rem;margin-top:8px}
-.st-new{animation:rowin .6s both}
-@keyframes rowin{from{opacity:0}}
-.stand{font-family:var(--sans);font-size:.88rem;border:3px solid var(--ink);background:#fff;padding:8px 12px;margin-bottom:10px}
-.stand div{padding:2px 0}
-.tell{max-width:40em;margin-top:1.6rem}
-.tell+.tell{margin-top:0}
-.cards3.pair{grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px}
-@media(max-width:860px){.cards3.pair{grid-template-columns:1fr}}
-.card3 h3:last-child{margin-bottom:0}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -427,8 +23,8 @@ button.beg{cursor:pointer}
   <div class="wrap grid">
     <div>
       <h1>The Limits of Agreement</h1>
-      <p class="generic">Can machines always agree when one of them may stop silently and messages take any time at all?</p>
-      <p class="allegory">We find out by exploring how four mercenaries at the foot of a hill, unable to see one another, tried to agree whether to attack or hold when any of them might be dead.</p>
+      <p class="generic">Can a group of computers always reach an agreement when messages can take any amount of time and even one machine might silently stop?</p>
+      <p class="allegory">To find out, we follow four mercenaries camped at the foot of a hill. Out of sight of one another, they must agree whether to attack or hold their ground—knowing that at any moment, one of them might already be dead.</p>
       <p class="source">After Michael J. Fischer, Nancy A. Lynch and Michael S. Paterson, <i>Impossibility of Distributed Consensus with One Faulty Process</i>, 1985</p>
     </div>
     <div class="pop" data-auto>
@@ -450,7 +46,7 @@ button.beg{cursor:pointer}
     <div class="lin-side in">
       <h5>Draws on</h5>
       <ul class="lin-nodes">
-        <li><a class="lin-node book" data-n="i:pease-shostak-lamport-1980_reaching-agreement" data-label="Pease, Shostak &amp; Lamport 1980" href="../agreeing-among-liars/index.html"><b>Reaching Agreement in the Presence of Faults</b><span class="by">Pease, Shostak &amp; Lamport 1980 · Agreeing Among Liars</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:pease-shostak-lamport-1980_reaching-agreement" data-to="m:fischer-lynch-paterson-1985_flp-impossibility" tabindex="0"><em>the agreement problem</em><span class="ends"></span><span class="why">The agreement problem, solved there with bounded delays and posed here with none.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="i:pease-shostak-lamport-1980_reaching-agreement" data-label="Pease, Shostak &amp; Lamport 1980" href="../agreeing-among-liars/index.html"><b>Reaching Agreement in the Presence of Faults</b><span class="by">Pease, Shostak &amp; Lamport 1980 · Agreeing Among Liars</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:pease-shostak-lamport-1980_reaching-agreement" data-to="m:fischer-lynch-paterson-1985_flp-impossibility" tabindex="0"><em>the agreement problem</em><span class="ends"></span><span class="why">Introduced the agreement problem—solved there when message delays have a known time limit, and posed here when they have none.</span></li></ul></li>
       </ul>
     </div>
     <div class="lin-mid">
@@ -462,16 +58,16 @@ button.beg{cursor:pointer}
     <div class="lin-side out">
       <h5>Leads to</h5>
       <ul class="lin-nodes">
-        <li><a class="lin-node book" data-n="o:ben-or-1983_free-choice" data-label="Ben-Or 1983" href="../agreeing-by-chance/index.html"><b>Another Advantage of Free Choice: Completely Asynchronous Agreement Protocols</b><span class="by">Ben-Or 1983 · Agreeing by Chance</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:fischer-lynch-paterson-1985_flp-impossibility" data-to="o:ben-or-1983_free-choice" tabindex="0"><em>impossibility</em><span class="ends"></span><span class="why">The impossibility of deterministic agreement in an asynchronous system, which coin flips get around.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="o:dwork-lynch-stockmeyer-1988_consensus-partial-synchrony" data-label="Dwork, Lynch &amp; Stockmeyer 1988" href="../agreeing-when-messages-run-late/index.html"><b>Consensus in the Presence of Partial Synchrony</b><span class="by">Dwork, Lynch &amp; Stockmeyer 1988 · Agreeing When Messages Run Late</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:fischer-lynch-paterson-1985_flp-impossibility" data-to="o:dwork-lynch-stockmeyer-1988_consensus-partial-synchrony" tabindex="0"><em>impossibility</em><span class="ends"></span><span class="why">The impossibility of agreement in an asynchronous system, which delays bounded only eventually get around.</span></li></ul></li>
-        <li><a href="https://cs.brown.edu/~mph/Herlihy91/p124-herlihy.pdf" class="lin-node ext" data-n="o:herlihy-1991" data-label="Herlihy 1991"><b>Wait-Free Synchronization</b><span class="by">Herlihy 1991</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:fischer-lynch-paterson-1985_flp-impossibility" data-to="o:herlihy-1991" tabindex="0"><em>the valency argument</em><span class="ends"></span><span class="why">The argument from undecided configurations, carried over to shared memory.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="o:chandra-toueg-1996_unreliable-failure-detectors" data-label="Chandra &amp; Toueg 1996" href="../telling-the-dead-from-the-slow/index.html"><b>Unreliable Failure Detectors for Reliable Distributed Systems</b><span class="by">Chandra &amp; Toueg 1996 · Telling the Dead from the Slow</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:fischer-lynch-paterson-1985_flp-impossibility" data-to="o:chandra-toueg-1996_unreliable-failure-detectors" tabindex="0"><em>impossibility</em><span class="ends"></span><span class="why">The impossibility of agreement in an asynchronous system, which an unreliable failure detector gets around.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="o:lamport-1998_part-time-parliament" data-label="Lamport 1998" href="../the-part-time-parliament/index.html"><b>The Part-Time Parliament</b><span class="by">Lamport 1998 · The Part-Time Parliament</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:fischer-lynch-paterson-1985_flp-impossibility" data-to="o:lamport-1998_part-time-parliament" tabindex="0"><em>no guaranteed progress</em><span class="ends"></span><span class="why">No algorithm can guarantee progress in an asynchronous system, so only safety is guaranteed.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="o:castro-liskov-1999_practical-byzantine-fault-tolerance" data-label="Castro &amp; Liskov 1999" href="../keeping-order-among-liars/index.html"><b>Practical Byzantine Fault Tolerance</b><span class="by">Castro &amp; Liskov 1999 · Keeping Order Among Liars</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:fischer-lynch-paterson-1985_flp-impossibility" data-to="o:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>the need for timing bounds</em><span class="ends"></span><span class="why">Agreement needs some bound on delay, so safety holds always and progress only when delays are bounded.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="o:gilbert-lynch-2012_perspectives-on-cap" data-label="Gilbert &amp; Lynch 2012" href="../answering-while-cut-off/index.html"><b>Perspectives on the CAP Theorem</b><span class="by">Gilbert &amp; Lynch 2012 · Answering While Cut Off</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:fischer-lynch-paterson-1985_flp-impossibility" data-to="o:gilbert-lynch-2012_perspectives-on-cap" tabindex="0"><em>safety against liveness</em><span class="ends"></span><span class="why">The impossibility of consensus, beside which CAP is set as one more trade between safety and liveness.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="o:ben-or-1983_free-choice" data-label="Ben-Or 1983" href="../agreeing-by-chance/index.html"><b>Another Advantage of Free Choice: Completely Asynchronous Agreement Protocols</b><span class="by">Ben-Or 1983 · Agreeing by Chance</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:fischer-lynch-paterson-1985_flp-impossibility" data-to="o:ben-or-1983_free-choice" tabindex="0"><em>impossibility</em><span class="ends"></span><span class="why">Shows that while fixed rules cannot guarantee agreement without time limits, flipping a coin can break the deadlock.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="o:dwork-lynch-stockmeyer-1988_consensus-partial-synchrony" data-label="Dwork, Lynch &amp; Stockmeyer 1988" href="../agreeing-when-messages-run-late/index.html"><b>Consensus in the Presence of Partial Synchrony</b><span class="by">Dwork, Lynch &amp; Stockmeyer 1988 · Agreeing When Messages Run Late</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:fischer-lynch-paterson-1985_flp-impossibility" data-to="o:dwork-lynch-stockmeyer-1988_consensus-partial-synchrony" tabindex="0"><em>impossibility</em><span class="ends"></span><span class="why">Bypasses the impossibility result by assuming message delays eventually settle within a predictable bound.</span></li></ul></li>
+        <li><a href="https://cs.brown.edu/~mph/Herlihy91/p124-herlihy.pdf" class="lin-node ext" data-n="o:herlihy-1991" data-label="Herlihy 1991"><b>Wait-Free Synchronization</b><span class="by">Herlihy 1991</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:fischer-lynch-paterson-1985_flp-impossibility" data-to="o:herlihy-1991" tabindex="0"><em>the valency argument</em><span class="ends"></span><span class="why">Adapts this paper's core proof technique—tracking undecided system states—to shared-memory computers.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="o:chandra-toueg-1996_unreliable-failure-detectors" data-label="Chandra &amp; Toueg 1996" href="../telling-the-dead-from-the-slow/index.html"><b>Unreliable Failure Detectors for Reliable Distributed Systems</b><span class="by">Chandra &amp; Toueg 1996 · Telling the Dead from the Slow</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:fischer-lynch-paterson-1985_flp-impossibility" data-to="o:chandra-toueg-1996_unreliable-failure-detectors" tabindex="0"><em>impossibility</em><span class="ends"></span><span class="why">Overcomes the impossibility result by giving machines an imperfect "failure detector" that guesses who has crashed.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="o:lamport-1998_part-time-parliament" data-label="Lamport 1998" href="../the-part-time-parliament/index.html"><b>The Part-Time Parliament</b><span class="by">Lamport 1998 · The Part-Time Parliament</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:fischer-lynch-paterson-1985_flp-impossibility" data-to="o:lamport-1998_part-time-parliament" tabindex="0"><em>no guaranteed progress</em><span class="ends"></span><span class="why">Since no algorithm can guarantee both safety and progress when messages lag indefinitely, Paxos guarantees safety always and progress once the network settles.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="o:castro-liskov-1999_practical-byzantine-fault-tolerance" data-label="Castro &amp; Liskov 1999" href="../keeping-order-among-liars/index.html"><b>Practical Byzantine Fault Tolerance</b><span class="by">Castro &amp; Liskov 1999 · Keeping Order Among Liars</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:fischer-lynch-paterson-1985_flp-impossibility" data-to="o:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>the need for timing bounds</em><span class="ends"></span><span class="why">Because agreement requires bounded delays to finish, this protocol guarantees safety at all times and progress whenever message delays stay within bounds.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="o:gilbert-lynch-2012_perspectives-on-cap" data-label="Gilbert &amp; Lynch 2012" href="../answering-while-cut-off/index.html"><b>Perspectives on the CAP Theorem</b><span class="by">Gilbert &amp; Lynch 2012 · Answering While Cut Off</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:fischer-lynch-paterson-1985_flp-impossibility" data-to="o:gilbert-lynch-2012_perspectives-on-cap" tabindex="0"><em>safety against liveness</em><span class="ends"></span><span class="why">Places the CAP theorem alongside this paper's result as another fundamental trade-off between safety (never disagreeing) and liveness (eventually deciding).</span></li></ul></li>
       </ul>
     </div>
-    <p class="lin-say">Each link is an idea one paper took from another. Point at one, or tap it, to read how.</p>
+    <p class="lin-say">Each line traces an idea passed from one paper to another. Hover over or tap a connection to see how they relate.</p>
     <p class="lin-key"><i class="k here"></i>a paper this book retells <i class="k book"></i>a paper retold in another book <i class="k ext"></i>a paper outside the series</p>
     </div>
   </div>
@@ -485,20 +81,20 @@ button.beg{cursor:pointer}
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>Many computers, one decision</h2>
-      <p class="lede">A group of computers must all settle on the same one of two values, and the value must depend on what the machines started with.</p>
-      <p>Two things stand in the way. A message may take any time at all: every message arrives, but no delay is too long to be possible. And one machine may stop at any moment, without a word. A machine that hears nothing cannot tell which has happened.</p>
+      <p class="lede">Imagine a group of computers across a network that must all agree on a single choice—say, <i>commit</i> or <i>abort</i>—based on the initial values each machine started with.</p>
+      <p>Two obstacles stand in their way. First, the network is <b>asynchronous</b>: every message eventually arrives, but there is no upper limit on how long it might take. Second, <b>one machine might crash</b> at any moment without warning. Because messages can be arbitrarily slow, a computer waiting for a reply faces an impossible dilemma: has the other machine crashed, or is its message simply delayed?</p>
       <ul class="terms">
-        <li><b>No guaranteed decision</b> (Fischer, Lynch and Paterson, 1985): no protocol that acts only on what it has received can guarantee that the group ever decides.</li>
-        <li><b>Only the ending is lost.</b> No two machines are made to decide differently. What cannot be promised is that the waiting ends.</li>
+        <li><b>No guaranteed decision</b> (Fischer, Lynch, and Paterson, 1985): No deterministic protocol—one that acts strictly on the messages it has received without randomness—can guarantee that the group will ever reach a decision.</li>
+        <li><b>Only the ending is lost.</b> The machines are never forced to disagree with one another. What cannot be promised is that the waiting will ever end.</li>
       </ul>
-      <p style="margin-top:1.2rem">We tell it with four mercenaries, their ravens, and a hill they must take together or not at all.</p>
+      <p style="margin-top:1.2rem">To see why this happens step by step, we tell the story through four mercenaries, their messenger ravens, and a hill they must either storm together or not at all.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper logs">
         <h4>Crashed, or only slow?</h4>
         <div class="wire"><div class="m">MACHINE A</div><div class="w"><span>?</span></div><div class="m q">MACHINE B</div></div>
         <div class="waitlog" id="waitlog"></div>
-        <p class="note" id="waitnote" data-live>A has asked B for its value and is waiting for the reply.</p>
+        <p class="note" id="waitnote" data-live>Machine A has asked Machine B for its value and is waiting for the reply.</p>
         <div class="row"><button class="btn" id="waitb">Wait longer</button><button class="btn alt" id="waitr" hidden>Start again</button></div>
       </div>
     </div></div>
@@ -513,11 +109,13 @@ button.beg{cursor:pointer}
     <div class="hall-title"><div class="t">
       <div class="kicker">The foot of Mount Phyle</div>
       <h2>Four tents, out of sight of one another</h2>
-      <p>Four mercenaries are camped at the foot of Mount Phyle, one to a tent, out of sight of one another and under nobody's command.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> Bandits hold the top of the hill, and the four have one question to settle about it.</p>
+      <p>Four mercenaries are camped around the base of Mount Phyle, one to a tent, hidden from one another by trees and rocky gullies and answering to no commander.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> Bandits hold the fortress at the summit, and before dawn the four have one question to settle together.</p>
     </div></div>
-    <div class="pin pop" style="left:50%;top:44%;"><div class="leaf"><b>Only ravens</b>The four send word to one another only by raven. Every raven arrives, but no raven has a longest flight.</div></div>
-    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>Nobody lies</b>No man at the foot ever misreports anything, and a raven brings exactly what was written.</div></div>
-    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>Any man may die</b>Any one of the four may be killed. A dead man's tent simply falls silent: nobody takes the dead man's place, and no bird reports the death.</div></div>
+    <div class="pins">
+      <div class="pin pop"><div class="leaf"><b>Only ravens</b>The four send word to one another only by messenger raven. Every raven eventually arrives, but there is no limit to how long a bird might take on the way.</div></div>
+      <div class="pin pop"><div class="leaf"><b>Nobody lies</b>Every mercenary reports honestly and follows the plan faithfully, and every raven delivers exactly what was written.</div></div>
+      <div class="pin pop"><div class="leaf"><b>Any man may die</b>At most one of the four may be killed during the night. A dead man's tent simply falls silent: nobody takes his place, and no bird flies out to report his death.</div></div>
+    </div>
   </div>
 </section>
 
@@ -528,22 +126,22 @@ button.beg{cursor:pointer}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">One question, two answers</div>
       <h2>Attack, or hold</h2>
-      <p class="lede">The question is whether to attack the hill or to hold, and the four mercenaries must all give the same answer. Attacking, they climb together. Holding, each man guards the path down one gully and the hill stays closed. Half attacking while half hold is worse than either: too few to climb, and a hill left open.</p>
-      <p>Each man formed an opinion at dusk, attack or hold, from what could be seen of that man's own quarter. A man <b>commits</b> by leaving the tent, to climb with the others or to guard a gully, and will not be back before dawn. The four want three things of whatever plan they follow.</p>
+      <p class="lede">The four mercenaries must decide whether to <b>attack</b> the hill or to <b>hold</b> their ground—and they must all make the exact same choice. If they attack, all of them climb together to overpower the bandits. If they hold, each man blocks the path down his own gully to keep the bandits trapped on top. Splitting up is worse than either choice: if half climb while half hold, there are too few men to take the summit, and the gullies are left wide open.</p>
+      <p>At dusk, each mercenary scouted his own quarter of the slope and formed an initial opinion: <b>attack</b> or <b>hold</b>. A mercenary <b>commits</b> the moment he leaves his tent—either to climb with the others or to guard his gully—and once he leaves, he will not return before dawn. Whatever plan they follow must satisfy three demands:</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First demand</div><h3>No two commit differently</h3><p>Nobody attacks while another holds.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second demand</div><h3>Both answers stay possible</h3><p>What they do must depend on what they saw.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third demand</div><h3>Somebody eventually commits</h3><p>Sooner or later at least one man leaves the tent.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First demand · Agreement</div><h3>No two commit differently</h3><p>Nobody attacks while another holds. Every man who leaves his tent makes the same choice.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second demand · Validity</div><h3>Both answers stay possible</h3><p>Their choice must reflect what they saw at dusk: if all saw attack, they attack; if all saw hold, they hold.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third demand · Termination</div><h3>Somebody eventually commits</h3><p>They cannot wait forever. Sooner or later, at least one mercenary leaves his tent.</p></div></div></div>
     </div>
-    <p class="tell">The second demand shuts out the plan of holding whatever anyone saw, which keeps the first demand and makes the evening pointless. The third shuts out the plan under which nobody ever moves, which keeps the first two for free. One more condition binds the four: they may not draw lots. Each man acts on what has arrived at that man's tent and nothing else.</p>
-    <p class="tell">Two plans come to mind at once. Try each on the sightings below, then try the second again on a night when tent 3 stays silent, and watch which demand is given up.</p>
+    <p class="tell">Why are all three demands necessary? The second demand rules out the trivial plan of agreeing in advance to "always hold" no matter what anyone saw at dusk—which guarantees agreement, but makes scouting the hill pointless. The third demand rules out the plan where nobody ever leaves his tent, which satisfies the first two demands simply by doing nothing. One final rule binds the four: they may not flip coins or draw lots. Each man's actions must be completely <b>deterministic</b>, driven strictly by his own dusk sighting and the ravens that have arrived at his tent.</p>
+    <p class="tell">Two straightforward plans come to mind right away. Test each one on the dusk sightings below—and then test the second plan again on a night when Tent 3 falls silent to see which demand gives way.</p>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>Two easy plans <em>try each</em></h4>
       <div class="hill-wrap">
         <svg class="isle-svg" id="plansvg" role="img" aria-label="The hill from above with four tents at its foot, each showing what its man saw at dusk"></svg>
         <div>
-          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">The hill from above. The badge beside each tent is what that man saw at dusk: A for attack, H for hold.</p>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">The hill from above. The badge beside each tent shows what that mercenary saw at dusk: A for attack, H for hold.</p>
           <ul class="checks" data-live>
             <li id="d1"></li><li id="d2"></li><li id="d3"></li>
           </ul>
@@ -557,7 +155,7 @@ button.beg{cursor:pointer}
         <button class="btn alt" id="plannew">New sightings</button>
       </div>
     </div></div></div>
-    <p class="tell">Waiting for every report keeps all three demands while every man answers, and nobody lies at the foot, so it looks like a sound plan. What it gives up shows only when a tent stays silent, and the reason lies in the birds.</p>
+    <p class="tell">Waiting for every tent's report satisfies all three demands whenever all four men are alive to answer. Because nobody lies, every tent collects the exact same four reports and reaches the same decision. Its fatal flaw appears only when a tent stays silent—and the reason lies in the ravens.</p>
   </div>
 </section>
 
@@ -568,25 +166,25 @@ button.beg{cursor:pointer}
   <div class="wrap">
     <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
-        <div class="kicker">The difficulty, entire</div>
+        <div class="kicker">The heart of the problem</div>
         <h2>A dead man, or a slow bird?</h2>
-        <p class="lede">The birds can be trusted in every way but one. The ravens always arrive, they bring exactly what was written, and they come in no particular order. But they take as long as they take.</p>
-        <p>A raven may sit in the wooded gullies for an hour or for the night, so no hour comes after which a man can say that nothing more is on its way. A man may always walk to the perch and find nothing there, and that is not news.</p>
-        <p>Now add that any one of the four may be killed, and that a dead man's tent simply falls silent. A man waiting on a tent that has not answered is then in one of two situations. Wait at tent 2's perch below, and see whether the hours tell them apart.</p>
+        <p class="lede">The ravens can be trusted in every way but one: every bird eventually arrives and delivers its note intact, but there is no limit to how long its flight may take.</p>
+        <p>A raven might fly straight across the gullies in minutes, or it might roost in a pine tree for hours. Because no flight delay is too long to be possible, there is no hour of the night after which a mercenary can look at an empty perch and know that nothing more is on the way.</p>
+        <p>Now combine slow birds with the danger that one of the four men may be killed, leaving his tent completely silent. A mercenary waiting on a tent that has not answered is caught between two possibilities that look identical from the outside. Wait at Tent 2's perch below, and see whether the passing hours ever tell them apart.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-p03-perch-e9103e78f0-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-p03-perch-e9103e78f0-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-p03-perch-e9103e78f0-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-p03-perch-e9103e78f0-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p03-perch.jpg" alt="A tent and a chest in a wooded gully by moonlight, a shield leaning on the chest, and a bare bird perch with nothing on it" loading="lazy"></div></div></div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
       <h4>Two nights <em>seen from tent 2's perch</em></h4>
       <div class="worlds">
-        <div class="world"><h5>One night</h5><svg class="isle-svg" id="worldA" role="img" aria-label="The hill from above: tent 1 has fallen silent and no raven is in the air"></svg><p>Suppose the man at tent 1 is dead. No bird will ever come.</p><div class="perch">Tent 2's perch<b>empty</b></div></div>
-        <div class="world"><h5>Another night</h5><svg class="isle-svg" id="worldB" role="img" aria-label="The hill from above: tent 1's raven has stopped part of the way to tent 2"></svg><p>Suppose tent 1's man is well. The raven went out hours ago and is sitting in a pine.</p><div class="perch">Tent 2's perch<b>empty</b></div></div>
+        <div class="world"><h5>One night</h5><svg class="isle-svg" id="worldA" role="img" aria-label="The hill from above: tent 1 has fallen silent and no raven is in the air"></svg><p>Suppose the man at Tent 1 is dead. No bird was ever sent, and none will ever come.</p><div class="perch">Tent 2's perch<b>empty</b></div></div>
+        <div class="world"><h5>Another night</h5><svg class="isle-svg" id="worldB" role="img" aria-label="The hill from above: tent 1's raven has stopped part of the way to tent 2"></svg><p>Suppose Tent 1's man is alive and well. His raven flew out hours ago, but is sitting in a pine tree.</p><div class="perch">Tent 2's perch<b>empty</b></div></div>
       </div>
       <p class="say" id="worldsay">Tent 2 has heard nothing from tent 1. Which night is this?</p>
       <div class="row"><button class="btn" id="worldb">Wait another hour</button></div>
     </div></div></div>
-    <p class="tell">Both nights look like an empty perch, and waiting longer never turns one into the other. So a plan cannot wait for every report: whenever one man is dead it waits for ever, and can never learn of the death. <b>Each man must act, at some point, without hearing from everyone.</b></p>
-    <p class="tell">Somewhere in the night, then, the matter gets settled without everyone having been heard. The chance that one tent falls silent is enough to force that, and the next thing to say is when it happens.</p>
+    <p class="tell">From Tent 2's point of view, both nights look like the exact same thing: an empty perch. Waiting another hour never distinguishes a dead comrade from a slow raven. A valid plan therefore cannot wait for all four reports—because whenever one man truly dies, the others would wait forever and violate the third demand. <b>Any working plan must allow the mercenaries to commit after hearing from at most three tents.</b></p>
+    <p class="tell">That single requirement—that the camp must be able to settle the decision while ignoring one silent tent—is the lever that undoes every possible plan. To see why, we need a clear way to track how the night unfolds step by step.</p>
   </div>
 </section>
 
@@ -596,23 +194,23 @@ button.beg{cursor:pointer}
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">Three words the argument needs</div>
+      <div class="kicker">Three key concepts</div>
       <h2>When is the matter settled?</h2>
-      <p class="lede">Saying when the matter is settled takes three words that ordinary speech lacks.</p>
+      <p class="lede">Pinpointing the exact moment a night's outcome is locked in requires three simple terms to describe the state of the camp.</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A position</div><h3>How the night stands, entire</h3><p>A position is what each of the four men holds in mind, together with every raven aloft and not yet taken in.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">An arrival</div><h3>One man takes in one raven</h3><p>An arrival is the only kind of thing that happens. Going to the perch and finding nothing counts as a turn, and changes nothing.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Open or closed</div><h3>Does the order of arrivals still matter?</h3><p>A position is open if the night can still end in holding and can still end in attacking. A position is closed if only one answer remains.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A position</div><h3>A snapshot of the whole camp</h3><p>A <b>position</b> (or <i>configuration</i>) is the complete state of the night at a given moment: what each of the four men currently holds in mind, plus every raven currently in flight.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">An arrival</div><h3>One man receives one raven</h3><p>The night advances one step at a time through <b>arrivals</b> (or <i>events</i>): one man takes in a raven from his perch, updates his state, and perhaps sends out new ravens. (Checking an empty perch changes nothing.)</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Open or closed</div><h3>Does flight order still matter?</h3><p>A position is <b>open</b> (<i>bivalent</i>) if the night can still end in either holding or attacking depending on which birds land first. It is <b>closed</b> (<i>univalent</i>) once only one outcome remains possible.</p></div></div></div>
     </div>
-    <p class="tell" style="margin-top:2.4rem">Open does not describe what anyone thinks. It says only that the answer still depends on the order in which the birds arrive. Once any man has committed, the position is closed, so the matter is settled wherever the night stops being open.</p>
-    <p class="tell">The first tool of the argument is about that order. Below, let one pair of tents trade ravens first, start the night again, let the other pair go first, and compare how the night stands at the end.</p>
+    <p class="tell" style="margin-top:2.4rem">Notice that "open" does not describe what any single mercenary is thinking; it describes the whole camp from above. As long as a position is <b>open</b>, the order in which ravens land still holds the power to tip the outcome either way. Once a position is <b>closed</b>, the camp's fate is sealed—even if no mercenary has actually stepped out of his tent yet.</p>
+    <p class="tell">Our first building block is a simple rule about the order of arrivals. Below, Tents 1 and 2 have ravens to exchange on one side of the hill, while Tents 3 and 4 have ravens to exchange on the other. Let one pair trade ravens first, reset the night, let the other pair go first, and compare the final position of the camp.</p>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>Separate folds <em>run them in either order</em></h4>
       <div class="hill-wrap">
         <svg class="isle-svg fig" id="foldsvg" style="width:100%;max-width:520px" role="img" aria-label="Four lines running outward, one for each tent, with ravens as arcs between tents 1 and 2 and between tents 3 and 4"></svg>
         <div>
-          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each line is one tent, at one moment after another, and each ring further out is later. A raven is an arc from one tent to another. A hollow dot is a man who has not committed.</p>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each line represents one tent over time, moving outward from the center as the night progresses. An arc is a raven flying from one tent to another, and a hollow dot is a man who has not yet committed.</p>
           <div class="stand" id="foldstand" data-live></div>
           <p class="say" id="foldsay">Tents 1 and 2 have ravens to trade, and so have tents 3 and 4. Which pair goes first?</p>
         </div>
@@ -623,24 +221,16 @@ button.beg{cursor:pointer}
         <button class="btn alt" id="foldr">Start the night again</button>
       </div>
     </div></div></div>
-    <p class="tell">Two runs of arrivals with no man in common do not interfere: run either first, and the night arrives at the same position. The reason is that an arrival is one man taking in one raven and perhaps writing more. All of that belongs to the one man or to the air, and none of it to anybody else.</p>
-    <p class="tell">With these words the question has a sharper form. At dusk every man has a sighting and no bird has flown. The first thing to find out is whether the night is closed already, by the sightings alone.</p>
+    <p class="tell">Two sequences of arrivals that involve completely separate mercenaries <b>do not interfere with each other</b> (they <i>commute</i>): run either sequence first, and the camp reaches the exact same position. That is because an arrival only changes the memory of the one man receiving the bird and the pool of birds in the air—nothing that touches the other tents.</p>
+    <p class="tell">With these terms in hand, we can ask our first sharp question. At dusk, every man has his initial sighting and no bird has flown yet. Could a clever plan settle the outcome right at dusk, so that the night begins already closed by the sightings alone?</p>
     <details class="proof">
-      <summary>Proof · courses with no man in common commute</summary>
-      <p class="given">In the paper's terms a position is a configuration, an arrival an event, a course a schedule, a fair course an admissible run, and open and closed are bivalent and univalent. <b>Lemma 1.</b> Let courses σ₁ and σ₂ both be applicable at a position, and let the set <var>A</var> of men who act in σ₁ and the set <var>B</var> of men who act in σ₂ be disjoint. Then each can be run after the other, and both orders reach the same position.</p>
+      <summary>Proof · Courses with no man in common commute (Lemma 1)</summary>
+      <p class="given">In the paper's terms, a position is a <i>configuration</i>, an arrival is an <i>event</i>, a course is a <i>schedule</i>, a fair course is an <i>admissible run</i>, and open and closed are <i>bivalent</i> and <i>univalent</i>. <b>Lemma 1.</b> Let courses σ₁ and σ₂ both be applicable at a position, and let the set <var>A</var> of men who act in σ₁ and the set <var>B</var> of men who act in σ₂ be disjoint. Then each course can be run after the other, and both orders reach the exact same position.</p>
     <ol class="proofsteps">
-      <li>A position is what is in each man's head together with the ravens aloft. An arrival
-      changes two parts of it: the one man who takes the raven in, and the air — one raven removed,
-      perhaps others added.</li>
-      <li>Let σ₁ touch a set of men <var>A</var> and σ₂ a set <var>B</var>, disjoint. Running σ₁
-      alters only men in <var>A</var>, which σ₂ never reads; and conversely.</li>
-      <li>Neither disables the other through the air: ravens are addressed, so those σ₂ consumes
-      are addressed into <var>B</var>, and σ₁ removes only ravens addressed into <var>A</var>.
-      Both orders are therefore applicable.</li>
-      <li>In either order, the men of <var>A</var> have taken exactly the arrivals of σ₁ and
-      those of <var>B</var> exactly the arrivals of σ₂, each in its own order, and the air has had
-      the same ravens removed and added. So the positions reached are the
-      same.<span class="qed">∎</span></li>
+      <li>A position consists of what is in each man's head together with the ravens aloft. An arrival changes only two parts of it: the single man who takes the raven in, and the air (one raven removed, and perhaps new ones added).</li>
+      <li>Let σ₁ involve a set of men <var>A</var> and σ₂ a disjoint set <var>B</var>. Running σ₁ alters only the men in <var>A</var>, whose states σ₂ never reads; and vice versa.</li>
+      <li>Neither course disables the other through the air: every raven is addressed to a specific tent, so the ravens consumed by σ₂ are addressed to men in <var>B</var>, whereas σ₁ removes only ravens addressed to men in <var>A</var>. Both orders are therefore valid.</li>
+      <li>In either order, the men of <var>A</var> experience the exact same arrivals of σ₁ and the men of <var>B</var> experience the exact same arrivals of σ₂, each in its own order, and the air has had the identical ravens removed and added. Thus, the resulting positions are identical.<span class="qed">∎</span></li>
     </ol>
     </details>
   </div>
@@ -652,35 +242,28 @@ button.beg{cursor:pointer}
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">The night can begin open</div>
+      <div class="kicker">Step 1 · The night can begin open</div>
       <h2>The dusk that settles nothing</h2>
-      <p class="lede">The sightings at dusk do not always close the night. To see why, line up some possible beginnings so that each differs from the next in one man's sighting, with all-hold at one end and all-attack at the other.</p>
-      <p>Suppose every beginning in the row were already settled by the sightings alone. The second demand forces the two ends opposite ways. The three in between are yours to settle. Click a beginning to change it, and watch the two that are marked.</p>
+      <p class="lede">No matter what plan the mercenaries use, the sightings at dusk cannot always lock in the outcome beforehand. To see why, line up five possible dusk beginnings from all-hold (HHHH) on the left to all-attack (AAAA) on the right, flipping just one man's sighting at each step along the row.</p>
+      <p>Suppose, for the sake of argument, that every beginning in this row were already closed—predetermined by the sightings alone. The second demand (Validity) forces all-hold to end in holding and all-attack to end in attacking. The three middle beginnings are yours to assign. Click any of the middle three to flip its predetermined fate, and watch the highlighted pair of neighbours.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>A row of beginnings <em>click the middle three</em></h4>
       <div class="dusk" id="dusk"></div>
       <p class="say" id="dusksay"></p>
     </div></div></div>
-    <p class="tell">However the row is settled, two neighbours split, and the supposition fails. Nobody died to make that argument work. The other three could not tell a silent man from a slow one, and so could not tell two different beginnings apart. <b>However the four arrange their affairs, the sightings can fall so that the night begins open.</b></p>
-    <p class="tell">The night can begin open, then. It still seems that it cannot stay open for ever, and that some arrival, sooner or later, must be the one that closes it.</p>
+    <p class="tell">No matter how you assign the middle three, <b>two adjacent beginnings in the row must always split—one fated for Hold and the next fated for Attack—even though they differ in only a single mercenary's sighting.</b> Now suppose that single mercenary falls silent (or his ravens are simply very slow), while the other three run the plan to a decision. Because the other three saw the exact same dusk sightings and hear the exact same messages in both beginnings, they cannot tell the two beginnings apart and must reach the <i>same</i> decision in both! That contradicts the claim that one beginning guaranteed Hold and the other guaranteed Attack. <b>Therefore, under any plan, at least one combination of dusk sightings leaves the night open from the very start.</b></p>
+    <p class="tell">So the night can begin open. Even so, it still feels as though the night cannot stay open forever—surely some raven's arrival, sooner or later, must be the decisive step that tips the balance and closes it.</p>
     <details class="proof">
-      <summary>Proof · some beginning is open</summary>
-      <p class="given">In the paper's terms a position is a configuration, an arrival an event, a course a schedule, a fair course an admissible run, and open and closed are bivalent and univalent. A beginning is an initial configuration: the four sightings, with no raven yet aloft. <b>Lemma 2.</b> Whatever the four have arranged, some beginning is open.</p>
+      <summary>Proof · Some beginning is open (Lemma 2)</summary>
+      <p class="given">A beginning is an <i>initial configuration</i>: the four mercenaries' dusk sightings, with no raven yet aloft. <b>Lemma 2.</b> Whatever plan the four have arranged, at least one beginning is open (bivalent).</p>
     <ol class="proofsteps">
-      <li>Suppose every beginning were closed, each already fated by the sightings alone.</li>
-      <li>Both fates occur: the second demand forces holding where all four saw hold, and attacking
-      where all four saw attack.</li>
-      <li>Call two beginnings neighbours when they differ in one man's sighting. Walking from a
-      hold-fated beginning to an attack-fated one by single changes, there must be neighbours
-      <var>B</var>₀ and <var>B</var>₁ fated to hold and to attack, differing only in the sighting of one
-      man <var>p</var>.</li>
-      <li>Take a fair course from <var>B</var>₀ in which <var>p</var> never stirs; this is
-      permitted, since at most one man may be silent. Being fair, it ends in holding.</li>
-      <li>Run the same course from <var>B</var>₁. Since <var>p</var> never acts and <var>p</var>'s sighting is the only difference, every other man sees exactly the same arrivals in the same order, so
-      the course ends in holding here too.</li>
-      <li>But <var>B</var>₁ was fated to attack, and a fated beginning admits no course to the other
-      answer. Hence some beginning is open.<span class="qed">∎</span></li>
+      <li>Suppose, for contradiction, that every possible beginning were closed—each already fated for either Hold or Attack by the dusk sightings alone.</li>
+      <li>Both fates must occur: Validity (the second demand) forces holding when all four saw hold, and attacking when all four saw attack.</li>
+      <li>Call two beginnings <i>neighbours</i> when they differ in only one man's sighting. Stepping from all-hold to all-attack one sighting at a time, there must be two adjacent neighbours <var>B</var>₀ and <var>B</var>₁—differing only in the sighting of one man <var>p</var>—that are fated for opposite decisions (say, <var>B</var>₀ for hold and <var>B</var>₁ for attack).</li>
+      <li>Take a fair course starting from <var>B</var>₀ in which man <var>p</var> never takes a step. This is permitted because the plan must still reach a decision when one man dies; thus, the remaining three eventually commit to holding.</li>
+      <li>Now run that exact same course starting from <var>B</var>₁. Since <var>p</var> never acts and <var>p</var>'s sighting is the only difference between <var>B</var>₀ and <var>B</var>₁, the other three men see the exact same sightings and receive the exact same arrivals in the same order, so they must commit to holding here too.</li>
+      <li>But <var>B</var>₁ was supposedly fated to attack, and a closed beginning admits no course to the opposite answer. This contradiction proves that some beginning must be open.<span class="qed">∎</span></li>
     </ol>
     </details>
   </div>
@@ -691,10 +274,10 @@ button.beg{cursor:pointer}
   <a class="anchor" id="s6"></a>
   <div class="wrap" style="margin-bottom:-1rem">
     <div class="narrow">
-      <div class="kicker">No arrival has to close it</div>
+      <div class="kicker">Step 2 · No arrival has to close it</div>
       <h2>The raven that would settle it can always be held back</h2>
-      <p class="lede">No arrival has to be the one that closes the night. Whichever raven would have settled the matter, the night can go on without it for a while, then take it in, and be open still.</p>
-      <p>The raven is never kept from landing, because the birds are reliable. The argument asks only whether its landing must settle anything. Scroll slowly, and the picture moves with you.</p>
+      <p class="lede">Suppose the night is currently open, and a raven is about to land that would close the night and lock in the decision. Remarkably, by holding that raven back for a while and letting other ravens land first, the camp can reach a position where that same raven finally lands and yet the night remains <b>open</b>.</p>
+      <p>The raven is never lost—because the birds are reliable, it must eventually land. We only ask whether its landing <i>must</i> settle the outcome. Scroll slowly through the seven steps below to follow the argument.</p>
     </div>
   </div>
   <div class="scrolly" id="defer">
@@ -702,45 +285,28 @@ button.beg{cursor:pointer}
       <svg class="fig svg-dark" id="defersvg" role="img" aria-label="A small map of positions: a top row reached while one raven is held back, and under each the position once that raven lands"></svg>
     </div></div>
     <div class="steps">
-      <div class="step on"><div class="card"><div class="num">1 · An open night</div><h3>One raven is about to land</h3><p>The night stands open: it can still end either way. One raven is waiting to be taken in. The birds are reliable, so it will land. What is in doubt is whether it must settle anything when it does.</p></div></div>
-      <div class="step"><div class="card"><div class="num">2 · Hold it back</div><h3>Other arrivals can come first</h3><p>The top row is the night going on while that raven waits, one arrival at a time. Under each position is the position once the raven lands there.</p></div></div>
-      <div class="step"><div class="card"><div class="num">3 · Suppose</div><h3>Suppose its landing always settled the night</h3><p>Then every position in the bottom row is closed, for holding or for attacking. Both must appear, because the night at the top could still end either way.</p></div></div>
-      <div class="step"><div class="card"><div class="num">4 · Neighbours</div><h3>Somewhere, two neighbours split</h3><p>Two positions in the top row are one arrival apart. Land the raven at the first and the night is settled for holding. Land it at the second and the night is settled for attacking.</p></div></div>
-      <div class="step"><div class="card"><div class="num">5 · Another tent's arrival</div><h3>Then the order cannot matter</h3><p>If that one arrival is another man's business, it and the raven are separate folds: either order reaches the same position. So one more arrival leads from a night settled for holding to a night settled for attacking. That cannot be.</p></div></div>
-      <div class="step"><div class="card"><div class="num">6 · The same tent's arrival</div><h3>Then let that man go quiet</h3><p>If both arrivals are one man's business, let that man go quiet, as a man does whose birds are in the pines. The other three must finish without the quiet man. From where they finish, the raven alone still leads to holding, while the quiet man's other arrival and then the raven still leads to attacking. A finished night would still be open. That cannot be either.</p></div></div>
-      <div class="step"><div class="card"><div class="num">7 · So</div><h3>The raven lands, and the night is open still</h3><p>The supposition fails. Somewhere in the bottom row a position is open. No single raven is ever the one that has to settle the matter.</p></div></div>
+      <div class="step on"><div class="card"><div class="num">1 · An open night</div><h3>One raven is about to land</h3><p>The night currently stands <b>open</b>: it can still end in either Hold or Attack. One specific raven is in the air, ready to be taken in. Because the birds are reliable, it must eventually land. The question is whether we can time its landing so that the night stays open afterward.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · Hold it back</div><h3>Other arrivals can come first</h3><p>Imagine holding that one raven back in the air while other arrivals happen first. The <b>top row</b> shows the positions the night can reach while our raven waits. Directly below each top position, the <b>bottom row</b> shows the position reached the moment our waiting raven finally lands.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · Suppose</div><h3>Suppose its landing always settled the night</h3><p>Suppose, for contradiction, that whenever our raven lands, it <i>always</i> closes the night. Then every position in the bottom row would be closed—either locked in for Hold or locked in for Attack. And because the night started open, both Hold and Attack must appear somewhere in that bottom row.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Neighbours</div><h3>Somewhere, two neighbours split</h3><p>Since the bottom row contains both outcomes, there must be two adjacent positions in the top row—just <b>one arrival apart</b>—where landing our raven at the first position locks in <b>Hold</b>, while landing it after that single arrival locks in <b>Attack</b>.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · Another tent's arrival</div><h3>If that step is at another tent, order cannot matter</h3><p>What is that single arrival between the two top neighbours? <b>Case 1:</b> Suppose it happens at a <i>different</i> tent than the one our waiting raven is flying to. By Lemma 1 (separate tents commute), landing our raven first and taking that step second reaches the <i>exact same position</i> as taking that step first and landing our raven second. That would mean a position already locked into Hold can step directly into a position locked into Attack—which is impossible!</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · The same tent's arrival</div><h3>If it is at the same tent, let that man go quiet</h3><p><b>Case 2:</b> What if both arrivals happen at the <i>same</i> tent? Then let that man go completely quiet—as if his birds are stuck in the pines—until the other three men finish the plan and commit on their own. Because the other three never hear from the quiet man, their steps commute with his. So even after the other three have committed, delivering the raven alone to the quiet man would force Hold, while delivering his other arrival first and then the raven would force Attack. A finished night would still be open—which is impossible too!</p></div></div>
+      <div class="step"><div class="card"><div class="num">7 · So</div><h3>The raven lands, and the night is open still</h3><p>Both cases lead to an impossibility, so our supposition fails. Somewhere in the bottom row there must be a position that is <b>still open</b> after the raven lands. No single raven is ever forced to settle the night.</p></div></div>
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
-    <p class="tell" style="margin-top:0">Whatever arrives while the raven waits is either another tent's business, so that the order cannot matter, or the same tent's, and then that man can go quiet and the rest cannot tell which landed first. Two facts are now in hand: the night can begin open, and no single arrival need close it. What is left is to see the night they make when both are used without rest.</p>
+    <p class="tell" style="margin-top:0">In short, whatever happens while the raven waits is either another tent's business (so the order of delivery cannot change the outcome) or the same tent's business (in which case that man can go quiet while the others finish, leaving them unable to tell which bird landed first). We now have two powerful facts: <b>the night can begin open</b>, and <b>any waiting raven can be delivered without closing it</b>. All that remains is to see what happens when we use both facts over and over.</p>
     <details class="proof">
-      <summary>Proof · an arrival can always be deferred and the night left open</summary>
-      <p class="given">In the paper's terms a position is a configuration, an arrival an event, a course a schedule, a fair course an admissible run, and open and closed are bivalent and univalent. <b>Lemma 3.</b> Let <var>C</var> be an open position and <var>e</var> an arrival applicable at <var>C</var>. Let 𝒞 be the set of positions reachable from <var>C</var> without allowing <var>e</var>, and 𝒟 the set got by allowing <var>e</var> at each position of 𝒞. Then 𝒟 contains an open position.</p>
+      <summary>Proof · An arrival can always be deferred and the night left open (Lemma 3)</summary>
+      <p class="given"><b>Lemma 3.</b> Let <var>C</var> be an open position and <var>e</var> an arrival applicable at <var>C</var>. Let 𝒞 be the set of positions reachable from <var>C</var> without allowing <var>e</var>, and 𝒟 the set of positions obtained by finally allowing <var>e</var> from each position in 𝒞. Then 𝒟 contains at least one open position.</p>
     <ol class="proofsteps">
-      <li>Let <var>C</var> be open and <var>e</var> an arrival applicable there. Write 𝒞 for
-      the positions reachable from <var>C</var> without allowing <var>e</var>, and 𝒟 for those got
-      by allowing <var>e</var> at each position of 𝒞. Suppose no member of 𝒟 is open.</li>
-      <li><b>Both settlements occur in 𝒟.</b> <var>C</var> is open, so some course from it
-      ends in holding and another in attacking. If such a course never allows <var>e</var>, its positions
-      lie in 𝒞 and allowing <var>e</var> at the end gives a member of 𝒟 settled the same way; if
-      it does allow <var>e</var>, the position just after is already in 𝒟.</li>
-      <li><b>So 𝒞 holds neighbours that split.</b> 𝒞 is connected, so walking from the position
-      whose image is settled for holding to the one whose image is settled for attacking gives <var>C</var>₀ and
-      <var>C</var>₁ = <var>f</var>(<var>C</var>₀), one arrival apart, whose images <var>D</var>₀
-      and <var>D</var>₁ are settled opposite ways.</li>
-      <li><b>Case one: <var>f</var> is another man's arrival.</b> By the lemma of separate folds
-      <var>e</var> and <var>f</var> commute, so <var>D</var>₁ = <var>f</var>(<var>D</var>₀). But
-      everything reachable from the hold-settled <var>D</var>₀ is settled for holding, and
-      <var>D</var>₁ is settled for attacking.</li>
-      <li><b>Case two: <var>f</var> is the same man's arrival, say <var>p</var>'s.</b> Take a
-      course σ from <var>C</var>₀ in which <var>p</var> never stirs and which does finish;
-      permitted, since <var>p</var> may be the one silent man. Call the position it reaches
-      <var>A</var>.</li>
-      <li>σ has no man in common with <var>e</var> or <var>f</var>, so by the lemma it may be run
-      from <var>D</var>₀ and from <var>D</var>₁ as well, reaching <var>e</var>(<var>A</var>) and
-      <var>f</var> then <var>e</var> applied to <var>A</var> — settled for holding and for attacking
-      respectively. So <var>A</var> is open, though σ finished there.</li>
-      <li>Both cases are impossible, so 𝒟 holds an open position.<span class="qed">∎</span></li>
+      <li>Let <var>C</var> be open and <var>e</var> an arrival ready to occur at <var>C</var>. Suppose, for contradiction, that no position in 𝒟 is open—meaning every position in 𝒟 is already closed for either Hold or Attack.</li>
+      <li><b>Both outcomes must occur in 𝒟.</b> Since <var>C</var> is open, some course from <var>C</var> ends in holding and another ends in attacking. If such a course never allows <var>e</var>, its positions lie in 𝒞 and allowing <var>e</var> at the end gives a member of 𝒟 closed for that same outcome; if the course does allow <var>e</var>, the position immediately after <var>e</var> occurs is already in 𝒟 and closed for that outcome.</li>
+      <li><b>So 𝒞 contains neighbours that split in 𝒟.</b> Because every position in 𝒞 is connected by single steps from <var>C</var>, walking from a position whose image in 𝒟 is closed for Hold to one whose image is closed for Attack must cross two neighbours <var>C</var>₀ and <var>C</var>₁ = <var>f</var>(<var>C</var>₀), one arrival <var>f</var> apart, whose images <var>D</var>₀ = <var>e</var>(<var>C</var>₀) and <var>D</var>₁ = <var>e</var>(<var>C</var>₁) are closed for opposite outcomes.</li>
+      <li><b>Case 1: <var>f</var> is another man's arrival.</b> By Lemma 1 (separate folds commute), <var>e</var> and <var>f</var> commute, so <var>D</var>₁ = <var>f</var>(<var>D</var>₀). But every position reachable from the Hold-closed position <var>D</var>₀ must also be closed for Hold, whereas <var>D</var>₁ is closed for Attack—a contradiction.</li>
+      <li><b>Case 2: <var>f</var> is the same man's arrival, say <var>p</var>'s.</b> Take a fair course σ starting from <var>C</var>₀ in which <var>p</var> never takes a step and the remaining three men eventually commit; this is permitted because <var>p</var> could be the one silent man. Call the decided position reached by σ position <var>A</var>.</li>
+      <li>Because σ has no man in common with <var>e</var> or <var>f</var>, Lemma 1 says σ can also be run from <var>D</var>₀ and from <var>D</var>₁, reaching <var>e</var>(<var>A</var>) and <var>e</var>(<var>f</var>(<var>A</var>)) respectively. Since these are reached from <var>D</var>₀ and <var>D</var>₁, <var>e</var>(<var>A</var>) is closed for Hold while <var>e</var>(<var>f</var>(<var>A</var>)) is closed for Attack. That means both outcomes are still reachable from <var>A</var>, so <var>A</var> is open—contradicting the fact that σ had already finished and decided at <var>A</var>!</li>
+      <li>Since both cases lead to a contradiction, 𝒟 must contain an open position.<span class="qed">∎</span></li>
     </ol>
     </details>
   </div>
@@ -752,11 +318,11 @@ button.beg{cursor:pointer}
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">Two facts, used without rest</div>
+      <div class="kicker">Step 3 · Two facts, used without rest</div>
       <h2>A fair night in which nothing is ever settled</h2>
-      <p class="lede">Used without rest, the two facts make a night that is entirely fair and never closes. Start from a dusk that leaves the night open, keep the four men in a queue, and let whoever orders the arrivals choose each one so that the night is open after it.</p>
-      <p>The man at the head of the queue takes in the raven longest aloft for that tent, or walks to the perch and back if none is waiting, and then goes to the back of the queue. Every man's turn comes round again and the oldest raven is always taken first, so no man is starved of a turn and every raven is taken in at last.</p>
-      <p>Let the night run, and watch the count of men committed. Then give the birds a longest flight, and watch it again.</p>
+      <p class="lede">Used one after another without rest, our two facts construct a night that obeys every rule of fairness and yet never reaches a decision. Start from a dusk sighting that leaves the night open (Lemma 2), place the four mercenaries in a rotating queue, and time the arrivals using Lemma 3 so that the night stays open after every round.</p>
+      <p>Specifically, the mercenary at the front of the queue looks for the raven that has been in the air the longest for his tent. Using Lemma 3, other ravens are allowed to land until delivering that oldest raven leaves the night still <b>open</b> (or if no raven is flying to his tent, he simply checks his empty perch), and then he moves to the back of the queue. Because every man's turn comes around repeatedly and the oldest waiting raven is always delivered next, no mercenary is ever starved of a turn and every raven eventually lands.</p>
+      <p>Let the night run below and watch the count of committed men stay at zero. Then give the birds a maximum flight time, and watch what changes.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>The night <em id="nightmode">not yet begun</em></h4>
@@ -773,20 +339,20 @@ button.beg{cursor:pointer}
         <button class="btn alt" id="nightbound">Give the birds a longest flight</button>
         <button class="btn alt" id="nightreset">Start again</button>
       </div>
-      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">The picture shows the pattern of the argument, not a worked plan: the turns and the ravens are real, and that the night stays open is what the two facts guarantee for any plan the four could have made.</p>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">This simulation illustrates the structure of the proof: the rotating turns and raven deliveries are completely fair, and Lemmas 2 and 3 guarantee that against <i>any</i> deterministic plan the four could have chosen, the arrivals can be ordered so the night remains open forever.</p>
     </div></div></div>
-    <p class="tell">Run for ever, that night is entirely fair, and at every stage of it nothing has been settled. The same night can be arranged against any plan the four could have made, however ingenious.</p>
+    <p class="tell">Left to run forever, that night is completely fair—every bird lands and every man acts—yet at no stage is the decision ever settled. And the exact same endless night can be arranged against any deterministic plan the four mercenaries could ever invent, however clever.</p>
     <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center;margin-top:2rem">
       <div>
         <h3 style="font-size:1.5rem;margin-bottom:.5rem">No plan guarantees that anybody ever commits</h3>
-        <p><b>Nobody dies in it.</b> The one death the argument allowed was spent on the reasoning and never on the hill. What limits the four is the possibility of a death, which looks exactly like a slow bird.</p>
-        <p><b>Nothing goes wrong.</b> Nobody commits to a wrong answer, because nobody commits at all.</p>
-        <p><b>One would have been enough.</b> The demand was only that somebody commit, and even that fails.</p>
-        <p><b>The hill has nothing to do with it.</b> The same conclusion holds for any number of men from two upward and any two answers.</p>
+        <p><b>Nobody actually dies in that endless night.</b> The single death allowed by the rules was used only inside the proof's "what-if" reasoning, never on the hill itself. What paralyzes the four men is the mere <i>possibility</i> of a death, which looks identical to a slow bird.</p>
+        <p><b>Agreement is never violated.</b> Nobody ever commits to the wrong answer—because nobody commits at all.</p>
+        <p><b>Even one man committing would have been enough.</b> The third demand asked only that <i>somebody</i> eventually commit, and even that weaker promise cannot be kept.</p>
+        <p><b>The hill and the number four are not special.</b> The exact same impossibility holds for any group of two or more mercenaries (or machines) trying to settle on any two choices.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on top" loading="lazy"></div></div></div>
     </div>
-    <p class="tell">The night ended differently once the birds had a longest flight. That shows where to look for what the four would need.</p>
+    <p class="tell">Notice how the simulation ended in a decision once the birds were given a maximum flight time. That points directly to what the four mercenaries would need to break the impasse.</p>
   </div>
 </section>
 
@@ -797,14 +363,14 @@ button.beg{cursor:pointer}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Three ways out</div>
       <h2>What would have to change</h2>
-      <p class="lede">What the four would need is some way to tell a dead man from a slow bird. Slow birds alone are no trouble, and neither are birds that arrive out of order. The trouble is two things together: no longest flight, and a dead man looking exactly like a slow bird. Three changes would each take it away.</p>
+      <p class="lede">To guarantee a decision, the four mercenaries need some way to tell a dead comrade from a slow bird. Slow birds by themselves are no trouble, and neither are birds that arrive out of order. The trap springs from two things combined: <b>no maximum flight time</b>, and <b>a dead man looking exactly like a slow bird</b>. Changing the rules in any one of three ways is enough to escape:</p>
     </div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">One</div><h3>A longest flight</h3><p>Give the birds a longest flight, and enough silence means something.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Two</div><h3>Some report of who has died</h3><p>The report must in the end name every dead man, and in the end stop naming at least one living one. Such a report is enough while more than half live.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Three</div><h3>Every death before dusk</h3><p>If no man can die once the evening has begun, a majority can manage.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">One</div><h3>A maximum flight time</h3><p>If every raven has a longest possible flight time, then silence past that deadline proves a tent is dead, and the survivors can safely move on without it.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Two</div><h3>An imperfect report of who has died</h3><p>Give the camp a failure detector that eventually names every dead man and eventually stops falsely suspecting at least one living man. That is enough as long as a majority live.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Three</div><h3>Every death before dusk</h3><p>If no man can die once the night's exchanges have begun—only beforehand—then a living majority can always reach agreement.</p></div></div></div>
     </div>
-    <p class="tell">None of the three is on offer at the foot of the hill. The first is on offer at the top, where the bandits' rats have a longest run.<sup class="xref"><a href="../agreeing-among-liars/index.html#s3" title="Agreeing Among Liars: The Rats in the Wall">*</a></sup></p>
+    <p class="tell">None of these three is available at the foot of Mount Phyle (nor is flipping coins). The first, however, is available at the top of the hill, where the bandits' messenger rats have a known maximum running time.<sup class="xref"><a href="../agreeing-among-liars/index.html#s3" title="Agreeing Among Liars: The Rats in the Wall">*</a></sup></p>
   </div>
 </section>
 
@@ -815,16 +381,16 @@ button.beg{cursor:pointer}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The camp was a group of machines</h2>
-      <p class="lede">Read the camp again with machines in the tents. Every tent is a process, every raven is a message, and a tent that falls silent is a machine that has stopped. Hover over a row, or tap it, to see who is who.</p>
+      <p class="lede">Now read the camp again with computers in place of the tents. Every tent is a process, every raven is a network message, and a tent that falls silent is a machine that has crashed. Hover over or tap any row below to see how the story maps to distributed computing.</p>
     </div>
     <div class="map" id="map">
-      <div class="hd" style="text-align:right;padding-right:6px">At the foot of the hill</div><div></div><div class="hd">In the machine room</div>
+      <div class="hd" style="text-align:right;padding-right:6px">At the foot of the hill</div><div></div><div class="hd">In computing</div>
     </div>
     <div class="meander" style="margin:3rem auto"></div>
     <div class="end">
-      <p class="big">When messages may take any time and even one machine may stop, no protocol can guarantee that the group ever decides.</p>
+      <p class="big">When messages may take any amount of time and even one machine may crash, no deterministic protocol can guarantee that the group ever decides.</p>
       <p class="lede" style="margin:0 auto">Agreement itself is never broken. What cannot be promised is an end to the waiting.</p>
-      <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">Practical protocols live with this by changing the rules a little: delays that are bounded in the end, an imperfect report of who has failed, or a coin.</p>
+      <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">Real-world distributed systems live with this result by relaxing the rules slightly: assuming message delays eventually stay within bounds, using imperfect failure detectors, or flipping coins.</p>
       <div class="links">
         <a href="../../places/the-foot/index.html">The Foot of Mount Phyle, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
@@ -838,19 +404,23 @@ button.beg{cursor:pointer}
     Paterson, “Impossibility of Distributed Consensus with One Faulty Process,” <i>Journal of the
     ACM</i> <b>32</b>, 2 (April 1985), 374–382.</p>
         <p><b>The ideas.</b> No deterministic protocol can guarantee consensus in an
-    asynchronous system in which even one process may crash. The proof turns on <i>bivalence</i>:
-    a configuration from which both decisions are still reachable. There is always a bivalent
-    initial configuration, and from any bivalent configuration the step that would resolve the
-    indecision can be deferred and then taken without resolving it — so a scheduler can build an
-    admissible run that never decides. Three details carry the weight: the run the proof
-    constructs contains <i>no failure at all</i>, the single permitted fault being spent on the
-    argument; agreement and validity are never violated, only termination is lost; and the result
-    bites even though the requirement is merely that <i>some</i> process decide. The obstruction
-    is not slowness but the inability to distinguish a crashed process from a slow one. Relax it —
-    bound the delays, even only eventually, or supply an imperfect oracle about who has failed —
-    and consensus becomes solvable again; the paper's own §4 relaxes it by letting processes die
-    only <i>before</i> the protocol begins, and gives a protocol that works whenever a majority
-    are sound.</p>
+    asynchronous network if even a single process is allowed to crash. The proof centers on
+    <i>bivalence</i> (what our story calls an <i>open position</i>): a system configuration from
+    which both possible decisions are still reachable. The authors prove two key lemmas: first,
+    every protocol has at least one bivalent initial configuration (Lemma 2); second, from any
+    bivalent configuration, any pending message delivery can be delayed behind other steps so that
+    delivering it still leaves the system in a bivalent configuration (Lemma 3). Chaining these
+    together lets an adversarial scheduler construct an infinite, fair run in which every process
+    takes steps and every message is delivered, yet no decision is ever reached. Three subtleties
+    make the theorem especially striking: the infinite run constructed by the proof contains
+    <i>no actual crash at all</i> (the single permitted fault is used only to show that processes
+    cannot wait for everyone); safety (agreement and validity) is never violated—only termination
+    (liveness) is lost; and the impossibility holds even when we only require <i>a single</i>
+    process to eventually decide. The root obstacle is not slow messages alone, but the inability
+    to distinguish a crashed process from a slow one. Relaxing that constraint—by bounding message
+    delays (even only eventually), adding an unreliable failure detector, allowing randomness, or
+    restricting crashes to occur only <i>before</i> the protocol begins (as shown in §4 of the
+    paper)—makes consensus solvable again.</p>
         <div class="refs">
       <p>Fischer, M. J., Lynch, N. A., and Paterson, M. S. Impossibility of distributed consensus
       with one faulty process. <i>J. ACM</i> <b>32</b>, 2 (1985), 374–382.</p>
@@ -865,347 +435,6 @@ button.beg{cursor:pointer}
 </section>
 <footer>Distributed Algorithms of Ancient Greece · “The Limits of Agreement”, after Fischer, Lynch and Paterson, JACM 32(2), 1985.</footer>
 
-<script>
-"use strict";
-(function(){
-const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-const NS="http://www.w3.org/2000/svg";
-const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
-function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
-function rnd(n){return Math.floor(Math.random()*n)}
-/* run fn(0..1) over ms, eased */
-function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();return}const t0=performance.now();
-  (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
-function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
-
-/* ===== pop-ups unfold when they enter view ===== */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
-$$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
-$$(".say,[data-live]").forEach(e=>e.setAttribute("aria-live","polite"));
-
-/* ===== scroll: progress bar, section name, parallax ===== */
-const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
-const dep=$$("[data-depth]"), par=$$("[data-parallax]");
-let tick=false;
-function onscroll(){
-  if(tick)return; tick=true;
-  requestAnimationFrame(()=>{
-    tick=false;
-    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
-    prog.style.width=(h>0?y/h*100:0)+"%";
-    const mid=y+innerHeight*.4; let cur=secs[0];
-    for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
-    now.textContent=cur.dataset.name||"";
-    if(reduce)return;
-    for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
-    for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
-  });
-}
-addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
-
-/* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
-function stepDots(root,steps){
-  const stage=$(".stage",root),nav=document.createElement("div"); nav.className="dots"; nav.setAttribute("role","group"); nav.setAttribute("aria-label","The steps of this picture");
-  let cur=0; const go=i=>steps[i]&&steps[i].scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
-  const ctl=(cls,label,d,fn)=>{const b=document.createElement("button"); b.type="button"; b.className=cls; b.setAttribute("aria-label",label); b.title=label;
-    if(d) b.innerHTML='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="'+d+'"/></svg>'; b.addEventListener("click",fn); return b};
-  const prev=ctl("arr","Previous step","M7.5 2 3.5 6l4 4",()=>go(cur-1)), next=ctl("arr","Next step","M4.5 2l4 4-4 4",()=>go(cur+1)),
-        back=ctl("arr back","Back to the first step","M2.6 6.4a3.5 3.5 0 1 0 1-2.8M2.4 1.6v2.2h2.2",()=>go(0));
-  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""),"",()=>go(i))});
-  nav.append(prev,...dots,next,back);
-  if(stage&&steps.length>1) stage.append(nav);
-  return i=>{cur=i; prev.disabled=back.disabled=i===0; next.disabled=i===steps.length-1;
-    dots.forEach((d,j)=>{d.classList.toggle("on",j===i); if(j===i)d.setAttribute("aria-current","step"); else d.removeAttribute("aria-current")})};
-}
-function scrolly(root,render){
-  const steps=$$(".step",root),mark=stepDots(root,steps); render(0); mark(0);
-  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); mark(i); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
-  steps.forEach(s=>so.observe(s));
-}
-
-/* ===== who is who: the setting on the left, the machine room on the right ===== */
-function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
-  const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
-  [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}
-
-/* ===== space-time drawn in the round: each place is a line running outward, each ring a later moment,
-         and whatever is carried from place to place is an arc curving round and outward ===== */
-function Polar(svg,o){
-  const {cx,cy,r0,step,nodes,rings,tEnd}=o; svg.innerHTML=""; svg.setAttribute("viewBox",o.vb);
-  const defs=el("defs",{},svg);
-  const mk=(key,col)=>{const m=el("marker",{id:`${svg.id}-${key}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:col},m)};
-  mk("b","#136f9e"); mk("r","#bf4a26");
-  const frame=el("g",{},svg), under=el("g",{},svg), slips=el("g",{},svg), evs=el("g",{},svg), over=el("g",{},svg);
-  const P={svg,under,slips,evs,over,cx,cy,
-    r:t=>r0+step*t,
-    xy(deg,rr){const a=deg*Math.PI/180;return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)]},
-    pt(k,t){return P.xy(nodes[k][0],P.r(t))},
-    /* the points of an arc from place a at time ta to place b at time tb, the short way round */
-    arc(a,ta,b,tb){const a0=nodes[a][0],d=((nodes[b][0]-a0+540)%360)-180,n=Math.max(12,Math.round(Math.abs(d)/3)),pts=[];
-      for(let i=0;i<=n;i++)pts.push(P.xy(a0+d*i/n,P.r(ta+(tb-ta)*i/n)));return pts},
-    slip(a,ta,b,tb,trim=17){const pts=P.arc(a,ta,b,tb),end=pts[pts.length-1];
-      while(pts.length>2&&Math.hypot(pts[pts.length-1][0]-end[0],pts[pts.length-1][1]-end[1])<trim)pts.pop();
-      const p=el("path",{class:"st-slip","marker-end":`url(#${svg.id}-b)`,d:"M"+pts.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" L")},slips);
-      p.mid=P.arc(a,ta,b,tb); p.mid=p.mid[Math.floor(p.mid.length/2)]; return p},
-    seg(k,t1,t2){const [x1,y1]=P.pt(k,t1),[x2,y2]=P.pt(k,t2);return el("line",{class:"st-seg",x1,y1,x2,y2},under)},
-    event(k,t,fill,rad=13){const [x,y]=P.pt(k,t),g=el("g",{class:"st-ev",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},evs);
-      el("circle",{class:"halo2",r:rad+5},g);el("circle",{class:"b",r:rad,fill},g);g.label=el("text",{},g);el("circle",{r:rad+8,fill:"transparent"},g);return g}
-  };
-  for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
-  for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
-  for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
-    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
-  if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
-  return P;
-}
-
-/* lineage: draw the edges of a book's graph of papers, and say what an edge carries (lineage.py) */
-(function(){
-const NS="http://www.w3.org/2000/svg",wide=matchMedia("(min-width:860px)");
-document.querySelectorAll(".lin").forEach(lin=>{
-  const svg=lin.querySelector(".lin-edges"),say=lin.querySelector(".lin-say"),idle=say.innerHTML;
-  const node=n=>lin.querySelector('[data-n="'+n+'"]');
-  const links=[...lin.querySelectorAll(".lin-link")].map(el=>({el,side:el.dataset.side,from:el.dataset.from.split(" "),to:el.dataset.to.split(" "),g:null}));
-  const box=el=>{const a=el.getBoundingClientRect(),b=lin.getBoundingClientRect();
-    return {l:a.left-b.left,r:a.right-b.left,t:a.top-b.top,b:a.bottom-b.top,cx:(a.left+a.right)/2-b.left,cy:(a.top+a.bottom)/2-b.top}};
-  const mk=(tag,at,to)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);to.appendChild(e);return e};
-  const f=v=>v.toFixed(1);
-  const path=(g,d)=>mk("path",{d},g);
-  const flat=(g,x1,y1,x2,y2)=>path(g,`M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}`);
-  const bend=(g,x1,y1,x2,y2)=>{const m=(x1+x2)/2;path(g,`M${f(x1)} ${f(y1)}C${f(m)} ${f(y1)} ${f(m)} ${f(y2)} ${f(x2)} ${f(y2)}`)};
-  const head=(g,x,y,down)=>mk("polygon",{points:down?`${f(x-5)},${f(y-8)} ${f(x+5)},${f(y-8)} ${f(x)},${f(y)}`:`${f(x-8)},${f(y-5)} ${f(x-8)},${f(y+5)} ${f(x)},${f(y)}`},g);
-  function draw(){
-    svg.textContent="";
-    if(!wide.matches)return;
-    const R=lin.getBoundingClientRect();
-    svg.setAttribute("width",R.width);svg.setAttribute("height",R.height);svg.setAttribute("viewBox",`0 0 ${f(R.width)} ${f(R.height)}`);
-    const ports={};   // the edges that meet one side of a middle node share it out between them, in the order they come from
-    const port=(n,side,y,then)=>(ports[n+side]=ports[n+side]||[]).push({n,side,y,then});
-    links.forEach(k=>{
-      const g=k.g=mk("g",{},svg),c=box(k.el.querySelector("em"));
-      if(k.side==="in"){
-        flat(g,box(node(k.from[0])).r,c.cy,c.l,c.cy);
-        k.to.forEach(n=>port(n,"l",c.cy,(x,y)=>{bend(g,c.r,c.cy,x-7,y);head(g,x,y)}));
-      }else if(k.side==="out"){
-        const b=box(node(k.to[0]));
-        flat(g,c.r,c.cy,b.l-7,c.cy);head(g,b.l,c.cy);
-        k.from.forEach(n=>port(n,"r",c.cy,(x,y)=>bend(g,x,y,c.l,c.cy)));
-      }else{
-        const s=node(k.from[0]),t=node(k.to[0]),sb=box(s),tb=box(t);
-        if(t.parentNode.previousElementSibling===s.parentNode)flat(g,c.cx,sb.b,c.cx,c.t);
-        else{const y=sb.b-12,x=sb.r+20;   // round the papers between, outside their right edge
-          path(g,`M${f(sb.r)} ${f(y)}H${f(x-10)}Q${f(x)} ${f(y)} ${f(x)} ${f(y+10)}V${f(c.cy-10)}Q${f(x)} ${f(c.cy)} ${f(x-10)} ${f(c.cy)}H${f(c.r)}`)}
-        flat(g,c.cx,c.b,c.cx,tb.t-7);head(g,c.cx,tb.t,true);
-      }
-    });
-    for(const key in ports){
-      const list=ports[key].sort((a,b)=>a.y-b.y),b=box(node(list[0].n)),h=b.b-b.t;
-      list.forEach((p,i)=>p.then(p.side==="l"?b.l:b.r,b.t+h*(.2+.6*(i+.5)/list.length)));
-    }
-  }
-  function light(on,words){
-    lin.classList.toggle("hot",on.length>0);
-    const nodes=new Set(on.flatMap(k=>k.from.concat(k.to)));
-    links.forEach(k=>{const is=on.includes(k);k.el.classList.toggle("on",is);if(k.g)k.g.classList.toggle("on",is)});
-    lin.querySelectorAll(".lin-node").forEach(n=>n.classList.toggle("on",nodes.has(n.dataset.n)));
-    say.innerHTML=words||idle;
-  }
-  const name=ns=>ns.map(n=>node(n).dataset.label).join(", ");
-  links.forEach(k=>{
-    const tell=()=>light([k],"<b>"+name(k.from)+" → "+name(k.to)+"</b>"+k.el.querySelector(".why").innerHTML);
-    k.el.addEventListener("mouseenter",tell);k.el.addEventListener("focus",tell);k.el.addEventListener("click",tell);
-  });
-  lin.querySelectorAll(".lin-node").forEach(n=>{
-    const mine=()=>light(links.filter(k=>k.from.concat(k.to).includes(n.dataset.n)));
-    n.addEventListener("mouseenter",mine);n.addEventListener("focus",mine);
-  });
-  lin.addEventListener("mouseleave",()=>light([]));
-  new ResizeObserver(draw).observe(lin);
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
-  draw();
-});
-})();
-
-/* the four mercenaries, told apart by colour */
-const TC={1:"#e0b84a",2:"#6583d6",3:"#c45448",4:"#9cb648"};
-const yesno=ok=>ok?"<span class='ok'>✓</span>":"<span class='bad'>✗</span>";
-const tentChip=(k,extra="")=>`<span class="chip"${extra}><i style="background:${TC[k]}"></i>Tent ${k}</span>`;
-
-/* ===== machines: waiting tells A nothing ===== */
-(function(){
-  const waits=["1 second","2 seconds","5 seconds","30 seconds","5 minutes","1 hour","1 day"],log=$("#waitlog"),note=$("#waitnote"),b=$("#waitb"),r=$("#waitr");let i=0;
-  b.onclick=()=>{const w=waits[i++],d=document.createElement("div");d.className="e";d.textContent=`waited ${w} ▸ no reply from B`;log.appendChild(d);while(log.children.length>5)log.firstChild.remove();
-    note.textContent=i===1?"No reply. Has B stopped, or is its reply still on the way?":i<waits.length?`After ${w}, A knows exactly what it knew after one second.`:"A can wait as long as it likes. No length of waiting tells a machine that has stopped from one that is slow.";
-    if(i>=waits.length){b.disabled=true;r.hidden=false}};
-  r.onclick=()=>{i=0;log.innerHTML="";b.disabled=false;r.hidden=true;note.textContent="A has asked B for its value and is waiting for the reply."};
-})();
-
-/* ===== the hill, seen from above: one picture reused wherever ravens fly between the tents ===== */
-function Hill(svg){
-  const cx=235,cy=235,R=158,A={1:-90,2:0,3:90,4:180}; svg.innerHTML=""; svg.setAttribute("viewBox","0 0 470 470");
-  el("circle",{cx,cy,r:215,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
-  el("circle",{cx,cy,r:96,fill:"#d9cfb4",stroke:"#6b5a48","stroke-width":2.5,"stroke-dasharray":"2 6"},svg);
-  el("circle",{cx,cy,r:24,fill:"#efe6cf",stroke:"#6b5a48","stroke-width":6},svg);
-  el("text",{x:cx,y:cy+52,class:"lab"},svg).textContent="the crown";
-  const under=el("g",{},svg),sites=el("g",{},svg),over=el("g",{},svg);
-  const H={svg,cx,cy,R,A,under,over,tent:{},
-    at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
-    put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
-    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
-    /* a raven u of the way from tent a to tent b, flying round the hill; each direction keeps its own line */
-    fly(g,a,b,u){const d=((A[b]-A[a]+540)%360)-180;H.put(g,...H.at(A[a]+d*u,R-(d>0?24:46)*Math.sin(Math.PI*u)))},
-    state(k,s){H.tent[k].st.textContent=s},
-    badge(k,s){const b=H.tent[k].badge;b.setAttribute("opacity",s?1:0);b.lastChild.textContent=s||""}
-  };
-  for(const k of [1,2,3,4]){const a=A[k]*Math.PI/180,[x,y]=H.at(A[k]),g=el("g",{class:"site"},sites);H.put(g,x,y);
-    el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:TC[k]},g);el("text",{},g).textContent="T"+k;
-    const st=el("text",{class:"state halo",x:-48*Math.cos(a),y:-46*Math.sin(a)},g);
-    const badge=el("g",{class:"badge",opacity:0,transform:`translate(${(38*Math.cos(a)).toFixed(1)} ${(34*Math.sin(a)).toFixed(1)})`},g);el("circle",{r:11},badge);el("text",{},badge);
-    H.tent[k]={x,y,g,st,badge}}
-  return H;
-}
-
-/* ===== two easy plans, each giving up one demand ===== */
-(function(){
-  const H=Hill($("#plansvg")),say=$("#plansay"),D=[1,2,3].map(i=>$("#d"+i)),btn=["plan1","plan2","plan3","plannew"].map(i=>$("#"+i));
-  const names=["No two commit differently","Both answers stay possible","Somebody eventually commits"],T=[1,2,3,4];
-  let sight={},toks=[];
-  const checks=(v,why)=>D.forEach((li,i)=>li.innerHTML=`<b>${names[i]}</b> ${v[i]==null?"":yesno(v[i])}${why[i]?"<br>"+why[i]:""}`);
-  const lock=on=>btn.forEach(b=>b.disabled=on);
-  function clear(){toks.forEach(g=>g.remove());toks=[];T.forEach(k=>{H.state(k,"");H.tent[k].g.classList.remove("out")})}
-  function deal(){T.forEach(k=>{sight[k]=rnd(2)?"A":"H";H.badge(k,sight[k])});clear();checks([null,null,null],["","",""]);say.textContent="Each easy plan keeps two demands. Find the one it gives up."}
-  /* every man in `from` sends what he saw to the other three; the birds take as long as they take */
-  function birds(from){const ps=[];from.forEach(a=>T.forEach(b=>{if(b===a)return;const g=H.token(TC[a],sight[a]);toks.push(g);H.fly(g,a,b,.12);g.setAttribute("opacity",1);
-    ps.push(tween(900+rnd(1900),u=>H.fly(g,a,b,.12+.76*u)).then(()=>g.setAttribute("opacity",0)))}));return Promise.all(ps)}
-  btn[0].onclick=()=>{clear();T.forEach(k=>H.state(k,"holds"));
-    checks([true,false,true],["All four hold.","They hold whatever anyone saw, so the evening was pointless.","Everyone commits at once."]);
-    say.innerHTML="<b>Always hold</b> keeps the first and third demands, and gives up the second."};
-  btn[1].onclick=async()=>{lock(true);clear();checks([null,null,null],["","",""]);say.textContent="Every man sends what was seen to the other three, and waits until holding all four sightings.";
-    await birds(T);const n=T.filter(k=>sight[k]==="A").length,att=n>=3;T.forEach(k=>H.state(k,att?"attacks":"holds"));
-    checks([true,true,true],["All four apply one rule to the same four sightings.",`${n} of the 4 saw attack, so tonight the rule says ${att?"attack":"hold"}. Other sightings would say otherwise.`,"Everyone commits once the last bird is in."]);
-    say.innerHTML="On a night when every man lives, <b>waiting for every report</b> keeps all three demands. The rule used here: attack if at least three saw attack, otherwise hold.";lock(false)};
-  btn[2].onclick=async()=>{lock(true);clear();checks([null,null,null],["","",""]);H.tent[3].g.classList.add("out");H.state(3,"silent");say.textContent="Suppose nothing ever comes from tent 3. The other three send what they saw, and wait for all four sightings.";
-    await birds([1,2,4]);[1,2,4].forEach(k=>H.state(k,"waits"));
-    checks([true,true,false],["Nobody commits, so no two differ.","The rule still depends on what was seen.","Three men wait on a tent that will never answer, and can never learn that it will not."]);
-    say.innerHTML="With one tent silent, <b>waiting for every report</b> gives up the third demand. Nobody at the foot can tell this night from one in which tent 3's bird is merely slow.";lock(false)};
-  btn[3].onclick=deal;deal();
-})();
-
-/* ===== two nights that look the same from tent 2's perch ===== */
-(function(){
-  const HA=Hill($("#worldA")),HB=Hill($("#worldB")),say=$("#worldsay"),b=$("#worldb");let h=0;
-  const t=HA.tent[1];t.g.classList.add("out");
-  el("path",{d:`M${t.x-17},${t.y-17} L${t.x+17},${t.y+17} M${t.x-17},${t.y+17} L${t.x+17},${t.y-17}`,stroke:"#1c1512","stroke-width":5,fill:"none"},HA.over);
-  const rv=HB.token(TC[1],"");rv.setAttribute("opacity",1);HB.fly(rv,1,2,.45);
-  const [px,py]=HB.at(-90+90*.45,HB.R-24*Math.sin(Math.PI*.45));el("text",{class:"lab halo",x:px+6,y:py+30},HB.over).textContent="in a pine";
-  b.onclick=()=>{h++;tween(500,u=>HB.fly(rv,1,2,.45+.025*Math.sin(u*Math.PI)));
-    say.innerHTML=`<b>${h} hour${h>1?"s":""}</b> of waiting. Both perches are empty. Nothing tent 2 can see, measure or wait for tells the two nights apart.`+(h>=4?" Since no bird has a longest flight, waiting longer never turns one night into the other. It only makes the wait longer.":"")};
-})();
-
-/* ===== separate folds: two runs of arrivals with no man in common, in either order ===== */
-(function(){
-  const P=Polar($("#foldsvg"),{vb:"0 0 520 480",cx:260,cy:240,r0:40,step:27,rings:7,tEnd:7.4,
-    nodes:{1:[225,"T1",TC[1]],2:[135,"T2",TC[2]],3:[315,"T3",TC[3]],4:[45,"T4",TC[4]]}});
-  const stand=$("#foldstand"),say=$("#foldsay"),b12=$("#fold12"),b34=$("#fold34"),br=$("#foldr");
-  let done=[],took={},last=null;
-  const paint=()=>stand.innerHTML=[1,2,3,4].map(k=>`<div>${tentChip(k)} ${took[k]?`has taken in the raven from tent ${took[k]}`:"has taken in nothing yet"}</div>`).join("");
-  const dot=(k,t)=>{const g=P.event(k,t,"#fffaf0",8);g.classList.add("st-new");g.style.cursor="default"};
-  const arc=(a,ta,b,tb)=>P.slip(a,ta,b,tb,12).classList.add("st-new");
-  function run(a,b,btn){
-    const t=1.4+3.1*done.length;dot(a,t);arc(a,t,b,t+1.1);dot(b,t+1.1);arc(b,t+1.1,a,t+2.2);dot(a,t+2.2);
-    took[b]=a;took[a]=b;done.push(a);btn.disabled=true;paint();
-    if(done.length<2){say.innerHTML=`Tents ${a} and ${b} trade ravens. Nothing in that touched the other two tents.`;return}
-    const order=done.join();
-    say.innerHTML=`Now tents ${a} and ${b} trade. Every man has taken in the partner's raven, and no raven is left aloft. `+
-      (last&&last!==order?"<span class='ok'>It is the same position as last time</span>, when the other pair went first. The ravens and the tents they reach are the same; only the moments swapped.":"Start the night again, and let the other pair go first.");
-    last=order;
-  }
-  function reset(){P.slips.innerHTML="";P.evs.innerHTML="";done=[];took={};b12.disabled=b34.disabled=false;paint();say.textContent="Tents 1 and 2 have ravens to trade, and so have tents 3 and 4. Which pair goes first?"}
-  b12.onclick=()=>run(1,2,b12);b34.onclick=()=>run(3,4,b34);br.onclick=reset;reset();
-})();
-
-/* ===== the dusk that settles nothing: however the row is settled, two neighbours split ===== */
-(function(){
-  const box=$("#dusk"),say=$("#dusksay"),B=[0,1,2,3,4].map(n=>[1,2,3,4].map(k=>k<=n?"A":"H")),fate=["H","H","H","A","A"];
-  const word={H:"hold",A:"attack"},ing={H:"holding",A:"attacking"};
-  function render(focus){
-    const i=fate.findIndex((f,j)=>j<4&&f!==fate[j+1]),p=i+1;
-    box.innerHTML=B.map((b,j)=>{const end=j===0||j===4,tag=end?"div":"button",hot=j===i||j===i+1;
-      return `<${tag} class="beg${hot?" split":""}"${end?"":` data-j="${j}" aria-label="A beginning settled for ${word[fate[j]]}. Press to change it."`}><div class="sq">${b.map((s,k)=>`<span style="background:${TC[k+1]}"${hot&&k+1===p?' class="p"':""}>${s}</span>`).join("")}</div><small>settled for<b class="${fate[j]==="H"?"hold":"att"}">${word[fate[j]]}</b>${end?"forced":"&nbsp;"}</small></${tag}>`}).join("");
-    $$("button",box).forEach(bt=>bt.onclick=()=>{const j=+bt.dataset.j;fate[j]=fate[j]==="H"?"A":"H";render(j)});
-    if(focus!=null)$(`button[data-j="${focus}"]`,box).focus();
-    const x=fate[i],y=fate[i+1];
-    say.innerHTML=`The two marked beginnings are settled opposite ways, and differ only in what <b>tent ${p}</b> saw. Take a night from the one settled for ${word[x]} in which tent ${p} never stirs, as the one silent man may. It ends in ${ing[x]}. Run the same night from its neighbour: tent ${p} has told nobody what was seen there, so the other three see the same ravens in the same order, and it ends in ${ing[x]} there too. <span class="bad">But that beginning was settled for ${word[y]}.</span> However you settle the row, some pair splits like this. So some beginning is not settled at all.`;
-  }
-  render();
-})();
-
-/* ===== scrollytelling: the raven that would settle it can be held back ===== */
-(function(){
-  const svg=$("#defersvg");svg.setAttribute("viewBox","0 0 640 470");
-  const HOLD="#136f9e",ATT="#bf4a26",PLAIN="#f3ead0",X=[110,250,390,530],YT=200,YB=350;
-  const m=el("marker",{id:"defer-k",markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},el("defs",{},svg));el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:"#1c1512"},m);
-  const kinds={open:[HOLD,ATT,""],H:[HOLD,HOLD,"H"],A:[ATT,ATT,"A"],q:["#b9a77e","#b9a77e","?"],plain:[PLAIN,PLAIN,""]};
-  function node(x,y){const n=el("g",{class:"gr-node fade",transform:`translate(${x} ${y})`},svg),l=el("path",{d:"M0,-28 A28,28 0 0 0 0,28 z"},n),r=el("path",{d:"M0,-28 A28,28 0 0 1 0,28 z"},n);
-    el("circle",{class:"rim",r:28},n);const t=el("text",{},n);n.set=k=>{l.setAttribute("fill",kinds[k][0]);r.setAttribute("fill",kinds[k][1]);t.textContent=kinds[k][2]};return n}
-  const arrow=(x1,y1,x2,y2,cls="")=>el("line",{class:"gr-arrow fade "+cls,x1,y1,x2,y2,"marker-end":"url(#defer-k)"},svg);
-  const label=(x,y,s,anchor)=>{const t=el("text",{class:"gr-lab fade",x,y},svg);t.textContent=s;if(anchor)t.style.textAnchor=anchor;return t};
-  const mark=(x,y,ok)=>{const t=el("text",{class:(ok?"gr-ok":"gr-x")+" fade",x,y},svg);t.textContent=ok?"✓":"✗";return t};
-  const box=el("rect",{class:"gr-box fade",x:X[1]-46,y:YT-46,width:X[2]-X[1]+92,height:YB-YT+92,rx:14},svg);
-  const right=[0,1,2].map(i=>arrow(X[i]+34,YT,X[i+1]-38,YT)),down=X.map(x=>arrow(x,YT+34,x,YB-38));
-  const top=X.map(x=>node(x,YT)),bot=X.map(x=>node(x,YB));
-  const l0=label(X[0]+46,YT+6,"one raven is waiting to land","start"),lt=label(320,YT-56,"the night goes on while the raven waits"),ld=label(X[0]+12,(YT+YB)/2+6,"the raven lands","start");
-  const below=arrow(X[1]+34,YB,X[2]-38,YB),bx=mark(320,YB-24,false);
-  const quiet=node(320,64),qa=arrow(X[1]+16,YT-34,302,92,"dash"),ql=label(398,58,"the other three finish","start"),ql2=label(398,80,"without that man: open still","start"),qx=mark(372,64,false),ok=mark(X[1]+46,YB-30,true);
-  quiet.set("open");
-  /* the key along the bottom */
-  [["H","settled for holding",40],["A","settled for attacking",235],["open","open",445]].forEach(([k,s,x])=>{const n=node(x,440);n.setAttribute("transform",`translate(${x} 440) scale(.42)`);n.set(k);n.classList.add("on");n.lastChild.textContent="";label(x+20,445,s,"start").classList.add("on")});
-  const on=(e,v)=>e.classList.toggle("on",!!v);
-  scrolly($("#defer"),s=>{
-    top.forEach((n,i)=>{on(n,i===0||s>=1);n.set(i===0?"open":"plain")});
-    bot.forEach((n,i)=>{on(n,s>=1);n.set(s<2?"q":s<6?"HHAA"[i]:i===1?"open":"q")});
-    right.forEach(a=>on(a,s>=1));down.forEach(a=>on(a,s>=1));
-    on(l0,s===0);on(lt,s>=1&&s!==5);on(ld,s>=1);on(box,s>=3&&s<6);
-    on(below,s===4);on(bx,s===4);[quiet,qa,ql,ql2,qx].forEach(e=>on(e,s===5));on(ok,s===6);
-  });
-})();
-
-/* ===== a fair night in which nothing is settled; and the same night once birds have a longest flight ===== */
-(function(){
-  const H=Hill($("#nightsvg")),qEl=$("#nightq"),say=$("#nightsay"),mode=$("#nightmode"),nA=$("#narr"),nL=$("#naloft"),nC=$("#ncom"),bRun=$("#nightrun"),bB=$("#nightbound"),bR=$("#nightreset"),T=[1,2,3,4];
-  let queue=[],aloft=[],arr=0,com=0,timer=null,want=false,busy=false,seq=0,gen=0;
-  function paint(){qEl.innerHTML="The queue: "+queue.map((k,i)=>tentChip(k,i?"":' style="box-shadow:0 0 0 3px var(--gold)"')).join("");
-    nA.textContent=arr;nL.textContent=aloft.length;nC.textContent=com;T.forEach(k=>H.tent[k].g.classList.toggle("turn",want&&k===queue[0]))}
-  function send(a,quick){let b;do{b=1+rnd(4)}while(b===a);const r={a,b,n:seq++,u:.4+Math.random()*.2,g:H.token(TC[a],"")};aloft.push(r);H.fly(r.g,a,b,.12);r.g.setAttribute("opacity",1);
-    return tween(quick?0:600,u=>H.fly(r.g,a,b,.12+(r.u-.12)*u))}
-  const land=r=>tween(600,u=>H.fly(r.g,r.a,r.b,r.u+(.88-r.u)*u)).then(()=>r.g.remove());
-  function stop(){clearInterval(timer);timer=null}
-  function go(){if(!timer&&want){turn();timer=setInterval(turn,1700)}}
-  /* the man at the head of the queue takes in the raven longest aloft for that tent, or comes back empty-handed */
-  async function turn(){
-    if(busy)return;busy=true;const g0=gen,k=queue[0],r=aloft.filter(x=>x.b===k).sort((x,y)=>x.n-y.n)[0];
-    if(r){aloft.splice(aloft.indexOf(r),1);say.innerHTML=`<b>Tent ${k}</b> takes in the raven longest aloft for that tent, from tent ${r.a}, and writes one more. The night is open still.`;
-      await land(r);if(g0!==gen)return;arr++;await send(k)}
-    else{say.innerHTML=`Nothing is waiting for <b>tent ${k}</b>. The man walks to the perch and back, empty-handed. The night is open still.`;await sleep(700)}
-    if(g0!==gen)return;queue.push(queue.shift());paint();busy=false;
-  }
-  function reset(){gen++;stop();want=busy=false;aloft.forEach(r=>r.g.remove());queue=[1,2,3,4];aloft=[];arr=com=0;T.forEach(k=>{H.state(k,"");send(k,true)});
-    mode.textContent="not yet begun";say.textContent="No man is starved of a turn, and every raven is taken in at last.";bRun.disabled=bB.disabled=false;paint()}
-  bRun.onclick=()=>{want=true;bRun.disabled=true;mode.textContent="open, and staying open";paint();go()};
-  bB.onclick=async()=>{const g0=++gen;stop();want=false;busy=true;bRun.disabled=bB.disabled=true;paint();mode.textContent="the birds have a longest flight";
-    say.innerHTML="Now no raven is ever aloft longer than a time all four know. Each man waits that long.";
-    await sleep(1200);if(g0!==gen)return;const n=aloft.length;await Promise.all(aloft.map(land));if(g0!==gen)return;
-    aloft=[];arr+=n;com=4;T.forEach(k=>H.state(k,"commits"));mode.textContent="closed";paint();
-    say.innerHTML="When that time has passed, an empty perch means something: every raven that was sent is in, so a silent tent is a dead one. <span class='ok'>All four can apply one rule to the same reports, and commit.</span>"};
-  bR.onclick=reset;
-  new IntersectionObserver(es=>{if(es[0].isIntersecting)go();else stop()},{threshold:.1}).observe($("#nightsvg"));
-  reset();
-})();
-
-/* ===== relevance map ===== */
-mapPairs($("#map"),[["Four tents, one man in each","Processes"],["Attack or hold","A decision between two values"],["What a man saw at dusk","Its input value"],["Committing: leaving the tent","Deciding, once and for good"],["A raven","A message"],["No longest flight","Asynchrony: no bound on message delay"],["A tent that falls silent","A crash, which looks exactly like slowness"],["No drawing lots","A deterministic protocol"],["A position","A configuration"],["An arrival","A step: one process receiving one message"],["Open / closed","Bivalent / univalent"],["The three demands","Agreement, validity, termination"]]);
-})();
-</script>
+<script src="script.js"></script>
 </body>
 </html>

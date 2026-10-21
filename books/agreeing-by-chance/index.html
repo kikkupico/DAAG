@@ -6,382 +6,7 @@
 <title>Agreeing by Chance — The Foot of Mount Phyle</title>
 <meta name="description" content="Ben-Or's randomized consensus: four mercenaries, their ravens and a coin in each tent, and what chance buys that no plan can.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<style>
-:root{
-  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4;
-  --aegean:#2e88b5; --aegean-d:#136f9e; --blood:#bf4a26; --olive:#7c8f3a; --terra:#b5602c;
-  --gold:#e0b84a; --shadow:#b9a77e;
-  --serif:Georgia,'Iowan Old Style','Palatino Linotype',serif;
-  --sans:Optima,'Gill Sans','Gill Sans MT',sans-serif;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;background:#d8cba6}
-body{margin:0;background:#d8cba6;color:var(--ink);font-family:var(--serif);line-height:1.55;overflow-x:hidden}
-img{max-width:100%;display:block}
-button{font:inherit;cursor:pointer}
-h1,h2,h3{font-family:var(--sans);line-height:1.12;margin:0;text-wrap:balance}
-p{margin:0 0 1rem;font-size:1.125rem;line-height:1.65;text-wrap:pretty}
-.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--blood)}
-
-/* ---------- top bar ---------- */
-.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
-  font-family:var(--sans);font-size:.78rem;letter-spacing:.05em;background:linear-gradient(180deg,#3a2a1a,#241a10)}
-.bar a{color:#f0e6cc;text-decoration:none;opacity:.8;white-space:nowrap} .bar a:hover{opacity:1}
-.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:520px){.bar a+a{display:none}}
-.bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
-
-/* ---------- spreads ---------- */
-.spread{position:relative;padding:clamp(4.5rem,11vw,8rem) 20px;overflow:clip}
-.spread.has-scrolly{overflow:visible;padding-bottom:0;background:var(--marble)}
-.dark{background:var(--marble);color:var(--ink);background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
-.light{background:var(--parch);color:var(--ink);
-  background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
-/* torn-paper edge between spreads */
-.tear{position:absolute;left:0;right:0;top:-1px;height:26px;z-index:3;pointer-events:none}
-.tear path{fill:var(--prev)}
-.wrap{max-width:1080px;margin:0 auto;position:relative;z-index:2}
-.narrow{max-width:640px;margin:0 auto}
-.spread h2{font-size:clamp(1.9rem,5vw,3.1rem);margin:.4rem 0 1rem}
-.lede{max-width:34em}
-.light .lede{color:#3a2d24}
-.meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
-  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
-
-/* ---------- the pop-up: a card that unfolds from its hinge ---------- */
-.pop{perspective:1400px}
-.pop > .leaf{transform-origin:50% 100%;transform:rotateX(78deg) translateY(30px);opacity:0;
-  transition:transform 1.1s cubic-bezier(.2,.9,.25,1.12),opacity .6s ease}
-.pop.up > .leaf{transform:rotateX(0) translateY(0);opacity:1}
-.pop.fromleft > .leaf{transform-origin:0 50%;transform:rotateY(-80deg)}
-.pop.fromright > .leaf{transform-origin:100% 50%;transform:rotateY(80deg)}
-.pop.up.fromleft > .leaf,.pop.up.fromright > .leaf{transform:none}
-.paper{background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);position:relative}
-.light .paper{box-shadow:9px 11px 0 #b9a77e}
-.photo{border:5px solid #fffaf0;box-shadow:0 0 0 3px var(--ink),12px 16px 0 var(--shadow);background:#222;overflow:hidden;position:relative}
-.photo img{width:100%;height:100%;object-fit:cover}
-.tilt-l{transform:rotate(-1.4deg)} .tilt-r{transform:rotate(1.2deg)}
-[data-depth]{will-change:transform}
-.fold-shadow{position:absolute;left:6%;right:6%;bottom:-18px;height:26px;background:radial-gradient(ellipse at center,#0008,transparent 70%);opacity:0;transition:opacity 1s .4s;z-index:-1}
-.up .fold-shadow{opacity:1}
-
-/* ---------- cover ---------- */
-#cover{min-height:100svh;display:grid;align-items:center;padding-top:5rem;
-  background:linear-gradient(180deg,#e0d6bb00 calc(100% - 140px),#e0d6bb),radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
-/* the cover ends in one colour, and the torn edge under it is that colour */
-#cover+.spread>.tear path{fill:#e0d6bb}
-#cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
-#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:0 0 1.4rem;letter-spacing:-.01em}
-#cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
-#cover .generic,#cover .allegory{max-width:26em;margin:0 0 1rem}
-#cover .generic,#cover .allegory{color:var(--ink)}
-#cover .generic{font-style:italic;font-size:clamp(1.15rem,2.3vw,1.4rem)}
-#cover .source{font-family:var(--sans);font-size:.74rem;line-height:1.5;max-width:36em;margin:1.6rem 0 0;color:#6b5d4f}
-#cover .source i{color:var(--blood)}
-.cut{position:absolute;pointer-events:none;z-index:1}
-.cut svg{display:block;width:100%;height:auto}
-@media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
-
-/* ---------- two-column spreads ---------- */
-.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-.two.wide-r{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
-@media(max-width:859px){.two,.two.wide-r{grid-template-columns:minmax(0,1fr)}}
-
-/* ---------- the hall (full-bleed photo with pins) ---------- */
-#hall{padding:0;background:var(--marble)}
-.bleed{position:relative;height:min(100svh,880px);overflow:hidden}
-.bleed img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover}
-.bleed::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--parch) 0,transparent 8%,transparent 92%,var(--parch) 100%);pointer-events:none}
-.pin{position:absolute;z-index:4;max-width:min(250px,44vw);padding:10px 14px;background:#fffaf0;color:var(--ink);border:3px solid var(--ink);
-  box-shadow:5px 6px 0 #0007;font-size:.92rem;line-height:1.35;transform-origin:0 100%}
-.pin b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood)}
-.pin::after{content:"";position:absolute;left:-3px;bottom:-26px;width:3px;height:26px;background:var(--ink)}
-.pin::before{content:"";position:absolute;left:-8px;bottom:-34px;width:13px;height:13px;border-radius:50%;background:var(--blood);border:3px solid var(--ink)}
-.hall-title{position:absolute;z-index:5;left:20px;right:20px;top:clamp(5rem,12vh,8rem);max-width:1080px;margin:0 auto}
-.hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
-.hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
-.hall-title p{margin:0}
-/* on a phone, or a screen too short to hold them, the title and the notes leave the photograph and stand under it */
-@media(max-width:900px),(max-height:680px){
-  #hall{background:var(--parch);padding-bottom:clamp(2.5rem,8vw,4rem)}
-  .bleed{height:auto!important;overflow:visible;display:flex;flex-direction:column;gap:14px;padding:0 20px}
-  .bleed::after{display:none}
-  .bleed img{position:static;width:calc(100% + 40px);max-width:none;height:min(58svh,460px);margin:0 -20px;transform:none!important;
-    -webkit-mask-image:linear-gradient(transparent,#000 9%);mask-image:linear-gradient(transparent,#000 9%)}
-  .hall-title{position:relative;inset:auto;width:100%;max-width:640px;margin:-3.2rem auto 4px}
-  .hall-title .t{display:block;max-width:none}
-  .pin{position:static;width:100%;max-width:640px;margin:0 auto;box-shadow:5px 6px 0 var(--shadow)}
-  .pin::before,.pin::after{display:none}
-}
-
-/* ---------- scrollytelling ---------- */
-.scrolly{position:relative}
-.scrolly .stage{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;padding:70px 20px 20px;overflow:hidden}
-.scrolly .steps{position:relative;z-index:6;margin-top:-100svh;pointer-events:none}
-.step{min-height:100svh;display:flex;align-items:center;padding:0 20px}
-.step .card{pointer-events:auto;max-width:360px;padding:16px 20px;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);
-  transform:translateY(24px) rotate(-.6deg);opacity:.25;transition:transform .7s cubic-bezier(.2,.9,.25,1.1),opacity .5s}
-.step.on .card{transform:none;opacity:1}
-.step .card h3{font-size:1.1rem;margin-bottom:.35rem}
-.step .card p{margin:0;font-size:.98rem}
-.step .num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
-.step.r{justify-content:flex-end}
-.scrolly svg.fig{width:min(100%,820px);height:auto;max-height:calc(100svh - 120px);overflow:visible}
-.scrolly .stage-inner{width:100%;display:flex;justify-content:center}
-/* under the picture: previous, one dot per step (the current one long), next, and back to the first; each scrolls the page to its step */
-.scrolly .stage{flex-direction:column;gap:12px}
-.dots{flex:0 0 auto;display:flex;justify-content:center;align-items:center;gap:1px;position:relative;z-index:7}
-.dots button{appearance:none;border:0;background:none;padding:8px 4px;line-height:0;cursor:pointer;color:var(--ink)}
-.dots .dot::before{content:"";display:block;width:7px;height:7px;border-radius:7px;background:var(--ink);opacity:.22;transition:width .3s,opacity .3s,background .3s}
-.dots .dot:hover::before{opacity:.5}
-.dots .dot.on::before{width:20px;opacity:1;background:var(--blood)}
-.dots .arr{padding:6px;opacity:.5;transition:opacity .3s}
-.dots .arr svg{display:block;width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.dots .arr:hover{opacity:1}
-.dots .arr:disabled{opacity:.14;cursor:default}
-.dots .back{margin-left:8px}
-.dots button:focus-visible{outline:2px solid var(--aegean-d);outline-offset:-3px}
-@media(min-width:900px){.scrolly .stage{padding-left:380px} .step .card{max-width:320px} .step{padding-left:max(24px,calc((100vw - 1080px)/2))}}
-@media(max-width:899px){
-  .scrolly .stage{justify-content:flex-start;padding-top:64px}
-  .scrolly svg.fig{max-height:46svh}
-  .step{align-items:flex-end;padding-bottom:22px}
-  .step .card{max-width:none;width:100%}
-}
-svg text{font-family:var(--serif)}
-.svg-dark{background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
-
-/* ---------- interactive wells ---------- */
-.well{padding:clamp(16px,3vw,28px);margin:1.6rem 0}
-.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;justify-content:space-between;gap:10px}
-.well h4 em{font-style:normal;color:#6b5a48}
-.btn{background:var(--ink);color:var(--parch);border:3px solid var(--ink);padding:8px 16px;font-family:var(--sans);font-size:.88rem;letter-spacing:.03em;box-shadow:4px 4px 0 var(--blood);transition:transform .12s,box-shadow .12s}
-.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--blood)}
-.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--blood)}
-.btn:disabled{opacity:.35;cursor:default;box-shadow:none}
-.btn.alt{background:#fffaf0;color:var(--ink)}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.say{margin:12px 0 0;font-size:.98rem;min-height:3.1em}
-.say b{color:var(--blood)}
-.ok{color:#3f7a2a;font-weight:700}.bad{color:var(--blood);font-weight:700}
-
-/* cards row */
-.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
-.card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
-.card3 .body{padding:16px 18px 18px}
-.card3 h3{font-size:1.15rem;margin-bottom:.4rem}
-.card3 p{font-size:.95rem;margin:0}
-.card3 .fx{margin-top:12px}
-/* cards in a row stand as tall as the tallest */
-.cards3>.pop>.leaf{height:100%}
-@media(max-width:860px){.cards3{grid-template-columns:1fr}}
-/* relevance */
-.map{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px 0;align-items:stretch;max-width:760px;margin:2rem auto 0}
-.map .l,.map .r{padding:11px 16px;font-size:1rem;border:3px solid var(--ink);background:#fffaf0;color:var(--ink);transition:background .25s,transform .25s;cursor:default}
-.map .r{font-family:var(--sans);background:#e9f2f7}
-.map .mid{display:grid;place-items:center;color:var(--blood);font-size:1.3rem}
-.map .hi{background:var(--gold)!important;transform:scale(1.03)}
-.map .hd{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood)}
-.end{text-align:center}
-.end .big{font-size:clamp(1.5rem,4.2vw,2.5rem);max-width:19em;margin:0 auto 1.4rem;color:var(--ink);text-wrap:balance}
-.links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
-.links a{color:var(--ink);background:#fffaf0;border:3px solid var(--ink);padding:9px 18px;text-decoration:none;font-family:var(--sans);font-size:.9rem;box-shadow:4px 4px 0 var(--shadow)}
-.links a:hover{background:var(--gold)}
-footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;font-family:var(--sans);background:#d8cba6}
-
-/* ---------- lists, small parts ---------- */
-.terms{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:12px}
-.terms li{padding:12px 16px;background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 #b9a77e;font-size:.98rem}
-.terms b{font-family:var(--sans)}
-@keyframes slotin{from{transform:translateY(-8px);opacity:0}}
-.btn:focus-visible,.links a:focus-visible,[role=button]:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
-.num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
-.chip{display:inline-block;padding:1px 7px;margin:2px 3px 2px 0;border:2px solid var(--ink);border-radius:5px;background:#fff;font-family:var(--sans);font-weight:700;font-size:.86rem;white-space:nowrap}
-.chip i{display:inline-block;width:.7em;height:.7em;border-radius:50%;border:1.5px solid var(--ink);margin-right:5px;vertical-align:-.02em}
-.isle-svg{width:min(100%,440px);display:block;margin:0 auto}
-.fig .fade{opacity:0;transition:opacity .6s}
-.fig .fade.on{opacity:1}
-.fig .lab{fill:#6b5a48;font-size:15px;font-style:italic;text-anchor:middle}
-.fig .halo{paint-order:stroke;stroke:#fffaf0;stroke-width:5px;stroke-linejoin:round}
-.tok text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.site rect,.site circle{stroke:var(--ink);stroke-width:4}
-.site text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-
-/* ---------- space-time, drawn in the round ---------- */
-.st-ring{fill:none;stroke:#b9a77e;stroke-opacity:.7;stroke-width:1;stroke-dasharray:3 4}
-.st-spoke{stroke:#1c1512;stroke-width:2.5;stroke-opacity:.45}
-.st-node rect{fill:#f6eed6;stroke:#1c1512;stroke-width:2}
-.st-node text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.st-slip{fill:none;stroke:#136f9e;stroke-width:2.6;transition:stroke .3s,stroke-width .3s,opacity .5s}
-.st-seg{stroke:#bf4a26;stroke-width:7;stroke-linecap:round;opacity:0;transition:opacity .3s}
-.st-seg.hi{opacity:.85}
-.st-slip.hi{stroke:#bf4a26;stroke-width:5}
-.st-ev{cursor:pointer}
-.st-ev circle.b{stroke:#1c1512;stroke-width:3;transition:stroke .3s,stroke-width .3s}
-.st-ev text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
-.st-ev .halo2{fill:none;stroke:#e0b84a;stroke-width:7;opacity:0;transition:opacity .3s}
-.st-ev.sel .halo2,.st-ev.mark .halo2{opacity:1}
-.st-ev.sel circle.b{stroke-width:4.5}
-.st-ev.dim{opacity:.3}
-.st-ev:focus-visible{outline:none}.st-ev:focus-visible circle.b{stroke:#136f9e;stroke-width:6}
-.st-note{fill:#6b5a48;font-size:13px;font-style:italic}
-
-/* ---------- a stage with a figure and a side panel ---------- */
-.stage-inner.split{gap:18px;align-items:center}
-.stage-inner.split svg.fig{flex:1 1 300px;min-width:0;max-width:470px}
-.side{flex:0 0 240px;display:grid;gap:10px;font-family:var(--sans);font-size:.84rem}
-.side .hc{background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--shadow);padding:8px 10px;min-height:92px;transition:background .4s}
-.side .hc h5{margin:0 0 5px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:6px}
-.side .hc h5 span{color:#6b5a48;letter-spacing:.02em;text-transform:none}
-.side .hc .chk{font-size:.78rem;margin-top:4px;line-height:1.35}
-.side .hc.in{background:#e3ecc4}
-@media(max-width:899px){
-  .stage-inner.split{flex-direction:column;gap:10px}
-  .stage-inner.split svg.fig{flex:0 0 auto;max-height:30svh;width:auto;max-width:100%}
-  .side{flex:0 0 auto;width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;font-size:.7rem}
-  .side .hc{padding:5px 6px;min-height:0;box-shadow:3px 3px 0 var(--shadow)}
-  .side .hc h5{font-size:.62rem;flex-direction:column;gap:0}
-  .side .hc .chk{font-size:.66rem}
-  .side .chip{font-size:.68rem;padding:0 4px}
-}
-.tear{width:100%}
-.scrolly svg.fig.svg-dark{overflow:hidden}
-
-/* ---------- proofs, in the paper's own terms ---------- */
-details.proof{max-width:760px;margin:1.8rem 0 0;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);padding:0 clamp(14px,3vw,22px);font-size:.95rem}
-details.proof>summary{cursor:pointer;padding:12px 0;font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--aegean-d)}
-details.proof>summary:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
-details.proof[open]{padding-bottom:14px}
-details.proof details.proof{border-width:3px;box-shadow:none;background:#fff;margin:1rem 0;max-width:none}
-details.proof .given{padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean);margin:0 0 .8rem}
-details.proof h3,details.proof h4{font-size:1.02rem;margin:1.4rem 0 .5rem}
-details.proof .hlink{color:inherit;text-decoration:none}
-details.proof .fnote{font-size:.84rem;color:#6b5a48}
-ol.proofsteps{padding-left:1.4em;margin:.4rem 0 0}
-ol.proofsteps li{margin:.55em 0}
-.qed{float:right;font-family:var(--sans);letter-spacing:.15em;color:#5f6e28}
-.mathblock{margin:.8rem 0;padding:8px 12px;overflow-x:auto;text-align:center;font-style:italic;background:#fff;border:2px solid #1c151233}
-.slab{margin:1rem 0;padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean)}
-.slab-head{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
-.stmt{font-style:italic}
-
-/* ---------- closing apparatus: lineage, papers, links to where a fact comes from ---------- */
-a.anchor{display:block;height:0;scroll-margin-top:56px}
-sup.xref{font-size:.8em;line-height:0;margin-left:1px}
-sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
-.apparatus{max-width:760px;margin:3rem auto 0;text-align:left;font-size:.94rem}
-.apparatus .lineage{margin:0 0 .6rem}
-.apparatus .lbl{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-right:8px}
-.apparatus a{color:var(--aegean-d)}
-.apparatus details.proof{margin-top:1.2rem}
-.apparatus .refs p,.apparatus ol.refs li{font-size:.9rem;margin:.45em 0}
-.apparatus table{width:100%;border-collapse:collapse;font-size:.9rem}
-.apparatus td{padding:5px 8px 5px 0;border-top:2px solid #1c151222;vertical-align:top}
-
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  .pop > .leaf{transition:opacity .3s;transform:none!important}
-  [data-depth]{transform:none!important}
-  .pulse{animation:none}
-  .fig .tok{transition:none}
-}
-/* ---------- lineage: the papers a book's papers draw on and lead to (lineage.py) ---------- */
-.lin{--gap:134px;position:relative;margin-top:1.2rem}
-.lin ul{list-style:none;margin:0;padding:0}
-.lin h5{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#6b5a48;margin:0 0 6px;font-weight:700}
-.lin-edges{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-.lin-edges path{fill:none;stroke:var(--ink);stroke-width:1.6}
-.lin-edges polygon{fill:var(--ink)}
-.lin-nodes>li{padding:6px 0}
-.lin-node{position:relative;z-index:1;display:block;padding:9px 12px;color:var(--ink);text-decoration:none;line-height:1.28}
-.lin-node b{display:block;font-size:.93rem}
-.lin-node .by{display:block;font-family:var(--sans);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--blood);margin-top:4px}
-.lin-node.book{background:#fffaf0;border:2px solid var(--ink);box-shadow:4px 5px 0 var(--shadow)}
-.lin-node.ext{background:#f6eed6;border:2px dashed #1c151288}
-.lin-node.ext b{font-weight:400;font-style:italic}
-a.lin-node:hover b{text-decoration:underline}
-.lin-node.here{background:var(--ink);color:var(--parch);border:2px solid var(--ink);box-shadow:5px 6px 0 var(--shadow);padding:13px 14px}
-.lin-node.here b{font-size:1rem}
-.lin-node.here .by{color:var(--gold)}
-.lin-link{position:relative;z-index:1;cursor:default;outline:0}
-.lin-link em{display:inline-block;font-family:var(--sans);font-style:normal;font-size:.72rem;line-height:1.2;background:#f6eed6;border:1px solid #1c151255;border-radius:10px;padding:2px 8px;color:var(--ink)}
-.lin-link .ends{font-family:var(--sans);font-size:.72rem;color:#6b5a48;margin-left:6px}
-.lin-link .why{display:block;font-size:.84rem;color:#3a2d24;margin:3px 0 0}
-.lin-say{font-size:.9rem;color:#3a2d24;margin:16px 0 0;max-width:none}
-.lin-say b{font-family:var(--sans);font-size:.74rem;letter-spacing:.06em;color:var(--blood);margin-right:8px}
-.lin-key{margin:10px 0 0;font-family:var(--sans);font-size:.74rem;color:#6b5a48}
-.lin-key .k{display:inline-block;width:20px;height:11px;vertical-align:-1px;margin:0 6px 0 16px;border:2px solid var(--ink)}
-.lin-key .k:first-child{margin-left:0}
-.lin-key .k.here{background:var(--ink)}
-.lin-key .k.book{background:#fffaf0}
-.lin-key .k.ext{border-style:dashed;border-color:#1c151288}
-@media(min-width:860px){
-  /* three columns; each paper at the sides keeps its links beside it, in the gap the edges cross */
-  .lin{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.92fr) minmax(0,1.2fr);align-items:center}
-  .lin-side.in h5{margin-right:var(--gap)}
-  .lin-side.out h5{margin-left:var(--gap)}
-  .lin-side .lin-nodes>li{display:grid;align-items:center}
-  .lin-side.in .lin-nodes>li{grid-template-columns:minmax(0,1fr) var(--gap)}
-  .lin-side.out .lin-nodes>li{grid-template-columns:var(--gap) minmax(0,1fr)}
-  .lin-side.out .lin-links{order:-1}
-  .lin-side .lin-links{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 10px;text-align:center}
-  .lin-mid{padding:0 56px}
-  .lin-mid .lin-nodes>li{padding:0}
-  .lin-mid .lin-nodes>li+li{margin-top:26px}
-  .lin-mid .lin-links{display:flex;justify-content:center;gap:8px;margin:-8px 0 18px;text-align:center}
-  .lin-link .ends,.lin-link .why{display:none}
-  .lin-say,.lin-key{grid-column:1/-1}
-  .lin-say{min-height:2.7em}
-  .lin-link em{transition:background .15s,color .15s}
-  .lin.hot .lin-node,.lin.hot .lin-link,.lin.hot .lin-edges g{opacity:.28}
-  .lin.hot .lin-node.on,.lin.hot .lin-link.on,.lin.hot .lin-edges g.on{opacity:1}
-  .lin.hot .lin-link.on em{background:var(--ink);color:var(--parch);border-color:var(--ink)}
-}
-@media(max-width:859px){
-  /* one column: each paper's links are written out under it */
-  .lin-side,.lin-mid{margin-bottom:1.4rem}
-  .lin-nodes>li{padding:7px 0}
-  .lin-links{margin:8px 0 4px 6px;padding-left:12px!important;border-left:2px solid #1c151255}
-  .lin-mid .lin-links{margin:0 0 8px 6px}
-  .lin-link+.lin-link{margin-top:8px}
-  .lin-say{display:none}
-}
-.mach4s{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
-.mach4{border:3px solid var(--ink);background:#fff;padding:8px 4px;text-align:center;font-family:var(--sans)}
-.mach4 b{display:block;font-size:.66rem;letter-spacing:.04em}
-.mach4 span{font-size:1.6rem;font-weight:700}
-.logs{padding:18px 18px 14px}
-.logs h4{font-family:var(--sans);margin:0 0 6px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
-.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0;min-height:3.2em;font-style:italic}
-.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
-@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
-.site .state{font-family:var(--serif);font-weight:400;font-style:italic;font-size:14px;fill:#1c1512}
-.badge circle{fill:#fffaf0;stroke:#1c1512;stroke-width:2.5}
-.badge text{font-family:var(--sans);font-weight:700;font-size:13px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.stand{font-family:var(--sans);font-size:.88rem;border:3px solid var(--ink);background:#fff;padding:8px 12px;margin-bottom:10px}
-.stand div{padding:2px 0}
-.tgs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px}
-.tg{font-size:.82rem;padding:6px 10px}
-.tg.on{background:var(--gold);color:var(--ink)}
-.tg.fixed{border:3px dashed var(--ink);background:#fff;font-family:var(--sans);padding:6px 10px;font-size:.82rem}
-/* a night laid out */
-.ngrid{font-family:var(--sans);font-size:.7rem;line-height:1.3}
-.nrow{display:grid;grid-template-columns:3.2rem repeat(4,minmax(0,1fr));gap:4px;margin-bottom:4px;align-items:stretch}
-.nrow.hd{align-items:center}
-.nrow.hd .chip{font-size:.62rem;padding:0 4px;margin:0}
-.nrow .rl{font-weight:700;font-size:.66rem;align-self:center}
-.nc{border:2px solid var(--ink);background:#fff;padding:3px 4px;min-height:3.5em}
-.nc span{display:block}
-.nc.toss{background:#f6e3c4}.nc.fav{background:#e3ecc4}.nc.set{background:#c9dca0}.nc.early{background:#eee;color:#6b5a48}
-.nc.gone{background:transparent;border-style:dashed;color:#6b5a48;display:grid;place-items:center}
-.nmore{font-size:.7rem;color:#6b5a48;margin:2px 0 6px}
-@media(max-width:520px){.nrow{grid-template-columns:2.4rem repeat(4,minmax(0,1fr));gap:3px}.nc{padding:2px 3px;font-size:.62rem}}
-.tell{max-width:40em;margin-top:1.6rem}
-.tell+.tell{margin-top:0}
-.cards3.pair{grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px}
-@media(max-width:860px){.cards3.pair{grid-template-columns:1fr}}
-.card3 h3:last-child{margin-bottom:0}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -398,8 +23,8 @@ a.lin-node:hover b{text-decoration:underline}
   <div class="wrap grid">
     <div>
       <h1>Agreeing by Chance</h1>
-      <p class="generic">If no plan can guarantee agreement when a machine may stop without warning, can chance succeed where planning cannot? What if a machine that is stuck simply tosses a coin?</p>
-      <p class="allegory">We find out by exploring how Greek mercenary camps, deadlocked over a plan, let a coin, tossed by each man alone in his tent, break the tie.</p>
+      <p class="generic">When messages can take arbitrarily long and even a single computer might crash without warning, no deterministic plan can guarantee that the group will ever reach agreement. But what if a machine that finds itself deadlocked simply flips a coin? Can pure chance break a tie that no fixed rule can escape?</p>
+      <p class="allegory">To see how, we return to the four Greek mercenaries camped at the foot of Mount Phyle and watch how a silver coin, tossed privately by each man inside his tent, breaks their deadlock and brings the camp to a single decision.</p>
       <p class="source">After Michael Ben-Or, <i>Another Advantage of Free Choice: Completely Asynchronous Agreement Protocols</i>, 1983</p>
     </div>
     <div class="pop" data-auto>
@@ -421,7 +46,7 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="lin-side in">
       <h5>Draws on</h5>
       <ul class="lin-nodes">
-        <li><a class="lin-node book" data-n="i:fischer-lynch-paterson-1985_flp-impossibility" data-label="Fischer, Lynch &amp; Paterson 1985" href="../the-limits-of-agreement/index.html"><b>Impossibility of Distributed Consensus with One Faulty Process</b><span class="by">Fischer, Lynch &amp; Paterson 1985 · The Limits of Agreement</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:fischer-lynch-paterson-1985_flp-impossibility" data-to="m:ben-or-1983_free-choice" tabindex="0"><em>impossibility</em><span class="ends"></span><span class="why">The impossibility of deterministic agreement in an asynchronous system, which coin flips get around.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="i:fischer-lynch-paterson-1985_flp-impossibility" data-label="Fischer, Lynch &amp; Paterson 1985" href="../the-limits-of-agreement/index.html"><b>Impossibility of Distributed Consensus with One Faulty Process</b><span class="by">Fischer, Lynch &amp; Paterson 1985 · The Limits of Agreement</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:fischer-lynch-paterson-1985_flp-impossibility" data-to="m:ben-or-1983_free-choice" tabindex="0"><em>impossibility</em><span class="ends"></span><span class="why">Proves that no deterministic protocol can guarantee consensus in an asynchronous system—the exact barrier that Ben-Or's coin flips bypass.</span></li></ul></li>
       </ul>
     </div>
     <div class="lin-mid">
@@ -433,11 +58,11 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="lin-side out">
       <h5>Leads to</h5>
       <ul class="lin-nodes">
-        <li><div class="lin-node ext" data-n="o:bracha-1987" data-label="Bracha 1987"><b>Asynchronous Byzantine Agreement Protocols</b><span class="by">Bracha 1987</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:ben-or-1983_free-choice" data-to="o:bracha-1987" tabindex="0"><em>randomized agreement</em><span class="ends"></span><span class="why">Randomized agreement, strengthened to tolerate Byzantine faults in just under a third of the processes.</span></li></ul></li>
-        <li><div class="lin-node ext" data-n="o:aguilera-toueg-2012" data-label="Aguilera &amp; Toueg 2012"><b>The Correctness Proof of Ben-Or’s Randomized Consensus Algorithm</b><span class="by">Aguilera &amp; Toueg 2012</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:ben-or-1983_free-choice" data-to="o:aguilera-toueg-2012" tabindex="0"><em>the algorithm</em><span class="ends"></span><span class="why">The algorithm, given a complete proof of correctness.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:bracha-1987" data-label="Bracha 1987"><b>Asynchronous Byzantine Agreement Protocols</b><span class="by">Bracha 1987</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:ben-or-1983_free-choice" data-to="o:bracha-1987" tabindex="0"><em>randomized agreement</em><span class="ends"></span><span class="why">Strengthens Ben-Or's randomized agreement approach to tolerate Byzantine faults in up to a third of the processes.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:aguilera-toueg-2012" data-label="Aguilera &amp; Toueg 2012"><b>The Correctness Proof of Ben-Or’s Randomized Consensus Algorithm</b><span class="by">Aguilera &amp; Toueg 2012</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:ben-or-1983_free-choice" data-to="o:aguilera-toueg-2012" tabindex="0"><em>the algorithm</em><span class="ends"></span><span class="why">Provides the first complete, rigorous proof that Ben-Or's algorithm terminates with probability 1 against an adaptive adversary.</span></li></ul></li>
       </ul>
     </div>
-    <p class="lin-say">Each link is an idea one paper took from another. Point at one, or tap it, to read how.</p>
+    <p class="lin-say">Each link traces how one paper built upon another. Hover over or tap any link to see the connection.</p>
     <p class="lin-key"><i class="k here"></i>a paper this book retells <i class="k book"></i>a paper retold in another book <i class="k ext"></i>a paper outside the series</p>
     </div>
   </div>
@@ -451,14 +76,14 @@ a.lin-node:hover b{text-decoration:underline}
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>A coin where reasoning gives out</h2>
-      <p class="lede">A group of computers must all settle on the same one of two values, and one of them may stop without a word.</p>
-      <p>Every message between them arrives, but no delay is too long to be possible, so a machine that has stopped cannot be told from one whose message is slow. Under those conditions no fixed protocol can promise a decision. One that acts only on what it has received cannot guarantee that the group ever decides, because the order of its messages can always be arranged to keep it waiting.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: A Fair Night in Which Nothing Is Ever Settled">*</a></sup> One idea gets past this.</p>
+      <p class="lede">Suppose a group of computers must agree on one of two values, and any one of them might crash without warning.</p>
+      <p>Every message between working machines eventually arrives, but there is no upper bound on how long a message can take—so a machine that has crashed looks identical to one whose message is merely delayed. As we saw in <a href="../the-limits-of-agreement/index.html">The Limits of Agreement</a>, no deterministic protocol can guarantee a decision under these conditions: as long as each machine acts purely as a fixed function of the messages it has received, an unlucky schedule of message arrivals can keep the group undecided forever.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: A Fair Night in Which Nothing Is Ever Settled">*</a></sup> Yet a single change breaks the deadlock:</p>
       <ul class="terms">
-        <li><b>Ben-Or</b> (1983): let a machine that cannot decide flip a private coin.</li>
-        <li><b>Never two decisions.</b> No two machines ever decide differently, whatever the delays and however the coins fall.</li>
-        <li><b>Probability one.</b> Every machine that has not stopped decides with probability one, though no round can be named.</li>
+        <li><b>Ben-Or</b> (1983): whenever a round of messages leaves a machine unable to decide, let that machine flip a private fair coin to pick its next preference.</li>
+        <li><b>Safety is unconditional:</b> no two machines ever decide differently, regardless of how messages are delayed or how the coins land.</li>
+        <li><b>Termination holds with probability 1:</b> every working machine eventually reaches a decision with probability 1, even though no upper bound on the number of rounds can be named in advance.</li>
       </ul>
-      <p style="margin-top:1.2rem">The coin is the only thing added, and the rest of the problem stays as it was. We tell it with four mercenaries, their ravens and a coin in each tent.</p>
+      <p style="margin-top:1.2rem">Nothing about the network or the crashes is relaxed—only the assumption that machines cannot roll the dice. We tell the story with four mercenaries, their ravens, and a silver coin in each tent.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper logs">
@@ -466,7 +91,7 @@ a.lin-node:hover b{text-decoration:underline}
         <div class="mach4s" id="mvals"></div>
         <p class="note" id="msay" data-live></p>
         <div class="row"><button class="btn" id="mfixed">Fixed rule, worst-order messages</button><button class="btn alt" id="mcoin">Each machine flips a coin</button><button class="btn alt" id="mreset">Start again</button></div>
-        <p class="note" style="margin-top:8px">The fixed rule is one example, used only to show the difficulty. The coins fall differently each time.</p>
+        <p class="note" style="margin-top:8px">With a deterministic rule, worst-case message ordering preserves the split forever. With coin flips, the coins eventually land alike.</p>
       </div>
     </div></div>
   </div>
@@ -480,11 +105,13 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="hall-title"><div class="t">
       <div class="kicker">The foot of Mount Phyle</div>
       <h2>The same four tents</h2>
-      <p>Four mercenaries camp at the foot of Mount Phyle, one to a tent, out of sight of one another and under nobody's command.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> Bandits hold the top of the hill, and the four go by the numbers of their tents.</p>
+      <p>Four mercenaries camp at the foot of Mount Phyle, one to a tent, hidden from one another by the folds of the hillside and under nobody's command.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> Bandits hold the summit above them, and the four men are known by the numbers of their tents.</p>
     </div></div>
-    <div class="pin pop" style="left:50%;top:44%;"><div class="leaf"><b>Only ravens</b>The four send word to one another only by raven. Every raven arrives with what was written, but no raven has a longest flight, and birds sent an hour apart arrive in either order.</div></div>
-    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>Nobody lies</b>No man at the foot ever misreports anything, so what a raven carries can be trusted.</div></div>
-    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>Nobody is killed</b>Any one of the four may be killed, and a dead man's tent falls silent. No one is killed in this book. What matters is that it may happen.</div></div>
+    <div class="pins">
+      <div class="pin pop"><div class="leaf"><b>Only ravens</b>The four communicate only by raven. Every raven eventually arrives with its strip intact, but there is no upper limit on how long a flight may take, and two birds released an hour apart may land in either order.</div></div>
+      <div class="pin pop"><div class="leaf"><b>Nobody lies</b>The mercenaries are honest comrades: no one ever falsifies a message, so every strip that lands can be trusted.</div></div>
+      <div class="pin pop"><div class="leaf"><b>Nobody is killed</b>At most one of the four might be killed during the night, leaving his tent permanently silent. Nobody actually dies in tonight's story, but their arrangement must work even if one man does.</div></div>
+    </div>
   </div>
 </section>
 
@@ -495,17 +122,17 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">What the four want, and what bound them</div>
       <h2>Three demands, and one assumption</h2>
-      <p class="lede">The four must all attack or all hold. Each formed an opinion at dusk, called a sighting, and committing is final: a man who attacks or holds leaves the tent and its birds for the night.</p>
-      <p>A silent tent cannot be told from a live one whose bird is slow, and that alone defeats every plan. Nobody lies and nothing goes wrong, and still no arrangement guarantees that any of the four ever commits, because the birds can always be ordered so that the night stays open.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: A Fair Night in Which Nothing Is Ever Settled">*</a></sup> What the four want comes to three demands.</p>
+      <p class="lede">Before dawn, all four mercenaries must either attack the hill together or hold their ground together. Each man formed an initial <b>sighting</b> at dusk, and <b>committing</b> is final: once a man steps out of his tent to attack or hold, he leaves his ravens behind for the night.</p>
+      <p>Because a silent tent could belong either to a dead comrade or to a living one whose raven is still sitting in the pines, no deterministic plan can guarantee that the four ever commit: the order in which ravens arrive can always be scheduled to keep the camp balanced on a knife-edge all night.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: A Fair Night in Which Nothing Is Ever Settled">*</a></sup> Let us state the three demands the mercenaries want to satisfy:</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First demand</div><h3>No two commit differently</h3><p>Nobody attacks while another holds.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second demand</div><h3>Matching sightings are followed</h3><p>If all four sighted the same answer, that is the answer they commit to.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third demand</div><h3>Every man left alive commits</h3><p>Every man who is not killed eventually commits.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First demand</div><h3>No two commit differently</h3><p>Never does one man go out to attack while another stays to hold (<i>agreement</i>).</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second demand</div><h3>Matching sightings are followed</h3><p>If all four men saw the same sighting at dusk, that is the plan they commit to (<i>validity</i>).</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third demand</div><h3>Every man left alive commits</h3><p>Every man who has not been killed eventually commits to a plan (<i>termination</i>).</p></div></div></div>
     </div>
-    <p class="tell">The second and third ask more than the impossibility needs. For the impossibility it is enough that both answers stay possible and that somebody commits. Here the second demand says exactly how the answers stay possible: when the sightings all agree the four follow them, which rules out agreeing in advance to hold. The third asks committing of every man left alive. Even the weaker demands could not be guaranteed,<sup class="xref"><a href="../the-limits-of-agreement/index.html#s2" title="The Limits of Agreement: Attack, or Hold">*</a></sup> so these cannot be either.</p>
-    <p class="tell">The impossibility rested on one assumption, which is easy to pass over: the four may not draw lots. Each acts only on what has reached them, so that, given the same sighting and the same birds in the same order, each does the same thing every time.</p>
-    <p class="tell">None of the three demands asks for that assumption. Suppose it is dropped and nothing else is changed, so that a man may leave something to chance. The first thing to settle is what chance the four have to hand.</p>
+    <p class="tell">Notice that these second and third demands are even stronger than the minimum needed to trigger the impossibility proof of <a href="../the-limits-of-agreement/index.html#s2">The Limits of Agreement</a> (which only required that both outcomes be possible and that at least one man eventually commit).<sup class="xref"><a href="../the-limits-of-agreement/index.html#s2" title="The Limits of Agreement: Attack, or Hold">*</a></sup> Since even those weaker demands cannot be guaranteed by any fixed plan, these stronger ones certainly cannot be either.</p>
+    <p class="tell">Yet the impossibility proof quietly relied on one hidden assumption: <b>the mercenaries are not allowed to draw lots</b>. In that proof, every mercenary is a deterministic machine—given the same initial sighting and the same sequence of incoming ravens, he must make the exact same move every single time.</p>
+    <p class="tell">Nothing in the three demands forbids a mercenary from leaving a choice to chance. What happens if we drop that single assumption and give each man a coin inside his tent?</p>
   </div>
 </section>
 
@@ -517,9 +144,9 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Dropping the assumption</div>
       <h2>A coin in each tent</h2>
-      <p class="lede">The chance the four have to hand is a coin. Every man at the foot was paid in Attic silver, and every Attic coin has the goddess's head on one face and an owl on the other. Before the tents were pitched the four settled that the owl stands for holding and the goddess for attacking.</p>
-      <p>A man who cannot settle on an answer, by the rules that follow, tosses a coin high off the thumb, catches it, and favours the answer it shows.</p>
-      <p>There are four coins and four separate tosses. The four cannot toss one coin together, because nothing on the hill brings them to one place. One man tossing for all would have to send the result by raven, and that raven might be the one still in the pines, or the man might be the one who is killed. So nobody learns another's toss except by bird, if at all. Toss in one tent or in all four, and watch the counts: each tent keeps its own, and no tent's coin follows another's.</p>
+      <p class="lede">Every mercenary at the foot of Mount Phyle was paid in Attic silver tetradrachms, which bear the head of Athena on one side and her owl on the other. Before pitching their tents, the four agreed on a simple convention: the <b>owl</b> stands for <i>hold</i>, and the <b>goddess</b> stands for <i>attack</i>.</p>
+      <p>Whenever the rules of a round leave a mercenary unable to settle on an answer from the ravens alone, he flips his silver coin high off his thumb, catches it in his palm, and adopts whichever answer the coin shows.</p>
+      <p>Crucially, there are <b>four separate coins</b> in four separate tents. The mercenaries cannot gather to watch a single shared coin toss, because the hillside keeps them apart. Nor can they appoint one man to flip a coin for everyone and send the result by raven—for that man might be the one who was killed, or his raven might be the one delayed in the pines! So each man flips his own coin privately inside his tent, and no one else knows how it landed unless a later raven reports it. Try tossing the coins in one tent or across all four below.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Four coins <em>four tents</em></h4>
@@ -534,17 +161,16 @@ a.lin-node:hover b{text-decoration:underline}
         <button class="btn" id="coin1">Toss in tent 1</button><button class="btn" id="coin2">Toss in tent 2</button><button class="btn" id="coin3">Toss in tent 3</button><button class="btn" id="coin4">Toss in tent 4</button>
         <button class="btn alt" id="coinall">Toss in all four</button><button class="btn alt" id="coinr">Clear the counts</button>
       </div>
-      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">Over many tosses owl and goddess come up about equally often. In a short run they need not.</p>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">Over many tosses, owl and goddess come up equally often, though in any short run they can easily diverge.</p>
     </div></div></div>
-    <p class="tell">The arrangement asks three things of a coin, and a silver coin tossed high and caught gives all three. A spun coin would not, because it tends to fall to one face, and a struck coin is never quite even.</p>
+    <p class="tell">For the protocol to work, each man's coin toss must have three properties:</p>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">(1) Fair</div><h3>Owl and goddess equally</h3><p>Over many tosses each face comes up as often as the other.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">(2) Fresh</div><h3>No toss owes anything</h3><p>Each toss owes nothing to any toss before it, in this tent or any other.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">(3) Unforeseen</div><h3>Unknown until made</h3><p>Before a toss is made, no one knows how it will fall. After it is made, anyone may know it.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">(1) Fair</div><h3>Owl and goddess equally</h3><p>On every toss, the coin lands owl with probability 1/2 and goddess with probability 1/2.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">(2) Fresh</div><h3>Independent of the past</h3><p>Each toss is completely independent of every earlier toss in that tent or any other.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">(3) Unforeseen</div><h3>Unknown until flipped</h3><p>Before a toss is made, nothing in the world can predict how it will land; after it lands, its outcome is no longer a secret.</p></div></div></div>
     </div>
-    <p class="tell">The third matters because of how the arguments of this book treat the birds. Without coins, the birds are taken in the worst order the argument can find: whatever the four arrange, the order of arrivals can be chosen against them.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s6" title="The Limits of Agreement: The Raven That Would Settle It Can Always Be Held Back">*</a></sup> The same is done here, and done harder. Think of the order in which the birds come down as arranged by someone who can see into every tent, read every strip and see every toss already made, and who arranges the arrivals to keep the four apart for as long as possible.</p>
-    <p class="tell">The one thing this arranger cannot do is see a toss before it is made. The arranger is only the worst case, and no such person exists, but anything that holds against the arranger holds on every night.</p>
-    <p class="tell">Each tent now has a coin that the arranger cannot foresee. The arrangement still has to say when a man tosses, and what the toss then does.</p>
+    <p class="tell">Why does the third property—that a toss cannot be foreseen before it is made—matter so much? Recall how the impossibility proof in <a href="../the-limits-of-agreement/index.html#s6">The Limits of Agreement</a> worked: we imagined a worst-case scheduler (an <b>arranger</b>) who can see inside every tent, read every message strip in flight, and choose the exact order in which ravens land so as to keep the camp divided.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s6" title="The Limits of Agreement: The Raven That Would Settle It Can Always Be Held Back">*</a></sup> Here we grant that adversarial arranger the exact same omniscience over all messages and all <i>past</i> coin flips.</p>
+    <p class="tell">The one power the arranger does <i>not</i> have is a crystal ball: he cannot see how a coin will land before the mercenary actually flips it! Now let us see how the mercenaries structure their rounds of ravens so that this one blind spot is enough to defeat the arranger.</p>
   </div>
 </section>
 
@@ -556,22 +182,22 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">When a man tosses</div>
       <h2>Rounds of birds</h2>
-      <p class="lede">A man tosses at one fixed point in a round, and only when the birds of that round have left the answer open. The arrangement goes in numbered rounds, and every bird carries its round's number, so that a late bird of the second round is not taken for an early one of the third.</p>
-      <p>In each round each man sends two birds to each of the others, and counts their own two as though they had come. The first is the <b>report</b>: the answer favoured at the start of the round, beginning with the sighting. The second says one of two things: <b>sure of</b> an answer, or <b>unsure</b>. A man may write <i>sure of hold</i> only when the reports read in that round show more than half of all four favouring hold. A round has three steps.</p>
+      <p class="lede">The mercenaries organize their night into numbered <b>rounds</b> (1, 2, 3, …), writing the round number on every message strip so that a slow bird from round 2 is never confused with a bird from round 3.</p>
+      <p>In each round, every mercenary sends two waves of ravens to all the other tents (and counts his own strip at each wave as arriving immediately). The first wave is his <b>report</b>: the answer he currently favors at the start of the round (in round 1, this is simply his dusk sighting). The second wave is his <b>second bird</b>, which says either <b>sure of</b> an answer (if the reports he read in step two showed a strict majority of the entire camp—at least three out of four—favoring that answer) or <b>unsure</b>. Each round follows three steps:</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step one</div><h3>Send the report</h3><p>Send the answer favoured now, to all the others.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step two</div><h3>Wait for three reports</h3><p>If all three name the same answer, more than half of all four, send <i>sure of</i> that answer. Otherwise send <i>unsure</i>.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step three</div><h3>Wait for three second birds</h3><p>One that is sure of an answer: favour it from now on. Two or more: be <b>settled</b> on it. None: toss the coin and favour the answer it shows. Then the next round begins.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step one</div><h3>Send the report</h3><p>Send a report naming the answer you currently favor to all tents.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step two</div><h3>Wait for three reports</h3><p>Wait until three reports from this round have arrived (your own plus two others). If <b>all three</b> name the same answer—a strict majority of all four tents—send a second bird saying <i>sure of</i> that answer; otherwise send <i>unsure</i>.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step three</div><h3>Wait for three second birds</h3><p>Wait until three second birds from this round have arrived. If <b>two or more</b> say <i>sure of</i> an answer, you are <b>settled</b> on that answer! If <b>only one</b> says <i>sure of</i> an answer, adopt that answer for the next round. If <b>none</b> say <i>sure</i>, flip your coin and adopt the answer it shows.</p></div></div></div>
     </div>
     <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center;margin-top:2rem">
       <div>
         <h3 style="font-size:1.5rem;margin-bottom:.5rem">Three birds, not four</h3>
-        <p>At each step a man waits for three birds, counting their own, and never for the fourth. With four men and at most one silent, three birds always come. A man who waited for four would wait for ever whenever one of them had been killed, and could not know it.</p>
+        <p>Why does a mercenary wait for <b>three</b> birds at each step, never all four? Because one of the four comrades might have been killed! Since at most one man can die and no raven is ever permanently lost, at least three birds are guaranteed to arrive at every step. Waiting for the fourth bird would risk waiting forever for a dead man.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-p03-perch-e9103e78f0-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-p03-perch-e9103e78f0-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-p03-perch-e9103e78f0-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-p03-perch-e9103e78f0-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p03-perch.jpg" alt="A tent, a chest and a leaning shield in a wooded gully by moonlight, with a bare bird perch beside them and nothing on it" loading="lazy"></div></div></div>
     </div>
-    <p class="tell" style="margin-top:2.4rem">Here is one round as tent 1 reads it. Change what the reports and the second birds say, and watch which of the three endings follows: favouring an answer, being settled on it, or a toss.</p>
+    <p class="tell" style="margin-top:2.4rem">Try running a single round at Tent 1 below. Click the reports and the second birds to change what they say, and see when Tent 1 settles, when it adopts an answer without flipping, and when it flips its coin.</p>
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:1.2rem">
       <h4>One round <em>at tent 1</em></h4>
       <p style="font-size:.92rem;color:#6b5a48;margin:0 0 8px">Tent 1 has read three reports: its own and two ravens. Press a report to change what it says.</p>
@@ -581,9 +207,9 @@ a.lin-node:hover b{text-decoration:underline}
       <div class="tgs" id="rsec"></div>
       <p class="say" id="rout"></p>
     </div></div></div>
-    <p class="tell">A settled man still has to <em>commit</em>, and committing has a catch. A man who leaves the tent to attack or to hold falls as silent as a dead one, and the others are waiting for three birds each round. If two men committed and a third were killed, the last would wait for ever. So a settled man does one thing more: in the round of settling, at once, both birds of the next round go to all, the report and <i>sure of</i> that answer. This is the <b>rule of parting</b>. Then the man leaves the tent and commits.</p>
-    <p class="tell">The two birds sent early are exactly the two that would have been sent had the man stayed, so the men who remain read nothing different and still get three birds at every step.</p>
-    <p class="tell">Each man now tosses whenever no second bird is sure, alone and unseen, and nothing makes the four coins fall alike. What has to be shown next is that coins falling differently cannot commit two men to different answers.</p>
+    <p class="tell">Once a man becomes <b>settled</b> at the end of Step 3, how does he actually leave his tent and <b>commit</b>? Remember that the comrades still inside their tents need three birds in the next round to finish their own steps. As we will prove in the next section, whenever one man settles on an answer in round <var>r</var>, every comrade who finishes round <var>r</var> is guaranteed to adopt that exact same answer for round <var>r</var> + 1, so in round <var>r</var> + 1 everyone will report that answer and everyone will send <i>sure of</i> that answer. Therefore, a man who settles in round <var>r</var> can immediately send out both of his round <var>r</var> + 1 birds in advance—his report and his <i>sure of</i> bird for that answer—and then step out of his tent and commit! We call this the <b>rule of parting</b>.</p>
+    <p class="tell">Because those two parting birds are the exact same birds he would have sent had he stayed inside his tent for round <var>r</var> + 1, the comrades who remain in their tents receive the three birds they need in round <var>r</var> + 1 and settle right behind him.</p>
+    <p class="tell">Now let us verify the crucial safety question: since each man flips his coin alone in his tent, why can different coin flips never cause two men to commit to opposite answers?</p>
     <details class="proof">
       <summary>The round, stated formally</summary>
       <p class="given">In the paper's terms the four tents are <var>N</var> = 4 processes, at most <var>t</var> = 1 of which may crash; a sighting is an initial value, a report is the message (1, <var>r</var>, <var>x</var>), <i>sure of</i> <var>v</var> is the D-message (2, <var>r</var>, <var>v</var>, D), <i>unsure</i> is (2, <var>r</var>, ?), being <i>settled</i> is deciding, and a process waits for <var>N</var> − <var>t</var> = 3 messages at each step. The three steps below are the paper's round, written for one process.</p>
@@ -609,31 +235,31 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow">
       <div class="kicker">Whatever the birds, whatever the coins</div>
       <h2>Never two answers</h2>
-      <p class="lede">Coins falling differently can never commit two men to different answers. The first two demands hold on every night, whatever the birds and whatever the coins, and the whole of it rests on one small fact about majorities.</p>
+      <p class="lede">No matter how the coins fall or how the ravens are delayed, two mercenaries can never commit to different answers. Both safety demands—agreement and validity—hold on every run, and the entire proof rests on a simple fact about overlapping majorities.</p>
     </div>
     <div class="cards3" style="margin-top:1.4rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">One sure answer a round</div><h3>Every sure bird agrees</h3><p>In any round, every <i>sure</i> bird names the same answer.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Never two answers</div><h3>No two commit differently</h3><p>If one man is settled on an answer in a round, every man who finishes that round favours that answer, and every man not killed is settled on it in the next round.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The sightings respected</div><h3>Matching sightings settle at once</h3><p>If all four sighted the same answer, every man not killed is settled on it in the first round, and no coin is tossed.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">One sure answer a round</div><h3>Every sure bird agrees</h3><p>Within any single round, it is impossible for one man to send <i>sure of hold</i> while another sends <i>sure of attack</i>.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Never two answers</div><h3>Settling locks the next round</h3><p>If any man settles on an answer in round <var>r</var>, every man who finishes round <var>r</var> adopts that same answer, and every living man settles on it in round <var>r</var> + 1.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The sightings respected</div><h3>Unanimous sightings settle in round 1</h3><p>If all four men saw the same sighting at dusk, every living man settles on it in round 1 without ever touching a coin.</p></div></div></div>
     </div>
-    <p class="tell">The fact about majorities is the first of the three, and the reason for it is a count. Each man sends one report a round, so a round has at most four reports. A man writes <i>sure of hold</i> only after reading three reports of hold, and <i>sure of attack</i> only after reading three of attack. Three of hold and three of attack out of four must share a man, and a man cannot have reported both.</p>
-    <p class="tell">The other two follow from it. A man is settled only on two <i>sure</i> birds, and every other man misses at most one bird, so each of them reads at least one of the two and favours the same answer. Scroll to watch one round worked out by the rules, with each man missing one of the four birds.</p>
+    <p class="tell">Why can a single round never produce both <i>sure of hold</i> and <i>sure of attack</i>? Because each man sends only one report per round, so there are at most four reports in total. Sending <i>sure of hold</i> requires seeing three reports of <i>hold</i>; sending <i>sure of attack</i> requires seeing three reports of <i>attack</i>. Out of four tents, any two groups of three must overlap in at least two tents—and no tent sends two different reports in the same round!</p>
+    <p class="tell">Now see why a single settled man locks the entire camp onto his answer. To settle on <i>hold</i> in Step 3, a man had to read at least <b>two</b> <i>sure of hold</i> birds. Every other mercenary reads three of the four second birds in Step 3, which means he misses at most one bird in the entire camp. Even if a comrade misses one of the two <i>sure of hold</i> birds, he is guaranteed to read the other one! And since no <i>sure of attack</i> bird can exist in that round, every single comrade reads at least one <i>sure of hold</i> bird, adopts <i>hold</i> (without flipping a coin!), and enters the next round unanimously favoring <i>hold</i>. Scroll through the round below to see this in action.</p>
   </div>
   <div class="scrolly" id="never">
     <div class="stage"><div class="stage-inner">
       <div class="ngrid" id="nevergrid" data-live style="max-width:600px;width:100%"></div>
     </div></div>
     <div class="steps">
-      <div class="step on"><div class="card"><div class="num">1 · The reports</div><h3>Tents 1, 2 and 4 favour hold</h3><p>Tent 3 favours attack. Each man will read three of the four reports, and misses one.</p></div></div>
-      <div class="step"><div class="card"><div class="num">2 · Who is sure</div><h3>Two men read three alike</h3><p>Tents 1 and 2 read three reports of hold, and write <i>sure of hold</i>. Tents 3 and 4 each read the attack among their three, and write <i>unsure</i>. A man cannot write <i>sure of attack</i> here, since that needs three of attack.</p></div></div>
-      <div class="step"><div class="card"><div class="num">3 · The second birds</div><h3>One man settles, the rest follow</h3><p>Tent 1 reads two <i>sure of hold</i> and is settled. Tents 2, 3 and 4 each read one, and favour hold. A man misses at most one bird, so every man reads at least one when two were sent. Nobody tosses.</p></div></div>
-      <div class="step"><div class="card"><div class="num">4 · Parting</div><h3>Tent 1 has gone, and its birds are in</h3><p>In the settling round tent 1 sent both birds of the next round: hold, and <i>sure of hold</i>. Those are the very birds it would have sent had it stayed.</p></div></div>
-      <div class="step"><div class="card"><div class="num">5 · The next round</div><h3>Every report names hold</h3><p>Each remaining man reads three reports of hold, writes <i>sure of hold</i>, reads three such birds, and is settled on hold. No bird names attack.</p></div></div>
-      <div class="step"><div class="card"><div class="num">6 · So</div><h3>The coins can delay, never divide</h3><p>A coin is tossed only by a man who read no <i>sure</i> bird at all, so while anyone is settled, no one is tossing against them. Chance comes into neither result.</p></div></div>
+      <div class="step on"><div class="card"><div class="num">1 · The reports</div><h3>Tents 1, 2 and 4 favour hold</h3><p>At the start of the round, Tents 1, 2, and 4 favor <i>hold</i>, while Tent 3 favors <i>attack</i>. In Step 2, each man reads three of the four reports and misses one.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · Who is sure</div><h3>Two men read three alike</h3><p>Tents 1 and 2 happen to miss Tent 3's report, so each reads three reports of <i>hold</i> and sends <i>sure of hold</i>. Tents 3 and 4 see Tent 3's report of <i>attack</i> among their three, so they send <i>unsure</i>. Nobody can send <i>sure of attack</i>.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · The second birds</div><h3>One man settles, the rest follow</h3><p>In Step 3, Tent 1 reads both <i>sure of hold</i> birds and settles! Tents 2, 3, and 4 each miss one of the <i>sure of hold</i> birds, but because each man misses at most one bird out of four, each of them still reads the other <i>sure of hold</i> bird and adopts <i>hold</i>. Nobody flips a coin.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Parting</div><h3>Tent 1 has gone, and its birds are in</h3><p>Before leaving his tent to commit, Number 1 sends his two parting birds for the next round: a report of <i>hold</i> and a second bird saying <i>sure of hold</i>—the exact birds he would have sent had he stayed.</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · The next round</div><h3>Every report names hold</h3><p>In the next round, every report is <i>hold</i>. Each remaining man reads three reports of <i>hold</i>, sends <i>sure of hold</i>, reads three <i>sure of hold</i> birds, and settles on <i>hold</i>.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · So</div><h3>The coins can delay, never divide</h3><p>Because a mercenary only flips his coin when he sees <i>zero</i> sure birds, nobody ever flips a coin in a round where a comrade settles. Coins can never break agreement once it is reached.</p></div></div>
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
-    <p class="tell">The coins cannot divide the four, then, and when the sightings agree no coin is tossed at all. What is left is the night on which the sightings are split and nobody can be sure. On such a night only the coins can bring the four together.</p>
+    <p class="tell">So the coins can never divide the camp, and when all four sightings match at dusk, everyone settles in round 1 without flipping a coin at all. What remains is a night when the sightings start out split and nobody can get three matching reports. On that night, the coins do their work.</p>
     <details class="proof">
       <summary>Proof · that once one man is settled, all end at that answer</summary>
       <p class="given">In the paper's terms the four tents are <var>N</var> = 4 processes, at most <var>t</var> = 1 of which may crash; a sighting is an initial value, a report is the message (1, <var>r</var>, <var>x</var>), <i>sure of</i> <var>v</var> is the D-message (2, <var>r</var>, <var>v</var>, D), <i>unsure</i> is (2, <var>r</var>, ?), being <i>settled</i> is deciding, and a process waits for <var>N</var> − <var>t</var> = 3 messages at each step. <b>Claim.</b> If a process decides <var>v</var> in round <var>r</var>, then every process that completes round <var>r</var> adopts <var>v</var>, and every process that does not crash decides <var>v</var> in round <var>r</var> + 1. This is Theorem 1 (iii).</p>
@@ -677,8 +303,8 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">How the coin does its work</div>
       <h2>The toss</h2>
-      <p class="lede">On a split night the coin does its work in the rounds where nobody is sure. Here is one way such a night can go, with tent 4 silent from the start, so that every wait is for the three who remain.</p>
-      <p>The sightings were hold at tent 1, attack at tent 2 and hold at tent 3. The tosses below are the ones of this night in the story, and the rounds are worked out by the rules. Press through the rounds, and watch for the one in which the tosses happen to agree.</p>
+      <p class="lede">When the sightings start out split, the coins come into play in any round where no man sees a <i>sure</i> bird. Let us trace one such night with Tent 4 silent from dusk, so that Tents 1, 2, and 3 always hear from one another.</p>
+      <p>At dusk, Tent 1 saw <i>hold</i>, Tent 2 saw <i>attack</i>, and Tent 3 saw <i>hold</i>. Step through the rounds below and watch what happens when the three coins first land split, and then happen to land alike.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>One night <em>press for the next round</em></h4>
@@ -686,11 +312,9 @@ a.lin-node:hover b{text-decoration:underline}
       <p class="say" id="storysay"></p>
       <div class="row"><button class="btn" id="storynext">The next round</button><button class="btn alt" id="storyr">Start again</button></div>
     </div></div></div>
-    <p class="tell">While the reports are split no man may be sure, and each tosses alone. Once the tosses happen to agree, every report of the next round is the same, and that round settles all of them.</p>
-    <p class="tell">The tosses did not have to agree with anybody's sighting. Tent 3 sighted hold and tossed the owl, tent 1 sighted hold and tossed the goddess. That is allowed, because the second demand speaks only of nights when all four sightings agree.</p>
-    <p class="tell">Round 2 settled nothing, though two of the three favoured attack. A man is sure only when more than half of all four agree, and more than half of those heard from is not enough. That keeps <i>one sure answer a round</i> true when a slow bird may be carrying the fourth report.</p>
-    <p class="tell">Nothing is to be read into which answer the coins chose. The coins pick an answer the way the birds' order would otherwise have picked it: by nothing anyone can know in advance. The night could as well have ended in attack.</p>
-    <p class="tell">That night ended in three rounds because the tosses of round 2 fell alike. Nothing made them fall alike, and a night whose tosses keep falling split has no such round. So whether every night ends needs an argument of its own.</p>
+    <p class="tell">As long as the three reports are split 2-to-1, nobody sees three matching reports, every second bird says <i>unsure</i>, and each of the three men flips his coin. As soon as their three coins happen to land on the same face in the same round, all three men enter the next round with the same favored answer—and that next round settles the entire camp!</p>
+    <p class="tell">Notice two details in the run above. First, in round 1 two of the three living men favored <i>hold</i>, and in round 2 two of the three favored <i>attack</i>—yet neither round produced a <i>sure</i> bird. Why isn't 2 out of 3 enough? Because Tent 4 is not necessarily dead—its bird might simply be slow! If two matching reports out of three were enough to send a <i>sure</i> bird, then on a night when all four men are alive and split 2-to-2, two men could read two <i>hold</i> reports and send <i>sure of hold</i> while the other two read two <i>attack</i> reports and send <i>sure of attack</i>, shattering safety. Requiring <b>three</b> matching reports—a strict majority of all four tents—guarantees that at most one answer can ever be called <i>sure</i> in any round.</p>
+    <p class="tell">Second, in the example above the three coins happened to land alike in round 2, ending the night in three rounds. What if the coins keep landing split? Can we be certain the night eventually ends?</p>
   </div>
 </section>
 
@@ -702,12 +326,12 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The end of the night</div>
       <h2>With probability one</h2>
-      <p class="lede">An ending cannot be promised on every course of birds and coins. The example could have taken thirty rounds, and there is a course, one among very many, in which it never ends: the tosses keep coming up split, round after round, for ever.</p>
-      <p>What can be promised is that such courses, taken together, have no chance whatever of happening. With at most one of the four silent, and however the birds are ordered, the chance that every man not killed eventually commits is one. Choose the sightings and run night after night: the number of rounds changes with the coins, and no round can be named in advance.</p>
+      <p class="lede">No randomized protocol can promise to finish within a fixed number of rounds on <i>every</i> conceivable sequence of coin flips. Just as you could theoretically flip a fair coin and get heads a thousand times in a row, there is a theoretical run in which the mercenaries' coins keep landing split round after round forever.</p>
+      <p>What the protocol <i>can</i> promise is that the probability of staying split forever is <b>zero</b>. With at most one of the four tents silent, and no matter how maliciously the ravens' arrivals are scheduled, the probability that every living mercenary eventually commits is <b>1</b>. Choose the initial sightings below and run night after night to see how the number of rounds varies with the coins.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>A fresh night <em>every press is a new night</em></h4>
-      <p style="font-size:.92rem;color:#6b5a48;margin:0 0 8px">Choose what each tent saw at dusk. The birds here arrive in a random order, each man missing one of the other three, which is gentler than the arranger would be.</p>
+      <p style="font-size:.92rem;color:#6b5a48;margin:0 0 8px">Choose what each tent saw at dusk. In this simulation the ravens arrive in random order, with each man missing one of the other three.</p>
       <div class="tgs" id="nightsight"></div>
       <div class="row" style="margin-bottom:10px"><button class="btn alt tg" id="nightsilent"></button></div>
       <div class="ngrid" id="nightgrid" data-live></div>
@@ -716,13 +340,13 @@ a.lin-node:hover b{text-decoration:underline}
     </div></div></div>
     <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center;margin-top:2rem">
       <div>
-        <p>The reason is that the coins keep giving the four a way out, and the birds cannot shut it for good. In any round at most one answer can be the subject of <i>sure</i> birds. If every man who tosses comes up with that answer, or, when there is none, all with the same answer, then every man starts the next round favouring one answer, and the next round settles everyone. The arranger can make that harder, round by round, but a way out that keeps coming back with some chance is taken in the end with chance one.</p>
-        <p><b>No night can be named</b> by which the four will have committed. There is no round after which committing is certain, only a chance, growing towards one, that it has happened by then. No figure for how fast it grows is given here. A man who asks <i>will we have committed by the fortieth round?</i> can only be told <i>almost certainly</i>. The courses that never end still exist. They have been given no chance at all, and they have not been abolished.</p>
-        <p>The short argument for this has a gap, said plainly in the panel below, and a full proof came much later.</p>
+        <p>Why does the probability of finishing reach 1? Because in every round, at most one answer can appear on any <i>sure</i> bird. Anyone who does not see a <i>sure</i> bird flips a fresh, fair coin that the arranger cannot foresee. Whenever all the coins flipped in a round happen to land on that round's single viable answer (or all land alike when there is no <i>sure</i> bird), every man enters the next round favoring the exact same answer, and the next round settles everyone! Because every round gives the camp a fresh, non-zero chance of snapping into unanimity, the chance of missing that exit for <var>k</var> rounds in a row shrinks exponentially toward zero as <var>k</var> grows.</p>
+        <p>Notice what this does and does not say. <b>No fixed round number can be named in advance</b> by which the camp is guaranteed to have committed. If a mercenary asks, <i>“Are we guaranteed to have committed by round 40?”</i> the answer is <i>“Almost certainly—with probability very close to 1—but not with 100% certainty.”</i> The infinite runs have not been erased from the tree of possibilities; their combined probability has simply been shrunk to zero.</p>
+        <p>Interestingly, the quick textbook proof sketch for this (given in the proof drawer below) has a subtle flaw when the arranger can stagger rounds—a gap that stood open for nearly thirty years until Marcos Aguilera and Sam Toueg published a complete proof in 2012.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on top, and a few small tents among the pines on the slopes below" loading="lazy"></div></div></div>
     </div>
-    <p class="tell">So the endless courses are still there, and the impossibility said only that such courses exist. Setting the night with coins beside the night without them shows exactly what the coin changed.</p>
+    <p class="tell">Comparing the night with coins against the night without them shows the exact nature of what randomization changes.</p>
     <details class="proof">
       <summary>Proof · a sketch, that the four commit with probability one</summary>
       <p class="given">In the paper's terms the four tents are <var>N</var> = 4 processes, at most <var>t</var> = 1 of which may crash; a sighting is an initial value, a report is the message (1, <var>r</var>, <var>x</var>), <i>sure of</i> <var>v</var> is the D-message (2, <var>r</var>, <var>v</var>, D), <i>unsure</i> is (2, <var>r</var>, ?), being <i>settled</i> is deciding, and a process waits for <var>N</var> − <var>t</var> = 3 messages at each step. A <i>local coin</i> is step 3(c): set the value to 0 or 1 with probability 1/2 each. <var>g</var> is a value, defined in step 1 below. <b>Claim.</b> With <var>N</var> &gt; 2<var>t</var>, every process that does not crash decides with probability 1. This is Theorem 1 (i), which the paper states without proof.</p>
@@ -742,8 +366,8 @@ a.lin-node:hover b{text-decoration:underline}
       row is at most (15/16)<sup><var>k</var></sup>, which shrinks towards nothing as <var>k</var>
       grows. The chance that it fails for ever is therefore nothing.<span class="qed">∎</span></li>
     </ol>
-      <p>Is the sketch airtight? No, and it should be said plainly where it fails. Step 1 treats the answer <var>g</var> as fixed before the round's tosses. But a slow man's report for round <var>r</var> comes from how that man's round <var>r</var> − 1 ended, and the arranger chooses which second birds are read there, and may choose after seeing some tosses of round <var>r</var>. So the answer named <i>sure</i> in round <var>r</var> can be picked against the early tosses, and the one-in-sixteen of step 3 is not a bound anyone has proved. Ben-Or's paper states its theorems without any proof. A proof that closes every such gap was published only in 2012, by Aguilera and Toueg; it comes to the same conclusion by a longer road.</p>
-      <p>What is not claimed? <b>No night can be named</b> by which the four will have committed. There is no round after which committing is certain; there is only a chance, growing towards one, that it has happened by then. Ben-Or's paper gives no figure for how fast that chance grows, and this book gives none.</p>
+      <p><b>Why is this only a sketch?</b> Step 1 treats the target answer <var>g</var> of round <var>r</var> as if it were fixed <i>before</i> anyone flips a coin in round <var>r</var>. In an asynchronous network, however, a fast mercenary might finish round <var>r</var> and flip his coin while a slow mercenary is still in Step 3 of round <var>r</var> − 1! An adaptive arranger can wait to see how the fast mercenary's coin lands in round <var>r</var>, and then choose which round <var>r</var> − 1 birds reach the slow mercenary so as to steer round <var>r</var>'s majority <var>g</var> <i>against</i> the coin flip that already happened. Ben-Or's 1983 paper stated Theorem 1 without proof; a complete proof that defeats even this adaptive arranger was given by Aguilera and Toueg in 2012.</p>
+      <p><b>What is not claimed?</b> No upper bound on the number of rounds can be guaranteed in advance; termination holds with probability approaching 1 as the number of rounds grows.</p>
     </details>
   </div>
 </section>
@@ -756,16 +380,16 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">A fork the arranger does not steer</div>
       <h2>What the coin changed</h2>
-      <p class="lede">What the coin changed shows in how the endless night is built. Without coins it takes three steps:<sup class="xref"><a href="../the-limits-of-agreement/index.html#s5" title="The Limits of Agreement: The Dusk That Settles Nothing">*</a></sup> a way for the sightings to fall that leaves the night open; from any open standing, an arrival that can be deferred and taken without closing the night; and so an arranger who defers well can keep it open for ever.</p>
-      <p>Every step leans on the four being unable to draw lots. Given the same birds in the same order, each man does the same thing, so the arranger knows, before choosing an arrival, what it will lead to. A coin takes that knowledge away.</p>
+      <p class="lede">Look back at how the endless night in <a href="../the-limits-of-agreement/index.html#s5">The Limits of Agreement</a> was constructed:<sup class="xref"><a href="../the-limits-of-agreement/index.html#s5" title="The Limits of Agreement: The Dusk That Settles Nothing">*</a></sup> the arranger found an initial dusk sighting that left both outcomes open, and from each open state carefully picked which raven arrived next so the camp stayed open forever.</p>
+      <p>That entire strategy depended on determinism: because each mercenary followed a fixed rule, the arranger could look ahead along every branch of the tree and know with certainty where delivering a bird would lead. A coin takes that foresight away.</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">With coins</div><h3>The arranger no longer knows</h3><p>At a toss the night forks, one way for the owl and one for the goddess, and the fork is taken by the coin. The arranger can still be as clever as before about the birds, and cannot steer both forks at once.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Still there</div><h3>Open standings and endless courses</h3><p>Fix every toss in advance and the argument without coins runs unchanged.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s6" title="The Limits of Agreement: The Raven That Would Settle It Can Always Be Held Back">*</a></sup> What has changed is that an endless course now needs the coins to cooperate, round after round, and they do not.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What it bought</div><h3>Every course, or probability one</h3><p>The result without coins stands: no arrangement guarantees that anybody ever commits, and this one does not either. It guarantees that the four never commit differently, and that failing to commit has no chance at all. The difference between every course and probability one is the whole of what the coin bought.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">With coins</div><h3>The arranger cannot steer both forks</h3><p>Whenever a mercenary flips a coin, the night forks into two branches—one for the owl and one for the goddess—and the coin chooses which branch is taken, not the arranger.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Still there</div><h3>Endless runs still exist</h3><p>If you fixed the sequence of coin outcomes in advance, the deterministic impossibility proof would work all over again.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s6" title="The Limits of Agreement: The Raven That Would Settle It Can Always Be Held Back">*</a></sup> With live coin flips, keeping the night open forever requires the coins themselves to keep landing against agreement round after round—an event of probability zero.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What it bought</div><h3>Probability one vs. every path</h3><p>The FLP theorem remains completely true: no protocol can terminate on <i>every</i> path. Randomization trades certainty on every path for termination with <b>probability 1</b>, while keeping safety 100% guaranteed on every path.</p></div></div></div>
     </div>
-    <p class="tell">Three things would change matters at the foot of the hill: a longest flight, or some report of who has died, or all the deaths happening before the evening begins.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: A Fair Night in Which Nothing Is Ever Settled">*</a></sup> The coin is a fourth way, and a different kind. The other three give the four men more knowledge of the world. The coin gives them none. It gives the world less power over them.</p>
-    <p class="tell">The world keeps some of its power all the same. The coin has limits, and the first of them is how many of the four may fall silent.</p>
+    <p class="tell">Notice how different the coin is from the other ways out of the impossibility at the foot of the hill—a wind that eventually drops (<a href="../agreeing-when-messages-run-late/index.html">Agreeing When Messages Run Late</a>) or a slate that marks the dead (<a href="../telling-the-dead-from-the-slow/index.html">Telling the Dead from the Slow</a>).<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: A Fair Night in Which Nothing Is Ever Settled">*</a></sup> Those other escapes give the mercenaries <b>more information about the outside world</b>. The coin gives the mercenaries no new information about the hill at all—instead, it gives the adversarial schedule <b>less power over them</b>.</p>
+    <p class="tell">Even with coins, however, the schedule retains one power that no protocol can overcome: what happens if <b>two</b> of the four mercenaries can fall silent?</p>
   </div>
 </section>
 
@@ -777,8 +401,8 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The limits of the coin</div>
       <h2>What chance does not buy</h2>
-      <p class="lede">The number of the silent is the first limit. The coins cannot carry the four past two silences. The arrangement needs the silent to be fewer than half, and that is no weakness of this arrangement, since every other shares it.</p>
-      <p><b>Half is too many.</b> If half the men or more may fall silent, no arrangement, with or without coins, can meet all three demands: that no two commit to different answers, that matching sightings are followed, and that every man not killed eventually commits. With half or more silent, the order of the birds can imitate a hill split in two. Hold back the birds of one pair of tents and then of the other, and watch what each pair is bound to do.</p>
+      <p class="lede">The first limit on randomized agreement is the number of silent tents. Coins cannot save a camp of four if two men may die: any protocol—randomized or not—requires a strict majority of living participants (<var>N</var> &gt; 2<var>t</var>).</p>
+      <p><b>Why half is too many.</b> Suppose up to two of the four mercenaries might die during the night. Then if Tents 1 and 2 never hear a word from Tents 3 and 4, they must still eventually commit (with probability 1), since 3 and 4 might be dead. And if Tents 1 and 2 both saw <i>hold</i>, they must commit to <i>hold</i>—because for all they know, 3 and 4 also saw <i>hold</i> and died at dusk, in which case the second demand requires the survivors to choose <i>hold</i> regardless of how their coins fall! By the exact same reasoning, if Tents 3 and 4 both saw <i>attack</i> and hear nothing from 1 and 2, they must commit to <i>attack</i>. Now let all four live, hold back all ravens between {1, 2} and {3, 4} until both pairs have committed, and watch them commit to opposite plans below.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>A hill where two may fall silent <em>the argument</em></h4>
@@ -787,9 +411,9 @@ a.lin-node:hover b{text-decoration:underline}
         <p class="say" id="halfsay"></p>
       </div>
       <div class="row"><button class="btn" id="half1">Hold back every bird from tents 3 and 4</button><button class="btn" id="half2">Hold back every bird from tents 1 and 2</button><button class="btn alt" id="half3">Release the held birds</button><button class="btn alt" id="halfr">Start again</button></div>
-      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">The picture shows the pattern of the argument, not a worked plan. Nobody falls silent in it: every bird is only late.</p>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">Nobody actually dies here—every cross-camp bird is simply held in the pines until both pairs have committed.</p>
     </div></div></div>
-    <p class="tell">Each pair hears only itself, and must commit as though the other pair were dead, because for all it can tell they are. The pairs sighted differently, so they commit differently, and no coin can help: whatever the coins show, each pair reads exactly what it would read on a night when the second demand binds it.</p>
+    <p class="tell">Because each pair hears only from itself, neither pair can tell this split night from a unanimous night on which the other pair died at dusk. No coin can help them, because on a unanimous night the second demand forbids the coins from overturning the shared sighting!</p>
     <details class="proof">
       <summary>Proof · that with two of four silent, the answers can divide</summary>
       <p class="given">In the paper's terms this is the case <var>N</var> ≤ 2<var>t</var>, here <var>N</var> = 4 and <var>t</var> = 2, a process being able to crash at any moment. <b>Claim.</b> No protocol, randomized or not, meets agreement, validity when all inputs are equal, and termination for every process that does not crash. This is the remark after Theorem 1: the schedule can simulate a partition.</p>
@@ -810,11 +434,11 @@ a.lin-node:hover b{text-decoration:underline}
       answers.<span class="qed">∎</span></li>
     </ol>
     </details>
-    <p class="tell">Four tents bear one silent man, and no more. Three other limits are worth stating plainly: what the coin does about liars, how quick it is, and whether it reaches a good answer.</p>
+    <p class="tell">Three further questions round out what a coin can and cannot do:</p>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What about liars?</div><h3>Six men against one liar</h3><p>Nobody lies at the foot of the hill. For men who may lie as well as die there is a second arrangement of the same shape: each man must be able to tell whose bird they hold, and the liars must be fewer than one in five. Against one liar that is six men. The four bandits on the crown could not use it, and do not need to; they have their own methods.<sup class="xref"><a href="../agreeing-among-liars/index.html#s2" title="Agreeing Among Liars: Hold, or Scatter">*</a></sup> Whether one in five is the best that can be done was not known.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Is it quick?</div><h3>The rounds may be many</h3><p>With many men and many possible silences, the tosses that must all come up alike are many too, and the expected number of rounds may grow very fast. One happier case: if the silent are few, no more than about the square root of the number of men, and the birds happen to come in step, the rounds needed on average do not grow at all. No arrangement without coins can do that, since those need at least one more round than there are men who may fail.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Does it choose a good answer?</div><h3>Nothing says so</h3><p>The coins say nothing about which answer is wiser. When the sightings agree, the four do what they sighted; when they do not, the answer is whichever the coins and the birds happen to reach. As always on the hill, nothing follows from it: no assault is told, and no one learns whether it was the right answer.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What about liars?</div><h3>Six men against one liar</h3><p>At the foot of the hill nobody lies. Ben-Or also gave a second randomized protocol for systems with Byzantine traitors (<var>N</var> &gt; 5<var>t</var>, or at least six participants to tolerate one liar), which Gabriel Bracha later improved in 1987 to the optimal <var>N</var> &gt; 3<var>t</var> (four participants for one liar).<sup class="xref"><a href="../agreeing-among-liars/index.html#s2" title="Agreeing Among Liars: Hold, or Scatter">*</a></sup></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Is it quick?</div><h3>Private coins vs. shared coins</h3><p>When <var>N</var> is large and the adversary schedules messages worst-first, waiting for <var>N</var> independent coins to land alike can take an exponential number of rounds on average (though when faults are at most O(√<var>N</var>) and messages arrive in lockstep, it takes only a constant number of rounds!). Later protocols replaced private coins with a cryptographic <i>shared coin</i> to finish in a small constant number of rounds on average.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Does it choose a good answer?</div><h3>Agreement, not wisdom</h3><p>When all four sightings agree at dusk, the protocol preserves that unanimous choice in round 1. When sightings are split, the coins simply break the tie so that all four men act together rather than staying paralyzed in their tents.</p></div></div></div>
     </div>
   </div>
 </section>
@@ -827,16 +451,16 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>The camp was a group of machines</h2>
-      <p class="lede">Read the foot of the hill again with machines in the tents. Every tent is a process, every raven is a message, the arranger of the birds is the scheduler that orders the messages, and the coin is a random bit that each process draws for itself. Hover over a row, or tap it, to see who is who.</p>
+      <p class="lede">Now read the story at the foot of the hill as a cluster of asynchronous processes. Every tent is a process, every raven is a message, the arranger is the adversarial network scheduler, and each silver coin is a local random number generator. Hover over or tap any row to see how the story maps to the paper.</p>
     </div>
     <div class="map" id="map">
-      <div class="hd" style="text-align:right;padding-right:6px">At the foot of the hill</div><div></div><div class="hd">In the machine room</div>
+      <div class="hd" style="text-align:right;padding-right:6px">At the foot of the hill</div><div></div><div class="hd">In computing</div>
     </div>
     <div class="meander" style="margin:3rem auto"></div>
     <div class="end">
-      <p class="big">A machine that cannot decide may flip a coin: then no two machines ever decide differently, and every machine decides in the end with probability one.</p>
-      <p class="lede" style="margin:0 auto">The impossibility stands. The coin changes one of its hypotheses, and asks for a majority of machines that keep running.</p>
-      <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">Later work replaced the private coins with a shared coin, to make the expected number of rounds small.</p>
+      <p class="big">When an asynchronous machine cannot decide from messages alone, flipping a random coin guarantees that no two machines ever decide differently and that every working machine decides with probability one.</p>
+      <p class="lede" style="margin:0 auto">The FLP impossibility theorem still holds for deterministic rules. Randomization escapes it by changing one assumption—requiring a working majority, and trading worst-case termination for termination with probability one.</p>
+      <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">Later randomized consensus protocols replaced independent local coins with a cryptographic common coin, bringing the expected number of rounds down to a small constant.</p>
       <div class="links">
         <a href="../../places/the-foot/index.html">The Foot of Mount Phyle, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
@@ -848,398 +472,16 @@ a.lin-node:hover b{text-decoration:underline}
       <details class="proof">
         <summary>The paper behind this book</summary>
         <div class="refs">
-          <p>Michael Ben-Or, <i>Another Advantage of Free Choice: Completely Asynchronous Agreement Protocols</i> (extended abstract). Proceedings of the 2nd ACM Symposium on Principles of Distributed Computing (PODC), Montreal, August 1983, 27–30. The randomized consensus protocol for crash failures with <var>N</var> &gt; 2<var>t</var> (Theorem 1), the Byzantine protocol with <var>N</var> &gt; 5<var>t</var> (Theorem 2), and constant expected rounds when <var>t</var> = O(√<var>N</var>) (Theorem 3), stated without proofs.</p>
+          <p>Michael Ben-Or, <i>Another Advantage of Free Choice: Completely Asynchronous Agreement Protocols</i> (extended abstract). Proceedings of the 2nd ACM Symposium on Principles of Distributed Computing (PODC), Montreal, August 1983, 27–30. Presents the randomized consensus protocol for crash failures with <var>N</var> &gt; 2<var>t</var> (Theorem 1), the Byzantine protocol with <var>N</var> &gt; 5<var>t</var> (Theorem 2), and constant expected rounds when <var>t</var> = O(√<var>N</var>) (Theorem 3).</p>
         </div>
-        <p><b>The ideas.</b> Fischer, Lynch and Paterson proved that no deterministic protocol can guarantee consensus in an asynchronous system if even one process may crash: an adversary ordering the messages can always keep the outcome undecided. Their proof depends on determinism, since the adversary must know in advance what each step will lead to.</p>
-        <p>Ben-Or showed that randomness removes the obstacle. Processes run in rounds. In each round every process broadcasts its current value, waits for <var>N</var> − <var>t</var> values, and broadcasts a proposal marked D if a strict majority of all <var>N</var> processes hold the same value. It then waits for <var>N</var> − <var>t</var> proposals: it decides on more than <var>t</var> D-proposals for a value, adopts the value on at least one, and otherwise flips a private fair coin.</p>
-        <p>Safety holds on every run. Two strict majorities intersect, so only one value can be proposed with D in a round; a decision means more than <var>t</var> D-proposals exist, so every process that finishes the round sees one and adopts the value, and all decide it in the next round. Termination holds with probability 1 when <var>N</var> &gt; 2<var>t</var>: once every correct process holds the same value, the next round decides, and the coin flips keep giving that a chance the adversary cannot remove. Ben-Or states this without proof; a complete proof, which must handle an adversary that sees earlier flips, is Aguilera and Toueg's (2012). Runs that never terminate still exist, but together they have probability zero.</p>
-        <p>The protocol does not contradict FLP; it changes a hypothesis. It needs a correct majority, which is necessary, and it may take many rounds. Later work replaced the private coins with a shared coin to make the expected number of rounds small.</p>
+        <p><b>The ideas.</b> Fischer, Lynch, and Paterson proved that no deterministic protocol can guarantee consensus in an asynchronous system if even a single process may crash: an adversarial scheduler can always delay and order messages to keep the system bivalent forever. Crucially, their proof relies on determinism, which lets the adversary predict how each process will react to any message delivery.</p>
+        <p>Ben-Or showed that local randomness breaks the adversary's control without requiring any timing assumptions at all. Processes execute numbered rounds of two message phases each. In Phase 1 of round <var>r</var>, each process broadcasts its preference and waits for <var>N</var> − <var>t</var> reports; if strictly more than <var>N</var>/2 reports favor the same value <var>v</var>, it broadcasts a Phase 2 decision proposal D(<var>v</var>), and otherwise broadcasts “?”. In Phase 2, it waits for <var>N</var> − <var>t</var> Phase 2 messages: if it sees more than <var>t</var> proposals D(<var>v</var>), it decides <var>v</var>; if it sees at least one D(<var>v</var>), it adopts <var>v</var> for round <var>r</var> + 1; and if it sees no D-proposals at all, it flips a private fair coin to choose 0 or 1 for round <var>r</var> + 1.</p>
+        <p>Safety holds unconditionally on every execution: because two strict majorities of <var>N</var> must overlap, at most one value <var>v</var> can be proposed with D in any round; and if any process decides <var>v</var> (seeing at least <var>t</var> + 1 messages D(<var>v</var>)), every other process (missing at most <var>t</var> messages) sees at least one D(<var>v</var>), adopts <var>v</var> without flipping a coin, and decides <var>v</var> in the next round. Termination holds with probability 1 whenever <var>N</var> &gt; 2<var>t</var> (rigorously proved against an adaptive adversary by Aguilera and Toueg in 2012). Non-terminating executions still exist, but their total probability measure is zero.</p>
       </details>
     </div>
   </div>
 </section>
 <footer>Distributed Algorithms of Ancient Greece · “Agreeing by Chance”, after Ben-Or, PODC 1983.</footer>
-<script>
-"use strict";
-(function(){
-const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-const NS="http://www.w3.org/2000/svg";
-const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
-function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
-function rnd(n){return Math.floor(Math.random()*n)}
-/* run fn(0..1) over ms, eased */
-function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();return}const t0=performance.now();
-  (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
-function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
-
-/* ===== pop-ups unfold when they enter view ===== */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
-$$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
-$$(".say,[data-live]").forEach(e=>e.setAttribute("aria-live","polite"));
-
-/* ===== scroll: progress bar, section name, parallax ===== */
-const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
-const dep=$$("[data-depth]"), par=$$("[data-parallax]");
-let tick=false;
-function onscroll(){
-  if(tick)return; tick=true;
-  requestAnimationFrame(()=>{
-    tick=false;
-    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
-    prog.style.width=(h>0?y/h*100:0)+"%";
-    const mid=y+innerHeight*.4; let cur=secs[0];
-    for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
-    now.textContent=cur.dataset.name||"";
-    if(reduce)return;
-    for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
-    for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
-  });
-}
-addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
-
-/* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
-function stepDots(root,steps){
-  const stage=$(".stage",root),nav=document.createElement("div"); nav.className="dots"; nav.setAttribute("role","group"); nav.setAttribute("aria-label","The steps of this picture");
-  let cur=0; const go=i=>steps[i]&&steps[i].scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
-  const ctl=(cls,label,d,fn)=>{const b=document.createElement("button"); b.type="button"; b.className=cls; b.setAttribute("aria-label",label); b.title=label;
-    if(d) b.innerHTML='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="'+d+'"/></svg>'; b.addEventListener("click",fn); return b};
-  const prev=ctl("arr","Previous step","M7.5 2 3.5 6l4 4",()=>go(cur-1)), next=ctl("arr","Next step","M4.5 2l4 4-4 4",()=>go(cur+1)),
-        back=ctl("arr back","Back to the first step","M2.6 6.4a3.5 3.5 0 1 0 1-2.8M2.4 1.6v2.2h2.2",()=>go(0));
-  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""),"",()=>go(i))});
-  nav.append(prev,...dots,next,back);
-  if(stage&&steps.length>1) stage.append(nav);
-  return i=>{cur=i; prev.disabled=back.disabled=i===0; next.disabled=i===steps.length-1;
-    dots.forEach((d,j)=>{d.classList.toggle("on",j===i); if(j===i)d.setAttribute("aria-current","step"); else d.removeAttribute("aria-current")})};
-}
-function scrolly(root,render){
-  const steps=$$(".step",root),mark=stepDots(root,steps); render(0); mark(0);
-  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); mark(i); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
-  steps.forEach(s=>so.observe(s));
-}
-
-/* ===== who is who: the setting on the left, the machine room on the right ===== */
-function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
-  const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
-  [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}
-
-/* ===== space-time drawn in the round: each place is a line running outward, each ring a later moment,
-         and whatever is carried from place to place is an arc curving round and outward ===== */
-function Polar(svg,o){
-  const {cx,cy,r0,step,nodes,rings,tEnd}=o; svg.innerHTML=""; svg.setAttribute("viewBox",o.vb);
-  const defs=el("defs",{},svg);
-  const mk=(key,col)=>{const m=el("marker",{id:`${svg.id}-${key}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:col},m)};
-  mk("b","#136f9e"); mk("r","#bf4a26");
-  const frame=el("g",{},svg), under=el("g",{},svg), slips=el("g",{},svg), evs=el("g",{},svg), over=el("g",{},svg);
-  const P={svg,under,slips,evs,over,cx,cy,
-    r:t=>r0+step*t,
-    xy(deg,rr){const a=deg*Math.PI/180;return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)]},
-    pt(k,t){return P.xy(nodes[k][0],P.r(t))},
-    /* the points of an arc from place a at time ta to place b at time tb, the short way round */
-    arc(a,ta,b,tb){const a0=nodes[a][0],d=((nodes[b][0]-a0+540)%360)-180,n=Math.max(12,Math.round(Math.abs(d)/3)),pts=[];
-      for(let i=0;i<=n;i++)pts.push(P.xy(a0+d*i/n,P.r(ta+(tb-ta)*i/n)));return pts},
-    slip(a,ta,b,tb,trim=17){const pts=P.arc(a,ta,b,tb),end=pts[pts.length-1];
-      while(pts.length>2&&Math.hypot(pts[pts.length-1][0]-end[0],pts[pts.length-1][1]-end[1])<trim)pts.pop();
-      const p=el("path",{class:"st-slip","marker-end":`url(#${svg.id}-b)`,d:"M"+pts.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" L")},slips);
-      p.mid=P.arc(a,ta,b,tb); p.mid=p.mid[Math.floor(p.mid.length/2)]; return p},
-    seg(k,t1,t2){const [x1,y1]=P.pt(k,t1),[x2,y2]=P.pt(k,t2);return el("line",{class:"st-seg",x1,y1,x2,y2},under)},
-    event(k,t,fill,rad=13){const [x,y]=P.pt(k,t),g=el("g",{class:"st-ev",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},evs);
-      el("circle",{class:"halo2",r:rad+5},g);el("circle",{class:"b",r:rad,fill},g);g.label=el("text",{},g);el("circle",{r:rad+8,fill:"transparent"},g);return g}
-  };
-  for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
-  for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
-  for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
-    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
-  if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
-  return P;
-}
-
-/* lineage: draw the edges of a book's graph of papers, and say what an edge carries (lineage.py) */
-(function(){
-const NS="http://www.w3.org/2000/svg",wide=matchMedia("(min-width:860px)");
-document.querySelectorAll(".lin").forEach(lin=>{
-  const svg=lin.querySelector(".lin-edges"),say=lin.querySelector(".lin-say"),idle=say.innerHTML;
-  const node=n=>lin.querySelector('[data-n="'+n+'"]');
-  const links=[...lin.querySelectorAll(".lin-link")].map(el=>({el,side:el.dataset.side,from:el.dataset.from.split(" "),to:el.dataset.to.split(" "),g:null}));
-  const box=el=>{const a=el.getBoundingClientRect(),b=lin.getBoundingClientRect();
-    return {l:a.left-b.left,r:a.right-b.left,t:a.top-b.top,b:a.bottom-b.top,cx:(a.left+a.right)/2-b.left,cy:(a.top+a.bottom)/2-b.top}};
-  const mk=(tag,at,to)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);to.appendChild(e);return e};
-  const f=v=>v.toFixed(1);
-  const path=(g,d)=>mk("path",{d},g);
-  const flat=(g,x1,y1,x2,y2)=>path(g,`M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}`);
-  const bend=(g,x1,y1,x2,y2)=>{const m=(x1+x2)/2;path(g,`M${f(x1)} ${f(y1)}C${f(m)} ${f(y1)} ${f(m)} ${f(y2)} ${f(x2)} ${f(y2)}`)};
-  const head=(g,x,y,down)=>mk("polygon",{points:down?`${f(x-5)},${f(y-8)} ${f(x+5)},${f(y-8)} ${f(x)},${f(y)}`:`${f(x-8)},${f(y-5)} ${f(x-8)},${f(y+5)} ${f(x)},${f(y)}`},g);
-  function draw(){
-    svg.textContent="";
-    if(!wide.matches)return;
-    const R=lin.getBoundingClientRect();
-    svg.setAttribute("width",R.width);svg.setAttribute("height",R.height);svg.setAttribute("viewBox",`0 0 ${f(R.width)} ${f(R.height)}`);
-    const ports={};   // the edges that meet one side of a middle node share it out between them, in the order they come from
-    const port=(n,side,y,then)=>(ports[n+side]=ports[n+side]||[]).push({n,side,y,then});
-    links.forEach(k=>{
-      const g=k.g=mk("g",{},svg),c=box(k.el.querySelector("em"));
-      if(k.side==="in"){
-        flat(g,box(node(k.from[0])).r,c.cy,c.l,c.cy);
-        k.to.forEach(n=>port(n,"l",c.cy,(x,y)=>{bend(g,c.r,c.cy,x-7,y);head(g,x,y)}));
-      }else if(k.side==="out"){
-        const b=box(node(k.to[0]));
-        flat(g,c.r,c.cy,b.l-7,c.cy);head(g,b.l,c.cy);
-        k.from.forEach(n=>port(n,"r",c.cy,(x,y)=>bend(g,x,y,c.l,c.cy)));
-      }else{
-        const s=node(k.from[0]),t=node(k.to[0]),sb=box(s),tb=box(t);
-        if(t.parentNode.previousElementSibling===s.parentNode)flat(g,c.cx,sb.b,c.cx,c.t);
-        else{const y=sb.b-12,x=sb.r+20;   // round the papers between, outside their right edge
-          path(g,`M${f(sb.r)} ${f(y)}H${f(x-10)}Q${f(x)} ${f(y)} ${f(x)} ${f(y+10)}V${f(c.cy-10)}Q${f(x)} ${f(c.cy)} ${f(x-10)} ${f(c.cy)}H${f(c.r)}`)}
-        flat(g,c.cx,c.b,c.cx,tb.t-7);head(g,c.cx,tb.t,true);
-      }
-    });
-    for(const key in ports){
-      const list=ports[key].sort((a,b)=>a.y-b.y),b=box(node(list[0].n)),h=b.b-b.t;
-      list.forEach((p,i)=>p.then(p.side==="l"?b.l:b.r,b.t+h*(.2+.6*(i+.5)/list.length)));
-    }
-  }
-  function light(on,words){
-    lin.classList.toggle("hot",on.length>0);
-    const nodes=new Set(on.flatMap(k=>k.from.concat(k.to)));
-    links.forEach(k=>{const is=on.includes(k);k.el.classList.toggle("on",is);if(k.g)k.g.classList.toggle("on",is)});
-    lin.querySelectorAll(".lin-node").forEach(n=>n.classList.toggle("on",nodes.has(n.dataset.n)));
-    say.innerHTML=words||idle;
-  }
-  const name=ns=>ns.map(n=>node(n).dataset.label).join(", ");
-  links.forEach(k=>{
-    const tell=()=>light([k],"<b>"+name(k.from)+" → "+name(k.to)+"</b>"+k.el.querySelector(".why").innerHTML);
-    k.el.addEventListener("mouseenter",tell);k.el.addEventListener("focus",tell);k.el.addEventListener("click",tell);
-  });
-  lin.querySelectorAll(".lin-node").forEach(n=>{
-    const mine=()=>light(links.filter(k=>k.from.concat(k.to).includes(n.dataset.n)));
-    n.addEventListener("mouseenter",mine);n.addEventListener("focus",mine);
-  });
-  lin.addEventListener("mouseleave",()=>light([]));
-  new ResizeObserver(draw).observe(lin);
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
-  draw();
-});
-})();
-
-/* the rules of the round, worked in code and used by every widget below */
-function sureOf(vals){for(const a of "HA")if(vals.filter(v=>v===a).length*2>4)return a;return null}
-function settleRule(secs){const s=secs.filter(Boolean);if(!s.length)return{kind:"toss"};if(s.some(x=>x!==s[0]))throw new Error("two sure answers in one round");return{kind:s.length>1?"settle":"favour",a:s[0]}}
-function pickTwo(xs){const a=xs.slice(),out=[];while(out.length<2)out.push(a.splice(rnd(a.length),1)[0]);return out}
-/* one whole night. sight: {1:"H",...}. silent: a tent that never sends. reads(r,m,kind,others) names the two other tents man m hears from. */
-function night(o){
-  const sight=o.sight,silent=o.silent||0,toss=o.toss||(()=>"HA"[rnd(2)]),reads=o.reads||((r,m,kind,others)=>pickTwo(others)),max=o.max||300;
-  const men=[1,2,3,4].filter(m=>m!==silent),fav={},parted={},rounds=[];men.forEach(m=>fav[m]=sight[m]);
-  const active=men.slice();
-  for(let r=1;r<=max&&active.length;r++){
-    const send=men.filter(m=>active.includes(m)||(parted[m]&&parted[m].c===r-1));
-    const rep={};send.forEach(m=>rep[m]=active.includes(m)?fav[m]:parted[m].a);
-    const sure={},R={},S={},out={},sec={};
-    active.forEach(m=>{const others=send.filter(x=>x!==m);if(others.length<2)throw new Error("a man would wait for ever");
-      R[m]=reads(r,m,"rep",others);sure[m]=sureOf([rep[m],...R[m].map(x=>rep[x])])});
-    send.forEach(m=>sec[m]=active.includes(m)?sure[m]:parted[m].a);
-    active.forEach(m=>{const others=send.filter(x=>x!==m);S[m]=reads(r,m,"sec",others);
-      const res=settleRule([sec[m],...S[m].map(x=>sec[x])]);if(res.kind==="toss")res.t=toss(r,m);out[m]=res});
-    rounds.push({r,rep,sure,sec,R,S,out,active:active.slice(),parted:Object.keys(parted).map(Number),send});
-    active.slice().forEach(m=>{const x=out[m];if(x.kind==="toss")fav[m]=x.t;else{fav[m]=x.a;if(x.kind==="settle"){parted[m]={c:r,a:x.a};active.splice(active.indexOf(m),1)}}});
-  }
-  const ans=Object.values(parted).map(p=>p.a);
-  if(ans.some(a=>a!==ans[0]))throw new Error("two men committed to different answers");
-  if([1,2,3,4].every(m=>sight[m]===sight[1])){if(rounds.length!==1||rounds[0].active.some(m=>rounds[0].out[m].kind!=="settle"))throw new Error("matching sightings were not followed in the first round")}
-  return {rounds,parted,done:!active.length,men,silent};
-}
-
-/* the four mercenaries, told apart by colour */
-const TC={1:"#e0b84a",2:"#6583d6",3:"#c45448",4:"#9cb648"};
-const W={H:"hold",A:"attack"},FACE={H:"owl",A:"goddess"};
-const tentChip=(k,extra="")=>`<span class="chip"${extra}><i style="background:${TC[k]}"></i>Tent ${k}</span>`;
-const list=a=>a.length<2?a.join(""):a.slice(0,-1).join(", ")+" and "+a[a.length-1];
-const tents=a=>(a.length>1?"tents ":"tent ")+list(a);
-
-/* ===== machines: a split no fixed rule need ever break ===== */
-(function(){
-  let v,rounds;const box=$("#mvals"),say=$("#msay"),bF=$("#mfixed"),bC=$("#mcoin"),bR=$("#mreset");
-  const paint=()=>{box.innerHTML=v.map((x,i)=>`<div class="mach4"><b>Machine ${i+1}</b><span>${x}</span></div>`).join("");
-    bF.disabled=!(v.filter(x=>x===1).length===2)};
-  function reset(){v=[0,0,1,1];rounds=0;paint();say.textContent="Four machines hold 0, 0, 1 and 1. A machine that cannot be sure of a value must still pick one."}
-  bF.onclick=()=>{
-    /* the order of messages is arranged: each machine hears from its own value and from two machines holding the other value, and adopts the majority of the three it read */
-    const nv=v.map((x,i)=>{const other=v.map((y,j)=>j).filter(j=>v[j]!==x).slice(0,2),seen=[x,...other.map(j=>v[j])];return seen.filter(y=>y===1).length>=2?1:0});
-    v=nv;rounds++;paint();say.innerHTML=`Round ${rounds} with a fixed rule, adopt the majority of the three values read, and the messages arranged to arrive in the worst order. Every machine ended up holding the other value. <b>Still two against two.</b> The same arrangement works again.`};
-  bC.onclick=()=>{v=v.map(()=>rnd(2));rounds=0;paint();const ones=v.filter(x=>x===1).length;
-    say.innerHTML=ones===0||ones===4?`The coins fell <b>${v.join(", ")}</b>. All four hold the same value, so every machine now reads three alike and nothing can move them.`:`The coins fell <b>${v.join(", ")}</b>: ${ones} hold 1 and ${4-ones} hold 0. Press again, and the coins will fall differently. Each run differs, and no press is certain to end it.`};
-  bR.onclick=reset;reset();
-})();
-
-/* ===== the hill, seen from above ===== */
-function Hill(svg){
-  const cx=235,cy=235,R=158,A={1:-90,2:0,3:90,4:180}; svg.innerHTML=""; svg.setAttribute("viewBox","0 0 470 470");
-  el("circle",{cx,cy,r:215,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
-  el("circle",{cx,cy,r:96,fill:"#d9cfb4",stroke:"#6b5a48","stroke-width":2.5,"stroke-dasharray":"2 6"},svg);
-  el("circle",{cx,cy,r:24,fill:"#efe6cf",stroke:"#6b5a48","stroke-width":6},svg);
-  el("text",{x:cx,y:cy+52,class:"lab"},svg).textContent="the crown";
-  const under=el("g",{},svg),sites=el("g",{},svg),over=el("g",{},svg);
-  const H={svg,cx,cy,R,A,under,over,tent:{},
-    at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
-    put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
-    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
-    fly(g,a,b,u){const d=((A[b]-A[a]+540)%360)-180;H.put(g,...H.at(A[a]+d*u,R-(d>0?24:46)*Math.sin(Math.PI*u)))},
-    state(k,s){H.tent[k].st.textContent=s},
-    badge(k,s){const b=H.tent[k].badge;b.setAttribute("opacity",s?1:0);b.lastChild.textContent=s||""}
-  };
-  for(const k of [1,2,3,4]){const a=A[k]*Math.PI/180,[x,y]=H.at(A[k]),g=el("g",{class:"site"},sites);H.put(g,x,y);
-    el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:TC[k]},g);el("text",{},g).textContent="T"+k;
-    const st=el("text",{class:"state halo",x:-48*Math.cos(a),y:-46*Math.sin(a)},g);
-    const badge=el("g",{class:"badge",opacity:0,transform:`translate(${(38*Math.cos(a)).toFixed(1)} ${(34*Math.sin(a)).toFixed(1)})`},g);el("circle",{r:11},badge);el("text",{},badge);
-    H.tent[k]={x,y,g,st,badge}}
-  return H;
-}
-
-/* ===== a night, laid out: one row a round, one cell a tent ===== */
-function cellHtml(rd,m,lv,silent){
-  if(m===silent)return `<div class="nc gone"><span>silent</span></div>`;
-  if(!rd.send.includes(m))return `<div class="nc gone"><span>gone</span></div>`;
-  const early=!rd.active.includes(m),rep=rd.rep[m],sec=rd.sec[m];
-  const l1=lv>=1?`<span>${W[rep]}</span>`:"<span>&nbsp;</span>";
-  const l2=lv>=2?`<span>${sec?"sure of "+W[sec]:"unsure"}</span>`:"<span>&nbsp;</span>";
-  let l3="<span>&nbsp;</span>",cls="";
-  if(lv>=3){if(early){l3="<span>sent as they left</span>";cls=" early"}else{const o=rd.out[m];
-    if(o.kind==="toss"){l3=`<span>tosses: ${FACE[o.t]}</span>`;cls=" toss"}else if(o.kind==="favour"){l3=`<span>favours ${W[o.a]}</span>`;cls=" fav"}else{l3=`<span><b>settled: ${W[o.a]}</b></span>`;cls=" set"}}}
-  return `<div class="nc${cls}">${l1}${l2}${l3}</div>`;
-}
-function grid(host,N,levels,labels,from=0){
-  const rs=N.rounds;let h=`<div class="nrow hd"><div></div>${[1,2,3,4].map(k=>`<div>${tentChip(k)}</div>`).join("")}</div>`;
-  if(from>0)h+=`<div class="nmore">${from} earlier round${from>1?"s":""} not shown</div>`;
-  for(let i=from;i<rs.length;i++){const lv=levels===null?3:(levels[i]||0);if(!lv)continue;
-    h+=`<div class="nrow"><div class="rl">${labels?labels[i]:"Round "+rs[i].r}</div>${[1,2,3,4].map(m=>cellHtml(rs[i],m,lv,N.silent)).join("")}</div>`}
-  host.innerHTML=h;
-}
-function describe(rd){
-  const act=rd.active;let s=`Reports: ${act.map(m=>`tent ${m} ${W[rd.rep[m]]}`).join(", ")}. `;
-  const sures=act.filter(m=>rd.sure[m]);
-  if(!sures.length){const c={H:0,A:0};act.forEach(m=>c[rd.rep[m]]++);const t=c.H>=c.A?"H":"A";
-    s+=c[t]*2>act.length?`${c[t]} of the ${act.length} favour ${W[t]}, but to be sure a man needs more than half of all four, which is three alike. `:"";
-    s+="Nobody is sure. "}
-  else s+=`${list(sures.map(m=>"tent "+m))} write${sures.length>1?"":"s"} sure of ${W[rd.sure[sures[0]]]}. `;
-  const g={toss:[],favour:[],settle:[]};act.forEach(m=>g[rd.out[m].kind].push(m));
-  if(g.toss.length)s+=`Tossing: ${list(g.toss.map(m=>`tent ${m} the ${FACE[rd.out[m].t]}`))}. `;
-  if(g.favour.length)s+=`Favouring ${W[rd.out[g.favour[0]].a]} from now on: ${tents(g.favour)}. `;
-  if(g.settle.length)s+=`<b>Settled on ${W[rd.out[g.settle[0]].a]}: ${tents(g.settle)}.</b> ${g.settle.length>1?"Each sends":"This tent sends"} both birds of the next round at once, and leaves.`;
-  return s;
-}
-
-/* ===== a coin in each tent ===== */
-(function(){
-  const H=Hill($("#coinsvg")),say=$("#coinsay"),tally=$("#cointally"),bs=[1,2,3,4,"all"].map(k=>$("#coin"+k)),br=$("#coinr");
-  let tl,busy=false;
-  const paint=()=>tally.innerHTML=[1,2,3,4].map(k=>`<div>${tentChip(k)} owl ${tl[k][0]} · goddess ${tl[k][1]}</div>`).join("");
-  async function toss(ks){if(busy)return;busy=true;bs.forEach(b=>b.disabled=true);ks.forEach(k=>H.state(k,"…"));say.textContent="The coin is in the air.";
-    await sleep(500);const res=ks.map(k=>{const f=rnd(2)?"H":"A";tl[k][f==="H"?0:1]++;H.state(k,FACE[f]);H.badge(k,f);return [k,f]});
-    say.innerHTML=res.map(([k,f])=>`<b>Tent ${k}</b>: ${FACE[f]}, so it favours ${W[f]}.`).join(" ")+" Each press differs, and nothing here says how the next toss will fall.";
-    paint();busy=false;bs.forEach(b=>b.disabled=false)}
-  function reset(){tl={1:[0,0],2:[0,0],3:[0,0],4:[0,0]};[1,2,3,4].forEach(k=>{H.state(k,"");H.badge(k,"")});paint();say.textContent="Four tents, four coins. Toss in one tent, or in all four."}
-  [1,2,3,4].forEach((k,i)=>bs[i].onclick=()=>toss([k]));bs[4].onclick=()=>toss([1,2,3,4]);br.onclick=reset;reset();
-})();
-
-/* ===== one round at one tent ===== */
-(function(){
-  const rep=["H","H","H"],secBird=[null,false,false];
-  const rEl=$("#rrep"),sEl=$("#rsec"),out=$("#rout"),pick=$("#rpick");
-  function paint(){
-    const sure=sureOf(rep),own=sure,names=["its own report","a raven from another tent","a raven from a third tent"];
-    rEl.innerHTML=rep.map((a,i)=>`<button class="btn alt tg" data-i="${i}" aria-label="${names[i]}: ${W[a]}. Press to change.">${i?"Raven":"Own report"}: <b>${W[a]}</b></button>`).join("");
-    $$("button",rEl).forEach(b=>b.onclick=()=>{const i=+b.dataset.i;rep[i]=rep[i]==="H"?"A":"H";paint()});
-    /* tent 1 read two reports of one answer, so the other has at most two among the four and nobody can be sure of it */
-    const ans=own||(rep.filter(a=>a==="H").length>=2?"H":"A"),other=ans==="H"?"A":"H";
-    pick.innerHTML=own?`<span>The sure birds this round can only name <b>${W[own]}</b>: tent 1 has written sure of ${W[own]}.</span>`:
-      `<span>The sure birds this round can only name <b>${W[ans]}</b>: tent 1 read two reports of ${W[ans]}, so at most two of the four name ${W[other]}, and sure of ${W[other]} needs three.</span>`;
-    const ownBird=own?`<span class="tg fixed">Own second bird: <b>sure of ${W[own]}</b></span>`:`<span class="tg fixed">Own second bird: <b>unsure</b></span>`;
-    sEl.innerHTML=ownBird+[1,2].map(i=>`<button class="btn alt tg${secBird[i]?" on":""}" data-i="${i}">Raven ${i}: <b>${secBird[i]?"sure of "+W[ans]:"unsure"}</b></button>`).join("");
-    $$("button",sEl).forEach(b=>b.onclick=()=>{const i=+b.dataset.i;secBird[i]=!secBird[i];paint()});
-    const secs=[own,secBird[1]?ans:null,secBird[2]?ans:null],r=settleRule(secs);
-    const n=secs.filter(Boolean).length;
-    out.innerHTML=(own?`The three reports read are all ${W[own]}: more than half of all four, so tent 1 writes <b>sure of ${W[own]}</b>. `:`The three reports read are not all alike, and more than half of all four means three alike. Tent 1 writes <b>unsure</b>. `)+
-      (r.kind==="toss"?`None of the three second birds is sure, so tent 1 <b>tosses the coin</b> and favours the answer it shows.`:
-       r.kind==="favour"?`One of the three second birds is sure of ${W[r.a]}, so tent 1 <b>favours ${W[r.a]}</b> from now on. That is one, not two, so it is not yet settled.`:
-       `${n} of the three second birds are sure of ${W[r.a]}, so tent 1 is <b>settled on ${W[r.a]}</b>. Before it commits it sends both birds of the next round to all: the report ${W[r.a]}, and sure of ${W[r.a]}. Then it leaves.`);
-  }
-  paint();
-})();
-
-/* ===== never two answers: a scroll-driven stage worked out by the rules ===== */
-(function(){
-  const host=$("#nevergrid");
-  const T={rep:{1:[2,4],2:[1,4],3:[1,2],4:[3,1]},sec:{1:[2,3],2:[3,4],3:[4,1],4:[3,2]}};
-  const N=night({sight:{1:"H",2:"H",3:"A",4:"H"},reads:(r,m,k,o)=>r===1?T[k][m]:o.slice(0,2)});
-  const L=[[1,0],[2,0],[3,0],[3,1],[3,3],[3,3]];
-  scrolly($("#never"),i=>grid(host,N,L[Math.min(i,5)],["A round","Next round"]));
-})();
-
-/* ===== the toss: the night of the story, round by round ===== */
-(function(){
-  const host=$("#storygrid"),say=$("#storysay"),b=$("#storynext"),r=$("#storyr");let n=0;
-  const N=night({sight:{1:"H",2:"A",3:"H",4:"A"},silent:4,toss:(rd,m)=>rd===1?{1:"A",2:"A",3:"H"}[m]:"H"});
-  const draw=()=>grid(host,N,N.rounds.map((x,i)=>i<n?3:0));
-  b.onclick=()=>{n++;draw();say.innerHTML=describe(N.rounds[n-1])+(n===N.rounds.length?"":"");if(n>=N.rounds.length){b.disabled=true;
-      say.innerHTML+=" <span class='ok'>The tosses of round 2 happened to agree, so round 3 could not fail to settle.</span>"}};
-  r.onclick=()=>{n=0;b.disabled=false;draw();say.textContent="Tent 4 is silent. Tents 1, 2 and 3 saw hold, attack and hold at dusk. These are the tosses of one night in the story."};
-  r.onclick();
-})();
-
-/* ===== with probability one: fresh nights ===== */
-(function(){
-  const host=$("#nightgrid"),say=$("#nightsay"),bs=$("#nightsight"),bq=$("#nightsilent"),run=$("#nightgo");
-  const sight={1:"H",2:"A",3:"H",4:"A"};let silent=0;
-  const paint=()=>{bs.innerHTML=[1,2,3,4].map(k=>`<button class="btn alt tg" data-k="${k}" aria-label="Tent ${k} saw ${W[sight[k]]} at dusk. Press to change.">T${k} saw <b>${W[sight[k]]}</b></button>`).join("");
-    $$("button",bs).forEach(x=>x.onclick=()=>{const k=+x.dataset.k;sight[k]=sight[k]==="H"?"A":"H";paint()});
-    bq.textContent=silent?"Tent 4 is silent":"All four tents speak";bq.classList.toggle("on",!!silent)};
-  bq.onclick=()=>{silent=silent?0:4;paint()};
-  run.onclick=()=>{
-    const N=night({sight,silent}),k=N.rounds.length,from=Math.max(0,k-12),toss=N.rounds.reduce((a,x)=>a+Object.values(x.out).filter(o=>o.kind==="toss").length,0);
-    grid(host,N,null,null,from);
-    const ans=Object.values(N.parted)[0].a,who=N.men.map(m=>m);
-    say.innerHTML=`<b>This night took ${k} round${k>1?"s":""}.</b> Every man who spoke committed to ${W[ans]}, and no two differed (worked out by the rules, not typed in). There were ${toss} toss${toss===1?"":"es"}. `+
-      (toss===0?`Nobody tossed: the sightings left no room for a coin. `:"")+`Another night may take more or fewer rounds, and no round can be named in advance. Press again and the coins fall differently.`};
-  paint();
-})();
-
-/* ===== half is too many ===== */
-(function(){
-  const H=Hill($("#halfsvg")),say=$("#halfsay"),b1=$("#half1"),b2=$("#half2"),b3=$("#half3"),br=$("#halfr");
-  let d1,d2,toks;const S={1:"H",2:"H",3:"A",4:"A"};
-  const hold=(a,b)=>{const g=H.token(TC[a],S[a]);H.fly(g,a,b,.45);g.setAttribute("opacity",1);toks.push([g,a,b])};
-  function reset(){toks.forEach(t=>t[0].remove());toks=[];d1=d2=false;[1,2,3,4].forEach(k=>{H.badge(k,S[k]);H.state(k,"")});b1.disabled=b2.disabled=false;b3.disabled=true;
-    say.textContent="Tents 1 and 2 saw hold. Tents 3 and 4 saw attack. On this hill, two of the four may fall silent."}
-  b1.onclick=()=>{d1=true;b1.disabled=true;hold(3,2);hold(4,1);H.state(1,"holds");H.state(2,"holds");b3.disabled=!(d1&&d2);
-    say.innerHTML="Every bird from tents 3 and 4 stays in the pines. Tents 1 and 2 hear only each other, and for all they can tell the other two are silent for good. That looks exactly like a night on which all four saw hold and the other two fell silent at the start, and there the second demand has them hold. Their coins make no difference. <b>So they hold.</b>"};
-  b2.onclick=()=>{d2=true;b2.disabled=true;hold(1,4);hold(2,3);H.state(3,"attacks");H.state(4,"attacks");b3.disabled=!(d1&&d2);
-    say.innerHTML="In the same way every bird from tents 1 and 2 stays in the pines, and tents 3 and 4 hear only each other. <b>So they attack.</b>"};
-  b3.onclick=async()=>{b3.disabled=true;await Promise.all(toks.map(([g,a,b])=>tween(1100,u=>H.fly(g,a,b,.45+.43*u)).then(()=>g.setAttribute("opacity",0))));
-    say.innerHTML="All four are alive and every bird was merely late, so neither pair could tell. <span class='bad'>The pairs have committed to different answers.</span> The first demand is broken. The picture shows the pattern of the argument, not a worked plan."};
-  br.onclick=reset;toks=[];reset();
-})();
-
-/* ===== who is who ===== */
-mapPairs($("#map"),[
-["The four tents","Processes. N = 4 asynchronous processes."],
-["A sighting; attack or hold","Each process's input. A binary initial value x."],
-["Committing","An irrevocable decision. Setting the write-once output register."],
-["The three demands","Agreement; validity when all inputs are equal; termination. Consensus with correctness criterion (C1)."],
-["Ravens that always arrive, with no longest flight, in any order","Reliable asynchronous message passing. The message buffer; every message is eventually delivered to a process that keeps taking steps."],
-["A man killed; a silent tent","A crash failure, indistinguishable from slowness. A t-correct schedule, t = 1."],
-["The arranger of the birds","The worst case over message orderings, chosen with knowledge of everything so far. The adversary scheduler, which knows all about the system."],
-["The coin, owl or goddess, tossed alone in each tent","A private fair random bit at each process. Step 3(c): set x to 0 or 1 with probability 1/2 each (a local coin)."],
-["A round; the report","A numbered phase; the first message of the round. Message (1, r, x)."],
-["Sure of an answer; unsure","The second message. (2, r, v, D) when more than N/2 of the received values are v; (2, r, ?) otherwise."],
-["Waiting for three birds","Waiting for all but t. Wait for N − t messages."],
-["Favouring an answer on one sure bird; settled on two","Adopting a value; deciding. Step 3(a): one D-message; step 3(b): more than t D-messages."],
-["The rule of parting","A decided process sends its next round's messages and halts. Not in the paper, where decided processes keep running; added here because committing is silence, and shown to change nothing."],
-["Never two answers; the sightings respected","Agreement and validity, on every run. Theorem 1 (ii), (iii)."],
-["Committing with probability one","Termination with probability 1 for N > 2t. Theorem 1 (i). The paper gives no proof; Aguilera and Toueg (2012) give a complete one."],
-["Half is too many","No consensus when N ≤ 2t. The remark after Theorem 2: the schedule can simulate a partition."],
-["Six men against one liar","Byzantine agreement for N > 5t, with authenticated senders. Protocol B, Theorem 2."],
-["The happier case","Constant expected rounds when t = O(√N), run synchronously. Theorem 3."],
-["No drawing lots","Deterministic processes. The assumption of FLP that randomization removes."]]);
-})();
-</script>
+<script src="script.js"></script>
 </body>
 </html>

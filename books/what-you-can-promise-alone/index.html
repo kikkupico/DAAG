@@ -6,389 +6,7 @@
 <title>What You Can Promise Alone — The Scholars' Coast</title>
 <meta name="description" content="Highly available transactions told in the reading rooms of the scholars' coast of Paxos: what a librarian can promise a reader while the couriers are stopped, what needs the reader to stay with one library, and what no librarian can promise alone.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<style>
-:root{
-  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4;
-  --aegean:#2e88b5; --aegean-d:#136f9e; --blood:#bf4a26; --olive:#7c8f3a; --terra:#b5602c;
-  --gold:#e0b84a; --shadow:#b9a77e;
-  --serif:Georgia,'Iowan Old Style','Palatino Linotype',serif;
-  --sans:Optima,'Gill Sans','Gill Sans MT',sans-serif;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;background:#d8cba6}
-body{margin:0;background:#d8cba6;color:var(--ink);font-family:var(--serif);line-height:1.55;overflow-x:hidden}
-img{max-width:100%;display:block}
-button{font:inherit;cursor:pointer}
-h1,h2,h3{font-family:var(--sans);line-height:1.12;margin:0;text-wrap:balance}
-p{margin:0 0 1rem;font-size:1.125rem;line-height:1.65;text-wrap:pretty}
-.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--blood)}
-
-/* ---------- top bar ---------- */
-.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
-  font-family:var(--sans);font-size:.78rem;letter-spacing:.05em;background:linear-gradient(180deg,#3a2a1a,#241a10)}
-.bar a{color:#f0e6cc;text-decoration:none;opacity:.8;white-space:nowrap} .bar a:hover{opacity:1}
-.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:520px){.bar a+a{display:none}}
-.bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
-
-/* ---------- spreads ---------- */
-.spread{position:relative;padding:clamp(4.5rem,11vw,8rem) 20px;overflow:clip}
-.spread.has-scrolly{overflow:visible;padding-bottom:0;background:var(--marble)}
-.dark{background:var(--marble);color:var(--ink);background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
-.light{background:var(--parch);color:var(--ink);
-  background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
-/* torn-paper edge between spreads */
-.tear{position:absolute;left:0;right:0;top:-1px;height:26px;z-index:3;pointer-events:none}
-.tear path{fill:var(--prev)}
-.wrap{max-width:1080px;margin:0 auto;position:relative;z-index:2}
-.narrow{max-width:640px;margin:0 auto}
-.spread h2{font-size:clamp(1.9rem,5vw,3.1rem);margin:.4rem 0 1rem}
-.lede{max-width:34em}
-.light .lede{color:#3a2d24}
-.meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
-  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
-
-/* ---------- the pop-up: a card that unfolds from its hinge ---------- */
-.pop{perspective:1400px}
-.pop > .leaf{transform-origin:50% 100%;transform:rotateX(78deg) translateY(30px);opacity:0;
-  transition:transform 1.1s cubic-bezier(.2,.9,.25,1.12),opacity .6s ease}
-.pop.up > .leaf{transform:rotateX(0) translateY(0);opacity:1}
-.pop.fromleft > .leaf{transform-origin:0 50%;transform:rotateY(-80deg)}
-.pop.fromright > .leaf{transform-origin:100% 50%;transform:rotateY(80deg)}
-.pop.up.fromleft > .leaf,.pop.up.fromright > .leaf{transform:none}
-.paper{background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);position:relative}
-.light .paper{box-shadow:9px 11px 0 #b9a77e}
-.photo{border:5px solid #fffaf0;box-shadow:0 0 0 3px var(--ink),12px 16px 0 var(--shadow);background:#222;overflow:hidden;position:relative}
-.photo img{width:100%;height:100%;object-fit:cover}
-.tilt-l{transform:rotate(-1.4deg)} .tilt-r{transform:rotate(1.2deg)}
-[data-depth]{will-change:transform}
-.fold-shadow{position:absolute;left:6%;right:6%;bottom:-18px;height:26px;background:radial-gradient(ellipse at center,#0008,transparent 70%);opacity:0;transition:opacity 1s .4s;z-index:-1}
-.up .fold-shadow{opacity:1}
-
-/* ---------- cover ---------- */
-#cover{min-height:100svh;display:grid;align-items:center;padding-top:5rem;
-  background:linear-gradient(180deg,#e0d6bb00 calc(100% - 140px),#e0d6bb),radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
-/* the cover ends in one colour, and the torn edge under it is that colour */
-#cover+.spread>.tear path{fill:#e0d6bb}
-#cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
-#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:0 0 1.4rem;letter-spacing:-.01em}
-#cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
-#cover .generic,#cover .allegory{max-width:26em;margin:0 0 1rem}
-#cover .generic,#cover .allegory{color:var(--ink)}
-#cover .generic{font-style:italic;font-size:clamp(1.15rem,2.3vw,1.4rem)}
-#cover .source{font-family:var(--sans);font-size:.74rem;line-height:1.5;max-width:36em;margin:1.6rem 0 0;color:#6b5d4f}
-#cover .source i{color:var(--blood)}
-.cut{position:absolute;pointer-events:none;z-index:1}
-.cut svg{display:block;width:100%;height:auto}
-@media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
-
-/* ---------- two-column spreads ---------- */
-.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-.two.wide-r{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
-@media(max-width:859px){.two,.two.wide-r{grid-template-columns:minmax(0,1fr)}}
-
-/* ---------- the hall (full-bleed photo with pins) ---------- */
-#hall{padding:0;background:var(--marble)}
-.bleed{position:relative;height:min(100svh,880px);overflow:hidden}
-.bleed img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover}
-.bleed::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--parch) 0,transparent 8%,transparent 92%,var(--parch) 100%);pointer-events:none}
-.pin{position:absolute;z-index:4;max-width:min(250px,44vw);padding:10px 14px;background:#fffaf0;color:var(--ink);border:3px solid var(--ink);
-  box-shadow:5px 6px 0 #0007;font-size:.92rem;line-height:1.35;transform-origin:0 100%}
-.pin b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood)}
-.pin::after{content:"";position:absolute;left:-3px;bottom:-26px;width:3px;height:26px;background:var(--ink)}
-.pin::before{content:"";position:absolute;left:-8px;bottom:-34px;width:13px;height:13px;border-radius:50%;background:var(--blood);border:3px solid var(--ink)}
-.hall-title{position:absolute;z-index:5;left:20px;right:20px;top:clamp(5rem,12vh,8rem);max-width:1080px;margin:0 auto}
-.hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
-.hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
-.hall-title p{margin:0}
-/* on a phone, or a screen too short to hold them, the title and the notes leave the photograph and stand under it */
-@media(max-width:900px),(max-height:680px){
-  #hall{background:var(--parch);padding-bottom:clamp(2.5rem,8vw,4rem)}
-  .bleed{height:auto!important;overflow:visible;display:flex;flex-direction:column;gap:14px;padding:0 20px}
-  .bleed::after{display:none}
-  .bleed img{position:static;width:calc(100% + 40px);max-width:none;height:min(58svh,460px);margin:0 -20px;transform:none!important;
-    -webkit-mask-image:linear-gradient(transparent,#000 9%);mask-image:linear-gradient(transparent,#000 9%)}
-  .hall-title{position:relative;inset:auto;width:100%;max-width:640px;margin:-3.2rem auto 4px}
-  .hall-title .t{display:block;max-width:none}
-  .pin{position:static;width:100%;max-width:640px;margin:0 auto;box-shadow:5px 6px 0 var(--shadow)}
-  .pin::before,.pin::after{display:none}
-}
-
-/* ---------- scrollytelling ---------- */
-.scrolly{position:relative}
-.scrolly .stage{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;padding:70px 20px 20px;overflow:hidden}
-.scrolly .steps{position:relative;z-index:6;margin-top:-100svh;pointer-events:none}
-.step{min-height:100svh;display:flex;align-items:center;padding:0 20px}
-.step .card{pointer-events:auto;max-width:360px;padding:16px 20px;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);
-  transform:translateY(24px) rotate(-.6deg);opacity:.25;transition:transform .7s cubic-bezier(.2,.9,.25,1.1),opacity .5s}
-.step.on .card{transform:none;opacity:1}
-.step .card h3{font-size:1.1rem;margin-bottom:.35rem}
-.step .card p{margin:0;font-size:.98rem}
-.step .num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
-.step.r{justify-content:flex-end}
-.scrolly svg.fig{width:min(100%,820px);height:auto;max-height:calc(100svh - 120px);overflow:visible}
-.scrolly .stage-inner{width:100%;display:flex;justify-content:center}
-/* under the picture: previous, one dot per step (the current one long), next, and back to the first; each scrolls the page to its step */
-.scrolly .stage{flex-direction:column;gap:12px}
-.dots{flex:0 0 auto;display:flex;justify-content:center;align-items:center;gap:1px;position:relative;z-index:7}
-.dots button{appearance:none;border:0;background:none;padding:8px 4px;line-height:0;cursor:pointer;color:var(--ink)}
-.dots .dot::before{content:"";display:block;width:7px;height:7px;border-radius:7px;background:var(--ink);opacity:.22;transition:width .3s,opacity .3s,background .3s}
-.dots .dot:hover::before{opacity:.5}
-.dots .dot.on::before{width:20px;opacity:1;background:var(--blood)}
-.dots .arr{padding:6px;opacity:.5;transition:opacity .3s}
-.dots .arr svg{display:block;width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.dots .arr:hover{opacity:1}
-.dots .arr:disabled{opacity:.14;cursor:default}
-.dots .back{margin-left:8px}
-.dots button:focus-visible{outline:2px solid var(--aegean-d);outline-offset:-3px}
-@media(min-width:900px){.scrolly .stage{padding-left:380px} .step .card{max-width:320px} .step{padding-left:max(24px,calc((100vw - 1080px)/2))}}
-@media(max-width:899px){
-  .scrolly .stage{justify-content:flex-start;padding-top:64px}
-  .scrolly svg.fig{max-height:46svh}
-  .step{align-items:flex-end;padding-bottom:22px}
-  .step .card{max-width:none;width:100%}
-}
-svg text{font-family:var(--serif)}
-.svg-dark{background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
-
-/* ---------- interactive wells ---------- */
-.well{padding:clamp(16px,3vw,28px);margin:1.6rem 0}
-.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;justify-content:space-between;gap:10px}
-.well h4 em{font-style:normal;color:#6b5a48}
-.btn{background:var(--ink);color:var(--parch);border:3px solid var(--ink);padding:8px 16px;font-family:var(--sans);font-size:.88rem;letter-spacing:.03em;box-shadow:4px 4px 0 var(--blood);transition:transform .12s,box-shadow .12s}
-.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--blood)}
-.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--blood)}
-.btn:disabled{opacity:.35;cursor:default;box-shadow:none}
-.btn.alt{background:#fffaf0;color:var(--ink)}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.say{margin:12px 0 0;font-size:.98rem;min-height:3.1em}
-.say b{color:var(--blood)}
-.ok{color:#3f7a2a;font-weight:700}.bad{color:var(--blood);font-weight:700}
-
-/* cards row */
-.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
-.card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
-.card3 .body{padding:16px 18px 18px}
-.card3 h3{font-size:1.15rem;margin-bottom:.4rem}
-.card3 p{font-size:.95rem;margin:0}
-.card3 .fx{margin-top:12px}
-/* cards in a row stand as tall as the tallest */
-.cards3>.pop>.leaf{height:100%}
-@media(max-width:860px){.cards3{grid-template-columns:1fr}}
-/* relevance */
-.map{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px 0;align-items:stretch;max-width:760px;margin:2rem auto 0}
-.map .l,.map .r{padding:11px 16px;font-size:1rem;border:3px solid var(--ink);background:#fffaf0;color:var(--ink);transition:background .25s,transform .25s;cursor:default}
-.map .r{font-family:var(--sans);background:#e9f2f7}
-.map .mid{display:grid;place-items:center;color:var(--blood);font-size:1.3rem}
-.map .hi{background:var(--gold)!important;transform:scale(1.03)}
-.map .hd{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood)}
-.end{text-align:center}
-.end .big{font-size:clamp(1.5rem,4.2vw,2.5rem);max-width:19em;margin:0 auto 1.4rem;color:var(--ink);text-wrap:balance}
-.links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
-.links a{color:var(--ink);background:#fffaf0;border:3px solid var(--ink);padding:9px 18px;text-decoration:none;font-family:var(--sans);font-size:.9rem;box-shadow:4px 4px 0 var(--shadow)}
-.links a:hover{background:var(--gold)}
-footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;font-family:var(--sans);background:#d8cba6}
-
-/* ---------- lists, small parts ---------- */
-.terms{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:12px}
-.terms li{padding:12px 16px;background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 #b9a77e;font-size:.98rem}
-.terms b{font-family:var(--sans)}
-@keyframes slotin{from{transform:translateY(-8px);opacity:0}}
-.btn:focus-visible,.links a:focus-visible,[role=button]:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
-.num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
-.chip{display:inline-block;padding:1px 7px;margin:2px 3px 2px 0;border:2px solid var(--ink);border-radius:5px;background:#fff;font-family:var(--sans);font-weight:700;font-size:.86rem;white-space:nowrap}
-.chip i{display:inline-block;width:.7em;height:.7em;border-radius:50%;border:1.5px solid var(--ink);margin-right:5px;vertical-align:-.02em}
-.isle-svg{width:min(100%,440px);display:block;margin:0 auto}
-.fig .fade{opacity:0;transition:opacity .6s}
-.fig .fade.on{opacity:1}
-.fig .lab{fill:#6b5a48;font-size:15px;font-style:italic;text-anchor:middle}
-.fig .halo{paint-order:stroke;stroke:#fffaf0;stroke-width:5px;stroke-linejoin:round}
-.tok text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.site rect,.site circle{stroke:var(--ink);stroke-width:4}
-.site text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-
-/* ---------- space-time, drawn in the round ---------- */
-.st-ring{fill:none;stroke:#b9a77e;stroke-opacity:.7;stroke-width:1;stroke-dasharray:3 4}
-.st-spoke{stroke:#1c1512;stroke-width:2.5;stroke-opacity:.45}
-.st-node rect{fill:#f6eed6;stroke:#1c1512;stroke-width:2}
-.st-node text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.st-slip{fill:none;stroke:#136f9e;stroke-width:2.6;transition:stroke .3s,stroke-width .3s,opacity .5s}
-.st-seg{stroke:#bf4a26;stroke-width:7;stroke-linecap:round;opacity:0;transition:opacity .3s}
-.st-seg.hi{opacity:.85}
-.st-slip.hi{stroke:#bf4a26;stroke-width:5}
-.st-ev{cursor:pointer}
-.st-ev circle.b{stroke:#1c1512;stroke-width:3;transition:stroke .3s,stroke-width .3s}
-.st-ev text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
-.st-ev .halo2{fill:none;stroke:#e0b84a;stroke-width:7;opacity:0;transition:opacity .3s}
-.st-ev.sel .halo2,.st-ev.mark .halo2{opacity:1}
-.st-ev.sel circle.b{stroke-width:4.5}
-.st-ev.dim{opacity:.3}
-.st-ev:focus-visible{outline:none}.st-ev:focus-visible circle.b{stroke:#136f9e;stroke-width:6}
-.st-note{fill:#6b5a48;font-size:13px;font-style:italic}
-
-/* ---------- a stage with a figure and a side panel ---------- */
-.stage-inner.split{gap:18px;align-items:center}
-.stage-inner.split svg.fig{flex:1 1 300px;min-width:0;max-width:470px}
-.side{flex:0 0 240px;display:grid;gap:10px;font-family:var(--sans);font-size:.84rem}
-.side .hc{background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--shadow);padding:8px 10px;min-height:92px;transition:background .4s}
-.side .hc h5{margin:0 0 5px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:6px}
-.side .hc h5 span{color:#6b5a48;letter-spacing:.02em;text-transform:none}
-.side .hc .chk{font-size:.78rem;margin-top:4px;line-height:1.35}
-.side .hc.in{background:#e3ecc4}
-@media(max-width:899px){
-  .stage-inner.split{flex-direction:column;gap:10px}
-  .stage-inner.split svg.fig{flex:0 0 auto;max-height:30svh;width:auto;max-width:100%}
-  .side{flex:0 0 auto;width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;font-size:.7rem}
-  .side .hc{padding:5px 6px;min-height:0;box-shadow:3px 3px 0 var(--shadow)}
-  .side .hc h5{font-size:.62rem;flex-direction:column;gap:0}
-  .side .hc .chk{font-size:.66rem}
-  .side .chip{font-size:.68rem;padding:0 4px}
-}
-.tear{width:100%}
-.scrolly svg.fig.svg-dark{overflow:hidden}
-
-/* ---------- proofs, in the paper's own terms ---------- */
-details.proof{max-width:760px;margin:1.8rem 0 0;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);padding:0 clamp(14px,3vw,22px);font-size:.95rem}
-details.proof>summary{cursor:pointer;padding:12px 0;font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--aegean-d)}
-details.proof>summary:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
-details.proof[open]{padding-bottom:14px}
-details.proof details.proof{border-width:3px;box-shadow:none;background:#fff;margin:1rem 0;max-width:none}
-details.proof .given{padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean);margin:0 0 .8rem}
-details.proof h3,details.proof h4{font-size:1.02rem;margin:1.4rem 0 .5rem}
-details.proof .hlink{color:inherit;text-decoration:none}
-details.proof .fnote{font-size:.84rem;color:#6b5a48}
-ol.proofsteps{padding-left:1.4em;margin:.4rem 0 0}
-ol.proofsteps li{margin:.55em 0}
-.qed{float:right;font-family:var(--sans);letter-spacing:.15em;color:#5f6e28}
-.mathblock{margin:.8rem 0;padding:8px 12px;overflow-x:auto;text-align:center;font-style:italic;background:#fff;border:2px solid #1c151233}
-.slab{margin:1rem 0;padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean)}
-.slab-head{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
-.stmt{font-style:italic}
-
-/* ---------- closing apparatus: lineage, papers, links to where a fact comes from ---------- */
-a.anchor{display:block;height:0;scroll-margin-top:56px}
-sup.xref{font-size:.8em;line-height:0;margin-left:1px}
-sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
-.apparatus{max-width:760px;margin:3rem auto 0;text-align:left;font-size:.94rem}
-.apparatus .lineage{margin:0 0 .6rem}
-.apparatus .lbl{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-right:8px}
-.apparatus a{color:var(--aegean-d)}
-.apparatus details.proof{margin-top:1.2rem}
-.apparatus .refs p,.apparatus ol.refs li{font-size:.9rem;margin:.45em 0}
-.apparatus table{width:100%;border-collapse:collapse;font-size:.9rem}
-.apparatus td{padding:5px 8px 5px 0;border-top:2px solid #1c151222;vertical-align:top}
-
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  .pop > .leaf{transition:opacity .3s;transform:none!important}
-  [data-depth]{transform:none!important}
-  .pulse{animation:none}
-  .fig .tok{transition:none}
-}
-/* ---------- lineage: the papers a book's papers draw on and lead to (lineage.py) ---------- */
-.lin{--gap:134px;position:relative;margin-top:1.2rem}
-.lin ul{list-style:none;margin:0;padding:0}
-.lin h5{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#6b5a48;margin:0 0 6px;font-weight:700}
-.lin-edges{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-.lin-edges path{fill:none;stroke:var(--ink);stroke-width:1.6}
-.lin-edges polygon{fill:var(--ink)}
-.lin-nodes>li{padding:6px 0}
-.lin-node{position:relative;z-index:1;display:block;padding:9px 12px;color:var(--ink);text-decoration:none;line-height:1.28}
-.lin-node b{display:block;font-size:.93rem}
-.lin-node .by{display:block;font-family:var(--sans);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--blood);margin-top:4px}
-.lin-node.book{background:#fffaf0;border:2px solid var(--ink);box-shadow:4px 5px 0 var(--shadow)}
-.lin-node.ext{background:#f6eed6;border:2px dashed #1c151288}
-.lin-node.ext b{font-weight:400;font-style:italic}
-a.lin-node:hover b{text-decoration:underline}
-.lin-node.here{background:var(--ink);color:var(--parch);border:2px solid var(--ink);box-shadow:5px 6px 0 var(--shadow);padding:13px 14px}
-.lin-node.here b{font-size:1rem}
-.lin-node.here .by{color:var(--gold)}
-.lin-link{position:relative;z-index:1;cursor:default;outline:0}
-.lin-link em{display:inline-block;font-family:var(--sans);font-style:normal;font-size:.72rem;line-height:1.2;background:#f6eed6;border:1px solid #1c151255;border-radius:10px;padding:2px 8px;color:var(--ink)}
-.lin-link .ends{font-family:var(--sans);font-size:.72rem;color:#6b5a48;margin-left:6px}
-.lin-link .why{display:block;font-size:.84rem;color:#3a2d24;margin:3px 0 0}
-.lin-say{font-size:.9rem;color:#3a2d24;margin:16px 0 0;max-width:none}
-.lin-say b{font-family:var(--sans);font-size:.74rem;letter-spacing:.06em;color:var(--blood);margin-right:8px}
-.lin-key{margin:10px 0 0;font-family:var(--sans);font-size:.74rem;color:#6b5a48}
-.lin-key .k{display:inline-block;width:20px;height:11px;vertical-align:-1px;margin:0 6px 0 16px;border:2px solid var(--ink)}
-.lin-key .k:first-child{margin-left:0}
-.lin-key .k.here{background:var(--ink)}
-.lin-key .k.book{background:#fffaf0}
-.lin-key .k.ext{border-style:dashed;border-color:#1c151288}
-@media(min-width:860px){
-  /* three columns; each paper at the sides keeps its links beside it, in the gap the edges cross */
-  .lin{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.92fr) minmax(0,1.2fr);align-items:center}
-  .lin-side.in h5{margin-right:var(--gap)}
-  .lin-side.out h5{margin-left:var(--gap)}
-  .lin-side .lin-nodes>li{display:grid;align-items:center}
-  .lin-side.in .lin-nodes>li{grid-template-columns:minmax(0,1fr) var(--gap)}
-  .lin-side.out .lin-nodes>li{grid-template-columns:var(--gap) minmax(0,1fr)}
-  .lin-side.out .lin-links{order:-1}
-  .lin-side .lin-links{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 10px;text-align:center}
-  .lin-mid{padding:0 56px}
-  .lin-mid .lin-nodes>li{padding:0}
-  .lin-mid .lin-nodes>li+li{margin-top:26px}
-  .lin-mid .lin-links{display:flex;justify-content:center;gap:8px;margin:-8px 0 18px;text-align:center}
-  .lin-link .ends,.lin-link .why{display:none}
-  .lin-say,.lin-key{grid-column:1/-1}
-  .lin-say{min-height:2.7em}
-  .lin-link em{transition:background .15s,color .15s}
-  .lin.hot .lin-node,.lin.hot .lin-link,.lin.hot .lin-edges g{opacity:.28}
-  .lin.hot .lin-node.on,.lin.hot .lin-link.on,.lin.hot .lin-edges g.on{opacity:1}
-  .lin.hot .lin-link.on em{background:var(--ink);color:var(--parch);border-color:var(--ink)}
-}
-@media(max-width:859px){
-  /* one column: each paper's links are written out under it */
-  .lin-side,.lin-mid{margin-bottom:1.4rem}
-  .lin-nodes>li{padding:7px 0}
-  .lin-links{margin:8px 0 4px 6px;padding-left:12px!important;border-left:2px solid #1c151255}
-  .lin-mid .lin-links{margin:0 0 8px 6px}
-  .lin-link+.lin-link{margin-top:8px}
-  .lin-say{display:none}
-}
-/* ---------- shared by the coast books ---------- */
-.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
-@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
-.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0}
-.counts span b{font-size:1.4rem;margin-right:5px}
-.cards3.five{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-table.terms2{width:100%;border-collapse:collapse;font-size:.88rem}
-table.terms2 td{padding:6px 8px 6px 0;border-top:2px solid #1c151222;vertical-align:top}
-table.terms2 td:first-child{width:40%;font-weight:700}
-.seg{display:flex;flex-wrap:wrap;gap:0;margin:0 0 8px}
-.seg button{background:#fff;border:3px solid var(--ink);margin-right:-3px;margin-bottom:-3px;padding:4px 9px;font-family:var(--sans);font-size:.78rem}
-.seg button[aria-pressed=true]{background:var(--ink);color:var(--parch)}
-.seglab{font-family:var(--sans);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:#6b5a48;margin:8px 0 4px}
-.checks{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px;font-size:.92rem}
-.checks li{padding:6px 10px;background:#fff;border:3px solid var(--ink)}
-.note{font-size:.9rem;color:#6b5a48;font-style:italic}
-.lib circle.b,.lib rect.b{stroke:var(--ink);stroke-width:3.5;transition:fill .4s,opacity .4s}
-.lib text{font-family:var(--sans);font-weight:700;font-size:13px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
-.lib.pick{cursor:pointer}
-.lib.pick:focus-visible{outline:none}.lib.pick:focus-visible .b{stroke:var(--aegean-d);stroke-width:6}
-.lib.off .b{opacity:.3}
-.lib .ring{fill:none;stroke:var(--gold);stroke-width:5;opacity:0;transition:opacity .3s}
-.lib.mark .ring{opacity:1}
-.way{fill:none;stroke:#b5602c;stroke-width:2.5;stroke-dasharray:3 7;opacity:.7}
-.way.cut{stroke:#bf4a26;stroke-dasharray:2 9;opacity:.35}
-.bars{display:grid;gap:10px;margin:.4rem 0 0}
-.bars .b{display:grid;grid-template-columns:minmax(0,11em) minmax(0,1fr);gap:10px;align-items:center;font-family:var(--sans);font-size:.82rem}
-.bars .b i{display:block;height:16px;background:var(--aegean);border:2px solid var(--ink);min-width:3px}
-.bars .b i.n{background:var(--gold)}
-.bars .b span.v{display:flex;align-items:center;gap:8px}
-.bars h5{font-family:var(--sans);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;margin:10px 0 0;color:#6b5a48}
-.tbl{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.86rem}
-.tbl th,.tbl td{padding:5px 8px;border-top:2px solid #1c151222;text-align:left}
-.tbl th{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48;border-top:0}
-.shelves{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:8px 0 0}
-.shelf{border:3px solid var(--ink);background:#fff;padding:8px 10px;font-family:var(--sans);font-size:.84rem;min-height:86px}
-.shelf h5{margin:0 0 6px;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48}
-.shelf .it{display:block;padding:3px 6px;margin:3px 0;border-left:5px solid var(--aegean);background:var(--parch-lo)}
-.shelf .it.held{border-left-color:var(--gold);font-style:italic}
-.shelf .it.old{border-left-color:#b9a77e}
-.shelf .it.none{border-left-color:#b9a77e;background:none;font-style:italic;color:#6b5a48}
-.shelf .shown{margin-top:6px}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -405,8 +23,8 @@ table.terms2 td:first-child{width:40%;font-weight:700}
   <div class="wrap grid">
     <div>
       <h1>What You Can Promise Alone</h1>
-      <p class="generic">When a machine cannot stop to check with the others on every change, what can it still promise on its own? That no one sees a reply before the message it answers? That no one sees a change half made? That two people never take the last item?</p>
-      <p class="allegory">We find out by exploring what ancient Greek librarians could still promise their readers when the couriers between the libraries stopped running.</p>
+      <p class="generic">When a machine cannot stop to check with other replicas on every transaction, what guarantees can it still keep on its own? Can it hide half-made changes? Show a reply only after the message it answers? Prevent two people from taking the last item?</p>
+      <p class="allegory">We find out by exploring what the librarians of the scholars' coast of Paxos could still promise their readers on days when the couriers between libraries stopped running.</p>
       <p class="source">After Peter Bailis, Aaron Davidson, Alan Fekete, Ali Ghodsi, Joseph M. Hellerstein and Ion Stoica, <i>Highly Available Transactions: Virtues and Limitations</i>, 2014</p>
     </div>
     <div class="pop" data-auto>
@@ -457,13 +75,14 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <div>
         <div class="kicker">First, in machine terms</div>
         <h2>Replicas that must always answer</h2>
-        <p class="lede">A database is replicated. A network partition can cut replicas off from one another for any length of time, and every replica a client can reach must still answer, from its own state.</p>
+        <p class="lede">On Mount Phyle,<sup class="xref"><a href="../answering-while-cut-off/index.html" title="Answering While Cut Off">*</a></sup> we saw that a partitioned replica cannot both answer every request and guarantee linearizability (strong consistency). Does giving up linearizability mean giving up transactions and isolation altogether?</p>
         <ul class="terms">
-          <li><b>Highly available transactions</b> (Bailis et al., 2014): a sorting of the isolation levels and session guarantees by whether they survive that demand.</li>
-          <li><b>Some survive</b>: read committed, atomic visibility of a transaction's writes, monotonic reads. <b>Some survive if each client sticks to one replica</b>: read your writes, causal consistency.</li>
-          <li><b>Some cannot</b>: preventing lost updates and write skew, and any bound on how stale a read may be.</li>
+          <li><b>Highly Available Transactions (HATs)</b> (Bailis et al., 2014) sort the classic database isolation levels and distributed session guarantees by whether a replica can keep them while cut off from other replicas for an arbitrary length of time.</li>
+          <li><b>Some guarantees can be kept by any replica</b>: `Read Committed`, `Monotonic Atomic View` (showing all or none of a transaction's writes), `Item/Predicate Cut Isolation`, `Monotonic Reads`, and `Writes Follow Reads`.</li>
+          <li><b>Some require sticky availability</b> (the client always talks to the same replica): `Read Your Writes`, `PRAM`, and `Causal Consistency`.</li>
+          <li><b>Some are provably impossible without coordination</b>: preventing `Lost Updates` and `Write Skew` (which rules out `Snapshot Isolation` and `Serializability`), and any recency bound on reads.</li>
         </ul>
-        <p style="margin-top:1.2rem">We tell it in the reading rooms of the scholars' coast, on a day when the couriers have stopped.</p>
+        <p style="margin-top:1.2rem">We tell this story in the reading rooms of the scholars' coast, on a day when the couriers between libraries have stopped.</p>
       </div>
       <div class="pop fromright"><div class="leaf">
         <div class="paper well" style="margin:0">
@@ -484,11 +103,13 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="hall-title"><div class="t">
       <div class="kicker">The reading rooms</div>
       <h2>A librarian, a reader, and no courier</h2>
-      <p>Every library on the scholars' coast has a reading room, where a reader comes with business. What the other libraries know reaches it by courier, and couriers can be stopped, cutting one part of the coast off from the rest for as long as they stay stopped.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: The Scholars' Coast">*</a></sup></p>
+      <p>Every library on the scholars' coast has a reading room where readers come to consult works, leave corrections, or borrow copies. News of what other libraries have done arrives by courier—and couriers can be stopped at any time, cutting one library off from the rest for as long as the stoppage lasts.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: The Scholars' Coast">*</a></sup></p>
     </div></div>
-    <div class="pin pop" style="left:52%;top:40%;"><div class="leaf"><b>Answered from the shelf</b>A librarian answers a reader from the copy the library holds.</div></div>
-    <div class="pin pop" style="left:6%;top:63%;"><div class="leaf"><b>For as long as they like</b>The couriers may be stopped for any length of time.</div></div>
-    <div class="pin pop" style="left:56%;top:80%;"><div class="leaf"><b>Every visit ends</b>A reader's business is finished, or the reader withdraws it.</div></div>
+    <div class="pins">
+      <div class="pin pop"><div class="leaf"><b>Answered from the shelf</b>A librarian must answer every reader who walks through the door using only what is on the library's own shelves.</div></div>
+      <div class="pin pop"><div class="leaf"><b>For as long as they like</b>Couriers between libraries may be stopped for hours, days, or months.</div></div>
+      <div class="pin pop"><div class="leaf"><b>Every visit finishes</b>A librarian may never turn a reader away with <i>come back when the couriers return</i>; every visit must finish its business unless the reader chooses to withdraw it.</div></div>
+    </div>
   </div>
 </section>
 
@@ -501,9 +122,9 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <div>
         <div class="kicker">The standard</div>
         <h2>The couriers stop</h2>
-        <p class="lede">Answering alone means this: every reader who can reach an open library is answered, whatever the couriers are doing and however long they have been stopped.</p>
-        <p>The librarian does not wait for another library to reply, nor for a courier to return, nor for most of the coast to agree, and does not answer <i>probably</i>. A librarian who must hear from most of the coast cannot speak on the day the couriers stop, and the promise is only worth having if it holds on that day.</p>
-        <p>Replying is not enough either. A librarian who told every reader <i>come back later</i> would always reply. A visit must be able to finish: given an open library, the reader's business is in the end done, or withdrawn by the reader.</p>
+        <p class="lede">What does it mean for a librarian to make a promise <b>alone</b> (`high availability`)? It means that every reader who can reach an open library gets their business completed, no matter which couriers are stopped or how long they stay stopped.</p>
+        <p>A librarian who has to wait for a majority of the coast (as the Chamber and the Tholos do) cannot answer when cut off. Nor does it count to say <i>I am probably right</i>, as in <a href="../probably-up-to-date/index.html">Probably Up to Date</a>. Here we ask which hard, deterministic promises hold even on the day every courier on the road is stopped.</p>
+        <p>Furthermore, simply replying <i>I abort your request</i> does not count as availability! If refusing every visitor counted as answering, a locked door would be “available.” Under <b>transactional availability</b>, every visit that reaches an open library must genuinely complete (`commit`), unless the reader himself chooses to cancel it.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p01-door.jpg" alt="A library's porch seen from the path: two plain columns, steps, and the door standing open on the racks of scrolls inside, with olive branches hanging close on both sides" loading="lazy"></div></div></div>
     </div>
@@ -518,15 +139,15 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">What a reader might want</div>
       <h2>A reader's visit</h2>
-      <p class="lede">A reader's business at one library is a <b>visit</b>: several works asked for, or several corrections left, one after another, before the reader goes.</p>
-      <p>The promises a reader might want are about what is seen during a visit and across visits. They fall on three shelves.</p>
+      <p class="lede">A reader's business at a library is a <b>visit</b> (`a transaction`): during a single visit, a reader may consult several works and leave corrections to several works before stepping out the door.</p>
+      <p>When we test every classic transactional and session guarantee against a courier stoppage, they sort cleanly onto three shelves:</p>
     </div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Kept alone, by any library</div><h3>Whatever the couriers do</h3><p>No correction is shown half made. Corrections bound together are seen all or none. The same answer comes twice in a visit. No answer is older than the last. A reply is held until its letter.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Kept if the reader stays with one library</div><h3>The same door every time</h3><p>The reader finds the corrections the reader left. They appear in the order they were made. All of this together, in order.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Kept by no librarian alone</div><h3>It needs news from elsewhere</h3><p>Two readers never take the last copy. Two readers never leave a shelf bare. This is the latest edition.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Kept alone, by any library</div><h3>Whatever the couriers do (`HAT`)</h3><p>No correction is shown half-made (`Read Committed`). Corrections bound together are seen all or none (`Monotonic Atomic View`). Reading the same work twice in a visit gives the same answer (`Cut Isolation`). No answer is older than a previous visit's (`Monotonic Reads`), and no reply is shown before its letter (`Writes Follow Reads`).</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Kept if the reader stays with one library</div><h3>The same door every time (`Sticky`)</h3><p>A returning reader sees the corrections they themselves left (`Read Your Writes`), in the order they left them (`PRAM`), and combined with everybody else's letters and replies (`Causal Consistency`).</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Kept by no librarian alone</div><h3>Needs news from elsewhere (`Unavailable`)</h3><p>Two readers never borrow the last copy (`Lost Update`), two readers never leave a reference shelf bare (`Write Skew`), and the copy handed over is guaranteed to be the newest—or within any fixed time of the newest (`Recency / Linearizability`).</p></div></div></div>
     </div>
-    <p style="max-width:40em;margin-top:1.4rem">The order is not a ranking of how good the promises are. Those on the first shelf are the more modest, and cost the reader nothing. Each on the second asks a little of the reader. Those on the third are what most people would want first.</p>
+    <p style="max-width:40em;margin-top:1.4rem">Let us walk through each shelf in turn and see <em>how</em> a librarian keeps the promises on the first two shelves without waiting for a courier—and why no librarian can keep the promises on the third.</p>
   </div>
 </section>
 
@@ -538,10 +159,10 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The most basic promise</div>
       <h2>No half-made corrections</h2>
-      <p class="lede">A reader leaves three corrections to three works, writing them one after another. Meanwhile another reader comes to the same library and asks for one of those works.</p>
-      <p>The librarian may not show a correction its writer has not finished, since the writer may yet abandon it. So the librarian holds a writer's corrections apart until the visit is over. They are written in the librarian's hands, not onto the shelves. When the writer finishes, all of them go onto the shelves together, and if the writer withdraws, none do. Nothing in this waits for another library.</p>
+      <p class="lede">Suppose a scholar sits in a reading room revising three works during a single visit. While he is still writing the second revision—and before he has decided whether to finish the visit or tear up his notes—another reader walks in and asks for the first work.</p>
+      <p>The librarian must never show another reader an unfinished or abandoned revision (`dirty read`). Keeping that promise (`Read Committed`) requires zero help from other libraries: the librarian simply holds a visitor's revisions aside on a desk until the visitor declares the visit complete, and only then places them onto the shelves (or discards them if the visitor withdraws).</p>
     </div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">A second, smaller promise</div><h3>Every correction in a visit carries the same tally</h3><p>Two readers at two libraries may correct the same two works, each unaware of the other. If one visit won on the first work and the other on the second, the shelves would hold a mixture that neither reader wrote. With one tally for a whole visit, and the larger tally winning wherever two corrections meet,<sup class="xref"><a href="../spreading-by-word-of-mouth/index.html" title="Spreading by Word of Mouth">*</a></sup> a visit wins on every work it touched or on none.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">A second, smaller promise</div><h3>Every correction in a visit carries the same tally</h3><p>What if two scholars at two cut-off libraries both revise Work <var>X</var> and Work <var>Y</var> in a single visit? If one scholar's revision won on <var>X</var> while the other's won on <var>Y</var>, the shelves would end up with a Frankenstein mixture (`dirty write` / `G0`) that neither scholar intended. By stamping <em>every</em> correction in a visit with a single shared tally (the visit's timestamp plus the visitor's ID) and resolving clashes by largest tally,<sup class="xref"><a href="../spreading-by-word-of-mouth/index.html" title="Spreading by Word of Mouth">*</a></sup> whichever visit has the larger tally wins on <em>both</em> <var>X</var> and <var>Y</var>.</p></div></div></div>
     <details class="proof">
       <summary>Proof · that Read Uncommitted and Read Committed are achievable with high availability</summary>
       <p class="given">High availability: every client that can reach a non-failing replica gets a response, without that replica contacting any other. <i>Read Uncommitted</i> (Adya's PL-1) forbids G0: a cycle in the graph with an edge from <var>T<sub>i</sub></var> to <var>T<sub>j</sub></var> when <var>T<sub>j</sub></var> overwrites a write of <var>T<sub>i</sub></var>. <i>Read Committed</i> (PL-2) also forbids reading aborted or intermediate writes (G1a–c). <b>Claim.</b> Both can be provided with high availability.</p>
@@ -563,8 +184,8 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">All or none</div>
       <h2>Corrections bound together</h2>
-      <p class="lede">A scholar corrects two works at once. The work <i>X</i> says the strait is crossed at one place, and the work <i>Y</i>, which cites it, must say so too. The two corrections reach the libraries separately.</p>
-      <p>The remedy is to bind the corrections under one <b>cord</b>. Every correction in the set carries the same tally and a list of all the works in the set. A library does not show a correction the moment it arrives. It holds it back, and shows it only when it knows that the whole set has arrived wherever it is going. Until then it answers with the older copy.</p>
+      <p class="lede">Suppose a scholar revises two works during one visit: he updates Work <var>X</var> (a map of the strait) and also updates Work <var>Y</var> (a sailing guide that refers to <var>X</var>). When couriers carry those two revisions across the coast, the courier carrying <var>X</var> might reach a library before the courier carrying <var>Y</var>.</p>
+      <p>If a reader saw the new <var>X</var> and then read the old <var>Y</var>, he would see a broken half-state (`fractured read`). To prevent that (`Monotonic Atomic View`), the scholar binds the revisions of a visit under one <b>cord</b>: each revision carries the visit's tally and the manifest of all works revised in that visit. A library does not place an incoming revision onto its public shelf the moment it arrives; it holds the revision in the back room until it knows that <em>every</em> revision under that cord has reached all the libraries (`pending stable`), and until then it continues to hand readers the older editions!</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>A reader asks for X, then for Y <em>the correction to X has arrived at Library 1; the correction to Y is still on the road to Library 2</em></h4>
@@ -573,7 +194,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <p class="say" id="csay">The reader has asked for nothing yet.</p>
       <div class="row"><button class="btn" id="cx">Ask Library 1 for X</button><button class="btn" id="cy">Ask Library 2 for Y</button><button class="btn alt" id="carr">The courier reaches Library 2</button><button class="btn alt" id="creset">Start again</button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Holding back is not waiting</div><h3>The library does not wait to answer. It waits only to change what it shows</h3><p>It answers at once from what it may show, which may be the older copy, and learns from the couriers' notes when the set is complete. If the couriers are stopped it goes on showing the older copy for as long as they are stopped. A reader sees the state before the set or the state after, never between. Which of the two is not promised, nor anything about two readers.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Holding back is not waiting</div><h3>The librarian never makes a reader wait; he only delays unveiling new arrivals</h3><p>Notice the trick that makes this highly available: when a reader asks for <var>X</var> or <var>Y</var> while the couriers are stopped, the librarian answers <em>immediately</em> using the older, pre-cord edition that is already complete on the shelf. Once every library has received the full cord, the new editions become eligible to show; and once a reader sees any work from a cord, his reading note records that cord's tally so any other library he asks in the same visit also shows him at least that cord's edition.</p></div></div></div>
     <details class="proof">
       <summary>Sketch · that Monotonic Atomic View is achievable with high availability</summary>
       <p class="given">Monotonic Atomic View (MAV): once some effect of a transaction <var>T<sub>i</sub></var> is observed by a transaction <var>T<sub>j</sub></var>, all later reads of <var>T<sub>j</sub></var> observe all of <var>T<sub>i</sub></var>'s effects, or later versions. A write is <i>pending stable</i> once every replica for the transaction's final writes has received them. <b>Claim.</b> MAV can be provided with high availability.</p>
@@ -597,9 +218,9 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <div>
         <div class="kicker">Within a visit, and across visits</div>
         <h2>The same answer twice</h2>
-        <p class="lede">A reader can be sure of the same answer twice in one visit, and can do most of it without the librarian.</p>
-        <p>A reader who has been shown a work holds a note of that copy on a tablet. Asked for again, the work is answered from the note, unless the reader has changed it meanwhile. The tablet is wiped when the reader leaves. With a little more care the note covers a whole <em>list</em>: every work on the stars, the same list however often it is asked for in the visit.</p>
-        <p>Across visits, a reader should never be shown an older copy than before. For that, every library shows readers only what it knows <em>every</em> library holds: a <b>floor</b> of editions, which the couriers' notes raise as each new edition is known to be everywhere.</p>
+        <p class="lede">What if a reader asks for the same work twice during a single visit and wants to see the exact same edition both times (`Item Cut Isolation` / `Repeatable Read`)?</p>
+        <p>That is effortless: the reader (or the reading room) simply jots down the edition shown on the first reading, and if the reader asks for that work again during the same visit, hands back the cached copy (unless the reader himself modified it during the visit). By keeping older editions on a back shelf, the librarian can do the same for a whole <em>list</em> of works matching a topic (`Predicate Cut Isolation`).</p>
+        <p>What about <em>across</em> visits, when a reader may visit Library 1 today and Library 2 tomorrow, and never wants to see an older edition than one he read before (`Monotonic Reads`)? Even without sticking to one library, the coast can guarantee this by having every library show readers only its <b>floor</b>: the highest edition that the library knows <em>every library on the coast</em> has already received!</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p03-path.jpg" alt="A library seen from above and behind among trees: a tiled roof with a smaller gable over its porch, walls of pale plaster with small barred windows, on a base of dressed stone" loading="lazy"></div></div></div>
     </div>
@@ -610,7 +231,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <p class="say" id="fsay">Every library holds edition 1, and shows it.</p>
       <div class="row"><button class="btn" id="fwrite">A new edition is written at Library 1</button><button class="btn" id="fc2">A courier reaches Library 2</button><button class="btn" id="fc3">A courier reaches Library 3</button></div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">The price is recency. The floor is only as new as the slowest courier, so a reader may be shown a copy far behind what some library holds. And the floor is common to everyone: it does not promise a reader the corrections that reader has just left, since they may not be on the floor yet. These promises are all about not going backwards. They say nothing about going forward.</p>
+    <p style="max-width:40em;margin-top:1.4rem">Because no library reveals an edition until every library holds it, a reader who walks from any library to any other can never step backwards. The price is staleness: while couriers are stopped, the floor stops rising, so every library keeps showing the old pre-stoppage floor—even to the very scholar who just wrote a new edition!</p>
   </div>
 </section>
 
@@ -624,9 +245,9 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <div>
         <div class="kicker">The second shelf</div>
         <h2>Staying with one library</h2>
-        <p class="lede">A reader leaves a correction at Library 1. The couriers stop. The next day the reader comes back and asks for the work.</p>
-        <p>At Library 1 the correction is on the shelves. At Library 2, which the couriers cannot reach, the librarian must answer from what is there, and what is there is the old copy. Library 2 could wait until it hears of the correction, but then it would wait for as long as the couriers stay stopped, which is not answering.</p>
-        <p>So the reader must <b>stay with one library</b>, returning always to the same door. The librarian does nothing new. A reader may instead carry a copy of every correction left, and show it to any library that lacks them, which comes to the same thing: such a reader is acting as a library.</p>
+        <p class="lede">Suppose a reader leaves a correction at Library 1, steps out while the couriers are stopped, and returns the next morning to read the work (`Read Your Writes`).</p>
+        <p>If he walks into Library 2—which is cut off from Library 1 by the stopped couriers—Library 2 has never heard of his correction! Under high availability, Library 2 cannot wait for the couriers to resume; it must answer from its own shelves, which hold only the old edition. Thus <b>no system can guarantee Read Your Writes if a client switches between partitioned replicas</b>.</p>
+        <p>To get `Read Your Writes`, the reader must <b>stay with one library</b> (`sticky availability`), returning to the same door each visit—or else carry copies of his own corrections under his arm to show any new library he visits (which amounts to acting as his own sticky replica).</p>
       </div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
@@ -639,7 +260,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       </div>
       <div class="row"><button class="btn" id="oleave">Leave a correction at Library 1</button><button class="btn alt" id="oback1">Come back to Library 1</button><button class="btn alt" id="oback2">Come back to Library 2</button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">What is promised</div><h3>A reader who stays with one library finds their own corrections</h3><p>With never going backwards and corrections appearing in the order they were made, a visit's readings and writings appear in the order the reader did them, as one line of acts. The price is one more than before: if the library the reader stays with is lost, the promises are lost with it.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">What is promised</div><h3>A reader who stays with one library always sees their own corrections</h3><p>When a reader sticks to one library, that library already holds every correction the reader ever wrote, in the exact order they wrote them (`PRAM` consistency). The only catch is that if that one library burns down or closes its doors, the reader's unpropagated corrections are trapped inside until it reopens.</p></div></div></div>
     <details class="proof">
       <summary>Proof · that Read Your Writes is not achievable with high availability, and is with sticky availability</summary>
       <p class="given">Read your writes: whenever a client reads an item after updating it, the read returns the updated value or one that overwrote it. Sticky availability: a client always reaches the same replica, and gets a response whenever it can. <var>w<sub>x</sub></var>(1) is a write of 1 to item <var>x</var>, and <var>r<sub>x</sub></var>(<var>a</var>) a read of <var>x</var> returning <var>a</var>. <b>Claim.</b> Read your writes cannot be provided with high availability, and is provided with sticky availability.</p>
@@ -661,8 +282,8 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Other people's writing</div>
       <h2>Letters and replies</h2>
-      <p class="lede">A scholar at Library 1 writes a letter on some question, and it is entered as a work. A scholar at Library 2 reads it and writes a reply, which is entered too. The reply travels quickly to a third library and the letter slowly.</p>
-      <p>The promise wanted is that <em>no reply is shown before the letter it answers</em>. A reply carries a note of what its writer had seen when writing it, and a library shows the reply only when each of those is already on its floor. The librarian answers all the while, from what may be shown.</p>
+      <p class="lede">Suppose a scholar at Library 1 writes a letter on a question, and it is catalogued as a work. A second scholar at Library 2 reads that letter and writes a reply. What if the courier carrying the reply reaches Library 3 <em>before</em> the slow courier carrying the original letter?</p>
+      <p>To promise that <em>no reply is ever shown before the letter it answers</em> (`Writes Follow Reads` / `Causal Consistency`), each new work carries a note listing the editions its author had read before writing it (`causal dependencies`). When the reply arrives at Library 3 ahead of the letter, Library 3 holds the reply in the back room and does not place it on the public shelf until the letter it depends on has also arrived. All the while, Library 3 continues answering readers immediately from the works already on its shelf.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>At the reader's library <em>the reply arrives first</em></h4>
@@ -671,7 +292,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <p class="say" id="lsay">Neither has arrived.</p>
       <div class="row"><button class="btn" id="lrep">The reply arrives</button><button class="btn" id="llet">The letter arrives</button><button class="btn alt" id="lreset">Start again</button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">The last thing a librarian can promise alone</div><h3>Never backwards, one's own corrections found, in order, and no reply before its letter</h3><p>Holding a reply for its letter needs nothing of the reader: any library holds it for anyone. Put together with the second shelf, it makes the strongest promise a librarian can give alone, to a reader who stays with one library.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">The ceiling of what can be promised without waiting</div><h3>Causal consistency plus atomic views is as strong as a sticky library can go</h3><p>Combining the first two shelves—holding back half-made or incomplete cords (`MAV`), holding back replies until their letters arrive (`Writes Follow Reads`), and keeping each reader at one library (`Read Your Writes` + `Monotonic Reads/Writes`)—gives transactional <b>Causal Consistency</b>. Anything stronger crosses onto the third shelf, where no librarian can keep the promise alone.</p></div></div></div>
   </div>
 </section>
 
@@ -684,9 +305,9 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <div>
         <div class="kicker">The third shelf</div>
         <h2>The last copy</h2>
-        <p class="lede">The libraries lend. A reader may borrow a copy for a term, and while it is out the library does not have it.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: The Scholars' Coast">*</a></sup></p>
-        <p>Say a work has one copy left on the coast, and both Library 1 and Library 2 have it noted as on the shelf. The couriers are stopped. A reader at each asks to borrow it.</p>
-        <p>Each lending reads the count of copies, finds one, and writes a count of none. Neither reading sees the other's writing. Any rule a librarian could try, such as waiting to hear from the other library, needs a courier, and stops working the day the couriers do.</p>
+        <p class="lede">Now we reach the third shelf: promises that <em>no</em> librarian can keep while the couriers are stopped. Suppose the libraries lend works out for a term,<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: The Scholars' Coast">*</a></sup> and only <b>one copy</b> of a work remains available on the coast.</p>
+        <p>Before the couriers stop, both Library 1 and Library 2 have a note on their shelves saying <i>1 copy available</i>. Now the couriers stop, and a reader walks into Library 1 to borrow the copy at the exact same time a second reader walks into Library 2 to borrow it.</p>
+        <p>Each librarian checks his shelf, sees `1 copy available`, lends it out, and writes `0 copies available` (`Lost Update`). Because the couriers are stopped, neither librarian can learn that the other just lent the copy! Any rule that prevented this—such as locking the work or waiting for a majority of libraries—would force at least one librarian to stall or turn his reader away while the couriers are stopped.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p04-roof.jpg" alt="A second library further along the coast, seen from above among thick trees: a tiled roof with the smaller gable of its porch, plastered walls with barred windows, and the sea beyond" loading="lazy"></div></div></div>
     </div>
@@ -698,9 +319,9 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <div class="row"><button class="btn" id="b1">A reader at Library 1 borrows it</button><button class="btn" id="b2">A reader at Library 2 borrows it</button><button class="btn alt" id="breset">Start again</button></div>
     </div></div></div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The same failure with two works</div><h3>A shelf left bare</h3><p>Two works are held for reference, and at least one must stay on the shelf. A reader at Library 1 sees the second there and borrows the first. A reader at Library 2 sees the first there and borrows the second. Each kept the rule by what could be seen, and the rule is broken.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Mended outside</div><h3>Settled on the road</h3><p>The two readers meet on the road, and one gives way. The paper calls this moving the clash out into the world, where someone able to settle it does.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Dodged by changing the rule</div><h3>Shelf-marks and spare copies</h3><p>A shelf-mark that must only be <em>unique</em> can be made at any library from its number and a count of its own. One that must be <em>next in sequence</em> for the whole coast cannot. A count that must not fall below none can be kept by making another copy whenever a lending would take it there, at the cost of more copies than waiting would have made.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The same failure with two works</div><h3>A shelf left bare (`Write Skew`)</h3><p>Suppose two reference works <var>X</var> and <var>Y</var> are kept under a rule that <em>at least one of the two</em> must stay on the shelf at all times. While couriers are stopped, a reader at Library 1 checks that <var>Y</var> is on the shelf and borrows <var>X</var>; concurrently, a reader at Library 2 checks that <var>X</var> is on the shelf and borrows <var>Y</var>. Each visit obeyed the rule locally, yet together they left the reference shelf completely bare!</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Mended outside</div><h3>Settled on the road (`Compensation`)</h3><p>How do real systems live without preventing `Lost Update` or `Write Skew`? Often by allowing both transactions to succeed while partitioned and issuing an apology or compensating action afterward—just as the two borrowers can settle who gets the scroll when they meet on the road.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Dodged by changing the rule</div><h3>Shelf-marks and spare copies</h3><p>Often a clash can be avoided by redesigning the rule: if shelf-marks only need to be <em>globally unique</em> rather than strictly sequential (`1, 2, 3...`), each library can prefix its own library number with zero coordination. And if a popular work would be over-lent, scribes can copy a fresh scroll on demand (`restocking`).</p></div></div></div>
     </div>
     <details class="proof">
       <summary>Proof · that Lost Update and Write Skew cannot be prevented with high availability</summary>
@@ -724,8 +345,8 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">What readers ask for first</div>
       <h2>The latest edition</h2>
-      <p class="lede">A librarian alone cannot promise that the copy handed over is the latest, nor any looser form of that: <em>no more than a day behind</em>, or no more than any bound.</p>
-      <p>Such a promise needs the librarian to know that nothing newer has been written anywhere since. If the couriers are stopped for longer than the bound, a newer edition may be on the road, and the librarian must still answer, from a copy that is behind by more than the bound.</p>
+      <p class="lede">Finally, no librarian who must always answer can promise that the copy handed over is the <b>latest edition</b> (`linearizability`)—nor even a looser time bound such as <i>no more than a day behind</i>.</p>
+      <p>Why? Because if couriers can be stopped for longer than whatever time bound the librarian promises, a scholar at Library 1 can write a new edition just as the stoppage begins, and once the stoppage outlasts the bound, Library 2 is forced either to stop answering (breaking availability) or to hand over its old copy (breaking the recency bound). This is the exact CAP impossibility of <a href="../answering-while-cut-off/index.html">Answering While Cut Off</a>, extended to every bounded-staleness guarantee.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Name a bound, then stop the couriers <em>a new edition is written at Library 1 just as they stop</em></h4>
@@ -743,7 +364,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
         <li>Since the partition can last longer than any fixed bound, no recency bound is enforceable. This is the argument of Gilbert and Lynch for the CAP theorem, applied to every recency guarantee.<span class="qed">∎</span></li>
       </ol>
     </details>
-    <p style="max-width:40em;margin-top:1.4rem">What is gained for giving this up is time, and never having to stop. In the paper's trials, a store that sends every act through one master across distant sites took ten to a hundred times as long for each as one that answers from any copy. Of eighteen stores the paper surveyed, only three keep the strong promises unless asked, so readers already live with modest ones.</p>
+    <p style="max-width:40em;margin-top:1.4rem">What do the libraries win in exchange for giving up the third shelf? Speed—even on sunny days when every courier is running! In the authors' geo-distributed benchmarks across continents, transactions that coordinated through a single master or quorum took `10` to `100` times longer than Highly Available Transactions (`HATs`) answered locally. Better yet, surveying eighteen commercial databases revealed that fifteen of them already defaulted to weak isolation levels (`Read Committed` or weaker) that can be made highly available.</p>
   </div>
 </section>
 
@@ -755,13 +376,13 @@ table.terms2 td:first-child{width:40%;font-weight:700}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The limits</div>
       <h2>What it does not say</h2>
-      <p class="lede">The paper sorts the promises onto three shelves. Four things it does not claim.</p>
+      <p class="lede">The paper sorts transactional guarantees onto three clear shelves. Here are four things it does not claim.</p>
     </div>
     <div class="cards3 five">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is answering alone a loose standard?</h3><p>It is a strict one. A library that needs most of the coast open does not answer alone, and neither does one that is right only very probably. The standard is an answer from every open library whatever the stoppage, because that is the one under which the impossibilities can be proved. A weaker standard would allow more.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it say how to build the libraries well?</h3><p>No. The devices here show that the promises <em>can</em> be kept alone. The common floor, for one, holds every old edition and may be slow to rise. The paper does show a better way of holding sets bound together, and measured a working version.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Do several promises at once cost more?</h3><p>A combination can be kept only as widely as the hardest of its parts: add one promise that needs the reader to stay with one library, and the whole needs it. The paper counts a hundred and forty-four combinations, and does not claim to list every promise there could be.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Are the modest promises enough?</h3><p>The paper does not say so. Whether a coast can live without the third shelf depends on the coast. Its advice is to expect a few acts that must be kept apart and given the slower, stronger treatment, and to use it sparingly.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is “answering alone” the only useful definition of availability?</h3><p>No—it is deliberately the strictest one (requiring `100%` of non-failing replicas to answer under arbitrary partitions). A system that only needs to answer in the connected majority of the coast (like the Chamber or Tholos), or only with high probability (like PBS), can provide stronger third-shelf guarantees to the clients it serves.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Are the proof-of-concept devices meant for production as-is?</h3><p>Not always. For instance, keeping a global floor of editions across all libraries can stall visibility whenever one library is slow. The paper's buffered `Monotonic Atomic View` (`MAV`) design, however, is genuinely practical and achieved high throughput and low latency in the authors' experiments.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What happens when you combine several guarantees?</h3><p>A combination of guarantees is only as available as its <em>least</em> available part: combining any first-shelf `HAT` guarantee with `Read Your Writes` makes the combination `Sticky`, and adding `Prevent Lost Update` makes it `Unavailable`. Across the combinations studied, the paper maps out `144` distinct consistency and isolation levels.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Can every application live without the third shelf?</h3><p>No. Some operations genuinely require preventing `Lost Update` or `Write Skew`. The lesson of `HATs`—and of the next book, <a href="../knowing-when-to-wait/index.html">Knowing When to Wait</a>—is to reserve slow cross-coast coordination for the few operations that truly need the third shelf, while running the rest at local reading-room speed.</p></div></div></div>
     </div>
   </div>
 </section>
@@ -778,7 +399,7 @@ table.terms2 td:first-child{width:40%;font-weight:700}
       <p class="lede">Every library is a replica, and a reader's visit is a transaction. Hover or tap to see who is who.</p>
     </div>
     <div class="map" id="map">
-      <div class="hd" style="text-align:right;padding-right:6px">On the coast</div><div></div><div class="hd">In the machine room</div>
+      <div class="hd" style="text-align:right;padding-right:6px">On the coast</div><div></div><div class="hd">In computing</div>
     </div>
     <div class="meander" style="margin:3rem auto"></div>
     <div class="end">
@@ -833,284 +454,6 @@ table.terms2 td:first-child{width:40%;font-weight:700}
   </div>
 </section>
 <footer>Distributed Algorithms of Ancient Greece · “What You Can Promise Alone”, after Bailis et al., VLDB 2014.</footer>
-<script>
-"use strict";
-(function(){
-const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-const NS="http://www.w3.org/2000/svg";
-const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
-function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
-function rnd(n){return Math.floor(Math.random()*n)}
-/* run fn(0..1) over ms, eased */
-function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();return}const t0=performance.now();
-  (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
-function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
-
-/* ===== pop-ups unfold when they enter view ===== */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
-$$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
-$$(".say,[data-live]").forEach(e=>e.setAttribute("aria-live","polite"));
-
-/* ===== scroll: progress bar, section name, parallax ===== */
-const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
-const dep=$$("[data-depth]"), par=$$("[data-parallax]");
-let tick=false;
-function onscroll(){
-  if(tick)return; tick=true;
-  requestAnimationFrame(()=>{
-    tick=false;
-    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
-    prog.style.width=(h>0?y/h*100:0)+"%";
-    const mid=y+innerHeight*.4; let cur=secs[0];
-    for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
-    now.textContent=cur.dataset.name||"";
-    if(reduce)return;
-    for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
-    for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
-  });
-}
-addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
-
-/* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
-function stepDots(root,steps){
-  const stage=$(".stage",root),nav=document.createElement("div"); nav.className="dots"; nav.setAttribute("role","group"); nav.setAttribute("aria-label","The steps of this picture");
-  let cur=0; const go=i=>steps[i]&&steps[i].scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
-  const ctl=(cls,label,d,fn)=>{const b=document.createElement("button"); b.type="button"; b.className=cls; b.setAttribute("aria-label",label); b.title=label;
-    if(d) b.innerHTML='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="'+d+'"/></svg>'; b.addEventListener("click",fn); return b};
-  const prev=ctl("arr","Previous step","M7.5 2 3.5 6l4 4",()=>go(cur-1)), next=ctl("arr","Next step","M4.5 2l4 4-4 4",()=>go(cur+1)),
-        back=ctl("arr back","Back to the first step","M2.6 6.4a3.5 3.5 0 1 0 1-2.8M2.4 1.6v2.2h2.2",()=>go(0));
-  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""),"",()=>go(i))});
-  nav.append(prev,...dots,next,back);
-  if(stage&&steps.length>1) stage.append(nav);
-  return i=>{cur=i; prev.disabled=back.disabled=i===0; next.disabled=i===steps.length-1;
-    dots.forEach((d,j)=>{d.classList.toggle("on",j===i); if(j===i)d.setAttribute("aria-current","step"); else d.removeAttribute("aria-current")})};
-}
-function scrolly(root,render){
-  const steps=$$(".step",root),mark=stepDots(root,steps); render(0); mark(0);
-  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); mark(i); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
-  steps.forEach(s=>so.observe(s));
-}
-
-/* ===== who is who: the setting on the left, the machine room on the right ===== */
-function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
-  const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
-  [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}
-
-/* ===== space-time drawn in the round: each place is a line running outward, each ring a later moment,
-         and whatever is carried from place to place is an arc curving round and outward ===== */
-function Polar(svg,o){
-  const {cx,cy,r0,step,nodes,rings,tEnd}=o; svg.innerHTML=""; svg.setAttribute("viewBox",o.vb);
-  const defs=el("defs",{},svg);
-  const mk=(key,col)=>{const m=el("marker",{id:`${svg.id}-${key}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:col},m)};
-  mk("b","#136f9e"); mk("r","#bf4a26");
-  const frame=el("g",{},svg), under=el("g",{},svg), slips=el("g",{},svg), evs=el("g",{},svg), over=el("g",{},svg);
-  const P={svg,under,slips,evs,over,cx,cy,
-    r:t=>r0+step*t,
-    xy(deg,rr){const a=deg*Math.PI/180;return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)]},
-    pt(k,t){return P.xy(nodes[k][0],P.r(t))},
-    /* the points of an arc from place a at time ta to place b at time tb, the short way round */
-    arc(a,ta,b,tb){const a0=nodes[a][0],d=((nodes[b][0]-a0+540)%360)-180,n=Math.max(12,Math.round(Math.abs(d)/3)),pts=[];
-      for(let i=0;i<=n;i++)pts.push(P.xy(a0+d*i/n,P.r(ta+(tb-ta)*i/n)));return pts},
-    slip(a,ta,b,tb,trim=17){const pts=P.arc(a,ta,b,tb),end=pts[pts.length-1];
-      while(pts.length>2&&Math.hypot(pts[pts.length-1][0]-end[0],pts[pts.length-1][1]-end[1])<trim)pts.pop();
-      const p=el("path",{class:"st-slip","marker-end":`url(#${svg.id}-b)`,d:"M"+pts.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" L")},slips);
-      p.mid=P.arc(a,ta,b,tb); p.mid=p.mid[Math.floor(p.mid.length/2)]; return p},
-    seg(k,t1,t2){const [x1,y1]=P.pt(k,t1),[x2,y2]=P.pt(k,t2);return el("line",{class:"st-seg",x1,y1,x2,y2},under)},
-    event(k,t,fill,rad=13){const [x,y]=P.pt(k,t),g=el("g",{class:"st-ev",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},evs);
-      el("circle",{class:"halo2",r:rad+5},g);el("circle",{class:"b",r:rad,fill},g);g.label=el("text",{},g);el("circle",{r:rad+8,fill:"transparent"},g);return g}
-  };
-  for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
-  for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
-  for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
-    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
-  if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
-  return P;
-}
-
-/* lineage: draw the edges of a book's graph of papers, and say what an edge carries (lineage.py) */
-(function(){
-const NS="http://www.w3.org/2000/svg",wide=matchMedia("(min-width:860px)");
-document.querySelectorAll(".lin").forEach(lin=>{
-  const svg=lin.querySelector(".lin-edges"),say=lin.querySelector(".lin-say"),idle=say.innerHTML;
-  const node=n=>lin.querySelector('[data-n="'+n+'"]');
-  const links=[...lin.querySelectorAll(".lin-link")].map(el=>({el,side:el.dataset.side,from:el.dataset.from.split(" "),to:el.dataset.to.split(" "),g:null}));
-  const box=el=>{const a=el.getBoundingClientRect(),b=lin.getBoundingClientRect();
-    return {l:a.left-b.left,r:a.right-b.left,t:a.top-b.top,b:a.bottom-b.top,cx:(a.left+a.right)/2-b.left,cy:(a.top+a.bottom)/2-b.top}};
-  const mk=(tag,at,to)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);to.appendChild(e);return e};
-  const f=v=>v.toFixed(1);
-  const path=(g,d)=>mk("path",{d},g);
-  const flat=(g,x1,y1,x2,y2)=>path(g,`M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}`);
-  const bend=(g,x1,y1,x2,y2)=>{const m=(x1+x2)/2;path(g,`M${f(x1)} ${f(y1)}C${f(m)} ${f(y1)} ${f(m)} ${f(y2)} ${f(x2)} ${f(y2)}`)};
-  const head=(g,x,y,down)=>mk("polygon",{points:down?`${f(x-5)},${f(y-8)} ${f(x+5)},${f(y-8)} ${f(x)},${f(y)}`:`${f(x-8)},${f(y-5)} ${f(x-8)},${f(y+5)} ${f(x)},${f(y)}`},g);
-  function draw(){
-    svg.textContent="";
-    if(!wide.matches)return;
-    const R=lin.getBoundingClientRect();
-    svg.setAttribute("width",R.width);svg.setAttribute("height",R.height);svg.setAttribute("viewBox",`0 0 ${f(R.width)} ${f(R.height)}`);
-    const ports={};   // the edges that meet one side of a middle node share it out between them, in the order they come from
-    const port=(n,side,y,then)=>(ports[n+side]=ports[n+side]||[]).push({n,side,y,then});
-    links.forEach(k=>{
-      const g=k.g=mk("g",{},svg),c=box(k.el.querySelector("em"));
-      if(k.side==="in"){
-        flat(g,box(node(k.from[0])).r,c.cy,c.l,c.cy);
-        k.to.forEach(n=>port(n,"l",c.cy,(x,y)=>{bend(g,c.r,c.cy,x-7,y);head(g,x,y)}));
-      }else if(k.side==="out"){
-        const b=box(node(k.to[0]));
-        flat(g,c.r,c.cy,b.l-7,c.cy);head(g,b.l,c.cy);
-        k.from.forEach(n=>port(n,"r",c.cy,(x,y)=>bend(g,x,y,c.l,c.cy)));
-      }else{
-        const s=node(k.from[0]),t=node(k.to[0]),sb=box(s),tb=box(t);
-        if(t.parentNode.previousElementSibling===s.parentNode)flat(g,c.cx,sb.b,c.cx,c.t);
-        else{const y=sb.b-12,x=sb.r+20;   // round the papers between, outside their right edge
-          path(g,`M${f(sb.r)} ${f(y)}H${f(x-10)}Q${f(x)} ${f(y)} ${f(x)} ${f(y+10)}V${f(c.cy-10)}Q${f(x)} ${f(c.cy)} ${f(x-10)} ${f(c.cy)}H${f(c.r)}`)}
-        flat(g,c.cx,c.b,c.cx,tb.t-7);head(g,c.cx,tb.t,true);
-      }
-    });
-    for(const key in ports){
-      const list=ports[key].sort((a,b)=>a.y-b.y),b=box(node(list[0].n)),h=b.b-b.t;
-      list.forEach((p,i)=>p.then(p.side==="l"?b.l:b.r,b.t+h*(.2+.6*(i+.5)/list.length)));
-    }
-  }
-  function light(on,words){
-    lin.classList.toggle("hot",on.length>0);
-    const nodes=new Set(on.flatMap(k=>k.from.concat(k.to)));
-    links.forEach(k=>{const is=on.includes(k);k.el.classList.toggle("on",is);if(k.g)k.g.classList.toggle("on",is)});
-    lin.querySelectorAll(".lin-node").forEach(n=>n.classList.toggle("on",nodes.has(n.dataset.n)));
-    say.innerHTML=words||idle;
-  }
-  const name=ns=>ns.map(n=>node(n).dataset.label).join(", ");
-  links.forEach(k=>{
-    const tell=()=>light([k],"<b>"+name(k.from)+" → "+name(k.to)+"</b>"+k.el.querySelector(".why").innerHTML);
-    k.el.addEventListener("mouseenter",tell);k.el.addEventListener("focus",tell);k.el.addEventListener("click",tell);
-  });
-  lin.querySelectorAll(".lin-node").forEach(n=>{
-    const mine=()=>light(links.filter(k=>k.from.concat(k.to).includes(n.dataset.n)));
-    n.addEventListener("mouseenter",mine);n.addEventListener("focus",mine);
-  });
-  lin.addEventListener("mouseleave",()=>light([]));
-  new ResizeObserver(draw).observe(lin);
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
-  draw();
-});
-})();
-
-/* ===== the scholars' coast from above: the body of the island, its libraries each in a clearing, the stoa on the eastern shore ===== */
-function Coast(svg,o={}){
-  const n=o.n||8,W=440,H=340;
-  svg.innerHTML="";svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
-  el("path",{d:"M52 86C70 40 150 22 214 34c40 8 56-14 104 0 52 16 86 60 76 112-6 34 14 52-4 96-20 50-92 72-150 62-36-6-50 14-96 2C86 292 40 262 40 204c0-34-8-70 12-118z",fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
-  const under=el("g",{},svg),libs=el("g",{},svg),over=el("g",{},svg);
-  /* the libraries' places, by number; the first few lie nearest the stoa */
-  const AT=[[150,96],[262,84],[330,150],[306,236],[214,268],[112,236],[96,160],[212,168],[188,60],[356,96],[150,292],[66,112]];
-  const C={svg,under,over,lib:[],stoa:[372,196],
-    put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
-    pos(i){return i==="stoa"?C.stoa:[C.lib[i].x,C.lib[i].y]},
-    fill(i,c){C.lib[i].b.setAttribute("fill",c)},
-    note(i,s){C.lib[i].s.textContent=s},
-    way(a,b,cls="way"){const [x1,y1]=C.pos(a),[x2,y2]=C.pos(b);return el("path",{class:cls,d:`M${x1} ${y1}L${x2} ${y2}`},under)},
-    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:11,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
-    run(g,a,b,u){const [x1,y1]=C.pos(a),[x2,y2]=C.pos(b);C.put(g,x1+(x2-x1)*u,y1+(y2-y1)*u)}
-  };
-  if(o.stoa!==false){el("rect",{x:C.stoa[0]-9,y:C.stoa[1]-26,width:18,height:52,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3},svg);
-    el("text",{x:C.stoa[0]+2,y:C.stoa[1]+44,class:"lab halo",style:"font-size:12px"},svg).textContent="the stoa";}
-  for(let i=0;i<n;i++){const [x,y]=AT[i],g=el("g",{class:"lib"},libs);C.put(g,x,y);
-    el("circle",{class:"ring",r:24},g);const b=el("circle",{class:"b",r:17,fill:"#fffaf0"},g);el("text",{},g).textContent=i+1;
-    const s=el("text",{class:"lab halo",y:33,style:"font-size:12px;font-style:normal;font-family:var(--sans);font-weight:400"},g);
-    C.lib.push({x,y,g,b,s})}
-  return C;
-}
-const seg=(box,opts,cur,fn)=>{box.innerHTML=opts.map(([v,t])=>`<button data-v="${v}" aria-pressed="${String(v)===String(cur)}">${t}</button>`).join("");
-  $$("button",box).forEach(bt=>bt.onclick=()=>{$$("button",box).forEach(x=>x.setAttribute("aria-pressed",x===bt));fn(bt.dataset.v)})};
-const oneIn=p=>p<=0?"none":p>=.95?"nearly all":p>=.095?`1 in ${Math.round(1/p)}`:`1 in ${Math.round(1/p).toLocaleString("en")}`;
-
-const shelfBox=(name,rows,foot="")=>`<div class="shelf"><h5>${name}</h5>${rows.join("")}${foot?`<div class="shown">${foot}</div>`:""}</div>`;
-const it=(t,c="")=>`<span class="it${c?" "+c:""}">${t}</span>`;
-
-/* ===== machines: read your writes across a partition ===== */
-(function(){
-  let a=0,b=0;const note=$("#mnote"),paint=()=>{$("#mxa").textContent=a;$("#mxb").textContent=b};
-  $("#mw").onclick=()=>{a=1;paint();note.textContent="A commits the write. It cannot tell B, and it does not wait to."};
-  $("#mra").onclick=()=>{note.innerHTML=`A answers ${a}.`+(a?` <span class="ok">The client reads its own write.</span>`:"")};
-  $("#mrb").onclick=()=>{note.innerHTML=`B must answer, and answers ${b}.`+(a!==b?` <span class="bad">The client's own write is missing.</span> B has no way to learn of it.`:"")};
-  paint();
-})();
-
-/* ===== the cord: a library shows a correction of a set only when the whole set has arrived ===== */
-(function(){
-  const box=$("#cshelves"),say=$("#csay");let cord=true,yHere,seen;
-  /* what each library may show: with a cord, the new copy only once both corrections are in place */
-  const shows=w=>{const here=w==="X"?true:yHere;return cord?(here&&yHere?"new":"old"):(here?"new":"old")};
-  const paint=()=>{box.innerHTML=shelfBox("Library 1 · the work X",[it("correction to X, arrived",cord&&!yHere?"held":""),it("the old X","old")],`Shows a reader: <b>${shows("X")==="new"?"X corrected":"the old X"}</b>`)+
-    shelfBox("Library 2 · the work Y",[yHere?it("correction to Y, arrived"):it("correction to Y, still on the road","none"),it("the old Y","old")],`Shows a reader: <b>${shows("Y")==="new"?"Y corrected":"the old Y"}</b>`)};
-  function reset(){yHere=false;seen={};paint();say.textContent="The reader has asked for nothing yet."}
-  const ask=w=>{seen[w]=shows(w);paint();const both=seen.X&&seen.Y;
-    say.innerHTML=`The reader is shown ${seen[w]==="new"?w+" corrected":"the old "+w}.`+(both?(seen.X!==seen.Y?` <span class="bad">One work corrected and the other old: half of what was made together.</span>`:` <span class="ok">Both ${seen.X==="new"?"corrected":"old"}: the state ${seen.X==="new"?"after":"before"} the set, never between.</span>`):"")};
-  $("#cx").onclick=()=>ask("X");$("#cy").onclick=()=>ask("Y");
-  $("#carr").onclick=()=>{yHere=true;seen={};paint();say.textContent="The correction to Y is at Library 2, and the couriers' notes tell both libraries that the set is complete."};
-  seg($("#cmode"),[["1","One cord round both corrections"],["0","No cord"]],"1",v=>{cord=v==="1";reset()});
-  $("#creset").onclick=reset;reset();
-})();
-
-/* ===== the floor: every library shows only the edition it knows every library holds ===== */
-(function(){
-  const box=$("#fshelves"),say=$("#fsay");let h=[1,1,1],floor=1,newest=1;
-  const paint=()=>{const f=Math.min(...h);if(f<floor)throw new Error("the floor fell");floor=f;
-    box.innerHTML=h.map((e,i)=>shelfBox(`Library ${i+1}`,[it(`holds up to edition ${e}`,e>floor?"held":"")],`Shows a reader: <b>edition ${floor}</b>`)).join("");
-    $("#ffloor").textContent=floor;$("#fnew").textContent=newest};
-  $("#fwrite").onclick=()=>{h[0]=++newest;const was=floor;paint();say.innerHTML=`Edition ${newest} is at Library 1 only. Every library still shows edition ${floor}: the floor has not moved, and a reader may be ${newest-floor} ${newest-floor>1?"editions":"edition"} behind.`};
-  const courier=i=>{const was=floor;h[i]=h[0];paint();say.innerHTML=floor>was?`Library ${i+1} now holds up to edition ${h[i]}. Edition ${floor} is everywhere, so <span class="ok">the floor rises to ${floor}</span> at every library.`:`Library ${i+1} now holds up to edition ${h[i]}. The floor stays at ${floor} until every library has it.`};
-  $("#fc2").onclick=()=>courier(1);$("#fc3").onclick=()=>courier(2);paint();
-})();
-
-/* ===== staying with one library ===== */
-(function(){
-  const C=Coast($("#onesvg"),{n:2,stoa:false}),say=$("#onesay");let left=false;
-  C.way(0,1,"way cut");C.note(0,"the old copy");C.note(1,"the old copy");
-  $("#oleave").onclick=()=>{left=true;C.fill(0,"#e0b84a");C.note(0,"the correction");say.textContent="The correction is on Library 1's shelves. No courier can carry it to Library 2."};
-  const back=i=>{if(!left){say.textContent="Leave a correction at Library 1 first.";return}
-    [0,1].forEach(k=>C.lib[k].g.classList.toggle("mark",k===i));
-    say.innerHTML=i===0?`Library 1 answers from its shelves. <span class="ok">The reader finds the correction.</span>`:`Library 2 must answer, from what it holds. <span class="bad">The reader's own correction is missing.</span> The librarian cannot find what nobody has brought.`};
-  $("#oback1").onclick=()=>back(0);$("#oback2").onclick=()=>back(1);
-})();
-
-/* ===== a reply is held for its letter ===== */
-(function(){
-  const box=$("#lshelves"),say=$("#lsay");let hold=true,rep,let_;
-  const shown=()=>{const s=[];if(let_)s.push("the letter");if(rep&&(let_||!hold))s.push("the reply");return s};
-  const paint=()=>{const s=shown();box.innerHTML=shelfBox("Arrived at the reader's library",[let_?it("the letter"):it("the letter: not yet","none"),rep?it("the reply",hold&&!let_?"held":""):it("the reply: not yet","none")])+
-    shelfBox("What a reader is shown",s.length?s.map(x=>it(x)):[it("neither, and whatever else the library holds","none")]);
-    say.innerHTML=!rep&&!let_?"Neither has arrived.":s.includes("the reply")&&!s.includes("the letter")?`<span class="bad">The reader reads an answer to a question not yet seen.</span>`:rep&&!let_?"The reply is held back. The librarian still answers every other request.":s.length===2?`<span class="ok">The letter, and then the reply.</span>`:"The letter is shown. The reply has not arrived."};
-  function reset(){rep=let_=false;paint()}
-  $("#lrep").onclick=()=>{rep=true;paint()};$("#llet").onclick=()=>{let_=true;paint()};
-  seg($("#lmode"),[["1","Replies are held for their letters"],["0","Everything is shown as it arrives"]],"1",v=>{hold=v==="1";reset()});
-  $("#lreset").onclick=reset;reset();
-})();
-
-/* ===== the last copy ===== */
-(function(){
-  const box=$("#bshelves"),say=$("#bsay");let stopped=true,note,out;
-  const paint=()=>box.innerHTML=[0,1].map(i=>shelfBox(`Library ${i+1}`,[it(`noted here: ${note[i]} ${note[i]===1?"copy":"copies"} on the shelf`,note[i]?"":"old")],out[i]?"A reader has borrowed the copy here.":"")).join("");
-  function reset(){note=[1,1];out=[false,false];paint();say.textContent="Nobody has asked yet."}
-  const borrow=i=>{if(note[i]<1){say.innerHTML=`Library ${i+1} has it noted as lent, and refuses. <span class="ok">One copy, one borrower.</span>`;return}
-    note[i]=0;out[i]=true;if(!stopped)note[1-i]=0;paint();const n=out.filter(Boolean).length;
-    say.innerHTML=n>1?`Library ${i+1} finds one copy noted and lends it. <span class="bad">Two readers now hold the one copy.</span> Each librarian was right by what could be seen.`:`Library ${i+1} finds one copy noted, lends it, and notes none.`+(stopped?" No courier carries the news.":" A courier carries the news to the other library.")};
-  $("#b1").onclick=()=>borrow(0);$("#b2").onclick=()=>borrow(1);
-  seg($("#bmode"),[["1","The couriers are stopped"],["0","The couriers are running"]],"1",v=>{stopped=v==="1";reset()});
-  $("#breset").onclick=reset;reset();
-})();
-
-/* ===== the latest edition: any bound can be outlasted ===== */
-(function(){
-  const D={day:1,week:7,month:30},N={day:"a day",week:"a week",month:"a month"};let bound="day",stop="week";
-  const paint=()=>{const broken=D[stop]>D[bound];
-    $("#tsay").innerHTML=`On the last day of the stoppage Library 2 must still answer, with a copy ${N[stop]==="a day"?"a day":N[stop]} behind. `+(broken?`<span class="bad">That is more than ${N[bound]}: the promise is broken.</span>`:`That is within ${N[bound]}, this time. A longer stoppage would break it.`)};
-  seg($("#tbound"),[["day","a day behind"],["week","a week behind"],["month","a month behind"]],bound,v=>{bound=v;paint()});
-  seg($("#tstop"),[["day","a day"],["week","a week"],["month","a month"]],stop,v=>{stop=v;paint()});paint();
-})();
-
-mapPairs($("#map"),[["A library's reading room","A replica"],["A reader's visit","A transaction"],["The couriers stopped","A network partition"],["Answering alone, from one's own shelves","High availability"],["Staying with one library","Sticky availability"],["No half-made correction shown","Read committed"],["Corrections bound under one cord","Monotonic atomic view"],["The same answer twice in a visit","Repeatable reads of items and predicates"],["The floor of what every library holds","Reading at a lower bound every replica has"],["Never older than before","Monotonic reads"],["A reader finds their own corrections","Read your writes"],["A reply held for its letter","Writes follow reads"],["Two readers borrow the last copy","Lost update"],["A shelf left bare","Write skew"],["\"This is the latest edition\"","A recency guarantee; linearizability"]]);
-})();
-</script>
+<script src="script.js"></script>
 </body>
 </html>

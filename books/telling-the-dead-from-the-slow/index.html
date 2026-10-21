@@ -6,423 +6,7 @@
 <title>Telling the Dead from the Slow — The Foot of Mount Phyle</title>
 <meta name="description" content="Chandra and Toueg's unreliable failure detectors: four mercenaries and their ravens, a slate at each tent that may be wrong, and how little it needs to get right.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<style>
-:root{
-  --ink:#1c1512; --parch:#f6eed6; --parch-lo:#e9dcb6; --marble:#eae4d4;
-  --aegean:#2e88b5; --aegean-d:#136f9e; --blood:#bf4a26; --olive:#7c8f3a; --terra:#b5602c;
-  --gold:#e0b84a; --shadow:#b9a77e;
-  --serif:Georgia,'Iowan Old Style','Palatino Linotype',serif;
-  --sans:Optima,'Gill Sans','Gill Sans MT',sans-serif;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;background:#d8cba6}
-body{margin:0;background:#d8cba6;color:var(--ink);font-family:var(--serif);line-height:1.55;overflow-x:hidden}
-img{max-width:100%;display:block}
-button{font:inherit;cursor:pointer}
-h1,h2,h3{font-family:var(--sans);line-height:1.12;margin:0;text-wrap:balance}
-p{margin:0 0 1rem;font-size:1.125rem;line-height:1.65;text-wrap:pretty}
-.kicker{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--blood)}
-
-/* ---------- top bar ---------- */
-.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;gap:14px;align-items:center;padding:9px 18px;border-bottom:4px solid var(--ink);
-  font-family:var(--sans);font-size:.78rem;letter-spacing:.05em;background:linear-gradient(180deg,#3a2a1a,#241a10)}
-.bar a{color:#f0e6cc;text-decoration:none;opacity:.8;white-space:nowrap} .bar a:hover{opacity:1}
-.bar .now{margin-left:auto;text-transform:uppercase;letter-spacing:.14em;font-size:.68rem;color:#c9b98a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:520px){.bar a+a{display:none}}
-.bar i{position:absolute;left:0;bottom:-4px;height:3px;width:0;background:linear-gradient(90deg,var(--aegean),var(--gold))}
-
-/* ---------- spreads ---------- */
-.spread{position:relative;padding:clamp(4.5rem,11vw,8rem) 20px;overflow:clip}
-.spread.has-scrolly{overflow:visible;padding-bottom:0;background:var(--marble)}
-.dark{background:var(--marble);color:var(--ink);background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
-.light{background:var(--parch);color:var(--ink);
-  background-image:radial-gradient(rgba(28,21,18,.05) 1px,transparent 1px);background-size:3px 3px}
-/* torn-paper edge between spreads */
-.tear{position:absolute;left:0;right:0;top:-1px;height:26px;z-index:3;pointer-events:none}
-.tear path{fill:var(--prev)}
-.wrap{max-width:1080px;margin:0 auto;position:relative;z-index:2}
-.narrow{max-width:640px;margin:0 auto}
-.spread h2{font-size:clamp(1.9rem,5vw,3.1rem);margin:.4rem 0 1rem}
-.lede{max-width:34em}
-.light .lede{color:#3a2d24}
-.meander{height:18px;margin:2.2rem 0;max-width:520px;opacity:.7;
-  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'><path d='M0 2h32v14h-8V8h-8v8h-4V6h12M0 16h8' fill='none' stroke='%231c1512' stroke-width='2.6'/></svg>") repeat-x}
-
-/* ---------- the pop-up: a card that unfolds from its hinge ---------- */
-.pop{perspective:1400px}
-.pop > .leaf{transform-origin:50% 100%;transform:rotateX(78deg) translateY(30px);opacity:0;
-  transition:transform 1.1s cubic-bezier(.2,.9,.25,1.12),opacity .6s ease}
-.pop.up > .leaf{transform:rotateX(0) translateY(0);opacity:1}
-.pop.fromleft > .leaf{transform-origin:0 50%;transform:rotateY(-80deg)}
-.pop.fromright > .leaf{transform-origin:100% 50%;transform:rotateY(80deg)}
-.pop.up.fromleft > .leaf,.pop.up.fromright > .leaf{transform:none}
-.paper{background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);position:relative}
-.light .paper{box-shadow:9px 11px 0 #b9a77e}
-.photo{border:5px solid #fffaf0;box-shadow:0 0 0 3px var(--ink),12px 16px 0 var(--shadow);background:#222;overflow:hidden;position:relative}
-.photo img{width:100%;height:100%;object-fit:cover}
-.tilt-l{transform:rotate(-1.4deg)} .tilt-r{transform:rotate(1.2deg)}
-[data-depth]{will-change:transform}
-.fold-shadow{position:absolute;left:6%;right:6%;bottom:-18px;height:26px;background:radial-gradient(ellipse at center,#0008,transparent 70%);opacity:0;transition:opacity 1s .4s;z-index:-1}
-.up .fold-shadow{opacity:1}
-
-/* ---------- cover ---------- */
-#cover{min-height:100svh;display:grid;align-items:center;padding-top:5rem;
-  background:linear-gradient(180deg,#e0d6bb00 calc(100% - 140px),#e0d6bb),radial-gradient(120% 90% at 70% 0%,#fbf4de 0%,#eae4d4 55%,#e0d6bb 100%)}
-/* the cover ends in one colour, and the torn edge under it is that colour */
-#cover+.spread>.tear path{fill:#e0d6bb}
-#cover .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,70px);align-items:center}
-#cover h1{font-size:clamp(2.6rem,7.4vw,5.6rem);color:var(--ink);margin:0 0 1.4rem;letter-spacing:-.01em}
-#cover .photo{aspect-ratio:3/4;max-height:80svh;margin:0 auto}
-#cover .generic,#cover .allegory{max-width:26em;margin:0 0 1rem}
-#cover .generic,#cover .allegory{color:var(--ink)}
-#cover .generic{font-style:italic;font-size:clamp(1.15rem,2.3vw,1.4rem)}
-#cover .source{font-family:var(--sans);font-size:.74rem;line-height:1.5;max-width:36em;margin:1.6rem 0 0;color:#6b5d4f}
-#cover .source i{color:var(--blood)}
-.cut{position:absolute;pointer-events:none;z-index:1}
-.cut svg{display:block;width:100%;height:auto}
-@media(max-width:760px){#cover .grid{grid-template-columns:1fr}#cover .photo{max-height:52svh;aspect-ratio:3/3.4}}
-
-/* ---------- two-column spreads ---------- */
-.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-.two.wide-r{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
-@media(max-width:859px){.two,.two.wide-r{grid-template-columns:minmax(0,1fr)}}
-
-/* ---------- the hall (full-bleed photo with pins) ---------- */
-#hall{padding:0;background:var(--marble)}
-.bleed{position:relative;height:min(100svh,880px);overflow:hidden}
-.bleed img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover}
-.bleed::after{content:"";position:absolute;inset:0;background:linear-gradient(var(--parch) 0,transparent 8%,transparent 92%,var(--parch) 100%);pointer-events:none}
-.pin{position:absolute;z-index:4;max-width:min(250px,44vw);padding:10px 14px;background:#fffaf0;color:var(--ink);border:3px solid var(--ink);
-  box-shadow:5px 6px 0 #0007;font-size:.92rem;line-height:1.35;transform-origin:0 100%}
-.pin b{font-family:var(--sans);display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blood)}
-.pin::after{content:"";position:absolute;left:-3px;bottom:-26px;width:3px;height:26px;background:var(--ink)}
-.pin::before{content:"";position:absolute;left:-8px;bottom:-34px;width:13px;height:13px;border-radius:50%;background:var(--blood);border:3px solid var(--ink)}
-.hall-title{position:absolute;z-index:5;left:20px;right:20px;top:clamp(5rem,12vh,8rem);max-width:1080px;margin:0 auto}
-.hall-title .t{display:inline-block;max-width:520px;padding:16px 22px;background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
-.hall-title h2{font-size:clamp(1.7rem,4.4vw,2.6rem);margin:.3rem 0 .6rem}
-.hall-title p{margin:0}
-/* on a phone, or a screen too short to hold them, the title and the notes leave the photograph and stand under it */
-@media(max-width:900px),(max-height:680px){
-  #hall{background:var(--parch);padding-bottom:clamp(2.5rem,8vw,4rem)}
-  .bleed{height:auto!important;overflow:visible;display:flex;flex-direction:column;gap:14px;padding:0 20px}
-  .bleed::after{display:none}
-  .bleed img{position:static;width:calc(100% + 40px);max-width:none;height:min(58svh,460px);margin:0 -20px;transform:none!important;
-    -webkit-mask-image:linear-gradient(transparent,#000 9%);mask-image:linear-gradient(transparent,#000 9%)}
-  .hall-title{position:relative;inset:auto;width:100%;max-width:640px;margin:-3.2rem auto 4px}
-  .hall-title .t{display:block;max-width:none}
-  .pin{position:static;width:100%;max-width:640px;margin:0 auto;box-shadow:5px 6px 0 var(--shadow)}
-  .pin::before,.pin::after{display:none}
-}
-
-/* ---------- scrollytelling ---------- */
-.scrolly{position:relative}
-.scrolly .stage{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;padding:70px 20px 20px;overflow:hidden}
-.scrolly .steps{position:relative;z-index:6;margin-top:-100svh;pointer-events:none}
-.step{min-height:100svh;display:flex;align-items:center;padding:0 20px}
-.step .card{pointer-events:auto;max-width:360px;padding:16px 20px;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);
-  transform:translateY(24px) rotate(-.6deg);opacity:.25;transition:transform .7s cubic-bezier(.2,.9,.25,1.1),opacity .5s}
-.step.on .card{transform:none;opacity:1}
-.step .card h3{font-size:1.1rem;margin-bottom:.35rem}
-.step .card p{margin:0;font-size:.98rem}
-.step .num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
-.step.r{justify-content:flex-end}
-.scrolly svg.fig{width:min(100%,820px);height:auto;max-height:calc(100svh - 120px);overflow:visible}
-.scrolly .stage-inner{width:100%;display:flex;justify-content:center}
-/* under the picture: previous, one dot per step (the current one long), next, and back to the first; each scrolls the page to its step */
-.scrolly .stage{flex-direction:column;gap:12px}
-.dots{flex:0 0 auto;display:flex;justify-content:center;align-items:center;gap:1px;position:relative;z-index:7}
-.dots button{appearance:none;border:0;background:none;padding:8px 4px;line-height:0;cursor:pointer;color:var(--ink)}
-.dots .dot::before{content:"";display:block;width:7px;height:7px;border-radius:7px;background:var(--ink);opacity:.22;transition:width .3s,opacity .3s,background .3s}
-.dots .dot:hover::before{opacity:.5}
-.dots .dot.on::before{width:20px;opacity:1;background:var(--blood)}
-.dots .arr{padding:6px;opacity:.5;transition:opacity .3s}
-.dots .arr svg{display:block;width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.dots .arr:hover{opacity:1}
-.dots .arr:disabled{opacity:.14;cursor:default}
-.dots .back{margin-left:8px}
-.dots button:focus-visible{outline:2px solid var(--aegean-d);outline-offset:-3px}
-@media(min-width:900px){.scrolly .stage{padding-left:380px} .step .card{max-width:320px} .step{padding-left:max(24px,calc((100vw - 1080px)/2))}}
-@media(max-width:899px){
-  .scrolly .stage{justify-content:flex-start;padding-top:64px}
-  .scrolly svg.fig{max-height:46svh}
-  .step{align-items:flex-end;padding-bottom:22px}
-  .step .card{max-width:none;width:100%}
-}
-svg text{font-family:var(--serif)}
-.svg-dark{background:#fffaf0;border:4px solid var(--ink);box-shadow:8px 9px 0 var(--shadow)}
-
-/* ---------- interactive wells ---------- */
-.well{padding:clamp(16px,3vw,28px);margin:1.6rem 0}
-.well h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;color:var(--blood);display:flex;justify-content:space-between;gap:10px}
-.well h4 em{font-style:normal;color:#6b5a48}
-.btn{background:var(--ink);color:var(--parch);border:3px solid var(--ink);padding:8px 16px;font-family:var(--sans);font-size:.88rem;letter-spacing:.03em;box-shadow:4px 4px 0 var(--blood);transition:transform .12s,box-shadow .12s}
-.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--blood)}
-.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--blood)}
-.btn:disabled{opacity:.35;cursor:default;box-shadow:none}
-.btn.alt{background:#fffaf0;color:var(--ink)}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.say{margin:12px 0 0;font-size:.98rem;min-height:3.1em}
-.say b{color:var(--blood)}
-.ok{color:#3f7a2a;font-weight:700}.bad{color:var(--blood);font-weight:700}
-
-/* cards row */
-.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,30px);margin-top:2rem}
-.card3 .photo{aspect-ratio:4/3;border:0;box-shadow:none}
-.card3 .body{padding:16px 18px 18px}
-.card3 h3{font-size:1.15rem;margin-bottom:.4rem}
-.card3 p{font-size:.95rem;margin:0}
-.card3 .fx{margin-top:12px}
-/* cards in a row stand as tall as the tallest */
-.cards3>.pop>.leaf{height:100%}
-@media(max-width:860px){.cards3{grid-template-columns:1fr}}
-/* relevance */
-.map{display:grid;grid-template-columns:1fr 46px 1fr;gap:6px 0;align-items:stretch;max-width:760px;margin:2rem auto 0}
-.map .l,.map .r{padding:11px 16px;font-size:1rem;border:3px solid var(--ink);background:#fffaf0;color:var(--ink);transition:background .25s,transform .25s;cursor:default}
-.map .r{font-family:var(--sans);background:#e9f2f7}
-.map .mid{display:grid;place-items:center;color:var(--blood);font-size:1.3rem}
-.map .hi{background:var(--gold)!important;transform:scale(1.03)}
-.map .hd{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood)}
-.end{text-align:center}
-.end .big{font-size:clamp(1.5rem,4.2vw,2.5rem);max-width:19em;margin:0 auto 1.4rem;color:var(--ink);text-wrap:balance}
-.links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
-.links a{color:var(--ink);background:#fffaf0;border:3px solid var(--ink);padding:9px 18px;text-decoration:none;font-family:var(--sans);font-size:.9rem;box-shadow:4px 4px 0 var(--shadow)}
-.links a:hover{background:var(--gold)}
-footer{padding:2rem 20px 3rem;text-align:center;font-size:.8rem;color:#6b5a48;font-family:var(--sans);background:#d8cba6}
-
-/* ---------- lists, small parts ---------- */
-.terms{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:12px}
-.terms li{padding:12px 16px;background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 #b9a77e;font-size:.98rem}
-.terms b{font-family:var(--sans)}
-@keyframes slotin{from{transform:translateY(-8px);opacity:0}}
-.btn:focus-visible,.links a:focus-visible,[role=button]:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
-.num{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood);text-transform:uppercase}
-.chip{display:inline-block;padding:1px 7px;margin:2px 3px 2px 0;border:2px solid var(--ink);border-radius:5px;background:#fff;font-family:var(--sans);font-weight:700;font-size:.86rem;white-space:nowrap}
-.chip i{display:inline-block;width:.7em;height:.7em;border-radius:50%;border:1.5px solid var(--ink);margin-right:5px;vertical-align:-.02em}
-.isle-svg{width:min(100%,440px);display:block;margin:0 auto}
-.fig .fade{opacity:0;transition:opacity .6s}
-.fig .fade.on{opacity:1}
-.fig .lab{fill:#6b5a48;font-size:15px;font-style:italic;text-anchor:middle}
-.fig .halo{paint-order:stroke;stroke:#fffaf0;stroke-width:5px;stroke-linejoin:round}
-.tok text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.site rect,.site circle{stroke:var(--ink);stroke-width:4}
-.site text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-
-/* ---------- space-time, drawn in the round ---------- */
-.st-ring{fill:none;stroke:#b9a77e;stroke-opacity:.7;stroke-width:1;stroke-dasharray:3 4}
-.st-spoke{stroke:#1c1512;stroke-width:2.5;stroke-opacity:.45}
-.st-node rect{fill:#f6eed6;stroke:#1c1512;stroke-width:2}
-.st-node text{font-family:var(--sans);font-weight:700;font-size:14px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.st-slip{fill:none;stroke:#136f9e;stroke-width:2.6;transition:stroke .3s,stroke-width .3s,opacity .5s}
-.st-seg{stroke:#bf4a26;stroke-width:7;stroke-linecap:round;opacity:0;transition:opacity .3s}
-.st-seg.hi{opacity:.85}
-.st-slip.hi{stroke:#bf4a26;stroke-width:5}
-.st-ev{cursor:pointer}
-.st-ev circle.b{stroke:#1c1512;stroke-width:3;transition:stroke .3s,stroke-width .3s}
-.st-ev text{font-family:var(--sans);font-weight:700;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
-.st-ev .halo2{fill:none;stroke:#e0b84a;stroke-width:7;opacity:0;transition:opacity .3s}
-.st-ev.sel .halo2,.st-ev.mark .halo2{opacity:1}
-.st-ev.sel circle.b{stroke-width:4.5}
-.st-ev.dim{opacity:.3}
-.st-ev:focus-visible{outline:none}.st-ev:focus-visible circle.b{stroke:#136f9e;stroke-width:6}
-.st-note{fill:#6b5a48;font-size:13px;font-style:italic}
-
-/* ---------- a stage with a figure and a side panel ---------- */
-.stage-inner.split{gap:18px;align-items:center}
-.stage-inner.split svg.fig{flex:1 1 300px;min-width:0;max-width:470px}
-.side{flex:0 0 240px;display:grid;gap:10px;font-family:var(--sans);font-size:.84rem}
-.side .hc{background:#fffaf0;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--shadow);padding:8px 10px;min-height:92px;transition:background .4s}
-.side .hc h5{margin:0 0 5px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:6px}
-.side .hc h5 span{color:#6b5a48;letter-spacing:.02em;text-transform:none}
-.side .hc .chk{font-size:.78rem;margin-top:4px;line-height:1.35}
-.side .hc.in{background:#e3ecc4}
-@media(max-width:899px){
-  .stage-inner.split{flex-direction:column;gap:10px}
-  .stage-inner.split svg.fig{flex:0 0 auto;max-height:30svh;width:auto;max-width:100%}
-  .side{flex:0 0 auto;width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;font-size:.7rem}
-  .side .hc{padding:5px 6px;min-height:0;box-shadow:3px 3px 0 var(--shadow)}
-  .side .hc h5{font-size:.62rem;flex-direction:column;gap:0}
-  .side .hc .chk{font-size:.66rem}
-  .side .chip{font-size:.68rem;padding:0 4px}
-}
-.tear{width:100%}
-.scrolly svg.fig.svg-dark{overflow:hidden}
-
-/* ---------- proofs, in the paper's own terms ---------- */
-details.proof{max-width:760px;margin:1.8rem 0 0;background:#fffaf0;color:var(--ink);border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);padding:0 clamp(14px,3vw,22px);font-size:.95rem}
-details.proof>summary{cursor:pointer;padding:12px 0;font-family:var(--sans);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--aegean-d)}
-details.proof>summary:focus-visible{outline:3px solid var(--aegean-d);outline-offset:2px}
-details.proof[open]{padding-bottom:14px}
-details.proof details.proof{border-width:3px;box-shadow:none;background:#fff;margin:1rem 0;max-width:none}
-details.proof .given{padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean);margin:0 0 .8rem}
-details.proof h3,details.proof h4{font-size:1.02rem;margin:1.4rem 0 .5rem}
-details.proof .hlink{color:inherit;text-decoration:none}
-details.proof .fnote{font-size:.84rem;color:#6b5a48}
-ol.proofsteps{padding-left:1.4em;margin:.4rem 0 0}
-ol.proofsteps li{margin:.55em 0}
-.qed{float:right;font-family:var(--sans);letter-spacing:.15em;color:#5f6e28}
-.mathblock{margin:.8rem 0;padding:8px 12px;overflow-x:auto;text-align:center;font-style:italic;background:#fff;border:2px solid #1c151233}
-.slab{margin:1rem 0;padding:10px 14px;background:var(--parch-lo);border-left:5px solid var(--aegean)}
-.slab-head{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:4px}
-.stmt{font-style:italic}
-
-/* ---------- closing apparatus: lineage, papers, links to where a fact comes from ---------- */
-a.anchor{display:block;height:0;scroll-margin-top:56px}
-sup.xref{font-size:.8em;line-height:0;margin-left:1px}
-sup.xref a{color:var(--aegean-d);text-decoration:none;font-weight:700}
-.apparatus{max-width:760px;margin:3rem auto 0;text-align:left;font-size:.94rem}
-.apparatus .lineage{margin:0 0 .6rem}
-.apparatus .lbl{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-right:8px}
-.apparatus a{color:var(--aegean-d)}
-.apparatus details.proof{margin-top:1.2rem}
-.apparatus .refs p,.apparatus ol.refs li{font-size:.9rem;margin:.45em 0}
-.apparatus table{width:100%;border-collapse:collapse;font-size:.9rem}
-.apparatus td{padding:5px 8px 5px 0;border-top:2px solid #1c151222;vertical-align:top}
-
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  .pop > .leaf{transition:opacity .3s;transform:none!important}
-  [data-depth]{transform:none!important}
-  .pulse{animation:none}
-  .fig .tok{transition:none}
-}
-/* ---------- lineage: the papers a book's papers draw on and lead to (lineage.py) ---------- */
-.lin{--gap:134px;position:relative;margin-top:1.2rem}
-.lin ul{list-style:none;margin:0;padding:0}
-.lin h5{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#6b5a48;margin:0 0 6px;font-weight:700}
-.lin-edges{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-.lin-edges path{fill:none;stroke:var(--ink);stroke-width:1.6}
-.lin-edges polygon{fill:var(--ink)}
-.lin-nodes>li{padding:6px 0}
-.lin-node{position:relative;z-index:1;display:block;padding:9px 12px;color:var(--ink);text-decoration:none;line-height:1.28}
-.lin-node b{display:block;font-size:.93rem}
-.lin-node .by{display:block;font-family:var(--sans);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--blood);margin-top:4px}
-.lin-node.book{background:#fffaf0;border:2px solid var(--ink);box-shadow:4px 5px 0 var(--shadow)}
-.lin-node.ext{background:#f6eed6;border:2px dashed #1c151288}
-.lin-node.ext b{font-weight:400;font-style:italic}
-a.lin-node:hover b{text-decoration:underline}
-.lin-node.here{background:var(--ink);color:var(--parch);border:2px solid var(--ink);box-shadow:5px 6px 0 var(--shadow);padding:13px 14px}
-.lin-node.here b{font-size:1rem}
-.lin-node.here .by{color:var(--gold)}
-.lin-link{position:relative;z-index:1;cursor:default;outline:0}
-.lin-link em{display:inline-block;font-family:var(--sans);font-style:normal;font-size:.72rem;line-height:1.2;background:#f6eed6;border:1px solid #1c151255;border-radius:10px;padding:2px 8px;color:var(--ink)}
-.lin-link .ends{font-family:var(--sans);font-size:.72rem;color:#6b5a48;margin-left:6px}
-.lin-link .why{display:block;font-size:.84rem;color:#3a2d24;margin:3px 0 0}
-.lin-say{font-size:.9rem;color:#3a2d24;margin:16px 0 0;max-width:none}
-.lin-say b{font-family:var(--sans);font-size:.74rem;letter-spacing:.06em;color:var(--blood);margin-right:8px}
-.lin-key{margin:10px 0 0;font-family:var(--sans);font-size:.74rem;color:#6b5a48}
-.lin-key .k{display:inline-block;width:20px;height:11px;vertical-align:-1px;margin:0 6px 0 16px;border:2px solid var(--ink)}
-.lin-key .k:first-child{margin-left:0}
-.lin-key .k.here{background:var(--ink)}
-.lin-key .k.book{background:#fffaf0}
-.lin-key .k.ext{border-style:dashed;border-color:#1c151288}
-@media(min-width:860px){
-  /* three columns; each paper at the sides keeps its links beside it, in the gap the edges cross */
-  .lin{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.92fr) minmax(0,1.2fr);align-items:center}
-  .lin-side.in h5{margin-right:var(--gap)}
-  .lin-side.out h5{margin-left:var(--gap)}
-  .lin-side .lin-nodes>li{display:grid;align-items:center}
-  .lin-side.in .lin-nodes>li{grid-template-columns:minmax(0,1fr) var(--gap)}
-  .lin-side.out .lin-nodes>li{grid-template-columns:var(--gap) minmax(0,1fr)}
-  .lin-side.out .lin-links{order:-1}
-  .lin-side .lin-links{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 10px;text-align:center}
-  .lin-mid{padding:0 56px}
-  .lin-mid .lin-nodes>li{padding:0}
-  .lin-mid .lin-nodes>li+li{margin-top:26px}
-  .lin-mid .lin-links{display:flex;justify-content:center;gap:8px;margin:-8px 0 18px;text-align:center}
-  .lin-link .ends,.lin-link .why{display:none}
-  .lin-say,.lin-key{grid-column:1/-1}
-  .lin-say{min-height:2.7em}
-  .lin-link em{transition:background .15s,color .15s}
-  .lin.hot .lin-node,.lin.hot .lin-link,.lin.hot .lin-edges g{opacity:.28}
-  .lin.hot .lin-node.on,.lin.hot .lin-link.on,.lin.hot .lin-edges g.on{opacity:1}
-  .lin.hot .lin-link.on em{background:var(--ink);color:var(--parch);border-color:var(--ink)}
-}
-@media(max-width:859px){
-  /* one column: each paper's links are written out under it */
-  .lin-side,.lin-mid{margin-bottom:1.4rem}
-  .lin-nodes>li{padding:7px 0}
-  .lin-links{margin:8px 0 4px 6px;padding-left:12px!important;border-left:2px solid #1c151255}
-  .lin-mid .lin-links{margin:0 0 8px 6px}
-  .lin-link+.lin-link{margin-top:8px}
-  .lin-say{display:none}
-}
-/* ---------- waiting on a machine ---------- */
-.logs{padding:18px 18px 14px}
-.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
-.wire{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700}
-.wire .m{flex:0 0 auto;border:3px solid var(--ink);background:#fff;padding:10px 14px;font-size:.8rem;letter-spacing:.06em}
-.wire .m.q{background:#ddd;color:#6b5a48}
-.wire .w{flex:1;border-top:3px dotted var(--ink);position:relative;height:0}
-.wire .w span{position:absolute;left:50%;top:-1.05em;transform:translateX(-50%);color:var(--blood)}
-.e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both;font-family:var(--sans)}
-.e.bad{border-left-color:var(--blood)}.e.good{border-left-color:#3f7a2a}
-.waitlog{border:3px solid var(--ink);background:#fff;padding:8px;min-height:128px;margin-top:12px}
-.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:4.8em;font-style:italic}
-/* ---------- the hill and its lists ---------- */
-.checks{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:.95rem}
-.checks li{padding:8px 12px;background:#fff;border:3px solid var(--ink)}
-.checks b{font-family:var(--sans)}
-.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
-@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
-.site.out{opacity:.35}
-.site.turn rect{stroke-width:7}
-.site .state{font-family:var(--serif);font-weight:400;font-style:italic;font-size:14px;fill:#1c1512}
-.badge circle{fill:#fffaf0;stroke:#1c1512;stroke-width:2.5}
-.badge text{font-family:var(--sans);font-weight:700;font-size:13px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
-.gr-arrow{stroke:#1c1512;stroke-width:2.2;fill:none}
-/* ---------- the slate widget ---------- */
-.srow{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;font-family:var(--sans);font-size:.88rem;padding:6px 0;border-top:2px solid #1c151222}
-.srow:first-child{border-top:0}
-.srow .sv{grid-column:1/-1;font-size:.84rem;min-height:1.1em}
-/* ---------- boards of small rows ---------- */
-.chead,.crow{display:grid;grid-template-columns:auto 1fr 1.2fr 1.3fr;gap:4px 10px;align-items:center;font-family:var(--sans);font-size:.82rem;padding:6px 8px;border-top:2px solid #1c151222;background:#fff}
-.chead{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:#6b5a48;border:3px solid var(--ink);border-bottom:0}
-.crow{border-left:3px solid var(--ink);border-right:3px solid var(--ink)}
-.crow:last-child{border-bottom:3px solid var(--ink)}
-.crow.dead{background:#eee;color:#6b5a48}
-.crow.owner{background:#f6e7b0}
-.crow i{color:#6b5a48}
-.chead.t,.crow.t{grid-template-columns:auto auto 1.2fr 1.3fr auto}
-.chead.t2,.crow.t2{grid-template-columns:auto auto 1fr 1.3fr}
-@media(max-width:520px){.chead,.crow{grid-template-columns:auto 1fr;font-size:.78rem}.chead span:nth-child(n+3){display:none}
-  .chead.t,.crow.t,.chead.t2,.crow.t2{grid-template-columns:auto 1fr 1fr}.chead.t span:nth-child(n+4),.chead.t2 span:nth-child(n+4){display:none}}
-.tally{display:inline-grid;grid-template-columns:repeat(4,1.7em);gap:3px}
-.tidx{display:grid;grid-template-columns:repeat(4,1fr);font-size:.6rem;color:#6b5a48;text-align:center;margin-top:3px}
-.side .tally{display:grid;grid-template-columns:repeat(4,1fr)}
-.tc{border:2px solid var(--ink);text-align:center;font-family:var(--sans);font-weight:700;font-size:.82rem;line-height:1.5;background:#fff;color:#6b5a48}
-.tc.f{background:#fffaf0;color:var(--ink)}
-.tc.new{background:#f3dc92}
-.tc.gone{background:#f3c9b8;text-decoration:line-through}
-.side .hc.gone{opacity:.55}
-.side .hc h5 .chip{margin:0}
-/* ---------- the eight kinds ---------- */
-.kinds{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.86rem;background:#fff;border:3px solid var(--ink)}
-.kinds th,.kinds td{padding:7px 9px;border-top:2px solid #1c151222;text-align:left;vertical-align:top}
-.kinds th{font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;color:#6b5a48}
-.kinds td b{color:var(--blood)}
-@media(max-width:520px){.kinds{font-size:.76rem}.kinds th,.kinds td{padding:5px}}
-/* ---------- the windy night ---------- */
-.windtl{display:grid;grid-template-columns:repeat(15,minmax(0,1fr));gap:3px;margin:12px 0}
-.wc{height:30px;border:2px solid var(--ink);background:#fff;text-align:center;font-family:var(--sans);font-weight:700;line-height:26px;font-size:.85rem}
-.wc.wd{background:#e1ebf2}
-.wc.ch{background:#f3c9b8;color:var(--blood)}
-.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0;min-height:3rem}
-.counts span b{display:block;font-size:1.2rem}
-.stand{font-family:var(--sans);font-size:.88rem;border:3px solid var(--ink);background:#fff;padding:8px 12px;margin-bottom:10px}
-.stand div{padding:2px 0}
-.btn.on{background:var(--gold);color:var(--ink)}
-.steplist li{padding:7px 12px}
-@media(max-width:899px){#strongside{grid-template-columns:repeat(2,minmax(0,1fr))!important}.side .tally{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:520px){.chead.t{display:none}.crow.t{grid-template-columns:auto 1fr 1fr}.crow.t .tally{grid-column:1/-1}.crow.t>span:nth-child(5){grid-column:2/-1}}
-@media(max-width:520px){.chead{display:none}.crow{grid-template-columns:auto 1fr}.crow>span[data-l]{grid-column:1/-1}.crow>span[data-l]::before{content:attr(data-l) ": ";color:#6b5a48;font-size:.74rem}.chead{border-bottom:0}.crow:first-of-type{border-top:3px solid var(--ink)}}
-/* on a phone the table of slates scrolls sideways inside its own box instead of being cut off */
-@media(max-width:560px){table.kinds{display:block;overflow-x:auto;max-width:100%}}
-.tell{max-width:40em;margin-top:1.6rem}
-.tell+.tell{margin-top:0}
-.cards3.pair{grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px}
-@media(max-width:860px){.cards3.pair{grid-template-columns:1fr}}
-.card3 h3:last-child{margin-bottom:0}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -439,8 +23,8 @@ a.lin-node:hover b{text-decoration:underline}
   <div class="wrap grid">
     <div>
       <h1>Telling the Dead from the Slow</h1>
-      <p class="generic">A machine that has crashed looks exactly like one that is merely slow, and that alone makes agreement impossible. How well must we tell the dead from the slow before agreement becomes possible again?</p>
-      <p class="allegory">We find out by exploring how the same Greek mercenaries, each keeping a slate of the tents he thought dead, agreed whether to attack or hold though the slates were often wrong.</p>
+      <p class="generic">In an asynchronous network, a computer that has crashed looks identical to one whose messages are merely running slow—and that single ambiguity makes agreement impossible. What if each machine had an imperfect detector that guessed which machines had crashed? How wrong can those guesses be before agreement becomes impossible again?</p>
+      <p class="allegory">To find out, we return to the four Greek mercenaries at the foot of Mount Phyle, where each man keeps a chalk slate of the tents he suspects have fallen silent—and discover how little those slates need to get right for the camp to agree.</p>
       <p class="source">After Tushar Deepak Chandra and Sam Toueg, <i>Unreliable Failure Detectors for Reliable Distributed Systems</i>, 1996</p>
     </div>
     <div class="pop" data-auto>
@@ -462,8 +46,8 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="lin-side in">
       <h5>Draws on</h5>
       <ul class="lin-nodes">
-        <li><a class="lin-node book" data-n="i:fischer-lynch-paterson-1985_flp-impossibility" data-label="Fischer, Lynch &amp; Paterson 1985" href="../the-limits-of-agreement/index.html"><b>Impossibility of Distributed Consensus with One Faulty Process</b><span class="by">Fischer, Lynch &amp; Paterson 1985 · The Limits of Agreement</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:fischer-lynch-paterson-1985_flp-impossibility" data-to="m:chandra-toueg-1996_unreliable-failure-detectors" tabindex="0"><em>impossibility</em><span class="ends"></span><span class="why">The impossibility of agreement in an asynchronous system, which an unreliable failure detector gets around.</span></li></ul></li>
-        <li><a class="lin-node book" data-n="i:dwork-lynch-stockmeyer-1988_consensus-partial-synchrony" data-label="Dwork, Lynch &amp; Stockmeyer 1988" href="../agreeing-when-messages-run-late/index.html"><b>Consensus in the Presence of Partial Synchrony</b><span class="by">Dwork, Lynch &amp; Stockmeyer 1988 · Agreeing When Messages Run Late</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:dwork-lynch-stockmeyer-1988_consensus-partial-synchrony" data-to="m:chandra-toueg-1996_unreliable-failure-detectors" tabindex="0"><em>partial synchrony</em><span class="ends"></span><span class="why">Partial synchrony, under which an eventually accurate detector can be built, and the rotating coordinator.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="i:fischer-lynch-paterson-1985_flp-impossibility" data-label="Fischer, Lynch &amp; Paterson 1985" href="../the-limits-of-agreement/index.html"><b>Impossibility of Distributed Consensus with One Faulty Process</b><span class="by">Fischer, Lynch &amp; Paterson 1985 · The Limits of Agreement</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:fischer-lynch-paterson-1985_flp-impossibility" data-to="m:chandra-toueg-1996_unreliable-failure-detectors" tabindex="0"><em>impossibility</em><span class="ends"></span><span class="why">Shows that consensus is impossible in an asynchronous system because a crashed process cannot be distinguished from a slow one—motivating failure detectors.</span></li></ul></li>
+        <li><a class="lin-node book" data-n="i:dwork-lynch-stockmeyer-1988_consensus-partial-synchrony" data-label="Dwork, Lynch &amp; Stockmeyer 1988" href="../agreeing-when-messages-run-late/index.html"><b>Consensus in the Presence of Partial Synchrony</b><span class="by">Dwork, Lynch &amp; Stockmeyer 1988 · Agreeing When Messages Run Late</span></a><ul class="lin-links"><li class="lin-link" data-side="in" data-from="i:dwork-lynch-stockmeyer-1988_consensus-partial-synchrony" data-to="m:chandra-toueg-1996_unreliable-failure-detectors" tabindex="0"><em>partial synchrony</em><span class="ends"></span><span class="why">Provides the rotating coordinator pattern and the partial-synchrony timing model that can implement an eventually accurate failure detector.</span></li></ul></li>
       </ul>
     </div>
     <div class="lin-mid">
@@ -475,11 +59,11 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="lin-side out">
       <h5>Leads to</h5>
       <ul class="lin-nodes">
-        <li><div class="lin-node ext" data-n="o:chandra-hadzilacos-toueg-1996" data-label="Chandra, Hadzilacos &amp; Toueg 1996"><b>The Weakest Failure Detector for Solving Consensus</b><span class="by">Chandra, Hadzilacos &amp; Toueg 1996</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:chandra-toueg-1996_unreliable-failure-detectors" data-to="o:chandra-hadzilacos-toueg-1996" tabindex="0"><em>failure detector classes</em><span class="ends"></span><span class="why">Failure detector classes, and the weakest one that still allows consensus.</span></li></ul></li>
-        <li><div class="lin-node ext" data-n="o:aguilera-chen-toueg-2000" data-label="Aguilera, Chen &amp; Toueg 2000"><b>Failure Detection and Consensus in the Crash-Recovery Model</b><span class="by">Aguilera, Chen &amp; Toueg 2000</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:chandra-toueg-1996_unreliable-failure-detectors" data-to="o:aguilera-chen-toueg-2000" tabindex="0"><em>failure detectors</em><span class="ends"></span><span class="why">Failure detectors, extended to processes that crash and recover.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:chandra-hadzilacos-toueg-1996" data-label="Chandra, Hadzilacos &amp; Toueg 1996"><b>The Weakest Failure Detector for Solving Consensus</b><span class="by">Chandra, Hadzilacos &amp; Toueg 1996</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:chandra-toueg-1996_unreliable-failure-detectors" data-to="o:chandra-hadzilacos-toueg-1996" tabindex="0"><em>failure detector classes</em><span class="ends"></span><span class="why">Proves that the eventually weak failure detector ◇W introduced here is the weakest detector capable of solving consensus.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:aguilera-chen-toueg-2000" data-label="Aguilera, Chen &amp; Toueg 2000"><b>Failure Detection and Consensus in the Crash-Recovery Model</b><span class="by">Aguilera, Chen &amp; Toueg 2000</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:chandra-toueg-1996_unreliable-failure-detectors" data-to="o:aguilera-chen-toueg-2000" tabindex="0"><em>failure detectors</em><span class="ends"></span><span class="why">Extends the failure-detector abstraction to systems where crashed processes can recover.</span></li></ul></li>
       </ul>
     </div>
-    <p class="lin-say">Each link is an idea one paper took from another. Point at one, or tap it, to read how.</p>
+    <p class="lin-say">Each link traces how one paper built upon another. Hover over or tap any link to see the connection.</p>
     <p class="lin-key"><i class="k here"></i>a paper this book retells <i class="k book"></i>a paper retold in another book <i class="k ext"></i>a paper outside the series</p>
     </div>
   </div>
@@ -493,13 +77,13 @@ a.lin-node:hover b{text-decoration:underline}
     <div>
       <div class="kicker">First, in machine terms</div>
       <h2>A guess about who has crashed</h2>
-      <p class="lede">A machine that has crashed looks exactly like one that is merely slow, and that alone makes agreement impossible: a machine waiting on a silent one cannot know whether to go on waiting.</p>
-      <p>A failure detector is a module on each machine that lists the machines it suspects have crashed. The list may be wrong, often. Two properties are asked of it: crashed machines are eventually suspected, and live ones are not. Chandra and Toueg (1996) found how little of the second is enough.</p>
+      <p class="lede">When messages can be delayed without bound, a crashed machine looks identical to a slow one—so a machine waiting for a reply can never know whether to keep waiting or move on.</p>
+      <p>What if we equip each machine with a <b>failure detector</b>—a local module that maintains a list of machines it currently <i>suspects</i> have crashed? Crucially, the detector is allowed to be <b>unreliable</b>: it can falsely suspect a slow working machine, and then remove that suspicion later when a message arrives. Tushar Deepak Chandra and Sam Toueg (1996) asked a foundational question: instead of baking clock and network timing bounds into our algorithms, how little accuracy does a failure detector need to make consensus solvable?</p>
       <ul class="terms">
-        <li><b>One correct machine never suspected</b>: agreement survives any number of crashes.</li>
-        <li><b>The same, but only eventually</b>: agreement survives while more than half the machines live.</li>
+        <li><b>If at least one working machine is never falsely suspected (Class S):</b> consensus can be solved regardless of how many machines crash (even if all but one crash).</li>
+        <li><b>If at least one working machine is only <i>eventually</i> spared from false suspicion (Class ◇S):</b> consensus can be solved as long as a strict majority of the machines remain working—and falsehoods before that eventual moment can only delay a decision, never cause a wrong one.</li>
       </ul>
-      <p style="margin-top:1.2rem">The detector is never told how to guess. It is judged only by what its lists get right. We tell it with four mercenaries, their ravens, and a slate at each tent.</p>
+      <p style="margin-top:1.2rem">By judging a detector purely by the properties of its suspect lists—not by how it measures time—we can write clean, time-free consensus algorithms. We tell the story with four mercenaries, their ravens, and a chalk slate at each tent.</p>
     </div>
     <div class="pop fromright"><div class="leaf">
       <div class="paper logs">
@@ -521,11 +105,13 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="hall-title"><div class="t">
       <div class="kicker">The foot of Mount Phyle</div>
       <h2>Four tents, out of sight of one another</h2>
-      <p>Four mercenaries are camped at the foot of Mount Phyle, one to a tent and under nobody's command, and no tent can be seen from another.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> Bandits hold the top of the hill.</p>
+      <p>Four mercenaries are camped at the foot of Mount Phyle, one to a tent, hidden from one another by the folds of the hillside and under nobody's command.<sup class="xref"><a href="../../places/the-foot/index.html" title="The Setting: The Foot of Mount Phyle">*</a></sup> Bandits hold the summit above them.</p>
     </div></div>
-    <div class="pin pop" style="left:50%;top:44%;"><div class="leaf"><b>Only ravens</b>The four send word to one another only by raven. A bird always arrives, but no bird has a longest flight.</div></div>
-    <div class="pin pop" style="left:6%;top:62%;"><div class="leaf"><b>Nobody lies</b>No man at the foot ever misreports anything, so whatever a bird carries is true.</div></div>
-    <div class="pin pop" style="left:52%;top:80%;"><div class="leaf"><b>Any man may die</b>Any of the four may be killed in the night. A dead man's tent simply falls silent, and no bird reports the death.</div></div>
+    <div class="pins">
+      <div class="pin pop"><div class="leaf"><b>Only ravens</b>The four communicate only by raven. Every raven eventually arrives, but there is no upper bound on how long a flight may take.</div></div>
+      <div class="pin pop"><div class="leaf"><b>Nobody lies</b>The mercenaries are honest comrades: no one ever falsifies a message, so whatever a raven carries is true.</div></div>
+      <div class="pin pop"><div class="leaf"><b>Any man may die</b>Any of the four might be killed during the night, leaving his tent permanently silent without any raven to announce his death.</div></div>
+    </div>
   </div>
 </section>
 
@@ -535,24 +121,24 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Three demands, one change</div>
       <h2>A slate at every tent</h2>
-      <p class="lede">The four must all attack or all hold. Each formed an opinion at dusk, a sighting, and the sightings may differ. Committing to either answer takes a man from the tent and its birds for the night, so a man who has committed sends and hears nothing more.</p>
-      <p>Whatever arrangement the four follow to settle on one answer, three things are demanded of it.</p>
+      <p class="lede">Before dawn, all four mercenaries must either attack the hill together or hold their ground together. Each man formed an initial <b>sighting</b> at dusk, and <b>committing</b> is final: once a man steps out of his tent to attack or hold, he leaves his ravens behind for the night.</p>
+      <p>Whatever arrangement they use to settle on a single plan must satisfy three demands:</p>
     </div>
     <div class="cards3" style="margin-top:1rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First demand</div><h3>No two commit differently</h3><p>No two of the four commit to different answers. Nobody attacks while another holds.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second demand</div><h3>Only a sighted answer</h3><p>A man commits only to an answer that one of the four sighted at dusk.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third demand</div><h3>Every living man commits</h3><p>Every man who is not killed commits in the end. Nobody is left waiting for ever.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First demand</div><h3>No two commit differently</h3><p>No two of the four ever commit to different answers (<i>agreement</i>).</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second demand</div><h3>Only a sighted answer</h3><p>A mercenary may only commit to an answer that at least one of the four actually sighted at dusk (<i>validity</i>).</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Third demand</div><h3>Every living man commits</h3><p>Every man who has not been killed eventually commits to a plan (<i>termination</i>).</p></div></div></div>
     </div>
     <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center;margin-top:2rem">
       <div>
-        <p>The first two are easy to keep by never committing, and the third forbids that. On such a night no arrangement can be sure of meeting all three, because none guarantees that anyone commits. The trouble is a silent tent. A man waiting on one cannot tell whether the man there is dead or the bird is still in the pines.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s3" title="The Limits of Agreement: A Dead Man, or a Slow Bird?">*</a></sup></p>
-        <p>Both choices can go wrong. If the man waits, the wait may be for ever, on a dead man. If the man stops waiting, a live man whose bird was about to arrive may be left out.</p>
+        <p>As we saw in <a href="../the-limits-of-agreement/index.html#s3">The Limits of Agreement</a>, if ravens can take arbitrarily long and nothing more is given, no arrangement can satisfy all three demands.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s3" title="The Limits of Agreement: A Dead Man, or a Slow Bird?">*</a></sup> The stumbling block is a silent tent: a mercenary waiting for a raven from Tent 4 cannot tell whether Number 4 is dead or his bird is merely delayed in the pines.</p>
+        <p>Without help, both choices fail: waiting forever leaves the camp paralyzed if Number 4 is dead, while giving up early risks acting without a living comrade whose bird was just about to land.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-p03-perch-e9103e78f0-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-p03-perch-e9103e78f0-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-p03-perch-e9103e78f0-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-p03-perch-e9103e78f0-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p03-perch.jpg" alt="A tent and a chest in a wooded gully by moonlight, a shield leaning on the chest, and a bare bird perch with nothing on it" loading="lazy"></div></div></div>
     </div>
     <div class="narrow" style="margin:2rem 0 0">
-      <p><b>Suppose each man had some help in telling the dead from the slow.</b> That is the one change in this book. Each tent has a <b>slate</b>, with a row for every other tent. A man <b>chalks</b> a tent thought dead, and rubs the mark out when thinking again. A man with a slate knows when to stop waiting: when the silent tent is chalked. How a man decides to chalk is not the question here.</p>
-      <p class="tell">The slate is often wrong. A mark may stand against a live man whose bird is merely slow, and a dead man's row may stay clean for a while. So the four have to find out how good a slate must be before they can agree, and before that, what it means for a slate to be good at all.</p>
+      <p><b>What if each mercenary had an imperfect guide to tell him when to stop waiting?</b> That is the single addition in this book. Beside each tent stands a <b>slate</b> (a <i>failure detector</i>) with a row for each of the other tents. Whenever a tent is suspected of being dead, its row on the slate is <b>chalked</b>; if the suspicion passes, the chalk mark can be rubbed out again. A mercenary waiting for a raven from a tent simply waits until either the raven lands <i>or</i> that tent's row is chalked on his slate.</p>
+      <p class="tell">Crucially, the slates at different tents need not agree with one another, and they are <b>often wrong</b>: a slate may chalk a living comrade whose bird is merely slow, or leave a dead man's row blank for a while. How reliable do these slates have to be before the four mercenaries can reach agreement?</p>
     </div>
   </div>
 </section>
@@ -565,8 +151,8 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Two ways to go wrong</div>
       <h2>How a slate may be wrong</h2>
-      <p class="lede">A slate is good when it keeps clear of its mistakes, and it can make only two. It can fail to chalk the dead, or it can chalk the living. So two things are asked of it.</p>
-      <p>Keep a slate yourself for one night. You sit at tent 1, and some tents have sent no bird. Chalk the ones you think are dead, then reveal the night and see which of the two mistakes you made.</p>
+      <p class="lede">Any slate can make only two kinds of mistakes: it can fail to chalk a dead man, or it can falsely chalk a living man. So we judge a slate by two promises—how well it chalks the dead (<i>completeness</i>), and how well it spares the living (<i>accuracy</i>).</p>
+      <p>Try keeping a slate yourself below. You are at Tent 1, and some tents have sent no raven yet. Chalk the tents you suspect are dead, then reveal the night to see which of the two mistakes you made.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Mark a slate <em>you are at tent 1</em></h4>
@@ -580,12 +166,11 @@ a.lin-node:hover b{text-decoration:underline}
       <div class="row"><button class="btn" id="slatereveal">Reveal the night</button><button class="btn alt" id="slatenew">A new night</button></div>
     </div></div></div>
     <div class="cards3" style="margin-top:2rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The dead</div><h3>Chalking the dead</h3><p>Every man who is killed is, in the end, chalked for good. This can be asked of every living man's slate, or only of some living man's.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The living</div><h3>Sparing the living</h3><p>A man who lives is not chalked. This can be asked in four strengths, of all the living or of one, from dusk or only in the end.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A warning</div><h3>Chalking the dead is worth nothing alone</h3></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The dead</div><h3>Chalking the dead</h3><p>Every man who is killed is eventually chalked permanently (<i>completeness</i>)—either on <b>every</b> living man's slate (<i>strong</i>), or on <b>at least one</b> living man's slate (<i>weak</i>).</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The living</div><h3>Sparing the living</h3><p>Living men are not falsely chalked (<i>accuracy</i>)—either <b>all</b> living men or <b>at least one</b> living man, and either <b>from dusk onward</b> or only <b>eventually</b>.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A warning</div><h3>Chalking the dead is worth nothing alone</h3><p>A slate that simply chalks every tent from dusk onward permanently chalks every dead man—yet conveys zero information!</p></div></div></div>
     </div>
-    <p class="tell">The warning is easy to check. A slate that chalks every tent all night chalks every dead man, and tells nobody anything, since a man who trusted it would wait for no one. It is the sparing of the living that makes a slate useful.</p>
-    <p class="tell">Sparing the living can be asked strictly or loosely, and how strictly it is asked decides what kind of slate a man holds.</p>
+    <p class="tell">That third card is worth pausing over. If all you ask of a slate is that it eventually chalks the dead, you can build one effortlessly: just chalk every tent at dusk and never rub the marks out! A mercenary who relied on such a slate would never wait for anyone. What gives a slate real power is pairing completeness with some guarantee of <b>sparing the living</b>.</p>
   </div>
 </section>
 
@@ -596,25 +181,25 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Four strengths of sparing</div>
       <h2>Eight kinds of slate</h2>
-      <p class="lede">Sparing the living is asked in four strengths, set out here from the strictest to the loosest. With the two ways of chalking the dead, by every living man or by some, they make eight kinds of slate.</p>
+      <p class="lede">We can ask a slate to spare the living in four strengths, from strictest to loosest. Combined with the two ways of chalking the dead (by every living man, or by at least one living man), they form a grid of eight kinds of slates:</p>
     </div>
     <ul class="checks" style="margin-bottom:1.6rem">
-      <li><b>Never chalked.</b> No man is chalked while living.</li>
-      <li><b>One never chalked.</b> Some man who lives through the night is never chalked by anyone.</li>
-      <li><b>In the end, never chalked.</b> There comes a time after which no living man is chalked.</li>
-      <li><b>In the end, one never chalked.</b> There comes a time after which some man who lives through the night is chalked by no one.</li>
+      <li><b>Never chalked (Strong accuracy).</b> No living man is ever chalked by anyone at any point in the night.</li>
+      <li><b>One never chalked (Weak accuracy).</b> There is at least one man who lives through the night whom nobody ever chalks, from dusk onward.</li>
+      <li><b>In the end, never chalked (Eventual strong accuracy).</b> Mistakes may happen early on, but there comes a point in the night after which no living man is chalked by anyone.</li>
+      <li><b>In the end, one never chalked (Eventual weak accuracy).</b> Mistakes may happen early on, and even later most living men may still be falsely chalked—all that is promised is that from some unknown moment onward, at least <i>one</i> living man is never chalked by anyone.</li>
     </ul>
     <div class="pop"><div class="leaf"><table class="kinds">
       <thead><tr><th></th><th>every living man chalks the dead</th><th>some living man chalks the dead</th></tr></thead>
       <tbody>
-        <tr><th>never chalked</th><td><b>perfect</b></td><td>-</td></tr>
-        <tr><th>one never chalked</th><td><b>strong</b></td><td><b>weak</b></td></tr>
-        <tr><th>in the end, never chalked</th><td><b>in the end perfect</b></td><td>-</td></tr>
-        <tr><th>in the end, one never chalked</th><td><b>in the end strong</b></td><td><b>in the end weak</b></td></tr>
+        <tr><th>never chalked</th><td><b>perfect</b> (<i>P</i>)</td><td>-</td></tr>
+        <tr><th>one never chalked</th><td><b>strong</b> (<i>S</i>)</td><td><b>weak</b> (<i>W</i>)</td></tr>
+        <tr><th>in the end, never chalked</th><td><b>in the end perfect</b> (<i>◇P</i>)</td><td>-</td></tr>
+        <tr><th>in the end, one never chalked</th><td><b>in the end strong</b> (<i>◇S</i>)</td><td><b>in the end weak</b> (<i>◇W</i>)</td></tr>
       </tbody></table></div></div>
     <div class="narrow" style="margin:1.6rem 0 0">
-      <p>Six of the eight have names in the table, and the other two will not be needed. The last row promises the least a slate can promise and still promise anything. Every living man may be chalked at one time or another, over and over, by everyone. All that is asked is that, from some moment nobody can see, one man who lives is left alone. No man knows when that moment has come, or who that man is.</p>
-      <p class="tell">Eight kinds of slate are a great many to study. The four need not study them all, because the two columns of the table come to the same thing.</p>
+      <p>Look at the bottom row of the table—<b>in the end strong (◇S)</b> and <b>in the end weak (◇W)</b>. They promise astonishingly little! For hours on end, every living mercenary can be falsely chalked by everyone else, marks can be rubbed out and redrawn capriciously, and even after the slates finally settle down, only <i>one</i> living man needs to be spared from false chalking—while nobody in the camp knows when that moment arrived or which comrade is the spared one.</p>
+      <p class="tell">Better yet, we do not need to study all eight kinds separately—because a simple trick turns the right-hand column of the table directly into the left-hand column!</p>
     </div>
     <details class="proof">
       <summary>The eight kinds, in the paper's names</summary>
@@ -637,9 +222,9 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The two columns are one</div>
       <h2>Copying marks</h2>
-      <p class="lede">The two columns come to the same thing because a mark can be passed on. If only some living man chalks the dead, the rest can be brought to chalk them too, by copying one another's marks.</p>
-      <p>Every man keeps a second slate, a <b>copy</b>. Again and again the man sends every tent the marks on the first slate. When a bird comes from a tent, the man adds its marks to the copy, and rubs out the mark against the tent the bird came from, since that tent was alive to send it.</p>
-      <p>In the rounds below tent 4 is dead, and of the three living men only tent 1 has chalked it. Early on, two slates also chalk a living man by mistake. Send the birds, and watch the mark against tent 4 reach every copy while the mistaken marks come and go.</p>
+      <p class="lede">Why is "some living man chalks the dead" just as good as "every living man chalks the dead"? Because the mercenaries can share their chalk marks by raven!</p>
+      <p>Suppose each man keeps a second slate—his <b>copy</b>—and repeatedly sends ravens to every other tent listing the marks on his original slate. Whenever a mercenary receives such a raven from Tent <var>q</var>, he does two things on his copy: he adds all the marks that Tent <var>q</var> reported, and he <b>rubs out any mark against Tent <var>q</var> itself</b> (since Tent <var>q</var> was obviously alive to send the bird!).</p>
+      <p>Try this below. Tent 4 is dead, and among the three living tents only Tent 1's original slate has chalked Tent 4, while Tents 1 and 2 also falsely chalk living comrades at first. Send rounds of ravens and watch how every living man's copy comes to chalk Tent 4 while sparing the living.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Rounds of birds <em>tent 4 is dead</em></h4>
@@ -647,9 +232,9 @@ a.lin-node:hover b{text-decoration:underline}
       <p class="say" id="copysay"></p>
       <div class="row"><button class="btn" id="copygo">Send a round of birds</button><button class="btn alt" id="copyr">Start again</button></div>
     </div></div></div>
-    <p class="tell">If some living man in the end chalks every dead man for good, then with copying every living man does. That man goes on sending the mark, and no bird ever comes from the dead to rub it out. And the copy spares the living exactly as well as the slate it was copied from. A man whom no slate chalks is on nobody's list of marks, so no copy chalks that man. A man whom the slates stop chalking goes on sending birds, and each bird rubs that man out of a copy.</p>
-    <p class="tell">So only the first column matters: perfect, strong, in the end perfect, and in the end strong. Of these, two need study, <b>strong</b> and <b>in the end strong</b>. A perfect slate is also strong, and one in the end perfect is also in the end strong, so whatever works with the weaker works with the stronger.</p>
-    <p class="tell">Start with the stronger of the two. With a strong slate one living man is never chalked by anyone, and nobody knows which man that is. What has to be settled is whether so little is enough to agree.</p>
+    <p class="tell">See why copying works so cleanly: once Tent 4 dies, it stops sending ravens, so after its last bird in flight lands, nobody ever rubs Tent 4 out of a copy. Meanwhile, the one living man whose original slate permanently chalked Tent 4 keeps broadcasting that mark, so every living man's copy permanently chalks Tent 4! At the same time, copying preserves whichever accuracy guarantee the original slates had: if nobody's original slate ever chalks Tent 2, no copy ever will; and if all original slates eventually stop chalking Tent 2, then because Tent 2 is alive and keeps sending ravens, Tent 2's own birds rub out any leftover false marks against Tent 2 on everyone's copy.</p>
+    <p class="tell">That means any weak slate (<b>W</b> or <b>◇W</b>) can be automatically upgraded into a strong one (<b>S</b> or <b>◇S</b>). And since a perfect slate (<b>P</b>) is already a special case of a strong slate (<b>S</b>), and <b>◇P</b> is a special case of <b>◇S</b>, we only need to design consensus protocols for two classes of slates: <b>strong (S)</b> and <b>in the end strong (◇S)</b>!</p>
+    <p class="tell">Let us start with a <b>strong (S)</b> slate, where at least one living man is never chalked from dusk onward—though nobody knows which man he is.</p>
     <details class="proof">
       <summary>Proof · that copying makes every living man chalk the dead, and spares the living as before</summary>
       <p class="given">The reduction <var>T</var><sub>D→D′</sub> of Fig. 3, §3: every process <var>p</var> keeps <var>output</var><sub><var>p</var></sub>, repeatedly sends its own suspect list to all, and on receiving the list of <var>q</var> sets <var>output</var><sub><var>p</var></sub> to (<var>output</var><sub><var>p</var></sub> ∪ the list of <var>q</var>) − {<var>q</var>}. <b>Theorem 1.</b> If the detector D has weak completeness, <var>output</var> has strong completeness, and it satisfies the same accuracy property as D.</p>
@@ -672,15 +257,15 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow">
       <div class="kicker">However many die</div>
       <h2>One man never chalked</h2>
-      <p class="lede">One living man whom nobody ever chalks is enough. Suppose the slates are strong: every living man in the end chalks the dead, and one man who lives, say the man at tent 2, is never chalked by anyone. Nobody knows it is tent 2. The four can then agree however many of them die, even three.</p>
-      <p>Each man keeps a <b>sheet of sightings</b>: a row for each tent, holding that tent's sighting if the man has learned it, and blank if not. At first it holds only the man's own. The arrangement works in three parts to make every sheet come out the same, so that every man reads the same answer from it.</p>
+      <p class="lede">Suppose the mercenaries have <b>strong (S)</b> slates: every dead man is eventually chalked on every slate, and there is at least one living man—say Number 2—whom nobody ever chalks from dusk onward. Even though nobody knows that Tent 2 is the unchalked one, the four can reach agreement no matter how many of them die—even if three of the four are killed!</p>
+      <p>How? Each mercenary keeps a four-row <b>sheet of sightings</b>, one row per tent, initially containing only his own sighting in his own row and blanks (`—`) for the other three. The protocol runs in three short stages to guarantee that every surviving mercenary ends up with the exact same sheet:</p>
     </div>
     <div class="cards3" style="margin-top:1.4rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Spreading, three rounds</div><h3>Send what is new</h3><p>In each round a man sends every tent the sightings learned for the first time in the round before (in the first round, the man's own). The man waits for that round's bird from every tent except a tent chalked, and stops waiting for a tent chalked during the wait. Any new sightings go into the sheet.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Comparing</div><h3>Send the whole sheet</h3><p>The man sends every tent the whole sheet, and waits in the same way. Any row that is blank in any sheet received is blanked in the man's own.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Committing</div><h3>First filled row</h3><p>The man commits to the answer in the first row of the sheet that is not blank, taking the rows in number order.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">1 · Spreading (3 rounds)</div><h3>Relay newly learned sightings</h3><p>In each of 3 rounds (<var>n</var> − 1 rounds for <var>n</var> tents), every man sends all tents any sightings he learned for the first time in the previous round (in round 1, his own sighting). He waits for a bird from every tent that is not currently chalked on his slate, and adds any new sightings to his sheet.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">2 · Comparing (1 round)</div><h3>Cross out missing rows</h3><p>Each man sends his entire four-row sheet to every tent and waits for sheets from all unchalked tents. If a row is blank in <i>any</i> sheet he receives, he blanks that row in his own sheet too (taking the intersection of the sheets).</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">3 · Committing</div><h3>Pick the first filled row</h3><p>Each man looks down his finished sheet in order (row 1, row 2, row 3, row 4) and commits to the answer in the first row that is not blank.</p></div></div></div>
     </div>
-    <p class="tell">Scroll to watch one night run. Tent 4 is killed in the first round, and the slates chalk living men by mistake. Follow tent 4's sighting, which reaches one sheet and no further.</p>
+    <p class="tell">Scroll through the night below. Tent 4 is killed in round 1 after its bird reaches only Tent 3, and the slates falsely chalk living comrades in rounds 1 and 2—except for Tent 2, which is never chalked by anyone.</p>
   </div>
   <div class="scrolly" id="strong">
     <div class="stage"><div class="stage-inner split">
@@ -688,29 +273,28 @@ a.lin-node:hover b{text-decoration:underline}
       <div class="side" id="strongside" data-live></div>
     </div></div>
     <div class="steps">
-      <div class="step on"><div class="card"><div class="num">1 · At dusk</div><h3>Each sheet holds one row</h3><p>Each man's sheet holds the man's own sighting, A for attack or H for hold. The man at tent 2 will never be chalked, though nobody knows it. Tent 4 is about to be killed.</p></div></div>
-      <div class="step"><div class="card"><div class="num">2 · Round one</div><h3>A bird reaches only one tent</h3><p>Tent 4's bird reaches only tent 3 before tent 4 is killed. Tent 1 chalks tent 3 and does not wait for its bird, and tent 3 chalks tent 1. Tent 3's sheet now holds tent 4's sighting.</p></div></div>
-      <div class="step"><div class="card"><div class="num">3 · Round two</div><h3>Chalk hides a sighting</h3><p>Tents 1 and 2 chalk tent 3 and do not wait for its bird. So tent 4's sighting, which only tent 3 holds, goes no further. Tent 3 waits for everyone, and learns tent 1's sighting.</p></div></div>
-      <div class="step"><div class="card"><div class="num">4 · Round three</div><h3>Nobody is chalked</h3><p>Every bird is taken in, and nothing more is new. Tents 1 and 2 hold rows 1 to 3. Tent 3 alone holds a fourth row, which tent 2 never heard.</p></div></div>
-      <div class="step"><div class="card"><div class="num">5 · Comparing</div><h3>One row is blanked</h3><p>Each man sends the whole sheet. Tent 3 receives tent 2's sheet with no row 4, and blanks row 4 in its own. Everyone waited for tent 2, so every sheet now matches tent 2's.</p></div></div>
-      <div class="step"><div class="card"><div class="num">6 · Committing</div><h3>All three commit alike</h3><p>Each man commits to the first row that is not blank: row 1, attack. All three agree, on an answer someone sighted, though a man was killed and the slates chalked living men.</p></div></div>
+      <div class="step on"><div class="card"><div class="num">1 · At dusk</div><h3>Each sheet holds one row</h3><p>At dusk, each man's sheet holds only his own sighting (<i>A</i> for attack or <i>H</i> for hold). Tent 2 will never be chalked by anyone tonight, though nobody knows that. Tent 4 is about to be killed.</p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · Round one</div><h3>A bird reaches only one tent</h3><p>Tent 4's round-1 bird reaches only Tent 3 before Number 4 is killed. Meanwhile, Tent 1 falsely chalks Tent 3 (and moves on without waiting for Tent 3's bird), and Tent 3 falsely chalks Tent 1. Only Tent 3 has learned Tent 4's sighting.</p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · Round two</div><h3>Chalk hides a sighting</h3><p>In round 2, both Tents 1 and 2 falsely chalk Tent 3 and do not wait for its bird—so Tent 4's sighting, which only Tent 3 was relaying in round 2, fails to reach Tents 1 and 2! Tent 3 waits for everyone and learns Tent 1's sighting.</p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Round three</div><h3>Nobody is chalked</h3><p>In round 3, nothing new is learned. At the end of the three spreading rounds, Tents 1 and 2 have rows 1, 2, and 3 filled, while Tent 3 has all four rows filled—a discrepancy!</p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · Comparing</div><h3>One row is blanked</h3><p>Now comes the comparing round: everyone broadcasts their full sheet. Because <b>nobody ever chalks Tent 2</b>, everyone waits for Tent 2's sheet—and since row 4 is blank on Tent 2's sheet, Tent 3 blanks row 4 on its own sheet! Every surviving sheet now matches Tent 2's sheet.</p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · Committing</div><h3>All three commit alike</h3><p>Each surviving man commits to the first non-blank row on his sheet: row 1, <i>attack</i>. All three agree on a genuine dusk sighting, despite a death and repeated false chalk marks!</p></div></div>
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
     <div class="narrow" style="margin:0 0 1rem">
-      <p><b>The arrangement turns on the man nobody chalks.</b> Since nobody chalks that man, everybody waits for every one of that man's birds, so whatever the man has learned by a round, everyone who finishes the next round has learned too. By the end of spreading, every sheet that finishes holds everything that man's sheet holds.</p>
-      <p>In comparing, everyone waits for that man's sheet and blanks every row that is blank in it. A row filled in it is filled in every sheet, so nobody blanks it. Everyone who reaches the end therefore holds exactly that man's sheet, which is not empty, since it holds the man's own sighting. All commit to the same answer, and it is an answer someone sighted.</p>
-      <p><b>Nobody waits for ever</b>, because a dead man is chalked in the end and a live man's bird comes in the end. So every man who lives commits, and all three demands are met. Nobody is in charge of any of it. Everybody sends everything to everybody, and the man who holds it together is one nobody can name.</p>
-      <p>The night above was a single night. Press a button below for another, with as many deaths as you choose, and check that the living always end with one sheet.</p>
+      <p><b>Why does every surviving sheet end up identical to Tent 2's sheet?</b> Two halves make the magic work. First, because nobody ever chalks Tent 2, every living man waits for Tent 2's raven in every single round. That guarantees that by the end of the 3 spreading rounds, every sighting that reached Tent 2 has also reached <i>every other surviving man</i> (if Tent 2 learned a sighting in round 1 or 2, Tent 2 relayed it in the next round and everyone waited for Tent 2's bird; if Tent 2 only learned it in round 3, that sighting had already passed through the other three tents along a chain of length 3!). Thus, after spreading, every surviving sheet contains <i>at least</i> all the rows filled in Tent 2's sheet.</p>
+      <p>Second, in the comparing round, every surviving man again waits for Tent 2's sheet and crosses out any row that is blank in Tent 2's sheet—while no row that is filled in Tent 2's sheet is ever crossed out, because every surviving sheet already has that row filled! Thus, after comparing, every surviving sheet is <b>identical</b> to Tent 2's sheet, and at least row 2 (Tent 2's own sighting) is guaranteed to be non-blank.</p>
+      <p>Try generating random nights below with 0, 1, 2, or even 3 deaths, and verify that the survivors always end with identical sheets.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Another night <em>choose how many are killed</em></h4>
       <div id="tryout" data-live></div>
       <p class="say" id="trysay"></p>
       <div class="row"><button class="btn" data-dead="0">Nobody is killed</button><button class="btn alt" data-dead="1">One is killed</button><button class="btn alt" data-dead="2">Two are killed</button><button class="btn alt" data-dead="3">Three are killed</button></div>
-      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">Each press deals new sightings, new deaths and new mistaken marks, and runs the arrangement by its rules.</p>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">Each click generates random dusk sightings, deaths, and false chalk marks (while keeping one living man unchalked), and runs the four rounds.</p>
     </div></div></div>
-    <p class="tell">A slate that never, from dusk on, chalks one living man is a great deal to ask. A slate may be right about someone only in the end, and it remains to see what the four can do with that.</p>
+    <p class="tell">A strong slate (Class <b>S</b>) is remarkably powerful, since it tolerates any number of deaths. Requiring that one living man is <i>never</i> falsely chalked from the very start of the night, however, is a tall order when winds blow early in the evening. What if the slates only stop chalking that one living man <b>eventually</b> (Class <b>◇S</b>)?</p>
     <details class="proof">
       <summary>Proof · that with a strong slate everyone who finishes holds the same sheet</summary>
       <p class="given"><b>Theorem 2.</b> With a failure detector of class S, consensus is solvable whatever the number of crashes. Here <var>n</var> = 4; <var>V</var><sub><var>p</var></sub> is the sheet of <var>p</var> (a blank is ⊥); the algorithm is that of Fig. 5, §6.1, with <var>n</var> − 1 = 3 rounds of Phase 1, then Phase 2, then Phase 3.</p>
@@ -746,17 +330,17 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Slates right only in the end</div>
       <h2>In the end, one man spared</h2>
-      <p class="lede">Slates that are right about someone only in the end are the slates in the end strong. For as long as such slates like, every man may be chalked by everyone. Only from some moment nobody sees is one living man left alone. The four can still agree, provided more than half of them live. With four men, one may die.</p>
-      <p>The sheets leaned from dusk on a man nobody chalked, and now there may be no such man until late in the night. So the four take <b>turns</b>, and each tent in its turn tries to bring the rest to one answer. Each round belongs to one tent, in number order: 1, 2, 3, 4, then 1 again. Nobody commands this. The round number alone decides whose turn it is, as on the windy nights.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s3" title="Agreeing When Messages Run Late: Turns and Pledges">*</a></sup> Each man carries an <b>estimate</b>, an answer, which starts as the sighting, and beside it the round in which the man last took it up. A round has four steps.</p>
+      <p class="lede">With an <b>in the end strong (◇S)</b> slate, every living mercenary might be falsely chalked by everyone else for the first several hours of the night. Only after some unknown point in time is a single living man left unchalked. Under this weak guarantee, the four mercenaries can still reach agreement—provided <b>more than half of them remain alive</b> (at most one death out of four).</p>
+      <p>Why can't we use the four-round sheet protocol here? Because that protocol relied on having an unchalked man during rounds 1 through 4, and with <b>◇S</b> the slates might still be chalking everyone during those rounds! Instead, the mercenaries run an open-ended sequence of rounds with a <b>rotating turn owner</b> (Tent 1 in round 1, Tent 2 in round 2, Tent 3 in round 3, Tent 4 in round 4, Tent 1 in round 5, and so on), just as they did on the windy nights of <a href="../agreeing-when-messages-run-late/index.html#s3">Agreeing When Messages Run Late</a>.<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s3" title="Agreeing When Messages Run Late: Turns and Pledges">*</a></sup> Each mercenary maintains a current <b>estimate</b> (starting as his dusk sighting) together with the <b>round number</b> in which he last adopted an owner's proposal. Each round has four steps:</p>
     </div>
     <ul class="checks steplist" style="margin-bottom:1.6rem">
-      <li><b>(1)</b> Every man sends the round's owner the estimate and the round it was taken up.</li>
-      <li><b>(2)</b> The owner waits for three of these, its own included, and takes the estimate taken up most recently. The owner sends it to every tent.</li>
-      <li><b>(3)</b> Every man waits for the owner's estimate, or until the man chalks the owner. If the estimate comes, the man takes it up, notes this round, and sends the owner <em>agreed</em>. If the owner is chalked first, the man sends <em>not agreed</em>.</li>
-      <li><b>(4)</b> The owner waits for three replies. If all three say <em>agreed</em>, the owner sends every tent a <b>parting bird</b> naming the estimate.</li>
-      <li><b>Committing.</b> A man who takes in a parting bird for the first time sends it on to every tent, then commits to its answer.</li>
+      <li><b>(1)</b> Every man sends the current round's owner his current estimate and the round number in which he last adopted it.</li>
+      <li><b>(2)</b> The round's owner waits to receive estimates from <b>three</b> men (a majority of the four, including himself), picks the estimate with the <b>most recent round number</b>, and sends that estimate to every tent as his proposal.</li>
+      <li><b>(3)</b> Every man waits until either the owner's proposal arrives <i>or</i> his slate chalks the owner. If the proposal arrives first, he updates his estimate to the owner's proposal, records the current round number as its timestamp, and replies <em>agreed</em> (<i>ack</i>) to the owner. If his slate chalks the owner first, he replies <em>not agreed</em> (<i>nack</i>) without changing his estimate.</li>
+      <li><b>(4)</b> The owner waits for <b>three</b> replies. If all three say <em>agreed</em>, the owner broadcasts a <b>parting bird</b> announcing that the estimate is decided! Otherwise, everyone simply moves on to the next round.</li>
+      <li><b>Committing.</b> Any man who receives a parting bird relays it to every other tent and commits to the answer it names.</li>
     </ul>
-    <p class="tell" style="margin-top:0;margin-bottom:1.6rem">Choose a night and take the rounds one at a time. For the first two rounds the slates are wrong and a man may chalk an owner who lives. From the third round they are right. Watch which rounds come to nothing, and whether one sends out the parting bird.</p>
+    <p class="tell" style="margin-top:0;margin-bottom:1.6rem">Step through the rounds below. During the first two rounds, the slates falsely chalk living owners so the rounds abort safely; from round 3 onward, one living man is spared.</p>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Rounds by turns <em>choose a night</em></h4>
       <div id="turnrows" data-live></div>
@@ -766,11 +350,11 @@ a.lin-node:hover b{text-decoration:underline}
       <div id="turnlog" style="margin-top:12px" data-live></div>
     </div></div></div>
     <div class="narrow" style="margin:1.6rem 0 0">
-      <p><b>The four never commit to two answers.</b> Take the first round in which three men sent <em>agreed</em>, say on hold. Those three took up hold in that round. Any later owner waits for three estimates, and any three out of four share a man with those three, so the owner sees at least one hold taken up that recently or later. Take the estimate taken up most recently, and by the same argument round after round, it is hold. So every later owner sends hold, and every parting bird names hold.</p>
-      <p><b>Every living man commits.</b> Nobody waits for ever, because a dead owner is in the end chalked, and three men live to reply. From some moment one living man is never chalked. When that man's turn next comes, the man gathers three estimates, everyone waits for the estimate, nobody chalks the owner, all say <em>agreed</em>, and the parting bird goes out. Each man who takes it in sends it on before committing, so it reaches every man who lives.</p>
-      <p>While the slates are still chalking the living, rounds fail: a man chalks a live owner whose bird is slow, says <em>not agreed</em>, and the round comes to nothing. Failing is always safe, since a round that fails sends out no parting bird. The chalk can cost time. It can never cost agreement.</p>
+      <p><b>Why can two men never commit to different answers, no matter how badly the slates lie?</b> Suppose round <var>r</var> is the earliest round in which an owner receives three <em>agreed</em> replies—say for <i>hold</i>. Because those three men replied <em>agreed</em> in round <var>r</var>, all three of them updated their estimate to <i>hold</i> and stamped it with round <var>r</var>. Now consider any later round's owner: in Step 2, that owner must wait for estimates from <b>three</b> of the four tents. Because any two groups of three out of four must overlap in at least two tents, the new owner is guaranteed to hear from at least one of the three men who adopted <i>hold</i> in round <var>r</var>! And because no estimate before round <var>r</var> can have a timestamp as high as <var>r</var>, the most recently stamped estimate in round <var>r</var> + 1 (and by induction in every round after <var>r</var>) must be <i>hold</i>. Once three men say <em>agreed</em> in any round, the estimate is permanently locked for the rest of the night!</p>
+      <p><b>Why does every living man eventually commit?</b> Because at most one man dies, at least three men are alive to send estimates in Step 1 and replies in Step 3, and nobody ever gets stuck waiting on a dead owner in Step 3 because every dead man is eventually chalked on every slate. Then, once the moment arrives after which one living man (say Tent <var>q</var>) is never chalked by anyone, wait until the turn rotation reaches Tent <var>q</var>'s round: Tent <var>q</var> gathers three estimates, sends its proposal to everyone, nobody chalks Tent <var>q</var> so all living men wait for the proposal and reply <em>agreed</em>, and Tent <var>q</var> receives three <em>agreed</em> replies and sends out the parting bird!</p>
+      <p>Notice the beauty of this separation: while the slates are making mistakes early in the night, false chalk marks can cause a round to abort with <em>not agreed</em>, costing time—but an aborted round never sends a parting bird and never breaks safety.</p>
     </div>
-    <p class="tell">A strong slate bore any number of deaths, and this one needs more than half alive, because an owner must gather three estimates and three replies. That may be a weakness of the turns, or it may be a need that every arrangement shares.</p>
+    <p class="tell">Why did <b>◇S</b> require more than half the camp to stay alive, whereas <b>S</b> tolerated up to three deaths out of four? Could a cleverer algorithm for <b>◇S</b>—or even for an <b>in the end perfect (◇P)</b> slate—tolerate two deaths out of four?</p>
     <details class="proof">
       <summary>Proof · that the turns never commit anyone to two answers, and in the end commit everyone to one</summary>
       <p class="given"><b>Theorem 3.</b> With a failure detector of class ◇S, consensus is solvable if fewer than <var>n</var>/2 processes crash. Here <var>n</var> = 4, so three is ⌈(<var>n</var> + 1)/2⌉; the algorithm is the rotating coordinator of Fig. 6, §6.2, and the parting bird is Reliable Broadcast of the decision (Fig. 4). Here <var>e</var> is an estimate, <var>r</var> a round, and <var>q</var> a process.</p>
@@ -807,15 +391,15 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Would every arrangement need it?</div>
       <h2>Why more than half, then</h2>
-      <p class="lede">The need for more than half alive is shared by every arrangement. It holds even for slates in the end perfect, which in the end chalk the dead and nobody else. To see it, suppose some arrangement carried the four past two deaths, and run it on three nights.</p>
-      <p>Take the nights in turn. On each, look at what tents 1 and 2 can see of tents 3 and 4, and at what the two pairs commit to.</p>
+      <p class="lede">Requiring more than half the camp to survive is not a quirk of the rotating-turn algorithm—it is a hard law for <i>every</i> algorithm whose slates are only eventually accurate, even if the slates are <b>in the end perfect (◇P)</b>.</p>
+      <p>Why? Because an "eventual" guarantee allows the slates to be wrong for as long as it takes two isolated halves of the camp to commit on their own! Step through the three nights below to see the trap.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>Three nights <em>pairs: tents 1 and 2, tents 3 and 4</em></h4>
       <div class="hill-wrap">
         <svg class="isle-svg fig" id="halfsvg" style="width:100%;max-width:520px" role="img" aria-label="Four lines running outward, one for each tent, with ravens as arcs between tents 1 and 2, between tents 3 and 4, and on the third night slow dashed ravens between the two pairs"></svg>
         <div>
-          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each line is one tent, and each ring further out is a later moment. A hollow dot is a man who has not committed; a filled dot is one who has, blue for hold and red for attack. A cross is a dead man.</p>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem">Each line is one tent, with time moving outward from the center. A hollow dot is a man who has not committed; a filled dot is one who has (blue for <i>hold</i>, red for <i>attack</i>). A cross marks a dead man.</p>
           <div class="stand" id="halfstand" data-live></div>
         </div>
       </div>
@@ -823,9 +407,8 @@ a.lin-node:hover b{text-decoration:underline}
       <div class="row"><button class="btn" data-night="1">First night</button><button class="btn alt" data-night="2">Second night</button><button class="btn alt" data-night="3">Third night</button></div>
     </div></div></div>
     <div class="narrow" style="margin:1.6rem 0 0">
-      <p>On the third night nobody is dead, but each pair's birds to the other are slow and each pair chalks the other, exactly as on a night when the other pair was dead. The slates are rubbed clean afterwards, too late. <b>If two of the four may die, no arrangement meets the three demands, even with slates in the end perfect.</b></p>
-      <p>The difference from a strong slate is when the slate is right. A strong slate never chalks one living man, from dusk, and that man holds the four together from the start. A slate that is right only in the end may be wrong about everyone for as long as the arrangement needs it to be right. While it is, the four are two pairs, each able to believe the other dead.</p>
-      <p class="tell">So a slate in the end strong, with more than half alive, is enough, and with such slates the half cannot be spared. Nothing so far has said where such a slate comes from, or what its promises leave unsaid.</p>
+      <p>On the third night, nobody is dead, but every raven flying between {1, 2} and {3, 4} is delayed in the pines while each pair's slates falsely chalk the other pair. Because the protocol must tolerate two deaths, Tents 1 and 2 must eventually commit to <i>hold</i> (say by time <var>A</var>), and Tents 3 and 4 must eventually commit to <i>attack</i> (say by time <var>B</var>). Only <i>after</i> both pairs have committed do the delayed ravens arrive and the slates rub out all their chalk marks—satisfying the definition of <b>in the end perfect (◇P)</b>! Yet the camp has already split in two.</p>
+      <p>Notice the exact contrast with a <b>strong (S)</b> slate: with <b>S</b>, at least one living man is never chalked <i>from dusk onward</i>, preventing the camp from ever splitting into two halves that completely chalk each other. Once accuracy holds only <i>eventually</i>, every decision must wait for a strict majority of the camp so that any two deciding groups are forced to overlap.</p>
     </div>
     <details class="proof">
       <summary>Proof · that slates in the end perfect cannot carry the four past two deaths</summary>
@@ -858,31 +441,30 @@ a.lin-node:hover b{text-decoration:underline}
       <div>
         <div class="kicker">Granted, not earned</div>
         <h2>What the slate does not say</h2>
-        <p class="lede">Where a slate comes from is the one thing the slate does not say. Its promises are granted, not earned. On a night when no bird has a longest flight, and nothing more is known, no man can keep a slate that is even in the end weak. If one could, the four could agree on that night, and they cannot.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: A Fair Night in Which Nothing Is Ever Settled">*</a></sup></p>
-        <p>So the slates of this book are an assumption about the hill, stated as a promise about chalk. The four were handed slates that keep their promises, and were never told how to keep one.</p>
+        <p class="lede">Where does a reliable slate come from? In a completely asynchronous network where ravens have no bound on flight time at all, <b>no mercenary can build even an in-the-end-weak (◇W) slate</b>—for if he could, the camp could solve consensus on a purely asynchronous night, contradicting <a href="../the-limits-of-agreement/index.html#s7">The Limits of Agreement</a>!<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: A Fair Night in Which Nothing Is Ever Settled">*</a></sup></p>
+        <p>A failure detector is therefore a clean way of packaging a timing assumption about the outside world into a purely logical interface: the algorithm asks only what the slate's marks eventually get right, without caring how the slate was built.</p>
       </div>
       <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on top, tiny tents on the slopes and the sea beyond" loading="lazy"></div></div></div>
     </div>
     <div class="narrow" style="margin:2rem 0 1rem">
-      <p><b>A slate can be kept on a windy night.</b> Where a wind blows for a while and then drops, and in still air every bird comes within a glass,<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s2" title="Agreeing When Messages Run Late: Glasses and Late Birds">*</a></sup> a man can keep a slate in the end perfect. Every man sends a bird to every tent, again and again, to say the sender is alive. A man chalks a tent when a glass has run out with no bird from it. When a bird from it comes after all, the man rubs out the mark and waits longer for that tent next time. Below, one man watches one tent through such a night. Run it once with the watched man alive and once with the watched man killed.</p>
+      <p><b>How to build an in-the-end-perfect (◇P) slate on a windy night.</b> On a night where the wind eventually drops (<a href="../agreeing-when-messages-run-late/index.html#s2">Agreeing When Messages Run Late</a>),<sup class="xref"><a href="../agreeing-when-messages-run-late/index.html#s2" title="Agreeing When Messages Run Late: Glasses and Late Birds">*</a></sup> each mercenary can easily maintain a <b>◇P</b> slate using a sandglass. Every man periodically sends heartbeat ravens to every other tent. If a man's sandglass runs out with no bird from Tent <var>q</var>, he chalks Tent <var>q</var> on his slate. If a delayed bird from Tent <var>q</var> lands later on, he rubs out the chalk mark against Tent <var>q</var> and <b>increases the timeout</b> he allows Tent <var>q</var> next time! Try watching one tent with this rule below, first when the watched man is alive and then when he is killed.</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4>A slate kept on a windy night <em>one watched man</em></h4>
-      <p style="font-size:.9rem;color:#6b5a48;margin:0">Each cell is one moment, later to the right. Blue cells are the windy part of the night, when a bird may take any time. A dot is a bird taken in, a cross is a mark standing against the watched man, and a loop is a mark rubbed out.</p>
+      <p style="font-size:.9rem;color:#6b5a48;margin:0">Each cell is a time step moving left to right. Blue cells mark the windy part of the night when birds can run arbitrarily late. A dot is an arriving bird, a cross is a chalk mark against the watched tent, and a loop is a mark rubbed out (which increases the timeout for that tent).</p>
       <div class="windtl" id="windtl" data-live></div>
       <div class="counts" id="windstat" data-live></div>
       <p class="say" id="windsay"></p>
       <div class="row"><button class="btn" id="windlive">The watched man lives</button><button class="btn alt" id="winddead">The watched man is killed</button><button class="btn alt" id="windr" hidden>Start again</button></div>
-      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">The delays are drawn at random for the picture; the rule the watcher follows is the one in the text.</p>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0">While the wind blows, slow birds cause false chalk marks that lengthen the timeout; once the wind drops, the timeout is big enough that a living man is never chalked again.</p>
     </div></div></div>
-    <p class="tell">Each mistaken mark lengthens the wait. Once the wind has dropped, a live man's birds come in time once the waiting is long enough, so in the end nobody living is chalked. A dead man's birds stop, so the dead man is chalked for good. The slate is a way of saying what the wind gives, without saying anything about wind.</p>
-    <p class="tell">Three more things about the slates are worth setting down before leaving the hill.</p>
+    <p class="tell">See how the adaptive timeout works: every time a slow bird causes a false chalk mark, rubbing it out makes the watcher more patient with that tent in the future. Once the wind drops, a living man's birds arrive within a bounded time, so after at most a few more adjustments the watcher's timeout exceeds that bound and he never falsely chalks that living comrade again! Meanwhile, a dead man stops sending birds altogether, so his timeout eventually expires for the last time and he stays chalked forever.</p>
+    <p class="tell">Three final observations complete the picture:</p>
     <div class="cards3" style="margin-top:1.6rem">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">A slate that breaks every promise</div><h3>Still never two answers</h3><p>If the slates chalk the living for ever and never chalk the dead, the two arrangements may never commit anyone. They never commit two men to different answers. Only committing is lost.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The weakest slate that will do</div><h3>In the end weak</h3><p>In the end weak, with more than half alive, is enough. It is also necessary: any slate with which the four could agree can be made into one in the end weak. That was proved separately, and is not proved here.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Many things to decide</div><h3>The same slates</h3><p>If the four had many things to decide, one after another, and had to take them in the same order, the same slates would do, and nothing weaker: agreeing once and agreeing on an order can each be turned into the other.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">If the slate breaks every promise</div><h3>Safety still holds</h3><p>In the rotating-turn algorithm for <b>◇S</b>, even if the slates go haywire forever—chalking the living endlessly or never chalking the dead—two men will still <i>never</i> commit to different answers. Bad slates can only stall termination, never break agreement.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The weakest possible slate</div><h3>In the end weak (◇W)</h3><p>Because copying upgrades <b>◇W</b> to <b>◇S</b>, an in-the-end-weak slate (with a living majority) is sufficient to solve consensus. In a companion paper that same year, Chandra, Hadzilacos, and Toueg proved that <b>◇W</b> is also <i>necessary</i>—the weakest failure detector that can solve consensus!</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Agreeing on a sequence of orders</div><h3>Atomic broadcast</h3><p>Chandra and Toueg also showed that agreeing on a single choice (<i>consensus</i>) and agreeing on the exact order of a stream of messages (<i>atomic broadcast</i>) are equivalent in asynchronous systems: either problem can be built directly out of a solution to the other, using the exact same slates.</p></div></div></div>
     </div>
-    <p class="tell">Nothing follows here from committing. The four attack together or hold together, and what happens then is not the subject of this book.</p>
   </div>
 </section>
 
@@ -894,15 +476,15 @@ a.lin-node:hover b{text-decoration:underline}
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Back to machines</div>
       <h2>At the foot, in the paper</h2>
-      <p class="lede">Read the foot of the hill again with machines in the tents, and the slates can be checked against the paper of Chandra and Toueg. Every man is a process, a man killed is a process that has crashed, and the slate is a failure detector. Hover over a row, or tap it, to see who is who.</p>
+      <p class="lede">Now read the story at the foot of the hill as a system of asynchronous processes equipped with failure detectors. Every mercenary is a process, a death is a crash fault, and each tent's chalk slate is its local failure detector module. Hover over or tap any row to see how the story maps to the paper.</p>
     </div>
     <div class="map" id="map">
-      <div class="hd" style="text-align:right;padding-right:6px">At the foot of the hill</div><div></div><div class="hd">In the machine room</div>
+      <div class="hd" style="text-align:right;padding-right:6px">At the foot of the hill</div><div></div><div class="hd">In computing</div>
     </div>
     <div class="meander" style="margin:3rem auto"></div>
     <div class="end">
-      <p class="big">A failure detector may be wrong, often, and still be enough: with one correct process never suspected, consensus survives any number of crashes, and if that holds only eventually, it survives as long as a majority is alive.</p>
-      <p class="lede" style="margin:0 auto">Consensus is impossible in an asynchronous system with even one crash because a crashed process cannot be told from a slow one. The detector takes exactly that obstacle and asks how well it must be overcome.</p>
+      <p class="big">A failure detector can make mistakes repeatedly and still make consensus solvable: if one correct process is never suspected, consensus survives any number of crashes; if that holds only eventually, consensus survives as long as a majority of processes remain alive.</p>
+      <p class="lede" style="margin:0 auto">Instead of reasoning directly about clocks and network delays, failure detectors isolate the exact information needed to tell the dead from the slow.</p>
       <div class="links">
         <a href="../../places/the-foot/index.html">The Foot of Mount Phyle, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
@@ -913,514 +495,15 @@ a.lin-node:hover b{text-decoration:underline}
       <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/the-foot/index.html">The Foot of Mount Phyle</a></p>
       <details class="proof">
         <summary>The paper behind this book</summary>
-        <p><b>The paper behind this book.</b> Tushar Deepak Chandra and Sam Toueg, <i>Unreliable Failure Detectors for Reliable Distributed Systems</i>. Journal of the ACM <b>43</b>, 2 (March 1996), 225–267. The eight classes, the reduction from weak to strong completeness, consensus with S and with ◇S, the majority lower bound, and the equivalence with atomic broadcast.</p>
-        <p><b>The ideas, plainly.</b> Consensus is impossible in an asynchronous system with even one crash, because a crashed process cannot be told from a slow one. Chandra and Toueg add an unreliable failure detector: a module at each process that lists the processes it suspects, and may be wrong. They classify detectors by completeness (crashed processes are eventually suspected, by every or by some correct process) and accuracy (correct processes are not suspected: never, or eventually; all of them, or at least one).</p>
-        <p>Weak completeness can be turned into strong by gossiping suspicions, so four classes matter. With S, where some correct process is never suspected, consensus tolerates any number of crashes, by relaying proposals for <var>n</var> − 1 rounds. With ◇S, where some correct process is eventually never suspected, consensus needs a majority of correct processes and uses a rotating coordinator; safety holds however badly the detector behaves, and progress returns once it behaves. The majority is necessary even with ◇P, by a partition argument.</p>
-        <p>A failure detector packages timing assumptions as a statement about suspicions. In partially synchronous systems, growing timeouts implement ◇P; the detector lets algorithms be written without mentioning time at all. ◇W is the weakest detector for consensus, and consensus is equivalent to atomic broadcast.</p>
+        <p><b>The paper behind this book.</b> Tushar Deepak Chandra and Sam Toueg, <i>Unreliable Failure Detectors for Reliable Distributed Systems</i>. Journal of the ACM <b>43</b>, 2 (March 1996), 225–267. Defines the eight classes of failure detectors, the reduction from weak to strong completeness, the consensus algorithms for S and ◇S, the majority lower bound for ◇P, and the equivalence of consensus and atomic broadcast.</p>
+        <p><b>The ideas, plainly.</b> Deterministic consensus is impossible in an asynchronous system if even a single process can crash, because a crashed process cannot be distinguished from a slow one. Chandra and Toueg factor that obstacle into an abstract module at each process—an <i>unreliable failure detector</i> that outputs a set of processes currently suspected to have crashed. Detectors are specified purely by two axiomatic properties: <i>completeness</i> (crashed processes are eventually permanently suspected, either by every correct process or by at least one correct process) and <i>accuracy</i> (correct processes are spared from false suspicion, either all of them or at least one of them, and either perpetually from the start or only eventually).</p>
+        <p>Because processes can gossip their suspect lists and clear any process from which they receive a message, weak completeness reduces to strong completeness while preserving accuracy—leaving four core classes (P, S, ◇P, ◇S). With class S (some correct process is never suspected), a four-phase relay protocol solves consensus regardless of how many processes crash (<var>f</var> &lt; <var>n</var>). With class ◇S (eventually some correct process is never suspected), a rotating-coordinator protocol solves consensus whenever a strict majority of processes are correct (<var>f</var> &lt; <var>n</var>/2); safety holds unconditionally even if the detector misbehaves forever, and termination occurs as soon as the detector stabilizes. A partition argument shows that <var>f</var> &lt; <var>n</var>/2 is necessary even for ◇P.</p>
+        <p>Failure detectors separate the <i>why</i> of timing from the <i>how</i> of agreement: in a partially synchronous system, heartbeats with adaptive timeouts implement ◇P, while the consensus protocol itself can be written and proved without mentioning clocks or message delay bounds at all.</p>
       </details>
     </div>
   </div>
 </section>
 <footer>Distributed Algorithms of Ancient Greece · “Telling the Dead from the Slow”, after Chandra and Toueg, JACM 43(2), 1996.</footer>
-<script>
-"use strict";
-(function(){
-const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-const NS="http://www.w3.org/2000/svg";
-const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
-function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
-function rnd(n){return Math.floor(Math.random()*n)}
-/* run fn(0..1) over ms, eased */
-function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();return}const t0=performance.now();
-  (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
-function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
-
-/* ===== pop-ups unfold when they enter view ===== */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
-$$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
-$$(".say,[data-live]").forEach(e=>e.setAttribute("aria-live","polite"));
-
-/* ===== scroll: progress bar, section name, parallax ===== */
-const secs=$$("section.spread,header.spread"), now=$("#now"), prog=$("#prog");
-const dep=$$("[data-depth]"), par=$$("[data-parallax]");
-let tick=false;
-function onscroll(){
-  if(tick)return; tick=true;
-  requestAnimationFrame(()=>{
-    tick=false;
-    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
-    prog.style.width=(h>0?y/h*100:0)+"%";
-    const mid=y+innerHeight*.4; let cur=secs[0];
-    for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
-    now.textContent=cur.dataset.name||"";
-    if(reduce)return;
-    for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
-    for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
-  });
-}
-addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
-
-/* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
-function stepDots(root,steps){
-  const stage=$(".stage",root),nav=document.createElement("div"); nav.className="dots"; nav.setAttribute("role","group"); nav.setAttribute("aria-label","The steps of this picture");
-  let cur=0; const go=i=>steps[i]&&steps[i].scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
-  const ctl=(cls,label,d,fn)=>{const b=document.createElement("button"); b.type="button"; b.className=cls; b.setAttribute("aria-label",label); b.title=label;
-    if(d) b.innerHTML='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="'+d+'"/></svg>'; b.addEventListener("click",fn); return b};
-  const prev=ctl("arr","Previous step","M7.5 2 3.5 6l4 4",()=>go(cur-1)), next=ctl("arr","Next step","M4.5 2l4 4-4 4",()=>go(cur+1)),
-        back=ctl("arr back","Back to the first step","M2.6 6.4a3.5 3.5 0 1 0 1-2.8M2.4 1.6v2.2h2.2",()=>go(0));
-  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""),"",()=>go(i))});
-  nav.append(prev,...dots,next,back);
-  if(stage&&steps.length>1) stage.append(nav);
-  return i=>{cur=i; prev.disabled=back.disabled=i===0; next.disabled=i===steps.length-1;
-    dots.forEach((d,j)=>{d.classList.toggle("on",j===i); if(j===i)d.setAttribute("aria-current","step"); else d.removeAttribute("aria-current")})};
-}
-function scrolly(root,render){
-  const steps=$$(".step",root),mark=stepDots(root,steps); render(0); mark(0);
-  const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); mark(i); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
-  steps.forEach(s=>so.observe(s));
-}
-
-/* ===== who is who: the setting on the left, the machine room on the right ===== */
-function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
-  const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
-  [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}
-
-/* ===== space-time drawn in the round: each place is a line running outward, each ring a later moment,
-         and whatever is carried from place to place is an arc curving round and outward ===== */
-function Polar(svg,o){
-  const {cx,cy,r0,step,nodes,rings,tEnd}=o; svg.innerHTML=""; svg.setAttribute("viewBox",o.vb);
-  const defs=el("defs",{},svg);
-  const mk=(key,col)=>{const m=el("marker",{id:`${svg.id}-${key}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:col},m)};
-  mk("b","#136f9e"); mk("r","#bf4a26");
-  const frame=el("g",{},svg), under=el("g",{},svg), slips=el("g",{},svg), evs=el("g",{},svg), over=el("g",{},svg);
-  const P={svg,under,slips,evs,over,cx,cy,
-    r:t=>r0+step*t,
-    xy(deg,rr){const a=deg*Math.PI/180;return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)]},
-    pt(k,t){return P.xy(nodes[k][0],P.r(t))},
-    /* the points of an arc from place a at time ta to place b at time tb, the short way round */
-    arc(a,ta,b,tb){const a0=nodes[a][0],d=((nodes[b][0]-a0+540)%360)-180,n=Math.max(12,Math.round(Math.abs(d)/3)),pts=[];
-      for(let i=0;i<=n;i++)pts.push(P.xy(a0+d*i/n,P.r(ta+(tb-ta)*i/n)));return pts},
-    slip(a,ta,b,tb,trim=17){const pts=P.arc(a,ta,b,tb),end=pts[pts.length-1];
-      while(pts.length>2&&Math.hypot(pts[pts.length-1][0]-end[0],pts[pts.length-1][1]-end[1])<trim)pts.pop();
-      const p=el("path",{class:"st-slip","marker-end":`url(#${svg.id}-b)`,d:"M"+pts.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" L")},slips);
-      p.mid=P.arc(a,ta,b,tb); p.mid=p.mid[Math.floor(p.mid.length/2)]; return p},
-    seg(k,t1,t2){const [x1,y1]=P.pt(k,t1),[x2,y2]=P.pt(k,t2);return el("line",{class:"st-seg",x1,y1,x2,y2},under)},
-    event(k,t,fill,rad=13){const [x,y]=P.pt(k,t),g=el("g",{class:"st-ev",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},evs);
-      el("circle",{class:"halo2",r:rad+5},g);el("circle",{class:"b",r:rad,fill},g);g.label=el("text",{},g);el("circle",{r:rad+8,fill:"transparent"},g);return g}
-  };
-  for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
-  for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
-  for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
-    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
-  if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
-  return P;
-}
-
-/* lineage: draw the edges of a book's graph of papers, and say what an edge carries (lineage.py) */
-(function(){
-const NS="http://www.w3.org/2000/svg",wide=matchMedia("(min-width:860px)");
-document.querySelectorAll(".lin").forEach(lin=>{
-  const svg=lin.querySelector(".lin-edges"),say=lin.querySelector(".lin-say"),idle=say.innerHTML;
-  const node=n=>lin.querySelector('[data-n="'+n+'"]');
-  const links=[...lin.querySelectorAll(".lin-link")].map(el=>({el,side:el.dataset.side,from:el.dataset.from.split(" "),to:el.dataset.to.split(" "),g:null}));
-  const box=el=>{const a=el.getBoundingClientRect(),b=lin.getBoundingClientRect();
-    return {l:a.left-b.left,r:a.right-b.left,t:a.top-b.top,b:a.bottom-b.top,cx:(a.left+a.right)/2-b.left,cy:(a.top+a.bottom)/2-b.top}};
-  const mk=(tag,at,to)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);to.appendChild(e);return e};
-  const f=v=>v.toFixed(1);
-  const path=(g,d)=>mk("path",{d},g);
-  const flat=(g,x1,y1,x2,y2)=>path(g,`M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}`);
-  const bend=(g,x1,y1,x2,y2)=>{const m=(x1+x2)/2;path(g,`M${f(x1)} ${f(y1)}C${f(m)} ${f(y1)} ${f(m)} ${f(y2)} ${f(x2)} ${f(y2)}`)};
-  const head=(g,x,y,down)=>mk("polygon",{points:down?`${f(x-5)},${f(y-8)} ${f(x+5)},${f(y-8)} ${f(x)},${f(y)}`:`${f(x-8)},${f(y-5)} ${f(x-8)},${f(y+5)} ${f(x)},${f(y)}`},g);
-  function draw(){
-    svg.textContent="";
-    if(!wide.matches)return;
-    const R=lin.getBoundingClientRect();
-    svg.setAttribute("width",R.width);svg.setAttribute("height",R.height);svg.setAttribute("viewBox",`0 0 ${f(R.width)} ${f(R.height)}`);
-    const ports={};   // the edges that meet one side of a middle node share it out between them, in the order they come from
-    const port=(n,side,y,then)=>(ports[n+side]=ports[n+side]||[]).push({n,side,y,then});
-    links.forEach(k=>{
-      const g=k.g=mk("g",{},svg),c=box(k.el.querySelector("em"));
-      if(k.side==="in"){
-        flat(g,box(node(k.from[0])).r,c.cy,c.l,c.cy);
-        k.to.forEach(n=>port(n,"l",c.cy,(x,y)=>{bend(g,c.r,c.cy,x-7,y);head(g,x,y)}));
-      }else if(k.side==="out"){
-        const b=box(node(k.to[0]));
-        flat(g,c.r,c.cy,b.l-7,c.cy);head(g,b.l,c.cy);
-        k.from.forEach(n=>port(n,"r",c.cy,(x,y)=>bend(g,x,y,c.l,c.cy)));
-      }else{
-        const s=node(k.from[0]),t=node(k.to[0]),sb=box(s),tb=box(t);
-        if(t.parentNode.previousElementSibling===s.parentNode)flat(g,c.cx,sb.b,c.cx,c.t);
-        else{const y=sb.b-12,x=sb.r+20;   // round the papers between, outside their right edge
-          path(g,`M${f(sb.r)} ${f(y)}H${f(x-10)}Q${f(x)} ${f(y)} ${f(x)} ${f(y+10)}V${f(c.cy-10)}Q${f(x)} ${f(c.cy)} ${f(x-10)} ${f(c.cy)}H${f(c.r)}`)}
-        flat(g,c.cx,c.b,c.cx,tb.t-7);head(g,c.cx,tb.t,true);
-      }
-    });
-    for(const key in ports){
-      const list=ports[key].sort((a,b)=>a.y-b.y),b=box(node(list[0].n)),h=b.b-b.t;
-      list.forEach((p,i)=>p.then(p.side==="l"?b.l:b.r,b.t+h*(.2+.6*(i+.5)/list.length)));
-    }
-  }
-  function light(on,words){
-    lin.classList.toggle("hot",on.length>0);
-    const nodes=new Set(on.flatMap(k=>k.from.concat(k.to)));
-    links.forEach(k=>{const is=on.includes(k);k.el.classList.toggle("on",is);if(k.g)k.g.classList.toggle("on",is)});
-    lin.querySelectorAll(".lin-node").forEach(n=>n.classList.toggle("on",nodes.has(n.dataset.n)));
-    say.innerHTML=words||idle;
-  }
-  const name=ns=>ns.map(n=>node(n).dataset.label).join(", ");
-  links.forEach(k=>{
-    const tell=()=>light([k],"<b>"+name(k.from)+" → "+name(k.to)+"</b>"+k.el.querySelector(".why").innerHTML);
-    k.el.addEventListener("mouseenter",tell);k.el.addEventListener("focus",tell);k.el.addEventListener("click",tell);
-  });
-  lin.querySelectorAll(".lin-node").forEach(n=>{
-    const mine=()=>light(links.filter(k=>k.from.concat(k.to).includes(n.dataset.n)));
-    n.addEventListener("mouseenter",mine);n.addEventListener("focus",mine);
-  });
-  lin.addEventListener("mouseleave",()=>light([]));
-  new ResizeObserver(draw).observe(lin);
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
-  draw();
-});
-})();
-
-/* the four mercenaries, told apart by colour */
-const TC={1:"#e0b84a",2:"#6583d6",3:"#c45448",4:"#9cb648"};
-const T=[1,2,3,4],HOLD="#136f9e",ATT="#bf4a26";
-const word={H:"hold",A:"attack"};
-const tentChip=(k,extra="")=>`<span class="chip"${extra}><i style="background:${TC[k]}"></i>Tent ${k}</span>`;
-const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
-const list=a=>a.length<2?a.join(""):a.slice(0,-1).join(", ")+" and "+a[a.length-1];
-const tents=a=>(a.length>1?"tents ":"tent ")+list(a);
-const cap=s=>s[0].toUpperCase()+s.slice(1);
-
-/* ===== the arrangement for a strong slate, run by its rules =====
-   o.sight {k:"A"|"H"}; o.c the man nobody chalks; o.dies {k:round} the round a man is killed in (0 = before sending anything,
-   4 = while comparing); o.part {k:[tents]} who the last bird of a dying man reaches; o.skip(p,r) the tents p has chalked and stops waiting for. */
-function runStrong(o){
-  const V={},D={},snaps=[],dies=o.dies||{},part=o.part||{};
-  T.forEach(k=>{V[k]={[k]:o.sight[k]};D[k]={[k]:o.sight[k]}});
-  const clone=()=>({V:JSON.parse(JSON.stringify(V)),D:JSON.parse(JSON.stringify(D)),heard:{}});
-  snaps.push(clone());
-  const alive=(k,r)=>dies[k]==null||dies[k]>=r, finishes=k=>dies[k]==null;
-  const sends=(q,r,p)=>dies[q]==null||r<dies[q]||(r===dies[q]&&(part[q]||[]).includes(p));
-  for(let r=1;r<=4;r++){
-    const msg={};T.forEach(q=>{if(alive(q,r))msg[q]=JSON.parse(JSON.stringify(r<4?D[q]:V[q]))});
-    const S=clone();const nV={},nD={};
-    for(const p of T){
-      if(dies[p]!=null&&dies[p]<=r)continue;
-      const sk=o.skip?o.skip(p,r):[],hs=T.filter(q=>q===p||(msg[q]&&sends(q,r,p)&&(q===o.c||!sk.includes(q))));
-      S.heard[p]=hs;
-      if(r<4){const v={...V[p]},d={};
-        for(const q of hs)for(const k in msg[q])if(v[k]==null){v[k]=msg[q][k];d[k]=msg[q][k]}
-        nV[p]=v;nD[p]=d}
-      else{const v={...V[p]};for(const k in V[p])if(hs.some(q=>msg[q][k]==null))delete v[k];nV[p]=v}
-    }
-    for(const p in nV){V[p]=nV[p];if(r<4)D[p]=nD[p]}
-    const s=clone();s.heard=S.heard;snaps.push(s);
-  }
-  const commit={};
-  for(const p of T)if(finishes(p)){const k=T.find(k=>V[p][k]!=null);commit[p]=V[p][k]}
-  return {snaps,V,commit,finish:T.filter(finishes)};
-}
-
-/* ===== rounds by turns, for slates that are right only in the end ===== */
-function newNight(live,sight){const est={},ts={};T.forEach(k=>{est[k]=sight[k];ts[k]=0});return {live,est,ts,sight,commit:null,r:0,stuck:false}}
-function playRound(st,calm,stormP=.5){
-  const r=++st.r,owner=((r-1)%4)+1,out={r,owner},L=st.live;
-  if(!L.includes(owner)){out.kind="deadowner";return out}
-  if(L.length<3){out.kind="stuck";st.stuck=true;return out}
-  const others=shuffle(L.filter(k=>k!==owner)).slice(0,2),gather=[owner,...others];
-  const best=Math.max(...gather.map(k=>st.ts[k])),pick=shuffle(gather.filter(k=>st.ts[k]===best))[0],e=st.est[pick];
-  out.gather=gather;out.best=best;out.e=e;out.pick=pick;out.calm=calm;
-  const reply={};
-  for(const q of L){if(q===owner||calm||Math.random()>=stormP){st.est[q]=e;st.ts[q]=r;reply[q]=true}else reply[q]=false}
-  out.reply=reply;out.three=shuffle(L).slice(0,3);out.ok=out.three.every(k=>reply[k]);
-  if(out.ok){st.commit=e;out.kind="parting"}else out.kind="failed";
-  return out;
-}
-
-/* ===== machines: a guess about a machine that has gone quiet ===== */
-(function(){
-  const log=$("#guesslog"),note=$("#guessnote"),bc=$("#guessc"),bs=$("#guesss"),br=$("#guessr");let gen=0,seen={};
-  const line=(t,s,cls="")=>{const d=document.createElement("div");d.className="e "+cls;d.innerHTML=`<b>${t}</b> ${s}`;log.appendChild(d)};
-  async function run(slow){
-    const g=++gen;bc.disabled=bs.disabled=true;br.hidden=true;log.innerHTML="";seen[slow?"s":"c"]=1;
-    note.textContent=slow?"B is alive, and its reply is on the way.":"B has crashed.";
-    line("0 s","A asks B for its value.");await sleep(700);if(g!==gen)return;
-    line("1 s","No reply yet. A's failure detector puts B on its list of suspected machines.","bad");await sleep(900);if(g!==gen)return;
-    if(slow){line("4 s","B's reply arrives after all. A takes B off the list.","good");note.textContent="A suspected a machine that was alive. The guess was wrong."}
-    else{line("1 hour","Still nothing. B stays on the list.");await sleep(500);if(g!==gen)return;note.textContent="A suspected a machine that had crashed. The guess was right."}
-    bc.disabled=bs.disabled=false;
-    if(seen.s&&seen.c)note.textContent="At one second the two runs looked the same to A, and the guess was right in one and wrong in the other. A detector may be wrong, often. What does an algorithm need it to get right?";
-    br.hidden=false;
-  }
-  bc.onclick=()=>run(false);bs.onclick=()=>run(true);
-  br.onclick=()=>{gen++;seen={};log.innerHTML="";bc.disabled=bs.disabled=false;br.hidden=true;note.textContent="A has asked B for its value and is waiting for the reply. A's failure detector lists the machines A suspects."};
-})();
-
-/* ===== the hill, seen from above: one picture reused wherever ravens fly between the tents ===== */
-function Hill(svg){
-  const cx=235,cy=235,R=158,A={1:-90,2:0,3:90,4:180}; svg.innerHTML=""; svg.setAttribute("viewBox","0 0 470 470");
-  el("circle",{cx,cy,r:215,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
-  el("circle",{cx,cy,r:96,fill:"#d9cfb4",stroke:"#6b5a48","stroke-width":2.5,"stroke-dasharray":"2 6"},svg);
-  el("circle",{cx,cy,r:24,fill:"#efe6cf",stroke:"#6b5a48","stroke-width":6},svg);
-  el("text",{x:cx,y:cy+52,class:"lab"},svg).textContent="the crown";
-  const under=el("g",{},svg),sites=el("g",{},svg),over=el("g",{},svg);
-  const H={svg,cx,cy,R,A,under,over,tent:{},
-    at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
-    put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
-    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
-    /* a raven u of the way from tent a to tent b, flying round the hill; each direction keeps its own line */
-    fly(g,a,b,u){const d=((A[b]-A[a]+540)%360)-180;H.put(g,...H.at(A[a]+d*u,R-(d>0?24:46)*Math.sin(Math.PI*u)))},
-    state(k,s){H.tent[k].st.textContent=s},
-    badge(k,s){const b=H.tent[k].badge;b.setAttribute("opacity",s?1:0);b.lastChild.textContent=s||""}
-  };
-  for(const k of [1,2,3,4]){const a=A[k]*Math.PI/180,[x,y]=H.at(A[k]),g=el("g",{class:"site"},sites);H.put(g,x,y);
-    el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:TC[k]},g);el("text",{},g).textContent="T"+k;
-    const st=el("text",{class:"state halo",x:-48*Math.cos(a),y:-46*Math.sin(a)},g);
-    const badge=el("g",{class:"badge",opacity:0,transform:`translate(${(38*Math.cos(a)).toFixed(1)} ${(34*Math.sin(a)).toFixed(1)})`},g);el("circle",{r:11},badge);el("text",{},badge);
-    H.tent[k]={x,y,g,st,badge}}
-  return H;
-}
-/* a drawn line for a raven's flight from tent a to tent b, on the same route the tokens fly */
-function route(H,a,b,u0=.14,u1=.86){const pts=[];for(let i=0;i<=14;i++){const u=u0+(u1-u0)*i/14,d=((H.A[b]-H.A[a]+540)%360)-180;pts.push(H.at(H.A[a]+d*u,H.R-(d>0?24:46)*Math.sin(Math.PI*u)))}
-  return "M"+pts.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" L")}
-const cross=(g,x,y,r=17)=>el("path",{d:`M${x-r},${y-r} L${x+r},${y+r} M${x-r},${y+r} L${x+r},${y-r}`,stroke:"#1c1512","stroke-width":5,fill:"none"},g);
-
-/* ===== a slate that may be wrong, in two ways ===== */
-(function(){
-  const H=Hill($("#slatesvg")),say=$("#slatesay"),rows=$("#slaterows"),bR=$("#slatereveal"),bN=$("#slatenew");
-  const K=[2,3,4];let truth,mark,shown,extra;
-  function deal(){do{truth={};K.forEach(k=>truth[k]=["fine","slow","dead"][rnd(3)])}while(!K.some(k=>truth[k]!=="fine"));
-    mark={};K.forEach(k=>mark[k]=false);shown=false;(extra||[]).forEach(e=>e.remove());extra=[];
-    T.forEach(k=>{H.tent[k].g.classList.remove("out");H.state(k,"");H.badge(k,"")});H.tent[1].g.classList.add("turn");H.state(1,"you");
-    bR.disabled=false;paint();
-    say.textContent="Tent 1's man has had no bird from some tents. Which of them are dead? Chalk the ones you think are, then reveal the night."}
-  const bird=k=>truth[k]==="fine"?"a bird came in":"no bird yet";
-  function paint(){
-    rows.innerHTML=K.map(k=>`<div class="srow">${tentChip(k)}<span class="sb">${bird(k)}</span><button class="btn alt" data-k="${k}" ${shown?"disabled":""}>${mark[k]?"Rub out":"Chalk"}</button><span class="sv" id="sv${k}"></span></div>`).join("");
-    $$("button[data-k]",rows).forEach(b=>b.onclick=()=>{const k=+b.dataset.k;mark[k]=!mark[k];H.badge(k,mark[k]?"✗":"");paint()});
-    if(shown)K.forEach(k=>{const dead=truth[k]==="dead",m=mark[k];$("#sv"+k).innerHTML=
-      dead&&m?"<span class='ok'>Right.</span> Dead, and chalked.":
-      dead&&!m?"<span class='bad'>Not yet.</span> Dead, and the row is clean.":
-      m?"<span class='bad'>Wrong.</span> Alive"+(truth[k]==="slow"?", its bird only slow":"")+", and chalked.":
-      "<span class='ok'>Right.</span> Alive, and the row is clean."})}
-  bR.onclick=()=>{shown=true;bR.disabled=true;
-    K.forEach(k=>{if(truth[k]==="dead"){H.tent[k].g.classList.add("out");H.state(k,"dead");extra.push(cross(H.over,H.tent[k].x,H.tent[k].y))}
-      else if(truth[k]==="slow"){const g=H.token(TC[k],"");g.setAttribute("opacity",1);H.fly(g,k,1,.45);const [px,py]=H.at(H.A[k]+(((H.A[1]-H.A[k]+540)%360)-180)*.45,H.R-24*Math.sin(Math.PI*.45));
-        const t=el("text",{class:"lab halo",x:px+(k===3?-4:6),y:py+30},H.over);t.textContent="in a pine";extra.push(g,t);H.state(k,"alive")}
-      else H.state(k,"alive")});
-    paint();
-    const missed=K.filter(k=>truth[k]==="dead"&&!mark[k]).length,wrong=K.filter(k=>truth[k]!=="dead"&&mark[k]).length;
-    say.innerHTML=!missed&&!wrong?"No mistake this time. But from where tent 1 sits, a dead man and a slow bird look the same, so a slate can only guess.":
-      `This slate went wrong ${missed?"by leaving "+missed+" dead "+(missed>1?"men":"man")+" clean":""}${missed&&wrong?" and ":""}${wrong?"by chalking "+wrong+" living "+(wrong>1?"men":"man"):""}. <b>Those are the only two ways to go wrong.</b>`};
-  bN.onclick=deal;deal();
-})();
-
-/* ===== copying marks: a second slate, rewritten by every bird ===== */
-(function(){
-  const rows=$("#copyrows"),say=$("#copysay"),bG=$("#copygo"),bR=$("#copyr");
-  /* tent 4 is dead from dusk. Only tent 1 chalks it. Early on, tents 1 and 3 chalk a living man by mistake. */
-  const LIVE=[1,2,3];
-  const slate=(p,r)=>r<=2?({1:[2,4],2:[],3:[1]})[p]:({1:[4],2:[],3:[]})[p];
-  let r,copy,order;
-  function reset(){r=0;copy={};LIVE.forEach(p=>copy[p]=new Set());order={};paint();bG.disabled=false;
-    say.textContent="Tent 4 is dead. Of the three living men, only tent 1 has chalked it. Send a round of birds: every living man sends the marks on the slate to every tent."}
-  const marks=s=>s.size?[...s].sort().map(k=>tentChip(k)).join(""):"<i>none</i>";
-  function paint(){
-    rows.innerHTML=`<div class="chead"><span></span><span>the slate says</span><span>the copy holds</span><span>birds taken in, in order</span></div>`+
-      LIVE.map(p=>`<div class="crow">${tentChip(p)}<span data-l="the slate says">${r===0?"<i>nothing sent yet</i>":marks(new Set(slate(p,r)))}</span><span data-l="the copy holds">${marks(copy[p])}</span><span data-l="birds in">${order[p]?order[p].map(q=>"from "+q).join(", "):"<i>none yet</i>"}</span></div>`).join("")+
-      `<div class="crow dead"><span>${tentChip(4)}</span><span>killed</span><span></span><span>sends nothing</span></div>`}
-  bG.onclick=()=>{r++;
-    LIVE.forEach(p=>{order[p]=shuffle(LIVE);order[p].forEach(q=>{const c=copy[p];slate(q,r).forEach(k=>c.add(k));c.delete(q)})});
-    paint();
-    const all4=LIVE.every(p=>copy[p].has(4)),w=LIVE.some(p=>copy[p].has(2)||copy[p].has(1)||copy[p].has(3));
-    say.innerHTML=`Round ${r}. Each man added the marks of every bird taken in, and rubbed out the mark against the tent the bird came from.`+
-      (all4?` <b>Tent 4 is chalked in every copy,</b> and no bird from tent 4 will ever come to rub it out.`:"")+
-      (r<3?(w?" Some copies still hold a mark against a living man. That is only the slates' mistake, passed on, and any bird from that man rubs it out.":""):
-        " The slates are right about the living now. Every copy holds tent 4 and nobody else: the copy is only as wrong as the slates it was copied from, and it rights itself when they do.");
-    if(r>=4)bG.disabled=true};
-  bR.onclick=reset;reset();
-})();
-
-/* ===== scroll-driven: the arrangement for a strong slate, run in full ===== */
-const strongRun=(function(){
-  const skipTab={"1-1":[3],"3-1":[1],"1-2":[3],"2-2":[3]};
-  return runStrong({sight:{1:"A",2:"H",3:"A",4:"H"},c:2,dies:{4:1},part:{4:[3]},skip:(p,r)=>skipTab[p+"-"+r]||[]});
-})();
-(function(){
-  const R=strongRun,H=Hill($("#strongsvg")),side=$("#strongside"),svg=H.svg;
-  const m=el("marker",{id:"strong-k",markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},el("defs",{},svg));el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:"#1c1512"},m);
-  const arrows={};
-  for(let r=1;r<=4;r++){arrows[r]=[];const hs=R.snaps[r].heard;for(const p in hs)hs[p].forEach(q=>{if(q!=+p)arrows[r].push(el("path",{class:"gr-arrow fade",d:route(H,q,+p),"marker-end":"url(#strong-k)"},H.under))})}
-  H.state(2,"spared");
-  const deadMark=cross(H.over,H.tent[4].x,H.tent[4].y);deadMark.setAttribute("opacity",0);
-  const on=(e,v)=>e.classList.toggle("on",!!v);
-  const rowCell=(V,P,k)=>{const v=V[k],was=P&&P[k];return `<span class="tc ${v?"f":""} ${v&&!was?"new":""} ${!v&&was?"gone":""}">${v||"–"}</span>`};
-  const word2={A:"attack",H:"hold"};
-  function card(p,i,snapI){
-    const S=R.snaps[snapI],P=snapI>0?R.snaps[snapI-1]:null,gone=p===4&&i>=1,V=S.V[p];
-    const head=`<h5>${tentChip(p)}<span>${gone?"killed":p===2?"never chalked":"alive"}</span></h5>`;
-    const cells=`<div class="tally">${T.map(k=>rowCell(V,P&&P.V[p],k)).join("")}</div>`;
-    const idx=`<div class="tidx"><span>1</span><span>2</span><span>3</span><span>4</span></div>`;
-    const chk=i===5&&!gone?`<div class="chk"><b>commits to ${word2[T.map(k=>V[k]).find(Boolean)]}</b></div>`:`<div class="chk">${gone?"sends nothing more":""}</div>`;
-    return `<div class="hc${gone?" gone":""}${i===5&&!gone?" in":""}">${head}${idx}${cells}${chk}</div>`}
-  scrolly($("#strong"),i=>{
-    const snapI=Math.min(i,4);
-    side.innerHTML=T.map(p=>card(p,i,snapI)).join("");
-    for(let r=1;r<=4;r++)arrows[r].forEach(a=>on(a,snapI===r&&i<5));
-    deadMark.setAttribute("opacity",i>=1?1:0);H.tent[4].g.classList.toggle("out",i>=1);
-  });
-})();
-
-/* ===== any night: deaths, wrong slates, and every sheet still ends the same ===== */
-(function(){
-  const out=$("#tryout"),say=$("#trysay"),btns=$$("[data-dead]");
-  function go(n){
-    const ks=shuffle(T),dead=ks.slice(0,n),live=ks.slice(n),c=live[rnd(live.length)];
-    const sight={};T.forEach(k=>sight[k]=rnd(2)?"A":"H");
-    const dies={},part={};dead.forEach(k=>{dies[k]=rnd(5);part[k]=T.filter(q=>q!==k&&rnd(2))});
-    const skips={},o={sight,c,dies,part,skip:(p,r)=>skips[p+"-"+r]||(skips[p+"-"+r]=T.filter(q=>q!==p&&q!==c&&rnd(2)))};
-    const R=runStrong(o),fin=R.finish,tallies=new Set(fin.map(p=>JSON.stringify(R.V[p]))),ans=new Set(Object.values(R.commit));
-    const when=r=>r===0?"killed before sending anything":r<4?`killed in round ${r}`:"killed while comparing";
-    out.innerHTML=`<div class="chead t"><span>tent</span><span>saw</span><span>fate</span><span>final sheet</span><span>commits to</span></div>`+
-      T.map(p=>{const d=dies[p]!=null,V=R.V[p];
-        return `<div class="crow t${d?" dead":""}">${tentChip(p)}<span><b>${sight[p]}</b></span><span>${d?when(dies[p]):p===c?"alive, never chalked":"alive"}</span>`+
-          (d?`<span></span><span>–</span>`:`<span><div class="tally">${T.map(k=>`<span class="tc ${V[k]?"f":""}">${V[k]||"–"}</span>`).join("")}</div></span><span><b>${word[R.commit[p]]}</b></span>`)+`</div>`}).join("");
-    const same=tallies.size===1,one=ans.size===1,seen=[...ans].every(a=>Object.values(sight).includes(a));
-    say.innerHTML=`${n?cap(tents(dead))+(n>1?" are":" is")+" killed.":"Nobody is killed."} Tent ${c} lives and is never chalked, and every other living man may be chalked by anyone, over and over. `+
-      `<span class="${same?"ok":"bad"}">${same?"Every living man ends with the same sheet.":"The sheets differ."}</span> `+
-      `<span class="${one&&seen?"ok":"bad"}">${one&&seen?"All commit to "+word[[...ans][0]]+", an answer someone sighted.":"The answers differ."}</span>`;
-  }
-  btns.forEach(b=>b.onclick=()=>go(+b.dataset.dead));go(1);
-})();
-
-/* ===== rounds by turns ===== */
-(function(){
-  const rows=$("#turnrows"),log=$("#turnlog"),say=$("#turnsay"),bN=$("#turnnext"),bs=$$("[data-kill]"),bR=$("#turnr");
-  let st=null;
-  const word2=v=>`<b>${word[v]}</b>`;
-  function paint(owner){
-    rows.innerHTML=`<div class="chead t2"><span>tent</span><span>estimate</span><span>taken up in round</span><span></span></div>`+
-      T.map(k=>{const live=st.live.includes(k),own=owner===k;
-        return `<div class="crow t2${live?"":" dead"}${own?" owner":""}">${tentChip(k)}<span data-l="estimate">${word2(st.est[k])}</span><span data-l="taken up in round">${st.ts[k]||"its sighting"}</span><span>${!live?"killed":st.commit?"commits to "+word[st.commit]:own?"owner of this round":""}</span></div>`}).join("")}
-  function start(nDead){const ks=shuffle(T),sight={};T.forEach(k=>sight[k]=rnd(2)?"A":"H");
-    st=newNight(ks.slice(nDead).sort(),sight);log.innerHTML="";bN.disabled=false;bR.hidden=false;paint(null);
-    say.innerHTML=`${nDead?(nDead>1?"Two men are":"One man is")+" killed.":"All four live."} For the first two rounds the slates are wrong: a man may chalk a round's owner who lives. From round 3 they are right. Take a round.`}
-  const ev=(h,cls="")=>{const d=document.createElement("div");d.className="e "+cls;d.innerHTML=h;log.prepend(d);while(log.children.length>14)log.lastChild.remove()};
-  bN.onclick=()=>{
-    if(!st)return;const o=playRound(st,st.r>=2);paint(o.owner);
-    const own=o.owner,H=`<b>Round ${o.r}</b> belongs to tent ${own}. `;
-    if(o.kind==="deadowner"){ev(H+`Tent ${own} is dead. Every man chalks it in the end, and the round comes to nothing.`,"bad");say.textContent="A dead owner costs one round. Failing is always safe, and the next round begins with the next tent.";return}
-    if(o.kind==="stuck"){ev(H+`The owner must wait for three estimates, and only two men live. It waits for ever.`,"bad");bN.disabled=true;
-      say.innerHTML="Nobody can commit, and nobody commits to anything wrong. <b>With two of the four killed, this arrangement waits for ever.</b>";return}
-    const how=o.best===0?`the sighting of tent ${o.pick}, since none has been taken up in any round yet`:`the one taken up most recently, in round ${o.best}, by tent ${o.pick}`;
-    const others=T.filter(k=>st.live.includes(k)&&k!==own);
-    const chalked=others.filter(k=>!o.reply[k]);
-    let h=H+`Tent ${own} gathers three estimates, from ${tents(o.gather)}, and takes ${how}: ${word2(o.e)}. It sends it to every tent. `;
-    h+=chalked.length?`${cap(tents(chalked))} ${chalked.length>1?"have":"has"} chalked the owner and answer${chalked.length>1?"":"s"} <i>not agreed</i>${others.length>chalked.length?"; "+tents(others.filter(k=>o.reply[k]))+" take"+(others.length-chalked.length>1?"":"s")+" it up and answer"+(others.length-chalked.length>1?"":"s")+" <i>agreed</i>":""}. `:
-      `Every man takes it up and answers <i>agreed</i>. `;
-    h+=`The owner waits for the first three replies, from ${tents(o.three.slice().sort())}. `;
-    if(o.ok){ev(h+"<span class='ok'>All three say agreed: the parting bird goes out.</span>","good");bN.disabled=true;paint(own);
-      say.innerHTML=`Everyone who lives takes in the parting bird, sends it on, and commits to <b>${word[o.e]}</b>.`+(st.sight&&Object.values(st.sight).includes(o.e)?" Someone sighted it.":"")+` Nobody commits to anything else, in this round or in any later one: three men took up this answer, and any three out of four share a man with them.`;paint(own)}
-    else{ev(h+"<span class='bad'>One says not agreed: the round comes to nothing.</span>","bad");
-      say.innerHTML=o.calm?"The round failed.":"The round failed because a slate chalked a living owner. The chalk can cost time. It can never cost agreement."}
-  };
-  bs.forEach(b=>b.onclick=()=>start(+b.dataset.kill));
-  bR.onclick=()=>{st=null;rows.innerHTML="";log.innerHTML="";bN.disabled=true;bR.hidden=true;say.textContent="Choose a night."};
-  bN.disabled=true;bR.hidden=true;
-})();
-
-/* ===== the three nights that split the four ===== */
-(function(){
-  const nodes={1:[225,"T1",TC[1]],2:[135,"T2",TC[2]],3:[315,"T3",TC[3]],4:[45,"T4",TC[4]]},svg=$("#halfsvg"),stand=$("#halfstand"),say=$("#halfsay"),bs=$$("[data-night]");
-  const defs=[];
-  function draw(n){
-    const P=Polar(svg,{vb:"0 0 520 480",cx:260,cy:240,r0:40,step:27,rings:7,tEnd:7.4,nodes});
-    const spokes=$$(".st-spoke",svg);
-    const dead=n===1?[3,4]:n===2?[1,2]:[];
-    dead.forEach(k=>{const [x,y]=P.pt(k,1);spokes[k-1].setAttribute("x2",x);spokes[k-1].setAttribute("y2",y);cross(P.over,x,y,12)});
-    const live=T.filter(k=>!dead.includes(k)),ans={1:"H",2:"H",3:"A",4:"A"};
-    const dot=(k,t,fill,txt)=>{const g=P.event(k,t,fill,10);g.style.cursor="default";g.label.textContent=txt||"";if(fill!=="#fffaf0")g.label.style.fill="#fff";return g};
-    const pair=n===1?[1,2]:n===2?[3,4]:null;
-    live.forEach(k=>dot(k,1.4,"#fffaf0",n===3?ans[k]:n===1?"H":"A"));
-    const exch=(a,b)=>{P.slip(a,1.4,b,2.6,12);P.slip(b,1.4,a,2.6,12)};
-    if(n===1)exch(1,2);else if(n===2)exch(3,4);else{exch(1,2);exch(3,4);
-      [[1,3],[2,4],[3,1],[4,2]].forEach(([a,b])=>{const s=P.slip(a,1.4,b,7.2,14);s.classList.add("hi");s.style.strokeDasharray="6 4";s.style.strokeWidth=3.4})}
-    live.forEach(k=>{const v=n===2?"A":n===1?"H":ans[k];dot(k,4.2,v==="H"?HOLD:ATT,v)});
-    return live;
-  }
-  const texts={
-    1:`<b>First night.</b> All four sighted hold. Tents 3 and 4 are dead from dusk, and tents 1 and 2 chalk them all night. That slate is in the end perfect: it chalks the dead, and nobody else. Tents 1 and 2 commit, within some time, and to hold, since only hold was sighted.`,
-    2:`<b>Second night.</b> The same with the pairs and the answers swapped: all four sighted attack, tents 1 and 2 are dead from dusk, and tents 3 and 4 commit to attack within some time.`,
-    3:`<b>Third night.</b> Tents 1 and 2 sighted hold, tents 3 and 4 attack. <span class="ok">Nobody dies.</span> Every bird between the two pairs sits in the pines until after both pairs have committed, and until then each pair chalks the other. Afterwards all the birds arrive and all the chalk is rubbed out. That slate is in the end perfect too. <span class="bad">Each pair sees exactly what it saw on its own night, and commits: one pair to hold, the other to attack.</span>`};
-  const chalks={1:{1:[3,4],2:[3,4],3:[],4:[]},2:{1:[],2:[],3:[1,2],4:[1,2]},3:{1:[3,4],2:[3,4],3:[1,2],4:[1,2]}};
-  function show(n){
-    const live=draw(n);bs.forEach(b=>b.classList.toggle("on",+b.dataset.night===n));
-    stand.innerHTML=T.map(k=>live.includes(k)?`<div>${tentChip(k)} chalks ${chalks[n][k].length?tents(chalks[n][k]):"nobody"}, and commits to <b>${word[n===3?(k<3?"H":"A"):n===1?"H":"A"]}</b></div>`:`<div>${tentChip(k)} <i>dead from dusk</i></div>`).join("");
-    say.innerHTML=texts[n]}
-  bs.forEach(b=>b.onclick=()=>show(+b.dataset.night));show(1);
-})();
-
-/* ===== a slate kept on a windy night ===== */
-(function(){
-  const tl=$("#windtl"),say=$("#windsay"),bL=$("#windlive"),bD=$("#winddead"),bR=$("#windr"),stat=$("#windstat");
-  const N=30,WIND=14,DIE=9;let gen=0,visible=false;
-  /* the watched man sends a bird every tick; in wind a bird takes 1 to 9 ticks, in still air 2. The watcher chalks him when
-     the glass (g ticks) runs out with no bird, rubs the mark out when one comes after all, and waits longer next time. */
-  function simulate(alive){
-    const arr=Array.from({length:N+12},()=>0);
-    for(let t=0;t<N;t++){if(!alive&&t>=DIE)break;const d=t<WIND?1+rnd(9):2;arr[t+d]++}
-    let g=2,last=0,chalked=false,wrong=0;const cells=[];
-    for(let t=0;t<N;t++){let rub=false,fresh=false;
-      if(arr[t]){last=t;if(chalked){chalked=false;g++;rub=true}}
-      if(!chalked&&t-last>g){chalked=true;fresh=true;if(alive||t<DIE)wrong++}
-      cells.push({t,chalked,rub,fresh,g,birds:arr[t],wrong,wind:t<WIND})}
-    return {cells,g,chalked,wrong};
-  }
-  function paintCell(c,i){return `<span class="wc${c.chalked?" ch":""}${c.wind?" wd":""}" title="tick ${i+1}">${c.chalked?"✗":c.rub?"↺":c.birds?"•":""}</span>`}
-  function reset(){gen++;tl.innerHTML=Array.from({length:N},(_, i)=>`<span class="wc${i<WIND?" wd":""}"></span>`).join("");stat.innerHTML="";bL.disabled=bD.disabled=false;bR.hidden=true;
-    say.textContent="A man at one tent watches another tent for a sign of life. Every man sends a bird to every tent, again and again, to say the sender is alive. Watch a night go by."}
-  async function run(alive){
-    const g=++gen,S=simulate(alive);bL.disabled=bD.disabled=true;bR.hidden=true;tl.innerHTML=Array.from({length:N},(_, i)=>`<span class="wc${i<WIND?" wd":""}"></span>`).join("");
-    for(let i=0;i<N;i++){
-      while(!visible&&!reduce){await sleep(300);if(g!==gen)return}
-      if(g!==gen)return;
-      const c=S.cells[i];tl.children[i].outerHTML=paintCell(c,i);
-      stat.innerHTML=`<span><b>${c.g}</b>glass, in ticks</span><span><b>${c.wrong}</b>mistaken marks</span><span><b>${c.chalked?"chalked":"clean"}</b>the row now</span>`;
-      await sleep(170)}
-    if(g!==gen)return;
-    say.innerHTML=alive?`The man lives, and the slate was wrong ${S.wrong} time${S.wrong===1?"":"s"} while the wind blew. Each late bird rubbed the mark out and lengthened the glass. Once the wind dropped and every bird came within a glass, the mark never stood again: <b>in the end, nobody living is chalked.</b>`:
-      `The man was killed. Birds already in the air still came in, and each rubbed the mark out. Then none came, and the mark stayed: <b>a dead man's birds stop, so the dead man is chalked for good.</b>`;
-    bR.hidden=false;bL.disabled=bD.disabled=false}
-  bL.onclick=()=>run(true);bD.onclick=()=>run(false);bR.onclick=reset;reset();
-  new IntersectionObserver(es=>{visible=es[0].isIntersecting},{threshold:.1}).observe(tl);
-})();
-
-/* ===== who is who ===== */
-mapPairs($("#map"),[
- ["The four men; no longest flight; nobody lies; any may be killed","Asynchronous processes with reliable channels and crash failures (§2, n = 4)"],
- ["A sighting; committing","A proposed value; a decision (§5)"],
- ["The three demands","Agreement, uniform validity, termination (§5). The algorithms give uniform agreement: no two processes, correct or not, decide differently"],
- ["The slate; chalking a tent; rubbing it out","A local failure detector module; suspecting a process; ceasing to suspect it (§2.2)"],
- ["Chalking the dead, by every or by some living man","Strong and weak completeness (§2.3)"],
- ["The four ways of sparing the living","Strong, weak, eventual strong and eventual weak accuracy (§2.3)"],
- ["The eight kinds of slate","P, S, ◇P, ◇S, Q, W, ◇Q, ◇W (Fig. 1)"],
- ["Copying marks","The reduction from weak to strong completeness, preserving accuracy (Fig. 3, Theorem 1, Corollary 1)"],
- ["The sheet of sightings; spreading; comparing","The vector V_p; Phase 1's n − 1 rounds; Phase 2 (Fig. 5)"],
- ["One Man Never Chalked","Consensus is solvable with S, tolerating up to n − 1 crashes (Theorem 2; Corollary 2 for W)"],
- ["Turns in number order; the owner","The rotating coordinator, c = (r mod n) + 1 (§6.2)"],
- ["An estimate and the round it was taken up","estimate_p and its timestamp ts_p (Fig. 6)"],
- ["Agreed; not agreed","ack; nack (Fig. 6, Phase 3)"],
- ["The parting bird, sent on before committing","R-broadcast of the decision, relayed on first receipt (Fig. 4). Here a process halts after relaying, since committing is silence; the paper's processes keep running"],
- ["In the End, One Man Spared","Consensus is solvable with ◇S when fewer than half crash (Theorem 3; Corollary 3 for ◇W)"],
- ["More Than Half; the three nights","Consensus cannot be solved with ◇P when f ≥ n/2 (Theorem 5, runs R₀, R₁, R_A)"],
- ["Granted, not earned","Failure detectors are specified by properties, not implementations; none with ◇W's properties can be implemented in a purely asynchronous system (§1, footnote 6)"],
- ["A slate kept on a windy night","Timeouts that grow after each premature suspicion implement ◇P when bounds hold after an unknown time (Theorem 9, §9.1, Fig. 10)"],
- ["The weakest slate that will do","◇W₀ is the weakest failure detector for consensus with a majority correct (Theorem 4 and Corollary 4, from Chandra, Hadzilacos and Toueg; not proved in this paper)"],
- ["Agreeing on an order","Consensus and Atomic Broadcast are equivalent (§7, Corollary 5)"]]);
-})();
-</script>
+<script src="script.js"></script>
 </body>
 </html>

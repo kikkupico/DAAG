@@ -291,6 +291,8 @@ class Handler(SimpleHTTPRequestHandler):
             "title": one_line(body.get("title"), 120),
             "section": section if re.fullmatch(r"[\w-]*", section) else "",
             "viewing": viewing if re.fullmatch(r"[\w-]*", viewing) else "",
+            # on a page with two registers, the one the reader has showing
+            "reading": body.get("reading") if body.get("reading") in ("allegory", "computing") else "",
             "asked": time.strftime("%Y-%m-%d %H:%M"),
             "text": text,
             "quote": one_line(body.get("quote"), 1500),
