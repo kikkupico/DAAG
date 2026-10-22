@@ -3,18 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Knowing When to Wait — The Hall of Two Doors</title>
+<title data-m="Knowing When to Wait — The CALM Theorem">Knowing When to Wait — The Hall of Two Doors</title>
 <meta name="description" content="The CALM theorem told at the hall of two doors on Paxos: questions that only grow leave by the scholars' door and need no waiting, questions that rest on an absence leave by the door of the assemblies, and the shape of a question decides.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <link rel="stylesheet" href="../../assets/css/book.css">
 <link rel="stylesheet" href="../../assets/css/widgets.css">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../../assets/css/registers.css">
 </head>
-<body>
+<body data-reg="i">
 
 <div class="bar">
   <a href="../../index.html">← The Books</a>
   <span class="now" id="now"></span>
+  <div class="regseg" role="group" aria-label="Which words to read"><button type="button" class="segb" data-reg="i" aria-pressed="true">Allegory</button><button type="button" class="segb" data-reg="m" aria-pressed="false">Computing</button></div>
   <i id="prog"></i>
 </div>
 
@@ -26,10 +28,12 @@
     <div>
       <h1>Knowing When to Wait</h1>
       <p class="generic">Which problems can a distributed system solve consistently without machines ever waiting to coordinate with one another—and which problems provably force them to wait?</p>
-      <p class="allegory">We find out at the hall of two doors at the fork of Paxos, where every question is sorted by its logical shape toward either the scholars' coast or the assemblies.</p>
+      <p class="allegory i">We find out at the hall of two doors at the fork of Paxos, where every question is sorted by its logical shape toward either the scholars' coast or the assemblies.</p>
+      <p class="allegory m">We find out by sorting programs by their logical shape: those that only ever add to their output can run on a group of machines without waiting for one another, and those that rest on an absence cannot.</p>
       <p class="source">After Joseph M. Hellerstein, <i>The Declarative Imperative: Experiences and Conjectures in Distributed Logic</i>, 2010 · Tom J. Ameloot, Frank Neven and Jan Van den Bussche, <i>Relational Transducers for Declarative Networking</i>, 2011 · Joseph M. Hellerstein and Peter Alvaro, <i>Keeping CALM: When Distributed Consistency Is Easy</i>, 2020</p>
     </div>
-    <div class="pop" data-auto>
+    <div class="pop m" data-auto><div class="leaf"><svg class="isle-svg" id="coversvg" role="img" aria-label="Three nodes in a ring, each holding some facts, with messages in transit between them"></svg></div></div>
+    <div class="pop i" data-auto>
       <div class="leaf">
         <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" alt="The hall of two doors seen end on: a small gabled hall of pale coursed limestone under a tiled roof, one open doorway in its end wall with a black and white floor showing inside, trees round it and the sea beyond"></div>
         <div class="fold-shadow"></div>
@@ -76,65 +80,40 @@
 </section>
 <!-- /lineage -->
 
-<section class="spread light" id="machines" data-name="In machine terms">
-  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
-  <div class="wrap">
-    <div class="two" style="gap:clamp(24px,5vw,60px);align-items:center">
-      <div>
-        <div class="kicker">First, in machine terms</div>
-        <h2>When is coordination needed?</h2>
-        <p class="lede">Suppose a set of machines each hold part of the input facts and exchange the rest by messages that can arrive late, duplicated, or out of order. Some programs can emit answers as facts trickle in and still end up with the exact same output everywhere. Others cannot safely emit a single answer until they have coordinated to make sure no more facts are on the way.</p>
-        <ul class="terms">
-          <li><b>A monotonic program</b> is one whose output only ever grows as its input set grows (<var>S</var> ⊆ <var>T</var> ⇒ <var>P</var>(<var>S</var>) ⊆ <var>P</var>(<var>T</var>)): learning a new fact never forces the program to retract an answer it already gave.</li>
-          <li><b>The CALM Theorem</b> (<i>Consistency As Logical Monotonicity</i>) states that a problem has a consistent, coordination-free distributed implementation <b>if and only if</b> it is monotonic.</li>
-          <li><b>Conjectured</b> by Hellerstein (2010), <b>proved</b> by Ameloot, Neven, and Van den Bussche (2011), and <b>restated</b> for systems builders by Hellerstein and Alvaro (2020).</li>
-        </ul>
-        <p style="margin-top:1.2rem">We tell this story at a small limestone hall with two doors that stands at the fork of Paxos, between the island's two assemblies and the scholars' coast.</p>
-      </div>
-      <div class="pop fromright"><div class="leaf">
-        <div class="paper well" style="margin:0">
-          <h4>Two programs, one input <em>arriving a fact at a time</em></h4>
-          <table class="tbl" id="mtbl"></table>
-          <p class="note" id="mnote" data-live style="min-height:3.4em;margin:10px 0 0">Nothing has arrived. Each program outputs what it can.</p>
-          <div class="row"><button class="btn" id="mnext">The next fact arrives</button><button class="btn alt" id="mreset">Start again</button></div>
-        </div>
-      </div></div>
-    </div>
-  </div>
-</section>
+
 
 <!-- ============================================================ the setting -->
-<section class="spread dark" id="hall" data-name="The hall of two doors">
+<section class="spread dark" id="hall" data-name="The hall of two doors" data-name-m="The classification">
   <div class="bleed">
-    <img src="img/hall.jpg" alt="The hall of two doors from the air: a small gabled limestone hall under a tiled roof where the island road forks, a scholar walking to its door and a messenger walking up the road towards the white round hall on the height beyond" data-parallax>
+    <img class="i" src="img/hall.jpg" alt="The hall of two doors from the air: a small gabled limestone hall under a tiled roof where the island road forks, a scholar walking to its door and a messenger walking up the road towards the white round hall on the height beyond" data-parallax>
     <div class="hall-title"><div class="t">
-      <div class="kicker">The hall of two doors</div>
-      <h2>It sorts, and never rules</h2>
-      <p>At the fork of Paxos, where the road up the island's stem divides to run out along its two northern arms, a small gabled hall stands on common ground that belongs to neither city. It has one doorway in its north wall and one in its south wall—and it never passes a law or keeps a shelf of its own.<sup class="xref"><a href="../../places/hall-of-two-doors/index.html" title="The Setting: The Hall of Two Doors">*</a></sup></p>
+      <div class="kicker"><span class="i">The hall of two doors</span><span class="m">The classification</span></div>
+      <h2><span class="i">It sorts, and never rules</span><span class="m">A classification, not a protocol</span></h2>
+      <p><span class="i">At the fork of Paxos, where the road up the island's stem divides to run out along its two northern arms, a small gabled hall stands on common ground that belongs to neither city. It has one doorway in its north wall and one in its south wall—and it never passes a law or keeps a shelf of its own.<sup class="xref"><a href="../../places/hall-of-two-doors/index.html" title="The Setting: The Hall of Two Doors">*</a></sup></span><span class="m">This book sorts questions asked of a group of machines — programs over facts spread across them — by their logical shape. It never decides or computes anything itself: it only says which questions can be answered without the machines waiting for one another.</span></p>
     </div></div>
     <div class="pins">
-      <div class="pin pop"><div class="leaf"><b>The door of the assemblies</b>Faces north up the bay toward the Chamber and the Tholos—the two halls on Paxos that assemble and vote.</div></div>
-      <div class="pin pop"><div class="leaf"><b>The scholars' door</b>Faces south down the stem toward the scholars' coast, where nothing ever waits for a vote.</div></div>
-      <div class="pin pop"><div class="leaf"><b>The shape decides</b>Every question brought to the hall leaves by whichever door the logical shape of the question itself requires.</div></div>
+      <div class="pin pop"><div class="leaf"><span class="i"><b>The door of the assemblies</b>Faces north up the bay toward the Chamber and the Tholos—the two halls on Paxos that assemble and vote.</span><span class="m"><b>Needs coordination</b>Questions that need the machines to wait for one another — to agree, or to hear from everyone — before answering.</span></div></div>
+      <div class="pin pop"><div class="leaf"><span class="i"><b>The scholars' door</b>Faces south down the stem toward the scholars' coast, where nothing ever waits for a vote.</span><span class="m"><b>Coordination-free</b>Questions that never wait: each machine answers from the facts it has, and nothing is ever taken back.</span></div></div>
+      <div class="pin pop"><div class="leaf"><span class="i"><b>The shape decides</b>Every question brought to the hall leaves by whichever door the logical shape of the question itself requires.</span><span class="m"><b>The shape decides</b>Which side a question falls on depends on its logical shape alone.</span></div></div>
     </div>
   </div>
 </section>
 
 <!-- ============================================================ Two doors -->
-<section class="spread light" id="doors" data-name="Two doors">
+<section class="spread light" id="doors" data-name="Two doors" data-name-m="Two kinds of question">
   <a class="anchor" id="s1"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
   <div class="wrap">
-    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
         <div class="kicker">What is sorted</div>
-        <h2>Two doors</h2>
-        <p class="lede">The questions brought to the hall are questions the libraries of Paxos want to answer from the facts scattered across their shelves: a note that a copy was made, a record that one work cites another, or word that a reader is waiting for a scroll.</p>
-        <p>No single library starts with all the facts. The rest arrive by courier—late, in batches, or out of order. Yet every library wants to give <b>consistent</b> answers: once a library announces an answer, it must never have to take that answer back, and in the end all libraries must announce the exact same set of answers.</p>
-        <p>If a question leaves by the <b>south door</b> (the scholars' door), each library can announce answers as facts come in, without ever waiting to coordinate with the others. If a question leaves by the <b>north door</b> (the door of the assemblies), no library can safely answer until the libraries coordinate to make sure everyone has been heard from.</p>
-        <p>Compare two questions that sound almost identical: <i>Has at least one copy of this work been made?</i> versus <i>Is this every copy that has been made?</i> As soon as a library hears of a single copy, it can answer <i>yes</i> to the first question—and no matter how many more courier letters arrive later, that <i>yes</i> will never become wrong. For the second question, however, a library that has heard of three copies cannot safely say <i>three is all of them</i>, because a fourth courier might be walking up the road right now!</p>
+        <h2><span class="i">Two doors</span><span class="m">Two kinds of question</span></h2>
+        <p class="lede"><span class="i">The questions brought to the hall are questions the libraries of Paxos want to answer from the facts scattered across their shelves: a note that a copy was made, a record that one work cites another, or word that a reader is waiting for a scroll.</span><span class="m">The questions are ones that machines want to answer from facts scattered across them: a record that a copy was made, a record that one item cites another, or word that a client is waiting for a lock.</span></p>
+        <p><span class="i">No single library starts with all the facts. The rest arrive by courier—late, in batches, or out of order. Yet every library wants to give <b>consistent</b> answers: once a library announces an answer, it must never have to take that answer back, and in the end all libraries must announce the exact same set of answers.</span><span class="m">No single machine starts with all the facts. The rest arrive by message — late, in batches, or out of order. Yet every machine wants to give <b>consistent</b> answers: once a machine announces an answer, it must never have to take that answer back, and in the end all machines must announce the exact same set of answers.</span></p>
+        <p><span class="i">If a question leaves by the <b>south door</b> (the scholars' door), each library can announce answers as facts come in, without ever waiting to coordinate with the others. If a question leaves by the <b>north door</b> (the door of the assemblies), no library can safely answer until the libraries coordinate to make sure everyone has been heard from.</span><span class="m">If a question is <b>coordination-free</b>, each machine can announce answers as facts come in, without ever waiting to coordinate with the others. If a question <b>needs coordination</b>, no machine can safely answer until the machines coordinate to make sure everyone has been heard from.</span></p>
+        <p><span class="i">Compare two questions that sound almost identical: <i>Has at least one copy of this work been made?</i> versus <i>Is this every copy that has been made?</i> As soon as a library hears of a single copy, it can answer <i>yes</i> to the first question—and no matter how many more courier letters arrive later, that <i>yes</i> will never become wrong. For the second question, however, a library that has heard of three copies cannot safely say <i>three is all of them</i>, because a fourth courier might be walking up the road right now!</span><span class="m">Compare two questions that sound almost identical: <i>Has at least one copy of this item been made?</i> versus <i>Is this every copy that has been made?</i> As soon as a machine hears of a single copy, it can answer <i>yes</i> to the first question — and no matter how many more messages arrive later, that <i>yes</i> will never become wrong. For the second question, however, a machine that has heard of three copies cannot safely say <i>three is all of them</i>, because a fourth message might be in transit right now!</span></p>
       </div>
-      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p01-fork.jpg" alt="The fork of the island from behind the hall of two doors: its tiled roof in the foreground among trees, and beyond, on the height of the far arm, the white round colonnaded hall of the Chamber under its conical roof" loading="lazy"></div></div></div>
+      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p01-fork.jpg" alt="The fork of the island from behind the hall of two doors: its tiled roof in the foreground among trees, and beyond, on the height of the far arm, the white round colonnaded hall of the Chamber under its conical roof" loading="lazy"></div></div></div>
     </div>
   </div>
 </section>
@@ -144,26 +123,26 @@
   <a class="anchor" id="s2"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
   <div class="wrap">
-    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
-        <div class="kicker">The scholars' door</div>
+        <div class="kicker"><span class="i">The scholars' door</span><span class="m">Coordination-free</span></div>
         <h2>Questions that only grow</h2>
         <p class="lede">A question <b>only grows</b> (`monotonic`) when learning additional facts can only add new answers to the output, and can never invalidate or retract an answer already produced.</p>
-        <p>Why does a growing question never need coordination? Because a library holding only a subset of the island's facts can immediately announce every answer that its current subset supports! When more courier letters arrive later—in whatever order, in whatever batches, even twice over—they only add further answers alongside the first ones (`confluence`).</p>
-        <p>As long as every fact eventually reaches every library (by gossip or the festival), every library is guaranteed to converge to the exact same set of answers, without any library ever asking <i>Have I heard everything yet?</i></p>
+        <p><span class="i">Why does a growing question never need coordination? Because a library holding only a subset of the island's facts can immediately announce every answer that its current subset supports! When more courier letters arrive later—in whatever order, in whatever batches, even twice over—they only add further answers alongside the first ones (`confluence`).</span><span class="m">Why does a growing question never need coordination? Because a machine holding only a subset of the facts can immediately announce every answer that its current subset supports! When more messages arrive later — in whatever order, in whatever batches, even twice over — they only add further answers alongside the first ones (`confluence`).</span></p>
+        <p><span class="i">As long as every fact eventually reaches every library (by gossip or the festival), every library is guaranteed to converge to the exact same set of answers, without any library ever asking <i>Have I heard everything yet?</i></span><span class="m">As long as every fact eventually reaches every machine (by gossip or anti-entropy), every machine is guaranteed to converge to the exact same set of answers, without ever asking <i>Have I heard everything yet?</i></span></p>
       </div>
-      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p02-south-door.jpg" alt="The south end of the hall of two doors, close: coursed limestone blocks, an open doorway under a plain lintel, the tiled gable above, trees either side and a town on the shore beyond" loading="lazy"></div></div></div>
+      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p02-south-door.jpg" alt="The south end of the hall of two doors, close: coursed limestone blocks, an open doorway under a plain lintel, the tiled gable above, trees either side and a town on the shore beyond" loading="lazy"></div></div></div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>Two questions, the same letters <em>let the letters arrive, in an order drawn by lot</em></h4>
+      <h4><span class="i">Two questions, the same letters <em>let the letters arrive, in an order drawn by lot</em></span><span class="m">Two questions, the same messages <em>let the messages arrive, in an order drawn by lot</em></span></h4>
       <table class="tbl" id="gtbl"></table>
-      <p class="say" id="gsay">No letter has arrived.</p>
-      <div class="row"><button class="btn" id="gnext">The next letter arrives</button><button class="btn alt" id="greset">Another order</button></div>
+      <p class="say" id="gsay"><span class="i">No letter has arrived.</span><span class="m">No message has arrived.</span></p>
+      <div class="row"><button class="btn" id="gnext"><span class="i">The next letter arrives</span><span class="m">The next message arrives</span></button><button class="btn alt" id="greset">Another order</button></div>
     </div></div></div>
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Questions of this kind</div><h3>Has any copy been made?</h3><p>Simple selection and projection: once a matching fact is seen, it remains seen forever.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Questions of this kind</div><h3>Do these two works cite each other through a chain?</h3><p>Joining facts together and following chains (`transitive closure`): once a chain of citations links Work A to Work B, adding more citations elsewhere never breaks that chain.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Questions of this kind</div><h3>Is there a ring of libraries each waiting on the next?</h3><p>Every question that asks whether a pattern of facts <em>exists</em> only grows—just like the stable properties of <a href="../taking-stock-without-stopping/index.html">Taking Stock Without Stopping</a>.<sup class="xref"><a href="../taking-stock-without-stopping/index.html" title="Taking Stock Without Stopping">*</a></sup> And any program built by composing monotonic steps is monotonic as a whole.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Questions of this kind</div><h3><span class="i">Do these two works cite each other through a chain?</span><span class="m">Do these two items cite each other through a chain?</span></h3><p><span class="i">Joining facts together and following chains (`transitive closure`): once a chain of citations links Work A to Work B, adding more citations elsewhere never breaks that chain.</span><span class="m">Joining facts together and following chains (`transitive closure`): once a chain of citations links item A to item B, adding more citations elsewhere never breaks that chain.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Questions of this kind</div><h3><span class="i">Is there a ring of libraries each waiting on the next?</span><span class="m">Is there a ring of machines each waiting on the next?</span></h3><p><span class="i">Every question that asks whether a pattern of facts <em>exists</em> only grows—just like the stable properties of <a href="../taking-stock-without-stopping/index.html">Taking Stock Without Stopping</a>.<sup class="xref"><a href="../taking-stock-without-stopping/index.html" title="Taking Stock Without Stopping">*</a></sup> And any program built by composing monotonic steps is monotonic as a whole.</span><span class="m">Every question that asks whether a pattern of facts <em>exists</em> only grows — just like the stable properties of a snapshot.<sup class="xref"><a href="../taking-stock-without-stopping/index.html" title="Taking Stock Without Stopping">*</a></sup> And any program built by composing monotonic steps is monotonic as a whole.</span></p></div></div></div>
     </div>
     <details class="proof">
       <summary>Only growing, stated exactly</summary>
@@ -178,90 +157,90 @@
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">The door of the assemblies</div>
+      <div class="kicker"><span class="i">The door of the assemblies</span><span class="m">Needs coordination</span></div>
       <h2>Questions that rest on absence</h2>
-      <p class="lede">A question <b>rests on an absence</b> (`non-monotonic`) whenever a new fact can <em>take away</em> an answer that looked true before. <i>Is this every copy?</i> really asks <i>Is there no copy other than these?</i> And <i>Has no one borrowed this scroll?</i> asks for the absence of any borrowing.</p>
-      <p>You can usually spot a non-monotonic question by words of negation or completion: <i>not</i>, <i>none</i>, <i>no one</i>, <i>every</i>, <i>only</i>, <i>highest</i>, or <i>count the total</i>. Each of these depends not just on the facts a library has seen, but on the <em>non-existence</em> of any contradicting fact anywhere else on the island.</p>
-      <p>Because a single delayed courier can carry the very fact that overturns <i>there is none</i>, a library that answers a non-monotonic question from partial news is only guessing—and two libraries that hear the same facts in different orders can emit conflicting answers along the way.</p>
+      <p class="lede"><span class="i">A question <b>rests on an absence</b> (`non-monotonic`) whenever a new fact can <em>take away</em> an answer that looked true before. <i>Is this every copy?</i> really asks <i>Is there no copy other than these?</i> And <i>Has no one borrowed this scroll?</i> asks for the absence of any borrowing.</span><span class="m">A question <b>rests on an absence</b> (`non-monotonic`) whenever a new fact can <em>take away</em> an answer that looked true before. <i>Is this every copy?</i> really asks <i>Is there no copy other than these?</i> And <i>Has no one locked this item?</i> asks for the absence of any lock.</span></p>
+      <p><span class="i">You can usually spot a non-monotonic question by words of negation or completion: <i>not</i>, <i>none</i>, <i>no one</i>, <i>every</i>, <i>only</i>, <i>highest</i>, or <i>count the total</i>. Each of these depends not just on the facts a library has seen, but on the <em>non-existence</em> of any contradicting fact anywhere else on the island.</span><span class="m">You can usually spot a non-monotonic question by words of negation or completion: <i>not</i>, <i>none</i>, <i>no one</i>, <i>every</i>, <i>only</i>, <i>highest</i>, or <i>count the total</i>. Each of these depends not just on the facts a machine has seen, but on the <em>non-existence</em> of any contradicting fact anywhere else in the system.</span></p>
+      <p><span class="i">Because a single delayed courier can carry the very fact that overturns <i>there is none</i>, a library that answers a non-monotonic question from partial news is only guessing—and two libraries that hear the same facts in different orders can emit conflicting answers along the way.</span><span class="m">Because a single delayed message can carry the very fact that overturns <i>there is none</i>, a machine that answers a non-monotonic question from partial news is only guessing — and two machines that hear the same facts in different orders can emit conflicting answers along the way.</span></p>
     </div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">What would make the answer safe</div><h3>Knowing that nothing more is coming</h3><p>Before a library can safely output an answer that rests on an absence, it must be certain that no missing fact is still on the road. That means hearing from the other libraries and agreeing that the input is complete—which is the exact work of an assembly, and the exact thing that stalls when couriers are stopped.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">What would make the answer safe</div><h3>Knowing that nothing more is coming</h3><p><span class="i">Before a library can safely output an answer that rests on an absence, it must be certain that no missing fact is still on the road. That means hearing from the other libraries and agreeing that the input is complete—which is the exact work of an assembly, and the exact thing that stalls when couriers are stopped.</span><span class="m">Before a machine can safely output an answer that rests on an absence, it must be certain that no missing fact is still in transit. That means hearing from the other machines and agreeing that the input is complete — which is exactly what coordination is, and exactly what stalls when messages are stopped.</span></p></div></div></div>
   </div>
 </section>
 
 <!-- ============================================================ The waiting chain and the unwanted work -->
-<section class="spread dark" id="chain" data-name="The waiting chain and the unwanted work">
+<section class="spread dark" id="chain" data-name="The waiting chain and the unwanted work" data-name-m="Deadlock detection and garbage collection">
   <a class="anchor" id="s4"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
   <div class="wrap">
-    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
-      <div class="pop fromleft"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/p03-hall.jpg" alt="The hall of two doors from above and to the south: its tiled gable roof and a wall of coursed limestone among trees, a town climbing the shore beyond with a round hall above it, and the sea" loading="lazy"></div></div></div>
+    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div class="pop fromleft i"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/p03-hall.jpg" alt="The hall of two doors from above and to the south: its tiled gable roof and a wall of coursed limestone among trees, a town climbing the shore beyond with a round hall above it, and the sea" loading="lazy"></div></div></div>
       <div>
         <div class="kicker">The same picture, two questions</div>
-        <h2>The waiting chain and the unwanted work</h2>
-        <p class="lede">To see how sharply the word <i>not</i> separates the two doors, Hellerstein and Alvaro contrast two classic graph problems over three libraries, where each library initially knows only its own local link:</p>
-        <p>1. <b>The ring of waiting (`distributed deadlock detection`)</b>: Library 1 knows that Reader A is waiting on Reader B; Library 2 knows that B is waiting on C; Library 3 knows that C is waiting on A. Once those three links exist, A, B, and C are deadlocked in a circle, and learning about other readers elsewhere will never un-deadlock them.</p>
-        <p>2. <b>The unwanted work (`distributed garbage collection`)</b>: The coast keeps a canon of core works, along with any work the canon cites directly or indirectly; any work <em>not</em> cited by a chain from the canon may be thrown away. Suppose Library 1 knows the canon cites <var>X</var>, Library 2 knows <var>X</var> cites <var>Y</var>, and Library 3 holds <var>Y</var> and sees no local citation to <var>Y</var>.</p>
+        <h2><span class="i">The waiting chain and the unwanted work</span><span class="m">Deadlock detection and garbage collection</span></h2>
+        <p class="lede"><span class="i">To see how sharply the word <i>not</i> separates the two doors, Hellerstein and Alvaro contrast two classic graph problems over three libraries, where each library initially knows only its own local link:</span><span class="m">To see how sharply the word <i>not</i> separates the two kinds, Hellerstein and Alvaro contrast two classic graph problems over three machines, where each machine initially knows only its own local link:</span></p>
+        <p><span class="i">1. <b>The ring of waiting (`distributed deadlock detection`)</b>: Library 1 knows that Reader A is waiting on Reader B; Library 2 knows that B is waiting on C; Library 3 knows that C is waiting on A. Once those three links exist, A, B, and C are deadlocked in a circle, and learning about other readers elsewhere will never un-deadlock them.</span><span class="m">1. <b>Distributed deadlock detection</b>: Node 1 knows that process A is waiting on process B; Node 2 knows that B is waiting on C; Node 3 knows that C is waiting on A. Once those three links exist, A, B, and C are deadlocked in a circle, and learning about other processes elsewhere will never un-deadlock them.</span></p>
+        <p><span class="i">2. <b>The unwanted work (`distributed garbage collection`)</b>: The coast keeps a canon of core works, along with any work the canon cites directly or indirectly; any work <em>not</em> cited by a chain from the canon may be thrown away. Suppose Library 1 knows the canon cites <var>X</var>, Library 2 knows <var>X</var> cites <var>Y</var>, and Library 3 holds <var>Y</var> and sees no local citation to <var>Y</var>.</span><span class="m">2. <b>Distributed garbage collection</b>: The system keeps a set of root objects, along with any object reachable from a root by a chain of references; any object <em>not</em> reachable from a root may be collected. Suppose Node 1 knows the root references <var>X</var>, Node 2 knows <var>X</var> references <var>Y</var>, and Node 3 holds <var>Y</var> and sees no local reference to <var>Y</var>.</span></p>
       </div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>Three libraries, each with one link <em>let them tell what they know, in any order</em></h4>
+      <h4><span class="i">Three libraries, each with one link <em>let them tell what they know, in any order</em></span><span class="m">Three nodes, each with one link <em>let them tell what they know, in any order</em></span></h4>
       <div class="hill-wrap" style="align-items:start">
         <div>
-          <div class="seglab">The ring of waiting</div>
+          <div class="seglab"><span class="i">The ring of waiting</span><span class="m">The deadlock ring</span></div>
           <ul class="checks" id="ring" data-live></ul>
           <p class="say" id="ringsay"></p>
         </div>
         <div>
-          <div class="seglab">The work Y, at Library 3</div>
+          <div class="seglab"><span class="i">The work Y, at Library 3</span><span class="m">The object Y, at Node 3</span></div>
           <ul class="checks" id="cite" data-live></ul>
           <p class="say" id="citesay"></p>
         </div>
       </div>
-      <div class="row"><button class="btn" id="tell1">Library 1 tells</button><button class="btn" id="tell2">Library 2 tells</button><button class="btn" id="tell3">Library 3 tells</button><button class="btn alt" id="tellreset">Start again</button></div>
+      <div class="row"><button class="btn" id="tell1"><span class="i">Library 1 tells</span><span class="m">Node 1 tells</span></button><button class="btn" id="tell2"><span class="i">Library 2 tells</span><span class="m">Node 2 tells</span></button><button class="btn" id="tell3"><span class="i">Library 3 tells</span><span class="m">Node 3 tells</span></button><button class="btn alt" id="tellreset">Start again</button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Only the word not</div><h3>A path found is found forever; a path not yet seen may still be on the road</h3><p>Both problems trace paths across the exact same kind of directed graph! Yet the waiting ring asks whether a path <em>exists</em> (monotonic, south door: as soon as all three links arrive in any order, the cycle is known for good), whereas throwing away an unwanted work asks whether a path <em>does not exist</em> (non-monotonic, north door: Library 3 cannot safely throw <var>Y</var> away until it has heard from <em>every</em> library and verified that no chain from the canon reaches <var>Y</var>).</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Only the word not</div><h3><span class="i">A path found is found forever; a path not yet seen may still be on the road</span><span class="m">A path found is found forever; a path not yet seen may still be in transit</span></h3><p><span class="i">Both problems trace paths across the exact same kind of directed graph! Yet the waiting ring asks whether a path <em>exists</em> (monotonic, south door: as soon as all three links arrive in any order, the cycle is known for good), whereas throwing away an unwanted work asks whether a path <em>does not exist</em> (non-monotonic, north door: Library 3 cannot safely throw <var>Y</var> away until it has heard from <em>every</em> library and verified that no chain from the canon reaches <var>Y</var>).</span><span class="m">Both problems trace paths across the exact same kind of directed graph! Yet the deadlock ring asks whether a path <em>exists</em> (monotonic, coordination-free: as soon as all three links arrive in any order, the cycle is known for good), whereas collecting an unreachable object asks whether a path <em>does not exist</em> (non-monotonic, needs coordination: Node 3 cannot safely collect <var>Y</var> until it has heard from <em>every</em> node and verified that no chain from a root reaches <var>Y</var>).</span></p></div></div></div>
   </div>
 </section>
 
 <!-- ============================================================ The librarian without a roster -->
-<section class="spread light" id="roster" data-name="The librarian without a roster">
+<section class="spread light" id="roster" data-name="The librarian without a roster" data-name-m="Machines without a roster">
   <a class="anchor" id="s5"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Who is everyone?</div>
-      <h2>The librarian without a roster</h2>
-      <p class="lede">How did Ameloot, Neven, and Van den Bussche turn this intuition into a mathematical proof? By asking a deceptively simple question: what can a librarian compute if he has <b>no roster</b> (`obliviousness`)—that is, he does not know the list of all libraries on the island or even how many libraries there are?</p>
-      <p>Notice that a librarian with no roster can still answer <em>every</em> question that only grows! He simply shares the facts he holds with any neighbours he meets, listens to the facts they share with him, and outputs every answer supported by the facts he has accumulated so far. Because he never needs to wait for “everyone,” he never needs to know who “everyone” is.</p>
-      <p>Now watch what happens when a librarian with no roster tries to answer the simplest possible question that rests on an absence: <i>Is the shelf empty at every library?</i> Each library whose shelf is empty sends out a slip with its name. The librarian collects `1` name, `2` names, `3` names... but without a roster telling him that there are `4` libraries in all, he can never know when the last library has spoken!</p>
+      <h2><span class="i">The librarian without a roster</span><span class="m">A machine without a roster</span></h2>
+      <p class="lede"><span class="i">How did Ameloot, Neven, and Van den Bussche turn this intuition into a mathematical proof? By asking a deceptively simple question: what can a librarian compute if he has <b>no roster</b> (`obliviousness`)—that is, he does not know the list of all libraries on the island or even how many libraries there are?</span><span class="m">How did Ameloot, Neven, and Van den Bussche turn this intuition into a mathematical proof? By asking a deceptively simple question: what can a machine compute if it has <b>no roster</b> (`obliviousness`) — that is, it does not know the list of all machines in the system or even how many there are?</span></p>
+      <p><span class="i">Notice that a librarian with no roster can still answer <em>every</em> question that only grows! He simply shares the facts he holds with any neighbours he meets, listens to the facts they share with him, and outputs every answer supported by the facts he has accumulated so far. Because he never needs to wait for “everyone,” he never needs to know who “everyone” is.</span><span class="m">Notice that a machine with no roster can still answer <em>every</em> question that only grows! It simply shares the facts it holds with any neighbours it meets, listens to the facts they share with it, and outputs every answer supported by the facts it has accumulated so far. Because it never needs to wait for “everyone,” it never needs to know who “everyone” is.</span></p>
+      <p><span class="i">Now watch what happens when a librarian with no roster tries to answer the simplest possible question that rests on an absence: <i>Is the shelf empty at every library?</i> Each library whose shelf is empty sends out a slip with its name. The librarian collects `1` name, `2` names, `3` names... but without a roster telling him that there are `4` libraries in all, he can never know when the last library has spoken!</span><span class="m">Now watch what happens when a machine with no roster tries to answer the simplest possible question that rests on an absence: <i>Is the data empty at every machine?</i> Each machine whose data is empty sends out a message with its name. The machine collects `1` name, `2` names, `3` names... but without a roster telling it that there are `4` machines in all, it can never know when the last machine has spoken!</span></p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>Is the shelf empty at every library? <em>names of libraries with empty shelves come in, one by one</em></h4>
-      <div class="seg" id="rmode" role="group" aria-label="Whether the librarian has a roster"></div>
-      <div class="counts"><span><b id="rn">0</b>names heard</span><span><b id="rof">4</b>libraries on the roster</span></div>
+      <h4><span class="i">Is the shelf empty at every library? <em>names of libraries with empty shelves come in, one by one</em></span><span class="m">Is the data empty at every machine? <em>names of machines with empty data come in, one by one</em></span></h4>
+      <div class="seg" id="rmode" role="group" aria-label="Whether the librarian has a roster" data-al-m="Whether the machine has a roster"></div>
+      <div class="counts"><span><b id="rn">0</b>names heard</span><span><b id="rof">4</b><bdi class="i">libraries on the roster</bdi><bdi class="m">machines on the roster</bdi></span></div>
       <p class="say" id="rsay"></p>
       <div class="row"><button class="btn" id="rnext">Another name comes in</button><button class="btn alt" id="rreset">Start again</button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">What the roster buys</div><h3>With a roster, you can answer anything—at the price of waiting for every name on it</h3><p>A librarian who holds the full roster (`All`) can answer <em>any</em> question whatsoever: he simply waits until he has received the complete collection of facts from every library named on the roster, and then evaluates the question locally as if the whole island were a single room. That is the door of the assemblies.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">What the roster buys</div><h3>With a roster, you can answer anything—at the price of waiting for every name on it</h3><p><span class="i">A librarian who holds the full roster (`All`) can answer <em>any</em> question whatsoever: he simply waits until he has received the complete collection of facts from every library named on the roster, and then evaluates the question locally as if the whole island were a single room. That is the door of the assemblies.</span><span class="m">A machine that holds the full roster (`All`) can answer <em>any</em> question whatsoever: it simply waits until it has received the complete collection of facts from every machine named on the roster, and then evaluates the question locally as if the whole system were a single machine. That is coordination.</span></p></div></div></div>
   </div>
 </section>
 
 <!-- ============================================================ Why only questions that grow leave by the scholars' door -->
-<section class="spread dark" id="law" data-name="Why only questions that grow leave by the scholars' door">
+<section class="spread dark" id="law" data-name="Why only questions that grow leave by the scholars' door" data-name-m="Why only growing questions are coordination-free">
   <a class="anchor" id="s6"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">The law the hall states</div>
-      <h2>Why only questions that grow leave by the scholars' door</h2>
-      <p class="lede">Hellerstein (Hellersteinos) first stated the connection between growing (`monotonicity`) and not waiting (`coordination-freeness`) as the <b>CALM conjecture</b> in 2010. A year later, Ameloot, Neven, and Van den Bussche proved it by closing a three-way circle of equivalences:</p>
+      <div class="kicker"><span class="i">The law the hall states</span><span class="m">The theorem</span></div>
+      <h2><span class="i">Why only questions that grow leave by the scholars' door</span><span class="m">Why only growing questions are coordination-free</span></h2>
+      <p class="lede"><span class="i">Hellerstein (Hellersteinos) first stated the connection between growing (`monotonicity`) and not waiting (`coordination-freeness`) as the <b>CALM conjecture</b> in 2010. A year later, Ameloot, Neven, and Van den Bussche proved it by closing a three-way circle of equivalences:</span><span class="m">Hellerstein first stated the connection between growing (`monotonicity`) and not waiting (`coordination-freeness`) as the <b>CALM conjecture</b> in 2010. A year later, Ameloot, Neven, and Van den Bussche proved it by closing a three-way circle of equivalences:</span></p>
     </div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step 1 · Monotone ⇒ No Roster</div><h3>It only grows</h3><p>If a question only grows, every library can broadcast the facts it holds and output all answers supported by the facts received so far. That requires no roster of the island (`oblivious`).</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step 2 · No Roster ⇒ No Waiting</div><h3>It needs no roster</h3><p>Suppose every library already starts with a full copy of the facts <var>I</var>. Because a roster-free (`oblivious`) librarian cannot tell whether he is alone on a one-library island or surrounded by others unless he reads a message, he must be able to output the full answer <var>Q</var>(<var>I</var>) without reading a single message (`coordination-free`)!</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step 3 · No Waiting ⇒ Monotone</div><h3>It needs no waiting</h3><p>Suppose a question can be answered on some distribution of facts <var>I</var> without reading any messages, so Library <var>v</var> outputs answer <var>t</var> ∈ <var>Q</var>(<var>I</var>) on its own. Now secretly hand extra facts (<var>J</var> ∖ <var>I</var>) to <em>another</em> library <var>v</var>′! Library <var>v</var> still outputs <var>t</var> before hearing from <var>v</var>′; and because the network is consistent and never retracts an output, <var>t</var> must still be in <var>Q</var>(<var>J</var>). Thus <var>Q</var>(<var>I</var>) ⊆ <var>Q</var>(<var>J</var>): the question only grows!</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step 1 · Monotone ⇒ No Roster</div><h3>It only grows</h3><p><span class="i">If a question only grows, every library can broadcast the facts it holds and output all answers supported by the facts received so far. That requires no roster of the island (`oblivious`).</span><span class="m">If a question only grows, every machine can broadcast the facts it holds and output all answers supported by the facts received so far. That requires no roster of the system (`oblivious`).</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step 2 · No Roster ⇒ No Waiting</div><h3>It needs no roster</h3><p><span class="i">Suppose every library already starts with a full copy of the facts <var>I</var>. Because a roster-free (`oblivious`) librarian cannot tell whether he is alone on a one-library island or surrounded by others unless he reads a message, he must be able to output the full answer <var>Q</var>(<var>I</var>) without reading a single message (`coordination-free`)!</span><span class="m">Suppose every machine already starts with a full copy of the facts <var>I</var>. Because a roster-free (`oblivious`) machine cannot tell whether it is alone in a one-machine system or surrounded by others unless it reads a message, it must be able to output the full answer <var>Q</var>(<var>I</var>) without reading a single message (`coordination-free`)!</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Step 3 · No Waiting ⇒ Monotone</div><h3>It needs no waiting</h3><p><span class="i">Suppose a question can be answered on some distribution of facts <var>I</var> without reading any messages, so Library <var>v</var> outputs answer <var>t</var> ∈ <var>Q</var>(<var>I</var>) on its own. Now secretly hand extra facts (<var>J</var> ∖ <var>I</var>) to <em>another</em> library <var>v</var>′! Library <var>v</var> still outputs <var>t</var> before hearing from <var>v</var>′; and because the network is consistent and never retracts an output, <var>t</var> must still be in <var>Q</var>(<var>J</var>). Thus <var>Q</var>(<var>I</var>) ⊆ <var>Q</var>(<var>J</var>): the question only grows!</span><span class="m">Suppose a question can be answered on some distribution of facts <var>I</var> without reading any messages, so machine <var>v</var> outputs answer <var>t</var> ∈ <var>Q</var>(<var>I</var>) on its own. Now secretly hand extra facts (<var>J</var> ∖ <var>I</var>) to <em>another</em> machine <var>v</var>′! Machine <var>v</var> still outputs <var>t</var> before hearing from <var>v</var>′; and because the network is consistent and never retracts an output, <var>t</var> must still be in <var>Q</var>(<var>J</var>). Thus <var>Q</var>(<var>I</var>) ⊆ <var>Q</var>(<var>J</var>): the question only grows!</span></p></div></div></div>
     </div>
-    <p style="max-width:40em;margin-top:1.4rem">Notice the cleverness in how Step 2 and Step 3 define <i>without waiting</i> (`coordination-freeness`): even a monotonic question needs messages if Library 1 holds a fact that Library 2 needs to see. To separate <em>communication</em> (shipping data to where it is needed) from <em>coordination</em> (waiting to make sure no one else holds a contradicting fact), the proof asks whether there exists <em>some</em> way of placing the input facts across the libraries (such as giving every library all of <var>I</var>) under which every library can produce the answer with zero messages. For a monotonic question, yes! For a non-monotonic question, even if you hand every library the entire input <var>I</var>, no library knows that the others hold nothing more until it coordinates with them.</p>
+    <p style="max-width:40em;margin-top:1.4rem"><span class="i">Notice the cleverness in how Step 2 and Step 3 define <i>without waiting</i> (`coordination-freeness`): even a monotonic question needs messages if Library 1 holds a fact that Library 2 needs to see. To separate <em>communication</em> (shipping data to where it is needed) from <em>coordination</em> (waiting to make sure no one else holds a contradicting fact), the proof asks whether there exists <em>some</em> way of placing the input facts across the libraries (such as giving every library all of <var>I</var>) under which every library can produce the answer with zero messages. For a monotonic question, yes! For a non-monotonic question, even if you hand every library the entire input <var>I</var>, no library knows that the others hold nothing more until it coordinates with them.</span><span class="m">Notice the cleverness in how Step 2 and Step 3 define <i>without waiting</i> (`coordination-freeness`): even a monotonic question needs messages if machine 1 holds a fact that machine 2 needs to see. To separate <em>communication</em> (shipping data to where it is needed) from <em>coordination</em> (waiting to make sure no one else holds a contradicting fact), the proof asks whether there exists <em>some</em> way of placing the input facts across the machines (such as giving every machine all of <var>I</var>) under which every machine can produce the answer with zero messages. For a monotonic question, yes! For a non-monotonic question, even if you hand every machine the entire input <var>I</var>, no machine knows that the others hold nothing more until it coordinates with them.</span></p>
     <details class="proof">
       <summary>The CALM theorem, as the papers state it</summary>
       <p class="given">A program has a consistent, coordination-free distributed implementation if and only if it is monotonic. Equivalently, for any query <var>Q</var>: <var>Q</var> is computed by a coordination-free transducer network, if and only if it is computed by an oblivious one, if and only if <var>Q</var> is monotone.</p>
@@ -286,7 +265,7 @@
         <li>On any partition, to output ‘true’ a node must know that every other node's part is empty, which it can only learn from a message. So no partition, including the one that gives every node the whole input, lets the output be reached by heartbeats alone. Hence the query is not coordination-free, and it is not monotone: <var>S</var> = ∅ gives ‘true’ and a larger <var>S</var> does not.<span class="qed">∎</span></li>
       </ol>
     </details>
-    <p style="max-width:40em;margin-top:1.4rem">And that connects CALM directly to the CAP theorem of <a href="../answering-while-cut-off/index.html">Answering While Cut Off</a>: a program that needs no coordination is a program that stays available when couriers are stopped! The scholars' door is the door that stays open during a partition; the door of the assemblies is the door that must wait.</p>
+    <p style="max-width:40em;margin-top:1.4rem"><span class="i">And that connects CALM directly to the CAP theorem of <a href="../answering-while-cut-off/index.html">Answering While Cut Off</a>: a program that needs no coordination is a program that stays available when couriers are stopped! The scholars' door is the door that stays open during a partition; the door of the assemblies is the door that must wait.</span><span class="m">And that connects CALM directly to the CAP theorem:<sup class="xref"><a href="../answering-while-cut-off/index.html" title="Answering While Cut Off">*</a></sup> a program that needs no coordination is a program that stays available when messages are stopped! The coordination-free side is the one that stays available during a partition; the side that needs coordination must wait.</span></p>
   </div>
 </section>
 
@@ -298,52 +277,52 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Most business is mixed</div>
       <h2>Waiting only once</h2>
-      <p class="lede">In real life, a reader's business rarely consists solely of growing questions. Consider a reader building a reading list (`a shopping cart` as in Amazon's Dynamo): along the way, the reader adds titles, strikes titles off, and finally <b>closes</b> (`checks out`) the list so the library can fetch the scrolls.</p>
-      <p>As we saw on the far terraces,<sup class="xref"><a href="../changes-that-never-clash/index.html" title="Changes That Never Clash">*</a></sup> adding a title and striking a title can both be represented as two grow-only lists (`added` and `struck`), which merge in any order with zero waiting. Only the final step—<em>closing</em> the list and taking the set difference `added \ struck`—is non-monotonic, because if the closing notice arrives at the library before an earlier `Add` or `Strike` notice that is still on the road, the library will fetch the wrong scrolls!</p>
-      <p>Even that single non-monotonic step needs far less waiting than a full assembly if the reader seals the closing notice with a <b>manifest</b>: a list of the IDs of all the `Add` and `Strike` notices the reader sent before closing. Then the library does not have to ask every other library on the coast; it simply waits until the specific notices named on the manifest have arrived (in any order!) and then fetches the scrolls.</p>
+      <p class="lede"><span class="i">In real life, a reader's business rarely consists solely of growing questions. Consider a reader building a reading list (`a shopping cart` as in Amazon's Dynamo): along the way, the reader adds titles, strikes titles off, and finally <b>closes</b> (`checks out`) the list so the library can fetch the scrolls.</span><span class="m">In real life, a program rarely consists solely of growing questions. Consider a shopping cart (as in Amazon's Dynamo): along the way, a client adds items, removes items, and finally <b>checks out</b> so the service can fetch the goods.</span></p>
+      <p><span class="i">As we saw on the far terraces,<sup class="xref"><a href="../changes-that-never-clash/index.html" title="Changes That Never Clash">*</a></sup> adding a title and striking a title can both be represented as two grow-only lists (`added` and `struck`), which merge in any order with zero waiting. Only the final step—<em>closing</em> the list and taking the set difference `added \ struck`—is non-monotonic, because if the closing notice arrives at the library before an earlier `Add` or `Strike` notice that is still on the road, the library will fetch the wrong scrolls!</span><span class="m">As we saw with replicated data types,<sup class="xref"><a href="../changes-that-never-clash/index.html" title="Changes That Never Clash">*</a></sup> adding an item and removing an item can both be represented as two grow-only sets (`added` and `removed`), which merge in any order with zero waiting. Only the final step — <em>checking out</em> and taking the set difference `added \ removed` — is non-monotonic, because if the checkout message arrives at the service before an earlier `Add` or `Remove` message that is still in transit, the service will fetch the wrong goods!</span></p>
+      <p><span class="i">Even that single non-monotonic step needs far less waiting than a full assembly if the reader seals the closing notice with a <b>manifest</b>: a list of the IDs of all the `Add` and `Strike` notices the reader sent before closing. Then the library does not have to ask every other library on the coast; it simply waits until the specific notices named on the manifest have arrived (in any order!) and then fetches the scrolls.</span><span class="m">Even that single non-monotonic step needs far less waiting than full coordination if the client seals the checkout message with a <b>manifest</b>: a list of the IDs of all the `Add` and `Remove` messages the client sent before checking out. Then the service does not have to ask every other machine; it simply waits until the specific messages named on the manifest have arrived (in any order!) and then fetches the goods.</span></p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>Four notices on the road <em>deliver them to the library in any order</em></h4>
-      <div class="seg" id="nmode" role="group" aria-label="Whether the closing notice carries a manifest"></div>
+      <h4><span class="i">Four notices on the road <em>deliver them to the library in any order</em></span><span class="m">Four messages in transit <em>deliver them to the service in any order</em></span></h4>
+      <div class="seg" id="nmode" role="group" aria-label="Whether the closing notice carries a manifest" data-al-m="Whether the checkout message carries a manifest"></div>
       <div class="shelves" id="nshelves" data-live></div>
       <p class="say" id="nsay">Nothing has arrived.</p>
-      <div class="row"><button class="btn" id="n0">“Add <i>The Winds</i>” arrives</button><button class="btn" id="n1">“Strike <i>The Winds</i>” arrives</button><button class="btn" id="n2">“Add <i>The Tides</i>” arrives</button><button class="btn" id="n3">The closing notice arrives</button><button class="btn alt" id="nreset">Start again</button></div>
+      <div class="row"><button class="btn" id="n0"><span class="i">“Add <i>The Winds</i>” arrives</span><span class="m">“Add <i>item A</i>” arrives</span></button><button class="btn" id="n1"><span class="i">“Strike <i>The Winds</i>” arrives</span><span class="m">“Remove <i>item A</i>” arrives</span></button><button class="btn" id="n2"><span class="i">“Add <i>The Tides</i>” arrives</span><span class="m">“Add <i>item B</i>” arrives</span></button><button class="btn" id="n3"><span class="i">The closing notice arrives</span><span class="m">The checkout message arrives</span></button><button class="btn alt" id="nreset">Start again</button></div>
     </div></div></div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Sparing the waiting</div><h3>Isolate and seal the non-monotonic step</h3><p>Keep all the intermediate `Add` and `Strike` steps monotonic so they never wait, and attach a manifest to the single closing step so it waits only for the exact messages it depends on.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Sparing the waiting</div><h3>Move coordination off the reader's path</h3><p>Throwing away old struck-off tombstones or unwanted works rests on an absence, so it needs everyone to be heard from—but it can be done lazily in the background, where no reader is waiting at the counter.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Sparing the waiting</div><h3>Apologize afterwards (`Compensation`)</h3><p>If lending the last copy of a work without coordination occasionally double-lends a scroll, it is often cheaper to let the rare clash happen and send an apology or a freshly copied scroll afterward than to make every borrower wait on an assembly.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Sparing the waiting</div><h3>Isolate and seal the non-monotonic step</h3><p><span class="i">Keep all the intermediate `Add` and `Strike` steps monotonic so they never wait, and attach a manifest to the single closing step so it waits only for the exact messages it depends on.</span><span class="m">Keep all the intermediate `Add` and `Remove` steps monotonic so they never wait, and attach a manifest to the single checkout step so it waits only for the exact messages it depends on.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Sparing the waiting</div><h3><span class="i">Move coordination off the reader's path</span><span class="m">Move coordination off the client's path</span></h3><p><span class="i">Throwing away old struck-off tombstones or unwanted works rests on an absence, so it needs everyone to be heard from—but it can be done lazily in the background, where no reader is waiting at the counter.</span><span class="m">Discarding old tombstones or unreachable objects rests on an absence, so it needs everyone to be heard from — but it can be done lazily in the background, where no client is waiting.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Sparing the waiting</div><h3>Apologize afterwards (`Compensation`)</h3><p><span class="i">If lending the last copy of a work without coordination occasionally double-lends a scroll, it is often cheaper to let the rare clash happen and send an apology or a freshly copied scroll afterward than to make every borrower wait on an assembly.</span><span class="m">If selling the last unit of an item without coordination occasionally double-sells it, it is often cheaper to let the rare clash happen and send an apology or a replacement afterward than to make every buyer wait on coordination.</span></p></div></div></div>
     </div>
     <p style="max-width:40em;margin-top:1.4rem">The lesson of CALM is not that every program can be made monotonic. It is that by spotting the exact points where a program stops growing and rests on an absence, a designer can confine coordination to those narrow points and let everything else run free.</p>
   </div>
 </section>
 
 <!-- ============================================================ What leaves by each door -->
-<section class="spread dark" id="each" data-name="What leaves by each door">
+<section class="spread dark" id="each" data-name="What leaves by each door" data-name-m="What each side holds">
   <a class="anchor" id="s8"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
   <div class="wrap">
-    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
-        <div class="kicker">The same island, sorted</div>
-        <h2>What leaves by each door</h2>
-        <p class="lede">Standing in the hall of two doors at the fork of Paxos, we can now see why the entire island is laid out the way it is.</p>
-        <p>Every practice that lives south of the fork on the scholars' coast is built to grow monotonically: the pebble columns and tagged catalogues of the far terraces,<sup class="xref"><a href="../changes-that-never-clash/index.html" title="Changes That Never Clash">*</a></sup> the larger-tally-wins editions spread by word of mouth and at the festival,<sup class="xref"><a href="../spreading-by-word-of-mouth/index.html" title="Spreading by Word of Mouth">*</a></sup> and the cords and causal dependencies held back until complete in the reading rooms.<sup class="xref"><a href="../what-you-can-promise-alone/index.html" title="What You Can Promise Alone">*</a></sup></p>
-        <p>And every question that must walk north up the bay to the Chamber or the Tholos rests on an absence or a global total order: deciding which of two conflicting laws occupies decree slot `k`, preventing two readers from borrowing the last copy, guaranteeing that a read returns the latest edition, or verifying that every library has seen a tombstone so it can be thrown away.</p>
+        <div class="kicker"><span class="i">The same island, sorted</span><span class="m">The same systems, sorted</span></div>
+        <h2><span class="i">What leaves by each door</span><span class="m">What falls on each side</span></h2>
+        <p class="lede"><span class="i">Standing in the hall of two doors at the fork of Paxos, we can now see why the entire island is laid out the way it is.</span><span class="m">With the classification in hand, we can now see why practical systems are laid out the way they are.</span></p>
+        <p><span class="i">Every practice that lives south of the fork on the scholars' coast is built to grow monotonically: the pebble columns and tagged catalogues of the far terraces,<sup class="xref"><a href="../changes-that-never-clash/index.html" title="Changes That Never Clash">*</a></sup> the larger-tally-wins editions spread by word of mouth and at the festival,<sup class="xref"><a href="../spreading-by-word-of-mouth/index.html" title="Spreading by Word of Mouth">*</a></sup> and the cords and causal dependencies held back until complete in the reading rooms.<sup class="xref"><a href="../what-you-can-promise-alone/index.html" title="What You Can Promise Alone">*</a></sup></span><span class="m">Every practice on the coordination-free side is built to grow monotonically: the vector entries and tagged sets of replicated data types,<sup class="xref"><a href="../changes-that-never-clash/index.html" title="Changes That Never Clash">*</a></sup> the larger-timestamp-wins values spread by gossip and anti-entropy,<sup class="xref"><a href="../spreading-by-word-of-mouth/index.html" title="Spreading by Word of Mouth">*</a></sup> and the causal dependencies held back until complete.<sup class="xref"><a href="../what-you-can-promise-alone/index.html" title="What You Can Promise Alone">*</a></sup></span></p>
+        <p><span class="i">And every question that must walk north up the bay to the Chamber or the Tholos rests on an absence or a global total order: deciding which of two conflicting laws occupies decree slot `k`, preventing two readers from borrowing the last copy, guaranteeing that a read returns the latest edition, or verifying that every library has seen a tombstone so it can be thrown away.</span><span class="m">And every question that needs coordination rests on an absence or a global total order: deciding which of two conflicting values occupies log slot `k`, preventing two clients from buying the last unit, guaranteeing that a read returns the latest version, or verifying that every machine has seen a tombstone so it can be discarded.</span></p>
       </div>
-      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p04-above.jpg" alt="The hall of two doors alone at the fork, seen from above: its tiled roof and the dark doorway in its end wall, the pale road passing it, wild olives round it, and a town on the shore of the bay beyond" loading="lazy"></div></div></div>
+      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p04-above.jpg" alt="The hall of two doors alone at the fork, seen from above: its tiled roof and the dark doorway in its end wall, the pale road passing it, wild olives round it, and a town on the shore of the bay beyond" loading="lazy"></div></div></div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>Bring a question to the hall <em>the page tries each question on every set of facts and its every enlargement</em></h4>
+      <h4><span class="i">Bring a question to the hall <em>the page tries each question on every set of facts and its every enlargement</em></span><span class="m">Sort a question <em>the page tries each question on every set of facts and its every enlargement</em></span></h4>
       <div class="hill-wrap">
-        <svg class="isle-svg fig" id="hallsvg" role="img" aria-label="The hall of two doors from above, with the door of the assemblies to the north and the scholars' door to the south"></svg>
+        <svg class="isle-svg fig" id="hallsvg" role="img" aria-label="The hall of two doors from above, with the door of the assemblies to the north and the scholars' door to the south" data-al-m="The classification as a figure: questions that need coordination to the north, coordination-free questions to the south"></svg>
         <div>
           <div class="qs" id="qs" role="group" aria-label="Questions"></div>
           <p class="say" id="qsay">Choose a question.</p>
         </div>
       </div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">There is no third door: mathematically, a problem is either monotonic or it is not. The only trap is syntactic: a programmer can accidentally write a monotonic question using non-monotonic steps, which is why languages like `Bloom` analyze a program's rules to highlight the exact lines where negation or aggregation forces a wait.</p>
+    <p style="max-width:40em;margin-top:1.4rem"><span class="i">There is no third door: mathematically, a problem is either monotonic or it is not. The only trap is syntactic: a programmer can accidentally write a monotonic question using non-monotonic steps, which is why languages like `Bloom` analyze a program's rules to highlight the exact lines where negation or aggregation forces a wait.</span><span class="m">There is no third category: mathematically, a problem is either monotonic or it is not. The only trap is syntactic: a programmer can accidentally write a monotonic question using non-monotonic steps, which is why languages like `Bloom` analyze a program's rules to highlight the exact lines where negation or aggregation forces a wait.</span></p>
   </div>
 </section>
 
@@ -355,30 +334,30 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The limits</div>
       <h2>What it does not say</h2>
-      <p class="lede">The hall sorts every question into one of its two doors. Here are five things it does not do.</p>
+      <p class="lede"><span class="i">The hall sorts every question into one of its two doors. Here are five things it does not do.</span><span class="m">The classification sorts every question into one of two kinds. Here are five things it does not do.</span></p>
     </div>
     <div class="cards3 five">
       <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it tell you how to rewrite a problem so it only grows?</h3><p>No. CALM is a classification theorem, not an automatic compiler. Knowing that monotonic problems need no coordination still leaves the designer two hard tasks: figuring out whether a problem can be reformulated monotonically (as CRDTs do for counters and sets), and implementing it efficiently.</p></div></div></div>
       <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Was the original 2010 conjecture true word for word?</h3><p>Not quite. Hellerstein originally phrased CALM in terms of syntactic `Datalog` rules without negation, and Ameloot et al. showed that some semantically monotonic queries over ordered domains cannot be expressed in positive Datalog. What was proved—and what matters—is semantic monotonicity (<var>S</var> ⊆ <var>T</var> ⇒ <var>Q</var>(<var>S</var>) ⊆ <var>Q</var>(<var>T</var>)).</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does “coordination-free” mean zero messages?</h3><p>No. Facts still have to travel from the library that holds them to the libraries that need them! Coordination-freeness means that if a library already happens to hold the relevant facts, it does not need to exchange messages just to check whether other libraries hold contradicting facts.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does confluence guarantee recency?</h3><p>No. CALM guarantees <b>confluence</b>—that all libraries eventually produce the exact same output regardless of message order. It does not guarantee real-time linearizability (`is this the latest state right now?`), which itself rests on the absence of newer writes elsewhere.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What if libraries know how facts are partitioned in advance?</h3><p>Subsequent work (such as Zinn, Green, and Ludäscher 2012) showed that if data is partitioned by a known hash or policy Rule (`policy-aware transducers`), certain non-monotonic queries can also be answered without messages because each library already knows which subset of facts could possibly exist elsewhere.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does “coordination-free” mean zero messages?</h3><p><span class="i">No. Facts still have to travel from the library that holds them to the libraries that need them! Coordination-freeness means that if a library already happens to hold the relevant facts, it does not need to exchange messages just to check whether other libraries hold contradicting facts.</span><span class="m">No. Facts still have to travel from the machine that holds them to the machines that need them! Coordination-freeness means that if a machine already happens to hold the relevant facts, it does not need to exchange messages just to check whether other machines hold contradicting facts.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does confluence guarantee recency?</h3><p><span class="i">No. CALM guarantees <b>confluence</b>—that all libraries eventually produce the exact same output regardless of message order. It does not guarantee real-time linearizability (`is this the latest state right now?`), which itself rests on the absence of newer writes elsewhere.</span><span class="m">No. CALM guarantees <b>confluence</b> — that all machines eventually produce the exact same output regardless of message order. It does not guarantee real-time linearizability (`is this the latest state right now?`), which itself rests on the absence of newer writes elsewhere.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3><span class="i">What if libraries know how facts are partitioned in advance?</span><span class="m">What if machines know how facts are partitioned in advance?</span></h3><p><span class="i">Subsequent work (such as Zinn, Green, and Ludäscher 2012) showed that if data is partitioned by a known hash or policy Rule (`policy-aware transducers`), certain non-monotonic queries can also be answered without messages because each library already knows which subset of facts could possibly exist elsewhere.</span><span class="m">Subsequent work (such as Zinn, Green, and Ludäscher 2012) showed that if data is partitioned by a known hash or policy rule (`policy-aware transducers`), certain non-monotonic queries can also be answered without messages because each machine already knows which subset of facts could possibly exist elsewhere.</span></p></div></div></div>
     </div>
   </div>
 </section>
 
 <!-- ============================================================ Back to machines -->
-<section class="spread dark" id="why" data-name="Back to machines">
+<section class="spread dark" id="why" data-name="Back to machines" data-name-m="The result">
   <a class="anchor" id="s10"></a>
   <a class="anchor" id="refs"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">Back to machines</div>
-      <h2>The hall was a theorem</h2>
-      <p class="lede">Every question is a program, and its door is whether it needs coordination. Hover or tap to see who is who.</p>
+      <div class="kicker"><span class="i">Back to machines</span><span class="m">The result</span></div>
+      <h2><span class="i">The hall was a theorem</span><span class="m">What the theorem says</span></h2>
+      <p class="lede"><span class="i">Every question is a program, and its door is whether it needs coordination. Hover or tap to see who is who.</span><span class="m">Every question is a program, and what matters is whether it needs coordination: a program has a consistent, coordination-free implementation exactly when it is monotonic.</span></p>
     </div>
-    <div class="map" id="map">
+    <div class="map i" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">At the hall</div><div></div><div class="hd">In computing</div>
     </div>
     <div class="meander" style="margin:3rem auto"></div>
@@ -386,12 +365,12 @@
       <p class="big">A program has a consistent, coordination-free distributed implementation exactly when it is monotonic.</p>
       <p class="lede" style="margin:0 auto">The line is bright, and it is no recipe: it does not say how to find a monotonic form of a problem.</p>
       <div class="links">
-        <a href="../../places/hall-of-two-doors/index.html">The hall of two doors, in detail</a>
+        <a class="i" href="../../places/hall-of-two-doors/index.html">The hall of two doors, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
       </div>
     </div>
     <div class="apparatus">
-      <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/hall-of-two-doors/index.html">The Hall of Two Doors</a></p>
+      <p class="lineage i"><span class="lbl">Setting</span> <a href="../../places/hall-of-two-doors/index.html">The Hall of Two Doors</a></p>
       <details class="proof">
         <summary>The paper behind this book</summary>
         <p>Joseph M. Hellerstein, <i>The Declarative Imperative: Experiences and Conjectures in Distributed Logic</i>. SIGMOD Record 39(1), 2010, 5–19; the text of the keynote at the ACM Symposium on Principles of Database Systems (PODS), 2010. — The CALM conjecture and its companions.</p>
@@ -401,9 +380,9 @@
         <p>Hellerstein asked which computations a group of machines can carry out without ever waiting for one another, so that they stay available when the network is cut and are not slowed by coordination. His conjecture, CALM, is that those are exactly the monotone computations: ones whose output only grows as the input grows, so that no answer ever has to be retracted. Deadlock detection is monotone, since a cycle found stays found. Garbage collection is not, since to be sure an object is unreachable a machine must know that it has heard everything.</p>
         <p>Ameloot, Neven and Van den Bussche proved it in a model of machines running relational queries and exchanging facts. A computation is coordination-free if there is some distribution of the data on which it reaches its answer without messages; they show this is exactly the monotone queries, and also exactly those answered by machines that know neither their own names nor the others'. Without that knowledge a machine cannot tell that it has heard from everyone, which is what a non-monotone query needs.</p>
         <p>Hellerstein and Alvaro restate it for practice. A non-monotone step can often be isolated and sealed, so that only it waits, and only for what it names; coordination can be moved off the critical path; or an error can be apologised for afterwards. The result is a bright line, not a recipe: it does not say how to find a monotone form of a problem, and what it guarantees is that the outcome does not depend on the order of the news, not that it is the newest.</p>
-        <p class="fnote">Hellersteinos stands for Joseph Hellerstein, the author of the first and third papers. The papers have five authors, Joseph M. Hellerstein, Peter Alvaro, Tom J. Ameloot, Frank Neven and Jan Van den Bussche, and all are credited here; only Hellersteinos is named, and the librarians and scholars are told apart by what they do.</p>
+        <p class="fnote i">Hellersteinos stands for Joseph Hellerstein, the author of the first and third papers. The papers have five authors, Joseph M. Hellerstein, Peter Alvaro, Tom J. Ameloot, Frank Neven and Jan Van den Bussche, and all are credited here; only Hellersteinos is named, and the librarians and scholars are told apart by what they do.</p>
       </details>
-      <details class="proof">
+      <details class="proof i">
         <summary>In the paper, term by term</summary>
         <table class="terms2"><tbody>
           <tr><td><span class="term">the hall of two doors, sorting and never ruling</span></td><td>The CALM theorem as a classification of programs. <span class="paper">Hellerstein–Alvaro §1.4; Ameloot et al. §6.</span></td></tr>
@@ -437,6 +416,7 @@
   </div>
 </section>
 <footer>Distributed Algorithms of Ancient Greece · “Knowing When to Wait”, after Hellerstein 2010, Ameloot, Neven and Van den Bussche 2011, and Hellerstein and Alvaro 2020.</footer>
+<script src="../../assets/js/registers.js"></script>
 <script src="../../assets/js/book.js"></script>
 <script src="script.js"></script>
 </body>
