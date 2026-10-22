@@ -11,6 +11,9 @@ function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();ret
   (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
 function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
 
+/* ===== the two registers: see assets/js/registers.js ===== */
+const {isM,dual,vis,dtext,onReg}=REG;
+
 /* ===== pop-ups unfold when they enter view ===== */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
 $$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
@@ -28,12 +31,13 @@ function onscroll(){
     prog.style.width=(h>0?y/h*100:0)+"%";
     const mid=y+innerHeight*.4; let cur=secs[0];
     for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
-    now.textContent=cur.dataset.name||"";
+    now.textContent=(isM()&&cur.dataset.nameM)||cur.dataset.name||"";
     if(reduce)return;
     for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
     for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
   });
 }
+REG.after=onscroll;
 addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
 
 /* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
@@ -44,7 +48,8 @@ function stepDots(root,steps){
     if(d) b.innerHTML='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="'+d+'"/></svg>'; b.addEventListener("click",fn); return b};
   const prev=ctl("arr","Previous step","M7.5 2 3.5 6l4 4",()=>go(cur-1)), next=ctl("arr","Next step","M4.5 2l4 4-4 4",()=>go(cur+1)),
         back=ctl("arr back","Back to the first step","M2.6 6.4a3.5 3.5 0 1 0 1-2.8M2.4 1.6v2.2h2.2",()=>go(0));
-  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""),"",()=>go(i))});
+  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+vis(h):""),"",()=>go(i))});
+  onReg.push(()=>dots.forEach((d,i)=>{const h=$("h3",steps[i]),t="Step "+(i+1)+" of "+steps.length+(h?": "+vis(h):"");d.setAttribute("aria-label",t);d.title=t}));
   nav.append(prev,...dots,next,back);
   if(stage&&steps.length>1) stage.append(nav);
   return i=>{cur=i; prev.disabled=back.disabled=i===0; next.disabled=i===steps.length-1;
@@ -87,7 +92,7 @@ function Polar(svg,o){
   for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
   for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
   for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
-    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
+    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";dtext(g,{},nodes[k][1],nodes[k][3]||nodes[k][1])}
   if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
   return P;
 }
@@ -160,62 +165,52 @@ document.querySelectorAll(".lin").forEach(lin=>{
 })();
 
 const HC={1:"#9cb648",2:"#e0b84a",3:"#5b9be0"};
-const chip=(t,h)=>`<span class="chip"><i style="background:${HC[h]}"></i>${t}·H${h}</span>`;
-
-/* ===== machines: three clocks that disagree ===== */
-(function(){
-  const off=[2.4,-1.8,.5], box=$("#clocks"), t0=performance.now(); let timer=null;
-  const els=off.map((o,i)=>{const d=document.createElement("div");d.className="clk";d.innerHTML=`<h5>MACHINE ${"ABC"[i]}</h5><b></b>`;box.appendChild(d);return $("b",d)});
-  const read=i=>12*3600+(performance.now()-t0)/1000+off[i];
-  const fmt=s=>`${Math.floor(s/3600)}:${String(Math.floor(s%3600/60)).padStart(2,"0")}:${(s%60).toFixed(1).padStart(4,"0")}`;
-  const paint=()=>els.forEach((e,i)=>e.textContent=fmt(read(i)));
-  paint();
-  new IntersectionObserver(es=>{clearInterval(timer);timer=null;if(es[0].isIntersecting)timer=setInterval(paint,100)}).observe(box);
-  const btn=$("#wr"),truth=$("#truth"),stamps=$("#stamps"),note=$("#clknote");
-  btn.onclick=async()=>{btn.disabled=true;truth.innerHTML=stamps.innerHTML="";
-    const a={m:"A",what:"price = 4",s:read(0)};truth.innerHTML=`<div class="e">1 ▸ A: ${a.what}</div>`;note.textContent="Machine A writes, and stamps the write with its own clock.";
-    await sleep(1100);
-    const b={m:"B",what:"price = 7",s:read(1)};truth.innerHTML+=`<div class="e">2 ▸ B: ${b.what}</div>`;note.textContent="A moment later machine B writes, and stamps the write with its own clock, which runs behind.";
-    await sleep(1300);
-    stamps.innerHTML=[b,a].map(x=>`<div class="e bad">${fmt(x.s)} ▸ ${x.m}: ${x.what}</div>`).join("");
-    note.innerHTML="Sorted by timestamp, B's write comes first. <span class='bad'>The clocks have reversed what happened.</span>";btn.disabled=false;btn.textContent="Again"};
-})();
+const GM={G:"!"};   /* the goatherd's token: a letter in the allegory, a mark in computing */
+/* a label that says one thing in each register */
+const dl=(parent,attrs)=>{const t=dtext(parent,attrs,"","");return {set(i,m){t[0].textContent=i;t[1].textContent=m===undefined?i:m}}};
+const chip=(t,h)=>`<span class="chip"><i style="background:${HC[h]}"></i>${dual(`${t}·H${h}`,`${t}·P${h}`)}</span>`;
 
 /* ===== Arche, seen from above: one picture reused wherever messengers are on the road ===== */
 function Isle(svg){
   const cx=235,cy=235,R=165,A={1:-90,2:30,3:150}; svg.innerHTML=""; svg.setAttribute("viewBox","0 0 470 470");
   el("circle",{cx,cy,r:215,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
   el("circle",{cx,cy,r:86,fill:"#d9cfb4",stroke:"#6b5a48","stroke-width":2.5,"stroke-dasharray":"2 6"},svg);
-  el("text",{x:cx,y:cy-8,class:"lab"},svg).textContent="Mount Phyle";
+  el("text",{x:cx,y:cy-8,class:"lab i"},svg).textContent="Mount Phyle";
   el("circle",{cx,cy,r:R,fill:"none",stroke:"#b5602c","stroke-width":3,"stroke-dasharray":"3 8"},svg);
   const under=el("g",{},svg),sites=el("g",{},svg),over=el("g",{},svg);
   const I={svg,cx,cy,R,A,under,over,house:{},
     at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
-    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:13,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
+    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:13,fill,stroke:"#1c1512","stroke-width":2.5},g);dtext(g,{},glyph,GM[glyph]||glyph);return g},
     put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
     /* u of the way along the direct stretch from house a to house b; each direction keeps to its own lane */
     road(g,a,b,u){const d=((A[b]-A[a]+540)%360)-180;I.put(g,...I.at(A[a]+d*u,R+(d>0?9:-9)))}
   };
-  for(const h of [1,2,3]){const [x,y]=I.at(A[h]),g=el("g",{class:"site"},sites);I.put(g,x,y);el("rect",{x:-25,y:-17,width:50,height:34,rx:5,fill:HC[h]},g);el("text",{},g).textContent="H"+h;I.house[h]={x,y,g}}
+  for(const h of [1,2,3]){const [x,y]=I.at(A[h]),g=el("g",{class:"site"},sites);I.put(g,x,y);el("rect",{x:-25,y:-17,width:50,height:34,rx:5,fill:HC[h]},g);dtext(g,{},"H"+h,"P"+h);I.house[h]={x,y,g}}
   return I;
 }
+
+/* the cover, in computing: three processes in a ring with messages in transit */
+(function(){const I=Isle($("#coversvg"));
+  [[1,2,.5],[2,3,.5],[3,1,.45],[1,3,.4]].forEach(([a,b,u])=>{const g=I.token(HC[a],"✉");g.setAttribute("opacity",1);I.road(g,a,b,u)})})();
 
 /* ===== the gate of House 3: arrival follows the quicker legs, not the earlier request ===== */
 (function(){
   const I=Isle($("#race")),m1=I.token(HC[1],"✉"),m2=I.token(HC[2],"✉"),say=$("#racesay"),b1=$("#race1"),b2=$("#race2");
-  const w1=el("text",{class:"lab halo",x:I.house[1].x,y:I.house[1].y+40},I.over),w2=el("text",{class:"lab halo",x:I.house[2].x-16,y:I.house[2].y-28},I.over);
+  const w1=dl(I.over,{class:"lab halo",x:I.house[1].x,y:I.house[1].y+40}),w2=dl(I.over,{class:"lab halo",x:I.house[2].x-16,y:I.house[2].y-28});
   let seen=0;
   async function run(fast){
-    b1.disabled=b2.disabled=true;w1.textContent=w2.textContent="";m1.setAttribute("opacity",0);m2.setAttribute("opacity",0);
+    b1.disabled=b2.disabled=true;w1.set("");w2.set("");m1.setAttribute("opacity",0);m2.setAttribute("opacity",0);
     const ms=h=>h===fast?1700:3600;
-    w2.textContent="wrote first";say.textContent="House 2 writes its request and sends a messenger.";
+    w2.set("wrote first","sent first");say.innerHTML=dual("House 2 writes its request and sends a messenger.","P2 makes its request and sends a message.");
     I.road(m2,2,3,.1);m2.setAttribute("opacity",1);const p2=tween(ms(2),u=>I.road(m2,2,3,.1+.78*u));
     await sleep(700);
-    w1.textContent="wrote second";say.textContent="A little later House 1 writes its own request and sends a messenger.";
+    w1.set("wrote second","sent second");say.innerHTML=dual("A little later House 1 writes its own request and sends a messenger.","A little later P1 makes its own request and sends a message.");
     I.road(m1,1,3,.1);m1.setAttribute("opacity",1);const p1=tween(ms(1),u=>I.road(m1,1,3,.1+.78*u));
     await Promise.all([p1,p2]);seen|=fast;
-    say.innerHTML=(fast===1?"<b>House 1's slip reaches the gate first.</b> Yet House 2 wrote first: the quicker messenger won.":"<b>House 2's slip reaches the gate first.</b> This time the request written first also arrives first, but only because its messenger kept ahead.")
-      +(seen===3?" The same two requests, written in the same sequence; only the legs changed. Arrival at the gate cannot be the test.":"");
+    say.innerHTML=dual((fast===1?"<b>House 1's slip reaches the gate first.</b> Yet House 2 wrote first: the quicker messenger won.":"<b>House 2's slip reaches the gate first.</b> This time the request written first also arrives first, but only because its messenger kept ahead.")
+      +(seen===3?" The same two requests, written in the same sequence; only the legs changed. Arrival at the gate cannot be the test.":""),
+      (fast===1?"<b>P1's message reaches P3 first.</b> Yet P2 sent first: the faster delivery won.":"<b>P2's message reaches P3 first.</b> This time the request made first also arrives first, but only because its message kept ahead.")
+      +(seen===3?" The same two requests, made in the same sequence; only the delivery times changed. Order of arrival cannot be the test.":""));
     b1.disabled=b2.disabled=false;
   }
   b1.onclick=()=>run(1);b2.onclick=()=>run(2);
@@ -226,18 +221,18 @@ function Isle(svg){
    by following scroll lines and slips, so the page checks one against the other. */
 function Morning(svg){
   const P=Polar(svg,{vb:"0 0 620 596",cx:310,cy:350,r0:44,step:30,rings:9,tEnd:9.5,note:[14,24],
-    nodes:{1:[-90,"H1",HC[1]],2:[30,"H2",HC[2]],3:[150,"H3",HC[3]]}});
+    nodes:{1:[-90,"H1",HC[1],"P1"],2:[30,"H2",HC[2],"P2"],3:[150,"H3",HC[3],"P3"]}});
   const E=[
-    {id:"a",h:1,t:1.2,d:"House 1 enters a request"},
-    {id:"b",h:1,t:2.4,d:"House 1 sends a slip to House 2"},
-    {id:"c",h:2,t:1.6,d:"House 2 enters a sale"},
-    {id:"d",h:2,t:3.8,d:"House 2 receives House 1's slip",from:"b"},
-    {id:"e",h:2,t:5,d:"House 2 sends a slip to House 3"},
-    {id:"f",h:3,t:3,d:"House 3 enters a delivery"},
-    {id:"g",h:3,t:4.6,d:"House 3 enters a request"},
-    {id:"i",h:3,t:6.6,d:"House 3 receives House 2's slip",from:"e"},
-    {id:"j",h:3,t:7.6,d:"House 3 sends a slip to House 1"},
-    {id:"l",h:1,t:9,d:"House 1 receives House 3's slip",from:"j"}];
+    {id:"a",h:1,t:1.2,d:"House 1 enters a request",m:"P1’s first event"},
+    {id:"b",h:1,t:2.4,d:"House 1 sends a slip to House 2",m:"P1 sends a message to P2"},
+    {id:"c",h:2,t:1.6,d:"House 2 enters a sale",m:"P2’s first event"},
+    {id:"d",h:2,t:3.8,d:"House 2 receives House 1's slip",m:"P2 receives P1’s message",from:"b"},
+    {id:"e",h:2,t:5,d:"House 2 sends a slip to House 3",m:"P2 sends a message to P3"},
+    {id:"f",h:3,t:3,d:"House 3 enters a delivery",m:"P3’s first event"},
+    {id:"g",h:3,t:4.6,d:"House 3 enters a request",m:"P3’s second event"},
+    {id:"i",h:3,t:6.6,d:"House 3 receives House 2's slip",m:"P3 receives P2’s message",from:"e"},
+    {id:"j",h:3,t:7.6,d:"House 3 sends a slip to House 1",m:"P3 sends a message to P1"},
+    {id:"l",h:1,t:9,d:"House 1 receives House 3's slip",m:"P1 receives P3’s message",from:"j"}];
   const by={},T={1:0,2:0,3:0},V={1:[0,0,0],2:[0,0,0],3:[0,0,0]},last={};E.forEach(e=>by[e.id]=e);
   [...E].sort((a,b)=>a.t-b.t).forEach(e=>{const s=e.from&&by[e.from];e.pred=[];
     if(last[e.h]){e.pred.push(last[e.h]);e.seg=P.seg(e.h,last[e.h].t,e.t)}
@@ -255,7 +250,8 @@ function Morning(svg){
     hi(links){M.clear();links.forEach(([x,n])=>{if(n.from===x.id){n.slip.classList.add("hi");n.slip.setAttribute("marker-end",`url(#${svg.id}-r)`)}else n.seg.classList.add("hi")})},
     text(e,s){e.g.label.textContent=s},
     /* let the reader choose two entries */
-    pick(cb){let sel=[];E.forEach(e=>button(e.g,e.d,()=>{if(sel.length===2||sel.includes(e))sel=[];sel.push(e);E.forEach(x=>x.g.classList.toggle("sel",sel.includes(x)));cb(sel)}))}
+    pick(cb){let sel=[];E.forEach(e=>button(e.g,e.d,()=>{if(sel.length===2||sel.includes(e))sel=[];sel.push(e);E.forEach(x=>x.g.classList.toggle("sel",sel.includes(x)));cb(sel)}));
+      onReg.push(()=>E.forEach(e=>e.g.setAttribute("aria-label",isM()?e.m:e.d)))}
   };
   return M;
 }
@@ -264,22 +260,23 @@ function Morning(svg){
 (function(){
   const M=Morning($("#cbsvg")),say=$("#cbsay");
   M.pick(sel=>{
-    if(sel.length<2){M.clear();say.innerHTML=`<b>${sel[0].d}.</b> Now choose a second entry.`;return}
+    if(sel.length<2){M.clear();say.innerHTML=dual(`<b>${sel[0].d}.</b> Now choose a second entry.`,`<b>${sel[0].m}.</b> Now choose a second event.`);return}
     let [a,b]=sel;if(M.before(b,a))[a,b]=[b,a];
-    if(M.before(a,b)){M.hi(M.chain(a,b));say.innerHTML=`<b>${a.d}</b> came before <b>${b.d}</b>. Follow the red chain: every link is a line of one house's scroll, or a slip on the road.`}
-    else{M.clear();say.innerHTML=`<b>${a.d}</b>, and <b>${b.d}</b>: <span class="bad">unrelated</span>. No chain of scroll lines and slips joins them, so neither house could have known of the other's entry. One lies further out, later by the sun, but nothing the houses hold can tell them so.`}
+    if(M.before(a,b)){M.hi(M.chain(a,b));say.innerHTML=dual(`<b>${a.d}</b> came before <b>${b.d}</b>. Follow the red chain: every link is a line of one house's scroll, or a slip on the road.`,`<b>${a.m}</b> happened before <b>${b.m}</b>. Follow the red chain: every link is a step in one process’s log, or a message on the network.`)}
+    else{M.clear();say.innerHTML=dual(`<b>${a.d}</b>, and <b>${b.d}</b>: <span class="bad">unrelated</span>. No chain of scroll lines and slips joins them, so neither house could have known of the other's entry. One lies further out, later by the sun, but nothing the houses hold can tell them so.`,`<b>${a.m}</b>, and <b>${b.m}</b>: <span class="bad">concurrent</span>. No chain of local steps and messages joins them, so neither process could have known of the other’s event. One may be later in real time, but nothing the processes hold can tell them so.`)}
   });
 })();
 
 /* ===== scrollytelling: the tally ===== */
 (function(){
   const M=Morning($("#tallysvg")),lab={};
-  M.E.filter(e=>e.slip).forEach(e=>{const [x,y]=e.slip.mid,t=el("text",{class:"tok-l fade halo",x,y:y+4},M.P.over);t.textContent="slip says "+M.by[e.from].tally;lab[e.id]=t});
+  M.E.filter(e=>e.slip).forEach(e=>{const [x,y]=e.slip.mid,t=dtext(M.P.over,{class:"tok-l fade halo",x,y:y+4},"slip says "+M.by[e.from].tally,"message carries "+M.by[e.from].tally);lab[e.id]=t});
+  const on=(t,v)=>t.forEach(x=>x.classList.toggle("on",v));
   const from={a:1,b:1,c:1,f:1,g:1,d:3,e:4,i:4,j:4,l:4}, B=M.by;
   const long=[[B.a,B.b],[B.b,B.d],[B.d,B.e],[B.e,B.i],[B.i,B.j],[B.j,B.l]];
   scrolly($("#tally"),s=>{
     M.E.forEach(e=>{M.text(e,s>=from[e.id]?e.tally:"");e.g.classList.toggle("mark",s===6&&(e===B.g||e===B.d));e.g.classList.toggle("dim",s===6&&e!==B.g&&e!==B.d)});
-    lab.d.classList.toggle("on",s>=2&&s<6);lab.i.classList.toggle("on",s>=4&&s<6);lab.l.classList.toggle("on",s>=4&&s<6);
+    on(lab.d,s>=2&&s<6);on(lab.i,s>=4&&s<6);on(lab.l,s>=4&&s<6);
     if(s===5)M.hi(long);else M.clear();
   });
 })();
@@ -295,9 +292,9 @@ function Morning(svg){
   const sound=l=>{const at=l.map(String);return chains.every(([a,b])=>at.indexOf(a)<at.indexOf(b))};
   const heard=()=>{let l;do{l=mixed()}while(!sound(l));return l};
   function mix(){do{lists=[heard(),heard(),heard()]}while(String(lists[0])===String(lists[1])||String(lists[1])===String(lists[2])||String(lists[0])===String(lists[2]));paint();
-    st.textContent="as each heard of them";say.textContent="Six entries from the morning, each marked with its tally and its house. Each house heard of them in a different sequence.";bs.disabled=false}
-  bs.onclick=()=>{lists=lists.map(l=>[...l].sort((a,b)=>a[0]-b[0]||a[1]-b[1]));paint();bs.disabled=true;st.textContent="by precedence";
-    say.innerHTML="Lower tally first; where tallies tie, lower house number first. <span class='ok'>All three houses now hold the same list</span>, and none of them needed a clock.";};
+    st.innerHTML=dual("as each heard of them","as each received them");say.innerHTML=dual("Six entries from the morning, each marked with its tally and its house. Each house heard of them in a different sequence.","Six events from the execution, each marked with its timestamp and its process. Each process received them in a different sequence.");bs.disabled=false}
+  bs.onclick=()=>{lists=lists.map(l=>[...l].sort((a,b)=>a[0]-b[0]||a[1]-b[1]));paint();bs.disabled=true;st.innerHTML=dual("by precedence","by precedence");
+    say.innerHTML=dual("Lower tally first; where tallies tie, lower house number first. <span class='ok'>All three houses now hold the same list</span>, and none of them needed a clock.","Lower timestamp first; where timestamps tie, lower process number first. <span class='ok'>All three processes now hold the same list</span>, and none of them needed a clock.");};
   bm.onclick=mix;mix();
 })();
 
@@ -305,7 +302,7 @@ function Morning(svg){
 (function(){
   const I=Isle($("#storesvg")),side=$("#storeside");
   const [sx,sy]=I.at(90,I.R-36),sg=el("g",{class:"site"},I.over);I.put(sg,sx,sy);
-  const sr=el("rect",{x:-56,y:-14,width:112,height:28,rx:4,fill:"#fffaf0"},sg),stx=el("text",{style:"font-size:12px"},sg);
+  const sr=el("rect",{x:-56,y:-14,width:112,height:28,rx:4,fill:"#fffaf0"},sg),stx=dtext(sg,{style:"font-size:12px"},"","");
   const r1=[2,1],r3=[2,3],both=[r1,r3];
   /* how things stand at each step: tallies, queues, who is loading, and the highest tally each asker has heard from the others */
   const ST=[
@@ -328,12 +325,12 @@ function Morning(svg){
     let chk="";
     if(h===2)chk="no request of its own";
     else if(!mine)chk="no request standing";
-    else chk=`first in its queue ${tick(q[0][1]===h)}<br>heard above 2 from `+[1,2,3].filter(o=>o!==h).map(o=>`H${o} ${tick((heard[o]||0)>2)}`).join(" ");
-    return `<div class="hc${S.in===h?" in":""}"><h5>House ${h}<span>tally ${S.t[h-1]}</span></h5><div>${q.length?q.map(r=>chip(r[0],r[1])).join(""):"queue empty"}</div><div class="chk">${chk}</div></div>`;
+    else{const hs=p=>[1,2,3].filter(o=>o!==h).map(o=>`${p}${o} ${tick((heard[o]||0)>2)}`).join(" "),a=`first in its queue ${tick(q[0][1]===h)}<br>heard above 2 from `;chk=dual(a+hs("H"),a+hs("P"))}
+    return `<div class="hc${S.in===h?" in":""}"><h5>${dual("House "+h,"P"+h)}<span>${dual("tally ","clock ")}${S.t[h-1]}</span></h5><div>${q.length?q.map(r=>chip(r[0],r[1])).join(""):"queue empty"}</div><div class="chk">${chk}</div></div>`;
   }
   scrolly($("#store"),s=>{
     const S=ST[s];side.innerHTML=[1,2,3].map(h=>card(h,S)).join("");
-    sr.setAttribute("fill",S.in?HC[S.in]:"#fffaf0");stx.textContent=S.in?`House ${S.in} loading`:"storehouse: empty";
+    sr.setAttribute("fill",S.in?HC[S.in]:"#fffaf0");stx[0].textContent=S.in?`House ${S.in} loading`:"storehouse: empty";stx[1].textContent=S.in?`P${S.in} in the resource`:"resource: free";
     toks.forEach(k=>{const u=k.plan[s],id=++k.run;
       if(u==null){k.g.setAttribute("opacity",0);k.u=s>k.end?.9:.1;I.road(k.g,k.a,k.b,k.u);return}
       k.g.setAttribute("opacity",1);const u0=k.u;tween(800,e=>{if(k.run!==id)return;k.u=u0+(u-u0)*e;I.road(k.g,k.a,k.b,k.u)})});
@@ -344,17 +341,17 @@ function Morning(svg){
 (function(){
   const I=Isle($("#goat")),say=$("#goatsay"),btn=$("#goatgo"),H1=I.house[1],H3=I.house[3];
   const gt=I.token("#fffaf0","G"),ms=I.token(HC[3],"9");
-  const l3=el("text",{class:"lab halo",x:H3.x+10,y:H3.y+38},I.over),l1=el("text",{class:"lab halo",x:H1.x+32,y:H1.y+36,style:"text-anchor:start"},I.over);
+  const l3=dl(I.over,{class:"lab halo",x:H3.x+10,y:H3.y+38}),l1=dl(I.over,{class:"lab halo",x:H1.x+32,y:H1.y+36,style:"text-anchor:start"});
   const over=u=>{const v=1-u;I.put(gt,v*v*H3.x+2*u*v*I.cx+u*u*H1.x,v*v*H3.y+2*u*v*I.cy+u*u*H1.y)};
-  function reset(){l3.textContent="tally 8";l1.textContent="tally 3";gt.setAttribute("opacity",0);ms.setAttribute("opacity",0)}
+  function reset(){l3.set("tally 8","clock 8");l1.set("tally 3","clock 3");gt.setAttribute("opacity",0);ms.setAttribute("opacity",0)}
   btn.onclick=async()=>{btn.disabled=true;reset();
-    l3.textContent="sale: tally 9";say.innerHTML="House 3 enters a sale under tally <b>9</b>. A messenger sets out by the road with the official slip, and a goatherd sets out over the mountain with the news.";
+    l3.set("sale: tally 9","sale: clock 9");say.innerHTML=dual("House 3 enters a sale under tally <b>9</b>. A messenger sets out by the road with the official slip, and a goatherd sets out over the mountain with the news.","P3 records a sale under clock <b>9</b>. A message sets out over the network with the official stamp, and the news also goes out over the outside channel.");
     I.road(ms,3,1,.1);ms.setAttribute("opacity",1);over(.12);gt.setAttribute("opacity",1);
     const road=tween(6200,u=>I.road(ms,3,1,.1+.78*u));
     await tween(1900,u=>over(.12+.76*u));
-    l1.textContent="request: tally 4";say.innerHTML="The goatherd is lucky. House 1 hears of the sale and at once enters a request because of it. Its quiet tally stood at 3, so the request goes in under <b>4</b>.";
+    l1.set("request: tally 4","request: clock 4");say.innerHTML=dual("The goatherd is lucky. House 1 hears of the sale and at once enters a request because of it. Its quiet tally stood at 3, so the request goes in under <b>4</b>.","The outside channel is fast. P1 hears of the sale and at once makes a request because of it. Its quiet clock stood at 3, so the request goes in under <b>4</b>.");
     await road;ms.setAttribute("opacity",0);
-    say.innerHTML="Hours later the official slip arrives, marked 9, too late to correct anything. <span class='bad'>By the tallies, the request (4) came before the sale (9) that caused it.</span> The goatherd carried no slip, so the rules never saw the goatherd.";
+    say.innerHTML=dual("Hours later the official slip arrives, marked 9, too late to correct anything. <span class='bad'>By the tallies, the request (4) came before the sale (9) that caused it.</span> The goatherd carried no slip, so the rules never saw the goatherd.","Hours later the official message arrives, stamped 9, too late to correct anything. <span class='bad'>By the clocks, the request (4) happened before the sale (9) that caused it.</span> The outside channel carried no message, so the rules never saw it.");
     btn.textContent="Again";btn.disabled=false};
   reset();
 })();
@@ -362,19 +359,22 @@ function Morning(svg){
 /* ===== the column: compare two entries row by row ===== */
 (function(){
   const M=Morning($("#colsvg")),out=$("#colout"),say=$("#colsay");M.E.forEach(e=>M.text(e,e.tally));
-  const short=e=>`H${e.h}'s ${e.tally}`;
+  const short=e=>dual(`H${e.h}'s ${e.tally}`,`P${e.h}'s ${e.tally}`);
   M.pick(sel=>{
-    if(sel.length<2){M.clear();out.innerHTML="";say.innerHTML=`<b>${sel[0].d}</b>, tally ${sel[0].tally}. Now choose a second entry.`;return}
+    if(sel.length<2){M.clear();out.innerHTML="";say.innerHTML=dual(`<b>${sel[0].d}</b>, tally ${sel[0].tally}. Now choose a second entry.`,`<b>${sel[0].m}</b>, timestamp ${sel[0].tally}. Now choose a second event.`);return}
     const [a,b]=sel,le=a.col.every((x,k)=>x<=b.col[k]),ge=a.col.every((x,k)=>x>=b.col[k]);
     out.innerHTML=`<table class="cmp"><thead><tr><th>Row</th><th>${short(a)}</th><th></th><th>${short(b)}</th></tr></thead><tbody>`+
-      a.col.map((x,k)=>`<tr class="${x<b.col[k]?"up":x>b.col[k]?"down":""}"><td>House ${k+1}</td><td>${x}</td><td>${x<b.col[k]?"&lt;":x>b.col[k]?"&gt;":"="}</td><td>${b.col[k]}</td></tr>`).join("")+"</tbody></table>";
+      a.col.map((x,k)=>`<tr class="${x<b.col[k]?"up":x>b.col[k]?"down":""}"><td>${dual("House "+(k+1),"P"+(k+1))}</td><td>${x}</td><td>${x<b.col[k]?"&lt;":x>b.col[k]?"&gt;":"="}</td><td>${b.col[k]}</td></tr>`).join("")+"</tbody></table>";
     if(le||ge){const [x,y]=le?[a,b]:[b,a];M.hi(M.chain(x,y));
-      say.innerHTML=`No row of the ${le?"first":"second"} column is greater than the other's, and the columns differ. So <b>${x.d}</b> <span class="ok">came before</span> <b>${y.d}</b>. Their tallies, ${x.tally} and ${y.tally}, agree with that, but could not have ruled out that the two were unrelated.`}
+      say.innerHTML=dual(`No row of the ${le?"first":"second"} column is greater than the other's, and the columns differ. So <b>${x.d}</b> <span class="ok">came before</span> <b>${y.d}</b>. Their tallies, ${x.tally} and ${y.tally}, agree with that, but could not have ruled out that the two were unrelated.`,
+        `No entry of the ${le?"first":"second"} vector is greater than the other's, and the vectors differ. So <b>${x.m}</b> <span class="ok">happened before</span> <b>${y.m}</b>. Their timestamps, ${x.tally} and ${y.tally}, agree with that, but could not have ruled out that the two were concurrent.`)}
     else{M.clear();const up=a.col.findIndex((x,k)=>x>b.col[k]),dn=a.col.findIndex((x,k)=>x<b.col[k]);
-      say.innerHTML=`The first column is greater in the row for House ${up+1}, the second in the row for House ${dn+1}. Neither is at least the other, so the two entries are <span class="bad">unrelated</span>: each was made in ignorance of the other. Their tallies, ${a.tally} and ${b.tally}, ${a.tally===b.tally?"say nothing either way":"would have suggested a sequence that was never there"}.`}
+      say.innerHTML=dual(`The first column is greater in the row for House ${up+1}, the second in the row for House ${dn+1}. Neither is at least the other, so the two entries are <span class="bad">unrelated</span>: each was made in ignorance of the other. Their tallies, ${a.tally} and ${b.tally}, ${a.tally===b.tally?"say nothing either way":"would have suggested a sequence that was never there"}.`,
+        `The first vector is greater in the entry for P${up+1}, the second in the entry for P${dn+1}. Neither is at least the other, so the two events are <span class="bad">concurrent</span>: each was made in ignorance of the other. Their timestamps, ${a.tally} and ${b.tally}, ${a.tally===b.tally?"say nothing either way":"would have suggested a sequence that was never there"}.`)}
   });
 })();
 
 /* ===== relevance map ===== */
 mapPairs($("#map"),[["A trading house","A process"],["A slip carried by a messenger","A message"],["No passing on the road","Messages between two processes arrive in the order sent"],["Water-clocks with no common hour","No synchronised clocks"],["Came before","Happened before"],["Unrelated","Concurrent"],["The tally","A Lamport logical clock"],["Precedence: tally, then house number","A total order, ties broken by process number"],["The shared storehouse","Mutual exclusion without a coordinator"],["The goatherd over the mountain","A cause that travels outside the system"],["The column","A vector clock"]]);
+REG.start();
 })();
