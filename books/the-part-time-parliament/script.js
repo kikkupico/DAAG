@@ -307,13 +307,5 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   b.onclick=()=>{on=!on; const es=$$(".e",f); es.forEach((e,i)=>setTimeout(()=>e.classList.toggle("gone",on),reduce?0:i*20)); f.classList.toggle("folded",on); b.innerHTML=on?dual("Unfold it again","Unfold it again"):dual("Fold the scroll","Fold the log")};
 })();
 
-/* ===== relevance map ===== */
-(function(){
-  const pairs=[["A legislator","A server"],["Leaving the Chamber","A crash or a partition"],["A messenger","A network message"],["A scroll of decrees","The log of commands"],["A majority in the Chamber","A quorum of servers"],["The president","The leader"],["A ballot number","A proposal or term number"],["A decree","A command in the log"]];
-  const m=$("#map"); pairs.forEach(([a,b])=>{
-    const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
-    const grp=[l,mid,r]; grp.forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)});
-})();
-
 REG.start();
 })();
