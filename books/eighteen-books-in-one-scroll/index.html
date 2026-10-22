@@ -34,7 +34,7 @@
       <input type="range" class="tseek" min="0" max="1000" step="1" value="1000" aria-label="Moment shown">
     </div>
     <p class="legend">
-      <span class="lg-walk"><span class="i">Spokes are places, later as they run outward · arcs are messengers · <b class="r">red</b> is the one change</span><span class="m">Spokes are processes, time outward · arcs are messages · <b class="r">red</b> is the changed assumption</span></span>
+      <span class="lg-walk"><span class="i">Spokes are places, later as they run outward · arcs are messengers · <b class="r">red</b> is the one change</span><span class="m">Lanes are processes, time left to right · arrows are messages · <b class="r">red</b> is the changed assumption</span></span>
       <span class="lg-wall"><span class="i"><b class="g">Gold</b> is what one post sees, the same on both nights · <b class="r">red</b> is what differs</span><span class="m"><b class="g">Gold</b> is one process's view, the same in both runs · <b class="r">red</b> is what differs</span></span>
     </p>
   </div>
@@ -71,6 +71,166 @@
   </div>
 </section>
 
+<!-- ============================================================ THE WHOLE FAMILY: every book, and what each changes -->
+<section class="family solid" id="threads">
+  <div class="fam-pin">
+    <svg id="tree" viewBox="-330 -290 660 580" role="img" aria-label="The eighteen books as one family tree in the round: Ordering Without Clocks at the centre, each book joined to the one it grows from by a red arc"></svg>
+    <p class="fam-cap" id="famCap" aria-live="polite"></p>
+  </div>
+  <div class="fam-steps">
+    <article class="tcard lead-card" data-thread="all">
+      <p class="kicker">The whole family</p>
+      <h2><span class="i">Eighteen books. Seventeen changes.</span><span class="m">Eighteen books. Seventeen changes.</span></h2>
+      <p><span class="i">Every red arc is one change; every book sits one change from the book it grows from. Tap a book to read it.</span><span class="m">Each red arc is one changed assumption or demand. Tap a node to read its book.</span></p>
+      <p class="sub"><span class="i">Now ten moves that come back from book to book under different names. Learn one, and you have met it everywhere it appears.</span><span class="m">Now ten techniques that recur across the papers. Each lights the papers that use it.</span></p>
+    </article>
+
+    <article class="tcard" id="t1" data-thread="t1">
+      <p class="kicker">Thread one</p>
+      <h3><span class="i">Number it</span><span class="m">Logical timestamps</span></h3>
+      <p><span class="i">With no common hour, number things instead, and break ties by a name.</span><span class="m">Counters replace clocks, and identifiers break ties.</span></p>
+      <ul class="forms">
+        <li><a class="bk" href="#s-owc"><span class="i">Without Clocks</span><span class="m">Logical clocks</span></a> <span class="i">a tally, then the house number</span><span class="m">Lamport clocks, ties by process id</span></li>
+        <li><a class="bk" href="#s-dls"><span class="i">Running Late</span><span class="m">Partial synchrony</span></a> <span class="i">glasses and turns</span><span class="m">rounds and phases</span></li>
+        <li><a class="bk" href="#s-bo"><span class="i">By Chance</span><span class="m">Ben-Or</span></a> <span class="i">numbered rounds</span><span class="m">round numbers</span></li>
+        <li><a class="bk" href="#s-cap"><span class="i">Cut Off</span><span class="m">CAP</span></a> <span class="i">the muster-master's stamps</span><span class="m">version stamps</span></li>
+        <li><a class="bk" href="#s-ptp"><span class="i">Parliament</span><span class="m">Paxos</span></a> <span class="i">ballots, each priest's own numbers</span><span class="m">ballots partitioned by proposer</span></li>
+        <li><a class="bk" href="#s-vr"><span class="i">One Leader</span><span class="m">Viewstamped</span></a> <span class="i">a board's count and caller's name</span><span class="m">viewid ⟨cnt, mid⟩</span></li>
+        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">entry numbers and terms</span><span class="m">sequence numbers and views</span></li>
+        <li><a class="bk" href="#s-gos"><span class="i">Word of Mouth</span><span class="m">Epidemics</span></a> <span class="i">an edition's tally and library</span><span class="m">timestamps with site ids</span></li>
+        <li><a class="bk" href="#s-hat"><span class="i">Promise Alone</span><span class="m">HATs</span></a> <span class="i">one tally for a whole visit</span><span class="m">one timestamp per transaction</span></li>
+      </ul>
+    </article>
+
+    <article class="tcard" id="t2" data-thread="t2">
+      <p class="kicker">Thread two</p>
+      <h3><span class="i">One moment inside each span</span><span class="m">Linearizability</span></h3>
+      <p><span class="i">Copies act as one when every request seems to take effect at one moment between its sending and its answer.</span><span class="m">The single-copy illusion, defined on invocations and responses alone.</span></p>
+      <ul class="forms">
+        <li><a class="bk" href="#s-mc"><span class="i">Many Copies</span><span class="m">Linearizability</span></a> <span class="i">the rule of the board</span><span class="m">the definition; locality</span></li>
+        <li><a class="bk" href="#s-cap"><span class="i">Cut Off</span><span class="m">CAP</span></a> <span class="i">answering as one</span><span class="m">atomic consistency</span></li>
+        <li><a class="bk" href="#s-ptp"><span class="i">Parliament</span><span class="m">Paxos</span></a> <span class="i">no stale scroll for black goats</span><span class="m">reads through leases</span></li>
+        <li><a class="bk" href="#s-vr"><span class="i">One Leader</span><span class="m">Viewstamped</span></a> <span class="i">one law, in a single place</span><span class="m">the group acts as one</span></li>
+        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">one order at every post</span><span class="m">linearizable replication</span></li>
+        <li><a class="bk" href="#s-pbs"><span class="i">Up to Date</span><span class="m">PBS</span></a> <span class="i">groups that must share a library</span><span class="m">strict quorums</span></li>
+        <li><a class="bk" href="#s-hat"><span class="i">Promise Alone</span><span class="m">HATs</span></a> <span class="i">the newest edition, out of reach</span><span class="m">recency: unavailable</span></li>
+      </ul>
+    </article>
+
+    <article class="tcard" id="t3" data-thread="t3">
+      <p class="kicker">Thread three</p>
+      <h3><span class="i">Wait for most, never all</span><span class="m">Intersecting quorums</span></h3>
+      <p><span class="i">A silent man may be dead, so never wait for all; wait for most, since any two majorities share someone who carries what the first one did.</span><span class="m">Wait for n − f replies; any two quorums share a correct process.</span></p>
+      <ul class="forms">
+        <li><a class="bk" href="#s-flp"><span class="i">The Limits</span><span class="m">FLP</span></a> <span class="i">settle on three of four</span><span class="m">decide on n − 1</span></li>
+        <li><a class="bk" href="#s-dls"><span class="i">Running Late</span><span class="m">Partial synchrony</span></a> <span class="i">call on three, commit on two</span><span class="m">n − t to propose, t + 1 to decide</span></li>
+        <li><a class="bk" href="#s-bo"><span class="i">By Chance</span><span class="m">Ben-Or</span></a> <span class="i">wait for three birds</span><span class="m">wait for n − t</span></li>
+        <li><a class="bk" href="#s-ct"><span class="i">Dead or Slow</span><span class="m">Failure detectors</span></a> <span class="i">most of the estimates</span><span class="m">a majority under ◇S</span></li>
+        <li><a class="bk" href="#s-ptp"><span class="i">Parliament</span><span class="m">Paxos</span></a> <span class="i">two majorities share a legislator</span><span class="m">majority quorums</span></li>
+        <li><a class="bk" href="#s-vr"><span class="i">One Leader</span><span class="m">Viewstamped</span></a> <span class="i">the holder and two benches</span><span class="m">primary + sub-majority</span></li>
+        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">three seals of four</span><span class="m">2f + 1 of 3f + 1</span></li>
+        <li><a class="bk" href="#s-hs"><span class="i">Changing Leaders</span><span class="m">HotStuff</span></a> <span class="i">bundles of three</span><span class="m">quorum certificates</span></li>
+        <li><a class="bk" href="#s-pbs"><span class="i">Up to Date</span><span class="m">PBS</span></a> <span class="i">two counts above three</span><span class="m">R + W &gt; N</span></li>
+      </ul>
+    </article>
+
+    <article class="tcard" id="t4" data-thread="t4">
+      <p class="kicker">Thread four</p>
+      <h3><span class="i">Carry the latest forward</span><span class="m">Value carry-over across views</span></h3>
+      <p><span class="i">Each new attempt asks most of them what they last accepted and proposes that, so whatever may have passed survives a change of hands. Leading is a job, not a rank: two leaders only slow things down.</span><span class="m">A new leader adopts the highest-ranked value a quorum reports; leaders help liveness, never safety.</span></p>
+      <ul class="forms">
+        <li><a class="bk" href="#s-dls"><span class="i">Running Late</span><span class="m">Partial synchrony</span></a> <span class="i">pledges, untied only by later ones</span><span class="m">locks with lock release</span></li>
+        <li><a class="bk" href="#s-ct"><span class="i">Dead or Slow</span><span class="m">Failure detectors</span></a> <span class="i">the most recently stamped estimate</span><span class="m">timestamped estimates</span></li>
+        <li><a class="bk" href="#s-bgp"><span class="i">Among Liars</span><span class="m">Byzantine generals</span></a> <span class="i">the chief is a job</span><span class="m">commander as a role</span></li>
+        <li><a class="bk" href="#s-ptp"><span class="i">Parliament</span><span class="m">Paxos</span></a> <span class="i">the latest vote</span><span class="m">highest accepted in phase 1</span></li>
+        <li><a class="bk" href="#s-vr"><span class="i">One Leader</span><span class="m">Viewstamped</span></a> <span class="i">the latest board-and-line</span><span class="m">highest viewstamp</span></li>
+        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">readied entries in every request</span><span class="m">prepared certificates</span></li>
+        <li><a class="bk" href="#s-hs"><span class="i">Changing Leaders</span><span class="m">HotStuff</span></a> <span class="i">the latest first bundle, and a lock</span><span class="m">highQC and lockedQC</span></li>
+      </ul>
+    </article>
+
+    <article class="tcard" id="t5" data-thread="t5">
+      <p class="kicker">Thread five</p>
+      <h3><span class="i">Safe in any wind, done once it drops</span><span class="m">Safety always, liveness eventually</span></h3>
+      <p><span class="i">Safety never waits on the weather; only progress does. Sandglasses and slates end a wait, and never decide anything.</span><span class="m">Timing assumptions are used for termination only.</span></p>
+      <ul class="forms">
+        <li><a class="bk" href="#s-flp"><span class="i">The Limits</span><span class="m">FLP</span></a> <span class="i">never wrong, maybe never done</span><span class="m">termination is what fails</span></li>
+        <li><a class="bk" href="#s-dls"><span class="i">Running Late</span><span class="m">Partial synchrony</span></a> <span class="i">commits after the wind drops</span><span class="m">decides after GST</span></li>
+        <li><a class="bk" href="#s-bo"><span class="i">By Chance</span><span class="m">Ben-Or</span></a> <span class="i">done, with probability one</span><span class="m">termination w.p. 1</span></li>
+        <li><a class="bk" href="#s-ct"><span class="i">Dead or Slow</span><span class="m">Failure detectors</span></a> <span class="i">bad slates stall, never split</span><span class="m">safe under any detector</span></li>
+        <li><a class="bk" href="#s-ptp"><span class="i">Parliament</span><span class="m">Paxos</span></a> <span class="i">progress when most stay</span><span class="m">live with a stable majority</span></li>
+        <li><a class="bk" href="#s-vr"><span class="i">One Leader</span><span class="m">Viewstamped</span></a> <span class="i">stopped, never wrong</span><span class="m">catastrophe halts safely</span></li>
+        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">the doubling sandglass</span><span class="m">exponential view timeouts</span></li>
+        <li><a class="bk" href="#s-hs"><span class="i">Changing Leaders</span><span class="m">HotStuff</span></a> <span class="i">the rats' pace</span><span class="m">optimistic responsiveness</span></li>
+      </ul>
+    </article>
+
+    <article class="tcard" id="t6" data-thread="t6">
+      <p class="kicker">Thread six</p>
+      <h3><span class="i">Echo before you trust</span><span class="m">Byzantine cross-checking</span></h3>
+      <p><span class="i">A liar's word counts only when enough men echo it, so his two stories can never both stand.</span><span class="m">Relay, sign and gather 2f + 1 before acting.</span></p>
+      <ul class="forms">
+        <li><a class="bk" href="#s-bgp"><span class="i">Among Liars</span><span class="m">Byzantine generals</span></a> <span class="i">relays, the greater count, seals</span><span class="m">OM(m) and SM(m)</span></li>
+        <li><a class="bk" href="#s-dls"><span class="i">Running Late</span><span class="m">Partial synchrony</span></a> <span class="i">four to bear a liar, sealed or not</span><span class="m">3t + 1 with authentication</span></li>
+        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">two echoes; settled checkpoints</span><span class="m">prepare, commit; checkpoints</span></li>
+        <li><a class="bk" href="#s-hs"><span class="i">Changing Leaders</span><span class="m">HotStuff</span></a> <span class="i">bundles of seals; a third stage</span><span class="m">QCs; three-phase locking</span></li>
+      </ul>
+    </article>
+
+    <article class="tcard" id="t7" data-thread="t7">
+      <p class="kicker">Thread seven</p>
+      <h3><span class="i">Leave it to chance</span><span class="m">Randomization</span></h3>
+      <p><span class="i">Where no plan can be sure, chance can come close: it takes the schedule's power away, and costs a little certainty.</span><span class="m">Coins, random partners and probabilistic bounds.</span></p>
+      <ul class="forms">
+        <li><a class="bk" href="#s-bo"><span class="i">By Chance</span><span class="m">Ben-Or</span></a> <span class="i">a coin in each tent</span><span class="m">local coins</span></li>
+        <li><a class="bk" href="#s-gos"><span class="i">Word of Mouth</span><span class="m">Epidemics</span></a> <span class="i">partners drawn by lot</span><span class="m">random gossip partners</span></li>
+        <li><a class="bk" href="#s-pbs"><span class="i">Up to Date</span><span class="m">PBS</span></a> <span class="i">the odds of an old copy</span><span class="m">bounded staleness, in probability</span></li>
+      </ul>
+    </article>
+
+    <article class="tcard" id="t8" data-thread="t8">
+      <p class="kicker">Thread eight</p>
+      <h3><span class="i">Only grow</span><span class="m">Monotonicity</span></h3>
+      <p><span class="i">What only grows merges in any order, any number of times, and what stays true once true can be read from any honest count.</span><span class="m">Join-semilattices, stable properties and monotone queries.</span></p>
+      <ul class="forms">
+        <li><a class="bk" href="#s-ts"><span class="i">Taking Stock</span><span class="m">Snapshots</span></a> <span class="i">a deficit stays a deficit</span><span class="m">stable properties</span></li>
+        <li><a class="bk" href="#s-gos"><span class="i">Word of Mouth</span><span class="m">Epidemics</span></a> <span class="i">the larger tally wins</span><span class="m">last writer wins</span></li>
+        <li><a class="bk" href="#s-crdt"><span class="i">Never Clash</span><span class="m">CRDTs</span></a> <span class="i">the larger pile in each column</span><span class="m">merge by join</span></li>
+        <li><a class="bk" href="#s-hat"><span class="i">Promise Alone</span><span class="m">HATs</span></a> <span class="i">the floor only rises</span><span class="m">monotonic reads</span></li>
+        <li><a class="bk" href="#s-calm"><span class="i">When to Wait</span><span class="m">CALM</span></a> <span class="i">questions that only grow</span><span class="m">monotone programs</span></li>
+      </ul>
+    </article>
+
+    <article class="tcard" id="t9" data-thread="t9">
+      <p class="kicker">Thread nine</p>
+      <h3><span class="i">Write the absence down</span><span class="m">Make absence explicit</span></h3>
+      <p><span class="i">Nothing cannot travel, so turn it into something that can.</span><span class="m">Markers, defaults, no-ops and tombstones.</span></p>
+      <ul class="forms">
+        <li><a class="bk" href="#s-ts"><span class="i">Taking Stock</span><span class="m">Snapshots</span></a> <span class="i">a red sash: no more carts behind</span><span class="m">markers</span></li>
+        <li><a class="bk" href="#s-bgp"><span class="i">Among Liars</span><span class="m">Byzantine generals</span></a> <span class="i">silence counts as hold</span><span class="m">a default for a missing message</span></li>
+        <li><a class="bk" href="#s-ptp"><span class="i">Parliament</span><span class="m">Paxos</span></a> <span class="i">Traditional Olive Day fills a gap</span><span class="m">no-op decrees</span></li>
+        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">blank entries fill the numbering</span><span class="m">null requests</span></li>
+        <li><a class="bk" href="#s-gos"><span class="i">Word of Mouth</span><span class="m">Epidemics</span></a> <span class="i">a notice of withdrawal</span><span class="m">death certificates</span></li>
+        <li><a class="bk" href="#s-crdt"><span class="i">Never Clash</span><span class="m">CRDTs</span></a> <span class="i">black pebbles and struck tags</span><span class="m">tombstones</span></li>
+        <li><a class="bk" href="#s-calm"><span class="i">When to Wait</span><span class="m">CALM</span></a> <span class="i">a manifest of what came before</span><span class="m">sealing with a manifest</span></li>
+      </ul>
+    </article>
+
+    <article class="tcard" id="t10" data-thread="t10">
+      <p class="kicker">Thread ten</p>
+      <h3><span class="i">Hold back, never hold up</span><span class="m">Buffer, don't block</span></h3>
+      <p><span class="i">Show only what is whole, and answer at once from what already is.</span><span class="m">Delay visibility, never the response.</span></p>
+      <ul class="forms">
+        <li><a class="bk" href="#s-ts"><span class="i">Taking Stock</span><span class="m">Snapshots</span></a> <span class="i">a slate kept open until its sash</span><span class="m">recording until the marker</span></li>
+        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">entries written with no gaps</span><span class="m">in-order execution</span></li>
+        <li><a class="bk" href="#s-crdt"><span class="i">Never Clash</span><span class="m">CRDTs</span></a> <span class="i">notices in order of dependence</span><span class="m">causal delivery</span></li>
+        <li><a class="bk" href="#s-hat"><span class="i">Promise Alone</span><span class="m">HATs</span></a> <span class="i">a cord; a reply held for its letter</span><span class="m">MAV; writes follow reads</span></li>
+        <li><a class="bk" href="#s-calm"><span class="i">When to Wait</span><span class="m">CALM</span></a> <span class="i">a closing waits for its manifest</span><span class="m">seal the non-monotone step</span></li>
+      </ul>
+    </article>
+  </div>
+</section>
+
 <!-- ============================================================ ARCHE -->
 <section class="interlude solid" id="arche" data-pin>
   <div class="pin">
@@ -98,10 +258,10 @@
 
 <section class="walk" id="walk-1" data-setting="ring" data-label="The ring road">
   <article class="card intro" id="s-start" data-scene="start">
-    <p class="kicker">How to read the round</p>
-    <h3 class="punch"><span class="i">Each spoke is a place. Each arc, a messenger.</span><span class="m">Each spoke is a process. Each arc, a message.</span></h3>
+    <p class="kicker"><span class="i">How to read the round</span><span class="m">How to read the timeline</span></p>
+    <h3 class="punch"><span class="i">Each spoke is a place. Each arc, a messenger.</span><span class="m">Each lane is a process. Each arrow, a message.</span></h3>
     <p class="i">A spoke runs outward through time, later and later. Each dashed ring is <b>one moment everywhere at once</b>. Every book below is drawn this way, as the book it grows from with one change, and <b class="r">the change is red</b>.</p>
-    <p class="m">Time runs outward along each spoke; each dashed ring is <b>one instant of real time</b>. An arc is sent at its inner end and received at its outer one. Every paper below is drawn as the paper it builds on, with <b class="r">the changed assumption in red</b>.</p>
+    <p class="m">Time runs left to right along each lane; each dashed upright line is <b>one instant of real time</b>. An arrow is sent at its left end and received at its right one. Every paper below is drawn as the paper it builds on, with <b class="r">the changed assumption in red</b>.</p>
   </article>
 
   <article class="card book" id="s-owc" data-scene="owc" data-book="owc">
@@ -811,165 +971,7 @@
   </article>
 </section>
 
-<!-- ============================================================ THE FAMILY AND ITS THREADS -->
-<section class="family solid" id="threads">
-  <div class="fam-pin">
-    <svg id="tree" viewBox="-330 -290 660 580" role="img" aria-label="The eighteen books as one family tree in the round: Ordering Without Clocks at the centre, each book joined to the one it grows from by a red arc"></svg>
-    <p class="fam-cap" id="famCap" aria-live="polite"></p>
-  </div>
-  <div class="fam-steps">
-    <article class="tcard lead-card" data-thread="all">
-      <p class="kicker">The whole family</p>
-      <h2><span class="i">Eighteen books. Seventeen changes.</span><span class="m">Eighteen books. Seventeen changes.</span></h2>
-      <p><span class="i">Every red arc is one change; every book sits one change from the book it grows from. Tap a book to read it.</span><span class="m">Each red arc is one changed assumption or demand. Tap a node to read its book.</span></p>
-      <p class="sub"><span class="i">Now ten moves that come back from book to book under different names. Learn one, and you have met it everywhere it appears.</span><span class="m">Now ten techniques that recur across the papers. Each lights the papers that use it.</span></p>
-    </article>
 
-    <article class="tcard" id="t1" data-thread="t1">
-      <p class="kicker">Thread one</p>
-      <h3><span class="i">Number it</span><span class="m">Logical timestamps</span></h3>
-      <p><span class="i">With no common hour, number things instead, and break ties by a name.</span><span class="m">Counters replace clocks, and identifiers break ties.</span></p>
-      <ul class="forms">
-        <li><a class="bk" href="#s-owc"><span class="i">Without Clocks</span><span class="m">Logical clocks</span></a> <span class="i">a tally, then the house number</span><span class="m">Lamport clocks, ties by process id</span></li>
-        <li><a class="bk" href="#s-dls"><span class="i">Running Late</span><span class="m">Partial synchrony</span></a> <span class="i">glasses and turns</span><span class="m">rounds and phases</span></li>
-        <li><a class="bk" href="#s-bo"><span class="i">By Chance</span><span class="m">Ben-Or</span></a> <span class="i">numbered rounds</span><span class="m">round numbers</span></li>
-        <li><a class="bk" href="#s-cap"><span class="i">Cut Off</span><span class="m">CAP</span></a> <span class="i">the muster-master's stamps</span><span class="m">version stamps</span></li>
-        <li><a class="bk" href="#s-ptp"><span class="i">Parliament</span><span class="m">Paxos</span></a> <span class="i">ballots, each priest's own numbers</span><span class="m">ballots partitioned by proposer</span></li>
-        <li><a class="bk" href="#s-vr"><span class="i">One Leader</span><span class="m">Viewstamped</span></a> <span class="i">a board's count and caller's name</span><span class="m">viewid ⟨cnt, mid⟩</span></li>
-        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">entry numbers and terms</span><span class="m">sequence numbers and views</span></li>
-        <li><a class="bk" href="#s-gos"><span class="i">Word of Mouth</span><span class="m">Epidemics</span></a> <span class="i">an edition's tally and library</span><span class="m">timestamps with site ids</span></li>
-        <li><a class="bk" href="#s-hat"><span class="i">Promise Alone</span><span class="m">HATs</span></a> <span class="i">one tally for a whole visit</span><span class="m">one timestamp per transaction</span></li>
-      </ul>
-    </article>
-
-    <article class="tcard" id="t2" data-thread="t2">
-      <p class="kicker">Thread two</p>
-      <h3><span class="i">One moment inside each span</span><span class="m">Linearizability</span></h3>
-      <p><span class="i">Copies act as one when every request seems to take effect at one moment between its sending and its answer.</span><span class="m">The single-copy illusion, defined on invocations and responses alone.</span></p>
-      <ul class="forms">
-        <li><a class="bk" href="#s-mc"><span class="i">Many Copies</span><span class="m">Linearizability</span></a> <span class="i">the rule of the board</span><span class="m">the definition; locality</span></li>
-        <li><a class="bk" href="#s-cap"><span class="i">Cut Off</span><span class="m">CAP</span></a> <span class="i">answering as one</span><span class="m">atomic consistency</span></li>
-        <li><a class="bk" href="#s-ptp"><span class="i">Parliament</span><span class="m">Paxos</span></a> <span class="i">no stale scroll for black goats</span><span class="m">reads through leases</span></li>
-        <li><a class="bk" href="#s-vr"><span class="i">One Leader</span><span class="m">Viewstamped</span></a> <span class="i">one law, in a single place</span><span class="m">the group acts as one</span></li>
-        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">one order at every post</span><span class="m">linearizable replication</span></li>
-        <li><a class="bk" href="#s-pbs"><span class="i">Up to Date</span><span class="m">PBS</span></a> <span class="i">groups that must share a library</span><span class="m">strict quorums</span></li>
-        <li><a class="bk" href="#s-hat"><span class="i">Promise Alone</span><span class="m">HATs</span></a> <span class="i">the newest edition, out of reach</span><span class="m">recency: unavailable</span></li>
-      </ul>
-    </article>
-
-    <article class="tcard" id="t3" data-thread="t3">
-      <p class="kicker">Thread three</p>
-      <h3><span class="i">Wait for most, never all</span><span class="m">Intersecting quorums</span></h3>
-      <p><span class="i">A silent man may be dead, so never wait for all; wait for most, since any two majorities share someone who carries what the first one did.</span><span class="m">Wait for n − f replies; any two quorums share a correct process.</span></p>
-      <ul class="forms">
-        <li><a class="bk" href="#s-flp"><span class="i">The Limits</span><span class="m">FLP</span></a> <span class="i">settle on three of four</span><span class="m">decide on n − 1</span></li>
-        <li><a class="bk" href="#s-dls"><span class="i">Running Late</span><span class="m">Partial synchrony</span></a> <span class="i">call on three, commit on two</span><span class="m">n − t to propose, t + 1 to decide</span></li>
-        <li><a class="bk" href="#s-bo"><span class="i">By Chance</span><span class="m">Ben-Or</span></a> <span class="i">wait for three birds</span><span class="m">wait for n − t</span></li>
-        <li><a class="bk" href="#s-ct"><span class="i">Dead or Slow</span><span class="m">Failure detectors</span></a> <span class="i">most of the estimates</span><span class="m">a majority under ◇S</span></li>
-        <li><a class="bk" href="#s-ptp"><span class="i">Parliament</span><span class="m">Paxos</span></a> <span class="i">two majorities share a legislator</span><span class="m">majority quorums</span></li>
-        <li><a class="bk" href="#s-vr"><span class="i">One Leader</span><span class="m">Viewstamped</span></a> <span class="i">the holder and two benches</span><span class="m">primary + sub-majority</span></li>
-        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">three seals of four</span><span class="m">2f + 1 of 3f + 1</span></li>
-        <li><a class="bk" href="#s-hs"><span class="i">Changing Leaders</span><span class="m">HotStuff</span></a> <span class="i">bundles of three</span><span class="m">quorum certificates</span></li>
-        <li><a class="bk" href="#s-pbs"><span class="i">Up to Date</span><span class="m">PBS</span></a> <span class="i">two counts above three</span><span class="m">R + W &gt; N</span></li>
-      </ul>
-    </article>
-
-    <article class="tcard" id="t4" data-thread="t4">
-      <p class="kicker">Thread four</p>
-      <h3><span class="i">Carry the latest forward</span><span class="m">Value carry-over across views</span></h3>
-      <p><span class="i">Each new attempt asks most of them what they last accepted and proposes that, so whatever may have passed survives a change of hands. Leading is a job, not a rank: two leaders only slow things down.</span><span class="m">A new leader adopts the highest-ranked value a quorum reports; leaders help liveness, never safety.</span></p>
-      <ul class="forms">
-        <li><a class="bk" href="#s-dls"><span class="i">Running Late</span><span class="m">Partial synchrony</span></a> <span class="i">pledges, untied only by later ones</span><span class="m">locks with lock release</span></li>
-        <li><a class="bk" href="#s-ct"><span class="i">Dead or Slow</span><span class="m">Failure detectors</span></a> <span class="i">the most recently stamped estimate</span><span class="m">timestamped estimates</span></li>
-        <li><a class="bk" href="#s-bgp"><span class="i">Among Liars</span><span class="m">Byzantine generals</span></a> <span class="i">the chief is a job</span><span class="m">commander as a role</span></li>
-        <li><a class="bk" href="#s-ptp"><span class="i">Parliament</span><span class="m">Paxos</span></a> <span class="i">the latest vote</span><span class="m">highest accepted in phase 1</span></li>
-        <li><a class="bk" href="#s-vr"><span class="i">One Leader</span><span class="m">Viewstamped</span></a> <span class="i">the latest board-and-line</span><span class="m">highest viewstamp</span></li>
-        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">readied entries in every request</span><span class="m">prepared certificates</span></li>
-        <li><a class="bk" href="#s-hs"><span class="i">Changing Leaders</span><span class="m">HotStuff</span></a> <span class="i">the latest first bundle, and a lock</span><span class="m">highQC and lockedQC</span></li>
-      </ul>
-    </article>
-
-    <article class="tcard" id="t5" data-thread="t5">
-      <p class="kicker">Thread five</p>
-      <h3><span class="i">Safe in any wind, done once it drops</span><span class="m">Safety always, liveness eventually</span></h3>
-      <p><span class="i">Safety never waits on the weather; only progress does. Sandglasses and slates end a wait, and never decide anything.</span><span class="m">Timing assumptions are used for termination only.</span></p>
-      <ul class="forms">
-        <li><a class="bk" href="#s-flp"><span class="i">The Limits</span><span class="m">FLP</span></a> <span class="i">never wrong, maybe never done</span><span class="m">termination is what fails</span></li>
-        <li><a class="bk" href="#s-dls"><span class="i">Running Late</span><span class="m">Partial synchrony</span></a> <span class="i">commits after the wind drops</span><span class="m">decides after GST</span></li>
-        <li><a class="bk" href="#s-bo"><span class="i">By Chance</span><span class="m">Ben-Or</span></a> <span class="i">done, with probability one</span><span class="m">termination w.p. 1</span></li>
-        <li><a class="bk" href="#s-ct"><span class="i">Dead or Slow</span><span class="m">Failure detectors</span></a> <span class="i">bad slates stall, never split</span><span class="m">safe under any detector</span></li>
-        <li><a class="bk" href="#s-ptp"><span class="i">Parliament</span><span class="m">Paxos</span></a> <span class="i">progress when most stay</span><span class="m">live with a stable majority</span></li>
-        <li><a class="bk" href="#s-vr"><span class="i">One Leader</span><span class="m">Viewstamped</span></a> <span class="i">stopped, never wrong</span><span class="m">catastrophe halts safely</span></li>
-        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">the doubling sandglass</span><span class="m">exponential view timeouts</span></li>
-        <li><a class="bk" href="#s-hs"><span class="i">Changing Leaders</span><span class="m">HotStuff</span></a> <span class="i">the rats' pace</span><span class="m">optimistic responsiveness</span></li>
-      </ul>
-    </article>
-
-    <article class="tcard" id="t6" data-thread="t6">
-      <p class="kicker">Thread six</p>
-      <h3><span class="i">Echo before you trust</span><span class="m">Byzantine cross-checking</span></h3>
-      <p><span class="i">A liar's word counts only when enough men echo it, so his two stories can never both stand.</span><span class="m">Relay, sign and gather 2f + 1 before acting.</span></p>
-      <ul class="forms">
-        <li><a class="bk" href="#s-bgp"><span class="i">Among Liars</span><span class="m">Byzantine generals</span></a> <span class="i">relays, the greater count, seals</span><span class="m">OM(m) and SM(m)</span></li>
-        <li><a class="bk" href="#s-dls"><span class="i">Running Late</span><span class="m">Partial synchrony</span></a> <span class="i">four to bear a liar, sealed or not</span><span class="m">3t + 1 with authentication</span></li>
-        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">two echoes; settled checkpoints</span><span class="m">prepare, commit; checkpoints</span></li>
-        <li><a class="bk" href="#s-hs"><span class="i">Changing Leaders</span><span class="m">HotStuff</span></a> <span class="i">bundles of seals; a third stage</span><span class="m">QCs; three-phase locking</span></li>
-      </ul>
-    </article>
-
-    <article class="tcard" id="t7" data-thread="t7">
-      <p class="kicker">Thread seven</p>
-      <h3><span class="i">Leave it to chance</span><span class="m">Randomization</span></h3>
-      <p><span class="i">Where no plan can be sure, chance can come close: it takes the schedule's power away, and costs a little certainty.</span><span class="m">Coins, random partners and probabilistic bounds.</span></p>
-      <ul class="forms">
-        <li><a class="bk" href="#s-bo"><span class="i">By Chance</span><span class="m">Ben-Or</span></a> <span class="i">a coin in each tent</span><span class="m">local coins</span></li>
-        <li><a class="bk" href="#s-gos"><span class="i">Word of Mouth</span><span class="m">Epidemics</span></a> <span class="i">partners drawn by lot</span><span class="m">random gossip partners</span></li>
-        <li><a class="bk" href="#s-pbs"><span class="i">Up to Date</span><span class="m">PBS</span></a> <span class="i">the odds of an old copy</span><span class="m">bounded staleness, in probability</span></li>
-      </ul>
-    </article>
-
-    <article class="tcard" id="t8" data-thread="t8">
-      <p class="kicker">Thread eight</p>
-      <h3><span class="i">Only grow</span><span class="m">Monotonicity</span></h3>
-      <p><span class="i">What only grows merges in any order, any number of times, and what stays true once true can be read from any honest count.</span><span class="m">Join-semilattices, stable properties and monotone queries.</span></p>
-      <ul class="forms">
-        <li><a class="bk" href="#s-ts"><span class="i">Taking Stock</span><span class="m">Snapshots</span></a> <span class="i">a deficit stays a deficit</span><span class="m">stable properties</span></li>
-        <li><a class="bk" href="#s-gos"><span class="i">Word of Mouth</span><span class="m">Epidemics</span></a> <span class="i">the larger tally wins</span><span class="m">last writer wins</span></li>
-        <li><a class="bk" href="#s-crdt"><span class="i">Never Clash</span><span class="m">CRDTs</span></a> <span class="i">the larger pile in each column</span><span class="m">merge by join</span></li>
-        <li><a class="bk" href="#s-hat"><span class="i">Promise Alone</span><span class="m">HATs</span></a> <span class="i">the floor only rises</span><span class="m">monotonic reads</span></li>
-        <li><a class="bk" href="#s-calm"><span class="i">When to Wait</span><span class="m">CALM</span></a> <span class="i">questions that only grow</span><span class="m">monotone programs</span></li>
-      </ul>
-    </article>
-
-    <article class="tcard" id="t9" data-thread="t9">
-      <p class="kicker">Thread nine</p>
-      <h3><span class="i">Write the absence down</span><span class="m">Make absence explicit</span></h3>
-      <p><span class="i">Nothing cannot travel, so turn it into something that can.</span><span class="m">Markers, defaults, no-ops and tombstones.</span></p>
-      <ul class="forms">
-        <li><a class="bk" href="#s-ts"><span class="i">Taking Stock</span><span class="m">Snapshots</span></a> <span class="i">a red sash: no more carts behind</span><span class="m">markers</span></li>
-        <li><a class="bk" href="#s-bgp"><span class="i">Among Liars</span><span class="m">Byzantine generals</span></a> <span class="i">silence counts as hold</span><span class="m">a default for a missing message</span></li>
-        <li><a class="bk" href="#s-ptp"><span class="i">Parliament</span><span class="m">Paxos</span></a> <span class="i">Traditional Olive Day fills a gap</span><span class="m">no-op decrees</span></li>
-        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">blank entries fill the numbering</span><span class="m">null requests</span></li>
-        <li><a class="bk" href="#s-gos"><span class="i">Word of Mouth</span><span class="m">Epidemics</span></a> <span class="i">a notice of withdrawal</span><span class="m">death certificates</span></li>
-        <li><a class="bk" href="#s-crdt"><span class="i">Never Clash</span><span class="m">CRDTs</span></a> <span class="i">black pebbles and struck tags</span><span class="m">tombstones</span></li>
-        <li><a class="bk" href="#s-calm"><span class="i">When to Wait</span><span class="m">CALM</span></a> <span class="i">a manifest of what came before</span><span class="m">sealing with a manifest</span></li>
-      </ul>
-    </article>
-
-    <article class="tcard" id="t10" data-thread="t10">
-      <p class="kicker">Thread ten</p>
-      <h3><span class="i">Hold back, never hold up</span><span class="m">Buffer, don't block</span></h3>
-      <p><span class="i">Show only what is whole, and answer at once from what already is.</span><span class="m">Delay visibility, never the response.</span></p>
-      <ul class="forms">
-        <li><a class="bk" href="#s-ts"><span class="i">Taking Stock</span><span class="m">Snapshots</span></a> <span class="i">a slate kept open until its sash</span><span class="m">recording until the marker</span></li>
-        <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">entries written with no gaps</span><span class="m">in-order execution</span></li>
-        <li><a class="bk" href="#s-crdt"><span class="i">Never Clash</span><span class="m">CRDTs</span></a> <span class="i">notices in order of dependence</span><span class="m">causal delivery</span></li>
-        <li><a class="bk" href="#s-hat"><span class="i">Promise Alone</span><span class="m">HATs</span></a> <span class="i">a cord; a reply held for its letter</span><span class="m">MAV; writes follow reads</span></li>
-        <li><a class="bk" href="#s-calm"><span class="i">When to Wait</span><span class="m">CALM</span></a> <span class="i">a closing waits for its manifest</span><span class="m">seal the non-monotone step</span></li>
-      </ul>
-    </article>
-  </div>
-</section>
 
 <!-- ============================================================ THE COSTS -->
 <section class="costs solid" id="costs">

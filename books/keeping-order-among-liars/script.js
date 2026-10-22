@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -204,9 +204,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 (function(){
   const svg=$("#echosvg"),side=$("#echoside");
   const nodes={1:[-90,"B1",BC[1],"R1"],2:[0,"B2",BC[2],"R2"],3:[90,"B3",BC[3],"R3"],4:[180,"B4",BC[4],"R4"]};
-  const P=Polar(svg,{vb:"0 0 620 600",cx:310,cy:300,r0:46,step:34,rings:7,tEnd:6.6,note:[14,24],nodes});
-  const defs=$("defs",svg);
-  [["o","#a8741a"],["g","#5f6e28"]].forEach(([k,c])=>{const m=el("marker",{id:`${svg.id}-${k}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:c},m)});
+  let P,items=[],cur=0;
   /* the rule: every rat is a row, sent at s and taken in at r */
   const HOLD=1,M=[];
   M.push({kind:"file",a:2,b:1,s:1.4,r:2.4});
@@ -221,24 +219,6 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     const se=M.filter(m=>m.kind==="second"&&m.b===k&&m.r<=T).length,own2=ready&&T>=4.4,second=se+(own2?1:0);
     return {has,first,ready,second,stands:ready&&second>=3};
   }
-  /* the picture: each mark appears at one step and stays */
-  const items=[];const add=(e,from,to=99)=>{e.classList.add("fade");items.push({e,from,to});return e};
-  const hot=p=>p;
-  const dot=(k,t,fill,from)=>add(P.event(k,t,fill,9),from);
-  const lbl=(k,t,s,from,to,col,sm)=>{const [x,y]=P.pt(k,t),a=nodes[k][0];
-    dtext(P.over,{class:"lab halo",x:x+(a===-90||a===90?-14:0),y:y+(a===-90||a===90?5:-16)},s,sm===undefined?s:sm).forEach(t2=>{
-      t2.style.textAnchor=a===-90||a===90?"end":"middle";if(col)t2.style.fill=col;add(t2,from,to)})};
-  const slip=(m,from,col,mk,dash)=>{const p=P.slip(m.a,m.s,m.b,m.r,12);p.setAttribute("style",`stroke:${col};stroke-width:3.4`);p.setAttribute("marker-end",`url(#${svg.id}-${mk})`);if(dash)p.style.strokeDasharray="7 5";return add(p,from)};
-  dtext(P.over,{class:"lab halo",x:292,y:261,style:"text-anchor:end"},"has the job","primary");
-  dot(2,1.4,"#fffaf0",0);M.filter(m=>m.kind==="file").forEach(m=>slip(m,0,"#136f9e","b"));lbl(2,1.4,"files",0,0,undefined,"submits");
-  dot(1,2.4,"#fffaf0",1);lbl(1,2.4,"no. 7",1,1,"#bf4a26");
-  M.filter(m=>m.kind==="num").forEach(m=>slip(m,1,"#bf4a26","r",m.held));
-  lbl(4,4.9,"held by the wind",1,99,undefined,"delayed");
-  [2,3].forEach(k=>dot(k,3.4,"#fffaf0",2));
-  M.filter(m=>m.kind==="first").forEach(m=>slip(m,2,"#a8741a","o"));
-  [1,2,3].forEach(k=>dot(k,4.4,"#e0b84a",3));lbl(2,4.4,"readied",3,3,undefined,"prepared");
-  M.filter(m=>m.kind==="second").forEach(m=>slip(m,4,"#5f6e28","g"));
-  [1,2,3].forEach(k=>dot(k,5.4,"#9cb648",5));lbl(2,5.4,"stands",5,5,"#2f5a1c","committed");
   const Ts=[2.4,3.4,3.4,4.4,4.4,5.4];
   function card(k,s){
     const T=Ts[s],K=know(k,T),role=k===HOLD?dual("has the job","primary"):"";
@@ -252,10 +232,37 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     if(K.stands)note.push(dual("<b>stands</b>","<b>committed</b>"));
     return `<div class="hc${K.stands?" done":""}"><h5><span><i class="dot" style="background:${BC[k]}"></i>${dual("Number "+k,"R"+k)}</span><span>${role}</span></h5><div class="chk">${note.join("<br>")}</div></div>`;
   }
-  scrolly($("#echo"),s=>{
+  const apply=s=>{cur=s;
     items.forEach(it=>it.e.classList.toggle("on",s>=it.from&&s<=it.to));
     side.innerHTML=[1,2,3,4].map(k=>card(k,s)).join("");
+  };
+  /* drawn in the round, or on lanes in computing, at the step the reader has reached */
+  Timeline(svg,{vb:"0 0 620 600",cx:310,cy:300,r0:46,step:34,rings:7,tEnd:6.6,note:[14,24],nodes},Q=>{P=Q;items=[];
+  const defs=$("defs",svg);
+  [["o","#a8741a"],["g","#5f6e28"]].forEach(([k,c])=>{const m=el("marker",{id:`${svg.id}-${k}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:c},m)});
+  /* the picture: each mark appears at one step and stays */
+  const add=(e,from,to=99)=>{e.classList.add("fade");items.push({e,from,to});return e};
+  const hot=p=>p;
+  const dot=(k,t,fill,from)=>add(P.event(k,t,fill,9),from);
+  const lbl=(k,t,s,from,to,col,sm)=>{const [x,y]=P.pt(k,t),a=P.lanes?0:nodes[k][0];
+    dtext(P.over,{class:"lab halo",x:x+(a===-90||a===90?-14:0),y:y+(a===-90||a===90?5:-16)},s,sm===undefined?s:sm).forEach(t2=>{
+      t2.style.textAnchor=a===-90||a===90?"end":"middle";if(col)t2.style.fill=col;add(t2,from,to)})};
+  const slip=(m,from,col,mk,dash)=>{const p=P.slip(m.a,m.s,m.b,m.r,12);p.setAttribute("style",`stroke:${col};stroke-width:3.4`);p.setAttribute("marker-end",`url(#${svg.id}-${mk})`);if(dash)p.style.strokeDasharray="7 5";return add(p,from)};
+  /* who has the job: at the centre of the round, beside R1's lane in computing */
+  if(P.lanes){const [x,y]=P.pt(1,0);dtext(P.over,{class:"lab halo",x:x+4,y:y-24,style:"text-anchor:start"},"has the job","primary")}
+  else dtext(P.over,{class:"lab halo",x:292,y:261,style:"text-anchor:end"},"has the job","primary");
+  dot(2,1.4,"#fffaf0",0);M.filter(m=>m.kind==="file").forEach(m=>slip(m,0,"#136f9e","b"));lbl(2,1.4,"files",0,0,undefined,"submits");
+  dot(1,2.4,"#fffaf0",1);lbl(1,2.4,"no. 7",1,1,"#bf4a26");
+  M.filter(m=>m.kind==="num").forEach(m=>slip(m,1,"#bf4a26","r",m.held));
+  lbl(4,4.9,"held by the wind",1,99,undefined,"delayed");
+  [2,3].forEach(k=>dot(k,3.4,"#fffaf0",2));
+  M.filter(m=>m.kind==="first").forEach(m=>slip(m,2,"#a8741a","o"));
+  [1,2,3].forEach(k=>dot(k,4.4,"#e0b84a",3));lbl(2,4.4,"readied",3,3,undefined,"prepared");
+  M.filter(m=>m.kind==="second").forEach(m=>slip(m,4,"#5f6e28","g"));
+  [1,2,3].forEach(k=>dot(k,5.4,"#9cb648",5));lbl(2,5.4,"stands",5,5,"#2f5a1c","committed");
+    apply(cur);
   });
+  scrolly($("#echo"),apply);
 })();
 
 /* ===== who is who ===== */

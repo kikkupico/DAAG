@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -106,11 +106,12 @@ $("#misstbl").innerHTML=`<tr><th>${dual("Home libraries","Replicas")}</th><th>Wa
 
 /* ===== the four legs, drawn in the round ===== */
 (function(){
-  const P=Polar($("#legsvg"),{vb:"0 0 520 500",cx:260,cy:262,r0:40,step:26,rings:7,tEnd:7.6,note:[12,22],
-    nodes:{W:[-90,"W","#e0b84a"],K:[30,"K","#f6eed6"],R:[150,"R","#8fb3d9"]}});
+  Timeline($("#legsvg"),{vb:"0 0 520 500",cx:260,cy:262,r0:40,step:26,rings:7,tEnd:7.6,note:[12,22],
+    nodes:{W:[-90,"W","#e0b84a"],K:[30,"K","#f6eed6"],R:[150,"R","#8fb3d9"]}},P=>{
   const ev=(k,t,f,s)=>{P.event(k,t,f).label.textContent=s};
   P.slip("W",1.5,"K",6.6);P.slip("R",3.6,"K",4.9).classList.add("hi");P.slip("K",4.9,"R",6.2);
   ev("W",1.5,"#e0b84a",1);ev("W",2.7,"#e0b84a",2);ev("R",3.6,"#8fb3d9",3);ev("K",4.9,"#fde0d4",4);ev("K",6.6,"#e0b84a",5);
+  });
 })();
 
 /* ===== the replay (the paper's method): for each home library draw the four journeys; the edition is announced when the

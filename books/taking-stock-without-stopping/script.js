@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -144,21 +144,29 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 (function(){
   const C=Census(),svg=$("#cutsvg"),say=$("#cutsay"),b1=$("#cutok"),b2=$("#cutbad");
   const nodes={1:[-90,"H1",HC[1],"P1"],2:[30,"H2",HC[2],"P2"],3:[150,"H3",HC[3],"P3"]};
-  const P=Polar(svg,{vb:"0 0 620 600",cx:310,cy:330,r0:44,step:30,rings:7,tEnd:7.6,note:[14,24],nodes});
   const carts=C.items.filter(x=>x.k==="cart"),sashRec=C.recT;
   const whimRec={1:C.recT[1],2:4.8,3:C.recT[3]};   // House 2 counts after the cart of 20 came in
-  const loop=el("path",{fill:"#e0b84a","fill-opacity":.22,stroke:"#1c1512","stroke-width":2.4,"stroke-dasharray":"7 5"},P.under);
-  const dots=[1,2,3].map(h=>P.event(h,1.4,HC[h],8));
-  const ang=[-90,30,150];
+  const ang=[-90,30,150],lbl=[.5,.2,.8,.5];
+  let P,loop,dots,arcs=[],rec=null,sel=null,mode="ok";
+  /* in the round the cut is a loop round the centre; on lanes it is a line down through each process's record,
+     with the past to its left */
   function loopPath(rec){const pts=[];
-    for(let a=-90;a<270;a+=4){const i=Math.min(2,Math.floor((a+90)/120)),j=(i+1)%3,f=(a-ang[i])/120,w=(1-Math.cos(Math.PI*f))/2,
+    if(P.lanes){const L=P.x(0)-12,R=P.x(rec[1]),top=P.y(1)-40,bot=P.y(3)+40;
+      pts.push([L,top],[R,top]);[1,2,3].forEach(h=>pts.push(P.pt(h,rec[h])));pts.push([P.x(rec[3]),bot],[L,bot])}
+    else for(let a=-90;a<270;a+=4){const i=Math.min(2,Math.floor((a+90)/120)),j=(i+1)%3,f=(a-ang[i])/120,w=(1-Math.cos(Math.PI*f))/2,
       r=P.r(rec[i+1]+(rec[j+1]-rec[i+1])*w);pts.push(P.xy(a,r))}
     return "M"+pts.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" L")+"Z"}
-  const lbl=[.5,.2,.8,.5];
-  const arcs=carts.map((x,n)=>{const p=P.slip(x.a,x.sent,x.b,x.arr),d=p.getAttribute("d");
-    const hit=el("path",{d,fill:"none",stroke:"transparent","stroke-width":18,"pointer-events":"stroke"},P.slips);
-    const pts=P.arc(x.a,x.sent,x.b,x.arr),q=pts[Math.round((pts.length-1)*lbl[n])],t=el("text",{class:"tok-l",x:q[0],y:q[1]+5},P.over);t.textContent=x.n;
-    return {x,p,hit,t}});
+  Timeline(svg,{vb:"0 0 620 600",cx:310,cy:330,r0:44,step:30,rings:7,tEnd:7.6,note:[14,24],nodes},Q=>{P=Q;
+    loop=el("path",{fill:"#e0b84a","fill-opacity":.22,stroke:"#1c1512","stroke-width":2.4,"stroke-dasharray":"7 5"},P.under);
+    dots=[1,2,3].map(h=>P.event(h,1.4,HC[h],8));
+    arcs=carts.map((x,n)=>{const p=P.slip(x.a,x.sent,x.b,x.arr),d=p.getAttribute("d");
+      const hit=el("path",{d,fill:"none",stroke:"transparent","stroke-width":18,"pointer-events":"stroke"},P.slips);
+      const pts=P.arc(x.a,x.sent,x.b,x.arr),q=pts[Math.round((pts.length-1)*lbl[n])],t=el("text",{class:"tok-l",x:q[0],y:q[1]+5},P.over);t.textContent=x.n;
+      return {x,p,hit,t}});
+    arcs.forEach(a=>button(a.hit,isM()?`The ${a.x.n}-unit message from P${a.x.a} to P${a.x.b}`:`The cart of ${a.x.n} jars from House ${a.x.a} to House ${a.x.b}`,()=>{sel=a;paint()}));
+    if(sel)sel=arcs.find(a=>a.x===sel.x);
+    if(rec)paint();
+  });
   /* where a cart was counted, given when each house recorded */
   const cls=(x,rec)=>{const early=x.sent<rec[x.a],arrIn=x.arr<rec[x.b];
     return early&&arrIn?"in":early&&!arrIn?"out":!early&&!arrIn?"after":"inward"};
@@ -168,12 +176,11 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     after:x=>`<b>The cart of ${x.n} jars from House ${x.a} to House ${x.b}</b> left after House ${x.a} recorded and arrived after House ${x.b} recorded. It lies wholly outside the loop. The ${x.n} jars are already in House ${x.a}'s recorded stock, and House ${x.b}'s slate for that road was closed before they came.`,
     inward:x=>`<b>The cart of ${x.n} jars from House ${x.a} to House ${x.b}</b> left after House ${x.a} recorded and arrived before House ${x.b} recorded. <span class="bad">It crosses the loop inward.</span> The ${x.n} jars are in House ${x.a}'s recorded stock, and counted again in House ${x.b}'s. Such an island never existed.`};
   const saysM={
-    in:x=>`<b>The ${x.n}-unit message from P${x.a} to P${x.b}</b> was sent before P${x.a} recorded and arrived before P${x.b} recorded. It lies wholly inside the loop, and the ${x.n} units are counted in P${x.b}'s state.`,
-    out:x=>`<b>The ${x.n}-unit message from P${x.a} to P${x.b}</b> was sent before P${x.a} recorded and arrived after P${x.b} recorded. It crosses the loop outward: it was in transit at the time, and P${x.b}'s record for that channel catches the ${x.n} units.`,
-    after:x=>`<b>The ${x.n}-unit message from P${x.a} to P${x.b}</b> was sent after P${x.a} recorded and arrived after P${x.b} recorded. It lies wholly outside the loop. The ${x.n} units are already in P${x.a}'s recorded state, and P${x.b}'s record for that channel was closed before they came.`,
-    inward:x=>`<b>The ${x.n}-unit message from P${x.a} to P${x.b}</b> was sent after P${x.a} recorded and arrived before P${x.b} recorded. <span class="bad">It crosses the loop inward.</span> The ${x.n} units are in P${x.a}'s recorded state, and counted again in P${x.b}'s. Such a state never existed.`};
+    in:x=>`<b>The ${x.n}-unit message from P${x.a} to P${x.b}</b> was sent before P${x.a} recorded and arrived before P${x.b} recorded. It lies wholly before the cut, and the ${x.n} units are counted in P${x.b}'s state.`,
+    out:x=>`<b>The ${x.n}-unit message from P${x.a} to P${x.b}</b> was sent before P${x.a} recorded and arrived after P${x.b} recorded. It crosses the cut forward: it was in transit at the time, and P${x.b}'s record for that channel catches the ${x.n} units.`,
+    after:x=>`<b>The ${x.n}-unit message from P${x.a} to P${x.b}</b> was sent after P${x.a} recorded and arrived after P${x.b} recorded. It lies wholly after the cut. The ${x.n} units are already in P${x.a}'s recorded state, and P${x.b}'s record for that channel was closed before they came.`,
+    inward:x=>`<b>The ${x.n}-unit message from P${x.a} to P${x.b}</b> was sent after P${x.a} recorded and arrived before P${x.b} recorded. <span class="bad">It crosses the cut backward.</span> The ${x.n} units are in P${x.a}'s recorded state, and counted again in P${x.b}'s. Such a state never existed.`};
   const says={};for(const k in says0)says[k]=x=>dual(says0[k](x),saysM[k](x));
-  let rec=sashRec,sel=null,mode="ok";
   function paint(){
     loop.setAttribute("d",loopPath(rec));
     dots.forEach((g,i)=>{const [x,y]=P.pt(i+1,rec[i+1]);g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)});
@@ -181,9 +188,9 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
       a.p.setAttribute("marker-end",`url(#${svg.id}-${c==="inward"?"r":"b"})`);a.t.classList.toggle("in",c==="inward")});
     const bad=arcs.filter(a=>a.c==="inward");
     if(sel)say.innerHTML=says[sel.c](sel.x);
-    else if(bad.length)say.innerHTML=dual(`<b>Each house counted at an hour of its own choosing.</b> One cart crosses the loop inward. Choose it to see what that does to the count.`,`<b>Each process recorded at a time of its own choosing.</b> One message crosses the loop inward. Choose it to see what that does to the count.`);
-    else say.innerHTML=dual(`<b>Each house recorded when the red sash reached it.</b> Every cart is wholly inside the loop, wholly outside it, or crosses it outward. Choose any cart to see where its jars were counted.`,`<b>Each process recorded when the marker reached it.</b> Every message is wholly inside the loop, wholly outside it, or crosses it outward. Choose any message to see where its units were counted.`)}
-  arcs.forEach(a=>btn(a.hit,`The cart of ${a.x.n} jars from House ${a.x.a} to House ${a.x.b}`,`The ${a.x.n}-unit message from P${a.x.a} to P${a.x.b}`,()=>{sel=a;paint()}));
+    else if(bad.length)say.innerHTML=dual(`<b>Each house counted at an hour of its own choosing.</b> One cart crosses the loop inward. Choose it to see what that does to the count.`,`<b>Each process recorded at a time of its own choosing.</b> One message crosses the cut backward. Choose it to see what that does to the count.`);
+    else say.innerHTML=dual(`<b>Each house recorded when the red sash reached it.</b> Every cart is wholly inside the loop, wholly outside it, or crosses it outward. Choose any cart to see where its jars were counted.`,`<b>Each process recorded when the marker reached it.</b> Every message lies wholly before the cut, wholly after it, or crosses it forward. Choose any message to see where its units were counted.`)}
+  onReg.push(()=>arcs.forEach(a=>a.hit.setAttribute("aria-label",isM()?`The ${a.x.n}-unit message from P${a.x.a} to P${a.x.b}`:`The cart of ${a.x.n} jars from House ${a.x.a} to House ${a.x.b}`)));
   function setMode(m){mode=m;rec=m==="ok"?sashRec:whimRec;sel=null;b1.classList.toggle("on",m==="ok");b2.classList.toggle("on",m!=="ok");
     if(m!=="ok")sel=arcs.find(a=>cls(a.x,rec)==="inward")||null;paint()}
   b1.onclick=()=>setMode("ok");b2.onclick=()=>setMode("bad");setMode("ok");

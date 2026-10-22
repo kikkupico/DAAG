@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -160,11 +160,13 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* ===== a new registrar every entry: terms in a row, read by the chain rule ===== */
 (function(){
   const nodes={1:[-90,"B1",BC[1],"R1"],2:[0,"B2",BC[2],"R2"],3:[90,"B3",BC[3],"R3"],4:[180,"B4",BC[4],"R4"]};
-  const P=Polar($("#chainsvg"),{vb:"0 0 560 560",cx:280,cy:280,r0:46,step:22,rings:10,tEnd:9.6,note:[12,22],nodes});
   const list=$("#chainlist"),say=$("#chainsay"),term=$("#chainterm"),bn=$("#chainnext"),br=$("#chainreset"),MAX=7;
   const registrar=k=>(k-1)%4+1,t=k=>1.4+1.2*(k-1);
   const kinds=[["new proposal","#fffaf0","#1c1512","","new proposal"],["first bundle","#fbe7a1","#1c1512","","first certificate"],["locked on","#f0b429","#1c1512","s-lock","locked on"],["stands","#3f7a2a","#fffaf0","s-stands","committed"]];
-  let k=0,dots=[];
+  let k=0,dots=[],P;
+  /* term j drawn: its registrar's dot, and the bundle carried from the term before */
+  const place=j=>{const h=registrar(j),g=P.event(h,t(j),"#fffaf0",11);g.label.textContent=j;g.style.cursor="default";dots.push(g);
+    if(j>1)P.slip(registrar(j-1),t(j-1),h,t(j),12)};
   /* the entry of term j has been carried by k-j proposals in a row: new, first bundle, locked on, stands */
   const stat=j=>kinds[Math.min(3,k-j)];
   function paint(){
@@ -172,8 +174,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     let h="";for(let j=k;j>=Math.max(1,k-3);j--){const s=stat(j);h+=`<div>${dual(`Entry of term ${j}:`,`Block of view ${j}:`)} <span class="stat ${s[3]}">${dual(s[0],s[4])}</span></div>`}
     if(k>4)h+=`<div>${dual("Every entry behind them stands.","Every block behind them is committed.")}</div>`;list.innerHTML=h}
   function next(){
-    k++;const h=registrar(k),g=P.event(h,t(k),"#fffaf0",11);g.label.textContent=k;g.style.cursor="default";dots.push(g);
-    if(k>1)P.slip(registrar(k-1),t(k-1),h,t(k),12);
+    k++;const h=registrar(k);place(k);
     term.innerHTML=dual(`term ${k}`,`view ${k}`);paint();
     let s=`<b>Term ${k}.</b> Bandit ${h} proposes an entry`,m=`<b>View ${k}.</b> R${h} proposes a block`;
     if(k===1){s+=". There is no bundle for any entry yet.";m+=". There is no certificate for any block yet."}
@@ -181,6 +182,8 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     if(k===MAX){bn.disabled=true;s+=" Three proposals in a row stand behind each entry from now on, one more entry standing at every term.";m+=" Three proposals in a row stand behind each block from now on, one more block committed at every view."}
     say.innerHTML=dual(s,m)}
   function reset(){P.slips.innerHTML="";P.evs.innerHTML="";dots=[];k=0;bn.disabled=false;term.innerHTML=dual("no term yet","no view yet");list.innerHTML="";say.innerHTML=dual("The job starts at bandit 1. Press the button to run a term.","The leader's role starts at R1. Press the button to run a view.")}
+  /* in the round, or on lanes in computing, with the terms run so far */
+  Timeline($("#chainsvg"),{vb:"0 0 560 560",cx:280,cy:280,r0:46,step:22,rings:10,tEnd:9.6,note:[12,22],nodes},Q=>{P=Q;dots=[];for(let j=1;j<=k;j++)place(j);if(k)paint()});
   bn.onclick=next;br.onclick=reset;reset();
 })();
 

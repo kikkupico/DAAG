@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -86,12 +86,11 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   b1.onclick=()=>run(1);b2.onclick=()=>run(2);
 })();
 
-/* ===== one morning on Arche: ten entries and three slips, drawn in the round =====
+/* ===== one morning on Arche: ten entries and three slips, drawn in the round (on lanes in computing) =====
    The tallies and columns are worked out here by the houses' own rules, and coming-before
-   by following scroll lines and slips, so the page checks one against the other. */
+   by following scroll lines and slips, so the page checks one against the other.
+   The picture is drawn again when the register changes; whoever uses it puts its own marks back in M.paint. */
 function Morning(svg){
-  const P=Polar(svg,{vb:"0 0 620 596",cx:310,cy:350,r0:44,step:30,rings:9,tEnd:9.5,note:[14,24],
-    nodes:{1:[-90,"H1",HC[1],"P1"],2:[30,"H2",HC[2],"P2"],3:[150,"H3",HC[3],"P3"]}});
   const E=[
     {id:"a",h:1,t:1.2,d:"House 1 enters a request",m:"P1’s first event"},
     {id:"b",h:1,t:2.4,d:"House 1 sends a slip to House 2",m:"P1 sends a message to P2"},
@@ -104,14 +103,14 @@ function Morning(svg){
     {id:"j",h:3,t:7.6,d:"House 3 sends a slip to House 1",m:"P3 sends a message to P1"},
     {id:"l",h:1,t:9,d:"House 1 receives House 3's slip",m:"P1 receives P3’s message",from:"j"}];
   const by={},T={1:0,2:0,3:0},V={1:[0,0,0],2:[0,0,0],3:[0,0,0]},last={};E.forEach(e=>by[e.id]=e);
-  [...E].sort((a,b)=>a.t-b.t).forEach(e=>{const s=e.from&&by[e.from];e.pred=[];
-    if(last[e.h]){e.pred.push(last[e.h]);e.seg=P.seg(e.h,last[e.h].t,e.t)}
-    if(s){e.pred.push(s);e.slip=P.slip(s.h,s.t,e.h,e.t)}
+  const order=[...E].sort((a,b)=>a.t-b.t);
+  order.forEach(e=>{const s=e.from&&by[e.from];e.pred=[];
+    if(last[e.h]){e.pred.push(last[e.h]);e.prev=last[e.h]}
+    if(s)e.pred.push(s);
     e.tally=T[e.h]=Math.max(T[e.h],s?s.tally:0)+1;                       // never lowered; past the slip's number
     const v=V[e.h];if(s)s.col.forEach((x,k)=>v[k]=Math.max(v[k],x));v[e.h-1]++;e.col=[...v];last[e.h]=e});
-  E.forEach(e=>e.g=P.event(e.h,e.t,HC[e.h]));
   const past=e=>{const s=new Set();(function f(x){x.pred.forEach(p=>{if(!s.has(p)){s.add(p);f(p)}})})(e);return s};
-  const M={P,E,by,
+  const M={P:null,E,by,paint:[],
     before:(a,b)=>past(b).has(a),
     /* the links of one chain from a to b, as [earlier, later] pairs */
     chain(a,b){const next=new Map([[b,null]]),q=[b];while(q.length){const x=q.shift();if(x===a)break;x.pred.forEach(p=>{if(!next.has(p)){next.set(p,x);q.push(p)}})}
@@ -120,9 +119,19 @@ function Morning(svg){
     hi(links){M.clear();links.forEach(([x,n])=>{if(n.from===x.id){n.slip.classList.add("hi");n.slip.setAttribute("marker-end",`url(#${svg.id}-r)`)}else n.seg.classList.add("hi")})},
     text(e,s){e.g.label.textContent=s},
     /* let the reader choose two entries */
-    pick(cb){let sel=[];E.forEach(e=>button(e.g,e.d,()=>{if(sel.length===2||sel.includes(e))sel=[];sel.push(e);E.forEach(x=>x.g.classList.toggle("sel",sel.includes(x)));cb(sel)}));
+    pick(cb){let sel=[];
+      const bind=()=>{E.forEach(e=>{button(e.g,isM()?e.m:e.d,()=>{if(sel.length===2||sel.includes(e))sel=[];sel.push(e);E.forEach(x=>x.g.classList.toggle("sel",sel.includes(x)));cb(sel)});
+        e.g.classList.toggle("sel",sel.includes(e))});if(sel.length)cb(sel)};
+      bind();M.paint.push(bind);
       onReg.push(()=>E.forEach(e=>e.g.setAttribute("aria-label",isM()?e.m:e.d)))}
   };
+  Timeline(svg,{vb:"0 0 620 596",cx:310,cy:350,r0:44,step:30,rings:9,tEnd:9.5,note:[14,24],
+    nodes:{1:[-90,"H1",HC[1],"P1"],2:[30,"H2",HC[2],"P2"],3:[150,"H3",HC[3],"P3"]}},P=>{
+    M.P=P;
+    order.forEach(e=>{const s=e.from&&by[e.from];e.seg=e.prev?P.seg(e.h,e.prev.t,e.t):undefined;e.slip=s?P.slip(s.h,s.t,e.h,e.t):undefined});
+    E.forEach(e=>e.g=P.event(e.h,e.t,HC[e.h]));
+    M.paint.forEach(f=>f());
+  });
   return M;
 }
 
@@ -139,16 +148,18 @@ function Morning(svg){
 
 /* ===== scrollytelling: the tally ===== */
 (function(){
-  const M=Morning($("#tallysvg")),lab={};
-  M.E.filter(e=>e.slip).forEach(e=>{const [x,y]=e.slip.mid,t=dtext(M.P.over,{class:"tok-l fade halo",x,y:y+4},"slip says "+M.by[e.from].tally,"message carries "+M.by[e.from].tally);lab[e.id]=t});
+  const M=Morning($("#tallysvg")),lab={};let cur=0;
   const on=(t,v)=>t.forEach(x=>x.classList.toggle("on",v));
   const from={a:1,b:1,c:1,f:1,g:1,d:3,e:4,i:4,j:4,l:4}, B=M.by;
   const long=[[B.a,B.b],[B.b,B.d],[B.d,B.e],[B.e,B.i],[B.i,B.j],[B.j,B.l]];
-  scrolly($("#tally"),s=>{
+  function show(s){cur=s;
     M.E.forEach(e=>{M.text(e,s>=from[e.id]?e.tally:"");e.g.classList.toggle("mark",s===6&&(e===B.g||e===B.d));e.g.classList.toggle("dim",s===6&&e!==B.g&&e!==B.d)});
     on(lab.d,s>=2&&s<6);on(lab.i,s>=4&&s<6);on(lab.l,s>=4&&s<6);
     if(s===5)M.hi(long);else M.clear();
-  });
+  }
+  const labels=()=>M.E.filter(e=>e.slip).forEach(e=>{const [x,y]=e.slip.mid,t=dtext(M.P.over,{class:"tok-l fade halo",x,y:y+4},"slip says "+M.by[e.from].tally,"message carries "+M.by[e.from].tally);lab[e.id]=t});
+  labels();M.paint.push(()=>{labels();show(cur)});
+  scrolly($("#tally"),show);
 })();
 
 /* ===== precedence: three lists become one ===== */
@@ -228,7 +239,7 @@ function Morning(svg){
 
 /* ===== the column: compare two entries row by row ===== */
 (function(){
-  const M=Morning($("#colsvg")),out=$("#colout"),say=$("#colsay");M.E.forEach(e=>M.text(e,e.tally));
+  const M=Morning($("#colsvg")),out=$("#colout"),say=$("#colsay"),tallies=()=>M.E.forEach(e=>M.text(e,e.tally));tallies();M.paint.unshift(tallies);
   const short=e=>dual(`H${e.h}'s ${e.tally}`,`P${e.h}'s ${e.tally}`);
   M.pick(sel=>{
     if(sel.length<2){M.clear();out.innerHTML="";say.innerHTML=dual(`<b>${sel[0].d}</b>, tally ${sel[0].tally}. Now choose a second entry.`,`<b>${sel[0].m}</b>, timestamp ${sel[0].tally}. Now choose a second event.`);return}

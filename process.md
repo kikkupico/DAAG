@@ -40,7 +40,7 @@ widgets that several books share), `assets/css/registers.css` (the Allegory | Co
 computing dress), then the book's own `style.css`, which holds only what is particular to that book.
 Scripts load as `assets/js/registers.js`, `assets/js/book.js`, then the book's `script.js`. `book.js`
 defines `window.BOOK` with the helpers (`$`, `$$`, `el`, `tween`, `sleep`, `button`, `stepDots`, `scrolly`,
-`mapPairs`, `Polar`) and `BOOK.init()` (pop-ups, the progress bar, the section name, parallax); it also
+`mapPairs`, `Polar`, `Lanes`, `Timeline`, `Space`, `redrawOn`) and `BOOK.init()` (pop-ups, the progress bar, the section name, parallax); it also
 draws the lineage edges by itself. A script opens with `const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;`,
 `const {isM,dual,vis,dtext,onReg}=REG;`, `BOOK.init();`, and ends with `REG.start();`. Put a rule in the shared
 file when three or more books want it; a rule only one book needs stays in its own `style.css`.
@@ -49,6 +49,9 @@ The computing cover is drawn, not photographed: `assets/js/covers.js` defines `w
 dot-grid card, loaded after `book.js`; each book's `script.js` calls `COVERS.draw("#coversvg",(svg,{...})=>{...})`
 with the figure that is that paper's signature picture (a lane diagram, a lattice, a field of sites), and the
 svg is class `cover-fig`. The same figure is cropped into the spreads it illustrates: an `<svg class="cover-fig" data-crop="x y w h">` inside a `pop m` beside the text, drawn by `COVERS.mount(COVER)`; such a spread drops its `solo` class.
+The cover function sits between `/* cover:start */` and `/* cover:end */` in the book's `script.js`.
+`python3 art/scroll/book_covers.py` copies every such block into `assets/js/book-covers.js` as `BOOK_COVERS["<slug>"]`,
+which the landing page (`landing.html`) draws on its book cards in computing; rerun it after changing a cover.
 
 **Two registers.** A book can be read as allegory or as computing, by a switch in its bar that shares
 its choice with the scroll page. Both are always in the page: every paragraph, heading, proof step,
@@ -300,11 +303,24 @@ Arche with its three houses on the ring road (`Isle`), the hill with its four te
 crown with the chief inside the ring wall and three posts on the slopes, the Chamber with its one
 door (`Hall`). Copy the picture from a book of the same setting and keep it the same.
 
-**Space-time, in the round.** `Polar` in `shell.js`: each place is a line running outward from
+**Space-time, in the round.** `Polar` in `book.js`: each place is a line running outward from
 its label, each ring further out is a later moment, and whatever is carried between places is an
-arc that curves round and outward. Never flat lifelines. Events stay clear of the label boxes. A
+arc that curves round and outward. Never flat lifelines in the allegory. Events stay clear of the label boxes. A
 dead man is a cross on a shortened line; a hollow dot is a man who has not committed; a cut is a
 dashed loop that carried things may cross outward and never inward.
+
+**Space-time in computing, on lanes.** In the computing register the same picture is drawn by `Lanes`
+in `book.js`, in the covers' dress: one lane per process from top to bottom in the order of the nodes,
+real time running left to right on a dotted grid, events as dots, messages as straight arrows sloping
+right, and an operation as a bar from invocation to response (`op`) shaded down through every lane.
+A dead process's lane stops where it died; a cut is a dashed line through each process's record with the
+past shaded to its left, and a message crossing it backward is the inconsistent one. `Lanes` answers to
+everything `Polar` does (`pt`, `seg`, `slip`, `event`, `arc`, and `r` and `xy`, which find the nearest lane
+and the time), so a book draws once for both. `Timeline(svg,opts,draw)` draws in the register being read
+and runs `draw(P)` again when the register changes, or a phone crosses the size where the lanes grow 1.6
+times larger; `draw` builds the figure from nothing and puts back whatever the reader has chosen. A book
+that redraws from scratch each time uses `Space(svg,opts)` for the engine and `redrawOn(fn)`. Write the
+computing caption and `data-al-m` for lanes (left to right, arrows), never for the round.
 
 **Draw a figure when the argument has a shape**, and not otherwise:
 
@@ -378,7 +394,11 @@ Before calling a book done (the brief's checklist has the mechanics):
   register, the link to the book, and its papers with their authors at the foot, copied from
   `papers/index.html`); in its `script.js`, a scene in the round (`def`, or `grow` from the parent's
   scene, with the change marked `c: 1`), its place in the family (`B`, `KIDS` and `LAY` in the
-  family tree), and its key in every `THREAD` that it uses.
+  family tree), and its key in every `THREAD` that it uses. A scene is written once, in the round's
+  terms; in computing the page draws it on lanes (`LN` in its `script.js`): positions on a spoke become
+  positions on a lane, arcs straight arrows, rings upright lines, a cut a line with the past to its left,
+  and a point given as x and y inside the round goes to the lane nearest its angle (captions above or below
+  the round stay put, at the top or foot of the card). The card is as tall as its lanes need: short for three, nearly square for five, easing between sizes when the cast changes. The family tree, with its threads, opens the page, before the first island.
 
 ---
 

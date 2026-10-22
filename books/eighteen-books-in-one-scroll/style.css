@@ -465,6 +465,9 @@ html:not(.js) .stage{display:none}
 /* ============================================================ THE ROUND */
 #round text{user-select:none}
 .disc{fill:#fffaf0;stroke:#1c1512;stroke-width:2.5}
+/* computing's lanes: a white card on a dotted grid, in the covers' dress */
+.disc.lanes{fill:#fff;stroke:#d2d2d7;stroke-width:1.2}
+#round .lnote{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:calc(12px*var(--k));fill:#a1a1a6;text-anchor:end}
 .stage[data-setting="foot"] .disc,.stage[data-setting="crown"] .disc{stroke:#000;filter:drop-shadow(0 30px 60px rgba(0,0,0,.55))}
 .rg{fill:none;stroke:#b9a77e;stroke-opacity:.75;stroke-width:1;stroke-dasharray:3 4}
 .spoke{stroke:#1c1512;stroke-width:2.5;stroke-opacity:.42}
@@ -516,10 +519,10 @@ html:not(.js) .stage{display:none}
 .band path{fill:#9fb3c2;fill-opacity:.28}
 .band.chg path{fill:#d98a6e;fill-opacity:.22}
 .band.hl path{fill:#e0b84a;fill-opacity:.28}
-.ring circle{fill:none;stroke:#1c1512;stroke-width:1.6;stroke-dasharray:6 4}
-.ring.chg circle{stroke:#bf4a26;stroke-width:3;stroke-dasharray:none}
-.ring.hl circle{stroke:#b8891a;stroke-width:3;stroke-dasharray:none}
-.ring.sun.chg circle{stroke-dasharray:10 5}
+.ring circle,.ring line{fill:none;stroke:#1c1512;stroke-width:1.6;stroke-dasharray:6 4}
+.ring.chg circle,.ring.chg line{stroke:#bf4a26;stroke-width:3;stroke-dasharray:none}
+.ring.hl circle,.ring.hl line{stroke:#b8891a;stroke-width:3;stroke-dasharray:none}
+.ring.sun.chg circle,.ring.sun.chg line{stroke-dasharray:10 5}
 .cut .fillc{fill:#5f6e28;fill-opacity:.12}
 .cut .edge{fill:none;stroke:#5f6e28;stroke-width:2;stroke-dasharray:7 4}
 .cut.chg .fillc{fill:#bf4a26;fill-opacity:.09}
@@ -560,7 +563,7 @@ html:not(.js) .stage{display:none}
 /* time: the moment shown, a head on each messenger in flight, and marks that appear as the moment reaches them */
 .now{transition:opacity .4s}
 .now.off{opacity:0}
-.now circle{fill:none;stroke:#1c1512;stroke-opacity:.55;stroke-width:1.8}
+.now circle,.now line{fill:none;stroke:#1c1512;stroke-opacity:.55;stroke-width:1.8}
 .sl .head{fill:#136f9e;stroke:#fffaf0;stroke-width:2}
 .sl.chg .head{fill:#bf4a26}
 .sl.hl .head{fill:#b8891a}

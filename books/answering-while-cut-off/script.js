@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -137,7 +137,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* ===== scrolly: two nights, and a man who cannot tell them apart ===== */
 (function(){
   const svg=$("#cutsvg"),side=$("#cutside");
-  const P=Polar(svg,{vb:"0 0 520 480",cx:260,cy:240,r0:40,step:27,rings:7,tEnd:7.4,note:[10,20],nodes:{1:[225,"T1",TC[1],"P1"],2:[135,"T2",TC[2],"P2"],3:[315,"T3",TC[3],"P3"],4:[45,"T4",TC[4],"P4"]}});
+  let P,gA,gB,gC,cur=0;
   const grp=()=>el("g",{class:"fade"},P.over);
   const dot=(g,k,t,plan)=>{const e=P.event(k,t,plan?PC[plan]:"#1c1512",plan?12:6);if(plan)evLabel(e,PL[plan],V[plan]);e.style.cursor="default";g.appendChild(e);return e};
   const lostArc=(g,a,ta,b,tb,frac)=>{const pts=P.arc(a,ta,b,tb),n=Math.round((pts.length-1)*frac),q=pts.slice(0,n+1);
@@ -147,15 +147,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const T=1.2,mv1=1.4,askAt=mv1+T+1.6,ansAt=askAt+1;
   const night1={moves:[{by:2,plan:"attack",begin:mv1,end:mv1+T}],birds:[{from:2,to:4,sent:mv1,lost:true,plan:"attack"}]};
   const night2={moves:[],birds:[]};
-  const gA=grp(),gB=grp(),gC=grp();
-  /* night one among the three */
-  P.seg(2,mv1,mv1+T).classList.add("hi");gA.appendChild(P.under.lastChild);
-  dot(gA,2,mv1);lostArc(gA,2,mv1,4,mv1+1.6,.55);dot(gA,2,mv1+T,"attack");
-  /* night two at tent 4 */
-  P.seg(4,askAt,ansAt).classList.add("hi");gB.appendChild(P.under.lastChild);
-  dot(gB,4,askAt);const ans=answer4(view4(night1.birds,askAt));dot(gB,4,ansAt,ans);
-  /* tent 4, cut off */
-  const [cx4,cy4]=P.pt(4,0);hawkShape(gC,cx4+30,cy4+30,1);hawkShape(gC,cx4+44,cy4-12,1);
+  const ans=answer4(view4(night1.birds,askAt));
   const mk=(h,r,c)=>`<div class="hc"><h5>${h}</h5><div class="rc">${r}</div><div class="chk">${c||""}</div></div>`;
   const same=JSON.stringify(view4(night1.birds,askAt))===JSON.stringify(view4(night2.birds,askAt));
   const rec1=record(night1.moves.map(m=>({plan:m.plan,end:m.end})),askAt),rec2=record(night2.moves,askAt);
@@ -167,12 +159,26 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     [mk(Dk(2),dual("moves the plan to attack<br>told it stands","writes 1<br>told it took effect")),mk(Dk(4),dual(`inputs the same as the second night: ${same?"yes":"no"}`,`inputs the same as the second execution: ${same?"yes":"no"}`)),mk(one,pv("attack"))],
     [mk(Dk(2),dual("moved the plan to attack","wrote 1")),mk(Dk(4),`${dual("answers","answers")} <b>${pv(ans)}</b>`),mk(one,`${pv(rec1)} ${yesno(ans===rec1)}`)]];
   const show=[[0,0,1],[1,0,1],[0,1,1],[1,1,1],[1,1,1]];
-  scrolly($("#cut"),s=>{
+  const apply=s=>{cur=s;
     [gA,gB,gC].forEach((g,i)=>g.classList.toggle("on",!!show[s][i]&&!(i===2&&s===0&&false)));
     gC.classList.add("on");
     side.innerHTML=cards[s].join("");
     $$(".st-ev",gB).forEach(e=>e.classList.toggle("mark",s===4));
+  };
+  /* drawn in the round, or on lanes in computing, at the step the reader has reached */
+  Timeline(svg,{vb:"0 0 520 480",cx:260,cy:240,r0:40,step:27,rings:7,tEnd:7.4,note:[10,20],nodes:{1:[225,"T1",TC[1],"P1"],2:[135,"T2",TC[2],"P2"],3:[315,"T3",TC[3],"P3"],4:[45,"T4",TC[4],"P4"]}},Q=>{P=Q;
+  gA=grp();gB=grp();gC=grp();
+  /* night one among the three */
+  P.seg(2,mv1,mv1+T).classList.add("hi");gA.appendChild(P.under.lastChild);
+  dot(gA,2,mv1);lostArc(gA,2,mv1,4,mv1+1.6,.55);dot(gA,2,mv1+T,"attack");
+  /* night two at tent 4 */
+  P.seg(4,askAt,ansAt).classList.add("hi");gB.appendChild(P.under.lastChild);
+  dot(gB,4,askAt);dot(gB,4,ansAt,ans);
+  /* tent 4, cut off */
+  const [cx4,cy4]=P.pt(4,0);hawkShape(gC,cx4+30,cy4+30,1);hawkShape(gC,cx4+44,cy4-12,1);
+    apply(cur);
   });
+  scrolly($("#cut"),apply);
   if(!same||ans===rec1)throw new Error("the two nights must look alike to tent 4 and the answer must break answering as one");
 })();
 
@@ -242,7 +248,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* ===== scrolly: the damage mends ===== */
 (function(){
   const svg=$("#spansvg"),side=$("#spanside");
-  const P=Polar(svg,{vb:"0 0 620 600",cx:310,cy:300,r0:44,step:30,rings:9,tEnd:9.4,note:[14,24],nodes:{1:[225,"T1",TC[1],"P1"],2:[135,"T2",TC[2],"P2"],3:[315,"T3",TC[3],"P3"],4:[45,"T4",TC[4],"P4"]}});
+  let P,gs=[],cur=0;
   /* the times, in glass units: a flight, the muster-master's time to answer, the span, the moment the hawks leave */
   const f=.7,aT=.2,S=3.2,G=2*f+aT,rs=S/2-f,mv=1.4,h=3.5;
   const sends=[];for(let t=mv;;t+=rs){sends.push({t,lost:t<h});if(t>=h)break}
@@ -254,16 +260,6 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const lostArc=(g,a,ta,b,tb,frac)=>{const pts=P.arc(a,ta,b,tb),q=pts.slice(0,Math.round((pts.length-1)*frac)+1);
     g.appendChild(el("path",{d:"M"+q.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" L"),fill:"none",stroke:ATT,"stroke-width":2.6,"stroke-dasharray":"6 4"}));hawkShape(g,...q[q.length-1],.9)};
   const seg=(g,k,a,b)=>{const s=P.seg(k,a,b);s.classList.add("hi");g.appendChild(s)};
-  const G1=grp(),G2=grp(),G3=grp(),G4=grp(),G5=grp(),G6=grp();
-  seg(G1,4,mv,mv+G);dot(G1,4,mv);lostArc(G1,4,mv,1,mv+f,.5);dot(G1,4,mv+G,"attack");
-  sends.filter(x=>x.lost).slice(1).forEach(x=>lostArc(G2,4,x.t,1,x.t+f,.5));
-  {const [x,y]=P.pt(4,h);const a=135*Math.PI/180;G2.appendChild(el("line",{x1:x+14*Math.cos(a),y1:y+14*Math.sin(a),x2:x-14*Math.cos(a),y2:y-14*Math.sin(a),stroke:"#1c1512","stroke-width":4}));
-    dtext(G2,{class:"st-note",x:x+18,y:y+20},"hawks leave","network recovers")}
-  arrow(G3,4,first.t,1,arrK);dot(G3,1,arrK,"attack","1");
-  [2,3,4].forEach(k=>{arrow(G4,1,arrK,k,arrAll);dot(G4,k,arrAll,"attack","1")});
-  seg(G5,4,h,spanEnd);
-  dot(G6,3,askT);arrow(G6,3,askT,1,askT+f);arrow(G6,1,askT+f+aT,3,ansT);dot(G6,3,ansT,"attack");
-  const gs=[G1,G2,G3,G4,G5,G6];
   const mk=(h,r)=>`<div class="hc"><h5>${h}</h5><div class="rc">${r}</div></div>`;
   const t1=dual("Tent 1, the muster-master","P1, the primary"),t3=Dk(3),t4=Dk(4),as=dual("attack, stamp 1","1, sequence number 1");
   const cards=[
@@ -273,7 +269,23 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     [mk(t1,as),mk(t3,as),mk(t4,dual("attack, stamp 1<br>acknowledged","1, sequence number 1<br>acknowledged"))],
     [mk(t1,as),mk(t3,as),mk(t4,dual("attack, stamp 1<br>a span has passed, no bird lost","1, sequence number 1<br>a span has passed, no message lost"))],
     [mk(t1,as),mk(t3,dual("asks<br>answered <b>attack</b>","reads<br>answered <b>1</b>")),mk(t4,as)]];
-  scrolly($("#span"),s=>{gs.forEach((g,i)=>g.classList.toggle("on",i<=s));side.innerHTML=cards[s].join("")});
+  const apply=s=>{cur=s;gs.forEach((g,i)=>g.classList.toggle("on",i<=s));side.innerHTML=cards[s].join("")};
+  /* drawn in the round, or on lanes in computing, at the step the reader has reached */
+  Timeline(svg,{vb:"0 0 620 600",cx:310,cy:300,r0:44,step:30,rings:9,tEnd:9.4,note:[14,24],nodes:{1:[225,"T1",TC[1],"P1"],2:[135,"T2",TC[2],"P2"],3:[315,"T3",TC[3],"P3"],4:[45,"T4",TC[4],"P4"]}},Q=>{P=Q;
+  const G1=grp(),G2=grp(),G3=grp(),G4=grp(),G5=grp(),G6=grp();
+  seg(G1,4,mv,mv+G);dot(G1,4,mv);lostArc(G1,4,mv,1,mv+f,.5);dot(G1,4,mv+G,"attack");
+  sends.filter(x=>x.lost).slice(1).forEach(x=>lostArc(G2,4,x.t,1,x.t+f,.5));
+  /* the moment the hawks leave: a tick across tent 4's line (across its lane in computing) */
+  {const [x,y]=P.pt(4,h);const a=(P.lanes?90:135)*Math.PI/180;G2.appendChild(el("line",{x1:x+14*Math.cos(a),y1:y+14*Math.sin(a),x2:x-14*Math.cos(a),y2:y-14*Math.sin(a),stroke:"#1c1512","stroke-width":4}));
+    dtext(G2,{class:"st-note",x:x+18,y:y+20},"hawks leave","network recovers")}
+  arrow(G3,4,first.t,1,arrK);dot(G3,1,arrK,"attack","1");
+  [2,3,4].forEach(k=>{arrow(G4,1,arrK,k,arrAll);dot(G4,k,arrAll,"attack","1")});
+  seg(G5,4,h,spanEnd);
+  dot(G6,3,askT);arrow(G6,3,askT,1,askT+f);arrow(G6,1,askT+f+aT,3,ansT);dot(G6,3,ansT,"attack");
+  gs=[G1,G2,G3,G4,G5,G6];
+    apply(cur);
+  });
+  scrolly($("#span"),apply);
 })();
 
 /* ===== two men move the plan during a loss ===== */

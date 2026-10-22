@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -88,6 +88,9 @@ function band(P,pl,t1,t2,col,off=0,w=8){
   const [x1,y1]=P.xy(ANG[pl]+off,P.r(t1)),[x2,y2]=P.xy(ANG[pl]+off,P.r(t2));
   return el("line",{x1:x1.toFixed(1),y1:y1.toFixed(1),x2:x2.toFixed(1),y2:y2.toFixed(1),stroke:col,"stroke-width":w,"stroke-linecap":"round",opacity:.5},P.under)}
 
+/* the three timelines: in the round in the allegory, on lanes in computing (Timeline in book.js) */
+const TL={vb:"0 0 640 570",cx:320,cy:290,r0:44,step:22,rings:10,tEnd:10.4,note:[14,24],nodes:NODES};
+
 /* ===== Arche, seen from above: the same picture as every book on the ring road ===== */
 function Isle(svg){
   const cx=235,cy=235,R=165,A={1:-90,2:30,3:150}; svg.innerHTML=""; svg.setAttribute("viewBox","0 0 470 470");
@@ -173,15 +176,19 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* ===== before, or overlap: choose two requests ===== */
 (function(){
   const svg=$("#spansvg"),say=$("#spansay");
-  const P=Polar(svg,{vb:"0 0 640 570",cx:320,cy:290,r0:44,step:22,rings:10,tEnd:10.4,note:[14,24],nodes:NODES});
   const O=[{k:"A",pl:1,s:1.6,e:4.2,name:"House 1's request",nm:"P1's request"},{k:"B",pl:2,s:3.0,e:5.4,name:"House 2's first request",nm:"P2's first request"},{k:"C",pl:2,s:7.0,e:9.4,name:"House 2's second request",nm:"P2's second request"}];
-  O.forEach(o=>{band(P,o.pl,o.s,o.e,HC[o.pl]);mark(P,o.pl,o.e,HC[o.pl],"",0,6);o.g=mark(P,o.pl,o.s,HC[o.pl],o.k)});
   let sel=[];
-  O.forEach(o=>button(o.g,o.name,()=>{if(sel.length===2||sel.includes(o))sel=[];sel.push(o);O.forEach(x=>x.g.classList.toggle("sel",sel.includes(x)));
+  /* in the allegory each request's starting dot is the button; in computing, its whole bar */
+  Timeline(svg,TL,P=>{
+    if(P.lanes)O.forEach(o=>o.g=P.op(o.pl,o.s,o.e,HC[o.pl],o.k));
+    else O.forEach(o=>{band(P,o.pl,o.s,o.e,HC[o.pl]);mark(P,o.pl,o.e,HC[o.pl],"",0,6);o.g=mark(P,o.pl,o.s,HC[o.pl],o.k)});
+    O.forEach(o=>{button(o.g,isM()?o.nm:o.name,()=>pick(o));o.g.classList.toggle("sel",sel.includes(o))});
+  });
+  function pick(o){{if(sel.length===2||sel.includes(o))sel=[];sel.push(o);O.forEach(x=>x.g.classList.toggle("sel",sel.includes(x)));
     if(sel.length<2){say.innerHTML=dual(`<b>${o.name}.</b> Now choose a second request.`,`<b>${o.nm}.</b> Now choose a second request.`);return}
     let [a,b]=sel;if(b.e<a.s)[a,b]=[b,a];
     say.innerHTML=a.e<b.s?dual(`<b>${a.name}</b> was over before <b>${b.name}</b> began, so it came <span class="ok">before</span>.`,`<b>${a.nm}</b> was over before <b>${b.nm}</b> began, so it came <span class="ok">before</span>.`)
-      :dual(`<b>${a.name}</b> and <b>${b.name}</b> <span class="bad">overlap</span>: neither was over before the other began, so neither came first.`,`<b>${a.nm}</b> and <b>${b.nm}</b> <span class="bad">overlap</span>: neither was over before the other began, so neither came first.`)}));
+      :dual(`<b>${a.name}</b> and <b>${b.name}</b> <span class="bad">overlap</span>: neither was over before the other began, so neither came first.`,`<b>${a.nm}</b> and <b>${b.nm}</b> <span class="bad">overlap</span>: neither was over before the other began, so neither came first.`)}}
 })();
 
 /* ===== four mornings, put to the rule by the checker ===== */
@@ -195,11 +202,15 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     {n:dual("Served before the confirmation arrives","Served before the response arrives"),v:"ok",ops:[E("a",1,1.6,6.0),D("c",1,3.4,4.6)],t:dual("House 1's request is entered, and a loader serves it while word of the entry is still on the road. The request's moment came at its entry, and the house simply has not heard yet.","P1's request is entered, and a dequeue serves it while the response is still in transit. The request's moment came at its entry, and P1 simply has not heard yet.")},
     {n:"One request served twice",v:"steward",ops:[E("b",2,1.6,3.4),D("c",2,4.4,5.4,-5),D("d",2,4.8,6.0,5)],t:dual("Two loaders each take House 2's single request and load grain for it.","Two dequeues each take P2's single request.")}];
   M.forEach(m=>{if(verdict(m.ops)!==m.v)throw new Error("a morning does not match the rule: "+m.n)});
-  function show(n){const m=M[n],ops=m.ops;bs.forEach((b,i)=>{b.classList.toggle("on",i===n);b.classList.toggle("alt",i!==n)});nm.innerHTML=m.n;
-    const P=Polar(svg,{vb:"0 0 640 570",cx:320,cy:290,r0:44,step:22,rings:10,tEnd:10.4,note:[14,24],nodes:NODES});
-    ops.forEach(o=>{const col=o.kind==="enq"?HC[o.h]:"#8a7a62";band(P,o.pl,o.s,o.e,col,o.off);
+  let cur=null,tl=null;
+  /* computing: an enqueue is a bar in its process's colour, a dequeue a grey bar on P3's lane, each named for the request */
+  const paint=P=>{const ops=M[cur].ops;
+    if(P.lanes)ops.forEach(o=>P.op(o.pl,o.s,o.e,o.kind==="enq"?HC[o.h]:"GREY",o.kind==="enq"?`enq P${o.h}`:`deq → P${o.h}`,o.off));
+    else ops.forEach(o=>{const col=o.kind==="enq"?HC[o.h]:"#8a7a62";band(P,o.pl,o.s,o.e,col,o.off);
       if(o.kind==="enq"){mark(P,o.pl,o.e,col,"",o.off,6);mark(P,o.pl,o.s,col,o.h,o.off)}
-      else{mark(P,o.pl,o.s,col,"",o.off,6);mark(P,o.pl,o.e,HC[o.h],o.h,o.off)}});
+      else{mark(P,o.pl,o.s,col,"",o.off,6);mark(P,o.pl,o.e,HC[o.h],o.h,o.off)}})};
+  function show(n){cur=n;const m=M[n],ops=m.ops;bs.forEach((b,i)=>{b.classList.toggle("on",i===n);b.classList.toggle("alt",i!==n)});nm.innerHTML=m.n;
+    if(tl)tl(true);else tl=Timeline(svg,TL,paint);
     const v=verdict(ops);say.innerHTML=m.t;
     const lab=o=>chip(dual(o.kind==="enq"?`enters House ${o.h}'s request`:`serves House ${o.h}'s request`,o.kind==="enq"?`enqueues P${o.h}'s request`:`dequeues P${o.h}'s request`),o.h);
     vd.innerHTML=v==="ok"?`<p class="say"><span class="ok">Allowed.</span> ${dual("A single steward could have produced it, in this sequence:","A single sequential queue could have produced it, in this sequence:")}</p><div class="seqline">${lin(ops,true).seq.map(lab).join(" ")}</div>`
@@ -219,12 +230,20 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   /* the book's two mornings, checked against what they say */
   {const f0=facts(K[0]),f1=facts(K[1]);
    if(f0.ch||f0.tFirst!==2||!f0.sunBefore||!f1.ch||f1.tFirst!==1||f1.sunBefore)throw new Error("the two mornings do not behave as the book says")}
-  function show(i){const k=K[i],f=facts(k);bs.forEach((b,j)=>{b.classList.toggle("on",j===i);b.classList.toggle("alt",j!==i)});nm.innerHTML=k.n;
-    const P=Polar(svg,{vb:"0 0 640 570",cx:320,cy:290,r0:44,step:22,rings:10,tEnd:10.4,note:[14,24],nodes:NODES});
+  let cur=null,tl=null;
+  /* computing: each request a bar named with its timestamp, other events small dots, messages sloping arrows */
+  const paint=P=>{const k=K[cur],f=facts(k);
+    if(P.lanes){
+      [["o1",1],["o2",2]].forEach(([id,h])=>P.op(h,k.sp[id][0],k.sp[id][1],HC[h],`ts ${f.tal[id]}`));
+      k.ev.filter(e=>e.id!=="o1"&&e.id!=="o2").forEach(e=>P.dot(e.h,e.t,HC[e.h]));
+      k.ev.filter(e=>e.from).forEach(e=>{const s=k.ev.find(x=>x.id===e.from);P.msg(s.h,s.t,e.h,e.t)})}
+    else{
     [["o1",1],["o2",2]].forEach(([id,h])=>band(P,h,k.sp[id][0],k.sp[id][1],HC[h]));
     k.ev.forEach(e=>{if(e.id==="o1"||e.id==="o2")mark(P,e.h,e.t,HC[e.h],f.tal[e.id]);else mark(P,e.h,e.t,HC[e.h],"",0,6)});
     k.ev.filter(e=>e.from).forEach(e=>{const s=k.ev.find(x=>x.id===e.from);P.slip(s.h,s.t,e.h,e.t)});
-    [[1,k.sp.o1[1]],[2,k.sp.o2[1]]].forEach(([h,t])=>mark(P,h,t,HC[h],"",0,6));
+    [[1,k.sp.o1[1]],[2,k.sp.o2[1]]].forEach(([h,t])=>mark(P,h,t,HC[h],"",0,6))}};
+  function show(i){cur=i;const k=K[i],f=facts(k);bs.forEach((b,j)=>{b.classList.toggle("on",j===i);b.classList.toggle("alt",j!==i)});nm.innerHTML=k.n;
+    if(tl)tl(true);else tl=Timeline(svg,TL,paint);
     tab.innerHTML=`<tr><td>${dual("Does a chain of slips join the requests?","Does a chain of messages join the requests?")}</td><td>${f.ch?"yes":"no"}</td></tr>
       <tr><td>${dual(`Tallies: House 1's request ${f.n1}, House 2's ${f.n2}`,`Timestamps: P1's request ${f.n1}, P2's ${f.n2}`)}</td><td>${dual(`House ${f.tFirst} first${f.ch?"":" (arbitrary)"}`,`P${f.tFirst} first${f.ch?"":" (arbitrary)"}`)}</td></tr>
       <tr><td>${dual("The sun","Real time")}</td><td>${f.sunBefore?dual("House 1 first","P1 first"):"overlap"}</td></tr>
