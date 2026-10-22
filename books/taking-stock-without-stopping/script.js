@@ -11,6 +11,9 @@ function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();ret
   (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
 function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
 
+/* ===== the two registers: see assets/js/registers.js ===== */
+const {isM,dual,vis,dtext,onReg}=REG;
+
 /* ===== pop-ups unfold when they enter view ===== */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
 $$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
@@ -28,12 +31,13 @@ function onscroll(){
     prog.style.width=(h>0?y/h*100:0)+"%";
     const mid=y+innerHeight*.4; let cur=secs[0];
     for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
-    now.textContent=cur.dataset.name||"";
+    now.textContent=(isM()&&cur.dataset.nameM)||cur.dataset.name||"";
     if(reduce)return;
     for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
     for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
   });
 }
+REG.after=onscroll;
 addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
 
 /* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
@@ -44,7 +48,8 @@ function stepDots(root,steps){
     if(d) b.innerHTML='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="'+d+'"/></svg>'; b.addEventListener("click",fn); return b};
   const prev=ctl("arr","Previous step","M7.5 2 3.5 6l4 4",()=>go(cur-1)), next=ctl("arr","Next step","M4.5 2l4 4-4 4",()=>go(cur+1)),
         back=ctl("arr back","Back to the first step","M2.6 6.4a3.5 3.5 0 1 0 1-2.8M2.4 1.6v2.2h2.2",()=>go(0));
-  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""),"",()=>go(i))});
+  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+vis(h):""),"",()=>go(i))});
+  onReg.push(()=>dots.forEach((d,i)=>{const h=$("h3",steps[i]),t="Step "+(i+1)+" of "+steps.length+(h?": "+vis(h):"");d.setAttribute("aria-label",t);d.title=t}));
   nav.append(prev,...dots,next,back);
   if(stage&&steps.length>1) stage.append(nav);
   return i=>{cur=i; prev.disabled=back.disabled=i===0; next.disabled=i===steps.length-1;
@@ -87,7 +92,7 @@ function Polar(svg,o){
   for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
   for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
   for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
-    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
+    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";dtext(g,{},nodes[k][1],nodes[k][3]||nodes[k][1])}
   if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
   return P;
 }
@@ -160,45 +165,26 @@ document.querySelectorAll(".lin").forEach(lin=>{
 })();
 
 const HC={1:"#9cb648",2:"#e0b84a",3:"#5b9be0"};
+/* a button on a drawing, labelled in each register */
+const btn=(g,i,m,fn)=>{button(g,i,fn);onReg.push(()=>g.setAttribute("aria-label",isM()?m:i))};
 const chip=(t,h)=>`<span class="chip"><i style="background:${HC[h]}"></i>${t}</span>`;
-
-/* ===== machines: counting one machine after another, with units moving in between ===== */
-(function(){
-  const A=$("#mA"),B=$("#mB"),va=$("b",A),vb=$("b",B),ar=$("#marrow"),log=$("#mlog"),sum=$("#msum"),say=$("#msay"),b1=$("#mab"),b2=$("#mba");
-  const start=300,move=200;
-  const show=(a,b)=>{va.textContent=a;vb.textContent=b};
-  async function run(from){
-    b1.disabled=b2.disabled=true;let a=start,b=start;show(a,b);log.innerHTML=sum.innerHTML="";
-    const add=(t,c="")=>log.insertAdjacentHTML("beforeend",`<div class="e ${c}">${t}</div>`);
-    A.classList.add("on");say.textContent="A is counted first.";await sleep(900);add(`Count A: ${a}`);const ca=a;A.classList.remove("on");await sleep(900);
-    const to=from==="A"?"B":"A";say.textContent=`While the counting goes on, ${move} units move from ${from} to ${to}.`;
-    ar.textContent=from==="A"?"→ "+move:move+" ←";
-    if(from==="A"){a-=move;b+=move}else{b-=move;a+=move}show(a,b);add(`${move} units move ${from} → ${to}`);await sleep(1300);
-    B.classList.add("on");say.textContent="Then B is counted.";await sleep(900);add(`Count B: ${b}`);const cb=b;B.classList.remove("on");ar.textContent="";await sleep(700);
-    const real=start*2,got=ca+cb;
-    sum.innerHTML=`<div class="e bad">${ca} + ${cb} = <b>${got}</b></div><div class="e good">Really there: <b>${real}</b></div>`;
-    say.innerHTML=got>real?`<span class="bad">Too high by ${got-real}.</span> The ${move} units were counted on A, and again on B.`:`<span class="bad">Too low by ${real-got}.</span> The ${move} units had left B before B was counted, and reached A after A was counted. Nobody counted them.`;
-    b1.disabled=b2.disabled=false;
-  }
-  b1.onclick=()=>run("A");b2.onclick=()=>run("B");show(start,start);
-})();
 
 /* ===== Arche, seen from above: the same picture as every book on the ring road ===== */
 function Isle(svg){
   const cx=235,cy=235,R=165,A={1:-90,2:30,3:150}; svg.innerHTML=""; svg.setAttribute("viewBox","0 0 470 470");
   el("circle",{cx,cy,r:215,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
   el("circle",{cx,cy,r:86,fill:"#d9cfb4",stroke:"#6b5a48","stroke-width":2.5,"stroke-dasharray":"2 6"},svg);
-  el("text",{x:cx,y:cy-8,class:"lab"},svg).textContent="Mount Phyle";
+  el("text",{x:cx,y:cy-8,class:"lab i"},svg).textContent="Mount Phyle";
   el("circle",{cx,cy,r:R,fill:"none",stroke:"#b5602c","stroke-width":3,"stroke-dasharray":"3 8"},svg);
   const under=el("g",{},svg),sites=el("g",{},svg),over=el("g",{},svg);
   const I={svg,cx,cy,R,A,under,over,house:{},
     at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
-    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:13,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
+    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:13,fill,stroke:"#1c1512","stroke-width":2.5},g);dtext(g,{},glyph,glyph);return g},
     put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
     /* u of the way along the direct stretch from house a to house b; each direction keeps to its own lane */
     road(g,a,b,u){const d=((A[b]-A[a]+540)%360)-180;I.put(g,...I.at(A[a]+d*u,R+(d>0?9:-9)))}
   };
-  for(const h of [1,2,3]){const [x,y]=I.at(A[h]),g=el("g",{class:"site"},sites);I.put(g,x,y);el("rect",{x:-25,y:-17,width:50,height:34,rx:5,fill:HC[h]},g);el("text",{},g).textContent="H"+h;I.house[h]={x,y,g}}
+  for(const h of [1,2,3]){const [x,y]=I.at(A[h]),g=el("g",{class:"site"},sites);I.put(g,x,y);el("rect",{x:-25,y:-17,width:50,height:34,rx:5,fill:HC[h]},g);dtext(g,{},"H"+h,"P"+h);I.house[h]={x,y,g}}
   return I;
 }
 
@@ -232,13 +218,17 @@ function Census(){
   return {items,snaps,ends,rec:R,recT,slate,truth,total};
 }
 
+/* the cover, in computing: three processes with messages in transit */
+(function(){const I=Isle($("#coversvg"));
+  [[1,2,.5],[2,3,.5],[3,1,.45],[1,3,.4]].forEach(([a,b,u])=>{const g=I.token(HC[a],"");g.setAttribute("opacity",1);I.road(g,a,b,u)})})();
+
 /* ===== the nine places to count ===== */
 (function(){
   const I=Isle($("#nine")),say=$("#ninesay"),cnt=$("#ninecount"),svg=I.svg,seen=new Set(),all=[];
   const defs=el("defs",{},svg),mk=el("marker",{id:"nine-ar",markerUnits:"userSpaceOnUse",markerWidth:11,markerHeight:11,refX:9,refY:5.5,orient:"auto"},defs);el("path",{d:"M0,0 L11,5.5 L0,11 z",fill:"#1c1512"},mk);
   const clear=()=>all.forEach(x=>{x.el.classList.remove("pick");if(x.road)x.el.classList.add("dim")});
   function pick(x,text){clear();x.el.classList.remove("dim");x.el.classList.add("pick");seen.add(x.id);
-    say.innerHTML=text+(seen.size===9?" <span class='ok'>All nine looked at.</span> A scribe can count three of them from a desk.":"");cnt.textContent=seen.size+" of nine looked at"}
+    say.innerHTML=text+(seen.size===9?dual(" <span class='ok'>All nine looked at.</span> A scribe can count three of them from a desk."," <span class='ok'>All nine looked at.</span> A process can record only three of them directly."):"");cnt.textContent=seen.size+" of nine looked at"}
   for(const [a,b] of [[1,2],[2,1],[1,3],[3,1],[2,3],[3,2]]){
     const d=((I.A[b]-I.A[a]+540)%360)-180,r=I.R+(d>0?9:-9),pts=[];
     for(let k=0;k<=14;k++)pts.push(I.at(I.A[a]+d*(.24+.52*k/14),r));
@@ -247,10 +237,10 @@ function Census(){
     el("path",{d:dd,class:"rp",stroke:HC[a],"marker-end":"url(#nine-ar)"},g);
     el("path",{d:dd,fill:"none",stroke:"transparent","stroke-width":18,"pointer-events":"stroke"},g);
     const x={id:a+">"+b,el:g,road:true};all.push(x);
-    button(g,`The track from House ${a} to House ${b}`,()=>pick(x,`<b>The track from House ${a} to House ${b}.</b> The carts that have left House ${a} and not yet reached House ${b}. Nobody at either house can see it.`));
+    btn(g,`The track from House ${a} to House ${b}`,`The channel from P${a} to P${b}`,()=>pick(x,dual(`<b>The track from House ${a} to House ${b}.</b> The carts that have left House ${a} and not yet reached House ${b}. Nobody at either house can see it.`,`<b>The channel from P${a} to P${b}.</b> The messages that have left P${a} and not yet reached P${b}. Neither process can see inside it.`)));
   }
   for(const h of [1,2,3]){const g=I.house[h].g,x={id:"h"+h,el:g};all.push(x);
-    button(g,`House ${h}'s storehouse`,()=>pick(x,`<b>House ${h}'s storehouse.</b> What sits under its roof. A scribe at that house can count it.`))}
+    btn(g,`House ${h}'s storehouse`,`P${h}'s local state`,()=>pick(x,dual(`<b>House ${h}'s storehouse.</b> What sits under its roof. A scribe at that house can count it.`,`<b>P${h}'s local state.</b> What the process holds in its own memory. It can read it directly.`)))}
 })();
 
 /* ===== scroll: the count with red sashes ===== */
@@ -260,12 +250,12 @@ function Census(){
   const pos=(s,id)=>{for(const k in snaps[s].ch){const i=snaps[s].ch[k].indexOf(id);if(i>=0)return i}return -1};
   function card(h,S,done){
     const o=[1,2,3].filter(k=>k!==h),r=S.rec[h],sl=S.slate[h];
-    const lines=r==null?"no slates yet":o.map(k=>`from H${k}: ${sl[k].closed?"closed":"open"} ${sl[k].sum}`).join("<br>");
-    return `<div class="hc${done?" done":""}"><h5>House ${h}<span>stock ${S.S[h]}</span></h5><div class="rc">${r==null?"not yet recorded":"recorded <b>"+r+"</b>"}</div><div class="chk">${lines}</div></div>`;
+    const lines=r==null?dual("no slates yet","no channel records yet"):o.map(k=>dual(`from H${k}: ${sl[k].closed?"closed":"open"} ${sl[k].sum}`,`from P${k}: ${sl[k].closed?"closed":"open"} ${sl[k].sum}`)).join("<br>");
+    return `<div class="hc${done?" done":""}"><h5>${dual("House "+h,"P"+h)}<span>${dual("stock ","state ")}${S.S[h]}</span></h5><div class="rc">${r==null?"not yet recorded":"recorded <b>"+r+"</b>"}</div><div class="chk">${lines}</div></div>`;
   }
   const last=snaps.length-1;
-  $("#sashsum").innerHTML=`${C.rec.join(" + ")} + ${C.slate[2][3].sum} + ${C.slate[3][2].sum} = <b>${C.total}</b>`;
-  $("#sashtruth").textContent=C.truth;
+  $$("#sashsum,.sashsum2").forEach(e=>e.innerHTML=`${C.rec.join(" + ")} + ${C.slate[2][3].sum} + ${C.slate[3][2].sum} = <b>${C.total}</b>`);
+  $$("#sashtruth,.sashtruth2").forEach(e=>e.textContent=C.truth);
   scrolly($("#sash"),s=>{
     const S=snaps[s];side.innerHTML=[1,2,3].map(h=>card(h,S,s===last)).join("");
     toks.forEach(k=>{const p=pos(s,k.x.id),id=++k.run;
@@ -281,7 +271,7 @@ function Census(){
 /* ===== a cut: where each cart of the morning was counted ===== */
 (function(){
   const C=Census(),svg=$("#cutsvg"),say=$("#cutsay"),b1=$("#cutok"),b2=$("#cutbad");
-  const nodes={1:[-90,"H1",HC[1]],2:[30,"H2",HC[2]],3:[150,"H3",HC[3]]};
+  const nodes={1:[-90,"H1",HC[1],"P1"],2:[30,"H2",HC[2],"P2"],3:[150,"H3",HC[3],"P3"]};
   const P=Polar(svg,{vb:"0 0 620 600",cx:310,cy:330,r0:44,step:30,rings:7,tEnd:7.6,note:[14,24],nodes});
   const carts=C.items.filter(x=>x.k==="cart"),sashRec=C.recT;
   const whimRec={1:C.recT[1],2:4.8,3:C.recT[3]};   // House 2 counts after the cart of 20 came in
@@ -300,11 +290,17 @@ function Census(){
   /* where a cart was counted, given when each house recorded */
   const cls=(x,rec)=>{const early=x.sent<rec[x.a],arrIn=x.arr<rec[x.b];
     return early&&arrIn?"in":early&&!arrIn?"out":!early&&!arrIn?"after":"inward"};
-  const says={
+  const says0={
     in:x=>`<b>The cart of ${x.n} jars from House ${x.a} to House ${x.b}</b> left before House ${x.a} recorded and arrived before House ${x.b} recorded. It lies wholly inside the loop, and the ${x.n} jars are counted in House ${x.b}'s stock.`,
     out:x=>`<b>The cart of ${x.n} jars from House ${x.a} to House ${x.b}</b> left before House ${x.a} recorded and arrived after House ${x.b} recorded. It crosses the loop outward: it was on the road at the time, and House ${x.b}'s slate for that road catches the ${x.n} jars.`,
     after:x=>`<b>The cart of ${x.n} jars from House ${x.a} to House ${x.b}</b> left after House ${x.a} recorded and arrived after House ${x.b} recorded. It lies wholly outside the loop. The ${x.n} jars are already in House ${x.a}'s recorded stock, and House ${x.b}'s slate for that road was closed before they came.`,
     inward:x=>`<b>The cart of ${x.n} jars from House ${x.a} to House ${x.b}</b> left after House ${x.a} recorded and arrived before House ${x.b} recorded. <span class="bad">It crosses the loop inward.</span> The ${x.n} jars are in House ${x.a}'s recorded stock, and counted again in House ${x.b}'s. Such an island never existed.`};
+  const saysM={
+    in:x=>`<b>The ${x.n}-unit message from P${x.a} to P${x.b}</b> was sent before P${x.a} recorded and arrived before P${x.b} recorded. It lies wholly inside the loop, and the ${x.n} units are counted in P${x.b}'s state.`,
+    out:x=>`<b>The ${x.n}-unit message from P${x.a} to P${x.b}</b> was sent before P${x.a} recorded and arrived after P${x.b} recorded. It crosses the loop outward: it was in transit at the time, and P${x.b}'s record for that channel catches the ${x.n} units.`,
+    after:x=>`<b>The ${x.n}-unit message from P${x.a} to P${x.b}</b> was sent after P${x.a} recorded and arrived after P${x.b} recorded. It lies wholly outside the loop. The ${x.n} units are already in P${x.a}'s recorded state, and P${x.b}'s record for that channel was closed before they came.`,
+    inward:x=>`<b>The ${x.n}-unit message from P${x.a} to P${x.b}</b> was sent after P${x.a} recorded and arrived before P${x.b} recorded. <span class="bad">It crosses the loop inward.</span> The ${x.n} units are in P${x.a}'s recorded state, and counted again in P${x.b}'s. Such a state never existed.`};
+  const says={};for(const k in says0)says[k]=x=>dual(says0[k](x),saysM[k](x));
   let rec=sashRec,sel=null,mode="ok";
   function paint(){
     loop.setAttribute("d",loopPath(rec));
@@ -313,9 +309,9 @@ function Census(){
       a.p.setAttribute("marker-end",`url(#${svg.id}-${c==="inward"?"r":"b"})`);a.t.classList.toggle("in",c==="inward")});
     const bad=arcs.filter(a=>a.c==="inward");
     if(sel)say.innerHTML=says[sel.c](sel.x);
-    else if(bad.length)say.innerHTML=`<b>Each house counted at an hour of its own choosing.</b> One cart crosses the loop inward. Choose it to see what that does to the count.`;
-    else say.innerHTML=`<b>Each house recorded when the red sash reached it.</b> Every cart is wholly inside the loop, wholly outside it, or crosses it outward. Choose any cart to see where its jars were counted.`}
-  arcs.forEach(a=>button(a.hit,`The cart of ${a.x.n} jars from House ${a.x.a} to House ${a.x.b}`,()=>{sel=a;paint()}));
+    else if(bad.length)say.innerHTML=dual(`<b>Each house counted at an hour of its own choosing.</b> One cart crosses the loop inward. Choose it to see what that does to the count.`,`<b>Each process recorded at a time of its own choosing.</b> One message crosses the loop inward. Choose it to see what that does to the count.`);
+    else say.innerHTML=dual(`<b>Each house recorded when the red sash reached it.</b> Every cart is wholly inside the loop, wholly outside it, or crosses it outward. Choose any cart to see where its jars were counted.`,`<b>Each process recorded when the marker reached it.</b> Every message is wholly inside the loop, wholly outside it, or crosses it outward. Choose any message to see where its units were counted.`)}
+  arcs.forEach(a=>btn(a.hit,`The cart of ${a.x.n} jars from House ${a.x.a} to House ${a.x.b}`,`The ${a.x.n}-unit message from P${a.x.a} to P${a.x.b}`,()=>{sel=a;paint()}));
   function setMode(m){mode=m;rec=m==="ok"?sashRec:whimRec;sel=null;b1.classList.toggle("on",m==="ok");b2.classList.toggle("on",m!=="ok");
     if(m!=="ok")sel=arcs.find(a=>cls(a.x,rec)==="inward")||null;paint()}
   b1.onclick=()=>setMode("ok");b2.onclick=()=>setMode("bad");setMode("ok");
@@ -325,19 +321,21 @@ function Census(){
 /* ===== a morning nobody lived through: the sale and the milling ===== */
 (function(){
   const lived=$("#mlived"),cens=$("#mcens"),say=$("#mosay"),bs=$("#moswap"),bj=$("#mojoin"),bb=$("#moback");
-  const E={a:{h:1,t:"House 1 records its storehouse"},b:{h:1,t:"House 1 sells forty jars into its port town"},
-           c:{h:2,t:"House 2 mills eighty measures of barley"},d:{h:2,t:"House 2 records its storehouse"}};
+  const E={a:{h:1,t:dual("House 1 records its storehouse","P1 records its state")},b:{h:1,t:dual("House 1 sells forty jars into its port town","P1 spends forty units")},
+           c:{h:2,t:dual("House 2 mills eighty measures of barley","P2 converts eighty units of one resource into another")},d:{h:2,t:dual("House 2 records its storehouse","P2 records its state")}};
+  const WM={held:"held",sold:"spent",unmilled:"unconverted",milled:"converted"};
   const livedOrder=["a","b","c","d"],censusOrder=["a","c","d","b"];
   /* the state of the two goods after each entry: House 1's jars, House 2's barley */
   const states=order=>{let j="held",m="unmilled";return order.map(k=>{if(k==="b")j="sold";if(k==="c")m="milled";return {j,m}})};
   const matches=(o,s)=>states(o).some(x=>x.j===s.j&&x.m===s.m);
   const recorded={j:"held",m:"milled"};
-  const html=(order,mark)=>{const st=states(order);return order.map((k,i)=>`<div class="ev ${mark&&mark.includes(k)?"mv":""} ${st[i].j===recorded.j&&st[i].m===recorded.m?"hit":""}" style="border-left-color:${HC[E[k].h]}"><span>${E[k].t}</span><span class="st">jars ${st[i].j}<br>barley ${st[i].m}</span></div>`).join("")};
+  const html=(order,mark)=>{const st=states(order);return order.map((k,i)=>`<div class="ev ${mark&&mark.includes(k)?"mv":""} ${st[i].j===recorded.j&&st[i].m===recorded.m?"hit":""}" style="border-left-color:${HC[E[k].h]}"><span>${E[k].t}</span><span class="st">${dual(`jars ${st[i].j}<br>barley ${st[i].m}`,`P1's units ${WM[st[i].j]}<br>P2's units ${WM[st[i].m]}`)}</span></div>`).join("")};
   const base=()=>{lived.innerHTML=html(livedOrder);cens.innerHTML="<p style='font-size:.85rem;color:#6b5a48;margin:0'>Not yet drawn.</p>";bb.disabled=true;bs.disabled=false;
-    say.innerHTML="House 1 recorded first, and House 2 some while later. The count wrote down: House 1 still holds the jars, and House 2 has already milled its barley. Did the island ever stand so?"};
+    say.innerHTML=dual("House 1 recorded first, and House 2 some while later. The count wrote down: House 1 still holds the jars, and House 2 has already milled its barley. Did the island ever stand so?","P1 recorded first, and P2 some while later. The snapshot wrote down: P1 still holds its units, and P2 has already converted its resource. Did the system ever stand so?")};
   bs.onclick=()=>{cens.innerHTML=html(censusOrder,["b","c"]);lived.innerHTML=html(livedOrder);bs.disabled=true;bb.disabled=false;
-    say.innerHTML=`Nothing joins the sale and the milling, so the count may take either first. <span class="${matches(livedOrder,recorded)?"bad":"ok"}">${matches(livedOrder,recorded)?"The morning as lived":"The morning as lived never"}</span> passed through the recorded picture; <span class="${matches(censusOrder,recorded)?"ok":"bad"}">the rearranged morning ${matches(censusOrder,recorded)?"does":"does not"}</span>, in the rows marked. Every one of its entries still happened, each house's own entries in their own order.`};
-  bj.onclick=()=>{say.innerHTML="Could a cart tie the sale to the milling? A cart sent after House 1 recorded cannot reach House 2 before House 2 has recorded: the red sash is ahead of it on the track. So nothing joins an entry made after one house recorded to an entry made before the other recorded, and the two can always be swapped."};
+    say.innerHTML=dual(`Nothing joins the sale and the milling, so the count may take either first. <span class="${matches(livedOrder,recorded)?"bad":"ok"}">${matches(livedOrder,recorded)?"The morning as lived":"The morning as lived never"}</span> passed through the recorded picture; <span class="${matches(censusOrder,recorded)?"ok":"bad"}">the rearranged morning ${matches(censusOrder,recorded)?"does":"does not"}</span>, in the rows marked. Every one of its entries still happened, each house's own entries in their own order.`,
+      `Nothing joins the spend and the conversion, so the snapshot may take either first. <span class="${matches(livedOrder,recorded)?"bad":"ok"}">${matches(livedOrder,recorded)?"The execution as it happened":"The execution as it happened never"}</span> passed through the recorded state; <span class="${matches(censusOrder,recorded)?"ok":"bad"}">the rearranged execution ${matches(censusOrder,recorded)?"does":"does not"}</span>, in the rows marked. Every one of its events still happened, each process's own events in their own order.`)};
+  bj.onclick=()=>{say.innerHTML=dual("Could a cart tie the sale to the milling? A cart sent after House 1 recorded cannot reach House 2 before House 2 has recorded: the red sash is ahead of it on the track. So nothing joins an entry made after one house recorded to an entry made before the other recorded, and the two can always be swapped.","Could a message tie the spend to the conversion? A message sent after P1 recorded cannot reach P2 before P2 has recorded: the marker is ahead of it on the channel. So nothing joins an event made after one process recorded to an event made before the other recorded, and the two can always be swapped.")};
   bb.onclick=base;base();
 })();
 
@@ -349,15 +347,16 @@ function Census(){
   const deficit=held=>held<scrolls;
   function show(key){const c=cases[key];bs.forEach(b=>{b.classList.toggle("on",b.dataset.case===key);b.classList.toggle("alt",b.dataset.case!==key)});
     const atStart=scrolls-c.took,atCensus=scrolls-c.took,atEnd=scrolls-c.took-c.after;
-    tab.innerHTML=`<tr><td>What the account scrolls say the houses hold</td><td>${scrolls}</td></tr><tr><td>The count's total, nine places</td><td>${atCensus}</td></tr><tr><td>Short by</td><td>${scrolls-atCensus}</td></tr><tr><td>The island when the count began</td><td>${deficit(atStart)?"short":"whole"}</td></tr><tr><td>The island when the count ended</td><td>${deficit(atEnd)?"short":"whole"}</td></tr>`;
+    tab.innerHTML=`<tr><td>${dual("What the account scrolls say the houses hold","What the books say the processes hold")}</td><td>${scrolls}</td></tr><tr><td>${dual("The count's total, nine places","The snapshot's total, nine places")}</td><td>${atCensus}</td></tr><tr><td>Short by</td><td>${scrolls-atCensus}</td></tr><tr><td>${dual("The island when the count began","The system when the snapshot began")}</td><td>${deficit(atStart)?"short":"whole"}</td></tr><tr><td>${dual("The island when the count ended","The system when the snapshot ended")}</td><td>${deficit(atEnd)?"short":"whole"}</td></tr>`;
     if(deficit(atCensus)){if(!deficit(atEnd))throw new Error("a deficit was undone");
-      say.innerHTML=`<span class="bad">The count is short, so the houses have been robbed.</span> Being short is a settled property: once jars are gone that no trade between the houses can bring back, they stay gone. What is true of the recorded island is true of the island now, and the shortfall is what the bandits hold.`}
+      say.innerHTML=dual(`<span class="bad">The count is short, so the houses have been robbed.</span> Being short is a settled property: once jars are gone that no trade between the houses can bring back, they stay gone. What is true of the recorded island is true of the island now, and the shortfall is what the bandits hold.`,`<span class="bad">The snapshot is short, so units have been lost.</span> Being short is a stable property: once units are gone that no exchange between the processes can bring back, they stay gone. What is true of the recorded state is true of the system now, and the shortfall is what the fault dropped.`)}
     else{if(deficit(atStart))throw new Error("the rule failed");
-      say.innerHTML=`<span class="ok">The count is whole, so nothing had been taken when it began.</span> That is all it says.${deficit(atEnd)?` <span class="bad">Here the bandits struck after the count ended, and the island is short now.</span> The count could not know, and does not claim to.`:" Here nothing has been taken since, either."}`}
+      say.innerHTML=dual(`<span class="ok">The count is whole, so nothing had been taken when it began.</span> That is all it says.${deficit(atEnd)?` <span class="bad">Here the bandits struck after the count ended, and the island is short now.</span> The count could not know, and does not claim to.`:" Here nothing has been taken since, either."}`,`<span class="ok">The snapshot is whole, so nothing had been lost when it began.</span> That is all it says.${deficit(atEnd)?` <span class="bad">Here the fault struck after the snapshot ended, and the system is short now.</span> The snapshot could not know, and does not claim to.`:" Here nothing has been lost since, either."}`)}
   }
   bs.forEach(b=>b.onclick=()=>show(b.dataset.case));show("before");
 })();
 
 /* ===== who is who ===== */
 mapPairs($("#map"),[["A trading house","A process"],["A track, one way","A channel: FIFO, reliable, unbounded delay"],["What the road is holding","Channel state"],["The nine places","A global state: process states plus channel states"],["The red-sashed messenger","A marker message"],["The rule of sending","The marker-sending rule"],["The rule of receiving","The marker-receiving rule"],["A cut","A cut in a space-time diagram"],["Crossing the loop inward","An inconsistent cut"],["A settled property","A stable property"],["The island at the start, as recorded, at the end","S_begin, S*, S_end (S_ι, S*, S_φ in the paper)"]]);
+REG.start();
 })();
