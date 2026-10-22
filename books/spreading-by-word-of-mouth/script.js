@@ -97,7 +97,7 @@ function gossipWell(ids,opts,line){
 }
 (function(){
   const o={k:1,attentive:true,count:true,mode:"tell"};
-  const reset=gossipWell({cells:"#gcells",say:"#gsay",go:"#ggo",res:"#gres",m:"#gm",day:"#gday",label:dual("Start the telling","Start the spreading"),idle:dual("Pale: has not heard. Gold: still telling. Green: has stopped.","Pale: has not heard. Gold: still spreading. Green: has stopped.")},()=>({...o}),
+  const reset=gossipWell({cells:"#gcells",say:"#gsay",go:"#ggo",res:"#gres",m:"#gm",day:"#gday",label:dual("Start the telling","Start the spreading"),idle:dual("Pale: has not heard. Gold: still telling. Green: has stopped.","Pale: has not received it. Gold: still spreading. Green: has stopped.")},()=>({...o}),
     (G,N)=>dual(`The last teller stopped on day ${G.day}. <b>${G.left}</b> of ${N} libraries never heard, after ${G.m.toFixed(1)} tellings a library. One over the exponential of ${G.m.toFixed(1)} is about ${Math.round(N*Math.exp(-G.m))} in ${N}.`,`The last spreader stopped in cycle ${G.day}. <b>${G.left}</b> of ${N} sites never heard, after ${G.m.toFixed(1)} messages a site. One over the exponential of ${G.m.toFixed(1)} is about ${Math.round(N*Math.exp(-G.m))} in ${N}.`));
   seg($("#gk"),[1,2,3,4,5].map(k=>[k,k]),o.k,v=>{o.k=+v;reset()});
   seg($("#gfb"),[["1",dual("attentive","with feedback")],["0","blind"]],"1",v=>{o.attentive=v==="1";reset()});
