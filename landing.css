@@ -1,0 +1,156 @@
+/* The landing page: an index and summary of the books. The home page's settings and books, with the one-scroll page's
+   premise, walls, costs and closing paragraph. Loaded after shell.css, place.css and registers.css.
+   In computing the islands, the setting photographs and the setting pages leave, and each book shows its drawn cover. */
+
+:root{--night:#17110c; --night2:#221911; --cream:#f6eed6; --dim:#c9b98a; --red-l:#ef6a3f}
+.btn{display:inline-flex;align-items:center;gap:.3em;font-family:var(--sans);font-size:.95rem;letter-spacing:.02em;text-decoration:none;
+  padding:10px 18px;background:var(--cream);color:var(--ink);border:3px solid var(--ink);box-shadow:4px 4px 0 var(--blood);transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--blood)}
+.btn.ghost{background:transparent;color:var(--cream);border:2px solid rgba(246,238,214,.45);box-shadow:none}
+.btn.ghost:hover{border-color:var(--cream)}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:1.6rem}
+.lede{color:#3a2d24}
+.punch{font-family:var(--sans);font-weight:600;color:var(--blood);line-height:1.3;margin:0 0 .6rem}
+
+/* ---------- the cover: night, with the chart ---------- */
+.lhero{min-height:100svh;display:grid;align-items:center;padding-top:5rem;color:var(--cream);
+  background:radial-gradient(90% 70% at 75% 30%,#3a2a1a 0%,var(--night) 60%),var(--night)}
+.lhero .grid{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:clamp(28px,5vw,70px);align-items:center}
+.lhero .kicker{color:var(--gold)}
+.lhero h1{font-size:clamp(2.3rem,5.4vw,4.3rem);color:var(--cream);margin:.6rem 0 1.2rem;letter-spacing:-.01em}
+.lhero .pub{font-size:clamp(1.05rem,2vw,1.25rem);max-width:31em;color:#eadfc2}
+.lhero .pub a{color:var(--gold)}
+.lhero .also{margin:1.4rem 0 0;font-family:var(--sans);font-size:.85rem;letter-spacing:.04em}
+.lhero .also a{color:var(--dim);text-decoration:none;border-bottom:1px solid rgba(201,185,138,.4)}
+.lhero .also a:hover{color:var(--cream)}
+.lh-chart .photo{aspect-ratio:1/1;background:#e9dcb6;box-shadow:0 0 0 3px var(--ink),12px 16px 0 #000a}
+/* the two registers, with a switch that works like the one in the bar */
+.two-ways{max-width:31em;margin:1.4rem 0 0;padding:4px 0 4px 18px;border-left:3px solid var(--gold)}
+.two-ways p{font-size:1rem;line-height:1.6;color:var(--dim);margin:0 0 .9rem}
+.two-ways b{color:var(--cream);font-weight:600}
+.two-ways .segb{font-size:.82rem;padding:6px 16px}
+@media(max-width:860px){.lhero .grid{grid-template-columns:minmax(0,1fr)}.lh-chart{max-width:440px;width:100%;margin:0 auto}}
+
+/* ---------- the premise: its words light as they pass the middle of the screen ---------- */
+.premise{background:var(--night);color:var(--cream);padding-top:clamp(3rem,8vw,6rem);padding-bottom:clamp(5rem,12vw,9rem)}
+.premise .words{font-family:var(--sans);font-size:clamp(1.9rem,4.8vw,3.7rem);font-weight:600;line-height:1.12;max-width:15em;margin:0 auto;text-align:center}
+.js .premise .w{color:rgba(246,238,214,.16);transition:color .4s}
+.js .premise .w.lit{color:var(--cream)}
+
+/* ---------- two islands ---------- */
+.islands{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,3vw,34px);margin-top:2rem}
+.island{margin:0;background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow)}
+.island img{width:100%;aspect-ratio:16/10;object-fit:cover;border-bottom:4px solid var(--ink)}
+.island figcaption{padding:18px 22px 6px}
+.island h3{font-size:clamp(1.8rem,3.6vw,2.4rem);margin:.2rem 0 .5rem}
+.island figcaption p:not(.kicker){font-size:1rem}
+@media(max-width:760px){.islands{grid-template-columns:minmax(0,1fr)}}
+/* each island's settings, as links down to them */
+.sts{list-style:none;margin:.4rem 0 14px;padding:0;border-top:1px solid rgba(28,21,18,.15)}
+.sts li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-bottom:1px solid rgba(28,21,18,.15)}
+.sts a{font-family:var(--sans);font-size:1rem;color:var(--ink);text-decoration:none}
+.sts a::after{content:" ↓";color:var(--blood)}
+.sts a:hover{color:var(--aegean-d)}
+.sts small{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5d4f;white-space:nowrap}
+
+/* ---------- the books ---------- */
+#books{padding-bottom:clamp(1.5rem,4vw,2.5rem)}
+#books .tour{justify-content:flex-start;margin-top:1.2rem}
+.setting{padding-top:clamp(3.5rem,8vw,5.5rem)}
+.band{position:relative;margin:0;height:clamp(300px,40vw,440px);border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);overflow:hidden;background:#222}
+.band img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.band::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(14,10,7,.88) 0%,rgba(14,10,7,.45) 45%,rgba(14,10,7,0) 75%);pointer-events:none}
+.band figcaption{position:absolute;z-index:2;left:0;right:0;bottom:0;padding:22px clamp(18px,3vw,30px);color:var(--cream);max-width:720px}
+.band .kicker{color:var(--gold);margin:0 0 .3rem}
+.band h2{font-size:clamp(2rem,5vw,3.4rem);color:#fff;margin:0;text-shadow:0 3px 30px rgba(0,0,0,.5)}
+.band .sub{font-family:var(--sans);letter-spacing:.06em;font-size:.95rem;color:var(--dim);margin:.2rem 0 .7rem}
+.band p.i,.band p.m{font-size:1rem;line-height:1.5;margin:0;color:#eadfc2}
+@media(max-width:640px){
+  .band{height:auto;background:var(--night)}
+  .band img{position:static;height:210px}
+  .band::after{display:none}
+  .band figcaption{position:static;padding:16px 18px 18px}
+}
+
+.bks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(16px,2.6vw,28px);margin-top:1.8rem}
+.bks>.pop:last-child:nth-child(odd){grid-column:1/-1}
+.bks .leaf{height:100%}
+.bk a.cardlink{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,5fr);height:100%}
+.bks>.pop:last-child:nth-child(odd) .bk a.cardlink{grid-template-columns:minmax(0,1fr) minmax(0,3fr)}
+.bk .photo{border:0;box-shadow:none;border-right:4px solid var(--ink);height:100%;min-height:240px}
+.bk .body{padding:16px 18px 18px}
+.bk h3{font-size:1.2rem;margin:0 0 .45rem}
+.bk:hover h3{color:var(--aegean-d)}
+.bk .punch{font-size:1rem}
+.bk .q{font-style:italic;font-size:.95rem;margin:0 0 .5rem}
+.bk .how{font-size:.88rem;color:#5a4a3a;margin:0 0 .6rem}
+.bk .credit{display:block;font-family:var(--sans);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blood)}
+@media(max-width:860px){.bks{grid-template-columns:minmax(0,1fr)}.bks>.pop:last-child:nth-child(odd) .bk a.cardlink{grid-template-columns:minmax(0,2fr) minmax(0,5fr)}}
+@media(max-width:520px){
+  .bk a.cardlink,.bks>.pop:last-child:nth-child(odd) .bk a.cardlink{grid-template-columns:minmax(0,1fr)}
+  .bk .photo{border-right:0;border-bottom:4px solid var(--ink);min-height:0;aspect-ratio:16/10}
+  .bk .how{display:none}
+}
+
+/* ---------- night sections: the walls and the closing paragraph ---------- */
+.ink{background:var(--night);color:var(--cream)}
+.ink h2{color:var(--cream)}
+.ink .kicker{color:var(--red-l)}
+.ink .lede{color:var(--dim)}
+.walls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(16px,2.6vw,28px);margin-top:2rem}
+.wall{border:2px solid rgba(246,238,214,.22);padding:22px 24px;background:var(--night2)}
+.wall h3{font-size:clamp(1.4rem,2.6vw,1.8rem);color:var(--gold);margin:0 0 .8rem}
+.wall p.i,.wall p.m{font-size:.98rem;color:#eadfc2}
+.wall b{color:var(--cream)}
+.nights{font-family:var(--sans);font-size:.85rem;margin:0;padding-top:.8rem;border-top:1px dashed rgba(246,238,214,.25);color:var(--dim)}
+.nights b{color:var(--gold)!important}
+.nights i{color:var(--dim)}
+@media(max-width:760px){.walls{grid-template-columns:minmax(0,1fr)}}
+
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(14px,2.4vw,24px);margin-top:2rem}
+.tile{background:#fffaf0;border:4px solid var(--ink);box-shadow:7px 8px 0 var(--shadow);padding:18px 18px 8px}
+.tile .glyph{display:block;font-size:2rem;line-height:1;color:var(--blood);margin-bottom:.5rem}
+.tile h3{font-size:1.15rem;margin:0 0 .4rem}
+.tile p{font-size:.92rem}
+@media(max-width:960px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.tiles{grid-template-columns:minmax(0,1fr)}}
+
+#breath .breath{font-size:clamp(1.15rem,2.1vw,1.5rem);line-height:1.65;max-width:42em;color:#eadfc2}
+#breath + footer{background:var(--night);color:var(--dim)}
+
+/* on a phone the site's name gives way, so the switch always fits */
+@media(max-width:520px){.bar>a:first-child{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}.bar .now{display:none}.bar .regseg{margin-left:auto}}
+
+/* ---------- computing: black night sections, soft cards, and nothing of the islands ---------- */
+body[data-reg="m"] .lhero,body[data-reg="m"] .premise,body[data-reg="m"] .ink,body[data-reg="m"] #breath + footer{background:#000;color:#f5f5f7}
+body[data-reg="m"] .lhero{background:radial-gradient(80% 60% at 75% 30%,#1d1d1f 0%,#000 70%)}
+body[data-reg="m"] .lhero .grid{grid-template-columns:minmax(0,1fr)}
+body[data-reg="m"] .lhero h1,body[data-reg="m"] .ink h2{color:#f5f5f7;font-weight:700}
+body[data-reg="m"] .lhero .kicker{color:var(--gold)}
+body[data-reg="m"] .two-ways p{color:#a1a1a6}
+body[data-reg="m"] .two-ways b{color:#f5f5f7}
+body[data-reg="m"] .ink .kicker{color:var(--red-l)}
+body[data-reg="m"] .ink .lede{color:#a1a1a6}
+body[data-reg="m"] .btn{border:0;border-radius:999px;box-shadow:none;background:#f5f5f7;color:#1d1d1f;padding:11px 22px}
+body[data-reg="m"] .btn.ghost{background:transparent;color:#f5f5f7;border:1px solid rgba(255,255,255,.35)}
+body[data-reg="m"] .lede{color:var(--mute)}
+body[data-reg="m"] .punch{color:var(--red)}
+body[data-reg="m"] #islands,body[data-reg="m"] .band img,body[data-reg="m"] .band::after,body[data-reg="m"] .setting-card{display:none}
+/* a setting's head becomes a plain title card for its topic */
+body[data-reg="m"] .band{height:auto;border:0;border-radius:24px;box-shadow:none;background:#000}
+body[data-reg="m"] .band figcaption{position:static;padding:clamp(22px,4vw,36px)}
+body[data-reg="m"] .band h2{text-shadow:none}
+body[data-reg="m"] .band .kicker{color:var(--gold)}
+body[data-reg="m"] .tile{border:0;border-radius:24px;box-shadow:var(--card-sh);background:#fff}
+body[data-reg="m"] .bk{overflow:hidden}
+body[data-reg="m"] a.cardlink{color:var(--ink)}
+body[data-reg="m"] .bk:hover h3{color:var(--blue)}
+body[data-reg="m"] .wall{border:0;border-radius:20px;background:#1d1d1f}
+/* each book's drawn cover in place of its photograph */
+.bk .cvr{background:#fff;align-self:stretch;display:flex;align-items:center}
+body[data-reg="m"] .bk .cvr .cover-fig{width:100%;max-width:none;height:auto;border-radius:0;box-shadow:none}
+@media(max-width:520px){body[data-reg="m"] .bk .cvr{border-bottom:1px solid var(--line,#ececf0)}}
+/* a drawn cover needs more room than a photograph to be read */
+body[data-reg="m"] .bk a.cardlink{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+body[data-reg="m"] .bks>.pop:last-child:nth-child(odd) .bk a.cardlink{grid-template-columns:minmax(0,2fr) minmax(0,3fr)}
+@media(max-width:520px){body[data-reg="m"] .bk a.cardlink,body[data-reg="m"] .bks>.pop:last-child:nth-child(odd) .bk a.cardlink{grid-template-columns:minmax(0,1fr)}}
