@@ -62,13 +62,42 @@ const answer4=v=>v.birds.length?v.birds[v.birds.length-1]:v.note;
 /* what a single record says: the last move finished before the question began, else hold */
 const record=(moves,askAt)=>{const done=moves.filter(m=>m.end<askAt).sort((a,b)=>a.end-b.end);return done.length?done[done.length-1].plan:"hold"};
 
-/* the cover, in computing: four processes, their inputs, one crashed, messages in transit */
-(function(){
-  const H=Hill($("#coversvg")),inp={1:"A",2:"H",3:"A",4:"A"},t=H.tent[3];
-  [1,2,3,4].forEach(k=>H.badge(k,inp[k]));t.g.classList.add("out");
-  el("path",{d:`M${t.x-17},${t.y-17} L${t.x+17},${t.y+17} M${t.x-17},${t.y+17} L${t.x+17},${t.y-17}`,stroke:"#1c1512","stroke-width":5,fill:"none"},H.over);
-  [[1,2,.5],[4,1,.5],[2,4,.45],[1,4,.4]].forEach(([a,b,u])=>{const g=H.token(TC[a],inp[a]);g.setAttribute("opacity",1);H.fly(g,a,b,u)});
-})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · A WRITE ON ONE SIDE, A READ ON THE OTHER","C · A · P");
+  const N={1:[150,150],2:[88,262],3:[212,276],4:[420,214]},val={1:1,2:1,3:1,4:0};
+  /* the partition */
+  el("path",{d:"M300 70l-14 34l28 34l-28 34l28 34l-28 34l28 34l-28 34l28 34l-14 30",fill:"none",stroke:P.red,"stroke-width":2.4,"stroke-linejoin":"round","stroke-dasharray":"2 0",opacity:.85},g);
+  el("rect",{x:300,y:60,width:220,height:390,fill:P.redL,opacity:.18},g);
+  chip(g,300,64,"network partition",{m:1,s:9.5,k:P.red,c:P.red,f:P.redL});
+  /* messages inside the left island */
+  [[2,1],[2,3],[1,3],[3,1]].forEach(([a,b],k)=>{const A=N[a],B=N[b],d=Math.hypot(B[0]-A[0],B[1]-A[1]),u=[(B[0]-A[0])/d,(B[1]-A[1])/d];
+    const p=link(g,A[0]+u[0]*24,A[1]+u[1]*24,B[0]-u[0]*26,B[1]-u[1]*26,{c:"blue",w:1.5,bend:k===3?14:k===2?-14:0});packet(g,p,{c:"blue",dur:2.2+k*.3,delay:k*.4})});
+  /* the update that cannot cross */
+  const x0=N[2][0]+24,y0=N[2][1]-8,xe=294,ye=N[2][1]-8+(N[4][1]-N[2][1])*(294-x0)/(N[4][0]-x0)*1;
+  const pc=link(g,x0,y0,xe,ye,{c:"red",w:1.5,dash:"5 3",head:false});packet(g,pc,{c:"red",dur:2.6,delay:.2,r:3.4});
+  el("path",{d:`M${xe-6} ${ye-6}l12 12m0 -12l-12 12`,stroke:P.red,"stroke-width":2.6,"stroke-linecap":"round"},g);
+  link(g,xe+14,ye+4,N[4][0]-26,N[4][1]-4,{c:"red",w:1,dash:"2 5",head:false,op:.5});
+  chip(g,xe-8,ye-30,"update(1) lost",{a:"end",m:1,s:8.5,k:P.line,c:P.red});
+  /* nodes with their copies */
+  for(const k in N){const [x,y]=N[k],c=k==4?"gold":"blue";
+    node(g,x,y,22,"P"+k,{s:12,halo:P[c+"L"],k:P.ink});
+    chip(g,x+(k==4?0:0),y+36,"value = "+val[k],{m:1,s:8.5,pad:8,k:val[k]?P.blue:P.red,c:val[k]?P.blue:P.red,f:val[k]?P.blueL:P.redL})}
+  /* the clients */
+  chip(g,88,336,"client · write(1) → ok ✓",{a:"start",m:1,s:9,k:P.blue,c:P.blue});
+  link(g,100,328,92,288,{c:"blue",w:1,dash:"3 3",head:false});
+  chip(g,N[4][0]+8,284,"client · read() → 0 ✗",{m:1,s:9,k:P.red,c:P.red,f:P.redL,w:600});
+  link(g,N[4][0],270,N[4][0],244,{c:"red",w:1,dash:"3 3",head:false});
+  T(g,318,330,"answers anyway → stale",{s:9.5,m:1,c:P.red,a:"start"});
+  T(g,318,348,"or refuses → unavailable",{s:9.5,m:1,c:P.mute,a:"start"});
+  /* the triangle */
+  const tx=140,ty=392,tri=[[tx,ty-4,"P"],[tx-62,ty+60,"C"],[tx+62,ty+60,"A"]];
+  tri.forEach(([x1,y1],i)=>{const [x2,y2]=tri[(i+1)%3];link(g,x1,y1,x2,y2,{c:"mute",w:1.4,head:false,op:.5})});
+  tri.forEach(([x,y,t],i)=>node(g,x,y,13,t,{s:11,k:i===0?P.red:P.ink,c:i===0?P.red:P.ink,f:i===0?P.redL:"#fff"}));
+  T(g,tx,ty+90,"pick any two, but P is not optional",{s:9,m:1,c:P.faint});
+  chip(g,W-26,ty+24,"every request answered",{a:"end",m:1,s:9,k:P.line,c:P.mute});chip(g,W-26,ty+52,"every read sees the latest write",{a:"end",m:1,s:9,k:P.line,c:P.mute});
+});
+/* cover:end */
 
 /* ===== ravens and hawks ===== */
 (function(){

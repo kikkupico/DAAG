@@ -41,13 +41,43 @@ function Hill(svg){
   return H;
 }
 
-/* the cover, in computing: four processes, their inputs, one crashed, messages in transit */
-(function(){
-  const H=Hill($("#coversvg")),inp={1:"A",2:"H",3:"A",4:"A"},t=H.tent[3];
-  [1,2,3,4].forEach(k=>H.badge(k,inp[k]));t.g.classList.add("out");
-  el("path",{d:`M${t.x-17},${t.y-17} L${t.x+17},${t.y+17} M${t.x-17},${t.y+17} L${t.x+17},${t.y-17}`,stroke:"#1c1512","stroke-width":5,fill:"none"},H.over);
-  [[1,2,.5],[4,1,.5],[2,4,.45],[1,4,.4]].forEach(([a,b,u])=>{const g=H.token(TC[a],inp[a]);g.setAttribute("opacity",1);H.fly(g,a,b,u)});
-})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · UNSTABLE, THEN SETTLED","GST");
+  const ys=[128,184,240,296],xl=70,xr=502,GST=262,ax=352;
+  bandX(g,xl-6,GST-xl+6,78,ax-12,"#fbefe9");bandX(g,GST,xr-GST+4,78,ax-12,"#edf4fc");
+  T(g,(xl+GST)/2,92,"unstable: delays unbounded",{s:9.5,m:1,c:P.red});T(g,(GST+xr)/2,92,"settled: every message within Δ",{s:9.5,m:1,c:P.blue});
+  ys.forEach((y,j)=>{lane(g,xl,xr,y,{w:1.3});node(g,42,y,14,"P"+(j+1),{s:10.5})});
+  /* before GST: slow, tangled, out of order */
+  const late=[[0,100,2,236],[1,92,3,214],[3,112,0,250],[2,150,1,226],[0,176,3,244]];
+  late.forEach(([a,xa,b,xb],k)=>{link(g,xa,ys[a],xb,ys[b],{c:"red",w:1.2,dash:"5 3",op:.65,bend:k%2?10:-10});dot(g,xa,ys[a],3,P.ink)});
+  chip(g,150,ys[1]+0.5-1,"late",{m:1,s:8.5,pad:8,k:P.red,c:P.red,f:P.redL});
+  /* after GST: four-round phases, coordinator P2 */
+  const tk=[GST+14,GST+68,GST+122,GST+176,GST+230],nm=["ask","propose","ack","release"],pa=[];
+  tk.slice(0,4).forEach((x,i)=>{const x2=tk[i+1];T(g,(x+x2)/2,ax-0+0-250+0,"",{});
+    el("rect",{x:x+1,y:ax-4,width:x2-x-2,height:5,rx:2.5,fill:i%2?P.blueL:"#bcd8f3"},g);T(g,(x+x2)/2,ax+20,nm[i],{s:9.5,m:1,c:P.blue})});
+  tk.forEach(x=>{el("line",{x1:x,x2:x,y1:ax-6,y2:ax+4,stroke:P.blue,"stroke-width":1.2},g)});
+  tk.forEach((x,i)=>{el("line",{x1:x,x2:x,y1:ys[0]-10,y2:ys[3]+10,stroke:P.blue,"stroke-width":.8,"stroke-dasharray":"2 4",opacity:.35},g)});
+  const co=1;
+  for(const a of[0,2,3])pa.push(link(g,tk[0],ys[a],tk[1],ys[co],{c:"blue",w:1.2,op:.8}));
+  for(const b of[0,2,3])pa.push(link(g,tk[1],ys[co],tk[2],ys[b],{c:"blue",w:1.5}));
+  for(const a of[0,2])pa.push(link(g,tk[2],ys[a],tk[3],ys[co],{c:"green",w:1.2,op:.85}));
+  for(const b of[0,2,3])pa.push(link(g,tk[3],ys[co],tk[4],ys[b],{c:"green",w:1.5}));
+  tk.forEach((x,i)=>ys.forEach((y,j)=>{if(i<4||j!==3)dot(g,x,y,2.8,P.ink)}));
+  pa.slice(3,9).forEach((p,k)=>packet(g,p,{c:"blue",dur:2.2,delay:k*.25,r:3.2}));
+  /* locks and decisions */
+  const lk=(x,y)=>{el("rect",{x:x-6,y:y-1,width:12,height:9,rx:2,fill:P.ink},g);el("path",{d:`M${x-3.4} ${y-1}v-3a3.4 3.4 0 0 1 6.8 0v3`,fill:"none",stroke:P.ink,"stroke-width":1.5},g)};
+  [0,2].forEach(j=>{lk(tk[3]-14,ys[j]-14);chip(g,tk[3]+6,ys[j]-14,"0 · ph 5",{a:"start",m:1,s:8,pad:8,k:P.line,c:P.mute})});
+  [0,1,2].forEach(j=>{const x=xr-8;node(g,x,ys[j],7.5,null,{k:P.green,f:P.green,sw:1});el("path",{d:`M${x-3} ${ys[j]}l2.2 2.4l4-4.6`,stroke:"#fff","stroke-width":1.6,fill:"none",stroke_linecap:"round"},g)});
+  /* GST */
+  el("line",{x1:GST,x2:GST,y1:70,y2:ax+8,stroke:P.ink,"stroke-width":1.6,"stroke-dasharray":"6 4"},g);
+  chip(g,GST,66,"GST",{m:1,s:10,w:600,k:P.ink,f:P.ink,c:"#fff",sw:1});
+  /* the axis */
+  link(g,xl,ax,xr+4,ax,{c:"mute",w:1.3,op:.7});T(g,xl,ax+20,"time",{a:"start",s:9.5,m:1,c:P.faint});
+  T(g,W/2,H-68,"a phase is four rounds, each as long as the timeout",{s:10,m:1,c:P.mute});
+  chip(g,W/2-96,H-34,"no deciding unless a majority locks",{m:1,s:9,k:P.line,c:P.mute});chip(g,W/2+150,H-34,"safe even before GST",{m:1,s:9,k:P.line,c:P.mute});
+});
+/* cover:end */
 
 /* ===== the wind: birds let go one span at a time ===== */
 (function(){

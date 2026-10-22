@@ -40,9 +40,40 @@ const miss=(n,w,r)=>choose(n-w,r)/choose(n,r);
 const pick=(n,k)=>{const a=[...Array(n).keys()];for(let i=0;i<k;i++){const j=i+rnd(n-i);[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,k)};
 const pct=p=>p>=.9995?"more than 999 in 1,000":p>=.995?`${Math.round(p*1000)} in 1,000`:`${Math.round(p*100)} in 100`;
 
-/* the cover, in computing: three replicas with messages in flight */
-(function(){const C=Coast($("#coversvg"),{n:3,stoa:false});
-  [[0,1,.5],[1,2,.45],[2,0,.4],[0,2,.6]].forEach(([a,b,u])=>{const g=C.token("#e0b84a","");g.setAttribute("opacity",1);C.run(g,a,b,u)})})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · A PARTIAL QUORUM: N = 3, W = 2, R = 1","PBS");
+  const X=[96,260,424],cy=170,names=["R1","R2","R3"],ver=["v7","v7","v6"];
+  /* the quorums */
+  el("ellipse",{cx:178,cy,rx:132,ry:62,fill:P.blueL,opacity:.55,stroke:P.blue,"stroke-width":1.5,"stroke-dasharray":"5 4"},g);
+  el("ellipse",{cx:424,cy,rx:62,ry:62,fill:P.goldL,opacity:.7,stroke:P.gold,"stroke-width":1.5,"stroke-dasharray":"5 4"},g);
+  chip(g,178,cy-78,"write quorum, W = 2",{m:1,s:9,k:P.blue,c:P.blue});chip(g,424,cy-78,"read quorum, R = 1",{m:1,s:9,k:P.gold,c:"#8a6a00"});
+  X.forEach((x,i)=>{const stale=i===2;
+    el("rect",{x:x-42,y:cy-34,width:84,height:68,rx:14,fill:"#fff",stroke:stale?P.red:P.ink,"stroke-width":1.8},g);
+    T(g,x,cy-16,names[i],{s:11,w:600,c:P.mute});T(g,x,cy+10,ver[i],{s:22,w:700,c:stale?P.red:P.blue});
+    T(g,x,cy+27,stale?"stale":"newest",{s:8.5,m:1,c:stale?P.red:P.faint})});
+  /* the writer and reader */
+  chip(g,178,56,"writer · put(v7)",{m:1,s:9.5,k:P.blue,c:P.blue,f:"#fff",w:600});chip(g,424,56,"reader · get()",{m:1,s:9.5,k:P.gold,c:"#8a6a00",f:"#fff",w:600});
+  const pw=[link(g,150,68,X[0]+14,cy-36,{c:"blue",w:1.6}),link(g,206,68,X[1]-14,cy-36,{c:"blue",w:1.6})];pw.forEach((p,k)=>packet(g,p,{c:"blue",dur:2,delay:k*.3}));
+  const pr=link(g,424,68,424,cy-36,{c:"gold",w:1.6});packet(g,pr,{c:"gold",dur:2});
+  const lt=link(g,X[1]+46,cy+8,X[2]-46,cy+8,{c:"mute",w:1.3,dash:"3 4",op:.6});
+  chip(g,(X[1]+X[2])/2,cy+28,"v7 still in transit",{m:1,s:8.5,pad:8,k:P.line,c:P.mute});
+  chip(g,424,cy+84,"read returns v6 ✗",{m:1,s:9.5,k:P.red,c:P.red,f:P.redL,w:600});
+  /* the staleness curve */
+  const cx0=70,cx1=482,cb=444,ct=292;
+  T(g,26,266,"chance a read is current, t after the write commits",{a:"start",s:10,m:1,c:P.mute});
+  [0,.5,1].forEach(f=>{const y=cb-(cb-ct)*f;el("line",{x1:cx0,x2:cx1,y1:y,y2:y,stroke:P.soft,"stroke-width":1},g)});
+  el("line",{x1:cx0,x2:cx0,y1:ct-6,y2:cb,stroke:P.line,"stroke-width":1.4},g);el("line",{x1:cx0,x2:cx1,y1:cb,y2:cb,stroke:P.line,"stroke-width":1.4},g);
+  const d=`M${cx0} ${cb-20}C${cx0+80} ${cb-24},${cx0+120} ${cb-96},${cx0+190} ${cb-122}S${cx0+330} ${ct+4},${cx1} ${ct}`;
+  el("path",{d:d+`L${cx1} ${cb}L${cx0} ${cb}Z`,fill:P.blueL,opacity:.5},g);
+  const cv=el("path",{d,fill:"none",stroke:P.blue,"stroke-width":2.4,"stroke-linecap":"round"},g);packet(g,cv,{c:"blue",dur:4.2,r:4});
+  [[cx0,"0"],[cx0+110,"10 ms"],[cx0+230,"100 ms"],[cx1-20,"1 s"]].forEach(([x,t])=>{el("line",{x1:x,x2:x,y1:cb,y2:cb+5,stroke:P.faint,"stroke-width":1},g);T(g,x,cb+16,t,{s:9,m:1,c:P.faint})});
+  T(g,cx0-6,ct,"100%",{a:"end",s:9,m:1,c:P.faint});T(g,cx0-6,(ct+cb)/2,"50%",{a:"end",s:9,m:1,c:P.faint});
+  const pt=cv.getPointAtLength(cv.getTotalLength()*.62);dot(g,pt.x,pt.y,5,P.red,"#fff");
+  chip(g,pt.x+12,pt.y+36,"99.9% current after t",{a:"start",m:1,s:9,k:P.red,c:P.red,f:"#fff"});link(g,pt.x+10,pt.y+30,pt.x+3,pt.y+6,{c:"red",w:1,head:false});
+  chip(g,W-26,H-24,"R + W ≤ N → reads may be stale, rarely and briefly",{a:"end",m:1,s:9,k:P.line,c:P.mute});
+});
+/* cover:end */
 
 /* ===== how many to wait for: three home libraries on the coast ===== */
 (function(){

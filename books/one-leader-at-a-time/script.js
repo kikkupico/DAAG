@@ -41,9 +41,39 @@ function Tholos(svg,o={}){
   return T;
 }
 
-/* the cover, in computing: five replicas, a primary at the centre, one cut off */
-(function(){const T=Tholos($("#coversvg"));T.board("board 6","O");T.out("T",true);
-  [["P","L",.5],["P","K",.4],["P","M",.55],["L","P",.4],["K","P",.5]].forEach(([a,b,u])=>{const g=T.token(WHO.O.c,"");g.setAttribute("opacity",1);T.run(g,a,b,u)})})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · ONE PRIMARY, A COMMIT POINT, A VIEW CHANGE","view 6 → 7");
+  const Y=[108,160,212,264,316],len=[13,12,12,10,9],sx=104,sw=28,cm=12;
+  const nm=["R1","R2","R3","R4","R5"];
+  /* the commit line */
+  const lxn=sx+cm*sw-2;
+  el("rect",{x:sx-6,y:Y[0]-22,width:cm*sw+2,height:Y[4]-Y[0]+44,rx:10,fill:P.blueL,opacity:.28},g);
+  el("line",{x1:lxn,x2:lxn,y1:Y[0]-30,y2:Y[4]+26,stroke:P.ink,"stroke-width":1.5,"stroke-dasharray":"5 4"},g);
+  chip(g,lxn-20,Y[0]-40,"commit point · record 12",{m:1,s:9,k:P.ink,sw:1.2});
+  Y.forEach((y,j)=>{
+    const cut=j===4,pr=j===0;
+    node(g,38,y,14,nm[j],{s:10.5,k:cut?P.red:pr?P.blue:P.ink,c:cut?P.red:pr?P.blue:P.ink,f:cut?P.redL:pr?P.blueL:"#fff"});
+    for(let s=1;s<=len[j];s++){const c=s<=cm,x=sx+(s-1)*sw;
+      el("rect",{x,y:y-11,width:sw-4,height:22,rx:5,fill:cut?"#fff":c?P.blueL:P.goldL,stroke:cut?P.red:c?P.blue:P.gold,"stroke-width":1.2,"stroke-dasharray":cut?"3 3":null},g);
+      if(s>cm-2&&s<=len[j]||s===1)T(g,x+(sw-4)/2,y+.5,String(s),{s:8.5,m:1,c:cut?P.red:c?P.blue:"#8a6a00"})}});
+  chip(g,sx+13*sw+4,Y[0],"draft",{a:"start",m:1,s:8,pad:8,k:P.gold,c:"#8a6a00",f:P.goldL});
+  chip(g,sx+9*sw+8,Y[4],"cut off",{a:"start",m:1,s:8,pad:8,k:P.red,c:P.red,f:P.redL});
+  /* the primary's replies, then silence */
+  /* quorum intersection */
+  const qy=396,xs=[88,150,212,274,336];
+  el("ellipse",{cx:150,cy:qy,rx:92,ry:26,fill:P.blueL,opacity:.6,stroke:P.blue,"stroke-width":1.4,"stroke-dasharray":"4 3"},g);
+  el("ellipse",{cx:274,cy:qy,rx:92,ry:26,fill:P.goldL,opacity:.6,stroke:P.gold,"stroke-width":1.4,"stroke-dasharray":"4 3"},g);
+  xs.forEach((x,k)=>{node(g,x,qy,12,"R"+(k+1),{s:9,k:k===2?P.ink:P.faint,c:k===2?P.ink:P.mute,sw:k===2?2:1.4})});
+  T(g,212,qy+44,"any two majorities share a replica",{s:9.5,m:1,c:P.mute});
+  /* the view change */
+  const vx=384;
+  chip(g,vx,372,"view 6 · primary R1",{a:"start",m:1,s:9,k:P.line,c:P.mute});
+  link(g,vx+80,382,vx+80,398,{c:"red",w:1.4});T(g,vx+86,390,"silent",{a:"start",s:8,m:1,c:P.red});
+  chip(g,vx,408,"view 7 · primary R2",{a:"start",m:1,s:9,k:P.blue,c:P.blue,f:P.blueL,w:600});
+  T(g,W/2,H-24,"a new view forms on a majority that holds every committed record",{s:9,m:1,c:P.faint});
+});
+/* cover:end */
 
 /* ===== when a law passes: on the second word back ===== */
 (function(){

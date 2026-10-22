@@ -34,9 +34,40 @@ const seg=(box,opts,cur,fn)=>{box.innerHTML=opts.map(([v,t])=>`<button data-v="$
   $$("button",box).forEach(bt=>bt.onclick=()=>{$$("button",box).forEach(x=>x.setAttribute("aria-pressed",x===bt));fn(bt.dataset.v)})};
 const oneIn=p=>p<=0?"none":p>=.95?"nearly all":p>=.095?`1 in ${Math.round(1/p)}`:`1 in ${Math.round(1/p).toLocaleString("en")}`;
 
-/* the cover, in computing: three nodes with messages in flight */
-(function(){const C=Coast($("#coversvg"),{n:3,stoa:false});
-  [[0,1,.5],[1,2,.45],[2,0,.4],[0,2,.6]].forEach(([a,b,u])=>{const g=C.token("#e0b84a","");g.setAttribute("opacity",1);C.run(g,a,b,u)})})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · MONOTONE OR NOT?","CALM");
+  const lx=134,rx=388;
+  el("line",{x1:260,x2:260,y1:86,y2:392,stroke:P.line,"stroke-width":1.4,"stroke-dasharray":"3 5"},g);
+  chip(g,lx,72,"no coordination needed",{m:1,s:10,k:P.blue,c:P.blue,f:P.blueL,w:600});chip(g,rx,72,"must wait for everyone",{m:1,s:10,k:P.red,c:P.red,f:P.redL,w:600});
+  /* left: a deadlock ring only ever gains edges */
+  const ra=[[lx,126],[lx-50,200],[lx+50,200]],nm=["A","B","C"];
+  const rp=[[0,2],[2,1],[1,0]].map(([a,b],k)=>link(g,ra[a][0]+(ra[b][0]-ra[a][0])*.25,ra[a][1]+(ra[b][1]-ra[a][1])*.25,ra[b][0]-(ra[b][0]-ra[a][0])*.25,ra[b][1]-(ra[b][1]-ra[a][1])*.25,{c:"blue",w:2,bend:-14}));
+  rp.forEach((p,k)=>packet(g,p,{c:"blue",dur:2.4,delay:k*.5,r:3.2}));
+  ra.forEach(([x,y],k)=>node(g,x,y,15,nm[k],{k:P.blue,c:P.blue,f:P.blueL,s:12}));
+  T(g,lx,236,"is there a cycle?",{s:10.5,c:P.ink,w:600});T(g,lx,252,"once found, found forever",{s:9.5,m:1,c:P.blue});
+  /* right: garbage is the absence of a path */
+  const gp=[[rx-68,150],[rx,150],[rx+68,150]],gn=["root","X","Y"];
+  link(g,gp[0][0]+18,150,gp[1][0]-17,150,{c:"ink",w:1.8});
+  link(g,gp[1][0]+17,150,gp[2][0]-17,150,{c:"red",w:1.6,dash:"4 4",head:false});
+  T(g,rx+34,134,"?",{s:16,w:700,c:P.red});
+  gp.forEach(([x,y],k)=>node(g,x,y,k==0?17:15,gn[k],{s:k==0?9.5:12,k:k==2?P.red:P.ink,c:k==2?P.red:P.ink,f:k==2?P.redL:"#fff"}));
+  T(g,rx,196,"is Y unreachable?",{s:10.5,c:P.ink,w:600});T(g,rx,212,"a message may still be in flight",{s:9.5,m:1,c:P.red});
+  chip(g,rx,238,"wait: has everyone reported?",{m:1,s:8.5,pad:10,k:P.red,c:P.red,f:"#fff"});
+  /* growth of answers */
+  const by=372;
+  [20,36,52,68,84].forEach((h,k)=>{el("rect",{x:lx-70+k*30,y:by-h,width:22,height:h,rx:4,fill:P.blueL,stroke:P.blue,"stroke-width":1.3},g)});
+    T(g,lx,by+16,"answers only ever grow",{s:10,m:1,c:P.blue});
+  [20,36,52].forEach((h,k)=>el("rect",{x:rx-70+k*30,y:by-h,width:22,height:h,rx:4,fill:P.redL,stroke:P.red,"stroke-width":1.3},g));
+  el("rect",{x:rx+20,y:by-28,width:22,height:28,rx:4,fill:"#fff",stroke:P.red,"stroke-width":1.3,"stroke-dasharray":"4 3"},g);
+  el("rect",{x:rx+20,y:by-52,width:22,height:24,rx:4,fill:"none",stroke:P.red,"stroke-width":1,"stroke-dasharray":"2 3",opacity:.5},g);
+  link(g,rx+31,by-58,rx+31,by-34,{c:"red",w:1.6});
+  T(g,rx+31,by-72,"taken back",{s:8.5,m:1,c:P.red});
+  T(g,rx,by+16,"a new fact retracts an answer",{s:10,m:1,c:P.red});
+  chip(g,W/2,H-60,"coordination-free  ⇔  monotonic",{m:1,s:12,pad:30,k:P.ink,sw:1.5,f:P.bg,w:600});
+  T(g,W/2,H-28,"not · none · every · only · highest · count  ⇒  wait",{s:9.5,m:1,c:P.faint});
+});
+/* cover:end */
 
 /* ===== questions as rules on the facts heard so far ===== */
 const anyCopy=S=>S.some(f=>f[0]==="copy"),noClaim=S=>!S.some(f=>f[0]==="claim");

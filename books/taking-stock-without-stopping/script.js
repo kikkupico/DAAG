@@ -59,9 +59,39 @@ function Census(){
   return {items,snaps,ends,rec:R,recT,slate,truth,total};
 }
 
-/* the cover, in computing: three processes with messages in transit */
-(function(){const I=Isle($("#coversvg"));
-  [[1,2,.5],[2,3,.5],[3,1,.45],[1,3,.4]].forEach(([a,b,u])=>{const g=I.token(HC[a],"");g.setAttribute("opacity",1);I.road(g,a,b,u)})})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · A SNAPSHOT TAKEN WHILE UNITS ARE IN FLIGHT","Chandy–Lamport");
+  const N={1:[260,128,"P1",40],2:[118,326,"P2",60],3:[402,326,"P3",50]};
+  /* the cut, drawn behind everything */
+  el("path",{d:"M52 232C150 276 230 196 330 238S440 214 482 196",fill:"none",stroke:P.red,"stroke-width":1.6,"stroke-dasharray":"6 5",opacity:.7},g);
+  chip(g,468,176,"consistent cut",{a:"end",m:1,s:9,k:P.red,c:P.red,f:P.redL});
+  /* channels */
+  const ch=[[1,2,-22,[1]],[2,1,-22,[]],[1,3,-22,[1]],[3,1,-22,[]],[2,3,-22,[]],[3,2,-22,[1,2]]],ps=[];
+  ch.forEach(([a,b,bd,u],k)=>{const A=N[a],B=N[b],d=Math.hypot(B[0]-A[0],B[1]-A[1]),e=[(B[0]-A[0])/d,(B[1]-A[1])/d];
+    const p=link(g,A[0]+e[0]*36,A[1]+e[1]*36,B[0]-e[0]*40,B[1]-e[1]*40,{c:"mute",w:1.6,bend:-bd,op:.75});ps.push(p);
+    const Ln=p.getTotalLength();
+    u.forEach((_,i)=>{const q=p.getPointAtLength(Ln*(.3+i*.2+k%2*.1));el("circle",{cx:q.x,cy:q.y,r:5,fill:P.gold,stroke:"#fff","stroke-width":1.4},g)})});
+  /* markers moving out from the initiator */
+  const mk=(p,delay)=>{const m=el("path",{d:"M0 -6.5L6.5 0L0 6.5L-6.5 0z",fill:P.red,stroke:"#fff","stroke-width":1.2},g);
+    if(reduce){const q=p.getPointAtLength(p.getTotalLength()*.55);m.setAttribute("transform",`translate(${q.x} ${q.y})`)}
+    else el("animateMotion",{dur:"3.2s",begin:delay+"s",repeatCount:"indefinite",path:p.getAttribute("d")},m)};
+  mk(ps[0],0);mk(ps[2],.3);mk(ps[3],1.2);
+  /* processes */
+  for(const k in N){const [x,y,t,u]=N[k],rec=k!=3;
+    if(rec)el("circle",{cx:x,cy:y,r:40,fill:"none",stroke:P.green,"stroke-width":1.6,"stroke-dasharray":"4 4"},g);
+    else el("circle",{cx:x,cy:y,r:40,fill:"none",stroke:P.faint,"stroke-width":1.4,"stroke-dasharray":"2 5"},g);
+    node(g,x,y,29,t,{s:14,halo:rec?P.greenL:null,k:P.ink});
+  }
+  [[1,-58,"local: 40 u"],[2,56,"local: 60 u"],[3,56,"not recorded yet"]].forEach(([k,dy,t])=>{const [x,y]=N[k];chip(g,x,y+dy,t,{m:1,s:9,k:k==3?P.line:P.green,c:k==3?P.mute:P.green,f:k==3?"#fff":P.greenL})});
+  chip(g,194,282,"channel: 20 u",{m:1,s:8.5,pad:8,k:P.line,c:P.mute});chip(g,334,196,"channel: 10 u",{m:1,s:8.5,pad:8,k:P.line,c:P.mute});
+  /* legend and the sum */
+  const ly=H-70;dot(g,40,ly,5.5,P.gold);T(g,52,ly,"unit",{a:"start",s:10.5,c:P.mute});
+  el("path",{d:`M110 ${ly-6}L116 ${ly}L110 ${ly+6}L104 ${ly}z`,fill:P.red},g);T(g,124,ly,"marker",{a:"start",s:10.5,c:P.mute});
+  el("circle",{cx:196,cy:ly,r:5.5,fill:"none",stroke:P.green,"stroke-width":1.5,"stroke-dasharray":"2 2"},g);T(g,208,ly,"state recorded",{a:"start",s:10.5,c:P.mute});
+  chip(g,W/2,H-32,"Σ local states + Σ channel records = 200  ✓  nothing lost",{m:1,s:10.5,pad:26,k:P.ink,sw:1.4,f:P.bg,w:600});
+});
+/* cover:end */
 
 /* ===== the nine places to count ===== */
 (function(){

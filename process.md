@@ -44,6 +44,11 @@ defines `window.BOOK` with the helpers (`$`, `$$`, `el`, `tween`, `sleep`, `butt
 draws the lineage edges by itself. A script opens with `const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;`,
 `const {isM,dual,vis,dtext,onReg}=REG;`, `BOOK.init();`, and ends with `REG.start();`. Put a rule in the shared
 file when three or more books want it; a rule only one book needs stays in its own `style.css`.
+The computing cover is drawn, not photographed: `assets/js/covers.js` defines `window.COVERS` with a kit
+(`stage`, `T`, `chip`, `node`, `link`, `mid`, `packet`, `lane`, `dot`, `vec`, `bandX`, `rnd32`) on a 520 x 520
+dot-grid card, loaded after `book.js`; each book's `script.js` calls `COVERS.draw("#coversvg",(svg,{...})=>{...})`
+with the figure that is that paper's signature picture (a lane diagram, a lattice, a field of sites), and the
+svg is class `cover-fig`.
 
 **Two registers.** A book can be read as allegory or as computing, by a switch in its bar that shares
 its choice with the scroll page. Both are always in the page: every paragraph, heading, proof step,

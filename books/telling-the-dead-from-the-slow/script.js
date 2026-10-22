@@ -91,13 +91,41 @@ function route(H,a,b,u0=.14,u1=.86){const pts=[];for(let i=0;i<=14;i++){const u=
   return "M"+pts.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" L")}
 const cross=(g,x,y,r=17)=>el("path",{d:`M${x-r},${y-r} L${x+r},${y+r} M${x-r},${y+r} L${x+r},${y-r}`,stroke:"#1c1512","stroke-width":5,fill:"none"},g);
 
-/* the cover, in computing: four processes, their inputs, one crashed, messages in transit */
-(function(){
-  const H=Hill($("#coversvg")),inp={1:"A",2:"H",3:"A",4:"A"},t=H.tent[3];
-  [1,2,3,4].forEach(k=>H.badge(k,inp[k]));t.g.classList.add("out");
-  el("path",{d:`M${t.x-17},${t.y-17} L${t.x+17},${t.y+17} M${t.x-17},${t.y+17} L${t.x+17},${t.y-17}`,stroke:"#1c1512","stroke-width":5,fill:"none"},H.over);
-  [[1,2,.5],[4,1,.5],[2,4,.45],[1,4,.4]].forEach(([a,b,u])=>{const g=H.token(TC[a],inp[a]);g.setAttribute("opacity",1);H.fly(g,a,b,u)});
-})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · A FAILURE DETECTOR AT P1","◇P · eventually perfect");
+  const x0=106,x1=488,ys=[106,154,202],T0=[0,1,2,3,4,5,6,7,8,9,10];
+  const px=t=>x0+t*36;
+  ys.forEach((y,j)=>{lane(g,x0-16,x1+6,y,{w:1.3,c:j===2?"red":null,dash:j===2?"4 4":null});node(g,40,y,14,"P"+(j+2),{s:10.5,k:j===2?P.red:P.ink,c:j===2?P.red:P.ink,f:j===2?P.redL:"#fff"})});
+  T(g,26,70,"heartbeats arriving at P1",{a:"start",s:10,m:1,c:P.mute});
+  const hb=(y,x,c)=>{el("line",{x1:x,x2:x,y1:y-9,y2:y+9,stroke:P[c||"blue"],"stroke-width":2.2,"stroke-linecap":"round"},g)};
+  [0,1,2,5,6,7,8,9,10].forEach(t=>hb(ys[0],px(t)));  /* P2: one late heartbeat, at t=3.8 */
+  hb(ys[0],px(3.9),"blue");
+  [0,1,2,3,4,5,6,7,8,9,10].forEach(t=>hb(ys[1],px(t)));
+  [0,1,2,3,4,5,6].forEach(t=>hb(ys[2],px(t)));
+  /* the crash */
+  el("path",{d:`M${px(6.9)-6} ${ys[2]-6}l12 12m0 -12l-12 12`,stroke:P.red,"stroke-width":2.6,"stroke-linecap":"round"},g);
+  chip(g,px(7.6),ys[2]-22,"crash",{a:"start",m:1,s:8.5,pad:8,k:P.red,c:P.red,f:P.redL});
+  /* the timeout brackets */
+  const br=(y,xa,xb,c,t)=>{el("path",{d:`M${xa} ${y+14}v5h${xb-xa}v-5`,fill:"none",stroke:P[c],"stroke-width":1.3},g);T(g,(xa+xb)/2,y+30,t,{s:8.5,m:1,c:P[c]})};
+  br(ys[0],px(2),px(3.5),"red","Δ");br(ys[0],px(5),px(7),"green","Δ′ > Δ");br(ys[2],px(6),px(9),"red","Δ″");
+  chip(g,px(3.5)+4,ys[0]-22,"false suspicion",{a:"start",m:1,s:8.5,pad:8,k:P.red,c:P.red,f:P.redL});
+  /* the suspect list over time */
+  T(g,26,262,"suspect list at P1",{a:"start",s:10,m:1,c:P.mute});
+  const sy=[288,318,348];
+  const seg=(y,xa,xb,c)=>el("rect",{x:xa,y:y-7,width:xb-xa,height:14,rx:7,fill:c,opacity:.9},g);
+  ys.forEach((_,j)=>node(g,40,sy[j],11,"P"+(j+2),{s:9,k:j===2?P.red:P.ink,c:j===2?P.red:P.ink}));
+  seg(sy[0],x0-10,px(3.5),P.green);seg(sy[0],px(3.5),px(3.9),P.red);seg(sy[0],px(3.9),x1+4,P.green);
+  seg(sy[1],x0-10,x1+4,P.green);
+  seg(sy[2],x0-10,px(9),P.green);seg(sy[2],px(9),x1+4,P.red);
+  T(g,x1+4,sy[0]+19,"trusted again",{a:"end",s:8.5,m:1,c:P.green});T(g,x1+4,sy[2]+19,"suspected, forever",{a:"end",s:8.5,m:1,c:P.red});
+  [[P.green,"trusted"],[P.red,"suspected"]].forEach(([c,t],k)=>{dot(g,106+k*92,382,5,c);T(g,106+k*92+10,382,t,{a:"start",s:10,c:P.mute})});
+  /* the timeout grows */
+  T(g,W-26,400,"timeout grows with each false suspicion",{a:"end",s:9.5,m:1,c:P.mute});
+  [36,54,72,90].forEach((w,k)=>el("rect",{x:W-26-210+k*54,y:478-w*.6,width:42,height:w*.6,rx:3,fill:P.blueL,stroke:P.blue,"stroke-width":1.2},g));
+  T(g,26,430,"every live process",{a:"start",s:10,c:P.mute});T(g,26,446,"is eventually trusted;",{a:"start",s:10,c:P.mute});T(g,26,462,"every crashed one, suspected",{a:"start",s:10,c:P.mute});
+});
+/* cover:end */
 
 /* ===== a slate that may be wrong, in two ways ===== */
 (function(){

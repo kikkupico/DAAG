@@ -107,9 +107,36 @@ function Isle(svg){
   return I;
 }
 
-/* the cover, in computing: three processes with messages in flight */
-(function(){const I=Isle($("#coversvg")),pts=[[1,2,.5],[2,3,.45],[3,1,.5],[1,3,.4]];
-  pts.forEach(([a,b,u])=>{const g=I.token(HC[a],"");g.setAttribute("opacity",1);I.road(g,a,b,u)})})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · EVERY OPERATION TAKES EFFECT AT ONE INSTANT","linearizability");
+  const Y=[112,176,240],lbl=["P1","P2","P3"];
+  Y.forEach((y,j)=>{lane(g,64,500,y,{w:1.2});node(g,36,y,14,lbl[j],{s:10.5})});
+  T(g,W-26,74,"real time →",{a:"end",s:9.5,m:1,c:P.faint});
+  /* operations: lane, start, end, label, linearization point, colour */
+  const O=[[0,74,214,"enq(x)",150,"blue"],[1,150,300,"enq(y)",236,"gold"],[2,262,414,"deq() → x",318,"red"],[0,340,490,"deq() → y",430,"green"]];
+  O.forEach(([l,a,b,t,p,c],k)=>{const y=Y[l];
+    el("rect",{x:a,y:y-16,width:b-a,height:32,rx:16,fill:P[c+"L"],stroke:P[c],"stroke-width":1.5},g);
+    T(g,(a+b)/2,y-2,t,{s:10,m:1,w:600,c:P[c]==="#e0b84a"?"#8a6a00":P[c]});
+    link(g,p,y+16,p,334,{c:"red",w:1,dash:"2 3",head:false,op:.55});
+    el("path",{d:`M${p} ${y+9}l6 7l-6 7l-6 -7z`,fill:P.red,stroke:"#fff","stroke-width":1.2},g)});
+  /* real-time order: one operation ends before the next begins */
+  link(g,214,Y[0]+16,262,Y[2]-16,{c:"mute",w:1.1,dash:"4 3",bend:12,op:.7});
+  chip(g,206,Y[1]+34,"returned before the next began",{a:"end",m:1,s:8.5,pad:8,k:P.line,c:P.mute});
+  chip(g,372,Y[1]+8,"overlap: either order",{m:1,s:8.5,pad:8,k:P.line,c:P.mute});
+  /* the one-at-a-time queue */
+  const qy=334;lane(g,64,500,qy,{w:2,c:"ink"});
+  O.forEach(([l,a,b,t,p,c])=>{dot(g,p,qy,5,P.red,"#fff")});
+  T(g,26,qy-0,"",{});
+  T(g,26,362,"a single queue, one step at a time",{a:"start",s:10,m:1,c:P.mute});
+  const st=[[150,"enq x","[ x ]"],[236,"enq y","[ x y ]"],[318,"deq → x","[ y ]"],[430,"deq → y","[   ]"]];
+  st.forEach(([x,t,q],k)=>{
+    el("rect",{x:x-34,y:384,width:68,height:44,rx:10,fill:"#fff",stroke:P.line,"stroke-width":1.2},g);
+    T(g,x,398,t,{s:9,m:1,c:P.mute});T(g,x,416,q,{s:12,m:1,w:700,c:P.ink})});
+  st.slice(0,3).forEach(([x],k)=>link(g,x+36,406,st[k+1][0]-36,406,{c:"mute",w:1.2,op:.6}));
+  chip(g,W/2,H-30,"copies, caches and workers behind it may do anything they like",{m:1,s:8.5,pad:16,k:P.line,c:P.mute});
+});
+/* cover:end */
 
 /* ===== scroll: the goatherd's morning, with tallies worked out by the rule ===== */
 (function(){

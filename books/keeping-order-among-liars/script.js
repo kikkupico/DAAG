@@ -42,11 +42,38 @@ function Crown(svg){
   return C;
 }
 
-/* the cover, in computing: four replicas with messages in flight */
-(function(){
-  const C=Crown($("#coversvg"));C.state(1,"primary");C.state(4,"faulty");
-  [[1,2,"",.5],[1,3,"",.45],[1,4,"",.5],[2,3,"",.5],[3,1,"",.4],[2,1,"",.35]].forEach(([a,b,w,u])=>{const g=C.token(BC[a],w);g.setAttribute("opacity",1);C.fly(g,a,b,u)});
-})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · THREE PHASES, ONE ORDER","n = 3f + 1 = 4");
+  const X=[116,194,272,350,428],Xe=496,Y={C:112,1:184,2:250,3:316,4:382},cols=["request","pre-prepare","prepare","commit","reply"];
+  cols.forEach((c,i)=>{
+    const x=X[i]-26,w=i<4?(X[i+1]-X[i]):(Xe-X[i]+26);
+    bandX(g,i===0?X[0]-26:X[i]-0,i===0?X[1]-X[0]+26:w,64,420,i%2?"#fafafc":P.bg);
+    T(g,(i===0?X[0]+10:X[i]+w/2),80,c,{s:9.5,m:1,c:P.mute})});
+  for(const k of["C",1,2,3,4]){
+    lane(g,62,508,Y[k],{c:k===4?"red":null,dash:k===4?"4 4":null,w:1.5});
+    node(g,40,Y[k],k==="C"?13:15,k==="C"?"C":"R"+k,{k:k===4?P.red:P.ink,c:k===4?P.red:P.ink,s:k==="C"?11:10.5,f:k===4?P.redL:"#fff"})}
+  const L=(a,xa,b,xb,o={})=>link(g,xa,Y[a],xb,Y[b],{w:1,c:"blue",op:.5,...o});
+  const ps=[];
+  ps.push(L("C",X[0],1,X[1],{op:.9,w:1.6}));
+  for(const b of[2,3,4])ps.push(L(1,X[1],b,X[2],{op:.9,w:1.4,c:b===4?"blue":"blue"}));
+  for(const a of[2,3,4])for(const b of[1,2,3,4])if(a!==b)L(a,X[2],b,X[3],{c:a===4?"red":"blue",op:a===4?.7:.45,dash:a===4?"3 3":null});
+  for(const a of[1,2,3,4])for(const b of[1,2,3,4])if(a!==b)L(a,X[3],b,X[4],{c:a===4?"red":"blue",op:a===4?.7:.4,dash:a===4?"3 3":null});
+  for(const a of[1,2,3])ps.push(L(a,X[4],"C",Xe-12,{c:"green",op:.8,w:1.3}));
+  X.forEach((x,i)=>{for(const k of["C",1,2,3,4]){if(k==="C"&&i>0&&i<4)continue;if(i===4&&k===4)continue;dot(g,x,Y[k],3.1,k===4?P.red:P.ink)}});
+  dot(g,Xe-12,Y.C,3.1,P.green);
+  ps.slice(0,5).forEach((p,k)=>packet(g,p,{c:k?"blue":"gold",dur:2.6+k*.3,delay:k*.35,r:3.4}));
+  chip(g,X[1]+4,Y[4]+34,"⟨pre-prepare, v=0, n=7, d⟩",{a:"start",m:1,s:9,k:P.blueL,c:P.blue});
+  chip(g,X[2]+0,Y[4]-24,"d′ ≠ d",{m:1,s:9,k:P.red,c:P.red,f:P.redL});
+  /* quorum brackets */
+  const br=(x1,x2,t,c,a,tx)=>{const y=Y[4]+66;el("path",{d:`M${x1} ${y-6}V${y}H${x2}V${y-6}`,fill:"none",stroke:P[c],"stroke-width":1.4},g);T(g,tx,y+14,t,{s:9.5,m:1,c:P[c],a})};
+  br(X[2],X[3]-3,"2f+1 prepares","blue","end",X[3]-3);br(X[3]+3,X[4],"2f+1 commits","green","start",X[3]+3);
+  /* the log */
+  const ly=H-26;T(g,26,ly,"log",{a:"start",s:10,m:1,c:P.mute});
+  [5,6,7,8].forEach((s,i)=>{const x=64+i*52;el("rect",{x,y:ly-11,width:46,height:22,rx:5,fill:s===7?P.blueL:"#fff",stroke:s===7?P.blue:P.line,"stroke-width":s===7?1.6:1},g);T(g,x+23,ly+.5,s===7?"req 7":String(s),{s:10,m:1,c:s===7?P.blue:P.faint,w:s===7?600:400})});
+  chip(g,W-26,ly,"view v = 0 · primary R1",{a:"end",m:1,s:9.5,c:P.mute})
+});
+/* cover:end */
 
 /* ===== why three seals, and four bandits: two groups always share an honest bandit ===== */
 (function(){

@@ -34,9 +34,46 @@ const seg=(box,opts,cur,fn)=>{box.innerHTML=opts.map(([v,t])=>`<button data-v="$
   $$("button",box).forEach(bt=>bt.onclick=()=>{$$("button",box).forEach(x=>x.setAttribute("aria-pressed",x===bt));fn(bt.dataset.v)})};
 const oneIn=p=>p<=0?"none":p>=.95?"nearly all":p>=.095?`1 in ${Math.round(1/p)}`:`1 in ${Math.round(1/p).toLocaleString("en")}`;
 
-/* the cover, in computing: three sites with updates in flight */
-(function(){const C=Coast($("#coversvg"),{n:3,stoa:false});
-  [[0,1,.5],[1,2,.45],[2,0,.4],[0,2,.6]].forEach(([a,b,u])=>{const g=C.token("#e0b84a","");g.setAttribute("opacity",1);C.run(g,a,b,u)})})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · EPIDEMIC REPLICATION","S → I → R");
+  const R=rnd32(11),n=19,sp=22,x0=(W-(n-1)*sp)/2,y0=78,seed=[6,5];
+  const cells=[];
+  for(let j=0;j<n;j++)for(let i=0;i<n;i++){
+    const d=Math.hypot(i-seed[0],j-seed[1])*(0.8+0.45*R());
+    cells.push({i,j,x:x0+i*sp,y:y0+j*sp,d,far:R()<.035})}
+  const st=c=>c.d<4.4?"R":c.d<6.3||c.far?"I":"S";
+  const fill={S:"#e6e6eb",I:P.gold,R:"#9ccf9c"};
+  const lay=el("g",{},g);
+  for(const c of cells){const s=st(c);
+    if(s==="I")el("circle",{cx:c.x,cy:c.y,r:11,fill:P.goldL,opacity:.8},lay);
+    el("circle",{cx:c.x,cy:c.y,r:s==="S"?5.6:7.2,fill:fill[s]},lay)}
+  /* anti-entropy and rumour arcs between sites */
+  const inf=cells.filter(c=>st(c)==="I"),rem=cells.filter(c=>st(c)==="R"),arcs=el("g",{},g),paths=[];
+  const sd=cells.find(c=>c.i===seed[0]&&c.j===seed[1]);
+  for(let k=0;k<8;k++){
+    const a=k<5?sd:rem[Math.floor(R()*rem.length)],b=inf[Math.floor(R()*inf.length)];
+    if(!a||!b||a===b)continue;
+    paths.push(link(arcs,a.x,a.y,b.x,b.y,{c:"blue",w:1.2,bend:(R()<.5?-1:1)*(26+R()*34),op:.55}))}
+  paths.slice(0,5).forEach((p,k)=>packet(g,p,{c:"blue",dur:3+k*.45,delay:k*.5}));
+  /* the seed and the callouts */
+  node(g,sd.x,sd.y,9,null,{k:P.red,f:P.red,sw:2,halo:P.redL});
+  dot(g,sd.x,sd.y,3,"#fff");
+  const far=cells.filter(c=>st(c)==="S"&&c.i>13&&c.j>12)[3]||cells[cells.length-30];
+  const tomb=rem[Math.floor(rem.length*.6)];
+  el("path",{d:`M${tomb.x-4} ${tomb.y-4}l8 8m0 -8l-8 8`,stroke:P.red,"stroke-width":2,"stroke-linecap":"round"},g);
+  chip(g,sd.x-22,sd.y-30,"seed · update u, ts 17",{a:"start",m:1,s:9.5,k:P.red,c:P.red});
+  link(g,sd.x-8,sd.y-26+8,sd.x-4,sd.y-10,{c:"red",w:1,head:false});
+  chip(g,tomb.x+14,tomb.y+30,"death certificate",{a:"start",m:1,s:9.5,k:P.red,c:P.red});
+  link(g,tomb.x+8,tomb.y+22,tomb.x+2,tomb.y+5,{c:"red",w:1,head:false});
+  chip(g,far.x+10,far.y-20,"not yet received",{a:"end",m:1,s:9.5,k:P.line,c:P.mute});
+  /* legend */
+  const ly=H-30;let lx=26;
+  for(const [k,t] of [["S","susceptible"],["I","infective"],["R","removed"]]){
+    dot(g,lx+6,ly,6,fill[k]);T(g,lx+18,ly,t,{a:"start",s:11,c:P.mute});lx+=t.length*6.1+44}
+  T(g,W-26,ly,"push · pull · push-pull",{a:"end",s:10,c:P.faint,m:1})
+});
+/* cover:end */
 
 /* ===== the festival: every copyist draws one name by lot; the pair give, ask, or both ===== */
 (function(){

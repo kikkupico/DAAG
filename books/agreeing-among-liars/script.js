@@ -40,11 +40,39 @@ function slip(P,a,ta,b,tb,w,lab=true,at=.5){const p=P.slip(a,ta,b,tb,14);p.style
   if(lab){const pts=P.arc(a,ta,b,tb),q=pts[Math.round((pts.length-1)*at)];dtext(P.over,{class:"lab halo k",x:q[0],y:q[1]+4},ORD[w],V[w]).forEach(t=>t.style.fill=OC[w])}return p}
 const dot=(P,k,t,fill="#fffaf0")=>{const g=P.event(k,t,fill,8);g.style.cursor="default";return g};
 
-/* the cover, in computing: four processes, one of them faulty, messages in transit */
-(function(){
-  const H=Crown($("#coversvg"));H.mark(1,true);H.state(1,"commander");H.state(3,"faulty");
-  [[1,2,"S",.5],[1,3,"S",.45],[1,4,"S",.5],[3,2,"H",.5],[3,4,"H",.4],[4,1,"S",.35]].forEach(([a,b,w,u])=>{const g=H.token(BC[a],w);g.setAttribute("opacity",1);H.fly(g,a,b,u)});
-})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · OM(1): TWO ROUNDS, THEN A MAJORITY","n = 3m + 1 = 4");
+  const C=[260,100],L=[[100,238],[260,300],[420,238]],nm=["P2","P3","P4"],bad=1;
+  /* the three-process impossibility, as an inset */
+  const ix=446,iy=84;[[ix-18,iy+14],[ix+18,iy+14],[ix,iy-14]].forEach(([x,y],k)=>{node(g,x,y,5.5,null,{k:k===0?P.red:P.ink,f:k===0?P.redL:"#fff",sw:1.4})});
+  el("path",{d:`M${ix-9} ${iy-9}l18 18m0 -18l-18 18`,stroke:P.red,"stroke-width":2.2,"stroke-linecap":"round",opacity:.85},g);
+  T(g,ix,iy+36,"3 processes: impossible",{s:8.5,m:1,c:P.red});
+  T(g,26,150,"ROUND 1",{a:"start",s:9.5,m:1,c:P.blue,w:600});
+  /* round 1 */
+  const p1=L.map(([x,y],k)=>{const p=link(g,C[0],C[1]+20,x,y-20,{c:"blue",w:1.8});const m=[C[0]+(x-C[0])*.34,C[1]+20+(y-40-C[1])*.34];chip(g,m[0],m[1],"1",{m:1,s:10,pad:9,k:P.blue,c:P.blue,w:600});return p});
+  p1.forEach((p,k)=>packet(g,p,{c:"blue",dur:2.4,delay:k*.3}));
+  /* round 2: every lieutenant relays what it heard */
+  T(g,26,282,"ROUND 2",{a:"start",s:9.5,m:1,c:P.blue,w:600});
+  const rel=(a,b,bend)=>{const A=L[a],B=L[b],liar=a===bad,v=liar?"0":"1",x1=A[0]+(B[0]>A[0]?19:-19),x2=B[0]+(B[0]>A[0]?-19:19),y1=A[1],y2=B[1];
+    link(g,x1,y1,x2,y2,{c:liar?"red":"blue",w:1.3,bend,dash:liar?"4 3":null,op:.85});
+    const m=mid(x1,y1,x2,y2,bend);chip(g,m[0],m[1],v,{m:1,s:9,pad:8,k:liar?P.red:P.blue,c:liar?P.red:P.blue,f:liar?P.redL:"#fff"})};
+  rel(0,1,20);rel(1,0,20);rel(1,2,20);rel(2,1,20);rel(0,2,64);rel(2,0,64);
+  L.forEach(([x,y],k)=>node(g,x,y,19,nm[k],{k:k===bad?P.red:P.ink,c:k===bad?P.red:P.ink,f:k===bad?P.redL:"#fff",halo:k===bad?P.redL:null,s:12}));
+  node(g,C[0],C[1],21,"P1",{s:13,halo:P.blueL});
+  chip(g,C[0]+34,C[1]-18,"commander · v = 1",{a:"start",m:1,s:9,k:P.blue,c:P.blue});
+  chip(g,L[bad][0]+44,L[bad][1]+4,"traitor",{a:"start",m:1,s:9,k:P.red,c:P.red,f:P.redL});
+  /* the tallies */
+  [0,2].forEach(k=>{const [x,y]=L[k];
+    link(g,x,y+22,x,y+74,{c:"mute",w:1,op:.5,head:false});
+    vec(g,x,y+90,[1,0,1],{hi:[1],hf:P.redL,hc:P.red,w:24,h:24,s:12});
+    T(g,x,y+112,"from P1 · P3 · "+(k===0?"P4":"P2"),{s:8.5,m:1,c:P.faint});
+    link(g,x,y+120,x,y+142,{c:"green",w:1.6});
+    chip(g,x,y+158,"majority → 1",{m:1,s:10,k:P.green,c:P.green,f:P.greenL,w:600})});
+  vec(g,L[bad][0],L[0][1]+90,["?","?","?"],{w:24,h:24,s:12,k:P.line});T(g,L[bad][0],L[0][1]+112,"no need to decide",{s:8.5,m:1,c:P.faint});
+  T(g,W/2,H-26,"honest lieutenants agree, and obey an honest commander",{s:10,m:1,c:P.mute});
+});
+/* cover:end */
 
 /* ===== the two conditions, tested on whatever is supposed ===== */
 (function(){
