@@ -69,6 +69,10 @@ body[data-reg="m"] .pin{transform:none}
 body[data-reg="m"] .pin::before{display:none}
 body[data-reg="m"] .dots .dot.on::before{background:var(--blue)}
 
+/* a two-column spread whose picture is allegory-only reads in one column */
+body[data-reg="m"] .two.solo{grid-template-columns:minmax(0,1fr)}
+body[data-reg="m"] .two.solo>div{max-width:48rem}
+
 /* ---------- computing: buttons are pills ---------- */
 body[data-reg="m"] .btn{background:var(--blue);color:#fff;border:0;border-radius:999px;padding:10px 22px;font-size:.95rem;font-weight:500;letter-spacing:0;box-shadow:none}
 body[data-reg="m"] .btn:hover:not(:disabled){background:#0b7ad6;transform:none;box-shadow:none}
