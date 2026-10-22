@@ -33,6 +33,18 @@ its papers are written once, in `meta.json`; the cover and the book's card on th
 carry them, and `python3 art/scroll/cover.py` checks that they agree (`--write` puts them into
 the cards). The pictures a book uses are copied into `books/<slug>/img/`.
 
+**Shared code.** Every book in `books/` (not the one-scroll overview) is assembled from shared layers, so a
+change made once reaches all of them. Styles load in this order: `assets/css/book.css` (tokens, bar,
+spreads, cards, diagrams: what every book has), `assets/css/widgets.css` (hill, camp, table and counter
+widgets that several books share), `assets/css/registers.css` (the Allegory | Computing switch and the
+computing dress), then the book's own `style.css`, which holds only what is particular to that book.
+Scripts load as `assets/js/registers.js`, `assets/js/book.js`, then the book's `script.js`. `book.js`
+defines `window.BOOK` with the helpers (`$`, `$$`, `el`, `tween`, `sleep`, `button`, `stepDots`, `scrolly`,
+`mapPairs`, `Polar`) and `BOOK.init()` (pop-ups, the progress bar, the section name, parallax); it also
+draws the lineage edges by itself. A script opens with `const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;`,
+`const {isM,dual,vis,dtext,onReg}=REG;`, `BOOK.init();`, and ends with `REG.start();`. Put a rule in the shared
+file when three or more books want it; a rule only one book needs stays in its own `style.css`.
+
 **Two registers.** A book can be read as allegory or as computing, by a switch in its bar that shares
 its choice with the scroll page. Both are always in the page: every paragraph, heading, proof step,
 caption and diagram label is written twice, `.i` for the allegory and `.m` for computing, and

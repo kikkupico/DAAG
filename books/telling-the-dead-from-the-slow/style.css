@@ -1,25 +1,12 @@
-/* Only what is particular to this book; the rest is in ../../assets/css/book.css. */
-
-/* ---------- waiting on a machine ---------- */
-.logs{padding:18px 18px 14px}
+/* Only what is particular to this book. Shared: ../../assets/css/book.css, ../../assets/css/widgets.css. */
 
 .logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
 
-.wire{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700}
-
-.wire .m{flex:0 0 auto;border:3px solid var(--ink);background:#fff;padding:10px 14px;font-size:.8rem;letter-spacing:.06em}
-
 .wire .m.q{background:#ddd;color:#6b5a48}
-
-.wire .w{flex:1;border-top:3px dotted var(--ink);position:relative;height:0}
-
-.wire .w span{position:absolute;left:50%;top:-1.05em;transform:translateX(-50%);color:var(--blood)}
 
 .e{font-size:.8rem;padding:2px 6px;margin-bottom:3px;background:var(--parch-lo);border-left:4px solid var(--aegean);animation:slotin .4s ease both;font-family:var(--sans)}
 
 .e.bad{border-left-color:var(--blood)}
-
-.e.good{border-left-color:#3f7a2a}
 
 .waitlog{border:3px solid var(--ink);background:#fff;padding:8px;min-height:128px;margin-top:12px}
 
@@ -30,21 +17,11 @@
 
 .checks li{padding:8px 12px;background:#fff;border:3px solid var(--ink)}
 
-.checks b{font-family:var(--sans)}
-
-.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
-
 @media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
-
-.site.out{opacity:.35}
 
 .site.turn rect{stroke-width:7}
 
 .site .state{font-family:var(--serif);font-weight:400;font-style:italic;font-size:14px;fill:#1c1512}
-
-.badge circle{fill:#fffaf0;stroke:#1c1512;stroke-width:2.5}
-
-.badge text{font-family:var(--sans);font-weight:700;font-size:13px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
 
 .gr-arrow{stroke:#1c1512;stroke-width:2.2;fill:none}
 
@@ -123,8 +100,6 @@
 
 .stand div{padding:2px 0}
 
-.btn.on{background:var(--gold);color:var(--ink)}
-
 .steplist li{padding:7px 12px}
 
 @media(max-width:899px){#strongside{grid-template-columns:repeat(2,minmax(0,1fr))!important}.side .tally{grid-template-columns:repeat(4,1fr)}}
@@ -136,12 +111,4 @@
 /* on a phone the table of slates scrolls sideways inside its own box instead of being cut off */
 @media(max-width:560px){table.kinds{display:block;overflow-x:auto;max-width:100%}}
 
-.tell{max-width:40em;margin-top:1.6rem}
-
-.tell+.tell{margin-top:0}
-
-.cards3.pair{grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px}
-
 @media(max-width:860px){.cards3.pair{grid-template-columns:1fr}}
-
-.card3 h3:last-child{margin-bottom:0}

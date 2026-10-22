@@ -1,0 +1,116 @@
+/* Widgets and figures several books share: the hill and the camp, tables, counters, panels.
+   Loaded after book.css and before a book's own style.css. */
+
+.checks b{font-family:var(--sans)}
+
+.world h5{margin:0 0 6px;font-family:var(--sans);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#6b5a48;text-align:center}
+
+.tell{max-width:40em;margin-top:1.6rem}
+
+.tell+.tell{margin-top:0}
+
+.cards3.pair{grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px}
+
+.card3 h3:last-child{margin-bottom:0}
+
+.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
+
+.badge circle{fill:#fffaf0;stroke:#1c1512;stroke-width:2.5}
+
+.badge text{font-family:var(--sans);font-weight:700;font-size:13px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+
+/* Only what is particular to this book; the rest is in ../../assets/css/book.css. */
+
+/* ---------- waiting on a machine ---------- */
+.logs{padding:18px 18px 14px}
+
+.wire{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700}
+
+.wire .m{flex:0 0 auto;border:3px solid var(--ink);background:#fff;padding:10px 14px;font-size:.8rem;letter-spacing:.06em}
+
+.wire .w{flex:1;border-top:3px dotted var(--ink);position:relative;height:0}
+
+.wire .w span{position:absolute;left:50%;top:-1.05em;transform:translateX(-50%);color:var(--blood)}
+
+.site.out{opacity:.35}
+
+.st-new{animation:rowin .6s both}
+
+@keyframes rowin{from{opacity:0}}
+
+.mbox h5{margin:0 0 4px;font-family:var(--sans);font-size:.7rem;letter-spacing:.08em}
+
+.e.good{border-left-color:#3f7a2a}
+
+/* Only what is particular to this book; the rest is in ../../assets/css/book.css. */
+
+/* ---------- shared by the coast books ---------- */
+.hill-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(14px,3vw,28px);align-items:center}
+
+.cards3.five{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+
+table.terms2{width:100%;border-collapse:collapse;font-size:.88rem}
+
+table.terms2 td{padding:6px 8px 6px 0;border-top:2px solid #1c151222;vertical-align:top}
+
+table.terms2 td:first-child{width:40%;font-weight:700}
+
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--parch)}
+
+.seglab{font-family:var(--sans);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:#6b5a48;margin:8px 0 4px}
+
+.note{font-size:.9rem;color:#6b5a48;font-style:italic}
+
+.lib circle.b,.lib rect.b{stroke:var(--ink);stroke-width:3.5;transition:fill .4s,opacity .4s}
+
+.lib text{font-family:var(--sans);font-weight:700;font-size:13px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
+
+.lib.pick{cursor:pointer}
+
+.lib.pick:focus-visible{outline:none}
+
+.lib.pick:focus-visible .b{stroke:var(--aegean-d);stroke-width:6}
+
+.lib.off .b{opacity:.3}
+
+.lib .ring{fill:none;stroke:var(--gold);stroke-width:5;opacity:0;transition:opacity .3s}
+
+.lib.mark .ring{opacity:1}
+
+.way{fill:none;stroke:#b5602c;stroke-width:2.5;stroke-dasharray:3 7;opacity:.7}
+
+.way.cut{stroke:#bf4a26;stroke-dasharray:2 9;opacity:.35}
+
+.bars{display:grid;gap:10px;margin:.4rem 0 0}
+
+.bars .b{display:grid;grid-template-columns:minmax(0,11em) minmax(0,1fr);gap:10px;align-items:center;font-family:var(--sans);font-size:.82rem}
+
+.bars .b i{display:block;height:16px;background:var(--aegean);border:2px solid var(--ink);min-width:3px}
+
+.bars .b i.n{background:var(--gold)}
+
+.bars .b span.v{display:flex;align-items:center;gap:8px}
+
+.bars h5{font-family:var(--sans);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;margin:10px 0 0;color:#6b5a48}
+
+.tbl{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.86rem}
+
+.tbl th,.tbl td{padding:5px 8px;border-top:2px solid #1c151222;text-align:left}
+
+.tbl th{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48;border-top:0}
+
+.shelves{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:8px 0 0}
+
+.shelf{border:3px solid var(--ink);background:#fff;padding:8px 10px;font-family:var(--sans);font-size:.84rem;min-height:86px}
+
+.shelf h5{margin:0 0 6px;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5a48}
+
+.shelf .it{display:block;padding:3px 6px;margin:3px 0;border-left:5px solid var(--aegean);background:var(--parch-lo)}
+
+.shelf .it.none{border-left-color:#b9a77e;background:none;font-style:italic;color:#6b5a48}
+
+.btn.on{background:var(--gold);color:var(--ink)}
+
+.st-svg{width:100%;height:auto;display:block}
+
+.lists{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
