@@ -3,16 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Part-Time Parliament — Paxos</title>
+<title data-m="The Part-Time Parliament — Paxos">The Part-Time Parliament — Paxos</title>
 <meta name="description" content="Leslie Lamport's Paxos paper: a round hall, a handful of legislators who keep wandering off, and the ballot that still gets them to agree.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../../assets/css/registers.css">
 </head>
-<body>
+<body data-reg="i">
 
 <div class="bar">
   <a href="../../index.html">← The Books</a>
   <span class="now" id="now"></span>
+  <div class="seg" role="group" aria-label="Which words to read"><button type="button" class="segb" data-reg="i" aria-pressed="true">Allegory</button><button type="button" class="segb" data-reg="m" aria-pressed="false">Computing</button></div>
   <i id="prog"></i>
 </div>
 
@@ -24,10 +26,12 @@
     <div>
       <h1>The Part-Time Parliament</h1>
       <p class="generic">How can a group of machines agree on a single sequence of commands when any of them may stop or wander off at any moment, messages can be delayed or lost, and no one stays in charge for long?</p>
-      <p class="allegory">Leslie Lamport answered this question himself by inventing the part-time legislators of the ancient Greek island of Paxos — the allegory that inspired this entire series. Here we retell his story with interactive figures. (While Lamport ends his paper with a scribe's blunder that topples the parliament, the rest of our books set that catastrophe aside: on our island, the parliament is still sitting.)</p>
+      <p class="allegory i">Leslie Lamport answered this question himself by inventing the part-time legislators of the ancient Greek island of Paxos — the allegory that inspired this entire series. Here we retell his story with interactive figures. (While Lamport ends his paper with a scribe's blunder that topples the parliament, the rest of our books set that catastrophe aside: on our island, the parliament is still sitting.)</p>
+      <p class="allegory m">We find out by following the protocol itself: a group of processes that must agree on a sequence of values while any of them may stop or return at any moment, and messages can be delayed, duplicated or lost.</p>
       <p class="source">After Leslie Lamport, <i>The Part-Time Parliament</i>, 1998 · Leslie Lamport, <i>Paxos Made Simple</i>, 2001</p>
     </div>
-    <div class="pop" data-auto>
+    <div class="pop m" data-auto><div class="leaf"><svg class="isle-svg" id="coversvg" role="img" aria-label="Five processes in a ring, each with a log, with messages in transit between them and one of them stopped"></svg></div></div>
+    <div class="pop i" data-auto>
       <div class="leaf">
         <div class="photo tilt-r" data-depth="14"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-cover-8a2d2c4426-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-cover-8a2d2c4426-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-cover-8a2d2c4426-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-cover-8a2d2c4426-896.avif 896w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/cover.jpg" alt="The Chamber of the Paxon Parliament seen from above its terrace, legislators with scrolls and messengers in blue walking in and out by its one door"></div>
         <div class="fold-shadow"></div>
@@ -74,45 +78,22 @@
 <!-- /lineage -->
 
 <!-- ============================================================ machines -->
-<section class="spread light" id="machines" data-name="In machine terms">
-  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
-  <div class="wrap cols">
-    <div>
-      <div class="kicker">First, in machine terms</div>
-      <h2>Many computers, one log</h2>
-      <p class="lede">Suppose a group of computers must maintain identical copies of a single log of commands, written in the exact same order (<i>state machine replication</i>). That is easy until things start failing — and in a real network, two kinds of failure happen all the time:</p>
-      <ul class="terms">
-        <li><b>Machines crash and restart</b> at any moment, losing whatever they had only in temporary memory while keeping what was written to durable disk (<i>stable storage</i>).</li>
-        <li><b>Network messages</b> can be arbitrarily delayed, lost altogether, or delivered more than once.</li>
-      </ul>
-      <p style="margin-top:1.2rem">Leslie Lamport's consensus algorithm, <b>Paxos</b>, stays rock-solid under both. No two copies of the log ever disagree (<i>safety</i>), and whenever a majority of the machines are running and able to talk to one another for long enough, new commands are chosen and recorded (<i>liveness</i>).</p>
-      <p>Lamport originally presented Paxos as the story of an ancient island parliament whose merchant-legislators refused to stay in their seats for long. So will we.</p>
-    </div>
-    <div class="pop fromright"><div class="leaf">
-      <div class="paper logs" id="logs">
-        <h4>Three machines, one log</h4>
-        <div class="replicas" id="reps"></div>
-        <p class="note" id="lognote">Commands arrive. Every machine writes them in the same order.</p>
-        <div class="row"><button class="btn" id="crash">Stop a machine</button><button class="btn alt" id="revive" disabled>Restart it</button></div>
-      </div>
-    </div></div>
-  </div>
-</section>
+
 
 <!-- ============================================================ hall -->
-<section class="spread dark" id="hall" data-name="The Chamber">
+<section class="spread dark" id="hall" data-name="The Chamber" data-name-m="The system model">
   <a class="anchor" id="s1"></a>
   <div class="bleed">
-    <img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-1200.avif 1200w" sizes="100vw" data-local="img/p01-scrolls.jpg" alt="Inside the Chamber: a round marble hall with one tall door, a checkerboard floor and legislators sitting along the wall with scrolls" data-parallax>
+    <img class="i" src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-1200.avif 1200w" sizes="100vw" data-local="img/p01-scrolls.jpg" alt="Inside the Chamber: a round marble hall with one tall door, a checkerboard floor and legislators sitting along the wall with scrolls" data-parallax>
     <div class="hall-title"><div class="t">
-      <div class="kicker">The Chamber of the Paxon Parliament</div>
-      <h2>A parliament whose members come and go</h2>
-      <p>Paxos is an island of busy merchants where trade comes before civic duty. Because no citizen is willing to devote their entire life to politics, the island's legislators serve part-time, wandering in and out of the round parliamentary Chamber whenever their business allows.</p>
+      <div class="kicker"><span class="i">The Chamber of the Paxon Parliament</span><span class="m">The model</span></div>
+      <h2><span class="i">A parliament whose members come and go</span><span class="m">Processes that come and go</span></h2>
+      <p><span class="i">Paxos is an island of busy merchants where trade comes before civic duty. Because no citizen is willing to devote their entire life to politics, the island's legislators serve part-time, wandering in and out of the round parliamentary Chamber whenever their business allows.</span><span class="m">A group of processes each keep a log of the decisions the group has made. No process is willing to stay up forever, so each may stop or restart at any time, and processes communicate only by messages.</span></p>
     </div></div>
     <div class="pins">
-      <div class="pin pop"><div class="leaf"><b>One door</b>Any legislator may walk out through the door at any moment — even in the middle of a vote — and stay away for as long as they please.</div></div>
-      <div class="pin pop"><div class="leaf"><b>A scroll each</b>Because no clerk is willing to sit permanently in the Chamber to keep an official ledger, every legislator carries their own parchment scroll (<i>stable storage</i>).</div></div>
-      <div class="pin pop"><div class="leaf"><b>No podium</b>The acoustics of the round stone hall are so poor that speeches cannot be heard across the floor; legislators communicate only by sending messengers with written notes.</div></div>
+      <div class="pin pop"><div class="leaf"><span class="i"><b>One door</b>Any legislator may walk out through the door at any moment — even in the middle of a vote — and stay away for as long as they please.</span><span class="m"><b>Crashes at any time</b>Any process may stop at any moment — even in the middle of a vote — and stay down for as long as it pleases.</span></div></div>
+      <div class="pin pop"><div class="leaf"><span class="i"><b>A scroll each</b>Because no clerk is willing to sit permanently in the Chamber to keep an official ledger, every legislator carries their own parchment scroll (<i>stable storage</i>).</span><span class="m"><b>Stable storage</b>Every process has its own durable storage (<i>stable storage</i>) that survives a crash; nothing else does.</span></div></div>
+      <div class="pin pop"><div class="leaf"><span class="i"><b>No podium</b>The acoustics of the round stone hall are so poor that speeches cannot be heard across the floor; legislators communicate only by sending messengers with written notes.</span><span class="m"><b>Only messages</b>Processes communicate only by sending messages; there is no shared memory.</span></div></div>
     </div>
   </div>
 </section>
@@ -121,67 +102,67 @@
 <section class="spread light" id="law" data-name="Two requirements">
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">What the Parliament must do</div>
-      <h2>Settle the law, one numbered decree at a time</h2>
-      <p class="lede">The law of Paxos is the numbered sequence of decrees passed by its Parliament. Each legislator writes passed decrees into their personal scroll by number, using indelible ink that can never be erased or altered. Parliamentary procedure must guarantee two properties for those scrolls:</p>
+      <div class="kicker"><span class="i">What the Parliament must do</span><span class="m">What the protocol must do</span></div>
+      <h2><span class="i">Settle the law, one numbered decree at a time</span><span class="m">Settle a log, one numbered value at a time</span></h2>
+      <p class="lede"><span class="i">The law of Paxos is the numbered sequence of decrees passed by its Parliament. Each legislator writes passed decrees into their personal scroll by number, using indelible ink that can never be erased or altered. Parliamentary procedure must guarantee two properties for those scrolls:</span><span class="m">The log is the numbered sequence of values that the group has decided. Each process writes decided values into its own log by slot number, durably, so they can never be erased or altered. The protocol must guarantee two properties for those logs:</span></p>
       <h3 class="req">Requirement one: consistency (safety)</h3>
-      <p>No two scrolls may ever contradict each other. If one legislator's scroll says that Decree 132 orders all lamps to burn pure olive oil, no other legislator's scroll may record a different Decree 132. (A scroll may, of course, still have a blank space at slot 132 if its owner has been away and has not yet heard that Decree 132 was passed.)</p>
-      <p>Part-time legislators immediately put this consistency in danger. Step through the panel below to see what goes wrong when one group of legislators passes a decree and leaves for a banquet, and a second group walks in knowing nothing about it.</p>
+      <p><span class="i">No two scrolls may ever contradict each other. If one legislator's scroll says that Decree 132 orders all lamps to burn pure olive oil, no other legislator's scroll may record a different Decree 132. (A scroll may, of course, still have a blank space at slot 132 if its owner has been away and has not yet heard that Decree 132 was passed.)</span><span class="m">No two logs may ever contradict each other. If one process's log says that slot 132 holds the value “set the lamp fuel to oil”, no other process's log may record a different value for slot 132. (A log may, of course, still have a blank at slot 132 if its process has been down and has not yet heard what was decided.)</span></p>
+      <p><span class="i">Part-time legislators immediately put this consistency in danger. Step through the panel below to see what goes wrong when one group of legislators passes a decree and leaves for a banquet, and a second group walks in knowing nothing about it.</span><span class="m">Processes that come and go immediately put this consistency in danger. Step through the panel below to see what goes wrong when one group of processes decides a value and stops, and a second group starts up knowing nothing about it.</span></p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>Two groups, one number <em>press the buttons in order</em></h4>
-      <svg class="hall-svg" id="banq" role="img" aria-label="The Chamber, with a first group of legislators leaving for a banquet and a second group arriving"></svg>
-      <p class="say" id="scrsay">Three legislators are in the Chamber, with decree 37 before them. The other three are away.</p>
+      <h4><span class="i">Two groups, one number <em>press the buttons in order</em></span><span class="m">Two groups, one slot <em>press the buttons in order</em></span></h4>
+      <svg class="hall-svg" id="banq" role="img" aria-label="The Chamber, with a first group of legislators leaving for a banquet and a second group arriving" data-al-m="Six processes: the first group of three has stopped after deciding slot 37, and the second group of three has started"></svg>
+      <p class="say" id="scrsay"><span class="i">Three legislators are in the Chamber, with decree 37 before them. The other three are away.</span><span class="m">Three processes are running, with slot 37 before them. The other three are down.</span></p>
       <div class="row">
-        <button class="btn" id="bq1">A group passes decree 37, then leaves for a banquet</button>
-        <button class="btn alt" id="bq2" disabled>A second group arrives, knowing nothing</button>
+        <button class="btn" id="bq1"><span class="i">A group passes decree 37, then leaves for a banquet</span><span class="m">A group decides slot 37, then stops</span></button>
+        <button class="btn alt" id="bq2" disabled><span class="i">A second group arrives, knowing nothing</span><span class="m">A second group starts, knowing nothing</span></button>
         <button class="btn alt" id="bqr" hidden>Again</button>
       </div>
     </div></div></div>
-    <div class="two" style="gap:24px;align-items:center;margin-top:2.4rem">
+    <div class="two solo" style="gap:24px;align-items:center;margin-top:2.4rem">
       <div>
         <h3 class="req" style="margin-top:0">Requirement two: progress (liveness)</h3>
-        <p>Consistency by itself would be trivial to preserve if nobody ever wrote anything down — blank scrolls never disagree! So Parliament also requires <b>progress</b>: whenever a majority of the legislators remain inside the Chamber for long enough without anyone entering or leaving, any decree proposed there must eventually pass and be written into the scroll of every legislator present.</p>
-        <p>No protocol can promise more than that when legislators are free to walk out whenever they wish.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: A Fair Night in Which Nothing Is Ever Settled">*</a></sup> The entire challenge is to guarantee both consistency and progress among people who may vanish halfway through a vote. First, let us see the exact rules of the island they had to work under.</p>
+        <p><span class="i">Consistency by itself would be trivial to preserve if nobody ever wrote anything down — blank scrolls never disagree! So Parliament also requires <b>progress</b>: whenever a majority of the legislators remain inside the Chamber for long enough without anyone entering or leaving, any decree proposed there must eventually pass and be written into the scroll of every legislator present.</span><span class="m">Consistency by itself would be trivial to preserve if nobody ever wrote anything down — blank logs never disagree! So the protocol also requires <b>progress</b>: whenever a majority of the processes stay up and connected for long enough without anyone stopping or starting, any value proposed must eventually be decided and written into the log of every process running.</span></p>
+        <p><span class="i">No protocol can promise more than that when legislators are free to walk out whenever they wish.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: A Fair Night in Which Nothing Is Ever Settled">*</a></sup> The entire challenge is to guarantee both consistency and progress among people who may vanish halfway through a vote. First, let us see the exact rules of the island they had to work under.</span><span class="m">No protocol can promise more than that when processes are free to stop whenever they wish.<sup class="xref"><a href="../the-limits-of-agreement/index.html#s7" title="The Limits of Agreement: A Fair Night in Which Nothing Is Ever Settled">*</a></sup> The entire challenge is to guarantee both consistency and progress among processes that may vanish halfway through a vote. First, let us see the exact rules of the system they had to work under.</span></p>
       </div>
-      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p04-synod-aba8e951b9-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p04-synod-aba8e951b9-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p04-synod-aba8e951b9-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p04-synod-aba8e951b9-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p04-synod.jpg" alt="The Chamber from its terrace, priests in white with red sashes strolling round the colonnade" loading="lazy"></div></div></div>
+      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p04-synod-aba8e951b9-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p04-synod-aba8e951b9-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p04-synod-aba8e951b9-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p04-synod-aba8e951b9-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p04-synod.jpg" alt="The Chamber from its terrace, priests in white with red sashes strolling round the colonnade" loading="lazy"></div></div></div>
     </div>
   </div>
 </section>
 
 <!-- ============================================================ assumptions -->
-<section class="spread dark" id="rules" data-name="The rules of the island">
+<section class="spread dark" id="rules" data-name="The rules of the island" data-name-m="The system's rules">
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1.5rem">
       <div class="kicker">What can go wrong</div>
-      <h2>Everyone is honest, and anyone may be absent</h2>
-      <p class="lede">On Paxos, legislators and messengers are scrupulously honest: nobody ever lies, forges a note, or breaks the rules of parliamentary procedure (<i>non-Byzantine faults</i>). What no one can be counted on to do is stay in the room.</p>
-      <p>Every rule of Parliament must work under three practical realities:</p>
+      <h2><span class="i">Everyone is honest, and anyone may be absent</span><span class="m">Everyone is honest, and anyone may stop</span></h2>
+      <p class="lede"><span class="i">On Paxos, legislators and messengers are scrupulously honest: nobody ever lies, forges a note, or breaks the rules of parliamentary procedure (<i>non-Byzantine faults</i>). What no one can be counted on to do is stay in the room.</span><span class="m">Processes and messages are scrupulously honest: nobody ever lies, forges a message, or breaks the protocol (<i>non-Byzantine faults</i>). What no one can be counted on to do is stay up.</span></p>
+      <p><span class="i">Every rule of Parliament must work under three practical realities:</span><span class="m">Every rule of the protocol must work under three practical realities:</span></p>
     </div>
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3" style="color:var(--ink)">
-        <div class="photo" style="aspect-ratio:4/3;border:0;box-shadow:none"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p02-hourglass-10839c1ffd-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p02-hourglass-10839c1ffd-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p02-hourglass-10839c1ffd-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p02-hourglass-10839c1ffd-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p02-hourglass.jpg" alt="A legislator holding up a sandglass beside another writing on a scroll" loading="lazy"></div>
-        <div class="body"><h3>Memory walks out the door</h3><p>A legislator who leaves the Chamber forgets what they were in the middle of doing. Anything that must survive an absence has to be written in the back of their scroll in indelible ink (<i>stable storage</i>). Temporary scratch notes go on a loose slip of paper (<i>volatile memory</i>), which may be lost whenever the legislator steps out.</p></div>
+        <div class="photo i" style="aspect-ratio:4/3;border:0;box-shadow:none"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p02-hourglass-10839c1ffd-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p02-hourglass-10839c1ffd-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p02-hourglass-10839c1ffd-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p02-hourglass-10839c1ffd-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p02-hourglass.jpg" alt="A legislator holding up a sandglass beside another writing on a scroll" loading="lazy"></div>
+        <div class="body"><h3><span class="i">Memory walks out the door</span><span class="m">Memory is lost in a crash</span></h3><p><span class="i">A legislator who leaves the Chamber forgets what they were in the middle of doing. Anything that must survive an absence has to be written in the back of their scroll in indelible ink (<i>stable storage</i>). Temporary scratch notes go on a loose slip of paper (<i>volatile memory</i>), which may be lost whenever the legislator steps out.</span><span class="m">A process that crashes forgets what it was in the middle of doing. Anything that must survive a crash has to be written to <i>stable storage</i>. Temporary working state lives in <i>volatile memory</i>, which may be lost whenever the process stops.</span></p></div>
       </div></div>
       <div class="pop"><div class="leaf paper card3" style="color:var(--ink)">
-        <div class="photo" style="aspect-ratio:4/3;border:0;box-shadow:none"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p03-messengers-6795dca507-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p03-messengers-6795dca507-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p03-messengers-6795dca507-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p03-messengers-6795dca507-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p03-messengers.jpg" alt="A messenger hands a note to a seated legislator while two more messengers cross the Chamber floor" loading="lazy"></div>
-        <div class="body"><h3>Absent-minded messengers</h3><p>Legislators communicate only through messengers. A messenger never alters the text of a note, but may take arbitrarily long to cross the hall, may forget they already delivered a note and deliver it a second time, or may wander off on a sea voyage and never deliver it at all.</p></div>
+        <div class="photo i" style="aspect-ratio:4/3;border:0;box-shadow:none"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p03-messengers-6795dca507-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p03-messengers-6795dca507-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p03-messengers-6795dca507-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p03-messengers-6795dca507-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p03-messengers.jpg" alt="A messenger hands a note to a seated legislator while two more messengers cross the Chamber floor" loading="lazy"></div>
+        <div class="body"><h3><span class="i">Absent-minded messengers</span><span class="m">Unreliable messages</span></h3><p><span class="i">Legislators communicate only through messengers. A messenger never alters the text of a note, but may take arbitrarily long to cross the hall, may forget they already delivered a note and deliver it a second time, or may wander off on a sea voyage and never deliver it at all.</span><span class="m">Processes communicate only through messages. A message is never altered, but may take arbitrarily long to arrive, may be delivered a second time, or may never arrive at all.</span></p></div>
       </div></div>
       <div class="pop"><div class="leaf paper card3" style="color:var(--ink)">
-        <div class="photo" style="aspect-ratio:4/3;border:0;box-shadow:none"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p01-scrolls.jpg" alt="Legislators sitting along the Chamber wall, each with a scroll" loading="lazy"></div>
-        <div class="body"><h3>Prompt when present, unbounded when away</h3><p>While two legislators remain inside the Chamber, a messenger can carry a note between them and return with an answer within the turn of a sandglass. Once someone steps out the door, however, any delay is possible.</p></div>
+        <div class="photo i" style="aspect-ratio:4/3;border:0;box-shadow:none"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p01-scrolls-ec93816fd3-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p01-scrolls.jpg" alt="Legislators sitting along the Chamber wall, each with a scroll" loading="lazy"></div>
+        <div class="body"><h3><span class="i">Prompt when present, unbounded when away</span><span class="m">Prompt when up, unbounded when down</span></h3><p><span class="i">While two legislators remain inside the Chamber, a messenger can carry a note between them and return with an answer within the turn of a sandglass. Once someone steps out the door, however, any delay is possible.</span><span class="m">While two processes stay up and connected, a message can be delivered and answered within a known time. Once either stops, however, any delay is possible.</span></p></div>
       </div></div>
     </div>
-    <p class="tell" style="margin:2.4rem auto 0;max-width:760px">Those unreliable messengers are what make coordination tricky. Dispatch a few messengers across the floor below to see what can happen to any note.</p>
+    <p class="tell" style="margin:2.4rem auto 0;max-width:760px"><span class="i">Those unreliable messengers are what make coordination tricky. Dispatch a few messengers across the floor below to see what can happen to any note.</span><span class="m">Unreliable messages are what make coordination tricky. Send a few messages below to see what can happen to any one of them.</span></p>
     <div class="pop"><div class="leaf"><div class="paper well" style="color:var(--ink);max-width:760px;margin:1.2rem auto 0">
       <h4>Send a message <em>try your luck</em></h4>
-      <svg class="hall-svg" id="lane" style="width:min(100%,340px)" role="img" aria-label="Two legislators in the Chamber and a messenger between them"></svg>
-      <div class="row" style="margin-top:0"><button class="btn" id="send">Send a message from A to B</button></div>
+      <svg class="hall-svg" id="lane" style="width:min(100%,340px)" role="img" aria-label="Two legislators in the Chamber and a messenger between them" data-al-m="Two processes and a message between them"></svg>
+      <div class="row" style="margin-top:0"><button class="btn" id="send"><span class="i">Send a message from A to B</span><span class="m">Send a message from P1 to P2</span></button></div>
       <div class="tally"><span><b id="t-ok">0</b>delivered</span><span><b id="t-two">0</b>delivered twice</span><span><b id="t-lost">0</b>never arrived</span></div>
       <p class="say" id="sendsay">A message may arrive once, arrive twice, or never arrive.</p>
     </div></div></div>
-    <p class="tell" style="margin:2.4rem auto 0;max-width:760px">When a legislator receives no reply, they cannot tell whether the messenger is still crossing the hall, lost at sea, or waiting on a colleague who walked out the door. Yet the scrolls must never disagree! The Paxons solved this by relying on a single arithmetic fact that no amount of wandering can ever undo.</p>
+    <p class="tell" style="margin:2.4rem auto 0;max-width:760px"><span class="i">When a legislator receives no reply, they cannot tell whether the messenger is still crossing the hall, lost at sea, or waiting on a colleague who walked out the door. Yet the scrolls must never disagree! The Paxons solved this by relying on a single arithmetic fact that no amount of wandering can ever undo.</span><span class="m">When a process receives no reply, it cannot tell whether the message is still in transit, lost, or waiting on a process that has stopped. Yet the logs must never disagree! The protocol solves this by relying on a single arithmetic fact that no amount of stopping and starting can ever undo.</span></p>
   </div>
 </section>
 
@@ -192,20 +173,20 @@
     <div>
       <div class="kicker">The one fact everything rests on</div>
       <h2>Any two majorities share a member</h2>
-      <p class="lede">No matter how legislators wander in and out of the Chamber, two majorities of the same Parliament can never consist of completely disjoint sets of people. At least one legislator is guaranteed to belong to both (<i>quorum intersection</i>).</p>
-      <p>That shared member acts as a bridge across time: as long as they record their votes in indelible ink in the back of their scroll, they carry the memory of what the first majority did into the second majority, even if everyone else from the first group has left the building. On the right are seven legislators seen from above the Chamber. Click any legislator to send them out through the door or call them back in; then let one majority pass a decree and watch who is still present when a second majority gathers.</p>
-      <div class="say" id="majsay">Send some legislators out through the door first, if you like.</div>
+      <p class="lede"><span class="i">No matter how legislators wander in and out of the Chamber, two majorities of the same Parliament can never consist of completely disjoint sets of people. At least one legislator is guaranteed to belong to both (<i>quorum intersection</i>).</span><span class="m">No matter how processes stop and start, two majorities of the same group can never consist of completely disjoint sets of processes. At least one process is guaranteed to belong to both (<i>quorum intersection</i>).</span></p>
+      <p><span class="i">That shared member acts as a bridge across time: as long as they record their votes in indelible ink in the back of their scroll, they carry the memory of what the first majority did into the second majority, even if everyone else from the first group has left the building. On the right are seven legislators seen from above the Chamber. Click any legislator to send them out through the door or call them back in; then let one majority pass a decree and watch who is still present when a second majority gathers.</span><span class="m">That shared member acts as a bridge across time: as long as it records its votes in stable storage, it carries the memory of what the first majority did into the second majority, even if every other member of the first has stopped. On the right are seven processes. Click any process to stop it or start it again; then let one majority decide a value and watch who is still up when a second majority gathers.</span></p>
+      <div class="say" id="majsay"><span class="i">Send some legislators out through the door first, if you like.</span><span class="m">Stop some processes first, if you like.</span></div>
       <div class="row">
-        <button class="btn" id="maj1">1 · A majority passes a decree</button>
-        <button class="btn alt" id="maj2" disabled>2 · They leave; another majority gathers</button>
+        <button class="btn" id="maj1"><span class="i">1 · A majority passes a decree</span><span class="m">1 · A majority decides a value</span></button>
+        <button class="btn alt" id="maj2" disabled><span class="i">2 · They leave; another majority gathers</span><span class="m">2 · They stop; another majority gathers</span></button>
       </div>
     </div>
     <div class="pop fromright"><div class="leaf"><div class="paper well" style="margin:0">
       <svg class="hall-svg" viewBox="0 0 440 440" id="hallsvg">
-        <circle cx="220" cy="220" r="204" fill="#efe6cf" stroke="#1c1512" stroke-width="5"/>
-        <circle cx="220" cy="220" r="150" fill="none" stroke="#b5602c" stroke-width="3" stroke-dasharray="3 8"/>
-        <rect x="196" y="402" width="48" height="12" fill="#6b4a2a" stroke="#1c1512" stroke-width="3"/>
-        <text x="220" y="428" text-anchor="middle" font-size="12" font-style="italic" fill="#6b5a48">the one door</text>
+        <circle class="i" cx="220" cy="220" r="204" fill="#efe6cf" stroke="#1c1512" stroke-width="5"/>
+        <circle class="i" cx="220" cy="220" r="150" fill="none" stroke="#b5602c" stroke-width="3" stroke-dasharray="3 8"/>
+        <rect class="i" x="196" y="402" width="48" height="12" fill="#6b4a2a" stroke="#1c1512" stroke-width="3"/>
+        <text class="i" x="220" y="428" text-anchor="middle" font-size="12" font-style="italic" fill="#6b5a48">the one door</text>
         <g id="seats"></g>
       </svg>
       <p class="say" id="count" style="text-align:center;margin-bottom:0"></p>
@@ -214,35 +195,35 @@
 </section>
 
 <!-- ============================================================ synod -->
-<section class="spread dark" id="synod" data-name="The Synod">
+<section class="spread dark" id="synod" data-name="The Synod" data-name-m="Single-decree Paxos">
   <a class="anchor" id="s2"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">A smaller puzzle first</div>
-      <h2>One decree, once every nineteen years</h2>
-      <p class="lede">Before we see how Parliament agrees on a whole sequence of decrees, let us solve the simpler puzzle from which Parliament's rules grew (<i>Single-Decree Paxos</i>, or the <i>Synod protocol</i>). Long before Parliament existed, a Synod of Paxon temple priests met once every nineteen years to choose a <em>single</em> symbolic decree. When the priests, too, began wandering in and out during the proceedings, one Synod ended in chaos without choosing anything.</p>
-      <p>To make sure that never happened again, Paxon mathematicians designed a voting procedure based on numbered <b>ballots</b>. Any priest may initiate a ballot: each ballot has a unique <b>ballot number</b>, proposes a single <b>decree</b>, and is addressed to a chosen majority of priests called its <b>quorum</b>. Each priest in the quorum may either vote for the ballot's decree or not vote at all, and a ballot <b>succeeds</b> if and only if every member of its quorum votes for it. Any number of ballots can be held over time, and whenever any ballot succeeds, its decree becomes the Synod's official choice.</p>
-      <p>How do we guarantee that two different ballots never succeed with two <em>different</em> decrees? The mathematicians laid down three fundamental rules (conditions <var>B</var>1, <var>B</var>2, and <var>B</var>3):</p>
+      <h2><span class="i">One decree, once every nineteen years</span><span class="m">Agreeing on a single value</span></h2>
+      <p class="lede"><span class="i">Before we see how Parliament agrees on a whole sequence of decrees, let us solve the simpler puzzle from which Parliament's rules grew (<i>Single-Decree Paxos</i>, or the <i>Synod protocol</i>). Long before Parliament existed, a Synod of Paxon temple priests met once every nineteen years to choose a <em>single</em> symbolic decree. When the priests, too, began wandering in and out during the proceedings, one Synod ended in chaos without choosing anything.</span><span class="m">Before we see how the group agrees on a whole sequence of values, let us solve the simpler puzzle from which the protocol grew (<i>single-decree Paxos</i>): getting a group of processes to choose a <em>single</em> value, even though processes may stop and restart during the proceedings.</span></p>
+      <p><span class="i">To make sure that never happened again, Paxon mathematicians designed a voting procedure based on numbered <b>ballots</b>. Any priest may initiate a ballot: each ballot has a unique <b>ballot number</b>, proposes a single <b>decree</b>, and is addressed to a chosen majority of priests called its <b>quorum</b>. Each priest in the quorum may either vote for the ballot's decree or not vote at all, and a ballot <b>succeeds</b> if and only if every member of its quorum votes for it. Any number of ballots can be held over time, and whenever any ballot succeeds, its decree becomes the Synod's official choice.</span><span class="m">The solution is a voting procedure based on numbered <b>ballots</b>. Any process may initiate a ballot: each ballot has a unique <b>ballot number</b>, proposes a single <b>value</b>, and is addressed to a chosen majority of processes called its <b>quorum</b>. Each process in the quorum may either vote for the ballot's value or not vote at all, and a ballot <b>succeeds</b> if and only if every member of its quorum votes for it. Any number of ballots can be held over time, and whenever any ballot succeeds, its value becomes the chosen value.</span></p>
+      <p><span class="i">How do we guarantee that two different ballots never succeed with two <em>different</em> decrees? The mathematicians laid down three fundamental rules (conditions <var>B</var>1, <var>B</var>2, and <var>B</var>3):</span><span class="m">How do we guarantee that two different ballots never succeed with two <em>different</em> values? Three fundamental rules (conditions <var>B</var>1, <var>B</var>2, and <var>B</var>3) do it:</span></p>
     </div>
     <div class="cards3" style="margin-top:1rem">
       <div class="pop"><div class="leaf paper card3" style="color:var(--ink)"><div class="body"><div class="num" style="font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood)">RULE ONE · B1</div><h3>Every ballot has a unique number</h3><p>No two ballots ever share the same ballot number, so between any two ballots there is always a well-defined earlier one and later one.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)"><div class="body"><div class="num" style="font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood)">RULE TWO · B2</div><h3>Any two quorums share a priest</h3><p>Every ballot's quorum is a majority of the priests, so any two quorums are guaranteed to have at least one priest in common.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)"><div class="body"><div class="num" style="font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood)">RULE THREE · B3</div><h3>A ballot carries the latest vote forward</h3><p>If any priest in a new ballot's quorum has ever voted in an earlier ballot, the new ballot <b>must</b> propose the exact same decree as the highest-numbered earlier ballot in which any member of its quorum voted.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)"><div class="body"><div class="num" style="font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood)">RULE TWO · B2</div><h3><span class="i">Any two quorums share a priest</span><span class="m">Any two quorums share a process</span></h3><p><span class="i">Every ballot's quorum is a majority of the priests, so any two quorums are guaranteed to have at least one priest in common.</span><span class="m">Every ballot's quorum is a majority of the processes, so any two quorums are guaranteed to have at least one process in common.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3" style="color:var(--ink)"><div class="body"><div class="num" style="font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;color:var(--blood)">RULE THREE · B3</div><h3>A ballot carries the latest vote forward</h3><p><span class="i">If any priest in a new ballot's quorum has ever voted in an earlier ballot, the new ballot <b>must</b> propose the exact same decree as the highest-numbered earlier ballot in which any member of its quorum voted.</span><span class="m">If any process in a new ballot's quorum has ever voted in an earlier ballot, the new ballot <b>must</b> propose the exact same value as the highest-numbered earlier ballot in which any member of its quorum voted.</span></p></div></div></div>
     </div>
-    <p class="tell" style="margin-top:2.4rem">Rule Three is the heart of the algorithm. An ancient Paxon manuscript illustrates how it works across five ballots held among five priests (Α, Β, Γ, Δ, and Ε). Click any ballot in the table below to see why its decree was chosen:</p>
+    <p class="tell" style="margin-top:2.4rem"><span class="i">Rule Three is the heart of the algorithm. An ancient Paxon manuscript illustrates how it works across five ballots held among five priests (Α, Β, Γ, Δ, and Ε). Click any ballot in the table below to see why its decree was chosen:</span><span class="m">Rule Three is the heart of the algorithm. The table below shows five ballots held among five processes (P1, P2, P3, P4, and P5). Click any ballot to see why its value was chosen:</span></p>
     <div class="pop"><div class="leaf"><div class="paper well ms" id="ms" style="color:var(--ink);margin-top:1.2rem">
-      <h4>The manuscript <em>click a ballot</em></h4>
-      <p style="margin:0 0 10px;font-size:.92rem">Each row is one ballot, with its number, its decree and its quorum. A <span class="pc v">boxed</span> priest is one who voted. Click a ballot to see whether it was free to choose its decree or had to copy an earlier one, and from whom.</p>
+      <h4><span class="i">The manuscript <em>click a ballot</em></span><span class="m">The ballots <em>click a ballot</em></span></h4>
+      <p style="margin:0 0 10px;font-size:.92rem"><span class="i">Each row is one ballot, with its number, its decree and its quorum. A <span class="pc v">boxed</span> priest is one who voted. Click a ballot to see whether it was free to choose its decree or had to copy an earlier one, and from whom.</span><span class="m">Each row is one ballot, with its number, its value and its quorum. A <span class="pc v">boxed</span> process is one that voted. Click a ballot to see whether it was free to choose its value or had to copy an earlier one, and from whom.</span></p>
       <table>
-        <thead><tr><th>Ballot</th><th>Decree</th><th>Quorum</th></tr></thead>
+        <thead><tr><th>Ballot</th><th><span class="i">Decree</span><span class="m">Value</span></th><th>Quorum</th></tr></thead>
         <tbody id="msrows"></tbody>
       </table>
       <div class="explain" id="msx">Try ballot 27.</div>
     </div></div></div>
-    <p class="tell" style="margin-top:2.4rem">See how the three rules lock in a decision once a ballot succeeds (say, Ballot 14 in the table above, where every member of the quorum {Α, Β, Ε} voted for decree α): any later ballot's quorum is a majority, so by Rule Two it must include at least one priest from {Α, Β, Ε}. That priest cast a vote in Ballot 14, so the highest-numbered vote prior to the new ballot among its quorum is at least 14 — and by induction, Rule Three forces the very next ballot after 14, and every ballot after that, to propose α! Therefore, no two successful ballots can ever choose different decrees.</p>
-    <p class="tell">Now let us see how the priests turn these three abstract rules into a concrete two-phase message protocol.</p>
-    <details class="proof">
+    <p class="tell" style="margin-top:2.4rem"><span class="i">See how the three rules lock in a decision once a ballot succeeds (say, Ballot 14 in the table above, where every member of the quorum {Β, Δ, Ε} voted for decree α): any later ballot's quorum is a majority, so by Rule Two it must include at least one priest from {Β, Δ, Ε}. That priest cast a vote in Ballot 14, so the highest-numbered vote prior to the new ballot among its quorum is at least 14 — and by induction, Rule Three forces the very next ballot after 14, and every ballot after that, to propose α! Therefore, no two successful ballots can ever choose different decrees.</span><span class="m">See how the three rules lock in a decision once a ballot succeeds (say, ballot 14 in the table above, where every member of the quorum {P2, P4, P5} voted for value α): any later ballot's quorum is a majority, so by Rule Two it must include at least one process from {P2, P4, P5}. That process cast a vote in ballot 14, so the highest-numbered vote prior to the new ballot among its quorum is at least 14 — and by induction, Rule Three forces the very next ballot after 14, and every ballot after that, to propose α! Therefore, no two successful ballots can ever choose different values.</span></p>
+    <p class="tell"><span class="i">Now let us see how the priests turn these three abstract rules into a concrete two-phase message protocol.</span><span class="m">Now let us see how the processes turn these three abstract rules into a concrete two-phase message protocol.</span></p>
+    <details class="proof i">
       <summary>The three rules, formally · and the proofs that they give consistency</summary>
       <p class="given">Each ballot <var>B</var> has a number <var>B</var><sub>bal</sub>, a decree <var>B</var><sub>dec</sub>, a quorum <var>B</var><sub>qrm</sub> and a set of voters <var>B</var><sub>vot</sub>, and ℬ is a set of ballots. The three rules are the conditions <var>B</var>1(ℬ), <var>B</var>2(ℬ) and <var>B</var>3(ℬ). A ballot is successful when <var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub>.</p>
   <div class="prose">
@@ -359,6 +340,123 @@
     <p style="font-size:.92rem">Condition <var>B</var>1(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}) follows from <var>B</var>1(<var>ℬ</var>), the choice of <var>B′</var><sub>bal</sub>, and the assumption about <var>b</var>. Condition <var>B</var>2(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}) follows from <var>B</var>2(<var>ℬ</var>), the choice of <var>B′</var><sub>qrm</sub>, and the assumption about <var>Q</var>. If <var>MaxVote</var>(<var>b</var>,&nbsp;<var>Q</var>,&nbsp;<var>ℬ</var>)<sub>bal</sub> = −∞ then let <var>B′</var><sub>dec</sub> be any decree, else let it equal <var>MaxVote</var>(<var>b</var>,&nbsp;<var>Q</var>,&nbsp;<var>ℬ</var>)<sub>dec</sub>. Condition <var>B</var>3(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}) then follows from <var>B</var>3(<var>ℬ</var>). <span class="qed">End Proof of Theorem</span></p>
   </details>
     </details>
+    <details class="proof m">
+      <summary>The three rules, formally · and the proofs that they give consistency</summary>
+      <p class="given">Each ballot <var>B</var> has a number <var>B</var><sub>bal</sub>, a value <var>B</var><sub>dec</sub>, a quorum <var>B</var><sub>qrm</sub> and a set of voters <var>B</var><sub>vot</sub>, and ℬ is a set of ballots. The three rules are the conditions <var>B</var>1(ℬ), <var>B</var>2(ℬ) and <var>B</var>3(ℬ). A ballot is successful when <var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub>.</p>
+  <div class="prose">
+    <p>To state <var>B</var>1(<var>ℬ</var>)–<var>B</var>3(<var>ℬ</var>) formally requires some more notation. A <em>vote</em> <var>v</var> was defined to be a quantity consisting of three components: a process <var>v</var><sub>pst</sub>, a ballot number <var>v</var><sub>bal</sub>, and a value <var>v</var><sub>dec</sub>. It represents a vote cast by process <var>v</var><sub>pst</sub> for value <var>v</var><sub>dec</sub> in ballot number <var>v</var><sub>bal</sub>. The authors also defined <em>null</em> votes to be votes <var>v</var> with <var>v</var><sub>bal</sub>&nbsp;=&nbsp;−∞ and <var>v</var><sub>dec</sub>&nbsp;=&nbsp;<span style="font-variant:small-caps">blank</span>, where −∞&nbsp;&lt;&nbsp;<var>b</var>&nbsp;&lt;&nbsp;∞ for any ballot number <var>b</var>, and <span style="font-variant:small-caps">blank</span> is not a value. For any process <var>p</var>, they defined <var>null</var><sub><var>p</var></sub> to be the unique null vote <var>v</var> with <var>v</var><sub>pst</sub>&nbsp;=&nbsp;<var>p</var>.</p>
+    <p>the authors defined a total ordering on the set of all votes, but part of the manuscript containing the definition has been lost. The remaining fragment indicates that, for any votes <var>v</var> and <var>v′</var>, if <var>v</var><sub>bal</sub>&nbsp;&lt;&nbsp;<var>v′</var><sub>bal</sub> then <var>v</var>&nbsp;&lt;&nbsp;<var>v′</var>. It is not known how the relative order of <var>v</var> and <var>v′</var> was defined if <var>v</var><sub>bal</sub>&nbsp;=&nbsp;<var>v′</var><sub>bal</sub>.</p>
+    <p>For any set <var>ℬ</var> of ballots, the set <var>Votes</var>(<var>ℬ</var>) of votes in <var>ℬ</var> was defined to consist of all votes <var>v</var> such that <var>v</var><sub>pst</sub>&nbsp;∈&nbsp;<var>B</var><sub>vot</sub>, <var>v</var><sub>bal</sub>&nbsp;=&nbsp;<var>B</var><sub>bal</sub>, and <var>v</var><sub>dec</sub>&nbsp;=&nbsp;<var>B</var><sub>dec</sub> for some <var>B</var>&nbsp;∈&nbsp;<var>ℬ</var>. If <var>p</var> is a process and <var>b</var> is either a ballot number or ±∞, then
+  <var>MaxVote</var>(<var>b</var>,&nbsp;<var>p</var>,&nbsp;<var>ℬ</var>)
+    was defined to be the largest vote <var>v</var> in <var>Votes</var>(<var>ℬ</var>) cast by <var>p</var> with <var>v</var><sub>bal</sub>&nbsp;&lt;&nbsp;<var>b</var>, or to be <var>null</var><sub><var>p</var></sub> if there was no such vote. Since <var>null</var><sub><var>p</var></sub> is smaller than any real vote cast by <var>p</var>, this means that <var>MaxVote</var>(<var>b</var>,&nbsp;<var>p</var>,&nbsp;<var>ℬ</var>) is the largest vote in the set</p>
+  </div>
+  <div class="mathblock">{<var>v</var> ∈ <var>Votes</var>(<var>ℬ</var>) :
+    (<var>v</var><sub>pst</sub> = <var>p</var>) ∧ (<var>v</var><sub>bal</sub> &lt; <var>b</var>)}
+    ∪ {<var>null</var><sub><var>p</var></sub>}</div>
+  <div class="prose">
+    <p>For any nonempty set <var>Q</var> of processes, <var>MaxVote</var>(<var>b</var>,&nbsp;<var>Q</var>,&nbsp;<var>ℬ</var>) was defined to equal the maximum of all votes <var>MaxVote</var>(<var>b</var>,&nbsp;<var>p</var>,&nbsp;<var>ℬ</var>) with <var>p</var> in <var>Q</var>.<br>Conditions <var>B</var>1(<var>ℬ</var>)–<var>B</var>3(<var>ℬ</var>) are stated formally as follows.<sup>8</sup></p>
+  </div>
+  <div class="slab">
+    <div class="mathblock">
+      <var>B</var>1(<var>ℬ</var>) ≜ ∀<var>B</var>, <var>B′</var> ∈ <var>ℬ</var> :
+      (<var>B</var> ≠ <var>B′</var>) ⇒ (<var>B</var><sub>bal</sub> ≠ <var>B′</var><sub>bal</sub>)
+    </div>
+    <div class="mathblock">
+      <var>B</var>2(<var>ℬ</var>) ≜ ∀<var>B</var>, <var>B′</var> ∈ <var>ℬ</var> :
+      <var>B</var><sub>qrm</sub> ∩ <var>B′</var><sub>qrm</sub> ≠ ∅
+    </div>
+    <div class="mathblock">
+      <var>B</var>3(<var>ℬ</var>) ≜ ∀<var>B</var> ∈ <var>ℬ</var> :
+      (<var>MaxVote</var>(<var>B</var><sub>bal</sub>, <var>B</var><sub>qrm</sub>, <var>ℬ</var>)<sub>bal</sub> ≠ −∞) ⇒
+      (<var>B</var><sub>dec</sub> = <var>MaxVote</var>(<var>B</var><sub>bal</sub>, <var>B</var><sub>qrm</sub>, <var>ℬ</var>)<sub>dec</sub>)
+    </div>
+    <p>Although the definition of <var>MaxVote</var> depends upon the ordering of votes, <var>B</var>1(<var>ℬ</var>) implies that <var>MaxVote</var>(<var>b</var>,&nbsp;<var>Q</var>,&nbsp;<var>ℬ</var>)<sub>dec</sub> is independent of how votes with equal ballot numbers were ordered.</p>
+  </div>
+  <p class="fnote"><b>8.</b> I use the symbol ≜, which meant <i>equals by
+  definition</i>.</p>
+
+  <div class="prose">
+    <p>To show that these conditions imply consistency, the authors first showed that <var>B</var>1(<var>ℬ</var>)–<var>B</var>3(<var>ℬ</var>) imply that, if a ballot <var>B</var> in <var>ℬ</var> is successful, then any later ballot in <var>ℬ</var> is for the same value as <var>B</var>.</p>
+  </div>
+  <div class="slab">
+    <div class="slab-head">Lemma</div>
+    <p class="stmt">If <var>B</var>1(<var>ℬ</var>), <var>B</var>2(<var>ℬ</var>), and
+    <var>B</var>3(<var>ℬ</var>) hold, then</p>
+    <div class="mathblock">((<var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub>) ∧
+      (<var>B′</var><sub>bal</sub> &gt; <var>B</var><sub>bal</sub>)) ⇒
+      (<var>B′</var><sub>dec</sub> = <var>B</var><sub>dec</sub>)</div>
+    <p class="stmt">for any <var>B</var>, <var>B′</var> in <var>ℬ</var>.</p>
+  </div>
+  <details class="proof">
+    <summary>Proof of Lemma</summary>
+    <p style="font-size:.92rem">For any ballot <var>B</var> in <var>ℬ</var>, let <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>) be the set of ballots in <var>ℬ</var> later than <var>B</var> for a value different from <var>B</var>’s:</p>
+    <div class="mathblock"><var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>) ≜ {<var>B′</var> ∈ <var>ℬ</var> : (<var>B′</var><sub>bal</sub> &gt; <var>B</var><sub>bal</sub>) ∧ (<var>B′</var><sub>dec</sub> ≠ <var>B</var><sub>dec</sub>)}</div>
+    <p style="font-size:.92rem">To prove the lemma, it suffices to show that if <var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub> then <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>) is empty. The authors gave a proof by contradiction. They assumed the existence of a <var>B</var> with <var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub> and <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>) ≠ ∅, and obtained a contradiction as follows.<sup>9</sup></p>
+    <ol class="proofsteps">
+      <li>Choose <var>C</var> ∈ <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>) such that <var>C</var><sub>bal</sub> = min{<var>B′</var><sub>bal</sub> : <var>B′</var> ∈ <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>)}.
+        <br><small><i>Proof:</i> <var>C</var> exists because <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>) is nonempty and finite.</small></li>
+      <li><var>C</var><sub>bal</sub> &gt; <var>B</var><sub>bal</sub>
+        <br><small><i>Proof:</i> By 1 and the definition of <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>).</small></li>
+      <li><var>B</var><sub>vot</sub> ∩ <var>C</var><sub>qrm</sub> ≠ ∅
+        <br><small><i>Proof:</i> By <var>B</var>2(<var>ℬ</var>) and the hypothesis that <var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub>.</small></li>
+      <li><var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>)<sub>bal</sub> ≥ <var>B</var><sub>bal</sub>
+        <br><small><i>Proof:</i> By 2, 3 and the definition of <var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>).</small></li>
+      <li><var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>) ∈ <var>Votes</var>(<var>ℬ</var>)
+        <br><small><i>Proof:</i> By 4 (which implies that <var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>) is not a null vote) and the definition of <var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>).</small></li>
+      <li><var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>)<sub>dec</sub> = <var>C</var><sub>dec</sub>.
+        <br><small><i>Proof:</i> By 5 and <var>B</var>3(<var>ℬ</var>).</small></li>
+      <li><var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>)<sub>dec</sub> ≠ <var>B</var><sub>dec</sub>
+        <br><small><i>Proof:</i> By 6, 1, and the definition of <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>).</small></li>
+      <li><var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>)<sub>bal</sub> &gt; <var>B</var><sub>bal</sub>
+        <br><small><i>Proof:</i> By 4, since 7 and <var>B</var>1(<var>ℬ</var>) imply that <var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>)<sub>bal</sub> ≠ <var>B</var><sub>bal</sub>.</small></li>
+      <li><var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>) ∈ <var>Votes</var>(<var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>))
+        <br><small><i>Proof:</i> By 7, 8, and the definition of <var>Ψ</var>(<var>B</var>,&nbsp;<var>ℬ</var>).</small></li>
+      <li><var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>)<sub>bal</sub> &lt; <var>C</var><sub>bal</sub>
+        <br><small><i>Proof:</i> By definition of <var>MaxVote</var>(<var>C</var><sub>bal</sub>,&nbsp;<var>C</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>).</small></li>
+      <li><b>Contradiction</b>
+        <br><small><i>Proof:</i> By 9, 10, and 1.</small></li>
+    </ol>
+    <p style="font-size:.92rem"><span class="qed">End Proof of Lemma</span></p>
+  </details>
+  <p class="fnote"><b>9.</b> the authors always provided careful, structured proofs of
+  important theorems. They were not as sophisticated as modern mathematicians, who can omit many
+  details and write paragraph-style proofs without ever making a mistake.</p>
+
+  <div class="prose">
+    <p>With this lemma, it was easy to show that, if <var>B</var>1–<var>B</var>3 hold, then any two successful ballots are for the same value.</p>
+  </div>
+  <div class="slab">
+    <div class="slab-head">Theorem 1</div>
+    <p class="stmt">If <var>B</var>1(<var>ℬ</var>), <var>B</var>2(<var>ℬ</var>), and
+    <var>B</var>3(<var>ℬ</var>) hold, then</p>
+    <div class="mathblock">((<var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub>) ∧
+      (<var>B′</var><sub>qrm</sub> ⊆ <var>B′</var><sub>vot</sub>)) ⇒
+      (<var>B′</var><sub>dec</sub> = <var>B</var><sub>dec</sub>)</div>
+    <p class="stmt">for any <var>B</var>, <var>B′</var> in <var>ℬ</var>.</p>
+  </div>
+  <details class="proof">
+    <summary>Proof of Theorem</summary>
+    <p style="font-size:.92rem">If <var>B′</var><sub>bal</sub> = <var>B</var><sub>bal</sub>, then <var>B</var>1(<var>ℬ</var>) implies <var>B′</var> = <var>B</var>. If <var>B′</var><sub>bal</sub> ≠ <var>B</var><sub>bal</sub>, then the theorem follows immediately from the lemma. <span class="qed">End Proof of Theorem</span></p>
+  </details>
+
+  <div class="prose">
+    <p>The authors then proved a theorem asserting that if there are enough processes in the system, then it is possible to conduct a successful ballot while preserving <var>B</var>1–<var>B</var>3. Although this does not guarantee progress, it at least shows that a balloting protocol based on <var>B</var>1–<var>B</var>3 will not deadlock.</p>
+  </div>
+  <div class="slab">
+    <div class="slab-head">Theorem 2</div>
+    <p class="stmt">Let <var>b</var> be a ballot number and <var>Q</var> a set of processes such
+    that <var>b</var> &gt; <var>B</var><sub>bal</sub> and
+    <var>Q</var> ∩ <var>B</var><sub>qrm</sub> ≠ ∅ for all <var>B</var> ∈ <var>ℬ</var>. If
+    <var>B</var>1(<var>ℬ</var>), <var>B</var>2(<var>ℬ</var>), and <var>B</var>3(<var>ℬ</var>)
+    hold, then there is a ballot <var>B′</var> with <var>B′</var><sub>bal</sub> = <var>b</var> and
+    <var>B′</var><sub>qrm</sub> = <var>B′</var><sub>vot</sub> = <var>Q</var> such that
+    <var>B</var>1(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}), <var>B</var>2(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}), and <var>B</var>3(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}) hold.</p>
+  </div>
+  <details class="proof">
+    <summary>Proof of Theorem</summary>
+    <p style="font-size:.92rem">Condition <var>B</var>1(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}) follows from <var>B</var>1(<var>ℬ</var>), the choice of <var>B′</var><sub>bal</sub>, and the assumption about <var>b</var>. Condition <var>B</var>2(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}) follows from <var>B</var>2(<var>ℬ</var>), the choice of <var>B′</var><sub>qrm</sub>, and the assumption about <var>Q</var>. If <var>MaxVote</var>(<var>b</var>,&nbsp;<var>Q</var>,&nbsp;<var>ℬ</var>)<sub>bal</sub> = −∞ then let <var>B′</var><sub>dec</sub> be any value, else let it equal <var>MaxVote</var>(<var>b</var>,&nbsp;<var>Q</var>,&nbsp;<var>ℬ</var>)<sub>dec</sub>. Condition <var>B</var>3(<var>ℬ</var>&nbsp;∪&nbsp;{<var>B′</var>}) then follows from <var>B</var>3(<var>ℬ</var>). <span class="qed">End Proof of Theorem</span></p>
+  </details>
+    </details>
   </div>
 </section>
 
@@ -368,26 +466,26 @@
     <div class="narrow">
       <div class="kicker">The rules as steps</div>
       <h2>One ballot, step by step</h2>
-      <p class="lede">When a priest wants to get a decree chosen, they initiate a ballot — and the three rules dictate every step of the exchange. Notice one crucial detail: to satisfy Rule Three (proposing the latest vote cast by anyone in the quorum below ballot <var>b</var>), the initiator cannot allow a quorum member to tell them "my latest vote was in ballot 5" and then turn around a moment later and cast a vote in ballot 18! So before proposing anything, the initiator must ask each quorum member both for their latest vote <em>and</em> for a binding <b>promise</b> never to vote in any ballot numbered below <var>b</var> (<i>Phase 1: Prepare / Promise</i>), and only then ask them to vote on the chosen decree (<i>Phase 2: Accept / Accepted</i>). Scroll slowly to follow Priest Α running Ballot 27 among the five priests.</p>
+      <p class="lede"><span class="i">When a priest wants to get a decree chosen, they initiate a ballot — and the three rules dictate every step of the exchange. Notice one crucial detail: to satisfy Rule Three (proposing the latest vote cast by anyone in the quorum below ballot <var>b</var>), the initiator cannot allow a quorum member to tell them "my latest vote was in ballot 5" and then turn around a moment later and cast a vote in ballot 18! So before proposing anything, the initiator must ask each quorum member both for their latest vote <em>and</em> for a binding <b>promise</b> never to vote in any ballot numbered below <var>b</var> (<i>Phase 1: Prepare / Promise</i>), and only then ask them to vote on the chosen decree (<i>Phase 2: Accept / Accepted</i>). Scroll slowly to follow Priest Α running Ballot 27 among the five priests.</span><span class="m">When a process wants to get a value chosen, it initiates a ballot — and the three rules dictate every step of the exchange. Notice one crucial detail: to satisfy Rule Three (proposing the latest vote cast by anyone in the quorum below ballot <var>b</var>), the initiator cannot allow a quorum member to tell it "my latest vote was in ballot 5" and then turn around a moment later and cast a vote in ballot 18! So before proposing anything, the initiator must ask each quorum member both for its latest vote <em>and</em> for a binding <b>promise</b> never to vote in any ballot numbered below <var>b</var> (<i>Phase 1: Prepare / Promise</i>), and only then ask them to vote on the chosen value (<i>Phase 2: Accept / Accepted</i>). Scroll slowly to follow process P1 running ballot 27 among the five processes.</span></p>
     </div>
   </div>
   <div class="scrolly" id="bal" data-steps="7">
     <div class="stage"><div class="stage-inner">
-      <svg class="fig svg-dark" viewBox="0 0 900 490" id="balsvg" role="img" aria-label="Ballot 27 run by priest A with the quorum A, Gamma and Delta; B and E are outside it"></svg>
+      <svg class="fig svg-dark" viewBox="0 0 900 490" id="balsvg" role="img" aria-label="Ballot 27 run by priest A with the quorum A, Gamma and Delta; B and E are outside it" data-al-m="Ballot 27 run by process P1 with the quorum P1, P3 and P4; P2 and P5 are outside it"></svg>
     </div></div>
     <div class="steps">
-      <div class="step on"><div class="card"><div class="num">1 · Choose a ballot number</div><h3>Pick a fresh number and a majority</h3><p>Priest Α initiates a ballot. To guarantee Rule One, each priest owns their own slice of ballot numbers; Α picks <b>Ballot 27</b>, which has never been used, and aims for a majority quorum of three: Α, Γ, and Δ (while Β and Ε sit this ballot out).</p></div></div>
-      <div class="step"><div class="card"><div class="num">2 · Ask (NextBallot / Prepare)</div><h3>A question coupled with a promise</h3><p>Α sends a <em>NextBallot(27)</em> note to the quorum asking two things at once: "Tell me the highest-numbered vote you have ever cast prior to 27, and <b>promise</b> never to vote in any ballot numbered below 27."</p></div></div>
-      <div class="step"><div class="card"><div class="num">3 · Promise (LastVote / Promise)</div><h3>Each member records the promise and replies</h3><p>Each member of the quorum writes the promise for Ballot 27 in the back of their scroll in indelible ink, and sends back a <em>LastVote</em> note reporting the highest-numbered vote they have ever cast (or <em>blank</em> if they have never voted).</p></div></div>
-      <div class="step"><div class="card"><div class="num">4 · Look back (Rule Three)</div><h3>Α learns what the quorum voted for</h3><p>Because Α, Γ, and Δ have all promised never to vote in any ballot below 27, their answers freeze the history below 27! Γ reports voting for β in Ballot 5, Δ reports voting for α in Ballot 2, and Α has never voted. Since Ballot 5 is the highest-numbered vote among the three, Rule Three leaves Α no choice: Ballot 27 <b>must</b> propose decree β. (Α would be free to propose a brand-new decree only if no one in the quorum had ever voted.)</p></div></div>
-      <div class="step"><div class="card"><div class="num">5 · Propose (BeginBallot / Accept)</div><h3>“Vote for decree β in Ballot 27”</h3><p>Having fixed Ballot 27's decree to β, Α sends a <em>BeginBallot(27, β)</em> note to all three members of the quorum asking them to cast their votes.</p></div></div>
-      <div class="step"><div class="card"><div class="num">6 · Vote (Voted / Accepted)</div><h3>Vote unless a higher promise intervened</h3><p>Each member of the quorum checks the back of their scroll: provided they have not promised to ignore Ballot 27 in favor of some even higher ballot in the meantime, they record their vote for (27, β) in indelible ink and send a <em>Voted(27)</em> note back to Α.</p></div></div>
-      <div class="step"><div class="card"><div class="num">7 · Done (Success)</div><h3>All three voted, so the ballot succeeds</h3><p>Once Α holds <em>Voted(27)</em> notes from the entire quorum {Α, Γ, Δ}, Ballot 27 has succeeded! Α writes decree β into the front of their scroll as the Synod's official decree and sends a <em>Success(β)</em> announcement to every priest.</p></div></div>
+      <div class="step on"><div class="card"><div class="num">1 · Choose a ballot number</div><h3>Pick a fresh number and a majority</h3><p><span class="i">Priest Α initiates a ballot. To guarantee Rule One, each priest owns their own slice of ballot numbers; Α picks <b>Ballot 27</b>, which has never been used, and aims for a majority quorum of three: Α, Γ, and Δ (while Β and Ε sit this ballot out).</span><span class="m">P1 initiates a ballot. To guarantee Rule One, each process owns its own slice of ballot numbers; P1 picks <b>ballot 27</b>, which has never been used, and aims for a majority quorum of three: P1, P3, and P4 (while P2 and P5 sit this ballot out).</span></p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · Ask (NextBallot / Prepare)</div><h3>A question coupled with a promise</h3><p><span class="i">Α sends a <em>NextBallot(27)</em> note to the quorum asking two things at once: "Tell me the highest-numbered vote you have ever cast prior to 27, and <b>promise</b> never to vote in any ballot numbered below 27."</span><span class="m">P1 sends a <em>NextBallot(27)</em> message to the quorum asking two things at once: "Tell me the highest-numbered vote you have ever cast prior to 27, and <b>promise</b> never to vote in any ballot numbered below 27."</span></p></div></div>
+      <div class="step"><div class="card"><div class="num">3 · Promise (LastVote / Promise)</div><h3>Each member records the promise and replies</h3><p><span class="i">Each member of the quorum writes the promise for Ballot 27 in the back of their scroll in indelible ink, and sends back a <em>LastVote</em> note reporting the highest-numbered vote they have ever cast (or <em>blank</em> if they have never voted).</span><span class="m">Each member of the quorum writes the promise for ballot 27 to stable storage, and sends back a <em>LastVote</em> message reporting the highest-numbered vote it has ever cast (or <em>blank</em> if it has never voted).</span></p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · Look back (Rule Three)</div><h3><span class="i">Α learns what the quorum voted for</span><span class="m">P1 learns what the quorum voted for</span></h3><p><span class="i">Because Α, Γ, and Δ have all promised never to vote in any ballot below 27, their answers freeze the history below 27! Γ reports voting for β in Ballot 5, Δ reports voting for α in Ballot 2, and Α has never voted. Since Ballot 5 is the highest-numbered vote among the three, Rule Three leaves Α no choice: Ballot 27 <b>must</b> propose decree β. (Α would be free to propose a brand-new decree only if no one in the quorum had ever voted.)</span><span class="m">Because P1, P3, and P4 have all promised never to vote in any ballot below 27, their answers freeze the history below 27! P3 reports voting for β in ballot 5, P4 reports voting for α in ballot 2, and P1 has never voted. Since ballot 5 is the highest-numbered vote among the three, Rule Three leaves P1 no choice: ballot 27 <b>must</b> propose value β. (P1 would be free to propose a brand-new value only if no one in the quorum had ever voted.)</span></p></div></div>
+      <div class="step"><div class="card"><div class="num">5 · Propose (BeginBallot / Accept)</div><h3><span class="i">“Vote for decree β in Ballot 27”</span><span class="m">“Vote for value β in ballot 27”</span></h3><p><span class="i">Having fixed Ballot 27's decree to β, Α sends a <em>BeginBallot(27, β)</em> note to all three members of the quorum asking them to cast their votes.</span><span class="m">Having fixed ballot 27's value to β, P1 sends a <em>BeginBallot(27, β)</em> message to all three members of the quorum asking them to cast their votes.</span></p></div></div>
+      <div class="step"><div class="card"><div class="num">6 · Vote (Voted / Accepted)</div><h3>Vote unless a higher promise intervened</h3><p><span class="i">Each member of the quorum checks the back of their scroll: provided they have not promised to ignore Ballot 27 in favor of some even higher ballot in the meantime, they record their vote for (27, β) in indelible ink and send a <em>Voted(27)</em> note back to Α.</span><span class="m">Each member of the quorum checks its stable storage: provided it has not promised to ignore ballot 27 in favor of some even higher ballot in the meantime, it records its vote for (27, β) and sends a <em>Voted(27)</em> message back to P1.</span></p></div></div>
+      <div class="step"><div class="card"><div class="num">7 · Done (Success)</div><h3>All three voted, so the ballot succeeds</h3><p><span class="i">Once Α holds <em>Voted(27)</em> notes from the entire quorum {Α, Γ, Δ}, Ballot 27 has succeeded! Α writes decree β into the front of their scroll as the Synod's official decree and sends a <em>Success(β)</em> announcement to every priest.</span><span class="m">Once P1 holds <em>Voted(27)</em> messages from the entire quorum {P1, P3, P4}, ballot 27 has succeeded! P1 records value β as the chosen value and sends a <em>Success(β)</em> announcement to every process.</span></p></div></div>
     </div>
   </div>
   <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
-    <p class="tell" style="margin-top:3rem">Notice that every step of this protocol is permissive: it specifies what a priest <em>may</em> do, never what a priest <em>must</em> do to keep the scrolls safe. If a priest walks out the door or a messenger vanishes at sea, a step simply remains unfinished — and an unfinished ballot can never violate any of the three rules. Likewise, if a forgetful messenger delivers the same note twice, the second delivery is harmlessly ignored. Consequently, no combination of departures, crashes, or message delays can ever cause two scrolls to disagree.</p>
-    <details class="proof">
+    <p class="tell" style="margin-top:3rem"><span class="i">Notice that every step of this protocol is permissive: it specifies what a priest <em>may</em> do, never what a priest <em>must</em> do to keep the scrolls safe. If a priest walks out the door or a messenger vanishes at sea, a step simply remains unfinished — and an unfinished ballot can never violate any of the three rules. Likewise, if a forgetful messenger delivers the same note twice, the second delivery is harmlessly ignored. Consequently, no combination of departures, crashes, or message delays can ever cause two scrolls to disagree.</span><span class="m">Notice that every step of this protocol is permissive: it specifies what a process <em>may</em> do, never what a process <em>must</em> do to keep the logs safe. If a process stops or a message is lost, a step simply remains unfinished — and an unfinished ballot can never violate any of the three rules. Likewise, if the network delivers the same message twice, the second delivery is harmlessly ignored. Consequently, no combination of crashes, restarts, or message delays can ever cause two logs to disagree.</span></p>
+    <details class="proof i">
       <summary>Appendix · proof of consistency of the Synod's protocol</summary>
       <p class="given">The one-ballot protocol above, stated as the actions a priest may take, with the invariant those actions maintain and its proof.</p>
   <h3 id="a1-the-basic-protocol" class="sect"><a href="#a1-the-basic-protocol" class="hlink">A1 · The Basic Protocol</a></h3>
@@ -568,6 +666,186 @@
     </div>
   </details>
     </details>
+    <details class="proof m">
+      <summary>Appendix · proof of consistency of the protocol</summary>
+      <p class="given">The one-ballot protocol above, stated as the actions a process may take, with the invariant those actions maintain and its proof.</p>
+  <h3 class="sect">A1 · The Basic Protocol</h3>
+  <div class="prose">
+    <p>The Synod’s basic protocol, described informally above, is stated here using modern algorithmic notation. We begin with the variables that a process <var>p</var> must maintain. First come the variables that represent information kept in its stable storage. (For convenience, a process's previous vote is kept as its two components <var>prevBal</var>[<var>p</var>] and <var>prevDec</var>[<var>p</var>].)</p>
+  </div>
+  <div class="slab">
+    <div class="slab-head">Ledger variables</div>
+    <p style="font-size:.92rem"><b><var>outcome</var>[<var>p</var>]</b> — The value written in <var>p</var>’s stable storage, or <span style="font-variant:small-caps">blank</span> if there is nothing written there yet.</p>
+    <p style="font-size:.92rem"><b><var>lastTried</var>[<var>p</var>]</b> — The number of the last ballot that <var>p</var> tried to begin, or −∞ if there was none.</p>
+    <p style="font-size:.92rem"><b><var>prevBal</var>[<var>p</var>]</b> — The number of the last ballot in which <var>p</var> voted, or −∞ if it never voted.</p>
+    <p style="font-size:.92rem"><b><var>prevDec</var>[<var>p</var>]</b> — The value for which <var>p</var> last voted, or <span style="font-variant:small-caps">blank</span> if <var>p</var> never voted.</p>
+    <p style="font-size:.92rem"><b><var>nextBal</var>[<var>p</var>]</b> — The number of the last ballot in which <var>p</var> agreed to participate, or −∞ if it has never agreed to participate in a ballot.</p>
+  </div>
+  <div class="prose">
+    <p>Next come variables representing information that process <var>p</var> could keep on a volatile memory:</p>
+    </div>
+  <div class="slab">
+    <div class="slab-head">Slip-of-paper variables</div>
+    <p style="font-size:.92rem"><b><var>status</var>[<var>p</var>]</b> — One of the following values:<br>&nbsp;&nbsp;<i>idle</i> — Not conducting or trying to begin a ballot<br>&nbsp;&nbsp;<i>trying</i> — Trying to begin ballot number <var>lastTried</var>[<var>p</var>]<br>&nbsp;&nbsp;<i>polling</i> — Now conducting ballot number <var>lastTried</var>[<var>p</var>]<br>If <var>p</var> has lost its volatile memory, then <var>status</var>[<var>p</var>] is assumed to equal <i>idle</i> and the values of the following four variables are irrelevant.</p>
+    <p style="font-size:.92rem"><b><var>prevVotes</var>[<var>p</var>]</b> — The set of votes received in <em>LastVote</em> messages for the current ballot (the one with ballot number <var>lastTried</var>[<var>p</var>]).</p>
+    <p style="font-size:.92rem"><b><var>quorum</var>[<var>p</var>]</b> — If <var>status</var>[<var>p</var>] = <i>polling</i>, then the set of processes forming the quorum of the current ballot; otherwise, meaningless.</p>
+    <p style="font-size:.92rem"><b><var>voters</var>[<var>p</var>]</b> — If <var>status</var>[<var>p</var>] = <i>polling</i>, then the set of quorum members from whom <var>p</var> has received <em>Voted</em> messages in the current ballot; otherwise, meaningless.</p>
+    <p style="font-size:.92rem"><b><var>value</var>[<var>p</var>]</b> — If <var>status</var>[<var>p</var>] = <i>polling</i>, then the value of the current ballot; otherwise, meaningless.</p>
+  </div>
+  <div class="prose">
+    <p>There is also the history variable <var>ℬ</var>, which is the set of ballots that have been started and their progress—namely, which processes have cast votes. (A history variable is one used in the development and proof of an algorithm, but not actually implemented.)</p>
+    <p>Next come the actions that process <var>p</var> may take. These actions are assumed to be atomic, meaning that once an action is begun, it must be completed before process <var>p</var> begins any other action. An action is described by an enabling condition and a list of effects. The enabling condition describes when the action can be performed; actions that receive a message are enabled whenever a messenger has arrived with the appropriate message. The list of effects describes how the action changes the algorithm’s variables and what message, if any, it sends. (Each individual action sends at most one message.)</p>
+    <p>Recall that ballot numbers were partitioned among the processes. For any ballot number <var>b</var>, the authors defined <var>owner</var>(<var>b</var>) to be the process who was allowed to use that ballot number.</p>
+    <p>The actions in the basic protocol are allowed actions; the protocol does not require that a process ever do anything. No attempt at efficiency has been made; the actions allow <var>p</var> to do silly things, such as sending another <em>BeginBallot</em> message to a process from whom it has already received a <em>LastVote</em> message.</p>
+  </div>
+  <details class="proof" open>
+    <summary>The actions of the basic protocol</summary>
+    <div style="font-size:.92rem">
+      <p><b>Try New Ballot</b><br>
+      <i>Always enabled.</i><br>
+      – Set <var>lastTried</var>[<var>p</var>] to any ballot number <var>b</var>, greater than its previous value, such that <var>owner</var>(<var>b</var>) = <var>p</var>.<br>
+      – Set <var>status</var>[<var>p</var>] to <i>trying</i>.<br>
+      – Set <var>prevVotes</var>[<var>p</var>] to ∅.</p>
+      <p><b>Send NextBallot Message</b><br>
+      <i>Enabled whenever <var>status</var>[<var>p</var>] = <i>trying</i>.</i><br>
+      – Send a <em>NextBallot</em>(<var>lastTried</var>[<var>p</var>]) message to any process.</p>
+      <p><b>Receive NextBallot(<var>b</var>) Message</b><br>
+      <i>If <var>b</var> ≥ <var>nextBal</var>[<var>p</var>] then</i><br>
+      – Set <var>nextBal</var>[<var>p</var>] to <var>b</var>.</p>
+      <p><b>Send LastVote Message</b><br>
+      <i>Enabled whenever <var>nextBal</var>[<var>p</var>] &gt; <var>prevBal</var>[<var>p</var>].</i><br>
+      – Send a <em>LastVote</em>(<var>nextBal</var>[<var>p</var>],&nbsp;<var>v</var>) message to process <var>owner</var>(<var>nextBal</var>[<var>p</var>]), where <var>v</var><sub>pst</sub> = <var>p</var>, <var>v</var><sub>bal</sub> = <var>prevBal</var>[<var>p</var>], and <var>v</var><sub>dec</sub> = <var>prevDec</var>[<var>p</var>].</p>
+      <p><b>Receive LastVote(<var>b</var>,&nbsp;<var>v</var>) Message</b><br>
+      <i>If <var>b</var> = <var>lastTried</var>[<var>p</var>] and <var>status</var>[<var>p</var>] = <i>trying</i>, then</i><br>
+      – Set <var>prevVotes</var>[<var>p</var>] to the union of its original value and {<var>v</var>}.</p>
+      <p><b>Start Polling Majority Set <var>Q</var></b><br>
+      <i>Enabled when <var>status</var>[<var>p</var>] = <i>trying</i> and <var>Q</var> ⊆ {<var>v</var><sub>pst</sub> : <var>v</var> ∈ <var>prevVotes</var>[<var>p</var>]}, where <var>Q</var> is a majority set.</i><br>
+      – Set <var>status</var>[<var>p</var>] to <i>polling</i>.<br>
+      – Set <var>quorum</var>[<var>p</var>] to <var>Q</var>.<br>
+      – Set <var>voters</var>[<var>p</var>] to ∅.<br>
+      – Set <var>value</var>[<var>p</var>] to a value <var>d</var> chosen as follows: Let <var>v</var> be the maximum element of <var>prevVotes</var>[<var>p</var>]. If <var>v</var><sub>bal</sub> ≠ −∞ then <var>d</var> = <var>v</var><sub>dec</sub>, else <var>d</var> can equal any value.<br>
+      – Set <var>ℬ</var> to the union of its former value and {<var>B</var>}, where <var>B</var><sub>dec</sub> = <var>d</var>, <var>B</var><sub>qrm</sub> = <var>Q</var>, <var>B</var><sub>vot</sub> = ∅, and <var>B</var><sub>bal</sub> = <var>lastTried</var>[<var>p</var>].</p>
+      <p><b>Send BeginBallot Message</b><br>
+      <i>Enabled when <var>status</var>[<var>p</var>] = <i>polling</i>.</i><br>
+      – Send a <em>BeginBallot</em>(<var>lastTried</var>[<var>p</var>],&nbsp;<var>value</var>[<var>p</var>]) message to any process in <var>quorum</var>[<var>p</var>].</p>
+      <p><b>Receive BeginBallot(<var>b</var>,&nbsp;<var>d</var>) Message</b><br>
+      <i>If <var>b</var> = <var>nextBal</var>[<var>p</var>] &gt; <var>prevBal</var>[<var>p</var>] then</i><br>
+      – Set <var>prevBal</var>[<var>p</var>] to <var>b</var>.<br>
+      – Set <var>prevDec</var>[<var>p</var>] to <var>d</var>.<br>
+      – If there is a ballot <var>B</var> in <var>ℬ</var> with <var>B</var><sub>bal</sub> = <var>b</var> [there will be], then choose any such <var>B</var> [there will be only one] and let the new value of <var>ℬ</var> be obtained from its old value by setting <var>B</var><sub>vot</sub> equal to the union of its old value and {<var>p</var>}.</p>
+      <p><b>Send Voted Message</b><br>
+      <i>Enabled whenever <var>prevBal</var>[<var>p</var>] ≠ −∞.</i><br>
+      – Send a <em>Voted</em>(<var>prevBal</var>[<var>p</var>],&nbsp;<var>p</var>) message to <var>owner</var>(<var>prevBal</var>[<var>p</var>]).</p>
+      <p><b>Receive Voted(<var>b</var>,&nbsp;<var>q</var>) Message</b><br>
+      <i>If <var>b</var> = <var>lastTried</var>[<var>p</var>] and <var>status</var>[<var>p</var>] = <i>polling</i>, then</i><br>
+      – Set <var>voters</var>[<var>p</var>] to the union of its old value and {<var>q</var>}</p>
+      <p><b>Succeed</b><br>
+      <i>Enabled whenever <var>status</var>[<var>p</var>] = <i>polling</i>, <var>quorum</var>[<var>p</var>] ⊆ <var>voters</var>[<var>p</var>], and <var>outcome</var>[<var>p</var>] = <span style="font-variant:small-caps">blank</span>.</i><br>
+      – Set <var>outcome</var>[<var>p</var>] to <var>value</var>[<var>p</var>].</p>
+      <p><b>Send Success Message</b><br>
+      <i>Enabled whenever <var>outcome</var>[<var>p</var>] ≠ <span style="font-variant:small-caps">blank</span>.</i><br>
+      – Send a <em>Success</em>(<var>outcome</var>[<var>p</var>]) message to any process.</p>
+      <p><b>Receive Success(<var>d</var>) Message</b><br>
+      <i>If <var>outcome</var>[<var>p</var>] = <span style="font-variant:small-caps">blank</span>, then</i><br>
+      – Set <var>outcome</var>[<var>p</var>] to <var>d</var>.</p>
+    </div>
+  </details>
+  <div class="prose">
+    <p>This algorithm is an abstract description of the real protocol performed by processes. Do the algorithm’s actions accurately model the actions of the real processes? There were three kinds of actions that a process could perform “atomically”: receiving a message, writing a note or stable storage entry, and sending a message. Each of these is represented by a single action of the algorithm, except that <b>Receive</b> actions both receive a message and set a variable. We can pretend that the receipt of a message occurred when a process acted upon the message; if it left the system before acting upon it, then we can pretend that the message was never received. Since this pretense does not affect the consistency condition, we can infer the consistency of the basic Synod protocol from the consistency of the algorithm.</p>
+  </div>
+
+  <h3 class="sect">A2 · Proof of Consistency</h3>
+  <div class="prose">
+    <p>To prove the consistency condition, it is necessary to show that whenever <var>outcome</var>[<var>p</var>] and <var>outcome</var>[<var>q</var>] are both different from <span style="font-variant:small-caps">blank</span>, they are equal. A rigorous correctness proof requires a complete description of the algorithm. The description given above is almost complete. Missing is a variable <var>ℳ</var> whose value is the multiset of all messages in transit.<sup>15</sup> Each <b>Send</b> action adds a message to this multiset and each <b>Receive</b> action removes one. Also needed are actions to represent the loss and duplication of messages, as well as a <b>Forget</b> action that represents a process losing its volatile memory.</p>
+    <p>With these additions, we get an algorithm that defines a set of possible behaviors, in which each change of state corresponds to one of the allowed actions. The authors proved correctness by finding a predicate <var>I</var> such that</p>
+    <ol class="proofsteps">
+      <li><var>I</var> is true initially.</li>
+      <li><var>I</var> implies the desired correctness condition.</li>
+      <li>Each allowed action leaves <var>I</var> true.</li>
+    </ol>
+    <p>The predicate <var>I</var> was written as a conjunction <var>I</var>1&nbsp;∧&nbsp;...&nbsp;∧&nbsp;<var>I</var>7, where <var>I</var>1–<var>I</var>5 were in turn the conjunction of predicates <var>I</var>1(<var>p</var>)–<var>I</var>5(<var>p</var>) for all processes <var>p</var>. Although most variables are mentioned in several of the conjuncts, each variable except <var>status</var>[<var>p</var>] is naturally associated with one conjunct, and each conjunct can be thought of as a constraint on its associated variables. The definitions of the individual conjuncts of <var>I</var> are given below, where a list of items marked by ∧ symbols denotes the conjunction of those items. The variables associated with a conjunct are listed in bracketed comments.</p>
+  </div>
+  <p class="fnote"><b>15.</b> A multiset is a set that may contain multiple copies of the same
+  element.</p>
+  <details class="proof">
+    <summary>The invariant I, in full</summary>
+    <div style="font-size:.9rem">
+      <div class="mathblock" style="text-align:left">
+        <var>I</var>1(<var>p</var>) ≜ <span class="rm">[Associated variable: <var>outcome</var>[<var>p</var>]]</span><br>
+        (<var>outcome</var>[<var>p</var>] ≠ <span class="rm" style="font-variant:small-caps">blank</span>) ⇒
+        ∃<var>B</var> ∈ <var>ℬ</var> : (<var>B</var><sub>qrm</sub> ⊆ <var>B</var><sub>vot</sub>) ∧
+        (<var>B</var><sub>dec</sub> = <var>outcome</var>[<var>p</var>])
+      </div>
+      <div class="mathblock" style="text-align:left">
+        <var>I</var>2(<var>p</var>) ≜ <span class="rm">[Associated variable: <var>lastTried</var>[<var>p</var>]]</span><br>
+        ∧ <var>owner</var>(<var>lastTried</var>[<var>p</var>]) = <var>p</var><br>
+        ∧ ∀<var>B</var> ∈ <var>ℬ</var> : (<var>owner</var>(<var>B</var><sub>bal</sub>) = <var>p</var>) ⇒<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;∧ <var>B</var><sub>bal</sub> ≤ <var>lastTried</var>[<var>p</var>]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;∧ (<var>status</var>[<var>p</var>] = <span class="rm"><i>trying</i></span>) ⇒ (<var>B</var><sub>bal</sub> &lt; <var>lastTried</var>[<var>p</var>])
+      </div>
+      <div class="mathblock" style="text-align:left">
+        <var>I</var>3(<var>p</var>) ≜ <span class="rm">[Associated variables: <var>prevBal</var>[<var>p</var>], <var>prevDec</var>[<var>p</var>], <var>nextBal</var>[<var>p</var>]]</span><br>
+        ∧ <var>prevBal</var>[<var>p</var>] = <var>MaxVote</var>(∞, <var>p</var>, <var>ℬ</var>)<sub>bal</sub><br>
+        ∧ <var>prevDec</var>[<var>p</var>] = <var>MaxVote</var>(∞, <var>p</var>, <var>ℬ</var>)<sub>dec</sub><br>
+        ∧ <var>nextBal</var>[<var>p</var>] ≥ <var>prevBal</var>[<var>p</var>]
+      </div>
+      <div class="mathblock" style="text-align:left">
+        <var>I</var>4(<var>p</var>) ≜ <span class="rm">[Associated variable: <var>prevVotes</var>[<var>p</var>]]</span><br>
+        (<var>status</var>[<var>p</var>] ≠ <span class="rm"><i>idle</i></span>) ⇒
+        ∀<var>v</var> ∈ <var>prevVotes</var>[<var>p</var>] :<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;∧ <var>v</var> = <var>MaxVote</var>(<var>lastTried</var>[<var>p</var>], <var>v</var><sub>pst</sub>, <var>ℬ</var>)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;∧ <var>nextBal</var>[<var>v</var><sub>pst</sub>] ≥ <var>lastTried</var>[<var>p</var>]
+      </div>
+      <div class="mathblock" style="text-align:left">
+        <var>I</var>5(<var>p</var>) ≜ <span class="rm">[Associated variables: <var>quorum</var>[<var>p</var>], <var>voters</var>[<var>p</var>], <var>value</var>[<var>p</var>]]</span><br>
+        (<var>status</var>[<var>p</var>] = <span class="rm"><i>polling</i></span>) ⇒<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;∧ <var>quorum</var>[<var>p</var>] ⊆ {<var>v</var><sub>pst</sub> : <var>v</var> ∈ <var>prevVotes</var>[<var>p</var>]}<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;∧ ∃<var>B</var> ∈ <var>ℬ</var> : ∧ <var>quorum</var>[<var>p</var>] = <var>B</var><sub>qrm</sub>
+        ∧ <var>value</var>[<var>p</var>] = <var>B</var><sub>dec</sub><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;∧ <var>voters</var>[<var>p</var>] ⊆ <var>B</var><sub>vot</sub>
+        ∧ <var>lastTried</var>[<var>p</var>] = <var>B</var><sub>bal</sub>
+      </div>
+      <div class="mathblock" style="text-align:left">
+        <var>I</var>6 ≜ <span class="rm">[Associated variable: <var>ℬ</var>]</span><br>
+        ∧ <var>B</var>1(<var>ℬ</var>) ∧ <var>B</var>2(<var>ℬ</var>) ∧ <var>B</var>3(<var>ℬ</var>)<br>
+        ∧ ∀<var>B</var> ∈ <var>ℬ</var> : <var>B</var><sub>qrm</sub> <span class="rm">is a majority set</span>
+      </div>
+      <div class="mathblock" style="text-align:left">
+        <var>I</var>7 ≜ <span class="rm">[Associated variable: <var>ℳ</var>]</span><br>
+        ∧ ∀<var>NextBallot</var>(<var>b</var>) ∈ <var>ℳ</var> : (<var>b</var> ≤ <var>lastTried</var>[<var>owner</var>(<var>b</var>)])<br>
+        ∧ ∀<var>LastVote</var>(<var>b</var>, <var>v</var>) ∈ <var>ℳ</var> :
+        ∧ <var>v</var> = <var>MaxVote</var>(<var>b</var>, <var>v</var><sub>pst</sub>, <var>ℬ</var>)
+        ∧ <var>nextBal</var>[<var>v</var><sub>pst</sub>] ≥ <var>b</var><br>
+        ∧ ∀<var>BeginBallot</var>(<var>b</var>, <var>d</var>) ∈ <var>ℳ</var> :
+        ∃<var>B</var> ∈ <var>ℬ</var> : (<var>B</var><sub>bal</sub> = <var>b</var>) ∧ (<var>B</var><sub>dec</sub> = <var>d</var>)<br>
+        ∧ ∀<var>Voted</var>(<var>b</var>, <var>p</var>) ∈ <var>ℳ</var> :
+        ∃<var>B</var> ∈ <var>ℬ</var> : (<var>B</var><sub>bal</sub> = <var>b</var>) ∧ (<var>p</var> ∈ <var>B</var><sub>vot</sub>)<br>
+        ∧ ∀<var>Success</var>(<var>d</var>) ∈ <var>ℳ</var> :
+        ∃<var>p</var> : <var>outcome</var>[<var>p</var>] = <var>d</var> ≠ <span class="rm" style="font-variant:small-caps">blank</span>
+      </div>
+    </div>
+  </details>
+  <div class="prose">
+    <p>The authors had to prove that <var>I</var> satisfies the three conditions given above. The first condition, that <var>I</var> holds initially, requires checking that each conjunct is true for the initial values of all the variables. While not stated explicitly, these initial values can be inferred from the variables’ descriptions, and checking the first condition is straightforward. The second condition, that <var>I</var> implies consistency, follows from <var>I</var>1, the first conjunct of <var>I</var>6, and Theorem 1. The hard part was proving the third condition, the invariance of <var>I</var>, which meant proving that <var>I</var> is left true by every action. This condition is proved by showing that, for each conjunct of <var>I</var>, executing any action when <var>I</var> is true leaves that conjunct true. The proofs are sketched below.</p>
+  </div>
+  <details class="proof">
+    <summary>The proofs, conjunct by conjunct</summary>
+    <div style="font-size:.92rem">
+      <p><b><var>I</var>1(<var>p</var>)</b> — <var>ℬ</var> is changed only by adding a new ballot or adding a new process to <var>B</var><sub>vot</sub> for some <var>B</var> ∈ <var>ℬ</var>, neither of which can falsify <var>I</var>1(<var>p</var>). The value of <var>outcome</var>[<var>p</var>] is changed only by the <b>Succeed</b> and <b>Receive Success Message</b> actions. The enabling condition and <var>I</var>5(<var>p</var>) imply that <var>I</var>1(<var>p</var>) is left true by the <b>Succeed</b> action. The enabling condition, <var>I</var>1(<var>p</var>), and the last conjunct of <var>I</var>7 imply that <var>I</var>1(<var>p</var>) is left true by the <b>Receive Success Message</b> action.</p>
+      <p><b><var>I</var>2(<var>p</var>)</b> — This conjunct depends only on <var>lastTried</var>[<var>p</var>], <var>status</var>[<var>p</var>], and <var>ℬ</var>. Only the <b>Try New Ballot</b> action changes <var>lastTried</var>[<var>p</var>], and only that action can set <var>status</var>[<var>p</var>] to <i>trying</i>. Since the action increases <var>lastTried</var>[<var>p</var>] to a value <var>b</var> with <var>owner</var>(<var>b</var>) = <var>p</var>, it leaves <var>I</var>2(<var>p</var>) true. A completely new element is added to <var>ℬ</var> only by a <b>Start Polling</b> action; the first conjunct of <var>I</var>2(<var>p</var>) and the specification of the action imply that adding this new element does not falsify the second conjunct of <var>I</var>2(<var>p</var>). The only other way <var>ℬ</var> is changed is by adding a new process to <var>B</var><sub>vot</sub> for some <var>B</var> ∈ <var>ℬ</var>, which does not affect <var>I</var>2(<var>p</var>).</p>
+      <p><b><var>I</var>3(<var>p</var>)</b> — Since votes are never removed from <var>ℬ</var>, the only action that can change <var>MaxVote</var>(∞,&nbsp;<var>p</var>,&nbsp;<var>ℬ</var>) is one that adds to <var>ℬ</var> a vote cast by <var>p</var>. Only a <b>Receive BeginBallot Message</b> action can do that, and only that action changes <var>prevBal</var>[<var>p</var>] and <var>prevDec</var>[<var>p</var>]. The <em>BeginBallot</em> conjunct of <var>I</var>7 implies that this action actually does add a vote to <var>ℬ</var>, and <var>B</var>1(<var>ℬ</var>) (the first conjunct of <var>I</var>6) implies that there is only one ballot to which the vote can be added. The enabling condition, the assumption that <var>I</var>3(<var>p</var>) holds before executing the action, and the definition of <var>MaxVote</var> then imply that the action leaves the first two conjuncts of <var>I</var>3(<var>p</var>) true. The third conjunct is left true because <var>prevBal</var>[<var>p</var>] is changed only by setting it to <var>nextBal</var>[<var>p</var>], and <var>nextBal</var>[<var>p</var>] is never decreased.</p>
+      <p><b><var>I</var>4(<var>p</var>)</b> — This conjunct depends only upon the values of <var>status</var>[<var>p</var>], <var>prevVotes</var>[<var>p</var>], <var>lastTried</var>[<var>p</var>], <var>nextBal</var>[<var>q</var>] for some processes <var>q</var>, and <var>ℬ</var>. The value of <var>status</var>[<var>p</var>] is changed from <i>idle</i> to not <i>idle</i> only by a <b>Try New Ballot</b> action, which sets <var>prevVotes</var>[<var>p</var>] to ∅, making <var>I</var>4(<var>p</var>) vacuously true. The only other actions that change <var>prevVotes</var>[<var>p</var>] are the <b>Forget</b> action, which leaves <var>I</var>4(<var>p</var>) true because it sets <var>status</var>[<var>p</var>] to <i>idle</i>, and the <b>Receive LastVote Message</b> action. It follows from the enabling condition and the <em>LastVote</em> conjunct of <var>I</var>7 that the <b>Receive LastVote Message</b> action preserves <var>I</var>4(<var>p</var>). The value of <var>lastTried</var>[<var>p</var>] is changed only by the <b>Try New Ballot</b> action, which leaves <var>I</var>4(<var>p</var>) true because it sets <var>status</var>[<var>p</var>] to <i>trying</i>. The value of <var>nextBal</var>[<var>q</var>] can only increase, which cannot make <var>I</var>4(<var>p</var>) false. Finally, <var>MaxVote</var>(<var>lastTried</var>[<var>p</var>],&nbsp;<var>v</var><sub>pst</sub>,&nbsp;<var>ℬ</var>) can be changed only if <var>v</var><sub>pst</sub> is added to <var>B</var><sub>vot</sub> for some <var>B</var> ∈ <var>ℬ</var> with <var>B</var><sub>bal</sub> &lt; <var>lastTried</var>[<var>p</var>]. But <var>v</var><sub>pst</sub> is added to <var>B</var><sub>vot</sub> (by a <b>Receive BeginBallot Message</b> action) only if <var>nextBal</var>[<var>v</var><sub>pst</sub>] = <var>B</var><sub>bal</sub>, in which case <var>I</var>4(<var>p</var>) implies that <var>B</var><sub>bal</sub> ≥ <var>lastTried</var>[<var>p</var>].</p>
+      <p><b><var>I</var>5(<var>p</var>)</b> — The value of <var>status</var>[<var>p</var>] is set to <i>polling</i> only by the <b>Start Polling</b> action. This action’s enabling condition guarantees that the first conjunct becomes true, and it adds the ballot to <var>ℬ</var> that makes the second conjunct true. No other action changes <var>quorum</var>[<var>p</var>], <var>value</var>[<var>p</var>], or <var>lastTried</var>[<var>p</var>] while leaving <var>status</var>[<var>p</var>] equal to <i>polling</i>. The value of <var>prevVotes</var>[<var>p</var>] cannot be changed while <var>status</var>[<var>p</var>] = <i>polling</i>, and <var>ℬ</var> is changed only by adding new elements or by adding a new process to <var>B</var><sub>vot</sub>. The only remaining possibility for falsifying <var>I</var>5(<var>p</var>) is the addition of a new element to <var>voters</var>[<var>p</var>] by the <b>Receive Voted Message</b> action. The <em>Voted</em> conjunct of <var>I</var>7, <var>B</var>1(<var>ℬ</var>) (the first conjunct of <var>I</var>6), and the action’s enabling condition imply that the element added to <var>voters</var>[<var>p</var>] is in <var>B</var><sub>vot</sub>, where <var>B</var> is the ballot whose existence is asserted in <var>I</var>5(<var>p</var>).</p>
+      <p><b><var>I</var>6</b> — Since <var>B</var><sub>bal</sub> and <var>B</var><sub>qrm</sub> are never changed for any <var>B</var> ∈ <var>ℬ</var>, the only way <var>B</var>1(<var>ℬ</var>), <var>B</var>2(<var>ℬ</var>), and the second conjunct of <var>I</var>6 can be falsified is by adding a new ballot to <var>ℬ</var>, which is done only by the <b>Start Polling Majority Set <var>Q</var></b> action when <var>status</var>[<var>p</var>] equals <i>trying</i>. It follows from the second conjunct of <var>I</var>2(<var>p</var>) that this action leaves <var>B</var>1(<var>ℬ</var>) true; and the assertion, in the enabling condition, that <var>Q</var> is a majority set implies that the action leaves <var>B</var>2(<var>ℬ</var>) and the second conjunct of <var>I</var>6 true. There are two possible ways of falsifying <var>B</var>3(<var>ℬ</var>): changing <var>MaxVote</var>(<var>B</var><sub>bal</sub>,&nbsp;<var>B</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>) by adding a new vote to <var>ℬ</var>, and adding a new ballot to <var>ℬ</var>. A new vote is added only by the <b>Receive BeginBallot Message</b> action, and <var>I</var>3(<var>p</var>) implies that the action adds a vote later than any other vote cast by <var>p</var> in <var>ℬ</var>, so it cannot change <var>MaxVote</var>(<var>B</var><sub>bal</sub>,&nbsp;<var>B</var><sub>qrm</sub>,&nbsp;<var>ℬ</var>) for any <var>B</var> in <var>ℬ</var>. Conjunct <var>I</var>4(<var>p</var>) implies that the new ballot added by the <b>Start Polling</b> action does not falsify <var>B</var>3(<var>ℬ</var>).</p>
+      <p><b><var>I</var>7</b> — <var>I</var>7 can be falsified either by adding a new message to <var>ℳ</var> or by changing the value of another variable on which <var>I</var>7 depends. Since <var>lastTried</var>[<var>p</var>] and <var>nextBal</var>[<var>p</var>] are never decreased, changing them cannot make <var>I</var>7 false. Since <var>outcome</var>[<var>p</var>] is never changed if its value is not <span style="font-variant:small-caps">blank</span>, changing it cannot falsify <var>I</var>7. Since <var>ℬ</var> is changed only by adding ballots and adding votes, the only change to it that can make <var>I</var>7 false is the addition of a vote by <var>v</var><sub>pst</sub> that makes the <em>LastVote</em>(<var>b</var>,&nbsp;<var>v</var>) conjunct false by changing <var>MaxVote</var>(<var>b</var>,&nbsp;<var>v</var><sub>pst</sub>,&nbsp;<var>ℬ</var>). This can happen only if <var>v</var><sub>pst</sub> votes in a ballot <var>B</var> with <var>B</var><sub>bal</sub> &lt; <var>b</var>. But <var>v</var><sub>pst</sub> can vote only in ballot number <var>nextBal</var>[<var>v</var><sub>pst</sub>], and the assumption that this conjunct holds initially implies that <var>nextBal</var>[<var>v</var><sub>pst</sub>] ≥ <var>b</var>. Therefore, we need check only that every message that is sent satisfies the condition in the appropriate conjunct of <var>I</var>7.</p>
+      <p style="margin-left:1.2em"><em>NextBallot</em>: Follows from the definition of the <b>Send NextBallot Message</b> action and the first conjunct of <var>I</var>2(<var>p</var>).</p>
+      <p style="margin-left:1.2em"><em>LastVote</em>: The enabling condition of the <b>Send LastVote Message</b> action and <var>I</var>3(<var>p</var>) imply that <var>MaxVote</var>(<var>nextBal</var>[<var>p</var>],&nbsp;<var>p</var>,&nbsp;<var>ℬ</var>) = <var>MaxVote</var>(∞,&nbsp;<var>p</var>,&nbsp;<var>ℬ</var>), from which it follows that the <em>LastVote</em> message sent by the action satisfies the condition in <var>I</var>7.</p>
+      <p style="margin-left:1.2em"><em>BeginBallot</em>: Follows from <var>I</var>5(<var>p</var>) and the definition of the <b>Send BeginBallot Message</b> action.</p>
+      <p style="margin-left:1.2em"><em>Voted</em>: Follows from <var>I</var>3(<var>p</var>), the definition of <var>MaxVote</var>, and the definition of the <b>Send Voted Message</b> action.</p>
+      <p style="margin-left:1.2em"><em>Success</em>: Follows from the definition of <b>Send Success Message</b>.</p>
+    </div>
+  </details>
+    </details>
   </div>
 </section>
 
@@ -578,101 +856,101 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Safe is not enough</div>
       <h2>Too many ballots block everything</h2>
-      <p class="lede">The basic ballot rules guarantee that the scrolls never disagree, but they do not guarantee that a decree is ever chosen. If no priest starts a ballot, nothing happens; and if two priests start ballots at the same time, they can trip each other up forever (<i>dueling proposers</i>).</p>
-      <p>The snag lies in the Phase 1 promise. Whenever a priest starts a higher-numbered ballot, its quorum promises never to vote in any lower-numbered ballot — which kills the earlier ballot if it has not yet finished Phase 2! If two eager priests both try to drive a ballot at once, each can keep interrupting the other with a higher ballot number before the other's Phase 2 votes come in:</p>
+      <p class="lede"><span class="i">The basic ballot rules guarantee that the scrolls never disagree, but they do not guarantee that a decree is ever chosen. If no priest starts a ballot, nothing happens; and if two priests start ballots at the same time, they can trip each other up forever (<i>dueling proposers</i>).</span><span class="m">The basic ballot rules guarantee that the logs never disagree, but they do not guarantee that a value is ever chosen. If no process starts a ballot, nothing happens; and if two processes start ballots at the same time, they can trip each other up forever (<i>dueling proposers</i>).</span></p>
+      <p><span class="i">The snag lies in the Phase 1 promise. Whenever a priest starts a higher-numbered ballot, its quorum promises never to vote in any lower-numbered ballot — which kills the earlier ballot if it has not yet finished Phase 2! If two eager priests both try to drive a ballot at once, each can keep interrupting the other with a higher ballot number before the other's Phase 2 votes come in:</span><span class="m">The snag lies in the Phase 1 promise. Whenever a process starts a higher-numbered ballot, its quorum promises never to vote in any lower-numbered ballot — which kills the earlier ballot if it has not yet finished Phase 2! If two eager processes both try to drive a ballot at once, each can keep interrupting the other with a higher ballot number before the other's Phase 2 votes come in:</span></p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well" id="duel">
-      <h4>Two would-be presidents <em id="duelmode">no one is in charge</em></h4>
+      <h4><span class="i">Two would-be presidents</span><span class="m">Two would-be leaders</span> <em id="duelmode">no one is in charge</em></h4>
       <div class="duel">
         <div>
           <svg style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto" id="duelsvg"></svg>
         </div>
         <div>
-          <div class="stat"><b id="dpassed">0</b>decrees passed</div>
+          <div class="stat"><b id="dpassed">0</b><bdi class="i">decrees passed</bdi><bdi class="m">values decided</bdi></div>
           <div class="stat" style="margin-top:6px"><b id="dballot">0</b>highest ballot started</div>
           <div class="dlog" id="dlog"></div>
         </div>
       </div>
       <div class="row">
         <button class="btn" id="drun">Let both run</button>
-        <button class="btn alt" id="dpres">Appoint one president</button>
+        <button class="btn alt" id="dpres"><span class="i">Appoint one president</span><span class="m">Appoint one leader</span></button>
         <button class="btn alt" id="dreset">Reset</button>
       </div>
     </div></div></div>
-    <p class="tell">The Paxons' cure was to elect a single <b>president</b> (a <i>distinguished proposer</i> or <i>leader</i>) who alone initiates ballots while in the Chamber. In most political systems, electing a president is perilous because if two people simultaneously think they are president, the government can issue contradictory laws. In Paxos, having two simultaneous presidents can <em>only</em> slow things down: it can never cause two scrolls to disagree, because safety does not depend on having a single leader! And as soon as a majority of priests remain in the Chamber for long enough, their sandglasses let them agree on a single president who completes a ballot without interruption.</p>
+    <p class="tell"><span class="i">The Paxons' cure was to elect a single <b>president</b> (a <i>distinguished proposer</i> or <i>leader</i>) who alone initiates ballots while in the Chamber. In most political systems, electing a president is perilous because if two people simultaneously think they are president, the government can issue contradictory laws. In Paxos, having two simultaneous presidents can <em>only</em> slow things down: it can never cause two scrolls to disagree, because safety does not depend on having a single leader! And as soon as a majority of priests remain in the Chamber for long enough, their sandglasses let them agree on a single president who completes a ballot without interruption.</span><span class="m">The cure is to elect a single <b>leader</b> (a <i>distinguished proposer</i>) who alone initiates ballots. In most systems, electing a leader is perilous because if two processes simultaneously think they are the leader, the system can issue contradictory results. In Paxos, having two simultaneous leaders can <em>only</em> slow things down: it can never cause two logs to disagree, because safety does not depend on having a single leader! And as soon as a majority of processes stay up for long enough, they can agree on a single leader who completes a ballot without interruption.</span></p>
   </div>
 </section>
 
 <!-- ============================================================ parliament -->
-<section class="spread dark" id="parliament" data-name="The Parliament">
+<section class="spread dark" id="parliament" data-name="The Parliament" data-name-m="A log of values">
   <a class="anchor" id="s3"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1.2rem">
-      <div class="kicker">From one decree to a whole law</div>
-      <h2>A separate Synod for every number</h2>
-      <p class="lede">Where the ancient Synod chose only a single decree, the Paxon Parliament must pass a continuous sequence of numbered decrees (Decree 1, Decree 2, Decree 3, …). Its key insight is simple: treat each decree number as a separate instance of the Synod protocol, and let a single president coordinate all of them at once (<i>Multi-Paxos</i>).</p>
+      <div class="kicker"><span class="i">From one decree to a whole law</span><span class="m">From one value to a whole log</span></div>
+      <h2><span class="i">A separate Synod for every number</span><span class="m">A separate instance for every slot</span></h2>
+      <p class="lede"><span class="i">Where the ancient Synod chose only a single decree, the Paxon Parliament must pass a continuous sequence of numbered decrees (Decree 1, Decree 2, Decree 3, …). Its key insight is simple: treat each decree number as a separate instance of the Synod protocol, and let a single president coordinate all of them at once (<i>Multi-Paxos</i>).</span><span class="m">Where single-decree Paxos chooses only one value, the group must decide a continuous sequence of numbered values (slot 1, slot 2, slot 3, …). Its key insight is simple: treat each slot as a separate instance of the protocol, and let a single leader coordinate all of them at once (<i>Multi-Paxos</i>).</span></p>
     </div>
-    <div class="two wide-r" style="gap:clamp(20px,4vw,50px);align-items:center">
-      <div class="pop fromleft"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p05-oki.jpg" alt="A newly made president sitting on the stone seat copying decrees onto a scroll while others wait" loading="lazy"></div></div></div>
+    <div class="two wide-r solo" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div class="pop fromleft i"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p05-oki.jpg" alt="A newly made president sitting on the stone seat copying decrees onto a scroll while others wait" loading="lazy"></div></div></div>
       <div>
-        <p>Whenever a citizen wants a decree passed, they hand it to the current president, who assigns it the next available decree number and runs a ballot for that number. Here comes the crucial optimization that makes Multi-Paxos fast: notice that Phase 1 of a ballot (<em>NextBallot</em> / <em>LastVote</em>) does not mention any specific decree! Because the president does not pick a decree until <em>after</em> the quorum replies, a <b>newly elected president</b> can send a <em>single</em> Phase 1 message covering <b>every</b> open decree number from the present into the future at once.</p>
-        <p>What comes back in those Phase 1 replies is best seen on a Monday morning, after legislators have been coming and going all weekend. Step through the three buttons below to see how the new president cleans up unfinished business and then passes new decrees in a single round-trip:</p>
+        <p><span class="i">Whenever a citizen wants a decree passed, they hand it to the current president, who assigns it the next available decree number and runs a ballot for that number. Here comes the crucial optimization that makes Multi-Paxos fast: notice that Phase 1 of a ballot (<em>NextBallot</em> / <em>LastVote</em>) does not mention any specific decree! Because the president does not pick a decree until <em>after</em> the quorum replies, a <b>newly elected president</b> can send a <em>single</em> Phase 1 message covering <b>every</b> open decree number from the present into the future at once.</span><span class="m">Whenever a client wants a value decided, it hands it to the current leader, who assigns it the next available slot and runs a ballot for that slot. Here comes the crucial optimization that makes Multi-Paxos fast: notice that Phase 1 of a ballot (<em>NextBallot</em> / <em>LastVote</em>) does not mention any specific value! Because the leader does not pick a value until <em>after</em> the quorum replies, a <b>newly elected leader</b> can send a <em>single</em> Phase 1 message covering <b>every</b> open slot from the present into the future at once.</span></p>
+        <p><span class="i">What comes back in those Phase 1 replies is best seen on a Monday morning, after legislators have been coming and going all weekend. Step through the three buttons below to see how the new president cleans up unfinished business and then passes new decrees in a single round-trip:</span><span class="m">What comes back in those Phase 1 replies is best seen after a weekend of crashes and restarts. Step through the three buttons below to see how the new leader cleans up unfinished business and then decides new values in a single round-trip:</span></p>
       </div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well" id="par" style="color:var(--ink);margin-top:2rem">
-      <h4>The president's scroll <em id="parstate">newly appointed</em></h4>
-      <svg class="fig" id="parsvg" style="width:100%;height:auto;max-width:880px;display:block;margin:0 auto" role="img" aria-label="The Chamber, with the new president asking every legislator what they have voted for, beside the president's scroll of numbered decrees"></svg>
-      <p class="say" id="parsay">Decrees 122 to 124 are known to everyone. Press the first button.</p>
+      <h4><span class="i">The president's scroll</span><span class="m">The leader's log</span> <em id="parstate">newly appointed</em></h4>
+      <svg class="fig" id="parsvg" style="width:100%;height:auto;max-width:880px;display:block;margin:0 auto" role="img" aria-label="The Chamber, with the new president asking every legislator what they have voted for, beside the president's scroll of numbered decrees" data-al-m="The five processes, with the new leader asking every process what it has voted for, beside the leader's log of numbered slots"></svg>
+      <p class="say" id="parsay"><span class="i">Decrees 122 to 124 are known to everyone. Press the first button.</span><span class="m">Slots 122 to 124 are decided everywhere. Press the first button.</span></p>
       <div class="row">
-        <button class="btn" id="par1">1 · Ask everyone about every open number</button>
+        <button class="btn" id="par1"><span class="i">1 · Ask everyone about every open number</span><span class="m">1 · Ask everyone about every open slot</span></button>
         <button class="btn alt" id="par2" disabled>2 · Fill the gap</button>
-        <button class="btn alt" id="par3" disabled>3 · Pass new decrees</button>
+        <button class="btn alt" id="par3" disabled><span class="i">3 · Pass new decrees</span><span class="m">3 · Decide new values</span></button>
         <button class="btn alt" id="parr" hidden>Again</button>
       </div>
     </div></div></div>
-    <p class="tell">Notice how the new president closes any gap left behind in the numbering (such as slot 126 above, where no one in the quorum had voted, while slot 127 already held a vote): the president passes the ceremonial no-op decree <em>"Traditional Olive Day"</em> in slot 126 so that the law scroll has no missing numbers! And as long as the same president stays in office, Phase 1 never needs to be repeated: every subsequent decree takes just Phase 2 (<em>BeginBallot</em> and <em>Voted</em>) plus the <em>Success</em> announcement.</p>
+    <p class="tell"><span class="i">Notice how the new president closes any gap left behind in the numbering (such as slot 125 above, where no one in the quorum had voted, while slot 126 already held a vote): the president passes the ceremonial no-op decree <em>"Traditional Olive Day"</em> in slot 125 so that the law scroll has no missing numbers! And as long as the same president stays in office, Phase 1 never needs to be repeated: every subsequent decree takes just Phase 2 (<em>BeginBallot</em> and <em>Voted</em>) plus the <em>Success</em> announcement.</span><span class="m">Notice how the new leader closes any gap left behind in the numbering (such as slot 125 above, where no one in the quorum had voted, while slot 126 already held a vote): the leader decides a harmless no-op value in slot 125 so that the log has no missing slots! And as long as the same leader stays in office, Phase 1 never needs to be repeated: every subsequent value takes just Phase 2 (<em>BeginBallot</em> and <em>Voted</em>) plus the <em>Success</em> announcement.</span></p>
   </div>
 </section>
 
 <!-- ============================================================ developments -->
-<section class="spread light" id="grew" data-name="How it grew">
+<section class="spread light" id="grew" data-name="How it grew" data-name-m="Lessons from practice">
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Years of practice</div>
-      <h2>Governing the island asked for more</h2>
-      <p class="lede">Turning a sequence of decrees into a working government for Paxos taught the islanders several practical lessons about distributed systems. Three famous incidents each refined how Parliament operated:</p>
+      <h2><span class="i">Governing the island asked for more</span><span class="m">Running it for real asked for more</span></h2>
+      <p class="lede"><span class="i">Turning a sequence of decrees into a working government for Paxos taught the islanders several practical lessons about distributed systems. Three famous incidents each refined how Parliament operated:</span><span class="m">Turning a sequence of decided values into a working system taught several practical lessons about distributed systems. Three famous incidents each refined how the protocol operated:</span></p>
     </div>
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3">
-        <div class="photo"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p05-oki.jpg" alt="A president copying decrees onto a scroll" loading="lazy"></div>
-        <div class="body"><h3>Choosing caught-up presidents</h3><p>At first, the presidency went automatically to whoever in the Chamber stood last in the alphabet. When the legislator Ωκι returned from a six-month voyage, he immediately became president — and all new laws ground to a halt while he spent days copying six months of past decrees into his scroll. Preferring a president whose scroll is already up to date avoids that stall.</p></div>
+        <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p05-oki-b63b73844d-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p05-oki.jpg" alt="A president copying decrees onto a scroll" loading="lazy"></div>
+        <div class="body"><h3><span class="i">Choosing caught-up presidents</span><span class="m">Choosing a caught-up leader</span></h3><p><span class="i">At first, the presidency went automatically to whoever in the Chamber stood last in the alphabet. When the legislator Ωκι returned from a six-month voyage, he immediately became president — and all new laws ground to a halt while he spent days copying six months of past decrees into his scroll. Preferring a president whose scroll is already up to date avoids that stall.</span><span class="m">At first, leadership went automatically to whichever process had the highest identifier. When a process came back after six months down, it immediately became leader — and all new values ground to a halt while it spent days copying six months of past decisions into its log. Preferring a leader whose log is already up to date avoids that stall.</span></p></div>
       </div></div>
       <div class="pop"><div class="leaf paper card3">
-        <div class="photo"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p06-cheese-45b16e795b-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p06-cheese-45b16e795b-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p06-cheese-45b16e795b-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p06-cheese-45b16e795b-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p06-cheese.jpg" alt="Two inspectors giving conflicting verdicts on the same lot of cheese in the town square" loading="lazy"></div>
-        <div class="body"><h3>One office, one holder (leases)</h3><p>Parliament once passed a decree replacing a notoriously strict cheese inspector (Δ˘ικστρα) with a new one (Γωυδα). Because the old inspector did not hear of the decree for weeks, two inspectors roamed the market giving conflicting verdicts on the same cheese. Thereafter, every appointment ran for a bounded time <i>lease</i>, stamped with the time the decree was proposed, so a replacement could take office only after the previous holder's lease expired.</p></div>
+        <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p06-cheese-45b16e795b-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p06-cheese-45b16e795b-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p06-cheese-45b16e795b-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p06-cheese-45b16e795b-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p06-cheese.jpg" alt="Two inspectors giving conflicting verdicts on the same lot of cheese in the town square" loading="lazy"></div>
+        <div class="body"><h3><span class="i">One office, one holder (leases)</span><span class="m">One role, one holder (leases)</span></h3><p><span class="i">Parliament once passed a decree replacing a notoriously strict cheese inspector (Δ˘ικστρα) with a new one (Γωυδα). Because the old inspector did not hear of the decree for weeks, two inspectors roamed the market giving conflicting verdicts on the same cheese. Thereafter, every appointment ran for a bounded time <i>lease</i>, stamped with the time the decree was proposed, so a replacement could take office only after the previous holder's lease expired.</span><span class="m">A decision once replaced the holder of a role with a new one. Because the old holder did not hear of the decision for weeks, two holders gave conflicting rulings at the same time. Thereafter, every appointment ran for a bounded-time <i>lease</i>, stamped with the time the value was proposed, so a replacement could take over only after the previous holder's lease expired.</span></p></div>
       </div></div>
       <div class="pop"><div class="leaf paper card3">
-        <div class="photo"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p07-goats-fdb7a60076-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p07-goats-fdb7a60076-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p07-goats-fdb7a60076-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p07-goats-fdb7a60076-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p07-goats.jpg" alt="A legislator whose scroll stops at decree 76 advises a buyer about black goats" loading="lazy"></div>
-        <div class="body"><h3>Never trust a single stale scroll</h3><p>After Decree 77 legalized the sale of black goats, a farmer offered black goats to a merchant. The merchant checked with a legislator whose scroll only went up to Decree 76 and was wrongly told the sale was still illegal! To guarantee linearizable reads,<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One: The Rule of the Board">*</a></sup> an inquiry about the current law must either go through a ballot or be answered by a lease-holding president whose scroll is guaranteed to be current.</p></div>
+        <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p07-goats-fdb7a60076-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p07-goats-fdb7a60076-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p07-goats-fdb7a60076-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-p07-goats-fdb7a60076-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p07-goats.jpg" alt="A legislator whose scroll stops at decree 76 advises a buyer about black goats" loading="lazy"></div>
+        <div class="body"><h3><span class="i">Never trust a single stale scroll</span><span class="m">Never trust a single stale log</span></h3><p><span class="i">After Decree 77 legalized the sale of black goats, a farmer offered black goats to a merchant. The merchant checked with a legislator whose scroll only went up to Decree 76 and was wrongly told the sale was still illegal! To guarantee linearizable reads,<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One: The Rule of the Board">*</a></sup> an inquiry about the current law must either go through a ballot or be answered by a lease-holding president whose scroll is guaranteed to be current.</span><span class="m">After slot 77 decided that a sale was now legal, a client asked a process whose log only went up to slot 76 and was wrongly told the sale was still illegal! To guarantee linearizable reads,<sup class="xref"><a href="../many-copies-acting-as-one/index.html#s2" title="Many Copies, Acting as One: The Rule of the Board">*</a></sup> a query about the current state must either go through a ballot or be answered by a lease-holding leader whose log is guaranteed to be current.</span></p></div>
       </div></div>
     </div>
-    <p class="tell" style="margin-top:2.4rem">Two final refinements — log compaction and changing the membership of Parliament itself — required no new machinery at all:</p>
+    <p class="tell" style="margin-top:2.4rem"><span class="i">Two final refinements — log compaction and changing the membership of Parliament itself — required no new machinery at all:</span><span class="m">Two final refinements — log compaction and changing the group's membership itself — required no new machinery at all:</span></p>
     <div class="two" style="gap:24px;margin-top:1.2rem">
       <div class="pop"><div class="leaf"><div class="paper well" style="margin:0">
-        <h4>Scrolls grew too long <em>fold one (checkpoints)</em></h4>
-        <div class="fold" id="fold"><div class="digest">Current law + number of the last decree</div></div>
-        <p class="say" style="margin-top:12px">As hundreds of decrees piled up, finding the current olive tax meant reading through years of superseded tax changes. So legislators replaced the long prefix of their scrolls with a compact summary of the current state of the law plus the number of the last decree folded into it (a <i>snapshot</i> or <i>checkpoint</i>).</p>
-        <div class="row"><button class="btn" id="foldb">Fold the scroll</button></div>
+        <h4><span class="i">Scrolls grew too long <em>fold one (checkpoints)</em></span><span class="m">Logs grew too long <em>fold one (checkpoints)</em></span></h4>
+        <div class="fold" id="fold"><div class="digest"><span class="i">Current law + number of the last decree</span><span class="m">Current state + number of the last slot</span></div></div>
+        <p class="say" style="margin-top:12px"><span class="i">As hundreds of decrees piled up, finding the current olive tax meant reading through years of superseded tax changes. So legislators replaced the long prefix of their scrolls with a compact summary of the current state of the law plus the number of the last decree folded into it (a <i>snapshot</i> or <i>checkpoint</i>).</span><span class="m">As hundreds of values piled up, finding the current state meant replaying years of superseded changes. So processes replace the long prefix of their logs with a compact summary of the current state plus the number of the last slot folded into it (a <i>snapshot</i> or <i>checkpoint</i>).</span></p>
+        <div class="row"><button class="btn" id="foldb"><span class="i">Fold the scroll</span><span class="m">Fold the log</span></button></div>
       </div></div></div>
       <div class="pop"><div class="leaf"><div class="paper well" style="margin:0">
-        <h4>Membership by decree <em>and self-healing scrolls</em></h4>
-        <p style="margin:0 0 10px">How do you change who sits in Parliament without two different groups thinking they are the majority? By making the membership roster part of the law itself, updated by ordinary decrees! To keep a ballot's quorum definition from shifting mid-vote, Decree <var>n</var> simply takes effect for the membership of Decree <var>n</var> + 3 and beyond.</p>
-        <p style="margin:0">And by periodically re-passing summaries of the law as new decrees, even a scroll smudged by an accidental spill is eventually healed.</p>
+        <h4><span class="i">Membership by decree <em>and self-healing scrolls</em></span><span class="m">Membership by decision <em>and self-healing logs</em></span></h4>
+        <p style="margin:0 0 10px"><span class="i">How do you change who sits in Parliament without two different groups thinking they are the majority? By making the membership roster part of the law itself, updated by ordinary decrees! To keep a ballot's quorum definition from shifting mid-vote, Decree <var>n</var> simply takes effect for the membership of Decree <var>n</var> + 3 and beyond.</span><span class="m">How do you change who is in the group without two different groups thinking they are the majority? By making the membership roster part of the log itself, updated by ordinary values! To keep a ballot's quorum definition from shifting mid-vote, a change decided in slot <var>n</var> simply takes effect for the membership of slot <var>n</var> + 3 and beyond.</span></p>
+        <p style="margin:0"><span class="i">And by periodically re-passing summaries of the law as new decrees, even a scroll smudged by an accidental spill is eventually healed.</span><span class="m">And by periodically re-deciding summaries of the state as new values, even a log damaged by an accidental fault is eventually healed.</span></p>
       </div></div></div>
     </div>
-    <details class="proof">
+    <details class="proof i">
       <summary>Why one office has one holder</summary>
       <p class="given">A decree carries the time it was proposed. That is safe because of a causal ordering property of the parliamentary protocol, stated here with its proof.</p>
   <div class="slab">
@@ -689,20 +967,37 @@
     message must state that he voted for <var>D</var>.</p>
   </details>
     </details>
+    <details class="proof m">
+      <summary>Why one role has one holder</summary>
+      <p class="given">A value carries the time it was proposed. That is safe because of a causal ordering property of the parliamentary protocol, stated here with its proof.</p>
+  <div class="slab">
+    <p class="stmt">If two values are passed by different presidents, then one of the presidents
+    proposed its value after learning that the other value had been proposed.</p>
+  </div>
+  <details class="proof">
+    <summary>Why the property holds</summary>
+    <p style="font-size:.92rem">To see that this property is satisfied, suppose that ballot number <var>b</var> was successful
+    for value <var>D</var>, ballot number <var>b′</var> was successful for value <var>D′</var>, and <var>b</var>&nbsp;&lt;&nbsp;<var>b′</var>. Let
+    <var>q</var> be a process who voted in both ballots. The balloting for <var>D′</var> began with
+    a <em>NextBallot</em>(<var>b′</var>,&nbsp;<var>n</var>) message. If the sender of that message did not already know
+    about <var>D</var>, then <var>n</var> is less than the value number of <var>D</var>, and <var>q</var>’s reply to the <em>NextBallot</em>
+    message must state that it voted for <var>D</var>.</p>
+  </details>
+    </details>
   </div>
 </section>
 
 <!-- ============================================================ relevance -->
-<section class="spread dark" id="why" data-name="Back to machines">
+<section class="spread dark" id="why" data-name="Back to machines" data-name-m="The result">
   <a class="anchor" id="s4"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-9-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">Back to machines</div>
-      <h2>The island was a replicated service</h2>
-      <p class="lede">Now read the story of Paxos again with servers in the legislators' seats. Each server maintains its own copy of a replicated command log, just as each legislator keeps a scroll, and a command is committed to a log slot the exact same way a decree is passed. Hover over a row, or tap it, to see how each part of Lamport's allegory maps to modern distributed systems.</p>
+      <div class="kicker"><span class="i">Back to machines</span><span class="m">The result</span></div>
+      <h2><span class="i">The island was a replicated service</span><span class="m">What the protocol shows</span></h2>
+      <p class="lede"><span class="i">Now read the story of Paxos again with servers in the legislators' seats. Each server maintains its own copy of a replicated command log, just as each legislator keeps a scroll, and a command is committed to a log slot the exact same way a decree is passed. Hover over a row, or tap it, to see how each part of Lamport's allegory maps to modern distributed systems.</span><span class="m">Everything above is Paxos: a numbered ballot, two phases of messages to a majority, a rule that a new ballot must carry the latest vote forward, and a leader that runs it across a whole log of slots.</span></p>
     </div>
-    <div class="map" id="map">
+    <div class="map i" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">On the island</div><div></div><div class="hd">In computing</div>
     </div>
     <div class="meander" style="margin:3rem auto"></div>
@@ -711,12 +1006,12 @@
       <p class="lede" style="margin:0 auto">It makes progress whenever a majority of machines are up and able to communicate for long enough — never sacrificing safety, and requiring stability only for progress.</p>
       <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">Its ballot protocol lives on as Paxos, the foundation of modern fault-tolerant distributed computing.</p>
       <div class="links">
-        <a href="../../places/the-chamber/index.html">The Chamber, in detail</a>
+        <a class="i" href="../../places/the-chamber/index.html">The Chamber, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
       </div>
     </div>
     <div class="apparatus">
-      <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/the-chamber/index.html">The Chamber</a></p>
+      <p class="lineage i"><span class="lbl">Setting</span> <a href="../../places/the-chamber/index.html">The Chamber</a></p>
       <details class="proof">
         <summary>The paper and its references</summary>
         <p>Leslie Lamport, “The Part-Time Parliament,” <i>ACM Transactions on Computer Systems</i> <b>16</b>, 2 (May 1998), 133–169. Submitted in January 1990 and accepted in March 1998: the referees offered to publish the paper if Lamport removed the Paxon allegory, Lamport declined to change it, and the manuscript sat in a drawer for eight years before finally appearing in print — followed in 2001 by “Paxos Made Simple.”</p>
@@ -738,7 +1033,7 @@
     <li>Skeen, M. D. 1982. <em>Crash recovery in a distributed database system.</em> Ph. D. thesis, University of California, Berkeley.</li>
   </ol>
       </details>
-      <details class="proof">
+      <details class="proof i">
         <summary>Who was who on Paxos</summary>
         <p>The paper gives its Paxons the names of computer scientists, spelled in a mock-Greek alphabet.</p>
         <table><tbody>
@@ -771,6 +1066,7 @@
 </section>
 <footer>Distributed Algorithms of Ancient Greece · “The Part-Time Parliament”, Leslie Lamport, ACM TOCS 16(2), 1998.</footer>
 
+<script src="../../assets/js/registers.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
