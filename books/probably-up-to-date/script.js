@@ -11,6 +11,9 @@ function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();ret
   (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
 function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
 
+/* ===== the two registers: see assets/js/registers.js ===== */
+const {isM,dual,vis,dtext,onReg}=REG;
+
 /* ===== pop-ups unfold when they enter view ===== */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
 $$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
@@ -28,12 +31,13 @@ function onscroll(){
     prog.style.width=(h>0?y/h*100:0)+"%";
     const mid=y+innerHeight*.4; let cur=secs[0];
     for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
-    now.textContent=cur.dataset.name||"";
+    now.textContent=(isM()&&cur.dataset.nameM)||cur.dataset.name||"";
     if(reduce)return;
     for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
     for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
   });
 }
+REG.after=onscroll;
 addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
 
 /* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
@@ -44,7 +48,8 @@ function stepDots(root,steps){
     if(d) b.innerHTML='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="'+d+'"/></svg>'; b.addEventListener("click",fn); return b};
   const prev=ctl("arr","Previous step","M7.5 2 3.5 6l4 4",()=>go(cur-1)), next=ctl("arr","Next step","M4.5 2l4 4-4 4",()=>go(cur+1)),
         back=ctl("arr back","Back to the first step","M2.6 6.4a3.5 3.5 0 1 0 1-2.8M2.4 1.6v2.2h2.2",()=>go(0));
-  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""),"",()=>go(i))});
+  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+vis(h):""),"",()=>go(i))});
+  onReg.push(()=>dots.forEach((d,i)=>{const h=$("h3",steps[i]),t="Step "+(i+1)+" of "+steps.length+(h?": "+vis(h):"");d.setAttribute("aria-label",t);d.title=t}));
   nav.append(prev,...dots,next,back);
   if(stage&&steps.length>1) stage.append(nav);
   return i=>{cur=i; prev.disabled=back.disabled=i===0; next.disabled=i===steps.length-1;
@@ -87,7 +92,7 @@ function Polar(svg,o){
   for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
   for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
   for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
-    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
+    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";dtext(g,{},nodes[k][1],nodes[k][3]||nodes[k][1])}
   if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
   return P;
 }
@@ -163,7 +168,7 @@ document.querySelectorAll(".lin").forEach(lin=>{
 function Coast(svg,o={}){
   const n=o.n||8,W=440,H=340;
   svg.innerHTML="";svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
-  el("path",{d:"M52 86C70 40 150 22 214 34c40 8 56-14 104 0 52 16 86 60 76 112-6 34 14 52-4 96-20 50-92 72-150 62-36-6-50 14-96 2C86 292 40 262 40 204c0-34-8-70 12-118z",fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
+  el("path",{d:"M52 86C70 40 150 22 214 34c40 8 56-14 104 0 52 16 86 60 76 112-6 34 14 52-4 96-20 50-92 72-150 62-36-6-50 14-96 2C86 292 40 262 40 204c0-34-8-70 12-118z",fill:"#efe6cf",stroke:"#1c1512","stroke-width":5,class:"i"},svg);
   const under=el("g",{},svg),libs=el("g",{},svg),over=el("g",{},svg);
   /* the libraries' places, by number; the first few lie nearest the stoa */
   const AT=[[150,96],[262,84],[330,150],[306,236],[214,268],[112,236],[96,160],[212,168],[188,60],[356,96],[150,292],[66,112]];
@@ -171,16 +176,16 @@ function Coast(svg,o={}){
     put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
     pos(i){return i==="stoa"?C.stoa:[C.lib[i].x,C.lib[i].y]},
     fill(i,c){C.lib[i].b.setAttribute("fill",c)},
-    note(i,s){C.lib[i].s.textContent=s},
+    note(i,s,m){C.lib[i].s[0].textContent=s;C.lib[i].s[1].textContent=m===undefined?s:m},
     way(a,b,cls="way"){const [x1,y1]=C.pos(a),[x2,y2]=C.pos(b);return el("path",{class:cls,d:`M${x1} ${y1}L${x2} ${y2}`},under)},
-    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:11,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph;return g},
+    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:11,fill,stroke:"#1c1512","stroke-width":2.5},g);dtext(g,{},glyph,glyph);return g},
     run(g,a,b,u){const [x1,y1]=C.pos(a),[x2,y2]=C.pos(b);C.put(g,x1+(x2-x1)*u,y1+(y2-y1)*u)}
   };
-  if(o.stoa!==false){el("rect",{x:C.stoa[0]-9,y:C.stoa[1]-26,width:18,height:52,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3},svg);
-    el("text",{x:C.stoa[0]+2,y:C.stoa[1]+44,class:"lab halo",style:"font-size:12px"},svg).textContent="the stoa";}
+  if(o.stoa!==false){el("rect",{x:C.stoa[0]-9,y:C.stoa[1]-26,width:18,height:52,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3,class:"i"},svg);
+    el("text",{x:C.stoa[0]+2,y:C.stoa[1]+44,class:"lab halo i",style:"font-size:12px"},svg).textContent="the stoa";}
   for(let i=0;i<n;i++){const [x,y]=AT[i],g=el("g",{class:"lib"},libs);C.put(g,x,y);
     el("circle",{class:"ring",r:24},g);const b=el("circle",{class:"b",r:17,fill:"#fffaf0"},g);el("text",{},g).textContent=i+1;
-    const s=el("text",{class:"lab halo",y:33,style:"font-size:12px;font-style:normal;font-family:var(--sans);font-weight:400"},g);
+    const s=dtext(g,{class:"lab halo",y:33,style:"font-size:12px;font-style:normal;font-family:var(--sans);font-weight:400"},"","");
     C.lib.push({x,y,g,b,s})}
   return C;
 }
@@ -194,42 +199,36 @@ const miss=(n,w,r)=>choose(n-w,r)/choose(n,r);
 const pick=(n,k)=>{const a=[...Array(n).keys()];for(let i=0;i<k;i++){const j=i+rnd(n-i);[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,k)};
 const pct=p=>p>=.9995?"more than 999 in 1,000":p>=.995?`${Math.round(p*1000)} in 1,000`:`${Math.round(p*100)} in 100`;
 
-/* ===== machines: W acknowledged, R answers, both at random ===== */
-(function(){
-  let W=1,R=1,n=0,s=0;const note=$("#mnote");
-  const reset=()=>{n=s=0;$("#mn").textContent=0;$("#ms").textContent=0;note.textContent=R+W>3?"R + W is more than 3: every read must meet the write.":"R + W is not more than 3: a read may miss the write."};
-  seg($("#mw"),[1,2,3].map(k=>[k,k]),W,v=>{W=+v;reset()});seg($("#mr"),[1,2,3].map(k=>[k,k]),R,v=>{R=+v;reset()});
-  $("#mgo").onclick=()=>{for(let i=0;i<100;i++){const w=pick(3,W),r=pick(3,R);n++;if(!r.some(x=>w.includes(x)))s++}
-    $("#mn").textContent=n;$("#ms").textContent=s;
-    note.innerHTML=R+W>3?`${n} reads, <span class="ok">none stale</span>. The two groups always share a replica.`:`${s} of ${n} reads were stale. The rule gives ${pct(miss(3,W,R))}.`};
-  reset();
-})();
+/* the cover, in computing: three replicas with messages in flight */
+(function(){const C=Coast($("#coversvg"),{n:3,stoa:false});
+  [[0,1,.5],[1,2,.45],[2,0,.4],[0,2,.6]].forEach(([a,b,u])=>{const g=C.token("#e0b84a","");g.setAttribute("opacity",1);C.run(g,a,b,u)})})();
 
 /* ===== how many to wait for: three home libraries on the coast ===== */
 (function(){
   const C=Coast($("#waitsvg"),{n:3,stoa:false}),say=$("#waitsay");let W=1,R=1;
   const clear=()=>{[0,1,2].forEach(i=>{C.fill(i,"#fffaf0");C.lib[i].g.classList.remove("mark");C.note(i,"")});
-    say.innerHTML=W+R>3?`${W} and ${R} add up to more than three. The two groups must share a home library.`:`${W} and ${R} do not add up to more than three. The groups may miss each other.`};
+    say.innerHTML=W+R>3?dual(`${W} and ${R} add up to more than three. The two groups must share a home library.`,`${W} and ${R} add up to more than three. The two groups must share a replica.`):dual(`${W} and ${R} do not add up to more than three. The groups may miss each other.`,`${W} and ${R} do not add up to more than three. The groups may miss each other.`)};
   seg($("#ww"),[1,2,3].map(k=>[k,k]),W,v=>{W=+v;clear()});seg($("#wr"),[1,2,3].map(k=>[k,k]),R,v=>{R=+v;clear()});
   $("#waitgo").onclick=()=>{clear();const w=pick(3,W),r=pick(3,R);          // which home libraries answered the writer first, and which the reader hears from first
-    w.forEach(i=>{C.fill(i,"#e0b84a");C.note(i,"new edition")});[0,1,2].filter(i=>!w.includes(i)).forEach(i=>C.note(i,"old copy"));
+    w.forEach(i=>{C.fill(i,"#e0b84a");C.note(i,"new edition","new version")});[0,1,2].filter(i=>!w.includes(i)).forEach(i=>C.note(i,"old copy"));
     r.forEach(i=>C.lib[i].g.classList.add("mark"));
     const both=r.filter(i=>w.includes(i));
-    say.innerHTML=both.length?`The reader hears from Library ${r.map(i=>i+1).join(" and ")}. Library ${both[0]+1} holds the new edition, and the reader takes the newest copy heard. <span class="ok">The reader is handed the new edition.</span>`
-      :`The reader hears from Library ${r.map(i=>i+1).join(" and ")}. ${r.length>1?"Neither holds":"It does not hold"} the new edition yet. <span class="bad">The reader is handed the old copy</span>, and nothing in the ${r.length>1?"replies says":"reply says"} so.`};
+    const ls=r.map(i=>i+1).join(" and ");
+    say.innerHTML=both.length?dual(`The reader hears from Library ${ls}. Library ${both[0]+1} holds the new edition, and the reader takes the newest copy heard. <span class="ok">The reader is handed the new edition.</span>`,`The client hears from Replica ${ls}. Replica ${both[0]+1} holds the new version, and the client takes the newest copy heard. <span class="ok">The client is handed the new version.</span>`)
+      :dual(`The reader hears from Library ${ls}. ${r.length>1?"Neither holds":"It does not hold"} the new edition yet. <span class="bad">The reader is handed the old copy</span>, and nothing in the ${r.length>1?"replies says":"reply says"} so.`,`The client hears from Replica ${ls}. ${r.length>1?"Neither holds":"It does not hold"} the new version yet. <span class="bad">The client is handed the old copy</span>, and nothing in the ${r.length>1?"replies says":"reply says"} so.`)};
   clear();
 })();
 
 /* ===== the chance of a miss as the home libraries grow ===== */
-$("#misstbl").innerHTML="<tr><th>Home libraries</th><th>Waited for, and asked</th><th>Chance of an old copy</th></tr>"+
+$("#misstbl").innerHTML=`<tr><th>${dual("Home libraries","Replicas")}</th><th>Waited for, and asked</th><th>Chance of an old copy</th></tr>`+
   [[3,1],[10,3],[30,9],[100,30]].map(([n,k])=>{const p=miss(n,k,k);return `<tr><td>${n}</td><td>${k} and ${k}</td><td>${p>.05?pct(p):p>1e-4?`about 1 in ${Math.round(1/p)}`:`about ${(p*1e6).toFixed(1)} in a million`}</td></tr>`}).join("");
 
 /* ===== leeway in editions ===== */
 (function(){
   let W=1;const box=$("#kbars");
   const paint=()=>{const p=miss(3,W,1);box.innerHTML=[1,2,3,5,10].map(k=>{const ok=1-Math.pow(p,k);
-    return `<div class="b"><span>${k===1?"the newest edition":`one of the newest ${k}`}</span><span class="v"><i style="width:${(ok*72).toFixed(1)}%"></i>${pct(ok)}</span></div>`}).join("")};
-  seg($("#kw"),[[1,"one home library"],[2,"two home libraries"]],W,v=>{W=+v;paint()});paint();
+    return `<div class="b"><span>${k===1?dual("the newest edition","the newest version"):`one of the newest ${k}`}</span><span class="v"><i style="width:${(ok*72).toFixed(1)}%"></i>${pct(ok)}</span></div>`}).join("")};
+  seg($("#kw"),[[1,dual("one home library","one replica")],[2,dual("two home libraries","two replicas")]],W,v=>{W=+v;paint()});paint();
 })();
 
 /* ===== the four legs, drawn in the round ===== */
@@ -261,21 +260,22 @@ function replay(W,R,slow,t,runs){
   seg($("#lslow"),[[.2,"five times quicker"],[1,"the same"],[10,"ten times slower"]],slow,v=>{slow=+v;blank()});
   $("#lgo").onclick=()=>{const ts=[0,1,3,10,30],res=ts.map(t=>replay(W,R,slow,t,10000));
     if(W+R>3&&res.some(p=>p<1))throw new Error("a stale reading with groups that must share a home library");
-    box.innerHTML="<h5>Chance of the new edition, a while after it is announced</h5>"+ts.map((t,k)=>`<div class="b"><span>${t?`${t} ${t>1?"journeys":"journey"} later`:"at once"}</span><span class="v"><i style="width:${(res[k]*68).toFixed(1)}%"></i>${pct(res[k])}</span></div>`).join("");
-    say.innerHTML=W+R>3?`<span class="ok">Never behind.</span> The groups share a home library, however the journeys fall.`:`At once the reader is handed the new edition ${pct(res[0])}. A while is counted in ordinary journeys: the average time of one of the other three legs.`};
+    box.innerHTML=`<h5>${dual("Chance of the new edition, a while after it is announced","Chance of the new version, a while after it is committed")}</h5>`+ts.map((t,k)=>`<div class="b"><span>${t?`${t} ${t>1?"journeys":"journey"} later`:"at once"}</span><span class="v"><i style="width:${(res[k]*68).toFixed(1)}%"></i>${pct(res[k])}</span></div>`).join("");
+    say.innerHTML=W+R>3?dual(`<span class="ok">Never behind.</span> The groups share a home library, however the journeys fall.`,`<span class="ok">Never behind.</span> The groups share a replica, however the journeys fall.`):dual(`At once the reader is handed the new edition ${pct(res[0])}. A while is counted in ordinary journeys: the average time of one of the other three legs.`,`At once the client is handed the new version ${pct(res[0])}. A while is counted in ordinary journeys: the average time of one of the other three legs.`)};
 })();
 
 /* ===== the four coasts: the paper's measures ===== */
-$("#cbars").innerHTML=[["Quick roads, quick copying",97.4],["Long delays now and then",89.3],["Slow copying onto papyrus",43.9],["Home libraries on both sides of a sea",33]]
+$("#cbars").innerHTML=[[dual("Quick roads, quick copying","Fast network, fast disks (LNKD-SSD)"),97.4],[dual("Long delays now and then","Occasional long delays (LNKD-DISK)"),89.3],[dual("Slow copying onto papyrus","Slow disk writes (YMMR)"),43.9],[dual("Home libraries on both sides of a sea","Replicas on both sides of an ocean (WAN)"),33]]
   .map(([t,v])=>`<div class="b"><span>${t}</span><span class="v"><i style="width:${(v*.7).toFixed(1)}%"></i>${v} in 100</span></div>`).join("");
 
 /* ===== never going backwards ===== */
 (function(){
   const p=miss(3,1,1);
   const paint=q=>{const k=1+q,bad=Math.pow(p,k);$("#bk").textContent=k;$("#bp").textContent=bad>.01?pct(bad):bad>1e-6?`1 in ${Math.round(1/bad).toLocaleString("en")}`:"less than 1 in a million";
-    $("#bsay").innerHTML=q===0?"A reader who comes back before anything new is announced needs the very edition seen before, or a newer one that is on its way.":`With ${q} announced between visits, any of the newest ${k} will do: ${k} chances of a miss, multiplied together.`};
+    $("#bsay").innerHTML=q===0?dual("A reader who comes back before anything new is announced needs the very edition seen before, or a newer one that is on its way.","A client that comes back before anything new is committed needs the very version seen before, or a newer one that is on its way."):dual(`With ${q} announced between visits, any of the newest ${k} will do: ${k} chances of a miss, multiplied together.`,`With ${q} committed between visits, any of the newest ${k} will do: ${k} chances of a miss, multiplied together.`)};
   seg($("#bq"),[[0,"none"],[1,"1"],[4,"4"],[9,"9"],[99,"99"]],1,v=>paint(+v));paint(1);
 })();
 
 mapPairs($("#map"),[["A work's three home libraries","A data item's N replicas"],["An edition and its tally","A version and its timestamp"],["The writer sends the edition to every home library","The coordinator sends the write to all N replicas"],["Announced when enough home libraries have answered","The write commits after W acknowledgments"],["The reader takes the first few replies","The read returns after R responses"],["The two numbers add up to more than the home libraries","A strict quorum: R + W > N"],["The quick way: wait for one, ask one","A partial quorum"],["One of the newest few editions","k-staleness"],["The odds a while after the announcement","t-visibility"],["The four legs","The WARS model of message delays"],["The couriers' logbook, played over by lot","Measured latencies and Monte Carlo simulation"],["Never going backwards","Monotonic reads"],["Keeping to one home library","A sticky replica"]]);
+REG.start();
 })();

@@ -3,16 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Probably Up to Date — The Scholars' Coast</title>
+<title data-m="Probably Up to Date — Probabilistically Bounded Staleness">Probably Up to Date — The Scholars' Coast</title>
 <meta name="description" content="Probabilistically Bounded Staleness told on the scholars' coast of Paxos: a work kept at three libraries, a writer who waits for some of them, a reader who asks a few, and the odds that the copy handed over is the newest.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../../assets/css/registers.css">
 </head>
-<body>
+<body data-reg="i">
 
 <div class="bar">
   <a href="../../index.html">← The Books</a>
   <span class="now" id="now"></span>
+  <div class="seg" role="group" aria-label="Which words to read"><button type="button" class="segb" data-reg="i" aria-pressed="true">Allegory</button><button type="button" class="segb" data-reg="m" aria-pressed="false">Computing</button></div>
   <i id="prog"></i>
 </div>
 
@@ -24,10 +26,12 @@
     <div>
       <h1>Probably Up to Date</h1>
       <p class="generic">When a data store writes to only some of its copies and reads from only some, how likely is an answer to be out of date—and by how much?</p>
-      <p class="allegory">We find out by exploring how libraries along the scholars' coast of Paxos, each consulting only a few of the others for speed, worked out the exact odds that a reader's copy was current.</p>
+      <p class="allegory i">We find out by exploring how libraries along the scholars' coast of Paxos, each consulting only a few of the others for speed, worked out the exact odds that a reader's copy was current.</p>
+      <p class="allegory m">We find out by following the probabilities directly: a data item stored on a few replicas, a write acknowledged by some of them, a read answered by some others—and the exact odds that the answer is current.</p>
       <p class="source">After Peter Bailis, Shivaram Venkataraman, Michael J. Franklin, Joseph M. Hellerstein and Ion Stoica, <i>Probabilistically Bounded Staleness for Practical Partial Quorums</i>, 2012</p>
     </div>
-    <div class="pop" data-auto>
+    <div class="pop m" data-auto><div class="leaf"><svg class="isle-svg" id="coversvg" role="img" aria-label="Three replicas in a ring with messages in transit between them"></svg></div></div>
+    <div class="pop i" data-auto>
       <div class="leaf">
         <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" alt="A small plastered library with a porch of two plain columns under a pediment and a tiled roof, standing on a headland above the sea, olive branches hanging in at the right"></div>
         <div class="fold-shadow"></div>
@@ -67,67 +71,40 @@
 </section>
 <!-- /lineage -->
 
-<section class="spread light" id="machines" data-name="In machine terms">
-  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
-  <div class="wrap">
-    <div class="two" style="gap:clamp(24px,5vw,60px);align-items:center">
-      <div>
-        <div class="kicker">First, in machine terms</div>
-        <h2>Write to some, read from some</h2>
-        <p class="lede">Suppose a data item is stored across <var>N</var> replicas. When a client writes a new version, it sends the write to all <var>N</var> replicas and considers the write committed as soon as <var>W</var> of them acknowledge it. When a client reads, it queries all <var>N</var> replicas, waits for the fastest <var>R</var> responses, and takes whichever version is newest.</p>
-        <ul class="terms">
-          <li><b>If <var>R</var> + <var>W</var> &gt; <var>N</var></b> (`strict quorums`), the <var>W</var> replicas that acknowledged the write and the <var>R</var> replicas that answered the read must overlap in at least one replica, so every read is guaranteed to see the latest committed write.</li>
-          <li><b>In practice, operators often choose <var>R</var> + <var>W</var> ≤ <var>N</var></b> (`partial quorums`) to avoid waiting for slow replicas. Then the read set and write set can miss each other, returning a stale value.</li>
-          <li><b>Probabilistically Bounded Staleness (PBS)</b> (Bailis et al., 2012) calculates the exact probability that a partial-quorum read is stale—measuring staleness both by how many versions behind the answer is (<var>k</var>-staleness) and by how long after the write the read occurs (<var>t</var>-visibility).</li>
-        </ul>
-        <p style="margin-top:1.2rem">We tell this story on the scholars' coast with a work kept at three home libraries, a writer, a reader, and a logbook of courier journey times.</p>
-      </div>
-      <div class="pop fromright"><div class="leaf">
-        <div class="paper well" style="margin:0">
-          <h4>Three replicas <em>choose W and R</em></h4>
-          <div class="seglab">W: acknowledgments a write waits for</div><div class="seg" id="mw" role="group" aria-label="W"></div>
-          <div class="seglab">R: answers a read waits for</div><div class="seg" id="mr" role="group" aria-label="R"></div>
-          <div class="counts"><span><b id="mn">0</b>reads</span><span><b id="ms">0</b>stale</span></div>
-          <p class="note" id="mnote" data-live style="min-height:4.2em;margin:10px 0 0">Each read comes straight after a write. Which replicas answer first is drawn at random.</p>
-          <div class="row"><button class="btn" id="mgo">Write, then read, a hundred times</button></div>
-        </div>
-      </div></div>
-    </div>
-  </div>
-</section>
+
 
 <!-- ============================================================ the setting -->
-<section class="spread dark" id="hall" data-name="The scholars' coast">
+<section class="spread dark" id="hall" data-name="The scholars' coast" data-name-m="The system model">
   <div class="bleed">
-    <img src="img/p02-coast.jpg" alt="The coast from high above: libraries with red-tiled roofs scattered through olive groves and joined by pale footpaths, the long stoa near the shore and the sea at the island's edge" data-parallax>
+    <img class="i" src="img/p02-coast.jpg" alt="The coast from high above: libraries with red-tiled roofs scattered through olive groves and joined by pale footpaths, the long stoa near the shore and the sea at the island's edge" data-parallax>
     <div class="hall-title"><div class="t">
-      <div class="kicker">The scholars' coast</div>
-      <h2>A work and its three home libraries</h2>
-      <p>On the scholars' coast, libraries answer readers from whatever copy sits on their shelf, accepting that copies may differ while couriers are on the road.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: The Scholars' Coast">*</a></sup> Rather than copying every work to every library on the coast, each work is entrusted to three designated <b>home libraries</b>.</p>
+      <div class="kicker"><span class="i">The scholars' coast</span><span class="m">The model</span></div>
+      <h2><span class="i">A work and its three home libraries</span><span class="m">A data item and its three replicas</span></h2>
+      <p><span class="i">On the scholars' coast, libraries answer readers from whatever copy sits on their shelf, accepting that copies may differ while couriers are on the road.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: The Scholars' Coast">*</a></sup> Rather than copying every work to every library on the coast, each work is entrusted to three designated <b>home libraries</b>.</span><span class="m">In this system, replicas answer clients from whatever copy they hold, accepting that copies may differ while messages are still in transit. Rather than copying every item to every machine, each item is stored on three designated <b>replicas</b>.</span></p>
     </div></div>
     <div class="pins">
-      <div class="pin pop"><div class="leaf"><b>Three home libraries</b>Each work is kept at three designated home libraries (<var>N</var> = 3) and nowhere else.</div></div>
-      <div class="pin pop"><div class="leaf"><b>Couriers on the road</b>A new edition is dispatched by courier to all three home libraries at once, and each courier takes a slightly different time.</div></div>
-      <div class="pin pop"><div class="leaf"><b>The newest reply wins</b>A reader sends couriers to all three home libraries and takes the newest edition among the first <var>R</var> replies that return.</div></div>
+      <div class="pin pop"><div class="leaf"><span class="i"><b>Three home libraries</b>Each work is kept at three designated home libraries (<var>N</var> = 3) and nowhere else.</span><span class="m"><b>Three replicas</b>Each item is kept at three designated replicas (<var>N</var> = 3) and nowhere else.</span></div></div>
+      <div class="pin pop"><div class="leaf"><span class="i"><b>Couriers on the road</b>A new edition is dispatched by courier to all three home libraries at once, and each courier takes a slightly different time.</span><span class="m"><b>Messages in flight</b>A new version is sent to all three replicas at once, and each message takes a slightly different time.</span></div></div>
+      <div class="pin pop"><div class="leaf"><span class="i"><b>The newest reply wins</b>A reader sends couriers to all three home libraries and takes the newest edition among the first <var>R</var> replies that return.</span><span class="m"><b>The newest reply wins</b>A client sends requests to all three replicas and takes the newest version among the first <var>R</var> replies that return.</span></div></div>
     </div>
   </div>
 </section>
 
 <!-- ============================================================ A work and its home libraries -->
-<section class="spread light" id="keepers" data-name="A work and its home libraries">
+<section class="spread light" id="keepers" data-name="A work and its home libraries" data-name-m="A data item and its replicas">
   <a class="anchor" id="s1"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
   <div class="wrap">
-    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
-        <div class="kicker">Who holds the work</div>
-        <h2>A work and its home libraries</h2>
-        <p class="lede">Every copy of a given work on the coast lives at its three <b>home libraries</b> (<var>N</var> = 3). As everywhere on the coast, each edition carries a <b>tally</b>—the day and hour it was written—and whenever two editions are compared, the larger tally is the newer.</p>
-        <p>When a writer finishes a new edition, he immediately dispatches three couriers—one to each home library. Each home library that receives the edition places it on the shelf and sends a courier back to acknowledge it. As soon as <var>W</var> home libraries have answered, the writer <b>announces</b> the edition as complete (`commits` the write). Importantly, the couriers still walking toward the remaining home libraries do not turn back; they keep walking and deliver the edition when they arrive.</p>
-        <p>When a reader wants to consult the work, he likewise sends a request courier to all three home libraries, waits for the fastest <var>R</var> replies to come back, and takes whichever copy among those <var>R</var> replies has the largest tally.</p>
-        <p>Two numbers therefore govern the coast's speed and safety: how many acknowledgments (<var>W</var>) the writer waits for before announcing the edition, and how many replies (<var>R</var>) the reader waits for before opening the scroll.</p>
+        <div class="kicker"><span class="i">Who holds the work</span><span class="m">Who holds the item</span></div>
+        <h2><span class="i">A work and its home libraries</span><span class="m">A data item and its replicas</span></h2>
+        <p class="lede"><span class="i">Every copy of a given work on the coast lives at its three <b>home libraries</b> (<var>N</var> = 3). As everywhere on the coast, each edition carries a <b>tally</b>—the day and hour it was written—and whenever two editions are compared, the larger tally is the newer.</span><span class="m">Every copy of a given item lives at its three <b>replicas</b> (<var>N</var> = 3). Each version carries a <b>timestamp</b>, and whenever two versions are compared, the larger timestamp is the newer.</span></p>
+        <p><span class="i">When a writer finishes a new edition, he immediately dispatches three couriers—one to each home library. Each home library that receives the edition places it on the shelf and sends a courier back to acknowledge it. As soon as <var>W</var> home libraries have answered, the writer <b>announces</b> the edition as complete (`commits` the write). Importantly, the couriers still walking toward the remaining home libraries do not turn back; they keep walking and deliver the edition when they arrive.</span><span class="m">When a writer finishes a new version, it immediately sends three messages—one to each replica. Each replica that receives the version stores it and sends an acknowledgment back. As soon as <var>W</var> replicas have answered, the writer <b>commits</b> the write. Importantly, the messages still on their way to the remaining replicas are not recalled; they keep going and deliver the version when they arrive.</span></p>
+        <p><span class="i">When a reader wants to consult the work, he likewise sends a request courier to all three home libraries, waits for the fastest <var>R</var> replies to come back, and takes whichever copy among those <var>R</var> replies has the largest tally.</span><span class="m">When a client wants to read the item, it likewise sends a request to all three replicas, waits for the fastest <var>R</var> replies to come back, and takes whichever copy among those <var>R</var> replies has the largest timestamp.</span></p>
+        <p><span class="i">Two numbers therefore govern the coast's speed and safety: how many acknowledgments (<var>W</var>) the writer waits for before announcing the edition, and how many replies (<var>R</var>) the reader waits for before opening the scroll.</span><span class="m">Two numbers therefore govern the system’s speed and safety: how many acknowledgments (<var>W</var>) the writer waits for before committing, and how many replies (<var>R</var>) the client waits for before returning an answer.</span></p>
       </div>
-      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p01-keeper.jpg" alt="One of a work's three home libraries seen from its porch road: a small plastered library on a base of dressed stone, with a porch of two plain columns, a pediment and a tiled roof, among olive trees and cypresses" loading="lazy"></div></div></div>
+      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p01-keeper.jpg" alt="One of a work's three home libraries seen from its porch road: a small plastered library on a base of dressed stone, with a porch of two plain columns, a pediment and a tiled roof, among olive trees and cypresses" loading="lazy"></div></div></div>
     </div>
   </div>
 </section>
@@ -140,22 +117,22 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Certainty, and its price</div>
       <h2>How many to wait for</h2>
-      <p class="lede">If a writer waited for all three home libraries (<var>W</var> = 3) or a reader waited for all three replies (<var>R</var> = 3), every single slow courier or closed library would bring work to a halt.</p>
-      <p>Waiting for fewer libraries is faster and survives a closed door. The danger is that if <var>W</var> and <var>R</var> are too small, the home libraries that answered the writer and the home libraries that answered the reader might not overlap at all.</p>
+      <p class="lede"><span class="i">If a writer waited for all three home libraries (<var>W</var> = 3) or a reader waited for all three replies (<var>R</var> = 3), every single slow courier or closed library would bring work to a halt.</span><span class="m">If a writer waited for all three replicas (<var>W</var> = 3) or a client waited for all three replies (<var>R</var> = 3), every single slow message or crashed replica would bring work to a halt.</span></p>
+      <p><span class="i">Waiting for fewer libraries is faster and survives a closed door. The danger is that if <var>W</var> and <var>R</var> are too small, the home libraries that answered the writer and the home libraries that answered the reader might not overlap at all.</span><span class="m">Waiting for fewer replicas is faster and survives a crashed replica. The danger is that if <var>W</var> and <var>R</var> are too small, the replicas that answered the writer and the replicas that answered the client might not overlap at all.</span></p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>Three home libraries, one new edition <em>choose the two numbers, then let a reader ask</em></h4>
+      <h4><span class="i">Three home libraries, one new edition <em>choose the two numbers, then let a reader ask</em></span><span class="m">Three replicas, one new version <em>choose the two numbers, then let a client read</em></span></h4>
       <div class="hill-wrap">
-        <svg class="isle-svg fig" id="waitsvg" role="img" aria-label="The coast from above with the work's three home libraries: gold home libraries have answered the writer, ringed home libraries are the ones whose replies the reader takes"></svg>
+        <svg class="isle-svg fig" id="waitsvg" role="img" aria-label="The coast from above with the work's three home libraries: gold home libraries have answered the writer, ringed home libraries are the ones whose replies the reader takes" data-al-m="The system with the item’s three replicas: gold replicas have answered the writer, ringed replicas are the ones whose replies the client takes"></svg>
         <div>
-          <div class="seglab">The writer waits for</div><div class="seg" id="ww" role="group" aria-label="Home libraries the writer waits for"></div>
-          <div class="seglab">The reader takes the first</div><div class="seg" id="wr" role="group" aria-label="Replies the reader takes"></div>
-          <p class="say" id="waitsay">Gold home libraries hold the new edition. Ringed home libraries are the ones the reader hears from first.</p>
+          <div class="seglab">The writer waits for</div><div class="seg" id="ww" role="group" aria-label="Home libraries the writer waits for" data-al-m="Replicas the writer waits for"></div>
+          <div class="seglab"><span class="i">The reader takes the first</span><span class="m">The client takes the first</span></div><div class="seg" id="wr" role="group" aria-label="Replies the reader takes" data-al-m="Replies the client takes"></div>
+          <p class="say" id="waitsay"><span class="i">Gold home libraries hold the new edition. Ringed home libraries are the ones the reader hears from first.</span><span class="m">Gold replicas hold the new version. Ringed replicas are the ones the client hears from first.</span></p>
         </div>
       </div>
-      <div class="row"><button class="btn" id="waitgo">A reader asks at the moment of the announcement</button></div>
+      <div class="row"><button class="btn" id="waitgo"><span class="i">A reader asks at the moment of the announcement</span><span class="m">A client reads at the moment of the commit</span></button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">The rule the Chamber has always used</div><h3>When <i>R + W &gt; N</i>, the two groups must share at least one home library</h3><p>Up on the northern arms of Paxos, the Chamber and the Tholos rely on majority overlap: out of three or five members, any two majorities share at least one member.<sup class="xref"><a href="../the-part-time-parliament/index.html" title="The Part-Time Parliament">*</a></sup> Here the rule is even more general: with <var>N</var> = 3 home libraries, as long as <var>R</var> + <var>W</var> &gt; 3 (for instance, <var>W</var> = 2 and <var>R</var> = 2), the <var>W</var> libraries that hold the announced edition and the <var>R</var> libraries that answer the reader must share at least one library. Because the reader picks the largest tally among his <var>R</var> replies, he is guaranteed to get the announced edition or an even newer one.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num"><span class="i">The rule the Chamber has always used</span><span class="m">The quorum rule</span></div><h3><span class="i">When <i>R + W &gt; N</i>, the two groups must share at least one home library</span><span class="m">When <i>R + W &gt; N</i>, the two groups must share at least one replica</span></h3><p><span class="i">Up on the northern arms of Paxos, the Chamber and the Tholos rely on majority overlap: out of three or five members, any two majorities share at least one member.<sup class="xref"><a href="../the-part-time-parliament/index.html" title="The Part-Time Parliament">*</a></sup> Here the rule is even more general: with <var>N</var> = 3 home libraries, as long as <var>R</var> + <var>W</var> &gt; 3 (for instance, <var>W</var> = 2 and <var>R</var> = 2), the <var>W</var> libraries that hold the announced edition and the <var>R</var> libraries that answer the reader must share at least one library. Because the reader picks the largest tally among his <var>R</var> replies, he is guaranteed to get the announced edition or an even newer one.</span><span class="m">Majority overlap is the oldest idea in the series: out of three or five members, any two majorities share at least one member.<sup class="xref"><a href="../the-part-time-parliament/index.html" title="The Part-Time Parliament">*</a></sup> Here the rule is even more general: with <var>N</var> = 3 replicas, as long as <var>R</var> + <var>W</var> &gt; 3 (for instance, <var>W</var> = 2 and <var>R</var> = 2), the <var>W</var> replicas that hold the committed version and the <var>R</var> replicas that answer the client must share at least one replica. Because the client picks the largest timestamp among its <var>R</var> replies, it is guaranteed to get the committed version or an even newer one.</span></p></div></div></div>
     <details class="proof">
       <summary>Proof · that R + W &gt; N forces every read quorum to meet every write quorum</summary>
       <p class="given">Let there be <var>N</var> replicas, a write quorum <var>Q<sub>W</sub></var> of size <var>W</var> and a read quorum <var>Q<sub>R</sub></var> of size <var>R</var>, both subsets of the same <var>N</var> replicas. <b>Claim.</b> If <var>R</var> + <var>W</var> &gt; <var>N</var>, the two quorums share a replica.</p>
@@ -166,7 +143,7 @@
         <li>If <var>R</var> + <var>W</var> &gt; <var>N</var>, the right side is at least 1, so the two quorums share a replica. That replica holds the committed write, and a read that returns the value with the greatest version among its responses returns that write or a later one.<span class="qed">∎</span></li>
       </ol>
     </details>
-    <p style="max-width:40em;margin-top:1.4rem">Yet in practice, practitioners with three replicas very often configure <var>W</var> = 1 and <var>R</var> = 1 on purpose! Why? Because waiting for only the single fastest acknowledgment and the single fastest reply makes both writing and reading as fast as the nearest, least-busy library. On the coast, waiting for one and asking one (<var>W</var> = 1, <var>R</var> = 1) is called the <b>quick way</b>.</p>
+    <p style="max-width:40em;margin-top:1.4rem"><span class="i">Yet in practice, practitioners with three replicas very often configure <var>W</var> = 1 and <var>R</var> = 1 on purpose! Why? Because waiting for only the single fastest acknowledgment and the single fastest reply makes both writing and reading as fast as the nearest, least-busy library. On the coast, waiting for one and asking one (<var>W</var> = 1, <var>R</var> = 1) is called the <b>quick way</b>.</span><span class="m">Yet in practice, practitioners with three replicas very often configure <var>W</var> = 1 and <var>R</var> = 1 on purpose! Why? Because waiting for only the single fastest acknowledgment and the single fastest reply makes both writing and reading as fast as the nearest, least-busy replica. Waiting for one and asking one (<var>W</var> = 1, <var>R</var> = 1) is the <b>quick way</b>.</span></p>
   </div>
 </section>
 
@@ -178,14 +155,14 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The plainest case</div>
       <h2>When the groups miss each other</h2>
-      <p class="lede">Suppose a reader asks at the exact instant an edition is announced, before the couriers to the remaining <var>N</var> − <var>W</var> home libraries have arrived, and suppose the <var>R</var> libraries that answer the reader first are a uniform random subset of the <var>N</var> home libraries.</p>
-      <p>With <var>N</var> = 3 home libraries and the quick way (<var>W</var> = 1, <var>R</var> = 1), only one home library holds the new edition at the moment of announcement, while two still hold the old one. A reader who takes one random reply therefore misses the new edition `2` times out of `3` (`66.7%`).</p>
-      <p>Earlier theory on <i>probabilistic quorums</i> pointed out that if <var>N</var> is large and <var>W</var> and <var>R</var> scale with <var>N</var> (say, a third of the libraries each), two random subsets of size <var>N</var>/3 almost never miss each other.</p>
+      <p class="lede"><span class="i">Suppose a reader asks at the exact instant an edition is announced, before the couriers to the remaining <var>N</var> − <var>W</var> home libraries have arrived, and suppose the <var>R</var> libraries that answer the reader first are a uniform random subset of the <var>N</var> home libraries.</span><span class="m">Suppose a client reads at the exact instant a version is committed, before the messages to the remaining <var>N</var> − <var>W</var> replicas have arrived, and suppose the <var>R</var> replicas that answer the client first are a uniform random subset of the <var>N</var> replicas.</span></p>
+      <p><span class="i">With <var>N</var> = 3 home libraries and the quick way (<var>W</var> = 1, <var>R</var> = 1), only one home library holds the new edition at the moment of announcement, while two still hold the old one. A reader who takes one random reply therefore misses the new edition `2` times out of `3` (`66.7%`).</span><span class="m">With <var>N</var> = 3 replicas and the quick way (<var>W</var> = 1, <var>R</var> = 1), only one replica holds the new version at the moment of commit, while two still hold the old one. A client that takes one random reply therefore misses the new version 2 times out of 3 (66.7%).</span></p>
+      <p><span class="i">Earlier theory on <i>probabilistic quorums</i> pointed out that if <var>N</var> is large and <var>W</var> and <var>R</var> scale with <var>N</var> (say, a third of the libraries each), two random subsets of size <var>N</var>/3 almost never miss each other.</span><span class="m">Earlier theory on <i>probabilistic quorums</i> pointed out that if <var>N</var> is large and <var>W</var> and <var>R</var> scale with <var>N</var> (say, a third of the replicas each), two random subsets of size <var>N</var>/3 almost never miss each other.</span></p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>The chance of an old copy <em>about a third of the home libraries waited for, and a third asked</em></h4>
+      <h4><span class="i">The chance of an old copy <em>about a third of the home libraries waited for, and a third asked</em></span><span class="m">The chance of an old copy <em>about a third of the replicas waited for, and a third asked</em></span></h4>
       <table class="tbl" id="misstbl"></table>
-      <p class="note" style="margin:10px 0 0">The page works these out from the count of the ways the reader's home libraries can all lie among those the edition has not reached.</p>
+      <p class="note" style="margin:10px 0 0"><span class="i">The page works these out from the count of the ways the reader's home libraries can all lie among those the edition has not reached.</span><span class="m">The page works these out from the count of the ways the client’s replicas can all lie among those the version has not reached.</span></p>
     </div></div></div>
     <details class="proof">
       <summary>Proof · that the probability of a read missing the last write is C(N − W, R) / C(N, R)</summary>
@@ -197,30 +174,30 @@
         <li>So <var>p<sub>s</sub></var> = C(<var>N</var> − <var>W</var>, <var>R</var>) / C(<var>N</var>, <var>R</var>). For <var>N</var> = 3, <var>R</var> = <var>W</var> = 1 this is 2/3; for <var>N</var> = 100, <var>R</var> = <var>W</var> = 30 it is about 1.88 × 10<sup>−6</sup>, as the paper states.<span class="qed">∎</span></li>
       </ol>
     </details>
-    <p style="max-width:40em;margin-top:1.4rem">That combinatorial miracle is great if a work has `100` home libraries—where <var>W</var> = <var>R</var> = 30 misses less than twice in a million reads. Real systems, however, keep <var>N</var> = 3 copies of each item, not `100`! Why, then, do operators find <var>W</var> = 1, <var>R</var> = 1 so well-behaved when <var>N</var> = 3? Because two things come to the rescue: leeway in <em>editions</em> (<var>k</var>), and leeway in <em>time</em> (<var>t</var>).</p>
+    <p style="max-width:40em;margin-top:1.4rem"><span class="i">That combinatorial miracle is great if a work has `100` home libraries—where <var>W</var> = <var>R</var> = 30 misses less than twice in a million reads. Real systems, however, keep <var>N</var> = 3 copies of each item, not `100`! Why, then, do operators find <var>W</var> = 1, <var>R</var> = 1 so well-behaved when <var>N</var> = 3? Because two things come to the rescue: leeway in <em>editions</em> (<var>k</var>), and leeway in <em>time</em> (<var>t</var>).</span><span class="m">That combinatorial miracle is great if an item has 100 replicas—where <var>W</var> = <var>R</var> = 30 misses less than twice in a million reads. Real systems, however, keep <var>N</var> = 3 copies of each item, not 100! Why, then, do operators find <var>W</var> = 1, <var>R</var> = 1 so well-behaved when <var>N</var> = 3? Because two things come to the rescue: leeway in <em>versions</em> (<var>k</var>), and leeway in <em>time</em> (<var>t</var>).</span></p>
   </div>
 </section>
 
 <!-- ============================================================ How many editions behind -->
-<section class="spread dark" id="behind" data-name="How many editions behind">
+<section class="spread dark" id="behind" data-name="How many editions behind" data-name-m="How many versions behind">
   <a class="anchor" id="s4"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">Leeway in editions</div>
-      <h2>How many editions behind</h2>
-      <p class="lede">First, suppose a work is updated frequently and a reader does not strictly need the single newest edition, as long as the copy handed over is within the newest <var>k</var> editions (what the paper calls <b><var>k</var>-staleness</b>).</p>
-      <p>Each of the last <var>k</var> announced editions was written to <var>W</var> home libraries. A reader's <var>R</var> replies return something older than <em>all <var>k</var></em> of those editions only if the reader's group misses the write group of the newest edition, <em>and</em> misses the write group of the second-newest edition, and so on for all <var>k</var> editions. If each write group is independent with miss probability <var>p<sub>s</sub></var>, the chance of missing all <var>k</var> of them is simply <var>p<sub>s</sub><sup>k</sup></var>—which drops exponentially with <var>k</var>!</p>
+      <div class="kicker"><span class="i">Leeway in editions</span><span class="m">Leeway in versions</span></div>
+      <h2><span class="i">How many editions behind</span><span class="m">How many versions behind</span></h2>
+      <p class="lede"><span class="i">First, suppose a work is updated frequently and a reader does not strictly need the single newest edition, as long as the copy handed over is within the newest <var>k</var> editions (what the paper calls <b><var>k</var>-staleness</b>).</span><span class="m">First, suppose an item is updated frequently and a client does not strictly need the single newest version, as long as the copy returned is within the newest <var>k</var> versions (what the paper calls <b><var>k</var>-staleness</b>).</span></p>
+      <p><span class="i">Each of the last <var>k</var> announced editions was written to <var>W</var> home libraries. A reader's <var>R</var> replies return something older than <em>all <var>k</var></em> of those editions only if the reader's group misses the write group of the newest edition, <em>and</em> misses the write group of the second-newest edition, and so on for all <var>k</var> editions. If each write group is independent with miss probability <var>p<sub>s</sub></var>, the chance of missing all <var>k</var> of them is simply <var>p<sub>s</sub><sup>k</sup></var>—which drops exponentially with <var>k</var>!</span><span class="m">Each of the last <var>k</var> committed versions was written to <var>W</var> replicas. A client’s <var>R</var> replies return something older than <em>all <var>k</var></em> of those versions only if the client’s group misses the write group of the newest version, <em>and</em> misses the write group of the second-newest version, and so on for all <var>k</var> versions. If each write group is independent with miss probability <var>p<sub>s</sub></var>, the chance of missing all <var>k</var> of them is simply <var>p<sub>s</sub><sup>k</sup></var>—which drops exponentially with <var>k</var>!</span></p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>One of the newest few <em>three home libraries, the reader takes one reply</em></h4>
-      <div class="seglab">The writer waits for</div><div class="seg" id="kw" role="group" aria-label="Home libraries the writer waits for"></div>
+      <h4><span class="i">One of the newest few <em>three home libraries, the reader takes one reply</em></span><span class="m">One of the newest few <em>three replicas, the client takes one reply</em></span></h4>
+      <div class="seglab">The writer waits for</div><div class="seg" id="kw" role="group" aria-label="Home libraries the writer waits for" data-al-m="Replicas the writer waits for"></div>
       <div class="bars" id="kbars"></div>
-      <p class="note" style="margin:12px 0 0">Worked out from the rule: one chance of a miss for each edition that will do, all multiplied together.</p>
+      <p class="note" style="margin:12px 0 0"><span class="i">Worked out from the rule: one chance of a miss for each edition that will do, all multiplied together.</span><span class="m">Worked out from the rule: one chance of a miss for each version that will do, all multiplied together.</span></p>
     </div></div></div>
     <details class="proof">
       <summary>Proof · that PBS k-staleness is p<sub>sk</sub> = p<sub>s</sub><sup>k</sup></summary>
-      <p class="given">Let <var>p<sub>s</sub></var> = C(<var>N</var> − <var>W</var>, <var>R</var>) / C(<var>N</var>, <var>R</var>) be the probability that a read quorum misses one write quorum, and let <var>k</var> be the number of versions a reader will accept. <b>Claim.</b> A read returns a value more than <var>k</var> versions old with probability <var>p<sub>sk</sub></var> = <var>p<sub>s</sub></var><sup><var>k</var></sup>.</p>
+      <p class="given"><span class="i">Let <var>p<sub>s</sub></var> = C(<var>N</var> − <var>W</var>, <var>R</var>) / C(<var>N</var>, <var>R</var>) be the probability that a read quorum misses one write quorum, and let <var>k</var> be the number of versions a reader will accept. <b>Claim.</b> A read returns a value more than <var>k</var> versions old with probability <var>p<sub>sk</sub></var> = <var>p<sub>s</sub></var><sup><var>k</var></sup>.</span><span class="m">Let <var>p<sub>s</sub></var> = C(<var>N</var> − <var>W</var>, <var>R</var>) / C(<var>N</var>, <var>R</var>) be the probability that a read quorum misses one write quorum, and let <var>k</var> be the number of versions a client will accept. <b>Claim.</b> A read returns a value more than <var>k</var> versions old with probability <var>p<sub>sk</sub></var> = <var>p<sub>s</sub></var><sup><var>k</var></sup>.</span></p>
       <ol class="proofsteps">
         <li>This is §3.1 for quorums that do not expand. A read returns a value within <var>k</var> versions of the latest committed version exactly when its read quorum intersects at least one of the write quorums of the last <var>k</var> committed versions.</li>
         <li>Treat the <var>k</var> write quorums as independent, each missed by the read quorum with probability <var>p<sub>s</sub></var> = C(<var>N</var> − <var>W</var>, <var>R</var>) / C(<var>N</var>, <var>R</var>).</li>
@@ -229,8 +206,8 @@
         <li>For expanding quorums the paper notes this is an upper bound on the probability of staleness, since writes only reach more replicas with time.<span class="qed">∎</span></li>
       </ol>
     </details>
-    <p style="max-width:40em;margin-top:1.4rem">Tolerating a few versions of staleness also reduces the load on the libraries: because a smaller <var>R</var> and <var>W</var> suffice to hit high confidence over <var>k</var> versions, each home library has to handle fewer couriers per read and write.</p>
-    <p style="max-width:40em;margin-top:.2rem">Even more important than leeway in editions, however, is what happens in the moments <em>after</em> an edition is announced—while the remaining couriers finish their walk.</p>
+    <p style="max-width:40em;margin-top:1.4rem"><span class="i">Tolerating a few versions of staleness also reduces the load on the libraries: because a smaller <var>R</var> and <var>W</var> suffice to hit high confidence over <var>k</var> versions, each home library has to handle fewer couriers per read and write.</span><span class="m">Tolerating a few versions of staleness also reduces the load on the replicas: because a smaller <var>R</var> and <var>W</var> suffice to hit high confidence over <var>k</var> versions, each replica has to handle fewer messages per read and write.</span></p>
+    <p style="max-width:40em;margin-top:.2rem"><span class="i">Even more important than leeway in editions, however, is what happens in the moments <em>after</em> an edition is announced—while the remaining couriers finish their walk.</span><span class="m">Even more important than leeway in versions, however, is what happens in the moments <em>after</em> a version is committed—while the remaining messages finish their journey.</span></p>
   </div>
 </section>
 
@@ -242,13 +219,13 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">Leeway in time</div>
       <h2>How long until it shows</h2>
-      <p class="lede">Remember that the writer sent couriers to <em>all three</em> home libraries at the start, even though he announced the edition as soon as the fastest <var>W</var> answered. Moments after the announcement, the couriers to the other <var>N</var> − <var>W</var> home libraries arrive too (`expanding quorums`).</p>
-      <p>The paper defines <b><var>t</var>-visibility</b> as the probability that a reader who starts his request at time <var>t</var> after an edition is announced receives that edition (or a newer one).</p>
-      <p>At the exact instant of announcement (<var>t</var> = 0), at least <var>W</var> home libraries hold the edition. A short time <var>t</var> later, the number of home libraries <var>c</var> holding the edition has grown from <var>W</var> toward <var>N</var>. Once all <var>N</var> = 3 home libraries hold it, even a reader who asks only <var>R</var> = 1 library is `100%` certain to get it!</p>
+      <p class="lede"><span class="i">Remember that the writer sent couriers to <em>all three</em> home libraries at the start, even though he announced the edition as soon as the fastest <var>W</var> answered. Moments after the announcement, the couriers to the other <var>N</var> − <var>W</var> home libraries arrive too (`expanding quorums`).</span><span class="m">Remember that the writer sent messages to <em>all three</em> replicas at the start, even though it committed as soon as the fastest <var>W</var> answered. Moments after the commit, the messages to the other <var>N</var> − <var>W</var> replicas arrive too (<i>expanding quorums</i>).</span></p>
+      <p><span class="i">The paper defines <b><var>t</var>-visibility</b> as the probability that a reader who starts his request at time <var>t</var> after an edition is announced receives that edition (or a newer one).</span><span class="m">The paper defines <b><var>t</var>-visibility</b> as the probability that a client that starts its read at time <var>t</var> after a version is committed receives that version (or a newer one).</span></p>
+      <p><span class="i">At the exact instant of announcement (<var>t</var> = 0), at least <var>W</var> home libraries hold the edition. A short time <var>t</var> later, the number of home libraries <var>c</var> holding the edition has grown from <var>W</var> toward <var>N</var>. Once all <var>N</var> = 3 home libraries hold it, even a reader who asks only <var>R</var> = 1 library is `100%` certain to get it!</span><span class="m">At the exact instant of commit (<var>t</var> = 0), at least <var>W</var> replicas hold the version. A short time <var>t</var> later, the number of replicas <var>c</var> holding the version has grown from <var>W</var> toward <var>N</var>. Once all <var>N</var> = 3 replicas hold it, even a client that asks only <var>R</var> = 1 replica is 100% certain to get it!</span></p>
     </div>
     <div class="cards3" style="grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Two things to note</div><h3>A newer edition ends the question</h3><p>If an even newer edition is announced before the first edition's couriers have finished arriving, a reader who receives the newer edition is completely up to date.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Two things to note</div><h3>Not yet announced is not stale</h3><p>If a reader happens to read an edition that has already reached one home library but has not yet been announced by its writer, that copy is <em>ahead</em> of the last announced edition, not stale.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Two things to note</div><h3><span class="i">A newer edition ends the question</span><span class="m">A newer version ends the question</span></h3><p><span class="i">If an even newer edition is announced before the first edition's couriers have finished arriving, a reader who receives the newer edition is completely up to date.</span><span class="m">If an even newer version is committed before the first version’s messages have finished arriving, a client that receives the newer version is completely up to date.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Two things to note</div><h3><span class="i">Not yet announced is not stale</span><span class="m">Not yet committed is not stale</span></h3><p><span class="i">If a reader happens to read an edition that has already reached one home library but has not yet been announced by its writer, that copy is <em>ahead</em> of the last announced edition, not stale.</span><span class="m">If a client happens to read a version that has already reached one replica but has not yet been committed by its writer, that copy is <em>ahead</em> of the last committed version, not stale.</span></p></div></div></div>
     </div>
     <details class="proof">
       <summary>Proof · that the probability of a stale read t after commit is a sum over how many replicas hold the write</summary>
@@ -260,7 +237,7 @@
         <li>The paper notes that this assumes instant reads and instant commitment after the <var>W</var>th copy arrives, so it is a conservative upper bound on the true probability of staleness. When the last <var>k</var> writes all happened at the same time the same argument gives the chance of missing all <var>k</var> as the <var>k</var>th power, the paper's ⟨<var>k</var>, <var>t</var>⟩-staleness.<span class="qed">∎</span></li>
       </ol>
     </details>
-    <p style="max-width:40em;margin-top:1.4rem">Combining both kinds of leeway gives <b>⟨<var>k</var>, <var>t</var>⟩-staleness</b>: the chance that a read begun <var>t</var> after commit returns one of the newest <var>k</var> editions. To compute <var>t</var>-visibility accurately, however, we have to look closely at the four courier journeys involved in a write and a read.</p>
+    <p style="max-width:40em;margin-top:1.4rem"><span class="i">Combining both kinds of leeway gives <b>⟨<var>k</var>, <var>t</var>⟩-staleness</b>: the chance that a read begun <var>t</var> after commit returns one of the newest <var>k</var> editions. To compute <var>t</var>-visibility accurately, however, we have to look closely at the four courier journeys involved in a write and a read.</span><span class="m">Combining both kinds of leeway gives <b>⟨<var>k</var>, <var>t</var>⟩-staleness</b>: the chance that a read begun <var>t</var> after commit returns one of the newest <var>k</var> versions. To compute <var>t</var>-visibility accurately, however, we have to look closely at the four message journeys involved in a write and a read.</span></p>
   </div>
 </section>
 
@@ -269,43 +246,46 @@
   <a class="anchor" id="s6"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
   <div class="wrap">
-    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
-      <div class="pop fromleft"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/p03-seaside.jpg" alt="A library on a headland seen from the side: a porch of two plain columns and a tiled roof above walls of pale plaster with small barred windows, an olive tree close at the right and the sea beyond" loading="lazy"></div></div></div>
+    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div class="pop fromleft i"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/p03-seaside.jpg" alt="A library on a headland seen from the side: a porch of two plain columns and a tiled roof above walls of pale plaster with small barred windows, an olive tree close at the right and the sea beyond" loading="lazy"></div></div></div>
       <div>
-        <div class="kicker">The couriers' journeys</div>
+        <div class="kicker"><span class="i">The couriers' journeys</span><span class="m">The message journeys</span></div>
         <h2>The four legs</h2>
-        <p class="lede">Every write-and-read pair involves four courier legs (which the paper calls the <b>WARS</b> model), and each leg takes a random transit time:</p>
-        <p>1. <b>W — The edition's way out</b> from the writer to each home library.<br>
+        <p class="lede"><span class="i">Every write-and-read pair involves four courier legs (which the paper calls the <b>WARS</b> model), and each leg takes a random transit time:</span><span class="m">Every write-and-read pair involves four message legs (which the paper calls the <b>WARS</b> model), and each leg takes a random transit time:</span></p>
+        <p><span class="i">1. <b>W — The edition's way out</b> from the writer to each home library.<br>
            2. <b>A — The acknowledgment's way back</b> from each home library to the writer.<br>
            3. <b>R — The request's way out</b> from the reader to each home library.<br>
-           4. <b>S — The copy's way back</b> from each home library to the reader.</p>
-        <p>When does a particular home library <var>i</var> hand a stale copy to a reader who starts his read at time <var>t</var> after the announcement? Exactly when the reader's request reaches library <var>i</var> <em>before</em> the writer's edition courier does! And the reader's overall answer is stale if and only if <em>every one</em> of the fastest <var>R</var> replies he receives came from a home library where the request outran the edition.</p>
+           4. <b>S — The copy's way back</b> from each home library to the reader.</span><span class="m">1. <b>W — The write’s way out</b> from the writer to each replica.<br>
+           2. <b>A — The acknowledgment’s way back</b> from each replica to the writer.<br>
+           3. <b>R — The request’s way out</b> from the client to each replica.<br>
+           4. <b>S — The response’s way back</b> from each replica to the client.</span></p>
+        <p><span class="i">When does a particular home library <var>i</var> hand a stale copy to a reader who starts his read at time <var>t</var> after the announcement? Exactly when the reader's request reaches library <var>i</var> <em>before</em> the writer's edition courier does! And the reader's overall answer is stale if and only if <em>every one</em> of the fastest <var>R</var> replies he receives came from a home library where the request outran the edition.</span><span class="m">When does a particular replica <var>i</var> hand a stale copy to a client that starts its read at time <var>t</var> after the commit? Exactly when the client’s request reaches replica <var>i</var> <em>before</em> the writer’s message does! And the client’s overall answer is stale if and only if <em>every one</em> of the fastest <var>R</var> replies it receives came from a replica where the request outran the write.</span></p>
       </div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>A request that outruns the edition <em>the writer, one home library and the reader</em></h4>
+      <h4><span class="i">A request that outruns the edition <em>the writer, one home library and the reader</em></span><span class="m">A request that outruns the write <em>the writer, one replica and the client</em></span></h4>
       <div class="hill-wrap">
-        <svg class="fig" id="legsvg" role="img" aria-label="Space-time drawn in the round with three places, the writer, one home library and the reader, later moments further out. The edition leaves the writer early and reaches the home library late. The reader's request leaves after the announcement and reaches the home library first, so the old copy goes back to the reader."></svg>
+        <svg class="fig" id="legsvg" role="img" aria-label="Space-time drawn in the round with three places, the writer, one home library and the reader, later moments further out. The edition leaves the writer early and reaches the home library late. The reader's request leaves after the announcement and reaches the home library first, so the old copy goes back to the reader." data-al-m="Space-time drawn in the round with three places, the writer, one replica and the client, later moments further out. The write leaves the writer early and reaches the replica late; the client’s request, sent later, reaches the replica first"></svg>
         <div>
           <ul class="checks">
-            <li><b>W</b> the writer · <b>K</b> one home library · <b>R</b> the reader</li>
-            <li><span class="chip"><i style="background:#e0b84a"></i>1</span> The writer sends the edition. Its way out to this home library is slow.</li>
-            <li><span class="chip"><i style="background:#e0b84a"></i>2</span> Enough other home libraries answer, and the writer announces it.</li>
-            <li><span class="chip"><i style="background:#8fb3d9"></i>3</span> A while later the reader sends a request. Its way out is quick.</li>
-            <li><span class="chip"><i style="background:#fde0d4"></i>4</span> The request arrives first. The home library sends back the old copy.</li>
-            <li><span class="chip"><i style="background:#e0b84a"></i>5</span> The edition arrives, too late for this reader.</li>
+            <li><span class="i"><b>W</b> the writer · <b>K</b> one home library · <b>R</b> the reader</span><span class="m"><b>W</b> the writer · <b>K</b> one replica · <b>R</b> the client</span></li>
+            <li><span class="chip"><i style="background:#e0b84a"></i>1</span> <span class="i">The writer sends the edition. Its way out to this home library is slow.</span><span class="m">The writer sends the version. Its way out to this replica is slow.</span></li>
+            <li><span class="chip"><i style="background:#e0b84a"></i>2</span> <span class="i">Enough other home libraries answer, and the writer announces it.</span><span class="m">Enough other replicas answer, and the writer commits it.</span></li>
+            <li><span class="chip"><i style="background:#8fb3d9"></i>3</span> <span class="i">A while later the reader sends a request. Its way out is quick.</span><span class="m">A while later the client sends a request. Its way out is quick.</span></li>
+            <li><span class="chip"><i style="background:#fde0d4"></i>4</span> <span class="i">The request arrives first. The home library sends back the old copy.</span><span class="m">The request arrives first. The replica sends back the old copy.</span></li>
+            <li><span class="chip"><i style="background:#e0b84a"></i>5</span> <span class="i">The edition arrives, too late for this reader.</span><span class="m">The version arrives, too late for this client.</span></li>
           </ul>
         </div>
       </div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">Because the announcement time <var>w<sub>t</sub></var> is the <var>W</var>-th order statistic of <var>W</var> + <var>A</var> and the reader takes the <var>R</var> smallest round trips of <var>R</var> + <var>S</var>, there is no simple closed-form formula for the probability of a stale read at time <var>t</var>. Instead, the librarians compute the exact odds by <b>Monte Carlo simulation</b>: replaying the four legs tens of thousands of times using journey times drawn from the couriers' logbooks.</p>
+    <p style="max-width:40em;margin-top:1.4rem"><span class="i">Because the announcement time <var>w<sub>t</sub></var> is the <var>W</var>-th order statistic of <var>W</var> + <var>A</var> and the reader takes the <var>R</var> smallest round trips of <var>R</var> + <var>S</var>, there is no simple closed-form formula for the probability of a stale read at time <var>t</var>. Instead, the librarians compute the exact odds by <b>Monte Carlo simulation</b>: replaying the four legs tens of thousands of times using journey times drawn from the couriers' logbooks.</span><span class="m">Because the commit time <var>w<sub>t</sub></var> is the <var>W</var>-th order statistic of <var>W</var> + <var>A</var> and the client takes the <var>R</var> smallest round trips of <var>R</var> + <var>S</var>, there is no simple closed-form formula for the probability of a stale read at time <var>t</var>. Instead, the exact odds are computed by <b>Monte Carlo simulation</b>: replaying the four legs tens of thousands of times using journey times drawn from measured latency logs.</span></p>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>Play it over ten thousand times <em>three home libraries; every journey's time is drawn afresh</em></h4>
+      <h4><span class="i">Play it over ten thousand times <em>three home libraries; every journey's time is drawn afresh</em></span><span class="m">Play it over ten thousand times <em>three replicas; every journey’s time is drawn afresh</em></span></h4>
       <div class="hill-wrap">
         <div>
-          <div class="seglab">The writer waits for</div><div class="seg" id="lw" role="group" aria-label="Home libraries the writer waits for"></div>
-          <div class="seglab">The reader takes the first</div><div class="seg" id="lr" role="group" aria-label="Replies the reader takes"></div>
-          <div class="seglab">The edition's way out, against the other three legs</div><div class="seg" id="lslow" role="group" aria-label="How slow the edition's way out is"></div>
+          <div class="seglab">The writer waits for</div><div class="seg" id="lw" role="group" aria-label="Home libraries the writer waits for" data-al-m="Replicas the writer waits for"></div>
+          <div class="seglab"><span class="i">The reader takes the first</span><span class="m">The client takes the first</span></div><div class="seg" id="lr" role="group" aria-label="Replies the reader takes" data-al-m="Replies the client takes"></div>
+          <div class="seglab"><span class="i">The edition's way out, against the other three legs</span><span class="m">The write’s way out, against the other three legs</span></div><div class="seg" id="lslow" role="group" aria-label="How slow the edition's way out is"></div>
         </div>
         <div>
           <div class="bars" id="lbars"></div>
@@ -330,26 +310,26 @@
 </section>
 
 <!-- ============================================================ What the logbooks say -->
-<section class="spread light" id="logs" data-name="What the logbooks say">
+<section class="spread light" id="logs" data-name="What the logbooks say" data-name-m="What the latency logs say">
   <a class="anchor" id="s7"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">The replay, run on real roads</div>
-      <h2>What the logbooks say</h2>
-      <p class="lede">Running the four-leg replay reveals first of all <em>which</em> leg governs staleness: the edition's way out (<var>W</var>), and especially how uneven (high-variance) it is.</p>
-      <p>Why? Because by the time the writer announces the edition (<var>w<sub>t</sub></var> = <var>W</var><sub>1</sub> + <var>A</var><sub>1</sub>), the edition couriers to the other two home libraries have already been walking for <var>w<sub>t</sub></var>! If all three edition couriers walk at nearly the same pace, the other two arrive while the acknowledgment is still travelling back to the writer—so at the very instant of announcement (<var>t</var> = 0), a reader using the quick way (<var>W</var> = 1, <var>R</var> = 1) already gets the new edition `9` times out of `10`! Only when <var>W</var> is much slower or much more variable than the other legs can a late edition courier still be on the road when a reader's request arrives.</p>
+      <div class="kicker"><span class="i">The replay, run on real roads</span><span class="m">The replay, run on real networks</span></div>
+      <h2><span class="i">What the logbooks say</span><span class="m">What the latency logs say</span></h2>
+      <p class="lede"><span class="i">Running the four-leg replay reveals first of all <em>which</em> leg governs staleness: the edition's way out (<var>W</var>), and especially how uneven (high-variance) it is.</span><span class="m">Running the four-leg replay reveals first of all <em>which</em> leg governs staleness: the write’s way out (<var>W</var>), and especially how uneven (high-variance) it is.</span></p>
+      <p><span class="i">Why? Because by the time the writer announces the edition (<var>w<sub>t</sub></var> = <var>W</var><sub>1</sub> + <var>A</var><sub>1</sub>), the edition couriers to the other two home libraries have already been walking for <var>w<sub>t</sub></var>! If all three edition couriers walk at nearly the same pace, the other two arrive while the acknowledgment is still travelling back to the writer—so at the very instant of announcement (<var>t</var> = 0), a reader using the quick way (<var>W</var> = 1, <var>R</var> = 1) already gets the new edition `9` times out of `10`! Only when <var>W</var> is much slower or much more variable than the other legs can a late edition courier still be on the road when a reader's request arrives.</span><span class="m">Why? Because by the time the writer commits the version (<var>w<sub>t</sub></var> = <var>W</var><sub>1</sub> + <var>A</var><sub>1</sub>), the write messages to the other two replicas have already been travelling for <var>w<sub>t</sub></var>! If all three write messages travel at nearly the same pace, the other two arrive while the acknowledgment is still travelling back to the writer—so at the very instant of commit (<var>t</var> = 0), a client using the quick way (<var>W</var> = 1, <var>R</var> = 1) already gets the new version 9 times out of 10! Only when <var>W</var> is much slower or much more variable than the other legs can a late write message still be in flight when a client’s request arrives.</span></p>
       <p>The authors then replayed production latency distributions from LinkedIn (`LNKD-SSD` and `LNKD-DISK`), Yammer (`YMMR`), and wide-area networks (`WAN`).</p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>Four coasts, the same three home libraries, the quick way <em>the chance of the new edition at the moment it is announced</em></h4>
+      <h4><span class="i">Four coasts, the same three home libraries, the quick way <em>the chance of the new edition at the moment it is announced</em></span><span class="m">Four networks, the same three replicas, the quick way <em>the chance of the new version at the moment it is committed</em></span></h4>
       <div class="bars" id="cbars"></div>
       <p class="note" style="margin:12px 0 0">These are the paper's measures. The page does not work them out.</p>
     </div></div></div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the logbooks show</div><h3>A long tail delays certainty</h3><p>On the SSD coast (`LNKD-SSD`), immediate visibility at <var>t</var> = 0 is high (`95%`), because median writes are fast; yet because occasional straggler writes take much longer (a long tail), reaching `99.9%` certainty takes longer than on more uniform paths.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the logbooks show</div><h3>More home libraries hurt the first moment, not the end</h3><p>When writes are slow (`YMMR`, where disk writes dominate network time), increasing <var>N</var> from `2` to `10` with <var>W</var> = <var>R</var> = 1 lowers immediate visibility at <var>t</var> = 0 from `58%` to `21%`, because only one of ten libraries has finished writing at commit. Yet the time to reach `99.9%` visibility increases by only about `20%`.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">What the logbooks show</div><h3>The quick way costs little</h3><p>Bumping the reader from <var>R</var> = 1 to <var>R</var> = 2 (while keeping <var>W</var> = 1) slashes the wait for `99.9%` visibility by `85%`, while keeping combined read-and-write latency vastly lower than strict quorums.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num"><span class="i">What the logbooks show</span><span class="m">What the latency logs show</span></div><h3>A long tail delays certainty</h3><p><span class="i">On the SSD coast (`LNKD-SSD`), immediate visibility at <var>t</var> = 0 is high (`95%`), because median writes are fast; yet because occasional straggler writes take much longer (a long tail), reaching `99.9%` certainty takes longer than on more uniform paths.</span><span class="m">On the SSD network (LNKD-SSD), immediate visibility at <var>t</var> = 0 is high (95%), because median writes are fast; yet because occasional straggler writes take much longer (a long tail), reaching 99.9% certainty takes longer than on more uniform paths.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num"><span class="i">What the logbooks show</span><span class="m">What the latency logs show</span></div><h3><span class="i">More home libraries hurt the first moment, not the end</span><span class="m">More replicas hurt the first moment, not the end</span></h3><p><span class="i">When writes are slow (`YMMR`, where disk writes dominate network time), increasing <var>N</var> from `2` to `10` with <var>W</var> = <var>R</var> = 1 lowers immediate visibility at <var>t</var> = 0 from `58%` to `21%`, because only one of ten libraries has finished writing at commit. Yet the time to reach `99.9%` visibility increases by only about `20%`.</span><span class="m">When writes are slow (YMMR, where disk writes dominate network time), increasing <var>N</var> from 2 to 10 with <var>W</var> = <var>R</var> = 1 lowers immediate visibility at <var>t</var> = 0 from 58% to 21%, because only one of ten replicas has finished writing at commit. Yet the time to reach 99.9% visibility increases by only about 20%.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num"><span class="i">What the logbooks show</span><span class="m">What the latency logs show</span></div><h3>The quick way costs little</h3><p><span class="i">Bumping the reader from <var>R</var> = 1 to <var>R</var> = 2 (while keeping <var>W</var> = 1) slashes the wait for `99.9%` visibility by `85%`, while keeping combined read-and-write latency vastly lower than strict quorums.</span><span class="m">Bumping the client from <var>R</var> = 1 to <var>R</var> = 2 (while keeping <var>W</var> = 1) slashes the wait for 99.9% visibility by 85%, while keeping combined read-and-write latency vastly lower than strict quorums.</span></p></div></div></div>
     </div>
   </div>
 </section>
@@ -360,18 +340,18 @@
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">A reader who returns</div>
+      <div class="kicker"><span class="i">A reader who returns</span><span class="m">A client that returns</span></div>
       <h2>Never going backwards</h2>
-      <p class="lede">Sometimes a returning reader does not mind if a copy is slightly behind the very newest edition, as long as he never sees time run backwards—that is, he is never handed an edition <em>older</em> than one he already read on an earlier visit (`monotonic reads`).</p>
-      <p>How likely is a returning reader to step backwards under partial quorums? Suppose that between two visits by this reader, an average of <var>m</var> = γ<sub>gw</sub> / γ<sub>cr</sub> new editions are announced across the coast. Then any of the newest 1 + <var>m</var> editions (the one the reader saw last time, plus the <var>m</var> editions written since) is at least as new as what the reader saw before! That reduces monotonic reads directly to <var>k</var>-staleness with <var>k</var> = 1 + <var>m</var>.</p>
+      <p class="lede"><span class="i">Sometimes a returning reader does not mind if a copy is slightly behind the very newest edition, as long as he never sees time run backwards—that is, he is never handed an edition <em>older</em> than one he already read on an earlier visit (`monotonic reads`).</span><span class="m">Sometimes a returning client does not mind if a copy is slightly behind the very newest version, as long as it never sees time run backwards—that is, it is never handed a version <em>older</em> than one it already read on an earlier visit (<i>monotonic reads</i>).</span></p>
+      <p><span class="i">How likely is a returning reader to step backwards under partial quorums? Suppose that between two visits by this reader, an average of <var>m</var> = γ<sub>gw</sub> / γ<sub>cr</sub> new editions are announced across the coast. Then any of the newest 1 + <var>m</var> editions (the one the reader saw last time, plus the <var>m</var> editions written since) is at least as new as what the reader saw before! That reduces monotonic reads directly to <var>k</var>-staleness with <var>k</var> = 1 + <var>m</var>.</span><span class="m">How likely is a returning client to step backwards under partial quorums? Suppose that between two visits by this client, an average of <var>m</var> = γ<sub>gw</sub> / γ<sub>cr</sub> new versions are committed. Then any of the newest 1 + <var>m</var> versions (the one the client saw last time, plus the <var>m</var> versions written since) is at least as new as what the client saw before! That reduces monotonic reads directly to <var>k</var>-staleness with <var>k</var> = 1 + <var>m</var>.</span></p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>How likely is a step backwards? <em>three home libraries, the quick way</em></h4>
-      <div class="seglab">Editions announced between two visits, on average</div><div class="seg" id="bq" role="group" aria-label="Editions announced between visits"></div>
-      <div class="counts"><span><b id="bk">1</b>editions will do</span><span><b id="bp"></b>chance of going backwards</span></div>
+      <h4><span class="i">How likely is a step backwards? <em>three home libraries, the quick way</em></span><span class="m">How likely is a step backwards? <em>three replicas, the quick way</em></span></h4>
+      <div class="seglab"><span class="i">Editions announced between two visits, on average</span><span class="m">Versions committed between two visits, on average</span></div><div class="seg" id="bq" role="group" aria-label="Editions announced between visits" data-al-m="Versions committed between visits"></div>
+      <div class="counts"><span><b id="bk">1</b><span class="i">editions will do</span><span class="m">versions will do</span></span><span><b id="bp"></b>chance of going backwards</span></div>
       <p class="say" id="bsay"></p>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">One sure way</div><h3>Keep to the same home library</h3><p>Because a single home library only ever replaces an edition when a larger tally arrives, its shelf never moves backwards. A reader who always directs his requests to the same home library (`sticky replica`) is guaranteed never to step backwards unless that library closes.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">One sure way</div><h3><span class="i">Keep to the same home library</span><span class="m">Stick to the same replica</span></h3><p><span class="i">Because a single home library only ever replaces an edition when a larger tally arrives, its shelf never moves backwards. A reader who always directs his requests to the same home library (`sticky replica`) is guaranteed never to step backwards unless that library closes.</span><span class="m">Because a single replica only ever replaces a version when a larger timestamp arrives, its copy never moves backwards. A client that always directs its requests to the same replica (<i>sticky replica</i>) is guaranteed never to step backwards unless that replica goes down.</span></p></div></div></div>
     <details class="proof">
       <summary>Proof · that PBS monotonic reads is k-staleness with k = 1 + γ<sub>gw</sub> / γ<sub>cr</sub></summary>
       <p class="given">Let a client read a data item at rate γ<sub>cr</sub> and let the item be written, by all clients, at rate γ<sub>gw</sub>. <b>Claim.</b> The probability of violating monotonic reads is <var>p<sub>sMR</sub></var> = (C(<var>N</var> − <var>W</var>, <var>R</var>) / C(<var>N</var>, <var>R</var>))<sup>1 + γ<sub>gw</sub> / γ<sub>cr</sub></sup>.</p>
@@ -390,35 +370,35 @@
   <a class="anchor" id="s9"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
   <div class="wrap">
-    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
         <div class="kicker">The limits</div>
         <h2>What it does not say</h2>
-        <p class="lede">PBS lets a library state the exact odds that a copy is current. Here are four things it cannot say.</p>
+        <p class="lede"><span class="i">PBS lets a library state the exact odds that a copy is current. Here are four things it cannot say.</span><span class="m">PBS lets a system state the exact odds that a copy is current. Here are four things it cannot say.</span></p>
       </div>
-      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p04-door.jpg" alt="A library seen from behind and to one side among trees: its tiled gable, the small pediment of its porch and a barred window in a wall of pale plaster" loading="lazy"></div></div></div>
+      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/p04-door.jpg" alt="A library seen from behind and to one side among trees: its tiled gable, the small pediment of its porch and a barred window in a wall of pale plaster" loading="lazy"></div></div></div>
     </div>
     <div class="cards3 five">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is this particular copy guaranteed to be current?</h3><p>With partial quorums (<var>R</var> + <var>W</var> ≤ <var>N</var>), the answer is always no. The library can promise <i>nine times in ten you receive the newest edition within ten milliseconds</i>, but in the worst case—if couriers are stopped—a partial quorum can return an arbitrarily old copy.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What do the odds assume?</h3><p>They assume that courier delays are drawn independently from the distributions recorded in the logbooks, with no stopped couriers or closed libraries. They also conservatively ignore background anti-entropy (the festival and word of mouth) and read repair, which make real-world staleness even rarer.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Can a reader tell at the moment of reading that a copy is stale?</h3><p>Not when the first <var>R</var> replies arrive. Only afterward, when the remaining <var>N</var> − <var>R</var> replies trickle in, can the reader spot a larger tally that arrived late—and even that can be a harmless false alarm if the late reply reflects an edition written <em>after</em> the read began.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What of multi-work invariants and causal order?</h3><p>PBS measures recency on a single work. Readers who need guarantees across several works—such as never seeing a reply before the letter it answers, or never lending the last copy twice—need transactional guarantees, which we meet in <a href="../what-you-can-promise-alone/index.html">What You Can Promise Alone</a>.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is this particular copy guaranteed to be current?</h3><p><span class="i">With partial quorums (<var>R</var> + <var>W</var> ≤ <var>N</var>), the answer is always no. The library can promise <i>nine times in ten you receive the newest edition within ten milliseconds</i>, but in the worst case—if couriers are stopped—a partial quorum can return an arbitrarily old copy.</span><span class="m">With partial quorums (<var>R</var> + <var>W</var> ≤ <var>N</var>), the answer is always no. The system can promise <i>nine times in ten you receive the newest version within ten milliseconds</i>, but in the worst case—if messages are stopped—a partial quorum can return an arbitrarily old copy.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What do the odds assume?</h3><p><span class="i">They assume that courier delays are drawn independently from the distributions recorded in the logbooks, with no stopped couriers or closed libraries. They also conservatively ignore background anti-entropy (the festival and word of mouth) and read repair, which make real-world staleness even rarer.</span><span class="m">They assume that message delays are drawn independently from the distributions recorded in the latency logs, with no stopped messages or crashed replicas. They also conservatively ignore background anti-entropy and read repair, which make real-world staleness even rarer.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3><span class="i">Can a reader tell at the moment of reading that a copy is stale?</span><span class="m">Can a client tell at the moment of reading that a copy is stale?</span></h3><p><span class="i">Not when the first <var>R</var> replies arrive. Only afterward, when the remaining <var>N</var> − <var>R</var> replies trickle in, can the reader spot a larger tally that arrived late—and even that can be a harmless false alarm if the late reply reflects an edition written <em>after</em> the read began.</span><span class="m">Not when the first <var>R</var> replies arrive. Only afterward, when the remaining <var>N</var> − <var>R</var> replies trickle in, can the client spot a larger timestamp that arrived late—and even that can be a harmless false alarm if the late reply reflects a version written <em>after</em> the read began.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3><span class="i">What of multi-work invariants and causal order?</span><span class="m">What of multi-item invariants and causal order?</span></h3><p><span class="i">PBS measures recency on a single work. Readers who need guarantees across several works—such as never seeing a reply before the letter it answers, or never lending the last copy twice—need transactional guarantees, which we meet in <a href="../what-you-can-promise-alone/index.html">What You Can Promise Alone</a>.</span><span class="m">PBS measures recency on a single item. Clients that need guarantees across several items—such as never seeing a reply before the message it answers, or never spending the last unit twice—need transactional guarantees, which we meet in <a href="../what-you-can-promise-alone/index.html">What You Can Promise Alone</a>.</span></p></div></div></div>
     </div>
   </div>
 </section>
 
 <!-- ============================================================ Back to machines -->
-<section class="spread dark" id="why" data-name="Back to machines">
+<section class="spread dark" id="why" data-name="Back to machines" data-name-m="The result">
   <a class="anchor" id="s10"></a>
   <a class="anchor" id="refs"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">Back to machines</div>
-      <h2>The home libraries were replicas</h2>
-      <p class="lede">Every home library is a replica, and the two numbers are the write and read quorums. Hover or tap to see who is who.</p>
+      <div class="kicker"><span class="i">Back to machines</span><span class="m">The result</span></div>
+      <h2><span class="i">The home libraries were replicas</span><span class="m">What the analysis shows</span></h2>
+      <p class="lede"><span class="i">Every home library is a replica, and the two numbers are the write and read quorums. Hover or tap to see who is who.</span><span class="m">Everything above is quorum arithmetic on <var>N</var> replicas: <var>W</var> acknowledgments before a write commits, <var>R</var> responses before a read returns, and four random message delays between them.</span></p>
     </div>
-    <div class="map" id="map">
+    <div class="map i" id="map">
       <div class="hd" style="text-align:right;padding-right:6px">On the coast</div><div></div><div class="hd">In computing</div>
     </div>
     <div class="meander" style="margin:3rem auto"></div>
@@ -426,22 +406,22 @@
       <p class="big">With small quorums a read may be stale, and the chance falls fast with every version of leeway and with every moment since the write was acknowledged.</p>
       <p class="lede" style="margin:0 auto">It is a probability and a way to tune it. The worst case stays unbounded.</p>
       <div class="links">
-        <a href="../../places/scholars-coast/index.html">The scholars' coast, in detail</a>
+        <a class="i" href="../../places/scholars-coast/index.html">The scholars' coast, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
       </div>
     </div>
     <div class="apparatus">
-      <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/scholars-coast/index.html">The Scholars' Coast</a></p>
+      <p class="lineage i"><span class="lbl">Setting</span> <a href="../../places/scholars-coast/index.html">The Scholars' Coast</a></p>
       <details class="proof">
         <summary>The paper behind this book</summary>
         <p>Peter Bailis, Shivaram Venkataraman, Michael J. Franklin, Joseph M. Hellerstein and Ion Stoica, <i>Probabilistically Bounded Staleness for Practical Partial Quorums</i>. Proceedings of the VLDB Endowment, Vol. 5, No. 8 (38th International Conference on Very Large Data Bases, Istanbul, August 2012), 776–787. — Partial quorums, PBS k-staleness, t-visibility and monotonic reads, the WARS model, and a Monte Carlo evaluation on production latency data.</p>
         <p><b>The ideas, plainly.</b></p>
-        <p>Bailis and co-authors study data kept on several machines, where a write is acknowledged after W of N machines have it and a read returns after R machines have answered. If R + W exceeds N, a read always meets the latest write. Operators often choose smaller numbers, for speed, so that a read may miss it. The paper asks how often, and shows that a read within k versions of the latest has probability 1 minus p to the k, where p is the chance of a plain miss: the chance of being stale falls exponentially with the leeway allowed. Monotonic reads is the same idea with k set by how often a reader returns compared with how often the data is written.</p>
+        <p><span class="i">Bailis and co-authors study data kept on several machines, where a write is acknowledged after W of N machines have it and a read returns after R machines have answered. If R + W exceeds N, a read always meets the latest write. Operators often choose smaller numbers, for speed, so that a read may miss it. The paper asks how often, and shows that a read within k versions of the latest has probability 1 minus p to the k, where p is the chance of a plain miss: the chance of being stale falls exponentially with the leeway allowed. Monotonic reads is the same idea with k set by how often a reader returns compared with how often the data is written.</span><span class="m">Bailis and co-authors study data kept on several machines, where a write is acknowledged after W of N machines have it and a read returns after R machines have answered. If R + W exceeds N, a read always meets the latest write. Operators often choose smaller numbers, for speed, so that a read may miss it. The paper asks how often, and shows that a read within k versions of the latest has probability 1 minus p to the k, where p is the chance of a plain miss: the chance of being stale falls exponentially with the leeway allowed. Monotonic reads is the same idea with k set by how often a client returns compared with how often the data is written.</span></p>
         <p>Staleness in time is harder, because writes keep reaching more machines after they are acknowledged. The paper models the four message delays of a write and a read, W, A, R and S, shows that a read is stale when its request reaches a replica before the write does, and works out the odds by simulation using measured delays. The results are that the delay of the write message, and above all its variance, matters most, and that typically the chance of reading the latest write is high within a short time of its commit, at a latency far below that of a strict quorum.</p>
         <p>What the paper offers is therefore a probability and a way to tune it, not a guarantee: the worst case stays unbounded, and the odds rest on assumptions about independence and about the delays staying as they were measured.</p>
-        <p class="fnote">The paper has five authors: Peter Bailis, Shivaram Venkataraman, Michael J. Franklin, Joseph M. Hellerstein and Ion Stoica, and all are credited here. Nobody in this telling is named; the writer, the home libraries and the reader are told apart by what they do.</p>
+        <p class="fnote"><span class="i">The paper has five authors: Peter Bailis, Shivaram Venkataraman, Michael J. Franklin, Joseph M. Hellerstein and Ion Stoica, and all are credited here. Nobody in this telling is named; the writer, the home libraries and the reader are told apart by what they do.</span><span class="m">The paper has five authors: Peter Bailis, Shivaram Venkataraman, Michael J. Franklin, Joseph M. Hellerstein and Ion Stoica, and all are credited here.</span></p>
       </details>
-      <details class="proof">
+      <details class="proof i">
         <summary>In the paper, term by term</summary>
         <table class="terms2"><tbody>
           <tr><td><span class="term">a work's home libraries: the same few libraries hold every copy of it</span></td><td>The replication factor N; one quorum system per data item. <span class="paper">§2.1, §2.2.</span></td></tr>
@@ -472,6 +452,7 @@
   </div>
 </section>
 <footer>Distributed Algorithms of Ancient Greece · “Probably Up to Date”, after Bailis et al., VLDB 2012.</footer>
+<script src="../../assets/js/registers.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
