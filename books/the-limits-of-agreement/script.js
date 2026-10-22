@@ -11,13 +11,9 @@ function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();ret
   (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
 function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
 
-/* ===== the two registers: allegory (.i) and computing (.m); both are always in the page, so a switch loses no state ===== */
-const KEY="daag-apart-reg", onReg=[];
-const isM=()=>document.body.getAttribute("data-reg")==="m";
-const dual=(i,m)=>`<span class="i">${i}</span><span class="m">${m}</span>`;
+/* ===== the two registers: see assets/js/registers.js ===== */
+const {isM,dual,vis,dtext,onReg}=REG;
 const GL={H:"0",A:"1"};   /* what a man saw at dusk: hold or attack in the allegory, 0 or 1 in computing */
-const vis=e=>{const x=$(isM()?".m":".i",e);return (x||e).textContent};
-function dtext(parent,attrs,i,m){return [["i",i],["m",m]].map(([r,t])=>{const e=el("text",{...attrs,class:((attrs.class||"")+" "+r).trim()},parent);e.textContent=t;return e})}
 
 /* ===== pop-ups unfold when they enter view ===== */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
@@ -44,22 +40,7 @@ function onscroll(){
 }
 addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
 
-/* ===== the switch: keeps the passage in view, and the choice for every book ===== */
-const segbs=$$(".segb"), TITLE=document.title;
-$$("[data-al-m]").forEach(e=>e.dataset.alI=e.getAttribute("aria-label"));
-function anchorEl(){const y=innerHeight*.5;let best=null,bh=1e9;
-  for(const e of $$(".wrap > *, .narrow > *, .hall-title, .pins, .step")){const r=e.getBoundingClientRect();if(r.height>0&&r.top<=y&&r.bottom>=y&&r.height<bh){best=e;bh=r.height}}return best}
-function setReg(r,keep){
-  const a=keep?anchorEl():null,before=a?a.getBoundingClientRect().top:0;
-  document.body.setAttribute("data-reg",r);
-  document.title=r==="m"?TITLE.replace("The Foot of Mount Phyle","The System Model"):TITLE;
-  segbs.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.reg===r)));
-  $$("[data-al-m]").forEach(e=>e.setAttribute("aria-label",r==="m"?e.dataset.alM:e.dataset.alI));
-  onReg.forEach(f=>f(r));
-  if(a&&a.getBoundingClientRect().height>0){const d=a.getBoundingClientRect().top-before;if(d)scrollTo({top:scrollY+d,behavior:"instant"})}
-  onscroll();
-}
-segbs.forEach(b=>b.addEventListener("click",()=>{setReg(b.dataset.reg,true);try{localStorage.setItem(KEY,b.dataset.reg)}catch(e){}}));
+REG.after=onscroll;
 
 /* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
 function stepDots(root,steps){
@@ -368,7 +349,5 @@ function Hill(svg){
 /* ===== relevance map ===== */
 mapPairs($("#map"),[["Four tents, one man in each","Processes"],["Attack or hold","A decision between two values"],["What a man saw at dusk","Its input value"],["Committing: leaving the tent","Deciding, once and for good"],["A raven","A message"],["No longest flight","Asynchrony: no bound on message delay"],["A tent that falls silent","A crash, which looks exactly like slowness"],["No drawing lots","A deterministic protocol"],["A position","A configuration"],["An arrival","A step: one process receiving one message"],["Open / closed","Bivalent / univalent"],["The three demands","Agreement, validity, termination"]]);
 
-/* the register: the reader's last choice, shared with every other book and the scroll page */
-let saved=null;try{saved=localStorage.getItem(KEY)}catch(e){}
-setReg(saved==="m"?"m":"i",false);
+REG.start();
 })();
