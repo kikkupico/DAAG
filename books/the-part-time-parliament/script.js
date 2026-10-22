@@ -27,14 +27,34 @@ function Hall(svg,o={}){
 }
 
 
-/* the cover, in computing: five processes with messages in flight, one stopped */
-(function(){
-  const H=Hall($("#coversvg"),{vb:"0 0 440 440",doorText:false});
-  const C=["#e0b84a","#5b9be0","#e2564e","#9cb648","#b58be0"],gl=["Α","Β","Γ","Δ","Ε"],deg=[-90,-18,54,126,198];
-  const S=gl.map((l,i)=>H.seat(l,C[i],deg[i]));S[3].g.setAttribute("opacity",.35);
-  [[0,1,.5],[1,2,.45],[2,4,.5],[4,0,.4],[0,2,.6],[2,1,.35]].forEach(([a,b,u])=>{const g=el("g",{},H.over);el("circle",{r:11,fill:"#fffaf0",stroke:"#1c1512","stroke-width":2.5},g);
-    g.setAttribute("transform",`translate(${(S[a].x+(S[b].x-S[a].x)*u).toFixed(1)} ${(S[a].y+(S[b].y-S[a].y)*u).toFixed(1)})`)});
-})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · BALLOTS, VOTES AND A CHOSEN VALUE","Paxos");
+  const cols=[2,5,18,27],cx=i=>166+i*88,ry=j=>148+j*46;
+  /* the four messages of a ballot */
+  [["NextBallot","blue"],["LastVote","blue"],["BeginBallot","green"],["Voted","green"]].forEach(([t,c],k)=>{const x=70+k*112;chip(g,x,56,t,{m:1,s:9,k:P[c],c:P[c],f:"#fff"});if(k<3)link(g,x+46,56,x+112-48,56,{c:"mute",w:1,op:.6})});
+  /* the table of ballots */
+  cols.forEach((b,i)=>{chip(g,cx(i),100,"ballot "+b,{m:1,s:9.5,k:i===3?P.blue:P.line,c:i===3?P.blue:P.mute,f:i===3?P.blueL:"#fff",w:i===3?600:400})});
+  el("rect",{x:cx(3)-42,y:112,width:84,height:ry(4)-ry(0)+52,rx:14,fill:P.blueL,opacity:.35,stroke:P.blue,"stroke-width":1.4,"stroke-dasharray":"5 4"},g);
+  const votes={"0,3":"β","2,3":"β","3,3":"β","3,0":"α","2,1":"β","4,1":"β","1,2":"β"};  /* row,col */
+  for(let j=0;j<5;j++){
+    node(g,52,ry(j),14,"P"+(j+1),{s:10.5});
+    lane(g,70,cx(3)+52,ry(j),{w:1});
+    cols.forEach((b,i)=>{const v=votes[j+","+i];
+      if(v){const c=v==="α"?"gold":"blue";el("rect",{x:cx(i)-20,y:ry(j)-15,width:40,height:30,rx:10,fill:P[c+"L"],stroke:P[c],"stroke-width":i===3?2:1.4},g);T(g,cx(i),ry(j)+.5,v,{s:15,w:700,c:c==="gold"?"#8a6a00":P.blue})}
+      else dot(g,cx(i),ry(j),3,P.line)})}
+  /* rule three: reuse the highest earlier vote in the quorum */
+  const pr=link(g,cx(1)+20,ry(2)+14,cx(3)-24,ry(2)+14,{c:"red",w:1.5,bend:30,dash:"4 3"});packet(g,pr,{c:"red",dur:2.6,r:3.4});
+  chip(g,200,ry(4)+30,"highest earlier vote in the quorum → β",{m:1,s:8.5,pad:8,k:P.red,c:P.red,f:"#fff"});
+  chip(g,cx(3),ry(4)+30,"quorum P1 · P3 · P4",{m:1,s:8.5,pad:8,k:P.blue,c:P.blue,f:"#fff"});
+  /* the log */
+  const ly=428;T(g,26,ly-34,"log, slot by slot",{a:"start",s:10,m:1,c:P.mute});
+  [["124","a"],["125","noop"],["126","b"],["127","β"],["128","…"]].forEach(([s,v],k)=>{const x=60+k*84,hi=k===3;
+    el("rect",{x:x-34,y:ly-14,width:68,height:34,rx:9,fill:hi?P.blueL:k===1?P.goldL:"#fff",stroke:hi?P.blue:k===1?P.gold:P.line,"stroke-width":hi?1.8:1.2},g);
+    T(g,x,ly-4,s,{s:8.5,m:1,c:P.faint});T(g,x,ly+10,v,{s:11,m:1,w:600,c:hi?P.blue:k===1?"#8a6a00":P.ink})});
+  chip(g,W-26,H-24,"any two majorities share a process",{a:"end",m:1,s:9,k:P.line,c:P.mute});
+});
+/* cover:end */
 
 /* ===== consistency: two banquets, in the Chamber ===== */
 (function(){

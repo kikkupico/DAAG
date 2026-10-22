@@ -218,5 +218,40 @@ mapPairs($("#map"),[
 ["Six men against one liar","Byzantine agreement for N > 5t, with authenticated senders. Protocol B, Theorem 2."],
 ["The happier case","Constant expected rounds when t = O(√N), run synchronously. Theorem 3."],
 ["No drawing lots","Deterministic processes. The assumption of FLP that randomization removes."]]);
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · ROUNDS OF REPORT AND PROPOSAL, THEN COINS","randomised consensus");
+  const ys=[134,188,242,296],xs=[110,180,250,320,390,460],hd=["report","propose","coin","report","propose","decide"];
+  const val=[[0,1,0,1],["?","?","?","?"],[1,1,0,1],[1,1,0,1],["D1","D1","D1","D1"],[1,1,1,1]];
+  /* round bands */
+  bandX(g,xs[0]-34,xs[2]-xs[0]+68,70,336,P.bg);bandX(g,xs[3]-34,xs[5]-xs[3]+68,70,336,"#fafafc");
+  T(g,(xs[0]+xs[2])/2,86,"ROUND 1",{s:9.5,m:1,c:P.blue,w:600});T(g,(xs[3]+xs[5])/2,86,"ROUND 2",{s:9.5,m:1,c:P.blue,w:600});
+  xs.forEach((x,i)=>T(g,x,104-0,"",{}));
+  ys.forEach((y,j)=>{lane(g,70,500,y,{w:1.2});node(g,42,y,14,"P"+(j+1),{s:10.5})});
+  /* all-to-all traffic between columns */
+  for(const i of[0,3])for(let a=0;a<4;a++)for(let b=0;b<4;b++)if(a!==b)link(g,xs[i]+15,ys[a],xs[i+1]-15,ys[b],{c:"blue",w:.9,op:.22,head:false});
+  const ps=[];for(let a=0;a<4;a++){ps.push(link(g,xs[1]+15,ys[a],xs[2]-15,ys[a],{c:"mute",w:1,op:.3,head:false}));ps.push(link(g,xs[4]+15,ys[a],xs[5]-15,ys[a],{c:"green",w:1.2,op:.6,head:false}))}
+  ys.forEach((y,j)=>{for(const i of[2]){link(g,xs[i]+15,y,xs[i+1]-15,y,{c:"mute",w:1,op:.3,head:false})}});
+  const col=v=>v===0?"blue":v===1?"red":v==="?"?"gold":"green";
+  xs.forEach((x,i)=>{
+    const hy=98;
+    T(g,x,hy,hd[i],{s:9.5,m:1,c:P.mute});
+    ys.forEach((y,j)=>{const v=val[i][j],c=col(v);
+      if(i===2){el("circle",{cx:x,cy:y,r:14,fill:"#fff",stroke:P.faint,"stroke-width":1.4,"stroke-dasharray":"3 3"},g);el("circle",{cx:x,cy:y,r:9,fill:P[c+"L"],stroke:P[c],"stroke-width":1.4},g);T(g,x,y+.5,String(v),{s:10,m:1,w:600,c:P[c]})}
+      else if(i===5){node(g,x,y,14,"1",{k:P.green,f:P.green,c:"#fff",s:11,sw:1.6})}
+      else if(i===4){el("rect",{x:x-16,y:y-12,width:32,height:24,rx:12,fill:P.greenL,stroke:P.green,"stroke-width":1.4},g);T(g,x,y+.5,"D(1)",{s:9.5,m:1,w:600,c:P.green})}
+      else if(v==="?"){node(g,x,y,13,"?",{k:P.gold,f:P.goldL,c:"#8a6a00",s:11,sw:1.5})}
+      else node(g,x,y,13,String(v),{k:P[c],f:P[c+"L"],c:P[c],s:11,sw:1.5})})});
+  /* a faulty split in round 1 needs the coin */
+  chip(g,xs[2],sy(),"no majority → flip",{m:1,s:8.5,pad:8,k:P.gold,c:"#8a6a00",f:P.goldL});
+  function sy(){return 328}
+  /* the odds */
+  const by=474,bw=26;T(g,26,372,"chance still undecided after r rounds",{a:"start",s:10,m:1,c:P.mute});
+  for(let k=0;k<7;k++){const h=80*Math.pow(.5,k),x=64+k*58;el("rect",{x,y:by-h,width:bw+10,height:h,rx:3,fill:k===0?P.blueL:P.blueL,stroke:P.blue,"stroke-width":1.2,opacity:1-.08*k},g);T(g,x+(bw+10)/2,by+13,"r="+(k+1),{s:8.5,m:1,c:P.faint})}
+  T(g,W-26,H-96,"→ 0 with probability 1",{a:"end",s:10.5,m:1,c:P.blue,w:600});
+  link(g,330,by-62,470,by-8,{c:"blue",w:1.2,bend:-26,op:.6});
+});
+/* cover:end */
+
 REG.start();
 })();

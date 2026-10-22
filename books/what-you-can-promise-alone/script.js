@@ -37,9 +37,31 @@ const oneIn=p=>p<=0?"none":p>=.95?"nearly all":p>=.095?`1 in ${Math.round(1/p)}`
 const shelfBox=(name,rows,foot="")=>`<div class="shelf"><h5>${name}</h5>${rows.join("")}${foot?`<div class="shown">${foot}</div>`:""}</div>`;
 const it=(t,c="")=>`<span class="it${c?" "+c:""}">${t}</span>`;
 
-/* the cover, in computing: three replicas with messages in flight */
-(function(){const C=Coast($("#coversvg"),{n:3,stoa:false});
-  [[0,1,.5],[1,2,.45],[2,0,.4],[0,2,.6]].forEach(([a,b,u])=>{const g=C.token("#e0b84a","");g.setAttribute("opacity",1);C.run(g,a,b,u)})})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · WHAT A REPLICA CAN PROMISE ALONE","HAT");
+  /* two replicas, cut off from one another */
+  const A=[130,150],B=[390,150];
+  el("path",{d:"M260 74l-12 26l24 26l-24 26l24 26l-24 26l12 24",fill:"none",stroke:P.red,"stroke-width":2.4,"stroke-linejoin":"round"},g);
+  chip(g,260,64,"partition",{m:1,s:9,k:P.red,c:P.red,f:P.redL});
+  node(g,A[0],A[1],24,"R1",{s:12,halo:P.blueL});node(g,B[0],B[1],24,"R2",{s:12,halo:P.blueL});
+  chip(g,A[0],86,"T1: w(x) w(y) commit ✓",{m:1,s:9,k:P.blue,c:P.blue,f:"#fff"});chip(g,B[0],86,"T2: r(x) r(y) commit ✓",{m:1,s:9,k:P.blue,c:P.blue,f:"#fff"});
+  [A,B].forEach(([x,y],k)=>{const p=link(g,x,102,x,y-28,{c:"blue",w:1.5});packet(g,p,{c:"blue",dur:1.8,delay:k*.4})});
+  T(g,A[0],196,"always answers, never waits",{s:9.5,m:1,c:P.mute});T(g,B[0],196,"always answers, never waits",{s:9.5,m:1,c:P.mute});
+  /* the three tiers */
+  const tiers=[
+   ["KEPT BY ANY REPLICA ALONE","green",["Read Committed","Monotonic Atomic View","Repeatable Reads","Monotonic Reads"]],
+   ["KEPT IF THE CLIENT STAYS WITH ONE REPLICA","blue",["Read Your Writes","PRAM","Causal Consistency"]],
+   ["KEPT BY NO REPLICA ALONE","red",["Lost Update","Write Skew","Linearizability"]]];
+  tiers.forEach(([t,c,items],k)=>{const y=224+k*76;
+    el("rect",{x:26,y,width:W-52,height:66,rx:14,fill:P[c+"L"],opacity:.55},g);el("rect",{x:26,y,width:6,height:66,rx:3,fill:P[c]},g);
+    T(g,46,y+15,t,{a:"start",s:9,m:1,c:P[c],w:700});
+    let x=46;items.forEach(s=>{const ch=chip(g,x,y+43,s,{a:"start",s:9.5,k:P[c],c:P.ink,f:"#fff"});x+=ch.w+8});
+    if(k<2){const ar=el("path",{d:`M${W-48} ${y+70}l0 4`,stroke:P.faint},g)}});
+  T(g,W-44,224+15,"✓",{a:"end",s:14,w:700,c:P.green});T(g,W-44,224+76+15,"✓",{a:"end",s:14,w:700,c:P.blue});T(g,W-44,224+152+15,"✗",{a:"end",s:14,w:700,c:P.red});
+  chip(g,W/2,H-30,"high availability  ·  144 consistency and isolation levels sorted by what they need",{m:1,s:8.5,pad:18,k:P.line,c:P.mute});
+});
+/* cover:end */
 
 /* ===== the cord: a library shows a correction of a set only when the whole set has arrived ===== */
 (function(){

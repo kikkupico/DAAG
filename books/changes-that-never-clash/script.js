@@ -34,9 +34,34 @@ const seg=(box,opts,cur,fn)=>{box.innerHTML=opts.map(([v,t])=>`<button data-v="$
   $$("button",box).forEach(bt=>bt.onclick=()=>{$$("button",box).forEach(x=>x.setAttribute("aria-pressed",x===bt));fn(bt.dataset.v)})};
 const oneIn=p=>p<=0?"none":p>=.95?"nearly all":p>=.095?`1 in ${Math.round(1/p)}`:`1 in ${Math.round(1/p).toLocaleString("en")}`;
 
-/* the cover, in computing: three replicas with messages in flight */
-(function(){const C=Coast($("#coversvg"),{n:3,stoa:false});
-  [[0,1,.5],[1,2,.45],[2,0,.4],[0,2,.6]].forEach(([a,b,u])=>{const g=C.token("#e0b84a","1");g.setAttribute("opacity",1);C.run(g,a,b,u)})})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · JOIN SEMILATTICE","merge = entrywise max");
+  const cx=260,Yt=118,Y2=214,Y1=316,Y0=412,dx=122;
+  const N={top:[cx,Yt,"1,1,1"],ab:[cx-dx,Y2,"1,1,0"],ac:[cx,Y2,"1,0,1"],bc:[cx+dx,Y2,"0,1,1"],a:[cx-dx,Y1,"1,0,0"],b:[cx,Y1,"0,1,0"],c:[cx+dx,Y1,"0,0,1"],o:[cx,Y0,"0,0,0"]};
+  const E=[["o","a"],["o","b"],["o","c"],["a","ab"],["a","ac"],["b","ab"],["b","bc"],["c","ac"],["c","bc"],["ab","top"],["ac","top"],["bc","top"]];
+  const hot={a:"blue",b:"gold",c:"red"},paths={};
+  for(const [u,v] of E)link(g,N[u][0],N[u][1],N[v][0],N[v][1],{c:"mute",op:.3,head:false,w:1.4});
+  /* the three replicas' states join upward */
+  const up=(u,v,c)=>{const p=link(g,N[u][0],N[u][1],N[v][0],N[v][1],{c,w:2.2,op:.9});return p};
+  const pp=[up("a","ab","blue"),up("a","ac","blue"),up("b","ab","gold"),up("b","bc","gold"),up("c","ac","red"),up("c","bc","red"),up("ab","top","blue"),up("ac","top","blue"),up("bc","top","gold")];
+  pp.forEach((p,k)=>packet(g,p,{c:["blue","blue","gold","gold","red","red","blue","blue","gold"][k],dur:2.6+(k%3)*.4,delay:k*.3,r:3.4}));
+  for(const k in N){const [x,y,v]=N[k],h=hot[k],top=k==="top";
+    const c=chip(g,x,y,"["+v+"]",{m:1,s:11,w:600,f:h?P[h+"L"]:top?P.ink:"#fff",k:h?P[h]:top?P.ink:P.line,c:top?"#fff":h?P[h]:P.ink,sw:h||top?1.6:1});
+    if(h){node(g,x+(k==="a"?-82:k==="c"?82:0),y+(k==="b"?36:0),15,k==="a"?"R1":k==="b"?"R2":"R3",{k:P[h],c:P[h],f:"#fff",s:10.5,halo:P[h+"L"]});
+      if(k!=="b")link(g,x+(k==="a"?-68:68),y,x+(k==="a"?-48:48),y,{c:h,w:1.4,head:false,dash:"2 3"})
+      else link(g,x,y+21,x,y+11,{c:h,w:1.4,head:false,dash:"2 3"});
+      const vx=x+(k==="a"?-82:k==="c"?82:0),vy=y+(k==="b"?72:40);
+      vec(g,vx,vy,k==="a"?[3,0,0]:k==="b"?[0,2,0]:[0,0,4],{k:P[h],hi:[k==="a"?0:k==="b"?1:2],hf:P[h+"L"],hc:P[h],w:17,h:18,s:10});
+      T(g,vx,vy+19,"+1 +1 +1".slice(0,k==="a"?8:k==="b"?5:11)+"",{s:8.5,m:1,c:P.faint})}}
+  T(g,cx,Yt-30,"⊔  join: every replica converges here",{s:10.5,c:P.mute,m:1});
+  T(g,cx,Y0+34,"each replica starts at ⊥",{s:10,c:P.faint,m:1});
+  /* formula strip */
+  const fy=H-38,fx=cx;
+  chip(g,fx,fy,"[3,0,0] ⊔ [0,2,0] ⊔ [0,0,4] = [3,2,4]",{m:1,s:11.5,pad:26,k:P.ink,sw:1.4,f:P.bg});
+  T(g,fx,fy+26,"commutative · associative · idempotent",{s:9.5,m:1,c:P.faint})
+});
+/* cover:end */
 
 /* ===== a table of pebbles: a pile for every terrace, in white (made) and, when used, black (lost) ===== */
 const TN=["terrace 1","terrace 2","terrace 3"],TM=["replica 1","replica 2","replica 3"];

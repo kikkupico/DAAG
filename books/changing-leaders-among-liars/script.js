@@ -33,9 +33,38 @@ function Crown(svg){
   return C;
 }
 
-/* the cover, in computing: a leader and three replicas, with votes in transit */
-(function(){const C=Crown($("#coversvg"));
-  [[2,1,.5],[3,1,.5],[4,1,.5],[1,2,.4]].forEach(([a,b,u])=>{const g=C.token(BC[a],"");g.setAttribute("opacity",1);C.fly(g,a,b,u)})})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · A CHAIN OF CERTIFIED BLOCKS","three-chain commit");
+  const by=140,bx=i=>74+i*96,st=["green","green","blue","blue","gold"],tx=["committed","committed","locked","prepared","proposed"];
+  /* parent links and certificates */
+  for(let i=1;i<5;i++){link(g,bx(i)-34,by,bx(i-1)+34,by,{c:"mute",w:1.6});
+    chip(g,bx(i)-48,by-40,"QC",{m:1,s:8.5,pad:8,k:P.gold,c:"#8a6a00",f:P.goldL});link(g,bx(i)-48,by-31,bx(i)-48,by-22,{c:"gold",w:1.2,head:false})}
+  st.forEach((c,i)=>{
+    el("rect",{x:bx(i)-34,y:by-24,width:68,height:48,rx:12,fill:P[c+"L"],stroke:P[c],"stroke-width":1.8},g);
+    T(g,bx(i),by-8,"b"+"₁₂₃₄₅"[i],{s:15,w:700,c:c==="gold"?"#8a6a00":P[c]});
+    T(g,bx(i),by+11,"view "+(i+7),{s:8.5,m:1,c:P.mute});
+    T(g,bx(i),by+40,tx[i],{s:8.5,m:1,c:c==="gold"?"#8a6a00":P[c]})});
+  const bk=el("path",{d:`M${bx(2)-34} ${by+62}v6H${bx(4)+34}v-6`,fill:"none",stroke:P.ink,"stroke-width":1.4},g);
+  T(g,(bx(2)+bx(4))/2,by+84,"three certificates in a row ⇒ b₃ commits",{s:9.5,m:1,c:P.ink,w:600});
+  /* the star: a leader gathers votes and sends one certificate back */
+  const sx=130,sy=356,ra=[[sx-66,sy-50],[sx+66,sy-50],[sx-66,sy+50],[sx+66,sy+50]],lp=[];
+  T(g,26,254,"EACH PHASE: ONE LEADER, n REPLICAS",{a:"start",s:9.5,m:1,c:P.mute,w:600});
+  ra.forEach(([x,y],k)=>{const bad=k===3;
+    const dx=sx-x,dy=sy-y,d=Math.hypot(dx,dy),u=[dx/d,dy/d];
+    const v=link(g,x+u[0]*13,y+u[1]*13,sx-u[0]*20,sy-u[1]*20,{c:bad?"red":"blue",w:1.4,bend:7,dash:bad?"3 3":null});
+    const q=link(g,sx-u[0]*20,sy-u[1]*20,x+u[0]*13,y+u[1]*13,{c:"gold",w:1.4,bend:7});
+    packet(g,v,{c:bad?"red":"blue",dur:2,delay:k*.3,r:3});packet(g,q,{c:"gold",dur:2,delay:1+k*.3,r:3});
+    node(g,x,y,12,"R"+(k+2),{s:9,k:bad?P.red:P.ink,c:bad?P.red:P.ink,f:bad?P.redL:"#fff"})});
+  node(g,sx,sy,19,"L",{s:13,halo:P.blueL,k:P.blue,c:P.blue});
+  T(g,sx,sy+84,"votes in, certificate out",{s:9.5,m:1,c:P.mute});T(g,sx,sy+100,"O(n) messages, not O(n²)",{s:9.5,m:1,c:P.blue,w:600});
+  /* views rotate the leader */
+  const vx=316,vy=[286,328,370,412],vt=[["view 7 · leader R3",null],["view 8 · leader R4 (faulty)","red"],["timeout → next view",null],["view 9 · leader R1","blue"]];
+  vt.forEach(([t,c],k)=>{chip(g,vx,vy[k],t,{a:"start",m:1,s:9,k:c?P[c]:P.line,c:c?P[c]:P.mute,f:c==="red"?P.redL:c==="blue"?P.blueL:"#fff",w:c?600:400});
+    if(k<3)link(g,vx+14,vy[k]+12,vx+14,vy[k+1]-12,{c:"mute",w:1.1,op:.6})});
+  T(g,vx,252,"THE LEADER ROTATES EVERY VIEW",{a:"start",s:9.5,m:1,c:P.mute,w:600});
+});
+/* cover:end */
 
 /* ===== one stage on the crown, counted both ways ===== */
 (function(){

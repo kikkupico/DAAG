@@ -36,13 +36,42 @@ function Hill(svg){
   return H;
 }
 
-/* the cover, in computing: four processes, their inputs, one crashed, messages in transit */
-(function(){
-  const H=Hill($("#coversvg")),inp={1:"A",2:"H",3:"A",4:"A"},t=H.tent[3];
-  [1,2,3,4].forEach(k=>H.badge(k,inp[k]));t.g.classList.add("out");
-  el("path",{d:`M${t.x-17},${t.y-17} L${t.x+17},${t.y+17} M${t.x-17},${t.y+17} L${t.x+17},${t.y-17}`,stroke:"#1c1512","stroke-width":5,fill:"none"},H.over);
-  [[1,2,.5],[4,1,.5],[2,4,.45],[1,4,.4]].forEach(([a,b,u])=>{const g=H.token(TC[a],inp[a]);g.setAttribute("opacity",1);H.fly(g,a,b,u)});
-})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · AN EXECUTION THAT NEVER DECIDES","FLP");
+  const R=rnd32(5),xs=[62,126,190,254,318,382,446],ys=[238,214,256,224,260,228,246];
+  const biv=(x,y,r)=>{const n=el("g",{transform:`translate(${x} ${y})`},g);
+    el("path",{d:`M0 ${-r}A${r} ${r} 0 0 0 0 ${r}Z`,fill:P.blue},n);el("path",{d:`M0 ${-r}A${r} ${r} 0 0 1 0 ${r}Z`,fill:P.red},n);
+    el("circle",{r,fill:"none",stroke:P.ink,"stroke-width":1.8},n);el("line",{y1:-r,y2:r,stroke:"#fff","stroke-width":1.6},n);return n};
+  let lx=26;[["0-valent",P.blue],["1-valent",P.red]].forEach(([t,c])=>{dot(g,lx+5,52,5.5,c);T(g,lx+16,52,t,{a:"start",s:10.5,c:P.mute});lx+=t.length*6+36});
+  biv(lx+5,52,5.5);T(g,lx+16,52,"bivalent: both outcomes still open",{a:"start",s:10.5,c:P.mute});
+  /* the leaves: executions that do decide, hanging off every step */
+  xs.forEach((x,i)=>{const y=ys[i];
+    for(const [dir,c] of [[-1,"blue"],[1,"red"]]){
+      const lx2=x+26+R()*6,ly=y+dir*(62+R()*14);
+      link(g,x,y,lx2,ly,{c:"mute",w:1.1,head:false,op:.5,bend:dir*8});
+      for(const [ox,oy] of [[16,-13],[18,9]]){link(g,lx2,ly,lx2+ox,ly+dir*Math.abs(oy)+(dir>0?6:-6),{c:"mute",w:.9,head:false,op:.35});dot(g,lx2+ox,ly+dir*Math.abs(oy)+(dir>0?6:-6),3.4,P[c])}
+      dot(g,lx2,ly,8,P[c],"#fff")}});
+  /* the path that stays bivalent */
+  const ps=[];
+  for(let i=0;i<6;i++)ps.push(link(g,xs[i],ys[i],xs[i+1],ys[i+1],{c:"gold",w:3.4,head:false,bend:i%2?10:-10}));
+  ps.forEach((p,k)=>packet(g,p,{c:"gold",r:3.6,dur:2.4,delay:k*.4}));
+  xs.forEach((x,i)=>biv(x,ys[i],i?10.5:12.5));
+  ["deliver m₁","m₂","m₃","m₄","m₅"].forEach((t,i)=>{const m=mid(xs[i],ys[i],xs[i+1],ys[i+1],i%2?10:-10);chip(g,m[0],m[1]+(i%2?18:-18),t,{m:1,s:8.5,pad:8,k:P.line,c:P.mute})});
+  T(g,xs[6]+0,ys[6]+26,"…",{s:18,c:P.gold,w:700});
+  chip(g,W-26,150,"never decides",{a:"end",m:1,s:9.5,k:P.gold,c:"#8a6a00",f:P.goldL});
+  /* initial configurations */
+  const by=432,cf=["0000","1000","1100","1110","1111"],cc=[P.blue,P.blue,null,P.red,P.red],bx=i=>86+i*84;
+  T(g,26,by-34,"initial configurations, one input flipped at a time",{a:"start",s:10,m:1,c:P.mute});
+  cf.forEach((t,i)=>{
+    const x=bx(i);if(i<4)link(g,x+31,by,bx(i+1)-31,by,{c:"mute",w:1,op:.5});
+    el("rect",{x:x-30,y:by-14,width:60,height:28,rx:8,fill:cc[i]?(cc[i]===P.blue?P.blueL:P.redL):P.goldL,stroke:cc[i]||P.gold,"stroke-width":i===2?2:1.4},g);
+    T(g,x,by+.5,t,{s:11.5,m:1,w:600,c:cc[i]||"#8a6a00"})});
+  const q=el("path",{d:`M${bx(1)-24} ${by+22}V${by+28}H${bx(2)+24}V${by+22}`,fill:"none",stroke:P.mute,"stroke-width":1.2},g);
+  T(g,(bx(1)+bx(2))/2,by+42,"neighbours that must split",{s:9.5,m:1,c:P.mute});
+  link(g,bx(2),by-16,xs[0]+4,ys[0]+16,{c:"gold",w:1.4,dash:"4 4",bend:-40});
+});
+/* cover:end */
 
 /* ===== two easy plans, each giving up one demand ===== */
 (function(){

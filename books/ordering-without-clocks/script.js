@@ -30,9 +30,37 @@ function Isle(svg){
   return I;
 }
 
-/* the cover, in computing: three processes in a ring with messages in transit */
-(function(){const I=Isle($("#coversvg"));
-  [[1,2,.5],[2,3,.5],[3,1,.45],[1,3,.4]].forEach(([a,b,u])=>{const g=I.token(HC[a],"✉");g.setAttribute("opacity",1);I.road(g,a,b,u)})})();
+/* cover:start */
+COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+  const g=stage(svg,"FIG. 1 · HAPPENED-BEFORE, WITH NO SHARED CLOCK","L(e) · V(e)");
+  const Y=[126,230,334],X0=66,X1=498;
+  ["P1","P2","P3"].forEach((n,j)=>{lane(g,X0,X1,Y[j],{w:1.5});node(g,34,Y[j],14,n,{s:10.5})});
+  /* events: lane, x, lamport, vector */
+  const E={a:[0,104,1,"[1,0,0]"],b:[1,184,2,"[1,1,0]"],c:[1,246,3,"[1,2,0]"],x:[2,126,1,"[0,0,1]"],d:[2,326,4,"[1,2,2]"],e:[2,386,5,"[1,2,3]"],f:[0,458,6,"[2,2,3]"]};
+  const M=[["a","b"],["c","d"],["e","f"]];
+  /* the causal chain, thick */
+  const ps=M.map(([u,v],k)=>link(g,E[u][1],Y[E[u][0]],E[v][1],Y[E[v][0]],{c:"blue",w:2.2,bend:k===2?-18:0}));
+  link(g,E.b[1],Y[1],E.c[1],Y[1],{c:"blue",w:2.2,head:false});link(g,E.d[1],Y[2],E.e[1],Y[2],{c:"blue",w:2.2,head:false});
+  ps.forEach((p,k)=>packet(g,p,{c:"gold",dur:2.4,delay:k*.5}));
+  /* concurrent: x and a */
+  link(g,E.x[1]+8,Y[2]-8,E.a[1]+4,Y[0]+10,{c:"red",w:1.2,dash:"3 3",head:false,op:.8});
+  T(g,26,Y[1]-40,"concurrent:",{a:"start",s:9.5,m:1,c:P.red,w:600});T(g,26,Y[1]-26,"a ∥ x",{a:"start",s:9.5,m:1,c:P.red});
+  /* the outside channel */
+  el("path",{d:`M${E.f[1]+16} ${Y[0]+14}C ${W-10} ${Y[0]+110} ${W-10} ${Y[2]-110} ${E.e[1]+30} ${Y[2]-8}`,fill:"none",stroke:P.faint,"stroke-width":1.4,"stroke-dasharray":"2 5"},g);
+  T(g,W-30,Y[1]+8,"phone call",{s:8.5,m:1,c:P.faint,a:"end"});T(g,W-30,Y[1]+22,"(no message)",{s:8.5,m:1,c:P.faint,a:"end"});
+  for(const k in E){const [l,x,L,V]=E[k],y=Y[l];
+    node(g,x,y,8,null,{k:P.ink,f:k==="a"||k==="x"?P.goldL:"#fff",sw:1.8});
+    chip(g,x,y-24,String(L),{m:1,s:10.5,pad:8,w:600,k:P.blue,c:P.blue,f:P.blueL});
+    T(g,x,y+22,V,{s:9,m:1,c:P.mute})}
+  /* the rule */
+  const ry=420;
+  el("rect",{x:26,y:ry-22,width:W-52,height:62,rx:14,fill:P.bg},g);
+  T(g,48,ry-4,"L(receive) = max(L(own), L(msg)) + 1",{a:"start",s:11,m:1,c:P.blue});
+  T(g,48,ry+18,"V(receive) = max(V(own), V(msg)), own entry + 1",{a:"start",s:11,m:1,c:P.mute});
+  T(g,W-48,ry+4,"a → b ⇔ V(a) < V(b)",{a:"end",s:11,m:1,w:600,c:P.ink});
+  T(g,W/2,H-34,"Lamport stamp above each event, vector clock below",{s:9.5,m:1,c:P.faint});
+});
+/* cover:end */
 
 /* ===== the gate of House 3: arrival follows the quicker legs, not the earlier request ===== */
 (function(){
