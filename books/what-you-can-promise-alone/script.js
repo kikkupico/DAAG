@@ -38,7 +38,7 @@ const shelfBox=(name,rows,foot="")=>`<div class="shelf"><h5>${name}</h5>${rows.j
 const it=(t,c="")=>`<span class="it${c?" "+c:""}">${t}</span>`;
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · WHAT A REPLICA CAN PROMISE ALONE","HAT");
   /* two replicas, cut off from one another */
   const A=[130,150],B=[390,150];
@@ -60,7 +60,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
     if(k<2){const ar=el("path",{d:`M${W-48} ${y+70}l0 4`,stroke:P.faint},g)}});
   T(g,W-44,224+15,"✓",{a:"end",s:14,w:700,c:P.green});T(g,W-44,224+76+15,"✓",{a:"end",s:14,w:700,c:P.blue});T(g,W-44,224+152+15,"✗",{a:"end",s:14,w:700,c:P.red});
   chip(g,W/2,H-30,"high availability  ·  144 consistency and isolation levels sorted by what they need",{m:1,s:8.5,pad:18,k:P.line,c:P.mute});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== the cord: a library shows a correction of a set only when the whole set has arrived ===== */

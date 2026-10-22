@@ -37,7 +37,7 @@ function Hill(svg){
 }
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · AN EXECUTION THAT NEVER DECIDES","FLP");
   const R=rnd32(5),xs=[62,126,190,254,318,382,446],ys=[238,214,256,224,260,228,246];
   const biv=(x,y,r)=>{const n=el("g",{transform:`translate(${x} ${y})`},g);
@@ -70,7 +70,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
   const q=el("path",{d:`M${bx(1)-24} ${by+22}V${by+28}H${bx(2)+24}V${by+22}`,fill:"none",stroke:P.mute,"stroke-width":1.2},g);
   T(g,(bx(1)+bx(2))/2,by+42,"neighbours that must split",{s:9.5,m:1,c:P.mute});
   link(g,bx(2),by-16,xs[0]+4,ys[0]+16,{c:"gold",w:1.4,dash:"4 4",bend:-40});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== two easy plans, each giving up one demand ===== */

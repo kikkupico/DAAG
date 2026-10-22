@@ -41,7 +41,7 @@ const pick=(n,k)=>{const a=[...Array(n).keys()];for(let i=0;i<k;i++){const j=i+r
 const pct=p=>p>=.9995?"more than 999 in 1,000":p>=.995?`${Math.round(p*1000)} in 1,000`:`${Math.round(p*100)} in 100`;
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · A PARTIAL QUORUM: N = 3, W = 2, R = 1","PBS");
   const X=[96,260,424],cy=170,names=["R1","R2","R3"],ver=["v7","v7","v6"];
   /* the quorums */
@@ -72,7 +72,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
   const pt=cv.getPointAtLength(cv.getTotalLength()*.62);dot(g,pt.x,pt.y,5,P.red,"#fff");
   chip(g,pt.x+12,pt.y+36,"99.9% current after t",{a:"start",m:1,s:9,k:P.red,c:P.red,f:"#fff"});link(g,pt.x+10,pt.y+30,pt.x+3,pt.y+6,{c:"red",w:1,head:false});
   chip(g,W-26,H-24,"R + W ≤ N → reads may be stale, rarely and briefly",{a:"end",m:1,s:9,k:P.line,c:P.mute});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== how many to wait for: three home libraries on the coast ===== */

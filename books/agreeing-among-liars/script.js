@@ -41,7 +41,7 @@ function slip(P,a,ta,b,tb,w,lab=true,at=.5){const p=P.slip(a,ta,b,tb,14);p.style
 const dot=(P,k,t,fill="#fffaf0")=>{const g=P.event(k,t,fill,8);g.style.cursor="default";return g};
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · OM(1): TWO ROUNDS, THEN A MAJORITY","n = 3m + 1 = 4");
   const C=[260,100],L=[[100,238],[260,300],[420,238]],nm=["P2","P3","P4"],bad=1;
   /* the three-process impossibility, as an inset */
@@ -71,7 +71,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
     chip(g,x,y+158,"majority → 1",{m:1,s:10,k:P.green,c:P.green,f:P.greenL,w:600})});
   vec(g,L[bad][0],L[0][1]+90,["?","?","?"],{w:24,h:24,s:12,k:P.line});T(g,L[bad][0],L[0][1]+112,"no need to decide",{s:8.5,m:1,c:P.faint});
   T(g,W/2,H-26,"honest lieutenants agree, and obey an honest commander",{s:10,m:1,c:P.mute});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== the two conditions, tested on whatever is supposed ===== */

@@ -103,7 +103,7 @@
 <!-- ============================================================ the loot scroll -->
 <section class="spread light" id="scrollsec" data-name="The loot scroll" data-name-m="The replicated state">
   <div class="wrap">
-    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
         <div class="kicker"><span class="i">What the four hold</span><span class="m">What the replicas hold</span></div>
         <h2><span class="i">The loot scroll</span><span class="m">The replicated state</span></h2>
@@ -112,6 +112,7 @@
         <p><span class="i">Furthermore, these are later nights of the siege. The four bandits turned their sandglasses together once on the first night, and their glasses have long since drifted out of step.<sup class="xref"><a href="../agreeing-among-liars/index.html#s3" title="Agreeing Among Liars: The Rats in the Wall">*</a></sup></span><span class="m">Furthermore, the network is asynchronous: the replicas’ clocks are not synchronized, and no bound is known on how long a message takes.<sup class="xref"><a href="../agreeing-among-liars/index.html#s3" title="Agreeing Among Liars: The Rats in the Wall">*</a></sup></span></p>
       </div>
       <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/keeping-order-among-liars-k01-wind-07a5353893-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/keeping-order-among-liars-k01-wind-07a5353893-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/keeping-order-among-liars-k01-wind-07a5353893-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/keeping-order-among-liars-k01-wind-07a5353893-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/k01-wind.jpg" alt="At dusk in a strong wind, a rat with a cord round its neck and a tiny bronze tube waits in a chink between the great grey stones of a ruined wall, the grass streaming flat below" loading="lazy"></div></div></div>
+      <div class="pop fromright m"><div class="leaf"><svg class="cover-fig" data-crop="250 60 270 340" role="img" aria-label="Quorum brackets and the log slot the request will occupy"></svg></div></div>
     </div>
     <p class="tell"><span class="i">The four bandits require two guarantees for their loot scroll, and the two guarantees hold under very different conditions:</span><span class="m">The replicas must provide two guarantees for the service, and the two hold under very different conditions:</span></p>
     <div class="cards3" style="margin-top:1.2rem">
@@ -132,7 +133,7 @@
   <a class="anchor" id="s2"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
   <div class="wrap">
-    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
         <div class="kicker"><span class="i">Who numbers the entries</span><span class="m">Who numbers the requests</span></div>
         <h2><span class="i">The chief's job</span><span class="m">The primary's job</span></h2>
@@ -140,6 +141,7 @@
         <p><span class="i">The registrar's job starts with Number 1 inside the ring wall. Whenever the job passes, it rotates around the posts in number order: 1, 2, 3, 4, and back to 1. Each spell under a single registrar is called a <b>term</b> (a <i>view</i> <var>v</var>), and because terms are numbered sequentially, the term number alone tells every bandit who the current registrar is.</span><span class="m">The primary's job starts with R1. Whenever the primary role passes, it rotates around the replicas in number order: R1, R2, R3, R4, and back to R1. Each period under a single primary is called a <b>view</b> (view <var>v</var>), and because views are numbered sequentially, the view number alone tells every replica who the current primary is.</span></p>
       </div>
       <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-mount-phyle-5eebd2564c-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/mount-phyle.jpg" alt="Mount Phyle from the air: a steep wooded crag with a ruined wall on its top, a few white tents on the slopes below and the sea beyond" loading="lazy"></div></div></div>
+      <div class="pop fromright m"><div class="leaf"><svg class="cover-fig" data-crop="20 60 500 340" role="img" aria-label="Request, pre-prepare, prepare, commit and reply on four replica lanes with one faulty replica"></svg></div></div>
     </div>
     <p class="tell"><span class="i">When a bandit wants to add an entry to the scroll, they seal it and send it to the current registrar. The registrar assigns it the next sequence number and announces that numbering to the other posts. Once the four posts have cross-checked the numbering, every honest bandit writes the entry into their scroll in number order and sends the filer a sealed confirmation that the entry <b>stands</b>.</span><span class="m">When a client wants to add a request to the log, it signs the request and sends it to the current primary. The primary assigns it the next sequence number and announces that numbering to the other replicas. Once the four replicas have cross-checked the numbering, every honest replica executes the request in number order and sends the client a signed reply confirming that the request <b>commits</b>.</span></p>
     <p class="tell"><span class="i">Because any of the four bandits may hold the registrar's job — including the liar — no one can trust the registrar's word alone. Every part of the protocol that follows is designed to defend against a lying registrar who tries any of three tricks:</span><span class="m">Because any of the four replicas may be the primary — including the faulty one — no replica can trust the primary's assignment alone. Every part of the protocol that follows is designed to defend against a faulty primary who tries any of three kinds of misbehaviour:</span></p>

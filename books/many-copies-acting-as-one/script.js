@@ -108,7 +108,7 @@ function Isle(svg){
 }
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · EVERY OPERATION TAKES EFFECT AT ONE INSTANT","linearizability");
   const Y=[112,176,240],lbl=["P1","P2","P3"];
   Y.forEach((y,j)=>{lane(g,64,500,y,{w:1.2});node(g,36,y,14,lbl[j],{s:10.5})});
@@ -135,7 +135,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
     T(g,x,398,t,{s:9,m:1,c:P.mute});T(g,x,416,q,{s:12,m:1,w:700,c:P.ink})});
   st.slice(0,3).forEach(([x],k)=>link(g,x+36,406,st[k+1][0]-36,406,{c:"mute",w:1.2,op:.6}));
   chip(g,W/2,H-30,"copies, caches and workers behind it may do anything they like",{m:1,s:8.5,pad:16,k:P.line,c:P.mute});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== scroll: the goatherd's morning, with tallies worked out by the rule ===== */

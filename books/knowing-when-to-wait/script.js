@@ -35,7 +35,7 @@ const seg=(box,opts,cur,fn)=>{box.innerHTML=opts.map(([v,t])=>`<button data-v="$
 const oneIn=p=>p<=0?"none":p>=.95?"nearly all":p>=.095?`1 in ${Math.round(1/p)}`:`1 in ${Math.round(1/p).toLocaleString("en")}`;
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · MONOTONE OR NOT?","CALM");
   const lx=134,rx=388;
   el("line",{x1:260,x2:260,y1:86,y2:392,stroke:P.line,"stroke-width":1.4,"stroke-dasharray":"3 5"},g);
@@ -66,7 +66,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
   T(g,rx,by+16,"a new fact retracts an answer",{s:10,m:1,c:P.red});
   chip(g,W/2,H-60,"coordination-free  ⇔  monotonic",{m:1,s:12,pad:30,k:P.ink,sw:1.5,f:P.bg,w:600});
   T(g,W/2,H-28,"not · none · every · only · highest · count  ⇒  wait",{s:9.5,m:1,c:P.faint});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== questions as rules on the facts heard so far ===== */
