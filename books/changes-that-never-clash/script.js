@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -159,11 +159,12 @@ function Marks(name){return {name,add:new Set(),struck:new Set(),n:0,
 
 /* ===== not the same as one order: the four acts, worked by the same rule ===== */
 (function(){
-  const P=Polar($("#ordsvg"),{vb:"0 0 520 500",cx:260,cy:262,r0:40,step:26,rings:7,tEnd:7.6,note:[12,22],
-    nodes:{A:[-90,"L1","#e0b84a","R1"],B:[30,"L2","#8fb3d9","R2"],T:[150,"T","#f6eed6","R3"]}});
+  Timeline($("#ordsvg"),{vb:"0 0 520 500",cx:260,cy:262,r0:40,step:26,rings:7,tEnd:7.6,note:[12,22],
+    nodes:{A:[-90,"L1","#e0b84a","R1"],B:[30,"L2","#8fb3d9","R2"],T:[150,"T","#f6eed6","R3"]}},P=>{
   const ev=(k,t,f,s)=>{P.event(k,t,f).label.textContent=s};
   ev("A",1.6,"#e0b84a","+E");ev("A",3.2,"#fde0d4","−F");ev("B",1.6,"#8fb3d9","+F");ev("B",3.2,"#fde0d4","−E");
   P.slip("A",3.6,"T",5.4);P.slip("B",3.6,"T",6.2);ev("T",5.4,"#f6eed6","");ev("T",6.2,"#a9c25a","");
+  });
   const a=Marks("1"),b=Marks("2"),t=Marks("T");
   a.write("E");const sf=a.strike("F");b.write("F");const se=b.strike("E");t.take(a);t.take(b);
   const on=["E","F"].filter(x=>t.live(x).length);

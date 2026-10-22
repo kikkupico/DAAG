@@ -103,6 +103,80 @@ function Polar(svg,o){
   return P;
 }
 
+/* The same space-time picture for computing, on a rectangular grid in the covers' dress: one lane per process from top
+   to bottom, in the order of o.nodes, and real time running left to right. It answers to everything Polar does
+   (pt, seg, slip, event, arc, and r and xy, which find the lane nearest an angle and the time of a radius, so that
+   a book's own helpers draw on either), and adds op, a bar from invocation to response shaded down through every
+   lane, dot and msg. On a phone the picture is half size, so its words, bars and dots are drawn 1.6 times larger. */
+const PHONE=matchMedia("(max-width:600px)");
+const LDK={"#9cb648":"#4f6d12","#e0b84a":"#8a6a00","#5b9be0":"#1f62ad",GREY:"#6e6e73"};
+const MONO="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace";
+function Lanes(svg,o){
+  const f=PHONE.matches?1.6:1,fs=n=>`font-size:${(n*f).toFixed(1)}px`,mono=n=>`font-family:${MONO};${fs(n)}`,big=f>1?1.3:1;
+  const keys=Object.keys(o.nodes),n=keys.length,G=n<=3?90:n===4?78:66,r0=o.r0||44,step=o.step||30,tEnd=o.tEnd||10;
+  const W=620,TOP=70,Y0=110,BOT=Y0+(n-1)*G+40,H=BOT+50,X0=84+(f-1)*14,K=(W-26-X0)/(tEnd+.1);
+  svg.innerHTML="";svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  const id=svg.id,defs=el("defs",{},svg);
+  const dots=el("pattern",{id:id+"-ld",width:16,height:16,patternUnits:"userSpaceOnUse"},defs);el("circle",{cx:8,cy:8,r:.9,fill:"#d9d9de"},dots);
+  const mk=(key,col)=>{const m=el("marker",{id:`${id}-${key}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:col},m)};
+  mk("b","#136f9e");mk("r","#bf4a26");
+  el("rect",{width:W,height:H,rx:18,fill:"#fff"},svg);el("rect",{width:W,height:H,rx:18,fill:`url(#${id}-ld)`},svg);
+  const frame=el("g",{},svg),shade=el("g",{},svg),under=el("g",{},svg),slips=el("g",{},svg),evs=el("g",{},svg),over=el("g",{},svg);
+  const Y={};keys.forEach((k,i)=>Y[k]=Y0+i*G);
+  const x=t=>X0+K*t,y=(k,off=0)=>Y[k]+off*(f>1?4.6:3.4),placed=[];
+  /* the lane whose node's angle is nearest, and how far round from it */
+  const near=deg=>{let best=keys[0],d=1e9;for(const k of keys){const w=((deg-o.nodes[k][0])%360+540)%360-180;if(Math.abs(w)<Math.abs(d)){d=w;best=k}}return [best,d]};
+  for(let t=0;t<=Math.floor(tEnd);t++)el("line",{class:"ln-grid",x1:x(t),x2:x(t),y1:TOP,y2:BOT},frame);
+  for(const k of keys){
+    el("line",{class:"ln-lane",x1:X0-12,x2:W-18,y1:Y[k],y2:Y[k]},frame);
+    const g=el("g",{class:"ln-proc",transform:`translate(${36+(f-1)*14} ${Y[k]})`},frame);el("circle",{r:19*big},g);
+    el("text",{style:fs(o.nodes[k][3]&&o.nodes[k][3].length>2?12:15)},g).textContent=o.nodes[k][3]||o.nodes[k][1]}
+  el("text",{class:"ln-note",x:W-18,y:48,"text-anchor":"end",style:mono(13)},frame).textContent="real time →";
+  const P={svg,under,slips,evs,over,shade,lanes:true,x,y,
+    r:t=>r0+step*t,
+    xy(deg,rr){const [k,d]=near(deg);return [x((rr-r0)/step),y(k,d)]},
+    pt(k,t){return [x(t),y(k)]},
+    arc(a,ta,b,tb){const pts=[];for(let i=0;i<=12;i++){const u=i/12;pts.push([x(ta+(tb-ta)*u),y(a)+(y(b)-y(a))*u])}return pts},
+    slip(a,ta,b,tb,trim=17){const [x1,y1]=P.pt(a,ta),[x2,y2]=P.pt(b,tb),d=Math.hypot(x2-x1,y2-y1)||1,k=Math.max(0,d-trim*big)/d;
+      const p=el("path",{class:"st-slip","marker-end":`url(#${id}-b)`,d:`M${x1.toFixed(1)},${y1.toFixed(1)} L${(x1+(x2-x1)*k).toFixed(1)},${(y1+(y2-y1)*k).toFixed(1)}`},slips);
+      p.mid=[(x1+x2)/2,(y1+y2)/2];return p},
+    seg(k,t1,t2){return el("line",{class:"st-seg",x1:x(t1),y1:y(k),x2:x(t2),y2:y(k)},under)},
+    event(k,t,fill,rad=13){const g=el("g",{class:"st-ev",transform:`translate(${x(t).toFixed(1)} ${y(k).toFixed(1)})`},evs),r=rad*big;
+      el("circle",{class:"halo2",r:r+5},g);el("circle",{class:"b",r,fill},g);g.label=el("text",f>1?{style:fs(15)}:{},g);el("circle",{r:r+8,fill:"transparent"},g);return g},
+    /* an operation from s to e on a lane, its stretch of time shaded down through every lane; returns its group */
+    op(k,s,e,col,label,off=0){
+      const dk=LDK[col]||LDK.GREY,fill=LDK[col]?col:"#a1a1a6",yy=y(k,off),h=(off?26:32)*big;
+      el("rect",{class:"ln-shade",x:x(s),y:TOP,width:x(e)-x(s),height:BOT-TOP,fill},shade);
+      const g=el("g",{class:"ln-op"},evs);
+      el("rect",{class:"ln-ring",x:x(s)-5,y:yy-h/2-5,width:x(e)-x(s)+10,height:h+10,rx:(h+10)/2},g);
+      el("rect",{class:"pill",x:x(s),y:yy-h/2,width:x(e)-x(s),height:h,rx:h/2,fill,stroke:dk},g);
+      /* a label too long for its bar sits just outside it: above the upper of two stacked bars, below the lower,
+         and on the other side when one already placed on that lane would run into it */
+      const lw=label.length*9.8*f,fits=lw+14<=x(e)-x(s),cx=(x(s)+x(e))/2;let below=off>0;
+      if(!fits){const hit=b=>placed.some(q=>q.k===k&&q.below===b&&Math.abs(q.cx-cx)<(q.lw+lw)/2+8);
+        if(hit(below)&&!hit(!below))below=!below;placed.push({k,below,cx,lw})}
+      el("text",{x:cx,y:fits?yy+.5:below?yy+h/2+9+6*f:yy-h/2-8-6*f,fill:dk,style:mono(16)},g).textContent=label;
+      return g},
+    /* a moment on a lane: a small dot */
+    dot(k,t,col,off=0,r=6){const g=el("g",{class:"ln-dot",transform:`translate(${x(t)} ${y(k,off)})`},over);el("circle",{r:r*(f>1?1.4:1),fill:LDK[col]||col||"#1d1d1f"},g);return g},
+    /* a message: an arrow sloping right because it takes time */
+    msg(a,ta,b,tb){return P.slip(a,ta,b,tb,10)}};
+  return P;
+}
+/* For a picture a book draws from nothing each time: the engine for the register being read, and a way to draw it
+   again when the register changes or, in computing, when a phone crosses the size where the lanes grow larger. */
+function Space(svg,o){svg.classList.toggle("lanes",isM());return isM()?Lanes(svg,o):Polar(svg,o)}
+function redrawOn(fn){onReg.push(()=>fn());PHONE.addEventListener("change",()=>{if(isM())fn()})}
+/* A space-time picture in the register being read: in the round in the allegory, on lanes in computing.
+   draw(P) builds it from nothing and puts back whatever the reader has chosen; it runs again when the register
+   changes, and in computing when a phone crosses the size where the lanes grow larger. */
+function Timeline(svg,o,draw){
+  let kind=null;
+  const go=force=>{const k=isM()?"m":"i";if(k===kind&&!force)return;kind=k;svg.classList.toggle("lanes",k==="m");draw(k==="m"?Lanes(svg,o):Polar(svg,o))};
+  go();onReg.push(()=>go());PHONE.addEventListener("change",()=>{if(kind==="m")go(true)});
+  return go;
+}
+
 /* lineage: draw the edges of a book's graph of papers, and say what an edge carries (lineage.py) */
 (function(){
 const NS="http://www.w3.org/2000/svg",wide=matchMedia("(min-width:860px)");
@@ -170,5 +244,5 @@ document.querySelectorAll(".lin").forEach(lin=>{
 });
 })();
 
-window.BOOK={$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,init};
+window.BOOK={$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Lanes,Timeline,Space,redrawOn,init};
 })();

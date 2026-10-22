@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 const GL={H:"0",A:"1"};   /* what a man saw at dusk: hold or attack in the allegory, 0 or 1 in computing */
 BOOK.init();
@@ -114,15 +114,18 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 
 /* ===== separate folds: two runs of arrivals with no man in common, in either order ===== */
 (function(){
-  const P=Polar($("#foldsvg"),{vb:"0 0 520 480",cx:260,cy:240,r0:40,step:27,rings:7,tEnd:7.4,
-    nodes:{1:[225,"T1",TC[1],"P1"],2:[135,"T2",TC[2],"P2"],3:[315,"T3",TC[3],"P3"],4:[45,"T4",TC[4],"P4"]}});
   const stand=$("#foldstand"),say=$("#foldsay"),b12=$("#fold12"),b34=$("#fold34"),br=$("#foldr");
-  let done=[],took={},last=null;
+  let done=[],took={},last=null,P;
   const paint=()=>stand.innerHTML=[1,2,3,4].map(k=>`<div>${tentChip(k)} ${took[k]?dual(`has taken in the raven from tent ${took[k]}`,`has received the message from P${took[k]}`):dual("has taken in nothing yet","has received nothing yet")}</div>`).join("");
   const dot=(k,t)=>{const g=P.event(k,t,"#fffaf0",8);g.classList.add("st-new");g.style.cursor="default"};
   const arc=(a,ta,b,tb)=>P.slip(a,ta,b,tb,12).classList.add("st-new");
+  /* one pair's trade, the nth to happen */
+  const trade=(a,b,n)=>{const t=1.4+3.1*n;dot(a,t);arc(a,t,b,t+1.1);dot(b,t+1.1);arc(b,t+1.1,a,t+2.2);dot(a,t+2.2)};
+  /* drawn in the round, or on lanes in computing, with the trades made so far */
+  Timeline($("#foldsvg"),{vb:"0 0 520 480",cx:260,cy:240,r0:40,step:27,rings:7,tEnd:7.4,
+    nodes:{1:[225,"T1",TC[1],"P1"],2:[135,"T2",TC[2],"P2"],3:[315,"T3",TC[3],"P3"],4:[45,"T4",TC[4],"P4"]}},Q=>{P=Q;done.forEach((a,n)=>trade(a,took[a],n))});
   function run(a,b,btn){
-    const t=1.4+3.1*done.length;dot(a,t);arc(a,t,b,t+1.1);dot(b,t+1.1);arc(b,t+1.1,a,t+2.2);dot(a,t+2.2);
+    trade(a,b,done.length);
     took[b]=a;took[a]=b;done.push(a);btn.disabled=true;paint();
     if(done.length<2){say.innerHTML=dual(`Tents ${a} and ${b} trade ravens. Nothing in that touched the other two tents.`,`P${a} and P${b} exchange messages. Nothing in that touched the other two processes.`);return}
     const order=done.join();

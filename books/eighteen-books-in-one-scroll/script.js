@@ -42,10 +42,32 @@ for (const k in CASTS) {
 }
 let CA = CASTS.houses;
 const A = n => CA.ang[n];
-const P = (n, t) => pol(A(n), rad(t));
+
+/* ---------- computing draws the same scenes on lanes: one per place from top to bottom, real time left to right,
+   on the same 524-unit square, so the stage around it does not change. LN says which way the scene is drawn. ---------- */
+let LN = false;
+const LX0 = -186, LX1 = 244;
+const lx = t => LX0 + (LX1 - LX0) * t / TEND;
+const lyN = (i, c) => (i - (c - 1) / 2) * (c <= 3 ? 120 : c === 4 ? 96 : 78);
+const laneIx = n => CA.n.findIndex(d => d[0] === n);
+const ly = n => lyN(laneIx(n), CA.n.length);
+const nodeXY = n => LN ? [LX0 - 40, ly(n)] : pol(A(n), R0);
+/* how far the grid reaches above and below the middle for c lanes, and the card's half-height round it:
+   three lanes make a short card, five nearly the round's square */
+const GHc = c => lyN(c - 1, c) + 34, CHc = c => GHc(c) + 42;
+let GH = GHc(3), CH = CHc(3);
+/* a point given in the round's own terms, on the lanes: its time, on the lane nearest its angle */
+function toLane(x, y) {
+  const t = Math.max(0, Math.min(TEND, (Math.hypot(x, y) - R0) / ST)), deg = Math.atan2(y, x) * 180 / Math.PI;
+  let best = CA.n[0][0], w = 1e9;
+  CA.n.forEach(d => { const dd = ((deg - d[2]) % 360 + 540) % 360 - 180; if (Math.abs(dd) < Math.abs(w)) { w = dd; best = d[0]; } });
+  return [lx(t), ly(best) + Math.max(-40, Math.min(40, w * 1.1))];
+}
+const P = (n, t) => LN ? [lx(t), ly(n)] : pol(A(n), rad(t));
 
 /* the points of an arc from place a at time ta to place b at time tb; the short way round unless dir says */
 function arc(a, ta, b, tb, dir) {
+  if (LN) { const [x1, y1] = P(a, ta), [x2, y2] = P(b, tb), pts = []; for (let i = 0; i <= 12; i++) pts.push([x1 + (x2 - x1) * i / 12, y1 + (y2 - y1) * i / 12]); return pts; }
   const a0 = A(a);
   let d = ((A(b) - a0 + 540) % 360) - 180;
   if (dir === 1 && d < 0) d += 360;
@@ -67,8 +89,39 @@ el("line", { x1: 0, y1: 0, x2: 0, y2: 8, stroke: "#bf4a26", "stroke-width": 2.2,
 /* everything that has happened by now lies inside one circle: marks drawn over time are clipped to it */
 const clip = el("clipPath", { id: "upto" }, defs), clipC = el("circle", { cx: 0, cy: 0, r: 999 }, clip);
 const frame = el("g", { class: "frame" }, svg);
-el("circle", { class: "disc", r: rad(TEND) + 24 }, frame);
-for (let i = 1; i <= RINGS; i++) el("circle", { class: "rg", r: rad(i) }, frame);
+const roundBg = [el("circle", { class: "disc", r: rad(TEND) + 24 }, frame)];
+for (let i = 1; i <= RINGS; i++) roundBg.push(el("circle", { class: "rg", r: rad(i) }, frame));
+let laneBg = [], clipR = null, nowL = null;
+/* swap the frame, the clip and the moment's mark between the round and the lanes */
+function setMode(lanes) {
+  LN = lanes;
+  if (LN) {
+    roundBg.forEach(e => e.remove());
+    laneBg = [el("rect", { class: "disc lanes", x: -252, width: 504, rx: 22 })];
+    for (let t = 0; t <= Math.floor(TEND); t++) laneBg.push(el("line", { class: "rg", x1: f(lx(t)), x2: f(lx(t)) }));
+    const n = el("text", { class: "lnote", x: LX1 }); n.textContent = "real time →"; laneBg.push(n);
+    laneBg.slice().reverse().forEach(e => frame.insertBefore(e, frame.firstChild));
+    clipR = el("rect", { x: -600, y: -600, width: 0, height: 1200 }, clip);
+    nowL = el("line", {}, nowG);
+    laneFrame(GH);
+  } else {
+    laneBg.forEach(e => e.remove()); laneBg = [];
+    if (clipR) { clipR.remove(); clipR = null; } if (nowL) { nowL.remove(); nowL = null; }
+    roundBg.slice().reverse().forEach(e => frame.insertBefore(e, frame.firstChild));
+    svg.setAttribute("viewBox", "-262 -262 524 524");
+  }
+}
+/* size the lanes' card, grid and picture for a grid reaching g above and below the middle */
+function laneFrame(g) {
+  GH = g; CH = g + 42;
+  svg.setAttribute("viewBox", `-262 ${f(-CH - 10)} 524 ${f(2 * CH + 20)}`);
+  laneBg.forEach(e => {
+    if (e.tagName === "rect") { e.setAttribute("y", f(-CH)); e.setAttribute("height", f(2 * CH)); }
+    else if (e.tagName === "line") { e.setAttribute("y1", f(-GH)); e.setAttribute("y2", f(GH)); }
+    else e.setAttribute("y", f(-CH + 26));
+  });
+  if (nowL) { nowL.setAttribute("y1", f(-GH)); nowL.setAttribute("y2", f(GH)); }
+}
 const marksG = el("g", { class: "marks" }, svg);
 const LY = {}; ["u", "s", "e", "t"].forEach(k => { LY[k] = el("g", { class: "ly-" + k }, marksG); });
 const nowG = el("g", { class: "now off" }, svg), nowC = el("circle", { r: R0 }, nowG);
@@ -83,26 +136,32 @@ const slots = [0, 1, 2, 3, 4].map(() => {
   return { sp, nd, rc, ti, tm, a: -90, op: 0 };
 });
 function place(s) {
-  const [x1, y1] = pol(s.a, R0), [x2, y2] = pol(s.a, rad(TEND));
+  const [x1, y1] = LN ? [LX0 - 16, s.y] : pol(s.a, R0), [x2, y2] = LN ? [LX1 + 6, y1] : pol(s.a, rad(TEND));
   s.sp.setAttribute("x1", f(x1)); s.sp.setAttribute("y1", f(y1)); s.sp.setAttribute("x2", f(x2)); s.sp.setAttribute("y2", f(y2));
-  s.nd.setAttribute("transform", `translate(${f(x1)} ${f(y1)})`);
+  s.nd.setAttribute("transform", `translate(${f(LN ? LX0 - 40 : x1)} ${f(y1)})`);
   s.sp.style.opacity = s.op; s.nd.style.opacity = s.op;
 }
 let castAnim = 0;
 function setCast(key, ms) {
   const c = CASTS[key], from = slots.map(s => ({ a: s.a, op: s.op }));
   const to = slots.map((s, i) => i < c.n.length ? { a: c.n[i][2], op: 1 } : { a: s.a, op: 0 });
+  const g0 = GH, g1 = GHc(c.n.length);
   slots.forEach((s, i) => {
+    const y1 = i < c.n.length ? lyN(i, c.n.length) : (s.y != null ? s.y : 0);
+    s.y0 = s.y != null && s.op >= .5 ? s.y : y1; s.y1 = y1;
     if (i >= c.n.length) return;
     const d = c.n[i];
     s.rc.style.fill = d[1]; s.ti.textContent = d[3] || d[0]; s.tm.textContent = "p" + SUB[i + 1];
     if (from[i].op < .5) { from[i].a = to[i].a; s.a = to[i].a; }
   });
   const id = ++castAnim;
-  const step = e => slots.forEach((s, i) => {
-    const d = ((to[i].a - from[i].a + 540) % 360) - 180;
-    s.a = from[i].a + d * e; s.op = from[i].op + (to[i].op - from[i].op) * e; place(s);
-  });
+  const step = e => {
+    if (LN) laneFrame(g0 + (g1 - g0) * e);
+    slots.forEach((s, i) => {
+      const d = ((to[i].a - from[i].a + 540) % 360) - 180;
+      s.a = from[i].a + d * e; s.op = from[i].op + (to[i].op - from[i].op) * e; s.y = s.y0 + (s.y1 - s.y0) * e; place(s);
+    });
+  };
   if (ms <= 0) { step(1); return; }
   const t0 = performance.now();
   (function fr(now) {
@@ -137,9 +196,10 @@ function token(p, x, y, v, r) {
 function cross(p, x, y, s) { s = s || 6.5; return el("path", { class: "cross", d: `M${f(x - s)},${f(y - s)}L${f(x + s)},${f(y + s)}M${f(x + s)},${f(y - s)}L${f(x - s)},${f(y + s)}` }, p); }
 function hawk(p, x, y) { return el("path", { class: "hawk", d: `M${f(x - 12)},${f(y)} Q${f(x - 6)},${f(y - 9)} ${f(x)},${f(y)} Q${f(x + 6)},${f(y - 9)} ${f(x + 12)},${f(y)}` }, p); }
 function where(m) {
-  if (m.x != null) return [m.x, m.y];
+  /* on lanes a point inside the round finds its lane and time; a caption above or below the round stays put */
+  if (m.x != null) return !LN ? [m.x, m.y] : Math.abs(m.y) < 200 ? toLane(m.x, m.y) : [m.x, Math.sign(m.y) * (CH - 20)];
   if (m.n) { const [x, y] = P(m.n, m.at); return [x + (m.dx || 0), y + (m.dy || 0)]; }
-  const [x, y] = pol(m.deg, rad(m.at)); return [x + (m.dx || 0), y + (m.dy || 0)];
+  const [x, y] = LN ? toLane(...pol(m.deg, rad(m.at))) : pol(m.deg, rad(m.at)); return [x + (m.dx || 0), y + (m.dy || 0)];
 }
 function measure(s, cls) { meas.setAttribute("class", "tgt meas " + cls); meas.textContent = s; let w = 0; try { w = meas.getComputedTextLength(); } catch (e) {} return w || s.length * 8; }
 /* a label in a box sized to what it says; "|" breaks a line */
@@ -169,8 +229,8 @@ const tagCls = m => (m.cls || "") + (m.c && !/red|gold|ok|blue|night/.test(m.cls
 function obstacles(list) {
   const pts = [], rects = [], line = (a, b, n) => { for (let i = 0; i <= n; i++) pts.push([a[0] + (b[0] - a[0]) * i / n, a[1] + (b[1] - a[1]) * i / n]); };
   CA.n.forEach(d => {
-    for (let t = 0; t <= TEND; t += .18) pts.push(pol(d[2], rad(t)));
-    const [x, y] = pol(d[2], R0); rects.push([x - 19, y - 14, x + 19, y + 14]);
+    for (let t = 0; t <= TEND; t += .18) pts.push(P(d[0], t));
+    const [x, y] = nodeXY(d[0]); rects.push([x - 19, y - 14, x + 19, y + 14]);
   });
   list.forEach(m => {
     if (m.t === "sl") {
@@ -180,24 +240,27 @@ function obstacles(list) {
     } else if (m.t === "ev" || m.t === "coin" || m.t === "bun") {
       const [x, y] = P(m.n, m.at), r = (m.r || (m.v || m.num != null || m.t !== "ev" ? 11 : 6)) + (m.ring ? 6 : 2); rects.push([x - r, y - r, x + r, y + r]);
     } else if (m.t === "slate") {
-      const [x, y] = P(m.n, m.at), a = (A(m.n) + 90 * (m.side || 1)) * Math.PI / 180, cx = x + 32 * Math.cos(a), cy = y + 32 * Math.sin(a); rects.push([cx - 21, cy - 14, cx + 21, cy + 14]);
+      const [x, y] = P(m.n, m.at), a = (LN ? -90 * (m.side || 1) : A(m.n) + 90 * (m.side || 1)) * Math.PI / 180, cx = x + 32 * Math.cos(a), cy = y + 32 * Math.sin(a); rects.push([cx - 21, cy - 14, cx + 21, cy + 14]);
     } else if (m.t === "sp" || m.t === "obs") line(P(m.n, m.t1), P(m.n, m.t2), 8);
     else if (m.t === "x") { const [x, y] = P(m.n, m.at); rects.push([x - 9, y - 9, x + 9, y + 9]); }
     else if (m.t === "hawk") { const [x, y] = where(m); rects.push([x - 13, y - 9, x + 13, y + 3]); }
-    else if (m.t === "halo") { const [x, y] = pol(A(m.n), R0); rects.push([x - 26, y - 19, x + 26, y + 19]); }
+    else if (m.t === "halo") { const [x, y] = nodeXY(m.n); rects.push([x - 26, y - 19, x + 26, y + 19]); }
   });
   return { pts, rects };
 }
 function placeTag(m, box, ob, taken) {
-  const [x0, y0] = where(m), W = box.W + 6, H = box.H + 4, lim = VB / 2 - 3;
+  let [x0, y0] = where(m);
+  const W = box.W + 6, H = box.H + 4, lim = VB / 2 - 3;
   if (m.fix) return [x0, y0];
+  /* on lanes a label asked for past the edge starts its search just inside the card */
+  if (LN) { x0 = Math.max(-246 + W / 2, Math.min(246 - W / 2, x0)); y0 = Math.max(-CH + 8 + H / 2, Math.min(CH - 8 - H / 2, y0)); }
   let best = null;
   const hit = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
   for (const rr of [0, 7, 14, 22, 31, 41, 52, 64, 78]) {
     for (let k = 0; k < (rr ? 16 : 1); k++) {
       const a = k * Math.PI / 8, x = x0 + rr * Math.cos(a), y = y0 + rr * Math.sin(a), R = [x - W / 2, y - H / 2, x + W / 2, y + H / 2];
       let sc = rr * .35;
-      if (R[0] < -lim || R[2] > lim || R[1] < -lim || R[3] > lim) sc += 5000;
+      if (R[0] < -lim || R[2] > lim || R[1] < -lim || R[3] > lim || (LN && (R[1] < -CH + 4 || R[3] > CH - 4))) sc += 5000;
       for (const q of ob.pts) if (q[0] > R[0] && q[0] < R[2] && q[1] > R[1] && q[1] < R[3]) sc += 12;
       for (const o of ob.rects) sc += hit(R, o) * .6;
       for (const o of taken) sc += hit(R, o) * 4;
@@ -263,7 +326,8 @@ const DRAW = {
     const g = wrap("u", tone(m) + " span"), [x1, y1] = P(m.n, m.t1), [x2, y2] = P(m.n, m.t2);
     /* with "around", a faint ring carries the same stretch of time round the whole round, so spans on
        different spokes can be compared: where two rings overlap, so do their spans */
-    if (m.around) {
+    if (m.around && LN) el("path", { class: "around", d: `M${f(lx(m.t1))},${f(-GH)} H${f(lx(m.t2))} V${f(GH)} H${f(lx(m.t1))} Z`, fill: m.col || CA.col[m.n], stroke: m.col || CA.col[m.n] }, g);
+    else if (m.around) {
       const ring = r => `M${f(r)},0 A${f(r)},${f(r)} 0 1 0 ${f(-r)},0 A${f(r)},${f(r)} 0 1 0 ${f(r)},0 Z`;
       el("path", { class: "around", d: ring(rad(m.t2)) + " " + ring(rad(m.t1)), "fill-rule": "evenodd", fill: m.col || CA.col[m.n], stroke: m.col || CA.col[m.n] }, g);
     }
@@ -278,6 +342,8 @@ const DRAW = {
   },
   /* a place cut off: a hatched wedge round its spoke */
   wedge(m) {
+    if (LN) { const g = wrap("u", tone(m) + " wedge"), y = ly(m.n), h = (m.w || 26) * 1.15, x1 = lx(m.t1 || 0), x2 = lx(m.t2 || TEND) + 8;
+      el("path", { d: `M${f(x1)},${f(y - h)} H${f(x2)} V${f(y + h)} H${f(x1)} Z` }, g); return g; }
     const g = wrap("u", tone(m) + " wedge"), a = A(m.n), w = m.w || 26, r1 = rad(m.t1 || 0), r2 = rad(m.t2 || TEND) + 8, n = 24, pts = [];
     for (let i = 0; i <= n; i++) pts.push(pol(a - w + 2 * w * i / n, r2));
     for (let i = n; i >= 0; i--) pts.push(pol(a - w + 2 * w * i / n, r1));
@@ -286,6 +352,8 @@ const DRAW = {
   },
   /* a whole span of time, everywhere at once */
   band(m) {
+    if (LN) { const g = wrap("u", tone(m) + " band " + (m.cls || ""));
+      el("path", { d: `M${f(lx(Math.max(0, m.t1)))},${f(-GH)} H${f(lx(m.t2))} V${f(GH)} H${f(lx(Math.max(0, m.t1)))} Z` }, g); return g; }
     const g = wrap("u", tone(m) + " band " + (m.cls || "")), r1 = Math.max(R0, rad(m.t1)), r2 = rad(m.t2);
     const ring = r => `M${f(r)},0 A${f(r)},${f(r)} 0 1 0 ${f(-r)},0 A${f(r)},${f(r)} 0 1 0 ${f(r)},0 Z`;
     el("path", { d: ring(r2) + " " + ring(r1), "fill-rule": "evenodd" }, g);
@@ -294,11 +362,20 @@ const DRAW = {
   /* one moment everywhere */
   ring(m) {
     const g = wrap("u", tone(m) + " ring " + (m.cls || ""));
-    el("circle", { r: f(rad(m.at)) }, g);
+    if (LN) el("line", { x1: f(lx(m.at)), x2: f(lx(m.at)), y1: f(-GH), y2: f(GH) }, g);
+    else el("circle", { r: f(rad(m.at)) }, g);
     return g;
   },
   /* a cut: the past of every place up to its own moment, shaded inside a loop */
   cut(m) {
+    if (LN) {
+      /* on lanes: a line down through each place's moment, the past shaded to its left */
+      const g = wrap("u", tone(m) + " cut"), ks = Object.keys(m.at).sort((a, b) => laneIx(a) - laneIx(b));
+      const line = [[lx(m.at[ks[0]]), -GH], ...ks.map(k => P(k, m.at[k])), [lx(m.at[ks[ks.length - 1]]), GH]];
+      el("path", { class: "fillc", d: dpath([[LX0 - 14, -GH], ...line, [LX0 - 14, GH]]) + " Z" }, g);
+      el("path", { class: "edge", d: dpath(line) }, g);
+      return g;
+    }
     const g = wrap("u", tone(m) + " cut"), norm = a => ((a % 360) + 360) % 360;
     const ks = Object.keys(m.at).sort((a, b) => norm(A(a)) - norm(A(b))), angs = ks.map(k => norm(A(k))), pts = [];
     for (let i = 0; i < ks.length; i++) {
@@ -314,7 +391,7 @@ const DRAW = {
   },
   /* a ring round a place's box: the podium, a liar, one group or another */
   halo(m) {
-    const g = wrap("u", tone(m) + " halo " + (m.cls || "")), [x, y] = pol(A(m.n), R0), s = m.cls === "q2" ? 6 : 0;
+    const g = wrap("u", tone(m) + " halo " + (m.cls || "")), [x, y] = nodeXY(m.n), s = m.cls === "q2" ? 6 : 0;
     el("rect", { x: f(x - 24 - s), y: f(y - 17 - s), width: 48 + 2 * s, height: 34 + 2 * s, rx: 9 + s }, g);
     return g;
   },
@@ -326,7 +403,7 @@ const DRAW = {
   },
   /* a slate chalked with the man its tent thinks dead */
   slate(m) {
-    const g = wrap("e", tone(m) + " slate"), [x, y] = P(m.n, m.at), a = (A(m.n) + 90 * (m.side || 1)) * Math.PI / 180;
+    const g = wrap("e", tone(m) + " slate"), [x, y] = P(m.n, m.at), a = (LN ? -90 * (m.side || 1) : A(m.n) + 90 * (m.side || 1)) * Math.PI / 180;
     const cx = x + 32 * Math.cos(a), cy = y + 32 * Math.sin(a), gg = el("g", { transform: `translate(${f(cx)} ${f(cy)})` }, g);
     el("line", { class: "tie", x1: f(x - cx), y1: f(y - cy), x2: 0, y2: 0 }, gg);
     el("rect", { x: -19, y: -12, width: 38, height: 24, rx: 3 }, gg);
@@ -656,7 +733,8 @@ function build() {
 }
 function apply() {
   const T = TL.T, end = T >= TEND - 1e-3;
-  clipC.setAttribute("r", end ? 999 : f(rad(T) + 1.5));
+  clipC.setAttribute("r", LN ? 0 : end ? 999 : f(rad(T) + 1.5));
+  if (LN) clipR.setAttribute("width", end ? 1200 : f(lx(T) + 1.5 + 600));
   for (const it of TL.items) {
     const pre = !it.forced && T < it.at;
     if (pre !== it.pre) { it.pre = pre; it.e.classList.toggle("pre", pre); }
@@ -669,7 +747,8 @@ function apply() {
     }
     h.c.style.display = on ? "" : "none";
   }
-  nowC.setAttribute("r", f(rad(T)));
+  nowC.setAttribute("r", LN ? 0 : f(rad(T)));
+  if (LN) { nowL.setAttribute("x1", f(lx(T))); nowL.setAttribute("x2", f(lx(T))); }
   nowG.classList.toggle("off", end || T <= 0);
   const v = Math.round(1000 * T / TEND);
   seeks.forEach(s => { s.value = v; s.style.setProperty("--v", v / 10 + "%"); });
@@ -701,14 +780,16 @@ seeks.forEach(s => {
   s.addEventListener("change", () => svg.classList.remove("scrub"));
 });
 let drag = null;
-const distAt = e => { const q = new DOMPoint(e.clientX, e.clientY).matrixTransform(svg.getScreenCTM().inverse()); return Math.hypot(q.x, q.y); };
+const ptAt = e => new DOMPoint(e.clientX, e.clientY).matrixTransform(svg.getScreenCTM().inverse());
+const distAt = e => { const q = ptAt(e); return Math.hypot(q.x, q.y); };
+const timeAt = e => LN ? (ptAt(e).x - LX0) / (LX1 - LX0) * TEND : (distAt(e) - R0) / ST;
 svg.addEventListener("pointerdown", e => {
   /* touch keeps scrolling the page; the slider is there for fingers */
   if (e.pointerType === "touch" || e.button !== 0 || cur.scene === null) return;
-  const d = distAt(e); if (d > rad(TEND) + 24) return;
-  drag = e.pointerId; svg.setPointerCapture(drag); svg.classList.add("scrub"); seek((d - R0) / ST); e.preventDefault();
+  if (LN ? Math.abs(ptAt(e).y) > CH : distAt(e) > rad(TEND) + 24) return;
+  drag = e.pointerId; svg.setPointerCapture(drag); svg.classList.add("scrub"); seek(timeAt(e)); e.preventDefault();
 });
-svg.addEventListener("pointermove", e => { if (drag === e.pointerId) seek((distAt(e) - R0) / ST); });
+svg.addEventListener("pointermove", e => { if (drag === e.pointerId) seek(timeAt(e)); });
 const endDrag = e => { if (drag === e.pointerId) { drag = null; svg.classList.remove("scrub"); } };
 svg.addEventListener("pointerup", endDrag); svg.addEventListener("pointercancel", endDrag);
 
@@ -730,7 +811,9 @@ function show(id, night, opt) {
   if (arrive && id === cur.scene && night === cur.night) return;
   const my = ++seq;
   const list = S.marks.concat(S.nights ? S.nights[night] : []);
-  const castChange = cur.cast !== S.cast, instant = !!opt.instant || reduce || cur.cast === null;
+  const lanes = document.body.dataset.reg === "m", modeChange = lanes !== LN;
+  if (modeChange) setMode(lanes);
+  const castChange = cur.cast !== S.cast || modeChange, instant = !!opt.instant || reduce || cur.cast === null;
   const keep = new Set();
   if (!castChange && !opt.redraw) list.forEach(m => { const o = live[m.k]; if (o && sig(o.m) === sig(m)) keep.add(m.k); });
   for (const k in live) if (!keep.has(k)) { remove(live[k].g, instant); delete live[k]; }
@@ -983,7 +1066,30 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
     /* the allegory draws it like a black-figure vase: terracotta on black; computing in cool light */
     const gr = isM() ? { ring: "rgba(255,255,255,.07)", spoke: "rgba(255,255,255,.16)", now: "224,184,74", msg: "58,160,255", tip: "160,210,255", red: "239,106,63" }
       : { ring: "rgba(200,105,58,.16)", spoke: "rgba(224,138,85,.32)", now: "224,184,74", msg: "240,230,204", tip: "246,238,214", red: "224,138,85" };
-    cx.setTransform(dpr, 0, 0, dpr, 0, 0); cx.clearRect(0, 0, W, H); cx.translate(W / 2, H / 2);
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0); cx.clearRect(0, 0, W, H);
+    /* computing: the same messages on lanes, one per process, with a moment sweeping left to right */
+    if (isM()) {
+      const top = H * .16, bot = H * .84, L = W * .05, Rr = W * .95, yy = i => top + (bot - top) * i / (N - 1), xx = t => L + (Rr - L) * t;
+      cx.setLineDash([2, 6]); cx.strokeStyle = gr.ring; cx.lineWidth = 1;
+      for (let i = 1; i <= 7; i++) { cx.beginPath(); cx.moveTo(xx(i / 7), top - 20); cx.lineTo(xx(i / 7), bot + 20); cx.stroke(); }
+      cx.setLineDash([]);
+      for (let i = 0; i < N; i++) {
+        cx.strokeStyle = gr.spoke; cx.lineWidth = 1.5; cx.beginPath(); cx.moveTo(L, yy(i)); cx.lineTo(Rr, yy(i)); cx.stroke();
+        cx.fillStyle = COL[i]; cx.globalAlpha = .85; cx.beginPath(); cx.arc(L, yy(i), Math.max(3, S * .007), 0, 7); cx.fill(); cx.globalAlpha = 1;
+      }
+      cx.strokeStyle = `rgba(${gr.now},${.22 * fade})`; cx.lineWidth = 1.5; cx.beginPath(); cx.moveTo(xx(u), top - 20); cx.lineTo(xx(u), bot + 20); cx.stroke();
+      for (const m of msgs) {
+        if (u < m.t1) continue;
+        const end = Math.min(1, (u - m.t1) / (m.t2 - m.t1)), x1 = xx(m.t1), y1 = yy(m.a), x2 = x1 + (xx(m.t2) - x1) * end, y2 = y1 + (yy(m.b) - y1) * end;
+        cx.strokeStyle = m.red ? `rgba(${gr.red},${.95 * fade})` : `rgba(${gr.msg},${.6 * fade})`; cx.lineWidth = m.red ? 2.6 : 1.6;
+        cx.beginPath(); cx.moveTo(x1, y1); cx.lineTo(x2, y2); cx.stroke();
+        cx.fillStyle = m.red ? `rgba(${gr.red},${fade})` : `rgba(${gr.tip},${.9 * fade})`;
+        cx.beginPath(); cx.arc(x2, y2, end < 1 ? 2.6 : 2, 0, 7); cx.fill();
+      }
+      if (!reduce) raf = requestAnimationFrame(draw);
+      return;
+    }
+    cx.translate(W / 2, H / 2);
     cx.setLineDash([2, 6]); cx.strokeStyle = gr.ring; cx.lineWidth = 1;
     for (let i = 1; i <= 7; i++) { cx.beginPath(); cx.arc(0, 0, rad(i / 7), 0, 7); cx.stroke(); }
     cx.setLineDash([]);

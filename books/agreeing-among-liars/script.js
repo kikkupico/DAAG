@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Space,redrawOn}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -132,7 +132,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 (function(){
   const AUTO=0;
   const NB={1:[-90,"B1",BC[1],"P1"],2:[150,"B2",BC[2],"P2"],3:[30,"B3",BC[3],"P3"]};
-  const mk=svg=>Polar(svg,{vb:"0 0 360 320",cx:180,cy:165,r0:30,step:25,rings:5,tEnd:4.8,nodes:NB});
+  const mk=svg=>Space(svg,{vb:"0 0 360 320",cx:180,cy:165,r0:30,step:25,rings:5,tEnd:4.8,nodes:NB});
   let PA=mk($("#worldA")),PB=mk($("#worldB"));
   /* what each night is: what the chief sent each guard, and what each guard told the other */
   const N={A:{send:{2:"H",3:"H"},tell:{"3>2":"S","2>3":"H"}},   // the chief is honest; bandit 3 lies to bandit 2
@@ -159,6 +159,8 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   b.forEach((x,i)=>x.onclick=()=>{if(i===s)go(s++)});
   function reset(){PA=mk($("#worldA"));PB=mk($("#worldB"));eA.innerHTML=eB.innerHTML=dual("bandit 2 holds: nothing yet","P2 holds: nothing yet");eA.classList.remove("same");eB.classList.remove("same");s=0;lock(0);say.textContent="Press the buttons in turn."}
   br.onclick=reset;reset();for(let i=0;i<AUTO;i++)go(s++);
+  /* in the other register the two nights are drawn again as far as the reader has gone */
+  redrawOn(()=>{PA=mk($("#worldA"));PB=mk($("#worldB"));const st=s>=2?2:s;if(st){draw(PA,"A",st);draw(PB,"B",st)}});
 })();
 
 /* ===== the price of a liar ===== */
@@ -189,18 +191,19 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     const lines=[rounds>=1?`${dual("from the chief","from the commander")}: ${word(acc[0])}`:"",
       ...(rounds>=2?[2,3,4].filter(j=>j!==k).map((j,n)=>`${dual("from bandit "+j,"from P"+j)}: ${word(acc[n+1])}`):[])].filter(Boolean);
     return `<div class="hc${count&&!isL?" in":""}"><h5>${chip(k)}<span>${count&&!isL?dual("obeys "+ORD[w],"obeys "+V[w]):isL?dual("supposed liar","faulty"):""}</span></h5><div class="chk">${isL&&k!==1?dual("Its word is not counted.","Its value is not counted."):lines.join("<br>")}</div></div>`};
+  let cur=0;
   function render(i){
-    const P=Polar(svg,{vb:"0 0 440 440",cx:220,cy:220,r0:34,step:28,rings:6,tEnd:5.4,nodes:NB,note:[12,430]}),s=ST[i];
+    cur=i;const P=Space(svg,{vb:"0 0 440 440",cx:220,cy:220,r0:34,step:28,rings:6,tEnd:5.4,nodes:NB,note:[12,430]}),s=ST[i];
     [["hold","H",20],["scatter","S",40]].forEach(([t,w,y])=>dtext(P.over,{class:"lab k",x:12,y},"■ "+t,"■ "+V[w]).forEach(e=>{e.style.textAnchor="start";e.style.fontSize="18px";e.style.fill=OC[w]}));
     if(s){const S=SC[s[0]],rounds=s[1],count=s[2];dot(P,1,1.4,BC[1]);
       if(rounds>=1)[2,3,4].forEach(k=>{slip(P,1,1.4,k,2.6,S.r1[k],false);dot(P,k,2.6,BC[k])});
       if(rounds>=2)[2,3,4].forEach(a=>[2,3,4].filter(b=>b!==a).forEach(b=>slip(P,a,2.9,b,4.1,S.tell(a,b),false)));
       if(rounds>=2)[2,3,4].forEach(k=>dot(P,k,4.1,BC[k]));
-      if(count)[2,3,4].filter(k=>k!==S.liar).forEach(k=>{const [x,y]=P.pt(k,4.1),w=maj(accounts(S,k)),a=NB[k][0]*Math.PI/180,
+      if(count)[2,3,4].filter(k=>k!==S.liar).forEach(k=>{const [x,y]=P.pt(k,4.1),w=maj(accounts(S,k)),a=(P.lanes?0:NB[k][0])*Math.PI/180,
         t=dtext(P.over,{class:"lab halo k",x:x+Math.cos(a)*40,y:y+Math.sin(a)*26+4},ORD[w],V[w]);t.forEach(e=>{e.style.fill=OC[w];e.style.fontSize="18px"})})}
     side.innerHTML=[2,3,4].map(k=>card(k,s&&SC[s[0]],s?s[1]:0,s?s[2]:0)).join("");
   }
-  scrolly($("#rep"),i=>render(i));
+  scrolly($("#rep"),i=>render(i));redrawOn(()=>render(cur));
   if(STEP!==null)render(STEP);
 })();
 
@@ -232,7 +235,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     const {m,cl,sheaf,slips}=sim(),honest=guards.filter(k=>!liars.has(k));
     [1,2,3,4].forEach(k=>{bl[k].setAttribute("aria-pressed",liars.has(k));bl[k].innerHTML=dual(`${liars.has(k)?"Supposing":"Suppose"} bandit ${k} lies`,`${liars.has(k)?"Supposing":"Suppose"} P${k} is faulty`)});
     bs.style.display=cl?"":"none";bs.innerHTML=dual("The chief seals: ","The commander signs: ")+SP[split].t;
-    const P=Polar(svg,{vb:"0 0 440 440",cx:220,cy:220,r0:34,step:28,rings:6,tEnd:6,nodes:NB});
+    const P=Space(svg,{vb:"0 0 440 440",cx:220,cy:220,r0:34,step:28,rings:6,tEnd:6,nodes:NB});
     dot(P,1,1.4,BC[1]);slips.forEach(s=>{const t0=1.4+1.5*(s.r-1);slip(P,s.from,t0,s.to,t0+1.2,s.w,false);dot(P,s.to,t0+1.2,BC[s.to])});
     const ans={};honest.forEach(k=>ans[k]=rule(sheaf[k]));
     tab.innerHTML=guards.map(k=>{
@@ -245,7 +248,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     const two=honest.some(k=>sheaf[k].size>1);
     say.innerHTML=dual(`The party is built to bear <b>${m}</b> ${m===1?"liar":"liars"}, so a guard passes a slip on while fewer than ${m} ${m===1?"guard's seal stands":"guards' seals stand"} on it. ${two?"A sheaf now holds two orders under the chief's seal, which an honest chief would never have sealed: <b>the chief has convicted themselves</b>, of lying and of nothing else. ":""}${cl&&!two&&honest.length?"The chief sealed only one order that reached an honest guard, so nothing marks the chief. ":""}`,`The system is built to bear <b>${m}</b> ${m===1?"traitor":"traitors"}, so a lieutenant passes a message on while fewer than ${m} ${m===1?"lieutenant's signature stands":"lieutenants' signatures stand"} on it. ${two?"A set now holds two values under the commander's signature, which an honest commander would never have signed: <b>the commander has convicted itself</b>, of lying and of nothing else. ":""}${cl&&!two&&honest.length?"The commander signed only one value that reached an honest lieutenant, so nothing marks the commander. ":""}`);
   }
-  paint();
+  paint();redrawOn(paint);
   if(AUTO)AUTO();
 })();
 

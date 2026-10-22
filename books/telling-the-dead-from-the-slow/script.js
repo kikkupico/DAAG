@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -287,9 +287,10 @@ const strongRun=(function(){
 (function(){
   const nodes={1:[225,"T1",TC[1],"P1"],2:[135,"T2",TC[2],"P2"],3:[315,"T3",TC[3],"P3"],4:[45,"T4",TC[4],"P4"]},svg=$("#halfsvg"),stand=$("#halfstand"),say=$("#halfsay"),bs=$$("[data-night]");
   const defs=[];
-  function draw(n){
-    const P=Polar(svg,{vb:"0 0 520 480",cx:260,cy:240,r0:40,step:27,rings:7,tEnd:7.4,nodes});
-    const spokes=$$(".st-spoke",svg);
+  let cur=1,tl=null,live=[];
+  /* the night chosen, in the round, or on lanes in computing; a dead man's line (or lane) stops where he died */
+  function draw(P,n){
+    const spokes=$$(P.lanes?".ln-lane":".st-spoke",svg);
     const dead=n===1?[3,4]:n===2?[1,2]:[];
     dead.forEach(k=>{const [x,y]=P.pt(k,1);spokes[k-1].setAttribute("x2",x);spokes[k-1].setAttribute("y2",y);cross(P.over,x,y,12)});
     const live=T.filter(k=>!dead.includes(k)),ans={1:"H",2:"H",3:"A",4:"A"};
@@ -310,8 +311,9 @@ const strongRun=(function(){
     3:dual(`<b>Third night.</b> Tents 1 and 2 sighted hold, tents 3 and 4 attack. <span class="ok">Nobody dies.</span> Every bird between the two pairs sits in the pines until after both pairs have committed, and until then each pair chalks the other. Afterwards all the birds arrive and all the chalk is rubbed out. That slate is in the end perfect too. <span class="bad">Each pair sees exactly what it saw on its own night, and commits: one pair to hold, the other to attack.</span>`,
        `<b>Third execution.</b> P1 and P2 have input 0, P3 and P4 have input 1. <span class="ok">Nobody crashes.</span> Every message between the two pairs is delayed until after both pairs have decided, and until then each pair suspects the other. Afterwards all the messages arrive and all the suspicions are removed. That detector is in the end perfect too. <span class="bad">Each pair sees exactly what it saw in its own execution, and decides: one pair 0, the other 1.</span>`)};
   const chalks={1:{1:[3,4],2:[3,4],3:[],4:[]},2:{1:[],2:[],3:[1,2],4:[1,2]},3:{1:[3,4],2:[3,4],3:[1,2],4:[1,2]}};
-  function show(n){
-    const live=draw(n);bs.forEach(b=>b.classList.toggle("on",+b.dataset.night===n));
+  function show(n){cur=n;
+    if(tl)tl(true);else tl=Timeline(svg,{vb:"0 0 520 480",cx:260,cy:240,r0:40,step:27,rings:7,tEnd:7.4,nodes},P=>{live=draw(P,cur)});
+    bs.forEach(b=>b.classList.toggle("on",+b.dataset.night===n));
     stand.innerHTML=T.map(k=>{const a=n===3?(k<3?"H":"A"):n===1?"H":"A";return live.includes(k)?`<div>${tentChip(k)} ${dual(`chalks ${chalks[n][k].length?tents(chalks[n][k]):"nobody"}, and commits to <b>${word[a]}</b>`,`suspects ${chalks[n][k].length?pn(chalks[n][k]):"nobody"}, and decides <b>${GL[a]}</b>`)}</div>`:`<div>${tentChip(k)} ${dual("<i>dead from dusk</i>","<i>crashed from the start</i>")}</div>`}).join("");
     say.innerHTML=texts[n]}
   bs.forEach(b=>b.onclick=()=>show(+b.dataset.night));show(1);

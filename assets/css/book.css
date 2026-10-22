@@ -575,3 +575,24 @@ a.lin-node:hover b{text-decoration:underline}
 }
 
 .side .hc.in{background:#e3ecc4}
+
+/* computing: space-time pictures on a rectangular grid (Lanes in book.js), in the covers' dress */
+.ln-grid{stroke:#ececf0;stroke-width:1}
+.ln-lane{stroke:#d2d2d7;stroke-width:1.6;stroke-linecap:round}
+.ln-proc circle{fill:#fff;stroke:#1d1d1f;stroke-width:2}
+.ln-proc text{font-weight:700;text-anchor:middle;dominant-baseline:central;fill:#1d1d1f}
+.ln-note{fill:#a1a1a6}
+.ln-shade{fill-opacity:.08}
+.ln-op .pill{fill-opacity:.24;stroke-width:2}
+.ln-op text{font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.ln-op .ln-ring{fill:none;stroke:#e0b84a;stroke-width:4;opacity:0;transition:opacity .3s}
+.ln-op.sel .ln-ring{opacity:1}
+.ln-op.sel .pill{fill-opacity:.42}
+.ln-op[role="button"]{cursor:pointer}
+.ln-op:focus-visible{outline:none}
+.ln-op:focus-visible .ln-ring{opacity:1;stroke:#0a6fc2}
+.ln-dot circle{stroke:#fff;stroke-width:2}
+.ln-dot text{font-weight:700;text-anchor:middle;dominant-baseline:central;fill:#fff}
+body[data-reg="m"] .st-svg{border-radius:18px}
+/* on a phone a lane picture is drawn at half size, so the words a book writes on it are set larger */
+@media(max-width:600px){svg.lanes .tok-l,svg.lanes .lab{font-size:22px}}
