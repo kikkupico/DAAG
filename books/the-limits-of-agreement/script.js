@@ -190,15 +190,6 @@ const TC={1:"#e0b84a",2:"#6583d6",3:"#c45448",4:"#9cb648"};
 const yesno=ok=>ok?"<span class='ok'>✓</span>":"<span class='bad'>✗</span>";
 const tentChip=(k,extra="")=>`<span class="chip"${extra}><i style="background:${TC[k]}"></i>${dual("Tent "+k,"P"+k)}</span>`;
 
-/* ===== machines: waiting tells A nothing ===== */
-(function(){
-  const waits=["1 second","2 seconds","5 seconds","30 seconds","5 minutes","1 hour","1 day"],log=$("#waitlog"),note=$("#waitnote"),b=$("#waitb"),r=$("#waitr");let i=0;
-  b.onclick=()=>{const w=waits[i++],d=document.createElement("div");d.className="e";d.textContent=`waited ${w} ▸ no reply from B`;log.appendChild(d);while(log.children.length>5)log.firstChild.remove();
-    note.textContent=i===1?"No reply. Has B stopped, or is its reply still on the way?":i<waits.length?`After ${w}, A knows exactly what it knew after one second.`:"A can wait as long as it likes. No length of waiting tells a machine that has stopped from one that is slow.";
-    if(i>=waits.length){b.disabled=true;r.hidden=false}};
-  r.onclick=()=>{i=0;log.innerHTML="";b.disabled=false;r.hidden=true;note.textContent="A has asked B for its value and is waiting for the reply."};
-})();
-
 /* ===== the hill, seen from above: one picture reused wherever ravens fly between the tents ===== */
 function Hill(svg){
   const cx=235,cy=235,R=158,A={1:-90,2:0,3:90,4:180}; svg.innerHTML=""; svg.setAttribute("viewBox","0 0 470 470");
