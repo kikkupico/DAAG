@@ -43,7 +43,7 @@ it never names the setting. Photographs and the who-is-who table are allegory-on
 `assets/js/registers.js` (`window.REG`: `dual` writes the two spans for text built by a script,
 `dtext` the two SVG texts, `onReg` runs a hook on a switch, `start` ends the page script). A book's
 own script keeps diagrams and live captions in step by writing both registers, never by
-re-rendering on a switch. Done so far: the five camp books (The Limits of Agreement, Agreeing by Chance, Telling the Dead from the Slow, Answering While Cut Off, Agreeing When Messages Run Late), Ordering Without Clocks, Changing Leaders Among Liars, Taking Stock Without Stopping, Probably Up to Date, Agreeing Among Liars, Changes That Never Clash and Keeping Order Among Liars. The allegory is the default; the computing register shows only when the reader has chosen it.
+re-rendering on a switch. Done so far: the five camp books (The Limits of Agreement, Agreeing by Chance, Telling the Dead from the Slow, Answering While Cut Off, Agreeing When Messages Run Late), Ordering Without Clocks, Changing Leaders Among Liars, Taking Stock Without Stopping, Probably Up to Date, Agreeing Among Liars, Changes That Never Clash, Keeping Order Among Liars, One Leader at a Time and The Part-Time Parliament. The allegory is the default; the computing register shows only when the reader has chosen it.
 
 Setting pages (`places/<place>/index.html`), the home page and `papers/index.html` wear the same
 look. They are ordinary hand-edited pages that link `art/scroll/shell.css`, `art/scroll/place.css`
