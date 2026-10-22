@@ -11,6 +11,9 @@ function tween(ms,fn){return new Promise(res=>{if(reduce||ms<=0){fn(1);res();ret
   (function f(t){const u=Math.max(0,Math.min(1,(t-t0)/ms)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;fn(e);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
 function button(g,label,fn){g.setAttribute("tabindex",0);g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
 
+/* ===== the two registers: see assets/js/registers.js ===== */
+const {isM,dual,vis,dtext,onReg}=REG;
+
 /* ===== pop-ups unfold when they enter view ===== */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("up");io.unobserve(e.target)}}),{threshold:0,rootMargin:"0px 0px -12% 0px"});
 $$(".pop").forEach(p=>{ if(p.hasAttribute("data-auto")) setTimeout(()=>p.classList.add("up"),250); else io.observe(p); });
@@ -28,12 +31,13 @@ function onscroll(){
     prog.style.width=(h>0?y/h*100:0)+"%";
     const mid=y+innerHeight*.4; let cur=secs[0];
     for(const s of secs){ if(s.offsetTop<=mid&&s.offsetTop>=cur.offsetTop) cur=s; }
-    now.textContent=cur.dataset.name||"";
+    now.textContent=(isM()&&cur.dataset.nameM)||cur.dataset.name||"";
     if(reduce)return;
     for(const d of dep){const r=d.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; d.style.transform=`translateY(${(c*+d.dataset.depth).toFixed(1)}px)`+(d.classList.contains("tilt-r")?" rotate(1.2deg)":d.classList.contains("tilt-l")?" rotate(-1.4deg)":"")}
     for(const p of par){const r=p.parentElement.getBoundingClientRect(); const c=(r.top+r.height/2-innerHeight/2)/innerHeight; p.style.transform=`translateY(${(c*-9).toFixed(2)}%)`}
   });
 }
+REG.after=onscroll;
 addEventListener("scroll",onscroll,{passive:true}); addEventListener("resize",onscroll); onscroll();
 
 /* ===== a scroll-driven stage: the step in the middle of the window drives render(i) ===== */
@@ -44,7 +48,8 @@ function stepDots(root,steps){
     if(d) b.innerHTML='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="'+d+'"/></svg>'; b.addEventListener("click",fn); return b};
   const prev=ctl("arr","Previous step","M7.5 2 3.5 6l4 4",()=>go(cur-1)), next=ctl("arr","Next step","M4.5 2l4 4-4 4",()=>go(cur+1)),
         back=ctl("arr back","Back to the first step","M2.6 6.4a3.5 3.5 0 1 0 1-2.8M2.4 1.6v2.2h2.2",()=>go(0));
-  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+h.textContent:""),"",()=>go(i))});
+  const dots=steps.map((s,i)=>{const h=$("h3",s); return ctl("dot","Step "+(i+1)+" of "+steps.length+(h?": "+vis(h):""),"",()=>go(i))});
+  onReg.push(()=>dots.forEach((d,i)=>{const h=$("h3",steps[i]),t="Step "+(i+1)+" of "+steps.length+(h?": "+vis(h):"");d.setAttribute("aria-label",t);d.title=t}));
   nav.append(prev,...dots,next,back);
   if(stage&&steps.length>1) stage.append(nav);
   return i=>{cur=i; prev.disabled=back.disabled=i===0; next.disabled=i===steps.length-1;
@@ -87,7 +92,7 @@ function Polar(svg,o){
   for(let i=1;i<=rings;i++)el("circle",{class:"st-ring",cx,cy,r:P.r(i)},frame);
   for(const k in nodes){const [x1,y1]=P.pt(k,0),[x2,y2]=P.pt(k,tEnd);el("line",{class:"st-spoke",x1,y1,x2,y2},frame)}
   for(const k in nodes){const [x,y]=P.pt(k,0),g=el("g",{class:"st-node",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`},frame);
-    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";el("text",{},g).textContent=nodes[k][1]}
+    el("rect",{x:-17,y:-12,width:34,height:24,rx:4,fill:nodes[k][2]||"#f6eed6"},g).style.fill=nodes[k][2]||"";dtext(g,{},nodes[k][1],nodes[k][3]||nodes[k][1])}
   if(o.note){const [x,y]=o.note;const t=el("text",{class:"st-note",x,y},frame);t.textContent="later moments are further out"}
   return P;
 }
@@ -161,56 +166,46 @@ document.querySelectorAll(".lin").forEach(lin=>{
 
 /* the four bandits, told apart by colour; Number 1 is the chief */
 const BC={1:"#a57fc0",2:"#9aa0a8",3:"#e8964d",4:"#b07a55"};
-const chip=k=>`<span class="chip"><i style="background:${BC[k]}"></i>Number ${k}</span>`;
-const chips=a=>a.length?a.map(chip).join(""):"<i>nobody</i>";
+const chip=k=>`<span class="chip"><i style="background:${BC[k]}"></i>${dual("Number "+k,"R"+k)}</span>`;
+const chips=a=>a.length?a.map(chip).join(""):`<i>${dual("nobody","nobody")}</i>`;
 
 /* a row of buttons for choosing one thing; keeps keyboard focus when it redraws */
 function picker(host,label,opts,cur,on){
   const keep=host.dataset.f;delete host.dataset.f;host.innerHTML="";host.className="pick";
-  const l=document.createElement("span");l.className="plab";l.textContent=label;host.appendChild(l);
-  opts.forEach(([v,t],i)=>{const b=document.createElement("button");b.className="btn"+(v===cur?"":" alt");b.textContent=t;b.setAttribute("aria-pressed",v===cur);
+  const l=document.createElement("span");l.className="plab";l.innerHTML=label;host.appendChild(l);
+  opts.forEach(([v,t],i)=>{const b=document.createElement("button");b.className="btn"+(v===cur?"":" alt");b.innerHTML=t;b.setAttribute("aria-pressed",v===cur);
     b.onclick=()=>{host.dataset.f=i;on(v)};host.appendChild(b);if(keep!=null&&+keep===i)b.focus()});
 }
-
-/* ===== machines: the same commands in two orders ===== */
-(function(){
-  const cmds={add:{t:"add 1",f:x=>x+1},dbl:{t:"double it",f:x=>x*2}},rows=$("#ordrows"),say=$("#ordsay"),bs=$("#ordsame"),bw=$("#ordswap");
-  const run=order=>{let x=3;const lines=[`start at ${x}`];order.forEach(k=>{x=cmds[k].f(x);lines.push(`${cmds[k].t} → ${x}`)});return {x,lines}};
-  const card=(n,r,bad)=>`<div class="copy${bad?" bad":""}"><h5>Copy ${n}</h5>${r.lines.map(l=>`<div class="e">${l}</div>`).join("")}<div class="fin">holds ${r.x}</div></div>`;
-  function show(o2,which){
-    const a=run(["add","dbl"]),b=run(o2),bad=a.x!==b.x;
-    rows.innerHTML=card(1,a,bad)+card(2,b,bad);
-    bs.classList.toggle("alt",which!=="same");bw.classList.toggle("alt",which!=="swap");
-    say.innerHTML=bad?`<span class="bad">The copies now hold ${a.x} and ${b.x}.</span> The commands were the same. Only their order differed, and an honest copy cannot tell which order is the right one unless the replicas agree on it.`:`Both copies hold ${a.x}. Same commands in the same order, same result.`;
-  }
-  bs.onclick=()=>show(["add","dbl"],"same");bw.onclick=()=>show(["dbl","add"],"swap");
-  rows.innerHTML=card(1,{x:3,lines:["start at 3"]})+card(2,{x:3,lines:["start at 3"]});
-  rows.querySelectorAll(".fin").forEach(f=>f.textContent="holds 3");
-})();
 
 /* ===== the crown, seen from above: ring wall at the centre with Number 1, three posts on the slopes ===== */
 function Crown(svg){
   const cx=235,cy=235,R=150,A={2:-90,3:30,4:150}; svg.innerHTML=""; svg.setAttribute("viewBox","0 0 470 470");
-  el("circle",{cx,cy,r:215,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
-  el("circle",{cx,cy,r:105,fill:"none",stroke:"#6b5a48","stroke-width":2.5,"stroke-dasharray":"2 6"},svg);
-  el("circle",{cx,cy,r:48,fill:"#d9cfb4",stroke:"#6b5a48","stroke-width":9},svg);
+  el("circle",{cx,cy,r:215,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5,class:"i"},svg);
+  el("circle",{cx,cy,r:105,fill:"none",stroke:"#6b5a48","stroke-width":2.5,"stroke-dasharray":"2 6",class:"i"},svg);
+  el("circle",{cx,cy,r:48,fill:"#d9cfb4",stroke:"#6b5a48","stroke-width":9,class:"i"},svg);
   const sites=el("g",{},svg),over=el("g",{},svg);
   const C={svg,cx,cy,R,A,over,tent:{},
     pos(k){if(k===1)return [cx,cy];const a=A[k]*Math.PI/180;return [cx+R*Math.cos(a),cy+R*Math.sin(a)]},
     put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
-    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:11,fill,stroke:"#1c1512","stroke-width":2.5},g);el("text",{},g).textContent=glyph||"";return g},
+    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:11,fill,stroke:"#1c1512","stroke-width":2.5},g);dtext(g,{},glyph||"",glyph||"");return g},
     /* a rat u of the way from post a to post b; each direction keeps to its own side of the line */
     fly(g,a,b,u){const [x1,y1]=C.pos(a),[x2,y2]=C.pos(b),dx=x2-x1,dy=y2-y1,l=Math.hypot(dx,dy),o=30*Math.sin(Math.PI*u);
       C.put(g,x1+dx*u-dy/l*o,y1+dy*u+dx/l*o)},
-    state(k,s){C.tent[k].st.textContent=s}
+    state(k,i,m){const t=C.tent[k].st;t[0].textContent=i;t[1].textContent=m===undefined?i:m}
   };
   for(const k of [1,2,3,4]){const [x,y]=C.pos(k),g=el("g",{class:"site"},sites);C.put(g,x,y);
-    el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:BC[k]},g);el("text",{},g).textContent="B"+k;
+    el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:BC[k]},g);dtext(g,{},"B"+k,"R"+k);
     const a=k===1?Math.PI/2:A[k]*Math.PI/180,r=k===1?68:48;
-    const st=el("text",{class:"state halo",x:r*Math.cos(a)*(k===1?0:1),y:k===1?66:r*Math.sin(a)},g);
+    const st=dtext(g,{class:"state halo",x:r*Math.cos(a)*(k===1?0:1),y:k===1?66:r*Math.sin(a)},"","");
     C.tent[k]={x,y,g,st}}
   return C;
 }
+
+/* the cover, in computing: four replicas with messages in flight */
+(function(){
+  const C=Crown($("#coversvg"));C.state(1,"primary");C.state(4,"faulty");
+  [[1,2,"",.5],[1,3,"",.45],[1,4,"",.5],[2,3,"",.5],[3,1,"",.4],[2,1,"",.35]].forEach(([a,b,w,u])=>{const g=C.token(BC[a],w);g.setAttribute("opacity",1);C.fly(g,a,b,u)});
+})();
 
 /* ===== why three seals, and four bandits: two groups always share an honest bandit ===== */
 (function(){
@@ -223,16 +218,16 @@ function Crown(svg){
   function paint(){
     const A=all(n),gx=A.filter(k=>k!==x),gy=A.filter(k=>k!==y),sh=gx.filter(k=>gy.includes(k)),hon=sh.filter(k=>k!==liar);
     [1,2,3,4].forEach(k=>{const g=C.tent[k].g;g.classList.toggle("gone",k>n);g.classList.toggle("shared",sh.includes(k));g.classList.toggle("sus",k===liar)});
-    stand.innerHTML=`<div>First group (everyone but ${chip(x)}) ${gx.map(chip).join("")}</div><div>Second group (everyone but ${chip(y)}) ${gy.map(chip).join("")}</div><div>In both groups ${chips(sh)}</div><div>Honest, and in both ${liar==null?"<i>suppose one bandit lies</i>":chips(hon)}</div>`;
-    if(liar==null)say.innerHTML=`Each group is three bandits out of four: all but one, since one may be a silent liar. Suppose one bandit lies, and see who is left in both groups.`.replace("three bandits out of four",n===4?"three bandits out of four":"two bandits out of three");
-    else if(hon.length)say.innerHTML=`<span class="ok">An honest bandit sits in both groups.</span> An honest bandit seals only one entry for a number in a term, so the two groups cannot have sealed different entries.`;
-    else say.innerHTML=`<span class="bad">The only bandit in both groups is the one who lies.</span> They could seal one entry to the first group and a different one to the second. With ${n} bandits, the groups can fail.`;
-    say.innerHTML+=` Over every choice, the fewest honest bandits two groups can share is <b>${least(n)}</b>${n===4?"":", so three bandits are too few"}.`;
-    const opts=A.map(k=>[k,"Number "+k]);
-    picker($("#sealp1")||mk("sealp1"),"How many bandits?",[[3,"Three bandits"],[4,"Four bandits"]],n,v=>{n=v;if(liar>n)liar=null;if(x>n)x=1;if(y>n)y=n;paint()});
-    picker($("#sealp2")||mk("sealp2"),"Suppose this one lies:",opts,liar,v=>{liar=v;paint()});
-    picker($("#sealp3")||mk("sealp3"),"The first group leaves out:",opts,x,v=>{x=v;paint()});
-    picker($("#sealp4")||mk("sealp4"),"The second group leaves out:",opts,y,v=>{y=v;paint()});
+    stand.innerHTML=`<div>First group (everyone but ${chip(x)}) ${gx.map(chip).join("")}</div><div>Second group (everyone but ${chip(y)}) ${gy.map(chip).join("")}</div><div>In both groups ${chips(sh)}</div><div>Honest, and in both ${liar==null?dual("<i>suppose one bandit lies</i>","<i>suppose one replica is faulty</i>"):chips(hon)}</div>`;
+    if(liar==null)say.innerHTML=dual(`Each group is three bandits out of four: all but one, since one may be a silent liar. Suppose one bandit lies, and see who is left in both groups.`.replace("three bandits out of four",n===4?"three bandits out of four":"two bandits out of three"),`Each group is ${n===4?"three replicas out of four":"two replicas out of three"}: all but one, since one may be a silent faulty replica. Suppose one replica is faulty, and see who is left in both groups.`);
+    else if(hon.length)say.innerHTML=dual(`<span class="ok">An honest bandit sits in both groups.</span> An honest bandit seals only one entry for a number in a term, so the two groups cannot have sealed different entries.`,`<span class="ok">An honest replica sits in both groups.</span> An honest replica signs only one request for a number in a view, so the two groups cannot have signed different requests.`);
+    else say.innerHTML=dual(`<span class="bad">The only bandit in both groups is the one who lies.</span> They could seal one entry to the first group and a different one to the second. With ${n} bandits, the groups can fail.`,`<span class="bad">The only replica in both groups is the faulty one.</span> It could sign one request for the first group and a different one for the second. With ${n} replicas, the groups can fail.`);
+    say.innerHTML+=dual(` Over every choice, the fewest honest bandits two groups can share is <b>${least(n)}</b>${n===4?"":", so three bandits are too few"}.`,` Over every choice, the fewest honest replicas two groups can share is <b>${least(n)}</b>${n===4?"":", so three replicas are too few"}.`);
+    const opts=A.map(k=>[k,dual("Number "+k,"R"+k)]);
+    picker($("#sealp1")||mk("sealp1"),dual("How many bandits?","How many replicas?"),[[3,dual("Three bandits","Three replicas")],[4,dual("Four bandits","Four replicas")]],n,v=>{n=v;if(liar>n)liar=null;if(x>n)x=1;if(y>n)y=n;paint()});
+    picker($("#sealp2")||mk("sealp2"),dual("Suppose this one lies:","Suppose this one is faulty:"),opts,liar,v=>{liar=v;paint()});
+    picker($("#sealp3")||mk("sealp3"),dual("The first group leaves out:","The first group leaves out:"),opts,x,v=>{x=v;paint()});
+    picker($("#sealp4")||mk("sealp4"),dual("The second group leaves out:","The second group leaves out:"),opts,y,v=>{y=v;paint()});
   }
   function mk(id){const d=document.createElement("div");d.id=id;ctl.appendChild(d);return d}
   paint();
@@ -246,26 +241,26 @@ function Crown(svg){
   const registrar=t=>((t-1)%4)+1;
   function paint(){
     const h=registrar(term);[1,2,3,4].forEach(k=>C.tent[k].g.classList.toggle("turn",k===h));
-    tEl.textContent=term;sEl.textContent=stood;info.textContent=`term ${term}, taken by Number ${h}`;
+    tEl.textContent=term;sEl.textContent=stood;info.innerHTML=dual(`term ${term}, taken by Number ${h}`,`view ${term}, primary R${h}`);
     bF.disabled=busy||waiting;bN.disabled=bS.disabled=busy||!waiting;bW.disabled=bR.disabled=busy;
-    bW.textContent=wind?"The wind is blowing":"The wind has dropped";bW.setAttribute("aria-pressed",wind);
+    bW.innerHTML=wind?dual("The wind is blowing","Messages are delayed"):dual("The wind has dropped","Delays are short");bW.setAttribute("aria-pressed",wind);
   }
   async function change(){
     busy=true;paint();const h=registrar(term),next=registrar(term+1),others=[1,2,3,4].filter(k=>k!==next);
-    say.innerHTML=`The sandglasses run out. Each bandit who is waiting asks for a change: a sealed request for the next term, with proof of every entry readied at their post, goes to <b>Number ${next}</b>.`;
+    say.innerHTML=dual(`The sandglasses run out. Each bandit who is waiting asks for a change: a sealed request for the next term, with proof of every entry readied at their post, goes to <b>Number ${next}</b>.`,`The timers expire. Each replica that is waiting asks for a view change: a signed request for the next view, with proof of every request prepared at that replica, goes to <b>R${next}</b>.`);
     const toks=others.map(k=>{const g=C.token(BC[k],"");g.setAttribute("opacity",1);C.fly(g,k,next,.1);return [k,g]});
     await Promise.all(toks.map(([k,g])=>tween(1100+rnd(700),u=>C.fly(g,k,next,.1+.8*u)).then(()=>g.remove())));
     term++;busy=false;paint();
-    say.innerHTML=`Three requests are in, and three are enough. <b>Number ${next}</b> now has the job, in term ${term}. The entry is still waiting. Nobody judged whether Number ${h} stalled or the wind held the rats back.`;
+    say.innerHTML=dual(`Three requests are in, and three are enough. <b>Number ${next}</b> now has the job, in term ${term}. The entry is still waiting. Nobody judged whether Number ${h} stalled or the wind held the rats back.`,`Three requests are in, and three are enough. <b>R${next}</b> is now the primary, in view ${term}. The request is still waiting. Nobody judged whether R${h} stalled or the network delayed its messages.`);
   }
-  bF.onclick=()=>{waiting=true;paint();say.innerHTML=`An entry is filed with <b>Number ${registrar(term)}</b>, who has the job, and the filer turns a sandglass. ${wind?"The wind is blowing.":"The wind has dropped."}`};
+  bF.onclick=()=>{waiting=true;paint();say.innerHTML=dual(`An entry is filed with <b>Number ${registrar(term)}</b>, who has the job, and the filer turns a sandglass. ${wind?"The wind is blowing.":"The wind has dropped."}`,`A request is submitted to <b>R${registrar(term)}</b>, the primary, and the client starts a timer. ${wind?"Messages are being delayed.":"Delays are short."}`)};
   bN.onclick=async()=>{const h=registrar(term);
-    if(wind){say.innerHTML=`<b>Number ${h}</b> numbers the entry and sends the numbering out, but the wind holds the rats in their holes. The sandglass runs out first. From where anyone sits, this looks exactly like a registrar who said nothing.`;await sleep(900);await change();return}
+    if(wind){say.innerHTML=dual(`<b>Number ${h}</b> numbers the entry and sends the numbering out, but the wind holds the rats in their holes. The sandglass runs out first. From where anyone sits, this looks exactly like a registrar who said nothing.`,`<b>R${h}</b> numbers the request and sends the numbering out, but the network delays the messages. The timer expires first. From where anyone sits, this looks exactly like a primary that said nothing.`);await sleep(900);await change();return}
     waiting=false;stood++;paint();
-    say.innerHTML=`<b>Number ${h}</b> numbers the entry, the others echo it twice, and it <span class="ok">stands</span> before the sandglass runs out. The job stays where it is.`};
-  bS.onclick=async()=>{const h=registrar(term);say.innerHTML=`<b>Number ${h}</b> numbers nothing. The sandglass runs out, and nobody can say whether that is a stall or the wind.`;await sleep(900);await change()};
-  bW.onclick=()=>{wind=!wind;paint();say.innerHTML=wind?"The wind is blowing. Nobody can see it drop, and nobody can see it start.":"The wind has dropped, though nobody on the crown can tell. Runs are short again."};
-  bR.onclick=()=>{term=1;waiting=false;wind=true;stood=0;paint();say.innerHTML="An entry is filed and waits to be numbered. The wind is blowing."};
+    say.innerHTML=dual(`<b>Number ${h}</b> numbers the entry, the others echo it twice, and it <span class="ok">stands</span> before the sandglass runs out. The job stays where it is.`,`<b>R${h}</b> numbers the request, the others echo it twice, and it <span class="ok">commits</span> before the timer expires. The primary stays where it is.`)};
+  bS.onclick=async()=>{const h=registrar(term);say.innerHTML=dual(`<b>Number ${h}</b> numbers nothing. The sandglass runs out, and nobody can say whether that is a stall or the wind.`,`<b>R${h}</b> numbers nothing. The timer expires, and nobody can say whether that is a stall or network delay.`);await sleep(900);await change()};
+  bW.onclick=()=>{wind=!wind;paint();say.innerHTML=wind?dual("The wind is blowing. Nobody can see it drop, and nobody can see it start.","Messages are being delayed. Nobody can see the delays end, and nobody can see them start."):dual("The wind has dropped, though nobody on the crown can tell. Runs are short again.","Delays have become short, though no replica can tell. Message runs are short again.")};
+  bR.onclick=()=>{term=1;waiting=false;wind=true;stood=0;paint();say.innerHTML=dual("An entry is filed and waits to be numbered. The wind is blowing.","A request is submitted and waits to be numbered. Messages are being delayed.")};
   paint();
 })();
 
@@ -278,14 +273,14 @@ function Crown(svg){
     const E=all.filter(k=>k!==out),honE=E.filter(k=>k!==liar),R=all.filter(k=>k!==left),show=R.filter(k=>honE.includes(k));
     all.forEach(k=>{const g=C.tent[k].g;g.classList.toggle("shared",E.includes(k));g.classList.toggle("sus",k===liar);g.classList.toggle("out",k===left)});
     const line=k=>{const yes=honE.includes(k),isL=k===liar;
-      return `<div class="rq${yes?" yes":""}">${chip(k)} ${yes?"shows X readied under 7, in term 1":isL?"may say anything at all":"may show it, or may show nothing"}</div>`};
-    stand.innerHTML=`<div>Sent second echoes for X ${chips(E)}</div><div>Of them, honest ${liar==null?chips(E):chips(honE)} (they have X readied)</div><div>Number ${registrar} has the job in term 2, and collects requests from ${chips(R)}</div><div class="req">${R.map(line).join("")}</div>`;
-    if(show.length)say.innerHTML=`<span class="ok">At least one request shows X readied under 7.</span> The new registrar must number X under 7, and the other bandits check that they do. For number 8 no request shows anything readied, so the new registrar numbers a blank entry there.`;
-    else say.innerHTML=`<span class="bad">No request shows X.</span> This cannot happen: two honest bandits have X readied, and three requests out of four always include one of them.`;
-    const opts=all.map(k=>[k,"Number "+k]);
-    picker($("#reqp1")||mk("reqp1"),"Second echoes for X came from everyone but:",opts,out,v=>{out=v;paint()});
-    picker($("#reqp2")||mk("reqp2"),"Suppose this one lies:",[[null,"Nobody"]].concat(opts),liar,v=>{liar=v;paint()});
-    picker($("#reqp3")||mk("reqp3"),"The new registrar leaves out the request of:",all.filter(k=>k!==registrar).map(k=>[k,"Number "+k]),left,v=>{left=v;paint()});
+      return `<div class="rq${yes?" yes":""}">${chip(k)} ${yes?dual("shows X readied under 7, in term 1","shows X prepared under 7, in view 1"):isL?dual("may say anything at all","may say anything at all"):dual("may show it, or may show nothing","may show it, or may show nothing")}</div>`};
+    stand.innerHTML=`<div>${dual("Sent second echoes for X","Sent commits for X")} ${chips(E)}</div><div>${dual("Of them, honest","Of them, honest")} ${liar==null?chips(E):chips(honE)} ${dual("(they have X readied)","(they have X prepared)")}</div><div>${dual(`Number ${registrar} has the job in term 2, and collects requests from`,`R${registrar} is the primary in view 2, and collects requests from`)} ${chips(R)}</div><div class="req">${R.map(line).join("")}</div>`;
+    if(show.length)say.innerHTML=dual(`<span class="ok">At least one request shows X readied under 7.</span> The new registrar must number X under 7, and the other bandits check that they do. For number 8 no request shows anything readied, so the new registrar numbers a blank entry there.`,`<span class="ok">At least one request shows X prepared under 7.</span> The new primary must number X under 7, and the other replicas check that it does. For number 8 no request shows anything prepared, so the new primary numbers a null request there.`);
+    else say.innerHTML=dual(`<span class="bad">No request shows X.</span> This cannot happen: two honest bandits have X readied, and three requests out of four always include one of them.`,`<span class="bad">No request shows X.</span> This cannot happen: two honest replicas have X prepared, and three requests out of four always include one of them.`);
+    const opts=all.map(k=>[k,dual("Number "+k,"R"+k)]);
+    picker($("#reqp1")||mk("reqp1"),dual("Second echoes for X came from everyone but:","Commits for X came from everyone but:"),opts,out,v=>{out=v;paint()});
+    picker($("#reqp2")||mk("reqp2"),dual("Suppose this one lies:","Suppose this one is faulty:"),[[null,dual("Nobody","Nobody")]].concat(opts),liar,v=>{liar=v;paint()});
+    picker($("#reqp3")||mk("reqp3"),dual("The new registrar leaves out the request of:","The new primary leaves out the request of:"),all.filter(k=>k!==registrar).map(k=>[k,dual("Number "+k,"R"+k)]),left,v=>{left=v;paint()});
   }
   paint();
 })();
@@ -294,25 +289,25 @@ function Crown(svg){
 (function(){
   const ctl=$("#gotctl"),list=$("#gotlist"),say=$("#gotsay"),run=$("#gotrun");
   const NEED=3;   /* a term's worth of short runs: the numbering and the two echoes, each at most one first glass */
-  const winds=[[2,"The wind drops soon"],[20,"The wind blows a long time"],[Infinity,"The wind never drops"]];
+  const winds=[[2,dual("The wind drops soon","Delays end soon")],[20,dual("The wind blows a long time","Delays last a long time")],[Infinity,dual("The wind never drops","Delays never end")]];
   let dbl=true,W=2,gen=0;
   const registrar=k=>((k-1)%4)+1;
   function sim(){const rows=[];let t=0;for(let k=1;k<=12;k++){const g=dbl?2**(k-1):1,still=t>=W,ok=still&&g>=NEED;
     rows.push({k,h:registrar(k),t,g,kind:ok?"ok":!still?"wind":"short"});if(ok)break;t+=g}return rows}
-  const why={ok:g=>`Still air, and the sandglass of ${g} outlasts three short runs. The entries stand.`,wind:()=>"The wind is still blowing when the term begins. Nothing stands.",short:g=>`Still air, but a sandglass of ${g} runs out before three short runs can finish. The job passes again.`};
+  const why={ok:g=>dual(`Still air, and the sandglass of ${g} outlasts three short runs. The entries stand.`,`Delays are short, and a timeout of ${g} outlasts three short runs. The requests commit.`),wind:()=>dual("The wind is still blowing when the term begins. Nothing stands.","Delays are still long when the view begins. Nothing commits."),short:g=>dual(`Still air, but a sandglass of ${g} runs out before three short runs can finish. The job passes again.`,`Delays are short, but a timeout of ${g} expires before three short runs can finish. The primary changes again.`)};
   function pickers(){
-    picker($("#gotp1")||mk("gotp1"),"The sandglass:",[[true,"Doubles at every change"],[false,"The same every time"]],dbl,v=>{dbl=v;reset()});
-    picker($("#gotp2")||mk("gotp2"),"The wind:",winds.map(([w,t])=>[w,t]),W,v=>{W=v;reset()});
+    picker($("#gotp1")||mk("gotp1"),dual("The sandglass:","The timeout:"),[[true,"Doubles at every change"],[false,"The same every time"]],dbl,v=>{dbl=v;reset()});
+    picker($("#gotp2")||mk("gotp2"),dual("The wind:","The delays:"),winds.map(([w,t])=>[w,t]),W,v=>{W=v;reset()});
   }
   function mk(id){const d=document.createElement("div");d.id=id;ctl.appendChild(d);return d}
-  function reset(){gen++;list.innerHTML="";run.disabled=false;pickers();say.textContent="Every registrar is honest in this picture, and the first sandglass is the time a short run takes at most. A term's worth is counted as three short runs: the numbering and the two echoes."}
+  function reset(){gen++;list.innerHTML="";run.disabled=false;pickers();say.innerHTML=dual("Every registrar is honest in this picture, and the first sandglass is the time a short run takes at most. A term's worth is counted as three short runs: the numbering and the two echoes.","Every primary is honest in this picture, and the first timeout is the time a short message run takes at most. A view's worth is counted as three short runs: the numbering and the two echoes.")}
   run.onclick=async()=>{const g0=++gen,rows=sim(),max=Math.max(...rows.map(r=>r.g));run.disabled=true;list.innerHTML="";
     for(const r of rows){if(g0!==gen)return;const d=document.createElement("div");d.className="trow "+r.kind;
-      d.innerHTML=`<b>Term ${r.k}</b><span class="gl"><i style="width:${Math.max(4,r.g/max*100)}%"></i></span><em>Number ${r.h} has the job, glass ${r.g}. ${why[r.kind](r.g)}</em>`;list.appendChild(d);await sleep(450)}
+      d.innerHTML=`<b>${dual("Term","View")} ${r.k}</b><span class="gl"><i style="width:${Math.max(4,r.g/max*100)}%"></i></span><em>${dual(`Number ${r.h} has the job, glass ${r.g}.`,`R${r.h} is the primary, timeout ${r.g}.`)} ${why[r.kind](r.g)}</em>`;list.appendChild(d);await sleep(450)}
     if(g0!==gen)return;const last=rows[rows.length-1];
-    if(last.kind==="ok")say.innerHTML=`<span class="ok">The entries stand at term ${last.k}.</span> ${dbl?"The doubling sandglass grew past a term's worth of short runs, and the first term to begin in still air after that one worked.":"The sandglass never changed, and still air was enough because it was long enough from the start."}`;
+    if(last.kind==="ok")say.innerHTML=dual(`<span class="ok">The entries stand at term ${last.k}.</span> ${dbl?"The doubling sandglass grew past a term's worth of short runs, and the first term to begin in still air after that one worked.":"The sandglass never changed, and still air was enough because it was long enough from the start."}`,`<span class="ok">The requests commit in view ${last.k}.</span> ${dbl?"The doubling timeout grew past a view's worth of short runs, and the first view to begin with short delays after that one worked.":"The timeout never changed, and short delays were enough because it was long enough from the start."}`);
     else{const d=document.createElement("div");d.className="trow more";d.textContent="…and so on, for ever";list.appendChild(d);
-      say.innerHTML=W===Infinity?`<span class="bad">Nothing ever stands, and nothing wrong stands either.</span> Going on waits for the wind to drop.`:`<span class="bad">The changes never stop.</span> A sandglass that stays the same is always shorter than a term's worth of short runs, so every term runs out before it can finish.`}
+      say.innerHTML=W===Infinity?dual(`<span class="bad">Nothing ever stands, and nothing wrong stands either.</span> Going on waits for the wind to drop.`,`<span class="bad">Nothing ever commits, and nothing wrong commits either.</span> Progress waits for delays to become short.`):dual(`<span class="bad">The changes never stop.</span> A sandglass that stays the same is always shorter than a term's worth of short runs, so every term runs out before it can finish.`,`<span class="bad">The view changes never stop.</span> A timeout that stays the same is always shorter than a view's worth of short runs, so every view expires before it can finish.`)}
     run.disabled=false};
   reset();
 })();
@@ -325,21 +320,21 @@ function Crown(svg){
   let N=0,S=0;
   function paint(){
     nE.textContent=N;sE.textContent=S;kE.textContent=N-S;bar.style.width=((N-S)/DIST*100)+"%";meter.classList.toggle("full",N-S>=DIST);
-    rng.textContent=`Allowed numbers: ${S+1} to ${S+DIST}. ${N-S} of the ${DIST} ${N-S===1?"is":"are"} used.`;
+    rng.innerHTML=dual(`Allowed numbers: ${S+1} to ${S+DIST}. ${N-S} of the ${DIST} ${N-S===1?"is":"are"} used.`,`Allowed numbers, between the water marks: ${S+1} to ${S+DIST}. ${N-S} of the ${DIST} ${N-S===1?"is":"are"} used.`);
     bF.disabled=N+50>S+DIST;bS.disabled=Math.floor(N/100)*100<=S;bG.disabled=N>=S+DIST;
   }
-  bF.onclick=()=>{N+=50;paint();say.innerHTML=`Fifty more entries stand, up to number ${N}. Every echo for them is held, in case a change of job calls for it.${N+50>S+DIST?" <span class='bad'>No more numbers are allowed until a checkpoint settles.</span>":""}`};
-  bS.onclick=()=>{const to=Math.floor(N/100)*100;S=to;paint();say.innerHTML=`Each bandit sealed a summary of their copy up to <b>${to}</b>. Three matching summaries settle the checkpoint: at least two honest bandits have the same scroll up to there. Every echo for numbers up to ${to} is thrown away, and the allowed numbers move up.`};
-  bB.onclick=()=>{say.innerHTML=`<span class="bad">Refused.</span> Number 1,000,000 lies far beyond the last settled checkpoint plus ${DIST}. A registrar cannot use up the numbers by jumping to an enormous one.`};
-  bG.onclick=()=>{N++;paint();say.innerHTML=`Number ${N} lies between the last settled checkpoint and ${S+DIST}, so it is allowed.`};
-  bR.onclick=()=>{N=0;S=0;paint();say.innerHTML="Nothing is written yet. The picture's allowed numbers run two hundred beyond the last settled checkpoint."};
+  bF.onclick=()=>{N+=50;paint();say.innerHTML=dual(`Fifty more entries stand, up to number ${N}. Every echo for them is held, in case a change of job calls for it.${N+50>S+DIST?" <span class='bad'>No more numbers are allowed until a checkpoint settles.</span>":""}`,`Fifty more requests commit, up to number ${N}. Every message for them is held, in case a view change calls for it.${N+50>S+DIST?" <span class='bad'>No more numbers are allowed until a checkpoint becomes stable.</span>":""}`)};
+  bS.onclick=()=>{const to=Math.floor(N/100)*100;S=to;paint();say.innerHTML=dual(`Each bandit sealed a summary of their copy up to <b>${to}</b>. Three matching summaries settle the checkpoint: at least two honest bandits have the same scroll up to there. Every echo for numbers up to ${to} is thrown away, and the allowed numbers move up.`,`Each replica signed a summary of its state up to <b>${to}</b>. Three matching summaries make the checkpoint stable: at least two honest replicas have the same state up to there. Every message for numbers up to ${to} is discarded, and the allowed numbers move up.`)};
+  bB.onclick=()=>{say.innerHTML=dual(`<span class="bad">Refused.</span> Number 1,000,000 lies far beyond the last settled checkpoint plus ${DIST}. A registrar cannot use up the numbers by jumping to an enormous one.`,`<span class="bad">Refused.</span> Number 1,000,000 lies far beyond the last stable checkpoint plus ${DIST}. A primary cannot use up the numbers by jumping to an enormous one.`)};
+  bG.onclick=()=>{N++;paint();say.innerHTML=dual(`Number ${N} lies between the last settled checkpoint and ${S+DIST}, so it is allowed.`,`Number ${N} lies between the last stable checkpoint and ${S+DIST}, so it is allowed.`)};
+  bR.onclick=()=>{N=0;S=0;paint();say.innerHTML=dual("Nothing is written yet. The picture's allowed numbers run two hundred beyond the last settled checkpoint.","Nothing is executed yet. The picture's water marks run two hundred beyond the last stable checkpoint.")};
   paint();
 })();
 
 /* ===== scrollytelling: one entry, from filing to standing ===== */
 (function(){
   const svg=$("#echosvg"),side=$("#echoside");
-  const nodes={1:[-90,"B1",BC[1]],2:[0,"B2",BC[2]],3:[90,"B3",BC[3]],4:[180,"B4",BC[4]]};
+  const nodes={1:[-90,"B1",BC[1],"R1"],2:[0,"B2",BC[2],"R2"],3:[90,"B3",BC[3],"R3"],4:[180,"B4",BC[4],"R4"]};
   const P=Polar(svg,{vb:"0 0 620 600",cx:310,cy:300,r0:46,step:34,rings:7,tEnd:6.6,note:[14,24],nodes});
   const defs=$("defs",svg);
   [["o","#a8741a"],["g","#5f6e28"]].forEach(([k,c])=>{const m=el("marker",{id:`${svg.id}-${k}`,markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},defs);el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:c},m)});
@@ -361,32 +356,32 @@ function Crown(svg){
   const items=[];const add=(e,from,to=99)=>{e.classList.add("fade");items.push({e,from,to});return e};
   const hot=p=>p;
   const dot=(k,t,fill,from)=>add(P.event(k,t,fill,9),from);
-  const lbl=(k,t,s,from,to,col)=>{const [x,y]=P.pt(k,t),a=nodes[k][0],t2=el("text",{class:"lab halo",x:x+(a===-90||a===90?-14:0),y:y+(a===-90||a===90?5:-16)},P.over);t2.textContent=s;
-    t2.style.textAnchor=a===-90||a===90?"end":"middle";if(col)t2.style.fill=col;return add(t2,from,to)};
+  const lbl=(k,t,s,from,to,col,sm)=>{const [x,y]=P.pt(k,t),a=nodes[k][0];
+    dtext(P.over,{class:"lab halo",x:x+(a===-90||a===90?-14:0),y:y+(a===-90||a===90?5:-16)},s,sm===undefined?s:sm).forEach(t2=>{
+      t2.style.textAnchor=a===-90||a===90?"end":"middle";if(col)t2.style.fill=col;add(t2,from,to)})};
   const slip=(m,from,col,mk,dash)=>{const p=P.slip(m.a,m.s,m.b,m.r,12);p.setAttribute("style",`stroke:${col};stroke-width:3.4`);p.setAttribute("marker-end",`url(#${svg.id}-${mk})`);if(dash)p.style.strokeDasharray="7 5";return add(p,from)};
-  const holds=el("text",{class:"lab halo",x:292,y:261,style:"text-anchor:end"},P.over);holds.textContent="has the job";
-  dot(2,1.4,"#fffaf0",0);M.filter(m=>m.kind==="file").forEach(m=>slip(m,0,"#136f9e","b"));lbl(2,1.4,"files",0,0);
+  dtext(P.over,{class:"lab halo",x:292,y:261,style:"text-anchor:end"},"has the job","primary");
+  dot(2,1.4,"#fffaf0",0);M.filter(m=>m.kind==="file").forEach(m=>slip(m,0,"#136f9e","b"));lbl(2,1.4,"files",0,0,undefined,"submits");
   dot(1,2.4,"#fffaf0",1);lbl(1,2.4,"no. 7",1,1,"#bf4a26");
   M.filter(m=>m.kind==="num").forEach(m=>slip(m,1,"#bf4a26","r",m.held));
-  lbl(4,4.9,"held by the wind",1,99);
+  lbl(4,4.9,"held by the wind",1,99,undefined,"delayed");
   [2,3].forEach(k=>dot(k,3.4,"#fffaf0",2));
   M.filter(m=>m.kind==="first").forEach(m=>slip(m,2,"#a8741a","o"));
-  [1,2,3].forEach(k=>dot(k,4.4,"#e0b84a",3));lbl(2,4.4,"readied",3,3);
+  [1,2,3].forEach(k=>dot(k,4.4,"#e0b84a",3));lbl(2,4.4,"readied",3,3,undefined,"prepared");
   M.filter(m=>m.kind==="second").forEach(m=>slip(m,4,"#5f6e28","g"));
-  [1,2,3].forEach(k=>dot(k,5.4,"#9cb648",5));lbl(2,5.4,"stands",5,5,"#2f5a1c");
+  [1,2,3].forEach(k=>dot(k,5.4,"#9cb648",5));lbl(2,5.4,"stands",5,5,"#2f5a1c","committed");
   const Ts=[2.4,3.4,3.4,4.4,4.4,5.4];
   function card(k,s){
-    const T=Ts[s],K=know(k,T),role=k===HOLD?"has the job":"";
+    const T=Ts[s],K=know(k,T),role=k===HOLD?dual("has the job","primary"):"";
     const note=[];
-    if(k===4)return `<div class="hc dim"><h5><span><i class="dot" style="background:${BC[k]}"></i>Number 4</span></h5><div class="chk">${s>=1?"Rats held by the wind. Nobody waits for them.":"—"}</div></div>`;
-    if(s===0&&k===2)note.push("filed the entry");
-    note.push(K.has?(k===HOLD?"has numbered it":"holds the numbering"):"no numbering yet");
-    if(s>=2&&k!==HOLD)note.push(`first echoes ${Math.min(K.first,2)} of 2`);
-    else if(s>=2)note.push(`first echoes ${Math.min(K.first,2)} of 2`);
-    if(s>=3&&K.ready)note.push("readied");
-    if(s>=4)note.push(`second echoes ${Math.min(K.second,3)} of 3`);
-    if(K.stands)note.push("<b>stands</b>");
-    return `<div class="hc${K.stands?" done":""}"><h5><span><i class="dot" style="background:${BC[k]}"></i>Number ${k}</span><span>${role}</span></h5><div class="chk">${note.join("<br>")}</div></div>`;
+    if(k===4)return `<div class="hc dim"><h5><span><i class="dot" style="background:${BC[k]}"></i>${dual("Number 4","R4")}</span></h5><div class="chk">${s>=1?dual("Rats held by the wind. Nobody waits for them.","Messages delayed. Nobody waits for them."):"—"}</div></div>`;
+    if(s===0&&k===2)note.push(dual("filed the entry","submitted the request"));
+    note.push(K.has?(k===HOLD?dual("has numbered it","has numbered it"):dual("holds the numbering","holds the pre-prepare")):dual("no numbering yet","no numbering yet"));
+    if(s>=2)note.push(dual(`first echoes ${Math.min(K.first,2)} of 2`,`prepares ${Math.min(K.first,2)} of 2`));
+    if(s>=3&&K.ready)note.push(dual("readied","prepared"));
+    if(s>=4)note.push(dual(`second echoes ${Math.min(K.second,3)} of 3`,`commits ${Math.min(K.second,3)} of 3`));
+    if(K.stands)note.push(dual("<b>stands</b>","<b>committed</b>"));
+    return `<div class="hc${K.stands?" done":""}"><h5><span><i class="dot" style="background:${BC[k]}"></i>${dual("Number "+k,"R"+k)}</span><span>${role}</span></h5><div class="chk">${note.join("<br>")}</div></div>`;
   }
   scrolly($("#echo"),s=>{
     items.forEach(it=>it.e.classList.toggle("on",s>=it.from&&s<=it.to));
@@ -415,4 +410,5 @@ mapPairs($("#map"),[
   ["A nonsense entry","Faulty clients are observed consistently but can write garbage; access control limits them (§3)"],
   ["Keeps nothing secret","No fault-tolerant privacy (§2)"],
   ["Cheaper marks only the receiver can check","Message authentication codes and authenticators, with signatures kept for view changes (§5.2)"]]);
+REG.start();
 })();
