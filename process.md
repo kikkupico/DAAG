@@ -33,6 +33,20 @@ its papers are written once, in `meta.json`; the cover and the book's card on th
 carry them, and `python3 art/scroll/cover.py` checks that they agree (`--write` puts them into
 the cards). The pictures a book uses are copied into `books/<slug>/img/`.
 
+**Two registers.** A book can be read as allegory or as computing, by a switch in its bar that shares
+its choice with the scroll page. Both are always in the page: every paragraph, heading, proof step,
+caption and diagram label is written twice, `.i` for the allegory and `.m` for computing, and
+`body[data-reg]` shows one. The machine-terms spread does not exist; the computing register says
+what it said. Computing uses processes, messages, values 0 and 1, and the paper's terms in proofs;
+it never names the setting. Photographs and the who-is-who table are allegory-only. A book links
+`assets/css/registers.css` (the switch, and the computing dress taken from the scroll page) and
+`assets/js/registers.js` (`window.REG`: `dual` writes the two spans for text built by a script,
+`dtext` the two SVG texts, `onReg` runs a hook on a switch, `start` ends the page script). A book's
+own script keeps diagrams and live captions in step by writing both registers, never by
+re-rendering on a switch. Done so far: the five camp books (The Limits of Agreement, Agreeing by
+Chance, Telling the Dead from the Slow, Answering While Cut Off, Agreeing When Messages Run Late)
+and Ordering Without Clocks.
+
 Setting pages (`places/<place>/index.html`), the home page and `papers/index.html` wear the same
 look. They are ordinary hand-edited pages that link `art/scroll/shell.css`, `art/scroll/place.css`
 and `art/scroll/shell.js`.
