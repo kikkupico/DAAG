@@ -42,7 +42,7 @@ function Tholos(svg,o={}){
 }
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · ONE PRIMARY, A COMMIT POINT, A VIEW CHANGE","view 6 → 7");
   const Y=[108,160,212,264,316],len=[13,12,12,10,9],sx=104,sw=28,cm=12;
   const nm=["R1","R2","R3","R4","R5"];
@@ -72,7 +72,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
   link(g,vx+80,382,vx+80,398,{c:"red",w:1.4});T(g,vx+86,390,"silent",{a:"start",s:8,m:1,c:P.red});
   chip(g,vx,408,"view 7 · primary R2",{a:"start",m:1,s:9,k:P.blue,c:P.blue,f:P.blueL,w:600});
   T(g,W/2,H-24,"a new view forms on a majority that holds every committed record",{s:9,m:1,c:P.faint});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== when a law passes: on the second word back ===== */

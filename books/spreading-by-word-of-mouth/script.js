@@ -35,7 +35,7 @@ const seg=(box,opts,cur,fn)=>{box.innerHTML=opts.map(([v,t])=>`<button data-v="$
 const oneIn=p=>p<=0?"none":p>=.95?"nearly all":p>=.095?`1 in ${Math.round(1/p)}`:`1 in ${Math.round(1/p).toLocaleString("en")}`;
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · EPIDEMIC REPLICATION","S → I → R");
   const R=rnd32(11),n=19,sp=22,x0=(W-(n-1)*sp)/2,y0=78,seed=[6,5];
   const cells=[];
@@ -72,7 +72,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
   for(const [k,t] of [["S","susceptible"],["I","infective"],["R","removed"]]){
     dot(g,lx+6,ly,6,fill[k]);T(g,lx+18,ly,t,{a:"start",s:11,c:P.mute});lx+=t.length*6.1+44}
   T(g,W-26,ly,"push · pull · push-pull",{a:"end",s:10,c:P.faint,m:1})
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== the festival: every copyist draws one name by lot; the pair give, ask, or both ===== */

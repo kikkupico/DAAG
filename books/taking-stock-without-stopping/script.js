@@ -60,7 +60,7 @@ function Census(){
 }
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · A SNAPSHOT TAKEN WHILE UNITS ARE IN FLIGHT","Chandy–Lamport");
   const N={1:[260,128,"P1",40],2:[118,326,"P2",60],3:[402,326,"P3",50]};
   /* the cut, drawn behind everything */
@@ -90,7 +90,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
   el("path",{d:`M110 ${ly-6}L116 ${ly}L110 ${ly+6}L104 ${ly}z`,fill:P.red},g);T(g,124,ly,"marker",{a:"start",s:10.5,c:P.mute});
   el("circle",{cx:196,cy:ly,r:5.5,fill:"none",stroke:P.green,"stroke-width":1.5,"stroke-dasharray":"2 2"},g);T(g,208,ly,"state recorded",{a:"start",s:10.5,c:P.mute});
   chip(g,W/2,H-32,"Σ local states + Σ channel records = 200  ✓  nothing lost",{m:1,s:10.5,pad:26,k:P.ink,sw:1.4,f:P.bg,w:600});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== the nine places to count ===== */

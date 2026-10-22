@@ -20,8 +20,8 @@ function stage(svg,cap,tag){
   const g=el("g",{},svg);
   el("rect",{width:W,height:H,fill:"#fff"},g);
   el("rect",{width:W,height:H,fill:"url(#cv-dots)"},g);
-  if(cap)T(g,26,26,cap,{a:"start",s:10,c:P.mute,m:1,w:600,ls:".06em"});
-  if(tag)T(g,W-26,26,tag,{a:"end",s:10,c:P.faint,m:1});
+  if(cap&&!svg.dataset.crop)T(g,26,26,cap,{a:"start",s:10,c:P.mute,m:1,w:600,ls:".06em"});
+  if(tag&&!svg.dataset.crop)T(g,W-26,26,tag,{a:"end",s:10,c:P.faint,m:1});
   return g}
 function T(g,x,y,s,o={}){
   const t=el("text",{x,y,"font-size":o.s||11,fill:o.c||P.ink,"text-anchor":o.a||"middle","font-weight":o.w||400,"dominant-baseline":"central"},g);
@@ -61,6 +61,8 @@ function bandX(g,x,w,y1,y2,f){return el("rect",{x,y:y1,width:w,height:y2-y1,fill
 function rnd32(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 const K={P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,MONO,el,reduce};
 
-/* a book draws its own cover:  COVERS.draw("#coversvg",(svg,K)=>{ ... })  with K the kit above */
-window.COVERS={K,draw(sel,fn){const s=typeof sel==="string"?document.querySelector(sel):sel;if(s)fn(s,K)}};
+/* a book draws its own cover:  const COVER=(svg,K)=>{ ... };  COVERS.draw("#coversvg",COVER);  COVERS.mount(COVER);  with K the kit above */
+window.COVERS={K,draw(sel,fn){const s=typeof sel==="string"?document.querySelector(sel):sel;if(s)fn(s,K)},
+  /* the same figure, cropped, beside the text it illustrates:  <svg data-crop="x y w h"> */
+  mount(fn){document.querySelectorAll("svg[data-crop]").forEach(s=>{fn(s,K);s.setAttribute("viewBox",s.dataset.crop);s.classList.add("cover-crop")})}};
 })();

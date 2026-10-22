@@ -43,7 +43,7 @@ function Crown(svg){
 }
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · THREE PHASES, ONE ORDER","n = 3f + 1 = 4");
   const X=[116,194,272,350,428],Xe=496,Y={C:112,1:184,2:250,3:316,4:382},cols=["request","pre-prepare","prepare","commit","reply"];
   cols.forEach((c,i)=>{
@@ -72,7 +72,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
   const ly=H-26;T(g,26,ly,"log",{a:"start",s:10,m:1,c:P.mute});
   [5,6,7,8].forEach((s,i)=>{const x=64+i*52;el("rect",{x,y:ly-11,width:46,height:22,rx:5,fill:s===7?P.blueL:"#fff",stroke:s===7?P.blue:P.line,"stroke-width":s===7?1.6:1},g);T(g,x+23,ly+.5,s===7?"req 7":String(s),{s:10,m:1,c:s===7?P.blue:P.faint,w:s===7?600:400})});
   chip(g,W-26,ly,"view v = 0 · primary R1",{a:"end",m:1,s:9.5,c:P.mute})
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== why three seals, and four bandits: two groups always share an honest bandit ===== */

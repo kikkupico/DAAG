@@ -101,7 +101,7 @@
 <section class="spread light" id="question" data-name="The goatherd's morning" data-name-m="An out-of-band message">
   <a class="anchor" id="s1"></a>
   <div class="wrap">
-    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
         <div class="kicker"><span class="i">The goatherd's morning</span><span class="m">The out-of-band execution</span></div>
         <h2><span class="i">Which request was placed first?</span><span class="m">Which request came first?</span></h2>
@@ -110,6 +110,7 @@
         <p><span class="i">However, tallies only track official slips travelling along the coastal road—and news can also cross the mountain by word of mouth. Scroll through the morning below to see how an unrecorded shortcut can turn the tally order upside down.</span><span class="m">However, timestamps only track the system's own messages — and information can also travel outside them. Scroll through the execution below to see how an unrecorded shortcut can turn the timestamp order upside down.</span></p>
       </div>
       <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b01-goatherd-2766d710f5-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b01-goatherd-2766d710f5-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b01-goatherd-2766d710f5-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b01-goatherd-2766d710f5-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/b01-goatherd.jpg" alt="High on a hillside above a harbour town, a goatherd in a sheepskin cape points down with his staff among his goats, with white houses, red roofs and a stone pier below" loading="lazy"></div></div></div>
+      <div class="pop fromright m"><div class="leaf"><svg class="cover-fig" data-crop="0 90 520 200" role="img" aria-label="Overlapping operations on three lanes, each with its linearization point"></svg></div></div>
     </div>
   </div>
 </section>
@@ -411,7 +412,7 @@
   <a class="anchor" id="s8"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-9-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
   <div class="wrap" style="margin-bottom:-1rem">
-    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
         <div class="kicker">Concurrent implementation · The lock-free queue</div>
         <h2><span class="i">The busy board</span><span class="m">A concurrent queue</span></h2>
@@ -419,6 +420,7 @@
         <p><span class="i">The wooden board consists of a long row of numbered <b>slots</b>—each large enough for one clay request tablet—and a movable <b>peg</b> marking the next unused slot number. To enter a request, a clerk performs two steps: first, in one swift motion, they read the slot number at the peg and advance the peg by one; second, they walk to that slot and place their tablet inside. To serve a request, a loader reads the peg, scans the slots starting from slot 1, and takes the first tablet they find. Even if a slow clerk pauses between taking a slot number and placing a tablet, nobody else is held up.</span><span class="m">The queue is an array of numbered <b>slots</b> — each holding one request — and a shared <b>back counter</b> marking the next unused slot number. To enqueue, a process performs two steps: first, in one atomic step, it reads the counter and advances it by one; second, it stores its request in that slot. To dequeue, a process reads the counter, scans the slots starting from slot 1, and takes the first request it finds. Even if a slow enqueuer pauses between taking a slot number and storing its request, nobody else is held up.</span></p>
       </div>
       <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b08-board-cdc497e14f-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b08-board-cdc497e14f-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b08-board-cdc497e14f-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/many-copies-acting-as-one-b08-board-cdc497e14f-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/b08-board.jpg" alt="Along the portico of a trading house, two clerks reach for the pigeonholes of a long wooden board that hold stacks of clay tablets, while a loader carries a grain sack past the columns from an open storehouse" loading="lazy"></div></div></div>
+      <div class="pop fromright m"><div class="leaf"><svg class="cover-fig" data-crop="20 320 480 200" role="img" aria-label="The linearization points laid out as one queue, step by step"></svg></div></div>
     </div>
     <p class="tell"><span class="i">With a single steward, it was easy to point to the exact step where each request joined the board. On this busy board, entering a request takes two separate steps (moving the peg, then placing the tablet)—and as the scroll below reveals, neither step by itself can always be called the exact instant the request took effect!</span><span class="m">With a single sequential queue, it was easy to point to the exact step where each request joined it. In this concurrent queue, enqueueing takes two separate steps (advancing the counter, then storing the request) — and as the scroll below reveals, neither step by itself can always be called the exact instant the request took effect!</span></p>
   </div>

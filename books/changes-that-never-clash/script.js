@@ -35,7 +35,7 @@ const seg=(box,opts,cur,fn)=>{box.innerHTML=opts.map(([v,t])=>`<button data-v="$
 const oneIn=p=>p<=0?"none":p>=.95?"nearly all":p>=.095?`1 in ${Math.round(1/p)}`:`1 in ${Math.round(1/p).toLocaleString("en")}`;
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · JOIN SEMILATTICE","merge = entrywise max");
   const cx=260,Yt=118,Y2=214,Y1=316,Y0=412,dx=122;
   const N={top:[cx,Yt,"1,1,1"],ab:[cx-dx,Y2,"1,1,0"],ac:[cx,Y2,"1,0,1"],bc:[cx+dx,Y2,"0,1,1"],a:[cx-dx,Y1,"1,0,0"],b:[cx,Y1,"0,1,0"],c:[cx+dx,Y1,"0,0,1"],o:[cx,Y0,"0,0,0"]};
@@ -60,7 +60,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,packet,lane,dot,vec,b
   const fy=H-38,fx=cx;
   chip(g,fx,fy,"[3,0,0] ⊔ [0,2,0] ⊔ [0,0,4] = [3,2,4]",{m:1,s:11.5,pad:26,k:P.ink,sw:1.4,f:P.bg});
   T(g,fx,fy+26,"commutative · associative · idempotent",{s:9.5,m:1,c:P.faint})
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== a table of pebbles: a pile for every terrace, in white (made) and, when used, black (lost) ===== */

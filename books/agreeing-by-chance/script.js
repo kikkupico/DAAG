@@ -219,7 +219,7 @@ mapPairs($("#map"),[
 ["The happier case","Constant expected rounds when t = O(√N), run synchronously. Theorem 3."],
 ["No drawing lots","Deterministic processes. The assumption of FLP that randomization removes."]]);
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · ROUNDS OF REPORT AND PROPOSAL, THEN COINS","randomised consensus");
   const ys=[134,188,242,296],xs=[110,180,250,320,390,460],hd=["report","propose","coin","report","propose","decide"];
   const val=[[0,1,0,1],["?","?","?","?"],[1,1,0,1],[1,1,0,1],["D1","D1","D1","D1"],[1,1,1,1]];
@@ -250,7 +250,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
   for(let k=0;k<7;k++){const h=80*Math.pow(.5,k),x=64+k*58;el("rect",{x,y:by-h,width:bw+10,height:h,rx:3,fill:k===0?P.blueL:P.blueL,stroke:P.blue,"stroke-width":1.2,opacity:1-.08*k},g);T(g,x+(bw+10)/2,by+13,"r="+(k+1),{s:8.5,m:1,c:P.faint})}
   T(g,W-26,H-96,"→ 0 with probability 1",{a:"end",s:10.5,m:1,c:P.blue,w:600});
   link(g,330,by-62,470,by-8,{c:"blue",w:1.2,bend:-26,op:.6});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 REG.start();

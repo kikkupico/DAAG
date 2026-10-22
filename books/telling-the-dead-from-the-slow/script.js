@@ -92,7 +92,7 @@ function route(H,a,b,u0=.14,u1=.86){const pts=[];for(let i=0;i<=14;i++){const u=
 const cross=(g,x,y,r=17)=>el("path",{d:`M${x-r},${y-r} L${x+r},${y+r} M${x-r},${y+r} L${x+r},${y-r}`,stroke:"#1c1512","stroke-width":5,fill:"none"},g);
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · A FAILURE DETECTOR AT P1","◇P · eventually perfect");
   const x0=106,x1=488,ys=[106,154,202],T0=[0,1,2,3,4,5,6,7,8,9,10];
   const px=t=>x0+t*36;
@@ -124,7 +124,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
   T(g,W-26,400,"timeout grows with each false suspicion",{a:"end",s:9.5,m:1,c:P.mute});
   [36,54,72,90].forEach((w,k)=>el("rect",{x:W-26-210+k*54,y:478-w*.6,width:42,height:w*.6,rx:3,fill:P.blueL,stroke:P.blue,"stroke-width":1.2},g));
   T(g,26,430,"every live process",{a:"start",s:10,c:P.mute});T(g,26,446,"is eventually trusted;",{a:"start",s:10,c:P.mute});T(g,26,462,"every crashed one, suspected",{a:"start",s:10,c:P.mute});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== a slate that may be wrong, in two ways ===== */

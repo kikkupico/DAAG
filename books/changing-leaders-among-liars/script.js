@@ -34,7 +34,7 @@ function Crown(svg){
 }
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · A CHAIN OF CERTIFIED BLOCKS","three-chain commit");
   const by=140,bx=i=>74+i*96,st=["green","green","blue","blue","gold"],tx=["committed","committed","locked","prepared","proposed"];
   /* parent links and certificates */
@@ -63,7 +63,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
   vt.forEach(([t,c],k)=>{chip(g,vx,vy[k],t,{a:"start",m:1,s:9,k:c?P[c]:P.line,c:c?P[c]:P.mute,f:c==="red"?P.redL:c==="blue"?P.blueL:"#fff",w:c?600:400});
     if(k<3)link(g,vx+14,vy[k]+12,vx+14,vy[k+1]-12,{c:"mute",w:1.1,op:.6})});
   T(g,vx,252,"THE LEADER ROTATES EVERY VIEW",{a:"start",s:9.5,m:1,c:P.mute,w:600});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== one stage on the crown, counted both ways ===== */

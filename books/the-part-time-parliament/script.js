@@ -28,7 +28,7 @@ function Hall(svg,o={}){
 
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · BALLOTS, VOTES AND A CHOSEN VALUE","Paxos");
   const cols=[2,5,18,27],cx=i=>166+i*88,ry=j=>148+j*46;
   /* the four messages of a ballot */
@@ -53,7 +53,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
     el("rect",{x:x-34,y:ly-14,width:68,height:34,rx:9,fill:hi?P.blueL:k===1?P.goldL:"#fff",stroke:hi?P.blue:k===1?P.gold:P.line,"stroke-width":hi?1.8:1.2},g);
     T(g,x,ly-4,s,{s:8.5,m:1,c:P.faint});T(g,x,ly+10,v,{s:11,m:1,w:600,c:hi?P.blue:k===1?"#8a6a00":P.ink})});
   chip(g,W-26,H-24,"any two majorities share a process",{a:"end",m:1,s:9,k:P.line,c:P.mute});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== consistency: two banquets, in the Chamber ===== */

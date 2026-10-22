@@ -48,7 +48,7 @@ The computing cover is drawn, not photographed: `assets/js/covers.js` defines `w
 (`stage`, `T`, `chip`, `node`, `link`, `mid`, `packet`, `lane`, `dot`, `vec`, `bandX`, `rnd32`) on a 520 x 520
 dot-grid card, loaded after `book.js`; each book's `script.js` calls `COVERS.draw("#coversvg",(svg,{...})=>{...})`
 with the figure that is that paper's signature picture (a lane diagram, a lattice, a field of sites), and the
-svg is class `cover-fig`.
+svg is class `cover-fig`. The same figure is cropped into the spreads it illustrates: an `<svg class="cover-fig" data-crop="x y w h">` inside a `pop m` beside the text, drawn by `COVERS.mount(COVER)`; such a spread drops its `solo` class.
 
 **Two registers.** A book can be read as allegory or as computing, by a switch in its bar that shares
 its choice with the scroll page. Both are always in the page: every paragraph, heading, proof step,

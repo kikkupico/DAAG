@@ -31,7 +31,7 @@ function Isle(svg){
 }
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · HAPPENED-BEFORE, WITH NO SHARED CLOCK","L(e) · V(e)");
   const Y=[126,230,334],X0=66,X1=498;
   ["P1","P2","P3"].forEach((n,j)=>{lane(g,X0,X1,Y[j],{w:1.5});node(g,34,Y[j],14,n,{s:10.5})});
@@ -59,7 +59,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
   T(g,48,ry+18,"V(receive) = max(V(own), V(msg)), own entry + 1",{a:"start",s:11,m:1,c:P.mute});
   T(g,W-48,ry+4,"a → b ⇔ V(a) < V(b)",{a:"end",s:11,m:1,w:600,c:P.ink});
   T(g,W/2,H-34,"Lamport stamp above each event, vector clock below",{s:9.5,m:1,c:P.faint});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== the gate of House 3: arrival follows the quicker legs, not the earlier request ===== */

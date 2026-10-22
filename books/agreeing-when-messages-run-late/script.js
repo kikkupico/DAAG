@@ -42,7 +42,7 @@ function Hill(svg){
 }
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · UNSTABLE, THEN SETTLED","GST");
   const ys=[128,184,240,296],xl=70,xr=502,GST=262,ax=352;
   bandX(g,xl-6,GST-xl+6,78,ax-12,"#fbefe9");bandX(g,GST,xr-GST+4,78,ax-12,"#edf4fc");
@@ -76,7 +76,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
   link(g,xl,ax,xr+4,ax,{c:"mute",w:1.3,op:.7});T(g,xl,ax+20,"time",{a:"start",s:9.5,m:1,c:P.faint});
   T(g,W/2,H-68,"a phase is four rounds, each as long as the timeout",{s:10,m:1,c:P.mute});
   chip(g,W/2-96,H-34,"no deciding unless a majority locks",{m:1,s:9,k:P.line,c:P.mute});chip(g,W/2+150,H-34,"safe even before GST",{m:1,s:9,k:P.line,c:P.mute});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== the wind: birds let go one span at a time ===== */

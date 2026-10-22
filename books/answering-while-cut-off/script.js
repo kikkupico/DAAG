@@ -63,7 +63,7 @@ const answer4=v=>v.birds.length?v.birds[v.birds.length-1]:v.note;
 const record=(moves,askAt)=>{const done=moves.filter(m=>m.end<askAt).sort((a,b)=>a.end-b.end);return done.length?done[done.length-1].plan:"hold"};
 
 /* cover:start */
-COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
+const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · A WRITE ON ONE SIDE, A READ ON THE OTHER","C · A · P");
   const N={1:[150,150],2:[88,262],3:[212,276],4:[420,214]},val={1:1,2:1,3:1,4:0};
   /* the partition */
@@ -96,7 +96,8 @@ COVERS.draw("#coversvg",(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,v
   tri.forEach(([x,y,t],i)=>node(g,x,y,13,t,{s:11,k:i===0?P.red:P.ink,c:i===0?P.red:P.ink,f:i===0?P.redL:"#fff"}));
   T(g,tx,ty+90,"pick any two, but P is not optional",{s:9,m:1,c:P.faint});
   chip(g,W-26,ty+24,"every request answered",{a:"end",m:1,s:9,k:P.line,c:P.mute});chip(g,W-26,ty+52,"every read sees the latest write",{a:"end",m:1,s:9,k:P.line,c:P.mute});
-});
+};
+COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
 /* ===== ravens and hawks ===== */
