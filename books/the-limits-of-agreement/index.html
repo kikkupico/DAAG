@@ -77,33 +77,6 @@
 </section>
 <!-- /lineage -->
 
-<!-- ============================================================ machines -->
-<section class="spread light" id="machines" data-name="In machine terms">
-  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
-  <div class="wrap two" style="gap:clamp(24px,5vw,60px);align-items:center">
-    <div>
-      <div class="kicker"><span class="i">First, in machine terms</span><span class="m">The problem</span></div>
-      <h2>Many computers, one decision</h2>
-      <p class="lede"><span class="i">Imagine a group of computers across a network that must all agree on a single choice—say, <i>commit</i> or <i>abort</i>—based on the initial values each machine started with.</span><span class="m">Imagine a group of computers across a network that must all agree on a single value—<i>0</i> or <i>1</i>, standing for <i>abort</i> or <i>commit</i>—based on the initial values each machine started with.</span></p>
-      <p>Two obstacles stand in their way. First, the network is <b>asynchronous</b>: every message eventually arrives, but there is no upper limit on how long it might take. Second, <b>one machine might crash</b> at any moment without warning. Because messages can be arbitrarily slow, a computer waiting for a reply faces an impossible dilemma: has the other machine crashed, or is its message simply delayed?</p>
-      <ul class="terms">
-        <li><b>No guaranteed decision</b> (Fischer, Lynch, and Paterson, 1985): No deterministic protocol—one that acts strictly on the messages it has received without randomness—can guarantee that the group will ever reach a decision.</li>
-        <li><b>Only the ending is lost.</b> The machines are never forced to disagree with one another. What cannot be promised is that the waiting will ever end.</li>
-      </ul>
-      <p style="margin-top:1.2rem"><span class="i">To see why this happens step by step, we tell the story through four mercenaries, their messenger ravens, and a hill they must either storm together or not at all.</span><span class="m">To see why this happens step by step, we follow the proof of Fischer, Lynch, and Paterson through four processes, P1 to P4.</span></p>
-    </div>
-    <div class="pop fromright"><div class="leaf">
-      <div class="paper logs">
-        <h4>Crashed, or only slow?</h4>
-        <div class="wire"><div class="mc">MACHINE A</div><div class="w"><span>?</span></div><div class="mc q">MACHINE B</div></div>
-        <div class="waitlog" id="waitlog"></div>
-        <p class="note" id="waitnote" data-live>Machine A has asked Machine B for its value and is waiting for the reply.</p>
-        <div class="row"><button class="btn" id="waitb">Wait longer</button><button class="btn alt" id="waitr" hidden>Start again</button></div>
-      </div>
-    </div></div>
-  </div>
-</section>
-
 <!-- ============================================================ the hill -->
 <section class="spread dark" id="hall" data-name="The Foot of Mount Phyle" data-name-m="The system model">
   <a class="anchor" id="s1"></a>
