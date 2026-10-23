@@ -59,6 +59,12 @@ document.querySelectorAll(".lin").forEach(lin=>{
     n.addEventListener("mouseenter",mine);n.addEventListener("focus",mine);
   });
   lin.addEventListener("mouseleave",()=>light([]));
+  // on a phone each outside paper is a row that opens on a tap
+  const tog=li=>{if(wide.matches)return;const o=li.classList.toggle("open");const k=li.querySelector(".lin-link");if(k)k.setAttribute("aria-expanded",o)};
+  lin.querySelectorAll(".lin-side .lin-nodes>li").forEach(li=>{
+    li.addEventListener("click",e=>{if(e.target.closest("a"))return;tog(li)});
+    li.querySelectorAll(".lin-link").forEach(k=>k.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tog(li)}}));
+  });
   new ResizeObserver(draw).observe(lin);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
   draw();
