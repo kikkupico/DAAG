@@ -171,7 +171,8 @@ function Lanes(svg,o){
    lands (a mover's u at o.land or beyond, .879 unless said); a lost one ends part-way at a cross; a crash ends a lane.
    Time runs while a message flies, plus whatever tick and step add; views that are read side by side share a clock.
    o.alias names the lane of a place that is not a process (the podium is whoever holds it); a place with no lane is
-   not drawn. o.labels writes each token's glyph (through o.vals) on its arrow. Nothing the twin does can stop the picture.
+   not drawn. o.labels writes each token's glyph (through o.vals) on its arrow. o.press {k:[label,fn]} makes a process's
+   name a button, for a picture whose places the reader presses. Nothing the twin does can stop the picture.
      const L=Unfold(svg,{nodes, span, slide, clock}); L.wrap(H);   (o.clock: another Unfold's clock, to share it) */
 function Unfold(src,o){
   const svg=src.cloneNode(false);svg.id=src.id+"-ln";svg.classList.add("m");src.classList.add("i");src.after(svg);
@@ -190,8 +191,12 @@ function Unfold(src,o){
   function draw(){
     if(!isM())return;
     const span=o.span||6,off=o.slide?Math.max(0,clock.t-span*.86):0,X=t=>t-off,now=X(clock.t);
+    const fk=svg.contains(document.activeElement)?document.activeElement.dataset.k:null;
     const P=Lanes(svg,{nodes:o.nodes,tEnd:span});svg.classList.add("lanes");
     const keys=Object.keys(o.nodes),big=PHONE.matches?1.6:1;
+    /* a process the reader can press in the picture is pressed by its name here; a redraw keeps the focus */
+    if(o.press){const gs=svg.querySelectorAll(".ln-proc");keys.forEach((k,i)=>{const p=o.press[k];if(!p)return;
+      const g=gs[i];g.dataset.k=k;g.classList.add("ln-press");button(g,p[0],p[1]);if(fk===k)g.focus()})}
     /* the lane of a man who has crashed stops there */
     keys.forEach(k=>{if(crashes[k]==null)return;const t=Math.max(0,X(crashes[k])),[x,y]=P.pt(k,t);
       el("line",{class:"ln-gone",x1:x,y1:y,x2:P.x(span)+20,y2:y},P.shade);
@@ -233,7 +238,8 @@ function Unfold(src,o){
   const L={svg,clock,
     /* relay a picture's own calls; a twin that fails leaves the picture running */
     wrap(H){for(const m of ["fly","road","run"])if(H[m]){const f=H[m];H[m]=(g,a,b,u)=>{f(g,a,b,u);safe(()=>L.fly(g,a,b,u))}}
-      for(const m of ["state","note"])if(H[m]){const f=H[m];H[m]=(k,i,m2)=>{f(k,i,m2);safe(()=>L.state(k,i,m2===undefined&&o.mtext?o.mtext(i):m2))}}
+      /* a note left empty only clears the picture's label; a state left empty clears the process's state */
+      for(const m of ["state","note"])if(H[m]){const f=H[m];H[m]=(k,i,m2)=>{f(k,i,m2);if(m==="note"&&!i)return;safe(()=>L.state(k,i,m2===undefined&&o.mtext?o.mtext(i):m2))}}
       if(H.badge){const f=H.badge;H.badge=(k,s)=>{f(k,s);safe(()=>L.badge(k,s))}}
       if(o.labels&&H.token){const f=H.token;H.token=(fill,glyph,...r)=>{const g=f(fill,glyph,...r);g.lnLab=glyph==null||glyph===""?null:String((o.vals&&o.vals[glyph])||glyph);return g}}
       H.lanes=L;return H},

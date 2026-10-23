@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -13,6 +13,8 @@ const who=k=>`<span class="who"><i style="background:${WHO[k].c}"></i>${dual(WHO
 const M_=s=>s.replace(/board/g,"view").replace(/to line/g,"to record").replace(/smooth wax/g,"state lost").replace(/on the porch/g,"cut off").replace(/\bline\b/g,"record");
 const yes=ok=>ok?"<span class='ok'>✓</span>":"<span class='bad'>✗</span>";
 $("#cast").innerHTML=ALL.map(who).join("");
+/* the five as lanes, for a Tholos picture's computing twin (Unfold in book.js) */
+const LN={};ALL.forEach(k=>LN[k]=[0,WHO[k].g,WHO[k].c,WHO[k].m]);
 
 /* ===== the Tholos, seen from above: the podium at the centre, five benches round the wall, the porch door below ===== */
 function Tholos(svg,o={}){
@@ -81,27 +83,32 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const T=Tholos($("#passsvg")),say=$("#passsay"),bw=$("#pwrite"),pl=$("#pline"),pp=$("#ppass");
   const hold={O:11,L:11,K:11,M:11,T:9},word={L:11,K:11,M:11,T:9},away={T:true},pace={L:800,K:1300,M:2400,T:1800};
   let line=11,passed=11,flying=0;
-  T.board("board 6","O");
-  function paint(){ALL.forEach(k=>{T.note(k,k==="O"?"":"to line "+hold[k]);T.out(k,away[k])});pl.textContent=line;pp.textContent=passed;bw.disabled=flying>0}
+  /* computing: the records going out and the acknowledgments coming back, on a timeline that slides as it runs;
+     a backup is cut off for as long as its lane is hatched, and pressing its name cuts it off or reconnects it */
+  const flip={};
+  const L=Unfold(T.svg,{nodes:LN,span:8,slide:true,alias:{P:"O"},land:.81,labels:true,mtext:M_,
+    press:Object.fromEntries(["L","K","M","T"].map(k=>[k,[`${WHO[k].m}: cut off or reconnect`,()=>flip[k]()]]))});L.wrap(T);
+  T.board("board 6","O");L.turn("O");
+  function paint(){ALL.forEach(k=>{T.note(k,k==="O"?"":"to line "+hold[k]);T.out(k,away[k]);L.cut(k,!!away[k])});pl.textContent=line;pp.textContent=passed;bw.disabled=flying>0}
   /* a line has passed when two benches have sent word that they hold it and all before it */
   function count(){const n=Object.values(word).sort((a,b)=>b-a)[1];if(n>passed){passed=n;return true}return false}
   async function runner(k){
     if(away[k]||hold[k]>=line)return;flying++;paint();
     const g=T.token(WHO.O.c,line),carry=line;g.setAttribute("opacity",1);
     await tween(pace[k],u=>T.run(g,"P",k,.2+.62*u));
-    if(away[k]){g.remove();flying--;paint();return}
-    hold[k]=Math.max(hold[k],carry);paint();g.querySelectorAll("text").forEach(t=>t.textContent="✓");g.firstChild.setAttribute("fill",WHO[k].c);
+    if(away[k]){L.lose(g);g.remove();flying--;paint();return}
+    hold[k]=Math.max(hold[k],carry);paint();g.querySelectorAll("text").forEach(t=>t.textContent="✓");g.firstChild.setAttribute("fill",WHO[k].c);g.lnLab="ack "+carry;
     await tween(pace[k],u=>T.run(g,k,"P",.2+.62*u));g.remove();
     word[k]=Math.max(word[k],carry);flying--;
-    const now=count();paint();
+    const now=count();paint();if(now)L.state("O","committed "+passed);
     if(now)say.innerHTML=dual(`${WHO[k].n}'s word is the second to come back for line ${passed}. With Okios, three of five hold it: <span class="ok">line ${passed} has passed</span>, and the petitioner is told it is law.`,`${WHO[k].m}'s acknowledgment is the second to come back for record ${passed}. With R1, three of five hold it: <span class="ok">record ${passed} has committed</span>, and the client is told.`);
     else if(passed>=carry)say.innerHTML=dual(`${WHO[k].n}'s copy catches up to line ${carry}. The line had already passed, so nothing changes.`,`${WHO[k].m}'s copy catches up to record ${carry}. The record had already committed, so nothing changes.`);
     else say.innerHTML=dual(`${WHO[k].n} sends word: up to line ${carry}. One word is not enough. Line ${carry} is still a draft.`,`${WHO[k].m} acknowledges up to record ${carry}. One acknowledgment is not enough. Record ${carry} is still a draft.`);
   }
-  bw.onclick=()=>{line++;hold.O=line;const here=["L","K","M","T"].filter(k=>!away[k]);
+  bw.onclick=()=>{line++;hold.O=line;L.state("O","appended "+line);const here=["L","K","M","T"].filter(k=>!away[k]);
     say.innerHTML=here.length?dual(`Okios writes line ${line} and gives it to the runners.`,`R1 appends record ${line} and sends it to the backups.`):dual(`Okios writes line ${line}, but no bench is within reach. It stays a draft.`,`R1 appends record ${line}, but no backup is reachable. It stays a draft.`);
     paint();here.forEach(runner)};
-  ["L","K","M","T"].forEach(k=>{T.seat[k].g.classList.add("pick");button(T.seat[k].g,`${WHO[k].n}: step out or come back`,()=>{away[k]=!away[k];paint();
+  ["L","K","M","T"].forEach(k=>{T.seat[k].g.classList.add("pick");button(T.seat[k].g,`${WHO[k].n}: step out or come back`,flip[k]=()=>{away[k]=!away[k];paint();
     if(away[k])say.innerHTML=dual(`${WHO[k].n} steps out of reach. The tablets stay on the bench.`,`${WHO[k].m} is cut off. Its state stays as it was.`);
     else{say.innerHTML=dual(`${WHO[k].n} is back within reach, and the runner brings every line missed, in order.`,`${WHO[k].m} is reachable again, and the primary sends every record missed, in order.`);runner(k)}})});
   paint();
@@ -172,8 +179,18 @@ function verdict(r,checks,say){
   const toks=[["L","K","7","L",{2:.5}],["L","M","7","L",{2:.5}],["L","T","7","L",{2:.5,3:.62}],["L","O","7","L",{2:.45}],
               ["K","L","12","K",{3:.55}],["M","L","10","M",{3:.55}],
               ["P","K","1","L",{5:.6}],["P","M","1","L",{5:.6}],["P","T","1","L",{5:.6}],["P","O","1","L",{6:.6}]]
-    .map(([a,b,g,c,plan])=>({a,b,plan,g:T.token(WHO[c].c,g),u:.2,run:0,end:Math.max(...Object.keys(plan))}));
-  scrolly($("#change"),s=>{const S=ST[s];T.board(S.post[0],S.post[1]);
+    .map(([a,b,g,c,plan])=>({a,b,n:g,plan,g:T.token(WHO[c].c,g),u:.2,run:0,start:Math.min(...Object.keys(plan)),end:Math.max(...Object.keys(plan))}));
+  /* computing: the view change so far as one timeline, a step to each unit of time; each process shows its view and
+     last record, and R1's lane is hatched while it is cut off */
+  const L=Unfold(T.svg,{nodes:LN,span:6.6,alias:{P:"L"}});
+  const LAB={"7":"view 7","12":"to 12","10":"to 10","1":"record 1"};
+  function lanes(s){L.reset();L.turn(ST[s].post[1]);
+    /* a message sent to several at once is labelled once */
+    const said=new Set();toks.forEach(k=>{if(k.start>s)return;const key=k.a+k.n+k.start;L.msg(k.a,k.b,k.start-.6,s>k.end?k.end+.4:null,said.has(key)?"":LAB[k.n]);said.add(key)});
+    if(s>=1){L.setT(.6);L.cut("O",true);if(s>=6){L.setT(5.6);L.cut("O",false)}}
+    ALL.forEach(k=>{let j=s;while(j>0&&ST[j-1].h[k]===ST[s].h[k])j--;L.setT(j===0?0:j-.2);L.state(k,ST[s].h[k])});
+    L.setT(s+.15)}
+  scrolly($("#change"),s=>{const S=ST[s];T.board(S.post[0],S.post[1]);lanes(s);
     ALL.forEach(k=>{T.out(k,S.out[k]);T.note(k,S.h[k])});
     side.innerHTML=ALL.map(k=>`<div class="hc"><h5>${dual(WHO[k].n,WHO[k].m)}</h5><div>${dual(`board ${S.h[k].split(" · ")[0]}, line ${S.h[k].split(" · ")[1]}`,`view ${S.h[k].split(" · ")[0]}, record ${S.h[k].split(" · ")[1]}`)}</div><div class="chk">${S.out[k]?dual("out of reach","unreachable"):k===S.post[1]?dual("holds the podium","primary"):""}</div></div>`).join("")+`<div class="hc" style="grid-column:1/-1;min-height:0"><div class="chk" style="margin:0">${S.n}</div></div>`;
     toks.forEach(k=>{const u=k.plan[s],id=++k.run;
@@ -186,15 +203,20 @@ function verdict(r,checks,say){
 (function(){
   const T=Tholos($("#porchsvg")),say=$("#porchsay"),bw=$("#porchwrite"),n=$("#porchn");
   let heard=false,busy=false;const og=T.token(WHO.O.c,WHO.O.g,WHO.O.gm);
+  /* computing: R1's view-6 records as arrows, each taken (✓) or refused (✗) where it lands; pressing R5's name
+     does what pressing its seat does */
+  const pick={};
+  const L=Unfold(T.svg,{nodes:LN,span:3.2,alias:{porch:"O"},land:.83,mtext:M_,press:{T:["R5: has it joined view 7?",()=>pick.T()]}});L.wrap(T);L.turn("L");
   T.board("board 7","L");T.out("O",true);T.note("O","on the porch");
   T.put(og,...T.porch);og.setAttribute("opacity",1);dtext(T.over,{class:"lab halo",x:T.porch[0]+48,y:T.porch[1]+4,style:"font-size:12px;text-anchor:start"},"board 6","view 6");
   function paint(){["L","K","M"].forEach(k=>T.note(k,"board 7"));T.note("T",heard?"board 7":"board 6")}
   T.seat.T.g.classList.add("pick");
-  button(T.seat.T.g,"Theron: has he heard of board 7?",()=>{if(busy)return;heard=!heard;paint();n.textContent=1;say.innerHTML=heard?dual("Theron has taken board 7.","R5 has taken view 7."):dual("Theron has not heard of board 7.","R5 has not heard of view 7.")});
-  bw.onclick=async()=>{busy=true;bw.disabled=true;let took=1;n.textContent=took;say.innerHTML=dual("Okios writes a line under board 6 and sends it to every bench.","R1 appends a record in view 6 and sends it to every backup.");
+  button(T.seat.T.g,"Theron: has he heard of board 7?",pick.T=()=>{if(busy)return;heard=!heard;paint();n.textContent=1;say.innerHTML=heard?dual("Theron has taken board 7.","R5 has taken view 7."):dual("Theron has not heard of board 7.","R5 has not joined view 7.")});
+  bw.onclick=async()=>{busy=true;bw.disabled=true;let took=1;n.textContent=took;
+    L.reset();L.turn("L");T.note("O","on the porch");paint();L.setT(.1);L.state("O","appends in view 6","appends in view 6");say.innerHTML=dual("Okios writes a line under board 6 and sends it to every bench.","R1 appends a record in view 6 and sends it to every backup.");
     await Promise.all(["L","K","M","T"].map(async k=>{const g=T.token(WHO.O.c,"6");g.setAttribute("opacity",1);
       await tween(1300,u=>T.run(g,"porch",k,.1+.74*u));
-      const takes=k==="T"&&!heard;g.querySelectorAll("text").forEach(t=>t.textContent=takes?"✓":"✗");g.firstChild.setAttribute("fill",takes?"#a9c25a":"#fde0d4");if(takes)took++;
+      const takes=k==="T"&&!heard;L.mark(k,takes?"✓":"✗",takes?"#a9c25a":"#fde0d4");g.querySelectorAll("text").forEach(t=>t.textContent=takes?"✓":"✗");g.firstChild.setAttribute("fill",takes?"#a9c25a":"#fde0d4");if(takes)took++;
       await sleep(900);g.remove()}));
     if(took>=3)throw new Error("a line passed under the old board");
     n.textContent=took;
