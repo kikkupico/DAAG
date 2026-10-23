@@ -1,9 +1,8 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Unfold}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
-
 
 /* the rules of the round, worked in code and used by every widget below */
 function sureOf(vals){for(const a of "HA")if(vals.filter(v=>v===a).length*2>4)return a;return null}
@@ -201,26 +200,6 @@ const LANES={1:[-90,"T1",TC[1],"P1"],2:[0,"T2",TC[2],"P2"],3:[90,"T3",TC[3],"P3"
 })();
 
 /* ===== who is who ===== */
-mapPairs($("#map"),[
-["The four tents","Processes. N = 4 asynchronous processes."],
-["A sighting; attack or hold","Each process's input. A binary initial value x."],
-["Committing","An irrevocable decision. Setting the write-once output register."],
-["The three demands","Agreement; validity when all inputs are equal; termination. Consensus with correctness criterion (C1)."],
-["Ravens that always arrive, with no longest flight, in any order","Reliable asynchronous message passing. The message buffer; every message is eventually delivered to a process that keeps taking steps."],
-["A man killed; a silent tent","A crash failure, indistinguishable from slowness. A t-correct schedule, t = 1."],
-["The arranger of the birds","The worst case over message orderings, chosen with knowledge of everything so far. The adversary scheduler, which knows all about the system."],
-["The coin, owl or goddess, tossed alone in each tent","A private fair random bit at each process. Step 3(c): set x to 0 or 1 with probability 1/2 each (a local coin)."],
-["A round; the report","A numbered phase; the first message of the round. Message (1, r, x)."],
-["Sure of an answer; unsure","The second message. (2, r, v, D) when more than N/2 of the received values are v; (2, r, ?) otherwise."],
-["Waiting for three birds","Waiting for all but t. Wait for N − t messages."],
-["Favouring an answer on one sure bird; settled on two","Adopting a value; deciding. Step 3(a): one D-message; step 3(b): more than t D-messages."],
-["The rule of parting","A decided process sends its next round's messages and halts. Not in the paper, where decided processes keep running; added here because committing is silence, and shown to change nothing."],
-["Never two answers; the sightings respected","Agreement and validity, on every run. Theorem 1 (ii), (iii)."],
-["Committing with probability one","Termination with probability 1 for N > 2t. Theorem 1 (i). The paper gives no proof; Aguilera and Toueg (2012) give a complete one."],
-["Half is too many","No consensus when N ≤ 2t. The remark after Theorem 2: the schedule can simulate a partition."],
-["Six men against one liar","Byzantine agreement for N > 5t, with authenticated senders. Protocol B, Theorem 2."],
-["The happier case","Constant expected rounds when t = O(√N), run synchronously. Theorem 3."],
-["No drawing lots","Deterministic processes. The assumption of FLP that randomization removes."]]);
 /* cover:start */
 const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · ROUNDS OF REPORT AND PROPOSAL, THEN COINS","randomised consensus");

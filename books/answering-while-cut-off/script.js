@@ -1,9 +1,8 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
-
 
 /* the four mercenaries, told apart by colour */
 const TC={1:"#e0b84a",2:"#6583d6",3:"#c45448",4:"#9cb648"};
@@ -328,25 +327,5 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   br.onclick=reset;reset();
 })();
 
-/* ===== who is who ===== */
-mapPairs($("#map"),[
- ["The four tents, one man in each","The nodes of the service, each also issuing requests for its client"],
- ["The standing plan; moving it; asking","An atomic read/write object with values hold and attack: a move is a write, a question a read, hold at dusk the initial value (§2.1)"],
- ["Answering as one","Atomic (linearizable) consistency: any read that begins after a write completes must return that value, or a later one (§2.1)"],
- ["Every man is answered","Availability: every request at a non-failed node eventually gets a response (§2.2)"],
- ["A lost bird; a cut-off tent","A lost message; a partition, in which every message between two components is lost: partition tolerance (§2.3)"],
- ["A flight; a man's time to answer","Known bounds on delivery of messages that are not lost, and on local processing: t_msg, t_local (§4.1)"],
- ["Glasses that run alike","Local timers at the same rate, not synchronised: the partially synchronous model (§4.1)"],
- ["The claim, any two of three","At most two of consistency, availability and partition tolerance: Brewer's conjecture, PODC 2000"],
- ["The Cut-Off Tent; the two nights","No algorithm guarantees availability and atomic consistency when messages may be lost, even with timers and a delivery bound; the executions α and α′₂ (Theorem 2; Theorem 1 in the asynchronous model)"],
- ["The muster-master's arrangement","A designated node holds the object; others forward requests and wait: the centralized algorithm (§3.2)"],
- ["Answering from one's own note","Returning local, possibly stale, data: available and partition tolerant (§3.2.3)"],
- ["Waiting a glass","A timeout after which the node answers with the best value it knows: 2 t_msg + t_local (§4.3)"],
- ["The promise of the span","A partial order that is atomic when no message is lost, and that orders any operation completed before a loss-free interval longer than t ahead of any operation begun after it: delayed-t consistency (Definition 3)"],
- ["The muster-master's stamps; sending again; every bird carrying the unacknowledged moves","The central node's sequence numbers and retransmission. Carrying the unacknowledged writes on every message stands in for ordered channels, which ravens do not give (Theorem 4)"],
- ["The wind; the Wind result","No bound on message delay: availability cannot be combined with atomicity even in executions where no messages are lost (asynchronous model, §3; Corollary 1.1)"],
- ["Which number each tent bears","A service needing no coordination: a trivial service, outside the theorem (2012, §2)"],
- ["The camps' impossibility","FLP: consensus with one crash, no message loss. Neither FLP nor CAP implies the other (2012, footnote 2)"],
- ["Dividing the choice","Partitioning by data or by operation (2012, §4.3–4.4)"]]);
 REG.start();
 })();

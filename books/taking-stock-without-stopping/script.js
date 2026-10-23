@@ -1,9 +1,8 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
-
 
 const HC={1:"#9cb648",2:"#e0b84a",3:"#5b9be0"};
 /* a button on a drawing, labelled in each register */
@@ -241,7 +240,5 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   bs.forEach(b=>b.onclick=()=>show(b.dataset.case));show("before");
 })();
 
-/* ===== who is who ===== */
-mapPairs($("#map"),[["A trading house","A process"],["A track, one way","A channel: FIFO, reliable, unbounded delay"],["What the road is holding","Channel state"],["The nine places","A global state: process states plus channel states"],["The red-sashed messenger","A marker message"],["The rule of sending","The marker-sending rule"],["The rule of receiving","The marker-receiving rule"],["A cut","A cut in a space-time diagram"],["Crossing the loop inward","An inconsistent cut"],["A settled property","A stable property"],["The island at the start, as recorded, at the end","S_begin, S*, S_end (S_ι, S*, S_φ in the paper)"]]);
 REG.start();
 })();

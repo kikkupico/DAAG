@@ -151,22 +151,3 @@ function Crown(svg){
   function reset(){P.slips.innerHTML="";P.evs.innerHTML="";dots=[];k=0;bn.disabled=false;term.textContent="no term yet";list.innerHTML="";say.textContent="The job starts at bandit 1. Press the button to run a term."}
   bn.onclick=next;br.onclick=reset;reset();
 })();
-
-/* ===== who is who ===== */
-mapPairs($("#map"),[
- ["The four men; one may lie; the wind","n = 3f + 1 = 4; Byzantine faults; partial synchrony with GST (§3)"],
- ["The loot scroll; entries forming a chain","State machine replication; a tree of nodes with parent links; a branch (§4, §4.2)"],
- ["Conflicting entries","Neither branch extends the other (§4.2)"],
- ["A term; its registrar","A view; its leader (§4)"],
- ["A vote; a bundle of three","A partially signed vote; a quorum certificate of n − f votes (§4.1–4.2)"],
- ["A threshold seal","A (2f + 1, n)-threshold signature, combining partial signatures into one (§3)"],
- ["First, second, third votes and bundles","prepare, pre-commit, commit votes; prepareQC, precommitQC, commitQC (§4.1)"],
- ["The latest first bundle a man sends a new registrar","new-view carrying prepareQC; highQC (§4.1)"],
- ["The lock","lockedQC, set on the precommitQC (Algorithm 2, line 25)"],
- ["The rule for the first vote, its two halves","safeNode: the safety rule (extends the locked node) or the liveness rule (a higher view than the lock) (Algorithm 1)"],
- ["Never Two Entries","Conflicting nodes cannot both be committed by correct replicas (Lemma 1, Theorem 2)"],
- ["The hidden lock; two stages and a full sandglass","The livelessness of two-phase HotStuff; Tendermint and Casper's wait for Δ (§4.4; §7.3)"],
- ["Going at the Rats' Pace","Optimistic responsiveness; after GST a correct leader decides within a bounded time (Lemma 3, Theorem 4)"],
- ["Registrars in fixed order; doubling sandglasses","The leader function and nextView with exponential back-off: the Pacemaker (§4.4, §6)"],
- ["A new registrar every entry; three in a row","Chained HotStuff; One-, Two- and Three-Chains (§5, Algorithm 3, Theorem 5)"],
- ["Every man to every man; a heavy change","PBFT's quadratic normal case and cubic view change in authenticators (Table 1)"]]);

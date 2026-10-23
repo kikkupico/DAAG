@@ -1,9 +1,8 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Unfold}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
-
 
 /* Schedia's five legislators, told apart by colour */
 const WHO={O:{n:"Okios",m:"R1",gm:"R1",g:"Ο",c:"#8fa3b8"},L:{n:"Liskovia",m:"R2",gm:"R2",g:"Λ",c:"#e8b03a"},K:{n:"Kleon",m:"R3",gm:"R3",g:"Κ",c:"#8fb35a"},M:{n:"Melissa",m:"R4",gm:"R4",g:"Μ",c:"#cf5a4a"},T:{n:"Theron",m:"R5",gm:"R5",g:"Θ",c:"#b3aea4"}};
@@ -236,7 +235,5 @@ function verdict(r,checks,say){
   $("#waxreset").onclick=()=>{home={};paint()};paint();
 })();
 
-/* ===== relevance map ===== */
-mapPairs($("#map"),[["The council of five, each with a copy of the law","A group of replicas"],["The law; a line","The group's state; one record in the log"],["Slow or lost messengers","A network that loses and delays messages"],["Stepping out","Being cut off for a while"],["Going home","A crash that loses what was in memory"],["The podium and its holder","The primary"],["The benches","The backups"],["A runner who never skips a line","In-order delivery from primary to backup"],["A law passes","An operation is committed: a majority hold it"],["A board","A view"],["Board and line","A viewstamp"],["The roll; the caller","Liveness messages; the member that starts a view change"],["An answer with tablets, or without","An acceptance with state, or after a crash"],["The opening line","The new view's first record: the whole state"],["Wax and the stone","Volatile state, and the little kept on stable storage"]]);
 REG.start();
 })();

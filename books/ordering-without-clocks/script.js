@@ -1,9 +1,8 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
-
 
 const HC={1:"#9cb648",2:"#e0b84a",3:"#5b9be0"};
 const GM={G:"!"};   /* the goatherd's token: a letter in the allegory, a mark in computing */
@@ -269,7 +268,5 @@ function Morning(svg){
   });
 })();
 
-/* ===== relevance map ===== */
-mapPairs($("#map"),[["A trading house","A process"],["A slip carried by a messenger","A message"],["No passing on the road","Messages between two processes arrive in the order sent"],["Water-clocks with no common hour","No synchronised clocks"],["Came before","Happened before"],["Unrelated","Concurrent"],["The tally","A Lamport logical clock"],["Precedence: tally, then house number","A total order, ties broken by process number"],["The shared storehouse","Mutual exclusion without a coordinator"],["The goatherd over the mountain","A cause that travels outside the system"],["The column","A vector clock"]]);
 REG.start();
 })();

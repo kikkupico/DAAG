@@ -1,6 +1,6 @@
 "use strict";
 /* The shared script of the books. A book's script.js starts with
-     const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;  BOOK.init();
+     const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar}=BOOK;  BOOK.init();
    and keeps only what is its own. Load it after registers.js (which a book that has the Allegory | Computing switch also uses);
    without registers.js it reads the allegory only. */
 (function(){
@@ -66,11 +66,6 @@ function scrolly(root,render){
   const so=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=steps.indexOf(e.target); steps.forEach((s,j)=>s.classList.toggle("on",j===i)); mark(i); render(i); } }),{rootMargin:"-45% 0px -45% 0px"});
   steps.forEach(s=>so.observe(s));
 }
-
-/* ===== who is who: the setting on the left, computing on the right ===== */
-function mapPairs(m,pairs){pairs.forEach(([a,b])=>{
-  const l=document.createElement("div");l.className="l";l.textContent=a; const mid=document.createElement("div");mid.className="mid";mid.textContent="⟷"; const r=document.createElement("div");r.className="r";r.textContent=b;
-  [l,mid,r].forEach(x=>{x.addEventListener("mouseenter",()=>{l.classList.add("hi");r.classList.add("hi")});x.addEventListener("mouseleave",()=>{l.classList.remove("hi");r.classList.remove("hi")});x.addEventListener("click",()=>{l.classList.toggle("hi");r.classList.toggle("hi")})}); m.append(l,mid,r)})}
 
 /* ===== space-time drawn in the round: each place is a line running outward, each ring a later moment,
          and whatever is carried from place to place is an arc curving round and outward ===== */
@@ -359,5 +354,5 @@ document.querySelectorAll(".lin").forEach(lin=>{
 });
 })();
 
-window.BOOK={$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Lanes,Timeline,Space,redrawOn,Unfold,init};
+window.BOOK={$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar,Lanes,Timeline,Space,redrawOn,Unfold,init};
 })();

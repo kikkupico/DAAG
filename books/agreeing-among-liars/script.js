@@ -1,9 +1,8 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Space,redrawOn,Unfold}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar,Space,redrawOn,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
-
 
 /* the four bandits, told apart by colour; bandit 1 is the chief inside the ring wall */
 const BC={1:"#a57fc0",2:"#9aa0a8",3:"#e8964d",4:"#b07a55"};
@@ -255,29 +254,5 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   if(AUTO)AUTO();
 })();
 
-/* ===== who is who ===== */
-mapPairs($("#map"),[
-  ["The chief inside the ring wall, three guards on the slopes","n generals; here n = 4, exactly 3m + 1 for one traitor"],
-  ["The chief, a job passed round","The commanding general: whoever's value is going round"],
-  ["Hold / scatter","ATTACK and RETREAT; which is better is never at issue"],
-  ["Silence counts as hold","The default order, RETREAT: fixed and known beforehand"],
-  ["The two conditions","IC1 and IC2, the interactive consistency conditions"],
-  ["Running it four times, once for each man","Interactive consistency proper: the solution run once per general"],
-  ["A rat to one post, not a shout to all","Point-to-point messages, and no broadcast: a commander heard by all at once could not equivocate"],
-  ["Slips arrive as written; the knots name the sender","Assumptions A1 and A2"],
-  ["A round; short watched runs; glasses turned together at dusk","A3 and the synchronous round: bounded message time plus synchronised clocks"],
-  ["A plain slip says whatever its writer chose","Oral messages: content entirely under the sender's control"],
-  ["A liar may send anything, or nothing, and two may agree their lies","Byzantine faults, collusion permitted"],
-  ["The Repeating; the greater count","Algorithm OM(m) and the function majority"],
-  ["Three cannot be brought to agree","Section 2; the rigorous proof is in Pease, Shostak and Lamport 1980"],
-  ["More than three men to a liar; one man playing several parts","n ≥ 3m + 1, by the Albanian-generals simulation"],
-  ["Acting at about the same time is as hard as acting together","The approximate-agreement reduction, IC1′ and IC2′"],
-  ["The seal rings; the line of stamps along a slip","Unforgeable signatures, A4; the notation v : 0 : j₁ : … : jₖ"],
-  ["Liars may lend each other rings; a slip may be withheld but not altered","Nothing is assumed of a traitor's signature; A4(a) does not prevent withholding"],
-  ["The Sealed Repeating; the sheaf; the standing rule","Algorithm SM(m); the set Vᵢ; the function choice"],
-  ["Relaying only while fewer than m guards' seals stand on a slip","SM(m) step (2)(B)(ii): forward only if k < m, k counting lieutenants' signatures"],
-  ["Any number of liars, whatever the size of the party","Theorem 2; the problem is merely vacuous below m + 2 men"],
-  ["The chief's seal on two orders convicts the chief","SM(1) with three generals, the paper's Fig. 5"],
-  ["Every post can reach every other","Section 5 treats parties where that fails: 3m-regular graphs, and SM(m + d − 1) for a loyal subgraph of diameter d. Not modelled here"]]);
 REG.start();
 })();

@@ -1,10 +1,9 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 const GL={H:"0",A:"1"};   /* what a man saw at dusk: hold or attack in the allegory, 0 or 1 in computing */
 BOOK.init();
-
 
 /* the four mercenaries, told apart by colour */
 const TC={1:"#e0b84a",2:"#6583d6",3:"#c45448",4:"#9cb648"};
@@ -224,9 +223,6 @@ const LANES={1:[-90,"T1",TC[1],"P1"],2:[0,"T2",TC[2],"P2"],3:[90,"T3",TC[3],"P3"
   new IntersectionObserver(es=>{if(es[0].isIntersecting)go();else stop()},{threshold:.1}).observe($("#nightsvg").parentElement);
   reset();
 })();
-
-/* ===== relevance map ===== */
-mapPairs($("#map"),[["Four tents, one man in each","Processes"],["Attack or hold","A decision between two values"],["What a man saw at dusk","Its input value"],["Committing: leaving the tent","Deciding, once and for good"],["A raven","A message"],["No longest flight","Asynchrony: no bound on message delay"],["A tent that falls silent","A crash, which looks exactly like slowness"],["No drawing lots","A deterministic protocol"],["A position","A configuration"],["An arrival","A step: one process receiving one message"],["Open / closed","Bivalent / univalent"],["The three demands","Agreement, validity, termination"]]);
 
 REG.start();
 })();

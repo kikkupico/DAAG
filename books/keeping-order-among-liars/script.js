@@ -1,9 +1,8 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
-
 
 /* the four bandits, told apart by colour; Number 1 is the chief */
 const BC={1:"#a57fc0",2:"#9aa0a8",3:"#e8964d",4:"#b07a55"};
@@ -273,26 +272,5 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   scrolly($("#echo"),apply);
 })();
 
-/* ===== who is who ===== */
-mapPairs($("#map"),[
-  ["Four bandits; one may lie","Replicas: n = 3f + 1 = 4, with f = 1 Byzantine (§2, §4)"],
-  ["The wind, and its dropping","An asynchronous network; progress needs delay(t) not to outgrow t for ever (§2)"],
-  ["Seal rings","Public-key signatures that an adversary cannot forge (§2); message digests are folded into the seal here"],
-  ["The loot scroll; an entry","A deterministic replicated state machine; an operation request (§3–4)"],
-  ["Order; going on","Safety (linearizability) and liveness (§3)"],
-  ["The job; a term; the fixed order of registrars","The primary; a view; primary = v mod |R| (§4)"],
-  ["Two matching sealed words to trust an entry","The client waits for f + 1 matching replies (§4.1); redundant for a replica acting as its own client"],
-  ["Numbering; first echo; readied","Pre-prepare; prepare; prepared = pre-prepare + 2f matching prepares (§4.2)"],
-  ["Second echo; stands","Commit; committed-local = prepared + 2f + 1 matching commits (§4.2)"],
-  ["One Entry to a Number","If prepared(m, v, n, i) then not prepared(m′, v, n, j) for non-faulty j and m′ ≠ m (§4.2)"],
-  ["Why four bandits","3f + 1 is optimal for asynchronous safety and liveness (§2, citing Bracha and Toueg)"],
-  ["Asking for a change; the three requests; the new numbering; blank entries","View-change; new-view with 2f + 1 view-changes; the set O; null requests (§4.4)"],
-  ["Order Across Terms","Non-faulty replicas agree on the sequence numbers of requests that commit locally, even in different views (§4.5.1; a sketch, with the full proof in Castro's thesis)"],
-  ["Joining on two requests; no bandit forces a change; a lying registrar's single term","Join a view change on f + 1 view-changes; a change needs f + 1; a faulty primary for at most f consecutive views (§4.5.2)"],
-  ["Doubling the sandglass","The view-change timeout doubles (§4.5.2)"],
-  ["Settled checkpoints; the allowed numbers","Stable checkpoints with 2f + 1 matching messages; low and high water marks (§4.3)"],
-  ["A nonsense entry","Faulty clients are observed consistently but can write garbage; access control limits them (§3)"],
-  ["Keeps nothing secret","No fault-tolerant privacy (§2)"],
-  ["Cheaper marks only the receiver can check","Message authentication codes and authenticators, with signatures kept for view changes (§5.2)"]]);
 REG.start();
 })();

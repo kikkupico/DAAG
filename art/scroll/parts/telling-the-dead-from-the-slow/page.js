@@ -311,26 +311,3 @@ const strongRun=(function(){
   bL.onclick=()=>run(true);bD.onclick=()=>run(false);bR.onclick=reset;reset();
   new IntersectionObserver(es=>{visible=es[0].isIntersecting},{threshold:.1}).observe(tl);
 })();
-
-/* ===== who is who ===== */
-mapPairs($("#map"),[
- ["The four men; no longest flight; nobody lies; any may be killed","Asynchronous processes with reliable channels and crash failures (§2, n = 4)"],
- ["A sighting; committing","A proposed value; a decision (§5)"],
- ["The three demands","Agreement, uniform validity, termination (§5). The algorithms give uniform agreement: no two processes, correct or not, decide differently"],
- ["The slate; chalking a tent; rubbing it out","A local failure detector module; suspecting a process; ceasing to suspect it (§2.2)"],
- ["Chalking the dead, by every or by some living man","Strong and weak completeness (§2.3)"],
- ["The four ways of sparing the living","Strong, weak, eventual strong and eventual weak accuracy (§2.3)"],
- ["The eight kinds of slate","P, S, ◇P, ◇S, Q, W, ◇Q, ◇W (Fig. 1)"],
- ["Copying marks","The reduction from weak to strong completeness, preserving accuracy (Fig. 3, Theorem 1, Corollary 1)"],
- ["The sheet of sightings; spreading; comparing","The vector V_p; Phase 1's n − 1 rounds; Phase 2 (Fig. 5)"],
- ["One Man Never Chalked","Consensus is solvable with S, tolerating up to n − 1 crashes (Theorem 2; Corollary 2 for W)"],
- ["Turns in number order; the owner","The rotating coordinator, c = (r mod n) + 1 (§6.2)"],
- ["An estimate and the round it was taken up","estimate_p and its timestamp ts_p (Fig. 6)"],
- ["Agreed; not agreed","ack; nack (Fig. 6, Phase 3)"],
- ["The parting bird, sent on before committing","R-broadcast of the decision, relayed on first receipt (Fig. 4). Here a process halts after relaying, since committing is silence; the paper's processes keep running"],
- ["In the End, One Man Spared","Consensus is solvable with ◇S when fewer than half crash (Theorem 3; Corollary 3 for ◇W)"],
- ["More Than Half; the three nights","Consensus cannot be solved with ◇P when f ≥ n/2 (Theorem 5, runs R₀, R₁, R_A)"],
- ["Granted, not earned","Failure detectors are specified by properties, not implementations; none with ◇W's properties can be implemented in a purely asynchronous system (§1, footnote 6)"],
- ["A slate kept on a windy night","Timeouts that grow after each premature suspicion implement ◇P when bounds hold after an unknown time (Theorem 9, §9.1, Fig. 10)"],
- ["The weakest slate that will do","◇W₀ is the weakest failure detector for consensus with a majority correct (Theorem 4 and Corollary 4, from Chandra, Hadzilacos and Toueg; not proved in this paper)"],
- ["Agreeing on an order","Consensus and Atomic Broadcast are equivalent (§7, Corollary 5)"]]);

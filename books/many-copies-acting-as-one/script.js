@@ -1,9 +1,8 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
-
 
 const HC={1:"#9cb648",2:"#e0b84a",3:"#5b9be0"};
 const chip=(t,h)=>`<span class="chip"><i style="background:${HC[h]}"></i>${t}</span>`;
@@ -363,7 +362,5 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     say.innerHTML=dual(`The loader goes up from slot 1 and takes the first tablet it finds: House ${t.h}'s request from slot ${t.slot}. <span class="ok">It could be first:</span> it leads ${first} of the ${before} sequence${before>1?"s":""} the board could stand for. The waiting requests are left standing for ${rest.length===1?"one sequence":rest.length+" sequences"}.`,`The dequeuer scans up from slot 1 and takes the first request it finds: P${t.h}'s request from slot ${t.slot}. <span class="ok">It could be first:</span> it leads ${first} of the ${before} sequence${before>1?"s":""} the array could stand for. The waiting requests are left standing for ${rest.length===1?"one sequence":rest.length+" sequences"}.`)}
 })();
 
-/* ===== who is who ===== */
-mapPairs($("#map"),[["A trading house; a loader; a clerk","A process: it waits for each answer before its next call"],["The board; placed first, filled first","A shared FIFO queue"],["A request; a serving","Enq; Deq"],["Sending a request; its confirmation","An invocation and its response"],["Before; overlap","Real-time order; concurrent calls"],["A single steward with a single board","The object's sequential specification"],["The rule of the board","Linearizability"],["A moment inside the span","The linearization point"],["The tallies' first","Happened-before, extended by process number"],["The looser rule","Sequential consistency"],["One Board at a Time","Locality: check each object alone"],["No Request Waits on Another","The nonblocking property"],["Several things done as one","A transaction; serializability"],["The busy board: slots and a peg","A lock-free queue on an array and a counter"],["What the board could mean","An abstraction function to a set of values"],["A rule that only forbids","A safety property, with no promise of progress"]]);
 REG.start();
 })();
