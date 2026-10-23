@@ -33,7 +33,16 @@ image model (the helpers are masonry.py's):
 - small high windows with a sill, a lintel and two upright bars;
 - the reading room: a flagstone floor, a rack of pigeonholes along the back wall with the
   scrolls lying in them end out, a title tag hanging from some, a reading table with a scroll
-  open on it, a stool, a bucket of scrolls by the door, beams and boarding overhead.
+  open on it, a stool, a bucket of scrolls by the door, beams and boarding overhead;
+- the loan desk, facing the door, so that a reader who comes in stands before it and the
+  librarian sits behind it with the rack at his back: a timber desk with a boarded front, a
+  small rack of pigeonholes at one end for the scrolls lent and returned, a bowl of white and a
+  bowl of black pebbles, the librarian's stool, and on the desk the pebble board, a marble board
+  cut with a shallow groove for each library in two sets, white pebbles in the first set for
+  the scrolls this library has lent and black in the second for the scrolls returned to it.
+  Every board has three grooves to a set, as the book that uses it has three libraries; the
+  piles differ from library to library, drawn from the desk's own seed so that the rest of each
+  library is drawn as before.
 """
 import bpy, json, math, random, sys
 from mathutils import Vector, Matrix
@@ -84,6 +93,11 @@ PAPYRUS = [material("papyrus", (0.78, 0.69, 0.48), 0.8), material("papyrus_b", (
            material("papyrus_c", (0.83, 0.75, 0.55), 0.8)]
 TAG = material("tag", (0.86, 0.8, 0.66), 0.8)
 WICKER = material("wicker", (0.55, 0.42, 0.24), 0.9)
+MARBLE = material("table-marble", (0.84, 0.82, 0.77), 0.45)
+GROOVE = material("table-marble-groove", (0.66, 0.64, 0.6), 0.6)
+WHITE = material("white-pebble", (0.93, 0.92, 0.88), 0.4)
+BLACK = material("black-pebble", (0.07, 0.07, 0.08), 0.4)
+CLAY = material("clay", (0.62, 0.36, 0.22), 0.8)
 
 shell, floor, furn = Part("shell"), Part("floor"), Part("furniture")
 T, FZ, PD, PW, CX = P["wall"], P["floor"], P["porch"], P["porch_w"], P["columns"]
@@ -311,6 +325,67 @@ for n, b in enumerate(PLAN):
         a = k * 1.05
         furn.cyl(bkt + Vector((0.09 * math.cos(a), 0.09 * math.sin(a), 0.1)), 0.045, 0.045, 0.42 + 0.05 * (k % 3), rng.choice(PAPYRUS), 8)
 
+    # --- the loan desk, facing the door ---------------------------------------------------------
+    # Its own draws, after everything else, so the rest of the library is drawn as before.
+    dr = random.Random(2000 + n)
+    dx0, dx1, dy0, dy1, dz = -1.4, -0.2, 0.05, 0.65, FZ + 0.8                         # the desk: front towards the door
+    bx(furn, (dx0, dy0, dz - 0.05), (dx1, dy1, dz), SHELF)                           # its top
+    bx(furn, (dx0 + 0.03, dy0, FZ + 0.12), (dx1 - 0.03, dy0 + 0.03, dz - 0.05), PLANK)   # the boarded front
+    for k in range(1, 4):                                                            # its boards' joints
+        x = dx0 + 0.03 + (dx1 - dx0 - 0.06) * k / 4
+        bx(furn, (x - 0.004, dy0 - 0.004, FZ + 0.12), (x + 0.004, dy0 + 0.01, dz - 0.05), TIMBER)
+    for x in (dx0 + 0.05, dx1 - 0.05):
+        for y in (dy0 + 0.05, dy1 - 0.05):
+            bx(furn, (x - 0.04, y - 0.04, FZ), (x + 0.04, y + 0.04, dz - 0.05), TIMBER)
+    for x0_, x1_ in ((dx0 + 0.05, dx1 - 0.05),):                                     # a stretcher between the back legs
+        bx(furn, (x0_, dy1 - 0.08, FZ + 0.15), (x1_, dy1 - 0.02, FZ + 0.22), TIMBER)
+    # the pebble board: a marble slab with a groove for each library, a white set and a black set
+    bc, bw, bd, bt = Vector(((dx1 - 0.34), (dy0 + dy1) / 2 + 0.02, dz)), 0.68, 0.44, 0.045
+    gw, gl, gp, nl = 0.055, 0.32, 0.08, 3
+    btop = dz + bt
+    g0 = btop - 0.01                                                                  # the grooves' floor
+    bx(furn, (bc.x - bw / 2, bc.y - bd / 2, dz), (bc.x + bw / 2, bc.y + bd / 2, g0 - 0.001), MARBLE)
+    xg = [bc.x + s * (0.045 + gp * (k + 0.5)) for s in (-1, 1) for k in range(nl)]   # white set, then black
+    cuts = sorted(v for x in xg for v in (x - gw / 2, x + gw / 2))
+    edges = [bc.x - bw / 2] + cuts + [bc.x + bw / 2]
+    for a, c in zip(edges[::2], edges[1::2]):                                        # the top between the grooves
+        bx(furn, (a, bc.y - bd / 2, g0 - 0.001), (c, bc.y + bd / 2, btop), MARBLE)
+    for x in xg:                                                                     # beyond their ends; their floors
+        for ya, yb in ((-bd / 2, -gl / 2), (gl / 2, bd / 2)):
+            bx(furn, (x - gw / 2, bc.y + ya, g0 - 0.001), (x + gw / 2, bc.y + yb, btop), MARBLE)
+        bx(furn, (x - gw / 2, bc.y - gl / 2, g0 - 0.002), (x + gw / 2, bc.y + gl / 2, g0), GROOVE)
+    lent = [dr.randint(1, 6) for _ in range(nl)]
+    back = [dr.randint(0, v) for v in lent]
+    for k in range(nl):                                                              # counted from the librarian's side
+        for count, x, mat in ((lent[k], bc.x - (0.045 + gp * (k + 0.5)), WHITE), (back[k], bc.x + 0.045 + gp * (k + 0.5), BLACK)):
+            for j in range(count):
+                furn.sphere((x + dr.uniform(-0.005, 0.005), bc.y + gl / 2 - 0.025 - j * 0.042, g0 + 0.014), 0.018, mat, 0.6, 8, 5)
+    for c, mat in ((Vector((dx0 + 0.13, dy0 + 0.14, dz)), WHITE), (Vector((dx0 + 0.36, dy0 + 0.14, dz)), BLACK)):   # bowls of spare pebbles
+        furn.lathe([(0.035, 0.0), (0.075, 0.04), (0.08, 0.045), (0.062, 0.03), (0.025, 0.01)], c, CLAY, 14)
+        for j in range(6):
+            a = j * 1.05
+            furn.sphere(c + Vector((0.026 * math.cos(a) * (j > 0), 0.026 * math.sin(a) * (j > 0), 0.03 + (0.01 if j == 0 else 0.0))), 0.018, mat, 0.6, 8, 5)
+    # a small rack at the desk's far end, two pigeonholes wide and two high, for scrolls lent and returned
+    kx0, kx1, ky0, ky1, kh = dx0 + 0.02, dx0 + 0.46, dy0 + 0.3, dy1 - 0.02, 0.34
+    bx(furn, (kx0, ky1 - 0.02, dz), (kx1, ky1, dz + kh), PLANK)
+    for k in range(3):
+        x = kx0 + (kx1 - kx0) * k / 2
+        bx(furn, (x - 0.012, ky0, dz), (x + 0.012, ky1 - 0.02, dz + kh), SHELF)
+    for k in range(3):
+        z = dz + kh * k / 2
+        bx(furn, (kx0 - 0.01, ky0, z), (kx1 + 0.01, ky1 - 0.02, z + 0.02), SHELF)
+    for i in range(2):
+        for j in range(2):
+            xa = kx0 + (kx1 - kx0) * i / 2 + 0.025
+            for q in range(dr.randint(1, 2)):
+                r = 0.035
+                scroll(furn, (xa + r + q * (2 * r + 0.006), ky0 + 0.01, dz + kh * j / 2 + 0.02 + r), r, 0.26, dr, dr.random() < 0.4)
+    lx, ly = (dx0 + dx1) / 2, dy1 + 0.28                                             # the librarian's stool, behind
+    bx(furn, (lx - 0.18, ly - 0.16, FZ + 0.44), (lx + 0.18, ly + 0.16, FZ + 0.48), SHELF)
+    for x in (lx - 0.14, lx + 0.14):
+        for y in (ly - 0.12, ly + 0.12):
+            bx(furn, (x - 0.025, y - 0.025, FZ), (x + 0.025, y + 0.025, FZ + 0.44), TIMBER)
+
     # --- stand it at its site -----------------------------------------------------------------
     # explorer (x, z) -> blender (x, -z); the plan's first half-axis runs at `rot` in explorer terms
     M = Matrix.Translation((cx, -cz, g)) @ Matrix.Rotation(-rot, 4, "Z")
@@ -320,7 +395,9 @@ for n, b in enumerate(PLAN):
     info.append({"at": [cx, cz], "ground": g, "floor": round(g + FZ, 2), "wall_top": round(g + wh, 2),
                  "ridge": round(g + top + 0.2, 2), "door": ex(0, -hy), "porch": ex(0, yc),
                  "steps": ex(0, -hy - PD - 0.9), "room": ex(0, 0), "rack": [ex(r0, ry0), ex(r1, ry0)],
-                 "table": ex((tx0 + tx1) / 2, (ty0 + ty1) / 2), "stool": ex(sx, sy)})
+                 "table": ex((tx0 + tx1) / 2, (ty0 + ty1) / 2), "stool": ex(sx, sy),
+                 "desk": ex((dx0 + dx1) / 2, (dy0 + dy1) / 2), "desk_top": round(g + dz, 2), "board": ex(bc.x, bc.y),
+                 "before_desk": ex((dx0 + dx1) / 2, dy0 - 0.55), "lent": lent, "returned": back})
     y0, y1 = -tyf + 0.05, hy0 + 0.3                                                  # the levelled ground: walls, porch, forecourt
     strips.append({"at": ex(0, (y0 + y1) / 2), "half": [hx0 + 0.3, (y1 - y0) / 2], "rot": b["rot"], "pad": g - 0.05})
 
@@ -328,7 +405,9 @@ objs = [shell.finish(), floor.finish(), furn.finish()]
 json.dump({"_note": "Written by art/sets/libraries.py; explorer coords [x, z] in metres, heights above the sea. "
                     "`door`: the middle of the doorway; `porch`: the middle of the column line; `steps`: the "
                     "ground before the porch steps; `room`: the reading room's middle, at `floor`; `rack`: the "
-                    "ends of the scroll rack's front; `table`, `stool`: the reading table and its stool.",
+                    "ends of the scroll rack's front; `table`, `stool`: the reading table and its stool; `desk`, at "
+                    "`desk_top`: the loan desk, `board` its pebble board, `before_desk` where a reader stands at it; "
+                    "`lent`, `returned`: the white and the black pebbles in each of the board's grooves.",
            "params": P, "libraries": info}, open(f"art/sets/{NAME}.json", "w"), indent=1)
 json.dump({"_note": f"Written by art/sets/libraries.py for {NAME}: ground to clear, explorer [x, z].", "strips": strips},
           open(f"art/sets/{NAME}-strips.json", "w"), indent=1)

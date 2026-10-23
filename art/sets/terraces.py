@@ -3,6 +3,12 @@ hillside at the island's southern tip, in enough detail that a previs render alr
 every part of them: nothing is left for an image model to make up.
 
     blender -b -P art/sets/terraces.py -- terraces
+    blender -b -P art/sets/terraces.py -- landing
+
+The terraces are retired: no book has them now, and they are no longer baked into the island.
+The landing below them is still used (the courier's way in Changes That Never Clash), so it is
+built on its own as the set `landing` from a plan with no tables (sets.json `landing.plan`),
+which writes art/sets/landing.glb, landing.json and landing-strips.json in the same way.
 
 Reads the plan (sets.json `terraces.plan`: each table's place, the ground levelled for it, the
 direction of its long side, its terrace's height and the step up to the terrace above) and
@@ -42,7 +48,8 @@ from masonry import Part, material, bx, rubble, flags, GAP
 
 NAME = sys.argv[sys.argv.index("--") + 1]
 SITE = json.load(open("art/sets/sets.json"))[NAME]
-PLAN = json.load(open(SITE["terraces"]["plan"]))["buildings"]
+PLANFILE = (SITE.get("terraces") or SITE["landing"])["plan"]
+PLAN = json.load(open(PLANFILE))["buildings"]
 P = dict(
     table=(1.7, 0.8, 0.75),      # the table: long, across, high
     set=0.57,                    # each set of columns, along the table
@@ -151,7 +158,7 @@ for n, b in enumerate(PLAN):
     strips.append({"at": [cx, cz], "half": [hx, hy], "rot": b["rot"], "pad": round(g - 0.05, 3)})
 
 # --- the landing: a quay at the shore and a stair up to the terraces ---------------------------
-LAND = json.load(open(SITE["terraces"]["plan"])).get("landing")
+LAND = json.load(open(PLANFILE)).get("landing")
 landing = None
 if LAND:
     Q, ST = LAND["quay"], LAND["stair"]

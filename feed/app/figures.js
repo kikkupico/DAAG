@@ -514,7 +514,7 @@ function versus(marks, fig) {
   return d;
 }
 function pebbles(marks, fig) {
-  const d = box("pebbles", alt(fig, "A terrace table: a pile of white and black pebbles in each column."));
+  const d = box("pebbles", alt(fig, "A loan desk's pebble board: a pile of white and black pebbles in each column."));
   const m = (marks || []).find(x => x && Array.isArray(x.columns));
   (m ? m.columns : []).slice(0, 4).forEach((c, i) => {
     const col = part(d, "div", "pcol", undefined, i), stack = part(col, "div", "stack");
