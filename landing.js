@@ -20,7 +20,7 @@ function lay(name){
     $(".tear",s).style.setProperty("--prev",light?"#eae4d4":"#f6eed6");
   });
   const first=$(".bk",document.getElementById(TOURS[name][0])), a=$("a",first), t=$("h3",first).textContent;
-  ["","2"].forEach(n=>{$("#startBtn"+n).href=a.getAttribute("href"); $("#startTitle"+n).textContent=t});
+  $("#startBtn").href=a.getAttribute("href"); $("#startTitle").textContent=t;
   dispatchEvent(new Event("scroll"));
 }
 let saved; try{saved=localStorage.getItem("tour")}catch(e){}
