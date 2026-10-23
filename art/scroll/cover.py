@@ -60,8 +60,8 @@ def by_hand(page, slug):
 
 
 def card_re(slug):
-    return re.compile(r'(href="books/' + re.escape(slug) + r'/index\.html">.*?<p class="q">)(.*?)(</p><p class="how">)(.*?)'
-                      r'(</p><span class="credit">)(.*?)(</span>)', re.S)
+    return re.compile(r'(href="books/' + re.escape(slug) + r'/index\.html">.*?<p class="q">)(.*?)(</p>\s*<p class="how[^"]*">)(.*?)'
+                      r'(</p>\s*<span class="credit">)(.*?)(</span>)', re.S)
 
 
 COVER = re.compile(r'(<p class="generic">)(.*?)(</p>\s*<p class="allegory">)(.*?)(</p>\s*<p class="source">)(.*?)(</p>)', re.S)
