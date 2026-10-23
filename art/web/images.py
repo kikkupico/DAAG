@@ -15,9 +15,9 @@ What is made: from the matching scene.png, AVIF at each of WIDTHS no wider than 
 in art/web/out/ (not in git). Each goes to the bucket under a name that carries the source's
 hash, so it never changes and is cached for a year; a regenerated picture gets a new name.
 
-Where the links are rewritten: where the page is written. A book built by art/scroll/assemble.py
-is changed in its body.html and rebuilt; the Part-Time Parliament, the setting pages and the
-home page are changed directly. A rewritten tag keeps the local path as data-local, which is
+Where the links are rewritten: in every page as it is published, the books' index.html among them,
+and in each book's source, art/scroll/parts/<slug>/body.html, so the two stay in step. Nothing is
+rebuilt: assemble.py still writes the single-file page the books have outgrown. A rewritten tag keeps the local path as data-local, which is
 how a later run finds it again.
 
 art/web/images.json records what was published. Uploading uses wrangler (npx) and the login
@@ -70,8 +70,12 @@ def sources():
     for page in sorted(ROOT.glob("places/*/index.html")):
         yield page, page.parent, None
     for page in sorted(ROOT.glob("books/*/index.html")):
+        # the built page is the book; its source in art/scroll/parts is kept in step but not
+        # rebuilt, since assemble.py still writes the single-file page the books have outgrown
+        yield page, page.parent, None
         body = PARTS / page.parent.name / "body.html"
-        yield (body, page.parent, page.parent.name) if body.exists() else (page, page.parent, None)
+        if body.exists():
+            yield body, page.parent, None
 
 
 class Imgs(HTMLParser):
@@ -184,8 +188,11 @@ def main():
             url = lambda w: f"{BASE}/{image['name']}-{digest}-{w}.avif"
             show = next(sizes for cls, sizes in SIZES if not cls or cls in around)
             middle = image["widths"][min(1, len(image["widths"]) - 1)]
+            srcset = ", ".join(f"{url(w)} {w}w" for w in image["widths"])
+            if (attrs.get("src") or "").startswith(f"{BASE}/{image['name']}-{digest}-") and attrs.get("data-local") == src:
+                continue  # already on this very picture: keep the tag as it is, sizes chosen by hand and all
             kept = re.sub(r'\s+(src|srcset|sizes|data-local)="[^"]*"', "", tag)
-            new = (f'<img src="{url(middle)}" srcset="{", ".join(f"{url(w)} {w}w" for w in image["widths"])}" '
+            new = (f'<img src="{url(middle)}" srcset="{srcset}" '
                    f'sizes="{show}" data-local="{src}"' + kept[4:])
             if new != tag:
                 edits.setdefault((file, rebuild), []).append((offset, tag, new))
