@@ -270,7 +270,7 @@ function Unfold(src,o){
        for a stretch inside another), the clock set outright */
     msg(a,b,t0,t1,lab,cls){a=lane(a);b=lane(b);if(a==null||b==null)return null;const r={a,b,t0,t1,lost:null,fill:cls==="ln-red"?"#bf4a26":o.nodes[a][2],lab,cls};msgs.push(r);render();return r},
     land(r,t=clock.t){if(r){r.t1=t;render()}},
-    band(t0,t1,lab,hot,low){bands.push({t0,t1,lab,hot,low});render()},
+    band(t0,t1,lab,hot,low){const b={t0,t1,lab,hot,low};bands.push(b);render();return b},
     setT(t){clock.t=t;render()},
     /* start the timeline again; inputs stay until badge changes them */
     reset(){msgs=[];states=[];steps=[];marks=[];bands=[];cuts=[];downs=[];crashes={};turnK=null;byTok.clear();clock.t=0;clock.owed=0;render()},
