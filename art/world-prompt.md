@@ -309,7 +309,7 @@ predate this rule; use them with a tint, and build new ones to it.
 > - **The Chamber** (the western arm): a round colonnaded hall under a conical tiled roof, on a terrace above the bay, where the parliament sits, looking across the water at the Tholos. The island road runs up the stem, forks, and runs out along the western arm past the Chamber to the harbour town at the arm's tip, so the Chamber is on a through route.
 > - **Schedia and the Tholos** (the eastern arm): a small unwalled city of its own above a cove on the bay, with the Tholos, a round hall with a conical tiled roof and a podium at its centre, on a terrace facing the Chamber across the bay.
 > - **The hall of two doors** (the fork): on common ground belonging to neither city; one door faces north up the bay to the Chamber and the Tholos, one south down the stem to the scholars' coast.
-> - **The scholars' coast** (the body of the island), which the scholars call Homonoia: lower, deeply indented country of coves and valleys, with the stoa and festival ground on an eastern harbour, about a dozen small libraries within casual reach of one another along footpaths of differing length, a courier cove on the rocky southwest shore, and the far terraces on remote slopes at the southern tip, as far from the assemblies as the island goes. The scholars hold no assembly.
+> - **The scholars' coast** (the body of the island), which the scholars call Homonoia: lower, deeply indented country of coves and valleys, with the stoa and festival ground on an eastern harbour, about a dozen small libraries within casual reach of one another along footpaths of differing length, a courier cove on the rocky southwest shore, and in every library a loan desk where a visiting scholar borrows scrolls against one deposit, his loans counted in pebbles. The scholars hold no assembly.
 
 ### 3.1 Island Plate Prompt (Geography, Habitation & Book Locations)
 Like Arche's, the Paxos plate carries its buildings in place. It is made in three steps.
@@ -340,7 +340,7 @@ Zero people.
 
 ### 3.1a Terrain Plate (bare land, for a model the buildings are added to)
 
-`art/refs/paxos-terrain-plate.jpeg` is a bare-terrain plate, like Arche's (§2.1a): the two arms round the bay, the fork and the broad body, with the earthworks for every site and nothing built. The round terrace on the western arm is the Chamber's; the terrace above the eastern cove, with Schedia's terraces below it, is the Tholos's (square: the Tholos stands on a paved court); the platform at the fork is the hall of two doors'; on the body, the eastern harbour's quay and flat ground are the stoa's and the festival ground's, the scattered clearings the libraries', the south-west landing the couriers', and the stepped terraces at the southern tip the far terraces. The Y is imperfect, its arms spreading rather than parallel, which looks more natural and keeps what the setting needs: two arms round a bay, the Chamber and the Tholos looking at each other across the water from round terraces, a fork for the hall of two doors, a short stem, and the scholars' coast in the body with every site joined to the road. Its Meshy conversion (2026-09-28) is `art/archive/paxos-meshy-2026-09-28/paxos-3d.glb`, the untouched source the bake reads. Made in Gemini (text-to-image) from:
+`art/refs/paxos-terrain-plate.jpeg` is a bare-terrain plate, like Arche's (§2.1a): the two arms round the bay, the fork and the broad body, with the earthworks for every site and nothing built. The round terrace on the western arm is the Chamber's; the terrace above the eastern cove, with Schedia's terraces below it, is the Tholos's (square: the Tholos stands on a paved court); the platform at the fork is the hall of two doors'; on the body, the eastern harbour's quay and flat ground are the stoa's and the festival ground's, the scattered clearings the libraries', the south-west landing the couriers', and the stepped terraces at the southern tip, made for the far terraces that no book uses now, are left as hillside, with the couriers' quay and stair at their foot (the set `landing`). The Y is imperfect, its arms spreading rather than parallel, which looks more natural and keeps what the setting needs: two arms round a bay, the Chamber and the Tholos looking at each other across the water from round terraces, a fork for the hall of two doors, a short stem, and the scholars' coast in the body with every site joined to the road. Its Meshy conversion (2026-09-28) is `art/archive/paxos-meshy-2026-09-28/paxos-3d.glb`, the untouched source the bake reads. Made in Gemini (text-to-image) from:
 ```text
 Photorealistic isometric terrain diorama of the Greek island of Paxos, Hellenistic Greece, 3rd century BC: the bare land and its earthworks only, made for 3D reconstruction. True orthographic axonometric view from the south, looking north and down at about 45 degrees, north at the top, the whole island in frame with a margin of sea all round. Deep focus, crisp fine geometry.
 
@@ -404,7 +404,7 @@ Detailed 3D isometric architectural asset of one small library on Paxos's schola
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated scholarly building, zero people.
 Sited in a small level clearing among olive trees, a footpath leading away.
 A small limestone building with a columned porch, a pitched oxblood terracotta tile roof, and a heavy timber double door standing open onto walls of wooden pigeonhole shelves (armaria) filled with rolled scrolls.
-Beside the main hall, a small reading room with a single reading table, a lectern and a bench.
+Beside the main hall, a small reading room with a single reading table, a lectern and a bench, and a timber loan desk facing the door with a marble board of black and white pebbles on it.
 The same building is repeated about a dozen times across the scholars' coast.
 ```
 
@@ -417,15 +417,16 @@ Features stone moorings and timber piers where swift courier boats are tied, a s
 Rugged sea-cliff backdrop.
 ```
 
-#### Feature 5: The Far Terraces (Tally Pebbles)
+#### Feature 5: The Loan Desk (inside every library)
 ```text
-Detailed 3D isometric architectural asset of The Far Terraces on Paxos's scholars' coast, Hellenistic Ancient Greece.
-Axonometric orthographic projection, hyperfocal focus, clean unpopulated terraces, zero people.
-Carved into steep, remote limestone hillsides at the island's southern tip, facing out toward the open, unbroken horizon of the sea.
-A dramatic flight of dry-stone retaining walls creating narrow, stepped terraces planted with wild olive trees.
-Set upon each terrace are long stone counting tables divided into twelve parallel shallow troughs, one column per library, each holding neat mounds of black and white voting pebbles; small inscribed stone markers head each column.
-Windswept, quiet, meditative landscape as far from the assemblies as the island goes.
+Detailed 3D isometric architectural cutaway of the reading room of one small library on Paxos's scholars' coast, Hellenistic Greece.
+Axonometric orthographic projection, hyperfocal focus, clean unpopulated room, zero people.
+Facing the open door stands a plain timber loan desk with a boarded front and a stool behind it; a wall of wooden pigeonholes full of rolled scrolls runs behind.
+On the desk lies a white marble counting board cut with six shallow grooves in two sets of three: white pebbles in the first set, black pebbles in the second; two clay bowls of spare white and black pebbles and a small rack of scrolls at the desk's end.
+No writing anywhere.
 ```
+
+The libraries' set (`art/sets/libraries.py`) models this desk in every library, so pictures come from the set rather than from this prompt.
 
 #### Feature 6: The Hall of Two Doors
 ```text

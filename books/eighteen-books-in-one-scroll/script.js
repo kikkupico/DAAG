@@ -31,8 +31,7 @@ const CASTS = {
   tholos:  [["O", "#8fa3b8", -90, "Ο"], ["L", "#e8b03a", -18, "Λ"], ["K", "#8fb35a", 54, "Κ"], ["M", "#cf5a4a", 126, "Μ"], ["Th", "#b3aea4", 198, "Θ"]],
   libs3:   [["L1", LIB, -90], ["L2", LIB, 30], ["L3", LIB, 150]],
   libs4:   [["L1", LIB, -90], ["L2", LIB, 0], ["L3", LIB, 90], ["L4", LIB, 180]],
-  libs5:   [["L1", LIB, -90], ["L2", LIB, -18], ["L3", LIB, 54], ["L4", LIB, 126], ["L5", LIB, 198]],
-  scribes: [["S1", "#d9c48e", -90], ["S2", "#b9c79a", 30], ["S3", "#d8b39c", 150]]
+  libs5:   [["L1", LIB, -90], ["L2", LIB, -18], ["L3", LIB, 54], ["L4", LIB, 126], ["L5", LIB, 198]]
 };
 const SUB = "₀₁₂₃₄₅₆₇₈₉";
 for (const k in CASTS) {
@@ -625,19 +624,19 @@ def("pbs", "libs3", [
   tg(on("L3", 5.6, -10, 34), V("later, the odds are better", "t-visibility"), { own: 1, id: "t3" })
 ]);
 
-/* Changes That Never Clash: one column per terrace, and merging keeps the larger pile */
-def("crdt", "scribes", [
-  ev("S1", 1.0, { id: "a1" }), ev("S1", 2.0, { id: "a2" }), ev("S2", 1.3, { id: "b1" }), ev("S3", 1.1, { id: "c1" }), ev("S3", 2.4, { id: "c2" }),
-  sl("S1", 2.0, "S2", 3.0, { id: "m1" }), ev("S2", 3.0, { ring: 1, c: 1, id: "b2" }),
-  sl("S3", 2.4, "S2", 3.9, { id: "m2" }), ev("S2", 3.9, { ring: 1, c: 1, id: "b3" }),
-  sl("S2", 3.9, "S1", 5.0, { id: "m3" }), ev("S1", 5.0, { ring: 1, c: 1, id: "a3" }),
-  sl("S2", 3.9, "S3", 5.0, { id: "m4" }), ev("S3", 5.0, { ring: 1, c: 1, id: "c3" }),
-  tg(on("S1", 2.0, -40, 0), "2·0·0", { cls: "sm col", id: "l1" }),
-  tg(on("S3", 2.4, -12, 28), "0·0·2", { cls: "sm col", id: "l2" }),
-  tg(on("S2", 3.0, 18, -26), "2·1·0", { cls: "sm col", c: 1, id: "l3" }),
-  tg(on("S2", 3.9, 46, 4), "2·1·2", { cls: "sm col", c: 1, id: "l4" }),
-  tg(on("S1", 5.0, 44, 0), "2·1·2", { cls: "sm col", c: 1, id: "l5" }),
-  tg(on("S3", 5.0, -22, 26), "2·1·2", { cls: "sm col", c: 1, id: "l6" }),
+/* Changes That Never Clash: one column per library, and merging keeps the larger pile */
+def("crdt", "libs3", [
+  ev("L1", 1.0, { id: "a1" }), ev("L1", 2.0, { id: "a2" }), ev("L2", 1.3, { id: "b1" }), ev("L3", 1.1, { id: "c1" }), ev("L3", 2.4, { id: "c2" }),
+  sl("L1", 2.0, "L2", 3.0, { id: "m1" }), ev("L2", 3.0, { ring: 1, c: 1, id: "b2" }),
+  sl("L3", 2.4, "L2", 3.9, { id: "m2" }), ev("L2", 3.9, { ring: 1, c: 1, id: "b3" }),
+  sl("L2", 3.9, "L1", 5.0, { id: "m3" }), ev("L1", 5.0, { ring: 1, c: 1, id: "a3" }),
+  sl("L2", 3.9, "L3", 5.0, { id: "m4" }), ev("L3", 5.0, { ring: 1, c: 1, id: "c3" }),
+  tg(on("L1", 2.0, -40, 0), "2·0·0", { cls: "sm col", id: "l1" }),
+  tg(on("L3", 2.4, -12, 28), "0·0·2", { cls: "sm col", id: "l2" }),
+  tg(on("L2", 3.0, 18, -26), "2·1·0", { cls: "sm col", c: 1, id: "l3" }),
+  tg(on("L2", 3.9, 46, 4), "2·1·2", { cls: "sm col", c: 1, id: "l4" }),
+  tg(on("L1", 5.0, 44, 0), "2·1·2", { cls: "sm col", c: 1, id: "l5" }),
+  tg(on("L3", 5.0, -22, 26), "2·1·2", { cls: "sm col", c: 1, id: "l6" }),
   tg([0, 236], V("merge: the larger pile in each column", "merge = element-wise max"), { c: 1, own: 1, id: "t1" })
 ]);
 
@@ -1491,7 +1490,7 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
   const box = $("#merge"); if (!box) return;
   const st = $("#mergeStatus"), COL = ["#d9a441", "#7fa34a", "#c8735a"];
   let T = [[2, 0, 0], [0, 1, 0], [0, 0, 2]], merges = 0;
-  box.innerHTML = [0, 1, 2].map(t => `<div class="tbl"><div class="tn">${T2("Terrace " + (t + 1), "Replica " + (t + 1))}</div><div class="cols">${[0, 1, 2].map(s => `<div class="pcol${s === t ? " own" : ""}" style="--c:${COL[s]}"></div>`).join("")}</div><div class="tot"></div><button type="button">${T2("+ a pebble", "increment")}</button></div>`).join("");
+  box.innerHTML = [0, 1, 2].map(t => `<div class="tbl"><div class="tn">${T2("Library " + (t + 1), "Replica " + (t + 1))}</div><div class="cols">${[0, 1, 2].map(s => `<div class="pcol${s === t ? " own" : ""}" style="--c:${COL[s]}"></div>`).join("")}</div><div class="tot"></div><button type="button">${T2("+ a loan", "increment")}</button></div>`).join("");
   const tbls = $$(".tbl", box);
   tbls.forEach((el, t) => $("button", el).addEventListener("click", () => { T[t][t]++; paint(); }));
   function paint(flash) {
@@ -1502,7 +1501,7 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
         while (c.children.length > want) c.lastChild.remove();
       });
       const sum = T[t].reduce((a, b) => a + b, 0);
-      $(".tot", el).innerHTML = sum + `<small>${T2(sum === 1 ? "copy" : "copies", "value")}</small>`;
+      $(".tot", el).innerHTML = sum + `<small>${T2(sum === 1 ? "scroll out" : "scrolls out", "value")}</small>`;
       el.classList.toggle("flash", !!flash && flash.includes(t));
     });
     if (flash) setTimeout(() => tbls.forEach(el => el.classList.remove("flash")), 700);
@@ -1510,8 +1509,8 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
     const up = [0, 1, 2].filter(t => T[t].every((v, s) => v === J[s])), lag = [0, 1, 2].filter(t => !up.includes(t));
     const names = a => a.map(t => t + 1).join(a.length === 2 ? " and " : ", ");
     const total = J.reduce((a, b) => a + b, 0);
-    st.innerHTML = !lag.length ? T2(`All three terraces agree: <span class="g">a count of ${total}</span>${merges ? `, after ${merges} ${merges === 1 ? "merge" : "merges"} in the order you chose` : ""}.`, `Converged: <span class="g">value ${total} on every replica</span>${merges ? ` after ${merges} merges, in your order` : ""}.`)
-      : T2(`Up to date: ${up.length ? "terrace" + (up.length > 1 ? "s " : " ") + names(up) : "none yet"}. <b>Still to meet the news: terrace${lag.length > 1 ? "s" : ""} ${names(lag)}.</b>`, `At the join: ${up.length ? names(up) : "none"}. <b>Behind: ${names(lag)}.</b>`);
+    st.innerHTML = !lag.length ? T2(`All three libraries agree: <span class="g">${total} out</span>${merges ? `, after ${merges} ${merges === 1 ? "merge" : "merges"} in the order you chose` : ""}.`, `Converged: <span class="g">value ${total} on every replica</span>${merges ? ` after ${merges} merges, in your order` : ""}.`)
+      : T2(`Up to date: ${up.length ? "library" + (up.length > 1 ? "s " : " ") + names(up) : "none yet"}. <b>Still to meet the news: librar${lag.length > 1 ? "ies" : "y"} ${names(lag)}.</b>`, `At the join: ${up.length ? names(up) : "none"}. <b>Behind: ${names(lag)}.</b>`);
   }
   $$(".merge-btns button").forEach(b => b.addEventListener("click", () => {
     const [a, c] = b.dataset.m.split(",").map(Number);

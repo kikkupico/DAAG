@@ -36,13 +36,13 @@ const oneIn=p=>p<=0?"none":p>=.95?"nearly all":p>=.095?`1 in ${Math.round(1/p)}`
   paint();
 })();
 
-/* ===== a table of pebbles: a pile for every terrace, in white (made) and, when used, black (lost) ===== */
-const TN=["terrace 1","terrace 2","terrace 3"];
+/* ===== a table of pebbles: a pile for every library, in white (lent) and, when used, black (returned) ===== */
+const TN=["library 1","library 2","library 3"];
 const pile=(n,own,k)=>`<div class="col${own?" own":""}${k?" k":""}">${"<i></i>".repeat(Math.min(n,9))}</div>`;
 function tableHtml(name,own,white,black,total){
   const cols=(v,k)=>`<div class="cols">${v.map((n,i)=>pile(n,i===own,k)).join("")}</div><div class="lbl">${v.map((n,i)=>`<span>${i+1}: ${n}</span>`).join("")}</div>`;
-  return `<div class="ptab"><h5><span>${name}</span><span>count <b>${total}</b></span></h5>`+
-    (black?`<div class="sets"><div><span class="t">made</span>${cols(white,false)}</div><div><span class="t">lost</span>${cols(black,true)}</div></div>`:cols(white,false))+`</div>`;
+  return `<div class="ptab"><h5><span>${name}</span><span>out <b>${total}</b></span></h5>`+
+    (black?`<div class="sets"><div><span class="t">lent</span>${cols(white,false)}</div><div><span class="t">returned</span>${cols(black,true)}</div></div>`:cols(white,false))+`</div>`;
 }
 const sum=v=>v.reduce((a,b)=>a+b,0),larger=(x,y)=>x.map((n,i)=>Math.max(n,y[i]));
 
@@ -51,42 +51,47 @@ const sum=v=>v.reduce((a,b)=>a+b,0),larger=(x,y)=>x.map((n,i)=>Math.max(n,y[i]))
   const box=$("#tabs"),say=$("#tsay");let T,made,rule="max",from=0,to=1;
   const paint=()=>{box.innerHTML=T.map((v,i)=>tableHtml("Table at "+TN[i],i,v,null,sum(v))).join("")};
   const verdict=()=>{const c=T.map(sum),same=c.every(x=>x===c[0]);
-    return c.some(x=>x>made)?` <span class="bad">A table now shows more copies than the ${made} that were made.</span>`:same&&c[0]===made&&made?` <span class="ok">All three tables show ${made}, the copies made.</span>`:""};
-  function reset(){T=[[0,0,0],[0,0,0],[0,0,0]];made=0;paint();say.textContent="Each table has a column for every terrace. The shaded column is the one its own scribe may add to."}
-  $("#tmake").innerHTML=TN.map((n,i)=>`<button class="btn" data-i="${i}">${n}</button>`).join("");
-  $$("button",$("#tmake")).forEach(bt=>bt.onclick=()=>{const i=+bt.dataset.i;T[i][i]++;made++;paint();say.innerHTML=`The scribe at ${TN[i]} adds a white pebble to column ${i+1} of the table there, and to no other.`});
+    return c.some(x=>x>made)?` <span class="bad">A table now shows more scrolls out than the ${made} he was lent.</span>`:same&&c[0]===made&&made?` <span class="ok">All three tables show ${made}, the scrolls he has out.</span>`:""};
+  function reset(){T=[[0,0,0],[0,0,0],[0,0,0]];made=0;paint();say.textContent="Each table has a column for every library. The shaded column is the one its own librarian may add to."}
+  $("#tmake").innerHTML=TN.map((n,i)=>`<button class="btn" data-i="${i}">Library ${i+1} lends one</button>`).join("");
+  $$("button",$("#tmake")).forEach(bt=>bt.onclick=()=>{const i=+bt.dataset.i;T[i][i]++;made++;paint();say.innerHTML=`Library ${i+1} lends him a scroll, and its librarian adds a white pebble to column ${i+1} of its own table, and to no other.`});
   seg($("#trule"),[["max","takes the larger pile in each column"],["add","adds the piles together"]],rule,v=>{rule=v;reset()});
   seg($("#tfrom"),TN.map((n,i)=>[i,n]),from,v=>{from=+v});seg($("#tto"),TN.map((n,i)=>[i,n]),to,v=>{to=+v});
-  $("#tsend").onclick=()=>{if(from===to){say.textContent="Choose two different terraces.";return}
+  $("#tsend").onclick=()=>{if(from===to){say.textContent="Choose two different libraries.";return}
     const before=T[to].join();T[to]=rule==="max"?larger(T[to],T[from]):T[to].map((n,i)=>n+T[from][i]);paint();
-    say.innerHTML=(rule==="max"?(T[to].join()===before?`The table of ${TN[from]} reaches ${TN[to]} and changes nothing: ${TN[to]} already held all of it.`:`${TN[to]} takes the larger pile in each column.`):`${TN[to]} adds each arriving pile to its own.`)+verdict()};
+    say.innerHTML=(rule==="max"?(T[to].join()===before?`The table of ${TN[from]} reaches ${TN[to]} and changes nothing: ${TN[to]} already held all of it.`:`${TN[to][0].toUpperCase()+TN[to].slice(1)} takes the larger pile in each column.`):`${TN[to][0].toUpperCase()+TN[to].slice(1)} adds each arriving pile to its own.`)+verdict()};
   $("#treset").onclick=reset;reset();
 })();
 
 /* ===== the table or the change ===== */
 (function(){
   const box=$("#wtabs"),say=$("#wsay");let t1,t2;
-  const paint=()=>{box.innerHTML=tableHtml("Table at terrace 1",0,t1,null,sum(t1))+tableHtml("Table at terrace 2",1,t2,null,sum(t2));$("#wshown").textContent=sum(t2)};
-  function reset(){t1=[1,0,0];t2=[0,0,0];paint();say.textContent="Terrace 2 has not heard yet."}
-  $("#wtable").onclick=()=>{const b=t2.join();t2=larger(t2,t1);paint();say.innerHTML=t2.join()===b?`The same table again. Terrace 2 takes the larger pile in each column, and nothing changes. <span class="ok">Still ${sum(t2)}.</span>`:"Terrace 2 takes the larger pile in each column."};
-  $("#wnote").onclick=()=>{t2[0]++;paint();say.innerHTML=sum(t2)>1?`<i>One more copy at terrace 1</i>, taken in again. Nothing in the notice says which copy. <span class="bad">Terrace 2 now shows ${sum(t2)} for one copy made.</span>`:"<i>One more copy at terrace 1.</i> Terrace 2 adds a pebble to column 1."};
+  const paint=()=>{box.innerHTML=tableHtml("Table at library 1",0,t1,null,sum(t1))+tableHtml("Table at library 2",1,t2,null,sum(t2));$("#wshown").textContent=sum(t2)};
+  function reset(){t1=[1,0,0];t2=[0,0,0];paint();say.textContent="Library 2 has not heard yet."}
+  $("#wtable").onclick=()=>{const b=t2.join();t2=larger(t2,t1);paint();say.innerHTML=t2.join()===b?`The same table again. Library 2 takes the larger pile in each column, and nothing changes. <span class="ok">Still ${sum(t2)}.</span>`:"Library 2 takes the larger pile in each column."};
+  $("#wnote").onclick=()=>{t2[0]++;paint();say.innerHTML=sum(t2)>1?`<i>One more scroll lent at library 1</i>, taken in again. Nothing in the notice says which loan. <span class="bad">Library 2 now shows ${sum(t2)} out for one scroll lent.</span>`:"<i>One more scroll lent at library 1.</i> Library 2 adds a pebble to column 1."};
   $("#wreset").onclick=reset;reset();
 })();
 
-/* ===== made and lost ===== */
+/* ===== lent and returned, and the deposit's limit ===== */
 (function(){
   const box=$("#ltabs"),say=$("#lsay");let W,K,rule="seen";
-  const count=i=>sum(W[i])-sum(K[i]);
+  /* the deposit lets him have three out at once; split in advance, library 1 holds two of it, library 2 one, library 3 none */
+  const DEP=3,SHARE=[2,1,0],up=s=>s[0].toUpperCase()+s.slice(1);
+  const count=i=>sum(W[i])-sum(K[i]),truth=()=>sum(larger(W[0],W[1]))-sum(larger(K[0],K[1]));
   const paint=()=>{box.innerHTML=[0,1].map(i=>tableHtml("Table at "+TN[i],i,W[i],K[i],count(i))).join("")};
-  function reset(){W=[[1,0,0],[1,0,0]];K=[[0,0,0],[0,0,0]];paint();say.textContent="The one copy was made at terrace 1. Both tables show it."}
-  /* seen: only if the scribe's own table shows a copy left; own: no more lost than were made at the scribe's own terrace */
-  const may=i=>rule==="seen"?count(i)>0:W[i][i]-K[i][i]>0;
-  const lose=i=>{if(!may(i)){say.innerHTML=rule==="seen"?`The table at ${TN[i]} shows no copy left, so its scribe may not mark one lost.`:`No copy was made at ${TN[i]} that is not already marked lost there, so its scribe may mark none, whatever the library holds.`;return}
-    K[i][i]++;paint();say.innerHTML=`The scribe at ${TN[i]} adds a black pebble to column ${i+1}. That table now shows ${count(i)}.`};
-  $("#l1").onclick=()=>lose(0);$("#l2").onclick=()=>lose(1);
+  function reset(){W=[[1,1,0],[1,1,0]];K=[[0,0,0],[0,0,0]];paint();
+    say.textContent=rule==="seen"?`His deposit lets him have ${DEP} scrolls out at once. Library 1 and Library 2 have each lent him one, and both tables show 2 out: room for one more.`:`His deposit of ${DEP} was split before he began: ${SHARE[0]} to Library 1, ${SHARE[1]} to Library 2, none to Library 3. Each has lent him one.`}
+  /* seen: while its own table shows room under the deposit; own: while what it has lent, less what came back to it, is under its share */
+  const may=i=>rule==="seen"?count(i)<DEP:W[i][i]-K[i][i]<SHARE[i];
+  const lend=i=>{if(!may(i)){say.innerHTML=rule==="seen"?`The table at ${TN[i]} shows ${count(i)} out, all the deposit allows, so its desk may not lend.`:`${up(TN[i])} has lent ${W[i][i]-K[i][i]} more than came back to it, all of its share, so its desk may not lend, whatever its table shows.`;return}
+    W[i][i]++;paint();say.innerHTML=`${up(TN[i])} lends him a scroll and adds a white pebble to column ${i+1}. Its table now shows ${count(i)} out.`};
+  $("#l1").onclick=()=>lend(0);$("#l2").onclick=()=>lend(1);
+  $("#lret").onclick=()=>{if(truth()<1){say.textContent="He has nothing out to return.";return}
+    K[1][1]++;paint();say.innerHTML=`He brings a scroll back to Library 2, whichever library lent it, and its librarian adds a black pebble to column 2. Its table now shows ${count(1)} out.`};
   $("#lmeet").onclick=()=>{const w=larger(W[0],W[1]),k=larger(K[0],K[1]);W=[w.slice(),w.slice()];K=[k.slice(),k.slice()];paint();const c=count(0);
-    say.innerHTML=c<0?`Each set of columns takes the larger pile. One made, ${sum(k)} lost: <span class="bad">the count is ${c}.</span> Each scribe kept the rule the table allowed.`:`Each set of columns takes the larger pile. Both tables show ${c}.`};
-  seg($("#lrule"),[["seen","if the table shows a copy left"],["own","no more than were made at the scribe's own terrace"]],rule,v=>{rule=v;reset()});
+    say.innerHTML=c>DEP?`Each set of columns takes the larger pile. ${sum(w)} lent, ${sum(k)} returned: <span class="bad">he has ${c} out, and his deposit allows ${DEP}.</span> Each desk kept to what its table showed.`:`Each set of columns takes the larger pile. Both tables show ${c} out, <span class="ok">within the deposit of ${DEP}</span>.`};
+  seg($("#lrule"),[["seen","if its own table shows room"],["own","only up to its own share of the deposit"]],rule,v=>{rule=v;reset()});
   $("#lreset").onclick=reset;reset();
 })();
 
@@ -101,9 +106,9 @@ const sum=v=>v.reduce((a,b)=>a+b,0),larger=(x,y)=>x.map((n,i)=>Math.max(n,y[i]))
     return kept.sort((a,b)=>a.n-b.n)}
   const show=k=>k.map(e=>`<span class="it">correction by ${e.by}, tally: ${e.t}</span>`).join("");
   function paint(){const a=settle([first,1-first]),b=settle([1-first,first]);
-    if(a.map(e=>e.n).join()!==b.map(e=>e.n).join())throw new Error("the terraces settled differently");
-    $("#hout").innerHTML=`<div class="shelf"><h5>A terrace that hears from ${E[first].by} first</h5>${show(a)}</div><div class="shelf"><h5>A terrace that hears from ${E[1-first].by} first</h5>${show(b)}</div>`;
-    $("#hsay").innerHTML=rule==="later"?"Both terraces keep Library 2's correction, whichever arrived first. Library 1's is lost for good.":"Neither correction was written after the other, so both terraces keep both, and a reader is shown the two."}
+    if(a.map(e=>e.n).join()!==b.map(e=>e.n).join())throw new Error("the two orders settled differently");
+    $("#hout").innerHTML=`<div class="shelf"><h5>Library 3, hearing from ${E[first].by} first</h5>${show(a)}</div><div class="shelf"><h5>Library 3, had it heard from ${E[1-first].by} first</h5>${show(b)}</div>`;
+    $("#hsay").innerHTML=rule==="later"?"Library 3 keeps Library 2's correction, whichever arrives first. Library 1's is lost for good.":"Neither correction was written after the other, so Library 3 keeps both, whichever arrives first, and a reader is shown the two."}
   seg($("#hrule"),[["later","keep the later"],["both","keep both"]],rule,v=>{rule=v;paint()});
   seg($("#hord"),[[0,"Library 1"],[1,"Library 2"]],first,v=>{first=+v;paint()});paint();
 })();
@@ -131,7 +136,7 @@ function Marks(name){return {name,add:new Set(),struck:new Set(),n:0,
 /* ===== not the same as one order: the four acts, worked by the same rule ===== */
 (function(){
   const P=Polar($("#ordsvg"),{vb:"0 0 520 500",cx:260,cy:262,r0:40,step:26,rings:7,tEnd:7.6,note:[12,22],
-    nodes:{A:[-90,"L1","#e0b84a"],B:[30,"L2","#8fb3d9"],T:[150,"T","#f6eed6"]}});
+    nodes:{A:[-90,"L1","#e0b84a"],B:[30,"L2","#8fb3d9"],T:[150,"L3","#f6eed6"]}});
   const ev=(k,t,f,s)=>{P.event(k,t,f).label.textContent=s};
   ev("A",1.6,"#e0b84a","+E");ev("A",3.2,"#fde0d4","−F");ev("B",1.6,"#8fb3d9","+F");ev("B",3.2,"#fde0d4","−E");
   P.slip("A",3.6,"T",5.4);P.slip("B",3.6,"T",6.2);ev("T",5.4,"#f6eed6","");ev("T",6.2,"#a9c25a","");
@@ -143,7 +148,7 @@ function Marks(name){return {name,add:new Set(),struck:new Set(),n:0,
   (function go(done,ia,ib){if(done.length===4){orders.push(done);return}
     if(ia<2)go([...done,acts[ia]],ia+1,ib);if(ib<2)go([...done,acts[2+ib]],ia,ib+1)})([],0,0);
   const both=orders.filter(o=>{const s=new Set();o.forEach(([,k,x])=>k==="add"?s.add(x):s.delete(x));return s.has("E")&&s.has("F")}).length;
-  $("#ordlist").innerHTML=`<li><b>L1</b> Library 1 · <b>L2</b> Library 2 · <b>T</b> a terrace</li><li>Library 1 adds E, then strikes F. It sees ${sf.length} ${sf.length===1?"tag":"tags"} of F.</li><li>Library 2 adds F, then strikes E. It sees ${se.length} ${se.length===1?"tag":"tags"} of E.</li><li>The terrace takes in both lists.</li>`;
-  $("#ordsay").innerHTML=`On the terrace's list: <b>${on.join(" and ")||"neither"}</b>. Of the ${orders.length} single orders in which the four acts could be done one after another, ${both||"none"} ${both===1?"ends":"end"} with both titles on the list.`;
+  $("#ordlist").innerHTML=`<li><b>L1</b> Library 1 · <b>L2</b> Library 2 · <b>L3</b> Library 3</li><li>Library 1 adds E, then strikes F. It sees ${sf.length} ${sf.length===1?"tag":"tags"} of F.</li><li>Library 2 adds F, then strikes E. It sees ${se.length} ${se.length===1?"tag":"tags"} of E.</li><li>Library 3 takes in both lists.</li>`;
+  $("#ordsay").innerHTML=`On Library 3's list: <b>${on.join(" and ")||"neither"}</b>. Of the ${orders.length} single orders in which the four acts could be done one after another, ${both||"none"} ${both===1?"ends":"end"} with both titles on the list.`;
 })();
 

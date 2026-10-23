@@ -41,7 +41,7 @@ MACHINE = [  # words a story card never uses
 AUTHORS = ("Lamport Fischer Lynch Paterson Chandy Fidge Mattern Herlihy Wing Dwork Stockmeyer Ben-Or Chandra Toueg Shostak "
            "Pease Castro Liskov Oki Yin Malkhi Reiter Gueta Abraham Brewer Gilbert Demers Bailis Shapiro Hellerstein "
            "Ameloot Neven Alvaro").split()
-# the in-world Demerios, Shapirios and Hellersteinos, and Liskovia and Okios of Schedia, are whole words that these
+# the in-world Demerios and Hellersteinos, and Liskovia and Okios of Schedia, are whole words that these
 # patterns do not match: \b ends a name only where a letter does not follow
 YEAR = re.compile(r"\b(?:19|20)\d\d\b")
 SETTING_WORDS = re.compile(r"\b(?:books?|ledgers?|pages?|bookkeepers?)\b", re.I)

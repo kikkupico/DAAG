@@ -353,12 +353,12 @@ and spreading the epics by rhapsode.
 |---|---|
 | `demers-1987` <span>(`demers-1989` is the same file)</span> | Travelling scholars pass on new learnings on scraps of papyrus in the stoa — that the Earth goes round the Sun, say — rumour-fashion, each losing interest once most of those they meet have the scrap; once a year each copyist draws by lot another library's name and sits down with its copyist to compare whole collections, scraps included, at the festival, catching what the talk missed; a notice of withdrawal travels like an edition; partners are preferred near, the inlet's one ferry being the critical crossing. *Spreading by Word of Mouth* |
 | `bailis-2012_pbs` | Each work is kept at several libraries. A new edition goes to some of them, and a reader asks only a few; how likely the copy handed over is out of date, and by how much, measured; a work has three home libraries, an edition goes to all three and is announced once enough have answered, a reader asks all three and takes the first replies, and a logbook of the couriers' journey times gives the odds. *Probably Up to Date* |
-| `shapiro-2011_crdt`, `shapiro-2011_crdt-comprehensive` | The count of copies made of each work, kept in voting pebbles, one column per library; merging takes the larger in each column, so it is associative, commutative and idempotent; a scribe at each terrace adds a white pebble for each copy made at the library nearest him, to his own column only, and a black pebble for each copy lost; a title catalogue with marks for adds and strikes. *Changes That Never Clash* |
+| `shapiro-2011_crdt`, `shapiro-2011_crdt-comprehensive` | A visiting scholar lodges one deposit that lets him have so many scrolls out at once at any library on the coast, and the desk in front of him lends at once, since a courier is slow and may be stopped. Each library keeps a table of pebbles for him on its **loan desk**, with a white column for the scrolls each library has lent and a black column for the scrolls returned to each; a library adds only to its own two columns, a return going to the desk it is brought to, whichever library lent the scroll. Couriers carry the tables between the libraries, and merging takes the larger pile in each column, so it is associative, commutative and idempotent. Any table says how many he has out, and the deposit is settled against that figure when he leaves; no desk can keep him within the deposit from its own table, unless the deposit was split among the libraries beforehand and each lends only up to its share. Also a register of corrections and a title catalogue with marks for adds and strikes. Why there is one deposit, not one per library, is never explained. *Changes That Never Clash* |
 | `bailis-2014_hats` | What a librarian can promise a reader while the couriers are stopped: that no reply is read before the letter it answers, that no change is seen half made; and what no librarian alone can promise, that two readers never take the last copy. *What You Can Promise Alone*; the libraries lend (a reader borrows a copy for a term), a reader's business is a visit, corrections to several works are bound under one cord and shown only when the set is complete, and every library shows readers only what all hold (a floor that only rises). *What You Can Promise Alone* |
 
-**The ground must provide:** many libraries within casual reach of one another, courier routes
-of differing length, an inlet crossed only by one ferry that many routes share, and a far shore at the island's southern tip, as far from the assemblies
-as the island goes, for the terraces.
+**The ground must provide:** many libraries within casual reach of one another, each with a
+reading room and a loan desk, courier routes of differing length, a landing for the couriers' boats,
+and an inlet crossed only by one ferry that many routes share.
 
 ### The hall of two doors
 
@@ -390,7 +390,7 @@ snapshots) · Corbett et al. 2012 (Spanner) · Thomson et al. 2012 (Calvin).
   other across a bay: the Chamber on the western arm, on the road to the harbour town at its
   tip; Schedia and its Tholos on the eastern arm. The hall of two doors stands at the fork. The
   stem widens into the scholars' coast, with many libraries within casual reach, courier
-  routes of different length and a far shore at the southern tip for the terraces.
+  routes of different length and a landing for the couriers' boats at the southern tip.
 
 ---
 

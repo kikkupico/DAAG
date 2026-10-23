@@ -63,14 +63,14 @@ const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd
 COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
-/* ===== a table of pebbles: a pile for every terrace, in white (made) and, when used, black (lost) ===== */
-const TN=["terrace 1","terrace 2","terrace 3"],TM=["replica 1","replica 2","replica 3"];
-const T_=i=>dual(TN[i],TM[i]),tn=i=>dual("Table at "+TN[i],"State at "+TM[i]);
+/* ===== a table of pebbles: a pile for every library, in white (lent) and, when used, black (returned) ===== */
+const TN=["library 1","library 2","library 3"],TM=["replica 1","replica 2","replica 3"];
+const T_=i=>dual(TN[i],TM[i]),tn=i=>dual("Table at "+TN[i],"State at "+TM[i]),lends=i=>dual(`Library ${i+1} lends one`,`Replica ${i+1}`),Up=s=>s[0].toUpperCase()+s.slice(1);
 const pile=(n,own,k)=>`<div class="col${own?" own":""}${k?" k":""}">${"<i></i>".repeat(Math.min(n,9))}</div>`;
 function tableHtml(name,own,white,black,total){
   const cols=(v,k)=>`<div class="cols">${v.map((n,i)=>pile(n,i===own,k)).join("")}</div><div class="lbl">${v.map((n,i)=>`<span>${i+1}: ${n}</span>`).join("")}</div>`;
-  return `<div class="ptab"><h5><span>${name}</span><span>count <b>${total}</b></span></h5>`+
-    (black?`<div class="sets"><div><span class="t">${dual("made","increments (P)")}</span>${cols(white,false)}</div><div><span class="t">${dual("lost","decrements (N)")}</span>${cols(black,true)}</div></div>`:cols(white,false))+`</div>`;
+  return `<div class="ptab"><h5><span>${name}</span><span>${dual("out","value")} <b>${total}</b></span></h5>`+
+    (black?`<div class="sets"><div><span class="t">${dual("lent","increments (P)")}</span>${cols(white,false)}</div><div><span class="t">${dual("returned","decrements (N)")}</span>${cols(black,true)}</div></div>`:cols(white,false))+`</div>`;
 }
 const sum=v=>v.reduce((a,b)=>a+b,0),larger=(x,y)=>x.map((n,i)=>Math.max(n,y[i]));
 
@@ -79,15 +79,15 @@ const sum=v=>v.reduce((a,b)=>a+b,0),larger=(x,y)=>x.map((n,i)=>Math.max(n,y[i]))
   const box=$("#tabs"),say=$("#tsay");let T,made,rule="max",from=0,to=1;
   const paint=()=>{box.innerHTML=T.map((v,i)=>tableHtml(tn(i),i,v,null,sum(v))).join("")};
   const verdict=()=>{const c=T.map(sum),same=c.every(x=>x===c[0]);
-    return c.some(x=>x>made)?` <span class="bad">${dual(`A table now shows more copies than the ${made} that were made.`,`A state now shows more increments than the ${made} that were made.`)}</span>`:same&&c[0]===made&&made?` <span class="ok">${dual(`All three tables show ${made}, the copies made.`,`All three states show ${made}, the increments made.`)}</span>`:""};
-  function reset(){T=[[0,0,0],[0,0,0],[0,0,0]];made=0;paint();say.innerHTML=dual("Each table has a column for every terrace. The shaded column is the one its own scribe may add to.","Each state has an entry for every replica. The shaded entry is the one its own replica may increment.")}
-  $("#tmake").innerHTML=TN.map((n,i)=>`<button class="btn" data-i="${i}">${T_(i)}</button>`).join("");
-  $$("button",$("#tmake")).forEach(bt=>bt.onclick=()=>{const i=+bt.dataset.i;T[i][i]++;made++;paint();say.innerHTML=dual(`The scribe at ${TN[i]} adds a white pebble to column ${i+1} of the table there, and to no other.`,`Replica ${i+1} increments Entry ${i+1} of its own state, and no other entry.`)});
+    return c.some(x=>x>made)?` <span class="bad">${dual(`A table now shows more scrolls out than the ${made} he was lent.`,`A state now shows more increments than the ${made} that were made.`)}</span>`:same&&c[0]===made&&made?` <span class="ok">${dual(`All three tables show ${made}, the scrolls he has out.`,`All three states show ${made}, the increments made.`)}</span>`:""};
+  function reset(){T=[[0,0,0],[0,0,0],[0,0,0]];made=0;paint();say.innerHTML=dual("Each table has a column for every library. The shaded column is the one its own librarian may add to.","Each state has an entry for every replica. The shaded entry is the one its own replica may increment.")}
+  $("#tmake").innerHTML=TN.map((n,i)=>`<button class="btn" data-i="${i}">${lends(i)}</button>`).join("");
+  $$("button",$("#tmake")).forEach(bt=>bt.onclick=()=>{const i=+bt.dataset.i;T[i][i]++;made++;paint();say.innerHTML=dual(`${TN[i][0].toUpperCase()+TN[i].slice(1)} lends him a scroll, and its librarian adds a white pebble to column ${i+1} of its own table, and to no other.`,`Replica ${i+1} increments Entry ${i+1} of its own state, and no other entry.`)});
   seg($("#trule"),[["max",dual("takes the larger pile in each column","takes the maximum in each entry")],["add",dual("adds the piles together","adds the entries together")]],rule,v=>{rule=v;reset()});
   seg($("#tfrom"),TN.map((n,i)=>[i,T_(i)]),from,v=>{from=+v});seg($("#tto"),TN.map((n,i)=>[i,T_(i)]),to,v=>{to=+v});
-  $("#tsend").onclick=()=>{if(from===to){say.innerHTML=dual("Choose two different terraces.","Choose two different replicas.");return}
+  $("#tsend").onclick=()=>{if(from===to){say.innerHTML=dual("Choose two different libraries.","Choose two different replicas.");return}
     const before=T[to].join();T[to]=rule==="max"?larger(T[to],T[from]):T[to].map((n,i)=>n+T[from][i]);paint();
-    say.innerHTML=(rule==="max"?(T[to].join()===before?dual(`The table of ${TN[from]} reaches ${TN[to]} and changes nothing: ${TN[to]} already held all of it.`,`The state of ${TM[from]} reaches ${TM[to]} and changes nothing: ${TM[to]} already held all of it.`):dual(`${TN[to]} takes the larger pile in each column.`,`${TM[to]} takes the maximum in each entry.`)):dual(`${TN[to]} adds each arriving pile to its own.`,`${TM[to]} adds each arriving entry to its own.`))+verdict()};
+    say.innerHTML=(rule==="max"?(T[to].join()===before?dual(`The table of ${TN[from]} reaches ${TN[to]} and changes nothing: ${TN[to]} already held all of it.`,`The state of ${TM[from]} reaches ${TM[to]} and changes nothing: ${TM[to]} already held all of it.`):dual(`${Up(TN[to])} takes the larger pile in each column.`,`${Up(TM[to])} takes the maximum in each entry.`)):dual(`${Up(TN[to])} adds each arriving pile to its own.`,`${Up(TM[to])} adds each arriving entry to its own.`))+verdict()};
   $("#treset").onclick=reset;reset();
 })();
 
@@ -95,26 +95,32 @@ const sum=v=>v.reduce((a,b)=>a+b,0),larger=(x,y)=>x.map((n,i)=>Math.max(n,y[i]))
 (function(){
   const box=$("#wtabs"),say=$("#wsay");let t1,t2;
   const paint=()=>{box.innerHTML=tableHtml(tn(0),0,t1,null,sum(t1))+tableHtml(tn(1),1,t2,null,sum(t2));$("#wshown").textContent=sum(t2)};
-  function reset(){t1=[1,0,0];t2=[0,0,0];paint();say.innerHTML=dual("Terrace 2 has not heard yet.","Replica 2 has not heard yet.")}
-  $("#wtable").onclick=()=>{const b=t2.join();t2=larger(t2,t1);paint();say.innerHTML=t2.join()===b?dual(`The same table again. Terrace 2 takes the larger pile in each column, and nothing changes. <span class="ok">Still ${sum(t2)}.</span>`,`The same state again. Replica 2 takes the maximum in each entry, and nothing changes. <span class="ok">Still ${sum(t2)}.</span>`):dual("Terrace 2 takes the larger pile in each column.","Replica 2 takes the maximum in each entry.")};
-  $("#wnote").onclick=()=>{t2[0]++;paint();say.innerHTML=sum(t2)>1?dual(`<i>One more copy at terrace 1</i>, taken in again. Nothing in the notice says which copy. <span class="bad">Terrace 2 now shows ${sum(t2)} for one copy made.</span>`,`<i>Increment Entry 1</i>, applied again. Nothing in the operation says which increment. <span class="bad">Replica 2 now shows ${sum(t2)} for one increment made.</span>`):dual("<i>One more copy at terrace 1.</i> Terrace 2 adds a pebble to column 1.","<i>Increment Entry 1.</i> Replica 2 increments Entry 1.")};
+  function reset(){t1=[1,0,0];t2=[0,0,0];paint();say.innerHTML=dual("Library 2 has not heard yet.","Replica 2 has not heard yet.")}
+  $("#wtable").onclick=()=>{const b=t2.join();t2=larger(t2,t1);paint();say.innerHTML=t2.join()===b?dual(`The same table again. Library 2 takes the larger pile in each column, and nothing changes. <span class="ok">Still ${sum(t2)}.</span>`,`The same state again. Replica 2 takes the maximum in each entry, and nothing changes. <span class="ok">Still ${sum(t2)}.</span>`):dual("Library 2 takes the larger pile in each column.","Replica 2 takes the maximum in each entry.")};
+  $("#wnote").onclick=()=>{t2[0]++;paint();say.innerHTML=sum(t2)>1?dual(`<i>One more scroll lent at library 1</i>, taken in again. Nothing in the notice says which loan. <span class="bad">Library 2 now shows ${sum(t2)} out for one scroll lent.</span>`,`<i>Increment Entry 1</i>, applied again. Nothing in the operation says which increment. <span class="bad">Replica 2 now shows ${sum(t2)} for one increment made.</span>`):dual("<i>One more scroll lent at library 1.</i> Library 2 adds a pebble to column 1.","<i>Increment Entry 1.</i> Replica 2 increments Entry 1.")};
   $("#wreset").onclick=reset;reset();
 })();
 
-/* ===== made and lost ===== */
+/* ===== lent and returned, and the deposit's limit ===== */
 (function(){
   const box=$("#ltabs"),say=$("#lsay");let W,K,rule="seen";
-  const count=i=>sum(W[i])-sum(K[i]);
+  /* the deposit lets him have three out at once; split in advance, library 1 holds two of it, library 2 one, library 3 none */
+  const DEP=3,SHARE=[2,1,0];
+  const count=i=>sum(W[i])-sum(K[i]),truth=()=>sum(larger(W[0],W[1]))-sum(larger(K[0],K[1]));
   const paint=()=>{box.innerHTML=[0,1].map(i=>tableHtml(tn(i),i,W[i],K[i],count(i))).join("")};
-  function reset(){W=[[1,0,0],[1,0,0]];K=[[0,0,0],[0,0,0]];paint();say.innerHTML=dual("The one copy was made at terrace 1. Both tables show it.","The one item was added at replica 1. Both states show it.")}
-  /* seen: only if the scribe's own table shows a copy left; own: no more lost than were made at the scribe's own terrace */
-  const may=i=>rule==="seen"?count(i)>0:W[i][i]-K[i][i]>0;
-  const lose=i=>{if(!may(i)){say.innerHTML=rule==="seen"?dual(`The table at ${TN[i]} shows no copy left, so its scribe may not mark one lost.`,`The state at ${TM[i]} shows no item left, so it may not decrement.`):dual(`No copy was made at ${TN[i]} that is not already marked lost there, so its scribe may mark none, whatever the library holds.`,`No increment was made at ${TM[i]} that is not already decremented there, so it may decrement nothing, whatever the other replicas hold.`);return}
-    K[i][i]++;paint();say.innerHTML=dual(`The scribe at ${TN[i]} adds a black pebble to column ${i+1}. That table now shows ${count(i)}.`,`Replica ${i+1} adds one to Entry ${i+1} of its N vector. That state now shows ${count(i)}.`)};
-  $("#l1").onclick=()=>lose(0);$("#l2").onclick=()=>lose(1);
+  const start=()=>rule==="seen"?dual(`His deposit lets him have ${DEP} scrolls out at once. Library 1 and Library 2 have each lent him one, and both tables show 2 out: room for one more.`,`The bound is ${DEP}. Replica 1 and Replica 2 have each incremented once, and both states show 2: one unit below the bound.`)
+    :dual(`His deposit of ${DEP} was split before he began: ${SHARE[0]} to Library 1, ${SHARE[1]} to Library 2, none to Library 3. Each has lent him one.`,`The bound of ${DEP} was split in advance: ${SHARE[0]} to replica 1, ${SHARE[1]} to replica 2, 0 to replica 3. Each has incremented once.`);
+  function reset(){W=[[1,1,0],[1,1,0]];K=[[0,0,0],[0,0,0]];paint();say.innerHTML=start()}
+  /* seen: while its own table shows room under the deposit; own: while what it has lent, less what came back to it, is under its share */
+  const may=i=>rule==="seen"?count(i)<DEP:W[i][i]-K[i][i]<SHARE[i];
+  const lend=i=>{if(!may(i)){say.innerHTML=rule==="seen"?dual(`The table at ${TN[i]} shows ${count(i)} out, all the deposit allows, so its desk may not lend.`,`The state at ${TM[i]} shows ${count(i)}, the bound, so it may not increment.`):dual(`${TN[i][0].toUpperCase()+TN[i].slice(1)} has lent ${W[i][i]-K[i][i]} more than came back to it, all of its share, so its desk may not lend, whatever its table shows.`,`${TM[i][0].toUpperCase()+TM[i].slice(1)} has P − N = ${W[i][i]-K[i][i]} for its own entries, its whole share, so it may not increment, whatever its state shows.`);return}
+    W[i][i]++;paint();say.innerHTML=dual(`${TN[i][0].toUpperCase()+TN[i].slice(1)} lends him a scroll and adds a white pebble to column ${i+1}. Its table now shows ${count(i)} out.`,`Replica ${i+1} adds one to Entry ${i+1} of its P vector. Its state now shows ${count(i)}.`)};
+  $("#l1").onclick=()=>lend(0);$("#l2").onclick=()=>lend(1);
+  $("#lret").onclick=()=>{if(truth()<1){say.innerHTML=dual("He has nothing out to return.","Nothing to decrement: the value is 0.");return}
+    K[1][1]++;paint();say.innerHTML=dual(`He brings a scroll back to Library 2, whichever library lent it, and its librarian adds a black pebble to column 2. Its table now shows ${count(1)} out.`,`Replica 2 adds one to Entry 2 of its N vector. Its state now shows ${count(1)}.`)};
   $("#lmeet").onclick=()=>{const w=larger(W[0],W[1]),k=larger(K[0],K[1]);W=[w.slice(),w.slice()];K=[k.slice(),k.slice()];paint();const c=count(0);
-    say.innerHTML=c<0?dual(`Each set of columns takes the larger pile. One made, ${sum(k)} lost: <span class="bad">the count is ${c}.</span> Each scribe kept the rule the table allowed.`,`Each vector takes the maximum in each entry. One increment, ${sum(k)} decrements: <span class="bad">the count is ${c}.</span> Each replica kept the rule its state allowed.`):dual(`Each set of columns takes the larger pile. Both tables show ${c}.`,`Each vector takes the maximum in each entry. Both states show ${c}.`)};
-  seg($("#lrule"),[["seen",dual("if the table shows a copy left","if its state shows an item left")],["own",dual("no more than were made at the scribe's own terrace","no more than were incremented at its own replica")]],rule,v=>{rule=v;reset()});
+    say.innerHTML=c>DEP?dual(`Each set of columns takes the larger pile. ${sum(w)} lent, ${sum(k)} returned: <span class="bad">he has ${c} out, and his deposit allows ${DEP}.</span> Each desk kept to what its table showed.`,`Each vector takes the maximum in each entry. <span class="bad">The value is ${c}, past the bound of ${DEP}.</span> Each replica kept the rule its state allowed.`):dual(`Each set of columns takes the larger pile. Both tables show ${c} out, <span class="ok">within the deposit of ${DEP}</span>.`,`Each vector takes the maximum in each entry. Both states show ${c}, <span class="ok">within the bound of ${DEP}</span>.`)};
+  seg($("#lrule"),[["seen",dual("if its own table shows room","if its own state shows room")],["own",dual("only up to its own share of the deposit","only up to its own share of the bound")]],rule,v=>{rule=v;reset()});
   $("#lreset").onclick=reset;reset();
 })();
 
@@ -129,9 +135,9 @@ const sum=v=>v.reduce((a,b)=>a+b,0),larger=(x,y)=>x.map((n,i)=>Math.max(n,y[i]))
     return kept.sort((a,b)=>a.n-b.n)}
   const show=k=>k.map(e=>`<span class="it">${dual(`correction by ${e.by}, tally: ${e.t}`,`write by ${e.byM}, timestamp: ${e.t}`)}</span>`).join("");
   function paint(){const a=settle([first,1-first]),b=settle([1-first,first]);
-    if(a.map(e=>e.n).join()!==b.map(e=>e.n).join())throw new Error("the terraces settled differently");
-    $("#hout").innerHTML=`<div class="shelf"><h5>${dual(`A terrace that hears from ${E[first].by} first`,`A replica that hears from ${E[first].byM} first`)}</h5>${show(a)}</div><div class="shelf"><h5>${dual(`A terrace that hears from ${E[1-first].by} first`,`A replica that hears from ${E[1-first].byM} first`)}</h5>${show(b)}</div>`;
-    $("#hsay").innerHTML=rule==="later"?dual("Both terraces keep Library 2's correction, whichever arrived first. Library 1's is lost for good.","Both replicas keep Replica 2's write, whichever arrived first. Replica 1's is lost for good."):dual("Neither correction was written after the other, so both terraces keep both, and a reader is shown the two.","Neither write was made after the other, so both replicas keep both, and a reader is shown the two.")}
+    if(a.map(e=>e.n).join()!==b.map(e=>e.n).join())throw new Error("the two orders settled differently");
+    $("#hout").innerHTML=`<div class="shelf"><h5>${dual(`Library 3, hearing from ${E[first].by} first`,`Replica 3, receiving from ${E[first].byM} first`)}</h5>${show(a)}</div><div class="shelf"><h5>${dual(`Library 3, had it heard from ${E[1-first].by} first`,`Replica 3, had it received from ${E[1-first].byM} first`)}</h5>${show(b)}</div>`;
+    $("#hsay").innerHTML=rule==="later"?dual("Library 3 keeps Library 2's correction, whichever arrives first. Library 1's is lost for good.","Replica 3 keeps Replica 2's write, whichever arrives first. Replica 1's is lost for good."):dual("Neither correction was written after the other, so Library 3 keeps both, whichever arrives first, and a reader is shown the two.","Neither write was made after the other, so Replica 3 keeps both, whichever arrives first, and a reader is shown the two.")}
   seg($("#hrule"),[["later","keep the later"],["both","keep both"]],rule,v=>{rule=v;paint()});
   seg($("#hord"),[[0,dual("Library 1","Replica 1")],[1,dual("Library 2","Replica 2")]],first,v=>{first=+v;paint()});paint();
 })();
@@ -159,7 +165,7 @@ function Marks(name){return {name,add:new Set(),struck:new Set(),n:0,
 /* ===== not the same as one order: the four acts, worked by the same rule ===== */
 (function(){
   Timeline($("#ordsvg"),{vb:"0 0 520 500",cx:260,cy:262,r0:40,step:26,rings:7,tEnd:7.6,note:[12,22],
-    nodes:{A:[-90,"L1","#e0b84a","R1"],B:[30,"L2","#8fb3d9","R2"],T:[150,"T","#f6eed6","R3"]}},P=>{
+    nodes:{A:[-90,"L1","#e0b84a","R1"],B:[30,"L2","#8fb3d9","R2"],T:[150,"L3","#f6eed6","R3"]}},P=>{
   const ev=(k,t,f,s)=>{P.event(k,t,f).label.textContent=s};
   ev("A",1.6,"#e0b84a","+E");ev("A",3.2,"#fde0d4","−F");ev("B",1.6,"#8fb3d9","+F");ev("B",3.2,"#fde0d4","−E");
   P.slip("A",3.6,"T",5.4);P.slip("B",3.6,"T",6.2);ev("T",5.4,"#f6eed6","");ev("T",6.2,"#a9c25a","");
@@ -172,8 +178,8 @@ function Marks(name){return {name,add:new Set(),struck:new Set(),n:0,
   (function go(done,ia,ib){if(done.length===4){orders.push(done);return}
     if(ia<2)go([...done,acts[ia]],ia+1,ib);if(ib<2)go([...done,acts[2+ib]],ia,ib+1)})([],0,0);
   const both=orders.filter(o=>{const s=new Set();o.forEach(([,k,x])=>k==="add"?s.add(x):s.delete(x));return s.has("E")&&s.has("F")}).length;
-  $("#ordlist").innerHTML=`<li>${dual("<b>L1</b> Library 1 · <b>L2</b> Library 2 · <b>T</b> a terrace","<b>R1</b> Replica 1 · <b>R2</b> Replica 2 · <b>R3</b> a third replica")}</li><li>${dual(`Library 1 adds E, then strikes F. It sees ${sf.length} ${sf.length===1?"tag":"tags"} of F.`,`Replica 1 adds E, then removes F. It sees ${sf.length} ${sf.length===1?"tag":"tags"} of F.`)}</li><li>${dual(`Library 2 adds F, then strikes E. It sees ${se.length} ${se.length===1?"tag":"tags"} of E.`,`Replica 2 adds F, then removes E. It sees ${se.length} ${se.length===1?"tag":"tags"} of E.`)}</li><li>${dual("The terrace takes in both lists.","The third replica takes in both states.")}</li>`;
-  $("#ordsay").innerHTML=dual(`On the terrace's list: <b>${on.join(" and ")||"neither"}</b>. Of the ${orders.length} single orders in which the four acts could be done one after another, ${both||"none"} ${both===1?"ends":"end"} with both titles on the list.`,`In the third replica's set: <b>${on.join(" and ")||"neither"}</b>. Of the ${orders.length} single orders in which the four operations could be done one after another, ${both||"none"} ${both===1?"ends":"end"} with both elements in the set.`);
+  $("#ordlist").innerHTML=`<li>${dual("<b>L1</b> Library 1 · <b>L2</b> Library 2 · <b>L3</b> Library 3","<b>R1</b> Replica 1 · <b>R2</b> Replica 2 · <b>R3</b> a third replica")}</li><li>${dual(`Library 1 adds E, then strikes F. It sees ${sf.length} ${sf.length===1?"tag":"tags"} of F.`,`Replica 1 adds E, then removes F. It sees ${sf.length} ${sf.length===1?"tag":"tags"} of F.`)}</li><li>${dual(`Library 2 adds F, then strikes E. It sees ${se.length} ${se.length===1?"tag":"tags"} of E.`,`Replica 2 adds F, then removes E. It sees ${se.length} ${se.length===1?"tag":"tags"} of E.`)}</li><li>${dual("Library 3 takes in both lists.","The third replica takes in both states.")}</li>`;
+  $("#ordsay").innerHTML=dual(`On Library 3's list: <b>${on.join(" and ")||"neither"}</b>. Of the ${orders.length} single orders in which the four acts could be done one after another, ${both||"none"} ${both===1?"ends":"end"} with both titles on the list.`,`In the third replica's set: <b>${on.join(" and ")||"neither"}</b>. Of the ${orders.length} single orders in which the four operations could be done one after another, ${both||"none"} ${both===1?"ends":"end"} with both elements in the set.`);
 })();
 
 REG.start();

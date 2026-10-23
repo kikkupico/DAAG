@@ -400,9 +400,9 @@ Before calling a book done (the brief's checklist has the mechanics):
   published to `assets/img/places/`.
 - [ ] A building that recurs across pictures is modelled in full before any picture is generated
   (the Chamber, the Tholos, Arche's three houses, the hall of two doors, and on the scholars' coast
-  the libraries, the stoa with its festival ground and the far terraces' pebble tables:
-  `art/sets/paxos_chamber.py`, `schedia_tholos.py`, `house.py`, `hall.py`, `libraries.py`, `stoa.py`
-  and `terraces.py`, on the helpers in
+  the libraries with their loan desks and pebble boards, the stoa with its festival ground and the
+  courier landing: `art/sets/paxos_chamber.py`, `schedia_tholos.py`, `house.py`, `hall.py`,
+  `libraries.py`, `stoa.py` and `terraces.py` (which builds the landing as the set `landing`), on the helpers in
   `masonry.py`: every block, joint, flute, capital, coffer, rafter, door board, tile, paving slab,
   scroll and pebble is geometry), and its scene prompts say so: keep every modelled
   part where it is, give it its real material, add no architecture. The image pass then adds
@@ -437,7 +437,7 @@ book depends on vocabulary an earlier one establishes.
 | The crown | Yin et al. 2019 (HotStuff) | *Changing Leaders Among Liars.* Needs the vocabulary of *Keeping Order Among Liars* and must not contradict it. Tell only what changes: the chief's job passes with every entry, and its registrar bundles the others' seals instead of every man writing to every other. Say plainly that a threshold signature makes the bundle one seal's size. Nothing follows from any entry. Written: `books/changing-leaders-among-liars/`. |
 | The stoa and festival ground | Demers 1987 | *Spreading by Word of Mouth.* Letters to everyone, the festival and the telling in the stoa, each covering what the other misses; a withdrawal travels as a notice. Nobody is in charge and no library records what another holds. Written: `books/spreading-by-word-of-mouth/`. |
 | The libraries | PBS 2012 | *Probably Up to Date.* The model, not a store: how likely a reader who asks only a few libraries is handed an out-of-date copy, and by how much. Odds, never a promise. Written: `books/probably-up-to-date/`. |
-| The far terraces | Shapiro et al. 2011 (both) | *Changes That Never Clash.* A column of pebbles to each terrace, merged by the larger pile; white for copies made and black for copies lost. A limit on the whole coast's count cannot be kept from one table. Written: `books/changes-that-never-clash/`. |
+| The loan desk | Shapiro et al. 2011 (both) | *Changes That Never Clash.* One visiting scholar's deposit, and at every library's loan desk a table of pebbles for him with a column to each library, merged by the larger pile; white for scrolls lent and black for scrolls returned. No desk can keep him within his deposit from its own table; splitting the deposit beforehand (escrow) can. Never explain why there is one deposit. Written: `books/changes-that-never-clash/`. |
 | The reading room | HATS 2014 | *What You Can Promise Alone.* What a librarian can promise while the couriers are stopped, and what no librarian alone can. Written: `books/what-you-can-promise-alone/`. |
 | The hall of two doors | Hellerstein 2010 · Ameloot 2011 · Hellerstein &amp; Alvaro 2020 | *Knowing When to Wait.* Drafted from the 2020 paper, the clearest of the three, with the definitions and the proof from Ameloot et al. The hall sorts and never rules. Written: `books/knowing-when-to-wait/`. |
 

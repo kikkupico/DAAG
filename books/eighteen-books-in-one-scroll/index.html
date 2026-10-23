@@ -829,7 +829,7 @@
   <article class="card book" id="s-crdt" data-scene="crdt" data-book="crdt">
     <h3 class="punch"><span class="i">Any order. Any number of times. Always agree.</span><span class="m">Commutative, associative, idempotent.</span></h3>
     <h4 class="title">Changes That Never Clash</h4>
-    <p class="i">Scribes count copies in pebbles, one column per terrace, each written only by its own scribe. <b>Merging two tables keeps the larger pile in each column</b>, so tables can meet in any order, any number of times, and always agree. Losses go in black pebbles; a struck title loses only the tags its striker saw. No table alone can keep a count from falling below zero.</p>
+    <p class="i">Every library keeps a table of pebbles for a visiting scholar's loans, one column per library, each written only by its own desk. <b>Merging two tables keeps the larger pile in each column</b>, so tables can meet in any order, any number of times, and always agree. Returns go in black pebbles; a struck title loses only the tags its striker saw. No table alone can keep him within his deposit.</p>
     <p class="m">CRDTs reach strong eventual consistency without coordination. <b>State-based types merge by least upper bound</b>, which is commutative, associative and idempotent; operation-based types need commuting operations delivered exactly once in causal order. Global invariants, such as a count that never drops below zero, still need coordination.</p>
     <a class="read" href="../changes-that-never-clash/index.html">Read the book ›</a>
     <div class="papers">
@@ -847,7 +847,7 @@
   <div class="f-in">
     <p class="kicker rv">Try it</p>
     <h2 class="rv"><span class="i">Merge the tables in any order you like.</span><span class="m">Merge replicas in any order.</span></h2>
-    <p class="lead rv"><span class="i">Each scribe adds pebbles to their own column only. A merge keeps the larger pile in each column. Add, merge, merge again: once every table has met the news, they agree.</span><span class="m">A G-counter: each replica increments its own entry; merge is the element-wise max; the value is the sum. Any delivery order converges.</span></p>
+    <p class="lead rv"><span class="i">Each library adds pebbles to its own column only. A merge keeps the larger pile in each column. Lend, merge, merge again: once every table has met the news, they agree.</span><span class="m">A G-counter: each replica increments its own entry; merge is the element-wise max; the value is the sum. Any delivery order converges.</span></p>
     <div class="merge rv" id="merge"></div>
     <div class="btns rv merge-btns">
       <button type="button" class="ghost" data-m="0,1"><span class="i">Merge 1 and 2</span><span class="m">merge(1, 2)</span></button>

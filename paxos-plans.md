@@ -101,46 +101,47 @@ see `settings.md`.
 
 ## Changes That Never Clash
 
-**Shapiro, Preguiça, Baquero & Zawirski 2011 (both papers) · the far terraces, Paxos**
+Written: `books/changes-that-never-clash/`.
+
+**Shapiro, Preguiça, Baquero & Zawirski 2011 (both papers) · the loan desks of the libraries, Paxos**
 
 **The idea.** **Strong eventual consistency (SEC):** replicas that have received the same updates are in the same state, with no coordination. Two sufficient conditions. **State-based (CvRDT):** states form a join-semilattice, updates only move up, and merge is the least upper bound. **Op-based (CmRDT):** concurrent operations commute, and delivery is causal. Each kind can emulate the other. SEC is not sequential consistency. The comprehensive report adds the portfolio: counters, registers, sets, graphs, sequences.
+
+**The setup, in three sentences.** A visiting scholar lodges one deposit that lets him have so many scrolls out at once at any library on the coast, and the desk in front of him must lend at once, because a courier is slow and may be stopped. Each library keeps its own table of pebbles for him, a white column for the scrolls each library has lent and a black column for the scrolls returned to each, and the couriers carry the tables between the libraries. Whatever table a library holds, it can say how many he has out, and when he leaves the deposit is settled against that figure. Why there is one deposit and not one per library is never explained.
 
 **The devices.**
 
 | Device | In the paper | Also in |
 |---|---|---|
-| the terrace tables: for each work, one column of pebbles per library | A counter as a vector, one entry per replica (G-Counter). | The column room (*Ordering Without Clocks*) |
+| the scholar's table at each library's loan desk: one column of pebbles per library | A counter as a vector, one entry per replica (G-Counter). | The column room (*Ordering Without Clocks*) |
 | a library adds pebbles only to its own column | An update touches only the replica's own entry. |  |
 | merging two tables: take the larger pile in each column | Merge as join: commutative, associative, idempotent. |  |
-| why not one pile: two terraces adding each other's totals count twice, and again at every merge | Why a plain sum is not a CRDT. |  |
-| white pebbles for copies made, black for copies lost | Two counters, one up and one down (PN-Counter). |  |
-| sending the whole table, or a notice "one more copy at library X" | State-based or op-based. |  |
+| why not one pile: two libraries adding each other's totals count twice, and again at every merge | Why a plain sum is not a CRDT. |  |
+| white pebbles for scrolls lent, black for scrolls returned at that desk, whichever library lent them | Two counters, one up and one down (PN-Counter). |  |
+| two desks lending the last room on the deposit at once | A global invariant cannot be kept locally (the report's non-negative counter). | *What You Can Promise Alone*: the last copy taken twice |
+| the deposit split among the libraries beforehand, each desk lending only up to its share | Escrow: a local invariant that implies the global one. |  |
+| sending the whole table, or a notice "one more scroll lent at library X" | State-based or op-based. |  |
 | a notice must arrive once, and after those it follows | Op-based needs exactly-once, causal delivery. | *What You Can Promise Alone*: no reply before the letter it answers |
-| two terraces that have taken in the same notices show the same piles | SEC. |  |
+| two libraries that have taken in the same notices show the same piles | SEC. |  |
 | the catalogue of titles, only ever added to | G-Set. |  |
 | the struck-off list: once struck, never restored | 2P-Set. |  |
 | each entry carries its own mark; striking out removes only the marks you have seen | OR-Set (add wins). |  |
-| two libraries each adding one title and striking the other's, ending with both | SEC is not sequential consistency. | *Many Copies, Acting as One* |
+| two libraries each adding one title and striking the other's, ending with both at Library 3 | SEC is not sequential consistency. | *Many Copies, Acting as One* |
 | the latest edition wins by its tally | LWW-Register. | The tally house (*Ordering Without Clocks*) |
-| the register of which work cites which | The graph CRDT (the paper's web-crawler example). |  |
 | Arche's count of jars | The contrast: ordered and snapshotted, never merged. | *Taking Stock Without Stopping* |
 
 **Chapters.**
-1. The count no one settles.
-2. One column each.
-3. Take the larger: why merging never clashes.
+1. The loan desks.
+2. The count no one settles.
+3. One column each, and take the larger.
 4. Sending the table or sending the change.
-5. Made and lost: counting down.
-6. Lists of titles: adding, striking, adding back.
-7. Not the same as one order.
-8. In the Book, In the Paper.
+5. Lent and returned, and the deposit's limit.
+6. Two hands on one work.
+7. Titles added and struck.
+8. Not the same as one order.
+9. What it does not say; the result.
 
-**Must not exist:** an assembly; a vote over a count; a pile that shrinks; any wait for another library before adding a pebble.
-
-**Open.**
-1. **Black pebbles.** `settings.md` counts copies made only, which is a G-Counter; the terrace prompt already shows black and white. Use black for copies lost (PN-Counter)?
-2. **The graph** is the short paper's worked example. Keep it (cross-references between works) or leave it to the paper column?
-3. **Names.** Four authors at four terraces: Shapirios, Preguiçaia, Baqueros, Zawirskios.
+**Must not exist:** an assembly; a vote over a count; a pile that shrinks; any wait for another library before lending; a name for any librarian or for the scholar; a reason for there being one deposit.
 
 ---
 
@@ -206,7 +207,7 @@ see `settings.md`.
 | a librarian who knows neither how many libraries there are nor their names | An oblivious transducer. |  |
 | every library already holding every copy, so nobody needs to read a letter | Ameloot's coordination-free: an ideal distribution on which no message is needed. |  |
 | a reading list sent sealed with its count, so the receiver knows when he has it all | Sealing (the 2020 shopping-cart checkout). |  |
-| the terrace merge | A monotone merge. | *Changes That Never Clash* |
+| the larger pile in each column of the pebble tables | A monotone merge. | *Changes That Never Clash* |
 | the last copy on loan | Lost update needs coordination because it is non-monotone. | *What You Can Promise Alone* |
 | a stable property: once true, true for ever | Detectable from a partial view. | *Taking Stock Without Stopping* |
 
