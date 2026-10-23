@@ -164,9 +164,10 @@ function Lanes(svg,o){
   return P;
 }
 /* Unfold: a place-from-above picture's computing twin, a timeline that grows as the reader acts.
-   The picture (a Hill, an Isle, the Crown, the Tholos) stays as it is and shows in the allegory; a second svg after it
-   shows in computing. The book's own calls feed it: wrap(H) relays the picture's mover (fly, road or run), its state,
-   note and badge; the rest is said outright at the point it happens: reset, crash, lose, cut, step, tick, turn, mark.
+   The picture (a Hill, an Isle, the Crown, the Tholos, the Chamber) stays as it is and shows in the allegory; a second
+   svg after it shows in computing. The book's own calls feed it: wrap(H) relays the picture's mover (fly, road or run),
+   its state, note and badge; the rest is said outright at the point it happens: reset, crash, down (a stretch with the
+   process stopped), lose, cut, step, tick, turn, mark.
    A message is an arrow from the moment it is sent, dashed toward its receiver while in transit and solid once it
    lands (a mover's u at o.land or beyond, .879 unless said); a lost one ends part-way at a cross; a crash ends a lane.
    Time runs while a message flies, plus whatever tick and step add; views that are read side by side share a clock.
@@ -178,7 +179,7 @@ function Unfold(src,o){
   const svg=src.cloneNode(false);svg.id=src.id+"-ln";svg.classList.add("m");src.classList.add("i");src.after(svg);
   if(src.dataset.alM)svg.setAttribute("aria-label",src.dataset.alM);
   const clock=o.clock||{t:0,owed:0,active:-1e9,raf:0,last:0,subs:[]};
-  let msgs=[],states=[],steps=[],marks=[],bands=[],cuts=[],badges={},crashes={},turnK=null,queued=false;
+  let msgs=[],states=[],steps=[],marks=[],bands=[],cuts=[],downs=[],badges={},crashes={},turnK=null,queued=false;
   const byTok=new Map(),land=o.land||.879,lane=k=>{k=o.alias&&o.alias[k]!=null?o.alias[k]:k;return o.nodes[k]?k:null};
   const safe=f=>{try{f()}catch(e){console.error(e)}};
   function wake(){if(!clock.raf){clock.last=performance.now();clock.raf=requestAnimationFrame(loop)}}
@@ -201,6 +202,9 @@ function Unfold(src,o){
     keys.forEach(k=>{if(crashes[k]==null)return;const t=Math.max(0,X(crashes[k])),[x,y]=P.pt(k,t);
       el("line",{class:"ln-gone",x1:x,y1:y,x2:P.x(span)+20,y2:y},P.shade);
       el("path",{class:"ln-x",d:`M${x-9},${y-9}L${x+9},${y+9}M${x-9},${y+9}L${x+9},${y-9}`},P.over)});
+    /* a process that is down for a while: its lane is missing for as long as it lasts */
+    for(const d of downs){const t0=Math.max(0,X(d.t0)),t1=d.t1!=null?X(d.t1):span+1;if(t1<0)continue;const [x,y]=P.pt(d.k,t0);
+      el("line",{class:"ln-gone",x1:x,y1:y,x2:Math.min(P.x(t1),P.x(span)+20),y2:y},P.shade)}
     /* each process's input, beside its name */
     keys.forEach(k=>{const s=badges[k];if(!s)return;const [x,y]=P.pt(k,0),g=el("g",{class:"ln-in",transform:`translate(${x+14*big} ${y})`},P.over);
       el("rect",{x:-11*big,y:-11*big,width:22*big,height:22*big,rx:6*big},g);el("text",{style:`font-size:${13*big}px`},g).textContent=s});
@@ -229,9 +233,10 @@ function Unfold(src,o){
     for(const m of marks){if(X(m.t)<0)continue;const [x,y]=P.pt(m.k,X(m.t)),g=el("g",{class:"ln-mark",transform:`translate(${x} ${y})`},P.over);
       el("circle",{r:11*big,fill:m.col||"#fff"},g);el("text",{style:`font-size:${12*big}px`},g).textContent=m.lab}
     /* the latest state of each process, at the moment it changed */
-    keys.forEach(k=>{const s=[...states].reverse().find(x=>String(x.k)===k);if(!s||X(s.t)<0)return;const [x,y]=P.pt(k,X(s.t));
+    /* (one taken before a sliding timeline's window still holds, and stands at its left edge) */
+    keys.forEach(k=>{const s=[...states].reverse().find(x=>String(x.k)===k);if(!s)return;const ts=Math.max(0,X(s.t)),[x,y]=P.pt(k,ts);
       /* a label that would run past the frame ends at its dot instead */
-      P.dot(k,X(s.t),"#1d1d1f");const lab=s.m||s.i,long=x+10+lab.length*7.7*big>P.x(span)+16;
+      P.dot(k,ts,"#1d1d1f");const lab=s.m||s.i,long=x+10+lab.length*7.7*big>P.x(span)+16;
       const t=el("text",{class:"ln-state",x:long?x-6:x+10,y:y-14*big,style:`font-size:${12.5*big}px`},P.over);t.textContent=lab;
       if(long)t.setAttribute("text-anchor","end")});
   }
@@ -247,7 +252,7 @@ function Unfold(src,o){
       /* a token that has landed starts a new flight only when it sets off again from near its sender */
       if(!r||r.a!=a||r.b!=b||((r.t1!=null||r.lost!=null)&&u<.5)){r={a:+a||a,b:+b||b,t0:clock.t,t1:null,lost:null,fill:o.nodes[a][2],lab:g.lnLab};msgs.push(r);byTok.set(g,r)}
       if(u>=land&&r.t1==null&&r.lost==null)r.t1=clock.t;clock.active=performance.now();wake();render()},
-    lose(g){const r=byTok.get(g);if(r&&r.t1==null){r.lost=clock.t;render()}},
+    lose(g){const r=byTok.get(g)||(g&&g.t0!=null?g:null);if(r&&r.t1==null){r.lost=clock.t;render()}},
     /* a state said again unchanged keeps the moment it first took */
     state(k,i,m){if(Array.isArray(i))[i,m]=i;k=lane(k);if(k==null)return;
       if(i){m=m===undefined?i:m;const last=[...states].reverse().find(x=>x.k==k);if(!last||last.i!==i||last.m!==m)states.push({k,t:clock.t,i,m})}
@@ -255,6 +260,7 @@ function Unfold(src,o){
     badge(k,s){badges[k]=s?((o.vals&&o.vals[s])||s):null;render()},
     crash(k,on=true){crashes[k]=on?clock.t:null;render()},
     cut(k,on){const c=cuts.find(x=>x.k==k&&x.t1==null);if(on&&!c)cuts.push({k,t0:clock.t,t1:null});else if(!on&&c)c.t1=clock.t;render()},
+    down(k,on){const d=downs.find(x=>x.k==k&&x.t1==null);if(on&&!d)downs.push({k,t0:clock.t,t1:null});else if(!on&&d)d.t1=clock.t;render()},
     turn(k){turnK=k==null?null:lane(k);render()},
     mark(k,lab,col){marks.push({k,t:clock.t,lab,col});render()},
     step(k,dt=.6){steps.push({k,t:clock.t});clock.owed+=dt;wake();render()},
@@ -267,7 +273,7 @@ function Unfold(src,o){
     band(t0,t1,lab,hot,low){bands.push({t0,t1,lab,hot,low});render()},
     setT(t){clock.t=t;render()},
     /* start the timeline again; inputs stay until badge changes them */
-    reset(){msgs=[];states=[];steps=[];marks=[];bands=[];cuts=[];crashes={};turnK=null;byTok.clear();clock.t=0;clock.owed=0;render()},
+    reset(){msgs=[];states=[];steps=[];marks=[];bands=[];cuts=[];downs=[];crashes={};turnK=null;byTok.clear();clock.t=0;clock.owed=0;render()},
     render};
   render();
   return L;

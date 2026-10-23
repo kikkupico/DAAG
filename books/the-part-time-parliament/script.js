@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -63,18 +63,23 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const C=["#e0b84a","#5b9be0","#e2564e","#9cb648","#b58be0","#e89a4d"], gl=["Α","Β","Γ","Δ","Ε","Ζ"];
   const home=[215,270,325,20,70,160], away=[[45,495],[130,495],[215,495],[290,495],[340,495],[390,495]];
   const S=gl.map((l,i)=>H.seat(l,C[i],home[i]));
+  /* computing: the two groups on a timeline; a process that is down has no lane for as long as it is down */
+  const L=Unfold(H.svg,{nodes:Object.fromEntries(gl.map((g,i)=>[i,[0,g,C[i],GM[g]]])),span:2.8});
   const bn=pair(dtext(H.over,{x:130,y:448,"text-anchor":"middle","font-size":13,"font-style":"italic",fill:"#6b5a48",opacity:0},"at the banquet","stopped"));
   function lbl(s,t,m){s.g.querySelectorAll(".lbl").forEach(x=>x.remove());dtext(s.g,{class:"lbl",y:40},t,m)}
-  function reset(){S.forEach((s,i)=>{H.place(s,...(i<3?H.at(home[i]):away[i]));s.g.setAttribute("opacity",i<3?1:0);s.g.classList.remove("clash");s.g.querySelectorAll(".lbl").forEach(x=>x.remove())});bn.setAttribute("opacity",0)}
+  function reset(){S.forEach((s,i)=>{H.place(s,...(i<3?H.at(home[i]):away[i]));s.g.setAttribute("opacity",i<3?1:0);s.g.classList.remove("clash");s.g.querySelectorAll(".lbl").forEach(x=>x.remove())});bn.setAttribute("opacity",0);
+    L.reset();[3,4,5].forEach(i=>L.down(i,true));L.setT(.2)}
   const say=$("#scrsay"),b1=$("#bq1"),b2=$("#bq2"),br=$("#bqr");
   b1.onclick=async()=>{b1.disabled=true;
-    [0,1,2].forEach(i=>lbl(S[i],"37: no painting","37: x"));
+    [0,1,2].forEach(i=>lbl(S[i],"37: no painting","37: x"));L.setT(.4);[0,1,2].forEach(i=>L.state(i,"37: x"));L.setT(.6);
     say.innerHTML=dual("Three legislators pass decree 37 and write it in their scrolls. Then they leave for a banquet.","Three processes decide slot 37 and write it in their logs. Then they stop.");
     await sleep(reduce?0:1300); [0,1,2].forEach(i=>{H.place(S[i],...away[i]);S[i].g.setAttribute("opacity",.55)}); bn.setAttribute("opacity",1);
+    L.setT(1.2);[0,1,2].forEach(i=>L.down(i,true));L.setT(1.4);
     say.innerHTML=dual("The first group is at the banquet. Everyone left in the Chamber knows nothing of decree 37, and that is allowed.","The first group is down. Every process now running knows nothing of slot 37, and that is allowed.");b2.disabled=false};
   b2.onclick=async()=>{b2.disabled=true;
     [3,4,5].forEach(i=>{S[i].g.setAttribute("opacity",1);H.place(S[i],...H.at(home[i]));lbl(S[i],"37: art is free","37: y")});
-    await sleep(reduce?0:900); S.forEach(s=>s.g.classList.add("clash"));
+    L.setT(1.6);[3,4,5].forEach(i=>L.down(i,false));L.setT(1.9);[3,4,5].forEach(i=>L.state(i,"37: y"));L.setT(2.1);
+    await sleep(reduce?0:900); S.forEach(s=>s.g.classList.add("clash"));L.band(.3,2.3,"two values in slot 37",true);
     say.innerHTML=dual("<span class='bad'>Two scrolls, two different decrees numbered 37.</span> Consistency is lost for good, because the ink is indelible. Parliament must never let this happen.","<span class='bad'>Two logs, two different values in slot 37.</span> Consistency is lost for good, because decided values are never undone. The protocol must never let this happen.");br.hidden=false};
   br.onclick=()=>{reset();say.innerHTML=dual("Three legislators are in the Chamber, with decree 37 before them. The other three are away.","Three processes are running, with slot 37 before them. The other three are down.");b1.disabled=false;br.hidden=true};
   reset();
@@ -88,15 +93,20 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const voy=pair(dtext(H.over,{x:H.cx,y:480,"text-anchor":"middle","font-size":14,"font-style":"italic",fill:"#bf4a26",opacity:0},"…off on a long voyage","…lost in transit"));
   function mkm(){const g=el("g",{opacity:0},H.over);el("circle",{r:13,fill:"#fffaf0",stroke:"#1c1512","stroke-width":3},g);const t=el("text",{"text-anchor":"middle","dominant-baseline":"central","font-size":14},g);t.textContent="✉";return g}
   const m1=mkm(),m2=mkm(),btn=$("#send"),say=$("#sendsay"),T={ok:0,two:0,lost:0};
+  /* computing: each send on a timeline: delivered once, twice, or never, the lost one ending at a cross */
+  const L=Unfold(H.svg,{nodes:{A:[0,"Α","#e0b84a","P1"],B:[0,"Β","#5b9be0","P2"]},span:4.4});
+  L.svg.style.width="min(100%,560px)";
+  const send=ms=>{const r=L.msg("A","B",L.clock.t,null);L.tick(ms/1000);return r};
   function fly(g,p,q,ms){return new Promise(res=>{const t0=performance.now();g.setAttribute("opacity",1);
     (function f(t){const u=Math.min(1,(t-t0)/ms),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;g.setAttribute("transform",`translate(${p[0]+(q[0]-p[0])*e} ${p[1]+(q[1]-p[1])*e})`);if(u<1)requestAnimationFrame(f);else res()})(t0)})}
   const pa=[A.x+34,A.y+6], pb=[B.x-34,B.y+6];
   btn.onclick=async()=>{
     btn.disabled=true;voy.setAttribute("opacity",0);m1.setAttribute("opacity",0);m2.setAttribute("opacity",0);
-    const r=Math.random(),dur=reduce?1:1500;
-    if(r<.4){await fly(m1,pa,pb,dur);m1.setAttribute("opacity",0);T.ok++;say.innerHTML="<b>Delivered, once.</b> The easy case."}
-    else if(r<.7){await fly(m1,pa,pb,dur);m1.setAttribute("opacity",0);say.innerHTML="Delivered… ";await sleep(reduce?1:500);await fly(m2,pa,pb,dur);m2.setAttribute("opacity",0);T.two++;say.innerHTML=dual("<b>Delivered twice.</b> The messenger forgot they'd already been.","<b>Delivered twice.</b> The network duplicated it.")}
-    else{await fly(m1,pa,[pa[0]+(pb[0]-pa[0])*.25,pa[1]+(pb[1]-pa[1])*.25],dur*.4);await fly(m1,[pa[0]+(pb[0]-pa[0])*.25,pa[1]],door,dur*.7);voy.setAttribute("opacity",1);await sleep(reduce?1:700);m1.setAttribute("opacity",0);T.lost++;say.innerHTML=dual("<b>Never arrived.</b> The messenger walked out of the one door and set off on a long voyage. Nobody can tell this from “very slow”.","<b>Never arrived.</b> The message was lost in transit. Nobody can tell this from “very slow”.")}
+    const r=Math.random(),dur=reduce?1:1500;L.reset();L.setT(.2);
+    if(r<.4){const x=send(dur);await fly(m1,pa,pb,dur);L.land(x);L.state("B","delivered");m1.setAttribute("opacity",0);T.ok++;say.innerHTML="<b>Delivered, once.</b> The easy case."}
+    else if(r<.7){const x=send(dur);await fly(m1,pa,pb,dur);L.land(x);L.state("B","delivered");m1.setAttribute("opacity",0);say.innerHTML="Delivered… ";L.tick(.5);await sleep(reduce?1:500);
+      const y=L.msg("A","B",x.t0,null);L.tick(dur/1000);await fly(m2,pa,pb,dur);L.land(y);L.state("B","delivered twice");m2.setAttribute("opacity",0);T.two++;say.innerHTML=dual("<b>Delivered twice.</b> The messenger forgot they'd already been.","<b>Delivered twice.</b> The network duplicated it.")}
+    else{const x=send(dur*1.1);await fly(m1,pa,[pa[0]+(pb[0]-pa[0])*.25,pa[1]+(pb[1]-pa[1])*.25],dur*.4);L.lose(x);await fly(m1,[pa[0]+(pb[0]-pa[0])*.25,pa[1]],door,dur*.7);voy.setAttribute("opacity",1);await sleep(reduce?1:700);m1.setAttribute("opacity",0);T.lost++;say.innerHTML=dual("<b>Never arrived.</b> The messenger walked out of the one door and set off on a long voyage. Nobody can tell this from “very slow”.","<b>Never arrived.</b> The message was lost in transit. Nobody can tell this from “very slow”.")}
     $("#t-ok").textContent=T.ok;$("#t-two").textContent=T.two;$("#t-lost").textContent=T.lost;btn.disabled=false};
 })();
 
@@ -175,6 +185,18 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const svg=$("#balsvg"); const H=Hall(svg,{vb:"0 0 900 490",cx:235,cy:235,rr:215,R:140,doorText:false}); svg.classList.add("fig");
   const C={A:"#e0b84a",B:"#5b9be0",G:"#e2564e",D:"#9cb648",E:"#b58be0"}, ang={A:200,B:270,G:340,D:40,E:140}, lab={A:"Α",B:"Β",G:"Γ",D:"Δ",E:"Ε"};
   const Q=["A","G","D"], q=["G","D"], all=["A","B","G","D","E"]; const S={}; all.forEach(k=>S[k]=H.seat(lab[k],C[k],ang[k]));
+  /* computing: the ballot so far as one timeline, a step to each unit of time and each kind of message a band */
+  const L=Unfold(svg,{nodes:Object.fromEntries(all.map((k,i)=>[k,[0,lab[k],C[k],"P"+(i+1)]])),span:6.4});
+  const MS=[[1,"NextBallot"],[2,"LastVote"],[4,"BeginBallot"],[5,"Voted"],[6,"Success"]];
+  function lanes(s){L.reset();L.turn("A");const at=k=>[k-1+.2,k-.25];
+    MS.forEach(([k,lab])=>{if(k<=s)L.band(k-1+.08,k-.1,lab,k===s)});
+    if(s>=1){const [a,b]=at(1);Q.filter(k=>k!=="A").forEach(k=>L.msg("A",k,a,b))}
+    if(s>=2){const [a,b]=at(2);L.setT(a);Q.forEach(k=>L.state(k,"promised ≥ 27"));L.msg("G","A",a,b,"5, β");L.msg("D","A",a,b,"2, α")}
+    if(s>=3){L.setT(2.55);L.state("A","value forced: β")}
+    if(s>=4){const [a,b]=at(4);q.forEach(k=>L.msg("A",k,a,b,k==="G"?"27, β":""))}
+    if(s>=5){const [a,b]=at(5);L.setT(a);q.forEach(k=>{L.state(k,"voted 27, β");L.msg(k,"A",a,b)})}
+    if(s>=6){const [a,b]=at(6);L.setT(a);L.state("A","chose β");["B","G","D","E"].forEach(k=>L.msg("A",k,a,b,k==="B"?"β":""));L.setT(b);["B","E"].forEach(k=>L.state(k,"β"))}
+    L.setT(Math.max(.2,s))}
   const O=H.over; const set=(e,on)=>e.classList.toggle("on",!!on);
   const rings={}; Q.forEach(k=>rings[k]=el("circle",{cx:S[k].x,cy:S[k].y,r:36,class:"ring"},H.under));
   const iniT=el("text",{x:S.A.x,y:S.A.y+46,class:"lab"},O); iniT.textContent="initiator";
@@ -200,7 +222,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const tq={},tr={},tpp={},tv={},tt={}; q.forEach(k=>{tq[k]=mk("#fffaf0","?");tr[k]=mk("#8fc4de","·");tpp[k]=mk("#a9c25a","β");tv[k]=mk("#a9c25a","✓")}); all.filter(k=>k!=="A").forEach(k=>tt[k]=mk("#a9c25a","β"));
   function put(g,k,u){const x=sp[k][0]+(tp[k][0]-sp[k][0])*u,y=sp[k][1]+(tp[k][1]-sp[k][1])*u;g.style.transform=`translate(${x}px,${y}px)`}
   const show=(g,on)=>g.setAttribute("opacity",on?1:0);
-  function render(s){
+  function render(s){lanes(s);
     Q.forEach(k=>{set(rings[k],true);set(tags[k],s>=2);set(repg[k],s>=2);set(chips[k],s>=5)});
     q.forEach(k=>{
       show(tq[k],s>=1&&s<2);put(tq[k],k,s>=1?1:0);
@@ -225,6 +247,11 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const H=Hall(svg,{vb:"0 0 440 450"});
   const C={A:"#e0b84a",E:"#b58be0",B:"#5b9be0",G:"#e2564e",D:"#9cb648"};
   const S={A:H.seat("Α",C.A,205),E:H.seat("Ε",C.E,335),B:H.seat("Β",C.B,20),G:H.seat("Γ",C.G,160),D:H.seat("Δ",C.D,270)};
+  /* computing: the ballots on a timeline that slides as it runs: each start goes to the three as arrows labelled with
+     its number, a ballot refused is crossed on its starter's lane, and a ballot that succeeds is marked */
+  const L=Unfold(svg,{nodes:{A:[0,"Α",C.A,"P1"],B:[0,"Β",C.B,"P2"],G:[0,"Γ",C.G,"P3"],D:[0,"Δ",C.D,"P4"],E:[0,"Ε",C.E,"P5"]},span:8,slide:true});
+  L.svg.style.maxWidth="620px";L.svg.setAttribute("role","img");L.svg.setAttribute("aria-label","Five lanes with real time running left to right: each ballot started goes to P2, P3 and P4 as arrows labelled with its number, a refused ballot is crossed on its starter's lane, and a decided value is ticked");
+  const out=(p,lab)=>{const t=L.clock.t;["B","G","D"].forEach((k,i)=>L.msg(p,k,t,t+.6,i?"":lab))};
   const lines=[]; ["A","E"].forEach(p=>["B","G","D"].forEach(k=>{const l=el("line",{x1:S[p].x,y1:S[p].y,x2:S[k].x,y2:S[k].y,stroke:C[p],"stroke-width":3,opacity:.3},H.under);lines.push({p,l})}));
   const meters={}; ["B","G","D"].forEach(k=>{const [x,y]=H.at(S[k].deg,H.R-72);const t=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":14,"font-family":"Optima,sans-serif",fill:"#1c1512"},H.over);t.textContent="promised ≥ 0";meters[k]=t});
   const who={A:"Α",E:"Ε"},whoM={A:"P1",E:"P5"},W=k=>dual(who[k],whoM[k]);
@@ -236,20 +263,21 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     const p=pres||turn, other=p==="A"?"E":"A", nm=W(p);
     if(!pres){
       ballot++;setMeters(ballot);hb.textContent=ballot;flash(p,true);setTimeout(()=>flash(p,false),500);
+      out(p,String(ballot));["B","G","D"].forEach(k=>L.state(k,"promised ≥ "+ballot));
       say(`<b>${nm}</b> starts ballot ${ballot}: everyone promises nothing lower.`);
-      if(pending[other]!==null)say(`<span class="bad">…${W(other)}'s ballot ${pending[other]} is refused: ${dual("they","it")} already promised ${ballot}.</span>`);
+      if(pending[other]!==null){L.mark(other,"✗","#fde0d4");say(`<span class="bad">…${W(other)}'s ballot ${pending[other]} is refused: ${dual("they","it")} already promised ${ballot}.</span>`)}
       pending[p]=ballot;pending[other]=null;turn=other;
     }else{
-      if(phase===0){ballot++;setMeters(ballot);hb.textContent=ballot;flash(p,true);say(`<b>${nm}</b> starts ballot ${ballot}. Nobody else is starting any.`);phase=1}
-      else if(phase===1){say(`The quorum votes in ballot ${ballot}.`);phase=2}
-      else{passed++;pass.textContent=passed;flash(p,false);say(`<span class="ok">${dual(`Ballot ${ballot} succeeded: decree ${passed} is passed.`,`Ballot ${ballot} succeeded: value ${passed} is decided.`)}</span>`);phase=0}
+      if(phase===0){ballot++;setMeters(ballot);hb.textContent=ballot;flash(p,true);out(p,String(ballot));["B","G","D"].forEach(k=>L.state(k,"promised ≥ "+ballot));say(`<b>${nm}</b> starts ballot ${ballot}. Nobody else is starting any.`);phase=1}
+      else if(phase===1){const t=L.clock.t;["B","G","D"].forEach(k=>L.msg(k,p,t,t+.6));say(`The quorum votes in ballot ${ballot}.`);phase=2}
+      else{passed++;pass.textContent=passed;flash(p,false);L.mark(p,"✓","#c9d98a");L.state(p,"decided "+passed);say(`<span class="ok">${dual(`Ballot ${ballot} succeeded: decree ${passed} is passed.`,`Ballot ${ballot} succeeded: value ${passed} is decided.`)}</span>`);phase=0}
     }
   }
-  function go(){if(timer)return;timer=setInterval(tickF,reduce?500:950)}
+  function go(){if(timer)return;timer=setInterval(()=>{tickF();L.tick(.95)},reduce?500:950)}
   function stop(){clearInterval(timer);timer=null}
-  $("#drun").onclick=()=>{if(pres){flash(pres,false);say(dual("<i>Ε no longer accepts that Α is president.</i>","<i>P5 no longer accepts that P1 is leader.</i>"))}pres=null;turn="A";pending={A:null,E:null};S.E.g.setAttribute("opacity",1);mode.innerHTML=dual("two priests each sure they are in charge","two processes each sure they are leader");want=true;go();$("#drun").disabled=true};
-  $("#dpres").onclick=()=>{pres="A";phase=0;pending={A:null,E:null};S.E.g.setAttribute("opacity",.35);mode.innerHTML=dual("Α is president, Ε waits","P1 is leader, P5 waits");say(dual("<i>Α is appointed president. Ε no longer starts ballots.</i>","<i>P1 is appointed leader. P5 no longer starts ballots.</i>"));want=true;go();$("#drun").disabled=false};
-  $("#dreset").onclick=()=>{stop();want=false;flash("A",false);flash("E",false);ballot=0;passed=0;pres=null;phase=0;pending={A:null,E:null};turn="A";hb.textContent=0;pass.textContent=0;setMeters(0);log.innerHTML="";S.E.g.setAttribute("opacity",1);mode.textContent="no one is in charge";$("#drun").disabled=false};
+  $("#drun").onclick=()=>{if(pres){flash(pres,false);say(dual("<i>Ε no longer accepts that Α is president.</i>","<i>P5 no longer accepts that P1 is leader.</i>"))}pres=null;turn="A";pending={A:null,E:null};S.E.g.setAttribute("opacity",1);L.state("E","");mode.innerHTML=dual("two priests each sure they are in charge","two processes each sure they are leader");want=true;go();$("#drun").disabled=true};
+  $("#dpres").onclick=()=>{pres="A";phase=0;pending={A:null,E:null};S.E.g.setAttribute("opacity",.35);L.state("E","waits");mode.innerHTML=dual("Α is president, Ε waits","P1 is leader, P5 waits");say(dual("<i>Α is appointed president. Ε no longer starts ballots.</i>","<i>P1 is appointed leader. P5 no longer starts ballots.</i>"));want=true;go();$("#drun").disabled=false};
+  $("#dreset").onclick=()=>{stop();want=false;flash("A",false);flash("E",false);ballot=0;passed=0;pres=null;phase=0;pending={A:null,E:null};turn="A";hb.textContent=0;pass.textContent=0;setMeters(0);log.innerHTML="";L.reset();S.E.g.setAttribute("opacity",1);mode.textContent="no one is in charge";$("#drun").disabled=false};
   new IntersectionObserver(es=>{if(!es[0].isIntersecting)stop();else if(want)go()},{threshold:.1}).observe($("#duel"));
 })();
 

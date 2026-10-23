@@ -113,7 +113,7 @@
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4><span class="i">Two groups, one number <em>press the buttons in order</em></span><span class="m">Two groups, one slot <em>press the buttons in order</em></span></h4>
-      <svg class="hall-svg" id="banq" role="img" aria-label="The Chamber, with a first group of legislators leaving for a banquet and a second group arriving" data-al-m="Six processes: the first group of three has stopped after deciding slot 37, and the second group of three has started"></svg>
+      <svg class="hall-svg" id="banq" role="img" aria-label="The Chamber, with a first group of legislators leaving for a banquet and a second group arriving" data-al-m="Six lanes, one for each process, with real time running left to right: P1, P2 and P3 decide x for slot 37 and stop, their lanes ending; then P4, P5 and P6, whose lanes were missing, start and decide y for slot 37"></svg>
       <p class="say" id="scrsay"><span class="i">Three legislators are in the Chamber, with decree 37 before them. The other three are away.</span><span class="m">Three processes are running, with slot 37 before them. The other three are down.</span></p>
       <div class="row">
         <button class="btn" id="bq1"><span class="i">A group passes decree 37, then leaves for a banquet</span><span class="m">A group decides slot 37, then stops</span></button>
@@ -160,7 +160,7 @@
     <p class="tell" style="margin:2.4rem auto 0;max-width:760px"><span class="i">Those unreliable messengers are what make coordination tricky. Dispatch a few messengers across the floor below to see what can happen to any note.</span><span class="m">Unreliable messages are what make coordination tricky. Send a few messages below to see what can happen to any one of them.</span></p>
     <div class="pop"><div class="leaf"><div class="paper well" style="color:var(--ink);max-width:760px;margin:1.2rem auto 0">
       <h4>Send a message <em>try your luck</em></h4>
-      <svg class="hall-svg" id="lane" style="width:min(100%,340px)" role="img" aria-label="Two legislators in the Chamber and a messenger between them" data-al-m="Two processes and a message between them"></svg>
+      <svg class="hall-svg" id="lane" style="width:min(100%,340px)" role="img" aria-label="Two legislators in the Chamber and a messenger between them" data-al-m="Two lanes, P1 and P2, with real time running left to right: each send is an arrow, dashed while in transit, delivered once, twice, or lost part of the way at a cross"></svg>
       <div class="row" style="margin-top:0"><button class="btn" id="send"><span class="i">Send a message from A to B</span><span class="m">Send a message from P1 to P2</span></button></div>
       <div class="tally"><span><b id="t-ok">0</b>delivered</span><span><b id="t-two">0</b>delivered twice</span><span><b id="t-lost">0</b>never arrived</span></div>
       <p class="say" id="sendsay">A message may arrive once, arrive twice, or never arrive.</p>
@@ -474,7 +474,7 @@
   </div>
   <div class="scrolly" id="bal" data-steps="7">
     <div class="stage"><div class="stage-inner">
-      <svg class="fig svg-dark" viewBox="0 0 900 490" id="balsvg" role="img" aria-label="Ballot 27 run by priest A with the quorum A, Gamma and Delta; B and E are outside it" data-al-m="Ballot 27 run by process P1 with the quorum P1, P3 and P4; P2 and P5 are outside it"></svg>
+      <svg class="fig svg-dark" viewBox="0 0 900 490" id="balsvg" role="img" aria-label="Ballot 27 run by priest A with the quorum A, Gamma and Delta; B and E are outside it" data-al-m="Five lanes with time running left to right a step at a time: ballot 27 run by P1 with the quorum P1, P3 and P4, each kind of message a shaded band, the one being read lit; P2 and P5 take part only in the success"></svg>
     </div></div>
     <div class="steps">
       <div class="step on"><div class="card"><div class="num">1 · Choose a ballot number</div><h3>Pick a fresh number and a majority</h3><p><span class="i">Priest Α initiates a ballot. To guarantee Rule One, each priest owns their own slice of ballot numbers; Α picks <b>Ballot 27</b>, which has never been used, and aims for a majority quorum of three: Α, Γ, and Δ (while Β and Ε sit this ballot out).</span><span class="m">P1 initiates a ballot. To guarantee Rule One, each process owns its own slice of ballot numbers; P1 picks <b>ballot 27</b>, which has never been used, and aims for a majority quorum of three: P1, P3, and P4 (while P2 and P5 take no part in this ballot).</span></p></div></div>
