@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -118,6 +118,12 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* ===== scroll: the count with red sashes ===== */
 (function(){
   const C=Census(),I=Isle($("#sashsvg")),side=$("#sashside"),{items,snaps,ends}=C;
+  /* computing: the morning so far as a timeline, by the times the count itself runs on; each message carries its
+     units, each marker is red, and each process shows what it recorded from the moment it recorded it */
+  const L=Unfold(I.svg,{nodes:{1:[-90,"H1",HC[1],"P1"],2:[30,"H2",HC[2],"P2"],3:[150,"H3",HC[3],"P3"]},span:7.6});
+  function lanes(s){const now=ends[s];L.reset();
+    items.forEach(x=>{if(x.sent<=now)L.msg(x.a,x.b,x.sent,x.arr!=null&&x.arr<=now?x.arr:null,x.k==="cart"?String(x.n):"",x.k==="sash"?"ln-red":null)});
+    [1,2,3].forEach(h=>{if(C.recT[h]<=now){L.setT(C.recT[h]);L.state(h,"recorded "+snaps[s].rec[h])}});L.setT(now)}
   const toks=items.map(x=>({x,g:I.token(x.k==="sash"?"#bf4a26":HC[x.a],x.k==="cart"?x.n:""),u:.1,run:0,shown:false}));
   const pos=(s,id)=>{for(const k in snaps[s].ch){const i=snaps[s].ch[k].indexOf(id);if(i>=0)return i}return -1};
   function card(h,S,done){
@@ -129,7 +135,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   $$("#sashsum,.sashsum2").forEach(e=>e.innerHTML=`${C.rec.join(" + ")} + ${C.slate[2][3].sum} + ${C.slate[3][2].sum} = <b>${C.total}</b>`);
   $$("#sashtruth,.sashtruth2").forEach(e=>e.textContent=C.truth);
   scrolly($("#sash"),s=>{
-    const S=snaps[s];side.innerHTML=[1,2,3].map(h=>card(h,S,s===last)).join("");
+    const S=snaps[s];side.innerHTML=[1,2,3].map(h=>card(h,S,s===last)).join("");lanes(s);
     toks.forEach(k=>{const p=pos(s,k.x.id),id=++k.run;
       if(p>=0){const u1=Math.max(.14,.86-.2*p);if(!k.shown){k.shown=true;k.u=.06}k.g.setAttribute("opacity",1);const u0=k.u;
         tween(800,e=>{if(k.run!==id)return;k.u=u0+(u1-u0)*e;I.road(k.g,k.x.a,k.x.b,k.u)});return}

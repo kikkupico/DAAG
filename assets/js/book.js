@@ -225,8 +225,10 @@ function Unfold(src,o){
       el("circle",{r:11*big,fill:m.col||"#fff"},g);el("text",{style:`font-size:${12*big}px`},g).textContent=m.lab}
     /* the latest state of each process, at the moment it changed */
     keys.forEach(k=>{const s=[...states].reverse().find(x=>String(x.k)===k);if(!s||X(s.t)<0)return;const [x,y]=P.pt(k,X(s.t));
-      P.dot(k,X(s.t),"#1d1d1f");const t=el("text",{class:"ln-state",x:Math.min(x+10,P.x(span)-4),y:y-14*big,style:`font-size:${12.5*big}px`},P.over);t.textContent=s.m||s.i;
-      if(x+10>P.x(span)-60)t.setAttribute("text-anchor","end")});
+      /* a label that would run past the frame ends at its dot instead */
+      P.dot(k,X(s.t),"#1d1d1f");const lab=s.m||s.i,long=x+10+lab.length*7.7*big>P.x(span)+16;
+      const t=el("text",{class:"ln-state",x:long?x-6:x+10,y:y-14*big,style:`font-size:${12.5*big}px`},P.over);t.textContent=lab;
+      if(long)t.setAttribute("text-anchor","end")});
   }
   const L={svg,clock,
     /* relay a picture's own calls; a twin that fails leaves the picture running */

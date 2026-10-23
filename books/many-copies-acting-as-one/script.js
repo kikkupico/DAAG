@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -157,15 +157,23 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   $$(".gt1").forEach(e=>e.textContent=n1);$$(".gt2").forEach(e=>e.textContent=n2);$$(".gt3").forEach(e=>e.textContent=n3);
   if(!(n3<n1))throw new Error("House 2's request should carry the lower tally");
   const first=[...board].sort((a,b)=>a.n-b.n||a.h-b.h)[0].h;
-  const toks=[[1,3,n1,{1:.35,2:.88}],[3,1,n2,{2:.2,3:.88}],[2,3,n3,{5:.35,6:.88}]].map(([a,b,n,plan])=>({a,b,plan,g:I.token(HC[a],n),u:.1,run:0,end:Math.max(...Object.keys(plan))}));
+  const toks=[[1,3,n1,{1:.35,2:.88}],[3,1,n2,{2:.2,3:.88}],[2,3,n3,{5:.35,6:.88}]].map(([a,b,n,plan])=>({a,b,n,plan,g:I.token(HC[a],n),u:.1,run:0,end:Math.max(...Object.keys(plan))}));
   const gt=I.token("#fffaf0","G"),H1=I.house[1],H2=I.house[2];
+  /* computing: the story so far as one timeline, a step to each unit of time; each message carries its timestamp,
+     the out-of-band message is dotted, and each process shows its timestamp from the step it last changed */
+  const L=Unfold(I.svg,{nodes:NODES,span:6.6});
+  function lanes(s){L.reset();
+    toks.forEach(k=>{const s0=Math.min(...Object.keys(k.plan));if(s0<=s)L.msg(k.a,k.b,s0-.6,s>=k.end?k.end-.1:null,String(k.n))});
+    if(s>=4)L.msg(1,2,3.5,4.2,"outside","ln-aside");
+    [1,2,3].forEach(h=>{let j=s;while(j>0&&st[j-1].T[h]===st[s].T[h])j--;L.setT(j===0?0:j-.1);L.state(h,"timestamp "+st[s].T[h])});
+    L.setT(s+.15)}
   const over=u=>{const v=1-u;I.put(gt,v*v*H1.x+2*u*v*I.cx+u*u*H2.x,v*v*H1.y+2*u*v*I.cy+u*u*H2.y)};let gr=0;
   function card(h,s){const X=st[s];let body;
     if(h===3)body=X.board.length?X.board.map(b=>chip(dual(`House ${b.h}'s request · ${b.n}`,`P${b.h}'s request · ${b.n}`),b.h)).join("")+(s===6?dual(`<br><b>serves House ${first} first</b>`,`<br><b>serves P${first} first</b>`):""):dual("board empty","queue empty");
     else body=X.o[h]!=null?dual(`request sent, tally ${X.o[h]}`,`request sent, timestamp ${X.o[h]}`):h===1?dual("two entries so far","two local events so far"):dual("no entries, no slips","no events, no messages");
     return `<div class="hc${s===6&&h===first?" in":""}"><h5>${dual("House "+h,"P"+h)}<span>${dual("tally","timestamp")} ${X.T[h]}</span></h5><div class="chk">${body}</div></div>`}
   scrolly($("#goat"),s=>{
-    side.innerHTML=[1,2,3].map(h=>card(h,s)).join("");
+    side.innerHTML=[1,2,3].map(h=>card(h,s)).join("");lanes(s);
     toks.forEach(k=>{const u=k.plan[s],id=++k.run;
       if(u==null){k.g.setAttribute("opacity",0);k.u=s>k.end?.9:.1;I.road(k.g,k.a,k.b,k.u);return}
       k.g.setAttribute("opacity",1);const u0=k.u;tween(800,e=>{if(k.run!==id)return;k.u=u0+(u-u0)*e;I.road(k.g,k.a,k.b,k.u)})});
