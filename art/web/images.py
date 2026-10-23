@@ -67,7 +67,6 @@ DRY = "--dry" in sys.argv
 def sources():
     """(file the tag is written in, folder its relative links start from, book to rebuild or None)."""
     yield ROOT / "index.html", ROOT, None
-    yield ROOT / "landing.html", ROOT, None
     for page in sorted(ROOT.glob("places/*/index.html")):
         yield page, page.parent, None
     for page in sorted(ROOT.glob("books/*/index.html")):

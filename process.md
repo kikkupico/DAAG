@@ -51,7 +51,7 @@ with the figure that is that paper's signature picture (a lane diagram, a lattic
 svg is class `cover-fig`. The same figure is cropped into the spreads it illustrates: an `<svg class="cover-fig" data-crop="x y w h">` inside a `pop m` beside the text, drawn by `COVERS.mount(COVER)`; such a spread drops its `solo` class.
 The cover function sits between `/* cover:start */` and `/* cover:end */` in the book's `script.js`.
 `python3 art/scroll/book_covers.py` copies every such block into `assets/js/book-covers.js` as `BOOK_COVERS["<slug>"]`,
-which the landing page (`landing.html`) draws on its book cards in computing; rerun it after changing a cover.
+which the home page (`index.html`, with `landing.css` and `landing.js`) draws on its book cards in computing; rerun it after changing a cover. The earlier home page is kept as `home-archive.html` and is not published.
 
 **Two registers.** A book can be read as allegory or as computing, by a switch in its bar that shares
 its choice with the scroll page. Both are always in the page: every paragraph, heading, proof step,
