@@ -119,3 +119,28 @@ body[data-reg="m"] .side .hc h5 span{color:var(--mute)}
 
 /* ---------- computing: the cover figure ---------- */
 body[data-reg="m"] .cover-fig{display:block;width:100%;max-width:600px;margin:0 auto;border-radius:24px;box-shadow:var(--card-sh);background:#fff}
+
+/* on a phone the hall title overlaps its photograph; with the photograph allegory-only there is nothing to overlap */
+@media(max-width:900px),(max-height:720px){
+  body[data-reg="m"] .bleed:not(:has(img:not(.i))) .hall-title{margin-top:0}
+}
+
+/* lineage on a phone, in the computing dress: a grouped list on a blue spine, direction told by the pill's colour */
+@media(max-width:859px){
+  body[data-reg="m"] .lin::before{background:#d2d2d7}
+  body[data-reg="m"] .lin h5{color:var(--mute)}
+  body[data-reg="m"] .lin h5::before{background:var(--blue)}
+  body[data-reg="m"] .lin-side .lin-nodes{background:#fff;border:0;border-radius:16px;box-shadow:var(--card-sh);overflow:hidden}
+  body[data-reg="m"] .lin-side .lin-nodes>li+li{border-top-color:#ececf0}
+  body[data-reg="m"] .lin-side .lin-nodes>li::after{color:#a1a1a6}
+  body[data-reg="m"] .lin-link em{background:rgba(10,111,194,.1);color:var(--blue);border:0;border-radius:999px;padding:3px 10px;font-weight:600}
+  body[data-reg="m"] .lin-side.out .lin-link em{background:rgba(191,74,38,.1);color:var(--red)}
+  body[data-reg="m"] .lin-side .lin-nodes a.lin-node b{color:var(--blue)}
+  body[data-reg="m"] .lin-side .lin-nodes .lin-node .by{color:var(--mute)}
+  body[data-reg="m"] .lin-link .ends{color:var(--mute)}
+  body[data-reg="m"] .lin-link .why{color:var(--ink2)}
+  body[data-reg="m"] .lin-node.here{border-radius:16px;box-shadow:none;background:var(--ink);border:0}
+  body[data-reg="m"] .lin-node.here .by{color:#a1a1a6}
+  body[data-reg="m"] .lin-mid .lin-link em{background:transparent;color:var(--mute);font-weight:500}
+  body[data-reg="m"] .lin-key .k{border-radius:4px}
+}

@@ -20,5 +20,5 @@ t=t.replace('<head>','<head>'+pre+'<style>*{transition:none!important;animation:
 open(sys.argv[2],'w').write(t)
 PY
 "$chrome" --headless=new --disable-gpu --hide-scrollbars --user-data-dir="$tmp" --window-size=$w,$h --virtual-time-budget=6000 --screenshot="$out" "file://$probe" >/dev/null 2>&1
-"$chrome" --headless=new --disable-gpu --user-data-dir="$tmp" --window-size=$w,900 --virtual-time-budget=6000 --dump-dom "file://$probe" 2>/dev/null | grep -o '<title>PROBE[^<]*</title>' | sed 's/<[^>]*>//g'
+"$chrome" --headless=new --disable-gpu --user-data-dir="$tmp" --window-size=$w,900 --virtual-time-budget=6000 --dump-dom "file://$probe" 2>/dev/null | grep -o '<title[^>]*>PROBE[^<]*</title>' | sed 's/<[^>]*>//g'
 rm -rf "$tmp" "$probe"; echo "screenshot: $out"
