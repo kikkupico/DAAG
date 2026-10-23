@@ -1,9 +1,8 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar,Timeline}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
-
 
 /* ===== the scholars' coast from above: the body of the island, its libraries each in a clearing, the stoa on the eastern shore ===== */
 function Coast(svg,o={}){
@@ -177,6 +176,5 @@ function Marks(name){return {name,add:new Set(),struck:new Set(),n:0,
   $("#ordsay").innerHTML=dual(`On the terrace's list: <b>${on.join(" and ")||"neither"}</b>. Of the ${orders.length} single orders in which the four acts could be done one after another, ${both||"none"} ${both===1?"ends":"end"} with both titles on the list.`,`In the third replica's set: <b>${on.join(" and ")||"neither"}</b>. Of the ${orders.length} single orders in which the four operations could be done one after another, ${both||"none"} ${both===1?"ends":"end"} with both elements in the set.`);
 })();
 
-mapPairs($("#map"),[["A terrace, its scribe and its table","A replica and its state"],["Terraces that heard the same news show the same count","Strong eventual consistency"],["A column for each terrace, written only by its own scribe","A vector with one entry per replica"],["Taking the larger pile in each column","Merge: the per-entry maximum"],["Any order, any grouping, as often as you like","Commutative, associative, idempotent"],["The table way","State-based replication"],["The notice way: exactly once, in order of dependence","Operation-based replication over reliable causal delivery"],["White pebbles and black","A counter that goes up and down: two grow-only counters"],["The later edition wins","A last-writer-wins register"],["Keeping both corrections","A multi-value register"],["The catalogue of titles","A grow-only set"],["The struck-off list","A two-phase set"],["A tag for every writing; a strike removes the tags seen","An observed-remove set"],["A limit on the whole coast's count","A global invariant, which needs coordination"]]);
 REG.start();
 })();

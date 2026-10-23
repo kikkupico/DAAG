@@ -1,9 +1,8 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
-
 
 /* ===== the scholars' coast from above: the body of the island, its libraries each in a clearing, the stoa on the eastern shore ===== */
 function Coast(svg,o={}){
@@ -174,6 +173,5 @@ const anyCopy=S=>S.some(f=>f[0]==="copy"),noClaim=S=>!S.some(f=>f[0]==="claim");
     await tween(900,u=>tok.setAttribute("transform",`translate(220 ${200+(south?1:-1)*110*u})`));(south?ds:dn).classList.add("on")});
 })();
 
-mapPairs($("#map"),[["A question brought to the hall","A program or query"],["The facts each library holds; the rest by courier","Input partitioned across machines; asynchronous messages"],["A question that only grows","A monotonic program"],["The same answers whatever the order of the news","Confluence"],["A question that rests on an absence","A non-monotonic program: negation, universal quantification"],["A ring of waiting","Deadlock detection"],["A work no one cites, thrown away","Garbage collection"],["The scholars' door","Coordination-free"],["The door of the assemblies","Coordination: consensus, commit protocols"],["The librarian with no roster","A machine that knows neither its own name nor the others'"],["The roster","Knowledge of the network's membership"],["The door that stays open when the couriers stop","Availability under partition"],["Closing a list with a manifest","Sealing the one non-monotonic step"],["Apologising for a lending","Compensation in place of coordination"]]);
 REG.start();
 })();

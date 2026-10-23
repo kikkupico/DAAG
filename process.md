@@ -40,8 +40,8 @@ widgets that several books share), `assets/css/registers.css` (the Allegory | Co
 computing dress), then the book's own `style.css`, which holds only what is particular to that book.
 Scripts load as `assets/js/registers.js`, `assets/js/book.js`, then the book's `script.js`. `book.js`
 defines `window.BOOK` with the helpers (`$`, `$$`, `el`, `tween`, `sleep`, `button`, `stepDots`, `scrolly`,
-`mapPairs`, `Polar`, `Lanes`, `Timeline`, `Space`, `redrawOn`) and `BOOK.init()` (pop-ups, the progress bar, the section name, parallax); it also
-draws the lineage edges by itself. A script opens with `const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;`,
+`Polar`, `Lanes`, `Timeline`, `Space`, `redrawOn`) and `BOOK.init()` (pop-ups, the progress bar, the section name, parallax); it also
+draws the lineage edges by itself. A script opens with `const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar}=BOOK;`,
 `const {isM,dual,vis,dtext,onReg}=REG;`, `BOOK.init();`, and ends with `REG.start();`. Put a rule in the shared
 file when three or more books want it; a rule only one book needs stays in its own `style.css`.
 The computing cover is drawn, not photographed: `assets/js/covers.js` defines `window.COVERS` with a kit
@@ -183,7 +183,7 @@ The shape that has worked before:
 | **The model** | One spread per device, each built up by an interactive. The reader should not notice they are being handed a formal system. |
 | **The results** | One spread per result, each stated in the setting's own words, shown by an interactive, and proved in a collapsed panel. |
 | **What it does not say** | What the result does *not* claim, or what it costs, or what it assumes and never verifies. It is often the best spread in a book. |
-| **Back to machines** | The who-is-who table, the result in one sentence, then the link to the setting, the papers and the ideas. |
+| **The result** | The result in one sentence, then the link to the setting, the papers and the ideas. The Allegory \| Computing switch already shows what each part of the setting stands for, so there is no who-is-who table. |
 
 **The book is carried by questions, written as statements.** Write down the questions a careful
 reader would ask, in order, and let them drive the spreads. Each spread answers what the one

@@ -194,25 +194,3 @@ function describe(rd){
     say.innerHTML="All four are alive and every bird was merely late, so neither pair could tell. <span class='bad'>The pairs have committed to different answers.</span> The first demand is broken. The picture shows the pattern of the argument, not a worked plan."};
   br.onclick=reset;toks=[];reset();
 })();
-
-/* ===== who is who ===== */
-mapPairs($("#map"),[
-["The four tents","Processes. N = 4 asynchronous processes."],
-["A sighting; attack or hold","Each process's input. A binary initial value x."],
-["Committing","An irrevocable decision. Setting the write-once output register."],
-["The three demands","Agreement; validity when all inputs are equal; termination. Consensus with correctness criterion (C1)."],
-["Ravens that always arrive, with no longest flight, in any order","Reliable asynchronous message passing. The message buffer; every message is eventually delivered to a process that keeps taking steps."],
-["A man killed; a silent tent","A crash failure, indistinguishable from slowness. A t-correct schedule, t = 1."],
-["The arranger of the birds","The worst case over message orderings, chosen with knowledge of everything so far. The adversary scheduler, which knows all about the system."],
-["The coin, owl or goddess, tossed alone in each tent","A private fair random bit at each process. Step 3(c): set x to 0 or 1 with probability 1/2 each (a local coin)."],
-["A round; the report","A numbered phase; the first message of the round. Message (1, r, x)."],
-["Sure of an answer; unsure","The second message. (2, r, v, D) when more than N/2 of the received values are v; (2, r, ?) otherwise."],
-["Waiting for three birds","Waiting for all but t. Wait for N − t messages."],
-["Favouring an answer on one sure bird; settled on two","Adopting a value; deciding. Step 3(a): one D-message; step 3(b): more than t D-messages."],
-["The rule of parting","A decided process sends its next round's messages and halts. Not in the paper, where decided processes keep running; added here because committing is silence, and shown to change nothing."],
-["Never two answers; the sightings respected","Agreement and validity, on every run. Theorem 1 (ii), (iii)."],
-["Committing with probability one","Termination with probability 1 for N > 2t. Theorem 1 (i). The paper gives no proof; Aguilera and Toueg (2012) give a complete one."],
-["Half is too many","No consensus when N ≤ 2t. The remark after Theorem 2: the schedule can simulate a partition."],
-["Six men against one liar","Byzantine agreement for N > 5t, with authenticated senders. Protocol B, Theorem 2."],
-["The happier case","Constant expected rounds when t = O(√N), run synchronously. Theorem 3."],
-["No drawing lots","Deterministic processes. The assumption of FLP that randomization removes."]]);

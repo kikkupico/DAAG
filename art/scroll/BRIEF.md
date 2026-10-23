@@ -53,7 +53,6 @@ with PIL first). Also run `node --check` on `page.js`.
 | `tween(ms, fn)` | calls `fn(0..1)` eased over `ms`; returns a promise |
 | `button(g, label, fn)` | make an SVG group keyboard-operable (tabindex, role, Enter/Space) |
 | `scrolly(root, render)` | scroll-driven stage: calls `render(i)` for the step in mid-window, and puts a row of controls under the picture: previous, a dot per step (the current one long), next, and back to the first step; each scrolls the page to its step |
-| `mapPairs(el, pairs)` | the two-column "who is who" table of the closing spread |
 | `Polar(svg, opts)` | space-time drawn in the round (see below) |
 | `reduce` | true when the reader asked for reduced motion |
 
@@ -97,9 +96,9 @@ Copy the markup from a model's `body.html`. The spreads, in order:
    is still open and the next begins by naming it (see "Continuous prose" below). Alternate `light` and
    `dark`; a spread that follows one of the other colour starts with a `.tear` (copy one, and set
    `--prev` to the colour above: `#eae4d4` after dark, `#f6eed6` after light).
-6. **Back to machines** (`section#why`): a lede that begins "Read the <place> again with
-   machines …" and names the main correspondences, the `.map` table, the `.end` block (one sentence in
-   `.big`, a `.lede`, the `.links`), then the `.apparatus`.
+6. **The result** (`section#why`, named "The result"): the `.end` block (one sentence in `.big`, a
+   `.lede`, the `.links`), then the `.apparatus`. There is no who-is-who table: the Allegory | Computing
+   switch already shows what each part of the setting stands for.
 
 Building blocks inside a spread: `.narrow` (kicker, `h2`, `.lede`, a paragraph or two);
 `.two` (text beside a `.photo` in a `.pop`); `.cards3` (three `.card3` papers, for rules or
