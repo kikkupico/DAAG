@@ -197,7 +197,7 @@ function Unfold(src,o){
     const keys=Object.keys(o.nodes),big=PHONE.matches?1.6:1;
     /* a process the reader can press in the picture is pressed by its name here; a redraw keeps the focus */
     if(o.press){const gs=svg.querySelectorAll(".ln-proc");keys.forEach((k,i)=>{const p=o.press[k];if(!p)return;
-      const g=gs[i];g.dataset.k=k;g.classList.add("ln-press");button(g,p[0],p[1]);if(fk===k)g.focus()})}
+      const g=gs[i];g.dataset.k=k;g.classList.add("ln-press");button(g,p[0],p[1]);if(fk===k)g.focus({preventScroll:true})})}
     /* the lane of a man who has crashed stops there */
     keys.forEach(k=>{if(crashes[k]==null)return;const t=Math.max(0,X(crashes[k])),[x,y]=P.pt(k,t);
       el("line",{class:"ln-gone",x1:x,y1:y,x2:P.x(span)+20,y2:y},P.shade);
