@@ -114,6 +114,7 @@ Written: `books/changes-that-never-clash/`.
 | Device | In the paper | Also in |
 |---|---|---|
 | the scholar's table at each library's loan desk: one column of pebbles per library | A counter as a vector, one entry per replica (G-Counter). | The column room (*Ordering Without Clocks*) |
+| a board at every desk for each scholar with a deposit; the book watches one | One counter per key, each behaving as the one shown; the merge is unchanged. |  |
 | a library adds pebbles only to its own column | An update touches only the replica's own entry. |  |
 | merging two tables: take the larger pile in each column | Merge as join: commutative, associative, idempotent. |  |
 | why not one pile: two libraries adding each other's totals count twice, and again at every merge | Why a plain sum is not a CRDT. |  |

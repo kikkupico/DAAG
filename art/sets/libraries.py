@@ -42,7 +42,10 @@ image model (the helpers are masonry.py's):
   the scrolls this library has lent and black in the second for the scrolls returned to it.
   Every board has three grooves to a set, as the book that uses it has three libraries; the
   piles differ from library to library, drawn from the desk's own seed so that the rest of each
-  library is drawn as before.
+  library is drawn as before. A desk keeps a board for every scholar with a deposit: the one on
+  the desk is the scholar's at the desk, and the others lie on a stepped stand beside its open
+  end, smaller, one to a step with its own piles, each board with a wax tag of its own colour on
+  its front edge (no writing), drawn from a seed of their own.
 """
 import bpy, json, math, random, sys
 from mathutils import Vector, Matrix
@@ -98,6 +101,8 @@ GROOVE = material("table-marble-groove", (0.66, 0.64, 0.6), 0.6)
 WHITE = material("white-pebble", (0.93, 0.92, 0.88), 0.4)
 BLACK = material("black-pebble", (0.07, 0.07, 0.08), 0.4)
 CLAY = material("clay", (0.62, 0.36, 0.22), 0.8)
+WAX = [material(f"wax-{k}", c, 0.5) for k, c in enumerate(                       # the boards' tags, one colour to a board
+    [(0.55, 0.1, 0.07), (0.8, 0.6, 0.16), (0.22, 0.4, 0.18), (0.16, 0.26, 0.52), (0.42, 0.22, 0.1), (0.4, 0.16, 0.38)])]
 
 shell, floor, furn = Part("shell"), Part("floor"), Part("furniture")
 T, FZ, PD, PW, CX = P["wall"], P["floor"], P["porch"], P["porch_w"], P["columns"]
@@ -385,6 +390,32 @@ for n, b in enumerate(PLAN):
     for x in (lx - 0.14, lx + 0.14):
         for y in (ly - 0.12, ly + 0.12):
             bx(furn, (x - 0.025, y - 0.025, FZ), (x + 0.025, y + 0.025, FZ + 0.44), TIMBER)
+    # the other scholars' boards: a stepped stand beside the desk's open end, a smaller marble board
+    # on each step with its own piles and a wax tag of its own colour on its front edge, the step
+    # rising towards the back so that every board shows over the one before it. The board on the
+    # desk carries a tag too. Drawn from a seed of their own, so the desk is drawn as before.
+    sr = random.Random(3000 + n)
+    wax = sr.sample(WAX, len(WAX))
+    furn.disc(Vector((bc.x - bw / 2 + 0.06, bc.y - bd / 2 - 0.004, dz + bt / 2)), 0.017, 0.008, (0, 1, 0), wax[0], 12)
+    sx0, sx1, sy0, ns, sd, s0, sh = dx1 + 0.1, dx1 + 0.62, dy0, 5, 0.2, FZ + 0.5, 0.1   # the stand: across, front, steps
+    for k in range(ns):
+        ya, yb, z = sy0 + k * sd, sy0 + (k + 1) * sd, s0 + k * sh
+        bx(furn, (sx0, ya, z - 0.03), (sx1, yb, z), SHELF)                           # the tread
+        bx(furn, (sx0 + 0.03, ya, FZ + 0.1 if k == 0 else z - sh), (sx1 - 0.03, ya + 0.02, z - 0.03), PLANK)   # the riser
+        for x in (sx0, sx1 - 0.035):                                                 # its cheeks, stepped
+            bx(furn, (x, ya, FZ), (x + 0.035, yb, z - 0.03), TIMBER)
+        ow, od, ot = sx1 - sx0 - 0.08, sd - 0.05, 0.03                               # a board on the step
+        oc = Vector(((sx0 + sx1) / 2, ya + 0.025 + od / 2, z))
+        bx(furn, (oc.x - ow / 2, oc.y - od / 2, z), (oc.x + ow / 2, oc.y + od / 2, z + ot), MARBLE)
+        og, ol = 0.032, od - 0.05
+        for s, mat in ((-1, WHITE), (1, BLACK)):
+            for j in range(nl):
+                x = oc.x + s * (0.03 + 0.055 * (j + 0.5))
+                bx(furn, (x - og / 2, oc.y - ol / 2, z + ot), (x + og / 2, oc.y + ol / 2, z + ot + 0.001), GROOVE)
+                for q in range(sr.randint(0, 3) if mat is WHITE else sr.randint(0, 1)):
+                    furn.sphere((x, oc.y + ol / 2 - 0.016 - q * 0.027, z + ot + 0.009), 0.012, mat, 0.6, 8, 5)
+        furn.disc(Vector((oc.x - ow / 2 + 0.05, oc.y - od / 2 - 0.004, z + ot / 2)), 0.015, 0.008, (0, 1, 0), wax[k + 1], 12)
+    bx(furn, (sx0 + 0.035, sy0 + 0.05, FZ + 0.08), (sx1 - 0.035, sy0 + ns * sd - 0.05, FZ + 0.12), TIMBER)   # a stretcher low between the cheeks
 
     # --- stand it at its site -----------------------------------------------------------------
     # explorer (x, z) -> blender (x, -z); the plan's first half-axis runs at `rot` in explorer terms
@@ -397,7 +428,8 @@ for n, b in enumerate(PLAN):
                  "steps": ex(0, -hy - PD - 0.9), "room": ex(0, 0), "rack": [ex(r0, ry0), ex(r1, ry0)],
                  "table": ex((tx0 + tx1) / 2, (ty0 + ty1) / 2), "stool": ex(sx, sy),
                  "desk": ex((dx0 + dx1) / 2, (dy0 + dy1) / 2), "desk_top": round(g + dz, 2), "board": ex(bc.x, bc.y),
-                 "before_desk": ex((dx0 + dx1) / 2, dy0 - 0.55), "lent": lent, "returned": back})
+                 "before_desk": ex((dx0 + dx1) / 2, dy0 - 0.55), "lent": lent, "returned": back,
+                 "boards": ex((sx0 + sx1) / 2, sy0 + ns * sd / 2)})
     y0, y1 = -tyf + 0.05, hy0 + 0.3                                                  # the levelled ground: walls, porch, forecourt
     strips.append({"at": ex(0, (y0 + y1) / 2), "half": [hx0 + 0.3, (y1 - y0) / 2], "rot": b["rot"], "pad": g - 0.05})
 
@@ -407,7 +439,8 @@ json.dump({"_note": "Written by art/sets/libraries.py; explorer coords [x, z] in
                     "ground before the porch steps; `room`: the reading room's middle, at `floor`; `rack`: the "
                     "ends of the scroll rack's front; `table`, `stool`: the reading table and its stool; `desk`, at "
                     "`desk_top`: the loan desk, `board` its pebble board, `before_desk` where a reader stands at it; "
-                    "`lent`, `returned`: the white and the black pebbles in each of the board's grooves.",
+                    "`lent`, `returned`: the white and the black pebbles in each of the board's grooves; `boards`: the "
+                    "stepped stand of the other scholars' boards beside the desk.",
            "params": P, "libraries": info}, open(f"art/sets/{NAME}.json", "w"), indent=1)
 json.dump({"_note": f"Written by art/sets/libraries.py for {NAME}: ground to clear, explorer [x, z].", "strips": strips},
           open(f"art/sets/{NAME}-strips.json", "w"), indent=1)
