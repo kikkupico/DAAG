@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -95,9 +95,14 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 (function(){
   const C=Coast($("#onesvg"),{n:2,stoa:false}),say=$("#onesay");let left=false;
   C.way(0,1,"way cut");C.note(0,"the old copy","the old value");C.note(1,"the old copy","the old value");
-  $("#oleave").onclick=()=>{left=true;C.fill(0,"#e0b84a");C.note(0,"the correction","the write");say.innerHTML=dual("The correction is on Library 1's shelves. No courier can carry it to Library 2.","The write is at replica 1. No message can carry it to replica 2.")};
+  /* computing: the client's visits on a timeline that slides as it runs, with the two replicas partitioned throughout */
+  const L=Unfold(C.svg,{nodes:{C:[0,"C","#8fb3d9","C"],R1:[0,"1","#f6eed6","R1"],R2:[0,"2","#f6eed6","R2"]},span:5,slide:true});
+  /* the partition lasts throughout, so its band spans whatever stretch is in view */
+  const part=L.band(0,5,"R1 and R2 partitioned",false,true);
+  const visit=(k,lab,back)=>{const t=L.clock.t;L.msg("C",k,t,t+.6,lab);L.msg(k,"C",t+.6,t+1.2,back);L.setT(t+1.3);part.t0=Math.max(0,L.clock.t-5*.86);part.t1=part.t0+5;L.render()};L.state("R1","old value");L.state("R2","old value");L.setT(.2);
+  $("#oleave").onclick=()=>{left=true;visit("R1","write","ack");L.setT(L.clock.t-.7);L.state("R1","the write");L.setT(L.clock.t+.7);C.fill(0,"#e0b84a");C.note(0,"the correction","the write");say.innerHTML=dual("The correction is on Library 1's shelves. No courier can carry it to Library 2.","The write is at replica 1. No message can carry it to replica 2.")};
   const back=i=>{if(!left){say.innerHTML=dual("Leave a correction at Library 1 first.","Write at replica 1 first.");return}
-    [0,1].forEach(k=>C.lib[k].g.classList.toggle("mark",k===i));
+    [0,1].forEach(k=>C.lib[k].g.classList.toggle("mark",k===i));visit("R"+(i+1),"read",i===0?"the write":"old value");L.state("C",i===0?"finds its write":"write missing");
     say.innerHTML=i===0?dual(`Library 1 answers from its shelves. <span class="ok">The reader finds the correction.</span>`,`Replica 1 answers from its own data. <span class="ok">The client finds its write.</span>`):dual(`Library 2 must answer, from what it holds. <span class="bad">The reader's own correction is missing.</span> The librarian cannot find what nobody has brought.`,`Replica 2 must answer, from what it holds. <span class="bad">The client's own write is missing.</span> The replica cannot return what nobody has sent it.`)};
   $("#oback1").onclick=()=>back(0);$("#oback2").onclick=()=>back(1);
 })();

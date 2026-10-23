@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -79,16 +79,25 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* ===== how many to wait for: three home libraries on the coast ===== */
 (function(){
   const C=Coast($("#waitsvg"),{n:3,stoa:false}),say=$("#waitsay");let W=1,R=1;
-  const clear=()=>{[0,1,2].forEach(i=>{C.fill(i,"#fffaf0");C.lib[i].g.classList.remove("mark");C.note(i,"")});
+  /* computing: the write and the read on a timeline. The writer's write goes to all three replicas; those that answered
+     first acknowledge it, and the rest are still in transit when the client reads; the client takes the first replies. */
+  const RN=["R1","R2","R3"],L=Unfold(C.svg,{nodes:{W:[0,"W","#e0b84a","W"],R1:[0,"1","#f6eed6","R1"],R2:[0,"2","#f6eed6","R2"],R3:[0,"3","#f6eed6","R3"],C:[0,"C","#8fb3d9","C"]},span:3.6});
+  function lanes(w,r){L.reset();RN.forEach(k=>L.state(k,"old version"));if(!w)return;
+    RN.forEach((k,i)=>{if(w.includes(i)){L.msg("W",k,.2,.9,i===w[0]?"write":"");L.setT(.9);L.state(k,"new version");L.msg(k,"W",.9,1.5,i===w[0]?"ack":"")}
+      else L.msg("W",k,.2,null)});
+    L.setT(1.55);L.state("W","committed");
+    RN.forEach((k,i)=>{L.msg("C",k,1.8,r.includes(i)?2.4:null,i===0?"read":"");if(r.includes(i))L.msg(k,"C",2.4,3,w.includes(i)?"new":"old")});
+    L.setT(3.05);L.state("C",r.some(i=>w.includes(i))?"reads new version":"reads old version");L.setT(3.4)}
+  const clear=()=>{lanes();[0,1,2].forEach(i=>{C.fill(i,"#fffaf0");C.lib[i].g.classList.remove("mark");C.note(i,"")});
     say.innerHTML=W+R>3?dual(`${W} and ${R} add up to more than three. The two groups must share a home library.`,`${W} and ${R} add up to more than three. The two groups must share a replica.`):dual(`${W} and ${R} do not add up to more than three. The groups may miss each other.`,`${W} and ${R} do not add up to more than three. The groups may miss each other.`)};
   seg($("#ww"),[1,2,3].map(k=>[k,k]),W,v=>{W=+v;clear()});seg($("#wr"),[1,2,3].map(k=>[k,k]),R,v=>{R=+v;clear()});
   $("#waitgo").onclick=()=>{clear();const w=pick(3,W),r=pick(3,R);          // which home libraries answered the writer first, and which the reader hears from first
     w.forEach(i=>{C.fill(i,"#e0b84a");C.note(i,"new edition","new version")});[0,1,2].filter(i=>!w.includes(i)).forEach(i=>C.note(i,"old copy"));
     r.forEach(i=>C.lib[i].g.classList.add("mark"));
-    const both=r.filter(i=>w.includes(i));
+    const both=r.filter(i=>w.includes(i));lanes(w,r);
     const ls=r.map(i=>i+1).join(" and ");
-    say.innerHTML=both.length?dual(`The reader hears from Library ${ls}. Library ${both[0]+1} holds the new edition, and the reader takes the newest copy heard. <span class="ok">The reader is handed the new edition.</span>`,`The client hears from Replica ${ls}. Replica ${both[0]+1} holds the new version, and the client takes the newest copy heard. <span class="ok">The client is handed the new version.</span>`)
-      :dual(`The reader hears from Library ${ls}. ${r.length>1?"Neither holds":"It does not hold"} the new edition yet. <span class="bad">The reader is handed the old copy</span>, and nothing in the ${r.length>1?"replies says":"reply says"} so.`,`The client hears from Replica ${ls}. ${r.length>1?"Neither holds":"It does not hold"} the new version yet. <span class="bad">The client is handed the old copy</span>, and nothing in the ${r.length>1?"replies says":"reply says"} so.`)};
+    say.innerHTML=both.length?dual(`The reader hears from Library ${ls}. Library ${both[0]+1} holds the new edition, and the reader takes the newest copy heard. <span class="ok">The reader is handed the new edition.</span>`,`The client takes the replies of Replica ${ls}. Replica ${both[0]+1} holds the new version, and the client takes the newest copy heard. <span class="ok">The client is handed the new version.</span>`)
+      :dual(`The reader hears from Library ${ls}. ${r.length>1?"Neither holds":"It does not hold"} the new edition yet. <span class="bad">The reader is handed the old copy</span>, and nothing in the ${r.length>1?"replies says":"reply says"} so.`,`The client takes the replies of Replica ${ls}. ${r.length>1?"Neither holds":"It does not hold"} the new version yet. <span class="bad">The client is handed the old copy</span>, and nothing in the ${r.length>1?"replies says":"reply says"} so.`)};
   clear();
 })();
 
