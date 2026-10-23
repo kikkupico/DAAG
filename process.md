@@ -322,16 +322,24 @@ times larger; `draw` builds the figure from nothing and puts back whatever the r
 that redraws from scratch each time uses `Space(svg,opts)` for the engine and `redrawOn(fn)`. Write the
 computing caption and `data-al-m` for lanes (left to right, arrows), never for the round.
 
-**A place from above, in computing.** A picture of where the processes sit that the reader plays with (the hill
-with its tents and ravens) keeps its allegory form, and in computing shows its twin: `Unfold(svg,{nodes,span,slide,clock})`
-in `book.js` adds a second svg after it, a timeline that grows as the reader acts. `L.wrap(H)` relays the picture's own
-`fly`, `state` and `badge`; a message is an arrow from the moment it is sent, dashed while in transit and solid once it
-lands. Everything else is said where it happens: `reset`, `crash(k)` (the lane stops), `lose(token)` (the arrow ends at a
-cross), `cut(k,on)` (the lane hatched while cut off), `step(k)` and `tick(dt)` (time that passes with nothing flying),
-`turn(k)`, `mark(k,label)` (a labelled moment that stays, such as each coin flip), and for a scene told step by step
-`msg(a,b,t0,t1,label)`, `band(t0,t1,label)` and `setT(t)`. Time runs while a message flies; views read side by side share
-a clock; an endless run slides. A widget that starts and stops with its picture's visibility watches the picture's
-parent, since the hidden one never shows. Done for the five books at the foot of Mount Phyle.
+**A place from above, in computing.** A picture of where the processes sit that carries something through time (the
+hill with its ravens, Arche's ring road, the crown's rats, the Tholos's runners, the Chamber's messengers) keeps its
+allegory form, and in computing shows its twin: `Unfold(svg,{nodes,span,slide,clock})` in `book.js` adds a second svg
+after it, a timeline that grows as the reader acts. `L.wrap(H)` relays the picture's own mover (`fly`, `road` or `run`),
+`state`, `note` and `badge`; a message is an arrow from the moment it is sent, dashed while in transit and solid once it
+lands. Everything else is said where it happens: `reset`, `crash(k)` (the lane stops), `down(k,on)` (the lane missing
+while the process is stopped), `lose` (the arrow ends at a cross), `cut(k,on)` (the lane hatched while cut off), `step(k)`
+and `tick(dt)` (time that passes with nothing flying), `turn(k)` (the name ringed), `mark(k,label)` (a labelled moment
+that stays, such as each coin flip or each refusal), and for a scene told step by step `msg(a,b,t0,t1,label,cls)` (t1 null
+while in transit; `ln-red` for a marker, `ln-aside` for an outside channel), `land`, `band(t0,t1,label,hot,low)` and
+`setT(t)`. A scroll draws the story so far at a step to each unit of time. Options: `alias` gives a place that is not a
+process the lane of whoever stands for it (the podium is its holder), `labels` writes each token's value on its arrow,
+`press` makes a process's name a button where the reader presses a place in the picture. Time runs while a message
+flies; views read side by side share a clock; an endless run slides, and a process's last state stays at the left edge.
+A process's label keeps the moment it last changed. A widget that starts and stops with its picture's visibility watches
+the picture's parent, since the hidden one never shows. A picture with no time in it (who sits in which group, which
+quorums meet, a sorting) stays as it is in both registers, and so does one that carries something lanes cannot show,
+such as the new leader's log beside the Chamber.
 
 **Draw a figure when the argument has a shape**, and not otherwise:
 

@@ -189,7 +189,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const L=Unfold(svg,{nodes:Object.fromEntries(all.map((k,i)=>[k,[0,lab[k],C[k],"P"+(i+1)]])),span:6.4});
   const MS=[[1,"NextBallot"],[2,"LastVote"],[4,"BeginBallot"],[5,"Voted"],[6,"Success"]];
   function lanes(s){L.reset();L.turn("A");const at=k=>[k-1+.2,k-.25];
-    MS.forEach(([k,lab])=>{if(k<=s)L.band(k-1+.08,k-.1,lab,k===s)});
+    MS.forEach(([k,lab],i)=>{if(k<=s)L.band(k-1+.08,k-.1,lab,k===s,i%2===1)});   /* names alternate above and below, so they keep apart on a phone */
     if(s>=1){const [a,b]=at(1);Q.filter(k=>k!=="A").forEach(k=>L.msg("A",k,a,b))}
     if(s>=2){const [a,b]=at(2);L.setT(a);Q.forEach(k=>L.state(k,"promised ≥ 27"));L.msg("G","A",a,b,"5, β");L.msg("D","A",a,b,"2, α")}
     if(s>=3){L.setT(2.55);L.state("A","value forced: β")}
