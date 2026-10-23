@@ -309,7 +309,7 @@ predate this rule; use them with a tint, and build new ones to it.
 > - **The Chamber** (the western arm): a round colonnaded hall under a conical tiled roof, on a terrace above the bay, where the parliament sits, looking across the water at the Tholos. The island road runs up the stem, forks, and runs out along the western arm past the Chamber to the harbour town at the arm's tip, so the Chamber is on a through route.
 > - **Schedia and the Tholos** (the eastern arm): a small unwalled city of its own above a cove on the bay, with the Tholos, a round hall with a conical tiled roof and a podium at its centre, on a terrace facing the Chamber across the bay.
 > - **The hall of two doors** (the fork): on common ground belonging to neither city; one door faces north up the bay to the Chamber and the Tholos, one south down the stem to the scholars' coast.
-> - **The scholars' coast** (the body of the island), which the scholars call Homonoia: lower, deeply indented country of coves and valleys, with the stoa and festival ground on an eastern harbour, about a dozen small libraries within casual reach of one another along footpaths of differing length, a courier cove on the rocky southwest shore, and in every library a loan desk where a visiting scholar borrows scrolls against one deposit, his loans counted in pebbles. The scholars hold no assembly.
+> - **The scholars' coast** (the body of the island), which the scholars call Homonoia: lower, deeply indented country of coves and valleys, with the stoa and festival ground on an eastern harbour, about a dozen small libraries within casual reach of one another along footpaths of differing length, a courier cove on the rocky southwest shore, and in every library a loan desk where a visiting scholar borrows scrolls against one deposit, his loans counted in pebbles on a board kept for him among the desk's boards. The scholars hold no assembly.
 
 ### 3.1 Island Plate Prompt (Geography, Habitation & Book Locations)
 Like Arche's, the Paxos plate carries its buildings in place. It is made in three steps.
@@ -404,7 +404,7 @@ Detailed 3D isometric architectural asset of one small library on Paxos's schola
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated scholarly building, zero people.
 Sited in a small level clearing among olive trees, a footpath leading away.
 A small limestone building with a columned porch, a pitched oxblood terracotta tile roof, and a heavy timber double door standing open onto walls of wooden pigeonhole shelves (armaria) filled with rolled scrolls.
-Beside the main hall, a small reading room with a single reading table, a lectern and a bench, and a timber loan desk facing the door with a marble board of black and white pebbles on it.
+Beside the main hall, a small reading room with a single reading table, a lectern and a bench, and a timber loan desk facing the door with a marble board of black and white pebbles on it, and beside it a stepped stand of smaller pebble boards, each with a coloured wax tag.
 The same building is repeated about a dozen times across the scholars' coast.
 ```
 
@@ -423,6 +423,7 @@ Detailed 3D isometric architectural cutaway of the reading room of one small lib
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated room, zero people.
 Facing the open door stands a plain timber loan desk with a boarded front and a stool behind it; a wall of wooden pigeonholes full of rolled scrolls runs behind.
 On the desk lies a white marble counting board cut with six shallow grooves in two sets of three: white pebbles in the first set, black pebbles in the second; two clay bowls of spare white and black pebbles and a small rack of scrolls at the desk's end.
+Beside the desk's other end a stepped timber stand holds five smaller marble boards, one to a step, each with a few white and black pebbles in its grooves and a small wax tag of its own colour on its front edge.
 No writing anywhere.
 ```
 
