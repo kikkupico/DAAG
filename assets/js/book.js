@@ -164,18 +164,22 @@ function Lanes(svg,o){
   return P;
 }
 /* Unfold: a place-from-above picture's computing twin, a timeline that grows as the reader acts.
-   The picture (a Hill, an Isle) stays as it is and shows in the allegory; a second svg after it shows in computing.
-   The book's own calls feed it: wrap(H) relays H.fly, H.state and H.badge; the rest is said outright at the point
-   it happens: reset, crash, lose, step, tick, turn. A message is an arrow from the moment it is sent, dashed toward its
-   receiver while in transit and solid once it lands; a lost one ends part-way at a cross; a crash ends a lane.
+   The picture (a Hill, an Isle, the Crown, the Tholos) stays as it is and shows in the allegory; a second svg after it
+   shows in computing. The book's own calls feed it: wrap(H) relays the picture's mover (fly, road or run), its state,
+   note and badge; the rest is said outright at the point it happens: reset, crash, lose, cut, step, tick, turn, mark.
+   A message is an arrow from the moment it is sent, dashed toward its receiver while in transit and solid once it
+   lands (a mover's u at o.land or beyond, .879 unless said); a lost one ends part-way at a cross; a crash ends a lane.
    Time runs while a message flies, plus whatever tick and step add; views that are read side by side share a clock.
+   o.alias names the lane of a place that is not a process (the podium is whoever holds it); a place with no lane is
+   not drawn. o.labels writes each token's glyph (through o.vals) on its arrow. Nothing the twin does can stop the picture.
      const L=Unfold(svg,{nodes, span, slide, clock}); L.wrap(H);   (o.clock: another Unfold's clock, to share it) */
 function Unfold(src,o){
   const svg=src.cloneNode(false);svg.id=src.id+"-ln";svg.classList.add("m");src.classList.add("i");src.after(svg);
   if(src.dataset.alM)svg.setAttribute("aria-label",src.dataset.alM);
   const clock=o.clock||{t:0,owed:0,active:-1e9,raf:0,last:0,subs:[]};
   let msgs=[],states=[],steps=[],marks=[],bands=[],cuts=[],badges={},crashes={},turnK=null,queued=false;
-  const byTok=new Map();
+  const byTok=new Map(),land=o.land||.879,lane=k=>{k=o.alias&&o.alias[k]!=null?o.alias[k]:k;return o.nodes[k]?k:null};
+  const safe=f=>{try{f()}catch(e){console.error(e)}};
   function wake(){if(!clock.raf){clock.last=performance.now();clock.raf=requestAnimationFrame(loop)}}
   function loop(now){const dt=Math.min(.1,(now-clock.last)/1000);clock.last=now;
     const flying=now-clock.active<160;let adv=flying?dt:0;
@@ -202,17 +206,19 @@ function Unfold(src,o){
       for(const c of cuts){const t0=Math.max(0,X(c.t0)),t1=c.t1!=null?X(c.t1):now;if(t1<0)continue;const y=P.pt(c.k,0)[1],h=22*big;
         el("rect",{class:"ln-cut",x:P.x(t0),y:y-h,width:Math.max(2,P.x(Math.max(t1,t0+.05))-P.x(t0)),height:2*h,rx:6,fill:`url(#${svg.id}-cut)`},P.shade)}}
     /* a stretch of time with a name: a round of a protocol */
-    for(const b of bands){const x1=P.x(X(b.t0)),x2=P.x(X(b.t1)),top=P.y(keys[0])-40;
-      el("rect",{class:"ln-band"+(b.hot?" hot":""),x:x1,y:top,width:x2-x1,height:P.y(keys[keys.length-1])+40-top},P.shade);
-      el("text",{class:"ln-bandl",x:(x1+x2)/2,y:top-8,style:`font-size:${11.5*big}px`},P.over).textContent=b.lab}
+    for(const b of bands){const x1=P.x(X(b.t0)),x2=P.x(X(b.t1)),top=P.y(keys[0])-40,bot=P.y(keys[keys.length-1])+40;
+      el("rect",{class:"ln-band"+(b.hot?" hot":""),x:x1,y:top,width:x2-x1,height:bot-top},P.shade);
+      el("text",{class:"ln-bandl",x:(x1+x2)/2,y:b.low?bot+16*big:top-8,style:`font-size:${11.5*big}px`},P.over).textContent=b.lab}
     for(const r of msgs){
       const t0=X(r.t0);if((r.t1!=null&&X(r.t1)<0)||(r.lost!=null&&X(r.lost)<0))continue;
       const [x1,y1]=P.pt(r.a,Math.max(0,t0)),yb=P.pt(r.b,0)[1],ya=P.pt(r.a,0)[1];
       if(r.lost!=null){const tl=X(r.lost),x2=P.x(tl),y2=ya+(yb-ya)*.5;
         el("path",{class:"st-slip ln-lost",d:`M${x1},${y1}L${x2},${y2}`},P.slips);el("path",{class:"ln-x",d:`M${x2-7},${y2-7}L${x2+7},${y2+7}M${x2-7},${y2+7}L${x2+7},${y2-7}`},P.over);continue}
       const t1=r.t1!=null?X(r.t1):now,p=P.slip(r.a,Math.max(0,t0),r.b,Math.max(t1,t0+.02),r.t1!=null?7:4);
+      if(r.cls){p.classList.add(r.cls);if(r.cls==="ln-red")p.setAttribute("marker-end",`url(#${svg.id}-r)`);if(r.cls==="ln-aside")p.removeAttribute("marker-end")}
       if(r.t1==null)p.classList.add("ln-pending");else P.dot(r.b,t1,r.fill);
-      if(r.lab){const [mx,my]=p.mid;el("text",{class:"ln-mlab",x:mx,y:my-6*big,style:`font-size:${11.5*big}px`},P.over).textContent=r.lab}}
+      /* a label a third of the way along, so that arrows crossing at their middles keep theirs apart */
+      if(r.lab){const [x2,y2]=P.pt(r.b,Math.max(t1,t0+.02)),mx=x1+(x2-x1)*.34,my=y1+(y2-y1)*.34;el("text",{class:"ln-mlab",x:mx,y:my-6*big,style:`font-size:${11.5*big}px`},P.over).textContent=r.lab}}
     for(const s of steps)if(X(s.t)>=0)P.dot(s.k,X(s.t),"#fff").classList.add("ln-step");
     /* labelled moments that all stay: every flip of a coin */
     for(const m of marks){if(X(m.t)<0)continue;const [x,y]=P.pt(m.k,X(m.t)),g=el("g",{class:"ln-mark",transform:`translate(${x} ${y})`},P.over);
@@ -223,28 +229,34 @@ function Unfold(src,o){
       if(x+10>P.x(span)-60)t.setAttribute("text-anchor","end")});
   }
   const L={svg,clock,
-    /* relay a picture's own calls */
-    wrap(H){const fly=H.fly,state=H.state,badge=H.badge;
-      H.fly=(g,a,b,u)=>{fly(g,a,b,u);L.fly(g,a,b,u)};
-      H.state=(k,i,m)=>{state(k,i,m);L.state(k,i,m)};
-      if(badge)H.badge=(k,s)=>{badge(k,s);L.badge(k,s)};
+    /* relay a picture's own calls; a twin that fails leaves the picture running */
+    wrap(H){for(const m of ["fly","road","run"])if(H[m]){const f=H[m];H[m]=(g,a,b,u)=>{f(g,a,b,u);safe(()=>L.fly(g,a,b,u))}}
+      for(const m of ["state","note"])if(H[m]){const f=H[m];H[m]=(k,i,m2)=>{f(k,i,m2);safe(()=>L.state(k,i,m2===undefined&&o.mtext?o.mtext(i):m2))}}
+      if(H.badge){const f=H.badge;H.badge=(k,s)=>{f(k,s);safe(()=>L.badge(k,s))}}
+      if(o.labels&&H.token){const f=H.token;H.token=(fill,glyph,...r)=>{const g=f(fill,glyph,...r);g.lnLab=glyph==null||glyph===""?null:String((o.vals&&o.vals[glyph])||glyph);return g}}
       H.lanes=L;return H},
-    fly(g,a,b,u){let r=byTok.get(g);
+    fly(g,a,b,u){a=lane(a);b=lane(b);if(a==null||b==null||a==b)return;let r=byTok.get(g);
       /* a token that has landed starts a new flight only when it sets off again from near its sender */
-      if(!r||r.a!=a||r.b!=b||((r.t1!=null||r.lost!=null)&&u<.5)){r={a:+a||a,b:+b||b,t0:clock.t,t1:null,lost:null,fill:o.nodes[a][2]};msgs.push(r);byTok.set(g,r)}
-      if(u>=.879&&r.t1==null&&r.lost==null)r.t1=clock.t;clock.active=performance.now();wake();render()},
+      if(!r||r.a!=a||r.b!=b||((r.t1!=null||r.lost!=null)&&u<.5)){r={a:+a||a,b:+b||b,t0:clock.t,t1:null,lost:null,fill:o.nodes[a][2],lab:g.lnLab};msgs.push(r);byTok.set(g,r)}
+      if(u>=land&&r.t1==null&&r.lost==null)r.t1=clock.t;clock.active=performance.now();wake();render()},
     lose(g){const r=byTok.get(g);if(r&&r.t1==null){r.lost=clock.t;render()}},
-    state(k,i,m){if(i)states.push({k,t:clock.t,i,m:m===undefined?i:m});else states=states.filter(s=>s.k!=k);render()},
+    /* a state said again unchanged keeps the moment it first took */
+    state(k,i,m){if(Array.isArray(i))[i,m]=i;k=lane(k);if(k==null)return;
+      if(i){m=m===undefined?i:m;const last=[...states].reverse().find(x=>x.k==k);if(!last||last.i!==i||last.m!==m)states.push({k,t:clock.t,i,m})}
+      else states=states.filter(s=>s.k!=k);render()},
     badge(k,s){badges[k]=s?((o.vals&&o.vals[s])||s):null;render()},
     crash(k,on=true){crashes[k]=on?clock.t:null;render()},
     cut(k,on){const c=cuts.find(x=>x.k==k&&x.t1==null);if(on&&!c)cuts.push({k,t0:clock.t,t1:null});else if(!on&&c)c.t1=clock.t;render()},
-    turn(k){turnK=k;render()},
+    turn(k){turnK=k==null?null:lane(k);render()},
     mark(k,lab,col){marks.push({k,t:clock.t,lab,col});render()},
     step(k,dt=.6){steps.push({k,t:clock.t});clock.owed+=dt;wake();render()},
     tick(dt){clock.owed+=dt;wake()},
-    /* for a scene told step by step: a message with its own times, a named stretch of time, the clock set outright */
-    msg(a,b,t0,t1,lab){msgs.push({a,b,t0,t1,lost:null,fill:o.nodes[a][2],lab});render()},
-    band(t0,t1,lab,hot){bands.push({t0,t1,lab,hot});render()},
+    /* for a scene told step by step: a message with its own times (t1 null: still in transit; cls "ln-red" for a marker,
+       "ln-aside" for something carried outside the system), a named stretch of time (low: its name under the lanes,
+       for a stretch inside another), the clock set outright */
+    msg(a,b,t0,t1,lab,cls){a=lane(a);b=lane(b);if(a==null||b==null)return null;const r={a,b,t0,t1,lost:null,fill:cls==="ln-red"?"#bf4a26":o.nodes[a][2],lab,cls};msgs.push(r);render();return r},
+    land(r,t=clock.t){if(r){r.t1=t;render()}},
+    band(t0,t1,lab,hot,low){bands.push({t0,t1,lab,hot,low});render()},
     setT(t){clock.t=t;render()},
     /* start the timeline again; inputs stay until badge changes them */
     reset(){msgs=[];states=[];steps=[];marks=[];bands=[];cuts=[];crashes={};turnK=null;byTok.clear();clock.t=0;clock.owed=0;render()},

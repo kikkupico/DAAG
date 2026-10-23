@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -11,6 +11,8 @@ const yesno=ok=>ok?"<span class='ok'>✓</span>":"<span class='bad'>✗</span>";
 const chip=k=>`<span class="chip"><i style="background:${BC[k]}"></i>${dual("bandit "+k,"R"+k)}</span>`;
 const chips=a=>a.map(chip).join(" ");
 const men=[1,2,3,4];
+/* the four as lanes, for a crown picture's computing twin (Unfold in book.js) */
+const LANES={1:[0,"B1",BC[1],"R1"],2:[-90,"B2",BC[2],"R2"],3:[30,"B3",BC[3],"R3"],4:[150,"B4",BC[4],"R4"]};
 
 /* ===== the crown, seen from above: one picture reused wherever rats run between the posts ===== */
 function Crown(svg){
@@ -69,14 +71,14 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 
 /* ===== one stage on the crown, counted both ways ===== */
 (function(){
-  const C=Crown($("#votesvg")),say=$("#votesay"),cnt=$("#votecount"),b1=$("#voteall"),b2=$("#voteone");
+  const C=Crown($("#votesvg")),L=Unfold(C.svg,{nodes:LANES,span:3.4}),say=$("#votesay"),cnt=$("#votecount"),b1=$("#voteall"),b2=$("#voteone");L.wrap(C);
   const flight=(a,b,fill,glyph,ms)=>{const g=C.token(fill,glyph);g.setAttribute("opacity",1);C.fly(g,a,b,0);return tween(ms,u=>C.fly(g,a,b,u)).then(()=>g.remove())};
   const lock=on=>b1.disabled=b2.disabled=on;
-  b1.onclick=async()=>{lock(true);const pairs=[];for(const a of men)for(const b of men)if(a!==b)pairs.push([a,b]);
+  b1.onclick=async()=>{lock(true);L.reset();const pairs=[];for(const a of men)for(const b of men)if(a!==b)pairs.push([a,b]);
     cnt.textContent=pairs.length;say.innerHTML=dual("Every man writes to every other man.","Every replica messages every other replica.");
     await Promise.all(pairs.map(([a,b])=>flight(a,b,BC[a],"",1100+rnd(800))));
     say.innerHTML=dual(`<b>${pairs.length} rats</b> in one stage: each of the four men writes to the other three.`,`<b>${pairs.length} messages</b> in one phase: each of the four replicas messages the other three.`);lock(false)};
-  b2.onclick=async()=>{lock(true);const votes=[2,3,4].map(k=>[k,1]),bundle=[2,3,4].map(k=>[1,k]);
+  b2.onclick=async()=>{lock(true);L.reset();const votes=[2,3,4].map(k=>[k,1]),bundle=[2,3,4].map(k=>[1,k]);
     cnt.textContent=votes.length;say.innerHTML=dual("Each man sends their sealed vote to the registrar, bandit 1.","Each replica sends its signed vote to the leader, R1.");
     await Promise.all(votes.map(([a,b])=>flight(a,b,BC[a],"",1100+rnd(500))));
     cnt.textContent=votes.length+bundle.length;say.innerHTML=dual("The registrar has three votes, ties them into a bundle, and sends the bundle to the other three.","The leader has three votes, combines them into a certificate, and sends the certificate to the other three.");
@@ -87,8 +89,15 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* ===== scroll: one term, stage by stage ===== */
 (function(){
   const C=Crown($("#termsvg")),posts=[2,3,4];let run=0,toks=[];
+  /* computing: the term as one timeline, each wave of messages in a slot of its own, each stage a band.
+     The stages already read are drawn whole; the one being read runs live from its first slot. */
+  const SLOT=1.45,L=Unfold(C.svg,{nodes:LANES,span:9*SLOT+.2});L.wrap(C);
+  const PH=[["new-view",["in","out"]],["prepare",["in"]],["pre-commit",["out","in"]],["commit",["out","in"]],["decide",["out"]],["next view",["next"]]];
+  const first=i=>PH.slice(0,i).reduce((n,p)=>n+p[1].length,0),at=w=>.1+w*SLOT;
+  const pairsOf=k=>k==="in"?posts.map(p=>[p,1]):k==="out"?posts.map(p=>[1,p]):[1,3,4].map(p=>[p,2]);
+  let slot=0;
   const flight=(a,b,fill,glyph,ms,id)=>{const g=C.token(fill,glyph);toks.push(g);g.setAttribute("opacity",1);C.fly(g,a,b,0);return tween(ms,u=>{if(id===run)C.fly(g,a,b,u)}).then(()=>g.remove())};
-  const wave=(pairs,glyph,id)=>Promise.all(pairs.map(([a,b])=>flight(a,b,BC[a],glyph,1000+rnd(400),id)));
+  const wave=(pairs,glyph,id)=>{if(id===run)L.setT(at(slot++));return Promise.all(pairs.map(([a,b])=>flight(a,b,BC[a],glyph,1000+rnd(400),id)))};
   const vin=(id)=>wave(posts.map(k=>[k,1]),"",id),vout=(id,g)=>wave(posts.map(k=>[1,k]),g||"",id);
   const set=o=>men.forEach(k=>C.state(k,o[k]||""));
   const all=s=>({1:s,2:s,3:s,4:s});
@@ -96,7 +105,10 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
            {1:"has three votes",2:"voted",3:"voted",4:"voted"},
            all(["first bundle","first certificate"]),all("locked"),all(["entry written","block committed"]),{2:["has the job","is leader"]}];
   async function render(i){
-    const id=++run;toks.forEach(g=>g.remove());toks=[];set(i?S[i-1]:{});
+    const id=++run;toks.forEach(g=>g.remove());toks=[];
+    L.reset();PH.forEach(([lab,ks],j)=>{if(j>i)return;const w0=first(j);L.band(at(w0)-.06,at(w0+ks.length-1)+1.32,lab,j===i);
+      if(j<i)ks.forEach((k,n)=>pairsOf(k).forEach(([a,b])=>L.msg(a,b,at(w0+n),at(w0+n)+1.1)))});
+    slot=first(i);L.setT(at(slot));set(i?S[i-1]:{});
     const live=()=>id===run;
     if(i===0){await vin(id);if(!live())return;await vout(id);if(!live())return;set(S[0])}
     else if(i===1){await vin(id);if(!live())return;set(S[1])}
