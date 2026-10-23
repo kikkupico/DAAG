@@ -157,9 +157,9 @@
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4><span class="i">The runners go out <em>and come back with a word</em></span><span class="m">The messages go out <em>and come back with an acknowledgment</em></span></h4>
       <div class="hill-wrap">
-        <svg class="isle-svg fig" id="passsvg" role="group" aria-label="The Tholos from above: the podium at the centre, five benches round the wall, and runners carrying lines out and words back" data-al-m="The five replicas from above: the primary at the centre, four backups round the edge, and messages carrying records out and acknowledgments back"></svg>
+        <svg class="isle-svg fig" id="passsvg" role="group" aria-label="The Tholos from above: the podium at the centre, five benches round the wall, and runners carrying lines out and words back" data-al-m="Five lanes, one for each replica, with real time running left to right and the primary's name ringed: records go out to the backups and acknowledgments come back as arrows, dashed while in transit, and a cut-off backup's lane is hatched"></svg>
         <div>
-          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem"><span class="i">The Tholos from above. The ringed legislator holds the podium. Click a bench to have its legislator step out of reach, or come back.</span><span class="m">The group from above. The ringed replica is the primary. Click a backup to cut it off, or reconnect it.</span></p>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem"><span class="i">The Tholos from above. The ringed legislator holds the podium. Click a bench to have its legislator step out of reach, or come back.</span><span class="m">Each lane is one replica, with real time running left to right; the ringed name is the primary. Each arrow is a record going out or an acknowledgment coming back, dashed while in transit; a hatched lane is cut off. Click a backup's name to cut it off, or reconnect it.</span></p>
           <div class="counts"><span><b id="pline">11</b><bdi class="i">last line written</bdi><bdi class="m">last record appended</bdi></span><span><b id="ppass">11</b><bdi class="i">passed up to</bdi><bdi class="m">committed up to</bdi></span></div>
           <p class="say" id="passsay"><span class="i">Okios holds the podium. Theron has stepped out. Write the next line.</span><span class="m">R1 is the primary. R5 is cut off. Append the next record.</span></p>
         </div>
@@ -250,7 +250,7 @@
   </div>
   <div class="scrolly" id="change">
     <div class="stage"><div class="stage-inner split">
-      <svg class="fig svg-dark" id="changesvg" role="img" aria-label="The Tholos from above during a change of board: invitations go out from the caller, answers come back, and the new holder sends the whole law" data-al-m="The group during a view change: invitations go out from the view manager, replies come back, and the new primary sends its whole log"></svg>
+      <svg class="fig svg-dark" id="changesvg" role="img" aria-label="The Tholos from above during a change of board: invitations go out from the caller, answers come back, and the new holder sends the whole law" data-al-m="Five lanes with time running left to right a step at a time, during a view change: invitations go out from R2, replies come back with each replica's state, and the new primary sends its whole log; each replica shows its view and last record, and R1's lane is hatched while it is cut off"></svg>
       <div class="side five" id="changeside" data-live></div>
     </div></div>
     <div class="steps">
@@ -350,11 +350,11 @@
     <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
       <h4><span class="i">Can Okios pass a line? <em>board 6 on the porch, board 7 inside</em></span><span class="m">Can R1 commit a record? <em>view 6 on one side, view 7 on the other</em></span></h4>
       <div class="hill-wrap">
-        <svg class="isle-svg fig" id="porchsvg" role="group" aria-label="The Tholos from above with Okios out on the porch under board 6 and Liskovia at the podium under board 7" data-al-m="The group with R1 partitioned away under view 6 and R2 as primary under view 7"></svg>
+        <svg class="isle-svg fig" id="porchsvg" role="group" aria-label="The Tholos from above with Okios out on the porch under board 6 and Liskovia at the podium under board 7" data-al-m="Five lanes with real time running left to right: R2 is the primary in view 7, and R1, still in view 6, sends a record to every backup; each arrow ends in a tick where the record is taken and a cross where it is refused"></svg>
         <div>
-          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem"><span class="i">Board 7 formed on a majority: Liskovia, Kleon and Melissa. Click Theron's bench to choose whether he has heard of board 7 yet.</span><span class="m">View 7 formed on a majority: R2, R3 and R4. Click R5 to choose whether it has heard of view 7 yet.</span></p>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem"><span class="i">Board 7 formed on a majority: Liskovia, Kleon and Melissa. Click Theron's bench to choose whether he has heard of board 7 yet.</span><span class="m">View 7 formed on a majority: R2, R3 and R4. Click R5's name to choose whether it has joined view 7 yet.</span></p>
           <div class="counts"><span><b id="porchn">1</b><bdi class="i">hold the line under board 6</bdi><bdi class="m">hold the record in view 6</bdi></span></div>
-          <p class="say" id="porchsay"><span class="i">Theron has not heard of board 7.</span><span class="m">R5 has not heard of view 7.</span></p>
+          <p class="say" id="porchsay"><span class="i">Theron has not heard of board 7.</span><span class="m">R5 has not joined view 7.</span></p>
         </div>
       </div>
       <div class="row"><button class="btn" id="porchwrite"><span class="i">Okios writes a line under board 6</span><span class="m">R1 appends a record in view 6</span></button></div>
