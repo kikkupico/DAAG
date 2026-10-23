@@ -147,6 +147,7 @@ for names in ASSETS.values():
             # Meshy's texture is grey-green and cold; warm and green it, as sunlit Mediterranean
             # foliage is, by multiplying the base colour
             shared = o.data.materials[0]
+            shared.name = "flora"            # render.py's ground lookup sees through plants by this name
             nt = shared.node_tree
             bsdf = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
             link = next((l for l in nt.links if l.to_socket == bsdf.inputs["Base Color"]), None)

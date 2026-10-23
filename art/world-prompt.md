@@ -503,6 +503,7 @@ The ring road's rule holds: every garment is one loom-woven rectangle, pinned or
 | The merchant | a short cream chiton pinned at both shoulders, an ochre band at the hem, a cord belt, a small hide sack |
 | The goatherd | a rough brown wool *exōmis*, a rope belt |
 | The scholar | a short grey chiton pinned at both shoulders, a cord belt |
+| The librarian | a long undyed cream wool chiton to the ankle, a cord belt |
 
 ## 4. Image-to-3D Reconstruction Guidelines
 

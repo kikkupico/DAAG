@@ -17,7 +17,8 @@ Optional: "cast" (rigged characters from art/cast/cast.json, posed from art/prev
 furniture, people only on floors), "light": "dusk" | "night" and "under"; "set": an interior
 set from art/sets/sets.json (e.g. "chamber"), which replaces the island model's own building
 at its site, with "hide": ["shell"] for a cutaway and "sky_strength" / "sun_energy" to
-relight the inside. Each is described where it is handled below. The explorer's Copy Scene
+relight the inside; "clear": metres, to take out every plant within that distance of the
+camera. Each is described where it is handled below. The explorer's Copy Scene
 button writes the camera, cast and set in this form.
 """
 import bpy, json, sys, math
@@ -89,15 +90,23 @@ if shot.get("set"):
 
 def ground(x, z, top=5000.0, props=False):
     """Height of the highest floor under (x, z) below `top`: the terrain, a set's floor, and
-    for props also its furniture. People never stand on each other or on desks."""
+    for props also its furniture. People never stand on each other or on desks, and nothing
+    stands on a tree: the ray passes through faces of the planting (material "flora")."""
     best = None
     for ob in FLOORS + (SURFACES if props else []):
         Mi = ob.matrix_world.inverted()
-        o, d = Mi @ Vector((x, -z, top)), Mi.to_3x3() @ Vector((0, 0, -1))
-        ok, loc, *_ = ob.ray_cast(o, d.normalized())
-        if ok:
-            h = (ob.matrix_world @ loc).z
-            best = h if best is None else max(best, h)
+        o, d = Mi @ Vector((x, -z, top)), (Mi.to_3x3() @ Vector((0, 0, -1))).normalized()
+        mats = ob.data.materials
+        for _ in range(64):
+            ok, loc, _n, fi = ob.ray_cast(o, d)
+            if not ok:
+                break
+            m = mats[ob.data.polygons[fi].material_index] if len(mats) else None
+            if m is None or not m.name.startswith("flora"):
+                h = (ob.matrix_world @ loc).z
+                best = h if best is None else max(best, h)
+                break
+            o = loc + d * 0.001
     return best if best is not None else 0.0
 
 def resolve(p):
@@ -107,6 +116,29 @@ def resolve(p):
     return [x, y, z]
 
 eye, look = to_bl(resolve(shot["eye"])), to_bl(resolve(shot["look"]))
+
+# "clear": metres. Every plant with any part that near the camera (across the ground) is taken
+# out, so no tree stands in front of the lens; an image model keeps such a plant's facets.
+if shot.get("clear"):
+    import bmesh
+    from mathutils.kdtree import KDTree
+    M, r = island.matrix_world, shot["clear"]
+    mats = island.data.materials
+    fl = {i for i, m in enumerate(mats) if m.name.startswith("flora")}
+    bm = bmesh.new(); bm.from_mesh(island.data); bm.verts.ensure_lookup_table()
+    # measured across the ground, so a crown's pieces (a plant is several pieces) go with its trunk
+    near = [f for f in bm.faces if f.material_index in fl and any(((M @ v.co) - eye).xy.length < r for v in f.verts)]
+    seen, todo = set(near), list(near)
+    while todo:                                   # grow to the whole of each plant
+        f = todo.pop()
+        for v in f.verts:
+            for g in v.link_faces:
+                if g not in seen and g.material_index in fl:
+                    seen.add(g); todo.append(g)
+    bmesh.ops.delete(bm, geom=list(seen), context="FACES")
+    bm.to_mesh(island.data); bm.free()
+    bpy.context.view_layer.update()
+    print("CLEAR", len(seen), "plant faces within", r, "m of the camera")
 
 # --- cast and props ---------------------------------------------------------
 # Rigged reference characters (Meshy GLBs, Mixamo skeleton, A-pose rest) stood on the
