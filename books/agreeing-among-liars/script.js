@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Space,redrawOn}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Space,redrawOn,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -105,24 +105,27 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 (function(){
   const AUTO=-1;
   const H=Crown($("#ratsvg")),say=$("#ratsay"),box=$("#ratacc"),bs=["rat1","rat2","rat3"].map(i=>$("#"+i));
+  /* computing: the round as a timeline, each message labelled with the value it carries, each round a band */
+  const L=Unfold(H.svg,{nodes:{1:[-90,"B1",BC[1],"P1"],2:[150,"B2",BC[2],"P2"],3:[30,"B3",BC[3],"P3"],4:[90,"B4",BC[4],"P4"]},span:2.6,labels:true,vals:V});L.wrap(H);
   const all=[[1,2,"S"],[1,3,"S"],[1,4,"S"]];
   const SC=[
     {rounds:[all],say:dual("Every slip arrived as written, and the knots on each cord name the sender. Each guard now holds what the chief sent.","Every message arrived as written, and the channel names the sender. Each lieutenant now holds what the commander sent.")},
     {rounds:[[[1,2,"S"],[1,4,"S"]]],say:dual("The glass has run out. Nothing came to bandit 3 within the round, so nothing was sent, and the empty post counts as hold. Hold is only the definite answer, not the wiser one.","The round has ended. Nothing came to P3 within the round, so nothing was sent, and the missing message counts as 0. 0 is only the definite answer, not the wiser one.")},
     {rounds:[all,[[2,3,"S"],[2,4,"S"],[3,2,"H"],[3,4,"H"],[4,2,"S"],[4,3,"S"]]],say:dual("Suppose bandit 3 wrote hold, though the chief's slip to bandit 3 said scatter. The slip arrived as written, with bandit 3's knots on its cord. Bandits 2 and 4 hold a word they have no way to check.","Suppose P3 sent 0, though the commander's message to P3 said 1. The message arrived as written, over P3’s channel. P2 and P4 hold a value they have no way to check.")}];
   let toks=[],busy=false;
-  const clear=()=>{toks.forEach(g=>g.remove());toks=[];box.innerHTML="";[1,2,3,4].forEach(k=>H.state(k,""))};
+  const clear=()=>{L.reset();toks.forEach(g=>g.remove());toks=[];box.innerHTML="";[1,2,3,4].forEach(k=>H.state(k,""))};
   function accounts(S){box.innerHTML=[2,3,4].map(k=>{
     const lines=[S.rounds[0].some(r=>r[1]===k)?`<div class="e">${dual("from the chief","from the commander")}: ${word("S")}</div>`:`<div class="e">${dual("from the chief: nothing came within the round, so ","from the commander: nothing arrived within the round, so ")}${word("H")}</div>`];
     (S.rounds[1]||[]).filter(r=>r[1]===k).forEach(([a,,w])=>lines.push(`<div class="e">${dual(`from bandit ${a}: “the chief sent me ${ORD[w]}”`,`from P${a}: “the commander sent me ${V[w]}”`)}</div>`));
     return `<div>${chip(k)}${lines.join("")}</div>`}).join("")}
   async function run(i){
     if(busy)return;busy=true;bs.forEach(b=>b.disabled=true);clear();const S=SC[i];say.innerHTML=dual("The slips go out, and the glass runs.","The messages go out, and the round runs.");
-    for(let r=0;r<S.rounds.length;r++){const ps=[];
+    for(let r=0;r<S.rounds.length;r++){const ps=[],t0=L.clock.t;
       S.rounds[r].forEach(([a,b,w])=>{const g=H.token(BC[a],w);toks.push(g);H.fly(g,a,b,.12);g.setAttribute("opacity",1);
         ps.push(tween(1000,u=>H.fly(g,a,b,.12+.76*u)).then(()=>g.setAttribute("opacity",0)))});
-      await Promise.all(ps);
-      if(r<S.rounds.length-1){say.innerHTML=dual("Next, each guard writes what the chief sent them to the other two.","Next, each lieutenant sends the other two what the commander sent it.");await sleep(300)}}
+      await Promise.all(ps);L.band(t0,L.clock.t+.05,"round "+(r+1));
+      if(r<S.rounds.length-1){say.innerHTML=dual("Next, each guard writes what the chief sent them to the other two.","Next, each lieutenant sends the other two what the commander sent it.");L.tick(.25);await sleep(300)}}
+    if(i===1)L.state(3,"nothing: 0");
     accounts(S);say.innerHTML=S.say;busy=false;bs.forEach(b=>b.disabled=false)}
   bs.forEach((b,i)=>b.onclick=()=>run(i));
   if(AUTO>=0)run(AUTO);

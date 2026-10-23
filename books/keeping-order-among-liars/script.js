@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -108,28 +108,36 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     bF=$("#jobfile"),bN=$("#jobnum"),bS=$("#jobsilent"),bW=$("#jobwind"),bR=$("#jobreset");
   let term=1,waiting=false,wind=true,stood=0,busy=false;
   const registrar=t=>((t-1)%4)+1;
+  /* computing: the views as one timeline that slides as it runs, each view a band and the primary's name ringed;
+     a numbering held up by the network is a dashed arrow that lands only after the view has changed */
+  const L=Unfold(C.svg,{nodes:{1:[0,"N1",BC[1],"R1"],2:[-90,"N2",BC[2],"R2"],3:[30,"N3",BC[3],"R3"],4:[150,"N4",BC[4],"R4"]},span:7,slide:true});
+  let vT=0,held=[];
   function paint(){
-    const h=registrar(term);[1,2,3,4].forEach(k=>C.tent[k].g.classList.toggle("turn",k===h));
+    const h=registrar(term);[1,2,3,4].forEach(k=>C.tent[k].g.classList.toggle("turn",k===h));L.turn(h);
     tEl.textContent=term;sEl.textContent=stood;info.innerHTML=dual(`term ${term}, taken by Number ${h}`,`view ${term}, primary R${h}`);
     bF.disabled=busy||waiting;bN.disabled=bS.disabled=busy||!waiting;bW.disabled=bR.disabled=busy;
     bW.innerHTML=wind?dual("The wind is blowing","Messages are delayed"):dual("The wind has dropped","Delays are short");bW.setAttribute("aria-pressed",wind);
   }
   async function change(){
     busy=true;paint();const h=registrar(term),next=registrar(term+1),others=[1,2,3,4].filter(k=>k!==next);
+    L.band(vT,L.clock.t,"view "+term);[1,2,3,4].forEach(k=>L.state(k,"timer expired"));
     say.innerHTML=dual(`The sandglasses run out. Each bandit who is waiting asks for a change: a sealed request for the next term, with proof of every entry readied at their post, goes to <b>Number ${next}</b>.`,`The timers expire. Each replica that is waiting asks for a view change: a signed request for the next view, with proof of every request prepared at that replica, goes to <b>R${next}</b>.`);
-    const toks=others.map(k=>{const g=C.token(BC[k],"");g.setAttribute("opacity",1);C.fly(g,k,next,.1);return [k,g]});
-    await Promise.all(toks.map(([k,g])=>tween(1100+rnd(700),u=>C.fly(g,k,next,.1+.8*u)).then(()=>g.remove())));
+    const toks=others.map(k=>{const g=C.token(BC[k],"");g.setAttribute("opacity",1);C.fly(g,k,next,.1);L.fly(g,k,next,.1);return [k,g]});
+    await Promise.all(toks.map(([k,g])=>tween(1100+rnd(700),u=>{C.fly(g,k,next,.1+.8*u);L.fly(g,k,next,.1+.8*u)}).then(()=>g.remove())));
+    held.forEach(r=>L.land(r));held=[];vT=L.clock.t;L.state(next,"primary, view "+(term+1));
     term++;busy=false;paint();
     say.innerHTML=dual(`Three requests are in, and three are enough. <b>Number ${next}</b> now has the job, in term ${term}. The entry is still waiting. Nobody judged whether Number ${h} stalled or the wind held the rats back.`,`Three requests are in, and three are enough. <b>R${next}</b> is now the primary, in view ${term}. The request is still waiting. Nobody judged whether R${h} stalled or the network delayed its messages.`);
   }
-  bF.onclick=()=>{waiting=true;paint();say.innerHTML=dual(`An entry is filed with <b>Number ${registrar(term)}</b>, who has the job, and the filer turns a sandglass. ${wind?"The wind is blowing.":"The wind has dropped."}`,`A request is submitted to <b>R${registrar(term)}</b>, the primary, and the client starts a timer. ${wind?"Messages are being delayed.":"Delays are short."}`)};
+  bF.onclick=()=>{waiting=true;L.tick(.35);L.state(registrar(term),"has request");paint();say.innerHTML=dual(`An entry is filed with <b>Number ${registrar(term)}</b>, who has the job, and the filer turns a sandglass. ${wind?"The wind is blowing.":"The wind has dropped."}`,`A request is submitted to <b>R${registrar(term)}</b>, the primary, and the client starts a timer. ${wind?"Messages are being delayed.":"Delays are short."}`)};
   bN.onclick=async()=>{const h=registrar(term);
-    if(wind){say.innerHTML=dual(`<b>Number ${h}</b> numbers the entry and sends the numbering out, but the wind holds the rats in their holes. The sandglass runs out first. From where anyone sits, this looks exactly like a registrar who said nothing.`,`<b>R${h}</b> numbers the request and sends the numbering out, but the network delays the messages. The timer expires first. From where anyone sits, this looks exactly like a primary that said nothing.`);await sleep(900);await change();return}
+    if(wind){say.innerHTML=dual(`<b>Number ${h}</b> numbers the entry and sends the numbering out, but the wind holds the rats in their holes. The sandglass runs out first. From where anyone sits, this looks exactly like a registrar who said nothing.`,`<b>R${h}</b> numbers the request and sends the numbering out, but the network delays the messages. The timer expires first. From where anyone sits, this looks exactly like a primary that said nothing.`);
+      [1,2,3,4].filter(k=>k!==h).forEach(k=>held.push(L.msg(h,k,L.clock.t,null)));L.tick(.9);await sleep(900);await change();return}
+    const t=L.clock.t;[1,2,3,4].filter(k=>k!==h).forEach(k=>L.msg(h,k,t,t+.5));L.band(t+.55,t+1.35,"echoes",false,true);L.setT(t+1.4);[1,2,3,4].forEach(k=>L.state(k,"committed"));
     waiting=false;stood++;paint();
     say.innerHTML=dual(`<b>Number ${h}</b> numbers the entry, the others echo it twice, and it <span class="ok">stands</span> before the sandglass runs out. The job stays where it is.`,`<b>R${h}</b> numbers the request, the others echo it twice, and it <span class="ok">commits</span> before the timer expires. The primary stays where it is.`)};
-  bS.onclick=async()=>{const h=registrar(term);say.innerHTML=dual(`<b>Number ${h}</b> numbers nothing. The sandglass runs out, and nobody can say whether that is a stall or the wind.`,`<b>R${h}</b> numbers nothing. The timer expires, and nobody can say whether that is a stall or network delay.`);await sleep(900);await change()};
+  bS.onclick=async()=>{const h=registrar(term);say.innerHTML=dual(`<b>Number ${h}</b> numbers nothing. The sandglass runs out, and nobody can say whether that is a stall or the wind.`,`<b>R${h}</b> numbers nothing. The timer expires, and nobody can say whether that is a stall or network delay.`);L.tick(.9);await sleep(900);await change()};
   bW.onclick=()=>{wind=!wind;paint();say.innerHTML=wind?dual("The wind is blowing. Nobody can see it drop, and nobody can see it start.","Messages are being delayed. Nobody can see the delays end, and nobody can see them start."):dual("The wind has dropped, though nobody on the crown can tell. Runs are short again.","Delays have become short, though no replica can tell. Message runs are short again.")};
-  bR.onclick=()=>{term=1;waiting=false;wind=true;stood=0;paint();say.innerHTML=dual("An entry is filed and waits to be numbered. The wind is blowing.","A request is submitted and waits to be numbered. Messages are being delayed.")};
+  bR.onclick=()=>{term=1;waiting=false;wind=true;stood=0;L.reset();vT=0;held=[];paint();say.innerHTML=dual("An entry is filed and waits to be numbered. The wind is blowing.","A request is submitted and waits to be numbered. Messages are being delayed.")};
   paint();
 })();
 
