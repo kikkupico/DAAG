@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 const GL={H:"0",A:"1"};   /* what a man saw at dusk: hold or attack in the allegory, 0 or 1 in computing */
 BOOK.init();
@@ -74,14 +74,17 @@ const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd
 COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
+/* the four as lanes, for a hill picture's computing twin (Unfold in book.js) */
+const LANES={1:[-90,"T1",TC[1],"P1"],2:[0,"T2",TC[2],"P2"],3:[90,"T3",TC[3],"P3"],4:[180,"T4",TC[4],"P4"]};
+
 /* ===== two easy plans, each giving up one demand ===== */
 (function(){
-  const H=Hill($("#plansvg")),say=$("#plansay"),D=[1,2,3].map(i=>$("#d"+i)),btn=["plan1","plan2","plan3","plannew"].map(i=>$("#"+i));
+  const H=Hill($("#plansvg")),L=Unfold(H.svg,{nodes:LANES,span:3.2,vals:GL}),say=$("#plansay"),D=[1,2,3].map(i=>$("#d"+i)),btn=["plan1","plan2","plan3","plannew"].map(i=>$("#"+i));
   const names=[dual("No two commit differently","No two processes decide differently"),dual("Both answers stay possible","Both values stay possible"),dual("Somebody eventually commits","Some process eventually decides")],T=[1,2,3,4];
-  let sight={},toks=[];
+  let sight={},toks=[];L.wrap(H);
   const checks=(v,why)=>D.forEach((li,i)=>li.innerHTML=`<b>${names[i]}</b> ${v[i]==null?"":yesno(v[i])}${why[i]?"<br>"+why[i]:""}`);
   const lock=on=>btn.forEach(b=>b.disabled=on);
-  function clear(){toks.forEach(g=>g.remove());toks=[];T.forEach(k=>{H.state(k,"");H.tent[k].g.classList.remove("out")})}
+  function clear(){toks.forEach(g=>g.remove());toks=[];L.reset();T.forEach(k=>{H.state(k,"");H.tent[k].g.classList.remove("out")})}
   function deal(){T.forEach(k=>{sight[k]=rnd(2)?"A":"H";H.badge(k,sight[k])});clear();checks([null,null,null],["","",""]);say.innerHTML=dual("Each easy plan keeps two demands. Find the one it gives up.","Each easy protocol keeps two properties. Find the one it gives up.")}
   /* every man in `from` sends what he saw to the other three; the birds take as long as they take */
   function birds(from){const ps=[];from.forEach(a=>T.forEach(b=>{if(b===a)return;const g=H.token(TC[a],sight[a]);toks.push(g);H.fly(g,a,b,.12);g.setAttribute("opacity",1);
@@ -93,7 +96,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     await birds(T);const n=T.filter(k=>sight[k]==="A").length,att=n>=3;T.forEach(k=>H.state(k,att?"attacks":"holds",att?"decides 1":"decides 0"));
     checks([true,true,true],[dual("All four apply one rule to the same four sightings.","All four apply one rule to the same four inputs."),dual(`${n} of the 4 saw attack, so tonight the rule says ${att?"attack":"hold"}. Other sightings would say otherwise.`,`${n} of the 4 inputs are 1, so for these inputs the rule says ${att?1:0}. Other inputs would say otherwise.`),dual("Everyone commits once the last bird is in.","Everyone decides once the last message is in.")]);
     say.innerHTML=dual("On a night when every man lives, <b>waiting for every report</b> keeps all three demands. The rule used here: attack if at least three saw attack, otherwise hold.","When no process crashes, <b>waiting for every input</b> keeps all three properties. The rule used here: decide 1 if at least three inputs are 1, otherwise 0.");lock(false)};
-  btn[2].onclick=async()=>{lock(true);clear();checks([null,null,null],["","",""]);H.tent[3].g.classList.add("out");H.state(3,"silent","crashed");say.innerHTML=dual("Suppose nothing ever comes from tent 3. The other three send what they saw, and wait for all four sightings.","Suppose P3 has crashed and nothing ever comes from it. The other three send their inputs, and wait for all four.");
+  btn[2].onclick=async()=>{lock(true);clear();checks([null,null,null],["","",""]);H.tent[3].g.classList.add("out");L.crash(3);H.state(3,"silent","crashed");say.innerHTML=dual("Suppose nothing ever comes from tent 3. The other three send what they saw, and wait for all four sightings.","Suppose P3 has crashed and nothing ever comes from it. The other three send their inputs, and wait for all four.");
     await birds([1,2,4]);[1,2,4].forEach(k=>H.state(k,"waits","waiting"));
     checks([true,true,false],[dual("Nobody commits, so no two differ.","Nobody decides, so no two differ."),dual("The rule still depends on what was seen.","The rule still depends on the inputs."),dual("Three men wait on a tent that will never answer, and can never learn that it will not.","Three processes wait on a process that will never answer, and can never learn that it will not.")]);
     say.innerHTML=dual("With one tent silent, <b>waiting for every report</b> gives up the third demand. Nobody at the foot can tell this night from one in which tent 3's bird is merely slow.","With one process crashed, <b>waiting for every input</b> gives up termination. None of the other three can tell this execution from one in which P3's message is merely slow.");lock(false)};
@@ -103,11 +106,13 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* ===== two nights that look the same from tent 2's perch ===== */
 (function(){
   const HA=Hill($("#worldA")),HB=Hill($("#worldB")),say=$("#worldsay"),b=$("#worldb");let h=0;
-  const t=HA.tent[1];t.g.classList.add("out");
+  const LA=Unfold(HA.svg,{nodes:LANES,span:5,slide:true}),LB=Unfold(HB.svg,{nodes:LANES,span:5,slide:true,clock:LA.clock});LA.wrap(HA);LB.wrap(HB);
+  [LA,LB].forEach(L=>L.state(2,"inbox empty","inbox empty"));
+  const t=HA.tent[1];t.g.classList.add("out");LA.crash(1);
   el("path",{d:`M${t.x-17},${t.y-17} L${t.x+17},${t.y+17} M${t.x-17},${t.y+17} L${t.x+17},${t.y-17}`,stroke:"#1c1512","stroke-width":5,fill:"none"},HA.over);
   const rv=HB.token(TC[1],"");rv.setAttribute("opacity",1);HB.fly(rv,1,2,.45);
   const [px,py]=HB.at(-90+90*.45,HB.R-24*Math.sin(Math.PI*.45));dtext(HB.over,{class:"lab halo",x:px+6,y:py+30},"in a pine","delayed");
-  b.onclick=()=>{h++;tween(500,u=>HB.fly(rv,1,2,.45+.025*Math.sin(u*Math.PI)));
+  b.onclick=()=>{h++;LA.tick(.5);tween(500,u=>HB.fly(rv,1,2,.45+.025*Math.sin(u*Math.PI)));
     const hrs=`<b>${h} hour${h>1?"s":""}</b> of waiting. `;
     say.innerHTML=dual(hrs+"Both perches are empty. Nothing tent 2 can see, measure or wait for tells the two nights apart."+(h>=4?" Since no bird has a longest flight, waiting longer never turns one night into the other. It only makes the wait longer.":""),hrs+"Both inboxes are empty. Nothing P2 can observe, measure or wait for tells the two executions apart."+(h>=4?" Since there is no bound on message delay, waiting longer never turns one execution into the other. It only makes the wait longer.":""))};
 })();
@@ -189,10 +194,10 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 
 /* ===== a fair night in which nothing is settled; and the same night once birds have a longest flight ===== */
 (function(){
-  const H=Hill($("#nightsvg")),qEl=$("#nightq"),say=$("#nightsay"),mode=$("#nightmode"),nA=$("#narr"),nL=$("#naloft"),nC=$("#ncom"),bRun=$("#nightrun"),bB=$("#nightbound"),bR=$("#nightreset"),T=[1,2,3,4];
-  let queue=[],aloft=[],arr=0,com=0,timer=null,want=false,busy=false,seq=0,gen=0;
+  const H=Hill($("#nightsvg")),L=Unfold($("#nightsvg"),{nodes:LANES,span:10,slide:true}),qEl=$("#nightq"),say=$("#nightsay"),mode=$("#nightmode"),nA=$("#narr"),nL=$("#naloft"),nC=$("#ncom"),bRun=$("#nightrun"),bB=$("#nightbound"),bR=$("#nightreset"),T=[1,2,3,4];
+  let queue=[],aloft=[],arr=0,com=0,timer=null,want=false,busy=false,seq=0,gen=0;L.wrap(H);
   function paint(){qEl.innerHTML=dual("The queue: ","The queue: ")+queue.map((k,i)=>tentChip(k,i?"":' style="box-shadow:0 0 0 3px var(--gold)"')).join("");
-    nA.textContent=arr;nL.textContent=aloft.length;nC.textContent=com;T.forEach(k=>H.tent[k].g.classList.toggle("turn",want&&k===queue[0]))}
+    nA.textContent=arr;nL.textContent=aloft.length;nC.textContent=com;T.forEach(k=>H.tent[k].g.classList.toggle("turn",want&&k===queue[0]));L.turn(want?queue[0]:null)}
   function send(a,quick){let b;do{b=1+rnd(4)}while(b===a);const r={a,b,n:seq++,u:.4+Math.random()*.2,g:H.token(TC[a],"")};aloft.push(r);H.fly(r.g,a,b,.12);r.g.setAttribute("opacity",1);
     return tween(quick?0:600,u=>H.fly(r.g,a,b,.12+(r.u-.12)*u))}
   const land=r=>tween(600,u=>H.fly(r.g,r.a,r.b,r.u+(.88-r.u)*u)).then(()=>r.g.remove());
@@ -203,10 +208,10 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     if(busy)return;busy=true;const g0=gen,k=queue[0],r=aloft.filter(x=>x.b===k).sort((x,y)=>x.n-y.n)[0];
     if(r){aloft.splice(aloft.indexOf(r),1);say.innerHTML=dual(`<b>Tent ${k}</b> takes in the raven longest aloft for that tent, from tent ${r.a}, and writes one more. The night is open still.`,`<b>P${k}</b> receives the message that has been in transit longest for it, from P${r.a}, and sends one more. The configuration is bivalent still.`);
       await land(r);if(g0!==gen)return;arr++;await send(k)}
-    else{say.innerHTML=dual(`Nothing is waiting for <b>tent ${k}</b>. The man walks to the perch and back, empty-handed. The night is open still.`,`Nothing is waiting for <b>P${k}</b>. It takes a step with an empty inbox. The configuration is bivalent still.`);await sleep(700)}
+    else{say.innerHTML=dual(`Nothing is waiting for <b>tent ${k}</b>. The man walks to the perch and back, empty-handed. The night is open still.`,`Nothing is waiting for <b>P${k}</b>. It takes a step with an empty inbox. The configuration is bivalent still.`);L.step(k,.7);await sleep(700)}
     if(g0!==gen)return;queue.push(queue.shift());paint();busy=false;
   }
-  function reset(){gen++;stop();want=busy=false;aloft.forEach(r=>r.g.remove());queue=[1,2,3,4];aloft=[];arr=com=0;T.forEach(k=>{H.state(k,"");send(k,true)});
+  function reset(){gen++;stop();want=busy=false;aloft.forEach(r=>r.g.remove());L.reset();queue=[1,2,3,4];aloft=[];arr=com=0;T.forEach(k=>{H.state(k,"");send(k,true)});
     mode.innerHTML=dual("not yet begun","not yet started");say.innerHTML=dual("No man is starved of a turn, and every raven is taken in at last.","No process is starved of a turn, and every message is delivered at last.");bRun.disabled=bB.disabled=false;paint()}
   bRun.onclick=()=>{want=true;bRun.disabled=true;mode.innerHTML=dual("open, and staying open","bivalent, and staying bivalent");paint();go()};
   bB.onclick=async()=>{const g0=++gen;stop();want=false;busy=true;bRun.disabled=bB.disabled=true;paint();mode.innerHTML=dual("the birds have a longest flight","messages have a maximum delay");
@@ -215,7 +220,8 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     aloft=[];arr+=n;com=4;T.forEach(k=>H.state(k,"commits","decides"));mode.innerHTML=dual("closed","univalent");paint();
     say.innerHTML=dual("When that time has passed, an empty perch means something: every raven that was sent is in, so a silent tent is a dead one. <span class='ok'>All four can apply one rule to the same reports, and commit.</span>","When that time has passed, an empty inbox means something: every message that was sent has arrived, so a silent process has crashed. <span class='ok'>All four can apply one rule to the same inputs, and decide.</span>")};
   bR.onclick=reset;
-  new IntersectionObserver(es=>{if(es[0].isIntersecting)go();else stop()},{threshold:.1}).observe($("#nightsvg"));
+  /* it runs while the picture is on screen, in either register */
+  new IntersectionObserver(es=>{if(es[0].isIntersecting)go();else stop()},{threshold:.1}).observe($("#nightsvg").parentElement);
   reset();
 })();
 

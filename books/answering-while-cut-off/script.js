@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -42,6 +42,8 @@ function Hill(svg){
   return H;
 }
 /* hawks, and the fold they keep */
+/* a hill picture with its computing twin, a timeline that grows as the reader acts (Unfold in book.js) */
+const twin=(H,o)=>{Unfold(H.svg,Object.assign({nodes:{1:[-90,"T1",TC[1],"P1"],2:[0,"T2",TC[2],"P2"],3:[90,"T3",TC[3],"P3"],4:[180,"T4",TC[4],"P4"]}},o)).wrap(H);return H};
 function hawkShape(parent,x,y,s){const g=el("g",{transform:`translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${s||1})`},parent);
   el("path",{d:"M-13,-2 Q-6,-12 0,-1 Q6,-12 13,-2 Q6,-5 0,3 Q-6,-5 -13,-2z",fill:"#5a4632",stroke:"#1c1512","stroke-width":1.5,"stroke-linejoin":"round",class:"i"},g);
   el("path",{d:"M-9,-9 L9,9 M-9,9 L9,-9",stroke:ATT,"stroke-width":4,fill:"none","stroke-linecap":"round",class:"m"},g);return g}
@@ -49,9 +51,9 @@ function hawkFold(H,k){const t=H.tent[k],g=el("g",{class:"hawkset",opacity:0},H.
   let dx=t.x-H.cx,dy=t.y-H.cy;const n=Math.hypot(dx,dy);dx/=n;dy/=n;const px=-dy,py=dx;
   el("circle",{cx:t.x,cy:t.y,r:42,fill:"none",stroke:ATT,"stroke-width":3,"stroke-dasharray":"6 5"},g);
   hawkShape(g,t.x+dx*62+px*22,t.y+dy*62+py*22,1.1);hawkShape(g,t.x+dx*62-px*22,t.y+dy*62-py*22,1.1);
-  return {show(on){g.setAttribute("opacity",on?1:0)}}}
+  return {show(on){g.setAttribute("opacity",on?1:0);if(H.lanes)H.lanes.cut(k,on)}}}
 function whereIs(g){const m=/translate\(([-\d.]+) ([-\d.]+)\)/.exec(g.getAttribute("transform"));return [+m[1],+m[2]]}
-function takeBird(H,g){const [x,y]=whereIs(g);g.remove();const h=hawkShape(H.over,x,y,1.2);h.classList.add("puff");setTimeout(()=>h.remove(),1700)}
+function takeBird(H,g){const [x,y]=whereIs(g);if(H.lanes)H.lanes.lose(g);g.remove();const h=hawkShape(H.over,x,y,1.2);h.classList.add("puff");setTimeout(()=>h.remove(),1700)}
 /* a raven from tent a to tent b: it lands, or a hawk takes it on the way */
 async function trip(H,a,b,lost){const g=H.token(TC[a],"");g.setAttribute("opacity",1);H.fly(g,a,b,.12);
   await tween(1100,u=>H.fly(g,a,b,.12+(lost?.34:.76)*u));if(lost)takeBird(H,g);else{await sleep(120);g.remove()}}
@@ -102,7 +104,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 
 /* ===== ravens and hawks ===== */
 (function(){
-  const H=Hill($("#birdsvg")),hk=hawkFold(H,4),say=$("#bsay"),stand=$("#bstand"),bs=[["#bs21",2,1],["#bs24",2,4],["#bs43",4,3]].map(([s,a,b])=>({b:$(s),a,to:b})),bh=$("#bhawk"),bf=$("#bflight");
+  const H=twin(Hill($("#birdsvg")),{span:6,slide:true}),hk=hawkFold(H,4),say=$("#bsay"),stand=$("#bstand"),bs=[["#bs21",2,1],["#bs24",2,4],["#bs43",4,3]].map(([s,a,b])=>({b:$(s),a,to:b})),bh=$("#bhawk"),bf=$("#bflight");
   let hawks=false,pend=null,busy=false;
   const paint=()=>{stand.innerHTML=`<div>${dual("Hawks in the fold of tent 4:","P4 cut off:")} <b>${hawks?"yes":"no"}</b></div><div>${pend?(pend.known?dual(`Number ${pend.to} knows the raven from tent ${pend.a} was lost, and not what it carried.`,`P${pend.to} knows the message from P${pend.a} was lost, and not what it carried.`):dual(`Number ${pend.to} is waiting on a raven from tent ${pend.a}.`,`P${pend.to} is waiting on a message from P${pend.a}.`)):dual("No man is waiting on a bird.","No node is waiting on a message.")}</div>`;
     bf.disabled=busy||!pend||pend.known;bs.forEach(x=>x.b.disabled=busy);bh.disabled=busy};
@@ -110,7 +112,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     say.innerHTML=dual(`A raven leaves tent ${x.a} for tent ${x.to}.`,`A message leaves P${x.a} for P${x.to}.`);await trip(H,x.a,x.to,lost);busy=false;
     if(lost){pend={a:x.a,to:x.to,known:false};say.innerHTML=dual(`No bird has come. No man at the foot saw it go, and Number ${x.to} cannot yet say whether it is lost or only slow.`,`No message has arrived. Nobody saw it dropped, and P${x.to} cannot yet say whether it is lost or only slow.`)}
     else say.innerHTML=dual(`The raven lands at tent ${x.to}, within a flight.`,`The message arrives at P${x.to}, within a delivery time.`);paint()});
-  bf.onclick=()=>{pend.known=true;say.innerHTML=dual(`<b>A whole flight has passed</b> and the raven from tent ${pend.a} has not come. A slow bird would have come by now, so Number ${pend.to} can say it was lost. Nothing says what it carried.`,`<b>A whole delivery time has passed</b> and the message from P${pend.a} has not arrived. A slow message would have arrived by now, so P${pend.to} can say it was lost. Nothing says what it carried.`);paint()};
+  bf.onclick=()=>{pend.known=true;H.lanes.tick(1.1);say.innerHTML=dual(`<b>A whole flight has passed</b> and the raven from tent ${pend.a} has not come. A slow bird would have come by now, so Number ${pend.to} can say it was lost. Nothing says what it carried.`,`<b>A whole delivery time has passed</b> and the message from P${pend.a} has not arrived. A slow message would have arrived by now, so P${pend.to} can say it was lost. Nothing says what it carried.`);paint()};
   bh.onclick=()=>{hawks=!hawks;hk.show(hawks);bh.innerHTML=dual(hawks?"Hawks leave tent 4's fold":"Hawks come to tent 4's fold",hawks?"Restore the network":"Cut P4 off");
     say.innerHTML=hawks?dual("Hawks keep to the fold of tent 4. Every bird between tent 4 and the other three is lost for as long as they stay: tent 4 is cut off.","P4 is cut off. Every message between P4 and the other three is lost for as long as the failure lasts."):dual("The hawks have gone, and birds fly freely again.","The network is restored, and messages flow freely again.");paint()};
   paint();
@@ -118,17 +120,17 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 
 /* ===== two ways to answer badly ===== */
 (function(){
-  const H=Hill($("#owesvg")),hk=hawkFold(H,3),say=$("#owesay"),D=[$("#ow1"),$("#ow2")],b1=$("#owehold"),b2=$("#owewait"),br=$("#owereset");
+  const H=twin(Hill($("#owesvg")),{span:4}),hk=hawkFold(H,3),say=$("#owesay"),D=[$("#ow1"),$("#ow2")],b1=$("#owehold"),b2=$("#owewait"),br=$("#owereset");
   const moves=[{by:2,plan:"attack",end:1}],askAt=2,right=record(moves,askAt);
   const nm=[dual("Answering as one","Acting as one copy"),dual("Every man is answered","Every request is answered")];
   const show=(given,why)=>{const one=given==null?null:given===right,ev=given!=null;
     D[0].innerHTML=`<b>${nm[0]}</b> ${one==null?dash:yesno(one)}<br>${why[0]}`;D[1].innerHTML=`<b>${nm[1]}</b> ${yesno(ev)}<br>${why[1]}`};
-  function reset(){H.state(2,"attack","1");H.state(3,"note: hold","copy: 0");hk.show(false);D.forEach((d,i)=>d.innerHTML=`<b>${nm[i]}</b>`);
+  function reset(){H.lanes.reset();H.state(2,"attack","1");H.state(3,"note: hold","copy: 0");hk.show(false);D.forEach((d,i)=>d.innerHTML=`<b>${nm[i]}</b>`);
     say.innerHTML=dual("Number 3 asks which plan stands. How might tent 3 answer?","A client reads at P3. How might P3 answer?");b1.disabled=b2.disabled=false}
-  b1.onclick=()=>{b1.disabled=b2.disabled=true;H.state(3,"says hold","answers 0");
+  b1.onclick=()=>{b1.disabled=b2.disabled=true;H.lanes.setT(1.4);H.state(3,"says hold","answers 0");
     show("hold",[dual(`A single record says ${right}, because Number 2's move was finished before the question began.`,`A single object would return ${V[right]}, because the write was finished before the read began.`),dual("Number 3 is answered at once.","The client at P3 is answered at once.")]);
     say.innerHTML=dual("A tent that says <b>hold</b> to every question has answered, but wrongly whenever attack stands.","A node that answers <b>0</b> to every read has answered, but wrongly whenever 1 stands.")};
-  b2.onclick=()=>{b1.disabled=b2.disabled=true;H.state(3,"waits","waiting");hk.show(true);
+  b2.onclick=()=>{b1.disabled=b2.disabled=true;H.lanes.setT(1);H.state(3,"waits","waiting");hk.show(true);H.lanes.tick(2.6);
     show(null,[dual("Nothing is said, so nothing is wrong.","Nothing is said, so nothing is wrong."),dual("Waiting is not an answer: the hawks may stay all night.","Waiting is not an answer: the failure may last forever.")]);
     say.innerHTML=dual("<b>Wait until the hawks leave</b> is not an answer, since the hawks may stay all night.","<b>Wait until the network recovers</b> is not an answer, since the failure may last forever.")};
   br.onclick=reset;reset();
@@ -184,19 +186,19 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 
 /* ===== the muster-master's arrangement: any two ===== */
 (function(){
-  const H=Hill($("#keepsvg")),hk=hawkFold(H,4),say=$("#keepsay"),D=[1,2,3].map(i=>$("#kd"+i)),bt=["#kp1","#kp2","#kp3"].map(s=>$(s));
+  const H=twin(Hill($("#keepsvg")),{span:5.6}),hk=hawkFold(H,4),say=$("#keepsay"),D=[1,2,3].map(i=>$("#kd"+i)),bt=["#kp1","#kp2","#kp3"].map(s=>$(s));
   H.state(1,"muster-master","primary");
   const names=[dual("Answering as one","Acting as one copy"),dual("Every man is answered","Every request is answered"),dual("Carrying on while birds can be lost","Carrying on while messages can be lost")];
   const right=record([{plan:"attack",end:1}],2);
   function line(i,v,why){D[i].innerHTML=`<b>${names[i]}</b> ${v==null?dash:yesno(v)}<br>${why}`}
-  async function run(kind){bt.forEach(b=>b.disabled=true);const hawks=kind!=="muster-master-clear";hk.show(hawks);
+  async function run(kind){bt.forEach(b=>b.disabled=true);H.lanes.reset();H.lanes.state(1,"muster-master","primary");const hawks=kind!=="muster-master-clear";hk.show(hawks);
     [2,3,4].forEach(k=>H.state(k,""));D.forEach((d,i)=>d.innerHTML=`<b>${names[i]}</b>`);
     let ans;
     say.innerHTML=dual("Number 2 moves the plan to attack.","A client writes 1 at P2.");
-    if(kind==="own"){H.state(2,"told: stands","write acked");await sleep(900)}
+    if(kind==="own"){H.lanes.tick(.9);H.state(2,"told: stands","write acked");await sleep(900)}
     else{await trip(H,2,1,false);await trip(H,1,2,false);H.state(2,"told: stands","write acked")}
     say.innerHTML=dual("Later, Number 4 asks which plan stands.","Later, a client reads at P4.");
-    if(kind==="own"){ans="hold";await sleep(700);H.state(4,"says hold","answers 0")}
+    if(kind==="own"){ans="hold";H.lanes.tick(.7);await sleep(700);H.state(4,"says hold","answers 0")}
     else if(kind==="muster-master-clear"){await trip(H,4,1,false);await trip(H,1,4,false);ans="attack";H.state(4,"told: attack","answers 1")}
     else{await trip(H,4,1,true);ans=null;H.state(4,"no answer")}
     const one=ans==null?true:ans===right,every=ans!=null;
@@ -211,11 +213,11 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 
 /* ===== waiting a glass ===== */
 (function(){
-  const H=Hill($("#glasssvg")),hk=hawkFold(H,4),say=$("#gsay"),stand=$("#gstand"),fill=$("#gfill"),bs={ask:$("#gask"),move:$("#gmove"),ask2:$("#gask2"),hawk:$("#ghawk"),reset:$("#greset")};
+  const H=twin(Hill($("#glasssvg")),{span:7,slide:true}),hk=hawkFold(H,4),say=$("#gsay"),stand=$("#gstand"),fill=$("#gfill"),bs={ask:$("#gask"),move:$("#gmove"),ask2:$("#gask2"),hawk:$("#ghawk"),reset:$("#greset")};
   H.state(1,"muster-master","primary");
   let hawks,K,N,own,done,answers,everLost,busy;
   const hawkLabel=()=>dual(hawks?"Hawks leave tent 4's fold":"Hawks come to tent 4's fold",hawks?"Restore the network":"Cut P4 off");
-  function init(){hawks=false;K="attack";N={4:"hold"};own={4:null};done=[{by:2,plan:"attack"}];answers=[];everLost=false;busy=false;hk.show(false);
+  function init(){H.lanes.reset();H.lanes.state(1,"muster-master","primary");hawks=false;K="attack";N={4:"hold"};own={4:null};done=[{by:2,plan:"attack"}];answers=[];everLost=false;busy=false;hk.show(false);
     bs.hawk.innerHTML=hawkLabel();fill.style.width="0";fill.classList.remove("out");
     say.innerHTML=dual("Number 4 may ask, or move the plan. With hawks in the fold, the glass will run out.","A client may read at P4, or write. With P4 cut off, the timer will run out.");paint()}
   function paint(){
@@ -227,7 +229,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     fill.classList.remove("out");fill.style.width="0";say.innerHTML=dual(`Number ${k} asks, sends a bird to the muster-master and starts the glass.`,`A client reads at P${k}; the node sends a message to the primary and starts the timer.`);
     if(!lost){const w=35+rnd(45);await trip(H,k,1,false);await trip(H,1,k,false);fill.style.width=w+"%";given=K;if(k===4)N[4]=K;
       say.innerHTML=dual(`The muster-master's answer came <b>before the glass ran out</b>, and Number ${k} takes it: ${given}.`,`The primary's answer came <b>before the timer ran out</b>, and P${k} takes it: ${V[given]}.`)}
-    else{everLost=true;const p=trip(H,4,1,true);fill.style.width="100%";await p;await sleep(600);fill.classList.add("out");
+    else{everLost=true;const p=trip(H,4,1,true);fill.style.width="100%";await p;H.lanes.tick(.6);await sleep(600);fill.classList.add("out");
       given=own[4]!=null?own[4]:N[4];
       say.innerHTML=dual(`<b>The glass ran out.</b> Number 4 answers from their own note: ${given}${own[4]!=null?", their own move, since they have moved the plan since":""}.`,`<b>The timer ran out.</b> P4 answers from its own copy: ${V[given]}${own[4]!=null?", its own write, since it has written since":""}.`)}
     const ok=given===right;if(!ok&&!everLost)throw new Error("a wrong answer on a night with no lost bird");
@@ -236,7 +238,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   async function move(p){busy=true;paint();const lost=hawks;fill.classList.remove("out");fill.style.width="0";
     say.innerHTML=dual(`Number 4 moves the plan to ${p}, sends the move to the muster-master and starts the glass.`,`A client writes ${V[p]} at P4; the node sends the write to the primary and starts the timer.`);
     if(!lost){await trip(H,4,1,false);await trip(H,1,4,false);K=p;own[4]=null;N[4]=p;fill.style.width=(35+rnd(45))+"%";say.innerHTML=dual("The muster-master answered in time: the move stands, and the muster-master's note changes.","The primary answered in time: the write takes effect, and the primary's copy changes.")}
-    else{everLost=true;const q=trip(H,4,1,true);fill.style.width="100%";await q;await sleep(600);fill.classList.add("out");own[4]=p;
+    else{everLost=true;const q=trip(H,4,1,true);fill.style.width="100%";await q;H.lanes.tick(.6);await sleep(600);fill.classList.add("out");own[4]=p;
       say.innerHTML=dual("<b>The glass ran out.</b> Number 4 is told the move stands. The muster-master never heard of it.","<b>The timer ran out.</b> The client at P4 is told the write took effect. The primary never heard of it.")}
     done.push({by:4,plan:p});busy=false;paint()}
   bs.ask.onclick=()=>ask(4);bs.ask2.onclick=()=>ask(2);bs.move.onclick=()=>move("hold");
@@ -306,12 +308,12 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 
 /* ===== two windy nights ===== */
 (function(){
-  const HA=Hill($("#windA")),HB=Hill($("#windB")),say=$("#windsay"),b1=$("#windask"),b2=$("#windans"),b3=$("#windgo"),br=$("#windreset");
+  const HA=twin(Hill($("#windA")),{span:4.5}),HB=twin(Hill($("#windB")),{span:4.5,clock:HA.lanes.clock}),say=$("#windsay"),b1=$("#windask"),b2=$("#windans"),b3=$("#windgo"),br=$("#windreset");
   const asks=3,moves=[{plan:"attack",end:1}],right=record(moves,asks);
   let stage,rv;
   function setup(H){H.state(2,"attack","1");H.state(4,"note: hold","copy: 0");[1,3].forEach(k=>H.state(k,k===1?"":""))}
   async function both(fn){await Promise.all([fn(HA,true),fn(HB,false)])}
-  function reset(){setup(HA);setup(HB);$$(".pine,.puff",document).forEach(e=>e.remove());stage=0;b1.disabled=false;b2.disabled=b3.disabled=true;
+  function reset(){HA.lanes.reset();HB.lanes.reset();setup(HA);setup(HB);$$(".pine,.puff",document).forEach(e=>e.remove());stage=0;b1.disabled=false;b2.disabled=b3.disabled=true;
     say.innerHTML=dual("Number 2 has moved the plan to attack and been told it stands. Number 4 now asks which plan stands.","A client has written 1 at P2 and been told it took effect. A client now reads at P4.")}
   b1.onclick=async()=>{b1.disabled=true;
     const ga=HA.token(TC[4],""),gb=HB.token(TC[4],"");[ga,gb].forEach(g=>g.setAttribute("opacity",1));HA.fly(ga,4,1,.12);HB.fly(gb,4,1,.12);
@@ -319,7 +321,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     takeBird(HA,ga);const [x,y]=whereIs(gb);rv=gb;const pn=el("path",{class:"pine i",d:"M0,-16 L11,5 L-11,5z M-2,5 h4 v8 h-4z",fill:"#4f6b2e",stroke:"#1c1512","stroke-width":1.5},HB.over);HB.put(pn,x+16,y-6);
     dtext(HB.over,{class:"lab halo pine",x:x+16,y:y+26},"in a pine","delayed");
     say.innerHTML=dual("No bird has come on either night. In a wind nobody can say how long a bird may sit in the pines, so Number 4 can wait any length of time and learn nothing.","No message has arrived in either execution. With unbounded delay nobody can say how long a message may be delayed, so P4 can wait any length of time and learn nothing.");b2.disabled=false};
-  b2.onclick=()=>{b2.disabled=true;const v=view4([],asks),a=answer4(v);HA.state(4,"says "+a,"answers "+V[a]);HB.state(4,"says "+a,"answers "+V[a]);
+  b2.onclick=()=>{b2.disabled=true;HA.lanes.tick(.6);const v=view4([],asks),a=answer4(v);HA.state(4,"says "+a,"answers "+V[a]);HB.state(4,"says "+a,"answers "+V[a]);
     say.innerHTML=dual(`Every man must be answered, so Number 4 answers: <b>${a}</b>. Their inputs are the same on both nights, so the answer is the same. A single record says ${right}, so <span class="bad">it is wrong.</span>`,`Every request must be answered, so P4 answers: <b>${V[a]}</b>. Its inputs are the same in both executions, so the answer is the same. A single object returns ${V[right]}, so <span class="bad">it is wrong.</span>`);b3.disabled=false};
   b3.onclick=async()=>{b3.disabled=true;HB.fly(rv,4,1,.46);await tween(1100,u=>HB.fly(rv,4,1,.46+.42*u));rv.remove();$$(".pine",HB.svg).forEach(e=>e.remove());
     say.innerHTML=dual("On the left night the bird was lost for good. On the right night it was only slow, and lands at last: <b>no bird was lost</b>. The answer was given before it landed, so it is still wrong.","In the left execution the message was lost for good. In the right execution it was only delayed, and arrives at last: <b>no message was lost</b>. The answer was given before it arrived, so it is still wrong.")};

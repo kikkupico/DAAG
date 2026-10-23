@@ -322,6 +322,17 @@ times larger; `draw` builds the figure from nothing and puts back whatever the r
 that redraws from scratch each time uses `Space(svg,opts)` for the engine and `redrawOn(fn)`. Write the
 computing caption and `data-al-m` for lanes (left to right, arrows), never for the round.
 
+**A place from above, in computing.** A picture of where the processes sit that the reader plays with (the hill
+with its tents and ravens) keeps its allegory form, and in computing shows its twin: `Unfold(svg,{nodes,span,slide,clock})`
+in `book.js` adds a second svg after it, a timeline that grows as the reader acts. `L.wrap(H)` relays the picture's own
+`fly`, `state` and `badge`; a message is an arrow from the moment it is sent, dashed while in transit and solid once it
+lands. Everything else is said where it happens: `reset`, `crash(k)` (the lane stops), `lose(token)` (the arrow ends at a
+cross), `cut(k,on)` (the lane hatched while cut off), `step(k)` and `tick(dt)` (time that passes with nothing flying),
+`turn(k)`, `mark(k,label)` (a labelled moment that stays, such as each coin flip), and for a scene told step by step
+`msg(a,b,t0,t1,label)`, `band(t0,t1,label)` and `setT(t)`. Time runs while a message flies; views read side by side share
+a clock; an endless run slides. A widget that starts and stops with its picture's visibility watches the picture's
+parent, since the hidden one never shows. Done for the five books at the foot of Mount Phyle.
+
 **Draw a figure when the argument has a shape**, and not otherwise:
 
 | Kind | What it does | Seen in |
