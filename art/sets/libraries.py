@@ -19,7 +19,8 @@ racks are.
 A library's frame is local: X runs along its front, the porch and the road are towards -Y, and
 the ground at its middle is Z = 0. What is modelled, so that it need not be described to an
 image model (the helpers are masonry.py's):
-- the terrace it stands on, faced with rubble under a paving of flagstones;
+- the terrace it stands on, faced with rubble under a paving of flagstones, running out under the
+  porch and its steps to a small forecourt, so the building stands on one level;
 - the base in two courses of dressed blocks in running bond, under smooth plaster;
 - the doorway: jambs in three blocks, a lintel with a small cornice, a threshold, and two
   boarded leaves on ledges, both standing open into the room;
@@ -52,7 +53,8 @@ P = dict(
     columns=1.4,                 # the two columns, either side of the door's axis
     col_d=0.42,
     eaves=0.45,
-    rack=(8, 5),                 # pigeonholes along and up
+    forecourt=0.9,               # the terrace's paving before the porch steps
+    rack=(8, 5),                # pigeonholes along and up
 )
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -136,13 +138,16 @@ for n, b in enumerate(PLAN):
     az = wh - 0.3                              # the architrave's underside
 
     # --- the terrace: rubble faces, a paving of flagstones ---------------------------------
+    # It runs out in front under the porch and its steps to a small forecourt, so the whole
+    # building stands on one level and the porch is not a block of its own over the slope.
     tx, ty = hx + 0.7, hy + 0.7
-    bx(floor, (-tx + 0.04, -ty + 0.04, low), (tx - 0.04, ty - 0.04, 0.04), TERRACE)
+    tyf = hy + PD + 0.68 + P["forecourt"]                                             # its front edge
+    bx(floor, (-tx + 0.04, -tyf + 0.04, low), (tx - 0.04, ty - 0.04, 0.04), TERRACE)
     rz = max(low, -1.6)
-    for p0, u, L in (((-tx, -ty, 0), (1, 0, 0), 2 * tx), ((tx, -ty, 0), (0, 1, 0), 2 * ty),
-                     ((tx, ty, 0), (-1, 0, 0), 2 * tx), ((-tx, ty, 0), (0, -1, 0), 2 * ty)):
+    for p0, u, L in (((-tx, -tyf, 0), (1, 0, 0), 2 * tx), ((tx, -tyf, 0), (0, 1, 0), ty + tyf),
+                     ((tx, ty, 0), (-1, 0, 0), 2 * tx), ((-tx, ty, 0), (0, -1, 0), ty + tyf)):
         rubble(floor, Vector(p0) + Vector(u) * 0.0 - Vector((u[1], -u[0], 0)) * 0.04, u, L, rz, 0.04, RUBBLE, JOINT, rng)
-    flags(floor, -tx, tx, -ty, ty, 0.08, FLAGS, rng, row=0.68, bed=JOINT)
+    flags(floor, -tx, tx, -tyf, ty, 0.08, FLAGS, rng, row=0.68, bed=JOINT)
 
     # --- the base and the walls -------------------------------------------------------------
     zs = [0.08, 0.34, FZ]
@@ -316,7 +321,8 @@ for n, b in enumerate(PLAN):
                  "ridge": round(g + top + 0.2, 2), "door": ex(0, -hy), "porch": ex(0, yc),
                  "steps": ex(0, -hy - PD - 0.9), "room": ex(0, 0), "rack": [ex(r0, ry0), ex(r1, ry0)],
                  "table": ex((tx0 + tx1) / 2, (ty0 + ty1) / 2), "stool": ex(sx, sy)})
-    strips.append({"at": [cx, cz], "half": [hx0 + 0.3, hy0 + 0.3], "rot": b["rot"], "pad": g - 0.05})
+    y0, y1 = -tyf + 0.05, hy0 + 0.3                                                  # the levelled ground: walls, porch, forecourt
+    strips.append({"at": ex(0, (y0 + y1) / 2), "half": [hx0 + 0.3, (y1 - y0) / 2], "rot": b["rot"], "pad": g - 0.05})
 
 objs = [shell.finish(), floor.finish(), furn.finish()]
 json.dump({"_note": "Written by art/sets/libraries.py; explorer coords [x, z] in metres, heights above the sea. "

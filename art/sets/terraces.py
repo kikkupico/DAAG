@@ -28,7 +28,11 @@ it need not be described to an image model (the helpers are masonry.py's):
   border round them;
 - the pebbles lying in the grooves, counted from the scribe's side, and a bowl of spare pebbles
   at each end of the table, white at the white set's end and black at the black;
-- the scribe's stool, on the side of the terrace above, so that he faces the sea.
+- the scribe's stool, on the side of the terrace above, so that he faces the sea;
+- below them on the south-west shore (the plan's `landing`), the landing where couriers' boats
+  put in: a quay of dressed blocks under flagstones with stone bollards along its sea face, and
+  a stair of blocks between rubble kerbs from the lowest earthwork terrace down to the quay,
+  the ground cut down under it.
 """
 import bpy, json, math, random, sys
 from mathutils import Vector, Matrix
@@ -146,12 +150,60 @@ for n, b in enumerate(PLAN):
                  "above": round(g + rise, 2), "made": made, "lost": lost})
     strips.append({"at": [cx, cz], "half": [hx, hy], "rot": b["rot"], "pad": round(g - 0.05, 3)})
 
+# --- the landing: a quay at the shore and a stair up to the terraces ---------------------------
+LAND = json.load(open(SITE["terraces"]["plan"])).get("landing")
+landing = None
+if LAND:
+    Q, ST = LAND["quay"], LAND["stair"]
+    (qx, qz), (qa, qb), qr, qt = Q["at"], Q["half"], math.radians(Q["rot"]), Q["top"]
+    # The quay's frame: X along the shore, +Y out to sea, Z up from the sea.
+    bot = 0.02                                                           # nothing below the sea: the island stands on its lowest point
+    bx(floor, (-qa + 0.06, -qb, bot), (qa - 0.06, qb - 0.06, qt - 0.04), JOINT)
+    for p0, u, L in (((-qa, qb, 0), (1, 0, 0), 2 * qa), ((qa, -qb, 0), (0, 1, 0), 2 * qb),
+                     ((-qa, qb, 0), (0, -1, 0), 2 * qb)):
+        o = Vector((0, 1, 0)) if u == (1, 0, 0) else Vector((1, 0, 0)) if p0[0] > 0 else Vector((-1, 0, 0))
+        masonry.ashlar(floor, Vector(p0) - o * 0.12, u, L, [bot, 0.35, qt - 0.04], 0.9, BLOCKS, JOINT, rnd, out=o)
+    flags(floor, -qa, qa, -qb, qb, qt, FLAGS, rnd, row=0.7, size=(0.7, 1.2))
+    for x in (-2.2, 0.9, 2.4):                                           # stone bollards along its edge
+        floor.cyl(Vector((x, qb - 0.35, qt)), 0.16, 0.13, 0.5, rnd.choice(BLOCKS), 12)
+    Mq = Matrix.Translation((qx, -qz, 0)) @ Matrix.Rotation(-qr, 4, "Z")
+    floor.place(Mq)
+    foot = Mq @ Vector((0, -qb, qt))                                     # where the stair comes down: the quay's back edge
+    strips.append({"at": [qx, qz], "half": [qa, qb], "rot": Q["rot"], "pad": round(qt - 0.3, 3)})
+
+    # The stair's frame: X down the stair, Z up from the sea; the top at the origin.
+    (sx, sz), h0, W = ST["top"], ST["h"], ST["width"]
+    top = Vector((sx, -sz, 0))
+    run = Vector((foot.x - top.x, foot.y - top.y, 0))
+    L, yaw = run.length, math.atan2(run.y, run.x)
+    n = max(2, round((h0 - qt) / 0.18))                                  # risers
+    r, t = (h0 - qt) / n, L / (n - 1)                                    # rise and tread; the last step is the quay
+    bx(floor, (-1.2, -W / 2 - 0.3, h0 - 1.0), (0.0, W / 2 + 0.3, h0 - 0.04), JOINT)     # a paved head on the terrace
+    flags(floor, -1.2, 0.0, -W / 2 - 0.3, W / 2 + 0.3, h0, FLAGS, rnd, row=0.6, size=(0.5, 0.9))
+    for k in range(n - 1):
+        z = h0 - (k + 1) * r
+        x0, x1 = k * t, (k + 1) * t
+        for a, b in masonry.lengths(-W / 2, W / 2, 0.45, 0.75, rnd):
+            bx(floor, (x0 + GAP / 2, a + GAP / 2, max(bot, z - 1.3)), (x1 - GAP / 2, b - GAP / 2, z), rnd.choice(BLOCKS))
+        for s in (-1, 1):                                                # a kerb either side, stepping down with it
+            bx(floor, (x0 + GAP / 2, s * W / 2, max(bot, z - 1.3)), (x1 - GAP / 2, s * (W / 2 + 0.28), z + 0.22), rnd.choice(RUBBLE))
+    Ms = Matrix.Translation(top) @ Matrix.Rotation(yaw, 4, "Z")
+    floor.place(Ms)
+    ex_s = lambda x: (lambda v: [round(v.x, 2), round(-v.y, 2)])(Ms @ Vector((x, 0, 0)))
+    for k in range(0, n - 1, 3):                                         # the ground cut down under each few steps
+        k1 = min(k + 3, n - 1)
+        strips.append({"at": ex_s((k + k1) / 2 * t), "half": [(k1 - k) * t / 2, W / 2 + 0.28],
+                       "rot": round(-math.degrees(yaw), 2), "pad": round(h0 - k1 * r - 0.12, 3)})
+    strips.append({"at": ex_s(-0.6), "half": [0.6, W / 2 + 0.3], "rot": round(-math.degrees(yaw), 2), "pad": round(h0 - 0.1, 3)})
+    landing = {"quay": [qx, qz], "quay_top": qt, "stair_top": [sx, sz], "stair_h": h0, "stair_foot": [round(foot.x, 2), round(-foot.y, 2)], "steps": n - 1}
+
 objs = [floor.finish(), furn.finish()]
 json.dump({"_note": "Written by art/sets/terraces.py; explorer coords [x, z] in metres, heights above the sea. `at`: the "
                     "table's middle, its top at `top`; `downhill`: a point out over the terrace below; `ends`: the "
                     "table's two ends, the white set's first; `stool`: the scribe's stool; `stair`: the foot of the "
-                    "steps up to the terrace above, which is at `above`; `made`, `lost`: the pebbles in each column.",
-           "params": P, "tables": info}, open(f"art/sets/{NAME}.json", "w"), indent=1)
+                    "steps up to the terrace above, which is at `above`; `made`, `lost`: the pebbles in each column. "
+                    "`landing`: the quay's middle and top, the stair's top, height and foot.",
+           "params": P, "tables": info, "landing": landing}, open(f"art/sets/{NAME}.json", "w"), indent=1)
 json.dump({"_note": f"Written by art/sets/terraces.py for {NAME}: ground to level, explorer [x, z].", "strips": strips},
           open(f"art/sets/{NAME}-strips.json", "w"), indent=1)
 bpy.ops.object.select_all(action="SELECT")
