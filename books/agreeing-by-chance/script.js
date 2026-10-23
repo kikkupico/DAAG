@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -99,17 +99,20 @@ function describeR(rd,c){
 }
 const describe=rd=>dual(describeR(rd,0),describeR(rd,1));
 
+/* the four as lanes, for a hill picture's computing twin (Unfold in book.js) */
+const LANES={1:[-90,"T1",TC[1],"P1"],2:[0,"T2",TC[2],"P2"],3:[90,"T3",TC[3],"P3"],4:[180,"T4",TC[4],"P4"]};
+
 /* ===== a coin in each tent ===== */
 (function(){
-  const H=Hill($("#coinsvg")),say=$("#coinsay"),tally=$("#cointally"),bs=[1,2,3,4,"all"].map(k=>$("#coin"+k)),br=$("#coinr");
+  const H=Hill($("#coinsvg")),L=Unfold(H.svg,{nodes:LANES,span:6,slide:true}),say=$("#coinsay"),tally=$("#cointally"),bs=[1,2,3,4,"all"].map(k=>$("#coin"+k)),br=$("#coinr");
   let tl,busy=false;
   const paint=()=>tally.innerHTML=[1,2,3,4].map(k=>`<div>${tentChip(k)} ${dual(`owl ${tl[k][0]} · goddess ${tl[k][1]}`,`0: ${tl[k][0]} · 1: ${tl[k][1]}`)}</div>`).join("");
   async function toss(ks){if(busy)return;busy=true;bs.forEach(b=>b.disabled=true);ks.forEach(k=>H.state(k,"…"));say.textContent="The coin is in the air.";
-    await sleep(500);const res=ks.map(k=>{const f=rnd(2)?"H":"A";tl[k][f==="H"?0:1]++;H.state(k,FACE[f],GL[f]);H.badge(k,f);return [k,f]});
+    L.tick(.5);await sleep(500);const res=ks.map(k=>{const f=rnd(2)?"H":"A";tl[k][f==="H"?0:1]++;H.state(k,FACE[f],GL[f]);H.badge(k,f);L.mark(k,GL[f]);return [k,f]});
     say.innerHTML=dual(res.map(([k,f])=>`<b>Tent ${k}</b>: ${FACE[f]}, so it favours ${W[f]}.`).join(" ")+" Each press differs, and nothing here says how the next toss will fall.",
       res.map(([k,f])=>`<b>P${k}</b> flips ${GL[f]}, so it favours ${GL[f]}.`).join(" ")+" Each press differs, and nothing here says how the next flip will fall.");
     paint();busy=false;bs.forEach(b=>b.disabled=false)}
-  function reset(){tl={1:[0,0],2:[0,0],3:[0,0],4:[0,0]};[1,2,3,4].forEach(k=>{H.state(k,"");H.badge(k,"")});paint();say.innerHTML=dual("Four tents, four coins. Toss in one tent, or in all four.","Four processes, four coins. Flip at one process, or at all four.")}
+  function reset(){L.reset();tl={1:[0,0],2:[0,0],3:[0,0],4:[0,0]};[1,2,3,4].forEach(k=>{H.state(k,"");H.badge(k,"")});paint();say.innerHTML=dual("Four tents, four coins. Toss in one tent, or in all four.","Four processes, four coins. Flip at one process, or at all four.")}
   [1,2,3,4].forEach((k,i)=>bs[i].onclick=()=>toss([k]));bs[4].onclick=()=>toss([1,2,3,4]);br.onclick=reset;reset();
 })();
 
@@ -183,14 +186,14 @@ const describe=rd=>dual(describeR(rd,0),describeR(rd,1));
 
 /* ===== half is too many ===== */
 (function(){
-  const H=Hill($("#halfsvg")),say=$("#halfsay"),b1=$("#half1"),b2=$("#half2"),b3=$("#half3"),br=$("#halfr");
-  let d1,d2,toks;const S={1:"H",2:"H",3:"A",4:"A"};
+  const H=Hill($("#halfsvg")),L=Unfold($("#halfsvg"),{nodes:LANES,span:4.4,vals:GL}),say=$("#halfsay"),b1=$("#half1"),b2=$("#half2"),b3=$("#half3"),br=$("#halfr");
+  let d1,d2,toks;const S={1:"H",2:"H",3:"A",4:"A"};L.wrap(H);
   const hold=(a,b)=>{const g=H.token(TC[a],S[a]);H.fly(g,a,b,.45);g.setAttribute("opacity",1);toks.push([g,a,b])};
-  function reset(){toks.forEach(t=>t[0].remove());toks=[];d1=d2=false;[1,2,3,4].forEach(k=>{H.badge(k,S[k]);H.state(k,"")});b1.disabled=b2.disabled=false;b3.disabled=true;
+  function reset(){toks.forEach(t=>t[0].remove());toks=[];L.reset();d1=d2=false;[1,2,3,4].forEach(k=>{H.badge(k,S[k]);H.state(k,"")});b1.disabled=b2.disabled=false;b3.disabled=true;
     say.innerHTML=dual("Tents 1 and 2 saw hold. Tents 3 and 4 saw attack. On this hill, two of the four may fall silent.","P1 and P2 have input 0. P3 and P4 have input 1. In this system, two of the four may crash.")}
-  b1.onclick=()=>{d1=true;b1.disabled=true;hold(3,2);hold(4,1);H.state(1,"holds","decides 0");H.state(2,"holds","decides 0");b3.disabled=!(d1&&d2);
+  b1.onclick=()=>{d1=true;b1.disabled=true;hold(3,2);hold(4,1);L.setT(L.clock.t+1.2);H.state(1,"holds","decides 0");H.state(2,"holds","decides 0");b3.disabled=!(d1&&d2);
     say.innerHTML=dual("Every bird from tents 3 and 4 stays in the pines. Tents 1 and 2 hear only each other, and for all they can tell the other two are silent for good. That looks exactly like a night on which all four saw hold and the other two fell silent at the start, and there the second demand has them hold. Their coins make no difference. <b>So they hold.</b>","Every message from P3 and P4 is delayed. P1 and P2 hear only each other, and for all they can tell the other two have crashed for good. That looks exactly like an execution in which all four had input 0 and the other two crashed at the start, and there validity makes them decide 0. Their coins make no difference. <b>So they decide 0.</b>")};
-  b2.onclick=()=>{d2=true;b2.disabled=true;hold(1,4);hold(2,3);H.state(3,"attacks","decides 1");H.state(4,"attacks","decides 1");b3.disabled=!(d1&&d2);
+  b2.onclick=()=>{d2=true;b2.disabled=true;hold(1,4);hold(2,3);L.setT(L.clock.t+1.2);H.state(3,"attacks","decides 1");H.state(4,"attacks","decides 1");b3.disabled=!(d1&&d2);
     say.innerHTML=dual("In the same way every bird from tents 1 and 2 stays in the pines, and tents 3 and 4 hear only each other. <b>So they attack.</b>","In the same way every message from P1 and P2 is delayed, and P3 and P4 hear only each other. <b>So they decide 1.</b>")};
   b3.onclick=async()=>{b3.disabled=true;await Promise.all(toks.map(([g,a,b])=>tween(1100,u=>H.fly(g,a,b,.45+.43*u)).then(()=>g.setAttribute("opacity",0))));
     say.innerHTML=dual("All four are alive and every bird was merely late, so neither pair could tell. <span class='bad'>The pairs have committed to different answers.</span> The first demand is broken. The picture shows the pattern of the argument, not a worked plan.","All four are alive and every message was merely late, so neither pair could tell. <span class='bad'>The pairs have decided different values.</span> Agreement is broken. The picture shows the pattern of the argument, not a worked protocol.")};

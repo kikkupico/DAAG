@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -132,6 +132,8 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* ===== one turn, glass by glass, in still air ===== */
 (function(){
   const svg=$("#turnsvg"),side=$("#turnside"),H=Hill(svg),T=[1,2,3,4],OWNER=1,TURN=5;
+  /* computing: the phase as a timeline, one round after another, the round being read lit */
+  const L=Unfold(svg,{nodes:{1:[-90,"T1",TC[1],"P1"],2:[0,"T2",TC[2],"P2"],3:[90,"T3",TC[3],"P3"],4:[180,"T4",TC[4],"P4"]},span:4.2});
   const sight={1:"H",2:"H",3:"A",4:"H"},list=new Set(["H","A"]);
   const pl0={1:[],2:[["A",2]],3:[],4:[]};
   /* the rules of the four glasses, applied to the starting pledges */
@@ -175,6 +177,13 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     if(s===4)T.filter(k=>k!==2).forEach(k=>put(k,2,WORD[call][0].toUpperCase()+TURN,GL[call]+"·"+TURN));
     if(s===0)H.state(OWNER,"owner","coordinator");
     side.innerHTML=T.map(k=>card(k,s)).join("");
+    const R=[["1 · estimates",.2,.9],["2 · proposal",1.2,1.9],["3 · acks",2.2,2.9],["4 · locks",3.2,3.9]],others=T.filter(k=>k!==OWNER);
+    L.reset();L.turn(OWNER);L.setT(0);L.state(OWNER,"coordinator","coordinator");
+    R.forEach(([lab,a,b],i)=>{if(i<s)L.band(a-.12,b+.12,lab,i===s-1)});
+    if(s>=1)others.forEach(k=>L.msg(k,OWNER,.2,.9,names[k].map(x=>GL[x]).join("")));
+    if(s>=2)others.forEach(k=>L.msg(OWNER,k,1.2,1.9,GL[call]));
+    if(s>=3){others.forEach(k=>L.msg(k,OWNER,2.2,2.9,"✓"));if(commits){L.setT(3.02);L.state(OWNER,"decides "+GL[call],"decides "+GL[call])}}
+    if(s>=4)T.filter(k=>k!==2).forEach(k=>L.msg(k,2,3.2,3.9,GL[call]+"·"+TURN));
   });
 })();
 

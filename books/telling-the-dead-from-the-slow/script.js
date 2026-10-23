@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -128,29 +128,34 @@ const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd
 COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
+/* the four as lanes, for a hill picture's computing twin (Unfold in book.js) */
+const LANES={1:[-90,"T1",TC[1],"P1"],2:[0,"T2",TC[2],"P2"],3:[90,"T3",TC[3],"P3"],4:[180,"T4",TC[4],"P4"]};
+
 /* ===== a slate that may be wrong, in two ways ===== */
 (function(){
-  const H=Hill($("#slatesvg")),say=$("#slatesay"),rows=$("#slaterows"),bR=$("#slatereveal"),bN=$("#slatenew");
+  const H=Hill($("#slatesvg")),L=Unfold(H.svg,{nodes:LANES,span:3}),say=$("#slatesay"),rows=$("#slaterows"),bR=$("#slatereveal"),bN=$("#slatenew");
   const K=[2,3,4];let truth,mark,shown,extra;
   function deal(){do{truth={};K.forEach(k=>truth[k]=["fine","slow","dead"][rnd(3)])}while(!K.some(k=>truth[k]!=="fine"));
     mark={};K.forEach(k=>mark[k]=false);shown=false;(extra||[]).forEach(e=>e.remove());extra=[];
-    T.forEach(k=>{H.tent[k].g.classList.remove("out");H.state(k,"");H.badge(k,"")});H.tent[1].g.classList.add("turn");H.state(1,"you");
+    T.forEach(k=>{H.tent[k].g.classList.remove("out");H.state(k,"");H.badge(k,"");L.badge(k,"")});H.tent[1].g.classList.add("turn");H.state(1,"you");
+    L.reset();L.turn(1);L.state(1,"you","you");K.forEach(k=>{if(truth[k]==="fine")L.msg(k,1,.3,1.1)});L.setT(2.4);
     bR.disabled=false;paint();
     say.innerHTML=dual("Tent 1's man has had no bird from some tents. Which of them are dead? Chalk the ones you think are, then reveal the night.","P1 has had no message from some processes. Which of them have crashed? Mark the ones you think have, then reveal the execution.")}
   const bird=k=>truth[k]==="fine"?dual("a bird came in","a message came in"):dual("no bird yet","no message yet");
   function paint(){
     rows.innerHTML=K.map(k=>`<div class="srow">${tentChip(k)}<span class="sb">${bird(k)}</span><button class="btn alt" data-k="${k}" ${shown?"disabled":""}>${mark[k]?dual("Rub out","Remove"):dual("Chalk","Suspect")}</button><span class="sv" id="sv${k}"></span></div>`).join("");
-    $$("button[data-k]",rows).forEach(b=>b.onclick=()=>{const k=+b.dataset.k;mark[k]=!mark[k];H.badge(k,mark[k]?"✗":"");paint()});
+    $$("button[data-k]",rows).forEach(b=>b.onclick=()=>{const k=+b.dataset.k;mark[k]=!mark[k];H.badge(k,mark[k]?"✗":"");L.badge(k,mark[k]?"✗":"");paint()});
     if(shown)K.forEach(k=>{const dead=truth[k]==="dead",m=mark[k],slow=truth[k]==="slow";$("#sv"+k).innerHTML=
       dead&&m?dual("<span class='ok'>Right.</span> Dead, and chalked.","<span class='ok'>Right.</span> Crashed, and suspected."):
       dead&&!m?dual("<span class='bad'>Not yet.</span> Dead, and the row is clean.","<span class='bad'>Not yet.</span> Crashed, and not suspected."):
       m?dual("<span class='bad'>Wrong.</span> Alive"+(slow?", its bird only slow":"")+", and chalked.","<span class='bad'>Wrong.</span> Alive"+(slow?", its message only slow":"")+", and suspected."):
       dual("<span class='ok'>Right.</span> Alive, and the row is clean.","<span class='ok'>Right.</span> Alive, and not suspected.")})}
   bR.onclick=()=>{shown=true;bR.disabled=true;
-    K.forEach(k=>{if(truth[k]==="dead"){H.tent[k].g.classList.add("out");H.state(k,"dead","crashed");extra.push(cross(H.over,H.tent[k].x,H.tent[k].y))}
+    L.setT(0);K.forEach(k=>{if(truth[k]==="dead")L.crash(k);if(truth[k]==="slow")L.msg(k,1,.3,null)});L.setT(2.4);
+    K.forEach(k=>{if(truth[k]==="dead"){H.tent[k].g.classList.add("out");H.state(k,"dead","crashed");L.state(k,"crashed","crashed");extra.push(cross(H.over,H.tent[k].x,H.tent[k].y))}
       else if(truth[k]==="slow"){const g=H.token(TC[k],"");g.setAttribute("opacity",1);H.fly(g,k,1,.45);const [px,py]=H.at(H.A[k]+(((H.A[1]-H.A[k]+540)%360)-180)*.45,H.R-24*Math.sin(Math.PI*.45));
-        const t=dtext(H.over,{class:"lab halo",x:px+(k===3?-4:6),y:py+30},"in a pine","delayed");extra.push(g,...t);H.state(k,"alive")}
-      else H.state(k,"alive")});
+        const t=dtext(H.over,{class:"lab halo",x:px+(k===3?-4:6),y:py+30},"in a pine","delayed");extra.push(g,...t);H.state(k,"alive");L.state(k,"alive","alive")}
+      else{H.state(k,"alive");L.state(k,"alive","alive")}});
     paint();
     const missed=K.filter(k=>truth[k]==="dead"&&!mark[k]).length,wrong=K.filter(k=>truth[k]!=="dead"&&mark[k]).length;
     say.innerHTML=!missed&&!wrong?dual("No mistake this time. But from where tent 1 sits, a dead man and a slow bird look the same, so a slate can only guess.","No mistake this time. But from where P1 sits, a crashed process and a slow message look the same, so a detector can only guess."):
@@ -196,7 +201,7 @@ const strongRun=(function(){
   return runStrong({sight:{1:"A",2:"H",3:"A",4:"H"},c:2,dies:{4:1},part:{4:[3]},skip:(p,r)=>skipTab[p+"-"+r]||[]});
 })();
 (function(){
-  const R=strongRun,H=Hill($("#strongsvg")),side=$("#strongside"),svg=H.svg;
+  const R=strongRun,H=Hill($("#strongsvg")),L=Unfold($("#strongsvg"),{nodes:LANES,span:4.6}),side=$("#strongside"),svg=H.svg;
   const m=el("marker",{id:"strong-k",markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},el("defs",{},svg));el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:"#1c1512"},m);
   const arrows={};
   for(let r=1;r<=4;r++){arrows[r]=[];const hs=R.snaps[r].heard;for(const p in hs)hs[p].forEach(q=>{if(q!=+p)arrows[r].push(el("path",{class:"gr-arrow fade",d:route(H,q,+p),"marker-end":"url(#strong-k)"},H.under))})}
@@ -217,6 +222,12 @@ const strongRun=(function(){
     side.innerHTML=T.map(p=>card(p,i,snapI)).join("");
     for(let r=1;r<=4;r++)arrows[r].forEach(a=>on(a,snapI===r&&i<5));
     deadMark.setAttribute("opacity",i>=1?1:0);H.tent[4].g.classList.toggle("out",i>=1);
+    L.reset();L.setT(0);L.state(2,"spared","spared");
+    for(let r=1;r<=snapI;r++){const hs=R.snaps[r].heard;L.band(r-1+.08,r-.08,"round "+r,r===snapI&&i<5);
+      for(const p in hs)hs[p].forEach(q=>{if(q!=+p)L.msg(q,+p,r-1+.15,r-.15)})}
+    if(i>=1){L.setT(.62);L.crash(4)}
+    L.setT(Math.max(.05,Math.min(snapI,4)));
+    if(i===5){L.setT(4.25);T.filter(p=>p!==4).forEach(p=>{const x=T.map(k=>R.snaps[4].V[p][k]).find(Boolean);L.state(p,"decides "+GL[x],"decides "+GL[x])})}
   });
 })();
 

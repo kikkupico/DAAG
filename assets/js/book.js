@@ -163,6 +163,95 @@ function Lanes(svg,o){
     msg(a,ta,b,tb){return P.slip(a,ta,b,tb,10)}};
   return P;
 }
+/* Unfold: a place-from-above picture's computing twin, a timeline that grows as the reader acts.
+   The picture (a Hill, an Isle) stays as it is and shows in the allegory; a second svg after it shows in computing.
+   The book's own calls feed it: wrap(H) relays H.fly, H.state and H.badge; the rest is said outright at the point
+   it happens: reset, crash, lose, step, tick, turn. A message is an arrow from the moment it is sent, dashed toward its
+   receiver while in transit and solid once it lands; a lost one ends part-way at a cross; a crash ends a lane.
+   Time runs while a message flies, plus whatever tick and step add; views that are read side by side share a clock.
+     const L=Unfold(svg,{nodes, span, slide, clock}); L.wrap(H);   (o.clock: another Unfold's clock, to share it) */
+function Unfold(src,o){
+  const svg=src.cloneNode(false);svg.id=src.id+"-ln";svg.classList.add("m");src.classList.add("i");src.after(svg);
+  if(src.dataset.alM)svg.setAttribute("aria-label",src.dataset.alM);
+  const clock=o.clock||{t:0,owed:0,active:-1e9,raf:0,last:0,subs:[]};
+  let msgs=[],states=[],steps=[],marks=[],bands=[],cuts=[],badges={},crashes={},turnK=null,queued=false;
+  const byTok=new Map();
+  function wake(){if(!clock.raf){clock.last=performance.now();clock.raf=requestAnimationFrame(loop)}}
+  function loop(now){const dt=Math.min(.1,(now-clock.last)/1000);clock.last=now;
+    const flying=now-clock.active<160;let adv=flying?dt:0;
+    if(clock.owed>0){const d=Math.min(clock.owed,dt*1.6);clock.owed-=d;adv=Math.max(adv,d)}
+    clock.t+=adv;clock.subs.forEach(f=>f());clock.raf=flying||clock.owed>1e-4?requestAnimationFrame(loop):0}
+  const render=()=>{if(queued||!isM())return;queued=true;requestAnimationFrame(()=>{queued=false;draw()})};
+  clock.subs.push(render);onReg.push(()=>render());PHONE.addEventListener("change",render);
+  function draw(){
+    if(!isM())return;
+    const span=o.span||6,off=o.slide?Math.max(0,clock.t-span*.86):0,X=t=>t-off,now=X(clock.t);
+    const P=Lanes(svg,{nodes:o.nodes,tEnd:span});svg.classList.add("lanes");
+    const keys=Object.keys(o.nodes),big=PHONE.matches?1.6:1;
+    /* the lane of a man who has crashed stops there */
+    keys.forEach(k=>{if(crashes[k]==null)return;const t=Math.max(0,X(crashes[k])),[x,y]=P.pt(k,t);
+      el("line",{class:"ln-gone",x1:x,y1:y,x2:P.x(span)+20,y2:y},P.shade);
+      el("path",{class:"ln-x",d:`M${x-9},${y-9}L${x+9},${y+9}M${x-9},${y+9}L${x+9},${y-9}`},P.over)});
+    /* each process's input, beside its name */
+    keys.forEach(k=>{const s=badges[k];if(!s)return;const [x,y]=P.pt(k,0),g=el("g",{class:"ln-in",transform:`translate(${x+14*big} ${y})`},P.over);
+      el("rect",{x:-11*big,y:-11*big,width:22*big,height:22*big,rx:6*big},g);el("text",{style:`font-size:${13*big}px`},g).textContent=s});
+    if(turnK!=null){const [x,y]=P.pt(turnK,0);el("circle",{class:"ln-turn",cx:x-48-(big-1)*14,cy:y,r:26*big},P.under)}
+    /* a process cut off from the rest: its lane hatched for as long as it lasts */
+    if(cuts.length){const pt=el("pattern",{id:svg.id+"-cut",width:8,height:8,patternUnits:"userSpaceOnUse",patternTransform:"rotate(45)"},$("defs",svg));
+      el("line",{x1:0,y1:0,x2:0,y2:8,stroke:"#bf4a26","stroke-width":2.2,"stroke-opacity":.35},pt);
+      for(const c of cuts){const t0=Math.max(0,X(c.t0)),t1=c.t1!=null?X(c.t1):now;if(t1<0)continue;const y=P.pt(c.k,0)[1],h=22*big;
+        el("rect",{class:"ln-cut",x:P.x(t0),y:y-h,width:Math.max(2,P.x(Math.max(t1,t0+.05))-P.x(t0)),height:2*h,rx:6,fill:`url(#${svg.id}-cut)`},P.shade)}}
+    /* a stretch of time with a name: a round of a protocol */
+    for(const b of bands){const x1=P.x(X(b.t0)),x2=P.x(X(b.t1)),top=P.y(keys[0])-40;
+      el("rect",{class:"ln-band"+(b.hot?" hot":""),x:x1,y:top,width:x2-x1,height:P.y(keys[keys.length-1])+40-top},P.shade);
+      el("text",{class:"ln-bandl",x:(x1+x2)/2,y:top-8,style:`font-size:${11.5*big}px`},P.over).textContent=b.lab}
+    for(const r of msgs){
+      const t0=X(r.t0);if((r.t1!=null&&X(r.t1)<0)||(r.lost!=null&&X(r.lost)<0))continue;
+      const [x1,y1]=P.pt(r.a,Math.max(0,t0)),yb=P.pt(r.b,0)[1],ya=P.pt(r.a,0)[1];
+      if(r.lost!=null){const tl=X(r.lost),x2=P.x(tl),y2=ya+(yb-ya)*.5;
+        el("path",{class:"st-slip ln-lost",d:`M${x1},${y1}L${x2},${y2}`},P.slips);el("path",{class:"ln-x",d:`M${x2-7},${y2-7}L${x2+7},${y2+7}M${x2-7},${y2+7}L${x2+7},${y2-7}`},P.over);continue}
+      const t1=r.t1!=null?X(r.t1):now,p=P.slip(r.a,Math.max(0,t0),r.b,Math.max(t1,t0+.02),r.t1!=null?7:4);
+      if(r.t1==null)p.classList.add("ln-pending");else P.dot(r.b,t1,r.fill);
+      if(r.lab){const [mx,my]=p.mid;el("text",{class:"ln-mlab",x:mx,y:my-6*big,style:`font-size:${11.5*big}px`},P.over).textContent=r.lab}}
+    for(const s of steps)if(X(s.t)>=0)P.dot(s.k,X(s.t),"#fff").classList.add("ln-step");
+    /* labelled moments that all stay: every flip of a coin */
+    for(const m of marks){if(X(m.t)<0)continue;const [x,y]=P.pt(m.k,X(m.t)),g=el("g",{class:"ln-mark",transform:`translate(${x} ${y})`},P.over);
+      el("circle",{r:11*big,fill:m.col||"#fff"},g);el("text",{style:`font-size:${12*big}px`},g).textContent=m.lab}
+    /* the latest state of each process, at the moment it changed */
+    keys.forEach(k=>{const s=[...states].reverse().find(x=>String(x.k)===k);if(!s||X(s.t)<0)return;const [x,y]=P.pt(k,X(s.t));
+      P.dot(k,X(s.t),"#1d1d1f");const t=el("text",{class:"ln-state",x:Math.min(x+10,P.x(span)-4),y:y-14*big,style:`font-size:${12.5*big}px`},P.over);t.textContent=s.m||s.i;
+      if(x+10>P.x(span)-60)t.setAttribute("text-anchor","end")});
+  }
+  const L={svg,clock,
+    /* relay a picture's own calls */
+    wrap(H){const fly=H.fly,state=H.state,badge=H.badge;
+      H.fly=(g,a,b,u)=>{fly(g,a,b,u);L.fly(g,a,b,u)};
+      H.state=(k,i,m)=>{state(k,i,m);L.state(k,i,m)};
+      if(badge)H.badge=(k,s)=>{badge(k,s);L.badge(k,s)};
+      H.lanes=L;return H},
+    fly(g,a,b,u){let r=byTok.get(g);
+      /* a token that has landed starts a new flight only when it sets off again from near its sender */
+      if(!r||r.a!=a||r.b!=b||((r.t1!=null||r.lost!=null)&&u<.5)){r={a:+a||a,b:+b||b,t0:clock.t,t1:null,lost:null,fill:o.nodes[a][2]};msgs.push(r);byTok.set(g,r)}
+      if(u>=.879&&r.t1==null&&r.lost==null)r.t1=clock.t;clock.active=performance.now();wake();render()},
+    lose(g){const r=byTok.get(g);if(r&&r.t1==null){r.lost=clock.t;render()}},
+    state(k,i,m){if(i)states.push({k,t:clock.t,i,m:m===undefined?i:m});else states=states.filter(s=>s.k!=k);render()},
+    badge(k,s){badges[k]=s?((o.vals&&o.vals[s])||s):null;render()},
+    crash(k,on=true){crashes[k]=on?clock.t:null;render()},
+    cut(k,on){const c=cuts.find(x=>x.k==k&&x.t1==null);if(on&&!c)cuts.push({k,t0:clock.t,t1:null});else if(!on&&c)c.t1=clock.t;render()},
+    turn(k){turnK=k;render()},
+    mark(k,lab,col){marks.push({k,t:clock.t,lab,col});render()},
+    step(k,dt=.6){steps.push({k,t:clock.t});clock.owed+=dt;wake();render()},
+    tick(dt){clock.owed+=dt;wake()},
+    /* for a scene told step by step: a message with its own times, a named stretch of time, the clock set outright */
+    msg(a,b,t0,t1,lab){msgs.push({a,b,t0,t1,lost:null,fill:o.nodes[a][2],lab});render()},
+    band(t0,t1,lab,hot){bands.push({t0,t1,lab,hot});render()},
+    setT(t){clock.t=t;render()},
+    /* start the timeline again; inputs stay until badge changes them */
+    reset(){msgs=[];states=[];steps=[];marks=[];bands=[];cuts=[];crashes={};turnK=null;byTok.clear();clock.t=0;clock.owed=0;render()},
+    render};
+  render();
+  return L;
+}
 /* For a picture a book draws from nothing each time: the engine for the register being read, and a way to draw it
    again when the register changes or, in computing, when a phone crosses the size where the lanes grow larger. */
 function Space(svg,o){svg.classList.toggle("lanes",isM());return isM()?Lanes(svg,o):Polar(svg,o)}
@@ -244,5 +333,5 @@ document.querySelectorAll(".lin").forEach(lin=>{
 });
 })();
 
-window.BOOK={$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Lanes,Timeline,Space,redrawOn,init};
+window.BOOK={$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Lanes,Timeline,Space,redrawOn,Unfold,init};
 })();
