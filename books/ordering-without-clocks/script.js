@@ -1,6 +1,6 @@
 "use strict";
 (function(){
-const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline}=BOOK;
+const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,mapPairs,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
@@ -10,6 +10,8 @@ const GM={G:"!"};   /* the goatherd's token: a letter in the allegory, a mark in
 /* a label that says one thing in each register */
 const dl=(parent,attrs)=>{const t=dtext(parent,attrs,"","");return {set(i,m){t[0].textContent=i;t[1].textContent=m===undefined?i:m}}};
 const chip=(t,h)=>`<span class="chip"><i style="background:${HC[h]}"></i>${dual(`${t}·H${h}`,`${t}·P${h}`)}</span>`;
+/* the three as lanes, for a picture of Arche's computing twin (Unfold in book.js) */
+const LANES={1:[-90,"H1",HC[1],"P1"],2:[30,"H2",HC[2],"P2"],3:[150,"H3",HC[3],"P3"]};
 
 /* ===== Arche, seen from above: one picture reused wherever messengers are on the road ===== */
 function Isle(svg){
@@ -66,17 +68,18 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* ===== the gate of House 3: arrival follows the quicker legs, not the earlier request ===== */
 (function(){
   const I=Isle($("#race")),m1=I.token(HC[1],"✉"),m2=I.token(HC[2],"✉"),say=$("#racesay"),b1=$("#race1"),b2=$("#race2");
+  const L=Unfold(I.svg,{nodes:LANES,span:4.2});L.wrap(I);
   const w1=dl(I.over,{class:"lab halo",x:I.house[1].x,y:I.house[1].y+40}),w2=dl(I.over,{class:"lab halo",x:I.house[2].x-16,y:I.house[2].y-28});
   let seen=0;
   async function run(fast){
-    b1.disabled=b2.disabled=true;w1.set("");w2.set("");m1.setAttribute("opacity",0);m2.setAttribute("opacity",0);
+    b1.disabled=b2.disabled=true;w1.set("");w2.set("");m1.setAttribute("opacity",0);m2.setAttribute("opacity",0);L.reset();
     const ms=h=>h===fast?1700:3600;
-    w2.set("wrote first","sent first");say.innerHTML=dual("House 2 writes its request and sends a messenger.","P2 makes its request and sends a message.");
+    w2.set("wrote first","sent first");L.state(2,"sent first");say.innerHTML=dual("House 2 writes its request and sends a messenger.","P2 makes its request and sends a message.");
     I.road(m2,2,3,.1);m2.setAttribute("opacity",1);const p2=tween(ms(2),u=>I.road(m2,2,3,.1+.78*u));
     await sleep(700);
-    w1.set("wrote second","sent second");say.innerHTML=dual("A little later House 1 writes its own request and sends a messenger.","A little later P1 makes its own request and sends a message.");
+    w1.set("wrote second","sent second");L.state(1,"sent second");say.innerHTML=dual("A little later House 1 writes its own request and sends a messenger.","A little later P1 makes its own request and sends a message.");
     I.road(m1,1,3,.1);m1.setAttribute("opacity",1);const p1=tween(ms(1),u=>I.road(m1,1,3,.1+.78*u));
-    await Promise.all([p1,p2]);seen|=fast;
+    await Promise.all([p1,p2]);seen|=fast;L.state(3,"P"+fast+"'s message first");
     say.innerHTML=dual((fast===1?"<b>House 1's slip reaches the gate first.</b> Yet House 2 wrote first: the quicker messenger won.":"<b>House 2's slip reaches the gate first.</b> This time the request written first also arrives first, but only because its messenger kept ahead.")
       +(seen===3?" The same two requests, written in the same sequence; only the legs changed. Arrival at the gate cannot be the test.":""),
       (fast===1?"<b>P1's message reaches P3 first.</b> Yet P2 sent first: the faster delivery won.":"<b>P2's message reaches P3 first.</b> This time the request made first also arrives first, but only because its message kept ahead.")
@@ -199,7 +202,15 @@ function Morning(svg){
   /* every slip of the story: sender, receiver, the tally it carries, and where it is at which step */
   const toks=[[1,2,2,{1:.3,2:.62}],[1,3,2,{1:.3,2:.62}],[3,1,2,{1:.3,2:.62}],[3,2,2,{1:.3,2:.62}],
               [2,1,5,{4:.5}],[2,3,6,{4:.5}],[3,1,4,{4:.5}],[1,3,4,{4:.5}],[1,2,8,{6:.5}],[1,3,8,{6:.5}]]
-    .map(([a,b,n,plan])=>({a,b,plan,g:I.token(HC[a],n),u:.1,run:0,end:Math.max(...Object.keys(plan))}));
+    .map(([a,b,n,plan])=>({a,b,n,plan,g:I.token(HC[a],n),u:.1,run:0,start:Math.min(...Object.keys(plan)),end:Math.max(...Object.keys(plan))}));
+  /* computing: the story so far as one timeline, a step to each unit of time; each message carries its timestamp,
+     dashed while in transit; each process shows its clock from the step it last changed */
+  const L=Unfold(I.svg,{nodes:LANES,span:8.6});
+  const lab=(S,h)=>(S.in===h?"in resource · ":"")+"clock "+S.t[h-1];
+  function lanes(s){L.reset();
+    toks.forEach(k=>{if(k.start<=s)L.msg(k.a,k.b,k.start-.7,s>k.end?k.end+.3:null,String(k.n))});
+    [1,2,3].forEach(h=>{let j=s;while(j>0&&lab(ST[j-1],h)===lab(ST[s],h))j--;L.setT(j);L.state(h,lab(ST[s],h))});
+    L.setT(s+.15)}
   const tick=ok=>ok?"<span class='ok'>✓</span>":"<span class='bad'>✗</span>";
   function card(h,S){
     const q=S.q[h-1],heard=h===1?S.h1:h===3?S.h3:null,mine=q.some(r=>r[1]===h);
@@ -210,7 +221,7 @@ function Morning(svg){
     return `<div class="hc${S.in===h?" in":""}"><h5>${dual("House "+h,"P"+h)}<span>${dual("tally ","clock ")}${S.t[h-1]}</span></h5><div>${q.length?q.map(r=>chip(r[0],r[1])).join(""):"queue empty"}</div><div class="chk">${chk}</div></div>`;
   }
   scrolly($("#store"),s=>{
-    const S=ST[s];side.innerHTML=[1,2,3].map(h=>card(h,S)).join("");
+    const S=ST[s];side.innerHTML=[1,2,3].map(h=>card(h,S)).join("");lanes(s);
     sr.setAttribute("fill",S.in?HC[S.in]:"#fffaf0");stx[0].textContent=S.in?`House ${S.in} loading`:"storehouse: empty";stx[1].textContent=S.in?`P${S.in} in the resource`:"resource: free";
     toks.forEach(k=>{const u=k.plan[s],id=++k.run;
       if(u==null){k.g.setAttribute("opacity",0);k.u=s>k.end?.9:.1;I.road(k.g,k.a,k.b,k.u);return}
@@ -221,16 +232,19 @@ function Morning(svg){
 /* ===== the goatherd: a path that carries no slip ===== */
 (function(){
   const I=Isle($("#goat")),say=$("#goatsay"),btn=$("#goatgo"),H1=I.house[1],H3=I.house[3];
+  /* computing: the message goes as an arrow labelled with its timestamp; the outside channel is dotted and carries none */
+  const L=Unfold(I.svg,{nodes:LANES,span:6.8,labels:true});L.wrap(I);
   const gt=I.token("#fffaf0","G"),ms=I.token(HC[3],"9");
   const l3=dl(I.over,{class:"lab halo",x:H3.x+10,y:H3.y+38}),l1=dl(I.over,{class:"lab halo",x:H1.x+32,y:H1.y+36,style:"text-anchor:start"});
   const over=u=>{const v=1-u;I.put(gt,v*v*H3.x+2*u*v*I.cx+u*u*H1.x,v*v*H3.y+2*u*v*I.cy+u*u*H1.y)};
-  function reset(){l3.set("tally 8","clock 8");l1.set("tally 3","clock 3");gt.setAttribute("opacity",0);ms.setAttribute("opacity",0)}
+  function reset(){l3.set("tally 8","clock 8");l1.set("tally 3","clock 3");gt.setAttribute("opacity",0);ms.setAttribute("opacity",0);
+    L.reset();L.state(3,"clock 8");L.state(1,"clock 3")}
   btn.onclick=async()=>{btn.disabled=true;reset();
-    l3.set("sale: tally 9","sale: clock 9");say.innerHTML=dual("House 3 enters a sale under tally <b>9</b>. A messenger sets out by the road with the official slip, and a goatherd sets out over the mountain with the news.","P3 records a sale under clock <b>9</b>. A message sets out over the network with the official stamp, and the news also goes out over the outside channel.");
-    I.road(ms,3,1,.1);ms.setAttribute("opacity",1);over(.12);gt.setAttribute("opacity",1);
+    l3.set("sale: tally 9","sale: clock 9");L.setT(.2);L.state(3,"sale: clock 9");say.innerHTML=dual("House 3 enters a sale under tally <b>9</b>. A messenger sets out by the road with the official slip, and a goatherd sets out over the mountain with the news.","P3 records a sale under clock <b>9</b>. A message sets out over the network with the official stamp, and the news also goes out over the outside channel.");
+    I.road(ms,3,1,.1);ms.setAttribute("opacity",1);over(.12);gt.setAttribute("opacity",1);const out=L.msg(3,1,L.clock.t,null,"outside","ln-aside");
     const road=tween(6200,u=>I.road(ms,3,1,.1+.78*u));
     await tween(1900,u=>over(.12+.76*u));
-    l1.set("request: tally 4","request: clock 4");say.innerHTML=dual("The goatherd is lucky. House 1 hears of the sale and at once enters a request because of it. Its quiet tally stood at 3, so the request goes in under <b>4</b>.","The outside channel is fast. P1 hears of the sale and at once makes a request because of it. Its quiet clock stood at 3, so the request goes in under <b>4</b>.");
+    L.land(out);l1.set("request: tally 4","request: clock 4");L.state(1,"request: clock 4");say.innerHTML=dual("The goatherd is lucky. House 1 hears of the sale and at once enters a request because of it. Its quiet tally stood at 3, so the request goes in under <b>4</b>.","The outside channel is fast. P1 hears of the sale and at once makes a request because of it. Its quiet clock stood at 3, so the request goes in under <b>4</b>.");
     await road;ms.setAttribute("opacity",0);
     say.innerHTML=dual("Hours later the official slip arrives, marked 9, too late to correct anything. <span class='bad'>By the tallies, the request (4) came before the sale (9) that caused it.</span> The goatherd carried no slip, so the rules never saw the goatherd.","Hours later the official message arrives, stamped 9, too late to correct anything. <span class='bad'>By the clocks, the request (4) happened before the sale (9) that caused it.</span> The outside channel carried no message, so the rules never saw it.");
     btn.textContent="Again";btn.disabled=false};
