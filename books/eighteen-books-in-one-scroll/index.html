@@ -829,7 +829,7 @@
   <article class="card book" id="s-crdt" data-scene="crdt" data-book="crdt">
     <h3 class="punch"><span class="i">Any order. Any number of times. Always agree.</span><span class="m">Commutative, associative, idempotent.</span></h3>
     <h4 class="title">Changes That Never Clash</h4>
-    <p class="i">Every library keeps a table of pebbles for a visiting scholar's loans, one column per library, each written only by its own desk. <b>Merging two tables keeps the larger pile in each column</b>, so tables can meet in any order, any number of times, and always agree. Returns go in black pebbles; a struck title loses only the tags its striker saw. No table alone can keep him within his deposit.</p>
+    <p class="i">An entry in the scholars' compendium is made of parts, each merged by its own rule. The comet's sightings are counted in pebbles, one column per library, each written only by its own library. <b>Merging two boards keeps the larger pile in each column</b>, so boards can meet in any order, any number of times, and always agree. Mistaken sightings go in black pebbles; a struck reference loses only the tags its striker saw. No board alone can keep the count from falling below nothing.</p>
     <p class="m">CRDTs reach strong eventual consistency without coordination. <b>State-based types merge by least upper bound</b>, which is commutative, associative and idempotent; operation-based types need commuting operations delivered exactly once in causal order. Global invariants, such as a count that never drops below zero, still need coordination.</p>
     <a class="read" href="../changes-that-never-clash/index.html">Read the book ›</a>
     <div class="papers">
@@ -846,8 +846,8 @@
 <section class="feature light solid" id="f-merge">
   <div class="f-in">
     <p class="kicker rv">Try it</p>
-    <h2 class="rv"><span class="i">Merge the tables in any order you like.</span><span class="m">Merge replicas in any order.</span></h2>
-    <p class="lead rv"><span class="i">Each library adds pebbles to its own column only. A merge keeps the larger pile in each column. Lend, merge, merge again: once every table has met the news, they agree.</span><span class="m">A G-counter: each replica increments its own entry; merge is the element-wise max; the value is the sum. Any delivery order converges.</span></p>
+    <h2 class="rv"><span class="i">Merge the boards in any order you like.</span><span class="m">Merge replicas in any order.</span></h2>
+    <p class="lead rv"><span class="i">Each library adds pebbles to its own column only. A merge keeps the larger pile in each column. Record, merge, merge again: once every board has met the news, they agree.</span><span class="m">A G-counter: each replica increments its own entry; merge is the element-wise max; the value is the sum. Any delivery order converges.</span></p>
     <div class="merge rv" id="merge"></div>
     <div class="btns rv merge-btns">
       <button type="button" class="ghost" data-m="0,1"><span class="i">Merge 1 and 2</span><span class="m">merge(1, 2)</span></button>
@@ -951,7 +951,7 @@
       <div class="pile">
         <button type="button" class="q" data-door="south"><span class="i">Has any copy of this work been made?</span><span class="m">Is there a deadlock?</span></button>
         <button type="button" class="q" data-door="north"><span class="i">Are these all the copies?</span><span class="m">Is this object garbage?</span></button>
-        <button type="button" class="q" data-door="south"><span class="i">Merge two pebble tables</span><span class="m">Merge two G-counters</span></button>
+        <button type="button" class="q" data-door="south"><span class="i">Merge two pebble boards</span><span class="m">Merge two G-counters</span></button>
         <button type="button" class="q" data-door="north"><span class="i">Throw away an old notice of withdrawal</span><span class="m">Discard a tombstone</span></button>
         <button type="button" class="q" data-door="north"><span class="i">Keep a count from falling below zero</span><span class="m">Keep a counter non-negative</span></button>
         <button type="button" class="q" data-door="south"><span class="i">Pass fresh news on</span><span class="m">Gossip a new fact</span></button>
@@ -965,7 +965,7 @@
   <article class="card wall" id="w4" data-scene="w4">
     <p class="kicker">The fourth wall</p>
     <h3 class="punch"><span class="i">An absence needs everyone.</span><span class="m">CALM.</span></h3>
-    <p class="i">A question that only grows needs no waiting and no roster; <b>a question that rests on none, every or only must hear from everyone first</b>. That is why an old notice of withdrawal can be thrown away only when every library has been heard from, why no table alone keeps a count above zero, and why nothing on the coast that only grows ever waits for an assembly.</p>
+    <p class="i">A question that only grows needs no waiting and no roster; <b>a question that rests on none, every or only must hear from everyone first</b>. That is why an old notice of withdrawal can be thrown away only when every library has been heard from, why no board alone keeps a count above nothing, and why nothing on the coast that only grows ever waits for an assembly.</p>
     <p class="m">Exactly the <b>non-monotone computations</b>, such as negation, aggregation, global invariants and garbage collection, need coordination; monotone ones run coordination-free, and so stay available under partition.</p>
     <p class="nights"><span class="i">From one library:</span><span class="m">At one node:</span> <b class="i">every name heard</b><b class="m">all inputs seen</b> <i>looks like</i> <b class="i">one still on the road</b><b class="m">one still in flight</b></p>
   </article>
