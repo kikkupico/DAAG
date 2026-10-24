@@ -1485,12 +1485,12 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
   paint();
 })();
 
-/* ====================================================================== THE PEBBLE TABLES */
+/* ====================================================================== THE PEBBLE BOARDS */
 (function pebbles() {
   const box = $("#merge"); if (!box) return;
   const st = $("#mergeStatus"), COL = ["#d9a441", "#7fa34a", "#c8735a"];
   let T = [[2, 0, 0], [0, 1, 0], [0, 0, 2]], merges = 0;
-  box.innerHTML = [0, 1, 2].map(t => `<div class="tbl"><div class="tn">${T2("Library " + (t + 1), "Replica " + (t + 1))}</div><div class="cols">${[0, 1, 2].map(s => `<div class="pcol${s === t ? " own" : ""}" style="--c:${COL[s]}"></div>`).join("")}</div><div class="tot"></div><button type="button">${T2("+ a loan", "increment")}</button></div>`).join("");
+  box.innerHTML = [0, 1, 2].map(t => `<div class="tbl"><div class="tn">${T2("Library " + (t + 1), "Replica " + (t + 1))}</div><div class="cols">${[0, 1, 2].map(s => `<div class="pcol${s === t ? " own" : ""}" style="--c:${COL[s]}"></div>`).join("")}</div><div class="tot"></div><button type="button">${T2("+ a sighting", "increment")}</button></div>`).join("");
   const tbls = $$(".tbl", box);
   tbls.forEach((el, t) => $("button", el).addEventListener("click", () => { T[t][t]++; paint(); }));
   function paint(flash) {
@@ -1501,7 +1501,7 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
         while (c.children.length > want) c.lastChild.remove();
       });
       const sum = T[t].reduce((a, b) => a + b, 0);
-      $(".tot", el).innerHTML = sum + `<small>${T2(sum === 1 ? "scroll out" : "scrolls out", "value")}</small>`;
+      $(".tot", el).innerHTML = sum + `<small>${T2(sum === 1 ? "sighting" : "sightings", "value")}</small>`;
       el.classList.toggle("flash", !!flash && flash.includes(t));
     });
     if (flash) setTimeout(() => tbls.forEach(el => el.classList.remove("flash")), 700);
@@ -1509,7 +1509,7 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
     const up = [0, 1, 2].filter(t => T[t].every((v, s) => v === J[s])), lag = [0, 1, 2].filter(t => !up.includes(t));
     const names = a => a.map(t => t + 1).join(a.length === 2 ? " and " : ", ");
     const total = J.reduce((a, b) => a + b, 0);
-    st.innerHTML = !lag.length ? T2(`All three libraries agree: <span class="g">${total} out</span>${merges ? `, after ${merges} ${merges === 1 ? "merge" : "merges"} in the order you chose` : ""}.`, `Converged: <span class="g">value ${total} on every replica</span>${merges ? ` after ${merges} merges, in your order` : ""}.`)
+    st.innerHTML = !lag.length ? T2(`All three libraries agree: <span class="g">${total} ${total === 1 ? "sighting" : "sightings"}</span>${merges ? `, after ${merges} ${merges === 1 ? "merge" : "merges"} in the order you chose` : ""}.`, `Converged: <span class="g">value ${total} on every replica</span>${merges ? ` after ${merges} merges, in your order` : ""}.`)
       : T2(`Up to date: ${up.length ? "library" + (up.length > 1 ? "s " : " ") + names(up) : "none yet"}. <b>Still to meet the news: librar${lag.length > 1 ? "ies" : "y"} ${names(lag)}.</b>`, `At the join: ${up.length ? names(up) : "none"}. <b>Behind: ${names(lag)}.</b>`);
   }
   $$(".merge-btns button").forEach(b => b.addEventListener("click", () => {

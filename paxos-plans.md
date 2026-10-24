@@ -103,46 +103,47 @@ see `settings.md`.
 
 Written: `books/changes-that-never-clash/`.
 
-**Shapiro, Preguiça, Baquero & Zawirski 2011 (both papers) · the loan desks of the libraries, Paxos**
+**Shapiro, Preguiça, Baquero & Zawirski 2011 (both papers) · the compendium and its pebble boards, Paxos**
 
-**The idea.** **Strong eventual consistency (SEC):** replicas that have received the same updates are in the same state, with no coordination. Two sufficient conditions. **State-based (CvRDT):** states form a join-semilattice, updates only move up, and merge is the least upper bound. **Op-based (CmRDT):** concurrent operations commute, and delivery is causal. Each kind can emulate the other. SEC is not sequential consistency. The comprehensive report adds the portfolio: counters, registers, sets, graphs, sequences.
+**The idea.** **Strong eventual consistency (SEC):** replicas that have received the same updates are in the same state, with no coordination. Two sufficient conditions. **State-based (CvRDT):** states form a join-semilattice, updates only move up, and merge is the least upper bound. **Op-based (CmRDT):** concurrent operations commute, and delivery is causal. Each kind can emulate the other. SEC is not sequential consistency. The comprehensive report adds the portfolio: counters, registers, sets, graphs, sequences, and a map built from them (the shopping cart).
 
-**The setup, in three sentences.** A visiting scholar lodges one deposit that lets him have so many scrolls out at once at any library on the coast, and the desk in front of him must lend at once, because a courier is slow and may be stopped. Each library keeps its own table of pebbles for him, a white column for the scrolls each library has lent and a black column for the scrolls returned to each, and the couriers carry the tables between the libraries. Whatever table a library holds, it can say how many he has out, and when he leaves the deposit is settled against that figure. Why there is one deposit and not one per library is never explained.
+**The setup, in three sentences.** Every library on the coast keeps its own copy of the compendium and changes it at once, and couriers carry copies of entries, or slips naming one change, between the libraries. The coast's plain rule keeps the version of an entry with the larger tally, which throws away one of two changes made in ignorance of each other even when they touch different parts. So an entry is made of parts, each merged by its own rule; the book follows the comet's entry: its count of sightings, its account of what the comet is, and its cross-references, under a heading that can be withdrawn.
 
 **The devices.**
 
 | Device | In the paper | Also in |
 |---|---|---|
-| the scholar's table at each library's loan desk: one column of pebbles per library | A counter as a vector, one entry per replica (G-Counter). | The column room (*Ordering Without Clocks*) |
-| a board at every desk for each scholar with a deposit; the book watches one | One counter per key, each behaving as the one shown; the merge is unchanged. |  |
+| the larger tally stands, for the whole entry | Last writer wins over a whole object. | *Spreading by Word of Mouth*, *Probably Up to Date* |
+| the comet's count of sightings on a marble board, one column of pebbles per library | A counter as a vector, one entry per replica (G-Counter). | The column room (*Ordering Without Clocks*) |
+| a board for every entry that counts something; the book watches the comet's | One counter per key, each behaving as the one shown. |  |
 | a library adds pebbles only to its own column | An update touches only the replica's own entry. |  |
-| merging two tables: take the larger pile in each column | Merge as join: commutative, associative, idempotent. |  |
-| why not one pile: two libraries adding each other's totals count twice, and again at every merge | Why a plain sum is not a CRDT. |  |
-| white pebbles for scrolls lent, black for scrolls returned at that desk, whichever library lent them | Two counters, one up and one down (PN-Counter). |  |
-| two desks lending the last room on the deposit at once | A global invariant cannot be kept locally (the report's non-negative counter). | *What You Can Promise Alone*: the last copy taken twice |
-| the deposit split among the libraries beforehand, each desk lending only up to its share | Escrow: a local invariant that implies the global one. |  |
-| sending the whole table, or a notice "one more scroll lent at library X" | State-based or op-based. |  |
-| a notice must arrive once, and after those it follows | Op-based needs exactly-once, causal delivery. | *What You Can Promise Alone*: no reply before the letter it answers |
-| two libraries that have taken in the same notices show the same piles | SEC. |  |
-| the catalogue of titles, only ever added to | G-Set. |  |
-| the struck-off list: once struck, never restored | 2P-Set. |  |
-| each entry carries its own mark; striking out removes only the marks you have seen | OR-Set (add wins). |  |
-| two libraries each adding one title and striking the other's, ending with both at Library 3 | SEC is not sequential consistency. | *Many Copies, Acting as One* |
-| the latest edition wins by its tally | LWW-Register. | The tally house (*Ordering Without Clocks*) |
-| Arche's count of jars | The contrast: ordered and snapshotted, never merged. | *Taking Stock Without Stopping* |
+| merging two boards: take the larger pile in each column | Merge as join: commutative, associative, idempotent. |  |
+| why not one pile: adding two boards counts a pebble twice, and again at every merge | Why a plain sum is not a CRDT. |  |
+| the whole board, or a slip "one more sighting at Library 1" | State-based or op-based. |  |
+| a slip must arrive once, and after those it follows | Op-based needs exactly-once, causal delivery. | *What You Can Promise Alone*: no reply before the letter it answers |
+| white pebbles for sightings recorded, black for sightings struck at that library, whichever recorded them | Two counters, one up and one down (PN-Counter). |  |
+| two libraries striking the one sighting, and the count at −1 | A global invariant cannot be kept locally (report §3.1.4: two replicas at 1 decrement and converge to −1). |  |
+| a library strikes only sightings it recorded itself | The local invariant P[g] − N[g] ≥ 0; rights reserved in advance (escrow). |  |
+| the account of the comet, the later by tally or both kept, "some say … others say …" | LWW-Register; MV-Register with version vectors. | The tally house (*Ordering Without Clocks*) |
+| cross-references, only added; a struck-off list; a tag for every writing | G-Set; 2P-Set; OR-Set (add wins). |  |
+| headings with a tag for every writing into the entry; a withdrawn heading written into stands | A map on an OR-Set of keys (the report's OR-Cart). |  |
+| a reference to a withdrawn heading | An invariant across components; objects independent, no transactions. | *What You Can Promise Alone*: a new entry and the reference to it bound under one cord |
+| two libraries each adding one reference and striking the other's, ending with both | SEC is not sequential consistency. | *Many Copies, Acting as One* |
 
 **Chapters.**
-1. The loan desks.
-2. The count no one settles.
-3. One column each, and take the larger.
-4. Sending the table or sending the change.
-5. Lent and returned, and the deposit's limit.
-6. Two hands on one work.
-7. Titles added and struck.
-8. Not the same as one order.
-9. What it does not say; the result.
+1. The compendium.
+2. Two changes to one entry.
+3. The count of sightings.
+4. One column each, and take the larger.
+5. The whole board, or a slip.
+6. Sightings struck, and the count below nothing.
+7. Two accounts of one comet.
+8. Cross-references added and struck.
+9. One compendium from its parts.
+10. Not the same as one order.
+11. What it does not say; the result.
 
-**Must not exist:** an assembly; a vote over a count; a pile that shrinks; any wait for another library before lending; a name for any librarian or for the scholar; a reason for there being one deposit.
+**Must not exist:** an assembly; a vote over a count; a pile that shrinks; any wait for another library before changing an entry; a name for any librarian; sources on an entry (they belong to *What You Can Promise Alone*).
 
 ---
 
@@ -234,8 +235,8 @@ Written: `books/changes-that-never-clash/`.
 
 ## Across the six
 
-- **Shared vocabulary on the scholars' coast.** A *library* is a replica, a *work* an item, an *edition* a version, a *courier* a message and a stopped courier a partition, a *reader* a client. Every book uses these words the same way.
-- **Editions carry tallies.** Which edition is newer is settled by a tally, the device of *Ordering Without Clocks*; where causality matters, by columns, as in its column room.
+- **Shared vocabulary on the scholars' coast.** A *library* is a replica, the *compendium* the replicated data, an *entry* an item and its *heading* the key, a *version* a version, a *courier* a message and a stopped courier a partition, a *reader* a client. Every book uses these words the same way.
+- **Versions carry tallies.** Which version is newer is settled by a tally, the device of *Ordering Without Clocks*; where causality matters, by columns, as in its column room.
 - **Schedia is on the same island.** Its laws are its own, but the sun, the couriers and the scholars' roads reach it as they reach the rest of Paxos.
 - **Paxos can read the sun.** Unlike Arche in the trading season, Paxos tells time by the sun; the Chamber has a meridian line.
 - **Names follow papers**, with a footnote in every book.

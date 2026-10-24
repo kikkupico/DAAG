@@ -230,7 +230,8 @@ is bounded, but men lie, yielding the 3m + 1 threshold.
 
 *One island, two ways of keeping records.* Paxos holds two assemblies, each keeping one
 append-only law scroll across absent members and changing leaders — Lamport's parliament and
-the Tholos of Schedia — and the scholars and copyists, who keep many copies and hold no assembly.
+the Tholos of Schedia — and the scholars, who keep many copies of one compendium of knowledge and
+hold no assembly.
 Putting them on one island makes the difference a walk: the scholars could take any question
 to an assembly, and the oracle at the fork tells which work needs one.
 
@@ -242,7 +243,7 @@ the scholars' coast, which eventual consistency has to itself. The oracle stands
 the fork.
 
 **The parliament has no say over the scholars' copies.** It passes decrees, the island's law;
-a scholar's copy of a work is not law, and no decree settles which copy is right. So nothing
+an entry in the scholars' compendium is knowledge, not law, and no decree settles which copy is right. So nothing
 on the scholars' coast waits for a vote, although the Chamber is a morning's walk away.
 
 ### The Chamber
@@ -334,9 +335,28 @@ so the Tholos faces the Chamber across the water.
 The scholars call their coast *Homonoia*, "concord": everyone ends of one mind, by merging
 rather than by assembly. The scholars hold **no assembly**; nothing here waits for a vote.
 
-**Core physics.** Scholars and copyists in libraries along the coast, each holding copies of
-the works in its keeping. Letters, corrections and fresh copies travel by courier and by word
-of mouth; couriers are delayed or stopped, and libraries close.
+**Core physics.** The libraries along the coast keep one **compendium** of what is known: an
+**entry** for each subject, filed under its **heading**, each entry a short scroll of its own in the
+library's pigeonholes. Every library keeps its own copy of the whole compendium. Scholars at any
+library add entries, revise them and withdraw them, and **readers** consult them; a library answers
+a reader from its own copy. Word of a change travels by courier and by word of mouth; couriers are
+delayed or stopped, and libraries close, so the copies differ for a while.
+
+**Knowledge, not law.** An entry is knowledge, so it is enough that every copy agrees in the end.
+A decree must be one law everywhere at once, which is why the assemblies wait; an entry may read
+one way at one library and another way at the next until word arrives. That is why the coast needs
+no assembly.
+
+**Versions and tallies.** A **version** is one state of an entry. Which of two versions is newer is
+settled by a **tally**: the day and hour by the sun at which it was written, with the library's
+number to break a tie. The coast's plain rule treats an entry as one thing and keeps the version
+with the larger tally; a withdrawal travels as a **notice** with its own tally, never as a missing
+copy. *Spreading by Word of Mouth* and *Probably Up to Date* use the plain rule; *Changes That Never
+Clash* shows what it loses and merges an entry part by part instead.
+
+**Home libraries.** Every library keeps the whole compendium, but each entry has three **home
+libraries** that answer for it: a revision is sent to them first, and a reader who wants the
+newest version asks them. The other libraries learn of it later, by the spread.
 
 **The line between the scholars and Arche is how much disagreement each can live with**, not
 what is recorded: both keep records, and on Arche it is the stock of the storehouses that is
@@ -344,7 +364,7 @@ snapshotted and the requests for its grain that are put in sequence. At the camp
 note is done knowingly and only while birds are lost, because two men told different plans is a
 real harm. The
 scholars answer from whatever copy they hold as a matter of course, and live with copies that
-differ for a while, because an out-of-date line is put right at the next collation, as long as
+differ for a while, because an out-of-date entry is put right when word arrives, as long as
 every copy agrees in the end — strong consistency against eventual consistency. Greek
 scholarship already did every practice this coast needs: collating manuscripts line by line,
 and spreading the epics by rhapsode.
@@ -353,11 +373,11 @@ and spreading the epics by rhapsode.
 |---|---|
 | `demers-1987` <span>(`demers-1989` is the same file)</span> | Travelling scholars pass on new learnings on scraps of papyrus in the stoa — that the Earth goes round the Sun, say — rumour-fashion, each losing interest once most of those they meet have the scrap; once a year each copyist draws by lot another library's name and sits down with its copyist to compare whole collections, scraps included, at the festival, catching what the talk missed; a notice of withdrawal travels like an edition; partners are preferred near, the inlet's one ferry being the critical crossing. *Spreading by Word of Mouth* |
 | `bailis-2012_pbs` | Each work is kept at several libraries. A new edition goes to some of them, and a reader asks only a few; how likely the copy handed over is out of date, and by how much, measured; a work has three home libraries, an edition goes to all three and is announced once enough have answered, a reader asks all three and takes the first replies, and a logbook of the couriers' journey times gives the odds. *Probably Up to Date* |
-| `shapiro-2011_crdt`, `shapiro-2011_crdt-comprehensive` | A visiting scholar lodges one deposit that lets him have so many scrolls out at once at any library on the coast, and the desk in front of him lends at once, since a courier is slow and may be stopped. Each library keeps a table of pebbles for him on its **loan desk**, with a white column for the scrolls each library has lent and a black column for the scrolls returned to each; a library adds only to its own two columns, a return going to the desk it is brought to, whichever library lent the scroll. A desk keeps a board like this for every scholar who has lodged a deposit, the others on a stepped stand beside it, each with a wax tag of its own colour; the book watches one. Couriers carry the tables between the libraries, and merging takes the larger pile in each column, so it is associative, commutative and idempotent. Any table says how many he has out, and the deposit is settled against that figure when he leaves; no desk can keep him within the deposit from its own table, unless the deposit was split among the libraries beforehand and each lends only up to its share. Also a register of corrections and a title catalogue with marks for adds and strikes. Why there is one deposit, not one per library, is never explained. *Changes That Never Clash* |
+| `shapiro-2011_crdt`, `shapiro-2011_crdt-comprehensive` | The compendium merged part by part. An entry is made of parts, each merged by its own rule, so that changes made in ignorance of each other never clash. The book's entry is the **comet**'s: its **count of sightings**, kept at every library on a marble board of pebbles with a column for each library, white for sightings recorded and black for sightings struck as mistaken, each library adding only to its own columns and merging by the larger pile in each column; its **account** of what the comet is, kept by the later tally or both side by side ("some say … others say …"); and its **cross-references** to other entries, each writing with its own tag, a strike removing only the tags its library has seen. The **headings** work the same way: writing into an entry writes a fresh tag on its heading, so a heading withdrawn at one library while written into at another stands. Couriers carry whole boards and entries, or slips naming one change. No library can keep the count from falling below nothing by reading its own board, unless each strikes only sightings it recorded itself; and no part's rule keeps a reference from pointing at a withdrawn heading. Every entry that counts something has a board of its own, on a stepped stand beside the desk, each with a wax tag of its own colour; the book watches the comet's. *Changes That Never Clash* |
 | `bailis-2014_hats` | What a librarian can promise a reader while the couriers are stopped: that no reply is read before the letter it answers, that no change is seen half made; and what no librarian alone can promise, that two readers never take the last copy. *What You Can Promise Alone*; the libraries lend (a reader borrows a copy for a term), a reader's business is a visit, corrections to several works are bound under one cord and shown only when the set is complete, and every library shows readers only what all hold (a floor that only rises). *What You Can Promise Alone* |
 
 **The ground must provide:** many libraries within casual reach of one another, each with a
-reading room and a loan desk, courier routes of differing length, a landing for the couriers' boats,
+reading room, pigeonholes for its copy of the compendium and a desk with the pebble boards, courier routes of differing length, a landing for the couriers' boats,
 and an inlet crossed only by one ferry that many routes share.
 
 ### The oracle at the fork
