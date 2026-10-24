@@ -1,6 +1,7 @@
 <div class="bar">
   <a href="../../index.html">← The Books</a>
   <span class="now" id="now"></span>
+  <div class="regseg" role="group" aria-label="Which words to read"><button type="button" class="segb" data-reg="i" aria-pressed="true">Allegory</button><button type="button" class="segb" data-reg="m" aria-pressed="false">Computing</button></div>
   <i id="prog"></i>
 </div>
 
@@ -12,10 +13,12 @@
     <div>
       <h1>What You Can Promise Alone</h1>
       <p class="generic">{{question}}</p>
-      <p class="allegory">{{how}}</p>
+      <p class="allegory i">{{how}}</p>
+      <p class="allegory m">We find out by asking what a replica can still promise its clients when it must always answer: which guarantees it can keep on its own while the network between replicas is partitioned, and which it cannot.</p>
       <p class="source">{{source}}</p>
     </div>
-    <div class="pop" data-auto>
+    <div class="pop m" data-auto><div class="leaf"><svg class="cover-fig" id="coversvg" role="img" aria-label="Two replicas separated by a partition, each answering a transaction, above three tiers of guarantees: kept by any replica, kept by a sticky client, kept by none"></svg></div></div>
+    <div class="pop i" data-auto>
       <div class="leaf">
         <div class="photo tilt-r" data-depth="14"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-cover-c5fa28e9ae-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-cover-c5fa28e9ae-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-cover-c5fa28e9ae-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-cover-c5fa28e9ae-896.avif 896w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/cover.jpg" alt="The front of a small plastered library with a tiled roof and a porch of two plain columns: the librarian in the open doorway hands a scroll to a reader in a grey chiton, while down the road a courier sits on a low wall with his bundle, in no hurry, the sea beyond"></div>
         <div class="fold-shadow"></div>
@@ -27,98 +30,76 @@
 <!-- ============================================================ In machine terms -->
 {{lineage}}
 
-<section class="spread light" id="machines" data-name="In machine terms">
-  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
-  <div class="wrap">
-    <div class="two" style="gap:clamp(24px,5vw,60px);align-items:center">
-      <div>
-        <div class="kicker">First, in machine terms</div>
-        <h2>Replicas that must always answer</h2>
-        <p class="lede">A database is replicated. A network partition can cut replicas off from one another for any length of time, and every replica a client can reach must still answer, from its own state.</p>
-        <ul class="terms">
-          <li><b>Highly available transactions</b> (Bailis et al., 2014): a sorting of the isolation levels and session guarantees by whether they survive that demand.</li>
-          <li><b>Some survive</b>: read committed, atomic visibility of a transaction's writes, monotonic reads. <b>Some survive if each client sticks to one replica</b>: read your writes, causal consistency.</li>
-          <li><b>Some cannot</b>: preventing lost updates and write skew, and any bound on how stale a read may be.</li>
-        </ul>
-        <p style="margin-top:1.2rem">We tell it in the reading rooms of the scholars' coast, on a day when the couriers have stopped.</p>
-      </div>
-      <div class="pop fromright"><div class="leaf">
-        <div class="paper well" style="margin:0">
-          <h4>Two replicas, a partition <em>one client</em></h4>
-          <div class="counts"><span><b id="mxa">0</b>x at replica A</span><span><b id="mxb">0</b>x at replica B</span></div>
-          <p class="note" id="mnote" data-live style="min-height:4.4em;margin:10px 0 0">The two replicas cannot reach each other. Write at A, then read.</p>
-          <div class="row"><button class="btn" id="mw">Write x = 1 at A</button><button class="btn alt" id="mra">Read x at A</button><button class="btn alt" id="mrb">Read x at B</button></div>
-        </div>
-      </div></div>
+
+
+<!-- ============================================================ the setting -->
+<section class="spread dark" id="hall" data-name="The scholars' coast" data-name-m="The system model">
+  <div class="bleed">
+    <img class="i" src="img/scholars-coast.jpg" alt="The scholars' coast from the air: small red-roofed libraries in clearings among olive groves, linked by a pale road and footpaths, the long stoa beside the shore and a town on the point beyond" data-parallax>
+    <div class="hall-title"><div class="t">
+      <div class="kicker"><span class="i">The reading rooms</span><span class="m">The model</span></div>
+      <h2><span class="i">A library, a reader, and no courier</span><span class="m">A replica, a client, and no network</span></h2>
+      <p><span class="i">Every library on the scholars' coast has a reading room where readers consult the entries of its copy of the compendium, and where scholars correct them. Word of what other libraries have done arrives by courier, and a courier can be stopped at any time, cutting one library off from the rest for as long as the stoppage lasts.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: Libraries That Agree in the End">*</a></sup></span><span class="m">Every replica of the database serves clients: they read data, write updates, or run transactions against it. News of what other replicas have done arrives by message — and messages can be dropped or delayed at any time, cutting one replica off from the rest for as long as the partition lasts.</span></p>
+    </div></div>
+    <div class="pins">
+      <div class="pin pop"><div class="leaf"><span class="i"><b>Answered from its own copy</b>A library must answer every reader who comes through the door from its own copy of the compendium alone.</span><span class="m"><b>Answered locally</b>A replica must answer every client that reaches it using only what is in its own copy of the data.</span></div></div>
+      <div class="pin pop"><div class="leaf"><span class="i"><b>For as long as they like</b>Couriers between libraries may be stopped for hours, days, or months.</span><span class="m"><b>For as long as it lasts</b>Messages between replicas may be cut off for hours, days, or months.</span></div></div>
+      <div class="pin pop"><div class="leaf"><span class="i"><b>Every visit finishes</b>A library may never turn a reader away with <i>come back when the couriers return</i>; every visit must finish its business unless the reader chooses to withdraw it.</span><span class="m"><b>Every transaction finishes</b>A replica may never reject a client with <i>try again when the network returns</i>; every transaction must finish its business unless the client chooses to abort it.</span></div></div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================ the setting -->
-<section class="spread dark" id="hall" data-name="The scholars' coast">
-  <div class="bleed">
-    <img src="img/scholars-coast.jpg" alt="The scholars' coast from the air: small red-roofed libraries in clearings among olive groves, linked by a pale road and footpaths, the long stoa beside the shore and a town on the point beyond" data-parallax>
-    <div class="hall-title"><div class="t">
-      <div class="kicker">The reading rooms</div>
-      <h2>A librarian, a reader, and no courier</h2>
-      <p>Every library on the scholars' coast has a reading room, where a reader comes with business. What the other libraries know reaches it by courier, and couriers can be stopped, cutting one part of the coast off from the rest for as long as they stay stopped.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: Libraries That Agree in the End">*</a></sup></p>
-    </div></div>
-    <div class="pin pop" style="left:52%;top:40%;"><div class="leaf"><b>Answered from the shelf</b>A librarian answers a reader from the copy the library holds.</div></div>
-    <div class="pin pop" style="left:6%;top:63%;"><div class="leaf"><b>For as long as they like</b>The couriers may be stopped for any length of time.</div></div>
-    <div class="pin pop" style="left:56%;top:80%;"><div class="leaf"><b>Every visit ends</b>A reader's business is finished, or the reader withdraws it.</div></div>
-  </div>
-</section>
-
 <!-- ============================================================ The couriers stop -->
-<section class="spread light" id="stop" data-name="The couriers stop">
+<section class="spread light" id="stop" data-name="The couriers stop" data-name-m="The partition">
   <a class="anchor" id="s1"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
   <div class="wrap">
     <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
         <div class="kicker">The standard</div>
-        <h2>The couriers stop</h2>
-        <p class="lede">Answering alone means this: every reader who can reach an open library is answered, whatever the couriers are doing and however long they have been stopped.</p>
-        <p>The librarian does not wait for another library to reply, nor for a courier to return, nor for most of the coast to agree, and does not answer <i>probably</i>. A librarian who must hear from most of the coast cannot speak on the day the couriers stop, and the promise is only worth having if it holds on that day.</p>
-        <p>Replying is not enough either. A librarian who told every reader <i>come back later</i> would always reply. A visit must be able to finish: given an open library, the reader's business is in the end done, or withdrawn by the reader.</p>
+        <h2><span class="i">The couriers stop</span><span class="m">The network stops</span></h2>
+        <p class="lede"><span class="i">A library makes a promise <b>alone</b> (<i>high availability</i>) when every reader who can reach an open library has their business done, whichever couriers are stopped and however long they stay stopped.</span><span class="m">What does it mean for a replica to make a promise <b>alone</b> (<i>high availability</i>)? It means that every client that can reach a running replica gets its transaction completed, no matter which messages are lost or how long the partition lasts.</span></p>
+        <p><span class="i">A library that has to wait for a majority of the coast, as the Chamber and the Tholos do, cannot answer when cut off. Nor does it count to say <i>I am probably right</i>, as the coast's odds do.<sup class="xref"><a href="../probably-up-to-date/index.html" title="Probably Up to Date">*</a></sup> The question here is which hard promises hold even on the day every courier on the road is stopped.</span><span class="m">A replica that has to wait for a majority (as consensus protocols do) cannot answer when cut off. Nor does it count to say <i>I am probably right</i>, as with probabilistic staleness.<sup class="xref"><a href="../probably-up-to-date/index.html" title="Probably Up to Date">*</a></sup> Here we ask which hard, deterministic promises hold even when every message is lost.</span></p>
+        <p><span class="i">Replying <i>your request is refused</i> does not count as answering either: if refusing every visitor counted, a locked door would be available. Under <b>transactional availability</b>, every visit that reaches an open library must truly complete (<i>commit</i>), unless the reader chooses to cancel it.</span><span class="m">Furthermore, simply replying <i>I abort your request</i> does not count as availability! If refusing every client counted as answering, a replica that rejected every request would be “available.” Under <b>transactional availability</b>, every transaction that reaches a running replica must genuinely complete (<i>commit</i>), unless the client itself chooses to cancel it.</span></p>
       </div>
-      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p01-door-ef15f104f4-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p01-door-ef15f104f4-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p01-door-ef15f104f4-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p01-door-ef15f104f4-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p01-door.jpg" alt="A reader in a grey chiton stands on the library's porch at the open door, asking, while the librarian in a long cream chiton answers from the doorway with racks of scrolls behind; a courier's bundle lies on the paving, cypresses and pines round it and the sea beyond" loading="lazy"></div></div></div>
+      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p01-door-ef15f104f4-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p01-door-ef15f104f4-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p01-door-ef15f104f4-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p01-door-ef15f104f4-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p01-door.jpg" alt="A reader in a grey chiton stands on the library's porch at the open door, asking, while the librarian in a long cream chiton answers from the doorway with racks of scrolls behind; a courier's bundle lies on the paving, cypresses and pines round it and the sea beyond" loading="lazy"></div></div></div>
+      <div class="pop fromright m"><div class="leaf"><svg class="cover-fig" data-crop="0 50 520 200" role="img" aria-label="Two replicas separated by a partition, each completing its transaction"></svg></div></div>
     </div>
   </div>
 </section>
 
 <!-- ============================================================ A reader's visit -->
-<section class="spread dark" id="visit" data-name="A reader's visit">
+<section class="spread dark" id="visit" data-name="A reader's visit" data-name-m="A client's transaction">
   <a class="anchor" id="s2"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">What a reader might want</div>
-      <h2>A reader's visit</h2>
-      <p class="lede">A reader's business at one library is a <b>visit</b>: several works asked for, or several corrections left, one after another, before the reader goes.</p>
-      <p>The promises a reader might want are about what is seen during a visit and across visits. They fall on three shelves.</p>
+      <div class="kicker"><span class="i">What a reader might want</span><span class="m">What a client might want</span></div>
+      <h2><span class="i">A reader's visit</span><span class="m">A client's transaction</span></h2>
+      <p class="lede"><span class="i">A reader's business at a library is a <b>visit</b> (<i>a transaction</i>): in one visit, a reader may consult several entries and correct several before going out of the door.</span><span class="m">A client's business at a replica is a <b>transaction</b>: during a single transaction, a client may read several items and write several items before it commits.</span></p>
+      <p><span class="i">When we test every classic transactional and session guarantee against a courier stoppage, they sort cleanly onto three shelves:</span><span class="m">When we test every classic transactional and session guarantee against a network partition, they sort cleanly into three groups:</span></p>
     </div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Kept alone, by any library</div><h3>Whatever the couriers do</h3><p>No correction is shown half made. Corrections bound together are seen all or none. The same answer comes twice in a visit. No answer is older than the last. A reply is held until its letter.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Kept if the reader stays with one library</div><h3>The same door every time</h3><p>The reader finds the corrections the reader left. They appear in the order they were made. All of this together, in order.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Kept by no librarian alone</div><h3>It needs news from elsewhere</h3><p>Two readers never take the last copy. Two readers never leave a shelf bare. This is the latest edition.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num"><span class="i">Kept alone, by any library</span><span class="m">Kept alone, by any replica</span></div><h3><span class="i">Whatever the couriers do (<i>HAT</i>)</span><span class="m">Whatever the network does (<i>HAT</i>)</span></h3><p><span class="i">No correction is shown half made (<i>Read Committed</i>). Corrections bound together are seen all or none (<i>Monotonic Atomic View</i>). Reading the same entry twice in a visit gives the same answer (<i>Cut Isolation</i>). No answer is older than a previous visit's (<i>Monotonic Reads</i>), and no answer is shown before the entry it answers (<i>Writes Follow Reads</i>).</span><span class="m">No write is shown half-made (<i>Read Committed</i>). A transaction's writes are seen all or none (<i>Monotonic Atomic View</i>). Reading the same item twice in a transaction gives the same answer (<i>Cut Isolation</i>). No read is older than a previous one (<i>Monotonic Reads</i>), and no reply is shown before the message it answers (<i>Writes Follow Reads</i>).</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num"><span class="i">Kept if the reader stays with one library</span><span class="m">Kept if the client stays with one replica</span></div><h3><span class="i">The same door every time (<i>Sticky</i>)</span><span class="m">The same replica every time (<i>Sticky</i>)</span></h3><p><span class="i">A returning reader sees the corrections they themselves left (<i>Read Your Writes</i>), in the order they left them (<i>PRAM</i>), together with everyone else's questions and answers (<i>Causal Consistency</i>).</span><span class="m">A returning client sees the writes it made itself (<i>Read Your Writes</i>), in the order it made them (<i>PRAM</i>), and combined with everybody else's messages and replies (<i>Causal Consistency</i>).</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num"><span class="i">Kept by no library alone</span><span class="m">Kept by no replica alone</span></div><h3>Needs news from elsewhere (<i>Unavailable</i>)</h3><p><span class="i">Two scholars who each read a count and write it one higher never lose one of the two (<i>Lost Update</i>), two scholars never leave an entry with no source (<i>Write Skew</i>), and the version handed over is the newest, or within any fixed time of the newest (<i>Recency</i>, <i>Linearizability</i>).</span><span class="m">Two clients never take the last unit (<i>Lost Update</i>), two clients never break a constraint between items (<i>Write Skew</i>), and the value returned is guaranteed to be the newest — or within any fixed time of the newest (<i>Recency / Linearizability</i>).</span></p></div></div></div>
     </div>
-    <p style="max-width:40em;margin-top:1.4rem">The order is not a ranking of how good the promises are. Those on the first shelf are the more modest, and cost the reader nothing. Each on the second asks a little of the reader. Those on the third are what most people would want first.</p>
+    <p style="max-width:40em;margin-top:1.4rem"><span class="i">Taken shelf by shelf, the first two show <em>how</em> a library keeps its promises without waiting for a courier, and the third why no library can keep them alone.</span><span class="m">Let us walk through each group in turn and see <em>how</em> a replica keeps the promises in the first two groups without waiting for a message — and why no replica can keep the promises in the third.</span></p>
   </div>
 </section>
 
 <!-- ============================================================ No half-made corrections -->
-<section class="spread light" id="half" data-name="No half-made corrections">
+<section class="spread light" id="half" data-name="No half-made corrections" data-name-m="No half-made writes">
   <a class="anchor" id="s3"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The most basic promise</div>
-      <h2>No half-made corrections</h2>
-      <p class="lede">A reader leaves three corrections to three works, writing them one after another. Meanwhile another reader comes to the same library and asks for one of those works.</p>
-      <p>The librarian may not show a correction its writer has not finished, since the writer may yet abandon it. So the librarian holds a writer's corrections apart until the visit is over. They are written in the librarian's hands, not onto the shelves. When the writer finishes, all of them go onto the shelves together, and if the writer withdraws, none do. Nothing in this waits for another library.</p>
+      <h2><span class="i">No half-made corrections</span><span class="m">No half-made writes</span></h2>
+      <p class="lede"><span class="i">Suppose a scholar sits in a reading room correcting three entries in one visit. While the second correction is still being written, and before the scholar has decided whether to finish the visit or tear up the notes, another reader comes in and asks for the first entry.</span><span class="m">Suppose a client is revising three items during a single transaction. While it is still writing the second item — and before it has decided whether to commit or abort — another client asks for the first item.</span></p>
+      <p><span class="i">The library must never show a reader an unfinished or abandoned correction (<i>dirty read</i>). Keeping that promise (<i>Read Committed</i>) needs no help from other libraries: the library keeps a visitor's corrections aside on a desk until the visit is declared complete, and only then puts them into its copy, or throws them away if the visitor withdraws.</span><span class="m">The replica must never show another client an unfinished or abandoned write (<i>dirty read</i>). Keeping that promise (<i>Read Committed</i>) requires zero help from other replicas: the replica simply holds a transaction's writes aside until the client declares the transaction complete, and only then exposes them (or discards them if the client aborts).</span></p>
     </div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">A second, smaller promise</div><h3>Every correction in a visit carries the same tally</h3><p>Two readers at two libraries may correct the same two works, each unaware of the other. If one visit won on the first work and the other on the second, the shelves would hold a mixture that neither reader wrote. With one tally for a whole visit, and the larger tally winning wherever two corrections meet,<sup class="xref"><a href="../spreading-by-word-of-mouth/index.html" title="Spreading by Word of Mouth">*</a></sup> a visit wins on every work it touched or on none.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">A second, smaller promise</div><h3><span class="i">Every correction in a visit carries the same tally</span><span class="m">Every write in a transaction carries the same timestamp</span></h3><p><span class="i">Two scholars at two cut-off libraries may each correct entries <i>X</i> and <i>Y</i> in one visit. If one scholar's correction stood on <i>X</i> and the other's on <i>Y</i>, the copies would end with a mixture neither intended (<i>dirty write</i>, <i>G0</i>). Every correction in a visit carries one shared tally, the visit's hour and the visitor's number, and the larger tally stands,<sup class="xref"><a href="../spreading-by-word-of-mouth/index.html" title="Spreading by Word of Mouth">*</a></sup> so whichever visit has the larger tally stands on <em>both</em> <i>X</i> and <i>Y</i>.</span><span class="m">What if two clients at two cut-off replicas both write items <i>X</i> and <i>Y</i> in a single transaction? If one transaction's write won on <i>X</i> while the other's won on <i>Y</i>, the data would end up with a mixture of the two (<i>dirty write</i> / <i>G0</i>) that neither client intended. By stamping <em>every</em> write in a transaction with a single shared timestamp (the transaction's timestamp plus the client's ID) and resolving clashes by largest timestamp,<sup class="xref"><a href="../spreading-by-word-of-mouth/index.html" title="Spreading by Word of Mouth">*</a></sup> whichever transaction has the larger timestamp wins on <em>both</em> <i>X</i> and <i>Y</i>.</span></p></div></div></div>
     <details class="proof">
       <summary>Proof · that Read Uncommitted and Read Committed are achievable with high availability</summary>
       <p class="given">High availability: every client that can reach a non-failing replica gets a response, without that replica contacting any other. <i>Read Uncommitted</i> (Adya's PL-1) forbids G0: a cycle in the graph with an edge from <var>T<sub>i</sub></var> to <var>T<sub>j</sub></var> when <var>T<sub>j</sub></var> overwrites a write of <var>T<sub>i</sub></var>. <i>Read Committed</i> (PL-2) also forbids reading aborted or intermediate writes (G1a–c). <b>Claim.</b> Both can be provided with high availability.</p>
@@ -133,24 +114,24 @@
 </section>
 
 <!-- ============================================================ Corrections bound together -->
-<section class="spread dark" id="cord" data-name="Corrections bound together">
+<section class="spread dark" id="cord" data-name="Corrections bound together" data-name-m="Writes bound together">
   <a class="anchor" id="s4"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">All or none</div>
-      <h2>Corrections bound together</h2>
-      <p class="lede">A scholar corrects two works at once. The work <i>X</i> says the strait is crossed at one place, and the work <i>Y</i>, which cites it, must say so too. The two corrections reach the libraries separately.</p>
-      <p>The remedy is to bind the corrections under one <b>cord</b>. Every correction in the set carries the same tally and a list of all the works in the set. A library does not show a correction the moment it arrives. It holds it back, and shows it only when it knows that the whole set has arrived wherever it is going. Until then it answers with the older copy.</p>
+      <h2><span class="i">Corrections bound together</span><span class="m">Writes bound together</span></h2>
+      <p class="lede"><span class="i">Suppose a scholar adds two things in one visit: a new entry <i>X</i>, on the comet's path, and in the entry <i>Y</i> on the comet a cross-reference to <i>X</i>. The courier carrying <i>X</i> may reach a library before the courier carrying <i>Y</i>, or the other way round.</span><span class="m">Suppose a client writes two items in one transaction: it updates item <i>X</i> (a map) and also item <i>Y</i> (a guide that refers to <i>X</i>). When messages carry those two writes across the system, the message carrying <i>X</i> might reach a replica before the message carrying <i>Y</i>.</span></p>
+      <p><span class="i">A reader who saw the new <i>Y</i> but not yet <i>X</i> would follow a reference to an entry that is not there (<i>fractured read</i>). To prevent that (<i>Monotonic Atomic View</i>), the scholar binds the corrections of a visit under one <b>cord</b>: each carries the visit's tally and a list of every entry corrected in the visit. A library does not show an arriving correction at once; it keeps it in the back room until it knows that <em>every</em> correction under the cord has reached all the libraries (<i>pending stable</i>), and until then it shows readers the older versions.</span><span class="m">If a client saw the new <i>X</i> and then read the old <i>Y</i>, it would see a broken half-state (<i>fractured read</i>). To prevent that (<i>Monotonic Atomic View</i>), the client tags the writes of a transaction with one <b>manifest</b>: each write carries the transaction's timestamp and the list of all items written in it. A replica does not expose an incoming write the moment it arrives; it holds the write aside until it knows that <em>every</em> write of that transaction has reached all the replicas (<i>pending stable</i>), and until then it continues to return the older versions!</span></p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>A reader asks for X, then for Y <em>the correction to X has arrived at Library 1; the correction to Y is still on the road to Library 2</em></h4>
-      <div class="seg" id="cmode" role="group" aria-label="Cord or no cord"></div>
+      <h4><span class="i">A reader asks for X, then for Y <em>the correction to X has arrived at Library 1; the correction to Y is still on the road to Library 2</em></span><span class="m">A client reads X, then Y <em>the write to X has arrived at replica 1; the write to Y is still in transit to replica 2</em></span></h4>
+      <div class="seg" id="cmode" role="group" aria-label="Cord or no cord" data-al-m="Manifest or no manifest"></div>
       <div class="shelves" id="cshelves" data-live></div>
-      <p class="say" id="csay">The reader has asked for nothing yet.</p>
-      <div class="row"><button class="btn" id="cx">Ask Library 1 for X</button><button class="btn" id="cy">Ask Library 2 for Y</button><button class="btn alt" id="carr">The courier reaches Library 2</button><button class="btn alt" id="creset">Start again</button></div>
+      <p class="say" id="csay"><span class="i">The reader has asked for nothing yet.</span><span class="m">The client has read nothing yet.</span></p>
+      <div class="row"><button class="btn" id="cx"><span class="i">Ask Library 1 for X</span><span class="m">Read X at replica 1</span></button><button class="btn" id="cy"><span class="i">Ask Library 2 for Y</span><span class="m">Read Y at replica 2</span></button><button class="btn alt" id="carr"><span class="i">The courier reaches Library 2</span><span class="m">The message reaches replica 2</span></button><button class="btn alt" id="creset">Start again</button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Holding back is not waiting</div><h3>The library does not wait to answer. It waits only to change what it shows</h3><p>It answers at once from what it may show, which may be the older copy, and learns from the couriers' notes when the set is complete. If the couriers are stopped it goes on showing the older copy for as long as they are stopped. A reader sees the state before the set or the state after, never between. Which of the two is not promised, nor anything about two readers.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Holding back is not waiting</div><h3><span class="i">A library never makes a reader wait; it only delays showing new arrivals</span><span class="m">The replica never makes a client wait; it only delays exposing new arrivals</span></h3><p><span class="i">Ttheir is what keeps the promise available: when a reader asks for <i>X</i> or <i>Y</i> while the couriers are stopped, the library answers <em>at once</em> from the older versions, which are complete in its copy. Once every library has the whole cord, the new versions may be shown, and once a reader has seen any entry from a cord, the reader's note of the visit records the cord's tally, so any other library asked in the same visit shows at least that cord's versions.</span><span class="m">Notice the trick that makes this highly available: when a client reads <i>X</i> or <i>Y</i> during the partition, the replica answers <em>immediately</em> using the older, pre-transaction version that is already complete. Once every replica has received all the writes of the transaction, the new versions become eligible to show; and once a client sees any item from a transaction, its session records that transaction's timestamp so any other replica it asks in the same transaction also shows it at least that version.</span></p></div></div></div>
     <details class="proof">
       <summary>Sketch · that Monotonic Atomic View is achievable with high availability</summary>
       <p class="given">Monotonic Atomic View (MAV): once some effect of a transaction <var>T<sub>i</sub></var> is observed by a transaction <var>T<sub>j</sub></var>, all later reads of <var>T<sub>j</sub></var> observe all of <var>T<sub>i</sub></var>'s effects, or later versions. A write is <i>pending stable</i> once every replica for the transaction's final writes has received them. <b>Claim.</b> MAV can be provided with high availability.</p>
@@ -170,53 +151,54 @@
   <a class="anchor" id="s5"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
   <div class="wrap">
-    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
         <div class="kicker">Within a visit, and across visits</div>
         <h2>The same answer twice</h2>
-        <p class="lede">A reader can be sure of the same answer twice in one visit, and can do most of it without the librarian.</p>
-        <p>A reader who has been shown a work holds a note of that copy on a tablet. Asked for again, the work is answered from the note, unless the reader has changed it meanwhile. The tablet is wiped when the reader leaves. With a little more care the note covers a whole <em>list</em>: every work on the stars, the same list however often it is asked for in the visit.</p>
-        <p>Across visits, a reader should never be shown an older copy than before. For that, every library shows readers only what it knows <em>every</em> library holds: a <b>floor</b> of editions, which the couriers' notes raise as each new edition is known to be everywhere.</p>
+        <p class="lede"><span class="i">A reader who asks for the same entry twice in one visit should see the same version both times (<i>Item Cut Isolation</i>, <i>Repeatable Read</i>).</span><span class="m">What if a client reads the same item twice during a single transaction and wants to see the exact same version both times (<i>Item Cut Isolation</i> / <i>Repeatable Read</i>)?</span></p>
+        <p><span class="i">That is easy: the reader, or the reading room, notes the version shown the first time and hands back that copy if the reader asks again in the visit, unless the reader corrected it meanwhile. Keeping older versions in the back room, a library can do the same for a whole <em>list</em> of entries on one subject (<i>Predicate Cut Isolation</i>).</span><span class="m">That is effortless: the client (or its session) simply remembers the version returned by the first read, and if it reads that item again during the same transaction, returns the cached copy (unless the client itself modified it during the transaction). By keeping older versions around, the replica can do the same for a whole <em>set</em> of items matching a condition (<i>Predicate Cut Isolation</i>).</span></p>
+        <p><span class="i"><em>Across</em> visits a reader may go to Library 1 today and Library 2 tomorrow, and never wants to see a version older than one already read (<i>Monotonic Reads</i>). Without keeping to one library, the coast can promise ttheir by having every library show readers only its <b>floor</b>: the newest version the library knows <em>every library on the coast</em> already holds.</span><span class="m">What about <em>across</em> transactions, when a client may read from replica 1 today and replica 2 tomorrow, and never wants to see an older version than one it read before (<i>Monotonic Reads</i>)? Even without sticking to one replica, the system can guarantee this by having every replica show clients only its <b>stable version</b>: the highest version that the replica knows <em>every replica</em> has already received!</span></p>
       </div>
-      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p03-path-4c683317da-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p03-path-4c683317da-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p03-path-4c683317da-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p03-path-4c683317da-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p03-path.jpg" alt="A library with a tiled roof and barred windows seen from above, a reader in a grey chiton walking along the paved path beside it with a scroll, another small library among the olive trees beyond and the sea" loading="lazy"></div></div></div>
+      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p03-path-4c683317da-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p03-path-4c683317da-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p03-path-4c683317da-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p03-path-4c683317da-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p03-path.jpg" alt="A library with a tiled roof and barred windows seen from above, a reader in a grey chiton walking along the paved path beside it with a scroll, another small library among the olive trees beyond and the sea" loading="lazy"></div></div></div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>The floor only rises <em>three libraries; a reader may ask any of them</em></h4>
+      <h4><span class="i">The floor only rises <em>three libraries; a reader may ask any of them</em></span><span class="m">The stable version only rises <em>three replicas; a client may read any of them</em></span></h4>
       <div class="shelves" id="fshelves" data-live></div>
-      <div class="counts"><span><b id="ffloor">1</b>the floor: the edition every library holds</span><span><b id="fnew">1</b>the newest edition anywhere</span></div>
-      <p class="say" id="fsay">Every library holds edition 1, and shows it.</p>
-      <div class="row"><button class="btn" id="fwrite">A new edition is written at Library 1</button><button class="btn" id="fc2">A courier reaches Library 2</button><button class="btn" id="fc3">A courier reaches Library 3</button></div>
+      <div class="counts"><span><b id="ffloor">1</b><bdi class="i">the floor: the edition every library holds</bdi><bdi class="m">the stable version: the version every replica holds</bdi></span><span><b id="fnew">1</b><bdi class="i">the newest edition anywhere</bdi><bdi class="m">the newest version anywhere</bdi></span></div>
+      <p class="say" id="fsay"><span class="i">Every library holds version 1, and shows it.</span><span class="m">Every replica holds version 1, and shows it.</span></p>
+      <div class="row"><button class="btn" id="fwrite"><span class="i">A new version is written at Library 1</span><span class="m">A new version is written at replica 1</span></button><button class="btn" id="fc2"><span class="i">A courier reaches Library 2</span><span class="m">A message reaches replica 2</span></button><button class="btn" id="fc3"><span class="i">A courier reaches Library 3</span><span class="m">A message reaches replica 3</span></button></div>
     </div></div></div>
-    <p style="max-width:40em;margin-top:1.4rem">The price is recency. The floor is only as new as the slowest courier, so a reader may be shown a copy far behind what some library holds. And the floor is common to everyone: it does not promise a reader the corrections that reader has just left, since they may not be on the floor yet. These promises are all about not going backwards. They say nothing about going forward.</p>
+    <p style="max-width:40em;margin-top:1.4rem"><span class="i">No library shows a version until every library holds it, so a reader who walks from any library to any other never steps backwards. The price is staleness: while couriers are stopped the floor stops rising, and every library keeps showing the old floor, even to the scholar who has just written a new version.</span><span class="m">Because no replica reveals a version until every replica holds it, a client that moves from any replica to any other can never read an older version. The price is staleness: during the partition, the stable version stops rising, so every replica keeps showing the old pre-partition version — even to the very client that just wrote a new one!</span></p>
   </div>
 </section>
 
 <!-- ============================================================ Staying with one library -->
-<section class="spread dark" id="one" data-name="Staying with one library">
+<section class="spread dark" id="one" data-name="Staying with one library" data-name-m="Staying with one replica">
   <a class="anchor" id="s6"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
   <div class="wrap">
     <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
-      <div class="pop fromleft"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p02-porch-7e98a9cd5c-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p02-porch-7e98a9cd5c-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p02-porch-7e98a9cd5c-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p02-porch-7e98a9cd5c-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p02-porch.jpg" alt="A reader in a grey chiton sits on the library's porch step reading a scroll, a small wax tablet beside him, the plastered wall with its barred windows and the tiled roof above, olive trees and the sea behind" loading="lazy"></div></div></div>
+      <div class="pop fromleft i"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p02-porch-7e98a9cd5c-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p02-porch-7e98a9cd5c-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p02-porch-7e98a9cd5c-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p02-porch-7e98a9cd5c-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p02-porch.jpg" alt="A reader in a grey chiton sits on the library's porch step reading a scroll, a small wax tablet beside him, the plastered wall with its barred windows and the tiled roof above, olive trees and the sea behind" loading="lazy"></div></div></div>
+      <div class="pop fromleft m"><div class="leaf"><svg class="cover-fig" data-crop="20 210 480 250" role="img" aria-label="Guarantees sorted by what each needs from the network"></svg></div></div>
       <div>
-        <div class="kicker">The second shelf</div>
-        <h2>Staying with one library</h2>
-        <p class="lede">A reader leaves a correction at Library 1. The couriers stop. The next day the reader comes back and asks for the work.</p>
-        <p>At Library 1 the correction is on the shelves. At Library 2, which the couriers cannot reach, the librarian must answer from what is there, and what is there is the old copy. Library 2 could wait until it hears of the correction, but then it would wait for as long as the couriers stay stopped, which is not answering.</p>
-        <p>So the reader must <b>stay with one library</b>, returning always to the same door. The librarian does nothing new. A reader may instead carry a copy of every correction left, and show it to any library that lacks them, which comes to the same thing: such a reader is acting as a library.</p>
+        <div class="kicker"><span class="i">The second shelf</span><span class="m">The second group</span></div>
+        <h2><span class="i">Staying with one library</span><span class="m">Staying with one replica</span></h2>
+        <p class="lede"><span class="i">Suppose a reader leaves a correction at Library 1, goes out while the couriers are stopped, and comes back the next morning to read the entry (<i>Read Your Writes</i>).</span><span class="m">Suppose a client writes at replica 1, disconnects during the partition, and reconnects later to read the item (<i>Read Your Writes</i>).</span></p>
+        <p><span class="i">A reader who walks into Library 2, cut off from Library 1, finds that Library 2 has never heard of the correction. It cannot wait for the couriers; it must answer from its own copy, which holds only the old version. So <b>no library can promise a reader their own corrections if the reader moves between libraries that are cut off from each other</b>.</span><span class="m">If it reads from replica 2 — which is cut off from replica 1 by the partition — replica 2 has never received its write! Under high availability, replica 2 cannot wait for messages to resume; it must answer from its own data, which holds only the old version. Thus <b>no system can guarantee Read Your Writes if a client switches between partitioned replicas</b>.</span></p>
+        <p><span class="i">To get <i>Read Your Writes</i>, the reader must <b>stay with one library</b> (<i>sticky availability</i>), coming back to the same door each visit, or carry copies of their own corrections to show any other library, which amounts to the same thing.</span><span class="m">To get <i>Read Your Writes</i>, the client must <b>stay with one replica</b> (<i>sticky availability</i>), returning to the same replica each time — or else carry copies of its own writes along to show any new replica it visits (which amounts to acting as its own sticky replica).</span></p>
       </div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>Where does the reader come back? <em>a correction left at Library 1, and the couriers stopped</em></h4>
+      <h4><span class="i">Where does the reader come back? <em>a correction left at Library 1, and the couriers stopped</em></span><span class="m">Which replica does the client return to? <em>a write made at replica 1, and the network partitioned</em></span></h4>
       <div class="hill-wrap">
-        <svg class="isle-svg fig" id="onesvg" role="img" aria-label="The coast from above with two libraries and the road between them cut"></svg>
+        <svg class="isle-svg fig" id="onesvg" role="img" aria-label="The coast from above with two libraries and the road between them cut" data-al-m="Three lanes with real time running left to right: the client C and replicas R1 and R2, partitioned throughout. The client writes at R1, then reads at R1 or R2, each request and reply an arrow"></svg>
         <div>
-          <p class="say" id="onesay">Leave a correction at Library 1 first.</p>
+          <p class="say" id="onesay"><span class="i">Leave a correction at Library 1 first.</span><span class="m">Write at replica 1 first.</span></p>
         </div>
       </div>
-      <div class="row"><button class="btn" id="oleave">Leave a correction at Library 1</button><button class="btn alt" id="oback1">Come back to Library 1</button><button class="btn alt" id="oback2">Come back to Library 2</button></div>
+      <div class="row"><button class="btn" id="oleave"><span class="i">Leave a correction at Library 1</span><span class="m">Write at replica 1</span></button><button class="btn alt" id="oback1"><span class="i">Come back to Library 1</span><span class="m">Return to replica 1</span></button><button class="btn alt" id="oback2"><span class="i">Come back to Library 2</span><span class="m">Return to replica 2</span></button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">What is promised</div><h3>A reader who stays with one library finds their own corrections</h3><p>With never going backwards and corrections appearing in the order they were made, a visit's readings and writings appear in the order the reader did them, as one line of acts. The price is one more than before: if the library the reader stays with is lost, the promises are lost with it.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">What is promised</div><h3><span class="i">A reader who stays with one library always sees their own corrections</span><span class="m">A client that stays with one replica always sees its own writes</span></h3><p><span class="i">When a reader sticks to one library, that library already holds every correction the reader ever wrote, in the exact order they wrote them (<i>PRAM</i> consistency). The only catch is that if that one library burns down or closes its doors, the reader's unpropagated corrections are trapped inside until it reopens.</span><span class="m">When a client sticks to one replica, that replica already holds every write the client ever made, in the exact order it made them (<i>PRAM</i> consistency). The only catch is that if that one replica crashes, the client's unpropagated writes are stuck at that replica until it recovers.</span></p></div></div></div>
     <details class="proof">
       <summary>Proof · that Read Your Writes is not achievable with high availability, and is with sticky availability</summary>
       <p class="given">Read your writes: whenever a client reads an item after updating it, the read returns the updated value or one that overwrote it. Sticky availability: a client always reaches the same replica, and gets a response whenever it can. <var>w<sub>x</sub></var>(1) is a write of 1 to item <var>x</var>, and <var>r<sub>x</sub></var>(<var>a</var>) a read of <var>x</var> returning <var>a</var>. <b>Claim.</b> Read your writes cannot be provided with high availability, and is provided with sticky availability.</p>
@@ -231,53 +213,53 @@
 </section>
 
 <!-- ============================================================ Letters and replies -->
-<section class="spread light" id="letters" data-name="Letters and replies">
+<section class="spread light" id="letters" data-name="Questions and answers" data-name-m="Messages and replies">
   <a class="anchor" id="s7"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">Other people's writing</div>
-      <h2>Letters and replies</h2>
-      <p class="lede">A scholar at Library 1 writes a letter on some question, and it is entered as a work. A scholar at Library 2 reads it and writes a reply, which is entered too. The reply travels quickly to a third library and the letter slowly.</p>
-      <p>The promise wanted is that <em>no reply is shown before the letter it answers</em>. A reply carries a note of what its writer had seen when writing it, and a library shows the reply only when each of those is already on its floor. The librarian answers all the while, from what may be shown.</p>
+      <div class="kicker"><span class="i">Other people's writing</span><span class="m">Other clients' writes</span></div>
+      <h2><span class="i">Questions and answers</span><span class="m">Messages and replies</span></h2>
+      <p class="lede"><span class="i">Suppose a scholar at Library 1 adds an entry that raises a question, and a scholar at Library 2 reads it and adds an entry that answers it. The courier carrying the answer may reach Library 3 <em>before</em> the slow courier carrying the question.</span><span class="m">Suppose a client at replica 1 writes a message, which is stored as an item. A second client at replica 2 reads that message and writes a reply. What if the update carrying the reply reaches replica 3 <em>before</em> the slower update carrying the original message?</span></p>
+      <p><span class="i">To promise that <em>no answer is ever shown before the entry it answers</em> (<i>Writes Follow Reads</i>, <i>Causal Consistency</i>), each new entry carries a note of the versions its writer had read before writing it (<i>causal dependencies</i>). When the answer reaches Library 3 first, Library 3 keeps it in the back room and does not show it until the entry it depends on has arrived too. All the while, Library 3 goes on answering readers at once from the entries already in its copy.</span><span class="m">To promise that <em>no reply is ever shown before the message it answers</em> (<i>Writes Follow Reads</i> / <i>Causal Consistency</i>), each new write carries a list of the versions its author had read before writing it (<i>causal dependencies</i>). When the reply arrives at replica 3 ahead of the message, replica 3 holds the reply aside and does not expose it until the message it depends on has also arrived. All the while, replica 3 continues answering clients immediately from the data it already has.</span></p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>At the reader's library <em>the reply arrives first</em></h4>
+      <h4><span class="i">At the reader's library <em>the answer arrives first</em></span><span class="m">At the client's replica <em>the reply arrives first</em></span></h4>
       <div class="seg" id="lmode" role="group" aria-label="Whether replies are held"></div>
       <div class="shelves" id="lshelves" data-live></div>
       <p class="say" id="lsay">Neither has arrived.</p>
-      <div class="row"><button class="btn" id="lrep">The reply arrives</button><button class="btn" id="llet">The letter arrives</button><button class="btn alt" id="lreset">Start again</button></div>
+      <div class="row"><button class="btn" id="lrep"><span class="i">The answer arrives</span><span class="m">The reply arrives</span></button><button class="btn" id="llet"><span class="i">The question arrives</span><span class="m">The message arrives</span></button><button class="btn alt" id="lreset">Start again</button></div>
     </div></div></div>
-    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">The last thing a librarian can promise alone</div><h3>Never backwards, one's own corrections found, in order, and no reply before its letter</h3><p>Holding a reply for its letter needs nothing of the reader: any library holds it for anyone. Put together with the second shelf, it makes the strongest promise a librarian can give alone, to a reader who stays with one library.</p></div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">The ceiling of what can be promised without waiting</div><h3><span class="i">Causal consistency plus atomic views is as strong as a sticky library can go</span><span class="m">Causal consistency plus atomic views is as strong as a sticky replica can go</span></h3><p><span class="i">The first two shelves together, holding back incomplete cords (<i>MAV</i>), holding back answers until the entries they answer arrive (<i>Writes Follow Reads</i>), and keeping each reader at one library (<i>Read Your Writes</i>, <i>Monotonic Reads and Writes</i>), give transactional <b>Causal Consistency</b>. Anything stronger is on the third shelf, where no library can keep the promise alone.</span><span class="m">Combining the first two groups — holding back half-made or incomplete transactions (<i>MAV</i>), holding back replies until the messages they answer arrive (<i>Writes Follow Reads</i>), and keeping each client at one replica (<i>Read Your Writes</i> + <i>Monotonic Reads/Writes</i>) — gives transactional <b>Causal Consistency</b>. Anything stronger crosses into the third group, where no replica can keep the promise alone.</span></p></div></div></div>
   </div>
 </section>
 
 <!-- ============================================================ The last copy -->
-<section class="spread dark" id="last" data-name="The last copy">
+<section class="spread dark" id="last" data-name="A count read and written over" data-name-m="The last unit">
   <a class="anchor" id="s8"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
   <div class="wrap">
-    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
       <div>
-        <div class="kicker">The third shelf</div>
-        <h2>The last copy</h2>
-        <p class="lede">The libraries lend. A reader may borrow a copy for a term, and while it is out the library does not have it.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: Libraries That Agree in the End">*</a></sup></p>
-        <p>Say a work has one copy left on the coast, and both Library 1 and Library 2 have it noted as on the shelf. The couriers are stopped. A reader at each asks to borrow it.</p>
-        <p>Each lending reads the count of copies, finds one, and writes a count of none. Neither reading sees the other's writing. Any rule a librarian could try, such as waiting to hear from the other library, needs a courier, and stops working the day the couriers do.</p>
+        <div class="kicker"><span class="i">The third shelf</span><span class="m">The third group</span></div>
+        <h2><span class="i">A count read and written over</span><span class="m">A counter read and written over</span></h2>
+        <p class="lede"><span class="i">The third shelf holds promises that <em>no</em> library can keep while the couriers are stopped. The compendium's entry on the stars says how many stars have been catalogued: <b>850</b>. A scholar who catalogues a new star reads the entry and writes it one higher.</span><span class="m">Now we reach the third group: promises that <em>no</em> replica can keep while the network is partitioned. Suppose a counter holds the value <b>850</b>, and clients increment it by reading the value and writing it back one higher.</span></p>
+        <p><span class="i">The couriers are stopped. A scholar at Library 1 catalogues a new star in the same hour as a scholar at Library 2 catalogues another.</span><span class="m">During a partition, a client at replica 1 and a client at replica 2 each increment the counter at the same time.</span></p>
+        <p><span class="i">Each scholar reads 850 in their library's copy and writes 851 (<i>Lost Update</i>). Neither library can learn of the other's change while the couriers are stopped, and when they return, the version with the larger tally stands: 851, for two new stars. Any rule that prevented this, such as locking the entry or waiting for a majority of libraries, would make at least one library stall or turn its reader away while the couriers are stopped.</span><span class="m">Each reads 850 and writes 851 (<i>Lost Update</i>). Neither replica can learn of the other's write during the partition, and when it heals, last writer wins: 851, for two increments. Any rule that prevented this, such as locking the item or waiting for a majority of replicas, would force at least one replica to stall or reject its client during the partition.</span></p>
       </div>
-      <div class="pop fromright"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p04-roof-8b7fd2e462-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p04-roof-8b7fd2e462-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p04-roof-8b7fd2e462-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p04-roof-8b7fd2e462-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p04-roof.jpg" alt="A second library along the coast seen from above on a rocky shore: a tiled roof, plastered walls with barred windows, a reader in a grey chiton standing in the porch reading a scroll, and down the road a courier in a blue tunic sitting stopped on a stone wall, another library beyond and the sea" loading="lazy"></div></div></div>
+      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p04-roof-8b7fd2e462-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p04-roof-8b7fd2e462-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p04-roof-8b7fd2e462-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/what-you-can-promise-alone-p04-roof-8b7fd2e462-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="img/p04-roof.jpg" alt="A second library along the coast seen from above on a rocky shore: a tiled roof, plastered walls with barred windows, a reader in a grey chiton standing in the porch reading a scroll, and down the road a courier in a blue tunic sitting stopped on a stone wall, another library beyond and the sea" loading="lazy"></div></div></div>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>One copy, two libraries <em>each has it noted as on the shelf</em></h4>
-      <div class="seg" id="bmode" role="group" aria-label="Whether the couriers are running"></div>
+      <h4><span class="i">One count, two libraries <em>each reads the entry, then writes it one higher</em></span><span class="m">One counter, two replicas <em>each reads the value, then writes it one higher</em></span></h4>
+      <div class="seg" id="bmode" role="group" aria-label="Whether the couriers are running" data-al-m="Whether messages are running"></div>
       <div class="shelves" id="bshelves" data-live></div>
-      <p class="say" id="bsay">Nobody has asked yet.</p>
-      <div class="row"><button class="btn" id="b1">A reader at Library 1 borrows it</button><button class="btn" id="b2">A reader at Library 2 borrows it</button><button class="btn alt" id="breset">Start again</button></div>
+      <p class="say" id="bsay">The entry says 850 at both libraries.</p>
+      <div class="row"><button class="btn" id="b1"><span class="i">A scholar at Library 1 adds a star</span><span class="m">A client at replica 1 increments</span></button><button class="btn" id="b2"><span class="i">A scholar at Library 2 adds a star</span><span class="m">A client at replica 2 increments</span></button><button class="btn" id="bmeet"><span class="i">The couriers return</span><span class="m">The partition heals</span></button><button class="btn alt" id="breset">Start again</button></div>
     </div></div></div>
     <div class="cards3">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The same failure with two works</div><h3>A shelf left bare</h3><p>Two works are held for reference, and at least one must stay on the shelf. A reader at Library 1 sees the second there and borrows the first. A reader at Library 2 sees the first there and borrows the second. Each kept the rule by what could be seen, and the rule is broken.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Mended outside</div><h3>Settled on the road</h3><p>The two readers meet on the road, and one gives way. The paper calls this moving the clash out into the world, where someone able to settle it does.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Dodged by changing the rule</div><h3>Shelf-marks and spare copies</h3><p>A shelf-mark that must only be <em>unique</em> can be made at any library from its number and a count of its own. One that must be <em>next in sequence</em> for the whole coast cannot. A count that must not fall below none can be kept by making another copy whenever a lending would take it there, at the cost of more copies than waiting would have made.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">The same failure with two works</div><h3><span class="i">An entry left without a source (<i>Write Skew</i>)</span><span class="m">A constraint broken (<i>Write Skew</i>)</span></h3><p><span class="i">Every entry must keep at least one source. The entry on the comet has two, <i>X</i> and <i>Y</i>. While the couriers are stopped, a scholar at Library 1 sees that <i>Y</i> stands and strikes <i>X</i>, and a scholar at Library 2 sees that <i>X</i> stands and strikes <i>Y</i>. Each visit kept the rule by what it could see, and together they left the entry with no source at all.</span><span class="m">Suppose two items <i>X</i> and <i>Y</i> are kept under a rule that <em>at least one of the two</em> must remain. During the partition, a client at replica 1 checks that <i>Y</i> remains and deletes <i>X</i>; concurrently, a client at replica 2 checks that <i>X</i> remains and deletes <i>Y</i>. Each transaction obeyed the rule locally, and together they left neither.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Mended outside</div><h3><span class="i">Put right afterwards (<i>Compensation</i>)</span><span class="m">Settled afterwards (<i>Compensation</i>)</span></h3><p><span class="i">Systems that cannot prevent <i>Lost Update</i> or <i>Write Skew</i> often let both visits complete while cut off and put things right afterwards, as a scholar who later finds an entry with no source restores one.</span><span class="m">Systems that cannot prevent <i>Lost Update</i> or <i>Write Skew</i> often let both transactions commit while partitioned and issue a compensating action afterwards.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Dodged by changing the rule</div><h3><span class="i">Numbers and counts kept differently</span><span class="m">Identifiers and counters kept differently</span></h3><p><span class="i">A clash can often be avoided by changing the rule. If entry numbers need only be <em>unique</em>, not consecutive (1, 2, 3 …), each library puts its own number in front of its own count and needs no one else. And a count kept on a board with a column for each library, each adding only to its own, never reads and writes over at all.<sup class="xref"><a href="../changes-that-never-clash/index.html" title="Changes That Never Clash">*</a></sup></span><span class="m">A clash can often be avoided by changing the rule. If identifiers need only be <em>globally unique</em>, not sequential (1, 2, 3 …), each replica prefixes its own replica number and needs no coordination. And a counter kept as one entry per replica, merged by maximum, is never read and written over at all.<sup class="xref"><a href="../changes-that-never-clash/index.html" title="Changes That Never Clash">*</a></sup></span></p></div></div></div>
     </div>
     <details class="proof">
       <summary>Proof · that Lost Update and Write Skew cannot be prevented with high availability</summary>
@@ -294,20 +276,20 @@
 </section>
 
 <!-- ============================================================ The latest edition -->
-<section class="spread light" id="latest" data-name="The latest edition">
+<section class="spread light" id="latest" data-name="The latest edition" data-name-m="The latest version">
   <a class="anchor" id="s9"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
   <div class="wrap">
     <div class="narrow" style="margin:0 0 1rem">
-      <div class="kicker">What readers ask for first</div>
-      <h2>The latest edition</h2>
-      <p class="lede">A librarian alone cannot promise that the copy handed over is the latest, nor any looser form of that: <em>no more than a day behind</em>, or no more than any bound.</p>
-      <p>Such a promise needs the librarian to know that nothing newer has been written anywhere since. If the couriers are stopped for longer than the bound, a newer edition may be on the road, and the librarian must still answer, from a copy that is behind by more than the bound.</p>
+      <div class="kicker"><span class="i">What readers ask for first</span><span class="m">What clients ask for first</span></div>
+      <h2><span class="i">The latest version</span><span class="m">The latest version</span></h2>
+      <p class="lede"><span class="i">No library that must always answer can promise that the version handed over is the <b>latest</b> (<i>linearizability</i>), nor even a looser bound such as <i>no more than a day behind</i>.</span><span class="m">Finally, no replica that must always answer can promise that the value returned is the <b>latest version</b> (<i>linearizability</i>) — nor even a looser time bound such as <i>no more than a day behind</i>.</span></p>
+      <p><span class="i">If couriers can be stopped for longer than the bound a library promises, a scholar at Library 1 can write a new version just as the stoppage begins; once the stoppage outlasts the bound, Library 2 must either stop answering, breaking availability, or hand over its old copy, breaking the bound. Ttheir is the impossibility met at the camps of Arche,<sup class="xref"><a href="../answering-while-cut-off/index.html" title="Answering While Cut Off">*</a></sup> carried over to every bound on staleness.</span><span class="m">Why? Because if messages can be cut off for longer than whatever time bound the replica promises, a client at replica 1 can write a new version just as the partition begins, and once the partition outlasts the bound, replica 2 is forced either to stop answering (breaking availability) or to return its old version (breaking the recency bound). This is the exact CAP impossibility,<sup class="xref"><a href="../answering-while-cut-off/index.html" title="Answering While Cut Off">*</a></sup> extended to every bounded-staleness guarantee.</span></p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
-      <h4>Name a bound, then stop the couriers <em>a new edition is written at Library 1 just as they stop</em></h4>
-      <div class="seglab">Library 2 promises: no more than</div><div class="seg" id="tbound" role="group" aria-label="The bound promised"></div>
-      <div class="seglab">The couriers stay stopped for</div><div class="seg" id="tstop" role="group" aria-label="How long the couriers are stopped"></div>
+      <h4><span class="i">Name a bound, then stop the couriers <em>a new version is written at Library 1 just as they stop</em></span><span class="m">Name a bound, then partition the network <em>a new version is written at replica 1 just as they stop</em></span></h4>
+      <div class="seglab"><span class="i">Library 2 promises: no more than</span><span class="m">Replica 2 promises: no more than</span></div><div class="seg" id="tbound" role="group" aria-label="The bound promised"></div>
+      <div class="seglab"><span class="i">The couriers stay stopped for</span><span class="m">The partition lasts</span></div><div class="seg" id="tstop" role="group" aria-label="How long the couriers are stopped" data-al-m="How long the partition lasts"></div>
       <p class="say" id="tsay"></p>
     </div></div></div>
     <details class="proof">
@@ -320,7 +302,7 @@
         <li>Since the partition can last longer than any fixed bound, no recency bound is enforceable. This is the argument of Gilbert and Lynch for the CAP theorem, applied to every recency guarantee.<span class="qed">∎</span></li>
       </ol>
     </details>
-    <p style="max-width:40em;margin-top:1.4rem">What is gained for giving this up is time, and never having to stop. In the paper's trials, a store that sends every act through one master across distant sites took ten to a hundred times as long for each as one that answers from any copy. Of eighteen stores the paper surveyed, only three keep the strong promises unless asked, so readers already live with modest ones.</p>
+    <p style="max-width:40em;margin-top:1.4rem"><span class="i">What the libraries win by giving up the third shelf is speed, even on days when every courier is running. In the authors' benchmarks across continents, transactions that coordinated through one master or a quorum took 10 to 100 times longer than highly available transactions (<i>HATs</i>) answered locally. And of eighteen commercial databases surveyed, fifteen already defaulted to weak isolation levels (<i>Read Committed</i> or weaker) that can be made highly available.</span><span class="m">What do the replicas win in exchange for giving up the third group? Speed — even when the network is healthy! In the authors' geo-distributed benchmarks across continents, transactions that coordinated through a single master or quorum took 10 to 100 times longer than Highly Available Transactions (<i>HATs</i>) answered locally. Better yet, surveying eighteen commercial databases revealed that fifteen of them already defaulted to weak isolation levels (<i>Read Committed</i> or weaker) that can be made highly available.</span></p>
   </div>
 </section>
 
@@ -332,19 +314,19 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker">The limits</div>
       <h2>What it does not say</h2>
-      <p class="lede">The paper sorts the promises onto three shelves. Four things it does not claim.</p>
+      <p class="lede"><span class="i">The paper sorts transactional guarantees onto three clear shelves. Here are four things it does not claim.</span><span class="m">The paper sorts transactional guarantees into three clear groups. Here are four things it does not claim.</span></p>
     </div>
     <div class="cards3 five">
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is answering alone a loose standard?</h3><p>It is a strict one. A library that needs most of the coast open does not answer alone, and neither does one that is right only very probably. The standard is an answer from every open library whatever the stoppage, because that is the one under which the impossibilities can be proved. A weaker standard would allow more.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Does it say how to build the libraries well?</h3><p>No. The devices here show that the promises <em>can</em> be kept alone. The common floor, for one, holds every old edition and may be slow to rise. The paper does show a better way of holding sets bound together, and measured a working version.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Do several promises at once cost more?</h3><p>A combination can be kept only as widely as the hardest of its parts: add one promise that needs the reader to stay with one library, and the whole needs it. The paper counts a hundred and forty-four combinations, and does not claim to list every promise there could be.</p></div></div></div>
-      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Are the modest promises enough?</h3><p>The paper does not say so. Whether a coast can live without the third shelf depends on the coast. Its advice is to expect a few acts that must be kept apart and given the slower, stronger treatment, and to use it sparingly.</p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Is “answering alone” the only useful definition of availability?</h3><p><span class="i">No. It is deliberately the strictest one, asking every library that has not failed to answer whatever the stoppage. A library that needs to answer only in the connected majority of the coast, as the Chamber and the Tholos do, or only with high odds, as the coast's odds give, can make stronger third-shelf promises to the readers it serves.</span><span class="m">No — it is deliberately the strictest one (requiring 100% of non-failing replicas to answer under arbitrary partitions). A system that only needs to answer in the connected majority (as consensus protocols do), or only with high probability (like PBS), can provide stronger third-group guarantees to the clients it serves.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>Are the proof-of-concept devices meant for production as-is?</h3><p><span class="i">Not always. Keeping a floor across all libraries stalls what can be shown whenever one library is slow. The paper's buffered design for <i>Monotonic Atomic View</i> (<i>MAV</i>), however, is practical, and gave high throughput and low delay in the authors' experiments.</span><span class="m">Not always. For instance, keeping a global stable version across all replicas can stall visibility whenever one replica is slow. The paper's buffered <i>Monotonic Atomic View</i> (<i>MAV</i>) design, however, is genuinely practical and achieved high throughput and low latency in the authors' experiments.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3>What happens when you combine several guarantees?</h3><p><span class="i">A combination of guarantees is only as available as its <em>least</em> available part: combining any first-shelf <i>HAT</i> guarantee with <i>Read Your Writes</i> makes the combination <i>Sticky</i>, and adding <i>Prevent Lost Update</i> makes it <i>Unavailable</i>. Across the combinations studied, the paper maps out 144 distinct consistency and isolation levels.</span><span class="m">A combination of guarantees is only as available as its <em>least</em> available part: combining any first-group <i>HAT</i> guarantee with <i>Read Your Writes</i> makes the combination <i>Sticky</i>, and adding <i>Prevent Lost Update</i> makes it <i>Unavailable</i>. Across the combinations studied, the paper maps out 144 distinct consistency and isolation levels.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3><span class="i">Can every application live without the third shelf?</span><span class="m">Can every application live without the third group?</span></h3><p><span class="i">No. Some changes truly need <i>Lost Update</i> or <i>Write Skew</i> prevented. The lesson is to keep slow coordination across the coast for the few changes that need the third shelf, and run the rest at the speed of the reading room.</span><span class="m">No. Some operations genuinely require preventing <i>Lost Update</i> or <i>Write Skew</i>. The lesson of <i>HATs</i> — and of the CALM theorem<sup class="xref"><a href="../knowing-when-to-wait/index.html" title="Knowing When to Wait">*</a></sup> — is to reserve slow cross-system coordination for the few operations that truly need the third group, while running the rest at local speed.</span></p></div></div></div>
     </div>
   </div>
 </section>
 
 <!-- ============================================================ the result -->
-<section class="spread light" id="why" data-name="The result">
+<section class="spread light" id="why" data-name="The result" data-name-m="The result">
   <a class="anchor" id="s11"></a>
   <a class="anchor" id="refs"></a>
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
@@ -353,12 +335,12 @@
       <p class="big">A replica that must always answer can still hide unfinished writes, show a transaction's writes all together, and never go backwards.</p>
       <p class="lede" style="margin:0 auto">It cannot prevent lost updates or write skew, or bound how stale a read is. Those need replicas to coordinate.</p>
       <div class="links">
-        <a href="../../places/scholars-coast/index.html">Libraries That Agree in the End, in detail</a>
+        <a class="i" href="../../places/scholars-coast/index.html">Libraries That Agree in the End, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
       </div>
     </div>
     <div class="apparatus">
-      <p class="lineage"><span class="lbl">Setting</span> <a href="../../places/scholars-coast/index.html">Libraries That Agree in the End</a></p>
+      <p class="lineage i"><span class="lbl">Setting</span> <a href="../../places/scholars-coast/index.html">Libraries That Agree in the End</a></p>
       <details class="proof">
         <summary>The paper behind this book</summary>
         <p>Peter Bailis, Aaron Davidson, Alan Fekete, Ali Ghodsi, Joseph M. Hellerstein and Ion Stoica, <i>Highly Available Transactions: Virtues and Limitations</i>. Proceedings of the VLDB Endowment, Vol. 7, No. 3 (40th International Conference on Very Large Data Bases, Hangzhou, September 2014), 181–192. — A taxonomy of highly available, sticky available and unavailable isolation and consistency models, with proofs of unavailability and proof-of-concept algorithms.</p>
@@ -366,15 +348,15 @@
         <p>Bailis and co-authors ask which of the guarantees that databases and distributed systems offer can be kept by a replica that must always answer, even when it is cut off from every other replica for as long as the cut lasts. They call such systems highly available, and with transactions, highly available transactions. They go through the known guarantees and sort them into those that can be kept, those that can be kept if each client stays with one replica, and those that cannot.</p>
         <p>The first group includes read committed, which stops a client reading writes that are not finished, monotonic atomic view, which makes the writes of one transaction visible all together or not at all, repeatable reads within a transaction, and monotonic reads and writes and writes-follow-reads. The second adds read-your-writes, PRAM and causal consistency. Each is built by holding writes back from readers until it is safe to show them, never by making a reader wait.</p>
         <p>The third group is made of the guarantees that need a replica to know about concurrent operations elsewhere: preventing lost update and write skew, which rules out snapshot isolation, repeatable read in its other senses and serializability, and any bound on how out of date a read may be. These are fundamental, not weaknesses of particular systems. The paper concludes that many applications can live with the first two groups, that some operations will need the third and should use it sparingly, and that high availability buys the lowest delay.</p>
-        <p class="fnote">The paper has six authors, Peter Bailis, Aaron Davidson, Alan Fekete, Ali Ghodsi, Joseph M. Hellerstein and Ion Stoica, and all are credited here. Nobody in this telling is named; the librarians and readers are told apart by what they do.</p>
+        <p class="fnote i">The paper has six authors, Peter Bailis, Aaron Davidson, Alan Fekete, Ali Ghodsi, Joseph M. Hellerstein and Ion Stoica, and all are credited here. Nobody in this telling is named; the librarians and readers are told apart by what they do.</p>
       </details>
-      <details class="proof">
+      <details class="proof i">
         <summary>In the paper, term by term</summary>
         <table class="terms2"><tbody>
           <tr><td><span class="term">the reading room of a library; a reader's visit</span></td><td>A server; a transaction, a group of operations over several items. <span class="paper">§1, §4.</span></td></tr>
           <tr><td><span class="term">the couriers stopped</span></td><td>A network partition, indefinitely long. <span class="paper">§2.1, §4.</span></td></tr>
-          <tr><td><span class="term">answering alone, from one's own shelves</span></td><td>High availability: every client that reaches a non-failing server gets a response. <span class="paper">§4.</span></td></tr>
-          <tr><td><span class="term">a librarian who waits for most of the coast, or answers "probably"</span></td><td>Not available: a majority-quorum system, or a response with high probability. <span class="paper">§4, footnote 2.</span></td></tr>
+          <tr><td><span class="term">answering alone, from one's own copy</span></td><td>High availability: every client that reaches a non-failing server gets a response. <span class="paper">§4.</span></td></tr>
+          <tr><td><span class="term">a library that waits for most of the coast, or answers "probably"</span></td><td>Not available: a majority-quorum system, or a response with high probability. <span class="paper">§4, footnote 2.</span></td></tr>
           <tr><td><span class="term">a visit that finishes, or is withdrawn by the reader</span></td><td>Transactional availability: commit or internal abort, never indefinite external abort. <span class="paper">§4.2.</span></td></tr>
           <tr><td><span class="term">staying with one library</span></td><td>Sticky availability; a client acting as a server itself. <span class="paper">§4.1.</span></td></tr>
           <tr><td><span class="term">no half-made or abandoned correction shown</span></td><td>Read Committed (Adya PL-2); no dirty reads (G1). <span class="paper">§5.1.1.</span></td></tr>
@@ -383,16 +365,16 @@
           <tr><td><span class="term">the same answer twice in a visit; the same list twice</span></td><td>Item Cut Isolation; Predicate Cut Isolation (ANSI Repeatable Read, disambiguated). <span class="paper">§5.1.1.</span></td></tr>
           <tr><td><span class="term">the floor of what every library holds</span></td><td>Reading from a globally agreed lower bound on versions; multi-versioning. <span class="paper">§5.1.1, §5.1.3.</span></td></tr>
           <tr><td><span class="term">never older than before; corrections shown in the order made</span></td><td>Monotonic reads; monotonic writes. <span class="paper">§5.1.3.</span></td></tr>
-          <tr><td><span class="term">a reply held for its letter</span></td><td>Writes follow reads. <span class="paper">§5.1.3.</span></td></tr>
+          <tr><td><span class="term">an answer held for the entry it answers</span></td><td>Writes follow reads. <span class="paper">§5.1.3.</span></td></tr>
           <tr><td><span class="term">a reader finds their own corrections</span></td><td>Read your writes: needs stickiness. <span class="paper">§5.1.3.</span></td></tr>
-          <tr><td><span class="term">a visit read and written in order; letters before replies, too</span></td><td>PRAM; causal consistency (PL-2L), both sticky. <span class="paper">§5.1.3.</span></td></tr>
+          <tr><td><span class="term">a visit read and written in order; questions before answers, too</span></td><td>PRAM; causal consistency (PL-2L), both sticky. <span class="paper">§5.1.3.</span></td></tr>
           <tr><td><span class="term">the coast's libraries settle the same way in the end</span></td><td>Convergence, by anti-entropy. <span class="paper">§5.1.4.</span></td></tr>
-          <tr><td><span class="term">two readers borrowing the last copy</span></td><td>Lost Update; unavailable: it needs linearizability. <span class="paper">§5.2.1.</span></td></tr>
-          <tr><td><span class="term">two readers each leaving one work on the shelf, both borrowing the other</span></td><td>Write Skew; unavailable. <span class="paper">§5.2.1.</span></td></tr>
-          <tr><td><span class="term">"this is the latest edition"; "no more than a day behind"</span></td><td>Recency guarantees, linearizability, safe and regular semantics; unavailable. <span class="paper">§5.2.2.</span></td></tr>
-          <tr><td><span class="term">the two readers settling it on the road</span></td><td>Compensation: moving non-monotonicity to the real world. <span class="paper">§6.2.</span></td></tr>
-          <tr><td><span class="term">unique shelf-marks; next-in-sequence marks</span></td><td>Unique IDs by client identifier and timestamp; sequential IDs need preventing Lost Update. <span class="paper">§6.2.</span></td></tr>
-          <tr><td><span class="term">making another copy rather than fall below none</span></td><td>New-Order restocks inventory that would go negative. <span class="paper">§6.2.</span></td></tr>
+          <tr><td><span class="term">two scholars each reading a count and writing it one higher</span></td><td>Lost Update; unavailable: it needs linearizability. <span class="paper">§5.2.1.</span></td></tr>
+          <tr><td><span class="term">two scholars each striking one of an entry's two sources, leaving none</span></td><td>Write Skew; unavailable. <span class="paper">§5.2.1.</span></td></tr>
+          <tr><td><span class="term">"this is the latest version"; "no more than a day behind"</span></td><td>Recency guarantees, linearizability, safe and regular semantics; unavailable. <span class="paper">§5.2.2.</span></td></tr>
+          <tr><td><span class="term">restoring a source afterwards</span></td><td>Compensation: moving non-monotonicity to the real world. <span class="paper">§6.2.</span></td></tr>
+          <tr><td><span class="term">unique entry numbers; next-in-sequence numbers</span></td><td>Unique IDs by client identifier and timestamp; sequential IDs need preventing Lost Update. <span class="paper">§6.2.</span></td></tr>
+          <tr><td><span class="term">a count kept with a column for each library</span></td><td>Commutative updates in place of register semantics: the paper notes its Lost Update example could be made serializable this way, though the problem persists in general; TPC-C's New-Order restocks inventory instead. <span class="paper">§5.3, note 4; §6.2.</span></td></tr>
           <tr><td><span class="term">a store routed through one master, ten to a hundred times slower</span></td><td>Measured latency of mastered operations against HAT operations. <span class="paper">§6.3.</span></td></tr>
           <tr><td><span class="term">a combination is as available as its least available part</span></td><td>The partial order of HAT, sticky and unavailable models. <span class="paper">§5.3, Figure 2.</span></td></tr>
         </tbody></table>
