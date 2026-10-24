@@ -640,14 +640,14 @@ def("crdt", "libs3", [
   tg([0, 236], V("merge: the larger pile in each column", "merge = element-wise max"), { c: 1, own: 1, id: "t1" })
 ]);
 
-/* What You Can Promise Alone: a whole visit while cut off, and the last copy taken twice */
+/* What You Can Promise Alone: a whole visit while cut off, and a count written over twice */
 def("hat", "libs4", [
   { t: "wedge", n: "L3", w: 32, t1: 1.0, id: "cut" },
   sl("L3", 1.2, "L2", 2.2, { lost: .6, id: "x1" }), sl("L4", 1.4, "L3", 2.6, { lost: .7, id: "x2" }),
   { t: "sp", n: "L3", t1: 1.6, t2: 3.0, c: 1, id: "visit" }, ev("L3", 2.0, { r: 4.5, c: 1, id: "c1" }), ev("L3", 2.6, { r: 4.5, c: 1, id: "c2" }),
-  ev("L1", 3.8, { num: 1, id: "lend1" }), ev("L3", 4.1, { num: 1, id: "lend3" }),
+  ev("L1", 3.8, { num: 1, id: "add1" }), ev("L3", 4.1, { num: 1, id: "add3" }),
   tg(on("L3", 2.3, -76, 0), V("a whole visit: all or none", "atomic visibility"), { c: 1, own: 1, id: "t1" }),
-  tg(on("L1", 3.8, 80, 0), V("both lend the last copy", "lost update: unavoidable"), { own: 1, id: "t2" }),
+  tg(on("L1", 3.8, 80, 0), V("both write 851 over 850", "lost update: unavoidable"), { own: 1, id: "t2" }),
   tg(on("L3", 5.2, 60, 10), V("cut off", "partitioned"), { own: 1, id: "t3" })
 ]);
 

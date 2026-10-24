@@ -68,25 +68,25 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const box=$("#cshelves"),say=$("#csay");let cord=true,yHere,seen;
   /* what each library may show: with a cord, the new copy only once both corrections are in place */
   const shows=w=>{const here=w==="X"?true:yHere;return cord?(here&&yHere?"new":"old"):(here?"new":"old")};
-  const paint=()=>{box.innerHTML=shelfBox(dual("Library 1 · the work X","Replica 1 · item X"),[it(dual("correction to X, arrived","write to X, arrived"),cord&&!yHere?"held":""),it("the old X","old")],`${dual("Shows a reader","Shows a client")}: <b>${shows("X")==="new"?dual("X corrected","X as written"):"the old X"}</b>`)+
-    shelfBox(dual("Library 2 · the work Y","Replica 2 · item Y"),[yHere?it(dual("correction to Y, arrived","write to Y, arrived")):it(dual("correction to Y, still on the road","write to Y, still in transit"),"none"),it("the old Y","old")],`${dual("Shows a reader","Shows a client")}: <b>${shows("Y")==="new"?dual("Y corrected","Y as written"):"the old Y"}</b>`)};
+  const paint=()=>{box.innerHTML=shelfBox(dual("Library 1 · entry X","Replica 1 · item X"),[it(dual("correction to X, arrived","write to X, arrived"),cord&&!yHere?"held":""),it("the old X","old")],`${dual("Shows a reader","Shows a client")}: <b>${shows("X")==="new"?dual("X corrected","X as written"):"the old X"}</b>`)+
+    shelfBox(dual("Library 2 · entry Y","Replica 2 · item Y"),[yHere?it(dual("correction to Y, arrived","write to Y, arrived")):it(dual("correction to Y, still on the road","write to Y, still in transit"),"none"),it("the old Y","old")],`${dual("Shows a reader","Shows a client")}: <b>${shows("Y")==="new"?dual("Y corrected","Y as written"):"the old Y"}</b>`)};
   function reset(){yHere=false;seen={};paint();say.innerHTML=dual("The reader has asked for nothing yet.","The client has read nothing yet.")}
   const ask=w=>{seen[w]=shows(w);paint();const both=seen.X&&seen.Y;
-    say.innerHTML=dual(`The reader is shown ${seen[w]==="new"?w+" corrected":"the old "+w}.`+(both?(seen.X!==seen.Y?` <span class="bad">One work corrected and the other old: half of what was made together.</span>`:` <span class="ok">Both ${seen.X==="new"?"corrected":"old"}: the state ${seen.X==="new"?"after":"before"} the set, never between.</span>`):""),`The client is shown ${seen[w]==="new"?w+" as written":"the old "+w}.`+(both?(seen.X!==seen.Y?` <span class="bad">One item as written and the other old: half of what was written together.</span>`:` <span class="ok">Both ${seen.X==="new"?"as written":"old"}: the state ${seen.X==="new"?"after":"before"} the transaction, never between.</span>`):""))};
+    say.innerHTML=dual(`The reader is shown ${seen[w]==="new"?w+" corrected":"the old "+w}.`+(both?(seen.X!==seen.Y?` <span class="bad">One entry corrected and the other old: half of what was made together.</span>`:` <span class="ok">Both ${seen.X==="new"?"corrected":"old"}: the state ${seen.X==="new"?"after":"before"} the set, never between.</span>`):""),`The client is shown ${seen[w]==="new"?w+" as written":"the old "+w}.`+(both?(seen.X!==seen.Y?` <span class="bad">One item as written and the other old: half of what was written together.</span>`:` <span class="ok">Both ${seen.X==="new"?"as written":"old"}: the state ${seen.X==="new"?"after":"before"} the transaction, never between.</span>`):""))};
   $("#cx").onclick=()=>ask("X");$("#cy").onclick=()=>ask("Y");
   $("#carr").onclick=()=>{yHere=true;seen={};paint();say.innerHTML=dual("The correction to Y is at Library 2, and the couriers' notes tell both libraries that the set is complete.","The write to Y is at replica 2, and the messages tell both replicas that the transaction is complete.")};
   seg($("#cmode"),[["1",dual("One cord round both corrections","One manifest for both writes")],["0",dual("No cord","No manifest")]],"1",v=>{cord=v==="1";reset()});
   $("#creset").onclick=reset;reset();
 })();
 
-/* ===== the floor: every library shows only the edition it knows every library holds ===== */
+/* ===== the floor: every library shows only the version it knows every library holds ===== */
 (function(){
   const box=$("#fshelves"),say=$("#fsay");let h=[1,1,1],floor=1,newest=1;
   const paint=()=>{const f=Math.min(...h);if(f<floor)throw new Error("the floor fell");floor=f;
-    box.innerHTML=h.map((e,i)=>shelfBox(dual(`Library ${i+1}`,`Replica ${i+1}`),[it(dual(`holds up to edition ${e}`,`holds up to version ${e}`),e>floor?"held":"")],`${dual("Shows a reader","Shows a client")}: <b>${dual("edition","version")} ${floor}</b>`)).join("");
+    box.innerHTML=h.map((e,i)=>shelfBox(dual(`Library ${i+1}`,`Replica ${i+1}`),[it(dual(`holds up to version ${e}`,`holds up to version ${e}`),e>floor?"held":"")],`${dual("Shows a reader","Shows a client")}: <b>${dual("version","version")} ${floor}</b>`)).join("");
     $("#ffloor").textContent=floor;$("#fnew").textContent=newest};
-  $("#fwrite").onclick=()=>{h[0]=++newest;const was=floor;paint();say.innerHTML=dual(`Edition ${newest} is at Library 1 only. Every library still shows edition ${floor}: the floor has not moved, and a reader may be ${newest-floor} ${newest-floor>1?"editions":"edition"} behind.`,`Version ${newest} is at replica 1 only. Every replica still shows version ${floor}: the stable version has not moved, and a client may be ${newest-floor} ${newest-floor>1?"versions":"version"} behind.`)};
-  const courier=i=>{const was=floor;h[i]=h[0];paint();say.innerHTML=floor>was?dual(`Library ${i+1} now holds up to edition ${h[i]}. Edition ${floor} is everywhere, so <span class="ok">the floor rises to ${floor}</span> at every library.`,`Replica ${i+1} now holds up to version ${h[i]}. Version ${floor} is everywhere, so <span class="ok">the stable version rises to ${floor}</span> at every replica.`):dual(`Library ${i+1} now holds up to edition ${h[i]}. The floor stays at ${floor} until every library has it.`,`Replica ${i+1} now holds up to version ${h[i]}. The stable version stays at ${floor} until every replica has it.`)};
+  $("#fwrite").onclick=()=>{h[0]=++newest;const was=floor;paint();say.innerHTML=dual(`Version ${newest} is at Library 1 only. Every library still shows version ${floor}: the floor has not moved, and a reader may be ${newest-floor} ${newest-floor>1?"versions":"version"} behind.`,`Version ${newest} is at replica 1 only. Every replica still shows version ${floor}: the stable version has not moved, and a client may be ${newest-floor} ${newest-floor>1?"versions":"version"} behind.`)};
+  const courier=i=>{const was=floor;h[i]=h[0];paint();say.innerHTML=floor>was?dual(`Library ${i+1} now holds up to version ${h[i]}. Version ${floor} is everywhere, so <span class="ok">the floor rises to ${floor}</span> at every library.`,`Replica ${i+1} now holds up to version ${h[i]}. Version ${floor} is everywhere, so <span class="ok">the stable version rises to ${floor}</span> at every replica.`):dual(`Library ${i+1} now holds up to version ${h[i]}. The floor stays at ${floor} until every library has it.`,`Replica ${i+1} now holds up to version ${h[i]}. The stable version stays at ${floor} until every replica has it.`)};
   $("#fc2").onclick=()=>courier(1);$("#fc3").onclick=()=>courier(2);paint();
 })();
 
@@ -106,33 +106,37 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   $("#oback1").onclick=()=>back(0);$("#oback2").onclick=()=>back(1);
 })();
 
-/* ===== a reply is held for its letter ===== */
+/* ===== an answer is held for the entry it answers ===== */
 (function(){
-  const box=$("#lshelves"),say=$("#lsay");let hold=true,rep,let_;
-  const shown=()=>{const s=[];if(let_)s.push("the letter");if(rep&&(let_||!hold))s.push("the reply");return s};
-  const LM=x=>dual(x,x.replace("letter","message")),paint=()=>{const s=shown();box.innerHTML=shelfBox(dual("Arrived at the reader's library","Arrived at the client's replica"),[let_?it(LM("the letter")):it(LM("the letter: not yet"),"none"),rep?it("the reply",hold&&!let_?"held":""):it("the reply: not yet","none")])+
-    shelfBox(dual("What a reader is shown","What a client is shown"),s.length?s.map(x=>it(LM(x))):[it(dual("neither, and whatever else the library holds","neither, and whatever else the replica holds"),"none")]);
-    say.innerHTML=!rep&&!let_?"Neither has arrived.":s.includes("the reply")&&!s.includes("the letter")?dual(`<span class="bad">The reader reads an answer to a question not yet seen.</span>`,`<span class="bad">The client reads an answer to a message it has not yet seen.</span>`):rep&&!let_?dual("The reply is held back. The librarian still answers every other request.","The reply is held back. The replica still answers every other request."):s.length===2?dual(`<span class="ok">The letter, and then the reply.</span>`,`<span class="ok">The message, and then the reply.</span>`):dual("The letter is shown. The reply has not arrived.","The message is shown. The reply has not arrived.")};
-  function reset(){rep=let_=false;paint()}
-  $("#lrep").onclick=()=>{rep=true;paint()};$("#llet").onclick=()=>{let_=true;paint()};
-  seg($("#lmode"),[["1",dual("Replies are held for their letters","Replies are held for their messages")],["0","Everything is shown as it arrives"]],"1",v=>{hold=v==="1";reset()});
+  const box=$("#lshelves"),say=$("#lsay");let hold=true,rep,q;
+  const Q=dual("the question","the message"),A=dual("the answer","the reply");
+  const shown=()=>{const s=[];if(q)s.push(Q);if(rep&&(q||!hold))s.push(A);return s};
+  const paint=()=>{const s=shown();box.innerHTML=shelfBox(dual("Arrived at the reader's library","Arrived at the client's replica"),[q?it(Q):it(dual("the question: not yet","the message: not yet"),"none"),rep?it(A,hold&&!q?"held":""):it(dual("the answer: not yet","the reply: not yet"),"none")])+
+    shelfBox(dual("What a reader is shown","What a client is shown"),s.length?s.map(x=>it(x)):[it(dual("neither, and whatever else the library holds","neither, and whatever else the replica holds"),"none")]);
+    say.innerHTML=!rep&&!q?dual("Neither has arrived.","Neither has arrived."):rep&&!q&&!hold?dual(`<span class="bad">The reader reads an answer to a question not yet seen.</span>`,`<span class="bad">The client reads a reply to a message it has not yet seen.</span>`):rep&&!q?dual("The answer is held back. The library still answers every other request.","The reply is held back. The replica still answers every other request."):s.length===2?dual(`<span class="ok">The question, and then the answer.</span>`,`<span class="ok">The message, and then the reply.</span>`):dual("The question is shown. The answer has not arrived.","The message is shown. The reply has not arrived.")};
+  function reset(){rep=q=false;paint()}
+  $("#lrep").onclick=()=>{rep=true;paint()};$("#llet").onclick=()=>{q=true;paint()};
+  seg($("#lmode"),[["1",dual("Answers are held for their questions","Replies are held for their messages")],["0","Everything is shown as it arrives"]],"1",v=>{hold=v==="1";reset()});
   $("#lreset").onclick=reset;reset();
 })();
 
-/* ===== the last copy ===== */
+/* ===== a count read and written over: each scholar reads the entry and writes it one higher; when the couriers return, the larger tally stands ===== */
 (function(){
-  const box=$("#bshelves"),say=$("#bsay");let stopped=true,note,out;
-  const paint=()=>box.innerHTML=[0,1].map(i=>shelfBox(dual(`Library ${i+1}`,`Replica ${i+1}`),[it(dual(`noted here: ${note[i]} ${note[i]===1?"copy":"copies"} on the shelf`,`counted here: ${note[i]} ${note[i]===1?"unit":"units"} available`),note[i]?"":"old")],out[i]?dual("A reader has borrowed the copy here.","A client has bought the unit here."):"")).join("");
-  function reset(){note=[1,1];out=[false,false];paint();say.textContent="Nobody has asked yet."}
-  const borrow=i=>{if(note[i]<1){say.innerHTML=dual(`Library ${i+1} has it noted as lent, and refuses. <span class="ok">One copy, one borrower.</span>`,`Replica ${i+1} has it counted as sold, and refuses. <span class="ok">One unit, one buyer.</span>`);return}
-    note[i]=0;out[i]=true;if(!stopped)note[1-i]=0;paint();const n=out.filter(Boolean).length;
-    say.innerHTML=n>1?dual(`Library ${i+1} finds one copy noted and lends it. <span class="bad">Two readers now hold the one copy.</span> Each librarian was right by what could be seen.`,`Replica ${i+1} finds one unit counted and sells it. <span class="bad">Two clients now hold the one unit.</span> Each replica was right by what it could see.`):dual(`Library ${i+1} finds one copy noted, lends it, and notes none.`+(stopped?" No courier carries the news.":" A courier carries the news to the other library."),`Replica ${i+1} finds one unit counted, sells it, and counts none.`+(stopped?" No message carries the news.":" A message carries the news to the other replica."))};
-  $("#b1").onclick=()=>borrow(0);$("#b2").onclick=()=>borrow(1);
-  seg($("#bmode"),[["1",dual("The couriers are stopped","The messages are stopped")],["0",dual("The couriers are running","The messages are running")]],"1",v=>{stopped=v==="1";reset()});
+  const box=$("#bshelves"),say=$("#bsay");let stopped=true,v,added,last,met;
+  const paint=()=>box.innerHTML=[0,1].map(i=>shelfBox(dual(`Library ${i+1}`,`Replica ${i+1}`),[it(dual(`the entry says: ${v[i]} stars catalogued`,`value: ${v[i]}`))],added[i]?dual(`${added[i]} ${added[i]===1?"star":"stars"} added here`,`${added[i]} ${added[i]===1?"increment":"increments"} made here`):"")).join("");
+  const truth=()=>850+added[0]+added[1];
+  function reset(){v=[850,850];added=[0,0];last=-1;met=false;paint();say.innerHTML=dual("The entry says 850 at both libraries.","The value is 850 at both replicas.")}
+  const add=i=>{const r=v[i];v[i]=r+1;added[i]++;last=i;if(!stopped)v[1-i]=v[i];met=false;paint();
+    say.innerHTML=dual(`A scholar at Library ${i+1} catalogues a new star, reads ${r} in the entry and writes ${r+1}.`+(stopped?" No courier carries the new version.":" A courier carries it to the other library."),`A client at replica ${i+1} reads ${r} and writes ${r+1}.`+(stopped?" No message carries the write.":" A message carries it to the other replica."))};
+  $("#b1").onclick=()=>add(0);$("#b2").onclick=()=>add(1);
+  $("#bmeet").onclick=()=>{if(last<0){say.innerHTML=dual("Nothing has been written yet.","Nothing has been written yet.");return}
+    const w=v[last];v=[w,w];met=true;paint();const n0=added[0]+added[1],n=n0===2?"Two":n0===3?"Three":n0===4?"Four":String(n0);
+    say.innerHTML=w<truth()?dual(`The two versions meet and the one with the larger tally stands: ${w}. <span class="bad">${n} stars were catalogued and the entry rose by ${w-850}.</span> Each scholar wrote over what they had read.`,`Last writer wins: ${w}. <span class="bad">${n} increments were made and the value rose by ${w-850}.</span> Each write overwrote the value its client read.`):dual(`Both libraries say ${w}, <span class="ok">one higher for every star catalogued</span>.`,`Both replicas hold ${w}, <span class="ok">one higher for every increment</span>.`)};
+  seg($("#bmode"),[["1",dual("The couriers are stopped","The messages are stopped")],["0",dual("The couriers are running","The messages are running")]],"1",v_=>{stopped=v_==="1";reset()});
   $("#breset").onclick=reset;reset();
 })();
 
-/* ===== the latest edition: any bound can be outlasted ===== */
+/* ===== the latest version: any bound can be outlasted ===== */
 (function(){
   const D={day:1,week:7,month:30},N={day:"a day",week:"a week",month:"a month"};let bound="day",stop="week";
   const paint=()=>{const broken=D[stop]>D[bound];

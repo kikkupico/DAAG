@@ -113,7 +113,7 @@
         <li><a class="bk" href="#s-vr"><span class="i">One Leader</span><span class="m">Viewstamped</span></a> <span class="i">one law, in a single place</span><span class="m">the group acts as one</span></li>
         <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">one order at every post</span><span class="m">linearizable replication</span></li>
         <li><a class="bk" href="#s-pbs"><span class="i">Up to Date</span><span class="m">PBS</span></a> <span class="i">groups that must share a library</span><span class="m">strict quorums</span></li>
-        <li><a class="bk" href="#s-hat"><span class="i">Promise Alone</span><span class="m">HATs</span></a> <span class="i">the newest edition, out of reach</span><span class="m">recency: unavailable</span></li>
+        <li><a class="bk" href="#s-hat"><span class="i">Promise Alone</span><span class="m">HATs</span></a> <span class="i">the newest version, out of reach</span><span class="m">recency: unavailable</span></li>
       </ul>
     </article>
 
@@ -867,7 +867,7 @@
   <article class="card book" id="s-hat" data-scene="hat" data-book="hat">
     <h3 class="punch"><span class="i">What a librarian can promise alone.</span><span class="m">What survives a partition.</span></h3>
     <h4 class="title">What You Can Promise Alone</h4>
-    <p class="i">A librarian cut off from every other library must still finish each visit. Alone, a librarian can hide unfinished corrections, show a visit's corrections all or none, and hold a reply until its letter arrives; if a reader keeps to one library, the reader also sees their own corrections. <b>No librarian alone can stop two readers taking the last copy, or promise the newest edition.</b></p>
+    <p class="i">A library cut off from every other must still finish each visit. Alone, it can hide unfinished corrections, show a visit's corrections all or none, and hold an answer until the entry it answers arrives; if a reader keeps to one library, the reader also sees their own corrections. <b>No library alone can stop two scholars who each read a count and write it one higher from losing one of the two, or promise the newest version.</b></p>
     <p class="m">Highly available transactions: read committed, monotonic atomic view, cut isolation, monotonic reads and writes-follow-reads are achievable under partition; read-your-writes, PRAM and causal consistency need sticky clients; <b>preventing lost update or write skew, and so snapshot isolation and serializability, is impossible</b>, as is any recency bound.</p>
     <a class="read" href="../what-you-can-promise-alone/index.html">Read the book ›</a>
     <div class="papers">
@@ -889,8 +889,8 @@
       <li class="ok rv"><span class="ic" aria-label="yes">✓</span><span class="i">to show a visit's corrections all or none</span><span class="m">monotonic atomic view</span></li>
       <li class="ok rv"><span class="ic" aria-label="yes">✓</span><span class="i">to hold a reply until its letter arrives</span><span class="m">writes follow reads; monotonic reads; cut isolation</span></li>
       <li class="half rv"><span class="ic" aria-label="only with a sticky reader">◐</span><span class="i">to let readers see their own corrections, if they keep to one library</span><span class="m">read-your-writes, PRAM, causal: with sticky clients</span></li>
-      <li class="no rv"><span class="ic" aria-label="no">✕</span><span class="i">to stop two readers taking the last copy</span><span class="m">no lost update or write skew: so no snapshot isolation, no serializability</span></li>
-      <li class="no rv"><span class="ic" aria-label="no">✕</span><span class="i">to promise the newest edition</span><span class="m">any recency bound</span></li>
+      <li class="no rv"><span class="ic" aria-label="no">✕</span><span class="i">to keep both of two counts written over the same reading</span><span class="m">no lost update or write skew: so no snapshot isolation, no serializability</span></li>
+      <li class="no rv"><span class="ic" aria-label="no">✕</span><span class="i">to promise the newest version</span><span class="m">any recency bound</span></li>
     </ul>
   </div>
 </section>
@@ -899,7 +899,7 @@
   <article class="card wall" id="w3" data-scene="w3">
     <p class="kicker">The third wall</p>
     <h3 class="punch"><span class="i">Answer, or be right.</span><span class="m">CAP.</span></h3>
-    <p class="i">The last two crosses come from a wall first met at the foot. <b>A tent cut off by hawks cannot both answer every question and answer as one.</b> With a known flight, waiting a glass keeps the copies as one on every night no bird is lost; when birds may also be late without limit, not even then. So no librarian alone can stop two readers taking the last copy, or promise the newest edition.</p>
+    <p class="i">The last two crosses come from a wall first met at the foot. <b>A tent cut off by hawks cannot both answer every question and answer as one.</b> With a known flight, waiting a glass keeps the copies as one on every night no bird is lost; when birds may also be late without limit, not even then. So no library alone can keep both of two counts written over the same reading, or promise the newest version.</p>
     <p class="m">The two unavailable guarantees come from CAP. <b>Under message loss, a register cannot be both linearizable and available</b>; with bounded delays, consistency survives in loss-free runs; asynchronously, not even then. Preventing lost update or write skew, and any recency guarantee, are therefore unavailable.</p>
     <p class="nights"><span class="i">From the cut-off tent:</span><span class="m">At the partitioned replica:</span> <b class="i">the plan moved</b><b class="m">a write completed</b> <i>looks like</i> <b class="i">the plan never moved</b><b class="m">no write at all</b></p>
   </article>

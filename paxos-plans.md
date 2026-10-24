@@ -156,18 +156,18 @@ Written: `books/changes-that-never-clash/`.
 
 | Device | In the paper | Also in |
 |---|---|---|
-| a reader's business at one visit: several works asked for, or several corrections made | A transaction. |  |
+| a reader's business at one visit: several entries consulted, or several corrected | A transaction. |  |
 | the couriers stopped | A partition. | Lost birds at the camps (*Answering While Cut Off*) |
-| the librarian who answers from his own shelves | High availability. | The gate-glass: answering from one's own book |
-| a reader who keeps to his own library | Sticky availability. |  |
+| the library that answers from its own copy of the compendium | High availability. | The gate-glass: answering from one's own book |
+| a reader who keeps to one library | Sticky availability. |  |
 | never shown a correction abandoned or half written | Read committed. |  |
-| corrections to several works bound under one seal: seen all together or not at all | Monotonic atomic view. |  |
-| asking twice in one visit, and getting the same answer | Item cut isolation; predicate cut for "every work on the stars". |  |
-| a reader who always finds his own corrections | Read your writes. |  |
-| never a reply read before the letter it answers | Causal consistency. | The column room (*Ordering Without Clocks*) |
-| two readers borrowing the last copy at two libraries | Lost update: cannot be prevented. | Two men told different gates (*Answering While Cut Off*) |
-| two readers each borrowing one of the last two copies, when one must stay on the shelf | Write skew. |  |
-| "this is the latest edition" | Recency: cannot be promised. | *Probably Up to Date*: only probably |
+| corrections to several entries bound under one cord, such as a new entry and the cross-reference to it: seen all together or not at all | Monotonic atomic view. | *Changes That Never Clash*: a reference to a withdrawn heading |
+| asking twice in one visit, and getting the same answer | Item cut isolation; predicate cut for "every entry on the stars". |  |
+| a reader who always finds their own corrections | Read your writes. |  |
+| never an answer read before the entry it answers | Causal consistency. | The column room (*Ordering Without Clocks*) |
+| two scholars at two libraries each reading the count of catalogued stars and writing it one higher | Lost update: cannot be prevented. | *Changes That Never Clash*: a count kept as a board with a column per library never loses one |
+| two scholars each striking one of an entry's two sources, when every entry must keep one | Write skew. |  |
+| "this is the latest version" | Recency: cannot be promised. | *Probably Up to Date*: only probably |
 
 **Chapters.**
 1. The couriers stop.
@@ -175,16 +175,15 @@ Written: `books/changes-that-never-clash/`.
 3. No half-made corrections.
 4. The same answer twice.
 5. Staying with one library.
-6. Letters and replies.
-7. The last copy.
+6. Questions and answers.
+7. A count read and written over.
 8. What no librarian can promise alone.
 9. In the Book, In the Paper.
 
-**Must not exist:** an assembly; a librarian waiting on a courier before answering; a promise that needs another library; a lost copy that anyone is blamed for.
+**Must not exist:** an assembly; a library waiting on a courier before answering; a promise that needs another library; lending; a lost change that anyone is blamed for.
 
 **Open.**
-1. **Lending.** The last-copy example needs libraries that lend. `settings.md` already says "two readers never take the last copy"; confirm lending is part of the coast's practice.
-2. **Names.** Bailios again, with Davidsonia, Feketeos and others for the seven authors; the footnote says names follow papers.
+1. **Names.** Bailios again, with Davidsonia, Feketeos and others for the seven authors; the footnote says names follow papers.
 
 ---
 
@@ -208,8 +207,8 @@ Written: `books/changes-that-never-clash/`.
 | a librarian who knows neither how many libraries there are nor their names | An oblivious transducer. |  |
 | every library already holding every copy, so nobody needs to read a letter | Ameloot's coordination-free: an ideal distribution on which no message is needed. |  |
 | a reading list sent sealed with its count, so the receiver knows when he has it all | Sealing (the 2020 shopping-cart checkout). |  |
-| the larger pile in each column of the pebble tables | A monotone merge. | *Changes That Never Clash* |
-| the last copy on loan | Lost update needs coordination because it is non-monotone. | *What You Can Promise Alone* |
+| the larger pile in each column of the pebble boards | A monotone merge. | *Changes That Never Clash* |
+| a count read and written over | Lost update needs coordination because it is non-monotone. | *What You Can Promise Alone* |
 | a stable property: once true, true for ever | Detectable from a partial view. | *Taking Stock Without Stopping* |
 
 **Chapters.**

@@ -219,7 +219,7 @@ What each place, building, character, prop and practice of the setting has in co
 | a marble board grooved in columns, with piles of pebbles, on every library's desk | The Salamis Tablet, a marble counting board of the fourth century BC, was used for reckoning with pebbles†; *psēphoi* are pebbles used to count. | Close |
 | the reading room in every library, where the compendium is consulted | The one set of Greek library rules that survives, from the library of Pantainos in the Athenian Agora (about AD 100), forbids taking any book out and gives the opening hours (SEG 21.500). | Close |
 | a count kept in voting pebbles | Greek *psēphoi* were pebbles used to vote and to count, and the Greek for “to reckon” (*psēphizein*) comes from them†. | Close |
-| the reading room in every library, where a reader asks and corrects | Scholars read in the rooms and colonnades of the Museum and library at Alexandria†. | Close |
+| the reading room in every library, where a reader consults and corrects | Scholars read in the rooms and colonnades of the Museum and library at Alexandria†. | Close |
 | the courier landing | Hellenistic kings ran their own couriers, and merchant ships carried private letters†. | Close |
 | the ferry across the inlet, the one crossing between two parts of the coast | Short sea crossings were ordinary: the strait between the Attic shore and Salamis was crossed by boat†, and the Euripus was bridged only in 411 BC†. | Close |
 
@@ -255,8 +255,7 @@ What each place, building, character, prop and practice of the setting has in co
 | sightings of a comet reported at the nearest library and counted | Greek and Babylonian astronomers kept records of what they observed, and Hipparchus is said to have catalogued the stars after seeing a new one (Pliny, *Natural History* 2.95)†. A count of sightings kept on a board is the setting's own. | Loose |
 | a library strikes only sightings it recorded itself | No Greek arrangement like it is known; it is the paper's local rule that keeps a count above nothing, kept as the setting's own. | Invented |
 | a cross-reference written with its own tag, struck only where it was seen | Callimachus' *Pinakes* cross-referred works and authors†; tags that make each writing unique are the setting's own. | Invented |
-| a library lends a copy to a reader for a term | A king Ptolemy borrowed Athens' official copy of the tragedies against a deposit of fifteen talents and kept the original, returning a copy (Galen, commentary on Hippocrates' *Epidemics* III, Kühn 17a.607). A term of loan is the setting's own. | Loose |
-| corrections to several works bound under one cord, shown all together or not at all | Scrolls were tied and sealed in bundles†; showing a bundle only when complete is the setting's own. | Loose |
+| corrections to several entries bound under one cord, shown all together or not at all | Scrolls were tied and sealed in bundles†; showing a bundle only when complete is the setting's own. | Loose |
 | wardens of a dormant notice named by lot | Athens filled most magistracies by lot, drawing names with an allotment machine, the *klērotērion*†. Drawing names to keep a notice is the setting's use of it. | Close |
 | answering from whatever copy a library holds | The Alexandrian library is said to have seized books from ships in its harbour and returned copies†, so the copy a reader held really did depend on the shelf. | Loose |
 | no assembly; nothing waits for a vote | The scholarly world had no governing body; the Museum was a royal foundation and its scholars answered to the king†. | Loose |
