@@ -57,8 +57,7 @@ SIZES = (("bleed", "100vw"),
 # pictures that are not scenes but are published all the same, and the file each is made from
 EXTRA = {"assets/img/map.jpg": "art/full-map-cartographic.jpeg"}  # the home page's chart
 # generated-looking pictures that are really previs and stay local, whatever scene*.png says
-LOCAL = {"assets/img/places/hall.jpg", "books/knowing-when-to-wait/img/hall.jpg",
-         "assets/img/places/scholars-coast.jpg", "books/spreading-by-word-of-mouth/img/scholars-coast.jpg",
+LOCAL = {"assets/img/places/scholars-coast.jpg", "books/spreading-by-word-of-mouth/img/scholars-coast.jpg",
          "books/what-you-can-promise-alone/img/scholars-coast.jpg"}
 previs = set()  # local pictures that are previs renders; the deploy leaves them out of the site
 DRY = "--dry" in sys.argv
