@@ -1474,10 +1474,10 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
       const w = i < W, r = i >= 3 - Rr;
       el.classList.toggle("w", w); el.classList.toggle("r", r); el.classList.toggle("hit", w && r);
       $(".ed", el).innerHTML = w ? T2("new", "v2") : T2("old", "v1");
-      $(".tags", el).innerHTML = (w ? `<span class="tw">${T2("holds the new edition", "in W")}</span>` : "") + (r ? `<span class="tr">${T2("asked by the reader", "in R")}</span>` : "");
+      $(".tags", el).innerHTML = (w ? `<span class="tw">${T2("holds the new version", "in W")}</span>` : "") + (r ? `<span class="tr">${T2("asked by the reader", "in R")}</span>` : "");
     });
     const ok = W + Rr > 3;
-    st.innerHTML = ok ? T2(`${WORD[W][0].toUpperCase() + WORD[W].slice(1)} and ${WORD[Rr]}: more than three. The groups must share a library, so <span class="g">the reader gets the newest edition.</span>`, `R + W = ${W + Rr} &gt; N = 3: the quorums intersect, so <span class="g">every read is fresh.</span>`)
+    st.innerHTML = ok ? T2(`${WORD[W][0].toUpperCase() + WORD[W].slice(1)} and ${WORD[Rr]}: more than three. The groups must share a library, so <span class="g">the reader gets the newest version.</span>`, `R + W = ${W + Rr} &gt; N = 3: the quorums intersect, so <span class="g">every read is fresh.</span>`)
       : T2(`${WORD[W][0].toUpperCase() + WORD[W].slice(1)} and ${WORD[Rr]}: not more than three. The groups can miss each other, and <b>the reader may get an old copy</b>, though the odds fall with every moment after the announcement.${W === 1 && Rr === 1 ? " Many choose this, for speed." : ""}`, `R + W = ${W + Rr} ≤ N = 3: partial quorums; <b>a read may be stale</b>, and PBS gives the odds.`);
   }
   $$("button", segW).forEach(b => b.addEventListener("click", () => { W = +b.dataset.v; paint(); }));

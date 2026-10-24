@@ -33,7 +33,7 @@ const seg=(box,opts,cur,fn)=>{box.innerHTML=opts.map(([v,t])=>`<button data-v="$
   $$("button",box).forEach(bt=>bt.onclick=()=>{$$("button",box).forEach(x=>x.setAttribute("aria-pressed",x===bt));fn(bt.dataset.v)})};
 const oneIn=p=>p<=0?"none":p>=.95?"nearly all":p>=.095?`1 in ${Math.round(1/p)}`:`1 in ${Math.round(1/p).toLocaleString("en")}`;
 
-/* the number of ways to choose r of n, and the chance that r home libraries heard from all lie among the n-w the edition has not reached */
+/* the number of ways to choose r of n, and the chance that r home libraries heard from all lie among the n-w the version has not reached */
 const choose=(n,r)=>{if(r<0||r>n)return 0;let c=1;for(let i=1;i<=r;i++)c=c*(n-r+i)/i;return c};
 const miss=(n,w,r)=>choose(n-w,r)/choose(n,r);
 const pick=(n,k)=>{const a=[...Array(n).keys()];for(let i=0;i<k;i++){const j=i+rnd(n-i);[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,k)};
@@ -91,12 +91,12 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     say.innerHTML=W+R>3?dual(`${W} and ${R} add up to more than three. The two groups must share a home library.`,`${W} and ${R} add up to more than three. The two groups must share a replica.`):dual(`${W} and ${R} do not add up to more than three. The groups may miss each other.`,`${W} and ${R} do not add up to more than three. The groups may miss each other.`)};
   seg($("#ww"),[1,2,3].map(k=>[k,k]),W,v=>{W=+v;clear()});seg($("#wr"),[1,2,3].map(k=>[k,k]),R,v=>{R=+v;clear()});
   $("#waitgo").onclick=()=>{clear();const w=pick(3,W),r=pick(3,R);          // which home libraries answered the writer first, and which the reader hears from first
-    w.forEach(i=>{C.fill(i,"#e0b84a");C.note(i,"new edition","new version")});[0,1,2].filter(i=>!w.includes(i)).forEach(i=>C.note(i,"old copy"));
+    w.forEach(i=>{C.fill(i,"#e0b84a");C.note(i,"new version","new version")});[0,1,2].filter(i=>!w.includes(i)).forEach(i=>C.note(i,"old copy"));
     r.forEach(i=>C.lib[i].g.classList.add("mark"));
     const both=r.filter(i=>w.includes(i));lanes(w,r);
     const ls=r.map(i=>i+1).join(" and ");
-    say.innerHTML=both.length?dual(`The reader hears from Library ${ls}. Library ${both[0]+1} holds the new edition, and the reader takes the newest copy heard. <span class="ok">The reader is handed the new edition.</span>`,`The client takes the replies of Replica ${ls}. Replica ${both[0]+1} holds the new version, and the client takes the newest copy heard. <span class="ok">The client is handed the new version.</span>`)
-      :dual(`The reader hears from Library ${ls}. ${r.length>1?"Neither holds":"It does not hold"} the new edition yet. <span class="bad">The reader is handed the old copy</span>, and nothing in the ${r.length>1?"replies says":"reply says"} so.`,`The client takes the replies of Replica ${ls}. ${r.length>1?"Neither holds":"It does not hold"} the new version yet. <span class="bad">The client is handed the old copy</span>, and nothing in the ${r.length>1?"replies says":"reply says"} so.`)};
+    say.innerHTML=both.length?dual(`The reader hears from Library ${ls}. Library ${both[0]+1} holds the new version, and the reader takes the newest copy heard. <span class="ok">The reader is handed the new version.</span>`,`The client takes the replies of Replica ${ls}. Replica ${both[0]+1} holds the new version, and the client takes the newest copy heard. <span class="ok">The client is handed the new version.</span>`)
+      :dual(`The reader hears from Library ${ls}. ${r.length>1?"Neither holds":"It does not hold"} the new version yet. <span class="bad">The reader is handed the old copy</span>, and nothing in the ${r.length>1?"replies says":"reply says"} so.`,`The client takes the replies of Replica ${ls}. ${r.length>1?"Neither holds":"It does not hold"} the new version yet. <span class="bad">The client is handed the old copy</span>, and nothing in the ${r.length>1?"replies says":"reply says"} so.`)};
   clear();
 })();
 
@@ -104,11 +104,11 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 $("#misstbl").innerHTML=`<tr><th>${dual("Home libraries","Replicas")}</th><th>Waited for, and asked</th><th>Chance of an old copy</th></tr>`+
   [[3,1],[10,3],[30,9],[100,30]].map(([n,k])=>{const p=miss(n,k,k);return `<tr><td>${n}</td><td>${k} and ${k}</td><td>${p>.05?pct(p):p>1e-4?`about 1 in ${Math.round(1/p)}`:`about ${(p*1e6).toFixed(1)} in a million`}</td></tr>`}).join("");
 
-/* ===== leeway in editions ===== */
+/* ===== leeway in versions ===== */
 (function(){
   let W=1;const box=$("#kbars");
   const paint=()=>{const p=miss(3,W,1);box.innerHTML=[1,2,3,5,10].map(k=>{const ok=1-Math.pow(p,k);
-    return `<div class="b"><span>${k===1?dual("the newest edition","the newest version"):`one of the newest ${k}`}</span><span class="v"><i style="width:${(ok*72).toFixed(1)}%"></i>${pct(ok)}</span></div>`}).join("")};
+    return `<div class="b"><span>${k===1?dual("the newest version","the newest version"):`one of the newest ${k}`}</span><span class="v"><i style="width:${(ok*72).toFixed(1)}%"></i>${pct(ok)}</span></div>`}).join("")};
   seg($("#kw"),[[1,dual("one home library","one replica")],[2,dual("two home libraries","two replicas")]],W,v=>{W=+v;paint()});paint();
 })();
 
@@ -122,10 +122,10 @@ $("#misstbl").innerHTML=`<tr><th>${dual("Home libraries","Replicas")}</th><th>Wa
   });
 })();
 
-/* ===== the replay (the paper's method): for each home library draw the four journeys; the edition is announced when the
+/* ===== the replay (the paper's method): for each home library draw the four journeys; the version is announced when the
    chosen number of acknowledgments is back; the reader asks t later and takes the first replies; the reader is
-   behind when every one of those home libraries got the request before the edition. Journey times are drawn so that
-   short ones are common and long ones rare (an exponential), with the edition's way out slowed by a chosen factor. ===== */
+   behind when every one of those home libraries got the request before the version. Journey times are drawn so that
+   short ones are common and long ones rare (an exponential), with the version's way out slowed by a chosen factor. ===== */
 function replay(W,R,slow,t,runs){
   const ex=m=>-m*Math.log(1-Math.random());let stale=0;
   for(let n=0;n<runs;n++){const w=[],ack=[],req=[],back=[];
@@ -142,8 +142,8 @@ function replay(W,R,slow,t,runs){
   seg($("#lslow"),[[.2,"five times quicker"],[1,"the same"],[10,"ten times slower"]],slow,v=>{slow=+v;blank()});
   $("#lgo").onclick=()=>{const ts=[0,1,3,10,30],res=ts.map(t=>replay(W,R,slow,t,10000));
     if(W+R>3&&res.some(p=>p<1))throw new Error("a stale reading with groups that must share a home library");
-    box.innerHTML=`<h5>${dual("Chance of the new edition, a while after it is announced","Chance of the new version, a while after it is committed")}</h5>`+ts.map((t,k)=>`<div class="b"><span>${t?`${t} ${t>1?"journeys":"journey"} later`:"at once"}</span><span class="v"><i style="width:${(res[k]*68).toFixed(1)}%"></i>${pct(res[k])}</span></div>`).join("");
-    say.innerHTML=W+R>3?dual(`<span class="ok">Never behind.</span> The groups share a home library, however the journeys fall.`,`<span class="ok">Never behind.</span> The groups share a replica, however the journeys fall.`):dual(`At once the reader is handed the new edition ${pct(res[0])}. A while is counted in ordinary journeys: the average time of one of the other three legs.`,`At once the client is handed the new version ${pct(res[0])}. A while is counted in ordinary journeys: the average time of one of the other three legs.`)};
+    box.innerHTML=`<h5>${dual("Chance of the new version, a while after it is announced","Chance of the new version, a while after it is committed")}</h5>`+ts.map((t,k)=>`<div class="b"><span>${t?`${t} ${t>1?"journeys":"journey"} later`:"at once"}</span><span class="v"><i style="width:${(res[k]*68).toFixed(1)}%"></i>${pct(res[k])}</span></div>`).join("");
+    say.innerHTML=W+R>3?dual(`<span class="ok">Never behind.</span> The groups share a home library, however the journeys fall.`,`<span class="ok">Never behind.</span> The groups share a replica, however the journeys fall.`):dual(`At once the reader is handed the new version ${pct(res[0])}. A while is counted in ordinary journeys: the average time of one of the other three legs.`,`At once the client is handed the new version ${pct(res[0])}. A while is counted in ordinary journeys: the average time of one of the other three legs.`)};
 })();
 
 /* ===== the four coasts: the paper's measures ===== */
@@ -154,7 +154,7 @@ $("#cbars").innerHTML=[[dual("Quick roads, quick copying","Fast network, fast di
 (function(){
   const p=miss(3,1,1);
   const paint=q=>{const k=1+q,bad=Math.pow(p,k);$("#bk").textContent=k;$("#bp").textContent=bad>.01?pct(bad):bad>1e-6?`1 in ${Math.round(1/bad).toLocaleString("en")}`:"less than 1 in a million";
-    $("#bsay").innerHTML=q===0?dual("A reader who comes back before anything new is announced needs the very edition seen before, or a newer one that is on its way.","A client that comes back before anything new is committed needs the very version seen before, or a newer one that is on its way."):dual(`With ${q} announced between visits, any of the newest ${k} will do: ${k} chances of a miss, multiplied together.`,`With ${q} committed between visits, any of the newest ${k} will do: ${k} chances of a miss, multiplied together.`)};
+    $("#bsay").innerHTML=q===0?dual("A reader who comes back before anything new is announced needs the very version seen before, or a newer one that is on its way.","A client that comes back before anything new is committed needs the very version seen before, or a newer one that is on its way."):dual(`With ${q} announced between visits, any of the newest ${k} will do: ${k} chances of a miss, multiplied together.`,`With ${q} committed between visits, any of the newest ${k} will do: ${k} chances of a miss, multiplied together.`)};
   seg($("#bq"),[[0,"none"],[1,"1"],[4,"4"],[9,"9"],[99,"99"]],1,v=>paint(+v));paint(1);
 })();
 

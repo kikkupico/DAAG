@@ -66,24 +66,24 @@ see `settings.md`.
 
 | Device | In the paper | Also in |
 |---|---|---|
-| a work's home libraries: the same N libraries hold every copy of it | The replication factor N. |  |
-| a new edition sent to all N home libraries, announced as done once W have acknowledged it | The write quorum W. |  |
+| an entry's home libraries: the same N libraries answer for it, though every library keeps the whole compendium | The replication factor N. |  |
+| a new version sent to all N home libraries, announced as done once W have acknowledged it | The write quorum W. |  |
 | a reader who asks R home libraries and takes the newest copy handed over | The read quorum R. |  |
 | the Chamber's rule: R + W > N, so the two groups always share a library | A strict quorum; intersection. | The Chamber's majorities; the camps' pledges, where two pledged and three needed to call the other gate exceed four (*Agreeing When Messages Run Late*) |
 | the scholars' rule: R + W ≤ N, quicker, and the groups may miss | A partial quorum. |  |
-| the edition still on its way to the other home libraries after it is announced | Expanding quorums; anti-entropy. | The festival (*Spreading by Word of Mouth*) |
-| "one of the last k editions" | k-staleness. |  |
+| the version still on its way to the other home libraries after it is announced | Expanding quorums; anti-entropy. | The festival (*Spreading by Word of Mouth*) |
+| "one of the last k versions" | k-staleness. |  |
 | "t hours after it was announced" | t-visibility. |  |
-| the four legs: the edition out, the acknowledgement back, the reader's request out, the copy back | WARS: the four message delays. |  |
+| the four legs: the version out, the acknowledgement back, the reader's request out, the copy back | WARS: the four message delays. |  |
 | the couriers' logbook of journey times | The latency distributions, measured in production. |  |
 | the reader who is never handed an older copy than last time | Monotonic reads. |  |
 | a promise with odds: "nine chances in ten it is current after a day" | PBS consistency: an expected bound, not a guarantee. | The promise of the span t (*Answering While Cut Off*): a bound held for certain |
 
 **Chapters.**
-1. A work and its home libraries.
+1. An entry and its home libraries.
 2. How many to wait for.
 3. When the groups miss each other.
-4. How many editions behind.
+4. How many versions behind.
 5. How long until it shows.
 6. The four legs.
 7. Never going backwards.
