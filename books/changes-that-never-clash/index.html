@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title data-m="Changes That Never Clash — Conflict-free Replicated Data Types">Changes That Never Clash — The Scholars' Coast</title>
+<title data-m="Changes That Never Clash — Conflict-free Replicated Data Types">Changes That Never Clash — Libraries That Agree in the End</title>
 <meta name="description" content="Conflict-free replicated data types told at the loan desks of the scholars' coast: one scholar's deposit, a table of pebbles at every library with a column for each library, merged by taking the larger pile, and what counts, corrections and lists can and cannot be kept that way.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <link rel="stylesheet" href="../../assets/css/book.css">
@@ -91,7 +91,7 @@
     <div class="hall-title"><div class="t">
       <div class="kicker"><span class="i">The loan desks</span><span class="m">The model</span></div>
       <h2><span class="i">One deposit, a table at every desk</span><span class="m">A state at every replica</span></h2>
-      <p><span class="i">A visiting scholar reads at the libraries of the scholars' coast. He lodges one deposit, and any library may lend him scrolls against it. Each library keeps a table of pebbles for him on its loan desk, and couriers carry the tables between the libraries.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: The Scholars' Coast">*</a></sup></span><span class="m">Several replicas each hold a copy of the same data object. Each replica accepts updates locally and immediately, and sends its state to the others in the background, with messages that may arrive late, out of order, or twice.</span></p>
+      <p><span class="i">A visiting scholar reads at the libraries of the scholars' coast. He lodges one deposit, and any library may lend him scrolls against it. Each library keeps a table of pebbles for him on its loan desk, and couriers carry the tables between the libraries.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: Libraries That Agree in the End">*</a></sup></span><span class="m">Several replicas each hold a copy of the same data object. Each replica accepts updates locally and immediately, and sends its state to the others in the background, with messages that may arrive late, out of order, or twice.</span></p>
     </div></div>
     <div class="pins">
       <div class="pin pop"><div class="leaf"><span class="i"><b>No waiting</b>The desk he stands at lends him a scroll at once and adds a pebble to its own table, without asking the other libraries, for a courier is slow and may be stopped.</span><span class="m"><b>No waiting</b>Whenever an update is made at a replica, it applies it to its own state immediately, without asking any other replica.</span></div></div>
@@ -369,12 +369,12 @@
       <p class="big">Replicas that only ever move their state upward, and merge by taking the least state that holds both, converge without coordinating.</p>
       <p class="lede" style="margin:0 auto">A rule that spans all the replicas, such as a count that never goes below zero, still needs agreement.</p>
       <div class="links">
-        <a class="i" href="../../places/scholars-coast/index.html">The scholars' coast, in detail</a>
+        <a class="i" href="../../places/scholars-coast/index.html">Libraries That Agree in the End, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
       </div>
     </div>
     <div class="apparatus">
-      <p class="lineage i"><span class="lbl">Setting</span> <a href="../../places/scholars-coast/index.html">The Scholars' Coast</a></p>
+      <p class="lineage i"><span class="lbl">Setting</span> <a href="../../places/scholars-coast/index.html">Libraries That Agree in the End</a></p>
       <details class="proof">
         <summary>The paper behind this book</summary>
         <p>Marc Shapiro, Nuno Preguiça, Carlos Baquero and Marek Zawirski, <i>Conflict-free Replicated Data Types</i>. Stabilization, Safety, and Security of Distributed Systems (SSS), 2011. — Strong eventual consistency, the state-based and operation-based sufficient conditions, their equivalence, the incomparability with sequential consistency, counters, sets and graphs.</p>

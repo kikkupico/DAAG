@@ -78,6 +78,15 @@ papers lists actors, messengers and messages before the place, and the Reality C
 characters, props and practices before places and buildings. On the home page each setting's band
 leads with its actors, and its setting card gives three lines: Who, Word and Sent.
 
+A setting's title names its actors and their goal, not its place: Three Houses Keeping Order (the
+ring road), Four Mercenaries Who Must Agree (the foot of Mount Phyle), Four Bandits Who Must Agree
+Though Some Lie (the crown), Part-Time Legislators Passing Laws (the Chamber), A Council of Five
+Keeping One Law (Schedia and the Tholos), Libraries That Agree in the End (the scholars' coast) and
+Libraries Asking Whether to Wait (the hall of two doors). The place goes in the kicker above the
+title. The title is used wherever the setting is named as a setting: its page, the home page, the
+overview scroll, the papers index, a book's title, its Setting link and the tooltips on its
+superscripts, and the feed. The URLs keep the place slugs, and prose keeps the place names.
+
 Every book is a scroll. The earlier chapter editions are kept only in the git history.
 
 ## The two phases
