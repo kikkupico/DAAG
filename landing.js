@@ -6,8 +6,8 @@
 
 /* ===== the tour: the settings in the order the reader chose; the start buttons follow its first book ===== */
 const TOURS={
-  paxos:["the-chamber","schedia","the-ring-road","the-foot-of-mount-phyle","the-crown-of-mount-phyle","the-scholars-coast","the-hall-of-two-doors"],
-  basics:["the-ring-road","the-foot-of-mount-phyle","the-crown-of-mount-phyle","the-chamber","schedia","the-scholars-coast","the-hall-of-two-doors"]
+  paxos:["the-chamber","schedia","the-ring-road","the-foot-of-mount-phyle","the-crown-of-mount-phyle","the-scholars-coast","the-oracle-at-the-fork"],
+  basics:["the-ring-road","the-foot-of-mount-phyle","the-crown-of-mount-phyle","the-chamber","schedia","the-scholars-coast","the-oracle-at-the-fork"]
 };
 const tourEl=$("#tour"), head=$("#books");
 function lay(name){

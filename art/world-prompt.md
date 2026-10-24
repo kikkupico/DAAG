@@ -308,7 +308,7 @@ predate this rule; use them with a tint, and build new ones to it.
 > **Narrative Setting:** One island shaped like a Y, and its shape groups the papers. Two arms reach north and face each other across a sheltered bay; they join at a fork, and below it a short stem widens into the broad, lower body of the island. Two cities: Paxos, whose parliament governs the western arm, the stem and the body; and Schedia on the eastern arm, founded from a different mother city, which keeps its own laws. Four districts:
 > - **The Chamber** (the western arm): a round colonnaded hall under a conical tiled roof, on a terrace above the bay, where the parliament sits, looking across the water at the Tholos. The island road runs up the stem, forks, and runs out along the western arm past the Chamber to the harbour town at the arm's tip, so the Chamber is on a through route.
 > - **Schedia and the Tholos** (the eastern arm): a small unwalled city of its own above a cove on the bay, with the Tholos, a round hall with a conical tiled roof and a podium at its centre, on a terrace facing the Chamber across the bay.
-> - **The hall of two doors** (the fork): on common ground belonging to neither city; one door faces north up the bay to the Chamber and the Tholos, one south down the stem to the scholars' coast.
+> - **The oracle at the fork**: a sanctuary on common ground belonging to neither city, in the manner of Dodona: a low wall round an old oak, a small temple and an altar beside the tree; its north gate opens on the road up the bay to the Chamber and the Tholos, its south gate on the road down the stem to the scholars' coast.
 > - **The scholars' coast** (the body of the island), which the scholars call Homonoia: lower, deeply indented country of coves and valleys, with the stoa and festival ground on an eastern harbour, about a dozen small libraries within casual reach of one another along footpaths of differing length, a courier cove on the rocky southwest shore, and in every library a loan desk where a visiting scholar borrows scrolls against one deposit, his loans counted in pebbles on a board kept for him among the desk's boards. The scholars hold no assembly.
 
 ### 3.1 Island Plate Prompt (Geography, Habitation & Book Locations)
@@ -324,7 +324,7 @@ The western arm: on a level civic terrace above the bay stands a single round ha
 The eastern arm, directly across the bay from the rotunda: a small town of red-tiled stone houses above a cove, and above it, on a level terrace facing the bay, a round hall of warm honey-coloured limestone with plain walls, several doorways round it and no colonnade, under a single low conical roof of oxblood terracotta tiles rising to a small louvred lantern, and a small columned porch facing the water. It is clearly unlike the white colonnaded round hall across the bay.
 The fork, where the two arms meet: one small symmetrical gabled hall of pale limestone with a door in each end wall, one facing north up the bay, one facing south down the stem.
 The body of the island, well south of the stem: lower rolling hills and valleys with a deeply indented coast of coves and pebble beaches. On a harbour on the body's eastern shore, far down from the fork, a long colonnaded stoa facing an open ground set with rows of long tables. About a dozen small porched library buildings scattered in clearings among olive trees across the valleys and hill shoulders, linked by footpaths of differing length. A small rocky cove on the southwest shore with timber piers and small boats. At the remote southern tip, the farthest point from the fork, narrow stepped terraces with long stone tables on steep slopes facing the open sea.
-Farmsteads along one road running from the southern body up the stem, forking at the hall, one branch along each arm.
+Farmsteads along one road running from the southern body up the stem, forking at the oracle, one branch along each arm.
 No open-air theatre or exposed seating bowl anywhere, no citadel, no quarry, no ruins.
 ```
 
@@ -340,7 +340,7 @@ Zero people.
 
 ### 3.1a Terrain Plate (bare land, for a model the buildings are added to)
 
-`art/refs/paxos-terrain-plate.jpeg` is a bare-terrain plate, like Arche's (§2.1a): the two arms round the bay, the fork and the broad body, with the earthworks for every site and nothing built. The round terrace on the western arm is the Chamber's; the terrace above the eastern cove, with Schedia's terraces below it, is the Tholos's (square: the Tholos stands on a paved court); the platform at the fork is the hall of two doors'; on the body, the eastern harbour's quay and flat ground are the stoa's and the festival ground's, the scattered clearings the libraries', the south-west landing the couriers', and the stepped terraces at the southern tip, made for the far terraces that no book uses now, are left as hillside, with the couriers' quay and stair at their foot (the set `landing`). The Y is imperfect, its arms spreading rather than parallel, which looks more natural and keeps what the setting needs: two arms round a bay, the Chamber and the Tholos looking at each other across the water from round terraces, a fork for the hall of two doors, a short stem, and the scholars' coast in the body with every site joined to the road. Its Meshy conversion (2026-09-28) is `art/archive/paxos-meshy-2026-09-28/paxos-3d.glb`, the untouched source the bake reads. Made in Gemini (text-to-image) from:
+`art/refs/paxos-terrain-plate.jpeg` is a bare-terrain plate, like Arche's (§2.1a): the two arms round the bay, the fork and the broad body, with the earthworks for every site and nothing built. The round terrace on the western arm is the Chamber's; the terrace above the eastern cove, with Schedia's terraces below it, is the Tholos's (square: the Tholos stands on a paved court); the platform at the fork is the oracle's; on the body, the eastern harbour's quay and flat ground are the stoa's and the festival ground's, the scattered clearings the libraries', the south-west landing the couriers', and the stepped terraces at the southern tip, made for the far terraces that no book uses now, are left as hillside, with the couriers' quay and stair at their foot (the set `landing`). The Y is imperfect, its arms spreading rather than parallel, which looks more natural and keeps what the setting needs: two arms round a bay, the Chamber and the Tholos looking at each other across the water from round terraces, a fork for the oracle, a short stem, and the scholars' coast in the body with every site joined to the road. Its Meshy conversion (2026-09-28) is `art/archive/paxos-meshy-2026-09-28/paxos-3d.glb`, the untouched source the bake reads. Made in Gemini (text-to-image) from:
 ```text
 Photorealistic isometric terrain diorama of the Greek island of Paxos, Hellenistic Greece, 3rd century BC: the bare land and its earthworks only, made for 3D reconstruction. True orthographic axonometric view from the south, looking north and down at about 45 degrees, north at the top, the whole island in frame with a margin of sea all round. Deep focus, crisp fine geometry.
 
@@ -429,19 +429,15 @@ No writing anywhere.
 
 The libraries' set (`art/sets/libraries.py`) models this desk in every library, so pictures come from the set rather than from this prompt.
 
-#### Feature 6: The Hall of Two Doors
+#### Feature 6: The Oracle at the Fork
 ```text
-Detailed 3D isometric architectural diorama of The Hall of Two Doors on Paxos, Hellenistic Ancient Greece.
-Axonometric orthographic projection, hyperfocal focus, clean unpopulated temple-hall, zero people.
-Standing at the fork of the Y-shaped island, where the two northern arms meet the stem, on common ground belonging to neither city; the bay opens to the north, and the island's road runs past it and forks.
-An elegant, perfectly symmetrical Hellenistic temple-like hall built of pale dressed ashlar limestone with an oxblood terracotta tiled gabled roof.
-The defining architectural feature is two prominent, opposing monumental portal doorways on opposite facades:
-- The Southern Portal: facing south down the stem toward the scholars' coast, framed with simple, unadorned rustic stone lintels.
-- The Northern Portal: facing north up the bay toward the Chamber and the Tholos, the bodies that assemble, framed with classical fluted pilasters and a carved pediment.
-Both massive bronze doors stand wide open, revealing an open, sunlit stone interior hall paved with alternating white and black marble tiles.
-Surrounded by low stone parapets, gnarled wild olive trees and maquis.
+Detailed 3D isometric architectural diorama of the Oracle at the Fork on Paxos, Hellenistic Ancient Greece.
+Axonometric orthographic projection, hyperfocal focus, clean unpopulated sanctuary, zero people.
+Standing at the fork of the Y-shaped island, where the two northern arms meet the stem, on common ground belonging to neither city; the bay opens to the north, and the island's road runs up to it from the south and forks beyond it.
+A sanctuary in the manner of Dodona: a low enclosure wall of rough limestone round a single great old oak with a broad spreading crown; beside the oak a small temple of pale dressed limestone, two plain Doric columns between projecting side walls, under an oxblood terracotta tiled gable; a plain stone altar before it.
+Two simple gateways in the enclosure wall, one facing north to the road that forks up the two arms, one facing south to the road down the stem.
+Beaten earth and stone flags inside, gnarled wild olives and maquis outside.
 ```
-
 
 #### Feature 7: The Tholos
 ```text
