@@ -1450,13 +1450,13 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
       for (let i = 0; i < N; i++) { let j = rnd(N - 1); if (j >= i) j++; sent++; if (had[i] && !S[j]) { S[j] = 3; flashAt[j] = now; } if (had[j] && !S[i]) { S[i] = 3; flashAt[i] = now; } }
       const left = stats();
       if (left > 0) { st.innerHTML = T2(`Festival round ${rounds}: ${left} still unheard.`, `Anti-entropy round ${rounds}: ${left} susceptible.`); timer = setTimeout(roundStep, reduce ? 0 : 650); }
-      else { phase = "done"; go.disabled = false; go.innerHTML = T2("Spread another edition", "Run again"); st.innerHTML = T2(`After ${WORD[rounds] || rounds} festival ${rounds === 1 ? "round" : "rounds"}, <span class="g">every library has the new edition.</span>`, `<span class="g">Anti-entropy reached every site</span> in ${rounds} ${rounds === 1 ? "round" : "rounds"}.`); kick(); }
+      else { phase = "done"; go.disabled = false; go.innerHTML = T2("Spread another version", "Run again"); st.innerHTML = T2(`After ${WORD[rounds] || rounds} festival ${rounds === 1 ? "round" : "rounds"}, <span class="g">every library has the new version.</span>`, `<span class="g">Anti-entropy reached every site</span> in ${rounds} ${rounds === 1 ? "round" : "rounds"}.`); kick(); }
     };
     roundStep();
   }
   go.addEventListener("click", start); fest.addEventListener("click", festival);
   size(); stats(); paint(performance.now());
-  st.innerHTML = T2("One library has a new edition.", "One site holds an update.");
+  st.innerHTML = T2("One library has a new version.", "One site holds an update.");
   whenSeen(cv, () => { if (phase === "idle") setTimeout(start, 500); }, .5);
 })();
 

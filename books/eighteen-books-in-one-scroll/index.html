@@ -97,7 +97,7 @@
         <li><a class="bk" href="#s-ptp"><span class="i">Parliament</span><span class="m">Paxos</span></a> <span class="i">ballots, each priest's own numbers</span><span class="m">ballots partitioned by proposer</span></li>
         <li><a class="bk" href="#s-vr"><span class="i">One Leader</span><span class="m">Viewstamped</span></a> <span class="i">a board's count and caller's name</span><span class="m">viewid ⟨cnt, mid⟩</span></li>
         <li><a class="bk" href="#s-pbft"><span class="i">Keeping Order</span><span class="m">PBFT</span></a> <span class="i">entry numbers and terms</span><span class="m">sequence numbers and views</span></li>
-        <li><a class="bk" href="#s-gos"><span class="i">Word of Mouth</span><span class="m">Epidemics</span></a> <span class="i">an edition's tally and library</span><span class="m">timestamps with site ids</span></li>
+        <li><a class="bk" href="#s-gos"><span class="i">Word of Mouth</span><span class="m">Epidemics</span></a> <span class="i">a version's tally and library</span><span class="m">timestamps with site ids</span></li>
         <li><a class="bk" href="#s-hat"><span class="i">Promise Alone</span><span class="m">HATs</span></a> <span class="i">one tally for a whole visit</span><span class="m">one timestamp per transaction</span></li>
       </ul>
     </article>
@@ -748,7 +748,7 @@
   <article class="card book" id="s-gos" data-scene="gos" data-book="gos">
     <h3 class="punch"><span class="i">Rumour is quick. The festival is thorough.</span><span class="m">Rumor is fast; anti-entropy is complete.</span></h3>
     <h4 class="title">Spreading by Word of Mouth</h4>
-    <p class="i">Libraries answer from their own shelves and agree only in the end; of two editions, the larger tally wins. <b>Scholars in the stoa pass fresh news on until most of those they meet already know it</b>, which leaves a few unheard; at the festival, copyists drawn by lot compare whole collections and catch the rest. A withdrawal must travel as a notice, or an old copy brings the work back.</p>
+    <p class="i">Libraries answer from their own copies of the compendium and agree only in the end; of two versions of an entry, the larger tally wins. <b>Scholars in the stoa pass fresh news on until most of those they meet already know it</b>, which leaves a few unheard; at the festival, copyists drawn by lot compare whole copies and catch the rest. A withdrawal must travel as a notice, or an old copy brings the entry back.</p>
     <p class="m">Epidemic replication with last-writer-wins timestamps. <b>Rumor mongering is fast and cheap but leaves a residue of about e<sup>−m</sup> sites</b> for m messages per site; anti-entropy, pairwise reconciliation with random partners, reaches every site. Deletions spread as death certificates.</p>
     <a class="read" href="../spreading-by-word-of-mouth/index.html">Read the book ›</a>
     <div class="papers">
@@ -764,7 +764,7 @@
 <section class="feature light solid" id="f-gossip">
   <div class="f-in">
     <p class="kicker rv">Watch it</p>
-    <h2 class="rv"><span class="i">Four hundred libraries. One new edition.</span><span class="m">400 sites. One update.</span></h2>
+    <h2 class="rv"><span class="i">Four hundred libraries. One new version.</span><span class="m">400 sites. One update.</span></h2>
     <p class="lead rv"><span class="i">Each scholar who has the news tells one library at random, and gives up half the times it already knew. Then the festival pairs libraries by lot until no one is left out.</span><span class="m">Push rumor mongering with feedback: an infective site contacts one random site per step and loses interest with probability ½ when the site already knew. Then push-pull anti-entropy rounds with random partners.</span></p>
     <div class="gossip rv">
       <canvas id="gosCanvas" width="600" height="600" aria-label="A grid of 400 libraries lighting up as news spreads" role="img"></canvas>

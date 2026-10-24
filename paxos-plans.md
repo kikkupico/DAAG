@@ -23,17 +23,17 @@ see `settings.md`.
 
 | Device | In the paper | Also in |
 |---|---|---|
-| the libraries along the coast, each holding copies of the works | Sites, each with a replica of the database. |  |
-| a work's text, carrying the tally of its edition; the newer edition wins | A database entry with its timestamp. | The tallies of the tally house (*Ordering Without Clocks*) |
-| a scrap of papyrus with a new learning | An update. |  |
+| the libraries along the coast, each with its own copy of the compendium | Sites, each with a replica of the database. |  |
+| an entry under its heading, each version carrying a tally; the newer version wins | A database entry with its timestamp. | The tallies of the tally house (*Ordering Without Clocks*) |
+| a scrap of papyrus with a new version of an entry: the entry on the heavens revised to say the Earth goes round the Sun | An update. |  |
 | letters to every library at once | Direct mail: n messages, some lost, and the sender may not know every site. | Slips on Arche's road |
 | the scholar in the stoa telling whoever he meets while the news is fresh | Rumour mongering: an infective site. |  |
 | losing interest: after meeting k who already knew, or at a toss | Loss of interest: feedback or blind, counter or coin. | The coin of *Agreeing by Chance*, used differently |
 | telling, asking, or both | Push, pull, push-pull. |  |
 | the libraries the news never reached | The residue. |  |
-| the festival: pairs of copyists compare whole collections and keep the newer edition of each work | Anti-entropy, a simple epidemic that reaches everyone. |  |
-| comparing catalogues first, and the list of recent editions | Checksums and recent-update lists, which make anti-entropy cheap. |  |
-| a notice of withdrawal: "this work is withdrawn, as of tally t" | A death certificate: a deletion must travel like an update, or an old copy brings the work back. |  |
+| the festival: pairs of copyists compare whole copies of the compendium and keep the newer version of each entry | Anti-entropy, a simple epidemic that reaches everyone. |  |
+| comparing a sum worked from each whole copy first, and the list of recent versions | Checksums and recent-update lists, which make anti-entropy cheap. |  |
+| a notice of withdrawal: "this entry is withdrawn, as of tally t" | A death certificate: a deletion must travel like an update, or an old copy brings the entry back. |  |
 | the old notice kept by only a few libraries, woken when a stale copy turns up | Dormant death certificates and reactivation. |  |
 | preferring partners close by | Spatial distributions. | The courier routes of differing length, which the ground provides |
 | the traffic on the one long route | Traffic on critical links. |  |
@@ -44,7 +44,7 @@ see `settings.md`.
 3. The festival: comparing whole collections.
 4. Word of mouth, and losing interest.
 5. Who never hears.
-6. Withdrawing a work.
+6. Withdrawing an entry.
 7. Near partners and the long route.
 8. In the Book, In the Paper.
 
@@ -52,8 +52,7 @@ see `settings.md`.
 
 **Open.**
 1. **How often the festival meets.** `settings.md` makes it yearly; the paper runs anti-entropy regularly, as the backstop to rumour. Keep it yearly (slow and sure), or make it a regular meeting?
-2. **What a scrap carries.** "The Earth goes round the Sun" is a rumour, but the paper's updates are entries in a database. Proposal: a scrap carries a new edition of an entry in the shared catalogue, and the Sun is the first example.
-3. **Names.** Nine authors. Demerios and two or three others; the footnote credits all nine.
+2. **Names.** Nine authors. Demerios and two or three others; the footnote credits all nine.
 
 ---
 
