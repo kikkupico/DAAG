@@ -1,6 +1,6 @@
 /* The home page: an index of the books, setting by setting, after the premise. The walls, the costs and the series
    in one breath are told on Eighteen Books in One Scroll. Loaded after shell.css, place.css and registers.css.
-   In computing the islands, the setting photographs and the setting pages leave, and each book shows its drawn cover. */
+   In computing the setting photographs and the setting pages leave, and each book shows its drawn cover. */
 
 :root{--night:#17110c; --night2:#221911; --cream:#f6eed6; --dim:#c9b98a; --red-l:#ef6a3f}
 .btn{display:inline-flex;align-items:center;gap:.3em;font-family:var(--sans);font-size:.95rem;letter-spacing:.02em;text-decoration:none;
@@ -15,7 +15,9 @@
 /* ---------- the cover: night, with the chart ---------- */
 .lhero{min-height:100svh;display:grid;align-items:center;padding-top:5rem;color:var(--cream);
   background:radial-gradient(90% 70% at 75% 30%,#3a2a1a 0%,var(--night) 60%),var(--night)}
-.lhero .grid{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:clamp(28px,5vw,70px);align-items:center}
+.lhero .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);grid-template-areas:"head head" "chart text";gap:clamp(22px,3.5vw,40px) clamp(28px,5vw,70px);align-items:center}
+.lh-head{grid-area:head}.lh-chart,.lh-tree{grid-area:chart}.lh-text{grid-area:text}
+.lhero .lh-head h1{margin-bottom:0}
 .lhero .kicker{color:var(--gold)}
 .lhero h1{font-size:clamp(2.3rem,5.4vw,4.3rem);color:var(--cream);margin:.6rem 0 1.2rem;letter-spacing:-.01em}
 .lhero .pub{font-size:clamp(1.05rem,2vw,1.25rem);max-width:31em;color:#eadfc2}
@@ -29,7 +31,7 @@
 .two-ways p{font-size:1rem;line-height:1.6;color:var(--dim);margin:0 0 .9rem}
 .two-ways b{color:var(--cream);font-weight:600}
 .two-ways .segb{font-size:.82rem;padding:6px 16px}
-@media(max-width:860px){.lhero .grid{grid-template-columns:minmax(0,1fr)}.lh-chart{max-width:440px;width:100%;margin:0 auto}}
+@media(max-width:860px){.lhero .grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "chart" "text"}.lh-chart{max-width:440px;width:100%;margin:0 auto}}
 
 /* ---------- the premise: its words light as they pass the middle of the screen ---------- */
 .premise{background:var(--night);color:var(--cream);padding-top:clamp(3rem,8vw,6rem);padding-bottom:clamp(5rem,12vw,9rem)}
@@ -37,21 +39,6 @@
 .js .premise .w{color:rgba(246,238,214,.16);transition:color .4s}
 .js .premise .w.lit{color:var(--cream)}
 
-/* ---------- two islands ---------- */
-.islands{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,3vw,34px);margin-top:2rem}
-.island{margin:0;background:#fffaf0;border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow)}
-.island img{width:100%;aspect-ratio:16/10;object-fit:cover;border-bottom:4px solid var(--ink)}
-.island figcaption{padding:18px 22px 6px}
-.island h3{font-size:clamp(1.8rem,3.6vw,2.4rem);margin:.2rem 0 .5rem}
-.island figcaption p:not(.kicker){font-size:1rem}
-@media(max-width:760px){.islands{grid-template-columns:minmax(0,1fr)}}
-/* each island's settings, as links down to them */
-.sts{list-style:none;margin:.4rem 0 14px;padding:0;border-top:1px solid rgba(28,21,18,.15)}
-.sts li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-bottom:1px solid rgba(28,21,18,.15)}
-.sts a{font-family:var(--sans);font-size:1rem;color:var(--ink);text-decoration:none}
-.sts a::after{content:" ↓";color:var(--blood)}
-.sts a:hover{color:var(--aegean-d)}
-.sts small{font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#6b5d4f;white-space:nowrap}
 
 /* ---------- the books ---------- */
 #books{padding-bottom:clamp(1.5rem,4vw,2.5rem)}
@@ -122,7 +109,7 @@ body[data-reg="m"] .btn{border:0;border-radius:999px;box-shadow:none;background:
 body[data-reg="m"] .btn.ghost{background:transparent;color:#f5f5f7;border:1px solid rgba(255,255,255,.35)}
 body[data-reg="m"] .lede{color:var(--mute)}
 body[data-reg="m"] .punch{color:var(--red)}
-body[data-reg="m"] #islands,body[data-reg="m"] .band img,body[data-reg="m"] .band::after,body[data-reg="m"] .setting-card{display:none}
+body[data-reg="m"] .band img,body[data-reg="m"] .band::after,body[data-reg="m"] .setting-card{display:none}
 /* a setting's head becomes a plain title card for its topic */
 body[data-reg="m"] .band{height:auto;border:0;border-radius:24px;box-shadow:none;background:#000}
 body[data-reg="m"] .band figcaption{position:static;padding:clamp(22px,4vw,36px)}
