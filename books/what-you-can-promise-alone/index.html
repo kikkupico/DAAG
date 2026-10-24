@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title data-m="What You Can Promise Alone — Highly Available Transactions">What You Can Promise Alone — The Scholars' Coast</title>
+<title data-m="What You Can Promise Alone — Highly Available Transactions">What You Can Promise Alone — Libraries That Agree in the End</title>
 <meta name="description" content="Highly available transactions told in the reading rooms of the scholars' coast of Paxos: what a librarian can promise a reader while the couriers are stopped, what needs the reader to stay with one library, and what no librarian can promise alone.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <link rel="stylesheet" href="../../assets/css/book.css">
@@ -83,7 +83,7 @@
     <div class="hall-title"><div class="t">
       <div class="kicker"><span class="i">The reading rooms</span><span class="m">The model</span></div>
       <h2><span class="i">A librarian, a reader, and no courier</span><span class="m">A replica, a client, and no network</span></h2>
-      <p><span class="i">Every library on the scholars' coast has a reading room where readers come to consult works, leave corrections, or borrow copies. News of what other libraries have done arrives by courier—and couriers can be stopped at any time, cutting one library off from the rest for as long as the stoppage lasts.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: The Scholars' Coast">*</a></sup></span><span class="m">Every replica of the database serves clients: they read data, write updates, or run transactions against it. News of what other replicas have done arrives by message — and messages can be dropped or delayed at any time, cutting one replica off from the rest for as long as the partition lasts.</span></p>
+      <p><span class="i">Every library on the scholars' coast has a reading room where readers come to consult works, leave corrections, or borrow copies. News of what other libraries have done arrives by courier—and couriers can be stopped at any time, cutting one library off from the rest for as long as the stoppage lasts.<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: Libraries That Agree in the End">*</a></sup></span><span class="m">Every replica of the database serves clients: they read data, write updates, or run transactions against it. News of what other replicas have done arrives by message — and messages can be dropped or delayed at any time, cutting one replica off from the rest for as long as the partition lasts.</span></p>
     </div></div>
     <div class="pins">
       <div class="pin pop"><div class="leaf"><span class="i"><b>Answered from the shelf</b>A librarian must answer every reader who walks through the door using only what is on the library's own shelves.</span><span class="m"><b>Answered locally</b>A replica must answer every client that reaches it using only what is in its own copy of the data.</span></div></div>
@@ -287,7 +287,7 @@
       <div>
         <div class="kicker"><span class="i">The third shelf</span><span class="m">The third group</span></div>
         <h2><span class="i">The last copy</span><span class="m">The last unit</span></h2>
-        <p class="lede"><span class="i">Now we reach the third shelf: promises that <em>no</em> librarian can keep while the couriers are stopped. Suppose the libraries lend works out for a term,<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: The Scholars' Coast">*</a></sup> and only <b>one copy</b> of a work remains available on the coast.</span><span class="m">Now we reach the third group: promises that <em>no</em> replica can keep while the network is partitioned. Suppose an inventory tracks how many units of an item remain, and only <b>one unit</b> remains.</span></p>
+        <p class="lede"><span class="i">Now we reach the third shelf: promises that <em>no</em> librarian can keep while the couriers are stopped. Suppose the libraries lend works out for a term,<sup class="xref"><a href="../../places/scholars-coast/index.html" title="The Setting: Libraries That Agree in the End">*</a></sup> and only <b>one copy</b> of a work remains available on the coast.</span><span class="m">Now we reach the third group: promises that <em>no</em> replica can keep while the network is partitioned. Suppose an inventory tracks how many units of an item remain, and only <b>one unit</b> remains.</span></p>
         <p><span class="i">Before the couriers stop, both Library 1 and Library 2 have a note on their shelves saying <i>1 copy available</i>. Now the couriers stop, and a reader walks into Library 1 to borrow the copy at the exact same time a second reader walks into Library 2 to borrow it.</span><span class="m">Before the partition, both replica 1 and replica 2 hold a count of <i>1 unit available</i>. Now the partition begins, and a client at replica 1 buys the unit at the exact same time a second client at replica 2 buys it.</span></p>
         <p><span class="i">Each librarian checks his shelf, sees `1 copy available`, lends it out, and writes `0 copies available` (`Lost Update`). Because the couriers are stopped, neither librarian can learn that the other just lent the copy! Any rule that prevented this—such as locking the work or waiting for a majority of libraries—would force at least one librarian to stall or turn his reader away while the couriers are stopped.</span><span class="m">Each replica checks its count, sees `1 unit available`, sells it, and writes `0 units available` (`Lost Update`). Because the partition blocks every message, neither replica can learn that the other just sold the unit! Any rule that prevented this — such as locking the item or waiting for a majority of replicas — would force at least one replica to stall or turn its client away during the partition.</span></p>
       </div>
@@ -379,12 +379,12 @@
       <p class="big">A replica that must always answer can still hide unfinished writes, show a transaction's writes all together, and never go backwards.</p>
       <p class="lede" style="margin:0 auto">It cannot prevent lost updates or write skew, or bound how stale a read is. Those need replicas to coordinate.</p>
       <div class="links">
-        <a class="i" href="../../places/scholars-coast/index.html">The scholars' coast, in detail</a>
+        <a class="i" href="../../places/scholars-coast/index.html">Libraries That Agree in the End, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
       </div>
     </div>
     <div class="apparatus">
-      <p class="lineage i"><span class="lbl">Setting</span> <a href="../../places/scholars-coast/index.html">The Scholars' Coast</a></p>
+      <p class="lineage i"><span class="lbl">Setting</span> <a href="../../places/scholars-coast/index.html">Libraries That Agree in the End</a></p>
       <details class="proof">
         <summary>The paper behind this book</summary>
         <p>Peter Bailis, Aaron Davidson, Alan Fekete, Ali Ghodsi, Joseph M. Hellerstein and Ion Stoica, <i>Highly Available Transactions: Virtues and Limitations</i>. Proceedings of the VLDB Endowment, Vol. 7, No. 3 (40th International Conference on Very Large Data Bases, Hangzhou, September 2014), 181–192. — A taxonomy of highly available, sticky available and unavailable isolation and consistency models, with proofs of unavailability and proof-of-concept algorithms.</p>

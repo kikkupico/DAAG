@@ -25,13 +25,13 @@ OUT = ROOT / "bespoke" / "feed"
 
 # setting key: (label on the card, tint, the label papers/index.html gives it)
 SETTINGS = {
-    "ring": ("ring road", "#b5602c", "The Ring Road"),
-    "foot": ("foot of Mount Phyle", "#5f6e28", "The Foot of Mount Phyle"),
-    "crown": ("crown of Mount Phyle", "#7a4fa0", "The Crown of Mount Phyle"),
-    "chamber": ("the Chamber", "#136f9e", "The Chamber"),
-    "tholos": ("the Tholos", "#c8961c", "Schedia"),
-    "coast": ("the scholars' coast", "#2e88b5", "The Scholars’ Coast"),
-    "hall": ("the hall of two doors", "#6b5a48", "The Hall of Two Doors"),
+    "ring": ("ring road", "#b5602c", "Three Houses Keeping Order"),
+    "foot": ("foot of Mount Phyle", "#5f6e28", "Four Mercenaries Who Must Agree"),
+    "crown": ("crown of Mount Phyle", "#7a4fa0", "Four Bandits Who Must Agree Though Some Lie"),
+    "chamber": ("the Chamber", "#136f9e", "Part-Time Legislators Passing Laws"),
+    "tholos": ("the Tholos", "#c8961c", "A Council of Five Keeping One Law"),
+    "coast": ("the scholars' coast", "#2e88b5", "Libraries That Agree in the End"),
+    "hall": ("the hall of two doors", "#6b5a48", "Libraries Asking Whether to Wait"),
 }
 # the eighteen books, in the order the index lists them: slug, setting, the short code of idea keys
 BOOKS = [

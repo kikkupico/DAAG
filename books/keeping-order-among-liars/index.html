@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title data-m="Keeping Order Among Liars — Practical Byzantine Fault Tolerance">Keeping Order Among Liars — The Crown of Mount Phyle</title>
+<title data-m="Keeping Order Among Liars — Practical Byzantine Fault Tolerance">Keeping Order Among Liars — Four Bandits Who Must Agree Though Some Lie</title>
 <meta name="description" content="The Castro and Liskov protocol: four bandits on the crown, one who may lie, trained rats, and a loot scroll whose entries must stand in the same order in every honest copy.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <link rel="stylesheet" href="../../assets/css/book.css">
@@ -90,7 +90,7 @@
     <div class="hall-title"><div class="t">
       <div class="kicker"><span class="i">The crown of Mount Phyle</span><span class="m">The model</span></div>
       <h2><span class="i">Four posts, none in sight of another</span><span class="m">Four replicas, linked only by messages</span></h2>
-      <p><span class="i">Number 1, the chief, sits inside the stone ring wall with the strongboxes of loot, while Numbers 2, 3, and 4 keep lookout posts out on the slopes, none within sight or earshot of another.<sup class="xref"><a href="../../places/the-crown/index.html" title="The Setting: The Crown of Mount Phyle">*</a></sup> Any one of the four bandits may be a liar, and with four posts in all, a single liar is the most the honest three can tolerate.</span><span class="m">Four replicas of a service communicate only by messages. Any one of them may be faulty, and with four replicas in all, a single faulty replica is the most the three honest ones can tolerate.</span></p>
+      <p><span class="i">Number 1, the chief, sits inside the stone ring wall with the strongboxes of loot, while Numbers 2, 3, and 4 keep lookout posts out on the slopes, none within sight or earshot of another.<sup class="xref"><a href="../../places/the-crown/index.html" title="The Setting: Four Bandits Who Must Agree Though Some Lie">*</a></sup> Any one of the four bandits may be a liar, and with four posts in all, a single liar is the most the honest three can tolerate.</span><span class="m">Four replicas of a service communicate only by messages. Any one of them may be faulty, and with four replicas in all, a single faulty replica is the most the three honest ones can tolerate.</span></p>
     </div></div>
     <div class="pins">
       <div class="pin pop"><div class="leaf"><span class="i"><b>Only rats and seals</b>Word passes between the posts only by trained rat, and every message is stamped in wax with the sender's signet ring, which no one else can forge.</span><span class="m"><b>Only signed messages</b>Replicas communicate only by message, and every message carries the sender's digital signature, which no one else can forge.</span></div></div>
@@ -453,13 +453,13 @@
       <p class="lede" style="margin:0 auto">Safety requires no timing assumptions at all; liveness requires only that message delays do not grow faster than time indefinitely.</p>
       <p style="margin-top:1.4rem;color:var(--blood);font-family:var(--sans)">In practice, fast symmetric message authentication codes (MACs) replace almost all public-key signatures during normal operation.</p>
       <div class="links">
-        <a class="i" href="../../places/the-crown/index.html">The Crown of Mount Phyle, in detail</a>
+        <a class="i" href="../../places/the-crown/index.html">Four Bandits Who Must Agree Though Some Lie, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
       </div>
     </div>
     <div class="apparatus">
       <a class="anchor" id="refs"></a>
-      <p class="lineage i"><span class="lbl">Setting</span> <a href="../../places/the-crown/index.html">The Crown of Mount Phyle</a></p>
+      <p class="lineage i"><span class="lbl">Setting</span> <a href="../../places/the-crown/index.html">Four Bandits Who Must Agree Though Some Lie</a></p>
       <details class="proof">
         <summary>The paper behind this book</summary>
         <p><b>The paper behind this book.</b> Miguel Castro and Barbara Liskov, <i>Practical Byzantine Fault Tolerance</i>. Proceedings of the Third Symposium on Operating Systems Design and Implementation (OSDI), New Orleans, February 1999. Introduces the three-phase normal-case protocol, view changes, stable checkpoints, the partial-synchrony liveness mechanism, and the MAC-based cryptographic optimization.</p>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title data-m="One Leader at a Time — Viewstamped Replication">One Leader at a Time — Schedia</title>
+<title data-m="One Leader at a Time — Viewstamped Replication">One Leader at a Time — A Council of Five Keeping One Law</title>
 <meta name="description" content="Viewstamped Replication told in the Tholos of Schedia: five legislators, one law, a podium only its holder may write from, and a new holder who starts from the fullest copy a majority can show.">
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
 <link rel="stylesheet" href="../../assets/css/book.css">
@@ -81,7 +81,7 @@
     <div class="hall-title"><div class="t">
       <div class="kicker"><span class="i">The Tholos of Schedia</span><span class="m">The model</span></div>
       <h2><span class="i">Five legislators, one law</span><span class="m">Five replicas, one log</span></h2>
-      <p><span class="i">Schedia, the independent city on the eastern arm of Paxos, makes its own laws in the Tholos — a round stone hall looking across the bay toward the Paxon Chamber. Just as in the Chamber, the acoustics are so poor that no voice carries across the floor, so every word goes by messenger.<sup class="xref"><a href="../../places/schedia/index.html" title="The Setting: Schedia and the Tholos">*</a></sup></span><span class="m">Five replicas of a service communicate only by messages: none can see another's state directly. Messages can be delayed, reordered, or lost, and replicas may be cut off or may crash and recover.</span></p>
+      <p><span class="i">Schedia, the independent city on the eastern arm of Paxos, makes its own laws in the Tholos — a round stone hall looking across the bay toward the Paxon Chamber. Just as in the Chamber, the acoustics are so poor that no voice carries across the floor, so every word goes by messenger.<sup class="xref"><a href="../../places/schedia/index.html" title="The Setting: A Council of Five Keeping One Law">*</a></sup></span><span class="m">Five replicas of a service communicate only by messages: none can see another's state directly. Messages can be delayed, reordered, or lost, and replicas may be cut off or may crash and recover.</span></p>
     </div></div>
     <div class="pins">
       <div class="pin pop"><div class="leaf"><span class="i"><b>Slow messengers</b>Messengers across the floor can be delayed, reordered, or lost altogether.</span><span class="m"><b>An unreliable network</b>Messages can be delayed, reordered, or lost altogether.</span></div></div>
@@ -413,8 +413,8 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker"><span class="i">The other hall</span><span class="m">The other protocol</span></div>
       <h2><span class="i">Across the bay</span><span class="m">Compared with Paxos</span></h2>
-      <p class="lede"><span class="i">Across the water on the western arm of the island stands the Paxon Chamber — another round stone hall where speeches cannot be heard, legislators wander in and out, and messengers take as long as they take.<sup class="xref"><a href="../../places/the-chamber/index.html" title="The Setting: The Chamber">*</a></sup></span><span class="m">Paxos is the other well-known way to keep a replicated log consistent: any replica may propose, ballots compete, and replicas write their promises and votes to stable storage.</span></p>
-      <p><span class="i">Because each hall legislates only for its own city, their two law scrolls never conflict.<sup class="xref"><a href="../../places/schedia/index.html#s4" title="Schedia and the Tholos: The City and the Tholos">*</a></sup> Comparing the two halls side by side shows how closely related Viewstamped Replication and Paxos really are — and where each makes its own design choice:</span><span class="m">Comparing the two side by side shows how closely related Viewstamped Replication and Paxos really are — and where each makes its own design choice:</span></p>
+      <p class="lede"><span class="i">Across the water on the western arm of the island stands the Paxon Chamber — another round stone hall where speeches cannot be heard, legislators wander in and out, and messengers take as long as they take.<sup class="xref"><a href="../../places/the-chamber/index.html" title="The Setting: Part-Time Legislators Passing Laws">*</a></sup></span><span class="m">Paxos is the other well-known way to keep a replicated log consistent: any replica may propose, ballots compete, and replicas write their promises and votes to stable storage.</span></p>
+      <p><span class="i">Because each hall legislates only for its own city, their two law scrolls never conflict.<sup class="xref"><a href="../../places/schedia/index.html#s4" title="A Council of Five Keeping One Law: The City and the Tholos">*</a></sup> Comparing the two halls side by side shows how closely related Viewstamped Replication and Paxos really are — and where each makes its own design choice:</span><span class="m">Comparing the two side by side shows how closely related Viewstamped Replication and Paxos really are — and where each makes its own design choice:</span></p>
     </div>
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num"><span class="i">What the Chamber's ink buys</span><span class="m">What Paxos's stable storage buys</span></div><h3><span class="i">Immunity to everyone going home at once</span><span class="m">Immunity to everyone crashing at once</span></h3><p><span class="i">Because a Paxon legislator writes every promise, vote, and decree in indelible ink on their scroll (<i>stable storage on every step</i>), the entire Parliament can go home for the weekend and resume on Monday morning with nothing lost.<sup class="xref"><a href="../the-part-time-parliament/index.html#s1" title="The Part-Time Parliament: A Parliament Whose Members Come and Go">*</a></sup> Schedia's wax tablets avoid disk writes during normal operation, at the cost of requiring that a majority not lose their wax at once.</span><span class="m">Because a Paxos replica writes every promise, vote, and decision to stable storage, the entire group can crash and resume later with nothing lost.<sup class="xref"><a href="../the-part-time-parliament/index.html#s1" title="The Part-Time Parliament: A Parliament Whose Members Come and Go">*</a></sup> Viewstamped Replication's volatile state avoids disk writes during normal operation, at the cost of requiring that a majority not lose their state at once.</span></p></div></div></div>
@@ -455,12 +455,12 @@
       <p class="big">One primary orders every operation, and a new primary starts from the fullest log a majority can show, so nothing committed is ever lost.</p>
       <p class="lede" style="margin:0 auto">Keeping logs in volatile memory means that simultaneous crashes can halt the group — but the view-formation rules ensure it will never resume with a committed operation missing.</p>
       <div class="links">
-        <a class="i" href="../../places/schedia/index.html">Schedia and the Tholos, in detail</a>
+        <a class="i" href="../../places/schedia/index.html">A Council of Five Keeping One Law, in detail</a>
         <a href="../../papers/index.html">All the papers</a>
       </div>
     </div>
     <div class="apparatus">
-      <p class="lineage i"><span class="lbl">Setting</span> <a href="../../places/schedia/index.html">Schedia and the Tholos</a></p>
+      <p class="lineage i"><span class="lbl">Setting</span> <a href="../../places/schedia/index.html">A Council of Five Keeping One Law</a></p>
       <details class="proof">
         <summary>The paper behind this book</summary>
         <p>Brian M. Oki and Barbara H. Liskov, <i>Viewstamped Replication: A New Primary Copy Method to Support Highly-Available Distributed Systems</i>. Proceedings of the Seventh Annual ACM Symposium on Principles of Distributed Computing (PODC), Toronto, August 1988, 8–17. — Introduces the primary-copy replication method, viewids and viewstamps, forcing event records to a sub-majority of backups, the view-change algorithm and its crash-safe formation conditions, and integration with two-phase commit.</p>
