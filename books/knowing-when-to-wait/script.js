@@ -108,7 +108,7 @@ const anyCopy=S=>S.some(f=>f[0]==="copy"),noClaim=S=>!S.some(f=>f[0]==="claim");
       :dual(`${n} ${n===1?"name":"names"} heard. With no roster the library cannot tell the day the last name came in from a day it has not. <span class="bad">No answer can be given.</span>`,`${n} ${n===1?"name":"names"} heard. With no roster the machine cannot tell the moment the last name came in from a moment it has not. <span class="bad">No answer can be given.</span>`)};
   function reset(){n=0;paint()}
   $("#rnext").onclick=()=>{if(n<TOTAL)n++;paint()};$("#rreset").onclick=reset;
-  seg($("#rmode"),[["1",dual("The librarian has a roster","The machine has a roster")],["0",dual("The librarian has no roster","The machine has no roster")]],"1",v=>{roster=v==="1";reset()});reset();
+  seg($("#rmode"),[["1",dual("The library has a roster","The machine has a roster")],["0",dual("The library has no roster","The machine has no roster")]],"1",v=>{roster=v==="1";reset()});reset();
 })();
 
 /* ===== waiting only once: the reading list ===== */
