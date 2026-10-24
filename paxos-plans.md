@@ -198,14 +198,14 @@ Written: `books/changes-that-never-clash/`.
 | Device | In the paper | Also in |
 |---|---|---|
 | a question brought to the hall | A program or query. |  |
-| "has at least one copy of this work been made?": once yes, yes for ever | A monotone query. |  |
-| "is this every copy?", "no one has claimed this" | A non-monotone query: it rests on absence. |  |
+| "has the comet been seen at least once?": once yes, yes for ever | A monotone query. |  |
+| "is this every sighting?", "no library has withdrawn this entry" | A non-monotone query: it rests on absence. |  |
 | the scholars' door | Coordination-free. | The scholars' coast |
 | the door of the assemblies, facing north up the bay to the Chamber and the Tholos | Coordination. | *The Part-Time Parliament*; *One Leader at a Time* |
-| a waiting chain: library A waits on B's copy, B on A's; once found, it stays found | Deadlock detection: monotone. |  |
-| a work no one cites any more may be discarded, but only once all have been heard from | Garbage collection: non-monotone. |  |
+| a waiting chain: scholar A waits on B's correction, B on C's, C on A's; once found, it stays found | Deadlock detection: monotone. |  |
+| an entry nothing in the core cites may be withdrawn, but only once all have been heard from | Garbage collection: non-monotone. |  |
 | a librarian who knows neither how many libraries there are nor their names | An oblivious transducer. |  |
-| every library already holding every copy, so nobody needs to read a letter | Ameloot's coordination-free: an ideal distribution on which no message is needed. |  |
+| every library already holding every fact, so nobody needs to read a letter | Ameloot's coordination-free: an ideal distribution on which no message is needed. |  |
 | a reading list sent sealed with its count, so the receiver knows when he has it all | Sealing (the 2020 shopping-cart checkout). |  |
 | the larger pile in each column of the pebble boards | A monotone merge. | *Changes That Never Clash* |
 | a count read and written over | Lost update needs coordination because it is non-monotone. | *What You Can Promise Alone* |

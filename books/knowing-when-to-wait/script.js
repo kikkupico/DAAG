@@ -72,9 +72,9 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* ===== questions as rules on the facts heard so far ===== */
 const anyCopy=S=>S.some(f=>f[0]==="copy"),noClaim=S=>!S.some(f=>f[0]==="claim");
 (function(){
-  const L=[["copy","Library 2 has made a copy","Node 2 has made a copy"],["note","a reader is waiting","a client is waiting"],["claim","Library 3 has claimed the work","Node 3 has claimed the item"],["copy","Library 4 has made a copy","Node 4 has made a copy"]];
+  const L=[["copy","Library 2 has recorded a sighting","Node 2 has made a copy"],["note","a scholar is waiting on a correction","a client is waiting"],["claim","Library 3 has withdrawn the entry","Node 3 has claimed the item"],["copy","Library 4 has recorded a sighting","Node 4 has made a copy"]];
   let order,n,rows,took;const say=$("#gsay");
-  const paint=()=>{$("#gtbl").innerHTML=`<tr><th>${dual("Letter","Message")}</th>`+"<th><i>Has any copy been made?</i></th><th><i>Has no one claimed this?</i></th></tr>"+rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]?"yes":"not yet known"}</td><td${r[3]?' class="was"':""}>${r[2]?"yes":"no"}</td></tr>`).join("")};
+  const paint=()=>{$("#gtbl").innerHTML=`<tr><th>${dual("Letter","Message")}</th>`+`<th><i>${dual("Has the comet been seen?","Has any copy been made?")}</i></th><th><i>${dual("Has no library withdrawn this entry?","Has no one claimed this?")}</i></th></tr>`+rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]?"yes":"not yet known"}</td><td${r[3]?' class="was"':""}>${r[2]?"yes":"no"}</td></tr>`).join("")};
   function reset(){order=[0,1,2,3].sort(()=>Math.random()-.5);n=0;took=false;rows=[["none yet",anyCopy([]),noClaim([]),false]];paint();say.innerHTML=dual("No letter has arrived. A library that answers the second question now is guessing.","No message has arrived. A machine that answers the second question now is guessing.")}
   $("#gnext").onclick=()=>{if(n>=4)return;n++;const S=order.slice(0,n).map(i=>L[i]),a=anyCopy(S),b=noClaim(S),p=rows[rows.length-1];
     if(p[1]&&!a)throw new Error("a growing question was taken back");
@@ -86,16 +86,16 @@ const anyCopy=S=>S.some(f=>f[0]==="copy"),noClaim=S=>!S.some(f=>f[0]==="claim");
 
 /* ===== the waiting chain and the unwanted work: links pooled as the libraries tell ===== */
 (function(){
-  const wait=[["A","B"],["B","C"],["C","A"]],cites=[["the canon","X"],["X","Y"],null];let told;
+  const wait=[["A","B"],["B","C"],["C","A"]],cites=[["the core","X"],["X","Y"],null];let told;
   const reach=(E,from,to)=>{const seen=new Set([from]),q=[from];while(q.length){const u=q.pop();E.forEach(([a,b])=>{if(a===u&&!seen.has(b)){seen.add(b);q.push(b)}})}return seen.has(to)};
   let ringFound;
   function paint(){const W=wait.filter((e,i)=>told[i]),Ci=cites.filter((e,i)=>e&&told[i]);
     const ring=W.some(([a,b])=>reach(W,b,a));if(ringFound&&!ring)throw new Error("a ring was unfound");ringFound=ring;
     $("#ring").innerHTML=wait.map(([a,b],i)=>`<li>${dual("Library "+(i+1),"Node "+(i+1))}: ${told[i]?`<b>${a} waits on ${b}</b>`:"has not told"}</li>`).join("");
     $("#ringsay").innerHTML=ring?`<span class="ok">A ring: nobody in it can go on.</span> No later news can undo it.`:"No ring found yet. That may change, and only one way.";
-    const cited=reach(Ci,"the canon","Y");
-    $("#cite").innerHTML=cites.map((e,i)=>`<li>${dual("Library "+(i+1),"Node "+(i+1))}: ${e?(told[i]?`<b>${dual(`${e[0]} cites ${e[1]}`,`${e[0]==="the canon"?"the root":e[0]} references ${e[1]}`)}</b>`:"has not told"):dual("holds Y, and knows of nothing citing it","holds Y, and knows of no reference to it")}</li>`).join("");
-    $("#citesay").innerHTML=cited?dual(`<span class="bad">The canon reaches Y after all.</span> Had Library 3 thrown Y away on what it had heard, Y would be gone.`,`<span class="bad">The root reaches Y after all.</span> Had Node 3 collected Y on what it had heard, Y would be gone.`):dual(`Nothing Library 3 has heard cites Y. It <i>looks</i> unwanted, and only hearing from everyone could make that sure.`,`Nothing Node 3 has heard references Y. It <i>looks</i> unreachable, and only hearing from everyone could make that sure.`)}
+    const cited=reach(Ci,"the core","Y");
+    $("#cite").innerHTML=cites.map((e,i)=>`<li>${dual("Library "+(i+1),"Node "+(i+1))}: ${e?(told[i]?`<b>${dual(`${e[0]} cites ${e[1]}`,`${e[0]==="the core"?"the root":e[0]} references ${e[1]}`)}</b>`:"has not told"):dual("holds Y, and knows of nothing citing it","holds Y, and knows of no reference to it")}</li>`).join("");
+    $("#citesay").innerHTML=cited?dual(`<span class="bad">The core reaches Y after all.</span> Had Library 3 withdrawn Y on what it had heard, Y would be gone.`,`<span class="bad">The root reaches Y after all.</span> Had Node 3 collected Y on what it had heard, Y would be gone.`):dual(`Nothing Library 3 has heard cites Y. It <i>looks</i> unwanted, and only hearing from everyone could make that sure.`,`Nothing Node 3 has heard references Y. It <i>looks</i> unreachable, and only hearing from everyone could make that sure.`)}
   function reset(){told=[false,false,false];ringFound=false;paint()}
   [1,2,3].forEach(i=>$("#tell"+i).onclick=()=>{told[i-1]=true;paint()});$("#tellreset").onclick=reset;reset();
 })();
@@ -104,8 +104,8 @@ const anyCopy=S=>S.some(f=>f[0]==="copy"),noClaim=S=>!S.some(f=>f[0]==="claim");
 (function(){
   let roster=true,n;const TOTAL=4,say=$("#rsay");
   const paint=()=>{$("#rn").textContent=n;$("#rof").textContent=roster?TOTAL:"?";
-    say.innerHTML=roster?(n>=TOTAL?dual(`All ${TOTAL} libraries on the roster have been heard from. <span class="ok">Yes: every shelf is empty.</span>`,`All ${TOTAL} machines on the roster have been heard from. <span class="ok">Yes: every data set is empty.</span>`):dual(`${n} of ${TOTAL} heard from. The librarian waits for the other ${TOTAL-n}.`,`${n} of ${TOTAL} heard from. The machine waits for the other ${TOTAL-n}.`))
-      :dual(`${n} ${n===1?"name":"names"} heard. With no roster the librarian cannot tell the day the last name came in from a day it has not. <span class="bad">No answer can be given.</span>`,`${n} ${n===1?"name":"names"} heard. With no roster the machine cannot tell the moment the last name came in from a moment it has not. <span class="bad">No answer can be given.</span>`)};
+    say.innerHTML=roster?(n>=TOTAL?dual(`All ${TOTAL} libraries on the roster have been heard from. <span class="ok">Yes: every library has withdrawn it.</span>`,`All ${TOTAL} machines on the roster have been heard from. <span class="ok">Yes: every data set is empty.</span>`):dual(`${n} of ${TOTAL} heard from. The library waits for the other ${TOTAL-n}.`,`${n} of ${TOTAL} heard from. The machine waits for the other ${TOTAL-n}.`))
+      :dual(`${n} ${n===1?"name":"names"} heard. With no roster the library cannot tell the day the last name came in from a day it has not. <span class="bad">No answer can be given.</span>`,`${n} ${n===1?"name":"names"} heard. With no roster the machine cannot tell the moment the last name came in from a moment it has not. <span class="bad">No answer can be given.</span>`)};
   function reset(){n=0;paint()}
   $("#rnext").onclick=()=>{if(n<TOTAL)n++;paint()};$("#rreset").onclick=reset;
   seg($("#rmode"),[["1",dual("The librarian has a roster","The machine has a roster")],["0",dual("The librarian has no roster","The machine has no roster")]],"1",v=>{roster=v==="1";reset()});reset();
@@ -150,14 +150,14 @@ const anyCopy=S=>S.some(f=>f[0]==="copy"),noClaim=S=>!S.some(f=>f[0]==="claim");
   const paths=E=>{const r={};E.forEach(([a,b])=>{(r[a]=r[a]||new Set()).add(b)});return (from,to)=>{const seen=new Set([from]),q=[from];while(q.length){const u=q.pop();(r[u]||[]).forEach(b=>{if(!seen.has(b)){seen.add(b);q.push(b)}})}return seen.has(to)}};
   /* each: the possible facts, and the answers a set of facts supports */
   const Q=[
-    {q:"Has at least one copy of this work been made?",m:"Has at least one copy of this item been made?",U:["copy 1","copy 2","copy 3"],f:S=>S.length?["yes"]:[]},
-    {q:"Is this every copy that has been made?",m:"Is this every copy that has been made?",U:["copy 1","copy 2","copy 3","copy 4"],f:S=>S.includes("copy 4")?[]:["yes"]},
+    {q:"Has the comet been seen at least once?",m:"Has at least one copy of this item been made?",UM:["copy 1","copy 2","copy 3"],U:["sighting 1","sighting 2","sighting 3"],f:S=>S.length?["yes"]:[]},
+    {q:"Is this every sighting?",m:"Is this every copy that has been made?",UM:["copy 1","copy 2","copy 3","copy 4"],U:["sighting 1","sighting 2","sighting 3","sighting 4"],f:S=>S.includes("sighting 4")?[]:["yes"]},
     {q:"Is there a ring of libraries each waiting on the next?",m:"Is there a ring of machines each waiting on the next?",U:["A>B","B>C","C>A","C>D"],f:S=>{const E=S.map(x=>x.split(">")),p=paths(E);return E.some(([a,b])=>p(b,a))?["yes"]:[]}},
-    {q:"Is this work cited by nothing the canon reaches?",m:"Is this object unreachable from every root?",UM:["root>X","X>Y","Z>Y"],U:["canon>X","X>Y","Z>Y"],f:S=>paths(S.map(x=>x.split(">")))("canon","Y")?[]:["yes"]},
-    {q:"Which titles are on a catalogue that is only added to?",m:"Which items are in a set that is only added to?",UM:["add item A","add item B","add item C"],U:["add The Winds","add The Tides","add The Stars"],f:S=>S.map(x=>x.slice(4))},
-    {q:"Which of two editions has the larger tally?",m:"Which of two versions has the larger timestamp?",UM:["version at noon","version at dusk"],U:["edition at noon","edition at dusk"],f:S=>S.includes("edition at dusk")?["dusk or later"]:S.length?["noon or later"]:[],grow:(a,b)=>a.length===0||b.join()===a.join()||b[0]==="dusk or later"},
-    {q:"Has the last copy been lent to no one else?",m:"Has the last copy been sold to no one else?",UM:["sold at node 1","sold at node 2"],U:["lent at Library 1","lent at Library 2"],f:S=>S.length?[]:["yes"]},
-    {q:"Is the shelf empty at every library?",m:"Is the data empty at every machine?",UM:["data at node 1","data at node 2","data at node 3"],U:["a scroll at Library 1","a scroll at Library 2","a scroll at Library 3"],f:S=>S.length?[]:["yes"]}];
+    {q:"Is this entry cited by nothing the core reaches?",m:"Is this object unreachable from every root?",UM:["root>X","X>Y","Z>Y"],U:["core>X","X>Y","Z>Y"],f:S=>paths(S.map(x=>x.split(">")))("core","Y")?[]:["yes"]},
+    {q:"Which references are on a list that is only added to?",m:"Which items are in a set that is only added to?",UM:["add item A","add item B","add item C"],U:["add The Winds","add The Tides","add The Stars"],f:S=>S.map(x=>x.slice(4))},
+    {q:"Which of two versions has the larger tally?",m:"Which of two versions has the larger timestamp?",UM:["version at noon","version at dusk"],U:["version at noon","version at dusk"],f:S=>S.includes("version at dusk")?["dusk or later"]:S.length?["noon or later"]:[],grow:(a,b)=>a.length===0||b.join()===a.join()||b[0]==="dusk or later"},
+    {q:"Has no one written over the count since I read it?",m:"Has no one written the value since it was read?",UM:["write at node 1","write at node 2"],U:["written at Library 1","written at Library 2"],f:S=>S.length?[]:["yes"]},
+    {q:"Has every library withdrawn the entry?",m:"Is the data empty at every machine?",UM:["data at node 1","data at node 2","data at node 3"],U:["the entry still at Library 1","the entry still at Library 2","the entry still at Library 3"],f:S=>S.length?[]:["yes"]}];
   const subsets=U=>{const out=[];for(let m=0;m<1<<U.length;m++)out.push(U.filter((u,i)=>m>>i&1));return out};
   Q.forEach(o=>{const all=subsets(o.U);let tried=0,lost=null;
     for(const S of all)for(const T of all){if(!S.every(s=>T.includes(s)))continue;tried++;

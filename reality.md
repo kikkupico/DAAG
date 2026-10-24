@@ -284,7 +284,7 @@ What each place, building, character, prop and practice of the setting has in co
 | In the setting | The real precedent | How close |
 |---|---|---|
 | a closing notice that names the notices before it, a manifest | Athenian treasurers handed over to their successors inscribed inventories of the sacred treasures, listing each item (the Parthenon inventories)†; closing a list by naming its contents is the setting's own use. | Loose |
-| the canon, the works the coast will keep and whose citations decide what else is kept | Aristophanes of Byzantium and Aristarchus drew up canonical lists of approved poets and prose authors at Alexandria†. | Close |
+| the core of the compendium, the entries whose citations decide what else is kept | Aristophanes of Byzantium and Aristarchus drew up canonical lists of approved poets and prose authors at Alexandria†. | Close |
 | each group sent down the road its work's shape decides | The Athenian Council sorted business before it went to the Assembly with a preliminary resolution (*probouleuma*)†, but sorting by whether a question rests on absence is the theorem's own. | Loose |
 | a question on common ground | Neutral meeting places of cities existed (the Amphictyony at Delphi and Thermopylae)†. | Close |
 | a question written on a folded strip of lead | Hundreds of lead tablets from Dodona survive, folded, with the petitioner's question scratched inside; some were asked by whole communities, the Corcyreans among them†. | Close |
