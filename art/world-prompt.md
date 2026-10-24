@@ -291,6 +291,8 @@ use these colours, and previs shots pass the same RGB as a figure's `tint`.
 | Bandit 3 | saffron orange | [0.88, 0.50, 0.10] |
 | Bandit 4 | chestnut brown | [0.40, 0.22, 0.12] |
 
+**Students at the oracle (Paxos).** A group of students is four young men and women told apart only by the colours of their plain belted chitons: the group the oracle sends south wears undyed white, pale blue, madder pink and sage green; the group it sends north wears saffron, slate grey, rust red and deep green. The priestess is an older woman in a long white peplos with a white veil over her hair. A group's work is written on a small folded strip of dull grey lead.
+
 **Costume canon (ring road).** Everything worn is a Hellenistic loom-woven rectangle, never tailored.
 Messengers go bare-headed, with no hat of any kind; they wear a plain *exōmis*, a short tunic of one rectangle, sleeveless and bare at one
 shoulder, with no set-in sleeves, sewn collar or trim; simple strapped sandals, with no buckles, or
