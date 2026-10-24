@@ -158,7 +158,7 @@ Seats and houses are numbers; the figure draws the series' own pictures, in the 
 | `chamber` | the Chamber from above, one door | `{"seats": ["Α", "Β", "Γ", "Δ", "Ε"]}` (3 to 7; Α Β Γ Δ Ε Ζ Η), `{"tag": seat, "text"}`, `{"ring": [seats], "colour": "blue"\|"olive"\|"gold"}`, `{"out": [seats]}`, `{"centre": "text"}` | 12 |
 | `tholos` | the Tholos: porch, podium, the five | `{"podium": "text", "holder": "O"\|"L"\|"K"\|"M"\|"T"}`, `{"porch": "O"}`, `{"wax": [...]}`, `{"tag": seat, "text"}`, `{"ring": [...]}`, `{"runner": seat}` (O Okios, L Liskovia, K Kleon, M Melissa, T Theron) | 12 |
 | `coast` | the scholars' coast, libraries 1 to 8 | `{"tag": l, "text"}`, `{"courier": [a, b], "state": "walking"\|"stopped"\|"lost"}`, `{"glow": l}`, `{"ferry": true}` | 10 |
-| `hall` | the hall of two doors | `{"question": "text, up to 60 characters"}`, `{"door": "north"\|"south"}`, `{"north": "text"}`, `{"south": "text"}` | 4 |
+| `hall` | the oracle at the fork, from above | `{"question": "text, up to 60 characters"}`, `{"road": "north"\|"south"}`, `{"north": "text"}`, `{"south": "text"}` | 4 |
 | `timeline` | space-time in the round | `{"places": [{"key", "label", "colour"}]}` (up to 5, first), `{"event": {"at", "t", "label", "hollow"}}` (up to 12; t from 1.4 to 9), `{"arc": {"from", "t1", "to", "t2", "label", "lost"}}` (up to 10), `{"loop": [{"at", "t"}]}` | 28 |
 | `stat` | one big number | `{"value": "1,560 → 78"}`, `{"caption": "text"}` | 2 |
 | `versus` | two columns | `{"left": {"title", "lines": [up to 4]}}`, `{"right": {...}}` | 2 |
@@ -237,7 +237,7 @@ dot is a man who has not committed. Draw what the card says and no more: three o
 - The Tholos: five legislators, wax tablets, one at a time at the podium, a porch to step out onto.
 - The scholars' coast: libraries holding editions, couriers who may be late, lost or stopped, no assembly
   and nobody waiting for a vote.
-- The hall of two doors: at the fork; questions leave by the door their shape decides; it sorts, never rules.
+- The oracle at the fork: groups of students bring the work they mean to do together; the priestess sends them north, to live as legislators who keep a roster and wait for every name on it, or south, to live as scholars with no roster; the work's shape alone decides; there is no third road.
 
 ## Steering
 

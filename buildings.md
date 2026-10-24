@@ -47,7 +47,7 @@ Built, and fixed by *The Limits of Agreement* (the camps) and *Agreeing Among Li
 
 One island shaped like a Y, and its shape groups the papers. Two arms reach north and face
 each other across a bay: the Chamber on the western arm, the city of Schedia and its Tholos on the
-eastern. The hall of two doors stands at the fork, and the stem widens into the scholars'
+eastern. The oracle stands at the fork, and the stem widens into the scholars'
 coast. The parliament passes decrees, the law of Paxos; Schedia keeps its own laws; the
 scholars' copies are not law, and no decree settles which copy is right.
 
@@ -85,11 +85,11 @@ argument.
 | **The loan desk** | Shapiro et al. 2011 (both) <span title="shared">◆</span> | The short paper and the comprehensive report are one work, so one place: the loan desk in every library's reading room, facing the door, with a marble board of pebbles on it. A visiting scholar has lodged one deposit for the whole coast, and each desk keeps a table of pebbles for him: white in its own column for every scroll it lends him, black in its own column for every scroll brought back to it, whichever library lent it. A desk keeps such a board for every scholar who has lodged a deposit, the others on a stepped stand beside it, each with a wax tag of its own colour; the book watches one. Couriers carry the tables between the libraries, and merging takes the larger pile in each column of each colour. Merge in any order, merge twice, and every library still says the same number out. No desk can keep him within his deposit from its own table, unless the deposit was split among the libraries beforehand. |
 | **The reading room** | HATS 2014 | In every library: **what a librarian can still promise a reader while the couriers are stopped**. That no reply is shown before the letter it answers, and that no one sees half a revision, both survive the strike; that two readers will not both take the last copy provably does not. The libraries lend, so two readers at two libraries can borrow the last copy. *What You Can Promise Alone*. |
 
-## Paxos — the hall of two doors
+## Paxos — the oracle at the fork
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The hall of two doors** | Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020 <span title="shared">◆</span> | At the fork of the island, on common ground that belongs to neither city. One door facing north up the bay to the bodies that assemble, the Chamber and the Tholos; one facing south down the stem to the scholars' coast. Every question brought here leaves by the door its own shape decides: those that only ever add leave by the scholars' door and need no assembly, and those resting on absence — *no one has claimed this* — leave by the door of the assemblies. The building does not rule; it sorts. |
+| **The oracle at the fork** | Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020 <span title="shared">◆</span> | At the fork of the island, on common ground that belongs to neither city: a sanctuary in the manner of Dodona, a low wall round an old oak with a small temple and an altar beside the tree, and two gates. The north gate opens on the road that forks up the two arms to the bodies that assemble, the Chamber and the Tholos; the south gate on the road down the stem to the scholars' coast. Groups of students bring the priestess the work they mean to do together; work that only ever adds is sent south, to the scholars' life with no roster, and work that rests on an absence — *no one has claimed this* — is sent north, to the legislators' life of waiting for every name on the roster. The oracle does not rule; it counsels. |
 
 ---
 
@@ -103,7 +103,7 @@ argument.
 | The camps | FLP · DLS · Brewer / Gilbert &amp; Lynch · Ben-Or · Chandra &amp; Toueg | Same four camps; each book changes one assumption — nothing, a wind that drops, lost birds, a coin, a detector |
 | The Chamber | Lamport 1998 · 2001 | One algorithm in two presentations |
 | The loan desk | Shapiro (short) · Shapiro (comprehensive) | Two lengths of one work |
-| The hall of two doors | Hellerstein 2010 · Ameloot 2011 · Hellerstein &amp; Alvaro 2020 | A conjecture, its formal proof, and its definitive restatement — one idea at three resolutions |
+| The oracle at the fork | Hellerstein 2010 · Ameloot 2011 · Hellerstein &amp; Alvaro 2020 | A conjecture, its formal proof, and its definitive restatement — one idea at three resolutions |
 
 **The near-misses** — pairs that look shareable and are not:
 
@@ -143,6 +143,6 @@ Not assigned a building of their own; they sit with the paper they accompany.
 
 | File | Sits with |
 |---|---|
-| `hellerstein-alvaro-2020_keeping-calm.pdf` | The hall of two doors — the clearest statement of the theorem, and the one to draft from |
+| `hellerstein-alvaro-2020_keeping-calm.pdf` | The oracle at the fork — the clearest statement of the theorem, and the one to draft from |
 | `gilbert-lynch-2012_perspectives-on-cap.pdf` | The camps on nights of lost birds — the authors' own retrospective on what the proof did and did not say |
-| `zinn-green-ludascher-2012_win-move-coordination-free.pdf` | Background for the hall of two doors. Optional; it settles a narrower question than CALM itself |
+| `zinn-green-ludascher-2012_win-move-coordination-free.pdf` | Background for the oracle at the fork. Optional; it settles a narrower question than CALM itself |

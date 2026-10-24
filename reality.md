@@ -259,14 +259,22 @@ What each place, building, character, prop and practice of the setting has in co
 
 ---
 
-## Paxos · the hall of two doors
+## Paxos · the oracle at the fork
+
+### Characters
+
+| In the setting | The real precedent | How close |
+|---|---|---|
+| the priestess of the oracle | Dodona's oracle was served by priestesses, whom Herodotus heard called the doves (Herodotus 2.55–57)†. | Close |
+| students choosing between the legislators' life and the scholars' | Greek philosophy argued over the political and the contemplative life; Aristotle sets them side by side (Nicomachean Ethics 1.5 and 10.7–8)†, and Plato's Callicles mocks the grown man who stays a student instead of entering public life (Gorgias 484c–486d)†. | Close |
 
 ### Buildings
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| a hall on common ground that belongs to neither city | The Messon sanctuary of Zeus, Hera and Dionysos was the common sacred ground of the cities of Lesbos (Alcaeus fr. 129), and the Panionion on Mycale served the Ionian cities (Herodotus 1.141–148)†. | Close |
-| two doors, one to the assemblies and one to the scholars | The hall's arrangement is the setting's own; the Greek parallel is a shared sanctuary with two kinds of business. | Invented |
+| a sanctuary on common ground that belongs to neither city | The Messon sanctuary of Zeus, Hera and Dionysos was the common sacred ground of the cities of Lesbos (Alcaeus fr. 129), and the Panionion on Mycale served the Ionian cities (Herodotus 1.141–148)†. | Close |
+| an enclosure round an old oak, with a small temple and an altar | Dodona, the oracle of Zeus in Epirus: the god spoke through his sacred oak (Odyssey 14.327–328)†, and for centuries the sanctuary was little more than the tree in an enclosure, with a small temple built beside it only in the fourth century BC†. | Close |
+| two gates, north to the assemblies and south to the scholars | The gates and their roads are the setting's own. | Invented |
 
 ### Practices
 
@@ -274,7 +282,10 @@ What each place, building, character, prop and practice of the setting has in co
 |---|---|---|
 | a closing notice that names the notices before it, a manifest | Athenian treasurers handed over to their successors inscribed inventories of the sacred treasures, listing each item (the Parthenon inventories)†; closing a list by naming its contents is the setting's own use. | Loose |
 | the canon, the works the coast will keep and whose citations decide what else is kept | Aristophanes of Byzantium and Aristarchus drew up canonical lists of approved poets and prose authors at Alexandria†. | Close |
-| each question leaves by the door its own shape decides | The Athenian Council sorted business before it went to the Assembly with a preliminary resolution (*probouleuma*)†, but sorting by whether a question rests on absence is the theorem's own. | Loose |
+| each group sent down the road its work's shape decides | The Athenian Council sorted business before it went to the Assembly with a preliminary resolution (*probouleuma*)†, but sorting by whether a question rests on absence is the theorem's own. | Loose |
 | a question on common ground | Neutral meeting places of cities existed (the Amphictyony at Delphi and Thermopylae)†. | Close |
+| a question written on a folded strip of lead | Hundreds of lead tablets from Dodona survive, folded, with the petitioner's question scratched inside; some were asked by whole communities, the Corcyreans among them†. | Close |
+| a group consulting an oracle before it chooses how to live | Settlers asked Delphi before they set out: the founding of Cyrene from Thera begins with the oracle's command (Herodotus 4.150–159)†. | Close |
+| an oracle that is exact and foresees nothing | Greek oracles were known for answers that could be read two ways (Croesus and the Halys, Herodotus 1.53)†. An exact counsel read from the question alone is the setting's own. | Invented |
 
 ---

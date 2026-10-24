@@ -31,7 +31,7 @@ SETTINGS = {
     "chamber": ("the Chamber", "#136f9e", "Part-Time Legislators Passing Laws"),
     "tholos": ("the Tholos", "#c8961c", "A Council of Five Keeping One Law"),
     "coast": ("the scholars' coast", "#2e88b5", "Libraries That Agree in the End"),
-    "hall": ("the hall of two doors", "#6b5a48", "Libraries Asking Whether to Wait"),
+    "hall": ("the oracle at the fork", "#6b5a48", "Students Asking Which Life to Lead"),
 }
 # the eighteen books, in the order the index lists them: slug, setting, the short code of idea keys
 BOOKS = [
@@ -57,7 +57,7 @@ BOOKS = [
 
 # the places/ folders, and the setting each one describes
 PLACE_SETTING = {"ring-road": "ring", "the-foot": "foot", "the-crown": "crown", "the-chamber": "chamber",
-                 "schedia": "tholos", "scholars-coast": "coast", "hall-of-two-doors": "hall"}
+                 "schedia": "tholos", "scholars-coast": "coast", "oracle-at-the-fork": "hall"}
 VOID = {"br", "img", "hr", "meta", "link", "input", "source", "wbr", "col", "area", "base", "embed", "param", "track"}
 BREAK = {"p", "div", "li", "ul", "ol", "h1", "h2", "h3", "h4", "h5", "br", "td", "th", "tr", "table", "summary",
          "section", "header", "footer", "blockquote"}

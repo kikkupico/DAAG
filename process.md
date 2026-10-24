@@ -82,7 +82,7 @@ A setting's title names its actors and their goal, not its place: Three Houses K
 ring road), Four Mercenaries Who Must Agree (the foot of Mount Phyle), Four Bandits Who Must Agree
 Though Some Lie (the crown), Part-Time Legislators Passing Laws (the Chamber), A Council of Five
 Keeping One Law (Schedia and the Tholos), Libraries That Agree in the End (the scholars' coast) and
-Libraries Asking Whether to Wait (the hall of two doors). The place goes in the kicker above the
+Students Asking Which Life to Lead (the oracle at the fork). The place goes in the kicker above the
 title. The title is used wherever the setting is named as a setting: its page, the home page, the
 overview scroll, the papers index, a book's title, its Setting link and the tooltips on its
 superscripts, and the feed. The URLs keep the place slugs, and prose keeps the place names.
@@ -417,7 +417,7 @@ Before calling a book done (the brief's checklist has the mechanics):
   pass. Its other pictures are previs renders. Shots are in `art/panels/places/shots.json`,
   published to `assets/img/places/`.
 - [ ] A building that recurs across pictures is modelled in full before any picture is generated
-  (the Chamber, the Tholos, Arche's three houses, the hall of two doors, and on the scholars' coast
+  (the Chamber, the Tholos, Arche's three houses, the oracle at the fork, and on the scholars' coast
   the libraries with their loan desks and pebble boards, the stoa with its festival ground and the
   courier landing: `art/sets/paxos_chamber.py`, `schedia_tholos.py`, `house.py`, `hall.py`,
   `libraries.py`, `stoa.py` and `terraces.py` (which builds the landing as the set `landing`), on the helpers in
@@ -457,7 +457,7 @@ book depends on vocabulary an earlier one establishes.
 | The libraries | PBS 2012 | *Probably Up to Date.* The model, not a store: how likely a reader who asks only a few libraries is handed an out-of-date copy, and by how much. Odds, never a promise. Written: `books/probably-up-to-date/`. |
 | The loan desk | Shapiro et al. 2011 (both) | *Changes That Never Clash.* One visiting scholar's deposit, and at every library's loan desk a table of pebbles for him with a column to each library (the desk keeps one for every scholar with a deposit; the book watches one), merged by the larger pile; white for scrolls lent and black for scrolls returned. No desk can keep him within his deposit from its own table; splitting the deposit beforehand (escrow) can. Never explain why there is one deposit. Written: `books/changes-that-never-clash/`. |
 | The reading room | HATS 2014 | *What You Can Promise Alone.* What a librarian can promise while the couriers are stopped, and what no librarian alone can. Written: `books/what-you-can-promise-alone/`. |
-| The hall of two doors | Hellerstein 2010 · Ameloot 2011 · Hellerstein &amp; Alvaro 2020 | *Knowing When to Wait.* Drafted from the 2020 paper, the clearest of the three, with the definitions and the proof from Ameloot et al. The hall sorts and never rules. Written: `books/knowing-when-to-wait/`. |
+| The oracle at the fork | Hellerstein 2010 · Ameloot 2011 · Hellerstein &amp; Alvaro 2020 | *Knowing When to Wait.* Drafted from the 2020 paper, the clearest of the three, with the definitions and the proof from Ameloot et al. The oracle counsels and never rules. Written: `books/knowing-when-to-wait/`. |
 
 ### Standing constraints on future books
 

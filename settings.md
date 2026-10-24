@@ -21,7 +21,7 @@ Verified against `ls sources/`, not asserted:
 | Island | Papers |
 |---|--:|
 | Arche (ring road and Mount Phyle) | 15 |
-| Paxos (the Chamber, Schedia, the scholars' coast, the hall of two doors) | 10 |
+| Paxos (the Chamber, Schedia, the scholars' coast, the oracle at the fork) | 10 |
 
 No PDF is unassigned and nothing is blocked. Every paper the islands name is on disk and has
 been verified by opening it.
@@ -232,13 +232,13 @@ is bounded, but men lie, yielding the 3m + 1 threshold.
 append-only law scroll across absent members and changing leaders — Lamport's parliament and
 the Tholos of Schedia — and the scholars and copyists, who keep many copies and hold no assembly.
 Putting them on one island makes the difference a walk: the scholars could take any question
-to an assembly, and the hall of two doors shows which questions need one.
+to an assembly, and the oracle at the fork tells which work needs one.
 
 **The island is a Y, and its shape groups the papers.** Two arms reach north, spreading a little as
 natural arms do: the western arm holds the Chamber, the eastern arm the city of **Schedia** and
 its Tholos, and the two look at each other across the bay between the arms. The two ways of keeping one law scroll share the top of
 the island. The arms join at a fork, and below it the stem widens into the body of the island,
-the scholars' coast, which eventual consistency has to itself. The hall of two doors stands at
+the scholars' coast, which eventual consistency has to itself. The oracle stands at
 the fork.
 
 **The parliament has no say over the scholars' copies.** It passes decrees, the island's law;
@@ -360,11 +360,11 @@ and spreading the epics by rhapsode.
 reading room and a loan desk, courier routes of differing length, a landing for the couriers' boats,
 and an inlet crossed only by one ferry that many routes share.
 
-### The hall of two doors
+### The oracle at the fork
 
 | Paper | In the world |
 |---|---|
-| `hellerstein-2010`, `ameloot-2011` | **The hall of two doors**, at the fork, on common ground that belongs to neither city, as the Messon on Lesbos was the common sanctuary of that island's cities. A question needs coordination exactly when it is not monotonic. The examples come from the scholars: "has at least one copy of this work been made?" can be answered as soon as it is true; "is this every copy that has been made?" needs everyone. Each question leaves by the door its own shape decides — one facing north up the bay between the arms, to the Chamber and the Tholos, the two bodies that assemble; one facing south down the stem, to the scholars' coast, which does not. Questions are brought to the hall by the libraries, each holding some of the facts: one that only grows (any copy made, a ring of waiting) can be answered by a library with no roster of the others and without waiting; one that rests on an absence (every copy, a work no one cites) needs every library heard from. A reader's list is closed with a manifest naming the notices before it, so the library waits only for those. *Knowing When to Wait* |
+| `hellerstein-2010`, `ameloot-2011` | **The oracle at the fork**, a sanctuary on common ground that belongs to neither city, as the Messon on Lesbos was the common sanctuary of that island's cities, and built in the manner of Dodona: a low wall round an old oak, a small temple and an altar beside the tree, a gate to the north and a gate to the south. Groups of **students**, their schooling done, bring the **priestess** the work they mean to do together, written on a folded strip of lead, before they choose how to live. She reads the work and nothing else, and sends the group out by one gate: **north**, up the road that forks to the Chamber and the Tholos, to live as the assemblies do, keeping a **roster** of members and settling nothing until every name on it has been heard from; or **south**, down the stem, to live as scholars, each at a post in a library, with no roster, answering from whatever has reached it. The students do not join the Parliament or Schedia's council; they live as those bodies live. A group's work is a question about the libraries' facts, so in the examples the libraries are the students' posts: work that only grows (any copy made, a ring of waiting) can be answered with no roster and without waiting; work that rests on an absence (every copy, a work no one cites) needs every post heard from. The counsel is always one road or the other, never a third: mixed work may still go south if its one step that rests on an absence is closed with a manifest naming the notices before it, so that only that step waits, and only for those. The oracle is exact and foresees nothing; that real oracles were vague is said once, as a leak. *Knowing When to Wait* |
 
 ---
 
@@ -388,7 +388,7 @@ snapshots) · Corbett et al. 2012 (Spanner) · Thomson et al. 2012 (Calvin).
   interior; a small cone would leave the lines between evenly spaced houses clear.
 - **Paxos is a Y, and its shape groups its papers.** Two arms reach north and face each
   other across a bay: the Chamber on the western arm, on the road to the harbour town at its
-  tip; Schedia and its Tholos on the eastern arm. The hall of two doors stands at the fork. The
+  tip; Schedia and its Tholos on the eastern arm. The oracle stands at the fork. The
   stem widens into the scholars' coast, with many libraries within casual reach, courier
   routes of different length and a landing for the couriers' boats at the southern tip.
 

@@ -905,20 +905,20 @@
   </article>
 </section>
 
-<!-- ============================================================ THE HALL -->
-<section class="interlude solid" id="hall-of-two-doors" data-pin>
+<!-- ============================================================ THE ORACLE -->
+<section class="interlude solid" id="oracle-at-the-fork" data-pin>
   <div class="pin">
     <img class="bg" src="../../assets/img/places/hall.jpg" alt="A round colonnaded hall on a wooded headland above a deep blue sea, a path leading to it" loading="lazy">
     <div class="il-text">
-      <p class="kicker"><span class="i">Paxos, at the fork · setting seven · the Hall of Two Doors</span><span class="m">Coordination, and when it is needed</span></p>
-      <h2 class="place">Libraries Asking Whether to Wait</h2>
-      <p class="i">A hall at the fork of the island that rules on nothing, and only sorts every question into one of two doors: north to the assemblies, south to the scholars.</p>
+      <p class="kicker"><span class="i">Paxos, at the fork · setting seven · the oracle at the fork</span><span class="m">Coordination, and when it is needed</span></p>
+      <h2 class="place">Students Asking Which Life to Lead</h2>
+      <p class="i">Groups of students who ask an oracle at the fork whether the work they mean to do together lets them live as scholars, apart and never waiting, or makes them live as legislators, who wait for everyone.</p>
       <p class="m">Coordination is needed exactly where a program is not monotone, and nowhere else.</p>
     </div>
   </div>
 </section>
 
-<section class="walk" id="walk-14" data-setting="hall" data-label="Libraries Asking Whether to Wait">
+<section class="walk" id="walk-14" data-setting="hall" data-label="Students Asking Which Life to Lead">
   <article class="card eq" id="e-calm" data-scene="crdt">
     <p class="eq-from">Changes That Never Clash, <span>with one change:</span></p>
     <p class="eq-change"><span class="i">from data that only grows to questions that only grow</span><span class="m">from monotone data to monotone programs</span></p>
@@ -927,7 +927,7 @@
   <article class="card book" id="s-calm" data-scene="calm" data-book="calm">
     <h3 class="punch big"><span class="i">Some questions only grow.</span><span class="m">Monotone means coordination-free.</span></h3>
     <h4 class="title">Knowing When to Wait</h4>
-    <p class="i">A question that only grows, such as whether any copy has been made, <b>can be answered as news comes in and is never taken back</b>. One that rests on an absence, such as whether these are all the copies, must hear from everyone, which a librarian with no roster never can. So the hall sends each question out by the door its shape decides: south to the coast, or north to the assemblies.</p>
+    <p class="i">A question that only grows, such as whether any copy has been made, <b>can be answered as news comes in and is never taken back</b>. One that rests on an absence, such as whether these are all the copies, must hear from everyone, which a librarian with no roster never can. So the oracle sends each group down the road its work's shape decides: south, to live as scholars without a roster, or north, to live as legislators who wait for every name on theirs.</p>
     <p class="m">CALM: <b>a program has a consistent, coordination-free distributed implementation if and only if it is monotone</b>, equivalently if it can be computed without knowing the membership. Deadlock detection is monotone; garbage collection is not. A non-monotone step can be isolated and sealed with a manifest, moved off the critical path, or compensated afterwards.</p>
     <a class="read" href="../knowing-when-to-wait/index.html">Read the book ›</a>
     <div class="papers">
@@ -940,14 +940,14 @@
   </article>
 </section>
 
-<!-- the two doors -->
+<!-- the two roads -->
 <section class="feature light solid" id="f-doors">
   <div class="f-in">
     <p class="kicker rv">Watch it</p>
-    <h2 class="rv"><span class="i">Every question leaves by one door.</span><span class="m">Every computation lands on one side.</span></h2>
+    <h2 class="rv"><span class="i">Every piece of work takes one road.</span><span class="m">Every computation lands on one side.</span></h2>
     <div class="doors rv" id="doors">
-      <div class="door south"><p class="dk"><span class="i">South, to the scholars</span><span class="m">Monotone</span></p><p class="dd"><span class="i">answer as news comes in</span><span class="m">coordination-free</span></p><div class="slot"></div></div>
-      <div class="door north"><p class="dk"><span class="i">North, to the assemblies</span><span class="m">Non-monotone</span></p><p class="dd"><span class="i">must hear from everyone</span><span class="m">needs coordination</span></p><div class="slot"></div></div>
+      <div class="door south"><p class="dk"><span class="i">South, to live as scholars</span><span class="m">Monotone</span></p><p class="dd"><span class="i">answer as news comes in</span><span class="m">coordination-free</span></p><div class="slot"></div></div>
+      <div class="door north"><p class="dk"><span class="i">North, to live as legislators</span><span class="m">Non-monotone</span></p><p class="dd"><span class="i">must hear from everyone</span><span class="m">needs coordination</span></p><div class="slot"></div></div>
       <div class="pile">
         <button type="button" class="q" data-door="south"><span class="i">Has any copy of this work been made?</span><span class="m">Is there a deadlock?</span></button>
         <button type="button" class="q" data-door="north"><span class="i">Are these all the copies?</span><span class="m">Is this object garbage?</span></button>
@@ -961,7 +961,7 @@
   </div>
 </section>
 
-<section class="walk" id="walk-15" data-setting="hall" data-label="Libraries Asking Whether to Wait">
+<section class="walk" id="walk-15" data-setting="hall" data-label="Students Asking Which Life to Lead">
   <article class="card wall" id="w4" data-scene="w4">
     <p class="kicker">The fourth wall</p>
     <h3 class="punch"><span class="i">An absence needs everyone.</span><span class="m">CALM.</span></h3>
@@ -980,7 +980,7 @@
     <h2 class="rv"><span class="i">Every promise is paid for in one of four ways.</span><span class="m">Every guarantee is paid for in one of four costs.</span></h2>
     <p class="lead rv"><span class="i">And the walls say which promises nothing can buy together.</span><span class="m">And the impossibility results say which combinations no cost can buy.</span></p>
     <div class="tiles">
-      <div class="tile rv"><span class="glyph" aria-hidden="true">⧗</span><h3><span class="i">Waiting</span><span class="m">Coordination</span></h3><p><span class="i">for most of the others: the Chamber, the Tholos, the crown's scroll, the muster-master, the door of the assemblies.</span><span class="m">quorum round trips: Paxos, VR, PBFT, HotStuff, a CAP primary, non-monotone steps.</span></p></div>
+      <div class="tile rv"><span class="glyph" aria-hidden="true">⧗</span><h3><span class="i">Waiting</span><span class="m">Coordination</span></h3><p><span class="i">for most of the others: the Chamber, the Tholos, the crown's scroll, the muster-master, the road north from the oracle.</span><span class="m">quorum round trips: Paxos, VR, PBFT, HotStuff, a CAP primary, non-monotone steps.</span></p></div>
       <div class="tile rv"><span class="glyph" aria-hidden="true">⁂</span><h3><span class="i">More men</span><span class="m">Replicas</span></h3><p><span class="i">than may fail: more than half against silence, four to bear one liar.</span><span class="m">n ≥ 2f + 1 for crashes, n ≥ 3f + 1 for Byzantine faults.</span></p></div>
       <div class="tile rv"><span class="glyph" aria-hidden="true">◐</span><h3><span class="i">A little certainty</span><span class="m">Certainty</span></h3><p><span class="i">a coin's probability one, a few libraries unheard until the festival, the odds of an old copy, agreement only in the end.</span><span class="m">probability-1 termination, gossip residue, probabilistic staleness, eventual consistency.</span></p></div>
       <div class="tile rv"><span class="glyph" aria-hidden="true">≡</span><h3><span class="i">Bookkeeping</span><span class="m">Metadata</span></h3><p><span class="i">a column for every house, notices that pile up, stored seals and checkpoints, every promise in ink.</span><span class="m">vector clocks, tombstones, message logs and checkpoints, stable storage.</span></p></div>

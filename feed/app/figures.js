@@ -392,18 +392,20 @@ function coast(marks, fig) {
   return svg;
 }
 
-/* ---------------------------------------------------------------- the hall of two doors */
+/* ---------------------------------------------------------------- the oracle at the fork */
 
 function hall(marks, fig) {
-  const svg = newSvg("0 0 440 440", alt(fig, "The hall of two doors, where the island road forks: the north door and the south door."));
+  const svg = newSvg("0 0 440 440", alt(fig, "The oracle at the fork from above: a walled enclosure round an oak, with a small temple, its north gate on the road to the assemblies and its south gate on the road to the scholars' coast."));
   const head = arrowDefs(svg);
-  txt(svg, 220, 24, "north · the Chamber and the Tholos", "lab sm");
-  txt(svg, 220, 424, "south · the scholars' coast", "lab sm");
-  el("path", { class: "way", d: "M220 44V134" }, svg);
-  el("path", { class: "way", d: "M220 306V396" }, svg);
-  el("rect", { x: 125, y: 142, width: 190, height: 156, fill: "#efe6cf", stroke: INK, "stroke-width": 5 }, svg);
-  const dn = el("rect", { class: "door", x: 196, y: 130, width: 48, height: 24 }, svg), ds = el("rect", { class: "door", x: 196, y: 286, width: 48, height: 24 }, svg);
-  txt(svg, 220, 177, "the hall", "lab sm");
+  txt(svg, 220, 24, "north · to live as legislators", "lab sm");
+  txt(svg, 220, 424, "south · to live as scholars", "lab sm");
+  el("path", { class: "way", d: "M220 126V86L130 40M220 86L310 40" }, svg);
+  el("path", { class: "way", d: "M220 314V396" }, svg);
+  el("circle", { cx: 220, cy: 220, r: 96, fill: "#efe6cf", stroke: INK, "stroke-width": 5 }, svg);
+  el("circle", { cx: 166, cy: 270, r: 17, fill: "#8a9550", stroke: INK, "stroke-width": 2.4 }, svg);
+  el("rect", { x: 250, y: 260, width: 26, height: 20, fill: "#d9cfb4", stroke: INK, "stroke-width": 2.4 }, svg);
+  const dn = el("rect", { class: "door", x: 200, y: 114, width: 40, height: 22 }, svg), ds = el("rect", { class: "door", x: 200, y: 304, width: 40, height: 22 }, svg);
+  txt(svg, 220, 160, "the oracle", "lab sm");
   const over = layer(svg), under = layer(svg);
   each(marks, {
     question(v) {
@@ -411,10 +413,11 @@ function hall(marks, fig) {
       el("rect", { x: 138, y: f1(y0), width: 164, height: f1(h - 14), rx: 6, fill: "#fffaf0", stroke: INK, "stroke-width": 2.4 }, g);
       lines.forEach((l, i) => txt(g, 220, y0 + 22 + i * 21, l, "lab ink sm"));
     },
-    door(v) {
+    door(v) { this.road(v); },
+    road(v) {
       const g = mk(svg, under), n = v === "north";
       (n ? dn : ds).classList.add("on");
-      el("path", { d: n ? "M220 128V50" : "M220 312V390", fill: "none", stroke: ATTACK, "stroke-width": 4, "stroke-dasharray": "2 6", "stroke-linecap": "round", "marker-end": head("r") }, g);
+      el("path", { d: n ? "M220 112V58" : "M220 328V390", fill: "none", stroke: ATTACK, "stroke-width": 4, "stroke-dasharray": "2 6", "stroke-linecap": "round", "marker-end": head("r") }, g);
     },
     north(v) { tag(svg, mk(svg, over), 334, 86, String(v)); },
     south(v) { tag(svg, mk(svg, over), 334, 354, String(v)); },

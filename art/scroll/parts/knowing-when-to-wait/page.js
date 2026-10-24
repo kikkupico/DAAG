@@ -104,16 +104,17 @@ const anyCopy=S=>S.some(f=>f[0]==="copy"),noClaim=S=>!S.some(f=>f[0]==="claim");
   $("#nreset").onclick=reset;reset();
 })();
 
-/* ===== the hall from above, and the sorting. Each question is a rule on a small set of possible facts;
-   the page tries every set of facts and every larger set, and sends the question south only if no answer is ever lost. ===== */
+/* ===== the oracle at the fork from above, and the counsel. Each question is a rule on a small set of possible facts;
+   the page tries every set of facts and every larger set, and sends the group south only if no answer is ever lost. ===== */
 (function(){
   const svg=$("#hallsvg");svg.setAttribute("viewBox","0 0 440 400");
-  el("text",{x:220,y:26,class:"lab",style:"font-size:14px"},svg).textContent="north · the Chamber and the Tholos";
-  el("text",{x:220,y:388,class:"lab",style:"font-size:14px"},svg).textContent="south · the scholars' coast";
-  el("path",{class:"way",d:"M220 44V150"},svg);el("path",{class:"way",d:"M220 250V366"},svg);
-  el("rect",{x:150,y:150,width:140,height:100,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
-  const dn=el("rect",{class:"door",x:196,y:138,width:48,height:22},svg),ds=el("rect",{class:"door",x:196,y:240,width:48,height:22},svg);
-  el("text",{x:220,y:204,class:"lab",style:"font-size:13px"},svg).textContent="the hall";
+  el("text",{x:220,y:26,class:"lab",style:"font-size:14px"},svg).textContent="north · to live as legislators";
+  el("text",{x:220,y:388,class:"lab",style:"font-size:14px"},svg).textContent="south · to live as scholars";
+  el("path",{class:"way",d:"M220 150V96L120 46M220 96L320 46"},svg);el("path",{class:"way",d:"M220 250V366"},svg);
+  el("circle",{cx:220,cy:200,r:56,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
+  el("circle",{cx:204,cy:196,r:21,fill:"#8a9550",stroke:"#1c1512","stroke-width":2.5},svg);el("rect",{x:230,y:186,width:26,height:22,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":2.5},svg);
+  const dn=el("rect",{class:"door",x:202,y:136,width:36,height:20},svg),ds=el("rect",{class:"door",x:202,y:244,width:36,height:20},svg);
+  el("text",{x:220,y:236,class:"lab",style:"font-size:13px"},svg).textContent="the oracle";
   const tok=el("g",{class:"tok",opacity:0},svg);el("circle",{r:13,fill:"#e0b84a",stroke:"#1c1512","stroke-width":2.5},tok);el("text",{},tok).textContent="?";
   const paths=E=>{const r={};E.forEach(([a,b])=>{(r[a]=r[a]||new Set()).add(b)});return (from,to)=>{const seen=new Set([from]),q=[from];while(q.length){const u=q.pop();(r[u]||[]).forEach(b=>{if(!seen.has(b)){seen.add(b);q.push(b)}})}return seen.has(to)}};
   /* each: the possible facts, and the answers a set of facts supports */
@@ -137,8 +138,8 @@ const anyCopy=S=>S.some(f=>f[0]==="copy"),noClaim=S=>!S.some(f=>f[0]==="claim");
   $$("button",box).forEach(bt=>bt.onclick=async()=>{const o=Q[+bt.dataset.i],south=!o.lost;
     $$("button",box).forEach(b=>b.setAttribute("aria-pressed",b===bt));dn.classList.remove("on");ds.classList.remove("on");
     tok.setAttribute("opacity",1);tok.setAttribute("transform","translate(220 200)");
-    say.innerHTML=south?`Tried on ${o.tried} pairs of a set of facts and a larger one: no answer given on the smaller was ever lost on the larger. It only grows. <span class="ok">It leaves by the scholars' door.</span>`
-      :`Tried on ${o.tried} pairs. On <i>${o.lost[0].join(", ")||"no facts"}</i> the answer is yes; add <i>${o.lost[1].filter(v=>!o.lost[0].includes(v)).join(", ")}</i> and it is lost. It rests on an absence. <span class="bad">It leaves by the door of the assemblies.</span>`;
+    say.innerHTML=south?`Tried on ${o.tried} pairs of a set of facts and a larger one: no answer given on the smaller was ever lost on the larger. It only grows. <span class="ok">The oracle sends the group south, to live as scholars.</span>`
+      :`Tried on ${o.tried} pairs. On <i>${o.lost[0].join(", ")||"no facts"}</i> the answer is yes; add <i>${o.lost[1].filter(v=>!o.lost[0].includes(v)).join(", ")}</i> and it is lost. It rests on an absence. <span class="bad">The oracle sends the group north, to live as legislators.</span>`;
     await tween(900,u=>tok.setAttribute("transform",`translate(220 ${200+(south?1:-1)*110*u})`));(south?ds:dn).classList.add("on")});
 })();
 
