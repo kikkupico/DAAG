@@ -215,7 +215,7 @@ What each place, building, character, prop and practice of the setting has in co
 |---|---|---|
 | the libraries | The Library and Museum of Alexandria, and Pergamon's rival library, kept and collated copies of the works of Greek literature†. | Close |
 | the stoa, where scholars pass on news | Zeno taught under the Stoa Poikile in Athens, which gave the Stoics their name†; philosophers and scholars gathered in colonnades. | Close |
-| the festival ground, where copyists compare whole collections once a year | Panhellenic festivals drew poets, rhapsodes and scholars from across the Greek world; the yearly collation itself is the setting's own. | Loose |
+| the festival ground, where copyists compare whole copies of the compendium once a year | Panhellenic festivals drew poets, rhapsodes and scholars from across the Greek world; the yearly collation itself is the setting's own. | Loose |
 | a marble board grooved in columns, with piles of pebbles, on every library's desk | The Salamis Tablet, a marble counting board of the fourth century BC, was used for reckoning with pebbles†; *psēphoi* are pebbles used to count. | Close |
 | the reading room in every library, where the compendium is consulted | The one set of Greek library rules that survives, from the library of Pantainos in the Athenian Agora (about AD 100), forbids taking any book out and gives the opening hours (SEG 21.500). | Close |
 | a count kept in voting pebbles | Greek *psēphoi* were pebbles used to vote and to count, and the Greek for “to reckon” (*psēphizein*) comes from them†. | Close |
@@ -237,10 +237,10 @@ What each place, building, character, prop and practice of the setting has in co
 | the comet, and two accounts of what it is | Aristotle reports that some Pythagoreans held a comet to be a planet seen only at long intervals, and argues himself that comets are a dry exhalation set alight in the upper air (*Meteorologica* 1.6–7)†. | Close |
 | two accounts kept side by side: “some say … others say …” | The scholia to Homer and the doxographers record rival opinions side by side, naming whose each is†. | Close |
 | white pebbles for sightings recorded, black for sightings struck | Jurors voted with pebbles of two kinds, as Athena's casting vote does in Aeschylus' *Eumenides* (734–753)†. Counting sightings against mistakes with the two colours is the setting's own. | Loose |
-| a scrap of papyrus carrying a new learning: that the Earth goes round the Sun | This is a real example: Aristarchus of Samos proposed it in the third century BC, as Archimedes reports in the Sand Reckoner, and Plutarch says that Cleanthes thought he should be charged with impiety for it†. | Close |
-| different editions of one work | Homer's text circulated in variant forms, among them the “city” editions that the Alexandrians collated†. | Close |
-| the catalogue scroll, and the catalogue sum worked from all of it | Callimachus' *Pinakes* catalogued the Alexandrian library in some 120 scrolls†. The mark is the setting's own: sealed documents were common†, but no seal summed up a whole catalogue, and a digest is a modern device. | Invented |
-| a notice of withdrawal, spread like an edition | Aristarchus and Zenodotus marked lines they judged spurious with the *obelos* and left them in the text†; Athenian decrees were sometimes struck from their stelai†. The setting's notice, which travels and cancels older copies, is its own. | Loose |
+| a scrap of papyrus carrying a new version of an entry: that the Earth goes round the Sun | This is a real example: Aristarchus of Samos proposed it in the third century BC, as Archimedes reports in the Sand Reckoner, and Plutarch says that Cleanthes thought he should be charged with impiety for it†. | Close |
+| different versions of one entry | Homer's text circulated in variant forms, among them the “city” editions that the Alexandrians collated†. | Close |
+| the sum worked from a library's whole copy of the compendium | Sealed documents were common†, but nothing summed up a whole collection in one mark, and a digest is a modern device. | Invented |
+| a notice of withdrawal, spread like a version | Aristarchus and Zenodotus marked lines they judged spurious with the *obelos* and left them in the text†; Athenian decrees were sometimes struck from their stelai†. The setting's notice, which travels and cancels older copies, is its own. | Loose |
 | the hot tablet, a wax tablet of the scraps a scholar is still telling | Wax tablets were the Greek everyday writing surface†. | Close |
 
 ### Practices
@@ -248,7 +248,7 @@ What each place, building, character, prop and practice of the setting has in co
 | In the setting | The real precedent | How close |
 |---|---|---|
 | collating copies line by line | The Alexandrian scholars collated manuscripts and marked disputed lines, as the setting says†. | Close |
-| learnings spread by word of mouth, each carrier losing interest | Hesiod calls rumour a goddess, *Pheme*, who never wholly dies (Works and Days 763–764)†. Rhapsodes also spread the epics by recitation (Plato, Ion)†, and a rule credited to Solon or Hipparchus made them take over from one another in order†. | Loose |
+| news spread by word of mouth, each carrier losing interest | Hesiod calls rumour a goddess, *Pheme*, who never wholly dies (Works and Days 763–764)†. Rhapsodes also spread the epics by recitation (Plato, Ion)†, and a rule credited to Solon or Hipparchus made them take over from one another in order†. | Loose |
 | a work kept at several libraries, each holding its own copy | Athens kept an official copy of the tragedies and Ptolemy III is said to have borrowed it for Alexandria, giving a deposit and keeping the original (Galen on Hippocrates' *Epidemics* III)†. Several libraries holding copies of one work is ordinary; the three fixed home libraries are the setting's own. | Loose |
 | the couriers' logbook of journey times | Herodotus describes the stages and days of the Royal Road from Sardis to Susa (5.52–54)†, and *periploi* record days of sailing between ports†. A logbook of the variation in a journey, from which odds are worked, is the setting's own. | Loose |
 | a promise with odds: nine in ten you are handed the newest | Greek rhetoric argued from the likely, *eikos* (Antiphon's *Tetralogies*; Aristotle, *Rhetoric* 2.24)†; odds worked out from counts are not Greek. | Loose |

@@ -80,14 +80,14 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const N=100,box=$("#fcells"),say=$("#fsay"),fy=$("#fyear"),fh=$("#fhave"),go=$("#fgo");let has,year,mode="give";
   box.innerHTML="<i></i>".repeat(N);const cell=$$("i",box);
   const paint=()=>{cell.forEach((c,i)=>c.className=has[i]?"h":"");fy.textContent=year;fh.textContent=has.filter(Boolean).length};
-  function reset(){has=Array(N).fill(false);has[rnd(N)]=true;year=0;go.disabled=false;paint();say.innerHTML=dual("One library holds the new edition. Every copyist draws one name by lot.","One site holds the new value. Every site picks one other at random.")}
+  function reset(){has=Array(N).fill(false);has[rnd(N)]=true;year=0;go.disabled=false;paint();say.innerHTML=dual("One library holds the new version. Every copyist draws one name by lot.","One site holds the new value. Every site picks one other at random.")}
   seg($("#fmode"),[["give",dual("the newer gives","the newer pushes")],["ask",dual("the older asks","the older pulls")],["both","both"]],mode,v=>{mode=v;reset()});
   go.onclick=()=>{year++;const was=has.slice();let gained=0;
     for(let i=0;i<N;i++){let j=rnd(N-1);if(j>=i)j++;                 // i has drawn j's name
-      if(mode!=="ask"&&was[i]&&!has[j]){has[j]=true;gained++}        // giving: the one who drew hands the newer edition over
+      if(mode!=="ask"&&was[i]&&!has[j]){has[j]=true;gained++}        // giving: the one who drew hands the newer version over
       if(mode!=="give"&&was[j]&&!has[i]){has[i]=true;gained++}}      // asking: the one who drew asks for it
     paint();const n=has.filter(Boolean).length;
-    say.innerHTML=n===N?dual(`After ${year} festivals <span class="ok">every library holds the new edition.</span>`,`After ${year} cycles <span class="ok">every site holds the new value.</span>`):dual(`Festival ${year}: ${gained} more ${gained===1?"library takes":"libraries take"} the new edition. ${N-n} still lack it.`,`Cycle ${year}: ${gained} more ${gained===1?"site takes":"sites take"} the new value. ${N-n} still lack it.`);
+    say.innerHTML=n===N?dual(`After ${year} festivals <span class="ok">every library holds the new version.</span>`,`After ${year} cycles <span class="ok">every site holds the new value.</span>`):dual(`Festival ${year}: ${gained} more ${gained===1?"library takes":"libraries take"} the new version. ${N-n} still lack it.`,`Cycle ${year}: ${gained} more ${gained===1?"site takes":"sites take"} the new value. ${N-n} still lack it.`);
     if(n===N)go.disabled=true};
   $("#freset").onclick=reset;reset();
   /* when few remain: the two rules, applied five times to one library in ten */
@@ -148,32 +148,32 @@ function gossipWell(ids,opts,line){
   seg($("#ak"),[1,2,3].map(k=>[k,k]),o.k,v=>{o.k=+v;reset()});
 })();
 
-/* ===== withdrawing: what a library holds of one work is nothing, an edition, or a notice; each has a tally ===== */
-const itemHtml=x=>!x?`<span class="it none">${dual("nothing of the work","nothing for the key")}</span>`:x.gone?`<span class="it gone">${dual(`edition, day ${x.t}`,`value, day ${x.t}`)}</span>`:x.notice?`<span class="it nt">${dual(`notice of withdrawal, day ${x.t}${x.woke?`, awake since day ${x.woke}`:""}`,`death certificate, day ${x.t}${x.woke?`, awake since day ${x.woke}`:""}`)}</span>`:`<span class="it">${dual(`edition, day ${x.t}`,`value, day ${x.t}`)}</span>`;
+/* ===== withdrawing: what a library holds of one entry is nothing, a version, or a notice; each has a tally ===== */
+const itemHtml=x=>!x?`<span class="it none">${dual("nothing under the heading","nothing for the key")}</span>`:x.gone?`<span class="it gone">${dual(`version, day ${x.t}`,`value, day ${x.t}`)}</span>`:x.notice?`<span class="it nt">${dual(`notice of withdrawal, day ${x.t}${x.woke?`, awake since day ${x.woke}`:""}`,`death certificate, day ${x.t}${x.woke?`, awake since day ${x.woke}`:""}`)}</span>`:`<span class="it">${dual(`version, day ${x.t}`,`value, day ${x.t}`)}</span>`;
 const nmS=s=>dual(s,s.replace("Library","Site").replace("A warden","A retention site").replace("Another library","Another site"));
 const shelfHtml=(name,items)=>`<div class="shelf"><h5>${nmS(name)}</h5>${items.map(itemHtml).join("")}</div>`;
-/* when two libraries compare one work: the later tally stands on both shelves; a library holding nothing takes what the other has */
+/* when two libraries compare one entry: the later tally stands in both copies; a library holding nothing takes what the other has */
 function meet(a,b){if(!a)return [b,b,"take"];if(!b)return [a,a,"take"];return a.t>=b.t?[a,a,"later"]:[b,b,"later"]}
 (function(){
   const box=$("#wshelves"),say=$("#wsay"),go=$("#wgo");let mode="strike",a,b;
   function reset(){a=mode==="strike"?null:{notice:true,t:5};b={t:3};go.disabled=false;
     box.innerHTML=shelfHtml("Library 1",[a])+shelfHtml("Library 2",[b]);
-    say.innerHTML=mode==="strike"?dual("Library 1 has struck the work off its shelf. Library 2 still holds the old edition, written on day 3.","Site 1 has deleted the key. Site 2 still holds the old value, written on day 3."):dual("Library 1 has struck the work and keeps a notice of withdrawal, written on day 5. Library 2 still holds the old edition, written on day 3.","Site 1 has deleted the key and keeps a death certificate, written on day 5. Site 2 still holds the old value, written on day 3.")}
-  seg($("#wmode"),[["strike",dual("It only struck the work","It only deleted the key")],["notice",dual("It left a notice of withdrawal","It left a death certificate")]],mode,v=>{mode=v;reset()});
+    say.innerHTML=mode==="strike"?dual("Library 1 has taken the entry out of its copy. Library 2 still holds the old version, written on day 3.","Site 1 has deleted the key. Site 2 still holds the old value, written on day 3."):dual("Library 1 has taken the entry out and keeps a notice of withdrawal, written on day 5. Library 2 still holds the old version, written on day 3.","Site 1 has deleted the key and keeps a death certificate, written on day 5. Site 2 still holds the old value, written on day 3.")}
+  seg($("#wmode"),[["strike",dual("It only took the entry out","It only deleted the key")],["notice",dual("It left a notice of withdrawal","It left a death certificate")]],mode,v=>{mode=v;reset()});
   go.onclick=()=>{const [x,y,why]=meet(a,b);box.innerHTML=shelfHtml("Library 1",[x])+shelfHtml("Library 2",x.notice?[{...b,gone:true},y]:[y]);go.disabled=true;
-    say.innerHTML=x.notice?dual(`The notice's tally is later than the edition's. Library 2 strikes its old edition and keeps the notice. <span class="ok">The work is withdrawn at both.</span>`,`The certificate's timestamp is later than the value's. Site 2 replaces its old value with the certificate. <span class="ok">The key is deleted at both.</span>`)
-      :dual(`Library 1 holds nothing of the work, so it takes Library 2's edition. <span class="bad">The work is back on its shelf.</span>`,`Site 1 holds nothing for the key, so it takes Site 2's value. <span class="bad">The key is back.</span>`)};
+    say.innerHTML=x.notice?dual(`The notice's tally is later than the version's. Library 2 strikes its old version and keeps the notice. <span class="ok">The entry is withdrawn at both.</span>`,`The certificate's timestamp is later than the value's. Site 2 replaces its old value with the certificate. <span class="ok">The key is deleted at both.</span>`)
+      :dual(`Library 1 holds nothing under the heading, so it takes Library 2's version. <span class="bad">The entry is back in its copy.</span>`,`Site 1 holds nothing for the key, so it takes Site 2's value. <span class="bad">The key is back.</span>`)};
   $("#wreset").onclick=reset;reset();
 })();
 (function(){
   const box=$("#tshelves"),say=$("#tsay"),old={t:3},back={t:8};
   const start=()=>box.innerHTML=shelfHtml("A warden",[{notice:true,t:5},old])+shelfHtml("Another library",[back]);
-  /* a notice strikes an edition exactly when the notice's first tally is the later */
+  /* a notice strikes a version exactly when the notice's first tally is the later */
   function wake(fresh){const n=fresh?{notice:true,t:10}:{notice:true,t:5,woke:10},hit=e=>({...e,gone:n.t>e.t});
     const o=hit(old),bk=hit(back);
     box.innerHTML=shelfHtml("A warden",[n,o])+shelfHtml("Another library",[n,bk]);
-    say.innerHTML=fresh?dual(`The woken notice carries day 10. It strikes the old edition of day 3, and ${bk.gone?`<span class="bad">it strikes the edition of day 8 as well</span>, which was written after the withdrawal to bring the work back.`:"spares the edition of day 8."}`,`The woken certificate carries day 10. It replaces the old value of day 3, and ${bk.gone?`<span class="bad">it replaces the value of day 8 as well</span>, which was written after the deletion to bring the key back.`:"spares the value of day 8."}`)
-      :dual(`The woken notice still says the work was withdrawn on day 5, and is awake since day 10, so it is carried again. It strikes the old edition of day 3. ${bk.gone?"It strikes day 8 as well.":`<span class="ok">The edition of day 8 stands.</span>`}`,`The woken certificate still says the key was deleted on day 5, and is awake since day 10, so it is carried again. It replaces the old value of day 3. ${bk.gone?"It replaces day 8 as well.":`<span class="ok">The value of day 8 stands.</span>`}`)}
+    say.innerHTML=fresh?dual(`The woken notice carries day 10. It strikes the old version of day 3, and ${bk.gone?`<span class="bad">it strikes the version of day 8 as well</span>, which was written after the withdrawal to bring the entry back.`:"spares the version of day 8."}`,`The woken certificate carries day 10. It replaces the old value of day 3, and ${bk.gone?`<span class="bad">it replaces the value of day 8 as well</span>, which was written after the deletion to bring the key back.`:"spares the value of day 8."}`)
+      :dual(`The woken notice still says the entry was withdrawn on day 5, and is awake since day 10, so it is carried again. It strikes the old version of day 3. ${bk.gone?"It strikes day 8 as well.":`<span class="ok">The version of day 8 stands.</span>`}`,`The woken certificate still says the key was deleted on day 5, and is awake since day 10, so it is carried again. It replaces the old value of day 3. ${bk.gone?"It replaces day 8 as well.":`<span class="ok">The value of day 8 stands.</span>`}`)}
   $("#tone").onclick=()=>wake(true);$("#ttwo").onclick=()=>wake(false);start();
 })();
 
