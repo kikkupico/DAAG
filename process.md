@@ -69,6 +69,15 @@ Setting pages (`places/<place>/index.html`), the home page and `papers/index.htm
 look. They are ordinary hand-edited pages that link `art/scroll/shell.css`, `art/scroll/place.css`
 and `art/scroll/shell.js`.
 
+A setting is described by who acts there, what carries word between them and what the word says;
+the island and its buildings come second. Every setting page runs in that order: the actors (how
+many, alike or not, what each holds, how each may fail), the messenger (timing, loss, order, whether
+the sender is known), what the messages say (a table of each book's messages, or the notes of the
+one book), and only then the ground, framed by what it rules out. The map of the setting and the
+papers lists actors, messengers and messages before the place, and the Reality Checks table lists
+characters, props and practices before places and buildings. On the home page each setting's band
+leads with its actors, and its setting card gives three lines: Who, Word and Sent.
+
 Every book is a scroll. The earlier chapter editions are kept only in the git history.
 
 ## The two phases
@@ -391,8 +400,8 @@ Before calling a book done (the brief's checklist has the mechanics):
 - [ ] Every claim traceable to the paper has been checked against the PDF.
 - [ ] Added to the home page, `index.html`, as a cover card in its section, and `cover.py`
       reports that the card and the cover agree with `meta.json`.
-- [ ] The place's setting page, `places/<place>/index.html`, lists the book and still
-  describes the place truly. Each home-page section opens with its setting page, the brief a
+- [ ] The place's setting page, `places/<place>/index.html`, lists the book, adds its row to
+  the table of what the messages say, and still describes the place truly. Each home-page section opens with its setting page, the brief a
   reader needs before reading that section's books in any order. Its opening picture is a
   photorealistic establishing shot: a Blender previs render put through `pipeline.py scene` with a
   crop of the island plate (`art/refs/places/`) and any people refs on the board, with no comic
