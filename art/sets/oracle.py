@@ -20,7 +20,7 @@ The frame is local: X runs north to south (north is -X when `yaw` is 0), Y acros
 the ground inside. The oak is geometry, not flora: a trunk turned on a lathe with a flared foot,
 five boughs and a crown of clumps, so that it is the same tree in every picture.
 """
-import bpy, json, math, random, sys
+import bpy, bmesh, json, math, random, sys
 from mathutils import Vector, Matrix
 sys.path.insert(0, "art/sets")
 import masonry
@@ -50,9 +50,6 @@ RIDGES = [material("oxblood-ridge", (0.34, 0.09, 0.06), 0.8), material("oxblood-
 TIMBER = material("timber", (0.3, 0.19, 0.1), 0.75)
 BOARDS = [material("door-board", (0.36, 0.24, 0.13), 0.8), material("door-board_b", (0.31, 0.2, 0.11), 0.8)]
 DECK = material("roof-boards", (0.42, 0.3, 0.18), 0.85)
-BARK = [material("oak-bark", (0.27, 0.23, 0.19), 1.0), material("oak-bark_b", (0.22, 0.19, 0.16), 1.0)]
-LEAF = [material("oak-leaves", (0.2, 0.3, 0.12), 0.9), material("oak-leaves_b", (0.25, 0.35, 0.14), 0.9),
-        material("oak-leaves_c", (0.17, 0.26, 0.1), 0.9)]
 
 shell, floor, oak = Part("shell"), Part("floor"), Part("oak")
 low = max(-2.0, 0.05 - FL)
@@ -176,29 +173,93 @@ for za, zb in ((0.14, 0.5), (0.5, 0.86)):
 bx(shell, (AX - 0.6, AY - 0.38, 0.14), (AX + 0.6, AY + 0.38, 0.86), JOINT)
 bx(shell, (AX - 0.7, AY - 0.48, 0.86), (AX + 0.7, AY + 0.48, 0.98), CAP)                       # its top slab
 
-# --- the oak: a flared trunk, five boughs, a crown of clumps --------------------------------------------
+# --- the oak: a gnarled fissured trunk, a low fork, spreading limbs, leaf pads in layers ----------------
+# One ancient oak, drawn so that an image model reads it as a tree and as the same tree every time: pale
+# ridged bark, a short thick trunk forking low, limbs that reach out wide and nearly level, and dark leaf
+# pads in layers along them with the sky showing between.
 OX, OY = 0.45 * HX, -0.48 * HY
-prof = [(0.78, -0.05), (0.62, 0.15), (0.5, 0.45), (0.46, 1.0), (0.44, 1.6), (0.42, 2.1), (0.36, 2.5)]
-oak.lathe(prof, (OX, OY, 0), BARK[0], segs=14, squash=0.86, yaw=0.6)
-for k in range(5):                                                 # buttress roots at the foot
-    a = 1.1 + k * 1.3
-    oak.strut((OX, OY, 0.35), (OX + 1.1 * math.cos(a), OY + 1.1 * math.sin(a), -0.02), 0.22, 0.2, BARK[1])
-CR = []
-for k, (a, r, z) in enumerate(((0.3, 2.3, 3.7), (1.5, 2.6, 3.5), (2.7, 2.2, 3.9), (3.9, 2.5, 3.4), (5.1, 2.1, 4.0))):
-    tip = Vector((OX + r * math.cos(a), OY + r * math.sin(a), z))
-    mid = Vector((OX, OY, 2.4)) + (tip - Vector((OX, OY, 2.4))) * 0.5 + Vector((0, 0, 0.25))
-    oak.strut((OX, OY, 2.3), mid, 0.3, 0.28, BARK[k % 2])
-    oak.strut(mid, tip, 0.2, 0.18, BARK[(k + 1) % 2])
-    CR.append(tip)
-for tip in CR:                                                     # a clump on each bough's end, and smaller ones round it
-    oak.sphere(tip + Vector((0, 0, 0.6)), 1.45, rnd.choice(LEAF), 0.62, 14, 9)
-    for j in range(3):
-        a = rnd.uniform(0, 2 * math.pi)
-        oak.sphere(tip + Vector((0.9 * math.cos(a), 0.9 * math.sin(a), rnd.uniform(0.0, 0.9))), rnd.uniform(0.8, 1.1), rnd.choice(LEAF), 0.65, 12, 8)
-oak.sphere((OX, OY, 4.9), 1.9, LEAF[0], 0.6, 16, 10)              # and the crown's top
-for j in range(6):
-    a = j * math.pi / 3 + 0.3
-    oak.sphere((OX + 1.3 * math.cos(a), OY + 1.3 * math.sin(a), 5.3), 1.1, rnd.choice(LEAF), 0.62, 12, 8)
+orn = random.Random(7)
+BARK = [material("oak-bark", (0.36, 0.32, 0.27), 1.0), material("oak-bark_b", (0.29, 0.25, 0.21), 1.0)]
+LEAF = [material("oak-leaves", (0.07, 0.17, 0.05), 0.9), material("oak-leaves_b", (0.1, 0.22, 0.06), 0.9),
+        material("oak-leaves_c", (0.14, 0.27, 0.08), 0.9)]
+
+
+def tube(path, mat, segs=9, ridge=0.0, phase=0.0):
+    """A limb swept along path = [(point, radius), ...]; `ridge` cuts the bark into vertical furrows."""
+    s_ = oak.slot(mat)
+    rings, prev = [], Vector((0, 0, 1))
+    for i, (p, r) in enumerate(path):
+        p = Vector(p)
+        d = (Vector(path[min(i + 1, len(path) - 1)][0]) - Vector(path[max(i - 1, 0)][0])).normalized()
+        u = d.cross(prev if abs(d.dot(prev)) < 0.95 else Vector((1, 0, 0))).normalized()
+        w = d.cross(u)
+        prev = u
+        rings.append([oak.bm.verts.new(p + (u * math.cos(2 * math.pi * k / segs) + w * math.sin(2 * math.pi * k / segs))
+                                       * r * (1 + ridge * math.sin(5 * 2 * math.pi * k / segs + phase + 0.35 * i)))
+                      for k in range(segs)])
+    for a_, b_ in zip(rings, rings[1:]):
+        for k in range(segs):
+            oak.face((a_[k], a_[(k + 1) % segs], b_[(k + 1) % segs], b_[k]), s_, True)
+    oak.face(rings[0][::-1], s_)
+    oak.face(rings[-1], s_)
+
+
+def bend(p0, p1, r0, r1, wob, n=6, mat=None):
+    """A gently crooked limb from p0 to p1; returns its end."""
+    p0, p1 = Vector(p0), Vector(p1)
+    side = Vector((orn.uniform(-1, 1), orn.uniform(-1, 1), orn.uniform(-0.2, 0.4)))
+    path = [(p0 + (p1 - p0) * (i / n) + side * wob * math.sin(math.pi * i / n), r0 + (r1 - r0) * (i / n)) for i in range(n + 1)]
+    tube(path, mat or BARK[orn.randrange(2)], 8, 0.08, orn.uniform(0, 6))
+    return p1
+
+
+TOP = [0.0]
+
+
+def pad(c, r, flat=0.5):
+    """A leaf pad: a lumpy flattened ball, faceted so it reads as foliage."""
+    g = bmesh.ops.create_icosphere(oak.bm, subdivisions=2, radius=r,
+                                   matrix=Matrix.Translation(Vector(c)) @ Matrix.Diagonal((1, 1, flat, 1)))
+    k = 2 if Vector(c).z - 0 > 4.2 else orn.randrange(2)
+    oak.paint(g, LEAF[k if orn.random() < 0.7 else orn.randrange(3)])
+    for v in g["verts"]:
+        v.co += (v.co - Vector(c)).normalized() * orn.uniform(-0.28, 0.22) * r
+    TOP[0] = max(TOP[0], max(v.co.z for v in g["verts"]))
+
+
+# trunk: thick, short, leaning a little, ridged, flared at the foot, with buttress humps
+lean = Vector((0.18, -0.1, 0))
+tp = [(Vector((OX, OY, z)) + lean * (z / 2.0) ** 2, r) for z, r in
+      ((-0.05, 1.25), (0.25, 0.98), (0.7, 0.86), (1.2, 0.8), (1.7, 0.78), (2.1, 0.7))]
+tube(tp, BARK[0], 16, 0.07, 0.4)
+for k in range(6):                                                 # roots that run out over the ground
+    a = 0.4 + k * 1.05 + orn.uniform(-0.2, 0.2)
+    tube([(Vector((OX + 0.4 * math.cos(a), OY + 0.4 * math.sin(a), 0.55)), 0.3),
+          (Vector((OX + 0.85 * math.cos(a), OY + 0.85 * math.sin(a), 0.2)), 0.24),
+          (Vector((OX + 1.4 * math.cos(a), OY + 1.4 * math.sin(a), 0.0)), 0.17),
+          (Vector((OX + 1.8 * math.cos(a), OY + 1.8 * math.sin(a), -0.06)), 0.12)], BARK[1], 8)
+FORK = Vector((OX, OY, 2.1)) + lean * (2.1 / 2.0) ** 2
+# primary limbs: wide, rising at 25-40 degrees, one low and long that reaches out over the wall
+for a, rise, ln in ((0.5, 0.55, 2.3), (2.2, 0.7, 2.0), (3.5, 0.5, 2.5), (5.0, 0.8, 1.9)):
+    d = Vector((math.cos(a), math.sin(a), rise)).normalized()
+    p1 = bend(FORK, FORK + d * ln, 0.5, 0.26, 0.5)
+    for j in range(2):                                              # each divides in two, then again
+        a2 = a + (-0.55 if j == 0 else 0.6)
+        d2 = Vector((math.cos(a2), math.sin(a2), rise * 0.5 + 0.1)).normalized()
+        p2 = bend(p1, p1 + d2 * orn.uniform(1.1, 1.5), 0.2, 0.11, 0.35)
+        for m in range(2):
+            a3 = a2 + (-0.4 if m == 0 else 0.45)
+            d3 = Vector((math.cos(a3), math.sin(a3), 0.35)).normalized()
+            p3 = bend(p2, p2 + d3 * orn.uniform(0.8, 1.1), 0.11, 0.06, 0.2, 3)
+            pad(p3 + Vector((0, 0, 0.35)), orn.uniform(0.9, 1.15))
+            pad(p3 + Vector((orn.uniform(-0.9, 0.9), orn.uniform(-0.9, 0.9), 1.0)), orn.uniform(0.75, 1.0), 0.55)
+        pad(p2 + Vector((0, 0, 0.9)), orn.uniform(0.85, 1.1), 0.55)
+    pad(p1 + Vector((0, 0, 0.6)), 1.0, 0.55)
+for j in range(7):                                                  # the crown's upper layer
+    a = j * 0.9 + 0.2
+    pad(FORK + Vector((1.4 * math.cos(a) * (1 + 0.2 * (j % 2)), 1.4 * math.sin(a) * (1 + 0.2 * (j % 2)), 2.6 + 0.3 * (j % 3))),
+        orn.uniform(1.0, 1.3), 0.5)
+pad(FORK + Vector((0.3, 0.0, 3.2)), 1.4, 0.5)
 
 M = Matrix.Translation((CX, -CZ, FL)) @ Matrix.Rotation(YAW, 4, "Z")
 for part in (shell, floor, oak):
@@ -210,7 +271,7 @@ json.dump({"_note": "Written by art/sets/oracle.py; explorer coords [x, z] in me
                     "`north`, `south`: the road out before each; `oak`: the trunk, its crown's top at `oak_top`; "
                     "`temple`: the middle of its front, `temple_door` its doorway, roof top at `temple_top`; `altar`.",
            "middle": ex(0, 0), "floor": round(FL, 2), "north_gate": ex(-ox - T / 2, 0), "south_gate": ex(ox + T / 2, 0),
-           "north": ex(-ox - 8, 0), "south": ex(ox + 8, 0), "oak": ex(OX, OY), "oak_top": round(FL + 6.2, 2),
+           "north": ex(-ox - 8, 0), "south": ex(ox + 8, 0), "oak": ex(OX, OY), "oak_top": round(FL + TOP[0], 2),
            "temple": ex(TX, y0), "temple_door": ex(TX, DY), "temple_top": round(FL + top + 0.16, 2), "altar": ex(AX, AY),
            "wall_top": round(FL + WH, 2)},
           open(f"art/sets/{NAME}.json", "w"), indent=1)

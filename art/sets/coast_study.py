@@ -83,6 +83,17 @@ elif NAME == "oracle":
     shot("temple34", (4.5, -4.5, 2.2), (-2.0, -9.0, 1.8), 24)
     shot("north34", (-8, -25, 3.6), (0, -6.5, 1.8), 26)
     shot("above", (12, 10, 18), (0, -6.5, 0.5), 24)
+    shot("oak_out", (-4, 7, 1.7), (-2.4, -3.5, 3.2), 28)        # from the road, through the south gate
+    def oakshot(name, eye, look, lens):                           # absolute explorer [x, height, z]
+        cam.location = Vector((eye[0], -eye[2], eye[1]))
+        cam.rotation_euler = (Vector((look[0], -look[2], look[1])) - cam.location).to_track_quat("-Z", "Y").to_euler()
+        cam.data.lens = lens
+        sc.render.filepath = OUT + name + ".png"
+        bpy.ops.render.render(write_still=True)
+    oakshot("oak_near", (221.0, 11.7, 33.0), (224.7, 12.0, 36.3), 30)   # from the temple's side
+    oakshot("oak_trunk", (222.0, 11.5, 38.0), (224.7, 11.8, 36.3), 34)
+    shot("oak_under", (1.0, -2.0, 1.7), (-2.4, -3.5, 3.4), 26)
+    shot("oak_far", (10, 10, 3), (-2.4, -3.5, 3.0), 40)
 elif NAME == "stoa":
     shot("front34", (20, 22, 6), (0, -2, 2.5), 28)
     shot("colonnade", (-10.5, 1.5, 1.7), (6, -2.5, 2.6), 24)
