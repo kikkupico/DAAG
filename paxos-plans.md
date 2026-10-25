@@ -189,7 +189,7 @@ Written: `books/changes-that-never-clash/`.
 
 ## Knowing When to Wait
 
-**Hellerstein 2010 · Ameloot, Neven & Van den Bussche 2011 · Hellerstein & Alvaro 2020 · the hall of two doors, Paxos**
+**Hellerstein 2010 · Ameloot, Neven & Van den Bussche 2011 · Hellerstein & Alvaro 2020 · the oracle at the fork, Paxos**
 
 **The idea.** **CALM:** a program has a consistent, coordination-free distributed implementation if and only if it is **monotonic**: more input never retracts an output. Conjectured by Hellerstein (2010); proved by Ameloot, Neven and Van den Bussche (2011) for networks of relational transducers, where coordination-free programs compute exactly the monotone queries, as do **oblivious** ones that know neither the other nodes nor how many there are; restated by Hellerstein and Alvaro (2020), who show how to **seal** a non-monotone step so that only it needs coordination.
 

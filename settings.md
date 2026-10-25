@@ -69,7 +69,7 @@ office at one end; the **gate**, a deep entrance opening onto the road, where sl
 the storehouse at the other end, with loading doors onto the road. A portico of plain Doric
 columns, standing straight on the paving with no bases, under a lean-to roof runs the length of the range along the road's edge, and under it, by the
 gate, hangs the house's **board** of requests, a row of numbered slots with the peg beside it (House
-3's is Herlios' board). Each port town round it is a compact cluster on terraces cut into the slopes round the
+3's is the request board of *Many Copies, Acting as One*). Each port town round it is a compact cluster on terraces cut into the slopes round the
 harbour, of one-storey houses, courtyard houses and long storehouses, plastered off-white or pale ochre under gabled terracotta roofs. Houses
 face inwards, so the streets, of beaten earth, see mostly blank walls with a door and a few
 small high windows. Nothing sets one town apart.
@@ -102,10 +102,10 @@ small high windows. Nothing sets one town apart.
   the rule; serving by tally need not; neither sequence contains the other. Locality is shown with two
   boards, grain at House 3 and oil at House 2, ordered by all three houses (H8 for the looser rule). The **looser rule**
   (sequential consistency) passes each board and fails both together; several things done as one
-  (serializability) is one plain paragraph, with no device. The
-  paper's §4 queue is **Herlios' board** itself: numbered **slots**, a **peg** (`INC`), clerks entering requests (Glaukos, Mikon) and a loader serving (Sosias) with `SWAP`, all at one house. The
+  (serializability) is a short passage with one small three-case widget (two houses each doing two things as one). The
+  paper's §4 queue is **House 3's board** itself: numbered **slots**, a **peg** (`INC`), clerks entering requests and a loader serving with `SWAP`, all at one house. The
   rule is judged only at the houses' gates, so it cannot tell one board from copies acting as one;
-  no way of keeping copies is described. Herlios keeps the board.
+  no way of keeping copies is described.
 **Why linearizability is on Arche.** It is defined by real time: one operation finished before
 another began. Arche has real time — the sun rises over it whether or not a dial can be read —
 but in the trading season no one can read it, and no house can learn of another's order except
@@ -250,7 +250,7 @@ on the scholars' coast waits for a vote, although the Chamber is a morning's wal
 
 | Paper | In the world |
 |---|---|
-| `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and not retold, drawn as a round hall, a tholos ringed by a colonnade, because its acoustics make oratory impossible. Legislators wander in and out, each keeps a scroll, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved |
+| `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and kept as he wrote it, drawn as a round hall, a tholos ringed by a colonnade, because its acoustics make oratory impossible. Legislators wander in and out, each keeps a scroll, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved |
 
 **The ground must provide:** the **Chamber** on the western arm, looking across the bay at
 the Tholos, and on a route rather than at a dead end (legislators wander in and out): the

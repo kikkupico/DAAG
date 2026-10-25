@@ -297,7 +297,7 @@ use these colours, and previs shots pass the same RGB as a figure's `tint`.
 Messengers go bare-headed, with no hat of any kind; they wear a plain *exōmis*, a short tunic of one rectangle, sleeveless and bare at one
 shoulder, with no set-in sleeves, sewn collar or trim; simple strapped sandals, with no buckles, or
 bare feet; and a soft hide sack on a cord (a *pera*), with no stitched seams, tailored flap or belt
-buckle. Lamportios wears a draped, pinned chiton or himation. Slips are strips of papyrus, with visible
+buckle. A house's accountant wears a draped, pinned chiton or himation. Slips are strips of papyrus, with visible
 fibres and ragged edges. Outside columns are Doric: no bases, standing on the paving. The one exception is the ring of columns inside the Chamber, which are slender and Corinthian, with bell capitals of acanthus leaves. Roofs are flat terracotta
 pan tiles with narrow cover tiles and eave-end tiles; timbers are hand-hewn, uneven, never square-milled.
 Cloth, as modelling estimates: a himation about 1.3 × 2.8 m, a chlamys about 1.1 × 2 m, worn by a man about 1.7 m and a woman about 1.5 m tall.
