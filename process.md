@@ -85,7 +85,7 @@ Keeping One Law (Schedia and the Tholos), Libraries That Agree in the End (the s
 Students Asking Which Life to Lead (the oracle at the fork). The place goes in the kicker above the
 title. The title is used wherever the setting is named as a setting: its page, the home page, the
 overview scroll, the papers index, a book's title, its Setting link and the tooltips on its
-superscripts, and the feed. The URLs keep the place slugs, and prose keeps the place names.
+superscripts. The URLs keep the place slugs, and prose keeps the place names.
 
 Every book is a scroll. The earlier chapter editions are kept only in the git history.
 
