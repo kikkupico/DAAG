@@ -139,7 +139,7 @@ const LANES={1:[-90,"T1",TC[1],"P1"],2:[0,"T2",TC[2],"P2"],3:[90,"T3",TC[3],"P3"
     T.forEach(k=>{H.tent[k].g.classList.remove("out");H.state(k,"");H.badge(k,"");L.badge(k,"")});H.tent[1].g.classList.add("turn");H.state(1,"you");
     L.reset();L.turn(1);L.state(1,"you","you");K.forEach(k=>{if(truth[k]==="fine")L.msg(k,1,.3,1.1)});L.setT(2.4);
     bR.disabled=false;paint();
-    say.innerHTML=dual("Tent 1's man has had no bird from some tents. Which of them are dead? Chalk the ones you think are, then reveal the night.","P1 has had no message from some processes. Which of them have crashed? Mark the ones you think have, then reveal the execution.")}
+    say.innerHTML=dual("Tent 1's mercenary has had no bird from some tents. Which of them are dead? Chalk the ones you think are, then reveal the night.","P1 has had no message from some processes. Which of them have crashed? Mark the ones you think have, then reveal the execution.")}
   const bird=k=>truth[k]==="fine"?dual("a bird came in","a message came in"):dual("no bird yet","no message yet");
   function paint(){
     rows.innerHTML=K.map(k=>`<div class="srow">${tentChip(k)}<span class="sb">${bird(k)}</span><button class="btn alt" data-k="${k}" ${shown?"disabled":""}>${mark[k]?dual("Rub out","Remove"):dual("Chalk","Suspect")}</button><span class="sv" id="sv${k}"></span></div>`).join("");
@@ -157,8 +157,8 @@ const LANES={1:[-90,"T1",TC[1],"P1"],2:[0,"T2",TC[2],"P2"],3:[90,"T3",TC[3],"P3"
       else{H.state(k,"alive");L.state(k,"alive","alive")}});
     paint();
     const missed=K.filter(k=>truth[k]==="dead"&&!mark[k]).length,wrong=K.filter(k=>truth[k]!=="dead"&&mark[k]).length;
-    say.innerHTML=!missed&&!wrong?dual("No mistake this time. But from where tent 1 sits, a dead man and a slow bird look the same, so a slate can only guess.","No mistake this time. But from where P1 sits, a crashed process and a slow message look the same, so a detector can only guess."):
-      dual(`This slate went wrong ${missed?"by leaving "+missed+" dead "+(missed>1?"men":"man")+" clean":""}${missed&&wrong?" and ":""}${wrong?"by chalking "+wrong+" living "+(wrong>1?"men":"man"):""}. <b>Those are the only two ways to go wrong.</b>`,
+    say.innerHTML=!missed&&!wrong?dual("No mistake this time. But from where tent 1 sits, a dead mercenary and a slow bird look the same, so a slate can only guess.","No mistake this time. But from where P1 sits, a crashed process and a slow message look the same, so a detector can only guess."):
+      dual(`This slate went wrong ${missed?"by leaving "+missed+" dead "+(missed>1?"mercenaries":"mercenary")+" clean":""}${missed&&wrong?" and ":""}${wrong?"by chalking "+wrong+" living "+(wrong>1?"mercenaries":"mercenary"):""}. <b>Those are the only two ways to go wrong.</b>`,
         `This detector went wrong ${missed?"by leaving "+missed+" crashed "+(missed>1?"processes":"process")+" unsuspected":""}${missed&&wrong?" and ":""}${wrong?"by suspecting "+wrong+" live "+(wrong>1?"processes":"process"):""}. <b>Those are the only two ways to go wrong.</b>`)};
   bN.onclick=deal;deal();
 })();
@@ -172,7 +172,7 @@ const LANES={1:[-90,"T1",TC[1],"P1"],2:[0,"T2",TC[2],"P2"],3:[90,"T3",TC[3],"P3"
   let r,copy,order;
   const L=(a,b)=>isM()?b:a;
   function reset(){r=0;copy={};LIVE.forEach(p=>copy[p]=new Set());order={};paint();bG.disabled=false;
-    say.innerHTML=dual("Tent 4 is dead. Of the three living men, only tent 1 has chalked it. Send a round of birds: every living man sends the marks on the slate to every tent.","P4 has crashed. Of the three live processes, only P1 has suspected it. Send a round of messages: every live process sends the suspicions on its list to every process.")}
+    say.innerHTML=dual("Tent 4 is dead. Of the three living mercenaries, only tent 1 has chalked it. Send a round of birds: every living mercenary sends the marks on the slate to every tent.","P4 has crashed. Of the three live processes, only P1 has suspected it. Send a round of messages: every live process sends the suspicions on its list to every process.")}
   const marks=s=>s.size?[...s].sort().map(k=>tentChip(k)).join(""):"<i>none</i>";
   function paint(){
     rows.innerHTML=`<div class="chead"><span></span><span>${dual("the slate says","the list says")}</span><span>${dual("the copy holds","the copy holds")}</span><span>${dual("birds taken in, in order","messages received, in order")}</span></div>`+
@@ -182,9 +182,9 @@ const LANES={1:[-90,"T1",TC[1],"P1"],2:[0,"T2",TC[2],"P2"],3:[90,"T3",TC[3],"P3"
     LIVE.forEach(p=>{order[p]=shuffle(LIVE);order[p].forEach(q=>{const c=copy[p];slate(q,r).forEach(k=>c.add(k));c.delete(q)})});
     paint();
     const all4=LIVE.every(p=>copy[p].has(4)),w=LIVE.some(p=>copy[p].has(2)||copy[p].has(1)||copy[p].has(3));
-    say.innerHTML=dual(`Round ${r}. Each man added the marks of every bird taken in, and rubbed out the mark against the tent the bird came from.`+
+    say.innerHTML=dual(`Round ${r}. Each mercenary added the marks of every bird taken in, and rubbed out the mark against the tent the bird came from.`+
       (all4?` <b>Tent 4 is chalked in every copy,</b> and no bird from tent 4 will ever come to rub it out.`:"")+
-      (r<3?(w?" Some copies still hold a mark against a living man. That is only the slates' mistake, passed on, and any bird from that man rubs it out.":""):
+      (r<3?(w?" Some copies still hold a mark against a living mercenary. That is only the slates' mistake, passed on, and any bird from that mercenary rubs it out.":""):
         " The slates are right about the living now. Every copy holds tent 4 and nobody else: the copy is only as wrong as the slates it was copied from, and it rights itself when they do."),
       `Round ${r}. Each process added the suspicions in every message received, and removed the suspicion of the process the message came from.`+
       (all4?` <b>P4 is suspected in every copy,</b> and no message from P4 will ever come to remove it.`:"")+
@@ -245,8 +245,8 @@ const strongRun=(function(){
         return `<div class="crow t${d?" dead":""}">${tentChip(p)}<span><b>${dual(sight[p],GL[sight[p]])}</b></span><span>${d?when(dies[p]):p===c?dual("alive, never chalked","alive, never suspected"):"alive"}</span>`+
           (d?`<span></span><span>–</span>`:`<span><div class="tally">${T.map(k=>`<span class="tc ${V[k]?"f":""}">${V[k]?dual(V[k],GL[V[k]]):"–"}</span>`).join("")}</div></span><span><b>${WD(R.commit[p])}</b></span>`)+`</div>`}).join("");
     const same=tallies.size===1,one=ans.size===1,seen=[...ans].every(a=>Object.values(sight).includes(a));
-    say.innerHTML=dual(`${n?cap(tents(dead))+(n>1?" are":" is")+" killed.":"Nobody is killed."} Tent ${c} lives and is never chalked, and every other living man may be chalked by anyone, over and over. `+
-      `<span class="${same?"ok":"bad"}">${same?"Every living man ends with the same sheet.":"The sheets differ."}</span> `+
+    say.innerHTML=dual(`${n?cap(tents(dead))+(n>1?" are":" is")+" killed.":"Nobody is killed."} Tent ${c} lives and is never chalked, and every other living mercenary may be chalked by anyone, over and over. `+
+      `<span class="${same?"ok":"bad"}">${same?"Every living mercenary ends with the same sheet.":"The sheets differ."}</span> `+
       `<span class="${one&&seen?"ok":"bad"}">${one&&seen?"All commit to "+word[[...ans][0]]+", an answer someone sighted.":"The answers differ."}</span>`,
       `${n?cap(pn(dead))+(n>1?" crash.":" crashes."):"Nobody crashes."} P${c} stays correct and is never suspected, and every other correct process may be suspected by anyone, over and over. `+
       `<span class="${same?"ok":"bad"}">${same?"Every correct process ends with the same vector.":"The vectors differ."}</span> `+
@@ -266,24 +266,24 @@ const strongRun=(function(){
         return `<div class="crow t2${live?"":" dead"}${own?" owner":""}">${tentChip(k)}<span data-l="estimate">${word2(st.est[k])}</span><span data-l="${L("taken up in round","adopted in round")}">${st.ts[k]||dual("its sighting","its input")}</span><span>${!live?dual("killed","crashed"):st.commit?dual("commits to "+word[st.commit],"decides "+GL[st.commit]):own?dual("owner of this round","coordinator of this round"):""}</span></div>`}).join("")}
   function start(nDead){const ks=shuffle(T),sight={};T.forEach(k=>sight[k]=rnd(2)?"A":"H");
     st=newNight(ks.slice(nDead).sort(),sight);log.innerHTML="";bN.disabled=false;bR.hidden=false;paint(null);
-    say.innerHTML=dual(`${nDead?(nDead>1?"Two men are":"One man is")+" killed.":"All four live."} For the first two rounds the slates are wrong: a man may chalk a round's owner who lives. From round 3 they are right. Take a round.`,
+    say.innerHTML=dual(`${nDead?(nDead>1?"Two mercenaries are":"One mercenary is")+" killed.":"All four live."} For the first two rounds the slates are wrong: a mercenary may chalk a round's owner who lives. From round 3 they are right. Take a round.`,
       `${nDead?(nDead>1?"Two processes crash.":"One process crashes."):"All four run."} For the first two rounds the detectors are wrong: a process may suspect a round's coordinator that is correct. From round 3 they are right. Take a round.`)}
   const ev=(h,cls="")=>{const d=document.createElement("div");d.className="e "+cls;d.innerHTML=h;log.prepend(d);while(log.children.length>14)log.lastChild.remove()};
   bN.onclick=()=>{
     if(!st)return;const o=playRound(st,st.r>=2);paint(o.owner);
     const own=o.owner,H=dual(`<b>Round ${o.r}</b> belongs to tent ${own}. `,`<b>Round ${o.r}</b> belongs to P${own}. `);
-    if(o.kind==="deadowner"){ev(H+dual(`Tent ${own} is dead. Every man chalks it in the end, and the round comes to nothing.`,`P${own} has crashed. Every process suspects it in the end, and the round comes to nothing.`),"bad");say.innerHTML=dual("A dead owner costs one round. Failing is always safe, and the next round begins with the next tent.","A crashed coordinator costs one round. Failing is always safe, and the next round begins with the next process.");return}
-    if(o.kind==="stuck"){ev(H+dual(`The owner must wait for three estimates, and only two men live. It waits for ever.`,`The coordinator must wait for three estimates, and only two processes are correct. It waits for ever.`),"bad");bN.disabled=true;
+    if(o.kind==="deadowner"){ev(H+dual(`Tent ${own} is dead. Every mercenary chalks it in the end, and the round comes to nothing.`,`P${own} has crashed. Every process suspects it in the end, and the round comes to nothing.`),"bad");say.innerHTML=dual("A dead owner costs one round. Failing is always safe, and the next round begins with the next tent.","A crashed coordinator costs one round. Failing is always safe, and the next round begins with the next process.");return}
+    if(o.kind==="stuck"){ev(H+dual(`The owner must wait for three estimates, and only two mercenaries live. It waits for ever.`,`The coordinator must wait for three estimates, and only two processes are correct. It waits for ever.`),"bad");bN.disabled=true;
       say.innerHTML=dual("Nobody can commit, and nobody commits to anything wrong. <b>With two of the four killed, this arrangement waits for ever.</b>","Nobody can decide, and nobody decides anything wrong. <b>With two of the four crashed, this algorithm waits for ever.</b>");return}
     const how=dual(o.best===0?`the sighting of tent ${o.pick}, since none has been taken up in any round yet`:`the one taken up most recently, in round ${o.best}, by tent ${o.pick}`,o.best===0?`the input of P${o.pick}, since none has been adopted in any round yet`:`the one adopted most recently, in round ${o.best}, by P${o.pick}`);
     const others=T.filter(k=>st.live.includes(k)&&k!==own);
     const chalked=others.filter(k=>!o.reply[k]),taking=others.filter(k=>o.reply[k]);
-    const sI=chalked.length?`${cap(tents(chalked))} ${chalked.length>1?"have":"has"} chalked the owner and answer${chalked.length>1?"":"s"} <i>not agreed</i>${taking.length?"; "+tents(taking)+" take"+(taking.length>1?"":"s")+" it up and answer"+(taking.length>1?"":"s")+" <i>agreed</i>":""}. `:`Every man takes it up and answers <i>agreed</i>. `;
+    const sI=chalked.length?`${cap(tents(chalked))} ${chalked.length>1?"have":"has"} chalked the owner and answer${chalked.length>1?"":"s"} <i>not agreed</i>${taking.length?"; "+tents(taking)+" take"+(taking.length>1?"":"s")+" it up and answer"+(taking.length>1?"":"s")+" <i>agreed</i>":""}. `:`Every mercenary takes it up and answers <i>agreed</i>. `;
     const sM=chalked.length?`${cap(pn(chalked))} ${chalked.length>1?"suspect":"suspects"} the coordinator and answer${chalked.length>1?"":"s"} <i>nack</i>${taking.length?"; "+pn(taking)+" adopt"+(taking.length>1?"":"s")+" it and answer"+(taking.length>1?"":"s")+" <i>ack</i>":""}. `:`Every process adopts it and answers <i>ack</i>. `;
     let h=H+dual(`Tent ${own} gathers three estimates, from ${tents(o.gather)}, and takes `,`P${own} gathers three estimates, from ${pn(o.gather)}, and takes `)+how+`: ${word2(o.e)}. `+dual("It sends it to every tent. ","It sends it to every process. ")+dual(sI,sM);
     h+=dual(`The owner waits for the first three replies, from ${tents(o.three.slice().sort())}. `,`The coordinator waits for the first three replies, from ${pn(o.three.slice().sort())}. `);
     if(o.ok){ev(h+dual("<span class='ok'>All three say agreed: the parting bird goes out.</span>","<span class='ok'>All three say ack: the decision message goes out.</span>"),"good");bN.disabled=true;paint(own);
-      say.innerHTML=dual(`Everyone who lives takes in the parting bird, sends it on, and commits to <b>${word[o.e]}</b>.`+(st.sight&&Object.values(st.sight).includes(o.e)?" Someone sighted it.":"")+` Nobody commits to anything else, in this round or in any later one: three men took up this answer, and any three out of four share a man with them.`,
+      say.innerHTML=dual(`Everyone who lives takes in the parting bird, sends it on, and commits to <b>${word[o.e]}</b>.`+(st.sight&&Object.values(st.sight).includes(o.e)?" Someone sighted it.":"")+` Nobody commits to anything else, in this round or in any later one: three mercenaries took up this answer, and any three out of four share a mercenary with them.`,
         `Every correct process receives the decision message, sends it on, and decides <b>${GL[o.e]}</b>.`+(st.sight&&Object.values(st.sight).includes(o.e)?" Some process had it as input.":"")+` Nobody decides anything else, in this round or in any later one: three processes adopted this value, and any three out of four share a process with them.`);paint(own)}
     else{ev(h+dual("<span class='bad'>One says not agreed: the round comes to nothing.</span>","<span class='bad'>One says nack: the round comes to nothing.</span>"),"bad");
       say.innerHTML=o.calm?dual("The round failed.","The round failed."):dual("The round failed because a slate chalked a living owner. The chalk can cost time. It can never cost agreement.","The round failed because a detector suspected a correct coordinator. The suspicion can cost time. It can never cost agreement.")}
@@ -347,7 +347,7 @@ const strongRun=(function(){
   }
   function paintCell(c,i){return `<span class="wc${c.chalked?" ch":""}${c.wind?" wd":""}" title="tick ${i+1}">${c.chalked?"✗":c.rub?"↺":c.birds?"•":""}</span>`}
   function reset(){gen++;tl.innerHTML=Array.from({length:N},(_, i)=>`<span class="wc${i<WIND?" wd":""}"></span>`).join("");stat.innerHTML="";bL.disabled=bD.disabled=false;bR.hidden=true;
-    say.innerHTML=dual("A man at one tent watches another tent for a sign of life. Every man sends a bird to every tent, again and again, to say the sender is alive. Watch a night go by.","One process watches another for a sign of life. Every process sends a heartbeat to every other process, again and again, to say it is alive. Watch an execution go by.")}
+    say.innerHTML=dual("A mercenary at one tent watches another tent for a sign of life. Every mercenary sends a bird to every tent, again and again, to say the sender is alive. Watch a night go by.","One process watches another for a sign of life. Every process sends a heartbeat to every other process, again and again, to say it is alive. Watch an execution go by.")}
   async function run(alive){
     const g=++gen,S=simulate(alive);bL.disabled=bD.disabled=true;bR.hidden=true;tl.innerHTML=Array.from({length:N},(_, i)=>`<span class="wc${i<WIND?" wd":""}"></span>`).join("");
     for(let i=0;i<N;i++){
@@ -357,9 +357,9 @@ const strongRun=(function(){
       stat.innerHTML=`<span><b>${c.g}</b>${dual("glass, in ticks","timeout, in ticks")}</span><span><b>${c.wrong}</b>${dual("mistaken marks","false suspicions")}</span><span><b>${dual(c.chalked?"chalked":"clean",c.chalked?"suspected":"not suspected")}</b>${dual("the row now","the entry now")}</span>`;
       await sleep(170)}
     if(g!==gen)return;
-    say.innerHTML=alive?dual(`The man lives, and the slate was wrong ${S.wrong} time${S.wrong===1?"":"s"} while the wind blew. Each late bird rubbed the mark out and lengthened the glass. Once the wind dropped and every bird came within a glass, the mark never stood again: <b>in the end, nobody living is chalked.</b>`,
+    say.innerHTML=alive?dual(`The mercenary lives, and the slate was wrong ${S.wrong} time${S.wrong===1?"":"s"} while the wind blew. Each late bird rubbed the mark out and lengthened the glass. Once the wind dropped and every bird came within a glass, the mark never stood again: <b>in the end, nobody living is chalked.</b>`,
       `The process is alive, and the detector was wrong ${S.wrong} time${S.wrong===1?"":"s"} while the network was unstable. Each late heartbeat removed the suspicion and lengthened the timeout. Once the network settled and every heartbeat came within the timeout, the suspicion never stood again: <b>in the end, no correct process is suspected.</b>`):
-      dual(`The man was killed. Birds already in the air still came in, and each rubbed the mark out. Then none came, and the mark stayed: <b>a dead man's birds stop, so the dead man is chalked for good.</b>`,
+      dual(`The mercenary was killed. Birds already in the air still came in, and each rubbed the mark out. Then none came, and the mark stayed: <b>a dead mercenary's birds stop, so the dead mercenary is chalked for good.</b>`,
       `The process crashed. Heartbeats already in transit still arrived, and each removed the suspicion. Then none came, and the suspicion stayed: <b>a crashed process's heartbeats stop, so it is suspected for good.</b>`);
     bR.hidden=false;bL.disabled=bD.disabled=false}
   bL.onclick=()=>run(true);bD.onclick=()=>run(false);bR.onclick=reset;reset();

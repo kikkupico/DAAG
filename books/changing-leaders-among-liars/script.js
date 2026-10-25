@@ -74,11 +74,11 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const flight=(a,b,fill,glyph,ms)=>{const g=C.token(fill,glyph);g.setAttribute("opacity",1);C.fly(g,a,b,0);return tween(ms,u=>C.fly(g,a,b,u)).then(()=>g.remove())};
   const lock=on=>b1.disabled=b2.disabled=on;
   b1.onclick=async()=>{lock(true);L.reset();const pairs=[];for(const a of men)for(const b of men)if(a!==b)pairs.push([a,b]);
-    cnt.textContent=pairs.length;say.innerHTML=dual("Every man writes to every other man.","Every replica messages every other replica.");
+    cnt.textContent=pairs.length;say.innerHTML=dual("Every bandit writes to every other bandit.","Every replica messages every other replica.");
     await Promise.all(pairs.map(([a,b])=>flight(a,b,BC[a],"",1100+rnd(800))));
-    say.innerHTML=dual(`<b>${pairs.length} rats</b> in one stage: each of the four men writes to the other three.`,`<b>${pairs.length} messages</b> in one phase: each of the four replicas messages the other three.`);lock(false)};
+    say.innerHTML=dual(`<b>${pairs.length} rats</b> in one stage: each of the four bandits writes to the other three.`,`<b>${pairs.length} messages</b> in one phase: each of the four replicas messages the other three.`);lock(false)};
   b2.onclick=async()=>{lock(true);L.reset();const votes=[2,3,4].map(k=>[k,1]),bundle=[2,3,4].map(k=>[1,k]);
-    cnt.textContent=votes.length;say.innerHTML=dual("Each man sends their sealed vote to the registrar, bandit 1.","Each replica sends its signed vote to the leader, R1.");
+    cnt.textContent=votes.length;say.innerHTML=dual("Each bandit sends their sealed vote to the registrar, bandit 1.","Each replica sends its signed vote to the leader, R1.");
     await Promise.all(votes.map(([a,b])=>flight(a,b,BC[a],"",1100+rnd(500))));
     cnt.textContent=votes.length+bundle.length;say.innerHTML=dual("The registrar has three votes, ties them into a bundle, and sends the bundle to the other three.","The leader has three votes, combines them into a certificate, and sends the certificate to the other three.");
     await Promise.all(bundle.map(([a,b])=>flight(a,b,BC[1],"3",1100+rnd(500))));
@@ -128,9 +128,9 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
       L[0].innerHTML=dual(`<b>Lies on the chain of the entry they are locked on</b> ${yesno(h1)}`,`<b>Lies on the chain of the block it is locked on</b> ${yesno(h1)}`);
       L[1].innerHTML=dual(`<b>Carries a bundle from a later term than their lock</b> ${yesno(h2)}<br>the bundle is from term ${b}, the lock from term ${LOCK}`,`<b>Carries a certificate from a later view than its lock</b> ${yesno(h2)}<br>the certificate is from view ${b}, the lock from view ${LOCK}`);
       L[2].innerHTML=dual(`<b>Votes for the proposal</b> ${yesno(vote)}`,`<b>Votes for the proposal</b> ${yesno(vote)}`);
-      say.innerHTML=h1?dual("<b>The first half holds.</b> The proposal builds on the entry the man is locked on, so voting for it helps nothing conflicting forward.","<b>The first half holds.</b> The proposal builds on the block the replica is locked on, so voting for it helps nothing conflicting forward.")
-        :h2?dual(`<b>The second half holds.</b> The proposal conflicts with the lock, but the bundle it carries is from term ${b}, later than term ${LOCK}. The rest have gone past the lock, the man is shown that they have, and they let go.`,`<b>The second half holds.</b> The proposal conflicts with the lock, but the certificate it carries is from view ${b}, later than view ${LOCK}. The rest have gone past the lock, the replica is shown that they have, and it lets go.`)
-        :dual(`<b>Neither half holds.</b> The proposal conflicts with the lock and carries no later bundle. The man refuses.`,`<b>Neither half holds.</b> The proposal conflicts with the lock and carries no later certificate. The replica refuses.`)}});
+      say.innerHTML=h1?dual("<b>The first half holds.</b> The proposal builds on the entry the bandit is locked on, so voting for it helps nothing conflicting forward.","<b>The first half holds.</b> The proposal builds on the block the replica is locked on, so voting for it helps nothing conflicting forward.")
+        :h2?dual(`<b>The second half holds.</b> The proposal conflicts with the lock, but the bundle it carries is from term ${b}, later than term ${LOCK}. The rest have gone past the lock, the bandit is shown that they have, and they let go.`,`<b>The second half holds.</b> The proposal conflicts with the lock, but the certificate it carries is from view ${b}, later than view ${LOCK}. The rest have gone past the lock, the replica is shown that they have, and it lets go.`)
+        :dual(`<b>Neither half holds.</b> The proposal conflicts with the lock and carries no later bundle. The bandit refuses.`,`<b>Neither half holds.</b> The proposal conflicts with the lock and carries no later certificate. The replica refuses.`)}});
 })();
 
 /* ===== two bundles of the same stage share an honest man ===== */
@@ -138,10 +138,10 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const A=$("#lackA"),B=$("#lackB"),stand=$("#lackstand"),say=$("#lacksay");let a=null,b=null;
   function render(){
     $$("button",A).forEach(x=>x.classList.toggle("on",+x.dataset.k===a));$$("button",B).forEach(x=>x.classList.toggle("on",+x.dataset.k===b));
-    if(a==null||b==null){stand.innerHTML="";say.innerHTML=dual("Pick one man for each bundle.","Pick one replica for each certificate.");return}
+    if(a==null||b==null){stand.innerHTML="";say.innerHTML=dual("Pick one bandit for each bundle.","Pick one replica for each certificate.");return}
     const sealed=l=>men.filter(k=>k!==l),shared=men.filter(k=>k!==a&&k!==b);
     stand.innerHTML=`<div>${dual("Bundle A is sealed by","Certificate A is signed by")} ${chips(sealed(a))}</div><div>${dual("Bundle B is sealed by","Certificate B is signed by")} ${chips(sealed(b))}</div><div><b>${dual("Sealed both:","Signed both:")}</b> ${chips(shared)}</div>`;
-    say.innerHTML=dual(`<b>${shared.length} men sealed both bundles.</b> If one of them lies, at least ${shared.length-1} honest ${shared.length-1>1?"men":"man"} still did. An honest man votes once a stage a term, so two bundles of the same stage cannot vouch for conflicting entries.`,`<b>${shared.length} replicas signed both certificates.</b> If one of them is faulty, at least ${shared.length-1} honest ${shared.length-1>1?"replicas":"replica"} still did. An honest replica votes once a phase in a view, so two certificates of the same phase cannot vouch for conflicting blocks.`)}
+    say.innerHTML=dual(`<b>${shared.length} bandits sealed both bundles.</b> If one of them lies, at least ${shared.length-1} honest ${shared.length-1>1?"bandits":"bandit"} still did. An honest bandit votes once a stage a term, so two bundles of the same stage cannot vouch for conflicting entries.`,`<b>${shared.length} replicas signed both certificates.</b> If one of them is faulty, at least ${shared.length-1} honest ${shared.length-1>1?"replicas":"replica"} still did. An honest replica votes once a phase in a view, so two certificates of the same phase cannot vouch for conflicting blocks.`)}
   [[A,k=>a=k],[B,k=>b=k]].forEach(([box,setk])=>men.forEach(k=>{const bt=document.createElement("button");bt.className="btn alt chipb";bt.dataset.k=k;bt.innerHTML=dual("bandit "+k,"R"+k);bt.onclick=()=>{setk(k);render()};box.appendChild(bt)}));
   render();
 })();
@@ -154,12 +154,12 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   function render(){
     b2.classList.toggle("on",stages===2);b3.classList.toggle("on",stages===3);b2.classList.toggle("alt",stages!==2);b3.classList.toggle("alt",stages!==3);
     mode.innerHTML=stages===2?dual("two stages","two phases"):dual("three stages","three phases");
-    scene.innerHTML=stages===2?dual("A man locks as soon as they see a first bundle. In this term only <b>bandit 3</b> saw the first bundle before the sandglasses ran out, and bandit 3 is locked on it.","A replica locks as soon as it sees a first certificate. In this view only <b>R3</b> saw the first certificate before the timers ran out, and R3 is locked on it.")
-      :dual("A man locks only on a second bundle, and a second bundle exists only because three men voted on a first bundle and kept it. Here <b>bandits 2, 3 and 4</b> hold the first bundle, and bandit 3 is locked on it.","A replica locks only on a second certificate, and a second certificate exists only because three replicas voted on a first certificate and kept it. Here <b>R2, R3 and R4</b> hold the first certificate, and R3 is locked on it.");
+    scene.innerHTML=stages===2?dual("A bandit locks as soon as they see a first bundle. In this term only <b>bandit 3</b> saw the first bundle before the sandglasses ran out, and bandit 3 is locked on it.","A replica locks as soon as it sees a first certificate. In this view only <b>R3</b> saw the first certificate before the timers ran out, and R3 is locked on it.")
+      :dual("A bandit locks only on a second bundle, and a second bundle exists only because three bandits voted on a first bundle and kept it. Here <b>bandits 2, 3 and 4</b> hold the first bundle, and bandit 3 is locked on it.","A replica locks only on a second certificate, and a second certificate exists only because three replicas voted on a first certificate and kept it. Here <b>R2, R3 and R4</b> hold the first certificate, and R3 is locked on it.");
     menBox.innerHTML=men.map(k=>`<div class="pm${holds().includes(k)?" has":""}${k===LOCK?" lock":""}${k===slow?" slow":""}"><h5><i style="background:${BC[k]}"></i>${dual("bandit "+k,"R"+k)}</h5>${dual("first bundle:","first certificate:")} ${holds().includes(k)?"yes":"no"}<br>locked: ${k===LOCK?"yes":"no"}<br>${slow==null?"":k===slow?"answers last":"heard"}</div>`).join("");
-    if(slow==null){say.innerHTML=dual("Pick the slowest man.","Pick the slowest replica.");return}
+    if(slow==null){say.innerHTML=dual("Pick the slowest bandit.","Pick the slowest replica.");return}
     const heard=men.filter(k=>k!==slow),who=heard.filter(k=>holds().includes(k));
-    if(who.length)say.innerHTML=dual(`The registrar hears ${chips(heard)} and learns the latest first bundle from ${chips(who)}. `+(stages===3?"At least two honest men hold the first bundle, so any three answers include one of them. The lock cannot hide."
+    if(who.length)say.innerHTML=dual(`The registrar hears ${chips(heard)} and learns the latest first bundle from ${chips(who)}. `+(stages===3?"At least two honest bandits hold the first bundle, so any three answers include one of them. The lock cannot hide."
       :"Here nothing hides. But the registrar need only wait for three answers, and the three need not include bandit 3."),`The leader hears ${chips(heard)} and learns the latest first certificate from ${chips(who)}. `+(stages===3?"At least two honest replicas hold the first certificate, so any three answers include one of them. The lock cannot hide."
       :"Here nothing hides. But the leader need only wait for three answers, and the three need not include R3."));
     else say.innerHTML=dual(`The registrar hears ${chips(heard)}. <span class="bad">None of them has the first bundle.</span> The registrar proposes an entry that conflicts with bandit 3's lock, and bandit 3 refuses. The lock stayed hidden.`,`The leader hears ${chips(heard)}. <span class="bad">None of them has the first certificate.</span> The leader proposes a block that conflicts with R3's lock, and R3 refuses. The lock stayed hidden.`);
