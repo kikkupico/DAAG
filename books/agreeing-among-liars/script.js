@@ -171,7 +171,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   function paint(){
     nm.textContent=m;nn.textContent=3*m+1;nr.textContent=m+1;up.disabled=m>=6;dn.disabled=m<=1;
     const plain=4>3*m;
-    say.innerHTML=dual(`With plain slips the crown's four men ${plain?"are enough":"are too few"} ${yesno(plain)}, since it takes more than ${3*m} men.`,`With plain messages the system's four processes ${plain?"are enough":"are too few"} ${yesno(plain)}, since it takes more than ${3*m} processes.`)}
+    say.innerHTML=dual(`With plain slips the crown's four bandits ${plain?"are enough":"are too few"} ${yesno(plain)}, since it takes more than ${3*m} bandits.`,`With plain messages the system's four processes ${plain?"are enough":"are too few"} ${yesno(plain)}, since it takes more than ${3*m} processes.`)}
   up.onclick=()=>{m++;paint()};dn.onclick=()=>{m--;paint()};paint();
 })();
 
