@@ -147,7 +147,7 @@
         <p class="kicker"><span class="i">Paxos · The Chamber</span><span class="m">Consensus with crash and recovery</span></p>
         <h2><span class="i">Part-Time Legislators Passing Laws</span><span class="m">Consensus &amp; Replicated State Machines</span></h2>
         <p class="sub i">Consensus &amp; Replicated State Machines</p>
-        <p class="i">Part-time legislators who wander in and out, each with his own scroll, passing laws by notes that messengers may carry late, twice or never. The laws never contradict one another.</p>
+        <p class="i">Part-time legislators who wander in and out, each with their own scroll, passing laws by notes that messengers may carry late, twice or never. The laws never contradict one another.</p>
         <p class="m">Processes crash and recover with stable storage; messages may be slow, lost or duplicated. The log of decrees must never diverge.</p>
         <dl class="cast i"><dt>Who</dt><dd>Part-time legislators, each with a scroll</dd><dt>Word</dt><dd>Messengers: late, twice or never</dd><dt>Sent</dt><dd>Notes about numbered ballots</dd></dl>
       </figcaption>
@@ -209,7 +209,7 @@
         <p class="sub i">Clocks, State &amp; Linearizability</p>
         <p class="i">Three trading houses that keep no common hour, sending one another slips and goods down a road on which no messenger can pass another.</p>
         <p class="m">Three processes, no shared clock, reliable FIFO channels. Everything a process knows is in its own log or has arrived as a message.</p>
-        <dl class="cast i"><dt>Who</dt><dd>Three trading houses with no common hour</dd><dt>Word</dt><dd>Messengers and carts; nobody overtakes</dd><dt>Sent</dt><dd>Requests, goods, and the tallies on the slips</dd></dl>
+        <dl class="cast i"><dt>Who</dt><dd>Three trading houses with no common hour</dd><dt>Word</dt><dd>Messengers and carts; nobody overtakes</dd><dt>Sent</dt><dd>Requests, goods, and the tallies on the papyrus</dd></dl>
       </figcaption>
     </a>
     <div class="bks n3">
@@ -270,7 +270,7 @@
         <div class="cvr m"><svg data-cover="the-limits-of-agreement" role="img" aria-label="A tree of configurations with one thick path of bivalent configurations that never reaches a decision, deciding branches hanging off every step, and a row of initial configurations from 0000 to 1111"></svg></div>
         <div class="body">
           <h3>The Limits of Agreement</h3>
-          <p class="punch"><span class="i">A dead man looks exactly like a slow bird.</span><span class="m">A crashed process looks exactly like a slow one.</span></p>
+          <p class="punch"><span class="i">A dead mercenary looks exactly like a slow bird.</span><span class="m">A crashed process looks exactly like a slow one.</span></p>
           <p class="q">Can machines always agree when one of them may stop silently and messages take any time at all?</p>
           <p class="how i">We find out by exploring how four mercenaries at the foot of a hill, unable to see one another, tried to agree whether to attack or hold when any of them might be dead.</p>
           <span class="credit">Fischer, Lynch &amp; Paterson 1985</span>
@@ -305,7 +305,7 @@
           <h3>Agreeing by Chance</h3>
           <p class="punch"><span class="i">Sooner or later, the coins land alike.</span><span class="m">Termination with probability 1.</span></p>
           <p class="q">If no plan can guarantee agreement when a machine may stop without warning, can chance succeed where planning cannot? What if a machine that is stuck simply tosses a coin?</p>
-          <p class="how i">We find out by exploring how Greek mercenary camps, deadlocked over a plan, let a coin, tossed by each man alone in his tent, break the tie.</p>
+          <p class="how i">We find out by exploring how Greek mercenary camps, deadlocked over a plan, let a coin, tossed by each mercenary alone in their tent, break the tie.</p>
           <span class="credit">Ben-Or 1983</span>
         </div>
       </a></article></div>
@@ -316,7 +316,7 @@
           <h3>Telling the Dead from the Slow</h3>
           <p class="punch"><span class="i">Bad slates can stall the camp, never split it.</span><span class="m">Safe under any detector.</span></p>
           <p class="q">A machine that has crashed looks exactly like one that is merely slow, and that alone makes agreement impossible. How well must we tell the dead from the slow before agreement becomes possible again?</p>
-          <p class="how i">We find out by exploring how the same Greek mercenaries, each keeping a slate of the tents he thought dead, agreed whether to attack or hold though the slates were often wrong.</p>
+          <p class="how i">We find out by exploring how the same Greek mercenaries, each keeping a slate of the tents they thought dead, agreed whether to attack or hold though the slates were often wrong.</p>
           <span class="credit">Chandra &amp; Toueg 1996</span>
         </div>
       </a></article></div>
@@ -355,7 +355,7 @@
         <div class="cvr m"><svg data-cover="keeping-order-among-liars" role="img" aria-label="Four replicas and a client on time lanes: request, pre-prepare, prepare and commit messages between the lanes, one faulty replica sending a conflicting digest, quorum brackets, and a log slot"></svg></div>
         <div class="body">
           <h3>Keeping Order Among Liars</h3>
-          <p class="punch"><span class="i">Any two groups of three share an honest man.</span><span class="m">Any two quorums of 2f + 1 share a correct replica.</span></p>
+          <p class="punch"><span class="i">Any two groups of three share an honest bandit.</span><span class="m">Any two quorums of 2f + 1 share a correct replica.</span></p>
           <p class="q">Can a replicated service keep its commands in order when some of its machines lie, the leader included, and messages take arbitrarily long?</p>
           <p class="how i">We find out by exploring how four bandits holding a hilltop held one book of their loot when any of them, their chief included, might be lying.</p>
           <span class="credit">Castro &amp; Liskov 1999</span>
@@ -368,7 +368,7 @@
           <h3>Changing Leaders Among Liars</h3>
           <p class="punch"><span class="i">A change of hands costs no more than an entry.</span><span class="m">A linear, responsive view change.</span></p>
           <p class="q">When some machines may lie, replacing a leader has been slow and costly. Can a new leader take over as cheaply as any ordinary step, and at the pace of the messages rather than of a timer?</p>
-          <p class="how i">We find out by exploring how four bandits holding a hilltop took turns keeping their loot scroll, each gathering the others' seals into one bundle instead of every man writing to every other.</p>
+          <p class="how i">We find out by exploring how four bandits holding a hilltop took turns keeping their loot scroll, each gathering the others' seals into one bundle instead of every bandit writing to every other.</p>
           <span class="credit">Yin, Malkhi, Reiter, Gueta &amp; Abraham 2019</span>
         </div>
       </a></article></div>
@@ -387,7 +387,7 @@
         <p class="sub i">Replication Without Assembly</p>
         <p class="i">Libraries up and down a coast, each keeping its own copy of one compendium of knowledge, changing it at once and sending word of every change by courier. Nothing waits for a vote: everyone ends of one mind, by merging rather than by assembly.</p>
         <p class="m">Replicas that answer from local state without coordination, and converge only eventually. The question here is what that can still promise.</p>
-        <dl class="cast i"><dt>Who</dt><dd>Libraries, each with its copy of the compendium</dd><dt>Word</dt><dd>Couriers, who may be stopped</dd><dt>Sent</dt><dd>Revised entries, slips, notices of withdrawal</dd></dl>
+        <dl class="cast i"><dt>Who</dt><dd>Libraries, each with its copy of the compendium</dd><dt>Word</dt><dd>Couriers, who may be stopped</dd><dt>Sent</dt><dd>Revised entries, scrolls, notices of withdrawal</dd></dl>
       </figcaption>
     </a>
     <div class="bks n4">
