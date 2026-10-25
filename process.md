@@ -24,11 +24,11 @@ closing spread that returns to machines. Each mechanism has one live interactive
 stage for a sequence, a click-through widget for a choice. Proofs sit in collapsed panels at the
 end of the spread they belong to. Photographs and cards unfold as they enter view.
 
-A page is self-contained. Its source is four parts in `art/scroll/parts/<slug>/` (`meta.json`,
-`body.html`, `page.css`, `page.js`); `python3 art/scroll/assemble.py <slug>` copies the shared
-`shell.css` and `shell.js` round them and writes the page, and `art/scroll/shot.sh` checks it in
-headless Chrome. Never edit a built page by hand. *The Part-Time Parliament* predates the kit, and
-its page is edited directly. The question a book asks, its "We find out by exploring…" line and
+A page is self-contained. The files to edit are `books/<slug>/index.html`, `style.css` and `script.js`;
+`art/scroll/shot.sh` checks a page in headless Chrome. The four-part sources in `art/scroll/parts/<slug>/`
+(`meta.json`, `body.html`, `page.css`, `page.js`) and `assemble.py` were the original build; the books have
+moved on from them, and `cover.py` reports every page as stale, so do not run `assemble.py` over a book.
+`meta.json` still holds the words a cover and its card share. The question a book asks, its "We find out by exploring…" line and
 its papers are written once, in `meta.json`; the cover and the book's card on the home page both
 carry them, and `python3 art/scroll/cover.py` checks that they agree (`--write` puts them into
 the cards). The pictures a book uses are copied into `books/<slug>/img/`.
@@ -111,7 +111,7 @@ Where the setting is wrong for the period, say so; do not defend it.
 
 ---
 
-## The seven rules that are not negotiable
+## The eight rules that are not negotiable
 
 These are correctness constraints, not preferences.
 
@@ -119,7 +119,7 @@ These are correctness constraints, not preferences.
    findings are explored*. Nothing is resolved, nobody wins, there is no protagonist and no
    arc. If your draft has a climax, it is wrong.
 2. **No fantasy.** No gods, omens, curses or prophecies. Every mechanism is mundane and could
-   be built. Where a paper proves an impossibility, the impossibility is a fact about wood,
+   be built. The one sanctuary on Paxos, the oracle at the fork, is a place where students are told which of two lives their work allows; it is exact and foresees nothing, so it breaks no part of this rule. Where a paper proves an impossibility, the impossibility is a fact about wood,
    distance, birds and daylight — never a curse.
 3. **The allegory is exact.** Every device maps onto an element of the paper's model. Nothing
    may be added that changes the model. Write a *must not exist* list before you draft, and
@@ -447,7 +447,7 @@ book depends on vocabulary an earlier one establishes.
 
 | Building | Paper(s) | Note |
 |---|---|---|
-| The request board | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Shares the requests premise of *Ordering Without Clocks*: the tallies put requests in sequence by slips, this book by the sun. The object is House 3's board of requests, a FIFO queue; Herlios' board with its slots and peg is the paper's §4 queue. Must not give Arche a readable hour in the trading season. Written: `books/many-copies-acting-as-one/`. |
+| The request board | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Shares the requests premise of *Ordering Without Clocks*: the tallies put requests in sequence by slips, this book by the sun. The object is House 3's board of requests, a FIFO queue; House 3's board with its slots and peg is the paper's §4 queue. Must not give Arche a readable hour in the trading season. Written: `books/many-copies-acting-as-one/`. |
 | The camps | Chandra &amp; Toueg 1996 | *Telling the Dead from the Slow.* Shares the camps with FLP. The camps may decide; nothing follows from it. The slate's guarantees are granted, not earned — see `settings.md`. With a majority alive, a turn to propose, not a leader; point to *Agreeing When Messages Run Late* for it and stay on the detector. Written: `books/telling-the-dead-from-the-slow/`. |
 | The Part-Time Parliament | Lamport 1998, 2001 | Lamport's own allegory, the one the whole project borrows, retold as a scroll with his Paxons kept. The paper's formal conditions, its proofs and its appendix are carried in panels; the rest of the paper's prose is not reproduced. Written: `books/the-part-time-parliament/`. The paper ends with a scribe's error that destroys the parliament; later books ignore this for convenience, and in them the parliament is still sitting. |
 | The Tholos, Schedia | Oki &amp; Liskov 1988 | *One Leader at a Time.* VR, a genuine alternative to Paxos, found independently and published first, in Schedia, the city on Paxos's eastern arm with laws of its own. One council of five and one law scroll; the paper's transactions are stated, not carried. Written: `books/one-leader-at-a-time/`. |

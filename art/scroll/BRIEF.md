@@ -24,8 +24,8 @@ art/scroll/parts/<slug>/  meta.json, body.html, page.css, page.js   (what you wr
 books/<slug>/img/         the book's pictures (you copy them in)
 ```
 
-You write the four files in `parts/<slug>/`, run `assemble.py`, and never edit
-`books/<slug>/index.html` by hand. Run everything from the repository root.
+The books have moved on from `parts/`: edit `books/<slug>/index.html`, `style.css` and `script.js`
+directly, and do not run `assemble.py` over a finished book. Run everything from the repository root.
 
 `meta.json` holds the page's `title` and `description` and the words the cover shares with the
 book's card on the home page: `question`, `how`, `credit` (the card's short credit line) and
