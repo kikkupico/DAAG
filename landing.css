@@ -44,14 +44,19 @@
 #books{padding-bottom:clamp(1.5rem,4vw,2.5rem)}
 #books .tour{justify-content:flex-start;margin-top:1.2rem}
 .setting{padding-top:clamp(3.5rem,8vw,5.5rem)}
-.band{position:relative;margin:0;height:clamp(300px,40vw,440px);border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);overflow:hidden;background:#222}
+.band{position:relative;margin:0;height:clamp(340px,44vw,480px);border:4px solid var(--ink);box-shadow:9px 11px 0 var(--shadow);overflow:hidden;background:#222;display:block;text-decoration:none;color:inherit}
 .band img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.band::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(14,10,7,.88) 0%,rgba(14,10,7,.45) 45%,rgba(14,10,7,0) 75%);pointer-events:none}
+.band::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(14,10,7,.92) 0%,rgba(14,10,7,.75) 45%,rgba(14,10,7,.3) 70%,rgba(14,10,7,0) 88%);pointer-events:none}
 .band figcaption{position:absolute;z-index:2;left:0;right:0;bottom:0;padding:22px clamp(18px,3vw,30px);color:var(--cream);max-width:720px}
 .band .kicker{color:var(--gold);margin:0 0 .3rem}
-.band h2{font-size:clamp(2rem,5vw,3.4rem);color:#fff;margin:0;text-shadow:0 3px 30px rgba(0,0,0,.5)}
+.band h2{font-size:clamp(2rem,5vw,3.4rem);color:#fff;margin:0;text-shadow:0 3px 30px rgba(0,0,0,.5);transition:color .2s}
+.band:hover h2{color:var(--gold)}
+.band:focus-visible{outline:3px solid var(--aegean-d);outline-offset:6px}
 .band .sub{font-family:var(--sans);letter-spacing:.06em;font-size:.95rem;color:var(--dim);margin:.2rem 0 .7rem}
 .band p.i,.band p.m{font-size:1rem;line-height:1.5;margin:0;color:#eadfc2}
+.band .cast{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.2rem .8rem;margin:.7rem 0 0;font-size:.9rem;line-height:1.45;max-width:560px}
+.band .cast dt{font-family:var(--sans);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);padding-top:.15rem}
+.band .cast dd{margin:0;color:#eadfc2}
 @media(max-width:640px){
   .band{height:auto;background:var(--night)}
   .band img{position:static;height:210px}
@@ -111,7 +116,7 @@ body[data-reg="m"] .lede{color:var(--mute)}
 body[data-reg="m"] .punch{color:var(--red)}
 body[data-reg="m"] .band img,body[data-reg="m"] .band::after,body[data-reg="m"] .setting-card{display:none}
 /* a setting's head becomes a plain title card for its topic */
-body[data-reg="m"] .band{height:auto;border:0;border-radius:24px;box-shadow:none;background:#000}
+body[data-reg="m"] .band{height:auto;border:0;border-radius:24px;box-shadow:none;background:#000;pointer-events:none;cursor:default}
 body[data-reg="m"] .band figcaption{position:static;padding:clamp(22px,4vw,36px)}
 body[data-reg="m"] .band h2{text-shadow:none}
 body[data-reg="m"] .band .kicker{color:var(--gold)}
