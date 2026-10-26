@@ -277,8 +277,8 @@ NO gate, NO council ring, NO circle of seats, NO roofs, NO banners, NO fire. Win
 
 The mercenaries and the bandits are each one kind of figure. Several models of a kind are fine for
 visual interest, but a figure is told apart only by the colour of its tunic and cloak, never by a
-face, build, age, sex, hair, pelt or other defining feature. The sheets in `archive/art/refs/sheets.json`
-use these colours, and previs shots pass the same RGB as a figure's `tint`.
+face, build, age, sex, hair, pelt or other defining feature. The reference pictures in `cast/`
+(`cast/cast.json`) use these colours, one figure to a picture, every figure of a kind made from one seed.
 
 | Figure | Colour | Tint |
 |---|---|---|
@@ -508,7 +508,7 @@ Defaults for the 3D phase, taken from `hellenistic-reference.html` (its *Modelli
 
 ### 3.5 Paxos cast: dress
 
-The ring road's rule holds: every garment is one loom-woven rectangle, pinned or belted, never tailored, with no set-in sleeves, sewn collars, buckles or stitched bags. The reference sheet is `archive/art/refs/paxos-sheet.png`, cut into `archive/art/refs/paxos/`; the Schedia council and its runners are on `archive/art/refs/schedia-sheet.png` and `archive/art/refs/schedia2-sheet.png`.
+The ring road's rule holds: every garment is one loom-woven rectangle, pinned or belted, never tailored, with no set-in sleeves, sewn collars, buckles or stitched bags. The reference pictures, Schedia's council and runners and the oracle's students among them, are made from `cast/cast.json`.
 
 | Who | Dress |
 |---|---|
