@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Previs: render a book's shots from the world model, each image traceable to the shot that made it.
 
-    python3 world/panels/previs.py <book> [shot ...] [--quality check|preview|final] [--size 1K|2K]
+    python3 world/panels/previs.py <book> [shot | shot/variant ...] [--quality check|preview|final] [--size 1K|2K]
 
 A shot in world/panels/<book>/shots.json names its island and the camera to render:
 
@@ -14,7 +14,12 @@ from; cam, target, lens, light, sun_from, res and the other camera keys override
 gives cam and target may leave base out (world/src/shots_panels.py). cast, prompt and keep are for
 the scene step and travel with the image.
 
-The shot's version is the hash of its entry, so the image is world/panels/<book>/<shot>/previs-<hash>.png
+A shot can have "variants": named versions (a, b, c, ...) of it, each an object of keys laid over the
+shot's own (its camera, lens, light, props...), so one shot is taken several ways; each variant is
+rendered to world/panels/<book>/<shot>/<variant>/ and is a shot of its own from then on. Naming a shot
+renders all its variants; "shot/b" renders one.
+
+The shot's version is the hash of its entry (with its variant laid over it), so the image is world/panels/<book>/<shot>/previs-<hash>.png
 and an older version of the shot keeps its own image. The image carries its record (world/provenance.py):
 the commit, the shot (shots.json, its name and version), the island build it was rendered from (world/
 build/<island>.build.json, checked against the .blend, with the commit it was built at) and the render
@@ -57,6 +62,24 @@ def version(shot):
     return hashlib.sha256(json.dumps(shot, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:10]
 
 
+def entry(shots, name, variant=None):
+    """A shot's entry, with a variant's keys laid over it (the variants themselves left out)."""
+    e = {k: v for k, v in shots[name].items() if k != "variants"}
+    if variant:
+        e.update(shots[name]["variants"][variant])
+    return e
+
+
+def takes(shots, names):
+    """(shot, variant or None) for each named shot ("p07-goats" is all its variants, "p07-goats/b" one)."""
+    out = []
+    for n in names or list(shots):
+        shot, _, var = n.partition("/")
+        vs = [var] if var else list(shots[shot].get("variants", {})) or [None]
+        out += [(shot, v) for v in vs]
+    return out
+
+
 def main():
     args = sys.argv[1:]
     quality = args[args.index("--quality") + 1] if "--quality" in args else "check"
@@ -68,17 +91,18 @@ def main():
     book, names = args[0], args[1:]
     shots_path = HERE / book / "shots.json"
     shots = json.loads(shots_path.read_text())
-    names = names or list(shots)
     rel = str(shots_path.relative_to(REPO))
     at = provenance.commit(shots_path, HERE / "previs.py", WORLD / "src", WORLD / "provenance.py")
     blender = subprocess.run(["blender", "--version"], capture_output=True, text=True).stdout.splitlines()[0]
     by_island = {}
-    for name in names:
-        by_island.setdefault(shots[name]["island"], []).append(name)
+    for shot, var in takes(shots, names):
+        e = entry(shots, shot, var)
+        by_island.setdefault(e["island"], []).append((shot, var, e))
     for island, group in by_island.items():
         build = provenance.island(island)  # refuses an island build that is not tied to a commit
-        specs = {f"panel__{book}__{n}": dict(shots[n], res=shots[n].get("res") or
-                 [d * scale for d in SIZES[shots[n].get("aspect", "16:9")]]) for n in group}
+        key = lambda shot, var: f"panel__{book}__{shot}" + (f"__{var}" if var else "")
+        specs = {key(n, v): dict(e, res=e.get("res") or [d * scale for d in SIZES[e.get("aspect", "16:9")]])
+                 for n, v, e in group}
         with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
             json.dump(specs, f)
         env = dict(os.environ, PANEL_SPECS=f.name)
@@ -88,14 +112,14 @@ def main():
         os.unlink(f.name)
         if done.returncode != 0 or "SHOT" not in done.stdout:
             sys.exit(f"blender failed for {island}:\n{done.stdout[-1500:]}\n{done.stderr[-1500:]}")
-        for n in group:
-            shot, v = shots[n], version(shots[n])
-            src = WORLD / "renders" / OUT_DIR.get(quality, "final") / f"panel__{book}__{n}.png"
-            dest = HERE / book / n / f"previs-{v}.png"
+        for n, var, e in group:
+            v = version(e)
+            src = WORLD / "renders" / OUT_DIR.get(quality, "final") / f"{key(n, var)}.png"
+            dest = HERE / book / n / (var or "") / f"previs-{v}.png"
             rec = provenance.record(
                 "previs", {"name": blender, "where": "local",
-                           "settings": {"quality": quality, "res": specs[f"panel__{book}__{n}"]["res"]}}, at,
-                source={"file": rel, "shot": n, "version": v}, island=build)
+                           "settings": {"quality": quality, "res": specs[key(n, var)]["res"]}}, at,
+                source={"file": rel, "shot": n, **({"variant": var} if var else {}), "version": v}, island=build)
             provenance.stamp(Image.open(src), dest, rec)
             src.unlink()
             print(f"  {dest.relative_to(REPO)}  {time.time() - t:.0f}s", flush=True)

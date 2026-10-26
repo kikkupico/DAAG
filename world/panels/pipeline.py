@@ -90,8 +90,14 @@ def shot_of(previs):
     if not rec or rec.get("kind") != "previs":
         sys.exit(f"{previs}: no previs record; make previs images with previs.py")
     src = rec["source"]
-    for entry in (provenance.at_commit(rec["commit"], src["file"], src["shot"]),
-                  json.loads((REPO / src["file"]).read_text()).get(src["shot"])):
+
+    def with_variant(e):
+        if not e or not src.get("variant"):
+            return e
+        return dict({k: v for k, v in e.items() if k != "variants"}, **e.get("variants", {}).get(src["variant"], {}))
+
+    for entry in map(with_variant, (provenance.at_commit(rec["commit"], src["file"], src["shot"]),
+                                    json.loads((REPO / src["file"]).read_text()).get(src["shot"]))):
         if entry and hashlib.sha256(json.dumps(entry, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:10] \
                 == src["version"]:
             return src, entry
