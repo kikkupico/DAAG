@@ -3,9 +3,10 @@
 
     ~/Projects/flux/.venv/bin/python world/panels/flux.py <previs.png | folder ...> [--style ligne-claire] [--seed N]
 
-The same request pipeline.py sends (the previs as image 1, each cast member cropped with their id below,
-the style's prompt, the shot's prompt, the note on who is whom and the head count, all from the shot at
-the previs's commit), run on FLUX locally: free, about a minute a picture, and weaker at keeping the
+The same request pipeline.py sends (the previs as image 1, each cast member cropped, the style's prompt,
+the shot's prompt, the note on who is whom and the head count, all from the shot at the previs's
+commit), with one difference: the crops carry no printed names, since FLUX copies the text into the
+picture. It runs on FLUX locally: free, about a minute a picture, and weaker at keeping the
 previs's camera and at following counts and negations, so it is for trials. To fit the 24 GB Mac the
 previs goes in at 1024 px and each cast picture at 512, the picture is made at about a megapixel in the
 previs's shape, and every picture runs in a process of its own.
@@ -37,7 +38,7 @@ def size_for(previs, area=1024 * 576):
 
 
 def one(previs, style, seed):
-    prompt, parts, aspect, dest, rec = pipeline.request(previs, style)
+    prompt, parts, aspect, dest, rec = pipeline.request(previs, style, labels=False)  # FLUX copies printed names
     provenance.commit(Path(__file__), WORLD / "fluxlocal.py")
     ims = []
     for i, part in enumerate(parts):

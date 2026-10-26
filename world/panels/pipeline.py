@@ -72,9 +72,9 @@ KEEP_LIGNE_CLAIRE = (
 # style: (the prompt that comes first, what the picture is called in the prompt, the output's name)
 STYLES = {"photo": (KEEP, "photograph", "scene"),
           "ligne-claire": (KEEP_LIGNE_CLAIRE, "illustration", "ligne-claire")}
-CAST_NOTE = ("{which} reference photographs of people, one person each, with their name printed below: {listing}. "
+CAST_NOTE = ("{which} reference photographs of people, one person each{printed}: {listing}. "
              "Put into the {picture} only these people, each with exactly the face, build and clothes of their "
-             "reference{drawn}. The names are labels only and appear nowhere in the {picture}.")
+             "reference{drawn}.{labels}")
 
 
 def aspect_of(path):
@@ -116,14 +116,25 @@ def previs_inputs(args):
     return out
 
 
-def cast_part(path, name):
-    """A cast picture as sent: cropped to the person, with a little margin, and their name printed below."""
-    from PIL import ImageChops, ImageDraw, ImageFont
+def cast_part(path, name, label=True):
+    """A cast picture as sent: cropped to the person, with a little margin, and (with label) their name printed below."""
+    from PIL import ImageChops
     im = Image.open(path).convert("RGB")
     box = ImageChops.difference(im, Image.new("RGB", im.size, "white")).convert("L").point(lambda v: 255 if v > 24 else 0).getbbox()
     if box:
         m = round(0.04 * im.height)
         im = im.crop((max(box[0] - m, 0), max(box[1] - m, 0), min(box[2] + m, im.width), min(box[3] + m, im.height)))
+    out = im
+    if label:
+        out = labelled(im, name)
+    buf = io.BytesIO()
+    out.save(buf, "JPEG", quality=92)
+    return {"type": "image", "mime_type": "image/jpeg", "data": base64.b64encode(buf.getvalue()).decode()}
+
+
+def labelled(im, name):
+    """A picture with a name printed in a white band below it."""
+    from PIL import ImageDraw, ImageFont
     size = max(28, im.height // 18)
     font = next((ImageFont.truetype(f, size) for f in FONTS if Path(f).exists()), None) or ImageFont.load_default(size=size)
     band = round(size * 1.8)
@@ -131,13 +142,12 @@ def cast_part(path, name):
     out.paste(im, (0, 0))
     draw = ImageDraw.Draw(out)
     draw.text(((im.width - draw.textlength(name, font=font)) / 2, im.height + (band - size) / 2), name, fill="black", font=font)
-    buf = io.BytesIO()
-    out.save(buf, "JPEG", quality=92)
-    return {"type": "image", "mime_type": "image/jpeg", "data": base64.b64encode(buf.getvalue()).decode()}
+    return out
 
 
-def request(previs, style="photo"):
-    """What one previs sends: (prompt, images as parts, aspect, where the picture goes, its record)."""
+def request(previs, style="photo", labels=True):
+    """What one previs sends: (prompt, images as parts, aspect, where the picture goes, its record).
+    labels=False sends the cast crops without their names printed, for models that copy the text."""
     source, entry = shot_of(previs)
     ids = entry.get("cast", [])
     cast = [CAST / f"{i}.png" for i in ids]
@@ -150,6 +160,8 @@ def request(previs, style="photo"):
         which = "Image 2 is a" if len(ids) == 1 else f"Images 2 to {len(ids) + 1} are"
         listing = ", ".join(f"image {k + 2} is {i}" for k, i in enumerate(ids))
         prompt += " " + CAST_NOTE.format(which=which, listing=listing, picture=picture,
+                                          printed=", with their name printed below" if labels else "",
+                                          labels=f" The names are labels only and appear nowhere in the {picture}." if labels else "",
                                           drawn=", drawn in the same ligne claire style" if style != "photo" else "").replace("a reference photographs", "a reference photograph")
     n, others = len(ids), entry.get("others")
     if others:  # people the shot only describes: a crowd, passers-by
@@ -158,7 +170,7 @@ def request(previs, style="photo"):
     else:
         prompt += (f" There {'is' if n == 1 else 'are'} exactly {n} {'person' if n == 1 else 'people'} in the {picture}; "
                    "nobody else." if n else f" There is nobody in the {picture}.")
-    images = [part(previs, 1920)] + [cast_part(p, i) for i, p in zip(ids, cast)]
+    images = [part(previs, 1920)] + [cast_part(p, i, labels) for i, p in zip(ids, cast)]
     aspect = aspect_of(previs)
     scene = provenance.record(
         "scene", {"name": MODEL, "where": "gemini", "settings": {"size": SIZE, "aspect": aspect, "style": style}},
