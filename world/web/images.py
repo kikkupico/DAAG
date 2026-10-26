@@ -1,28 +1,29 @@
-"""Publish the photoreal pictures to Cloudflare R2 and point the pages at them.
+"""Publish the pictures on the pages to Cloudflare R2 and point the pages at them.
 
-    python3 art/web/images.py           encode, upload what is missing, rewrite the links
-    python3 art/web/images.py --dry     say what would happen and change nothing
+    python3 world/web/images.py           encode, upload what is missing, rewrite the links
+    python3 world/web/images.py --dry     say what would happen and change nothing
 
-Run it again after a new scene is published; it only does what is not yet done.
+Run it again after a page gains a picture or a picture is replaced; it only does what is not yet done.
 
-Which pictures: every <img> on the home page, the setting pages and the books whose file is a
-generated scene, and the few named in EXTRA (the home page's chart). A scene is recognised by comparing the page's picture with the renders in
-art/panels: one that matches a shot's scene*.png (or comic*.png) is photoreal, one that matches
-a previs render is left where it is. A picture used on several pages is uploaded once.
-The previs ones are listed in images.json under "previs" and in a block of .gitignore; they are not in git.
+Which pictures: every <img> on the home page, the setting pages and the books. A picture is
+published when it is a render of the world model: its file matches one of world/renders/final/*.png
+(the render of the same name first, then any). The few named in EXTRA (the home page's chart) are
+published from their own source. A picture already on the bucket keeps its link until its file is
+replaced by a render. Anything else stays local; the old previs pictures among those are listed in
+images.json under "previs" and in a block of .gitignore, and are not in git.
 
-What is made: from the matching scene.png, AVIF at each of WIDTHS no wider than the picture,
-in art/web/out/ (not in git). Each goes to the bucket under a name that carries the source's
-hash, so it never changes and is cached for a year; a regenerated picture gets a new name.
+What is made: from the render, AVIF at each of WIDTHS no wider than the render, in world/web/out/
+(not in git). Each goes to the bucket under a name that carries the render's hash, so it never
+changes and is cached for a year; a re-rendered picture gets a new name.
 
-Where the links are rewritten: in every page as it is published, the books' index.html among them,
-and in each book's source, art/scroll/parts/<slug>/body.html, so the two stay in step. Nothing is
-rebuilt: assemble.py still writes the single-file page the books have outgrown. A rewritten tag keeps the local path as data-local, which is
-how a later run finds it again.
+Where the links are rewritten: in every page, the books' index.html among them, and in each book's
+source, scroll/parts/<slug>/body.html, so the two stay in step. A rewritten tag keeps the local path
+as data-local, which is how a later run finds it again.
 
-art/web/images.json records what was published. Uploading uses wrangler (npx) and the login
+world/web/images.json records what was published. Uploading uses wrangler (npx) and the login
 it already has.
 """
+import functools
 import hashlib
 import json
 import re
@@ -40,8 +41,8 @@ ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 OUT = HERE / "out"
 MANIFEST = HERE / "images.json"
-PANELS = ROOT / "art/panels"
-PARTS = ROOT / "art/scroll/parts"
+RENDERS = ROOT / "world/renders/final"
+PARTS = ROOT / "scroll/parts"
 
 BUCKET = "daag-images"
 BASE = "https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev"  # the bucket's public address; a custom domain goes here
@@ -49,32 +50,28 @@ WRANGLER = ["npx", "--yes", "wrangler@4.149.0"]
 WIDTHS = (400, 800, 1200)
 QUALITY = 60  # AVIF; about a third smaller than WebP 80 on these scenes
 CACHE = "public, max-age=31536000, immutable"
+MATCH = 6  # mean grey-level difference on a 48 x 48 thumbnail below which a picture is that render
 # how wide a picture is shown, by the nearest enclosing element that says so
 SIZES = (("bleed", "100vw"),
          ("setting-card", "110px"),
          ("cardlink", "(max-width: 700px) 80vw, 370px"),
          ("", "(max-width: 700px) 90vw, 560px"))
-# pictures that are not scenes but are published all the same, and the file each is made from
-EXTRA = {"assets/img/map.jpg": "art/full-map-cartographic.jpeg"}  # the home page's chart
-# generated-looking pictures that are really previs and stay local, whatever scene*.png says
-LOCAL = {"assets/img/places/scholars-coast.jpg", "books/spreading-by-word-of-mouth/img/scholars-coast.jpg",
-         "books/what-you-can-promise-alone/img/scholars-coast.jpg"}
-previs = set()  # local pictures that are previs renders; the deploy leaves them out of the site
+# pictures that are not renders but are published all the same, and the file each is made from
+EXTRA = {"assets/img/map.jpg": "archive/art/full-map-cartographic.jpeg"}  # the home page's chart
+PUBLISHED = re.compile(re.escape(BASE) + r"/(?:.+)-([0-9a-f]{10})-\d+\.avif$")
 DRY = "--dry" in sys.argv
 
 
 def sources():
-    """(file the tag is written in, folder its relative links start from, book to rebuild or None)."""
-    yield ROOT / "index.html", ROOT, None
+    """(file the tag is written in, folder its relative links start from)."""
+    yield ROOT / "index.html", ROOT
     for page in sorted(ROOT.glob("places/*/index.html")):
-        yield page, page.parent, None
+        yield page, page.parent
     for page in sorted(ROOT.glob("books/*/index.html")):
-        # the built page is the book; its source in art/scroll/parts is kept in step but not
-        # rebuilt, since assemble.py still writes the single-file page the books have outgrown
-        yield page, page.parent, None
+        yield page, page.parent
         body = PARTS / page.parent.name / "body.html"
         if body.exists():
-            yield body, page.parent, None
+            yield body, page.parent
 
 
 class Imgs(HTMLParser):
@@ -105,28 +102,23 @@ class Imgs(HTMLParser):
                 break
 
 
+@functools.lru_cache(maxsize=None)
 def signature(path):
-    return list(Image.open(path).convert("L").resize((48, 48)).getdata())
+    return tuple(Image.open(path).convert("L").resize((48, 48)).tobytes())
 
 
-def scene_of(local, book):
-    """The scene render a page's picture was exported from, or None if it is not a generated scene."""
-    stem = local.stem
-    if local.parent.name == "covers":
-        shots = [PANELS / stem / "cover"]
-    else:
-        shots = ([PANELS / book / stem] if book else []) + sorted(PANELS.glob(f"*/{stem}"))
-    renders = [(p, p.name.split(".")[0].split("-")[0]) for shot in shots if shot.is_dir() for p in shot.glob("*.png")]
-    renders += [(p, "previs") for shot in shots for p in [shot.with_suffix(".png")] if p.is_file()]  # a bare previs
-    renders = [(p, kind) for p, kind in renders if kind in ("previs", "scene", "comic")]
+def render_of(local):
+    """The world render a page's picture was made from, or None."""
+    renders = sorted(RENDERS.glob("*.png"))
     if not renders:
         return None
     mine = signature(local)
     diff = lambda path: sum(abs(a - b) for a, b in zip(mine, signature(path))) / len(mine)
-    best, kind = min(renders, key=lambda r: diff(r[0]))
-    if kind != "previs" and diff(best) < 6:
-        return best
-    previs.add(local.relative_to(ROOT).as_posix())  # it has renders, and this one is the previs
+    for group in ([p for p in renders if p.stem == local.stem], renders):
+        if group:
+            best = min(group, key=diff)
+            if diff(best) < MATCH:
+                return best
     return None
 
 
@@ -151,9 +143,10 @@ def upload(key):
 def main():
     manifest = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {"images": {}, "pages": {}}
     images, pages = manifest["images"], {}
+    previs = set(manifest.get("previs", []))
     edits, skipped = {}, set()  # file -> [(offset, old tag, new tag)]; local pictures left alone
 
-    for file, base, rebuild in sources():
+    for file, base in sources():
         text = file.read_text(encoding="utf-8")
         for offset, tag, attrs, around in Imgs(text).found:
             src = attrs.get("data-local") or attrs.get("src") or ""
@@ -161,40 +154,40 @@ def main():
                 continue
             local = (base / src).resolve()
             name = local.relative_to(ROOT).as_posix()
-            if not local.is_file():
-                skipped.add(name + " (missing)")
+            on_bucket = PUBLISHED.match(attrs.get("src") or "")
+            earlier = on_bucket.group(1) if on_bucket and on_bucket.group(1) in images else None
+            if name in EXTRA:
+                source = ROOT / EXTRA[name]
+            elif local.is_file():
+                source = render_of(local)
+            else:
+                source = None
+            if not source:
+                if earlier:  # published before and not replaced by a render: keep the tag as it is
+                    pages[name] = earlier
+                else:
+                    skipped.add(name + ("" if local.is_file() else " (missing)"))
                 continue
-            if name in LOCAL:
-                skipped.add(name)
-                previs.add(name)
-                if attrs.get("data-local"):  # put a tag published earlier back on its local file
-                    new = re.sub(r'\s+(srcset|sizes|data-local)="[^"]*"', "", tag)
-                    new = re.sub(r'(\ssrc=")[^"]*"', lambda m: m.group(1) + src + '"', new, count=1)
-                    edits.setdefault((file, rebuild), []).append((offset, tag, new))
-                continue
-            scene = ROOT / EXTRA[name] if name in EXTRA else scene_of(local, base.name if base.parent.name == "books" else None)
-            if not scene:
-                skipped.add(name)
-                continue
-            digest = hashlib.sha256(scene.read_bytes()).hexdigest()[:10]
+            digest = hashlib.sha256(source.read_bytes()).hexdigest()[:10]
             if digest not in images:
-                shot = local.stem if name in EXTRA else scene.parent.relative_to(PANELS).as_posix().replace("/", "-")
-                width, height = Image.open(scene).size
-                images[digest] = {"name": shot, "scene": scene.relative_to(ROOT).as_posix(), "size": [width, height],
+                width, height = Image.open(source).size
+                images[digest] = {"name": local.stem if name in EXTRA else source.stem,
+                                  "source": source.relative_to(ROOT).as_posix(), "size": [width, height],
                                   "widths": sorted({min(w, width) for w in WIDTHS})}
             pages[name] = digest
+            previs.discard(name)
             image = images[digest]
             url = lambda w: f"{BASE}/{image['name']}-{digest}-{w}.avif"
+            if earlier == digest and attrs.get("data-local") == src:
+                continue  # already on this very picture: keep the tag as it is, sizes chosen by hand and all
             show = next(sizes for cls, sizes in SIZES if not cls or cls in around)
             middle = image["widths"][min(1, len(image["widths"]) - 1)]
             srcset = ", ".join(f"{url(w)} {w}w" for w in image["widths"])
-            if (attrs.get("src") or "").startswith(f"{BASE}/{image['name']}-{digest}-") and attrs.get("data-local") == src:
-                continue  # already on this very picture: keep the tag as it is, sizes chosen by hand and all
             kept = re.sub(r'\s+(src|srcset|sizes|data-local)="[^"]*"', "", tag)
             new = (f'<img src="{url(middle)}" srcset="{srcset}" '
                    f'sizes="{show}" data-local="{src}"' + kept[4:])
             if new != tag:
-                edits.setdefault((file, rebuild), []).append((offset, tag, new))
+                edits.setdefault(file, []).append((offset, tag, new))
 
     used = {d: images[d] for d in sorted(set(pages.values()))}
     keys = []
@@ -205,15 +198,15 @@ def main():
             keys.append(key)
             if not (OUT / key).exists() and not DRY:
                 OUT.mkdir(exist_ok=True)
-                source = source or Image.open(ROOT / image["scene"]).convert("RGB")
+                source = source or Image.open(ROOT / image["source"]).convert("RGB")
                 height = round(source.height * w / source.width)
                 source.resize((w, height), Image.LANCZOS).save(OUT / key, "AVIF", quality=QUALITY, speed=4)
-    print(f"{len(pages)} pictures on the pages are generated scenes: {len(used)} distinct, {len(keys)} files")
-    print(f"{len(skipped)} left local (previs, or nothing to compare with):")
+    print(f"{len(pages)} pictures on the pages are published: {len(used)} distinct, {len(keys)} files")
+    print(f"{len(skipped)} left local (not a world render):")
     for name in sorted(skipped):
         print("   ", name)
     if DRY:
-        for (file, _), changes in edits.items():
+        for file, changes in edits.items():
             print(f"would rewrite {len(changes)} tags in {file.relative_to(ROOT)}")
         return
 
@@ -229,20 +222,18 @@ def main():
     MANIFEST.write_text(json.dumps({"base": BASE, "bucket": BUCKET, "images": used, "previs": sorted(previs), "pages": dict(sorted(pages.items()))},
                                    indent=1) + "\n")
     ignore = ROOT / ".gitignore"
-    block = "# previs pictures on the pages (art/web/images.py)\n" + "".join(f"/{n}\n" for n in sorted(previs))
+    block = "# previs pictures on the pages (world/web/images.py)\n" + "".join(f"/{n}\n" for n in sorted(previs))
     text = ignore.read_text() if ignore.exists() else ""
     text = re.sub(r"# previs pictures on the pages.*?(?=\n#|\Z)", "", text, flags=re.S).rstrip("\n")
     ignore.write_text(text + "\n\n" + block)
     subprocess.run(["git", "rm", "-r", "--cached", "-q", "--ignore-unmatch", *sorted(previs)], cwd=ROOT, check=True)
-    for (file, rebuild), changes in edits.items():
+    for file, changes in edits.items():
         text = file.read_text(encoding="utf-8")
         for offset, old, new in sorted(changes, reverse=True):
             assert text[offset:offset + len(old)] == old, file
             text = text[:offset] + new + text[offset + len(old):]
         file.write_text(text, encoding="utf-8")
         print(f"rewrote {len(changes)} tags in {file.relative_to(ROOT)}")
-        if rebuild:
-            subprocess.run([sys.executable, str(ROOT / "art/scroll/assemble.py"), rebuild], cwd=ROOT, check=True)
 
 
 if __name__ == "__main__":
