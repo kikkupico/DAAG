@@ -5,11 +5,11 @@ The one-scroll page draws the tree in its script.js (the books' places, the arcs
 this opens that page in headless Chrome, takes the drawn <svg id="tree">, and writes a static copy
 into index.html between  <!-- family:start -->  and  <!-- family:end --> : the computing names
 only, no animation, each node a link to its book from the site's root.
-Run from the repo root after changing the tree:  python3 art/scroll/home_tree.py
+Run from the repo root after changing the tree:  python3 scroll/home_tree.py
 """
 import pathlib, re, subprocess, sys, tempfile
 
-ROOT = pathlib.Path(__file__).resolve().parents[2]
+ROOT = pathlib.Path(__file__).resolve().parents[1]
 PAGE = ROOT / "books/eighteen-books-in-one-scroll/index.html"
 HOME = ROOT / "index.html"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"

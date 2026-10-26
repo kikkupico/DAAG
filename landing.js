@@ -1,6 +1,6 @@
 "use strict";
 /* The landing page: the tour order, the premise's words, the books' drawn covers in computing, then the register.
-   Uses $, $$, reduce from art/scroll/shell.js, REG from assets/js/registers.js, and COVERS and BOOK_COVERS
+   Uses $, $$, reduce from scroll/shell.js, REG from assets/js/registers.js, and COVERS and BOOK_COVERS
    from assets/js/covers.js and assets/js/book-covers.js. */
 (function(){
 

@@ -1,7 +1,7 @@
 """The graph at the start of a book: the papers its own papers draw on, and the papers they lead to.
 
-    python3 art/scroll/lineage.py            check the data and print each book's count of papers
-    python3 art/scroll/lineage.py <slug>     print that book's graph
+    python3 scroll/lineage.py            check the data and print each book's count of papers
+    python3 scroll/lineage.py <slug>     print that book's graph
 
 Lineage is kept by paper, never by book, in papers/lineage.json:
     papers    {"<data-file>": "Lamport 1978", ...}   the papers of the series, by their names on
@@ -26,7 +26,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[1]
+ROOT = HERE.parent
 PARTS = HERE / "parts"
 OPEN, CLOSE = "<!-- lineage -->", "<!-- /lineage -->"
 esc = html.escape

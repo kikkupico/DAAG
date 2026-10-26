@@ -1,9 +1,9 @@
 """The words a book's cover and its card on the home page share, kept once in meta.json.
 
-    python3 art/scroll/cover.py            check that every card and cover says what meta.json says
-    python3 art/scroll/cover.py --write    rewrite the cards and the hand-edited covers from meta.json
+    python3 scroll/cover.py            check that every card and cover says what meta.json says
+    python3 scroll/cover.py --write    rewrite the cards and the hand-edited covers from meta.json
 
-art/scroll/parts/<slug>/meta.json holds, beside the page's title and description:
+scroll/parts/<slug>/meta.json holds, beside the page's title and description:
     question   the question the book asks, in machine terms (HTML)
     how        the "We find out by exploring…" line (HTML)
     credit     the short credit under the card on the home page (HTML)
@@ -20,7 +20,7 @@ from pathlib import Path
 from lineage import OPEN, CLOSE, block
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[1]
+ROOT = HERE.parent
 PARTS = HERE / "parts"
 
 

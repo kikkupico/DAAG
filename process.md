@@ -9,9 +9,9 @@ analysis, the constraints that cannot be broken, and the islands themselves), `r
 (the real Greek precedent for each device, and how close it is), and `hellenistic-reference.html`
 (buildings, tools, weapons, dress, transport, town planning and civic procedure of the period, with
 measurements for modelling).
-**Read as models:** the finished books in `books/`, and their sources in `art/scroll/parts/`.
+**Read as models:** the finished books in `books/`, and their sources in `scroll/parts/`.
 They are the specification. Where this document and a finished book disagree, the book is right.
-**Read before writing a page:** `art/scroll/BRIEF.md`, the authoring guide for the format.
+**Read before writing a page:** `scroll/BRIEF.md`, the authoring guide for the format.
 
 ---
 
@@ -25,12 +25,12 @@ stage for a sequence, a click-through widget for a choice. Proofs sit in collaps
 end of the spread they belong to. Photographs and cards unfold as they enter view.
 
 A page is self-contained. The files to edit are `books/<slug>/index.html`, `style.css` and `script.js`;
-`art/scroll/shot.sh` checks a page in headless Chrome. The four-part sources in `art/scroll/parts/<slug>/`
+`scroll/shot.sh` checks a page in headless Chrome. The four-part sources in `scroll/parts/<slug>/`
 (`meta.json`, `body.html`, `page.css`, `page.js`) and `assemble.py` were the original build; the books have
 moved on from them, and `cover.py` reports every page as stale, so do not run `assemble.py` over a book.
 `meta.json` still holds the words a cover and its card share. The question a book asks, its "We find out by exploring…" line and
 its papers are written once, in `meta.json`; the cover and the book's card on the home page both
-carry them, and `python3 art/scroll/cover.py` checks that they agree (`--write` puts them into
+carry them, and `python3 scroll/cover.py` checks that they agree (`--write` puts them into
 the cards). The pictures a book uses are copied into `books/<slug>/img/`.
 
 **Shared code.** Every book in `books/` (not the one-scroll overview) is assembled from shared layers, so a
@@ -50,8 +50,8 @@ dot-grid card, loaded after `book.js`; each book's `script.js` calls `COVERS.dra
 with the figure that is that paper's signature picture (a lane diagram, a lattice, a field of sites), and the
 svg is class `cover-fig`. The same figure is cropped into the spreads it illustrates: an `<svg class="cover-fig" data-crop="x y w h">` inside a `pop m` beside the text, drawn by `COVERS.mount(COVER)`; such a spread drops its `solo` class.
 The cover function sits between `/* cover:start */` and `/* cover:end */` in the book's `script.js`.
-`python3 art/scroll/book_covers.py` copies every such block into `assets/js/book-covers.js` as `BOOK_COVERS["<slug>"]`,
-which the home page (`index.html`, with `landing.css` and `landing.js`) draws on its book cards in computing; rerun it after changing a cover. The earlier home page is kept as `home-archive.html` and is not published. In computing the home page's cover shows, in place of the chart, a static copy of the family tree from Eighteen Books in One Scroll, which `python3 art/scroll/home_tree.py` takes from that page in headless Chrome and writes between `<!-- family:start -->` and `<!-- family:end -->`; rerun it after changing the tree.
+`python3 scroll/book_covers.py` copies every such block into `assets/js/book-covers.js` as `BOOK_COVERS["<slug>"]`,
+which the home page (`index.html`, with `landing.css` and `landing.js`) draws on its book cards in computing; rerun it after changing a cover. The earlier home page is kept as `home-archive.html` and is not published. In computing the home page's cover shows, in place of the chart, a static copy of the family tree from Eighteen Books in One Scroll, which `python3 scroll/home_tree.py` takes from that page in headless Chrome and writes between `<!-- family:start -->` and `<!-- family:end -->`; rerun it after changing the tree.
 
 **Two registers.** A book can be read as allegory or as computing, by a switch in its bar that shares
 its choice with the scroll page. Both are always in the page: every paragraph, heading, proof step,
@@ -66,8 +66,8 @@ own script keeps diagrams and live captions in step by writing both registers, n
 re-rendering on a switch. All eighteen books have the switch. The allegory is the default; the computing register shows only when the reader has chosen it.
 
 Setting pages (`places/<place>/index.html`), the home page and `papers/index.html` wear the same
-look. They are ordinary hand-edited pages that link `art/scroll/shell.css`, `art/scroll/place.css`
-and `art/scroll/shell.js`.
+look. They are ordinary hand-edited pages that link `scroll/shell.css`, `scroll/place.css`
+and `scroll/shell.js`.
 
 A setting is described by who acts there, what carries word between them and what the word says;
 the island and its buildings come second. Every setting page runs in that order: the actors (how
@@ -97,7 +97,7 @@ whose picture does not exist yet is written without one; the prose never refers 
 the book reads as finished.
 
 **Phase 2 — art.** Happens later and separately: the cover and the panels, made from the
-book's shots (`art/panels/<slug>/shots.json`) and published to `assets/img/`. A picture enters the
+book's shots (`archive/art/panels/<slug>/shots.json`) and published to `assets/img/`. A picture enters the
 scroll as a `.photo` inside a `.pop`, copied into the book's `img/`. The allegorical devices must
 nevertheless be **fully in place in the prose**, because phase 2 is built from what you write.
 Never bend the prose to fit a picture.
@@ -195,7 +195,7 @@ The shape that has worked before:
 | | |
 |---|---|
 | **Cover** | Four pieces of text beside the picture: the title; the book's question in machine terms; its "We find out by exploring…" line; and the source papers with their titles and every author, in small print. The last three come from `meta.json`. |
-| **Where this book sits** | A spread of its own after the cover: the graph of the book's papers, what each draws on and what it leads to, with the idea that passes along every link. It is built from `papers/lineage.json`, which keeps lineage by paper and records only the reuse of an idea, never an order of reading; a new paper or link is added there (see `art/scroll/lineage.py`). |
+| **Where this book sits** | A spread of its own after the cover: the graph of the book's papers, what each draws on and what it leads to, with the idea that passes along every link. It is built from `papers/lineage.json`, which keeps lineage by paper and records only the reuse of an idea, never an order of reading; a new paper or link is added there (see `scroll/lineage.py`). |
 | **In machine terms** | The paper's problem and result in plain distributed-systems words, with one small interactive that shows the difficulty with machines. |
 | **The setting** | A photograph of the place with the premise in two or three sentences. Link the setting page with a superscript; do not describe the place again. |
 | **The model** | One spread per device, each built up by an interactive. The reader should not notice they are being handed a formal system. |
@@ -214,7 +214,7 @@ narrated, so rule 1 stands. Keep one line of argument: threads never alternate.
 **A spread reads on into the next.** A heading, a lede, a paragraph or two, its interactive or
 cards, and the connecting paragraphs that join them. A card that names a rule holds the rule
 alone, and the reason for it stands in the text beside the card. Every sentence carries a
-reason, a consequence or a connection; `art/scroll/BRIEF.md` ("Continuous prose") has the detail.
+reason, a consequence or a connection; `scroll/BRIEF.md` ("Continuous prose") has the detail.
 
 **An interactive follows the book's rules exactly.** Work its numbers out in code by those
 rules, and make the code refuse a state the rules forbid. Where a page shows a pattern and does
@@ -413,13 +413,13 @@ Before calling a book done (the brief's checklist has the mechanics):
   the table of what the messages say, and still describes the place truly. Each home-page section opens with its setting page, the brief a
   reader needs before reading that section's books in any order. Its opening picture is a
   photorealistic establishing shot: a Blender previs render put through `pipeline.py scene` with a
-  crop of the island plate (`art/refs/places/`) and any people refs on the board, with no comic
-  pass. Its other pictures are previs renders. Shots are in `art/panels/places/shots.json`,
+  crop of the island plate (`archive/art/refs/places/`) and any people refs on the board, with no comic
+  pass. Its other pictures are previs renders. Shots are in `archive/art/panels/places/shots.json`,
   published to `assets/img/places/`.
 - [ ] A building that recurs across pictures is modelled in full before any picture is generated
   (the Chamber, the Tholos, Arche's three houses, the oracle at the fork, and on the scholars' coast
   the libraries with their reading-room desks and pebble boards, the stoa with its festival ground and the
-  courier landing: `art/sets/paxos_chamber.py`, `schedia_tholos.py`, `house.py`, `hall.py`,
+  courier landing: `archive/art/sets/paxos_chamber.py`, `schedia_tholos.py`, `house.py`, `hall.py`,
   `libraries.py`, `stoa.py` and `terraces.py` (which builds the landing as the set `landing`), on the helpers in
   `masonry.py`: every block, joint, flute, capital, coffer, rafter, door board, tile, paving slab,
   scroll and pebble is geometry), and its scene prompts say so: keep every modelled
@@ -491,12 +491,12 @@ every tent sees and no post on the crown does.
 ## Changing art direction
 
 Art direction flows from the Hellenistic reference (`hellenistic-reference.html`) through the world
-guides, the book guides and the books to the images. `art/direction/decisions.json` lists each decision
+guides, the book guides and the books to the images. `archive/art/direction/decisions.json` lists each decision
 with the reference section it comes from, the words that betray it in a file or a prompt, and the commit
 it stands at (`since`). Everything is tied to git: each node in the tree carries its last commit and how
 many commits it is behind, and an image, which git does not track, carries the commit it was built at.
 
-1. `python3 art/direction/tree.py impact <decision-id | file | regex>`: what mentions it, what lies
+1. `python3 archive/art/direction/tree.py impact <decision-id | file | regex>`: what mentions it, what lies
    downstream, the images to regenerate and their cost.
 2. Make the change and commit it.
 3. `tree.py touch <decision-id>`: the decision now stands at HEAD, and everything older that it touches
@@ -504,7 +504,7 @@ many commits it is behind, and an image, which git does not track, carries the c
 4. `tree.py stale` lists what is still behind. After regenerating images, `tree.py stamp <paths>`
    records the commit they were built at.
 5. `tree.py review` lists decisions whose lines changed in the reference or the guides after they were
-   last touched; `tree.py log <id>` shows that history. `tree.py build` refreshes `art/direction/TREE.md`.
+   last touched; `tree.py log <id>` shows that history. `tree.py build` refreshes `archive/art/direction/TREE.md`.
 
 Add a decision when a new rule is settled.
 

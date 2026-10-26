@@ -5,45 +5,28 @@ __pycache__/
 sources/
 .tripo/
 
-# Art binaries are for local use only, not in git
-art/**/*.png
-art/**/*.jpg
-art/**/*.jpeg
-art/**/*.webp
-art/**/*.gif
-art/**/*.glb
-art/**/*.gltf
-art/**/*.blend
-art/**/*.blend1
-art/**/*.fbx
-art/**/*.obj
-art/**/*.exr
-art/**/*.mp4
+# Retired art, builds and pipelines. Files already in git stay tracked; nothing new is added.
+archive/
+
+# The world model's downloads, builds and renders are rebuilt by world/src/build_all.sh
+world/assets/
+world/build/
+world/renders/
+world/.tex_cache/
+world/showcase/img/
 
 # Book images are for local use only, not in git
 assets/img/
 
-art/**/*.npy
-art/**/*.npz
-art/paxos/build/sample-*
-
-# Retired artwork and builds (kept locally, not in git)
-art/archive/
-
-# Meshy API downloads
-meshy_output/
-
 # The learner's own notes, written by the tutor (see tutor/server.py)
 bespoke/
 
-# Encoded web pictures, uploaded to R2 by art/web/images.py
-art/web/out/
 .wrangler/
 
 # scratch work, never published
 scratch/
 
-# previs pictures on the pages (art/web/images.py)
+# previs pictures on the pages (archive/art/web/images.py)
 /assets/img/places/scholars-coast.jpg
 /books/spreading-by-word-of-mouth/img/scholars-coast.jpg
 /books/what-you-can-promise-alone/img/scholars-coast.jpg
