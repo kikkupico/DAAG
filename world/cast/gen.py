@@ -9,6 +9,9 @@ cast.json lists every figure. A prompt is the shared prefix plus the figure's ki
 seed of its own (from its id), so each has a face of its own; figures of one kind still differ in
 nothing that marks them but colour, as the cast rule asks. Pictures go to out/<maker>/<id>.png (not
 in git), with the seconds each took in out/<maker>/times.json; made pictures are kept unless --force.
+Each carries its record (world/provenance.py): the commit it was made at, its id in cast.json and
+the model; the prompt and seed are read back from git at that commit, so the script refuses to run
+while cast.json or the script has uncommitted changes.
 On a 24 GB Mac run FLUX one figure to a process, so memory is freed between pictures.
 Only people are made here; props are modelled in 3D in the world model.
 """
@@ -24,6 +27,8 @@ import zlib
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent))
+import provenance  # noqa: E402
 OUT = HERE / "out"
 FLUX_MODEL = Path.home() / "Projects/flux/models/FLUX.2-klein-4B"
 FLUX_SIZE = (768, 1024)
@@ -34,8 +39,29 @@ def jobs(maker):
     for item in spec["characters"]:
         text = spec["kinds"][item["kind"]].format(colour=item.get("colour", ""), who=item.get("who", ""),
                                                   extra=item.get("extra", ""), sandals=spec["sandals"])
-        yield {"id": item["id"], "seed": item.get("seed", zlib.crc32(item["id"].encode()) % 100000),
+        yield {"id": item["id"], "seed": item.get("seed", zlib.crc32(item["id"].encode()) % 100000), "item": item,
                "prompt": spec["prefix"] + " " + text, "dest": OUT / maker / (item["id"] + ".png")}
+
+
+AT = {}  # the commit this run is tied to, set by generate()
+
+
+def flux_model():
+    """FLUX as it ran: the weights' Hugging Face revision (from their download record) and the library."""
+    meta = sorted((FLUX_MODEL / ".cache/huggingface/download").rglob("*.metadata"))
+    revision = meta[0].read_text().split()[0][:12] if meta else None
+    try:
+        import diffusers
+        lib = f"diffusers {diffusers.__version__}"
+    except ImportError:
+        lib = None
+    return {"name": "FLUX.2-klein-4B", "repo": "black-forest-labs/FLUX.2-klein-4B", "revision": revision,
+            "library": lib, "where": "local"}
+
+
+def origin(job, model):
+    """The record a cast picture carries (world/provenance.py): the commit, and its entry in cast.json."""
+    return provenance.record("cast", model, AT, source={"file": provenance.rel(HERE / "cast.json"), "id": job["id"]})
 
 
 def record(maker, name, seconds):
@@ -63,7 +89,8 @@ def nb2(job):
         for c in step.get("content", []):
             if c.get("type") == "image":
                 from PIL import Image
-                Image.open(io.BytesIO(base64.b64decode(c["data"]))).save(job["dest"])
+                im = Image.open(io.BytesIO(base64.b64decode(c["data"])))
+                provenance.stamp(im, job["dest"], origin(job, {"name": "gemini-3.1-flash-image", "where": "gemini"}))
                 return True
     print(f"nb2 {job['id']}: no image: {json.dumps(res)[:400]}", flush=True)
     return False
@@ -77,8 +104,9 @@ def flux_pipe():
 
     def run(job):
         w, h = FLUX_SIZE
-        pipe(prompt=job["prompt"], width=w, height=h, guidance_scale=1.0, num_inference_steps=4,
-             generator=torch.Generator("cpu").manual_seed(job["seed"])).images[0].save(job["dest"])
+        im = pipe(prompt=job["prompt"], width=w, height=h, guidance_scale=1.0, num_inference_steps=4,
+                  generator=torch.Generator("cpu").manual_seed(job["seed"])).images[0]
+        provenance.stamp(im, job["dest"], origin(job, flux_model()))
         return True
     return run
 
@@ -89,6 +117,7 @@ def generate(maker, ids, force):
         print("nothing to make")
         return
     (OUT / maker).mkdir(parents=True, exist_ok=True)
+    AT.update(provenance.commit(HERE / "cast.json", HERE / "gen.py", HERE.parent / "provenance.py"))
     make = nb2 if maker == "nb2" else flux_pipe()
     for j in todo:
         t = time.time()

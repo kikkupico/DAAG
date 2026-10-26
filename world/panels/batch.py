@@ -18,7 +18,7 @@ usually finishes well within its 24-hour target; one not done in 48 hours expire
 Every job is recorded in world/panels/batches/<id>.json (its name, model, and which previs each request
 is, with the record its picture will carry), so status and fetch work from any later session. fetch
 saves each picture where pipeline.py would, scene-<version>.png beside its previs, with the same
-record; it keeps a picture already fetched from that job unless --force, and lists the requests
+record, its model marked as run in this batch job; it keeps a picture already fetched from that job unless --force, and lists the requests
 that failed.
 """
 import json
@@ -146,7 +146,8 @@ def fetch(args):
             if not image:
                 failed.append(f"{key}: {json.dumps(line.get('status') or line.get('error') or line.get('response', {}))[:200]}")
                 continue
-            pipeline.save(image, dest, dict(rec["keys"][key]["scene"], batch=rec["name"]))
+            scene = rec["keys"][key]["scene"]
+            pipeline.save(image, dest, dict(scene, model=dict(scene["model"], where=f"gemini-batch {rec['name']}")))
             rec.setdefault("fetched", {})[key] = True
             saved += 1
         path.write_text(json.dumps(rec, indent=1) + "\n")
