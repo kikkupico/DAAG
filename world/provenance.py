@@ -7,10 +7,10 @@
 A record is small, because git holds the rest. It is JSON in the PNG text chunk "daag-origin" (in a
 JPEG, its comment):
 
-    kind      cast | previs | scene | comic
+    kind      cast | cast-sheet | previs | scene | comic
     commit    the commit the picture was made at; the files that made it had no uncommitted changes
-    source    what at that commit it was made from: a file and the entry in it (cast.json and an id,
-              a book's shots.json and a shot, with the shot's version)
+    source    what at that commit it was made from: a file and the entry in it (cast.json and an id
+              or a sheet, a book's shots.json and a shot, with the shot's version)
     island    for a previs: the island build it was rendered from, which names its own commit
     inputs    the pictures it was made from (pictures are not in git): role, path, hash, and the
               commit in their own record
@@ -113,6 +113,9 @@ def at_commit(c, path, key=None):
         return text
     data = json.loads(text)
     if isinstance(data.get("characters"), list):
+        if key in data.get("sheets", {}):
+            return {"sheet": key, "about": data["sheets"][key],
+                    "people": [e["id"] for e in data["characters"] if key in e.get("sheets", [])]}
         return next((e for e in data["characters"] if e.get("id") == key), None)
     return data.get(key)
 
@@ -132,9 +135,9 @@ def show(path, depth=0, seen=None):
         print(f"{pad}  backfilled: {rec['backfilled']}")
     src = rec.get("source")
     if src:
-        entry = at_commit(rec["commit"], src["file"], src.get("id") or src.get("shot"))
+        entry = at_commit(rec["commit"], src["file"], src.get("id") or src.get("shot") or src.get("sheet"))
         print(f"{pad}  source: {src['file']} @ {rec['commit']}: {json.dumps(entry, ensure_ascii=False)[:500]}")
-        if rec["kind"] == "cast" and entry:
+        if rec["kind"] == "cast" and entry and "kind" in entry:
             spec = json.loads(git("show", f"{rec['commit']}:{src['file']}"))
             text = spec["kinds"][entry["kind"]].format(colour=entry.get("colour", ""), who=entry.get("who", ""),
                                                        extra=entry.get("extra", ""), sandals=spec["sandals"])

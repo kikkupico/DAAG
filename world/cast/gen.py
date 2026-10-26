@@ -1,50 +1,123 @@
-"""Reference pictures of the cast: each person alone, full length, front view, on white.
+"""Reference pictures of the cast, and the sheets the book pictures take them from.
 
-    python3 world/cast/gen.py nb2 [id ...] [--force]                       Nano Banana 2 (GEMINI_API_KEY)
-    ~/Projects/flux/.venv/bin/python world/cast/gen.py flux <id> [--force]  FLUX.2 klein 4B, locally
-    python3 world/cast/gen.py --sheet <maker>                              contact sheet, out/<maker>/sheet.jpg
+    python3 world/cast/gen.py submit [id ...] [--force]    Nano Banana 2 through the Batch API (the usual way)
+    python3 world/cast/gen.py status [job]
+    python3 world/cast/gen.py fetch [job] [--force]        save the pictures, then rebuild the sheets
+    python3 world/cast/gen.py now <id ...> [--force]       Nano Banana 2 at once, for a single take
+    ~/Projects/flux/.venv/bin/python world/cast/gen.py flux <id> [--force]   FLUX.2 klein 4B, locally
+    python3 world/cast/gen.py sheets [maker]               the sheets, out/<maker>/sheets/<sheet>.png
+    python3 world/cast/gen.py contact [maker]              every picture on one page, out/<maker>/contact.jpg
 
-cast.json lists every figure. A prompt is the shared prefix plus the figure's kind, with {colour},
-{who} and {extra} filled from the figure and {sandals} from the shared wording. Every figure has a
-seed of its own (from its id), so each has a face of its own; figures of one kind still differ in
-nothing that marks them but colour, as the cast rule asks. Pictures go to out/<maker>/<id>.png (not
-in git), with the seconds each took in out/<maker>/times.json; made pictures are kept unless --force.
-Each carries its record (world/provenance.py): the commit it was made at, its id in cast.json and
-the model; the prompt and seed are read back from git at that commit, so the script refuses to run
-while cast.json or the script has uncommitted changes.
-On a 24 GB Mac run FLUX one figure to a process, so memory is freed between pictures.
-Only people are made here; props are modelled in 3D in the world model.
+Every picture is one person alone, full length, facing the camera, on white. cast.json lists every
+figure: its prompt is the shared prefix plus its kind, with {colour}, {who} and {extra} filled from
+the figure and {sandals} from the shared wording. Figures of one kind differ only in the colours the
+canon gives them; each has a face of its own. Pictures go to out/<maker>/<id>.png (maker nb2 by
+default, or flux), not in git; made pictures are kept unless --force. Nano Banana 2 makes them at 3:4
+and IMAGE_SIZE (1K by default), like every Gemini picture here (world/gemini.py).
+
+A sheet puts the figures that work together side by side in one row on white, each with its id
+printed under it, at the size each was made, so heights compare. The book pictures send a shot's
+cast as the fewest sheets that hold it (world/panels/pipeline.py), and name people by those ids.
+cast.json's "sheets" names the sheets; a figure lists the ones it is on, and may be on several (the
+priestess is on both student groups' sheets). Keep a sheet to five people or fewer: the model scales a
+whole sheet down to one input, and every extra person makes each face smaller.
+
+Every picture and sheet carries its record (world/provenance.py): the commit it was made at, its id
+or sheet in cast.json, the model (and batch job), and for a sheet the pictures on it with their
+hashes. The prompt is read back from git at that commit, so the script refuses to run while cast.json
+or the script has uncommitted changes. Only people are made here; props are modelled in 3D.
 """
 import base64
 import io
 import json
-import os
 import sys
 import time
-import urllib.error
-import urllib.request
 import zlib
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE.parent))
+WORLD = HERE.parent
+sys.path.insert(0, str(WORLD))
+import gemini  # noqa: E402
 import provenance  # noqa: E402
+
 OUT = HERE / "out"
+JOBS = HERE / "batches"
 FLUX_MODEL = Path.home() / "Projects/flux/models/FLUX.2-klein-4B"
 FLUX_SIZE = (768, 1024)
+FONTS = ["/System/Library/Fonts/Supplemental/Arial.ttf", "/System/Library/Fonts/Helvetica.ttc",
+         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"]
 
 
-def jobs(maker):
-    spec = json.loads((HERE / "cast.json").read_text())
-    for item in spec["characters"]:
-        text = spec["kinds"][item["kind"]].format(colour=item.get("colour", ""), who=item.get("who", ""),
-                                                  extra=item.get("extra", ""), sandals=spec["sandals"])
+def spec():
+    return json.loads((HERE / "cast.json").read_text())
+
+
+def jobs(maker="nb2"):
+    s = spec()
+    for item in s["characters"]:
+        text = s["kinds"][item["kind"]].format(colour=item.get("colour", ""), who=item.get("who", ""),
+                                               extra=item.get("extra", ""), sandals=s["sandals"])
         yield {"id": item["id"], "seed": item.get("seed", zlib.crc32(item["id"].encode()) % 100000), "item": item,
-               "prompt": spec["prefix"] + " " + text, "dest": OUT / maker / (item["id"] + ".png")}
+               "prompt": s["prefix"] + " " + text, "dest": OUT / maker / (item["id"] + ".png")}
 
 
-AT = {}  # the commit this run is tied to, set by generate()
+def at():
+    return provenance.commit(HERE / "cast.json", HERE / "gen.py", WORLD / "provenance.py", WORLD / "gemini.py")
 
+
+def origin(job, model, commit):
+    """The record a cast picture carries: the commit, its id in cast.json, the model."""
+    return provenance.record("cast", model, commit, source={"file": provenance.rel(HERE / "cast.json"), "id": job["id"]})
+
+
+def todo(ids, force, maker="nb2"):
+    return [j for j in jobs(maker) if (not ids or j["id"] in ids) and (force or not j["dest"].exists())]
+
+
+def save(job, data, where, commit):
+    from PIL import Image
+    im = Image.open(io.BytesIO(base64.b64decode(data))).convert("RGB")
+    provenance.stamp(im, job["dest"], origin(job, {"name": gemini.MODEL, "where": where,
+                                                   "settings": {"aspect": "3:4", "size": gemini.SIZE}}, commit))
+
+
+# --- Nano Banana 2 ----------------------------------------------------------------------------------
+
+def submit(args):
+    force = "--force" in args
+    js = todo([a for a in args if not a.startswith("--")], force)
+    if not js:
+        sys.exit("nothing to make (--force to make again)")
+    commit = at()
+    batch = gemini.Batch(JOBS, "daag-cast")
+    batch.submit([{"key": j["id"], "prompt": j["prompt"], "images": [], "aspect": "3:4",
+                   "meta": {"commit": commit}} for j in js])
+
+
+def status(args):
+    gemini.Batch(JOBS, "daag-cast").status(args[0] if args else None)
+
+
+def fetch(args):
+    force = "--force" in args
+    args = [a for a in args if not a.startswith("--")]
+    by_id = {j["id"]: j for j in jobs()}
+    gemini.Batch(JOBS, "daag-cast").fetch(lambda key, meta, data, where: save(by_id[key], data, where, meta["commit"]),
+                                          args[0] if args else None, force)
+    sheets([])
+
+
+def now(args):
+    js = todo([a for a in args if not a.startswith("--")], "--force" in args)
+    commit = at()
+    for j in js:
+        t = time.time()
+        save(j, gemini.generate(j["prompt"], [], "3:4"), "gemini", commit)
+        print(f"  {provenance.rel(j['dest'])}  {time.time() - t:.0f}s", flush=True)
+
+
+# --- FLUX, locally ------------------------------------------------------------------------------------
 
 def flux_model():
     """FLUX as it ran: the weights' Hugging Face revision (from their download record) and the library."""
@@ -59,74 +132,70 @@ def flux_model():
             "library": lib, "where": "local"}
 
 
-def origin(job, model):
-    """The record a cast picture carries (world/provenance.py): the commit, and its entry in cast.json."""
-    return provenance.record("cast", model, AT, source={"file": provenance.rel(HERE / "cast.json"), "id": job["id"]})
-
-
-def record(maker, name, seconds):
-    path = OUT / maker / "times.json"
-    d = json.loads(path.read_text()) if path.exists() else {}
-    d[name] = round(seconds, 1)
-    path.write_text(json.dumps(d, indent=1) + "\n")
-    print(f"{maker} {name}: {d[name]}s", flush=True)
-
-
-def nb2(job):
-    body = {"model": "gemini-3.1-flash-image", "input": [{"type": "text", "text": job["prompt"]}],
-            "response_format": {"type": "image", "aspect_ratio": "3:4", "image_size": "2K"}}
-    req = urllib.request.Request(
-        "https://generativelanguage.googleapis.com/v1beta/interactions", method="POST",
-        data=json.dumps(body).encode(),
-        headers={"x-goog-api-key": os.environ["GEMINI_API_KEY"], "Api-Revision": "2026-05-20",
-                 "Content-Type": "application/json"})
-    try:
-        res = json.load(urllib.request.urlopen(req, timeout=300))
-    except urllib.error.HTTPError as e:
-        print(f"nb2 {job['id']}: HTTP {e.code} {e.read().decode()[:400]}", flush=True)
-        return False
-    for step in res.get("steps", []):
-        for c in step.get("content", []):
-            if c.get("type") == "image":
-                from PIL import Image
-                im = Image.open(io.BytesIO(base64.b64decode(c["data"])))
-                provenance.stamp(im, job["dest"], origin(job, {"name": "gemini-3.1-flash-image", "where": "gemini"}))
-                return True
-    print(f"nb2 {job['id']}: no image: {json.dumps(res)[:400]}", flush=True)
-    return False
-
-
-def flux_pipe():
+def flux(args):
+    js = todo([a for a in args if not a.startswith("--")], "--force" in args, "flux")
+    if not js:
+        sys.exit("nothing to make (--force to make again)")
     import torch
     from diffusers import Flux2KleinPipeline
+    commit = at()
     pipe = Flux2KleinPipeline.from_pretrained(FLUX_MODEL, torch_dtype=torch.bfloat16)
-    pipe.enable_model_cpu_offload()  # what fits a 24 GB Mac
-
-    def run(job):
-        w, h = FLUX_SIZE
-        im = pipe(prompt=job["prompt"], width=w, height=h, guidance_scale=1.0, num_inference_steps=4,
-                  generator=torch.Generator("cpu").manual_seed(job["seed"])).images[0]
-        provenance.stamp(im, job["dest"], origin(job, flux_model()))
-        return True
-    return run
-
-
-def generate(maker, ids, force):
-    todo = [j for j in jobs(maker) if (not ids or j["id"] in ids) and (force or not j["dest"].exists())]
-    if not todo:
-        print("nothing to make")
-        return
-    (OUT / maker).mkdir(parents=True, exist_ok=True)
-    AT.update(provenance.commit(HERE / "cast.json", HERE / "gen.py", HERE.parent / "provenance.py"))
-    make = nb2 if maker == "nb2" else flux_pipe()
-    for j in todo:
+    pipe.enable_model_cpu_offload()  # what fits a 24 GB Mac; run one figure to a process
+    for j in js:
         t = time.time()
-        if make(j):
-            record(maker, j["id"], time.time() - t)
+        w, h = FLUX_SIZE
+        im = pipe(prompt=j["prompt"], width=w, height=h, guidance_scale=1.0, num_inference_steps=4,
+                  generator=torch.Generator("cpu").manual_seed(j["seed"])).images[0]
+        provenance.stamp(im, j["dest"], origin(j, flux_model(), commit))
+        print(f"  {provenance.rel(j['dest'])}  {time.time() - t:.0f}s", flush=True)
 
 
-def sheet(maker):
+# --- sheets ---------------------------------------------------------------------------------------------
+
+def font(size):
+    from PIL import ImageFont
+    for f in FONTS:
+        if Path(f).exists():
+            return ImageFont.truetype(f, size)
+    return ImageFont.load_default(size=size)
+
+
+def sheets(args):
+    """One picture a sheet: its figures side by side at the size each was made, each id printed below."""
     from PIL import Image, ImageDraw
+    maker = args[0] if args else "nb2"
+    s = spec()
+    commit = at()
+    made = {j["id"]: j["dest"] for j in jobs(maker) if j["dest"].exists()}
+    label = font(64)
+    for name in s["sheets"]:
+        ids = [c["id"] for c in s["characters"] if name in c.get("sheets", [])]
+        missing = [i for i in ids if i not in made]
+        if missing:
+            print(f"  {name}: not yet, missing {missing}")
+            continue
+        ims = [Image.open(made[i]).convert("RGB") for i in ids]
+        gap, band = 40, 110
+        h = max(im.height for im in ims)
+        sheet = Image.new("RGB", (sum(im.width for im in ims) + gap * (len(ims) + 1), h + band + gap), "white")
+        draw = ImageDraw.Draw(sheet)
+        x = gap
+        for i, im in zip(ids, ims):
+            sheet.paste(im, (x, gap + h - im.height))
+            tw = draw.textlength(i, font=label)
+            draw.text((x + (im.width - tw) / 2, gap + h + 20), i, fill="black", font=label)
+            x += im.width + gap
+        rec = provenance.record("cast-sheet", {"name": "sheet", "where": "local"}, commit,
+                                source={"file": provenance.rel(HERE / "cast.json"), "sheet": name},
+                                inputs=[provenance.picture(f"cast {i}", made[i]) for i in ids])
+        dest = OUT / maker / "sheets" / f"{name}.png"
+        provenance.stamp(sheet, dest, rec)
+        print(f"  {provenance.rel(dest)}  {len(ids)} people")
+
+
+def contact(args):
+    from PIL import Image, ImageDraw
+    maker = args[0] if args else "nb2"
     made = [j for j in jobs(maker) if j["dest"].exists()]
     cols, cw = 6, 320
     ims = [Image.open(j["dest"]).convert("RGB") for j in made]
@@ -134,17 +203,14 @@ def sheet(maker):
     out = Image.new("RGB", (cols * cw, ((len(made) + cols - 1) // cols) * ch), "white")
     draw = ImageDraw.Draw(out)
     for n, (j, im) in enumerate(zip(made, ims)):
-        im = im.resize((cw, round(cw * im.height / im.width)))
-        x, y = (n % cols) * cw, (n // cols) * ch
-        out.paste(im, (x, y))
-        draw.text((x + 6, y + ch - 18), j["id"], fill="black")
-    out.save(OUT / maker / "sheet.jpg", quality=88)
-    print("sheet", OUT / maker / "sheet.jpg", len(made), "pictures")
+        out.paste(im.resize((cw, round(cw * im.height / im.width))), ((n % cols) * cw, (n // cols) * ch))
+        draw.text(((n % cols) * cw + 6, (n // cols) * ch + ch - 18), j["id"], fill="black")
+    out.save(OUT / maker / "contact.jpg", quality=88)
+    print("contact sheet", provenance.rel(OUT / maker / "contact.jpg"), len(made), "pictures")
 
 
 if __name__ == "__main__":
-    args = sys.argv[1:]
-    if args[0] == "--sheet":
-        sheet(args[1])
-    else:
-        generate(args[0], [a for a in args[1:] if not a.startswith("--")], "--force" in args)
+    commands = ("submit", "status", "fetch", "now", "flux", "sheets", "contact")
+    if len(sys.argv) < 2 or sys.argv[1] not in commands:
+        sys.exit(__doc__)
+    globals()[sys.argv[1]](sys.argv[2:])
