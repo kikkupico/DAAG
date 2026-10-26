@@ -132,6 +132,12 @@ def show(path, depth=0, seen=None):
     if src:
         entry = at_commit(rec["commit"], src["file"], src.get("id") or src.get("shot"))
         print(f"{pad}  source: {src['file']} @ {rec['commit']}: {json.dumps(entry, ensure_ascii=False)[:500]}")
+        if rec["kind"] == "cast" and entry:
+            spec = json.loads(git("show", f"{rec['commit']}:{src['file']}"))
+            text = spec["kinds"][entry["kind"]].format(colour=entry.get("colour", ""), who=entry.get("who", ""),
+                                                       extra=entry.get("extra", ""), sandals=spec["sandals"])
+            prefix = spec["prefix"] if isinstance(spec["prefix"], str) else spec["prefix"]["character"]
+            print(f"{pad}  prompt: {prefix} {text}")
     if rec.get("island"):
         print(f"{pad}  island: {json.dumps(rec['island'])}")
     for i in rec.get("inputs", []):
