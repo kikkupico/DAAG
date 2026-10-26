@@ -1,6 +1,6 @@
 # Cast
 
-Reference pictures of the people of both islands, and the sheets the book pictures take them from.
+Reference pictures of the people of both islands, and sheets of each setting's people side by side.
 Each picture is one person alone, full length, facing the camera, on white, wearing what the canon
 gives them. Image generation is used for people and nothing else: props are modelled in 3D in the
 world model (`../src/blib/props.py`, `../src/blib/paxos_bld.py` and the other builders), where counts,
@@ -15,11 +15,12 @@ grooves and lettering come out exact.
   (`../gemini.py`), at half the price; `now` makes one at once; `flux` runs FLUX.2 klein 4B locally
   instead (one figure to a process on a 24 GB Mac). `fetch` rebuilds the sheets; `sheets` does it by
   hand and `contact` puts every picture on one page.
-- **Sheets.** A sheet is the figures that work together, side by side in one row on white, each at
-  the size it was made, so heights compare, with its id printed below. A book picture sends the
-  fewest sheets that hold its shot's cast as single images (`../panels/pipeline.py`) and names
-  people by those ids. A figure can be on more than one sheet; keep a sheet to five people or fewer,
-  since the model scales each sheet down to one input and every extra person makes each face smaller.
+- **In the book pictures** each person of a shot's cast goes in as a picture of their own, cropped
+  to them, with their id printed below (`../panels/pipeline.py`), so each face keeps as much detail
+  as the model's input allows; the shot's prompt names people by those ids.
+- **Sheets** are for looking: the figures that work together, side by side in one row on white,
+  each at the size it was made, so heights and colours compare, with its id printed below. A figure
+  can be on more than one sheet.
 - `out/` (not in git): `out/nb2/` the cast the book pictures use, with `out/nb2/sheets/`; `out/flux/`
   the FLUX version; `out/v1/` the first version; `out/trial/` the model comparisons. Job records are
   in `batches/` (not in git).
