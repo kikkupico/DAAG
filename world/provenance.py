@@ -128,6 +128,8 @@ def show(path, depth=0, seen=None):
     print(f"{pad}  model: {json.dumps(rec.get('model'))}")
     if rec.get("uncommitted"):
         print(f"{pad}  UNCOMMITTED when made: {rec['uncommitted']}")
+    if rec.get("backfilled"):
+        print(f"{pad}  backfilled: {rec['backfilled']}")
     src = rec.get("source")
     if src:
         entry = at_commit(rec["commit"], src["file"], src.get("id") or src.get("shot"))
