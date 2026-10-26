@@ -34,7 +34,7 @@ def main():
     aspect = aspect_of(src)
     rec = provenance.record("comic", {"name": MODEL, "where": "gemini", "settings": {"size": SIZE, "aspect": aspect},
                                       **({"prompt": PROMPT} if os.environ.get("COMIC_PROMPT") else {})},
-                            provenance.commit(Path(__file__)), inputs=[provenance.picture("source", src)])
+                            provenance.commit(Path(__file__), Path(__file__).parents[1] / "gemini.py"), inputs=[provenance.picture("source", src)])
     generate([part(src, 1920)], PROMPT, aspect, out, rec)
 
 
