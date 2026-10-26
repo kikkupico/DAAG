@@ -11,9 +11,9 @@ Positions can be given two ways besides world metres:
                       shot stays framed on the building wherever the terrain puts it
   a height "+1.7"     1.7 m above the ground at that point (world positions only)
 
-"props" lists what a shot places for itself (blib/panel_props.py: goat, cheese, sandglass), each with
-"at" in the same terms, "face" in degrees (from the site's door when there is a site) or a point to
-face, and optionally "scale" and "colour"; they are built just before the shot renders and cleared
+"props" lists the things a shot places for itself (blib/panel_props.py: cheese, sandglass; animals are
+described in the prompt, never modelled), each with "at" in the same terms, "face" in degrees (from the
+site's door when there is a site) or a point to face, and optionally "scale"; they are built just before the shot renders and cleared
 before the next.
 """
 import importlib

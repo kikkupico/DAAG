@@ -136,6 +136,9 @@ def show(path, depth=0, seen=None):
     src = rec.get("source")
     if src:
         entry = at_commit(rec["commit"], src["file"], src.get("id") or src.get("shot") or src.get("sheet"))
+        if src.get("variant") and isinstance(entry, dict):
+            entry = dict({k: v for k, v in entry.items() if k != "variants"}, **entry["variants"].get(src["variant"], {}),
+                         variant=src["variant"])
         print(f"{pad}  source: {src['file']} @ {rec['commit']}: {json.dumps(entry, ensure_ascii=False)[:500]}")
         if rec["kind"] == "cast" and entry and "kind" in entry:
             spec = json.loads(git("show", f"{rec['commit']}:{src['file']}"))
