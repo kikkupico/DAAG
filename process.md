@@ -110,9 +110,10 @@ its own run:
    reference pictures (`world/cast/`) and makes each picture a photograph, keeping the previs's
    camera, buildings and props, in one job through the Batch API at half the price; Nano Banana 2
    at 1K is the default. `world/panels/pipeline.py` makes the same picture at once, for a single
-   take. Both read the cast and the prompt from the previs, not from the current shots.
+   take. Both read the cast and the prompt from the previs, not from the current shots, and both
+   can draw the picture as Franco-Belgian ligne claire instead of a photograph (`--style ligne-claire`).
 
-A cover is redrawn as ligne claire afterwards, by itself (`world/panels/comic.py`). Every cast
+A finished photograph can also be redrawn as ligne claire afterwards, by itself (`world/panels/comic.py`). Every cast
 picture, previs and scene carries a record of where it came from: the commit it was made at, what in
 that commit made it, the model that ran (and for a previs, the island build, itself stamped with its
 commit), and the pictures it was made from. The generators refuse to run with uncommitted changes to
