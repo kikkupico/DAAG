@@ -61,6 +61,10 @@ def model(a, res='2k'):
     jobs = [(g['url'], os.path.join(d, os.path.basename(g['url'])))]
     for rel, v in g.get('include', {}).items():
         jobs.append((v['url'], os.path.join(d, rel)))
+    # foliage: the glTF's colour map is a JPG with no transparency; the leaves' cut-out is a map of its own
+    a_ = files(a).get('Alpha', {}).get(r, {})
+    if 'png' in a_:
+        jobs.append((a_['png']['url'], os.path.join(d, 'textures', f'{a}_alpha_{r}.png')))
     return jobs
 
 def hdri(a, res='4k'):

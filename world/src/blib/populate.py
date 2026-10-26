@@ -1,5 +1,5 @@
 """Vegetation and rock prototypes, and density-driven scattering over an island."""
-import glob, math, os
+import glob, json, math, os
 import bpy
 import numpy as np
 from .core import PH, collection, import_gltf
@@ -31,9 +31,38 @@ def _desaturate_imported(objs, sat=0.35, val=0.9, tint=None):
             m['_grey'] = True
 
 
+def _cutout(asset, gltf, objs):
+    """Give the asset's leaf, twig and blade materials their cut-out: Poly Haven ships it as a separate
+    Alpha map (fetched beside the textures), since the glTF's colour map is a JPG with no transparency.
+    Without it every leaf card renders as a solid patch of the atlas's pale background."""
+    alpha = glob.glob(os.path.join(PH, 'models', asset, 'textures', f'{asset}_alpha_*.png'))
+    if not alpha:
+        return
+    cut = {m['name'] for m in json.load(open(gltf)).get('materials', []) if m.get('alphaMode') in ('MASK', 'BLEND')}
+    img = bpy.data.images.load(alpha[0], check_existing=True)
+    img.colorspace_settings.name = 'Non-Color'
+    done = set()
+    for o in objs:
+        for slot in o.material_slots:
+            m = slot.material
+            if not m or m.name in done or m.name.split('.')[0] not in cut or not m.node_tree:
+                continue
+            done.add(m.name)
+            nt = m.node_tree
+            bsdf = next((n for n in nt.nodes if n.type == 'BSDF_PRINCIPLED'), None)
+            colour = next((n for n in nt.nodes if n.type == 'TEX_IMAGE'), None)
+            if not bsdf:
+                continue
+            tex = nt.nodes.new('ShaderNodeTexImage'); tex.image = img; tex.interpolation = 'Closest'
+            if colour and colour.inputs['Vector'].links:
+                nt.links.new(colour.inputs['Vector'].links[0].from_socket, tex.inputs['Vector'])
+            nt.links.new(tex.outputs['Color'], bsdf.inputs['Alpha'])
+
+
 def _ph(asset, coll, pick=None, grey=None, join=False):
     g = glob.glob(os.path.join(PH, 'models', asset, '*.gltf'))[0]
     objs = [o for o in import_gltf(g, coll) if o.type == 'MESH']
+    _cutout(asset, g, objs)
     if join and len(objs) > 1:
         for o in objs:
             o.parent = None
