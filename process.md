@@ -112,6 +112,7 @@ its own run:
    at 1K is the default. `world/panels/pipeline.py` makes the same picture at once, for a single
    take. Both read the cast and the prompt from the previs, not from the current shots, and both
    can draw the picture as Franco-Belgian ligne claire instead of a photograph (`--style ligne-claire`).
+   `world/panels/flux.py` makes the same pictures with FLUX locally, free, for trials.
 
 A finished photograph can also be redrawn as ligne claire afterwards, by itself (`world/panels/comic.py`). Every cast
 picture, previs and scene carries a record of where it came from: the commit it was made at, what in

@@ -37,12 +37,12 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 WORLD = HERE.parent
 sys.path.insert(0, str(WORLD))
+import fluxlocal  # noqa: E402
 import gemini  # noqa: E402
 import provenance  # noqa: E402
 
 OUT = HERE / "out"
 JOBS = HERE / "batches"
-FLUX_MODEL = Path.home() / "Projects/flux/models/FLUX.2-klein-4B"
 FLUX_SIZE = (768, 1024)
 FONTS = ["/System/Library/Fonts/Supplemental/Arial.ttf", "/System/Library/Fonts/Helvetica.ttc",
          "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"]
@@ -118,34 +118,17 @@ def now(args):
 
 # --- FLUX, locally ------------------------------------------------------------------------------------
 
-def flux_model():
-    """FLUX as it ran: the weights' Hugging Face revision (from their download record) and the library."""
-    meta = sorted((FLUX_MODEL / ".cache/huggingface/download").rglob("*.metadata"))
-    revision = meta[0].read_text().split()[0][:12] if meta else None
-    try:
-        import diffusers
-        lib = f"diffusers {diffusers.__version__}"
-    except ImportError:
-        lib = None
-    return {"name": "FLUX.2-klein-4B", "repo": "black-forest-labs/FLUX.2-klein-4B", "revision": revision,
-            "library": lib, "where": "local"}
-
-
 def flux(args):
     js = todo([a for a in args if not a.startswith("--")], "--force" in args, "flux")
     if not js:
         sys.exit("nothing to make (--force to make again)")
-    import torch
-    from diffusers import Flux2KleinPipeline
-    commit = at()
-    pipe = Flux2KleinPipeline.from_pretrained(FLUX_MODEL, torch_dtype=torch.bfloat16)
-    pipe.enable_model_cpu_offload()  # what fits a 24 GB Mac; run one figure to a process
+    commit = provenance.commit(HERE / "cast.json", HERE / "gen.py", WORLD / "provenance.py", WORLD / "fluxlocal.py")
+    pipe = fluxlocal.pipe()  # run one figure to a process on a 24 GB Mac
+    w, h = FLUX_SIZE
     for j in js:
         t = time.time()
-        w, h = FLUX_SIZE
-        im = pipe(prompt=j["prompt"], width=w, height=h, guidance_scale=1.0, num_inference_steps=4,
-                  generator=torch.Generator("cpu").manual_seed(j["seed"])).images[0]
-        provenance.stamp(im, j["dest"], origin(j, flux_model(), commit))
+        im = fluxlocal.generate(pipe, j["prompt"], [], w, h, j["seed"])
+        provenance.stamp(im, j["dest"], origin(j, fluxlocal.model(seed=j["seed"], width=w, height=h), commit))
         print(f"  {provenance.rel(j['dest'])}  {time.time() - t:.0f}s", flush=True)
 
 
