@@ -98,7 +98,8 @@ def cycles(scene, samples=128, res=(1920, 1080), pct=100, gpu=True, denoise=True
     scene.cycles.use_denoising = denoise
     scene.cycles.adaptive_threshold = 0.02
     scene.cycles.max_bounces = 8
-    scene.cycles.transparent_max_bounces = 16
+    # leaf cards stack deep in dense scrub: at 16, rays gave up inside the lentisk and came back grey (snowy bushes)
+    scene.cycles.transparent_max_bounces = 128
     scene.cycles.diffuse_bounces = 3
     scene.cycles.glossy_bounces = 3
     scene.cycles.transmission_bounces = 6
