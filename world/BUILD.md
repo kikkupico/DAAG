@@ -60,6 +60,7 @@ The terrain scripts print and store (in `sites.json`) the canon tests:
 | `panels/batch.py` | book pictures from previs images, the usual route: the cast put in and each picture made a photograph by Nano Banana 2 at 1K through the Gemini Batch API, at half price; `submit`, `status`, `fetch`; jobs recorded in `panels/batches/` (not in git) |
 | `panels/pipeline.py` | the same picture at once, for a single take; holds the prompt and request both scripts share |
 | `panels/comic.py` | the ligne claire redraw of a finished picture, for covers; a separate step |
+| `provenance.py` | where every picture came from: the record in each cast picture, previs and scene (commit, source, model, island build, input pictures); `show` follows the chain, `export` makes a JPEG that keeps it. Island builds are stamped in `build/<island>.build.json` when saved |
 | `web/images.py`, `web/images.json` | publishes the renders used on the site's pages to the image bucket and points the pages at them; `web/out/` holds the encoded files |
 
 ## Credits

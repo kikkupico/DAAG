@@ -112,8 +112,13 @@ its own run:
    at 1K is the default. `world/panels/pipeline.py` makes the same picture at once, for a single
    take. Both read the cast and the prompt from the previs, not from the current shots.
 
-A cover is redrawn as ligne claire afterwards, by itself (`world/panels/comic.py`). The picture is
-saved as a JPEG in `assets/img/`, enters the scroll as a `.photo` inside a `.pop`, copied into the
+A cover is redrawn as ligne claire afterwards, by itself (`world/panels/comic.py`). Every cast
+picture, previs and scene carries a record of where it came from: the commit it was made at, what in
+that commit made it, the model that ran (and for a previs, the island build, itself stamped with its
+commit), and the pictures it was made from. The generators refuse to run with uncommitted changes to
+what they read, so the commit always tells the truth; `python3 world/provenance.py show <picture>`
+prints the chain. The picture is exported as a JPEG into `assets/img/` with
+`python3 world/provenance.py export`, which keeps the record, enters the scroll as a `.photo` inside a `.pop`, copied into the
 book's `img/`, and is published by `world/web/images.py`. The allegorical devices must
 nevertheless be **fully in place in the prose**, because phase 2 is built from what you write.
 Never bend the prose to fit a picture.

@@ -6,16 +6,17 @@
 
 The input is a previs image made by previs.py, world/panels/<book>/<shot>/previs-<version>.png. A folder
 stands for the newest previs of every shot under it, so world/panels/<book> is a whole book. The
-previs carries its shot's record (inside the PNG, and in previs-<version>.json beside it), and the
-cast and prompt are read from there, never from the current shots.json: the picture is made from
-the shot exactly as it was when its previs was rendered.
+cast and prompt are read from shots.json at the commit the previs names, never from the current file:
+the picture is made from the shot exactly as it was when its previs was rendered.
 
 The previs is image 1, and the cast pictures (world/cast/out/<CAST>/<id>.png, CAST=flux by default)
 follow as images 2, 3, ... in the record's order, so the prompt names each person by their image.
 The prompt is appended to KEEP, which turns the previs into a photograph without moving anything;
 a shot with "keep": false sends its prompt alone. The aspect is the previs's. Output: scene-<version>.png
-beside the previs, at the size the model returns, with its own record (the previs, the model, the cast
-files and their hashes) inside it and in scene-<version>.json; a new take replaces the last.
+beside the previs, at the size the model returns, with its record inside it (world/provenance.py): the
+commit (the prompt is this script's at that commit, with the shot's own), the shot, the model and its
+settings, and the previs and each cast picture with their hashes and commits; a new take replaces the
+last. It refuses to run while this script or batch.py has uncommitted changes.
 
 Generation runs on Nano Banana 2 (gemini-3.1-flash-image) at 1K through the Gemini Interactions API
 with GEMINI_API_KEY. Only people are generated: buildings and props come from the previs. The usual
@@ -33,11 +34,13 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-from PIL import Image, PngImagePlugin
+from PIL import Image
 
 HERE = Path(__file__).resolve().parent
 WORLD = HERE.parent
 REPO = WORLD.parent
+sys.path.insert(0, str(WORLD))
+import provenance  # noqa: E402
 CAST = WORLD / "cast/out" / os.environ.get("CAST", "flux")
 MODELS = {"lite": "gemini-3.1-flash-lite-image", "nb2": "gemini-3.1-flash-image", "pro": "gemini-3-pro-image"}
 MODEL = MODELS[os.environ.get("IMAGE_MODEL", "nb2")]
@@ -64,19 +67,20 @@ def aspect_of(path):
     return min(ASPECTS, key=lambda a: abs(int(a.split(":")[0]) / int(a.split(":")[1]) - w / h))
 
 
-def digest(path):
-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()[:10]
-
-
-def record_of(previs):
-    """The shot record a previs carries: in the PNG, or failing that in the .json beside it."""
-    text = Image.open(previs).text.get("daag-shot")
-    if text:
-        return json.loads(text)
-    side = previs.with_suffix(".json")
-    if side.exists():
-        return json.loads(side.read_text())
-    sys.exit(f"{previs}: no shot record; make previs images with previs.py")
+def shot_of(previs):
+    """The shot a previs was rendered from: its entry in shots.json at the previs's commit, checked
+    against the version the previs records. (A trial previs made with DAAG_ALLOW_DIRTY may match the
+    working copy instead.)"""
+    rec = provenance.read(previs)
+    if not rec or rec.get("kind") != "previs":
+        sys.exit(f"{previs}: no previs record; make previs images with previs.py")
+    src = rec["source"]
+    for entry in (provenance.at_commit(rec["commit"], src["file"], src["shot"]),
+                  json.loads((REPO / src["file"]).read_text()).get(src["shot"])):
+        if entry and hashlib.sha256(json.dumps(entry, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:10] \
+                == src["version"]:
+            return src, entry
+    sys.exit(f"{previs}: shot {src['shot']} version {src['version']} is neither at {rec['commit']} nor in the working copy")
 
 
 def previs_inputs(args):
@@ -99,8 +103,7 @@ def previs_inputs(args):
 
 def request(previs):
     """What one previs sends: (prompt, images as parts, aspect, where the picture goes, its record)."""
-    rec = record_of(previs)
-    entry = rec["entry"]
+    source, entry = shot_of(previs)
     cast = [CAST / f"{c}.png" for c in entry.get("cast", [])]
     missing = [str(p.relative_to(WORLD)) for p in cast if not p.exists()]
     if missing:
@@ -110,20 +113,18 @@ def request(previs):
     prompt += (f" There {'is' if n == 1 else 'are'} exactly {n} {'person' if n == 1 else 'people'} in the picture, "
                "the ones named; nobody else." if n else " There is nobody in the picture.")
     images = [part(previs, 1920)] + [part(p, 1024) for p in cast]
-    scene = {"previs": str(previs.relative_to(REPO)), "previs_hash": digest(previs), "shot": rec,
-             "model": MODEL, "cast": {str(p.relative_to(REPO)): digest(p) for p in cast}}
-    return prompt, images, aspect_of(previs), previs.with_name(previs.name.replace("previs-", "scene-")), scene
+    aspect = aspect_of(previs)
+    scene = provenance.record(
+        "scene", {"name": MODEL, "where": "gemini", "settings": {"size": SIZE, "aspect": aspect}},
+        provenance.commit(HERE / "pipeline.py", HERE / "batch.py", WORLD / "provenance.py"), source=source,
+        inputs=[provenance.picture("previs", previs)] + [provenance.picture(f"cast {p.stem}", p) for p in cast])
+    return prompt, images, aspect, previs.with_name(previs.name.replace("previs-", "scene-")), scene
 
 
 def save(data, dest, scene):
-    """Save a generated picture with its record inside it and beside it."""
+    """Save a generated picture with its record inside it."""
     im = Image.open(io.BytesIO(base64.b64decode(data))).convert("RGB")
-    scene = dict(scene, made=time.strftime("%Y-%m-%dT%H:%M:%S"))
-    info = PngImagePlugin.PngInfo()
-    info.add_text("daag-scene", json.dumps(scene, ensure_ascii=False))
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    im.save(dest, pnginfo=info)
-    dest.with_suffix(".json").write_text(json.dumps(scene, indent=1, ensure_ascii=False) + "\n")
+    provenance.stamp(im, dest, dict(scene, made=time.strftime("%Y-%m-%dT%H:%M:%S")))
 
 
 def generate(images, prompt, aspect, dest, scene=None):

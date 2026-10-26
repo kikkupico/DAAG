@@ -119,6 +119,32 @@ def cycles(scene, samples=128, res=(1920, 1080), pct=100, gpu=True, denoise=True
 def save_blend(path):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     bpy.ops.wm.save_as_mainfile(filepath=path, compress=True)
+    stamp_build(path)
+
+
+def stamp_build(path):
+    """Write <name>.build.json beside a saved island: the island model's version, which every previs
+    rendered from it records (world/provenance.py): the file's hash, the terrain it was built from,
+    the commit, and any uncommitted changes to the scripts that built it."""
+    import hashlib, json, subprocess, time
+    def sha(p):
+        h = hashlib.sha256()
+        with open(p, 'rb') as f:
+            for chunk in iter(lambda: f.read(1 << 24), b''):
+                h.update(chunk)
+        return h.hexdigest()[:12]
+    def git(*a):
+        return subprocess.run(['git', *a], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+    name = os.path.splitext(os.path.basename(path))[0]
+    terrain = os.path.join(BUILD, 'terrain', name)
+    st = {'blend': os.path.relpath(path, os.path.dirname(ROOT)), 'hash': sha(path),
+          'built': time.strftime('%Y-%m-%dT%H:%M:%S'),
+          'terrain': {f: sha(os.path.join(terrain, f)) for f in ('height.npy', 'sites.json')
+                      if os.path.exists(os.path.join(terrain, f))},
+          'commit': git('rev-parse', '--short', 'HEAD') or None,
+          'uncommitted': [l[3:] for l in git('status', '--porcelain', '--', 'src').splitlines()]}
+    with open(os.path.join(os.path.dirname(path), name + '.build.json'), 'w') as f:
+        json.dump(st, f, indent=1)
 
 
 def import_gltf(path, coll=None):

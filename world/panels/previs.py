@@ -15,11 +15,13 @@ gives cam and target may leave base out (world/src/shots_panels.py). cast, promp
 the scene step and travel with the image.
 
 The shot's version is the hash of its entry, so the image is world/panels/<book>/<shot>/previs-<hash>.png
-and an older version of the shot keeps its own image. Beside it, previs-<hash>.json, and inside the
-PNG as the text chunk "daag-shot", is the record: book, shot, version, the whole entry, the git commit
-of shots.json and whether it had uncommitted edits, the world scripts' commit, the quality and the time.
-The scene step (pipeline.py, batch.py) reads the cast and prompt from that record, never from the
-current shots.json. Render quality "check" is full size at a few samples, enough for a previs.
+and an older version of the shot keeps its own image. The image carries its record (world/provenance.py):
+the commit, the shot (shots.json, its name and version), the island build it was rendered from (world/
+build/<island>.build.json, checked against the .blend, with the commit it was built at) and the render
+settings. The script refuses to run while shots.json or the world scripts have uncommitted changes, or
+the island build was not made at a commit. The scene step (pipeline.py, batch.py) reads the cast and
+prompt from shots.json at the previs's commit, never from the current file. Render quality "check" is
+full size at a few samples, enough for a previs.
 
 The previs is rendered at the size of the picture it becomes: the 1K size Gemini gives the shot's
 "aspect" (16:9 unless the shot says otherwise; --size 2K for the 2K size), so the frame matches
@@ -34,11 +36,13 @@ import tempfile
 import time
 from pathlib import Path
 
-from PIL import Image, PngImagePlugin
+from PIL import Image
 
 HERE = Path(__file__).resolve().parent
 WORLD = HERE.parent
 REPO = WORLD.parent
+sys.path.insert(0, str(WORLD))
+import provenance  # noqa: E402
 OUT_DIR = {"preview": "preview", "check": "check"}
 # Gemini 3.1 Flash Image output sizes (image generation docs), 1K and 2K, by aspect
 SIZES = {"1:1": (1024, 1024), "2:3": (848, 1264), "3:2": (1264, 848), "3:4": (896, 1200), "4:3": (1200, 896),
@@ -66,13 +70,13 @@ def main():
     shots = json.loads(shots_path.read_text())
     names = names or list(shots)
     rel = str(shots_path.relative_to(REPO))
-    provenance = {"shots_file": rel, "shots_commit": git("log", "-1", "--format=%h", "--", rel) or None,
-                  "shots_uncommitted": bool(git("status", "--porcelain", "--", rel)),
-                  "world_commit": git("log", "-1", "--format=%h", "--", "world/src") or None}
+    at = provenance.commit(shots_path, HERE / "previs.py", WORLD / "src", WORLD / "provenance.py")
+    blender = subprocess.run(["blender", "--version"], capture_output=True, text=True).stdout.splitlines()[0]
     by_island = {}
     for name in names:
         by_island.setdefault(shots[name]["island"], []).append(name)
     for island, group in by_island.items():
+        build = provenance.island(island)  # refuses an island build that is not tied to a commit
         specs = {f"panel__{book}__{n}": dict(shots[n], res=shots[n].get("res") or
                  [d * scale for d in SIZES[shots[n].get("aspect", "16:9")]]) for n in group}
         with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
@@ -88,15 +92,12 @@ def main():
             shot, v = shots[n], version(shots[n])
             src = WORLD / "renders" / OUT_DIR.get(quality, "final") / f"panel__{book}__{n}.png"
             dest = HERE / book / n / f"previs-{v}.png"
-            dest.parent.mkdir(parents=True, exist_ok=True)
-            record = {"book": book, "shot": n, "version": v, "entry": shot, **provenance,
-                      "res": specs[f"panel__{book}__{n}"]["res"], "quality": quality,
-                      "rendered": time.strftime("%Y-%m-%dT%H:%M:%S")}
-            info = PngImagePlugin.PngInfo()
-            info.add_text("daag-shot", json.dumps(record, ensure_ascii=False))
-            Image.open(src).save(dest, pnginfo=info)
+            rec = provenance.record(
+                "previs", {"name": blender, "where": "local",
+                           "settings": {"quality": quality, "res": specs[f"panel__{book}__{n}"]["res"]}}, at,
+                source={"file": rel, "shot": n, "version": v}, island=build)
+            provenance.stamp(Image.open(src), dest, rec)
             src.unlink()
-            dest.with_suffix(".json").write_text(json.dumps(record, indent=1, ensure_ascii=False) + "\n")
             print(f"  {dest.relative_to(REPO)}  {time.time() - t:.0f}s", flush=True)
 
 
