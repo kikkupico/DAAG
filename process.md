@@ -96,9 +96,11 @@ whatever pictures already exist (the place shots in `assets/img/places/` at leas
 whose picture does not exist yet is written without one; the prose never refers to a picture, so
 the book reads as finished.
 
-**Phase 2 — art.** Happens later and separately: the cover and the panels, made from the
-book's shots (`archive/art/panels/<slug>/shots.json`) and published to `assets/img/`. A picture enters the
-scroll as a `.photo` inside a `.pop`, copied into the book's `img/`. The allegorical devices must
+**Phase 2 — art.** Happens later and separately. Every picture, the cover among them, is a render
+of the world model (`world/`; `world/BUILD.md` says how it is built). A book's shot is a camera
+added to `world/src/shots_arche.py` or `shots_paxos.py` and rendered by `world/src/render.py`; the
+render is saved as a JPEG in `assets/img/`, enters the scroll as a `.photo` inside a `.pop`, copied
+into the book's `img/`, and is published by `world/web/images.py`. The allegorical devices must
 nevertheless be **fully in place in the prose**, because phase 2 is built from what you write.
 Never bend the prose to fit a picture.
 
@@ -411,20 +413,15 @@ Before calling a book done (the brief's checklist has the mechanics):
       reports that the card and the cover agree with `meta.json`.
 - [ ] The place's setting page, `places/<place>/index.html`, lists the book, adds its row to
   the table of what the messages say, and still describes the place truly. Each home-page section opens with its setting page, the brief a
-  reader needs before reading that section's books in any order. Its opening picture is a
-  photorealistic establishing shot: a Blender previs render put through `pipeline.py scene` with a
-  crop of the island plate (`archive/art/refs/places/`) and any people refs on the board, with no comic
-  pass. Its other pictures are previs renders. Shots are in `archive/art/panels/places/shots.json`,
-  published to `assets/img/places/`.
-- [ ] A building that recurs across pictures is modelled in full before any picture is generated
-  (the Chamber, the Tholos, Arche's three houses, the oracle at the fork, and on the scholars' coast
+  reader needs before reading that section's books in any order. Its pictures are renders of the
+  world model, the first an establishing shot of the place, published to `assets/img/places/`.
+- [ ] A building that recurs across pictures is modelled in full in the world model before it
+  appears in any picture (the Chamber, the Tholos, the oracle at the fork, and on the scholars' coast
   the libraries with their reading-room desks and pebble boards, the stoa with its festival ground and the
-  courier landing: `archive/art/sets/paxos_chamber.py`, `schedia_tholos.py`, `house.py`, `hall.py`,
-  `libraries.py`, `stoa.py` and `terraces.py` (which builds the landing as the set `landing`), on the helpers in
-  `masonry.py`: every block, joint, flute, capital, coffer, rafter, door board, tile, paving slab,
-  scroll and pebble is geometry), and its scene prompts say so: keep every modelled
-  part where it is, give it its real material, add no architecture. The image pass then adds
-  only materials, light, people and props, and the building is the same in every picture.
+  courier landing in `world/src/blib/paxos_bld.py`; Arche's three houses and the harbours in
+  `buildings.py`; the camps and the crown in `mountain.py`). Every block, joint, flute, capital,
+  rafter, door board, tile, paving slab, scroll and pebble is geometry, so the building is the same
+  in every picture.
 - [ ] The book is on Eighteen Books in One Scroll, `books/eighteen-books-in-one-scroll/`: every
   book in one long page, each drawn on one round as the book it grows from with one change in red.
   A new book adds, in the page's `index.html`, a change card (`card eq`: the parent, the change in
@@ -491,22 +488,17 @@ every tent sees and no post on the crown does.
 ## Changing art direction
 
 Art direction flows from the Hellenistic reference (`hellenistic-reference.html`) through the world
-guides, the book guides and the books to the images. `archive/art/direction/decisions.json` lists each decision
-with the reference section it comes from, the words that betray it in a file or a prompt, and the commit
-it stands at (`since`). Everything is tied to git: each node in the tree carries its last commit and how
-many commits it is behind, and an image, which git does not track, carries the commit it was built at.
+model's own documents (`world/world-prompt.md`, `world/buildings.md`, `world/reality.md`) into the
+model, and from the model to every picture. A change is made once, in the documents and then in the
+model's scripts, and committed.
 
-1. `python3 archive/art/direction/tree.py impact <decision-id | file | regex>`: what mentions it, what lies
-   downstream, the images to regenerate and their cost.
-2. Make the change and commit it.
-3. `tree.py touch <decision-id>`: the decision now stands at HEAD, and everything older that it touches
-   is stale. Commit `decisions.json`.
-4. `tree.py stale` lists what is still behind. After regenerating images, `tree.py stamp <paths>`
-   records the commit they were built at.
-5. `tree.py review` lists decisions whose lines changed in the reference or the guides after they were
-   last touched; `tree.py log <id>` shows that history. `tree.py build` refreshes `archive/art/direction/TREE.md`.
+1. Rebuild and render everything: `sh world/src/build_all.sh` (`preview` first to look). No picture
+   is made any other way, so none can be left behind by the change.
+2. Look at the renders, and save each changed one over its JPEG in `assets/img/`.
+3. `python3 world/web/images.py`: a re-rendered picture gets a new name on the bucket, and the
+   pages are pointed at it.
 
-Add a decision when a new rule is settled.
+Write a settled rule into `world/world-prompt.md`.
 
 A scroll carries its own copies of its pictures in `books/<slug>/img/`. After regenerating a
 picture in `assets/img/`, copy it over the book's copy in the same pass.

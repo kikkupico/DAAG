@@ -55,6 +55,7 @@ The terrain scripts print and store (in `sites.json`) the canon tests:
 | `src/shots_*.py`, `src/render.py` | camera shots and the renderer |
 | `src/captions.py`, `src/showcase_template.html`, `src/gen_showcase.py` | the showcase page |
 | `src/build_all.sh` | the whole rebuild in one run |
+| `web/images.py`, `web/images.json` | publishes the renders used on the site's pages to the image bucket and points the pages at them; `web/out/` holds the encoded files |
 
 ## Credits
 
