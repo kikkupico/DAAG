@@ -1,87 +1,121 @@
-"""Reference pictures of the cast, made locally with FLUX.2 klein 4B (the model flux-gen uses).
+"""Reference pictures of the cast: each person alone, full length, front view, on white.
 
-    ~/Projects/flux/.venv/bin/python world/cast/gen.py [id ...] [--force] [--steps N]
-    python3 world/cast/gen.py --sheet          contact sheet of everything made, out/sheet.jpg
+    python3 world/cast/gen.py nb2 [id ...] [--force]                       Nano Banana 2 (GEMINI_API_KEY)
+    ~/Projects/flux/.venv/bin/python world/cast/gen.py flux <id> [--force]  FLUX.2 klein 4B, locally
+    python3 world/cast/gen.py --sheet <maker>                              contact sheet, out/<maker>/sheet.jpg
 
-cast.json lists every figure. A figure's prompt is the shared prefix plus its kind's text, with
-{colour}, {who} and {extra} filled from the figure and {sandals} from the shared wording. All figures
-of one kind share the kind's seed, so they come out alike and differ by colour, as the cast rule
-asks; each kind has a seed of its own, so kinds do not share a face. One figure to a picture: the
-model loses counts and later clauses in long prompts. Pictures go to out/characters/ (not in git),
-with the seconds each took in out/times.json. Pictures already made are kept unless --force.
+cast.json lists every figure. A prompt is the shared prefix plus the figure's kind, with {colour},
+{who} and {extra} filled from the figure and {sandals} from the shared wording. Every figure has a
+seed of its own (from its id), so each has a face of its own; figures of one kind still differ in
+nothing that marks them but colour, as the cast rule asks. Pictures go to out/<maker>/<id>.png (not
+in git), with the seconds each took in out/<maker>/times.json; made pictures are kept unless --force.
+On a 24 GB Mac run FLUX one figure to a process, so memory is freed between pictures.
 Only people are made here; props are modelled in 3D in the world model.
 """
+import base64
+import io
 import json
+import os
 import sys
 import time
+import urllib.error
+import urllib.request
+import zlib
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 OUT = HERE / "out"
-MODEL = Path.home() / "Projects/flux/models/FLUX.2-klein-4B"
-SIZE = (768, 1024)
+FLUX_MODEL = Path.home() / "Projects/flux/models/FLUX.2-klein-4B"
+FLUX_SIZE = (768, 1024)
 
 
-def jobs():
+def jobs(maker):
     spec = json.loads((HERE / "cast.json").read_text())
     for item in spec["characters"]:
-        kind = spec["kinds"][item["kind"]]
-        text = kind["text"].format(colour=item.get("colour", ""), who=item.get("who", ""),
-                                   extra=item.get("extra", ""), sandals=spec["sandals"])
-        yield {"id": item["id"], "seed": item.get("seed", kind["seed"]),
-               "prompt": spec["prefix"] + " " + text,
-               "dest": OUT / "characters" / (item["id"] + ".png")}
+        text = spec["kinds"][item["kind"]].format(colour=item.get("colour", ""), who=item.get("who", ""),
+                                                  extra=item.get("extra", ""), sandals=spec["sandals"])
+        yield {"id": item["id"], "seed": item.get("seed", zlib.crc32(item["id"].encode()) % 100000),
+               "prompt": spec["prefix"] + " " + text, "dest": OUT / maker / (item["id"] + ".png")}
 
 
-def generate(ids, force, steps):
+def record(maker, name, seconds):
+    path = OUT / maker / "times.json"
+    d = json.loads(path.read_text()) if path.exists() else {}
+    d[name] = round(seconds, 1)
+    path.write_text(json.dumps(d, indent=1) + "\n")
+    print(f"{maker} {name}: {d[name]}s", flush=True)
+
+
+def nb2(job):
+    body = {"model": "gemini-3.1-flash-image", "input": [{"type": "text", "text": job["prompt"]}],
+            "response_format": {"type": "image", "aspect_ratio": "3:4", "image_size": "2K"}}
+    req = urllib.request.Request(
+        "https://generativelanguage.googleapis.com/v1beta/interactions", method="POST",
+        data=json.dumps(body).encode(),
+        headers={"x-goog-api-key": os.environ["GEMINI_API_KEY"], "Api-Revision": "2026-05-20",
+                 "Content-Type": "application/json"})
+    try:
+        res = json.load(urllib.request.urlopen(req, timeout=300))
+    except urllib.error.HTTPError as e:
+        print(f"nb2 {job['id']}: HTTP {e.code} {e.read().decode()[:400]}", flush=True)
+        return False
+    for step in res.get("steps", []):
+        for c in step.get("content", []):
+            if c.get("type") == "image":
+                from PIL import Image
+                Image.open(io.BytesIO(base64.b64decode(c["data"]))).save(job["dest"])
+                return True
+    print(f"nb2 {job['id']}: no image: {json.dumps(res)[:400]}", flush=True)
+    return False
+
+
+def flux_pipe():
     import torch
     from diffusers import Flux2KleinPipeline
+    pipe = Flux2KleinPipeline.from_pretrained(FLUX_MODEL, torch_dtype=torch.bfloat16)
+    pipe.enable_model_cpu_offload()  # what fits a 24 GB Mac
 
-    todo = [j for j in jobs() if (not ids or j["id"] in ids) and (force or not j["dest"].exists())]
+    def run(job):
+        w, h = FLUX_SIZE
+        pipe(prompt=job["prompt"], width=w, height=h, guidance_scale=1.0, num_inference_steps=4,
+             generator=torch.Generator("cpu").manual_seed(job["seed"])).images[0].save(job["dest"])
+        return True
+    return run
+
+
+def generate(maker, ids, force):
+    todo = [j for j in jobs(maker) if (not ids or j["id"] in ids) and (force or not j["dest"].exists())]
     if not todo:
         print("nothing to make")
         return
-    t0 = time.time()
-    pipe = Flux2KleinPipeline.from_pretrained(MODEL, torch_dtype=torch.bfloat16)
-    pipe.enable_model_cpu_offload()  # what fits a 24 GB Mac
-    print(f"model loaded in {time.time() - t0:.0f}s", flush=True)
-    times_path = OUT / "times.json"
-    times = json.loads(times_path.read_text()) if times_path.exists() else {}
+    (OUT / maker).mkdir(parents=True, exist_ok=True)
+    make = nb2 if maker == "nb2" else flux_pipe()
     for j in todo:
-        w, h = SIZE
         t = time.time()
-        image = pipe(prompt=j["prompt"], width=w, height=h, guidance_scale=1.0, num_inference_steps=steps,
-                     generator=torch.Generator("cpu").manual_seed(j["seed"])).images[0]
-        j["dest"].parent.mkdir(parents=True, exist_ok=True)
-        image.save(j["dest"])
-        times[j["id"]] = round(time.time() - t, 1)
-        times_path.write_text(json.dumps(times, indent=1) + "\n")
-        print(f"{j['id']}: {times[j['id']]}s", flush=True)
+        if make(j):
+            record(maker, j["id"], time.time() - t)
 
 
-def sheet():
+def sheet(maker):
     from PIL import Image, ImageDraw
-    made = [j for j in jobs() if j["dest"].exists()]
-    cell, label = 300, 22
-    cols = 5
-    rows = (len(made) + cols - 1) // cols
-    out = Image.new("RGB", (cols * cell, rows * (cell * 4 // 3 + label)), "white")
+    made = [j for j in jobs(maker) if j["dest"].exists()]
+    cols, cw = 6, 320
+    ims = [Image.open(j["dest"]).convert("RGB") for j in made]
+    ch = max(round(cw * im.height / im.width) for im in ims) + 22
+    out = Image.new("RGB", (cols * cw, ((len(made) + cols - 1) // cols) * ch), "white")
     draw = ImageDraw.Draw(out)
-    for n, j in enumerate(made):
-        im = Image.open(j["dest"]).convert("RGB")
-        im.thumbnail((cell, cell * 4 // 3))
-        x, y = (n % cols) * cell, (n // cols) * (cell * 4 // 3 + label)
-        out.paste(im, (x + (cell - im.width) // 2, y))
-        draw.text((x + 6, y + cell * 4 // 3 + 4), j["id"], fill="black")
-    out.save(OUT / "sheet.jpg", quality=88)
-    print("sheet", OUT / "sheet.jpg", len(made), "pictures")
+    for n, (j, im) in enumerate(zip(made, ims)):
+        im = im.resize((cw, round(cw * im.height / im.width)))
+        x, y = (n % cols) * cw, (n // cols) * ch
+        out.paste(im, (x, y))
+        draw.text((x + 6, y + ch - 18), j["id"], fill="black")
+    out.save(OUT / maker / "sheet.jpg", quality=88)
+    print("sheet", OUT / maker / "sheet.jpg", len(made), "pictures")
 
 
 if __name__ == "__main__":
     args = sys.argv[1:]
-    if "--sheet" in args:
-        sheet()
+    if args[0] == "--sheet":
+        sheet(args[1])
     else:
-        steps = int(args[args.index("--steps") + 1]) if "--steps" in args else 4
-        ids = [a for a in args if not a.startswith("--") and not a.isdigit()]
-        generate(ids, "--force" in args, steps)
+        generate(args[0], [a for a in args[1:] if not a.startswith("--")], "--force" in args)

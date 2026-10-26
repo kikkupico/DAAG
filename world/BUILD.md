@@ -56,6 +56,10 @@ The terrain scripts print and store (in `sites.json`) the canon tests:
 | `src/captions.py`, `src/showcase_template.html`, `src/gen_showcase.py` | the showcase page |
 | `src/build_all.sh` | the whole rebuild in one run |
 | `cast/cast.json`, `cast/gen.py` | reference pictures of the cast (people only; props are modelled), made locally with FLUX.2 klein 4B (`cast/README.md`); not part of the rebuild |
+| `panels/<book>/shots.json`, `panels/previs.py`, `src/shots_panels.py` | a book's shots, and their previs: each shot's camera rendered without people to `previs-<version>.png`, carrying the shot entry and its commit |
+| `panels/batch.py` | book pictures from previs images, the usual route: the cast put in and each picture made a photograph by Nano Banana 2 at 1K through the Gemini Batch API, at half price; `submit`, `status`, `fetch`; jobs recorded in `panels/batches/` (not in git) |
+| `panels/pipeline.py` | the same picture at once, for a single take; holds the prompt and request both scripts share |
+| `panels/comic.py` | the ligne claire redraw of a finished picture, for covers; a separate step |
 | `web/images.py`, `web/images.json` | publishes the renders used on the site's pages to the image bucket and points the pages at them; `web/out/` holds the encoded files |
 
 ## Credits

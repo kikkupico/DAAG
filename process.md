@@ -96,11 +96,25 @@ whatever pictures already exist (the place shots in `assets/img/places/` at leas
 whose picture does not exist yet is written without one; the prose never refers to a picture, so
 the book reads as finished.
 
-**Phase 2 — art.** Happens later and separately. Every picture, the cover among them, is a render
-of the world model (`world/`; `world/BUILD.md` says how it is built). A book's shot is a camera
-added to `world/src/shots_arche.py` or `shots_paxos.py` and rendered by `world/src/render.py`; the
-render is saved as a JPEG in `assets/img/`, enters the scroll as a `.photo` inside a `.pop`, copied
-into the book's `img/`, and is published by `world/web/images.py`. The allegorical devices must
+**Phase 2 — art.** Happens later and separately. Every picture, the cover among them, starts as a
+render of the world model (`world/`; `world/BUILD.md` says how it is built), in three steps, each
+its own run:
+
+1. **Shot.** The book's shots are entries in `world/panels/<book>/shots.json`: the island, the
+   camera (a world shot from `world/src/shots_arche.py` or `shots_paxos.py`, adjusted or given
+   in full), the cast and what they do.
+2. **Previs.** `world/panels/previs.py` renders a shot's camera, with no people, to
+   `previs-<version>.png`; the version is the hash of the shot's entry, and the image carries that
+   entry with the commit it came from, so every picture can be traced to the shot that made it.
+3. **Scene.** `world/panels/batch.py` takes a set of previs images, puts the cast in from their
+   reference pictures (`world/cast/`) and makes each picture a photograph, keeping the previs's
+   camera, buildings and props, in one job through the Batch API at half the price; Nano Banana 2
+   at 1K is the default. `world/panels/pipeline.py` makes the same picture at once, for a single
+   take. Both read the cast and the prompt from the previs, not from the current shots.
+
+A cover is redrawn as ligne claire afterwards, by itself (`world/panels/comic.py`). The picture is
+saved as a JPEG in `assets/img/`, enters the scroll as a `.photo` inside a `.pop`, copied into the
+book's `img/`, and is published by `world/web/images.py`. The allegorical devices must
 nevertheless be **fully in place in the prose**, because phase 2 is built from what you write.
 Never bend the prose to fit a picture.
 
