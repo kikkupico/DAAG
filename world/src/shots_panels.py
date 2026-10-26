@@ -10,6 +10,11 @@ Positions can be given two ways besides world metres:
                       y to the left, z up from its floor (the chamber, the tholos, the oracle), so a
                       shot stays framed on the building wherever the terrain puts it
   a height "+1.7"     1.7 m above the ground at that point (world positions only)
+
+"props" lists what a shot places for itself (blib/panel_props.py: goat, cheese, sandglass), each with
+"at" in the same terms, "face" in degrees (from the site's door when there is a site) or a point to
+face, and optionally "scale" and "colour"; they are built just before the shot renders and cleared
+before the next.
 """
 import importlib
 import json
@@ -40,6 +45,20 @@ def place(mod, p, fr):
     return (float(p[0]), float(p[1]), float(z))
 
 
+def props(mod, items, fr):
+    """A shot's props with their positions in world metres, for blib.panel_props.place."""
+    out = []
+    for p in items:
+        q = dict(p, at=place(mod, p["at"], fr))
+        face = p.get("face", 0.0)
+        if isinstance(face, (list, tuple)):
+            q["face"] = list(place(mod, list(face[:2]) + [0.0], fr)[:2])
+        elif fr:
+            q["face"] = face + math.degrees(fr[3])
+        out.append(q)
+    return out
+
+
 def shots():
     specs = json.load(open(os.environ["PANEL_SPECS"]))
     mods, out = {}, {}
@@ -58,5 +77,7 @@ def shots():
                 sh[k] = tuple(v)
             elif k in KEYS:
                 sh[k] = v
+        from blib import panel_props  # inside Blender only
+        sh["pre"] = (lambda scene, P=props(mod, sp.get("props", []), fr): panel_props.place(P))
         out[name] = sh
     return out
