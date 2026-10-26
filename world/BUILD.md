@@ -55,7 +55,7 @@ The terrain scripts print and store (in `sites.json`) the canon tests:
 | `src/shots_*.py`, `src/render.py` | camera shots and the renderer |
 | `src/captions.py`, `src/showcase_template.html`, `src/gen_showcase.py` | the showcase page |
 | `src/build_all.sh` | the whole rebuild in one run |
-| `cast/cast.json`, `cast/gen.py` | reference pictures of the cast, people only (props are modelled): Nano Banana 2 through the Batch API by default, or FLUX.2 klein 4B locally, and the cast sheets that the book pictures take them from (`cast/README.md`); not part of the rebuild |
+| `cast/cast.json`, `cast/gen.py` | reference pictures of the cast, people only (props are modelled): Nano Banana 2 through the Batch API by default, or FLUX.2 klein 4B locally, and sheets of each setting's people side by side (`cast/README.md`); not part of the rebuild |
 | `gemini.py` | Gemini image generation shared by the cast and the book pictures: one picture at once, or many through the Batch API at half price |
 | `panels/<book>/shots.json`, `panels/previs.py`, `src/shots_panels.py` | a book's shots, and their previs: each shot's camera rendered without people to `previs-<version>.png`, carrying the shot entry and its commit |
 | `panels/batch.py` | book pictures from previs images, the usual route: the cast put in and each picture made a photograph by Nano Banana 2 at 1K through the Gemini Batch API, at half price; `submit`, `status`, `fetch`; jobs recorded in `panels/batches/` (not in git) |

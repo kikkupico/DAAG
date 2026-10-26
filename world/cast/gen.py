@@ -1,4 +1,4 @@
-"""Reference pictures of the cast, and the sheets the book pictures take them from.
+"""Reference pictures of the cast, and sheets of each setting's people side by side.
 
     python3 world/cast/gen.py submit [id ...] [--force]    Nano Banana 2 through the Batch API (the usual way)
     python3 world/cast/gen.py status [job]
@@ -15,12 +15,11 @@ canon gives them; each has a face of its own. Pictures go to out/<maker>/<id>.pn
 default, or flux), not in git; made pictures are kept unless --force. Nano Banana 2 makes them at 3:4
 and IMAGE_SIZE (1K by default), like every Gemini picture here (world/gemini.py).
 
-A sheet puts the figures that work together side by side in one row on white, each with its id
-printed under it, at the size each was made, so heights compare. The book pictures send a shot's
-cast as the fewest sheets that hold it (world/panels/pipeline.py), and name people by those ids.
-cast.json's "sheets" names the sheets; a figure lists the ones it is on, and may be on several (the
-priestess is on both student groups' sheets). Keep a sheet to five people or fewer: the model scales a
-whole sheet down to one input, and every extra person makes each face smaller.
+The book pictures send each person of a shot's cast as a picture of their own, cropped to them, with
+their id printed below (world/panels/pipeline.py), and name people by those ids. A sheet is for
+looking: the figures that work together side by side in one row on white, each with its id printed
+under it, at the size each was made, so heights and colours compare. cast.json's "sheets" names the
+sheets; a figure lists the ones it is on, and may be on several.
 
 Every picture and sheet carries its record (world/provenance.py): the commit it was made at, its id
 or sheet in cast.json, the model (and batch job), and for a sheet the pictures on it with their
