@@ -12,7 +12,9 @@ the picture is made from the shot exactly as it was when its previs was rendered
 The previs is image 1. The shot's cast are named by their ids in world/cast/cast.json and follow as
 images 2, 3, ... in the shot's order, one person each: their picture (world/cast/out/<CAST>/<id>.png,
 CAST=nb2 by default) cropped to the person, with their id printed below, so each face keeps as much
-detail as the model's input allows. The shot's prompt names people by those ids.
+detail as the model's input allows. The shot's prompt names people by those ids. People the shot
+only describes, with no picture of their own (a crowd, passers-by), go in its "others"; without it
+the prompt says nobody else is there.
 
 The prompt is appended to KEEP, which turns the previs into a photograph without moving anything, and
 is followed by a note saying which image is whom, and a head count; a shot with "keep": false sends
@@ -132,9 +134,13 @@ def request(previs):
         which = "Image 2 is a" if len(ids) == 1 else f"Images 2 to {len(ids) + 1} are"
         listing = ", ".join(f"image {k + 2} is {i}" for k, i in enumerate(ids))
         prompt += " " + CAST_NOTE.format(which=which, listing=listing).replace("a reference photographs", "a reference photograph")
-    n = len(ids)
-    prompt += (f" There {'is' if n == 1 else 'are'} exactly {n} {'person' if n == 1 else 'people'} in the photograph; "
-               "nobody else." if n else " There is nobody in the photograph.")
+    n, others = len(ids), entry.get("others")
+    if others:  # people the shot only describes: a crowd, passers-by
+        prompt += f" Besides the {n} named, the only other people in the photograph are these: {others}" if n else \
+                  f" The only people in the photograph are these: {others}"
+    else:
+        prompt += (f" There {'is' if n == 1 else 'are'} exactly {n} {'person' if n == 1 else 'people'} in the photograph; "
+                   "nobody else." if n else " There is nobody in the photograph.")
     images = [part(previs, 1920)] + [cast_part(p, i) for i, p in zip(ids, cast)]
     aspect = aspect_of(previs)
     scene = provenance.record(
