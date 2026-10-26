@@ -43,27 +43,45 @@ def ring_courses(k, R, t, z0, z1, mat='ashlar', gap_angles=(), course=0.52, bloc
 
 
 def radial_paving(k, r_in, r_out, z, ring=0.85, mat='pave', thick=0.2, alt=None):
-    """Concentric courses of tapered flagstones (real keystone shapes, hairline joints)."""
+    """Concentric courses of tapered flagstones with curved edges, so neighbouring rings meet along an
+    even hairline joint; the outermost ring ends exactly at r_out (run it under the wall to close the edge)."""
     rng = k.rng
+    j = 0.003                                    # half a joint
     r = max(r_in, 0.0)
     if r < 0.6:
-        k.lathe(mat, [(0.6, z - thick), (0.6, z), (0.0, z)], seg=16)
+        k.lathe(mat, [(0.6 - j, z - thick), (0.6 - j, z), (0.0, z)], seg=64)
         r = 0.6
-    while r < r_out - 0.1:
-        w = min(ring * rng.uniform(0.85, 1.15), r_out - r)
-        r0, r1 = r + 0.008, r + w - 0.008
+    widths = []
+    while r_out - r - sum(widths) > 1e-6:
+        w = ring * rng.uniform(0.85, 1.15)
+        rest = r_out - r - sum(widths) - w
+        if rest < 0.5 * ring:                    # too little left for a ring of its own: this one takes it
+            w += rest
+        widths.append(w)
+    for w in widths:
+        r0, r1 = r + j, r + w - j
         ring_i = getattr(k, '_ring_i', 0); k._ring_i = ring_i + 1
         m_ = alt if (alt and ring_i % 2) else mat
         n = max(6, int(2 * PI * (r + w / 2) / rng.uniform(0.85, 1.25)))
         off = rng.uniform(0, 2 * PI)
         for i in range(n):
-            a0 = off + 2 * PI * i / n + 0.006 / max(r0, 0.5); a1 = off + 2 * PI * (i + 1) / n - 0.006 / max(r0, 0.5)
+            a0 = off + 2 * PI * i / n + j / r0; a1 = off + 2 * PI * (i + 1) / n - j / r0
+            m = max(1, math.ceil((a1 - a0) * r1 / 0.15))      # arc segments, so the edge follows the circle
             zz = z + rng.normal(0, 0.004)
             tl = rng.normal(0, 0.003)
-            V = [(r0 * math.cos(a0), r0 * math.sin(a0), zz), (r1 * math.cos(a0), r1 * math.sin(a0), zz + tl),
-                 (r1 * math.cos(a1), r1 * math.sin(a1), zz - tl), (r0 * math.cos(a1), r0 * math.sin(a1), zz)]
+            V = []
+            for s in range(m + 1):
+                a = a0 + (a1 - a0) * s / m
+                V += [(r0 * math.cos(a), r0 * math.sin(a), zz), (r1 * math.cos(a), r1 * math.sin(a), zz + tl * (1 - 2 * s / m))]
             V += [(x, y, z - thick) for x, y, _ in V]
-            k.add(m_, V, [(0, 1, 2, 3), (4, 7, 6, 5), (0, 4, 5, 1), (1, 5, 6, 2), (2, 6, 7, 3), (3, 7, 4, 0)])
+            b = 2 * (m + 1)                       # offset of the bottom copy
+            F = []
+            for s in range(m):
+                i0, o0, i1, o1 = 2 * s, 2 * s + 1, 2 * s + 2, 2 * s + 3
+                F += [(i0, o0, o1, i1), (b + i0, b + i1, b + o1, b + o0),          # top, bottom
+                      (i0, i1, b + i1, b + i0), (o0, b + o0, b + o1, o1)]          # inner, outer edge
+            F += [(0, b, b + 1, 1), (2 * m, 2 * m + 1, b + 2 * m + 1, b + 2 * m)]  # the two ends
+            k.add(m_, V, F)
         r += w
 
 
@@ -156,7 +174,7 @@ def chamber(k, statues=True, north=PI / 2):
     R_in = R_drum - t_drum / 2
     k._ring_i = 0
     k.lathe('mortar', [(R_in, zs - 0.2), (R_in, zs + 0.004), (0.0, zs + 0.004)], seg=96)
-    radial_paving(k, 0.0, R_in - 0.05, zs + 0.02, ring=0.7, mat='marble_floor', alt='dark_floor')
+    radial_paving(k, 0.0, R_in + 0.15, zs + 0.02, ring=0.7, mat='marble_floor', alt='dark_floor')   # runs under the wall
     # ten slender Corinthian columns carrying the roof
     Dc = 0.62; Hc = 10.0 * Dc
     R_ic = 5.6
@@ -284,7 +302,7 @@ def tholos(k):
     # interior
     Rin = R - t / 2
     k.lathe('mortar', [(Rin, zs - 0.2), (Rin, zs + 0.085), (0.0, zs + 0.085)], seg=64)
-    radial_paving(k, 1.6, Rin - 0.02, zs + 0.1, ring=0.9, mat='pave_honey')
+    radial_paving(k, 1.5, Rin + 0.15, zs + 0.1, ring=0.9, mat='pave_honey')     # from the podium's foot to under the wall
     for i in range(6):
         a = 2 * PI * (i + 0.5) / 6
         k.inst('doric_plain', T(4.6 * math.cos(a), 4.6 * math.sin(a), zs + 0.1) @ Rz(a) @ S(0.6))
@@ -296,9 +314,10 @@ def tholos(k):
         a = 2 * PI * i / 24
         k.beam('timber', (4.5 * math.cos(a), 4.5 * math.sin(a), zi + 0.45), (Rin * math.cos(a), Rin * math.sin(a), zr - 0.12), 0.16, 0.22, 0.05)
         k.beam('timber', (4.5 * math.cos(a), 4.5 * math.sin(a), zi + 0.45), (apex_r * math.cos(a), apex_r * math.sin(a), zr + rise - 0.25), 0.15, 0.2, 0.05)
-    # five benches with backs, a stand of wax tablets at each, names cut in the stone
+    # five benches with backs, a stand of wax tablets at each, names cut in the stone; spaced evenly
+    # with the door (angle 0) halfway between two of them
     for i in range(5):
-        a = PI / 5 * 2 * i + PI / 5 + PI * 0.0 + 0.62
+        a = 2 * PI * (i + 1.5) / 5
         rb = Rin - 0.55
         k.push(T(rb * math.cos(a), rb * math.sin(a), zs + 0.1) @ Rz(a - PI / 2))     # local +y toward the wall
         k.box('marble', -1.1, -0.28, 0, 1.1, 0.3, 0.46)
