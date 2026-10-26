@@ -1,0 +1,149 @@
+# Buildings
+
+A building for each paper, and a shared building where sharing is right. The islands are
+described in `settings.md`; this file is the next resolution down. What each building is
+modelled on in the real Greek world is in `reality.md`.
+
+**Map pins are districts, not buildings.** A pin called *the libraries* is twelve
+buildings; a pin called *the Tholos* is one. Keeping the maps at district resolution is what stops
+them turning into floor plans.
+
+## The rule for sharing
+
+Two papers share a building when they are **one idea at two resolutions** — an independent
+rediscovery, a conjecture and its proof, a general result and its famous framing, a short and
+a long version — or when a later paper is best told as a change of procedure in an existing room.
+They get separate buildings when they make **different claims about the same subject**, and
+then the buildings stand next to each other so the difference is a short walk rather than a footnote.
+
+Seven shares below fall in **six places and cover nineteen papers**, the oracle's companion among
+them. Every other paper has a place of its own, which comes to **13 places for 25 papers**.
+
+**A book is not a building.** A book may walk between two adjacent buildings when the
+difference between them is best read in one sitting: *Ordering Without Clocks* covers the
+counting room and the column room. The rooms stay separate because the claims do.
+
+---
+
+## Arche — the ring road
+
+| Building | Papers | What it is |
+|---|---|---|
+| **The counting room** (in each house) | Lamport 1978 | A room in each house, by the clerks' office, in three parts for the paper's three parts: the front where clerks ink rising numbers on slips and push their own past any number that arrives; the middle where ties are broken by the house's number, which turns the partial order into a total one; and at the back, the drift-corrected clocks Lamport describes for orders that arrive outside the letters, which the houses cannot keep: they need a longest crossing and a common hour the trading season does not give. |
+| **The column room** (in each house) | Fidge 1988 · Mattern 1988 <span title="shared">◆</span> | Next door to the counting room in the same house, and the difference between them is the whole point: one column per house instead of one number. Two clerks can now tell whether their requests were placed in ignorance of each other, which the counting room can only fail to rule out. |
+| **The customs seat and the storehouses** | Chandy &amp; Lamport 1985 | Scribes record each house's storehouse; a messenger in a red sash goes down every stretch of road as the marker, and each house keeps a slate for each incoming stretch until the sash arrives. The total is a state the island could have been in, though no one ever saw it. |
+| **The request board** (at House 3) | Herlihy &amp; Wing 1990 | A board at House 3's gate on which the other houses' requests for its grain are entered, and the one placed first is filled first: a FIFO queue. The same requests the tallies of *Ordering Without Clocks* put in sequence by chains of slips are here ordered by the sun: a request finished before another began is served first. *Before* is judged by the sun, which no one on Arche can read in the trading season; the goatherd of *Ordering Without Clocks* is the witness who could catch the houses out. The board has numbered **slots** for request tablets and one **peg** at the next free slot; clerks enter requests (take a number, put the tablet in) and loaders serve (go up from slot 1, take the first tablet) at once, with no one standing aside: the paper's §4 queue. Oil from House 2's presses has a board of its own, and all three houses ask for both. The rule is judged at the gates, so one board and copies acting as one are judged alike. |
+
+## Arche — Mount Phyle
+
+Built, and fixed by *The Limits of Agreement* (the camps) and *Agreeing Among Liars* (the crown): nothing here may contradict them.
+
+| Building | Papers | What it is |
+|---|---|---|
+| **The camps** (×4) | FLP 1985 · DLS 1988 · Brewer 2000 · Gilbert &amp; Lynch 2002 · Ben-Or 1983 · Chandra &amp; Toueg 1996 <span title="shared">◆</span> | One small linen tent in a clearing at the foot of each gully, one man to a tent, and at its mouth a plain shield, a chest and a wicker basket holding a few birds that belong to the other tents. Nothing else: no palisade, no loft, no fire. **Five books share the same four camps**, and each changes one assumption, never the building. FLP changes nothing. DLS changes the weather: a wind that pins the ravens in the folds while it blows (a bird already down among the crows may stay past the drop) and always drops in the end, after which every bird let go is at its perch within a glass; each tent has a sandglass turned as the last light left the crown, a count of glasses common to all, and pledges tied to the tent pole naming an answer, attack or hold, and a turn. Brewer and Gilbert &amp; Lynch change the birds: on still nights a raven can be lost, and a tent whose every bird is lost is cut off; the four keep a standing plan, hold at dusk, that any man may move or ask after. Ben-Or adds a prop: a coin of Attic silver, owl for hold and goddess for attack, tossed and caught by a man who cannot settle on an answer, each alone in his own tent, so that chance breaks what no plan can; the tosses line up in the end with probability 1, never by a night anyone can name. Chandra &amp; Toueg adds a prop: the slate, a row per other tent, whose chalk mark is a dead man or a raven still in the folds and must never resolve which; with a majority alive, the turn of DLS passes round the tents by round number, which is no one's command. The mercenaries have no leader and do not lie, so the leader-based papers are on the crown. **A camp carries nothing from one house to another**, so the camps never become a channel between the houses. The camps are where asynchrony is studied. |
+| **The ring wall and the three slope posts** | Byzantine Generals 1982 · Reaching Agreement 1980 · Castro &amp; Liskov 1999 · HotStuff 2019 <span title="shared">◆</span> | A small ruined ring wall of rough cyclopean stones on the very top, solid all round: no gate, no gap, no stair, its top jagged but never broken through. Inside, a paved floor, the loot's strongboxes on a low stone shelf; nothing is roofed and no fire burns. The chief came in by a timber ladder and drew it up after him, and he can see only sky. The three other men hold lookout posts out on the slopes, each a hollow among crags with a low, rough dry-stone breastwork on its downhill side, uneven and gappy, nothing squared, watching its own approach; the hill's shoulders hide every post from the others. The trained rats cross the wall by the chinks between its stones. Each man has his own sandglass. The glasses are turned together at dusk, before the posts are manned, on the one synchronous night. The posts are out of sight and earshot because men within shouting distance of each other have a broadcast, and a chief with a broadcast cannot tell different men different things. The 1980 paper is the earlier and more general result; the 1982 paper is the framing everyone remembers. **Later nights** keep the same four men, rats and seal rings, and add the **loot scroll**, a copy at each post, whose entries each man files; an outside filer would trust an entry on two agreeing seals, but each of the four keeps a copy and needs no such rule. The wind that blows over the whole hill on the camps' windy nights holds the crown's rats in their holes while it blows; when it drops, runs are short again. Castro &amp; Liskov: the chief's job, numbering the entries, passes in a fixed order when its registrar is suspected (the chief is a job, not a rank); four men is exactly 3f + 1 for one liar. HotStuff changes a procedure, not the crown: the job passes with every entry, and its registrar ties the others' sealed votes into one bundle and sends the bundle on, instead of every man writing to every other. |
+
+## Paxos — the Chamber
+
+One island of three sections joined by two narrow necks, and its shape groups the papers. The
+Chamber stands on the summit of the middle section, the Tholos on the summit of the northern
+section above the city of Schedia, and the two face each other across the bay between the
+sections. The oracle stands on the southern neck, where the road forks, and the southern section
+is the scholars' coast. The parliament passes decrees, the law of Paxos; Schedia keeps its own laws; the
+scholars' copies are not law, and no decree settles which copy is right.
+
+| Building | Papers | What it is |
+|---|---|---|
+| **The Chamber** | Lamport 1998 · Lamport 2001 <span title="shared">◆</span> | Lamport's own Chamber, drawn as a rotunda to fit his description. *"The acoustics of the Chamber were poor, making oratory impossible"*, so: a circular hall with hard stone walls under one conical roof held up by columns inside, with no podium, no head of the room and no seating aimed at a speaker; legislators communicate only by messenger. One doorway, as a real tholos has, closed by a door that can be locked; legislators and messengers come and go through it whenever they like; statues on the terrace outside, one of which falls. The stone is white and the ornament painted, as on every Greek building: dark blue triglyphs, mouldings and eaves in red and blue, a painted meander band round the drum under the roof, painted statues. Paxos tells time by the sun: a bronze meridian line runs north across the floor, where the noon light from the lantern crosses it. The round plan and the colonnade illustrate Lamport's text and carry no meaning of their own. The two papers are one algorithm in two presentations and are not retold. Lamport's §3.3.4 (a farmer, a merchant and a black goat) states for Paxos the two readings of *before* that Arche's request board sets side by side. |
+
+## Paxos — Schedia
+
+A city on the northern section, governed from a round hall with a podium, with laws of its own: its founders came
+from a different mother city and brought their laws with them, and the Parliament's decrees
+have never run there. Each law scroll covers its own city, so the two never contradict each
+other.
+
+| Building | Papers | What it is |
+|---|---|---|
+| **The Tholos** | Oki &amp; Liskov 1988 | A round hall with the Chamber's poor acoustics, messengers and legislators on part-time duty, built plainer: a drum of honey-coloured limestone with no colonnade outside and only a painted band under its eaves, a porch at its one door and six columns inside, where the Chamber has a Doric colonnade outside and a ring of Corinthian columns within. Its one difference in use is a podium at the centre. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has a city of its own, and the two law scrolls never conflict. The podium is an office, not a pulpit: only its holder may propose, the others write down what its messengers bring, and those messengers all leave from the centre. Authority rides on the board number every note carries. The law is kept on wax tablets left on the benches and smoothed when their holder goes home, against the Chamber's indelible ink. When the podium falls silent, another legislator raises a higher board, and the new holder gathers what a majority hold before proposing anything. The council is five: Okios, Liskovia, Kleon, Melissa and Theron. The name is Athenian: the round building of the prytaneis, the committee on duty in turn, with one member presiding. |
+
+## Paxos — the scholars' coast
+
+*Homonoia*, concord, the scholars call it: everyone ends of one mind, by merging rather than by
+assembly. A coast of scholars and copyists, and the line between it and Arche is **how much
+disagreement each can live with**. At the camps, answering from a stale note is done knowingly and
+only while birds are lost: two men told different plans is a real harm. The scholars answer from whatever copy
+they hold as a matter of course and live with copies that differ for a while, since an
+out-of-date line is put right at the next collation, as long as every copy agrees in the end.
+The scholars hold **no assembly**: nothing here waits for a vote, though the Chamber is a
+morning's walk away, and most of what happens happens in the colonnades, which is the coast's
+argument.
+
+| Building | Papers | What it is |
+|---|---|---|
+| **The stoa and the festival ground** | Demers 1987 | Barely a building: a colonnade where travelling scholars pass on new versions of entries on scraps of papyrus — the entry on the heavens revised to say that the Earth goes round the Sun, say — and lose interest once most of those they meet already have the scrap, and a field where, once a year, each copyist draws by lot another library's name and sits down with its copyist at a long stone table to compare their whole copies of the compendium, scraps included, to catch whatever the talk missed. Each scholar telling a scrap carries it on a wax tablet, the hot tablet; each library keeps a sum worked from its whole copy, and a list of recent versions. An entry is withdrawn by a notice that travels like a version. Nobody in either place is in charge, and no library keeps a record of what another holds. *Spreading by Word of Mouth*. The finding is historical, but its author is not named: named figures are the papers' own authors. |
+| **The libraries** | PBS 2012 | A repeated type: every library keeps the whole compendium, each entry has three home libraries that answer for it, a new version reaches some of them before others, and a reader asks only a few. Nothing is built here; the paper is a model. It measures how likely the copy a reader is handed is out of date, and by how much, so a library can promise that it is *probably* current. |
+| **The pebble boards** | Shapiro et al. 2011 (both) <span title="shared">◆</span> | The short paper and the comprehensive report are one work, so one place: the desk in every library's reading room, facing the door, with the marble boards of pebbles that keep the counts some entries of the compendium hold, one board to an entry, the others on a stepped stand beside it, each with a wax tag of its own colour; the book watches the comet's. A library adds white pebbles to its own column for sightings it records and black to its own column for sightings it strikes, whichever library recorded them. Couriers carry boards and entries, or slips naming one change, and merging takes the larger pile in each column of each colour; the entry's account and its cross-references merge by their own rules. Merge in any order, merge twice, and every library shows the same entry. No library can keep the count from falling below nothing from its own board, unless each strikes only what it recorded itself. |
+| **The reading room** | HATS 2014 | In every library: **what a library can still promise a reader while the couriers are stopped**. That no answer is shown before the entry it answers, and that no one sees half a correction, both survive the stoppage; that two scholars who each read a count and write it one higher keep both their changes, or that an entry keeps at least one source, provably does not. Readers consult the compendium here and nothing is lent. *What You Can Promise Alone*. |
+
+## Paxos — the oracle at the fork
+
+| Building | Papers | What it is |
+|---|---|---|
+| **The oracle at the fork** | Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020 <span title="shared">◆</span> | On the southern neck, where the island road forks, on common ground that belongs to neither city: a sanctuary in the manner of Dodona, a low wall round an old oak with a small temple and an altar beside the tree, and two gates. The north gate opens on the way that forks to the bodies that assemble: a stepped way up to the Chamber, and the road on to the city and to Schedia below the Tholos; the south gate on the road down to the scholars' coast. Groups of students bring the priestess the work they mean to do together; work that only ever adds is sent south, to the scholars' life with no roster, and work that rests on an absence — *no one has claimed this* — is sent north, to the legislators' life of waiting for every name on the roster. The oracle does not rule; it counsels. |
+
+---
+
+## The seven shares, and why each is right
+
+| Building | Papers | The relation |
+|---|---|---|
+| The column room | Fidge · Mattern | Independent simultaneous discovery of one idea |
+| The camps, nights of lost birds | Brewer · Gilbert &amp; Lynch | A conjecture and the work that settles it |
+| The ring wall and the slope posts | Reaching Agreement 1980 · Byzantine Generals 1982 · Castro &amp; Liskov · HotStuff | The general result and its famous framing, same authors; then, on later nights, a leader among liars (PBFT) and a change of that leader's procedure (HotStuff) |
+| The camps | FLP · DLS · Brewer / Gilbert &amp; Lynch · Ben-Or · Chandra &amp; Toueg | Same four camps; each book changes one assumption — nothing, a wind that drops, lost birds, a coin, a detector |
+| The Chamber | Lamport 1998 · 2001 | One algorithm in two presentations |
+| The pebble boards | Shapiro (short) · Shapiro (comprehensive) | Two lengths of one work |
+| The oracle at the fork | Hellerstein 2010 · Ameloot 2011 · Hellerstein &amp; Alvaro 2020 | A conjecture, its formal proof, and its definitive restatement — one idea at three resolutions |
+
+**The near-misses** — pairs that look shareable and are not:
+
+- **Counting room / column room.** Both are clocks. But one respects causality and the other
+  *detects concurrency exactly*, which is a different claim. Adjacent, not merged.
+- **Request board / cut-off tent.** Both are about answering as one. But one states the rule for
+  House 3's board and the other proves it cannot be kept while birds are lost. Different
+  places, one rule, restated in each.
+- **Chamber / Tholos.** Both keep a law scroll by majority, in the same kind of hall. But VR was
+  found independently and is a genuine alternative, not a variant, so they are different halls,
+  on the summits of two sections of the island, facing each other across the bay: one with no head of the room,
+  where whoever thinks themselves president may start a ballot, and one with a podium, whose
+  holder is named on the board.
+
+---
+
+## Sources
+
+**`sources/` holds 28 verified PDFs: the 25 papers this file assigns, plus 3 companions.** No
+duplicates (checked by MD5), and every filename's lead surname appears on page 1 of its own
+file. `demers-1989` is a byte-identical copy of `demers-1987`, so there is one Demers paper.
+`sources/_misfiled/` holds files that carried a paper's name but not its content.
+
+**`papers/index.html` is the list of where each one comes from.** Every paper there links to a
+copy that can be read freely, and the link's `data-file` is the paper's filename here.
+`python3 tutor/prepare.py` fetches whichever of them are missing and writes each one's text
+beside it as `.txt`; `--check` reports the links that have stopped serving a PDF. The Zinn
+companion is not on the list and is not fetched.
+
+**Verify by opening the file, never by the URL or the filename.** MIT's TDS group serves
+Gilbert & Lynch's 2012 retrospective at a URL named `Brewer2.pdf`; the 2002 proof has to come
+from Gilbert's own page at NUS.
+
+### The three companions
+
+Not assigned a building of their own; they sit with the paper they accompany.
+
+| File | Sits with |
+|---|---|
+| `hellerstein-alvaro-2020_keeping-calm.pdf` | The oracle at the fork — the clearest statement of the theorem, and the one to draft from |
+| `gilbert-lynch-2012_perspectives-on-cap.pdf` | The camps on nights of lost birds — the authors' own retrospective on what the proof did and did not say |
+| `zinn-green-ludascher-2012_win-move-coordination-free.pdf` | Background for the oracle at the fork. Optional; it settles a narrower question than CALM itself |

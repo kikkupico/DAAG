@@ -1,4 +1,4 @@
-/* Time flowing outward through a round space-time diagram (svg.flow, built by art/diagrams/polar.py).
+/* Time flowing outward through a round space-time diagram (svg.flow, built by archive/art/diagrams/polar.py).
    A wavefront ring sweeps out from the houses at a steady pace.
    Marks inside <g class="tflow"> appear as it passes; labels fade in beside them, and each event
    drops in, swelling to size. The sweep plays once, then rests with a Replay button.

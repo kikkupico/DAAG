@@ -1,0 +1,450 @@
+# Settings
+
+The **analysis** behind the world: what each paper needs from its ground, and the
+constraints that cannot be broken. The paper-to-place assignment at building resolution is in
+`buildings.md`. The real geography, history and literature behind each place, building, character,
+prop and practice, and how close each is, are in `reality.md`; the period reference is `hellenistic-reference.html`. Source papers are in `sources/`.
+
+---
+
+## Coverage
+
+Verified against `ls sources/`, not asserted:
+
+| | |
+|---|---|
+| Verified PDFs in `sources/` | **28** |
+| Papers the settings require | **25** — all present |
+| Duplicates (by MD5) | none |
+| Companions beyond the 25 | 3 |
+
+| Island | Papers |
+|---|--:|
+| Arche (ring road and Mount Phyle) | 15 |
+| Paxos (the Chamber, Schedia, the scholars' coast, the oracle at the fork) | 10 |
+
+No PDF is unassigned and nothing is blocked. Every paper the islands name is on disk and has
+been verified by opening it.
+
+**The series is theory.** Every paper carries an algorithm, a proof or a model. A systems
+paper whose contribution is engineering is out of scope: practical considerations are better
+understood in real terms, and an allegory only gets in their way.
+
+---
+
+## Arche · *The Island of Foundations*
+
+*The central mountain and the coastal ring road.*
+
+**Core geography & physics.** Arche rises from the sea around a single limestone massif, Mount
+Phyle, which fills the interior and leaves only a coastal strip. The three houses are evenly
+spaced round the coast, so every line between two houses must pass through high rock. With
+evenly spaced houses those lines pass well away from the centre, so a small cone would not block
+them. That is why the massif must be broad. It is broad rather than high: a mountain of an Aegean
+island, with long gentle lower slopes, steepening only near its cragged top. The settings give no
+dimensions: they fix constraints, not measurements, and the pictures need not match any number.
+The few numbers a 3D model needs are its modelling defaults (`world-prompt.md` §3.4).
+
+The ring road is **one road with a lane each way**, looping round the foot of the mountain from
+harbour to harbour and never over it. By the law of the road nobody
+overtakes, and a slip takes the direct stretch, never the long way round. Three stretches, each
+travelled both ways, give **one FIFO channel per ordered pair of houses: six in all**.
+
+**What closes the other channels:**
+- **The summit** is visible from every shore. In the trading season it is capped by the same
+  cloud that silences the sundials, and in any season it is held by the siege, so the houses
+  light no beacon there.
+- **The mountain paths** are the siege's ground. The goatherd of *Ordering Without Clocks* is a rare
+  smuggler, with no bound on their crossing time.
+- **The sea**: reefs and tide-races off every headland stop small boats coasting between
+  coves. Big ships go out to sea, not round the island.
+- **The camps** carry nothing from one house to another, so they are never a channel between
+  houses. The houses hired the four mercenaries, each separately, which is why none commands another. Traders keep no ravens.
+
+**The ring road.** Three houses, known by number, **House 1**, **House 2** and **House 3**, act as an
+island-wide distribution network.
+
+**The houses are built alike.** Each is one long range under a tiled gable roof, of flat terracotta pan tiles with narrow cover tiles over the joints and a decorated tile at each eave end, on hand-hewn timbers, its walls
+lime-plastered over rubble on a low bare-rubble base, as Hellenistic walls were, on a terrace
+cut into the slope above its harbour, facing the quay across the waterfront road: the clerks'
+office at one end; the **gate**, a deep entrance opening onto the road, where slips come in;
+the storehouse at the other end, with loading doors onto the road. A portico of plain Doric
+columns, standing straight on the paving with no bases, under a lean-to roof runs the length of the range along the road's edge, and under it, by the
+gate, hangs the house's **board** of requests, a row of numbered slots with the peg beside it (House
+3's is the request board of *Many Copies, Acting as One*). Each harbour lies where a valley reaches the
+sea, between two headlands; behind the waterfront the ground rises gently into the mountain's foot,
+with no cliff or scarp behind the town. Each port town round it is a compact cluster on terraces cut into the slopes round the
+harbour, of one-storey houses, courtyard houses and long storehouses, plastered off-white or pale ochre under gabled terracotta roofs. Houses
+face inwards, so the streets, of beaten earth, see mostly blank walls with a door and a few
+small high windows. Nothing sets one town apart.
+
+- *Ordering Without Clocks* (`lamport-1978_time-clocks`, `fidge-1988_timestamps`,
+  `mattern-1988_virtual-time`). When overcast winter skies silence the headland sundials,
+  houses serve distribution requests strictly in the sequence they were placed using logical tallies (Lamport
+  scalar clocks), resolve ties by house number (total order), coordinate mutual exclusion for a
+  shared storehouse (§5), and use multi-house column rooms (vector clocks) to detect true
+  causal independence. Lamport's physical clocks (§6) are described and not kept: they need a
+  longest crossing and messengers at regular hours, and the houses have no common hour.
+- *Taking Stock Without Stopping* (`chandy-lamport-1985_distributed-snapshots`).
+  Carts are reported stolen by bandits on the road, and a late cart looks like a taken one; the
+  houses take an inventory of the entire distribution network, without halting trade, to find out.
+  Goods exist
+  both in the 3 house storehouses and in transit along the 6 directed road tracks. A messenger
+  wearing a **red sash** serves as the marker dividing pre-recording shipments from
+  post-recording shipments. Proves cut consistency, reachability ($S_\iota \to S^* \to S_\phi$),
+  and stable property detection. Bandits take carts but never a red sash messenger (the messenger carries
+  nothing worth taking); a taken cart's goods leave the count like a sale, so on a day with no
+  port-town trade a shortfall against the account scrolls is a deficit, a stable property. Stable properties are those of the trade between the houses,
+  with the port towns' buying and selling set aside; the census is taken at no one moment, so the book counts no
+  hours.
+- *Many Copies, Acting as One* (`herlihy-wing-1990_linearizability`). The same premise as
+  *Ordering Without Clocks*: the houses send one another **requests**, and House 3 fills first the request for its grain placed first. The tallies put requests in sequence by chains of slips; this book by the sun (one
+  piece of business came **before** another if it finished before the other began), which is
+  linearizability. The object is House 3's **board** of requests, a FIFO queue: a request is `Enq`, a
+  loader's **serving** is `Deq`. The running example is the goatherd's morning: House 1's request is entered and confirmed, the goatherd tells House 2, House 2 makes its request at noon with a lower tally and
+  is served first (the paper's H7). **Two kinds of first:** serving by entry at House 3's gate keeps
+  the rule; serving by tally need not; neither sequence contains the other. Locality is shown with two
+  boards, grain at House 3 and oil at House 2, ordered by all three houses (H8 for the looser rule). The **looser rule**
+  (sequential consistency) passes each board and fails both together; several things done as one
+  (serializability) is a short passage with one small three-case widget (two houses each doing two things as one). The
+  paper's §4 queue is **House 3's board** itself: numbered **slots**, a **peg** (`INC`), clerks entering requests and a loader serving with `SWAP`, all at one house. The
+  rule is judged only at the houses' gates, so it cannot tell one board from copies acting as one;
+  no way of keeping copies is described.
+**Why linearizability is on Arche.** It is defined by real time: one operation finished before
+another began. Arche has real time — the sun rises over it whether or not a dial can be read —
+but in the trading season no one can read it, and no house can learn of another's order except
+by slip. That is not an objection but the point. The tallies of *Ordering Without Clocks* put
+orders in sequence by chains of slips, and it shows a causal path they cannot see: the goatherd who
+carries word over the mountain. Linearizability puts the same requests in sequence by the sun, so that no
+goatherd could ever catch the houses out, though they can never see one coming. It is judged by
+the sun, not computed from it. The two books share the orders premise the way the camps' books
+share the mercenaries. On Paxos, Lamport's black-goat story (§3.3.4) states both readings of
+*precedes* for the parliament.
+
+**What the rest of Arche knows about the bandits.** Only the bandits know how many of them
+there are, which band each belongs to, and what they plan. Everyone else knows two things:
+there are bandits about the island, and their loot is on the hilltop. The crown's four stay
+there by choice, because the loot cannot be left; bandits met elsewhere need not be of their
+band, and no one outside can tell. The crown's four, in turn, know the camps are below and nothing
+of what the mercenaries mean to do. Why a liar on the crown lies is never given, in any book: the
+liars' motives stay hidden, and nobody ever learns which of them lied.
+
+---
+
+## Mount Phyle · *The Mountain at Arche's Centre*
+
+*Garrisons around an enemy hill.* Strictly theoretical: what is solvable under which
+synchrony assumption, against which adversary.
+
+**Two settings, two sections.** The foot (`places/the-foot`, the camps: crash faults) and the
+crown (`places/the-crown`, the bandits: liars) each have their own setting page and home-page
+section. Both pages restate the hill and the messengers (ravens below, rats above); each describes only its own end in full.
+
+**No ambush, and no outcome.** Each side has one binary question, and *nothing follows from either
+decision*. The mercenaries must all **attack** or all **hold**. They do not know where the bandits' posts
+lie; all they have seen is that the bandits are scattered and cannot help one another, so an attack means
+the four meeting at a place agreed beforehand and beating them one at a time, all together (defeat in detail); a hold
+means each man lies by the path down his own gully, and since the folds between the camps end in crags
+nobody can climb down, all four holding means no one breaks out unseen. Half attacking while half hold is worse than either (too few to climb, a gully
+left open). Committing to either takes a man from his tent and its birds until dawn, so committing is
+silence. The bandits must all **hold** or all **scatter** (abandoning the loot); holding ties no man to his
+post, and each holds from wherever he chooses. Neither side knows the other's plan, and no book sets one
+side's answer against the other's: which answer is better is never at issue. The siege has no resolution
+in any book: no assault happens, no wall is carried, no one surrenders. An all-or-nothing ambush is an
+outcome, and an outcome is plot.
+
+| Paper | In the world |
+|---|---|
+| `fischer-lynch-paterson-1985_flp-impossibility` | In an asynchronous gorge with one silent crash, commanders stay trapped in bivalence: an overrun camp cannot be told from a delayed raven. (*The Limits of Agreement*) |
+| `dwork-lynch-stockmeyer-1988` | **The camps on windy nights.** The one change from *The Limits of Agreement* is the **wind**: while it blows, a raven goes down among the crows of the folds and sits it out, for any time and even past the drop, so no one can say how long a bird will take; it always drops in the end and stays down, and a bird let go in still air is at its perch within a **glass** (Δ holds eventually; the drop is GST, which no man can see). The **glasses** were started together as the last light left the crown, which every tent can see on a clear evening, and run alike; a count of glasses is common to all (synchronous processors, Φ = 1, §4). A strip taken in during a later glass than it was written in is set aside. Four glasses make a **turn**, owned in number order by the count (Algorithm 1's phases): the **asking glass** (acceptable answers to the owner), the **calling glass** (the owner calls an answer three men can accept), the **answering glass** (**pledges** tied to the tent pole, *pledged* back; the owner commits on two), the **untying glass** (lock release). **The sighted answers** are the PROPER set. Every man who commits sends a **parting bird** to each tent before he leaves it (Remark 2; birds are never lost). Safe in any wind; once it drops all commit, within twenty glasses if no one committed while it blew, otherwise when the first parting birds arrive, with no bound; four men bear one death and no arrangement bears two (Theorem 4.3). The book closes with the liar bounds (3t + 1, sealed or not) and points up to the crown. The men are the four of *The Limits of Agreement*, known by their tents' numbers, 1 to 4. The turn's owner is not a leader. Nothing follows from committing. (*Agreeing When Messages Run Late*) |
+| `brewer-2000`, `gilbert-lynch-2002` (+ the 2012 retrospective) | **The camps on nights of lost birds.** The one change: a raven can be **lost** (a hawk takes it in the folds, unseen); when every bird between one tent and the rest is lost, that tent is **cut off**. There is no wind: a bird that arrives does so within a known **flight**, and each tent's glass runs alike (G&L's partially synchronous model, §4). The object is the **standing plan**, hold at dusk, which any man may move and any may ask after: a read/write register over the camps' own two answers. **Answering as one** is linearizability (the rule of *Many Copies*, restated); **every man is answered** is availability. The cut-off tent (Number 4) cannot do both (Theorem 2). One tent, the **muster-master** (tent 1), holds the only note of the plan (the centralized algorithm); **waiting a glass** is the timeout; the **promise of the span t** is Delayed-t, with every bird to the muster-master carrying the sender's unacknowledged moves, since ravens are not FIFO. On a windy night even nights with no loss cannot answer as one (Corollary 1.1). The same four numbered men, as in DLS. Nobody commits; nothing follows from which plan stands. (*Answering While Cut Off*) |
+| `pease-shostak-lamport-1980`, `lamport-shostak-pease-1982` | In synchronous rounds with traitors sending conflicting scrolls, loyal commanders agree iff N ≥ 3m + 1 — or, **with unforgeable wax signets, for any number of generals at all**. (*Agreeing Among Liars*) |
+| `chandra-toueg-1996` | Each tent keeps **the slate**: a row per other tent, chalked against a tent the man suspects and rubbed out when a bird comes from it. The suspicion is often wrong — an empty perch is a dead man or a raven still in the folds. The paper's classes are ways a slate may be wrong (completeness, accuracy; perpetual or eventual), and men copying one another's chalk turns weak completeness into strong. With **S** (one live man never wrongly chalked) the camps can agree with any number silent, relaying estimates round by round and no coordinator; with **◇S** they need a majority alive and use **a turn to propose**, passing round the tents in number order by round number, not by anyone's command (the turn of *Agreeing When Messages Run Late*, at the same tents, which the book points to). The slate's guarantees are **granted, not earned**: ravens with unbounded flights cannot build such a slate, and the paper treats the detector as given in the same way. The men are the same four numbered men, as in DLS and CAP. With S the book's arrangement is the **sheet of sightings** relayed for three rounds; with ◇S, **turns** with **estimates**, *agreed* / *not agreed*, and a **parting bird** relayed before committing. On windy nights (DLS) a slate in the end perfect can be kept by growing waits (Theorem 9). As always on the hill, nothing follows from the decision. (*Telling the Dead from the Slow*) |
+| `ben-or-1983` | The camps below, deadlocked as FLP says they may be forever, let chance break the tie. The choice is binary, attack or hold, which is exactly Ben-Or's model. The one change from *The Limits of Agreement* is lifting its "they may not draw lots": each man was paid in Attic silver, and a man who cannot settle tosses his own coin and catches it, alone in his tent (a local coin; tossed, not spun, since a spun coin is not fair); **owl for hold, goddess for attack**, fixed in advance. The camps send ravens in numbered **rounds**: a **report** (the answer he favours), then a second bird, **sure of** an answer (more than half of all four reports seen) or **unsure**. Every wait is for three birds (N − t). Favour an answer on one *sure* bird, be **settled** on two, toss on none. **The rule of parting**: a settled man at once sends both birds of the next round, then commits, since committing is silence; this is not in Ben-Or's paper (decided processes keep running there) and changes nothing the others see. Four camps bear one silent man (N > 2t); with half silent, no arrangement works. With probability 1 the tosses eventually line up and all commit; no night can be named, and courses that never end exist with probability 0. The paper gives no proofs; the full one is Aguilera & Toueg 2012. Ben-Or's version for liars (N > 5t) does not belong below: the mercenaries do not lie. The men are the same four numbered men as in every camp book. As always on the hill, nothing follows from the decision. (*Agreeing by Chance*) |
+| `castro-liskov-1999` | **The crown, on a later night of the siege.** The four keep one **loot scroll**, a copy at each post: where each strongbox lies and whose share it is. Each man is also a client: he files an entry and trusts it only when two sealed replies agree (f + 1). One man holds the chief's job and numbers the entries; the others echo twice, each time waiting for three seals (2f + 1), before an entry stands. The job starts with Number 1, the chief, and passes in number order (view change) when the others suspect its registrar of stalling or of numbering two ways. *Agreeing Among Liars* already says the chief is a job, not a rank. Four is exactly 3f + 1 for one liar, and the seal rings are that book's. On these nights **wind over the crown** holds the rats in their holes for as long as it blows, so a run has no bound; the entries stay safe in any wind, and progress returns once the wind drops for long enough (PBFT's delay(t) assumption). Each man's sandglass is only a timer for suspecting the chief, doubling at each change. The two-seal rule for clients is stated and shown redundant for an honest man, whose own copy already tells him an entry stands. MACs appear only in the mapping table. The men are the crown's four of *Agreeing Among Liars* (Number 1, the chief inside the wall, holds the job first, then Numbers 2, 3 and 4). An entry is **readied** on three seals (numbering and two first echoes) and **stands** on three second echoes; a job change needs three **requests**, and a man joins on two; **settled checkpoints** are the paper's stable checkpoints. The wind that blows over the whole hill is the same wind as the camps'. Nothing follows from any entry. (*Keeping Order Among Liars*) |
+| `yin-2019_hotstuff` | **The same crown and loot scroll, later again.** The chief's job passes to the next man with every entry, whether or not anyone suspects its registrar. Each man sends his sealed vote only to the man who has the job, who ties three of them into one **bundle** and sends the bundle on, instead of every man writing to every other. After the wind drops (GST), a new registrar proceeds as fast as the rats run, not when a sandglass runs out (optimistic responsiveness), and a change of registrar costs no more than an ordinary entry (linear view change). The bundle is three seals, not one: say plainly that the paper's threshold signature makes it the size of a single seal. The case for three stages (the hidden lock) is shown on the crown as a two-stage procedure that must wait out a full sandglass after each change of registrar. The men are the crown's four of *Agreeing Among Liars*; the footnote credits all five authors. Devices: **votes** to the registrar alone, **bundles** of three; a man's **lock** is the latest second bundle he voted on; the rule for the first vote (extends your lock, or carries a later bundle); the **hidden lock** of two stages; the chain in which three in a row make the first stand. Must not contradict *Keeping Order Among Liars*; nothing follows from any entry. (*Changing Leaders Among Liars*) |
+
+**The ground:** a broad massif, broad rather than high, with long gentle lower slopes and a steeper cragged top crowned by a small ruined ring wall, eight spurs and gullies (only the four with camps have a way down; the folds between end in crags), and four camps at the quarter points with no pair able
+to see each other. It fills the centre of Arche and blocks every line of sight between the
+houses.
+
+### The synchrony split on Mount Phyle
+
+- **The camps at the base carry the asynchronous model and its ways out.** Ravens, unbounded
+  delay, no fire or signal. FLP, DLS, Brewer / Gilbert & Lynch, Ben-Or and Chandra & Toueg live
+  here, each changing one assumption of FLP: nothing, a wind that drops, lost birds, a coin, a
+  failure detector. The mercenaries have
+  no leader and do not lie. On the windy nights of DLS each tent has a glass, started together as
+  the last light left the crown; no other common moment exists below.
+- **The summit carries the synchronous model.** On the very top stands a small ruined ring wall of rough
+  cyclopean stones, solid all round: no gate, no gap, no stair, its top jagged but never broken through. Inside,
+  open to the sky, are the loot and the chief, who climbed in by a timber ladder and drew it up after him, and who
+  can see only sky. The other three men hold lookout posts out on the slopes, each a hollow among crags with a
+  rough, uneven dry-stone breastwork on its downhill side, each watching one approach; the hill's shoulders hide
+  every post from the others, and the wall hides the chief from all of them. Nobody shouts, signals or lights a
+  brand, because the tents below are listening — and because a shout heard by everyone is a broadcast, and a chief
+  who can broadcast cannot tell different men different things, which would dissolve the problem. Every message
+  is carried by a trained rat, running over the rocks and through the chinks between the wall's stones. Each rat
+  wears a cord knotted with its sender's number, which names the sender (the paper's second assumption); a
+  trained rat always arrives (the first); silence within a round is detectable (the third). The four
+  sandglasses are turned together at dusk, before the posts are manned. One running of a sandglass is a
+  **round**, the unit of *Agreeing Among Liars*. Byzantine Generals lives here.
+- **Why rats.** No army ever sent messages by rat; the crown page says so. No animal fits a distance this
+  small except a runner, and a runner or a homing bird would be seen and heard. The rats stand for any private,
+  bounded message from one post to one other, which is all the paper asks of a messenger, and the wind can still
+  hold them back.
+- **The crown on later nights carries partial synchrony with liars.** The sandglasses were turned
+  together once, on the first night, and never again: the hill's shoulders take the light from each post at a
+  different moment, and the chief inside his wall sees only sky, so the last light that the tents below turn their glasses by is not theirs to use. On later nights the wind that blows over the whole hill holds the crown's rats in their holes for
+  as long as it blows; once it drops, every run is short again (GST, then Δ). The same wind
+  carries crashes below (DLS) and liars above (PBFT, HotStuff). The bandits have what the mercenaries lack, a chief and reason to distrust one another,
+  so the leader-based papers live here: PBFT, then HotStuff.
+
+*Agreeing Among Liars* closes on the contrast: below, honest men can die and messages take
+arbitrary time, yielding impossibility (*The Limits of Agreement*); above, nobody dies and time
+is bounded, but men lie, yielding the 3m + 1 threshold.
+
+### The synchrony spectrum on Arche
+
+- **Pure asynchrony (unbounded delay, crash faults):** the camps (FLP 1985); with a coin (Ben-Or
+  1983) or a slate (Chandra & Toueg 1996).
+- **Asynchronous FIFO with causality and snapshots:** the ring road in the cloudy trading season
+  (Lamport 1978, Chandy–Lamport 1985).
+- **Partial synchrony (unbounded delay → GST → bounded delay Δ), crash faults:** the camps on
+  windy nights (DLS 1988).
+- **Bounded delay with message loss:** the camps on nights of lost birds (Gilbert & Lynch 2002).
+- **Pure synchrony (bounded rounds, Byzantine faults):** the crown's first night (PSL 1980, LSP 1982).
+- **Partial synchrony with Byzantine faults:** the crown on windy nights (PBFT 1999, HotStuff 2019).
+
+### Two precision notes
+
+- **Signatures remove the bound, they do not lower it.** The paper gives an algorithm that
+  "copes with m traitors for any number of generals"; the m + 2 figure is a parenthetical
+  saying where the problem becomes *vacuous*, not a solvability threshold. The oral-message
+  3m + 1 bound and its removal is the whole point of the book's second half.
+- **DLS has two models, not one.** Bounds exist but are unknown; *or* bounds are known but
+  hold only after GST. The book uses the second, with synchronous processors (§4): a still
+  flight is within a glass once the wind drops, and the glasses give a common count. It mentions
+  the first (rounds lengthened each time, §4.2) and the distributed clocks of §5 in its closing
+  chapter.
+
+---
+
+## Paxos · *The Island of the Parliament, the Podium and the Scholars*
+
+*One island, two ways of keeping records.* Paxos holds two assemblies, each keeping one
+append-only law scroll across absent members and changing leaders — Lamport's parliament and
+the Tholos of Schedia — and the scholars, who keep many copies of one compendium of knowledge and
+hold no assembly.
+Putting them on one island makes the difference a walk: the scholars could take any question
+to an assembly, and the oracle at the fork tells which work needs one.
+
+**The island is three sections joined by two narrow necks, and its shape groups the papers.**
+From north to south: the northern section holds the city of **Schedia**, with its Tholos on the
+summit above the town; the middle section holds the city of Paxos, with the Chamber on its summit;
+a deep bay cuts in between the two from the east, the city of Paxos stands at its head, and the two
+halls look at each other across it from the two highest points of the island. The two ways of keeping one law scroll share the high
+north of the island. The southern neck joins the middle section to the southern section, the
+largest and the lowest, the scholars' coast, which eventual consistency has to itself. The oracle
+stands on the southern neck, at the fork of the island road.
+
+**The parliament has no say over the scholars' copies.** It passes decrees, the island's law;
+an entry in the scholars' compendium is knowledge, not law, and no decree settles which copy is right. So nothing
+on the scholars' coast waits for a vote, although the Chamber is a morning's walk away.
+
+### The Chamber
+
+| Paper | In the world |
+|---|---|
+| `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and kept as he wrote it, drawn as a round hall, a tholos ringed by a colonnade, because its acoustics make oratory impossible. Legislators wander in and out, each keeps a scroll, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved |
+
+**The ground must provide:** the **Chamber** on a terrace on the summit of the middle section, on
+its bay side, looking across the water at the Tholos. No road climbs to it: like a temple on an
+acropolis it is reached on foot, by two stepped ways, one from the island road just beyond the
+oracle's north gate and one from the city of Paxos at the head of the bay. So it lies on a way
+through rather than at a dead end, and legislators wander in and out from either side.
+
+**The parliament is still sitting.** Lamport's §3.3.6 ends the Paxon parliament — a scribe's
+error names drowned sailors as the only legislators, government halts, a coup and an invasion
+follow. Every later book ignores this, as a matter of convenience, and says so once: in the
+index entry and at that point in our rendition.
+
+**One legislature per city.** Paxos has two cities and two law scrolls. The Paxon Parliament
+makes the law of Paxos: the middle section and the scholars' coast; the sanctuary on the southern neck between them is common ground, since the road to Schedia leaves from its north gate too. **Schedia** keeps its
+own. Its name means *raft*: it was founded by settlers from a different mother city, who came
+by sea and brought their founders' laws with them, and the Parliament's decrees have never run on the northern section. That is
+ordinary Greek practice: Amorgos, a small island, held three independent cities — Minoa
+settled from Samos, Aigiale from Miletus, Arkesine from Naxos — each with its own laws, and
+Lesbos held five. Each law scroll covers its own city, so the two never contradict each other,
+and there is no split for either algorithm to prevent. Viewstamped Replication is a genuine
+alternative to Paxos, found independently and published first, and a city of its own says so.
+**Nothing on Paxos is named after the algorithm it carries.** Schedia's name nods to Raft, a
+systems paper outside the series that set out to leave the island of Paxos; it names no paper
+the city carries.
+
+**Later papers reuse existing rooms** instead of adding devices, so that approaches can be
+compared directly and the reader carries fewer allegories. Ben-Or and Chandra & Toueg return
+to FLP's camps, and PBFT and HotStuff to the Byzantine Generals' crown. What separates a later paper from an earlier one in the
+same place is a rule of procedure, not a building.
+
+**The Chamber is drawn as a rotunda.** Lamport gives it one physical property: *"The acoustics
+of the Chamber were poor, making oratory impossible. Legislators could communicate only by
+messenger."* A circular hall with hard stone walls under one conical roof held up by columns inside, with no podium and no head of the room,
+illustrates that faithfully, and its one doorway, with a door that can be locked, shows legislators and messengers
+coming and going. The round plan illustrates Lamport's text and carries no meaning of its own; in
+Lamport nobody speaks aloud at all. The Tholos of Schedia is a round hall of the same kind, built
+plainer: a drum of honey-coloured limestone with no colonnade outside, a porch at its one door and six
+columns inside, where the Chamber has a Doric colonnade outside and a ring of Corinthian columns within.
+It has the one thing the Chamber lacks: a podium at the centre.
+
+**Both halls are painted, as Greek buildings were.** The Chamber's stone is white, and its ornament
+is coloured on the white: the triglyphs of the Doric frieze dark blue, the mouldings and the eaves
+picked out in red and blue, and a painted band of meander running round the drum under the roof.
+The statues on its terrace are painted too. The Tholos is plainer: a painted band under its eaves
+on the honey-coloured stone, and nothing more. Bare white stone everywhere is a later idea of
+Greece, not the Greeks' own.
+
+### Schedia and the Tholos
+
+*A city on the northern section, with its own laws, governed from a round hall with a podium.*
+
+| Paper | In the world |
+|---|---|
+| `oki-liskov-1988` | **The Tholos.** A rotunda like the Chamber, with the same poor acoustics, messengers and legislators on part-time duty, and one difference: a podium at the centre. Only the legislator who holds the podium may propose; the others write down what its messengers bring. When the podium falls silent, another legislator raises a higher board, and the new holder first gathers what a majority hold, so nothing a majority knew is lost. *One Leader at a Time* |
+
+**The podium is an office, not a pulpit.** Nobody can be heard from it either. It stands where
+every bench is the same distance away, the current board hangs on it, and the podium's
+messengers all leave from it, so where messengers in the Chamber cross the floor in every
+direction, in the Tholos they run out from the centre. Authority rides on the board number that
+every note carries, not on standing at the podium, which is only where the holder sits when
+present. A holder who has stepped out and not noticed a new board can go on sending under the
+old one, and settles nothing, since any majority they reach includes a legislator who has taken
+the new board and refuses the old number. That is why boards are numbered.
+
+**Wax, not ink.** Lamport's legislators write in indelible ink; Schedia's keep the law on wax
+tablets that stay on their bench and are smoothed when their holder goes home, while the bench's
+name and the last board it served under are cut into its stone. A legislator who steps out
+comes back to their tablets; one who goes home comes back to smooth wax, calls for a new board at
+once, and is brought up to date only by that board's opening line. If a majority go home at
+once, the council can stop for good: a board may then form only on answers that still show every
+law that passed, as the old holder's tablets would, and it never starts a board missing a law
+that passed. VR keeps its group state in volatile memory, and a majority remembering is
+what makes that safe.
+
+**The council.** Five legislators: Okios and Liskovia (Oki and Liskov), and Kleon, Melissa and
+Theron, ordinary names for seats no author fills. A majority is three, so a law passes when the
+holder and two others hold its line. They are told apart by colour: Okios blue-grey, Liskovia
+saffron, Kleon green, Melissa madder red, Theron grey. The podium's runners are young men in short
+brown tunics, one to each bench, who carry the lines in order and never skip one. Citizens
+petition the podium only; a petition that reaches a bench comes back with the holder's name.
+The Tholos has five benches, one for each legislator.
+
+**Why a Tholos.** In Athens the Tholos was the round building of the prytaneis, the committee
+on duty in turn, with one member presiding: a round civic hall with a head, on part-time duty.
+
+**The ground must provide:** a terrace on the summit of the northern section, above the
+sheltered cove on the bay where Schedia's town and harbour lie, so the Tholos faces the Chamber
+across the water. A stepped way climbs to it from the top of the town. The island road leaves the
+oracle's north gate, runs along the middle section below the Chamber's summit to the city at the
+head of the bay, and crosses the northern neck to Schedia.
+
+### The scholars' coast
+
+The scholars call their coast *Homonoia*, "concord": everyone ends of one mind, by merging
+rather than by assembly. The scholars hold **no assembly**; nothing here waits for a vote.
+
+**Core physics.** The libraries along the coast keep one **compendium** of what is known: an
+**entry** for each subject, filed under its **heading**, each entry a short scroll of its own in the
+library's pigeonholes. Every library keeps its own copy of the whole compendium. Scholars at any
+library add entries, revise them and withdraw them, and **readers** consult them; a library answers
+a reader from its own copy. Word of a change travels by courier and by word of mouth; couriers are
+delayed or stopped, and libraries close, so the copies differ for a while.
+
+**Knowledge, not law.** An entry is knowledge, so it is enough that every copy agrees in the end.
+A decree must be one law everywhere at once, which is why the assemblies wait; an entry may read
+one way at one library and another way at the next until word arrives. That is why the coast needs
+no assembly.
+
+**Versions and tallies.** A **version** is one state of an entry. Which of two versions is newer is
+settled by a **tally**: the day and hour by the sun at which it was written, with the library's
+number to break a tie. The coast's plain rule treats an entry as one thing and keeps the version
+with the larger tally; a withdrawal travels as a **notice** with its own tally, never as a missing
+copy. *Spreading by Word of Mouth* and *Probably Up to Date* use the plain rule; *Changes That Never
+Clash* shows what it loses and merges an entry part by part instead.
+
+**Home libraries.** Every library keeps the whole compendium, but each entry has three **home
+libraries** that answer for it: a revision is sent to them first, and a reader who wants the
+newest version asks them. The other libraries learn of it later, by the spread.
+
+**The line between the scholars and Arche is how much disagreement each can live with**, not
+what is recorded: both keep records, and on Arche it is the stock of the storehouses that is
+snapshotted and the requests for its grain that are put in sequence. At the camps, answering from a stale
+note is done knowingly and only while birds are lost, because two men told different plans is a
+real harm. The
+scholars answer from whatever copy they hold as a matter of course, and live with copies that
+differ for a while, because an out-of-date entry is put right when word arrives, as long as
+every copy agrees in the end — strong consistency against eventual consistency. Greek
+scholarship already did every practice this coast needs: collating manuscripts line by line,
+and spreading the epics by rhapsode.
+
+| Paper | In the world |
+|---|---|
+| `demers-1987` <span>(`demers-1989` is the same file)</span> | A change to an entry travels on scraps of papyrus passed on in the stoa by travelling scholars — the entry on the heavens revised to say that the Earth goes round the Sun, say — rumour-fashion, each losing interest once most of those they meet have the scrap; once a year each copyist draws by lot another library's name and sits down with its copyist to compare their whole copies of the compendium, scraps included, at the festival, catching what the talk missed, a sum worked from each copy telling at once whether they agree; a notice of withdrawal travels like a version; partners are preferred near, the inlet's one ferry being the critical crossing. *Spreading by Word of Mouth* |
+| `bailis-2012_pbs` | Each entry has three home libraries that answer for it, though every library keeps the whole compendium. A new version goes to all three and is announced once enough have answered; a reader asks all three and takes the newest of the first replies; how likely the version handed over is out of date, and by how much, is measured, and a logbook of the couriers' journey times gives the odds. *Probably Up to Date* |
+| `shapiro-2011_crdt`, `shapiro-2011_crdt-comprehensive` | The compendium merged part by part. An entry is made of parts, each merged by its own rule, so that changes made in ignorance of each other never clash. The book's entry is the **comet**'s: its **count of sightings**, kept at every library on a marble board of pebbles with a column for each library, white for sightings recorded and black for sightings struck as mistaken, each library adding only to its own columns and merging by the larger pile in each column; its **account** of what the comet is, kept by the later tally or both side by side ("some say … others say …"); and its **cross-references** to other entries, each writing with its own tag, a strike removing only the tags its library has seen. The **headings** work the same way: writing into an entry writes a fresh tag on its heading, so a heading withdrawn at one library while written into at another stands. Couriers carry whole boards and entries, or slips naming one change. No library can keep the count from falling below nothing by reading its own board, unless each strikes only sightings it recorded itself; and no part's rule keeps a reference from pointing at a withdrawn heading. Every entry that counts something has a board of its own, on a stepped stand beside the desk, each with a wax tag of its own colour; the book watches the comet's. *Changes That Never Clash* |
+| `bailis-2014_hats` | What a library can promise a reader while the couriers are stopped: that no answer is read before the entry it answers, that no correction is seen half made; and what no library alone can promise: that two scholars who each read a count and write it one higher never lose one of the two (the compendium's count of catalogued stars), that two scholars never leave an entry with no source, and that the version handed over is the latest. A reader's business is a visit, consulting and correcting several entries; corrections to several entries are bound under one cord and shown only when the set is complete (a new entry and the cross-reference to it); and every library shows readers only what all hold (a floor that only rises). Nothing is lent. *What You Can Promise Alone* |
+
+**The ground must provide:** the whole southern section, lower than the two summits of the
+assemblies and deeply indented with coves; many libraries within casual reach of one another, each with a
+reading room, pigeonholes for its copy of the compendium and a desk with the pebble boards, courier routes of differing length, a landing for the couriers' boats at the southern tip,
+and an inlet crossed only by one ferry that many routes share.
+
+### The oracle at the fork
+
+| Paper | In the world |
+|---|---|
+| `hellerstein-2010`, `ameloot-2011` | **The oracle at the fork**, a sanctuary on common ground that belongs to neither city, as the Messon on Lesbos was the common sanctuary of that island's cities, and built in the manner of Dodona: a low wall round an old oak, a small temple and an altar beside the tree, a gate to the north and a gate to the south. Groups of **students**, their schooling done, bring the **priestess** the work they mean to do together, written on a folded strip of lead, before they choose how to live. She reads the work and nothing else, and sends the group out by one gate: **north**, up the way that forks beyond it, a stepped way up to the Chamber and the road on to the city and Schedia below the Tholos, to live as the assemblies do, keeping a **roster** of members and settling nothing until every name on it has been heard from; or **south**, down off the neck to the scholars' coast, to live as scholars, each at a post in a library, with no roster, answering from whatever has reached it. The students do not join the Parliament or Schedia's council; they live as those bodies live. A group's work is a question about the libraries' facts, so in the examples the libraries are the students' posts: work that only grows (any sighting recorded, a ring of waiting) can be answered with no roster and without waiting; work that rests on an absence (every sighting, an entry nothing cites) needs every post heard from. The counsel is always one road or the other, never a third: mixed work may still go south if its one step that rests on an absence is closed with a manifest naming the notices before it, so that only that step waits, and only for those. The oracle is exact and foresees nothing; that real oracles were vague is said once, as a leak. *Knowing When to Wait* |
+
+---
+
+## Out of scope
+
+The settings cover 25 papers. Not covered: Flexible Paxos · Attiya, Bar-Noy & Dolev · Terry
+1994 session guarantees · Gray & Lamport 2006 (Paxos Commit) · Schneider 1990 · Burrows
+(Chubby) · Abadi (PACELC) · Bailis *Coordination Avoidance*.
+
+**Systems papers, out of scope by the rule above:** Liskov & Cowling
+2012 (VR Revisited) · Ongaro & Ousterhout 2014 (Raft) · Chandra, Griesemer & Redstone 2007
+(Paxos Made Live) · DeCandia et al. 2007 (Dynamo) · Lloyd et al. 2011 (COPS) · Gray et al.
+1996 · Terry et al. 1995 (Bayou) · Saito & Shapiro 2005 (a survey) · Carbone et al. 2015 (Flink
+snapshots) · Corbett et al. 2012 (Spanner) · Thomson et al. 2012 (Calvin).
+
+---
+
+## What this means for the map
+
+- **Mount Phyle must block every sightline between the three houses.** It fills Arche's
+  interior; a small cone would leave the lines between evenly spaced houses clear.
+- **Paxos is three sections joined by two narrow necks, and its shape groups its papers.**
+  Schedia and its Tholos hold the northern section, the city of Paxos and its Chamber the
+  middle one; the two halls stand on the island's two highest points and face each other
+  across the bay that cuts in between the sections; the city of Paxos stands at the bay's
+  head. Both halls are reached on foot by stepped ways, the Chamber's from the road beyond the
+  oracle and from the city, the Tholos's from Schedia. The oracle stands on the southern neck,
+  where the way north forks to the two assemblies. The southern section, the largest and the lowest, is the
+  scholars' coast, with many libraries within casual reach, courier routes of different length,
+  an inlet crossed only by one ferry and a landing for the couriers' boats at the southern tip.
+- **Every harbour town on both islands rises gently behind its waterfront.** Arche's three ports and, on Paxos, the city's harbour, Schedia's cove and the stoa's harbour each lie where a valley
+  reaches the sea; from the waterfront the ground climbs by the town's terraces into the hills,
+  with no cliff, scarp or levelled bowl behind it. Sea-cliffs belong to the headlands between
+  the harbours. The couriers' landing is the exception: a narrow rocky cove in the cliffs, with no town.
+
+---
+
+## Open
+
+1. **How many books per island.** The grounds and buildings are fixed; the book count is not.
+   Current plan: one paper per book except *Ordering Without Clocks* (Lamport with Fidge and Mattern), *Agreeing Among Liars*
+   (the two Byzantine Generals papers) and the paired papers (Lamport 1998 with 2001, Brewer with Gilbert & Lynch, Shapiro's two, Hellerstein
+   with Ameloot). The camps keep five books (*The Limits of Agreement*, DLS, CAP, Ben-Or, Chandra & Toueg) and the crown
+   three (*Agreeing Among Liars*, Castro & Liskov, HotStuff).

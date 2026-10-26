@@ -1,8 +1,8 @@
 """Build a scroll book: books/<slug>/index.html from the shared shell and the book's own parts.
 
-    python3 art/scroll/assemble.py <slug>
+    python3 scroll/assemble.py <slug>
 
-Parts live in art/scroll/parts/<slug>/:
+Parts live in scroll/parts/<slug>/:
     meta.json   {"title": "...", "description": "..."} and the cover's words (see cover.py)
     body.html   everything inside <body>, from the top bar to the footer; its cover says
                 {{question}}, {{how}} and {{source}}, filled in from meta.json, and after the
@@ -20,7 +20,7 @@ from pathlib import Path
 from cover import fill, load
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[1]
+ROOT = HERE.parent
 slug = sys.argv[1]
 part = HERE / "parts" / slug
 if not (part / "body.html").exists():

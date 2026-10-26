@@ -8,19 +8,19 @@ anchor carry over.
 
 Three finished books are the models. Read them before writing anything:
 
-- `art/scroll/parts/ordering-without-clocks/` (the ring road: houses, messengers, slips)
-- `art/scroll/parts/the-limits-of-agreement/` (the foot of the hill: tents, ravens)
-- `art/scroll/parts/one-leader-at-a-time/` (the Tholos: named legislators, rules on cards)
+- `scroll/parts/ordering-without-clocks/` (the ring road: houses, messengers, slips)
+- `scroll/parts/the-limits-of-agreement/` (the foot of the hill: tents, ravens)
+- `scroll/parts/one-leader-at-a-time/` (the Tholos: named legislators, rules on cards)
 
 ## The kit
 
 ```
-art/scroll/shell.css      shared styles (never edit)
-art/scroll/shell.js       shared script (never edit)
-art/scroll/assemble.py    python3 art/scroll/assemble.py <slug>   -> books/<slug>/index.html
-art/scroll/cover.py       python3 art/scroll/cover.py [--write]   cards and covers against meta.json
-art/scroll/shot.sh        art/scroll/shot.sh <slug> <width> <out.png>   headless check
-art/scroll/parts/<slug>/  meta.json, body.html, page.css, page.js   (what you write)
+scroll/shell.css      shared styles (never edit)
+scroll/shell.js       shared script (never edit)
+scroll/assemble.py    python3 scroll/assemble.py <slug>   -> books/<slug>/index.html
+scroll/cover.py       python3 scroll/cover.py [--write]   cards and covers against meta.json
+scroll/shot.sh        scroll/shot.sh <slug> <width> <out.png>   headless check
+scroll/parts/<slug>/  meta.json, body.html, page.css, page.js   (what you write)
 books/<slug>/img/         the book's pictures (you copy them in)
 ```
 
@@ -259,8 +259,8 @@ the picture first). A picture may disagree with the prose; never bend the prose 
 
 ## Finishing checklist
 
-- [ ] `python3 art/scroll/assemble.py <slug>` runs; `node --check` passes on `page.js`
-- [ ] `python3 art/scroll/cover.py` reports that cards and covers agree with `meta.json`
+- [ ] `python3 scroll/assemble.py <slug>` runs; `node --check` passes on `page.js`
+- [ ] `python3 scroll/cover.py` reports that cards and covers agree with `meta.json`
 - [ ] `shot.sh` at 500 and 1280: widths equal, `errors=[]`, screenshots looked at
 - [ ] every interactive pressed through in your head against the long edition's rules
 - [ ] every proof panel present, steps verbatim, each with a `given`

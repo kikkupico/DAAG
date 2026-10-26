@@ -1,9 +1,9 @@
 """One-off: turn a setting page of the old format into the scroll look.
 
-    python3 art/scroll/place.py places/<slug>/index.html
+    python3 scroll/place.py places/<slug>/index.html
 
 Reads the old page and overwrites it. The result is an ordinary hand-edited page that links
-art/scroll/shell.css, place.css and shell.js; it is not rebuilt from anything afterwards.
+scroll/shell.css, place.css and shell.js; it is not rebuilt from anything afterwards.
 """
 import re, sys, html
 path = sys.argv[1]
@@ -76,8 +76,8 @@ page = f'''<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
-<link rel="stylesheet" href="../../art/scroll/shell.css">
-<link rel="stylesheet" href="../../art/scroll/place.css">
+<link rel="stylesheet" href="../../scroll/shell.css">
+<link rel="stylesheet" href="../../scroll/place.css">
 </head>
 <body>
 
@@ -106,7 +106,7 @@ page = f'''<!DOCTYPE html>
 
 {chr(10).join(out)}<footer>Distributed Algorithms of Ancient Greece · {crumb}</footer>
 
-<script src="../../art/scroll/shell.js"></script>
+<script src="../../scroll/shell.js"></script>
 <script>
 /* who is who: light a pair when either side is pointed at */
 document.querySelectorAll(".map").forEach(m=>{{const c=[...m.children].slice(3);for(let i=0;i<c.length;i+=3){{const l=c[i],r=c[i+2];

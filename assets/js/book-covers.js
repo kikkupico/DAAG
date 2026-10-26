@@ -1,5 +1,5 @@
 /* Every book's computing cover, copied from the cover:start … cover:end block of its script.js by
-   art/scroll/book_covers.py. Do not edit here: change the book's script.js and rerun that script.
+   scroll/book_covers.py. Do not edit here: change the book's script.js and rerun that script.
    Draw one with  COVERS.draw(svg, BOOK_COVERS[slug]) ; needs assets/js/covers.js. */
 "use strict";
 window.BOOK_COVERS={};

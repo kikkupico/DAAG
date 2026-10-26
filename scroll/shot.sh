@@ -1,6 +1,6 @@
 #!/bin/sh
 # Screenshot a scroll book in headless Chrome and report script errors and sideways overflow.
-#   art/scroll/shot.sh <slug | page path> <width> <out.png> [height]
+#   scroll/shot.sh <slug | page path> <width> <out.png> [height]
 # Run from the repo root. Uses a file:// URL and a throwaway profile, so many can run at once.
 slug=$1; w=${2:-390}; out=${3:-/tmp/$slug-$w.png}; h=${4:-16000}
 root=$(pwd); tmp=$(mktemp -d)

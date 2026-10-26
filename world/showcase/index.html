@@ -1,0 +1,454 @@
+<title>Arche and Paxos</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Marcellus&family=Alegreya+Sans+SC:wght@500&display=swap">
+<style>
+/* Layout: a dark gallery wall. Full-bleed opening render, then each island as a run of
+   numbered plates in one reading column, some plates paired side by side. */
+:root {
+  --bg: #0f1517;          /* night over the Aegean */
+  --panel: #161f22;
+  --fg: #e7e2d6;          /* weathered limestone */
+  --muted: #a2aaa5;
+  --rule: #2a3538;
+  --bronze: #c9a467;      /* the meridian line, the numerals */
+  --ok: #8fbf9f;
+  --bad: #e08a6e;
+  --scrim: rgba(8, 11, 12, 0.9);
+  --display: "Marcellus", "Trajan Pro", Georgia, serif;
+  --greek: "GFS Didot", "Didot", "Times New Roman", serif;
+  --body: "Literata", Georgia, "Times New Roman", serif;
+  --label: "Alegreya Sans SC", "Gill Sans", "Trebuchet MS", sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #eceeea; --panel: #e2e5e0; --fg: #1c2427; --muted: #57605f; --rule: #c8cdc8;
+    --bronze: #86622a; --ok: #2f6f45; --bad: #a3401f; --scrim: rgba(20, 26, 28, 0.88); color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #eceeea; --panel: #e2e5e0; --fg: #1c2427; --muted: #57605f; --rule: #c8cdc8;
+  --bronze: #86622a; --ok: #2f6f45; --bad: #a3401f; --scrim: rgba(20, 26, 28, 0.88); color-scheme: light;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.6; }
+a { color: var(--bronze); }
+.wrap { max-width: 1280px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* opening plate */
+.hero { position: relative; margin: 0; }
+.hero img { display: block; width: 100%; height: auto; max-height: 78vh; object-fit: cover; }
+.hero .title { position: absolute; left: 0; right: 0; bottom: 0; padding-block: 48px 28px;
+  background: linear-gradient(to top, rgba(10, 14, 15, 0.82), rgba(10, 14, 15, 0)); color: #eee9dd; }
+.hero h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.2rem, 6vw, 4.6rem); line-height: 1.05; margin: 0; letter-spacing: 0.02em; text-wrap: balance; }
+.hero .greek { font-family: var(--greek); font-size: clamp(1rem, 2.2vw, 1.4rem); letter-spacing: 0.18em; color: #d9b97f; }
+.hero p { margin: 10px 0 0; max-width: 60ch; color: #d6d1c4; }
+
+.intro { padding-block: 48px 8px; display: grid; gap: 28px; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; }
+.intro p { margin: 0 0 14px; max-width: 66ch; }
+.facts { border-left: 1px solid var(--rule); padding-left: 20px; font-size: 15px; color: var(--muted); }
+.facts dt { font-family: var(--label); letter-spacing: 0.06em; color: var(--fg); }
+.facts dd { margin: 0 0 12px; }
+@media (max-width: 820px) { .intro { grid-template-columns: minmax(0, 1fr); } .facts { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); padding-top: 18px; } }
+
+/* island sections */
+.island { padding-block: 56px 24px; border-top: 1px solid var(--rule); margin-top: 32px; }
+.island header { display: grid; gap: 6px; margin-bottom: 28px; max-width: 70ch; }
+.island .eyebrow { font-family: var(--greek); color: var(--bronze); letter-spacing: 0.22em; font-size: 1.1rem; }
+.island h2 { font-family: var(--display); font-weight: 400; font-size: clamp(1.8rem, 4vw, 2.8rem); margin: 0; line-height: 1.1; text-wrap: balance; }
+.island header p { margin: 4px 0 0; color: var(--muted); }
+
+.row { display: grid; gap: 22px; margin-bottom: 34px; }
+.row.pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 760px) { .row.pair { grid-template-columns: minmax(0, 1fr); } }
+.fig { margin: 0; min-width: 0; display: grid; gap: 12px; }
+.shot { all: unset; display: block; cursor: zoom-in; background: var(--panel); border-radius: 2px; overflow: hidden; }
+.shot:focus-visible { outline: 2px solid var(--bronze); outline-offset: 3px; }
+.shot img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; transition: transform 0.6s ease; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .shot:hover img { transform: scale(1.012); } }
+figcaption { display: grid; grid-template-columns: 3.4em minmax(0, 1fr); gap: 10px; font-size: 15.5px; line-height: 1.55; }
+figcaption .num { font-family: var(--greek); color: var(--bronze); font-size: 1.15rem; line-height: 1.3; }
+figcaption strong { font-weight: 600; }
+.row.single figcaption .cap { max-width: 78ch; }
+
+/* checks and credits */
+.notes { border-top: 1px solid var(--rule); padding-block: 48px 64px; display: grid; gap: 40px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 820px) { .notes { grid-template-columns: minmax(0, 1fr); } }
+.notes h3 { font-family: var(--display); font-weight: 400; font-size: 1.5rem; margin: 0 0 12px; }
+.checks { width: 100%; border-collapse: collapse; font-size: 15px; }
+.checks td { padding: 8px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.checks td:last-child { text-align: right; padding-left: 16px; white-space: nowrap; font-family: var(--label); letter-spacing: 0.05em; }
+.ok { color: var(--ok); } .bad { color: var(--bad); }
+.notes p { margin: 0 0 12px; max-width: 66ch; color: var(--muted); font-size: 15.5px; }
+.notes p strong { color: var(--fg); font-weight: 600; }
+
+/* lightbox */
+.lb { position: fixed; inset: 0; z-index: 30; background: var(--scrim); display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 10px;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) max(14px, env(safe-area-inset-right, 0px)) calc(14px + env(safe-area-inset-bottom, 0px)) max(14px, env(safe-area-inset-left, 0px)); }
+.lb img { width: 100%; height: 100%; object-fit: contain; min-height: 0; }
+.lb .bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; color: #e7e2d6; font-size: 15px; }
+.lb .bar span.n { font-family: var(--greek); color: #d9b97f; margin-right: 10px; }
+.lb button { font: inherit; font-family: var(--label); letter-spacing: 0.05em; color: #e7e2d6; background: transparent; border: 1px solid #56625f; border-radius: 2px; padding: 6px 12px; cursor: pointer; }
+.lb button:focus-visible { outline: 2px solid #d9b97f; outline-offset: 2px; }
+.lb .btns { display: flex; gap: 8px; }
+</style>
+
+<header class="hero">
+  <img src="img/arche_overview_golden.jpg" alt="Arche at evening: a round island filled by one limestone mountain, ringed by cliffs and a coastal road" width="1920" height="1080">
+  <div class="title">
+    <div class="wrap">
+      <div class="greek" lang="el">ΑΡΧΗ · ΠΑΞΟΣ</div>
+      <h1>Arche and Paxos</h1>
+      <p>The two islands of the series, modelled in full: every harbour, house, hall and library, the mountain and its siege, the bay and its two assemblies, and the scholars’ coast.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="wrap intro">
+    <div>
+      <p>Each island is built from the setting’s own descriptions, with no map: Arche’s three trading houses round its mountain, the camps in the gullies and the ruined wall on the summit; Paxos’s Y of arms, fork and stem, with the Chamber and the Tholos facing each other across the bay, the oracle at the fork, and the libraries of the scholars’ coast.</p>
+      <p>Everything is in place at once. The renders below are taken from that one model of each island, in the light of different hours and seasons. No people are shown: the islands are lived in through their objects.</p>
+    </div>
+    <dl class="facts">
+      <dt>Period</dt><dd>Hellenistic Greece, third century BC</dd>
+      <dt>Built from</dt><dd>The settings, the buildings and their plans, the reality checks and the art direction for each place; Paxos on the real ground of Leros, turned end to end</dd>
+      <dt>Rendered with</dt><dd>Blender Cycles, from procedural geometry, scanned materials and grown trees</dd>
+    </dl>
+  </section>
+
+  <section class="wrap island" id="arche" aria-labelledby="arche-h">
+    <header>
+      <div class="eyebrow" lang="el">ΑΡΧΗ</div>
+      <h2 id="arche-h">Arche, the island of foundations</h2>
+      <p>One massif fills the island. Three houses, known by number, sit a third of the way round the coast from one another, joined by a single ring road; on the mountain, four mercenaries camp in the gullies and four bandits hold the crown.</p>
+    </header>
+    <div class="row single">
+      <figure class="fig" id="arche_overview_golden">
+        <button class="shot" type="button" data-full="img/arche_overview_golden.jpg" data-title="Arche at evening" data-num="Αʹ" aria-label="Open Arche at evening full size">
+          <img src="img/arche_overview_golden.jpg" alt="Arche at evening: One limestone massif, Mount Phyle, fills the island and stands between every pair of the three houses, so no house can see another. The ring road keeps to the coastal strip all the way round, from harbour to harbour, and never crosses the mountain." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">Αʹ</span><span class="cap"><strong>Arche at evening.</strong> One limestone massif, Mount Phyle, fills the island and stands between every pair of the three houses, so no house can see another. The ring road keeps to the coastal strip all the way round, from harbour to harbour, and never crosses the mountain.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="arche_overview_overcast">
+        <button class="shot" type="button" data-full="img/arche_overview_overcast.jpg" data-title="The trading season" data-num="Βʹ" aria-label="Open The trading season full size">
+          <img src="img/arche_overview_overcast.jpg" alt="The trading season: Under the winter overcast no sundial on the headlands casts a shadow, and no house can read the hour. Reefs and tide-races fringe every headland, so no small boat coasts from one cove to the next." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">Βʹ</span><span class="cap"><strong>The trading season.</strong> Under the winter overcast no sundial on the headlands casts a shadow, and no house can read the hour. Reefs and tide-races fringe every headland, so no small boat coasts from one cove to the next.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="port3_aerial">
+        <button class="shot" type="button" data-full="img/port3_aerial.jpg" data-title="House 3 and its harbour" data-num="Γʹ" aria-label="Open House 3 and its harbour full size">
+          <img src="img/port3_aerial.jpg" alt="House 3 and its harbour: A compact town on terraces round the cove: one-storey houses, courtyard houses and long storehouses under gabled tile roofs. The house range faces the quay across the waterfront road; ships ride in the bay and lie on the slipways." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">Γʹ</span><span class="cap"><strong>House 3 and its harbour.</strong> A compact town on terraces round the cove: one-storey houses, courtyard houses and long storehouses under gabled tile roofs. The house range faces the quay across the waterfront road; ships ride in the bay and lie on the slipways.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="house3_portico">
+        <button class="shot" type="button" data-full="img/house3_portico.jpg" data-title="The portico of House 3" data-num="Δʹ" aria-label="Open The portico of House 3 full size">
+          <img src="img/house3_portico.jpg" alt="The portico of House 3: Plain Doric columns stand straight on the paving with no bases, under a lean-to roof that runs the length of the range along the road. The clerks’ office is at one end, the deep gate in the middle, the storehouse with its loading doors at the other end." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">Δʹ</span><span class="cap"><strong>The portico of House 3.</strong> Plain Doric columns stand straight on the paving with no bases, under a lean-to roof that runs the length of the range along the road. The clerks’ office is at one end, the deep gate in the middle, the storehouse with its loading doors at the other end.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row pair">
+      <figure class="fig" id="house3_board">
+        <button class="shot" type="button" data-full="img/house3_board.jpg" data-title="The board of requests" data-num="Εʹ" aria-label="Open The board of requests full size">
+          <img src="img/house3_board.jpg" alt="The board of requests: Numbered slots from Α to Ι hang by the gate. Three request tablets stand in their slots, and the peg waits at the next free one." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">Εʹ</span><span class="cap"><strong>The board of requests.</strong> Numbered slots from Α to Ι hang by the gate. Three request tablets stand in their slots, and the peg waits at the next free one.</span></figcaption>
+      </figure>
+      <figure class="fig" id="town1_street">
+        <button class="shot" type="button" data-full="img/town1_street.jpg" data-title="A street in House 1’s town" data-num="Ϛʹ" aria-label="Open A street in House 1’s town full size">
+          <img src="img/town1_street.jpg" alt="A street in House 1’s town: Houses face inward, so the street sees mostly blank walls of lime plaster on a bare rubble base, each with a door and a few small high windows." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">Ϛʹ</span><span class="cap"><strong>A street in House 1’s town.</strong> Houses face inward, so the street sees mostly blank walls of lime plaster on a bare rubble base, each with a door and a few small high windows.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="port2_aerial">
+        <button class="shot" type="button" data-full="img/port2_aerial.jpg" data-title="House 2 and the north cove" data-num="Ζʹ" aria-label="Open House 2 and the north cove full size">
+          <img src="img/port2_aerial.jpg" alt="House 2 and the north cove: The same house range, the same terraced town. The oil presses stand just behind the house, and along the road to the east the shared storehouse is cut into the rock." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">Ζʹ</span><span class="cap"><strong>House 2 and the north cove.</strong> The same house range, the same terraced town. The oil presses stand just behind the house, and along the road to the east the shared storehouse is cut into the rock.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row pair">
+      <figure class="fig" id="granary">
+        <button class="shot" type="button" data-full="img/granary.jpg" data-title="The shared storehouse" data-num="Ηʹ" aria-label="Open The shared storehouse full size">
+          <img src="img/granary.jpg" alt="The shared storehouse: A doorway cut into the limestone beside the road, closed by a heavy timber door bound with iron. One house at a time goes in." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">Ηʹ</span><span class="cap"><strong>The shared storehouse.</strong> A doorway cut into the limestone beside the road, closed by a heavy timber door bound with iron. One house at a time goes in.</span></figcaption>
+      </figure>
+      <figure class="fig" id="sundial_cape">
+        <button class="shot" type="button" data-full="img/sundial_cape.jpg" data-title="The sundial on the southern cape" data-num="Θʹ" aria-label="Open The sundial on the southern cape full size">
+          <img src="img/sundial_cape.jpg" alt="The sundial on the southern cape: A small paved platform on the headland, with a stone sundial on its pillar. In the trading season its gnomon throws no shadow." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">Θʹ</span><span class="cap"><strong>The sundial on the southern cape.</strong> A small paved platform on the headland, with a stone sundial on its pillar. In the trading season its gnomon throws no shadow.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="ring_road">
+        <button class="shot" type="button" data-full="img/ring_road.jpg" data-title="The ring road" data-num="Ιʹ" aria-label="Open The ring road full size">
+          <img src="img/ring_road.jpg" alt="The ring road: One road with a lane each way, worn into two pairs of ruts. Where the cliff drops to the sea a dry-stone parapet runs along the edge. Nobody overtakes." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">Ιʹ</span><span class="cap"><strong>The ring road.</strong> One road with a lane each way, worn into two pairs of ruts. Where the cliff drops to the sea a dry-stone parapet runs along the edge. Nobody overtakes.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="crown_aerial">
+        <button class="shot" type="button" data-full="img/crown_aerial.jpg" data-title="The crown" data-num="ΙΑʹ" aria-label="Open The crown full size">
+          <img src="img/crown_aerial.jpg" alt="The crown: A small ruined ring wall of rough cyclopean stones on the very top: solid all round, with no gate, no gap and no stair. Its top is jagged but never broken through." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΙΑʹ</span><span class="cap"><strong>The crown.</strong> A small ruined ring wall of rough cyclopean stones on the very top: solid all round, with no gate, no gap and no stair. Its top is jagged but never broken through.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row pair">
+      <figure class="fig" id="crown_inside">
+        <button class="shot" type="button" data-full="img/crown_inside.jpg" data-title="Inside the ring wall" data-num="ΙΒʹ" aria-label="Open Inside the ring wall full size">
+          <img src="img/crown_inside.jpg" alt="Inside the ring wall: A paved floor, the loot’s strongboxes on a low stone shelf, and nothing roofed. The chief climbed in by a timber ladder and drew it up after them; from inside the wall the chief sees only sky." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΙΒʹ</span><span class="cap"><strong>Inside the ring wall.</strong> A paved floor, the loot’s strongboxes on a low stone shelf, and nothing roofed. The chief climbed in by a timber ladder and drew it up after them; from inside the wall the chief sees only sky.</span></figcaption>
+      </figure>
+      <figure class="fig" id="slope_post">
+        <button class="shot" type="button" data-full="img/slope_post.jpg" data-title="A lookout post" data-num="ΙΓʹ" aria-label="Open A lookout post full size">
+          <img src="img/slope_post.jpg" alt="A lookout post: A hollow among crags with a rough, gappy dry-stone breastwork on its downhill side. The hill’s shoulders hide each post from the other two." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΙΓʹ</span><span class="cap"><strong>A lookout post.</strong> A hollow among crags with a rough, gappy dry-stone breastwork on its downhill side. The hill’s shoulders hide each post from the other two.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="camp_north">
+        <button class="shot" type="button" data-full="img/camp_north.jpg" data-title="The camp in the north gully" data-num="ΙΔʹ" aria-label="Open The camp in the north gully full size">
+          <img src="img/camp_north.jpg" alt="The camp in the north gully: One linen tent in a clearing at the foot of the gully, and at its mouth a plain bronze-faced shield, a chest and a covered wicker basket. Nothing else: no palisade, no loft, no fire." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΙΔʹ</span><span class="cap"><strong>The camp in the north gully.</strong> One linen tent in a clearing at the foot of the gully, and at its mouth a plain bronze-faced shield, a chest and a covered wicker basket. Nothing else: no palisade, no loft, no fire.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="wrap island" id="paxos" aria-labelledby="paxos-h">
+    <header>
+      <div class="eyebrow" lang="el">ΠΑΞΟΣ</div>
+      <h2 id="paxos-h">Paxos, the island of the parliament, the podium and the scholars</h2>
+      <p>Two cities, two ways of keeping one law scroll at the top of the island, and below the southern neck a coast of libraries that keep many copies of one compendium and hold no assembly.</p>
+    </header>
+    <div class="row single">
+      <figure class="fig" id="paxos_overview">
+        <button class="shot" type="button" data-full="img/paxos_overview.jpg" data-title="Paxos" data-num="ΙΕʹ" aria-label="Open Paxos full size">
+          <img src="img/paxos_overview.jpg" alt="Paxos: Three sections joined by two narrow necks, the shape of Leros turned end to end. Schedia holds the north, the city of Paxos the middle, and the largest and lowest section to the south is the scholars’ coast." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΙΕʹ</span><span class="cap"><strong>Paxos.</strong> Three sections joined by two narrow necks, the shape of Leros turned end to end. Schedia holds the north, the city of Paxos the middle, and the largest and lowest section to the south is the scholars’ coast.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="paxos_bay_dawn">
+        <button class="shot" type="button" data-full="img/paxos_bay_dawn.jpg" data-title="The bay between the sections" data-num="ΙϚʹ" aria-label="Open The bay between the sections full size">
+          <img src="img/paxos_bay_dawn.jpg" alt="The bay between the sections: A deep bay cuts in from the east between the northern and middle sections. The Tholos of Schedia stands on the one summit and the Chamber on the other, the two highest points of the island, each looking across the water at the other." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΙϚʹ</span><span class="cap"><strong>The bay between the sections.</strong> A deep bay cuts in from the east between the northern and middle sections. The Tholos of Schedia stands on the one summit and the Chamber on the other, the two highest points of the island, each looking across the water at the other.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="bay_chamber_to_tholos">
+        <button class="shot" type="button" data-full="img/bay_chamber_to_tholos.jpg" data-title="Across the bay" data-num="ΙΖʹ" aria-label="Open Across the bay full size">
+          <img src="img/bay_chamber_to_tholos.jpg" alt="Across the bay: From the Tholos’s court on the northern summit the eye crosses the bay to the Chamber on the summit of the middle section. Each hall faces the other across the water." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΙΖʹ</span><span class="cap"><strong>Across the bay.</strong> From the Tholos’s court on the northern summit the eye crosses the bay to the Chamber on the summit of the middle section. Each hall faces the other across the water.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="chamber_exterior">
+        <button class="shot" type="button" data-full="img/chamber_exterior.jpg" data-title="The Chamber" data-num="ΙΗʹ" aria-label="Open The Chamber full size">
+          <img src="img/chamber_exterior.jpg" alt="The Chamber: A round hall of white ashlar ringed by unbased Doric columns, under one conical tiled roof with a lantern and a bronze finial. Its ornament is painted, as Greek buildings were: blue triglyphs, a red band below them, and a running key in blue round the drum. It has one doorway, closed by a door that can be locked. Statues stand on tall pedestals round the terrace; one has fallen." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΙΗʹ</span><span class="cap"><strong>The Chamber.</strong> A round hall of white ashlar ringed by unbased Doric columns, under one conical tiled roof with a lantern and a bronze finial. Its ornament is painted, as Greek buildings were: blue triglyphs, a red band below them, and a running key in blue round the drum. It has one doorway, closed by a door that can be locked. Statues stand on tall pedestals round the terrace; one has fallen.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="chamber_aerial">
+        <button class="shot" type="button" data-full="img/chamber_aerial.jpg" data-title="The Chamber’s terrace" data-num="ΙΘʹ" aria-label="Open The Chamber’s terrace full size">
+          <img src="img/chamber_aerial.jpg" alt="The Chamber’s terrace: A paved round terrace on the summit of the middle section. No road climbs to it: like a temple on an acropolis it is reached on foot, by stepped ways from the road beyond the oracle and from the city. Legislators wander in and out." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΙΘʹ</span><span class="cap"><strong>The Chamber’s terrace.</strong> A paved round terrace on the summit of the middle section. No road climbs to it: like a temple on an acropolis it is reached on foot, by stepped ways from the road beyond the oracle and from the city. Legislators wander in and out.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="chamber_interior">
+        <button class="shot" type="button" data-full="img/chamber_interior.jpg" data-title="Inside the Chamber" data-num="Κʹ" aria-label="Open Inside the Chamber full size">
+          <img src="img/chamber_interior.jpg" alt="Inside the Chamber: Ten slender Corinthian columns carry the roof. Stone benches follow the wall, each with a small stand holding an inkpot and a closed scroll, written on the knees; nothing stands at the centre and nothing faces a speaker. A bronze meridian line runs north across the floor." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">Κʹ</span><span class="cap"><strong>Inside the Chamber.</strong> Ten slender Corinthian columns carry the roof. Stone benches follow the wall, each with a small stand holding an inkpot and a closed scroll, written on the knees; nothing stands at the centre and nothing faces a speaker. A bronze meridian line runs north across the floor.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row pair">
+      <figure class="fig" id="tholos_exterior">
+        <button class="shot" type="button" data-full="img/tholos_exterior.jpg" data-title="The Tholos of Schedia" data-num="ΚΑʹ" aria-label="Open The Tholos of Schedia full size">
+          <img src="img/tholos_exterior.jpg" alt="The Tholos of Schedia: The same kind of hall as the Chamber, plainer: a drum of honey-coloured limestone with no colonnade and a single painted band under its eaves, a porch at its one door, a low conical roof and a lantern. It stands on the island’s highest summit." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΚΑʹ</span><span class="cap"><strong>The Tholos of Schedia.</strong> The same kind of hall as the Chamber, plainer: a drum of honey-coloured limestone with no colonnade and a single painted band under its eaves, a porch at its one door, a low conical roof and a lantern. It stands on the island’s highest summit.</span></figcaption>
+      </figure>
+      <figure class="fig" id="tholos_interior">
+        <button class="shot" type="button" data-full="img/tholos_interior.jpg" data-title="Inside the Tholos" data-num="ΚΒʹ" aria-label="Open Inside the Tholos full size">
+          <img src="img/tholos_interior.jpg" alt="Inside the Tholos: Five benches with backs, each name cut into its stone, each with a stand of wax tablets. At the centre, the same distance from every bench, the podium: two steps, a stone seat, a small table and the board on its post." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΚΒʹ</span><span class="cap"><strong>Inside the Tholos.</strong> Five benches with backs, each name cut into its stone, each with a stand of wax tablets. At the centre, the same distance from every bench, the podium: two steps, a stone seat, a small table and the board on its post.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="tholos_schedia">
+        <button class="shot" type="button" data-full="img/tholos_schedia.jpg" data-title="Schedia" data-num="ΚΓʹ" aria-label="Open Schedia full size">
+          <img src="img/tholos_schedia.jpg" alt="Schedia: A city of its own on a cove on the bay’s north shore, founded from another mother city and keeping its own laws. The Tholos stands on the summit above it, reached by a stepped way from the town." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΚΓʹ</span><span class="cap"><strong>Schedia.</strong> A city of its own on a cove on the bay’s north shore, founded from another mother city and keeping its own laws. The Tholos stands on the summit above it, reached by a stepped way from the town.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="paxos_city">
+        <button class="shot" type="button" data-full="img/paxos_city.jpg" data-title="The city of Paxos" data-num="ΚΔʹ" aria-label="Open The city of Paxos full size">
+          <img src="img/paxos_city.jpg" alt="The city of Paxos: At the head of the bay, below the Chamber’s summit. The island road comes up from the oracle to the town and runs on over the northern neck to Schedia." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΚΔʹ</span><span class="cap"><strong>The city of Paxos.</strong> At the head of the bay, below the Chamber’s summit. The island road comes up from the oracle to the town and runs on over the northern neck to Schedia.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row pair">
+      <figure class="fig" id="oracle">
+        <button class="shot" type="button" data-full="img/oracle.jpg" data-title="The oracle at the fork" data-num="ΚΕʹ" aria-label="Open The oracle at the fork full size">
+          <img src="img/oracle.jpg" alt="The oracle at the fork: A low wall round an old oak, in the manner of Dodona. Beside the tree, a small temple with two columns between its side walls, and an altar before it." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΚΕʹ</span><span class="cap"><strong>The oracle at the fork.</strong> A low wall round an old oak, in the manner of Dodona. Beside the tree, a small temple with two columns between its side walls, and an altar before it.</span></figcaption>
+      </figure>
+      <figure class="fig" id="oracle_aerial">
+        <button class="shot" type="button" data-full="img/oracle_aerial.jpg" data-title="Two gates" data-num="ΚϚʹ" aria-label="Open Two gates full size">
+          <img src="img/oracle_aerial.jpg" alt="Two gates: Common ground on the southern neck that belongs to neither city. The north gate opens on the way that forks to the two assemblies, a stepped way up to the Chamber and the road on to the city and Schedia; the south gate on the road down to the scholars’ coast." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΚϚʹ</span><span class="cap"><strong>Two gates.</strong> Common ground on the southern neck that belongs to neither city. The north gate opens on the way that forks to the two assemblies, a stepped way up to the Chamber and the road on to the city and Schedia; the south gate on the road down to the scholars’ coast.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="library_exterior">
+        <button class="shot" type="button" data-full="img/library_exterior.jpg" data-title="A library" data-num="ΚΖʹ" aria-label="Open A library full size">
+          <img src="img/library_exterior.jpg" alt="A library: One of a dozen small libraries in clearings among the olives, each with a columned porch and heavy double doors standing open." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΚΖʹ</span><span class="cap"><strong>A library.</strong> One of a dozen small libraries in clearings among the olives, each with a columned porch and heavy double doors standing open.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row pair">
+      <figure class="fig" id="library_interior">
+        <button class="shot" type="button" data-full="img/library_interior.jpg" data-title="The library’s copy of the compendium" data-num="ΚΗʹ" aria-label="Open The library’s copy of the compendium full size">
+          <img src="img/library_interior.jpg" alt="The library’s copy of the compendium: Walls of pigeonholes, each entry a short scroll with its tag. The desk faces the door, with the marble pebble board on it and a stepped stand of smaller boards beside it, each with a wax tag of its own colour." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΚΗʹ</span><span class="cap"><strong>The library’s copy of the compendium.</strong> Walls of pigeonholes, each entry a short scroll with its tag. The desk faces the door, with the marble pebble board on it and a stepped stand of smaller boards beside it, each with a wax tag of its own colour.</span></figcaption>
+      </figure>
+      <figure class="fig" id="pebble_board">
+        <button class="shot" type="button" data-full="img/pebble_board.jpg" data-title="The pebble board" data-num="ΚΘʹ" aria-label="Open The pebble board full size">
+          <img src="img/pebble_board.jpg" alt="The pebble board: Six grooves in two sets of three, one in each set for each of the three libraries that keep the comet’s count: white for sightings recorded, black for sightings struck. Each library adds pebbles only to its own grooves." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΚΘʹ</span><span class="cap"><strong>The pebble board.</strong> Six grooves in two sets of three, one in each set for each of the three libraries that keep the comet’s count: white for sightings recorded, black for sightings struck. Each library adds pebbles only to its own grooves.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="stoa">
+        <button class="shot" type="button" data-full="img/stoa.jpg" data-title="The stoa" data-num="Λʹ" aria-label="Open The stoa full size">
+          <img src="img/stoa.jpg" alt="The stoa: Two storeys of colonnade along the harbour on the eastern bay, just south of the neck: Doric outside below, Ionic within and above." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">Λʹ</span><span class="cap"><strong>The stoa.</strong> Two storeys of colonnade along the harbour on the eastern bay, just south of the neck: Doric outside below, Ionic within and above.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="stoa_inside">
+        <button class="shot" type="button" data-full="img/stoa_inside.jpg" data-title="Under the colonnade" data-num="ΛΑʹ" aria-label="Open Under the colonnade full size">
+          <img src="img/stoa_inside.jpg" alt="Under the colonnade: Boards along the back wall pinned thick with scraps of papyrus, niches of scrolls, stone benches. At the middle stand a bronze armillary sphere and a painted panel with the Sun at the centre and the Earth circling it." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΛΑʹ</span><span class="cap"><strong>Under the colonnade.</strong> Boards along the back wall pinned thick with scraps of papyrus, niches of scrolls, stone benches. At the middle stand a bronze armillary sphere and a painted panel with the Sun at the centre and the Earth circling it.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row single">
+      <figure class="fig" id="festival_ground">
+        <button class="shot" type="button" data-full="img/festival_ground.jpg" data-title="The festival ground" data-num="ΛΒʹ" aria-label="Open The festival ground full size">
+          <img src="img/festival_ground.jpg" alt="The festival ground: Rows of long stone tables set in facing pairs, with scroll rests, lamps and inkpots. Once a year each copyist sits down here with another library’s copyist to compare their whole copies." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΛΒʹ</span><span class="cap"><strong>The festival ground.</strong> Rows of long stone tables set in facing pairs, with scroll rests, lamps and inkpots. Once a year each copyist sits down here with another library’s copyist to compare their whole copies.</span></figcaption>
+      </figure>
+    </div>
+    <div class="row pair">
+      <figure class="fig" id="courier_landing">
+        <button class="shot" type="button" data-full="img/courier_landing.jpg" data-title="The courier landing" data-num="ΛΓʹ" aria-label="Open The courier landing full size">
+          <img src="img/courier_landing.jpg" alt="The courier landing: Timber piers in a cove at the southern tip, where the couriers’ boats tie up, and a small open shelter with benches." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΛΓʹ</span><span class="cap"><strong>The courier landing.</strong> Timber piers in a cove at the southern tip, where the couriers’ boats tie up, and a small open shelter with benches.</span></figcaption>
+      </figure>
+      <figure class="fig" id="ferry">
+        <button class="shot" type="button" data-full="img/ferry.jpg" data-title="The ferry" data-num="ΛΔʹ" aria-label="Open The ferry full size">
+          <img src="img/ferry.jpg" alt="The ferry: The inlet’s one crossing: a stage on each bank and a single rowed ferry that many routes share." loading="lazy" width="1920" height="1080">
+        </button>
+        <figcaption><span class="num" lang="el">ΛΔʹ</span><span class="cap"><strong>The ferry.</strong> The inlet’s one crossing: a stage on each bank and a single rowed ferry that many routes share.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="wrap notes" aria-label="Checks and credits">
+    <div>
+      <h3>What the model checks itself</h3>
+      <table class="checks">
+        <tr><td>Every straight line between two of Arche’s houses passes through the mountain</td><td><span class="ok">holds</span></td></tr>
+        <tr><td>No camp can see another</td><td><span class="ok">holds</span></td></tr>
+        <tr><td>The hill’s shoulders hide each lookout post from the others</td><td><span class="ok">holds</span></td></tr>
+        <tr><td>The Chamber and the Tholos see each other across the bay</td><td><span class="ok">holds</span></td></tr>
+        <tr><td>Every route across the inlet goes by the one ferry</td><td><span class="ok">holds</span></td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Made with</h3>
+      <p><strong>Built by script.</strong> Terrain, buildings, columns and roofs tile by tile, ships, carts, pottery, the olive, cypress, pine and oak trees, and the painted panel in the stoa are all generated.</p>
+      <p><strong>Materials, rocks, shrubs and skies</strong> are from <a href="https://polyhaven.com" target="_blank" rel="noopener">Poly Haven</a> (CC0).</p>
+      <p><strong>The statues</strong> on the Chamber’s terrace are scans of museum pieces from <a href="https://threedscans.com" target="_blank" rel="noopener">Three D Scans</a>, published free of copyright restrictions.</p>
+      <p><strong>The ground of Paxos</strong> is Leros: its coastline from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors (ODbL), its heights from the <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">AWS Terrain Tiles</a> (SRTM and other open data).</p>
+    </div>
+  </section>
+</main>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Render, full size">
+  <img id="lb-img" alt="">
+  <div class="bar">
+    <div><span class="n" id="lb-n" lang="el"></span><span id="lb-t"></span></div>
+    <div class="btns">
+      <button type="button" id="lb-prev">Previous</button>
+      <button type="button" id="lb-next">Next</button>
+      <button type="button" id="lb-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const shots = Array.from(document.querySelectorAll('.shot'));
+  const lb = document.getElementById('lb'), img = document.getElementById('lb-img');
+  const n = document.getElementById('lb-n'), t = document.getElementById('lb-t');
+  let cur = -1, last = null;
+  function show(i) {
+    cur = (i + shots.length) % shots.length;
+    const b = shots[cur];
+    img.src = b.dataset.full; img.alt = b.dataset.title;
+    n.textContent = b.dataset.num; t.textContent = b.dataset.title;
+  }
+  function open(i) { last = document.activeElement; show(i); lb.hidden = false; document.getElementById('lb-close').focus(); }
+  function close() { lb.hidden = true; img.removeAttribute('src'); if (last) last.focus(); }
+  shots.forEach((b, i) => b.addEventListener('click', () => open(i)));
+  document.getElementById('lb-close').addEventListener('click', close);
+  document.getElementById('lb-prev').addEventListener('click', () => show(cur - 1));
+  document.getElementById('lb-next').addEventListener('click', () => show(cur + 1));
+  lb.addEventListener('click', e => { if (e.target === lb || e.target === img) close(); });
+  document.addEventListener('keydown', e => {
+    if (lb.hidden) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowRight') show(cur + 1);
+    else if (e.key === 'ArrowLeft') show(cur - 1);
+  });
+})();
+</script>
