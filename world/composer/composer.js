@@ -145,13 +145,10 @@ const dom = {
   shotNameInput: document.getElementById('shot-name-input'),
   explorerModal: document.getElementById('explorer-modal'),
   explorerList: document.getElementById('explorer-list'),
-  historyThisView: document.getElementById('history-this-view'),
-  historyImg: document.getElementById('history-img'),
-  historyCaption: document.getElementById('history-caption'),
-  historyStrip: document.getElementById('history-strip'),
-  historyViewer: document.getElementById('history-viewer'),
-  historyEmpty: document.getElementById('history-empty'),
-  historyOpen: document.getElementById('history-open'),
+  renderCaption: document.getElementById('render-caption'),
+  renderStrip: document.getElementById('render-strip'),
+  fluxCaption: document.getElementById('flux-caption'),
+  fluxStrip: document.getElementById('flux-strip'),
   fluxSourceRender: document.getElementById('flux-source-render'),
   fluxSourceNote: document.getElementById('flux-source-note'),
   fluxStatus: document.getElementById('flux-status'),
@@ -1464,16 +1461,11 @@ async function pollRender(job, t0) {
     const secs = Math.round((performance.now() - t0) / 1000);
     if (data.status === 'done') {
       state.renderURL = data.url;
-      loadHistory();
+      loadAttempts({ newest: true });
       state.renderView = viewSignature();
       dom.fluxSourceRender.disabled = false;
       setFluxSource('render');
       dom.renderStatus.textContent = `done in ${data.seconds}s`;
-      dom.renderImg.src = data.url;
-      dom.btnRenderOpen.href = data.url;
-      dom.btnRenderDownload.href = data.url;
-      dom.btnRenderDownload.download = `${state.shotId || 'shot'}-${job}.png`;
-      dom.renderResult.style.display = 'block';
       dom.btnRender.disabled = false;
       return;
     }
@@ -1505,6 +1497,14 @@ async function loadDrafts() {
 
 /** Save the composition on screen as the current shot, creating it (shot-N) the first time. */
 async function saveDraft() {
+  if (!state.draftId) {
+    // The same camera, look-at, island and site as a shot already saved is that shot, not a new one
+    const mine = composedShot(state.shotId);
+    const same = (p, q) => Array.isArray(p) && Array.isArray(q) && p.every((v, i) => v === q[i]);
+    const found = Object.entries(state.drafts).find(([, d]) =>
+      d.island === mine.island && (d.site || null) === (mine.site || null) && same(d.cam, mine.cam) && same(d.target, mine.target));
+    if (found) state.draftId = found[0];
+  }
   const res = await fetch('/api/shots', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1547,7 +1547,7 @@ async function switchDraft(id, { recapture = false } = {}) {
   applyBookShot(id, shot, { draft: id });
   showToast(`Shot ${draftLabel(id)}`);
   if (recapture) {
-    setTimeout(() => { captureCurrentScreenView(); loadHistory(); }, 1500);   // after the camera has flown there
+    setTimeout(() => { captureCurrentScreenView(); loadAttempts(); }, 1500);   // after the camera has flown there
   }
 }
 
@@ -1605,32 +1605,41 @@ function renderExplorer() {
   });
 }
 
-// --- Attempts: a view-only switcher over earlier renders and FLUX pictures ---
-const history = { kind: 'renders', items: { renders: [], flux: [] }, index: 0 };
-
 /** The camera position and look-at point in world (Blender) coordinates. */
 function currentView() {
   return { cam: shotPoint(camera.position), target: shotPoint(controls.target) };
 }
 
-async function loadHistory() {
-  try {
-    const v = currentView();
-    const query = new URLSearchParams();
-    if (state.draftId) query.set('shot', state.draftId);
-    if (dom.historyThisView.checked || !state.draftId) {
-      query.set('cam', v.cam.join(','));
-      query.set('target', v.target.join(','));
-    }
-    history.items = await (await fetch(`/api/history?${query}`)).json();
-  } catch (err) {
-    history.items = { renders: [], flux: [] };
-  }
-  history.index = 0;
-  showHistory();
+// --- Earlier attempts, in the Blender and FLUX panels ---
+// A picture is an attempt at this shot when it was made from this camera position looking the same way;
+// the lens, aspect and time of day may differ. Stepping through them only shows them.
+const attempts = { renders: [], flux: [], at: { renders: 0, flux: 0 } };
+
+function panelOf(kind) {
+  return kind === 'renders'
+    ? { box: dom.renderResult, img: dom.renderImg, caption: dom.renderCaption, strip: dom.renderStrip,
+        open: dom.btnRenderOpen, download: dom.btnRenderDownload }
+    : { box: dom.fluxResult, img: dom.fluxImg, caption: dom.fluxCaption, strip: dom.fluxStrip,
+        open: dom.btnFluxOpen, download: dom.btnFluxDownload };
 }
 
-function historyLabel(it) {
+async function loadAttempts({ newest = false } = {}) {
+  try {
+    const v = currentView();
+    const data = await (await fetch(`/api/history?cam=${v.cam.join(',')}&target=${v.target.join(',')}`)).json();
+    attempts.renders = data.renders || [];
+    attempts.flux = data.flux || [];
+  } catch (err) {
+    attempts.renders = [];
+    attempts.flux = [];
+  }
+  ['renders', 'flux'].forEach((kind) => {
+    if (newest) attempts.at[kind] = 0;
+    showAttempts(kind);
+  });
+}
+
+function attemptLabel(it) {
   const bits = [it.made];
   if (it.lens) bits.push(`${it.lens}mm`);
   if (it.aspect) bits.push(it.aspect);
@@ -1641,31 +1650,29 @@ function historyLabel(it) {
   return bits.join(' · ');
 }
 
-function showHistory() {
-  const list = history.items[history.kind] || [];
-  document.getElementById('history-tab-renders').classList.toggle('active', history.kind === 'renders');
-  document.getElementById('history-tab-flux').classList.toggle('active', history.kind === 'flux');
-  dom.historyEmpty.style.display = list.length ? 'none' : 'block';
-  dom.historyViewer.style.display = list.length ? 'block' : 'none';
-  if (!list.length) {
-    dom.historyStrip.innerHTML = '';
-    return;
-  }
-  history.index = Math.min(Math.max(history.index, 0), list.length - 1);
-  const it = list[history.index];
-  dom.historyImg.src = it.url;
-  dom.historyOpen.href = it.url;
-  dom.historyCaption.textContent = `${history.index + 1} of ${list.length} · ${historyLabel(it)}`;
-  dom.historyStrip.innerHTML = '';
-  list.forEach((item, i) => {
+function showAttempts(kind) {
+  const p = panelOf(kind);
+  const list = attempts[kind];
+  p.box.style.display = list.length ? 'block' : 'none';
+  p.strip.innerHTML = '';
+  if (!list.length) return;
+  attempts.at[kind] = Math.min(Math.max(attempts.at[kind], 0), list.length - 1);
+  const i = attempts.at[kind];
+  const it = list[i];
+  p.img.src = it.url;
+  p.open.href = it.url;
+  p.download.href = it.url;
+  p.download.download = `${state.draftId || state.shotId || 'shot'}-${kind === 'flux' ? 'flux-' : ''}${it.url.split('/').pop()}`;
+  p.caption.textContent = `${i + 1} of ${list.length} · ${attemptLabel(it)}`;
+  list.forEach((item, k) => {
     const t = document.createElement('img');
     t.src = `${item.url}?w=120`;
     t.loading = 'lazy';
     t.alt = item.made;
-    t.title = historyLabel(item);
-    t.style.cssText = `height: 56px; border-radius: 4px; cursor: pointer; opacity: ${i === history.index ? 1 : 0.55}; outline: ${i === history.index ? '2px solid var(--gold)' : 'none'};`;
-    t.addEventListener('click', () => { history.index = i; showHistory(); });
-    dom.historyStrip.appendChild(t);
+    t.title = attemptLabel(item);
+    t.style.cssText = `height: 52px; border-radius: 4px; cursor: pointer; opacity: ${k === i ? 1 : 0.55}; outline: ${k === i ? '2px solid var(--gold)' : 'none'};`;
+    t.addEventListener('click', () => { attempts.at[kind] = k; showAttempts(kind); });
+    p.strip.appendChild(t);
   });
 }
 
@@ -1724,13 +1731,8 @@ async function startFlux() {
       await new Promise((r) => setTimeout(r, 3000));
       const job = await (await fetch(`/api/render/${data.job}`)).json();
       if (job.status === 'done') {
-        loadHistory();
+        loadAttempts({ newest: true });
         dom.fluxStatus.textContent = `done in ${job.seconds}s · from the ${source === 'render' ? 'Blender render' : 'capture'}`;
-        dom.fluxImg.src = job.url;
-        dom.btnFluxOpen.href = job.url;
-        dom.btnFluxDownload.href = job.url;
-        dom.btnFluxDownload.download = `${state.shotId || 'shot'}-flux-${data.job}.png`;
-        dom.fluxResult.style.display = 'block';
         break;
       }
       if (job.status === 'error') throw new Error(String(job.error).slice(-200));
@@ -1745,14 +1747,18 @@ async function startFlux() {
 }
 
 async function useRenderAsPrevis() {
-  if (!state.renderURL) return;
-  state.capturedImageURL = state.renderURL;
-  state.captureFilename = `render:${state.renderURL.split('/').pop()}`;
+  const it = attempts.renders[attempts.at.renders];
+  if (!it) return;
+  state.renderURL = it.url;                // the render on show is the one FLUX and the prompt's Image 1 now use
+  state.renderView = viewSignature();
+  dom.fluxSourceRender.disabled = false;
+  state.capturedImageURL = it.url;
+  state.captureFilename = `render:${it.url.split('/').pop()}`;
   state.image1IsRender = true;
   setFluxSource('render');
-  dom.capturePreviewImg.src = state.renderURL;
+  dom.capturePreviewImg.src = it.url;
   dom.previsMetaBadge.textContent = `Blender render · ${state.aspect}`;
-  showToast('The render is now Image 1');
+  showToast('This render is now Image 1');
 }
 
 // --- Test shots: throwaway views for trying world changes ---
@@ -2188,7 +2194,7 @@ function setupEventListeners() {
   // Capture & Compose Modal Controls
   document.getElementById('btn-quick-capture').addEventListener('click', async () => {
     await saveDraft().catch((err) => showToast(`Shot not saved: ${err.message}`));
-    loadHistory();
+    loadAttempts();
     captureCurrentScreenView();
     dom.captureModal.classList.remove('hidden');
   });
@@ -2248,7 +2254,6 @@ function setupEventListeners() {
   document.getElementById('btn-prop-turn-right').addEventListener('click', () => turnSelectedProp(90));
   document.getElementById('btn-prop-drop').addEventListener('click', dropSelectedProp);
   dom.btnFlux.addEventListener('click', startFlux);
-  dom.historyThisView.addEventListener('change', loadHistory);
   dom.shotSwitch.addEventListener('change', (e) => (e.target.value ? switchDraft(e.target.value) : newShot()));
   document.getElementById('btn-new-shot').addEventListener('click', newShot);
   document.getElementById('btn-open-explorer').addEventListener('click', async () => {
@@ -2258,10 +2263,10 @@ function setupEventListeners() {
   });
   document.getElementById('btn-close-explorer').addEventListener('click', () => { dom.explorerModal.style.display = 'none'; });
   dom.shotNameInput.addEventListener('change', () => (state.draftId ? saveDraft() : null));
-  document.getElementById('history-tab-renders').addEventListener('click', () => { history.kind = 'renders'; history.index = 0; showHistory(); });
-  document.getElementById('history-tab-flux').addEventListener('click', () => { history.kind = 'flux'; history.index = 0; showHistory(); });
-  document.getElementById('history-prev').addEventListener('click', () => { history.index += 1; showHistory(); });
-  document.getElementById('history-next').addEventListener('click', () => { history.index -= 1; showHistory(); });
+  [['render', 'renders'], ['flux', 'flux']].forEach(([id, kind]) => {
+    document.getElementById(`${id}-prev`).addEventListener('click', () => { attempts.at[kind] += 1; showAttempts(kind); });
+    document.getElementById(`${id}-next`).addEventListener('click', () => { attempts.at[kind] -= 1; showAttempts(kind); });
+  });
   document.querySelectorAll('input[name="flux-source"]').forEach((r) => r.addEventListener('change', updateFluxSourceNote));
   document.getElementById('btn-save-test').addEventListener('click', saveTestShot);
   document.getElementById('btn-open-tests').addEventListener('click', () => {

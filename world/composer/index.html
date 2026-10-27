@@ -379,27 +379,6 @@
           </div>
         </div>
 
-        <div class="cast-strip-card" id="history-card">
-          <div class="section-title">
-            <span>Earlier attempts <label style="font-weight: normal; font-size: 0.72rem; color: var(--text-dim);"><input type="checkbox" id="history-this-view" checked> this view only</label></span>
-            <span>
-              <button class="btn btn-chip active" id="history-tab-renders">Renders</button>
-              <button class="btn btn-chip" id="history-tab-flux">FLUX</button>
-            </span>
-          </div>
-          <div id="history-empty" style="font-size: 0.8rem; color: var(--text-dim);">No earlier attempts for this shot from this exact camera position and look-at point. (Lens, aspect and time of day may differ; untick "this view only" for the shot's other views. Pictures made before shots had ids are not listed.)</div>
-          <div id="history-viewer" style="display: none;">
-            <img id="history-img" alt="Earlier attempt" style="width: 100%; border-radius: 8px; display: block;">
-            <div style="display: flex; gap: 8px; align-items: center; margin: 6px 0;">
-              <button class="btn btn-chip" id="history-prev" title="Older">‹</button>
-              <span id="history-caption" style="flex: 1; text-align: center; font-size: 0.75rem; color: var(--text-dim);"></span>
-              <button class="btn btn-chip" id="history-next" title="Newer">›</button>
-              <a class="btn btn-chip" id="history-open" target="_blank" rel="noopener">Open</a>
-            </div>
-            <div id="history-strip" style="display: flex; gap: 4px; overflow-x: auto; padding-bottom: 4px;"></div>
-          </div>
-        </div>
-
         <div class="cast-strip-card" id="render-card">
           <div class="section-title">
             <span>Full-detail render (Blender)</span>
@@ -417,13 +396,19 @@
             </select>
             <button class="btn btn-primary" id="btn-render">🎞 Render shot</button>
           </div>
-          <p style="font-size: 0.75rem; color: var(--text-dim); margin: 6px 0;">Rendered from the built island at this camera, lens, light and aspect. Props placed in the composer are not in the Blender scene.</p>
+          <p style="font-size: 0.75rem; color: var(--text-dim); margin: 6px 0;">Earlier renders from this exact camera position and look direction (any lens, aspect or time of day) are listed below the picture. Rendered from the built island at this camera, lens, light and aspect. Props placed in the composer are not in the Blender scene.</p>
           <div style="display: flex; gap: 8px; align-items: center; margin-top: 6px;">
             <input type="text" id="test-shot-name" class="input-text" placeholder="test shot name, e.g. chamber-door" style="flex: 1;">
             <button class="btn" id="btn-save-test" title="Keep this view as a throwaway test shot (not in any book)">🧪 Save as test shot</button>
           </div>
           <div id="render-result" style="display: none;">
             <img id="render-img" alt="Blender render" style="width: 100%; border-radius: 8px;">
+            <div style="display: flex; gap: 8px; align-items: center; margin: 6px 0;">
+              <button class="btn btn-chip" id="render-prev" title="Older attempt">‹</button>
+              <span id="render-caption" style="flex: 1; text-align: center; font-size: 0.72rem; color: var(--text-dim);"></span>
+              <button class="btn btn-chip" id="render-next" title="Newer attempt">›</button>
+            </div>
+            <div id="render-strip" style="display: flex; gap: 4px; overflow-x: auto; padding: 4px 0;"></div>
             <div class="capture-actions">
               <button class="btn btn-accent" id="btn-render-use">Use as Image 1</button>
               <a class="btn" id="btn-render-open" target="_blank" rel="noopener">Open full size</a>
@@ -451,6 +436,12 @@
           <p style="font-size: 0.75rem; color: var(--text-dim); margin: 6px 0;">FLUX.2 klein 4B on this Mac, free and about a minute a picture. Image 1 is the source you pick above (the capture, or the Blender render once one is done), then the cast crops, with the prompt below; it keeps the camera and the counts less well than Nano Banana 2, so use it for trials. Printed names are left off the references, since FLUX copies them into the picture.</p>
           <div id="flux-result" style="display: none;">
             <img id="flux-img" alt="FLUX picture" style="width: 100%; border-radius: 8px;">
+            <div style="display: flex; gap: 8px; align-items: center; margin: 6px 0;">
+              <button class="btn btn-chip" id="flux-prev" title="Older attempt">‹</button>
+              <span id="flux-caption" style="flex: 1; text-align: center; font-size: 0.72rem; color: var(--text-dim);"></span>
+              <button class="btn btn-chip" id="flux-next" title="Newer attempt">›</button>
+            </div>
+            <div id="flux-strip" style="display: flex; gap: 4px; overflow-x: auto; padding: 4px 0;"></div>
             <div class="capture-actions">
               <a class="btn" id="btn-flux-open" target="_blank" rel="noopener">Open full size</a>
               <a class="btn" id="btn-flux-download" download>💾 Download</a>

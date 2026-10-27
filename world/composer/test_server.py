@@ -177,6 +177,8 @@ class ServerTest(unittest.TestCase):
         put(server.FLUX_DIR, "f-from-capture", {"previs": str(server.CAPTURES_DIR / "c-here.png"), "seed": 8})
         put(server.FLUX_DIR, "f-elsewhere", {"previs": str(server.RENDERS_DIR / "r-moved.png"), "seed": 9})
         q = "cam=1.0,2.0,3.0&target=4.0,5.0,6.0"
+        self.assertTrue(server.same_view(here, {"cam": [1.0, 2.0, 3.0], "target": [7.0, 8.0, 9.0]}))      # same line of sight, further on
+        self.assertFalse(server.same_view(here, {"cam": [1.0, 2.0, 3.0], "target": [4.0, 5.0, 6.5]}))     # looking elsewhere
         got = json.loads(self.call(f"/api/history?{q}")[1])
         self.assertEqual(sorted(r["url"] for r in got["renders"]), ["/renders/r-here.png", "/renders/r-other-light.png"])
         self.assertEqual(sorted(f["url"] for f in got["flux"]), ["/flux/f-from-capture.png", "/flux/f-from-render.png"])
@@ -203,9 +205,10 @@ class ServerTest(unittest.TestCase):
         put(server.RENDERS_DIR, "s1-b", {"shot": a, "view": {"cam": [9, 9, 9], "target": shot["target"]}})
         put(server.RENDERS_DIR, "s2-a", {"shot": b, "view": view})
         put(server.FLUX_DIR, "f1", {"shot": a, "previs": str(server.RENDERS_DIR / "s1-a.png"), "seed": 1})
-        urls = lambda q: sorted(r["url"] for r in json.loads(self.call(f"/api/history?{q}")[1])["renders"])
-        self.assertEqual(urls(f"shot={a}"), ["/renders/s1-a.png", "/renders/s1-b.png"])        # every view of the shot
-        self.assertEqual(urls(f"shot={a}&cam=1.0,2.0,3.0&target=4.0,5.0,6.0"), ["/renders/s1-a.png"])
+        urls = lambda q: sorted(r["url"] for r in json.loads(self.call(f"/api/history?{q}")[1])["renders"]
+                                if r["url"].startswith("/renders/s"))        # (the folder is shared with the other tests)
+        # attempts are matched by camera position and look direction, not by shot id: shot-2's render is the same view
+        self.assertEqual(urls("cam=1.0,2.0,3.0&target=4.0,5.0,6.0"), ["/renders/s1-a.png", "/renders/s2-a.png"])
         summary = json.loads(self.call("/api/shots")[1])["summary"]
         self.assertEqual((summary[a]["counts"], summary[b]["counts"]), ({"renders": 2, "flux": 1}, {"renders": 1, "flux": 0}))
         self.call("/api/shots/delete", {"id": b})

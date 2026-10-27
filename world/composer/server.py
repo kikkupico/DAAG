@@ -380,11 +380,23 @@ def render_note(job, started):
 
 
 def same_view(a, b, tol=0.011):
-    """Two {cam, target} views with the same camera position and the same look-at point (to the centimetre)."""
+    """Two {cam, target} views with the same camera position (to the centimetre) and the same look direction.
+    The direction is the camera-to-target line, so where along it the target lies does not matter; the angle
+    allowed grows as the line gets short, since the target is stored to the centimetre."""
+    import math
     try:
-        return all(abs(float(x) - float(y)) <= tol for k in ("cam", "target") for x, y in zip(a[k], b[k]))
+        ca, cb = [float(v) for v in a["cam"]], [float(v) for v in b["cam"]]
+        da = [float(t) - c for t, c in zip(a["target"], ca)]
+        db = [float(t) - c for t, c in zip(b["target"], cb)]
     except (KeyError, TypeError, ValueError):
         return False
+    if any(abs(x - y) > tol for x, y in zip(ca, cb)):
+        return False
+    la, lb = math.sqrt(sum(v * v for v in da)), math.sqrt(sum(v * v for v in db))
+    if not la or not lb:
+        return False
+    cos = sum(x * y for x, y in zip(da, db)) / (la * lb)
+    return math.acos(max(-1.0, min(1.0, cos))) <= 0.02 / min(la, lb) + 1e-4
 
 
 def view_of(png):
@@ -410,15 +422,14 @@ def shot_of_picture(png):
     return note_of(png).get("shot") or ""
 
 
-def attempts(view=None, shot=None, limit=40):
-    """The Blender renders and FLUX pictures made from the composer, newest first, for the viewer. With a shot id
-    only that shot's; with a view ({cam, target}) only those made from that exact camera position and look-at
-    point (lens, aspect and light may differ)."""
+def attempts(view=None, limit=40):
+    """The Blender renders and FLUX pictures made from the composer, newest first. With a view ({cam, target}) only
+    those made from that camera position looking the same way (lens, aspect and light may differ)."""
     def stamp(png):
         return datetime.fromtimestamp(png.stat().st_mtime).strftime("%Y-%m-%d %H:%M:%S")
 
     def wanted(png):
-        return (shot is None or shot_of_picture(png) == shot) and (view is None or same_view(view, view_of(png) or {}))
+        return view is None or same_view(view, view_of(png) or {})
 
     def settings(png):
         note = note_of(png)
@@ -672,12 +683,11 @@ class ComposerHandler(SimpleHTTPRequestHandler):
 
         if path == "/api/history":
             q = parse_qs(url.query)
-            shot = safe_name(q["shot"][0]) if "shot" in q else None
             try:
                 view = {k: [float(v) for v in q[k][0].split(",")] for k in ("cam", "target")} if "cam" in q and "target" in q else None
             except ValueError:
                 view = None
-            self.send_json(attempts(view, shot))
+            self.send_json(attempts(view))
             return
 
         if path == "/api/shots":
