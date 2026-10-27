@@ -33,7 +33,13 @@ def road_mat(name='road', ruts=True, tex='rocky_trail', tint=(0.8, 0.74, 0.64, 1
         col = nt.mix(nt.math('MULTIPLY', rr, 0.5), col, (0.35, 0.3, 0.25, 1), blend='MULTIPLY')
         hh = nt.math('SUBTRACT', hh, nt.math('MULTIPLY', rr, 0.8))
     col = nt.mix(1.0, col, tint, blend='MULTIPLY')
-    finish(nt, col, rough, hh, bump=0.8, dist=0.05)
+    # the outer metre or so fades out unevenly into the ground beneath, which the terrain paints as road and
+    # shoulder, so the ribbon never shows a straight edge
+    ragged = nt.math('ADD', nt.math('MULTIPLY', nt.math('SUBTRACT', nz, 0.5), 0.2),
+                     nt.math('MULTIPLY', nt.math('SUBTRACT', nt.noise(obj, 1.5, 3).outputs['Fac'], 0.5), 0.12))
+    across = nt.math('ADD', nt.math('ABSOLUTE', nt.math('SUBTRACT', v, 0.5)), ragged)
+    alpha = nt.ramp(across, [(0.3, (1, 1, 1)), (0.44, (0, 0, 0))])
+    finish(nt, col, rough, hh, bump=0.8, dist=0.05, alpha=alpha)
     return m
 
 
