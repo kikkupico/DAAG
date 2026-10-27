@@ -11,6 +11,10 @@ Positions can be given two ways besides world metres:
                       shot stays framed on the building wherever the terrain puts it
   a height "+1.7"     1.7 m above the ground at that point (world positions only)
 
+"placed_props" are the live props the composer places (world/composer): [{"prop": id, "at": [x, y, z], "face":
+degrees, "scale"}], in world metres, each the prototype of that name from the island (cart_0, amphora_1, ionic,
+statue_plato, ...), standing on its z, centred on its footprint, built with the other props.
+
 "props" lists the things a shot places for itself (blib/panel_props.py: cheese, sandglass; animals are
 described in the prompt, never modelled), each with "at" in the same terms, "face" in degrees (from the
 site's door when there is a site) or a point to face, and optionally "scale"; they are built just before the shot renders and cleared
@@ -78,6 +82,9 @@ def shots():
             elif k in KEYS:
                 sh[k] = v
         from blib import panel_props  # inside Blender only
-        sh["pre"] = (lambda scene, P=props(mod, sp.get("props", []), fr): panel_props.place(P))
+        # "placed_props" (the composer's) are in world metres and degrees, whatever the shot's site
+        placed = [dict(kind="proto", proto=p["prop"], at=place(mod, p["at"], None), face=p.get("face", 0.0),
+                       scale=p.get("scale", 1.0)) for p in sp.get("placed_props", [])]
+        sh["pre"] = (lambda scene, P=props(mod, sp.get("props", []), fr) + placed: panel_props.place(P))
         out[name] = sh
     return out

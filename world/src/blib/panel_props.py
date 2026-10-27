@@ -9,6 +9,7 @@ image model draws them.
 import math
 
 import bpy
+from mathutils import Matrix, Vector
 
 from .kit import Kit, T, Rz, S
 from . import core
@@ -64,6 +65,42 @@ def sandglass(k):
 KINDS = {"cheese": cheese_wheel, "sandglass": sandglass}
 
 
+PROTO_EXTRA = {"merchantman": ["merchant_sail"]}      # prototypes drawn together with another
+
+
+def proto_objects(name):
+    """The prototype meshes of a live prop, by the id the composer's catalog uses: an object name (cart_0,
+    amphora_1) or the one object of a collection (p_handcart, p_ionic); a ship comes with its sail."""
+    obs = [o for o in bpy.data.objects if o.name == name and o.type == "MESH"]
+    if not obs and bpy.data.collections.get("p_" + name):
+        obs = [o for o in bpy.data.collections["p_" + name].objects if o.type == "MESH"][:1]
+    for stem in PROTO_EXTRA.get(name, []):
+        if bpy.data.collections.get("p_" + stem):
+            obs += [o for o in bpy.data.collections["p_" + stem].objects if o.type == "MESH"]
+    if not obs:
+        raise KeyError(f"no prototype '{name}' in this island")
+    return obs
+
+
+def place_proto(p, coll, i):
+    """A copy of a prototype at p["at"], turned to p["face"] and scaled, standing on z and centred on its footprint
+    as the composer shows it. The copies share the prototype's mesh and materials."""
+    obs = proto_objects(p["proto"])
+    pts = [o.matrix_world @ Vector(v) for o in obs for v in o.bound_box]
+    lo = [min(v[k] for v in pts) for k in range(3)]
+    hi = [max(v[k] for v in pts) for k in range(3)]
+    settle = Matrix.Translation((-(lo[0] + hi[0]) / 2, -(lo[1] + hi[1]) / 2, -lo[2]))
+    x, y, z = p["at"]
+    face = p.get("face", 0.0)
+    a = math.atan2(face[1] - y, face[0] - x) if isinstance(face, (list, tuple)) else math.radians(face)
+    s = p.get("scale", 1.0)
+    put = Matrix.Translation((x, y, z)) @ Matrix.Rotation(a, 4, "Z") @ Matrix.Diagonal((s, s, s, 1.0))
+    for o in obs:
+        ob = bpy.data.objects.new(f"prop_{p['proto']}_{i}", o.data)
+        ob.matrix_world = put @ settle @ o.matrix_world
+        coll.objects.link(ob)
+
+
 def clear():
     coll = bpy.data.collections.get(COLL)
     if coll:
@@ -79,6 +116,9 @@ def place(props):
     coll = bpy.data.collections.get(COLL) or core.collection(COLL)
     mats = _mats()
     for i, p in enumerate(props):
+        if p["kind"] == "proto":
+            place_proto(p, coll, i)
+            continue
         x, y, z = p["at"]
         face = p.get("face", 0.0)
         a = math.atan2(face[1] - y, face[0] - x) if isinstance(face, (list, tuple)) else math.radians(face)

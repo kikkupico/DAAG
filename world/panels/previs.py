@@ -13,6 +13,8 @@ A shot in world/panels/<book>/shots.json names its island and the camera to rend
 from; cam, target, lens, light, sun_from, res and the other camera keys override it, and a shot that
 gives cam and target may leave base out (world/src/shots_panels.py). cast, prompt and keep are for
 the scene step and travel with the image.
+"placed_props" ([{"prop", "at", "face", "scale"}], written by world/composer) puts the island's own prototype props (carts,
+amphorae, columns, statues...) into the previs at those world positions; see src/shots_panels.py.
 
 A shot can have "variants": named versions (a, b, c, ...) of it, each an object of keys laid over the
 shot's own (its camera, lens, light, props...), so one shot is taken several ways; each variant is
