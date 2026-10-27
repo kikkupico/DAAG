@@ -48,6 +48,9 @@ const state = {
   // Capture & Prompt Studio
   capturedImageURL: null,
   captureFilename: null,
+  renderJob: null,       // the Blender render in progress, if any
+  renderURL: null,       // its picture when done
+  shotsData: null,       // the book on show in the shots browser: { book, shots, images }
   promptStyle: 'photo', // 'photo' | 'ligne-claire'
   promptAction: 'On the terrace before the colonnade, legislator-man stands writing on an open papyrus scroll while paxos-messenger hands him a small papyrus slip.',
   promptOthers: 'a dozen more legislators in long white chitons strolling across the terrace and in and out by the open door.',
@@ -122,6 +125,17 @@ const dom = {
   saveBookSelect: document.getElementById('save-book-select'),
   saveShotId: document.getElementById('save-shot-id'),
   saveVariant: document.getElementById('save-variant'),
+  btnRender: document.getElementById('btn-render'),
+  renderStatus: document.getElementById('render-status'),
+  renderQuality: document.getElementById('render-quality'),
+  renderSize: document.getElementById('render-size'),
+  renderResult: document.getElementById('render-result'),
+  renderImg: document.getElementById('render-img'),
+  btnRenderUse: document.getElementById('btn-render-use'),
+  btnRenderOpen: document.getElementById('btn-render-open'),
+  btnRenderDownload: document.getElementById('btn-render-download'),
+  browserSearch: document.getElementById('browser-search'),
+  browserOnlyPictures: document.getElementById('browser-only-pictures'),
   btnSaveShotBook: document.getElementById('btn-save-shot-book'),
 
   // Drawers
@@ -1149,19 +1163,12 @@ function updatePrompt() {
 }
 
 // --- 10. Book Shots Storage (shots.json) ---
-async function saveShotToBook() {
-  const bookId = dom.saveBookSelect.value;
-  const shotId = dom.saveShotId.value.trim() || state.shotId || 'shot';
-
-  if (!bookId) {
-    showToast('Please select a book');
-    return;
-  }
-
-  // Camera and lens are saved in Blender coordinates, as previs.py reads them.
+/** The shot on screen as shots.json holds it: camera in Blender coordinates, or in the building's frame
+ *  when the shot being edited has a site. */
+function composedShot(shotId) {
   const frame = state.shotSite && state.shotId === shotId ? state.frames[state.shotSite] : null;
   const inShotSpace = (v) => frame ? worldToFrame(threeToBlender(v), frame).map((n) => parseFloat(n.toFixed(2))) : shotPoint(v);
-  const shotData = {
+  return {
     island: state.island,
     cam: inShotSpace(camera.position),
     target: inShotSpace(controls.target),
@@ -1171,8 +1178,21 @@ async function saveShotToBook() {
     prompt: state.promptAction.trim(),
     light: state.timeOfDay,
     sun_from: Math.round(state.sunAzimuth),
-    others: state.promptOthers.trim() || null
+    others: state.promptOthers.trim() || null,
+    ...(frame ? { site: state.shotSite } : {})
   };
+}
+
+async function saveShotToBook() {
+  const bookId = dom.saveBookSelect.value;
+  const shotId = dom.saveShotId.value.trim() || state.shotId || 'shot';
+
+  if (!bookId) {
+    showToast('Please select a book');
+    return;
+  }
+
+  const shotData = composedShot(shotId);
   const variant = dom.saveVariant.value.trim() || null;
 
   try {
@@ -1198,49 +1218,131 @@ async function saveShotToBook() {
   }
 }
 
+// --- Full-detail renders ---
+async function startRender() {
+  const shotId = dom.saveShotId.value.trim() || state.shotId || 'shot';
+  const shot = composedShot(shotId);
+  dom.btnRender.disabled = true;
+  dom.renderStatus.textContent = 'queued';
+  try {
+    const res = await fetch('/api/render', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ island: state.island, shot, quality: dom.renderQuality.value, size: dom.renderSize.value })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || res.statusText);
+    state.renderJob = data.job;
+    pollRender(data.job, performance.now());
+  } catch (err) {
+    dom.renderStatus.textContent = `failed: ${err.message}`;
+    dom.btnRender.disabled = false;
+  }
+}
+
+async function pollRender(job, t0) {
+  try {
+    const data = await (await fetch(`/api/render/${job}`)).json();
+    const secs = Math.round((performance.now() - t0) / 1000);
+    if (data.status === 'done') {
+      state.renderURL = data.url;
+      dom.renderStatus.textContent = `done in ${data.seconds}s`;
+      dom.renderImg.src = data.url;
+      dom.btnRenderOpen.href = data.url;
+      dom.btnRenderDownload.href = data.url;
+      dom.btnRenderDownload.download = `${state.shotId || 'shot'}-${job}.png`;
+      dom.renderResult.style.display = 'block';
+      dom.btnRender.disabled = false;
+      return;
+    }
+    if (data.status === 'error') {
+      dom.renderStatus.textContent = 'failed';
+      dom.btnRender.disabled = false;
+      console.error('Render failed:', data.error);
+      showToast(`Render failed: ${String(data.error).slice(-160)}`);
+      return;
+    }
+    dom.renderStatus.textContent = `${data.status}… ${secs}s`;
+    setTimeout(() => pollRender(job, t0), 2500);
+  } catch (err) {
+    dom.renderStatus.textContent = 'lost contact with server';
+    dom.btnRender.disabled = false;
+  }
+}
+
+async function useRenderAsPrevis() {
+  if (!state.renderURL) return;
+  state.capturedImageURL = state.renderURL;
+  state.captureFilename = `render:${state.renderURL.split('/').pop()}`;
+  dom.capturePreviewImg.src = state.renderURL;
+  dom.previsMetaBadge.textContent = `Blender render · ${state.aspect}`;
+  showToast('The render is now Image 1');
+}
+
+// --- Shots browser ---
 async function loadBookShotsBrowser(bookId) {
   try {
     const res = await fetch(`/api/books/${bookId}/shots`);
     const data = await res.json();
-    renderShotsBrowser(bookId, data.shots || {});
+    state.shotsData = { book: bookId, shots: data.shots || {}, images: data.images || {} };
+    renderShotsBrowser();
   } catch (err) {
     console.error('Failed to load shots for browser:', err);
   }
 }
 
-function renderShotsBrowser(bookId, shots) {
+const PICTURE_LABELS = { previs: 'previs', scene: 'scene', ligne: 'ligne claire' };
+
+function renderShotsBrowser() {
+  const { shots, images } = state.shotsData || { shots: {}, images: {} };
   dom.shotsBrowserList.innerHTML = '';
+
   // A shot with variants is listed once per variant, its keys laid over the shot's own.
-  const entries = Object.entries(shots).flatMap(([sid, s]) => {
+  let entries = Object.entries(shots).flatMap(([sid, s]) => {
     const { variants, ...base } = s;
     return variants && Object.keys(variants).length
       ? Object.entries(variants).map(([v, over]) => [`${sid}/${v}`, { ...base, ...over }])
       : [[sid, s]];
   });
 
+  const q = dom.browserSearch.value.trim().toLowerCase();
+  if (q) {
+    entries = entries.filter(([sid, s]) =>
+      [sid, s.prompt, s.others, (s.cast || []).join(' '), s.site, s.base, s.island].join(' ').toLowerCase().includes(q));
+  }
+  if (dom.browserOnlyPictures.checked) entries = entries.filter(([sid]) => images[sid]);
+
   if (entries.length === 0) {
-    dom.shotsBrowserList.innerHTML = '<p style="color: var(--text-dim); text-align: center;">No shots recorded for this book yet.</p>';
+    dom.shotsBrowserList.innerHTML = '<p style="color: var(--text-dim); text-align: center;">No shots match.</p>';
     return;
   }
 
   entries.forEach(([sid, s]) => {
+    const pics = images[sid] || {};
+    const thumbs = Object.entries(PICTURE_LABELS).filter(([k]) => pics[k]).map(([k, label]) => `
+      <a href="${esc(pics[k])}" target="_blank" rel="noopener" class="shot-thumb" title="${esc(label)}" style="flex: 1; min-width: 0; text-decoration: none; color: var(--text-dim); font-size: 0.7rem; text-align: center;">
+        <img loading="lazy" src="${esc(pics[k])}?w=360" alt="${esc(label)}" style="width: 100%; aspect-ratio: ${esc((s.aspect || '3:4').replace(':', ' / '))}; object-fit: cover; border-radius: 6px; display: block;">
+        ${esc(label)}
+      </a>`).join('');
     const card = document.createElement('div');
     card.className = 'control-section';
     card.style.cursor = 'pointer';
     card.innerHTML = `
       <div class="section-title">
         <span>${esc(sid)}</span>
-        <span class="control-val">${esc(s.lens || 26)}mm · ${esc(s.aspect || '3:4')}</span>
+        <span class="control-val">${esc(s.lens || '')}${s.lens ? 'mm · ' : ''}${esc(s.aspect || '')}</span>
       </div>
+      ${thumbs ? `<div style="display: flex; gap: 6px; margin-bottom: 8px;">${thumbs}</div>` : '<div style="font-size: 0.72rem; color: var(--text-dim); margin-bottom: 6px;">no pictures yet</div>'}
       <div style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;">
-        <strong>Island:</strong> ${esc(s.island || 'paxos')} · <strong>Light:</strong> ${esc(s.light || 'golden')}<br>
+        <strong>Island:</strong> ${esc(s.island || '')} · <strong>Light:</strong> ${esc(s.light || 'from base')}${s.site ? ` · <strong>Site:</strong> ${esc(s.site)}` : ''}<br>
         <strong>Cast:</strong> ${esc((s.cast || []).join(', ') || 'none')}<br>
-        <p style="margin-top: 4px; color: var(--text-main); font-style: italic;">"${esc((s.prompt || '').substring(0, 95))}..."</p>
+        <p style="margin-top: 4px; color: var(--text-main); font-style: italic;">"${esc((s.prompt || '').substring(0, 160))}${(s.prompt || '').length > 160 ? '…' : ''}"</p>
       </div>
       <button class="btn btn-primary btn-chip" style="margin-top: 6px;">🎯 Jump to this Shot</button>
     `;
 
-    card.addEventListener('click', () => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('a')) return;            // a picture opens full size instead
       applyBookShot(sid, s);
       dom.shotsBrowserModal.style.display = 'none';
       showToast(`Loaded shot: ${sid}`);
@@ -1563,6 +1665,10 @@ function setupEventListeners() {
   });
 
   dom.btnSaveShotBook.addEventListener('click', saveShotToBook);
+  dom.btnRender.addEventListener('click', startRender);
+  dom.btnRenderUse.addEventListener('click', useRenderAsPrevis);
+  dom.browserSearch.addEventListener('input', renderShotsBrowser);
+  dom.browserOnlyPictures.addEventListener('change', renderShotsBrowser);
 
   // Cast Drawer Controls
   document.getElementById('btn-open-cast').addEventListener('click', () => {
