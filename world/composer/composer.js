@@ -11,24 +11,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
-
-// --- Canonical Prompt Constants (from world/panels/pipeline.py) ---
-const KEEP_PHOTO = 
-  "Turn image 1 into a real photograph of the same place: keep its camera, framing, buildings, objects and " +
-  "layout exactly, and make the ground, plants, stone, cloth and light fully photographic. Hellenistic Greece, " +
-  "3rd century BC; nothing modern. Every building is in daily use, clean and well kept: no ruin, no weeds between the " +
-  "stones. Everything behind the people stays as it is in image 1, the same hills, trees, bushes and buildings, with " +
-  "nothing built that image 1 does not show. Natural daylight; people at true scale, with real shadows on the ground.";
-
-const KEEP_LIGNE_CLAIRE = 
-  "Draw image 1 as a Franco-Belgian ligne claire comic illustration in the manner of Hergé and Edgar P. Jacobs: clean " +
-  "black ink outlines of even weight, flat areas of clear colour with no gradients, no hatching and very little " +
-  "shading, detailed accurate architecture, readable figures. Keep its camera, framing, buildings, objects and layout " +
-  "exactly. Hellenistic Greece, 3rd century BC; nothing modern. Every building is in daily use, clean and well kept. " +
-  "Everything behind the people stays as it is in image 1, the same hills, trees, bushes and buildings, with nothing " +
-  "built that image 1 does not show. Daylight; people at true scale, with their shadows on the ground. One single " +
-  "illustration filling the frame: no lettering, no title, no speech balloons, no captions, no logos, no signature, " +
-  "no panel border.";
+import { buildPrompt, loadPromptParts } from './js/prompt.js';
+import { esc } from './js/util.js';
 
 // --- Application State ---
 const state = {
@@ -133,6 +117,7 @@ const dom = {
   btnCopyPrompt: document.getElementById('btn-copy-prompt'),
   saveBookSelect: document.getElementById('save-book-select'),
   saveShotId: document.getElementById('save-shot-id'),
+  saveVariant: document.getElementById('save-variant'),
   btnSaveShotBook: document.getElementById('btn-save-shot-book'),
 
   // Drawers
@@ -184,6 +169,7 @@ async function init() {
   await loadPropsCatalog();
   await loadCastData();
   await loadBooksList();
+  await loadPromptParts();
 
   // Load 3D Island Model
   loadIslandModel('/models/island-v2.glb');
@@ -743,16 +729,16 @@ function renderPropsCatalog(categoryFilter = 'all') {
     card.className = `prop-card ${state.activePropId === p.id ? 'active' : ''}`;
     card.dataset.id = p.id;
     card.innerHTML = `
-      <div class="prop-icon">${p.icon}</div>
-      <div class="prop-name">${p.name}</div>
-      <div class="prop-category">${p.category}</div>
+      <div class="prop-icon">${esc(p.icon)}</div>
+      <div class="prop-name">${esc(p.name)}</div>
+      <div class="prop-category">${esc(p.category)}</div>
     `;
 
     card.addEventListener('click', () => {
       document.querySelectorAll('.prop-card').forEach((c) => c.classList.remove('active'));
       card.classList.add('active');
       state.activePropId = p.id;
-      showToast(`Selected prop: ${p.name}`);
+      showToast(`Selected prop: ${esc(p.name)}`);
     });
 
     dom.propsCatalogGrid.appendChild(card);
@@ -852,7 +838,7 @@ function renderPlacedPropsList() {
     const item = document.createElement('div');
     item.className = `placed-prop-item ${state.selectedPlacedProp && state.selectedPlacedProp.id === p.id ? 'selected' : ''}`;
     item.innerHTML = `
-      <span>${p.icon} ${p.name} #${idx + 1}</span>
+      <span>${esc(p.icon)} ${esc(p.name)} #${idx + 1}</span>
       <div style="display: flex; gap: 4px;">
         <button class="btn btn-chip" data-action="focus" title="Focus camera on prop">🔍</button>
         <button class="btn btn-chip" data-action="delete" title="Delete prop" style="color: var(--accent-red);">✕</button>
@@ -889,7 +875,7 @@ function deleteProp(p) {
   propsGroup.remove(p.mesh);
   state.placedProps = state.placedProps.filter((item) => item.id !== p.id);
   renderPlacedPropsList();
-  showToast(`Deleted ${p.name}`);
+  showToast(`Deleted ${esc(p.name)}`);
 }
 
 function clearAllProps() {
@@ -971,7 +957,6 @@ async function saveCaptureToBackend(dataURL) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         image_data: dataURL,
-        book_id: state.activeBook,
         shot_id: state.shotId || 'capture',
         metadata: {
           cam: [camera.position.x, camera.position.y, camera.position.z],
@@ -1055,10 +1040,10 @@ function renderCastDrawer(filterSheet = 'all', searchQuery = '') {
 
     card.innerHTML = `
       <div class="cast-img-box">
-        <img src="${c.image_url || '/cast/images/legislator-man.png'}" alt="${c.name}">
+        <img src="${esc(c.image_url || '/cast/images/legislator-man.png')}" alt="${esc(c.name)}">
       </div>
-      <div class="cast-card-name">${c.name}</div>
-      <div class="cast-card-kind">${c.kind}</div>
+      <div class="cast-card-name">${esc(c.name)}</div>
+      <div class="cast-card-kind">${esc(c.kind)}</div>
     `;
 
     card.addEventListener('click', () => {
@@ -1107,8 +1092,8 @@ function updateCastSummaryUI() {
     item.className = 'cast-thumb-item';
     item.innerHTML = `
       <div class="cast-thumb-badge">Image ${index + 2}</div>
-      <img src="${char.image_url || `/cast/images/${cid}.png`}" alt="${char.name}">
-      <div class="cast-thumb-name">${char.name}</div>
+      <img src="${char.image_url || `/cast/images/${cid}.png`}" alt="${esc(char.name)}">
+      <div class="cast-thumb-name">${esc(char.name)}</div>
       <div style="display: flex; gap: 2px; margin-top: 2px;">
         <button class="btn btn-chip" data-action="copy" title="Copy reference image" style="padding: 2px 4px; font-size: 0.65rem;">📋</button>
         <button class="btn btn-chip" data-action="remove" title="Remove from shot" style="padding: 2px 4px; font-size: 0.65rem; color: var(--accent-red);">✕</button>
@@ -1145,36 +1130,12 @@ async function copyImageUrlToClipboard(imgUrl) {
 
 // --- 9. AI Prompt Generator ---
 function updatePrompt() {
-  const isPhoto = state.promptStyle === 'photo';
-  const keep = isPhoto ? KEEP_PHOTO : KEEP_LIGNE_CLAIRE;
-  const picture = isPhoto ? 'photograph' : 'illustration';
-
-  let prompt = `${keep} ${state.promptAction.trim()}`;
-
-  const ids = state.selectedCast;
-  const n = ids.length;
-
-  if (n > 0) {
-    const which = n === 1 ? 'Image 2 is a reference photograph of one person' : `Images 2 to ${n + 1} are reference photographs of people, one person each`;
-    const listing = ids.map((id, k) => `image ${k + 2} is ${id}`).join(', ');
-    const drawn = !isPhoto ? ', drawn in the same ligne claire style' : '';
-
-    prompt += ` ${which}: ${listing}. Put into the ${picture} only these people, each with exactly the face, build and clothes of their reference${drawn}. The names are labels only and appear nowhere in the ${picture}.`;
-  }
-
-  const others = state.promptOthers.trim();
-  if (others) {
-    prompt += n > 0
-      ? ` Besides the ${n} named, the only other people in the ${picture} are these: ${others}`
-      : ` The only people in the ${picture} are these: ${others}`;
-  } else {
-    prompt += n === 1
-      ? ` There is exactly 1 person in the ${picture}; nobody else.`
-      : n > 1
-      ? ` There are exactly ${n} people in the ${picture}; nobody else.`
-      : ` There is nobody in the ${picture}.`;
-  }
-
+  const prompt = buildPrompt({
+    style: state.promptStyle,
+    action: state.promptAction,
+    others: state.promptOthers,
+    cast: state.selectedCast
+  });
   dom.promptOutputText.textContent = prompt;
   return prompt;
 }
@@ -1189,29 +1150,23 @@ async function saveShotToBook() {
     return;
   }
 
-  // Construct canonical shot object
-  const islandName = (camera.position.x < -50) ? 'arche' : 'paxos';
-
+  // What the composer owns goes into every save; the camera only into a new shot (see server.py).
+  const round = (v) => parseFloat(v.toFixed(2));
   const shotData = {
-    island: islandName,
     aspect: state.aspect,
-    cam: [
-      parseFloat(camera.position.x.toFixed(2)),
-      parseFloat(camera.position.y.toFixed(2)),
-      parseFloat(camera.position.z.toFixed(2))
-    ],
-    target: [
-      parseFloat(controls.target.x.toFixed(2)),
-      parseFloat(controls.target.y.toFixed(2)),
-      parseFloat(controls.target.z.toFixed(2))
-    ],
-    lens: state.lens,
     cast: [...state.selectedCast],
     prompt: state.promptAction.trim(),
-    others: state.promptOthers.trim(),
     light: state.timeOfDay,
-    sun_from: Math.round(state.sunAzimuth)
+    sun_from: Math.round(state.sunAzimuth),
+    others: state.promptOthers.trim() || null
   };
+  const ifNew = {
+    island: (camera.position.x < -50) ? 'arche' : 'paxos',
+    cam: [camera.position.x, camera.position.y, camera.position.z].map(round),
+    target: [controls.target.x, controls.target.y, controls.target.z].map(round),
+    lens: state.lens
+  };
+  const variant = dom.saveVariant.value.trim() || null;
 
   try {
     const res = await fetch(`/api/books/${bookId}/shots`, {
@@ -1219,12 +1174,14 @@ async function saveShotToBook() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         shot_id: shotId,
-        shot: shotData
+        variant,
+        shot: shotData,
+        if_new: ifNew
       })
     });
     const result = await res.json();
     if (result.status === 'success') {
-      showToast(`Saved shot '${shotId}' into ${bookId}/shots.json`);
+      showToast(`${result.created ? 'Created' : 'Updated'} '${shotId}${variant ? '/' + variant : ''}' in ${bookId}/shots.json`);
       loadBooksList(); // Refresh counts
     } else {
       showToast(`Save failed: ${result.error}`);
@@ -1247,7 +1204,13 @@ async function loadBookShotsBrowser(bookId) {
 
 function renderShotsBrowser(bookId, shots) {
   dom.shotsBrowserList.innerHTML = '';
-  const entries = Object.entries(shots);
+  // A shot with variants is listed once per variant, its keys laid over the shot's own.
+  const entries = Object.entries(shots).flatMap(([sid, s]) => {
+    const { variants, ...base } = s;
+    return variants && Object.keys(variants).length
+      ? Object.entries(variants).map(([v, over]) => [`${sid}/${v}`, { ...base, ...over }])
+      : [[sid, s]];
+  });
 
   if (entries.length === 0) {
     dom.shotsBrowserList.innerHTML = '<p style="color: var(--text-dim); text-align: center;">No shots recorded for this book yet.</p>';
@@ -1260,13 +1223,13 @@ function renderShotsBrowser(bookId, shots) {
     card.style.cursor = 'pointer';
     card.innerHTML = `
       <div class="section-title">
-        <span>${sid}</span>
-        <span class="control-val">${s.lens || 26}mm · ${s.aspect || '3:4'}</span>
+        <span>${esc(sid)}</span>
+        <span class="control-val">${esc(s.lens || 26)}mm · ${esc(s.aspect || '3:4')}</span>
       </div>
       <div style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;">
-        <strong>Island:</strong> ${s.island || 'paxos'} · <strong>Light:</strong> ${s.light || 'golden'}<br>
-        <strong>Cast:</strong> ${(s.cast || []).join(', ') || 'none'}<br>
-        <p style="margin-top: 4px; color: var(--text-main); font-style: italic;">"${(s.prompt || '').substring(0, 95)}..."</p>
+        <strong>Island:</strong> ${esc(s.island || 'paxos')} · <strong>Light:</strong> ${esc(s.light || 'golden')}<br>
+        <strong>Cast:</strong> ${esc((s.cast || []).join(', ') || 'none')}<br>
+        <p style="margin-top: 4px; color: var(--text-main); font-style: italic;">"${esc((s.prompt || '').substring(0, 95))}..."</p>
       </div>
       <button class="btn btn-primary btn-chip" style="margin-top: 6px;">🎯 Jump to this Shot</button>
     `;
@@ -1282,8 +1245,10 @@ function renderShotsBrowser(bookId, shots) {
 }
 
 function applyBookShot(shotId, shot) {
-  state.shotId = shotId;
-  dom.saveShotId.value = shotId;
+  const [baseId, variantId = ''] = shotId.split('/');
+  state.shotId = baseId;
+  dom.saveShotId.value = baseId;
+  dom.saveVariant.value = variantId;
 
   if (shot.cam && shot.target) {
     flyCameraTo(

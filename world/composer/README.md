@@ -12,7 +12,7 @@ Launch the Composer server from the DAAG repository root:
 python3 world/composer/server.py
 ```
 
-By default, the server binds to `http://localhost:8767/` (or auto-selects the next available port if occupied).
+By default, the server binds to `http://127.0.0.1:8767/` (or the next free port). It has no CORS headers and writes into `world/panels`, so it is loopback-only unless you pass `--host 0.0.0.0` yourself.
 
 To specify a custom port or host:
 
@@ -74,7 +74,7 @@ Open the printed URL in any modern browser (Chrome, Safari, Firefox, Edge).
 - **Framing Crop**: Automatically crops to the selected aspect ratio (e.g. `3:4` or `16:9`) at high resolution.
 - **One-Click Clipboard Copy**: Copies the clean PNG directly to the system clipboard via `navigator.clipboard.write(ClipboardItem)`.
 - **PNG Download**: Downloads the captured previs image with metadata naming.
-- **Automatic Previs Saving**: Automatically saves the capture to `world/composer/captures/` and attaches shot metadata sidecars.
+- **Capture Saving**: Saves the capture and a metadata sidecar to `world/composer/captures/` only. Captures never go into `world/panels`: `previs.py` owns the `previs-*.png` files there and the scene step refuses any without its record.
 
 ### 6. Character Reference Cast Picker
 - **35 Canon Figures**: Browse characters from `world/cast/cast.json` with high-resolution studio reference portraits from `world/cast/out/nb2/`.
@@ -89,7 +89,7 @@ Open the printed URL in any modern browser (Chrome, Safari, Firefox, Edge).
 - **Individual Copy & Export**: One-click copy or download for each character reference image to pass as image input to AI tools.
 
 ### 7. AI Prompt Studio (Photoreal & Ligne Claire)
-Generates prompts matching the exact canonical syntax from `world/panels/pipeline.py`:
+Generates prompts the way `pipeline.request()` does. The style text and cast note are read from `world/panels/pipeline.py` through `/api/prompt`, so they cannot drift (the page keeps a fallback copy for when the server cannot import it):
 - **Style Toggle**:
   - **Photoreal**: Uses the canonical `KEEP` prompt for photographic realism (Hellenistic Greece, 3rd century BC, true scale, natural daylight, real shadows).
   - **Ligne Claire**: Uses the canonical `KEEP_LIGNE_CLAIRE` prompt for Franco-Belgian comic illustration (clean black ink outlines, flat clear colors, Hergé / Jacobs manner).
@@ -105,7 +105,8 @@ Generates prompts matching the exact canonical syntax from `world/panels/pipelin
   - "Download All as AI Bundle (ZIP)" packages `prompt.txt`, `01_image_previs.png`, and all selected `02_character.png` reference files into a single zip archive ready for any image generation AI (Nano Banana 2, Gemini, Midjourney, FLUX, Stable Diffusion).
 
 ### 8. Book Shots Storage (`shots.json`)
-- **Direct Book Saving**: Select any of the 5 canonical books (`the-part-time-parliament`, `ordering-without-clocks`, `the-limits-of-agreement`, `one-leader-at-a-time`, `examples`).
+- **Merge, never replace**: saving into an existing shot changes only the composer's fields (aspect, cast, prompt, others, light, sun_from) and keeps `base`, `site`, `variants` and everything else. The camera (`cam`, `target`, `lens`, `island`) is written only when the shot is new, because the composer frames in its own model's coordinates, not the Blender ones `previs.py` renders from. A *Variant* name saves into `variants.<name>` instead.
+- **Direct Book Saving**: Select any book under `world/panels` with a `shots.json`; for example (`the-part-time-parliament`, `ordering-without-clocks`, `the-limits-of-agreement`, `one-leader-at-a-time`, `examples`).
 - **Auto-Aggregated Shot Data**: Collects current camera position, target look-at, lens focal length, aspect ratio, lighting condition, sun azimuth, selected cast, scene prompt, and background crowd.
 - **Safety First**: Automatically creates a backup (`shots.json.bak`) before saving to avoid data loss.
 - **Shot Archive Browser**: Browse all shots in any book and click "Jump to this Shot" to instantly teleport the camera, set lens optics, restore lighting, select the cast, and populate the prompt!
@@ -120,6 +121,9 @@ world/composer/
 ├── index.html       # Single-page studio interface
 ├── composer.css     # Glassmorphic Hellenistic dark theme
 ├── composer.js      # Three.js 0.164.1 app, camera optics, sun simulation, raycaster
+├── js/prompt.js     # prompt assembly, identical to pipeline.request()
+├── js/util.js       # HTML escaping
+├── test_server.py   # server tests: python3 -m unittest world/composer/test_server.py
 ├── captures/        # Saved viewport screenshots and metadata sidecars
 └── README.md        # Documentation and user guide
 ```
@@ -131,8 +135,9 @@ world/composer/
 | `GET` | `/api/status` | Server health and resource counts |
 | `GET` | `/api/books` | Available books and their shot counts |
 | `GET` | `/api/books/<book>/shots` | Retrieve all shots for a given book |
-| `POST` | `/api/books/<book>/shots` | Save or update a shot in `shots.json` |
+| `POST` | `/api/books/<book>/shots` | Merge `shot` (optionally into `variant`, with `if_new` keys for new shots) into `shots.json`; atomic write, `.bak` first |
 | `GET` | `/api/cast` | Character definitions and portrait URLs |
+| `GET` | `/api/prompt` | Style prompts and cast note from `pipeline.py` |
 | `GET` | `/api/props` | Categorized catalog of 3D prop models |
 | `POST` | `/api/capture` | Save base64 viewport screenshot to disk |
 | `GET` | `/api/bundle` | Download ZIP archive of previs, cast, and prompt |

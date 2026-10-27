@@ -56,9 +56,46 @@ mimetypes.add_type("image/jpeg", ".jpeg")
 mimetypes.add_type("application/json", ".json")
 
 PORT = int(next((a for a in sys.argv[1:] if a.isdigit()), 8767))
-HOST = sys.argv[sys.argv.index("--host") + 1] if "--host" in sys.argv[1:-1] else "0.0.0.0"
+HOST = sys.argv[sys.argv.index("--host") + 1] if "--host" in sys.argv[1:-1] else "127.0.0.1"
 
 shots_lock = threading.Lock()
+
+NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
+
+
+def safe_name(value):
+    """A single path component made of plain characters, or None."""
+    return value if isinstance(value, str) and NAME_RE.match(value) and ".." not in value else None
+
+
+def inside(root, rel):
+    """root/rel resolved, if it is a file under root; otherwise None."""
+    try:
+        p = (root / rel).resolve()
+        p.relative_to(root.resolve())
+    except (ValueError, OSError):
+        return None
+    return p if p.is_file() else None
+
+
+def rel(path):
+    """path relative to the repository, or as is when it lies elsewhere."""
+    try:
+        return str(path.relative_to(REPO))
+    except ValueError:
+        return str(path)
+
+
+def prompt_parts():
+    """The style prompts and cast note, taken from world/panels/pipeline.py so they cannot drift."""
+    sys.path.insert(0, str(WORLD))
+    sys.path.insert(0, str(PANELS_DIR))
+    try:
+        import pipeline
+    except Exception as e:  # PIL or the Gemini client missing: the page falls back to its own copy
+        return {"error": str(e)}
+    return {"styles": {k: {"keep": v[0], "picture": v[1]} for k, v in pipeline.STYLES.items()},
+            "cast_note": pipeline.CAST_NOTE}
 
 
 def get_cast_data():
@@ -201,13 +238,11 @@ class ComposerHandler(SimpleHTTPRequestHandler):
 
     def log_message(self, format, *args):
         # Concise request logging
-        sys.stderr.write(f"[{datetime.now().strftime('%H:%M:%S')}] {args[0]} {args[1]} -> {args[2]}\n")
+        # send_error logs through here with other arguments than the request line, so format them whole
+        sys.stderr.write(f"[{datetime.now().strftime('%H:%M:%S')}] {format % args}\n")
 
     def end_headers(self):
-        # Enable CORS and Range acceptance
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type, Range")
+        # Range acceptance (same origin only: no CORS headers, so other pages cannot write shots)
         self.send_header("Accept-Ranges", "bytes")
         super().end_headers()
 
@@ -221,8 +256,8 @@ class ComposerHandler(SimpleHTTPRequestHandler):
         if path == "/models/island-v2.glb":
             self.head_file(ISLAND_V2_DIR / "island-v2.glb", "model/gltf-binary")
             return
-        local_file = (HERE / path.lstrip("/")).resolve()
-        if local_file.exists() and local_file.is_file():
+        local_file = inside(HERE, path.lstrip("/"))
+        if local_file:
             mime = mimetypes.guess_type(str(local_file))[0] or "application/octet-stream"
             self.head_file(local_file, mime)
             return
@@ -247,7 +282,7 @@ class ComposerHandler(SimpleHTTPRequestHandler):
         if path == "/api/status":
             self.send_json({
                 "status": "ok",
-                "version": "1.0.0",
+                "version": "1.1.0",
                 "repo": str(REPO),
                 "books_count": len(get_available_books()),
                 "cast_count": len(get_cast_data().get("characters", [])),
@@ -262,7 +297,10 @@ class ComposerHandler(SimpleHTTPRequestHandler):
         if path.startswith("/api/books/") and path.endswith("/shots"):
             parts = path.strip("/").split("/")
             if len(parts) == 4 and parts[0] == "api" and parts[1] == "books" and parts[3] == "shots":
-                book_id = parts[2]
+                book_id = safe_name(parts[2])
+                if not book_id:
+                    self.send_json({"error": "Invalid book id"}, status=400)
+                    return
                 shots_file = PANELS_DIR / book_id / "shots.json"
                 if shots_file.exists():
                     try:
@@ -276,6 +314,10 @@ class ComposerHandler(SimpleHTTPRequestHandler):
 
         if path == "/api/cast":
             self.send_json(get_cast_data())
+            return
+
+        if path == "/api/prompt":
+            self.send_json(prompt_parts())
             return
 
         if path == "/api/props":
@@ -304,8 +346,8 @@ class ComposerHandler(SimpleHTTPRequestHandler):
         # 2. Props
         if path.startswith("/props/kit/"):
             filename = path[len("/props/kit/"):]
-            file_path = KIT_MODELS_DIR / filename
-            if file_path.exists():
+            file_path = inside(KIT_MODELS_DIR, filename)
+            if file_path:
                 self.stream_file(file_path, "model/gltf-binary")
                 return
             self.send_error(HTTPStatus.NOT_FOUND, f"Kit prop not found: {filename}")
@@ -321,8 +363,8 @@ class ComposerHandler(SimpleHTTPRequestHandler):
 
         if path.startswith("/props/polyhaven/"):
             rel_path = path[len("/props/polyhaven/"):]
-            file_path = (POLYHAVEN_DIR / rel_path).resolve()
-            if file_path.exists() and str(file_path).startswith(str(POLYHAVEN_DIR)):
+            file_path = inside(POLYHAVEN_DIR, rel_path)
+            if file_path:
                 mime = mimetypes.guess_type(str(file_path))[0] or "application/octet-stream"
                 self.stream_file(file_path, mime)
                 return
@@ -332,8 +374,8 @@ class ComposerHandler(SimpleHTTPRequestHandler):
         # 3. Cast Images
         if path.startswith("/cast/images/"):
             filename = path[len("/cast/images/"):]
-            file_path = CAST_IMG_DIR / filename
-            if file_path.exists():
+            file_path = inside(CAST_IMG_DIR, filename)
+            if file_path:
                 self.stream_file(file_path, "image/png")
                 return
             self.send_error(HTTPStatus.NOT_FOUND, f"Cast image not found: {filename}")
@@ -342,8 +384,8 @@ class ComposerHandler(SimpleHTTPRequestHandler):
         # 4. Captured shots
         if path.startswith("/captures/"):
             filename = path[len("/captures/"):]
-            file_path = CAPTURES_DIR / filename
-            if file_path.exists():
+            file_path = inside(CAPTURES_DIR, filename)
+            if file_path:
                 mime = "image/png" if filename.endswith(".png") else "image/jpeg"
                 self.stream_file(file_path, mime)
                 return
@@ -356,8 +398,8 @@ class ComposerHandler(SimpleHTTPRequestHandler):
             return
 
         # Standard file fallback in HERE
-        local_file = (HERE / path.lstrip("/")).resolve()
-        if local_file.exists() and str(local_file).startswith(str(HERE)) and local_file.is_file():
+        local_file = inside(HERE, path.lstrip("/"))
+        if local_file and local_file.suffix in (".js", ".css", ".html", ".json", ".png", ".svg"):
             mime = mimetypes.guess_type(str(local_file))[0] or "application/octet-stream"
             self.stream_file(local_file, mime)
             return
@@ -372,7 +414,10 @@ class ComposerHandler(SimpleHTTPRequestHandler):
         if path.startswith("/api/books/") and path.endswith("/shots"):
             parts = path.strip("/").split("/")
             if len(parts) == 4 and parts[0] == "api" and parts[1] == "books" and parts[3] == "shots":
-                book_id = parts[2]
+                book_id = safe_name(parts[2])
+                if not book_id:
+                    self.send_json({"error": "Invalid book id"}, status=400)
+                    return
                 body = self.read_json_body()
                 if body is None:
                     return
@@ -395,6 +440,9 @@ class ComposerHandler(SimpleHTTPRequestHandler):
             if length == 0:
                 self.send_json({"error": "Empty body"}, status=400)
                 return None
+            if length > 64 * 1024 * 1024:
+                self.send_json({"error": "Body too large"}, status=413)
+                return None
             data = self.rfile.read(length)
             return json.loads(data.decode("utf-8"))
         except Exception as e:
@@ -402,103 +450,105 @@ class ComposerHandler(SimpleHTTPRequestHandler):
             return None
 
     def handle_save_shot(self, book_id, body):
-        """Save or update a shot entry in panels/<book>/shots.json."""
-        shot_id = body.get("shot_id")
-        shot_data = body.get("shot")
+        """Merge a shot into panels/<book>/shots.json.
 
-        if not shot_id or not shot_data:
-            self.send_json({"error": "Both 'shot_id' and 'shot' fields are required"}, status=400)
+        A shot that exists keeps every key the body does not name (base, site, variants, ...); with
+        "variant" the keys land in that variant instead. Keys set to null are removed. "if_new" holds keys
+        written only when the shot is created (the camera, which the composer frames in its own model's
+        coordinates, not the Blender ones previs.py renders from). The file is
+        replaced atomically after a .bak copy of the previous one."""
+        shot_id = safe_name(body.get("shot_id"))
+        fields = body.get("shot")
+        variant = body.get("variant")
+        if not shot_id or not isinstance(fields, dict) or not fields:
+            self.send_json({"error": "A plain 'shot_id' and a non-empty 'shot' object are required"}, status=400)
+            return
+        if variant is not None and not safe_name(variant):
+            self.send_json({"error": "Invalid variant name"}, status=400)
             return
 
         book_dir = PANELS_DIR / book_id
-        if not book_dir.exists():
-            # If book folder doesn't exist, create it
-            book_dir.mkdir(parents=True, exist_ok=True)
-
         shots_file = book_dir / "shots.json"
 
         with shots_lock:
-            existing_shots = {}
+            shots = {}
             if shots_file.exists():
                 try:
-                    existing_shots = json.loads(shots_file.read_text(encoding="utf-8"))
-                    # Create timestamped backup
-                    backup_file = shots_file.with_suffix(".json.bak")
-                    shutil.copy2(shots_file, backup_file)
+                    shots = json.loads(shots_file.read_text(encoding="utf-8"))
                 except Exception as e:
                     self.send_json({"error": f"Failed to read existing shots.json: {e}"}, status=500)
                     return
-
-            # Update or insert shot
-            existing_shots[shot_id] = shot_data
+            created = shot_id not in shots
+            entry = shots.setdefault(shot_id, {})
+            if created and isinstance(body.get("if_new"), dict):
+                entry.update(body["if_new"])
+            target = entry.setdefault("variants", {}).setdefault(variant, {}) if variant else entry
+            for k, v in fields.items():
+                if v is None:
+                    target.pop(k, None)
+                else:
+                    target[k] = v
 
             try:
-                # Pretty print json with 1-space indentation matching DAAG canon
-                formatted_json = json.dumps(existing_shots, indent=1, ensure_ascii=False)
-                shots_file.write_text(formatted_json + "\n", encoding="utf-8")
-                self.send_json({
-                    "status": "success",
-                    "book": book_id,
-                    "shot_id": shot_id,
-                    "shots_count": len(existing_shots),
-                    "file": str(shots_file.relative_to(REPO))
-                })
+                book_dir.mkdir(parents=True, exist_ok=True)
+                if shots_file.exists():
+                    shutil.copy2(shots_file, shots_file.with_suffix(".json.bak"))
+                tmp = shots_file.with_suffix(".json.tmp")
+                tmp.write_text(json.dumps(shots, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+                os.replace(tmp, shots_file)
             except Exception as e:
                 self.send_json({"error": f"Failed to write shots.json: {e}"}, status=500)
+                return
+            self.send_json({
+                "status": "success",
+                "book": book_id,
+                "shot_id": shot_id,
+                "variant": variant,
+                "created": created,
+                "shots_count": len(shots),
+                "file": rel(shots_file)
+            })
 
     def handle_save_capture(self, body):
-        """Save base64 image data to captures/ or panels/<book>/<shot>/."""
+        """Save a viewport capture and its metadata sidecar under composer/captures/.
+
+        Captures never go into world/panels: previs.py owns the previs-*.png files there, and the
+        scene step refuses any it did not render."""
         image_data = body.get("image_data")
-        book_id = body.get("book_id")
-        shot_id = body.get("shot_id", "unnamed")
+        shot_id = body.get("shot_id") or "capture"
         metadata = body.get("metadata", {})
 
-        if not image_data:
+        if not isinstance(image_data, str) or not image_data:
             self.send_json({"error": "Missing image_data"}, status=400)
             return
-
-        # Strip base64 header if present
         if "," in image_data:
             image_data = image_data.split(",", 1)[1]
-
         try:
-            img_bytes = base64.b64decode(image_data)
+            img_bytes = base64.b64decode(image_data, validate=True)
         except Exception as e:
             self.send_json({"error": f"Base64 decoding failed: {e}"}, status=400)
             return
+        if not img_bytes.startswith(b"\x89PNG\r\n\x1a\n"):
+            self.send_json({"error": "image_data is not a PNG"}, status=400)
+            return
 
-        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        clean_shot = re.sub(r"[^a-zA-Z0-9_-]", "_", shot_id)
-
-        filename = f"{clean_shot}_{timestamp}.png"
-        filepath = CAPTURES_DIR / filename
-        filepath.write_bytes(img_bytes)
-
-        # Also write metadata sidecar
-        meta_filepath = CAPTURES_DIR / f"{clean_shot}_{timestamp}.json"
-        meta_filepath.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
-
-        # If book_id and shot_id given, also offer to write previs directly to book folder
-        book_dest = None
-        if book_id and shot_id:
-            shot_folder = PANELS_DIR / book_id / clean_shot
-            shot_folder.mkdir(parents=True, exist_ok=True)
-            previs_path = shot_folder / f"previs-{timestamp[:8]}.png"
-            previs_path.write_bytes(img_bytes)
-            book_dest = str(previs_path.relative_to(REPO))
+        stamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")[:-3]
+        clean_shot = re.sub(r"[^a-zA-Z0-9_-]", "_", str(shot_id))[:64]
+        stem = f"{clean_shot}_{stamp}"
+        (CAPTURES_DIR / f"{stem}.png").write_bytes(img_bytes)
+        (CAPTURES_DIR / f"{stem}.json").write_text(json.dumps(metadata, indent=2), encoding="utf-8")
 
         self.send_json({
             "status": "success",
-            "filename": filename,
-            "url": f"/captures/{filename}",
-            "size_bytes": len(img_bytes),
-            "book_dest": book_dest
+            "filename": f"{stem}.png",
+            "url": f"/captures/{stem}.png",
+            "size_bytes": len(img_bytes)
         })
 
     def handle_export_bundle(self, query_string):
         """Export a zip file containing previs image, prompt, and character references."""
         params = parse_qs(query_string)
-        shot_id = params.get("shot", ["shot"])[0]
+        shot_id = re.sub(r"[^a-zA-Z0-9_-]", "_", params.get("shot", ["shot"])[0])[:64]
         capture_name = params.get("capture", [""])[0]
         cast_ids = params.get("cast", [])
         prompt_text = params.get("prompt", [""])[0]
@@ -510,15 +560,15 @@ class ComposerHandler(SimpleHTTPRequestHandler):
 
             # 2. Previs / capture image (Image 1)
             if capture_name:
-                cap_file = CAPTURES_DIR / capture_name
-                if cap_file.exists():
+                cap_file = inside(CAPTURES_DIR, capture_name)
+                if cap_file:
                     zf.write(cap_file, arcname="01_image_previs.png")
 
             # 3. Cast reference images (Image 2..N)
             idx = 2
             for cid in cast_ids:
-                cfile = CAST_IMG_DIR / f"{cid}.png"
-                if cfile.exists():
+                cfile = inside(CAST_IMG_DIR, f"{cid}.png") if safe_name(cid) else None
+                if cfile:
                     zf.write(cfile, arcname=f"{idx:02d}_{cid}.png")
                     idx += 1
 
