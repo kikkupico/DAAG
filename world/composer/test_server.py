@@ -128,6 +128,12 @@ class ServerTest(unittest.TestCase):
                     {"island": "paxos", "shot": {"cam": [1, 2, "__import__('os')"], "target": [0, 0, 0]}},
                     {"island": "paxos", "shot": {"cam": [1, 2, 3], "target": [0, 0, 0], "site": "../x"}}):
             self.assertIsNotNone(server.clean_spec(bad)[1], bad)
+        bad_props = {"island": "paxos", "shot": {"cam": [1, 2, 3], "target": [0, 0, 0],
+                                                 "placed_props": [{"prop": "../x", "at": [0, 0, 0]}]}}
+        self.assertIsNotNone(server.clean_spec(bad_props)[1])
+        good = {"island": "paxos", "shot": {"cam": [1, 2, 3], "target": [0, 0, 0],
+                                            "placed_props": [{"prop": "cart_0", "at": [0, 0, 0], "face": 90, "scale": 1}]}}
+        self.assertEqual(server.clean_spec(good)[0]["placed_props"][0]["prop"], "cart_0")
         self.assertEqual(self.call("/api/render", {"island": "paxos", "shot": {}})[0], 400)
         self.assertEqual(self.call("/api/render/nope")[0], 404)
 
