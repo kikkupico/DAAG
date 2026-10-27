@@ -377,6 +377,20 @@ def render_note(job, started):
             "uncommitted": [l.split(None, 1)[1] for l in git("status", "--porcelain", "--", "world/src").splitlines()]}
 
 
+def attempts(limit=40):
+    """The Blender renders and FLUX pictures made from the composer, newest first, for the viewer."""
+    def stamp(png):
+        return datetime.fromtimestamp(png.stat().st_mtime).strftime("%Y-%m-%d %H:%M:%S")
+    renders = [{"url": f"/renders/{p.name}", "made": stamp(p)}
+               for p in sorted(RENDERS_DIR.glob("*.png"), reverse=True)[:limit]]
+    flux = []
+    for p in sorted(FLUX_DIR.glob("*.png"), reverse=True)[:limit]:
+        note = json.loads(p.with_suffix(".json").read_text()) if p.with_suffix(".json").exists() else {}
+        flux.append({"url": f"/flux/{p.name}", "made": stamp(p), "seed": note.get("seed"), "seconds": note.get("seconds"),
+                     "from": Path(note["previs"]).parent.name.rstrip("s") if note.get("previs") else None})
+    return {"renders": renders, "flux": flux}
+
+
 def read_tests():
     return json.loads(TESTS_FILE.read_text(encoding="utf-8")) if TESTS_FILE.is_file() else {}
 
@@ -578,6 +592,10 @@ class ComposerHandler(SimpleHTTPRequestHandler):
                 self.send_json({"error": "No such job"}, status=404)
             return
 
+        if path == "/api/history":
+            self.send_json(attempts())
+            return
+
         if path == "/api/tests":
             tests = read_tests()
             self.send_json({"shots": tests, "renders": {tid: test_renders(tid) for tid in tests}})
@@ -662,21 +680,16 @@ class ComposerHandler(SimpleHTTPRequestHandler):
             self.send_error(HTTPStatus.NOT_FOUND, "Run: sh world/composer/export.sh")
             return
 
-        if path.startswith("/flux/") and path.endswith(".png"):
-            png = inside(FLUX_DIR, path[len("/flux/"):])
-            if png:
-                self.stream_file(png, "image/png")
+        for prefix, root in (("/flux/", FLUX_DIR), ("/renders/", RENDERS_DIR)):
+            if path.startswith(prefix) and path.endswith(".png"):
+                png = inside(root, path[len(prefix):])
+                if png:
+                    width = int(parse_qs(url.query).get("w", ["0"])[0] or 0)
+                    thumb = thumbnail(png, min(width, 2000)) if width else None
+                    self.stream_file(thumb or png, "image/jpeg" if thumb else "image/png")
+                    return
+                self.send_error(HTTPStatus.NOT_FOUND, "No such picture")
                 return
-            self.send_error(HTTPStatus.NOT_FOUND, "No such picture")
-            return
-
-        if path.startswith("/renders/") and path.endswith(".png"):
-            png = inside(RENDERS_DIR, path[len("/renders/"):])
-            if png:
-                self.stream_file(png, "image/png")
-                return
-            self.send_error(HTTPStatus.NOT_FOUND, "No such render")
-            return
 
         # 4. Captured shots
         if path.startswith("/captures/"):

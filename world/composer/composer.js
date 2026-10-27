@@ -137,6 +137,12 @@ const dom = {
   renderImg: document.getElementById('render-img'),
   btnRenderUse: document.getElementById('btn-render-use'),
   btnFlux: document.getElementById('btn-flux'),
+  historyImg: document.getElementById('history-img'),
+  historyCaption: document.getElementById('history-caption'),
+  historyStrip: document.getElementById('history-strip'),
+  historyViewer: document.getElementById('history-viewer'),
+  historyEmpty: document.getElementById('history-empty'),
+  historyOpen: document.getElementById('history-open'),
   fluxSourceRender: document.getElementById('flux-source-render'),
   fluxSourceNote: document.getElementById('flux-source-note'),
   fluxStatus: document.getElementById('flux-status'),
@@ -1446,6 +1452,7 @@ async function pollRender(job, t0) {
     const secs = Math.round((performance.now() - t0) / 1000);
     if (data.status === 'done') {
       state.renderURL = data.url;
+      loadHistory();
       state.renderView = viewSignature();
       dom.fluxSourceRender.disabled = false;
       setFluxSource('render');
@@ -1471,6 +1478,52 @@ async function pollRender(job, t0) {
     dom.renderStatus.textContent = 'lost contact with server';
     dom.btnRender.disabled = false;
   }
+}
+
+// --- Attempts: a view-only switcher over earlier renders and FLUX pictures ---
+const history = { kind: 'renders', items: { renders: [], flux: [] }, index: 0 };
+
+async function loadHistory() {
+  try {
+    history.items = await (await fetch('/api/history')).json();
+  } catch (err) {
+    history.items = { renders: [], flux: [] };
+  }
+  history.index = 0;
+  showHistory();
+}
+
+function historyLabel(it) {
+  const bits = [it.made];
+  if (it.seed !== undefined && it.seed !== null) bits.push(`seed ${it.seed}`);
+  if (it.seconds) bits.push(`${it.seconds}s`);
+  if (it.from) bits.push(`from ${it.from}`);
+  return bits.join(' · ');
+}
+
+function showHistory() {
+  const list = history.items[history.kind] || [];
+  document.getElementById('history-tab-renders').classList.toggle('active', history.kind === 'renders');
+  document.getElementById('history-tab-flux').classList.toggle('active', history.kind === 'flux');
+  dom.historyEmpty.style.display = list.length ? 'none' : 'block';
+  dom.historyViewer.style.display = list.length ? 'block' : 'none';
+  if (!list.length) return;
+  history.index = Math.min(Math.max(history.index, 0), list.length - 1);
+  const it = list[history.index];
+  dom.historyImg.src = it.url;
+  dom.historyOpen.href = it.url;
+  dom.historyCaption.textContent = `${history.index + 1} of ${list.length} · ${historyLabel(it)}`;
+  dom.historyStrip.innerHTML = '';
+  list.forEach((item, i) => {
+    const t = document.createElement('img');
+    t.src = `${item.url}?w=120`;
+    t.loading = 'lazy';
+    t.alt = item.made;
+    t.title = historyLabel(item);
+    t.style.cssText = `height: 56px; border-radius: 4px; cursor: pointer; opacity: ${i === history.index ? 1 : 0.55}; outline: ${i === history.index ? '2px solid var(--gold)' : 'none'};`;
+    t.addEventListener('click', () => { history.index = i; showHistory(); });
+    dom.historyStrip.appendChild(t);
+  });
 }
 
 // --- FLUX generation ---
@@ -1526,6 +1579,7 @@ async function startFlux() {
       await new Promise((r) => setTimeout(r, 3000));
       const job = await (await fetch(`/api/render/${data.job}`)).json();
       if (job.status === 'done') {
+        loadHistory();
         dom.fluxStatus.textContent = `done in ${job.seconds}s · from the ${source === 'render' ? 'Blender render' : 'capture'}`;
         dom.fluxImg.src = job.url;
         dom.btnFluxOpen.href = job.url;
@@ -1982,6 +2036,7 @@ function setupEventListeners() {
 
   // Capture & Compose Modal Controls
   document.getElementById('btn-quick-capture').addEventListener('click', () => {
+    loadHistory();
     captureCurrentScreenView();
     dom.captureModal.classList.remove('hidden');
   });
@@ -2041,6 +2096,10 @@ function setupEventListeners() {
   document.getElementById('btn-prop-turn-right').addEventListener('click', () => turnSelectedProp(90));
   document.getElementById('btn-prop-drop').addEventListener('click', dropSelectedProp);
   dom.btnFlux.addEventListener('click', startFlux);
+  document.getElementById('history-tab-renders').addEventListener('click', () => { history.kind = 'renders'; history.index = 0; showHistory(); });
+  document.getElementById('history-tab-flux').addEventListener('click', () => { history.kind = 'flux'; history.index = 0; showHistory(); });
+  document.getElementById('history-prev').addEventListener('click', () => { history.index += 1; showHistory(); });
+  document.getElementById('history-next').addEventListener('click', () => { history.index -= 1; showHistory(); });
   document.querySelectorAll('input[name="flux-source"]').forEach((r) => r.addEventListener('change', updateFluxSourceNote));
   document.getElementById('btn-save-test').addEventListener('click', saveTestShot);
   document.getElementById('btn-open-tests').addEventListener('click', () => {
