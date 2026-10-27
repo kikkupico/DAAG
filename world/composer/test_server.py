@@ -22,6 +22,12 @@ class ServerTest(unittest.TestCase):
         cls.tmp = tempfile.TemporaryDirectory()
         tmp = Path(cls.tmp.name)
         server.PANELS_DIR = tmp / "panels"
+        server.BOOKS_DIR = tmp / "books"
+        for slug in ("b", "other"):
+            (server.BOOKS_DIR / slug).mkdir(parents=True)
+            (server.BOOKS_DIR / slug / "index.html").write_text(f"<title>Book {slug} \u2014 A Paper</title>")
+        (server.BOOKS_DIR / "eighteen-books-in-one-scroll").mkdir()
+        (server.BOOKS_DIR / "eighteen-books-in-one-scroll" / "index.html").write_text("<title>x</title>")
         server.CAPTURES_DIR = tmp / "captures"
         server.CAPTURES_DIR.mkdir()
         book = server.PANELS_DIR / "b"
@@ -55,6 +61,15 @@ class ServerTest(unittest.TestCase):
         s = self.shots()["s"]
         self.assertEqual((s["base"], s["cam"], s["prompt"]), ("x", [1, 2, 3], "p"))
         self.assertIn("a", s["variants"])
+
+    def test_saved_shot_records_the_world_it_was_composed_against(self):
+        self.call("/api/books/b/shots", {"shot_id": "w", "shot": {"island": "paxos", "prompt": "p",
+                                                                   "placed_props": [{"prop": "cart_0", "at": [1, 2, 3], "face": 90, "scale": 1}]}})
+        w = self.shots()["w"]
+        self.assertEqual(w["placed_props"][0]["prop"], "cart_0")
+        self.assertTrue({"commit", "build", "at"} <= w["composed_with"].keys())
+        self.call("/api/books/b/shots", {"shot_id": "w", "shot": {"placed_props": None}})
+        self.assertNotIn("placed_props", self.shots()["w"])
 
     def test_new_shot_gets_if_new_and_variant_lands_in_variants(self):
         self.call("/api/books/b/shots", {"shot_id": "n", "shot": {"prompt": "q"}, "if_new": {"cam": [9, 9, 9]}})
@@ -95,6 +110,14 @@ class ServerTest(unittest.TestCase):
             self.assertTrue(sites, island)
             self.assertTrue(all({"id", "name", "x", "y", "z"} <= s.keys() for s in sites))
         self.assertEqual(self.call("/api/sites/..")[0], 404)
+
+    def test_books_are_the_sites_books(self):
+        books = {b["id"]: b for b in json.loads(self.call("/api/books")[1])["books"]}
+        self.assertEqual(sorted(books), ["b", "other"])          # no overview page, no "examples" folder
+        self.assertEqual((books["b"]["title"], books["other"]["shots_count"]), ("Book b", 0))
+        self.assertEqual(self.call("/api/books/examples/shots", {"shot_id": "x", "shot": {"a": 1}})[0], 400)
+        self.assertEqual(self.call("/api/books/other/shots", {"shot_id": "x", "shot": {"a": 1}})[0], 200)
+        self.assertEqual(json.loads(self.call("/api/books/other/shots")[1])["shots"]["x"], {"a": 1})
 
     def test_render_spec_is_cleaned(self):
         spec, err = server.clean_spec({"island": "paxos", "size": "1K", "shot": {

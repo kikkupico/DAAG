@@ -59,12 +59,7 @@ Open the printed URL in any modern browser (Chrome, Safari, Firefox, Edge).
 
 ### 4. Interactive Prop Placement Engine
 - **Click-to-Place Raycasting**: Enable "Click Island to Place Prop" mode and click anywhere on terrain, quays, or terraces to spawn models at that exact coordinate.
-- **Prop Library (20 models)**:
-  - **Transport & Vessels**: Wooden Oxcart, Harbour Skiff / Rowboat, Merchant Sailing Ship.
-  - **Architecture & Shelters**: Mercenary Tents, Market Stalls, Stone Granary, Quayside Depot, Harbour Warehouse, Customs House, Courtyard House.
-  - **Statues & Figures**: Equestrian Bronze Statue, Marble Philosopher Bust, Hellenistic Soldier Guard Standee.
-  - **Everyday Life**: Wicker Baskets, Well Buckets, Amphora Cellar Hatches.
-  - **Geology**: Limestone Boulders, Coastal Flat Rocks, Craggy Sea Cliffs.
+- **Prop Library (live props)**: the prototypes the islands themselves use (`p_*` collections), exported by `export_props.py` (part of `export.sh`) to `world/build/composer/props/`: carts and handcart, skiff, courier boat, ferry and merchant ship, amphorae, pithoi, crates, sacks, nets, baskets, scrolls, the Doric, Ionic and Corinthian columns, the five statues. Vegetation, rocks, roof tiles and wall blocks are not offered; the scene carries them. Categories become filter chips from the catalog.
 - **Transform Gizmo**: Switch between **Translate** (`G`), **Rotate Yaw** (`R`), and **Scale** (`S`) with interactive 3D handles.
 - **Prop Management**: Placed props list with camera focus, individual deletion (`Del`/`Backspace`), and bulk clear.
 
@@ -107,8 +102,9 @@ Generates prompts the way `pipeline.request()` does. The style text and cast not
   - "Download All as AI Bundle (ZIP)" packages `prompt.txt`, `01_image_previs.png`, and all selected `02_character.png` reference files into a single zip archive ready for any image generation AI (Nano Banana 2, Gemini, Midjourney, FLUX, Stable Diffusion).
 
 ### 8. Book Shots Storage (`shots.json`)
+- **What a saved shot records**: the prompt (`prompt`, and `others` for the crowd), the cast ids (`cast`, the reference portraits in `world/cast`), the props placed (`placed_props`: catalog id, Blender position, yaw in degrees, scale; restored when the shot is loaded), plus camera, lens, light and aspect. The prompt style (photo or ligne claire) is chosen when the picture is made, not stored. The server also stamps `composed_with`: the commit the repository was at, any uncommitted `world/src` or `cast.json` changes, the island build (hash, time, commit from `build/<island>.build.json`) and the time. `previs.py` and `pipeline.py` ignore these keys; they take the commit from the previs image's own record. `placed_props` is not yet rendered by Blender (`shots_panels` places only `props`: cheese and sandglass).
 - **Merge, never replace**: saving into an existing shot changes only the fields the composer owns (island, cam, target, lens, aspect, cast, prompt, others, light, sun_from) and keeps `base`, `site`, `variants` and everything else. Camera, lens and island are saved with it, in the shot's own space (world, or the building's frame when the shot has a `site`). A *Variant* name saves into `variants.<name>` instead.
-- **Direct Book Saving**: Select any book under `world/panels` with a `shots.json`; for example (`the-part-time-parliament`, `ordering-without-clocks`, `the-limits-of-agreement`, `one-leader-at-a-time`, `examples`).
+- **Direct Book Saving**: the books are the folders of `books/` that have a page (the overview page is not one), listed by title with their shot counts; a book with no `shots.json` yet gets one on the first save. (`the-part-time-parliament`, `ordering-without-clocks`, `the-limits-of-agreement`, `one-leader-at-a-time`, `examples`).
 - **Auto-Aggregated Shot Data**: Collects current camera position, target look-at, lens focal length, aspect ratio, lighting condition, sun azimuth, selected cast, scene prompt, and background crowd.
 - **Safety First**: Automatically creates a backup (`shots.json.bak`) before saving to avoid data loss.
 - **Shot Archive Browser**: every shot of a book, one card per variant, with its newest previs, scene and ligne claire pictures (thumbnails; click one for full size). Filter by shot name, cast or words in the prompt, or show only shots that have pictures. Click a card to jump to the shot: camera (resolving `site` frames), lens, lighting, cast and prompt.
