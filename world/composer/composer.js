@@ -51,6 +51,9 @@ const state = {
   captureFilename: null,
   renderJob: null,       // the Blender render in progress, if any
   renderURL: null,       // its picture when done
+  renderView: null,      // the camera the render was made from, to tell when the view has moved since
+  lastCaptureFile: null, // the viewport capture on disk (captureFilename may name a render instead)
+  image1IsRender: false, // 'Use as Image 1' was pressed: the render stands in for the capture in the prompt and bundle
   shotsData: null,       // the book on show in the shots browser: { book, shots, images }
   promptStyle: 'photo', // 'photo' | 'ligne-claire'
   promptAction: '',     // what the shot shows; typed in the capture dialog
@@ -134,6 +137,8 @@ const dom = {
   renderImg: document.getElementById('render-img'),
   btnRenderUse: document.getElementById('btn-render-use'),
   btnFlux: document.getElementById('btn-flux'),
+  fluxSourceRender: document.getElementById('flux-source-render'),
+  fluxSourceNote: document.getElementById('flux-source-note'),
   fluxStatus: document.getElementById('flux-status'),
   fluxSeed: document.getElementById('flux-seed'),
   fluxResult: document.getElementById('flux-result'),
@@ -1093,6 +1098,10 @@ function clearAllProps() {
 
 // --- 7. Screen View Capture Widget (Without UI Elements) ---
 function captureCurrentScreenView(supersample = 1) {
+  // A render still made from this very view stays Image 1 and FLUX's source; otherwise the capture is
+  const renderFits = state.renderView && state.renderView === viewSignature();
+  state.image1IsRender = state.image1IsRender && renderFits;
+  setFluxSource(renderFits ? 'render' : 'capture');
   // 1. Temporarily detach all visual helpers in the 3D scene
   transformControls.detach();
   dom.sitePinsLayer.style.display = 'none';
@@ -1163,7 +1172,8 @@ async function saveCaptureToBackend(dataURL) {
     });
     const data = await res.json();
     if (data.status === 'success') {
-      state.captureFilename = data.filename;
+      state.lastCaptureFile = data.filename;
+      if (!state.image1IsRender) state.captureFilename = data.filename;
     }
   } catch (err) {
     console.warn('Backend capture save failed:', err);
@@ -1436,6 +1446,9 @@ async function pollRender(job, t0) {
     const secs = Math.round((performance.now() - t0) / 1000);
     if (data.status === 'done') {
       state.renderURL = data.url;
+      state.renderView = viewSignature();
+      dom.fluxSourceRender.disabled = false;
+      setFluxSource('render');
       dom.renderStatus.textContent = `done in ${data.seconds}s`;
       dom.renderImg.src = data.url;
       dom.btnRenderOpen.href = data.url;
@@ -1461,9 +1474,38 @@ async function pollRender(job, t0) {
 }
 
 // --- FLUX generation ---
+/** The camera, lens and aspect as a string, to tell whether the view has moved since a render. */
+function viewSignature() {
+  const s = composedShot('view');
+  return JSON.stringify([s.cam, s.target, s.lens, s.aspect]);
+}
+
+function fluxSource() {
+  return document.querySelector('input[name="flux-source"]:checked').value;
+}
+
+function setFluxSource(which) {
+  const radio = document.querySelector(`input[name="flux-source"][value="${which}"]`);
+  if (!radio || radio.disabled) return;
+  radio.checked = true;
+  updateFluxSourceNote();
+}
+
+function updateFluxSourceNote() {
+  const moved = fluxSource() === 'render' && state.renderView && state.renderView !== viewSignature();
+  dom.fluxSourceNote.textContent = moved ? 'The view has moved since this render was made.' : '';
+}
+
 async function startFlux() {
-  if (!state.captureFilename) return showToast('Capture the view first');
-  const kindFile = state.captureFilename.startsWith('render:') ? state.captureFilename : `capture:${state.captureFilename}`;
+  const source = fluxSource();
+  let kindFile;
+  if (source === 'render') {
+    if (!state.renderURL) return showToast('Render the shot first');
+    kindFile = `render:${state.renderURL.split('/').pop()}`;
+  } else {
+    if (!state.lastCaptureFile) return showToast('Capture the view first');
+    kindFile = `capture:${state.lastCaptureFile}`;
+  }
   dom.btnFlux.disabled = true;
   dom.fluxStatus.textContent = 'queued';
   try {
@@ -1484,7 +1526,7 @@ async function startFlux() {
       await new Promise((r) => setTimeout(r, 3000));
       const job = await (await fetch(`/api/render/${data.job}`)).json();
       if (job.status === 'done') {
-        dom.fluxStatus.textContent = `done in ${job.seconds}s`;
+        dom.fluxStatus.textContent = `done in ${job.seconds}s · from the ${source === 'render' ? 'Blender render' : 'capture'}`;
         dom.fluxImg.src = job.url;
         dom.btnFluxOpen.href = job.url;
         dom.btnFluxDownload.href = job.url;
@@ -1507,6 +1549,8 @@ async function useRenderAsPrevis() {
   if (!state.renderURL) return;
   state.capturedImageURL = state.renderURL;
   state.captureFilename = `render:${state.renderURL.split('/').pop()}`;
+  state.image1IsRender = true;
+  setFluxSource('render');
   dom.capturePreviewImg.src = state.renderURL;
   dom.previsMetaBadge.textContent = `Blender render · ${state.aspect}`;
   showToast('The render is now Image 1');
@@ -1997,6 +2041,7 @@ function setupEventListeners() {
   document.getElementById('btn-prop-turn-right').addEventListener('click', () => turnSelectedProp(90));
   document.getElementById('btn-prop-drop').addEventListener('click', dropSelectedProp);
   dom.btnFlux.addEventListener('click', startFlux);
+  document.querySelectorAll('input[name="flux-source"]').forEach((r) => r.addEventListener('change', updateFluxSourceNote));
   document.getElementById('btn-save-test').addEventListener('click', saveTestShot);
   document.getElementById('btn-open-tests').addEventListener('click', () => {
     dom.testsModal.style.display = 'flex';
