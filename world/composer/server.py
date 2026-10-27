@@ -52,11 +52,13 @@ CAPTURES_DIR = HERE / "captures"
 RENDERS_DIR = HERE / "renders"          # full-detail Blender renders asked for from the page
 THUMBS_DIR = HERE / "thumbs"
 FLUX_DIR = HERE / "flux"                 # FLUX trial pictures from the composer, with a note beside each
+DRAFTS_DIR = HERE / "drafts"             # the shots being composed, each with an id: drafts/shots.json
+DRAFTS_FILE = DRAFTS_DIR / "shots.json"
 TESTS_DIR = HERE / "tests"               # throwaway shots for trying world changes: shots.json and renders/<id>/
 TESTS_FILE = TESTS_DIR / "shots.json"
 KEEP_RENDERS = 6                         # renders kept per test shot
 
-for _d in (CAPTURES_DIR, RENDERS_DIR, THUMBS_DIR, FLUX_DIR, TESTS_DIR / "renders"):
+for _d in (CAPTURES_DIR, RENDERS_DIR, THUMBS_DIR, FLUX_DIR, DRAFTS_DIR, TESTS_DIR / "renders"):
     _d.mkdir(parents=True, exist_ok=True)
 
 # Register custom MIME types
@@ -377,18 +379,89 @@ def render_note(job, started):
             "uncommitted": [l.split(None, 1)[1] for l in git("status", "--porcelain", "--", "world/src").splitlines()]}
 
 
-def attempts(limit=40):
-    """The Blender renders and FLUX pictures made from the composer, newest first, for the viewer."""
+def same_view(a, b, tol=0.011):
+    """Two {cam, target} views with the same camera position and the same look-at point (to the centimetre)."""
+    try:
+        return all(abs(float(x) - float(y)) <= tol for k in ("cam", "target") for x, y in zip(a[k], b[k]))
+    except (KeyError, TypeError, ValueError):
+        return False
+
+
+def view_of(png):
+    """The camera position and look-at point a picture was made from, as {cam, target}, or None if unknown:
+    a render's note, a capture's metadata, or for a FLUX picture those of the picture it was made from."""
+    note = png.with_suffix(".json")
+    if not note.exists():
+        return None
+    data = json.loads(note.read_text())
+    if png.parent == FLUX_DIR and data.get("previs"):
+        return view_of(Path(data["previs"]))
+    return data.get("view") or ({"cam": data["cam"], "target": data["target"]} if "cam" in data else None)
+
+
+def note_of(png):
+    """A picture's note: a render's, a capture's metadata or a FLUX picture's, as a dict ({} if it has none)."""
+    note = png.with_suffix(".json")
+    return json.loads(note.read_text()) if note.exists() else {}
+
+
+def shot_of_picture(png):
+    """The id of the shot a picture was made for ("" if it was made before shots had ids)."""
+    return note_of(png).get("shot") or ""
+
+
+def attempts(view=None, shot=None, limit=40):
+    """The Blender renders and FLUX pictures made from the composer, newest first, for the viewer. With a shot id
+    only that shot's; with a view ({cam, target}) only those made from that exact camera position and look-at
+    point (lens, aspect and light may differ)."""
     def stamp(png):
         return datetime.fromtimestamp(png.stat().st_mtime).strftime("%Y-%m-%d %H:%M:%S")
-    renders = [{"url": f"/renders/{p.name}", "made": stamp(p)}
-               for p in sorted(RENDERS_DIR.glob("*.png"), reverse=True)[:limit]]
+
+    def wanted(png):
+        return (shot is None or shot_of_picture(png) == shot) and (view is None or same_view(view, view_of(png) or {}))
+
+    def settings(png):
+        note = note_of(png)
+        if png.parent == FLUX_DIR and note.get("previs"):
+            note = note_of(Path(note["previs"]))
+        return {k: note.get(k) for k in ("lens", "aspect", "light") if note.get(k) is not None}
+
+    renders = [dict(url=f"/renders/{p.name}", made=stamp(p), **settings(p))
+               for p in sorted(RENDERS_DIR.glob("*.png"), reverse=True) if wanted(p)][:limit]
     flux = []
-    for p in sorted(FLUX_DIR.glob("*.png"), reverse=True)[:limit]:
-        note = json.loads(p.with_suffix(".json").read_text()) if p.with_suffix(".json").exists() else {}
-        flux.append({"url": f"/flux/{p.name}", "made": stamp(p), "seed": note.get("seed"), "seconds": note.get("seconds"),
-                     "from": Path(note["previs"]).parent.name.rstrip("s") if note.get("previs") else None})
-    return {"renders": renders, "flux": flux}
+    for p in sorted(FLUX_DIR.glob("*.png"), reverse=True):
+        if not wanted(p):
+            continue
+        note = note_of(p)
+        flux.append(dict(url=f"/flux/{p.name}", made=stamp(p), seed=note.get("seed"), seconds=note.get("seconds"),
+                         **{"from": Path(note["previs"]).parent.name.rstrip("s") if note.get("previs") else None},
+                         **settings(p)))
+    return {"renders": renders, "flux": flux[:limit]}
+
+
+# --- Shots being composed: each has an id, and the renders and FLUX pictures made for it carry that id ----
+
+def read_drafts():
+    return json.loads(DRAFTS_FILE.read_text(encoding="utf-8")) if DRAFTS_FILE.is_file() else {}
+
+
+def write_drafts(drafts):
+    DRAFTS_DIR.mkdir(parents=True, exist_ok=True)
+    tmp = DRAFTS_FILE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(drafts, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    os.replace(tmp, DRAFTS_FILE)
+
+
+def draft_summary(drafts):
+    """For each shot id its newest renders and FLUX pictures (urls) and how many there are."""
+    out = {sid: {"renders": [], "flux": []} for sid in drafts}
+    for kind, folder in (("renders", RENDERS_DIR), ("flux", FLUX_DIR)):
+        for png in sorted(folder.glob("*.png"), reverse=True):
+            sid = shot_of_picture(png)
+            if sid in out:
+                out[sid][kind].append(f"/{'renders' if kind == 'renders' else 'flux'}/{png.name}")
+    return {sid: {"renders": v["renders"][:3], "flux": v["flux"][:3],
+                  "counts": {"renders": len(v["renders"]), "flux": len(v["flux"])}} for sid, v in out.items()}
 
 
 def read_tests():
@@ -427,7 +500,8 @@ def clean_flux(body):
     seed = body.get("seed", 7)
     if not isinstance(seed, int) or not 0 <= seed < 2**31:
         return None, "'seed' must be an integer"
-    return {"previs": str(png), "prompt": prompt.strip(), "cast": cast, "seed": seed}, None
+    return {"previs": str(png), "prompt": prompt.strip(), "cast": cast, "seed": seed,
+            "shot": safe_name(body.get("shot_id")) or ""}, None
 
 
 def run_flux(job_id):
@@ -484,6 +558,10 @@ def run_render(job_id):
                     job.update(status="done", url=f"/tests/renders/{job['test']}/{job_id}.png")
                 else:
                     shutil.move(str(png), RENDERS_DIR / f"{job_id}.png")
+                    spec = job["spec"]
+                    (RENDERS_DIR / f"{job_id}.json").write_text(json.dumps(
+                        {"shot": job.get("shot"), "view": job.get("view"), "island": spec["island"], "lens": spec.get("lens"), "aspect": job.get("aspect"),
+                         "light": spec.get("light"), "quality": job["quality"], "made": datetime.now().strftime("%Y-%m-%dT%H:%M:%S")}, indent=1))
                     job.update(status="done", url=f"/renders/{job_id}.png")
             else:
                 job.update(status="error", error=(done.stdout[-800:] + done.stderr[-800:]).strip() or "Blender failed")
@@ -593,7 +671,18 @@ class ComposerHandler(SimpleHTTPRequestHandler):
             return
 
         if path == "/api/history":
-            self.send_json(attempts())
+            q = parse_qs(url.query)
+            shot = safe_name(q["shot"][0]) if "shot" in q else None
+            try:
+                view = {k: [float(v) for v in q[k][0].split(",")] for k in ("cam", "target")} if "cam" in q and "target" in q else None
+            except ValueError:
+                view = None
+            self.send_json(attempts(view, shot))
+            return
+
+        if path == "/api/shots":
+            drafts = read_drafts()
+            self.send_json({"shots": drafts, "summary": draft_summary(drafts)})
             return
 
         if path == "/api/tests":
@@ -749,6 +838,36 @@ class ComposerHandler(SimpleHTTPRequestHandler):
             self.send_json({"job": job_id, "status": "queued"})
             return
 
+        # 1d. The shots being composed, by id
+        if path in ("/api/shots", "/api/shots/delete"):
+            body = self.read_json_body()
+            if body is None:
+                return
+            with shots_lock:
+                drafts = read_drafts()
+                sid = safe_name(body.get("id")) if body.get("id") else None
+                if path.endswith("/delete"):
+                    drafts.pop(sid, None)
+                else:
+                    if body.get("id") and not sid:
+                        self.send_json({"error": "A plain 'id' is required"}, status=400)
+                        return
+                    spec, err = clean_spec({"island": (body.get("shot") or {}).get("island"), "shot": body.get("shot")})
+                    if err:
+                        self.send_json({"error": err}, status=400)
+                        return
+                    if not sid:     # a new shot: the next free shot-N
+                        n = 1 + max([int(k[5:]) for k in drafts if re.fullmatch(r"shot-\d+", k)] or [0])
+                        sid = f"shot-{n}"
+                    old = drafts.get(sid, {})
+                    name = body.get("name") if isinstance(body.get("name"), str) else old.get("name", "")
+                    keep = RENDER_KEYS | {"island", "aspect", "cast", "prompt", "others"}
+                    drafts[sid] = {"name": name[:80], **{k: v for k, v in body["shot"].items() if k in keep},
+                                   "updated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S")}
+                write_drafts(drafts)
+            self.send_json({"status": "success", "id": sid, "count": len(drafts)})
+            return
+
         # 1a. Throwaway test shots
         if path in ("/api/tests", "/api/tests/delete"):
             body = self.read_json_body()
@@ -789,8 +908,13 @@ class ComposerHandler(SimpleHTTPRequestHandler):
                 self.send_json({"error": f"No test shot '{test}'"}, status=400)
                 return
             job_id = datetime.now().strftime("%Y%m%d-%H%M%S-%f")[:-3]
-            jobs[job_id] = {"id": job_id, "status": "queued", "quality": quality, "spec": spec,
-                            **({"test": test} if test else {})}
+            view = body.get("view")      # the camera in world coordinates, for the attempts viewer (a site shot's cam is in its building's frame)
+            view = {k: view[k] for k in ("cam", "target")} if isinstance(view, dict) and all(
+                isinstance(view.get(k), list) and len(view[k]) == 3 and all(isinstance(v, (int, float)) for v in view[k])
+                for k in ("cam", "target")) else None
+            jobs[job_id] = {"id": job_id, "status": "queued", "quality": quality, "spec": spec, "view": view,
+                            "shot": safe_name(body.get("shot_id")),
+                            "aspect": (body.get("shot") or {}).get("aspect"), **({"test": test} if test else {})}
             threading.Thread(target=run_render, args=(job_id,), daemon=True).start()
             self.send_json({"job": job_id, "status": "queued"})
             return

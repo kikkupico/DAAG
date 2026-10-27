@@ -93,6 +93,9 @@
         <button class="btn" id="btn-open-cast" title="Select character cast for this shot">
           👥 Cast (<span id="cast-badge-count">0</span>)
         </button>
+        <select id="shot-switch" class="dropdown" title="The shot you are composing: pictures made for it carry its id"></select>
+        <button class="btn" id="btn-new-shot" title="Start a new shot from this view">＋ Shot</button>
+        <button class="btn" id="btn-open-explorer" title="Browse your shots and their renders">📂 Shots</button>
         <button class="btn" id="btn-open-tests" title="Throwaway shots for trying world changes">
           🧪 Test Shots
         </button>
@@ -352,6 +355,12 @@
       <button class="btn btn-icon" id="btn-close-capture-modal" style="font-size: 1.2rem;">✕</button>
     </div>
 
+    <div id="capture-shot-strip" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 8px 24px; border-bottom: 1px solid var(--border-subtle);">
+      <span style="color: var(--gold); font-size: 0.8rem;">Shot</span>
+      <span id="capture-shot-chips" style="display: flex; gap: 6px; flex-wrap: wrap;"></span>
+      <input type="text" id="shot-name-input" class="input-text" placeholder="name this shot" style="width: 180px; margin-left: auto;">
+    </div>
+
     <div class="modal-body">
       <!-- Left Column: Previs Image & Cast References -->
       <div class="capture-preview-column">
@@ -372,13 +381,13 @@
 
         <div class="cast-strip-card" id="history-card">
           <div class="section-title">
-            <span>Attempts (view only)</span>
+            <span>Earlier attempts <label style="font-weight: normal; font-size: 0.72rem; color: var(--text-dim);"><input type="checkbox" id="history-this-view" checked> this view only</label></span>
             <span>
               <button class="btn btn-chip active" id="history-tab-renders">Renders</button>
               <button class="btn btn-chip" id="history-tab-flux">FLUX</button>
             </span>
           </div>
-          <div id="history-empty" style="font-size: 0.8rem; color: var(--text-dim);">Nothing yet.</div>
+          <div id="history-empty" style="font-size: 0.8rem; color: var(--text-dim);">No earlier attempts for this shot from this exact camera position and look-at point. (Lens, aspect and time of day may differ; untick "this view only" for the shot's other views. Pictures made before shots had ids are not listed.)</div>
           <div id="history-viewer" style="display: none;">
             <img id="history-img" alt="Earlier attempt" style="width: 100%; border-radius: 8px; display: block;">
             <div style="display: flex; gap: 8px; align-items: center; margin: 6px 0;">
@@ -587,6 +596,18 @@
         </button>
       </div>
     </div>
+  </div>
+
+  <!-- SHOTS EXPLORER: the shots being composed, by id -->
+  <div id="explorer-modal" class="drawer" style="position: fixed; inset: 60px; border-radius: 14px; display: none; flex-direction: column;">
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <h2>YOUR SHOTS</h2>
+        <p>Every shot you compose has an id; its captures, Blender renders and FLUX pictures carry it. Open one to carry on from where it was left.</p>
+      </div>
+      <button class="btn btn-icon" id="btn-close-explorer">✕</button>
+    </div>
+    <div id="explorer-list" style="flex: 1; overflow-y: auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px;"></div>
   </div>
 
   <!-- TEST SHOTS MODAL -->
