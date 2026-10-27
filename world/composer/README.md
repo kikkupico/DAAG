@@ -36,7 +36,7 @@ Open the printed URL in any modern browser (Chrome, Safari, Firefox, Edge).
 - **Roof Cutaway**: lifts the roof-tile meshes 9 m where a model has them.
 
 ### 2. Camera Optics & Framing
-- **Focal Length & Lens Presets**: Real-time focal length slider (14mm to 150mm) and prime lens shortcuts (`18mm`, `24mm`, `26mm`, `35mm`, `50mm`, `85mm`) with dynamic Vertical FOV computation.
+- **Focal Length & Lens Presets**: focal length slider (14mm to 150mm) and prime shortcuts (`18mm`, `24mm`, `26mm`, `35mm`, `50mm`, `85mm`). The viewport camera is set so that what is inside the framing matte has the same field of view as the Blender render of that lens and aspect: Blender's camera has a 36 mm sensor fitted to the longer side of the frame, so a 3:4 frame has 36 mm over its height and a 16:9 frame over its width. The readout shows horizontal × vertical FOV of the frame. The capture is the matte's area, so the capture, the matte and the render agree.
 - **Aspect Ratio Framing Matte**: Live visual framing guides for canonical DAAG book formats:
   - `3:4` (Standard book panel & cover format)
   - `16:9` (Cinematic widescreen)
