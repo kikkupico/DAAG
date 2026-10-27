@@ -651,6 +651,17 @@ class ComposerHandler(SimpleHTTPRequestHandler):
             self.send_error(HTTPStatus.NOT_FOUND, "No such render")
             return
 
+        m = re.fullmatch(r"/ground/(\w+)\.png", path)
+        if m and m.group(1) in ISLANDS:
+            png = MODELS_DIR / f"{m.group(1)}_ground.png"
+            if png.is_file():
+                width = int(parse_qs(url.query).get("w", ["0"])[0] or 0)
+                thumb = thumbnail(png, min(width, 2000)) if width else None
+                self.stream_file(thumb or png, "image/jpeg" if thumb else "image/png")
+                return
+            self.send_error(HTTPStatus.NOT_FOUND, "Run: sh world/composer/export.sh")
+            return
+
         if path.startswith("/flux/") and path.endswith(".png"):
             png = inside(FLUX_DIR, path[len("/flux/"):])
             if png:
