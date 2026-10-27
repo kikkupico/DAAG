@@ -526,42 +526,51 @@ function applyTimeOfDayAtmosphere() {
 }
 
 // --- 3. Camera Optics & Framing Matte ---
+/** Field of view of a Blender camera for this lens and frame shape. The renders use a 36 mm sensor fitted to
+ *  the longer side of the frame (sensor_width 36, sensor_fit AUTO), so a 3:4 frame has 36 mm over its height
+ *  and a 16:9 frame over its width. Returns radians. */
+function shotFov(lens, aspect) {
+  const half = 18 / lens;
+  return aspect >= 1
+    ? { h: 2 * Math.atan(half), v: 2 * Math.atan(half / aspect) }
+    : { v: 2 * Math.atan(half), h: 2 * Math.atan(half * aspect) };
+}
+
 function applyFocalLength(mm) {
   state.lens = mm;
-  camera.setFocalLength(mm);
-  camera.updateProjectionMatrix();
-
-  state.fov = camera.fov;
   dom.focalSlider.value = mm;
   dom.focalVal.textContent = `${mm}mm`;
-  dom.fovDisplay.textContent = `FOV: ${camera.fov.toFixed(1)}° (${mm}mm)`;
   dom.hudCamSummary.textContent = `Cam: ${mm}mm · ${state.aspect}`;
-
   updateFramingMatte();
 }
 
-function updateFramingMatte() {
-  const parts = state.aspect.split(':');
-  const targetAspect = parseFloat(parts[0]) / parseFloat(parts[1]);
-
+/** The framing matte on screen: the largest box of the shot's aspect that fits the window with a margin. */
+function frameBox() {
+  const [w, h] = state.aspect.split(':').map(parseFloat);
+  const targetAspect = w / h;
   const winW = window.innerWidth;
   const winH = window.innerHeight;
-  const screenAspect = winW / winH;
+  const margin = 0.88;
+  return winW / winH > targetAspect
+    ? { boxW: winH * margin * targetAspect, boxH: winH * margin, targetAspect }
+    : { boxW: winW * margin, boxH: (winW * margin) / targetAspect, targetAspect };
+}
 
-  let boxW, boxH;
-  const margin = 0.88; // 88% of screen fit
-
-  if (screenAspect > targetAspect) {
-    boxH = winH * margin;
-    boxW = boxH * targetAspect;
-  } else {
-    boxW = winW * margin;
-    boxH = boxW / targetAspect;
-  }
-
+/** Draw the matte, and set the camera so that what is inside the matte has the field of view a Blender render
+ *  of this lens and aspect has. (The window is taller than the matte, so the camera's own vertical field of
+ *  view is wider than the shot's.) */
+function updateFramingMatte() {
+  const { boxW, boxH, targetAspect } = frameBox();
   dom.framingBox.style.width = `${Math.round(boxW)}px`;
   dom.framingBox.style.height = `${Math.round(boxH)}px`;
   dom.matteLabel.textContent = `${state.aspect} · ${state.lens}mm (focal)`;
+
+  const fov = shotFov(state.lens, targetAspect);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.fov = (2 * Math.atan(Math.tan(fov.v / 2) * (window.innerHeight / boxH)) * 180) / Math.PI;
+  camera.updateProjectionMatrix();
+  state.fov = (fov.v * 180) / Math.PI;
+  dom.fovDisplay.textContent = `FOV: ${(fov.h * 180 / Math.PI).toFixed(1)}° × ${state.fov.toFixed(1)}° (${state.lens}mm)`;
 }
 
 // --- 4. Loading Models & Assets ---
@@ -1000,23 +1009,13 @@ function captureCurrentScreenView(supersample = 1) {
   // 2. Render clean 3D scene
   renderer.render(scene, camera);
 
-  // 3. Compute crop bounding box based on active aspect ratio
-  const parts = state.aspect.split(':');
-  const targetAspect = parseFloat(parts[0]) / parseFloat(parts[1]);
-
+  // 3. Crop to the framing matte, so the picture is what the matte shows
   const canvasW = renderer.domElement.width;
   const canvasH = renderer.domElement.height;
-  const screenAspect = canvasW / canvasH;
-
-  let cropW, cropH;
-  if (screenAspect > targetAspect) {
-    cropH = canvasH;
-    cropW = cropH * targetAspect;
-  } else {
-    cropW = canvasW;
-    cropH = cropW / targetAspect;
-  }
-
+  const { boxW, boxH } = frameBox();
+  const scale = canvasW / window.innerWidth;
+  const cropW = boxW * scale;
+  const cropH = boxH * scale;
   const cropX = (canvasW - cropW) / 2;
   const cropY = (canvasH - cropH) / 2;
 
@@ -2089,8 +2088,6 @@ function updateFlyControls(delta) {
 }
 
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
   updateFramingMatte();
 }
