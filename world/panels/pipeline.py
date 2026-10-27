@@ -28,7 +28,8 @@ its settings, and the previs and each cast picture with their hashes and commits
 the last. It refuses to run while this script, batch.py or world/gemini.py has uncommitted changes.
 
 Generation runs on Nano Banana 2 (gemini-3.1-flash-image) at 1K through world/gemini.py, with
-GEMINI_API_KEY. Only people are generated: buildings and props come from the previs. The usual
+GEMINI_API_KEY. Only people are generated: buildings, props and the lie of the land come from the
+previs, and the photograph repaints their surfaces, since the previs's own textures are too plain to keep. The usual
 route is batch.py, the same pictures through the Batch API at half the price; this script is for a
 single take that is needed at once. comic.py redraws a finished photograph as ligne claire.
 """
@@ -55,11 +56,16 @@ CAST = WORLD / "cast/out" / os.environ.get("CAST", "nb2")
 FONTS = ["/System/Library/Fonts/Supplemental/Arial.ttf", "/System/Library/Fonts/Helvetica.ttc",
          "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"]
 ASPECTS = ["1:1", "2:3", "3:2", "3:4", "4:3", "4:5", "5:4", "9:16", "16:9", "21:9"]
-KEEP = ("Turn image 1 into a real photograph of the same place: keep its camera, framing, buildings, objects and "
-        "layout exactly, and make the ground, plants, stone, cloth and light fully photographic. Hellenistic Greece, "
-        "3rd century BC; nothing modern. Every building is in daily use, clean and well kept: no ruin, no weeds between the "
-        "stones. Everything behind the people stays as it is in image 1, the same hills, trees, bushes and buildings, with "
-        "nothing built that image 1 does not show. Natural daylight; people at true scale, with real shadows on the ground.")
+KEEP = ("Image 1 is a rough 3D render of the place, a guide to what is where and nothing more. Turn it into a real "
+        "photograph of the same place: keep its camera, framing and light, and the position, shape and size of every "
+        "building, hill, tree, bush and object, but repaint every surface with the detail of a real photograph instead of "
+        "copying the render's flat colours, smooth slopes, speckled foliage and repeating textures. The ground is worn "
+        "earth and gravel with stones, ruts, footprints and dust, merging into its verges with no hard straight edge. "
+        "Hillsides and banks are dry Mediterranean ground: stony soil, pale limestone breaking through, dry grass and low "
+        "scrub. Trees and bushes have real leaves, branches and gaps. Plaster walls show stains, scuffs and patching; "
+        "roof tiles vary in tone and sit unevenly. Hellenistic Greece, 3rd century BC; nothing modern. Every building is "
+        "in daily use, clean and well kept: no ruin, no weeds between the stones. Nothing is added that image 1 does "
+        "not show: no other buildings, trees or hills. People at true scale, with real shadows on the ground.")
 KEEP_LIGNE_CLAIRE = (
     "Draw image 1 as a Franco-Belgian ligne claire comic illustration in the manner of Hergé and Edgar P. Jacobs: clean "
     "black ink outlines of even weight, flat areas of clear colour with no gradients, no hatching and very little "
