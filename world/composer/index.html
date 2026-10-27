@@ -95,6 +95,7 @@
         </button>
         <select id="shot-switch" class="dropdown" title="The shot you are composing: pictures made for it carry its id"></select>
         <button class="btn" id="btn-new-shot" title="Start a new shot from this view">＋ Shot</button>
+        <button class="btn" id="btn-open-recent" title="Captures not yet saved to a book, with their renders and FLUX pictures (kept in this browser)">🕘 Recent (<span id="pending-count">0</span>)</button>
         <button class="btn" id="btn-open-explorer" title="Browse your shots and their renders">📂 Shots</button>
         <button class="btn" id="btn-open-tests" title="Throwaway shots for trying world changes">
           🧪 Test Shots
@@ -587,6 +588,18 @@
         </button>
       </div>
     </div>
+  </div>
+
+  <!-- RECENT CAPTURES: not yet saved to a book, kept in this browser's local storage -->
+  <div id="recent-modal" class="drawer" style="position: fixed; inset: 60px; border-radius: 14px; display: none; flex-direction: column;">
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <h2>RECENT CAPTURES</h2>
+        <p>Every capture not yet saved into a book, with the paths of its renders and FLUX pictures. Kept in this browser; open one to go back to it.</p>
+      </div>
+      <button class="btn btn-icon" id="btn-close-recent">✕</button>
+    </div>
+    <div id="recent-list" style="flex: 1; overflow-y: auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;"></div>
   </div>
 
   <!-- SHOTS EXPLORER: the shots being composed, by id -->
