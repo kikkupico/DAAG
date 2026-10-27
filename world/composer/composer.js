@@ -62,7 +62,7 @@ const state = {
   shotId: 'cover-alt',
 
   // Layout & Sites
-  island: 'paxos',      // the island model on screen: 'arche' | 'paxos'
+  island: 'paxos',      // the island model on screen: 'arche' | 'paxos' (chosen on page open)
   sites: [],            // named places of that island, Blender coordinates
   frames: {},           // building frames for shots given with a "site"
   shotSite: null,       // the site of the shot on screen, if its camera is in that building's frame
@@ -211,13 +211,30 @@ async function init() {
   state.lightPresets = (await (await fetch('/api/lights')).json()).presets || {};
   applyLightPreset(state.timeOfDay);
 
-  // Load 3D Island Model
-  loadIslandModel(state.island);
+  // Ask which island on open (?island=arche|paxos picks one without asking); each model is about 160 MB
+  chooseIsland().then(loadIslandModel);
 
   // Start Animation Loop
   animate();
   updateFramingMatte();
   updatePrompt();
+}
+
+/** The island chooser shown on page open; resolves with the island picked. */
+function chooseIsland() {
+  const preset = new URLSearchParams(location.search).get('island');
+  if (preset === 'arche' || preset === 'paxos') return Promise.resolve(preset);
+  const modal = document.getElementById('island-modal');
+  dom.loadingOverlay.classList.add('hidden');
+  modal.style.display = 'flex';
+  return new Promise((resolve) => {
+    modal.querySelectorAll('.island-card').forEach((card) => {
+      card.addEventListener('click', () => {
+        modal.style.display = 'none';
+        resolve(card.dataset.island);
+      }, { once: true });
+    });
+  });
 }
 
 // --- 1. Three.js Core Setup ---
@@ -1850,9 +1867,6 @@ function setupEventListeners() {
   });
 
   // View Presets
-  document.getElementById('btn-view-both').addEventListener('click', () => {
-    flyCameraTo(new THREE.Vector3(120, 260, 520), new THREE.Vector3(0, 15, 0), 1000);
-  });
   ['arche', 'paxos'].forEach((island) => {
     document.getElementById(`btn-view-${island}`).addEventListener('click', () => {
       if (state.island !== island) return loadIslandModel(island);
