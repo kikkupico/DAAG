@@ -1,0 +1,1809 @@
+/**
+ * DAAG Composer - 3D Island & Shot Composition Studio
+ *
+ * Implements 3D exploration of Arche & Paxos, camera focal length & lens controls,
+ * time of day & sun angle simulation, dynamic soft shadows, prop placement engine,
+ * clean screen view capture (without UI elements), character reference picker,
+ * photoreal / ligne claire AI prompt generator, and book shots.json storage.
+ */
+
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { TransformControls } from 'three/addons/controls/TransformControls.js';
+
+// --- Canonical Prompt Constants (from world/panels/pipeline.py) ---
+const KEEP_PHOTO = 
+  "Turn image 1 into a real photograph of the same place: keep its camera, framing, buildings, objects and " +
+  "layout exactly, and make the ground, plants, stone, cloth and light fully photographic. Hellenistic Greece, " +
+  "3rd century BC; nothing modern. Every building is in daily use, clean and well kept: no ruin, no weeds between the " +
+  "stones. Everything behind the people stays as it is in image 1, the same hills, trees, bushes and buildings, with " +
+  "nothing built that image 1 does not show. Natural daylight; people at true scale, with real shadows on the ground.";
+
+const KEEP_LIGNE_CLAIRE = 
+  "Draw image 1 as a Franco-Belgian ligne claire comic illustration in the manner of Hergé and Edgar P. Jacobs: clean " +
+  "black ink outlines of even weight, flat areas of clear colour with no gradients, no hatching and very little " +
+  "shading, detailed accurate architecture, readable figures. Keep its camera, framing, buildings, objects and layout " +
+  "exactly. Hellenistic Greece, 3rd century BC; nothing modern. Every building is in daily use, clean and well kept. " +
+  "Everything behind the people stays as it is in image 1, the same hills, trees, bushes and buildings, with nothing " +
+  "built that image 1 does not show. Daylight; people at true scale, with their shadows on the ground. One single " +
+  "illustration filling the frame: no lettering, no title, no speech balloons, no captions, no logos, no signature, " +
+  "no panel border.";
+
+// --- Application State ---
+const state = {
+  // Camera & Framing
+  lens: 26,             // mm
+  aspect: '3:4',        // '3:4', '16:9', '1:1', '4:3', '2:3', '9:16'
+  fov: 42,
+  showGrid: true,
+  showLabels: true,
+  roofsLifted: false,
+
+  // Environment & Light
+  timeOfDay: 'golden',  // 'morning', 'golden', 'noon', 'overcast', 'sunset', 'dusk'
+  sunAzimuth: 250,      // degrees (0 = North, 90 = East, 180 = South, 270 = West)
+  sunElevation: 24,     // degrees
+  sunIntensity: 1.5,
+  fogDensity: 25,       // %
+  seaWaves: true,
+
+  // Props
+  placePropMode: false,
+  activePropId: 'cypress',
+  propsCatalog: [],
+  placedProps: [],
+  selectedPlacedProp: null,
+  gizmoMode: 'translate', // 'translate', 'rotate', 'scale'
+
+  // Cast & Characters
+  castData: { characters: [], sheets: {} },
+  selectedCast: ['legislator-man', 'paxos-messenger'],
+
+  // Capture & Prompt Studio
+  capturedImageURL: null,
+  captureFilename: null,
+  promptStyle: 'photo', // 'photo' | 'ligne-claire'
+  promptAction: 'On the terrace before the colonnade, legislator-man stands writing on an open papyrus scroll while paxos-messenger hands him a small papyrus slip.',
+  promptOthers: 'a dozen more legislators in long white chitons strolling across the terrace and in and out by the open door.',
+
+  // Book Storage
+  books: [],
+  activeBook: 'the-part-time-parliament',
+  shotId: 'cover-alt',
+
+  // Layout & Sites
+  layout: null,
+  islandModel: null
+};
+
+// --- DOM References ---
+const dom = {
+  container: document.getElementById('canvas-container'),
+  loadingOverlay: document.getElementById('loading-overlay'),
+  progressBarFill: document.getElementById('progress-bar-fill'),
+  loadingStatus: document.getElementById('loading-status'),
+  sitePinsLayer: document.getElementById('site-pins-layer'),
+  framingBox: document.getElementById('framing-box'),
+  matteLabel: document.getElementById('matte-label'),
+
+  // Camera Tab
+  focalSlider: document.getElementById('focal-slider'),
+  focalVal: document.getElementById('focal-val'),
+  fovDisplay: document.getElementById('fov-display'),
+  camX: document.getElementById('cam-x'),
+  camY: document.getElementById('cam-y'),
+  camZ: document.getElementById('cam-z'),
+  tarX: document.getElementById('tar-x'),
+  tarY: document.getElementById('tar-y'),
+  tarZ: document.getElementById('tar-z'),
+
+  // Environment Tab
+  sunAzimuthSlider: document.getElementById('sun-azimuth-slider'),
+  sunAzimuthVal: document.getElementById('sun-azimuth-val'),
+  sunElevationSlider: document.getElementById('sun-elevation-slider'),
+  sunElevationVal: document.getElementById('sun-elevation-val'),
+  sunIntensitySlider: document.getElementById('sun-intensity-slider'),
+  sunIntensityVal: document.getElementById('sun-intensity-val'),
+  fogDensitySlider: document.getElementById('fog-density-slider'),
+  fogDensityVal: document.getElementById('fog-density-val'),
+  seaWavesToggle: document.getElementById('sea-waves-toggle'),
+
+  // Props
+  btnPlacePropMode: document.getElementById('btn-place-prop-mode'),
+  propsCatalogGrid: document.getElementById('props-catalog-grid'),
+  placedPropsList: document.getElementById('placed-props-list'),
+  placedPropsCount: document.getElementById('placed-props-count'),
+  btnClearProps: document.getElementById('btn-clear-props'),
+  propCategoryFilters: document.getElementById('prop-category-filters'),
+
+  // Capture Modal
+  captureModal: document.getElementById('capture-modal'),
+  capturePreviewImg: document.getElementById('capture-preview-img'),
+  previsMetaBadge: document.getElementById('previs-meta-badge'),
+  btnCopyImage: document.getElementById('btn-copy-image'),
+  btnDownloadImage: document.getElementById('btn-download-image'),
+  btnRecapture: document.getElementById('btn-recapture'),
+  modalCastStrip: document.getElementById('modal-cast-strip'),
+  btnModalAddCast: document.getElementById('btn-modal-add-cast'),
+  btnExportBundle: document.getElementById('btn-export-bundle'),
+  promptActionInput: document.getElementById('prompt-action-input'),
+  promptOthersInput: document.getElementById('prompt-others-input'),
+  promptOutputText: document.getElementById('prompt-output-text'),
+  btnCopyPrompt: document.getElementById('btn-copy-prompt'),
+  saveBookSelect: document.getElementById('save-book-select'),
+  saveShotId: document.getElementById('save-shot-id'),
+  btnSaveShotBook: document.getElementById('btn-save-shot-book'),
+
+  // Drawers
+  castDrawer: document.getElementById('cast-drawer'),
+  castCatalogGrid: document.getElementById('cast-catalog-grid'),
+  castSheetTabs: document.getElementById('cast-sheet-tabs'),
+  castSearchInput: document.getElementById('cast-search-input'),
+  castBadgeCount: document.getElementById('cast-badge-count'),
+  hudCastNames: document.getElementById('hud-cast-names'),
+  hudCamSummary: document.getElementById('hud-cam-summary'),
+  hudStatusDot: document.getElementById('hud-status-dot'),
+  hudStatusText: document.getElementById('hud-status-text'),
+
+  // Shots Browser Modal
+  shotsBrowserModal: document.getElementById('shots-browser-modal'),
+  browserBookSelect: document.getElementById('browser-book-select'),
+  shotsBrowserList: document.getElementById('shots-browser-list'),
+
+  // Toast
+  toast: document.getElementById('toast'),
+
+  // Docks & Headers
+  leftDock: document.getElementById('left-dock'),
+  btnDockCollapse: document.getElementById('btn-dock-collapse'),
+  btnDockExpand: document.getElementById('btn-dock-expand'),
+  teleportSelect: document.getElementById('teleport-select')
+};
+
+// --- Three.js Globals ---
+let scene, camera, renderer, controls, transformControls;
+let sunLight, ambientLight, hemisphereLight, seaMesh, skyDome;
+let islandGroup, propsGroup, sitePins = [];
+let raycaster, mouse;
+const propModelCache = new Map();
+const keyState = {};
+
+// --- Initialize Scene & Application ---
+async function init() {
+  setupRenderer();
+  setupScene();
+  setupLighting();
+  setupSea();
+  setupControls();
+  setupRaycaster();
+  setupEventListeners();
+
+  // Load backend data
+  await loadLayoutData();
+  await loadPropsCatalog();
+  await loadCastData();
+  await loadBooksList();
+
+  // Load 3D Island Model
+  loadIslandModel('/models/island-v2.glb');
+
+  // Start Animation Loop
+  animate();
+  updateFramingMatte();
+  updatePrompt();
+}
+
+// --- 1. Three.js Core Setup ---
+function setupRenderer() {
+  renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    powerPreference: 'high-performance',
+    preserveDrawingBuffer: true // Crucial for clean screenshot canvas capture
+  });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.15;
+  dom.container.appendChild(renderer.domElement);
+
+  camera = new THREE.PerspectiveCamera(state.fov, window.innerWidth / window.innerHeight, 0.5, 5000);
+  camera.position.set(120, 260, 520);
+  applyFocalLength(state.lens);
+}
+
+function setupScene() {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x8cb6d8);
+  scene.fog = new THREE.FogExp2(0x8cb6d8, 0.00045);
+
+  islandGroup = new THREE.Group();
+  propsGroup = new THREE.Group();
+  scene.add(islandGroup);
+  scene.add(propsGroup);
+
+  // Sky Dome with subtle gradient
+  const skyGeo = new THREE.SphereGeometry(3800, 32, 16);
+  const skyMat = new THREE.ShaderMaterial({
+    side: THREE.BackSide,
+    uniforms: {
+      uTop: { value: new THREE.Color(0x568ec2) },
+      uHorizon: { value: new THREE.Color(0xaed3ee) },
+      uGround: { value: new THREE.Color(0x8cb6d8) }
+    },
+    vertexShader: `
+      varying vec3 vWorldPosition;
+      void main() {
+        vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+        vWorldPosition = worldPosition.xyz;
+        gl_Position = projectionMatrix * viewMatrix * worldPosition;
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 uTop;
+      uniform vec3 uHorizon;
+      uniform vec3 uGround;
+      varying vec3 vWorldPosition;
+      void main() {
+        float h = normalize(vWorldPosition).y;
+        vec3 col = h > 0.0 ? mix(uHorizon, uTop, max(0.0, pow(h, 0.6))) : mix(uHorizon, uGround, max(0.0, -h));
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `
+  });
+  skyDome = new THREE.Mesh(skyGeo, skyMat);
+  scene.add(skyDome);
+}
+
+function setupLighting() {
+  ambientLight = new THREE.AmbientLight(0xd9e5f2, 0.5);
+  scene.add(ambientLight);
+
+  hemisphereLight = new THREE.HemisphereLight(0xaed3ee, 0x485a6a, 0.6);
+  scene.add(hemisphereLight);
+
+  sunLight = new THREE.DirectionalLight(0xfff7e6, state.sunIntensity);
+  sunLight.castShadow = true;
+  sunLight.shadow.mapSize.width = 2048;
+  sunLight.shadow.mapSize.height = 2048;
+  sunLight.shadow.camera.near = 10;
+  sunLight.shadow.camera.far = 1600;
+  sunLight.shadow.bias = -0.0003;
+  sunLight.shadow.normalBias = 0.02;
+
+  const d = 450;
+  sunLight.shadow.camera.left = -d;
+  sunLight.shadow.camera.right = d;
+  sunLight.shadow.camera.top = d;
+  sunLight.shadow.camera.bottom = -d;
+
+  scene.add(sunLight);
+  scene.add(sunLight.target);
+  updateSunPosition();
+}
+
+function setupSea() {
+  const seaGeo = new THREE.PlaneGeometry(6000, 6000, 96, 96);
+  seaGeo.rotateX(-Math.PI / 2);
+
+  const seaMat = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uDeepColor: { value: new THREE.Color(0x0e324c) },
+      uShallowColor: { value: new THREE.Color(0x287799) },
+      uSunDir: { value: new THREE.Vector3(0, 1, 0) },
+      uSunColor: { value: new THREE.Color(0xfff5e6) }
+    },
+    vertexShader: `
+      uniform float uTime;
+      varying vec3 vWorldPos;
+      varying vec3 vNormal;
+      void main() {
+        vec3 p = position;
+        float p1 = p.x * 0.035 + uTime * 1.2;
+        float q1 = p.z * 0.030 + uTime * 0.9;
+        float w = sin(p1) * cos(q1) * 0.18 + cos(p.x * 0.07 - uTime * 1.5) * 0.09;
+        p.y += w;
+        vNormal = normalize(vec3(-0.035 * cos(p1) * cos(q1) * 0.18, 1.0, 0.030 * sin(p1) * sin(q1) * 0.18));
+        vec4 wp = modelMatrix * vec4(p, 1.0);
+        vWorldPos = wp.xyz;
+        gl_Position = projectionMatrix * viewMatrix * wp;
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 uDeepColor;
+      uniform vec3 uShallowColor;
+      uniform vec3 uSunDir;
+      uniform vec3 uSunColor;
+      varying vec3 vWorldPos;
+      varying vec3 vNormal;
+      void main() {
+        vec3 viewDir = normalize(cameraPosition - vWorldPos);
+        float fresnel = pow(1.0 - max(dot(viewDir, vNormal), 0.0), 3.0);
+        vec3 waterCol = mix(uDeepColor, uShallowColor, fresnel * 0.8 + 0.2);
+
+        // Specular sun glint
+        vec3 halfVec = normalize(uSunDir + viewDir);
+        float spec = pow(max(dot(vNormal, halfVec), 0.0), 128.0) * 1.5;
+
+        gl_FragColor = vec4(waterCol + uSunColor * spec, 0.95);
+      }
+    `,
+    transparent: true
+  });
+
+  seaMesh = new THREE.Mesh(seaGeo, seaMat);
+  seaMesh.position.y = 0.0;
+  seaMesh.receiveShadow = true;
+  scene.add(seaMesh);
+}
+
+function setupControls() {
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+  controls.maxPolarAngle = Math.PI * 0.495;
+  controls.minDistance = 2.0;
+  controls.maxDistance = 2500.0;
+  controls.target.set(0, 15, 0);
+
+  transformControls = new TransformControls(camera, renderer.domElement);
+  transformControls.size = 0.8;
+  transformControls.setMode(state.gizmoMode);
+  scene.add(transformControls);
+
+  transformControls.addEventListener('dragging-changed', (event) => {
+    controls.enabled = !event.value;
+  });
+
+  transformControls.addEventListener('change', () => {
+    if (state.selectedPlacedProp) {
+      updateCoordsDisplay();
+    }
+  });
+}
+
+function setupRaycaster() {
+  raycaster = new THREE.Raycaster();
+  mouse = new THREE.Vector2();
+}
+
+// --- 2. Sun, Lighting & Weather Simulation ---
+function updateSunPosition() {
+  const radAz = (state.sunAzimuth * Math.PI) / 180;
+  const radEl = (state.sunElevation * Math.PI) / 180;
+
+  const distance = 800;
+  const y = Math.sin(radEl) * distance;
+  const x = Math.cos(radEl) * Math.sin(radAz) * distance;
+  const z = Math.cos(radEl) * Math.cos(radAz) * distance;
+
+  sunLight.position.set(x, Math.max(y, 10), z);
+  sunLight.target.position.set(0, 10, 0);
+  sunLight.intensity = Math.max(0.1, state.sunIntensity * Math.sin(Math.max(radEl, 0.05)));
+
+  if (seaMesh && seaMesh.material.uniforms) {
+    seaMesh.material.uniforms.uSunDir.value.copy(sunLight.position).normalize();
+  }
+
+  // Update atmosphere & sky dome colors
+  applyTimeOfDayAtmosphere();
+}
+
+function applyTimeOfDayAtmosphere() {
+  let skyTop, skyHorizon, skyGround, fogCol, lightColor;
+
+  switch (state.timeOfDay) {
+    case 'morning':
+      skyTop = 0x487ba8;
+      skyHorizon = 0xf0d8be;
+      skyGround = 0x8cb6d8;
+      lightColor = 0xfffaea;
+      fogCol = 0xcfdce8;
+      break;
+    case 'golden':
+      skyTop = 0x3d648c;
+      skyHorizon = 0xf5b574;
+      skyGround = 0x6e7e8e;
+      lightColor = 0xffdfa8;
+      fogCol = 0xdcb896;
+      break;
+    case 'noon':
+      skyTop = 0x24629e;
+      skyHorizon = 0x9bc2e2;
+      skyGround = 0x769ec2;
+      lightColor = 0xffffff;
+      fogCol = 0x9bc2e2;
+      break;
+    case 'overcast':
+      skyTop = 0x808b96;
+      skyHorizon = 0xb2bcc4;
+      skyGround = 0x757f88;
+      lightColor = 0xdfe4ea;
+      fogCol = 0xb2bcc4;
+      break;
+    case 'sunset':
+      skyTop = 0x243552;
+      skyHorizon = 0xdf5a3c;
+      skyGround = 0x5a343c;
+      lightColor = 0xff8c55;
+      fogCol = 0x985250;
+      break;
+    case 'dusk':
+      skyTop = 0x0f1c2c;
+      skyHorizon = 0x364962;
+      skyGround = 0x1a2636;
+      lightColor = 0x7890b0;
+      fogCol = 0x223042;
+      break;
+    default:
+      skyTop = 0x568ec2;
+      skyHorizon = 0xaed3ee;
+      skyGround = 0x8cb6d8;
+      lightColor = 0xfff7e6;
+      fogCol = 0x8cb6d8;
+  }
+
+  if (skyDome && skyDome.material.uniforms) {
+    skyDome.material.uniforms.uTop.value.setHex(skyTop);
+    skyDome.material.uniforms.uHorizon.value.setHex(skyHorizon);
+    skyDome.material.uniforms.uGround.value.setHex(skyGround);
+  }
+
+  sunLight.color.setHex(lightColor);
+  scene.fog.color.setHex(fogCol);
+  renderer.setClearColor(fogCol);
+
+  // Fog density
+  const baseFog = 0.00015;
+  const maxFog = 0.0018;
+  scene.fog.density = baseFog + (state.fogDensity / 100) * (maxFog - baseFog);
+}
+
+// --- 3. Camera Optics & Framing Matte ---
+function applyFocalLength(mm) {
+  state.lens = mm;
+  camera.setFocalLength(mm);
+  camera.updateProjectionMatrix();
+
+  state.fov = camera.fov;
+  dom.focalSlider.value = mm;
+  dom.focalVal.textContent = `${mm}mm`;
+  dom.fovDisplay.textContent = `FOV: ${camera.fov.toFixed(1)}° (${mm}mm)`;
+  dom.hudCamSummary.textContent = `Cam: ${mm}mm · ${state.aspect}`;
+
+  updateFramingMatte();
+}
+
+function updateFramingMatte() {
+  const parts = state.aspect.split(':');
+  const targetAspect = parseFloat(parts[0]) / parseFloat(parts[1]);
+
+  const winW = window.innerWidth;
+  const winH = window.innerHeight;
+  const screenAspect = winW / winH;
+
+  let boxW, boxH;
+  const margin = 0.88; // 88% of screen fit
+
+  if (screenAspect > targetAspect) {
+    boxH = winH * margin;
+    boxW = boxH * targetAspect;
+  } else {
+    boxW = winW * margin;
+    boxH = boxW / targetAspect;
+  }
+
+  dom.framingBox.style.width = `${Math.round(boxW)}px`;
+  dom.framingBox.style.height = `${Math.round(boxH)}px`;
+  dom.matteLabel.textContent = `${state.aspect} · ${state.lens}mm (focal)`;
+}
+
+// --- 4. Loading Models & Assets ---
+function loadIslandModel(url) {
+  const loader = new GLTFLoader();
+
+  dom.loadingOverlay.classList.remove('hidden');
+  dom.loadingStatus.textContent = 'Loading 3D islands model (island-v2.glb)...';
+
+  loader.load(
+    url,
+    (gltf) => {
+      const model = gltf.scene;
+      state.islandModel = model;
+
+      // Adjust material properties for Greek Mediterranean light
+      model.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+          if (child.material) {
+            child.material.roughness = 0.86;
+            child.material.metalness = 0.04;
+          }
+        }
+      });
+
+      islandGroup.clear();
+      islandGroup.add(model);
+
+      dom.loadingOverlay.classList.add('hidden');
+      showToast('Archipelago loaded successfully');
+      setupSitePins();
+    },
+    (xhr) => {
+      if (xhr.total > 0) {
+        const pct = Math.round((xhr.loaded / xhr.total) * 100);
+        dom.progressBarFill.style.width = `${pct}%`;
+        dom.loadingStatus.textContent = `Loading 3D islands model (${pct}%)...`;
+      }
+    },
+    (err) => {
+      console.error('Error loading island GLB:', err);
+      dom.loadingStatus.textContent = 'Failed to load island model. Please check console.';
+    }
+  );
+}
+
+async function loadLayoutData() {
+  try {
+    const res = await fetch('/models/layout.json');
+    state.layout = await res.json();
+    populateTeleportMenu();
+  } catch (err) {
+    console.warn('Could not load layout.json:', err);
+  }
+}
+
+async function loadPropsCatalog() {
+  try {
+    const res = await fetch('/api/props');
+    const data = await res.json();
+    state.propsCatalog = data.props || [];
+    renderPropsCatalog();
+  } catch (err) {
+    console.error('Failed to load props catalog:', err);
+  }
+}
+
+async function loadCastData() {
+  try {
+    const res = await fetch('/api/cast');
+    state.castData = await res.json();
+    renderCastDrawer();
+    updateCastSummaryUI();
+  } catch (err) {
+    console.error('Failed to load cast:', err);
+  }
+}
+
+async function loadBooksList() {
+  try {
+    const res = await fetch('/api/books');
+    const data = await res.json();
+    state.books = data.books || [];
+
+    // Populate save & browser dropdowns
+    dom.saveBookSelect.innerHTML = '';
+    dom.browserBookSelect.innerHTML = '';
+
+    state.books.forEach((b) => {
+      const opt1 = document.createElement('option');
+      opt1.value = b.id;
+      opt1.textContent = `${b.title} (${b.shots_count} shots)`;
+      if (b.id === state.activeBook) opt1.selected = true;
+      dom.saveBookSelect.appendChild(opt1);
+
+      const opt2 = document.createElement('option');
+      opt2.value = b.id;
+      opt2.textContent = `${b.title} (${b.shots_count} shots)`;
+      dom.browserBookSelect.appendChild(opt2);
+    });
+  } catch (err) {
+    console.error('Failed to load books:', err);
+  }
+}
+
+// --- 5. 3D Site Pins & Navigation ---
+function setupSitePins() {
+  dom.sitePinsLayer.innerHTML = '';
+  sitePins = [];
+
+  if (!state.layout || !state.layout.buildings) return;
+
+  state.layout.buildings.forEach((b) => {
+    const el = document.createElement('div');
+    el.className = 'site-pin';
+    el.textContent = b.name.split('·')[0].trim();
+    el.dataset.id = b.id;
+
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      teleportToSite(b);
+    });
+
+    dom.sitePinsLayer.appendChild(el);
+
+    sitePins.push({
+      el,
+      pos: new THREE.Vector3(b.world[0], (b.elevation_m || 8.0) + 4.0, b.world[1]),
+      b
+    });
+  });
+}
+
+function updateSitePinsScreenPos() {
+  if (!state.showLabels) {
+    dom.sitePinsLayer.style.display = 'none';
+    return;
+  }
+  dom.sitePinsLayer.style.display = 'block';
+
+  const halfW = window.innerWidth / 2;
+  const halfH = window.innerHeight / 2;
+  const tempVec = new THREE.Vector3();
+
+  sitePins.forEach((pin) => {
+    tempVec.copy(pin.pos).project(camera);
+
+    // Behind camera check
+    if (tempVec.z > 1.0) {
+      pin.el.style.display = 'none';
+      return;
+    }
+
+    const x = tempVec.x * halfW + halfW;
+    const y = -tempVec.y * halfH + halfH;
+
+    // Viewport bounds check
+    if (x < 10 || x > window.innerWidth - 10 || y < 60 || y > window.innerHeight - 60) {
+      pin.el.style.display = 'none';
+    } else {
+      pin.el.style.display = 'block';
+      pin.el.style.left = `${Math.round(x)}px`;
+      pin.el.style.top = `${Math.round(y)}px`;
+    }
+  });
+}
+
+function populateTeleportMenu() {
+  dom.teleportSelect.innerHTML = '<option value="">Teleport to site...</option>';
+  if (!state.layout || !state.layout.buildings) return;
+
+  const archeOptGroup = document.createElement('optgroup');
+  archeOptGroup.label = 'Arche Island (NW)';
+  const paxosOptGroup = document.createElement('optgroup');
+  paxosOptGroup.label = 'Paxos Island (SE)';
+
+  state.layout.buildings.forEach((b) => {
+    const opt = document.createElement('option');
+    opt.value = b.id;
+    opt.textContent = b.name;
+    if (b.island === 'arche') {
+      archeOptGroup.appendChild(opt);
+    } else {
+      paxosOptGroup.appendChild(opt);
+    }
+  });
+
+  dom.teleportSelect.appendChild(archeOptGroup);
+  dom.teleportSelect.appendChild(paxosOptGroup);
+}
+
+function teleportToSite(site) {
+  const wx = site.world[0];
+  const wz = site.world[1];
+  const wy = site.elevation_m || 8.0;
+
+  const dist = (site.type === 'chamber' || site.type === 'tholos' || site.type === 'stoa') ? 42 : 30;
+  flyCameraTo(
+    new THREE.Vector3(wx + dist * 0.7, wy + dist * 0.5, wz + dist * 0.8),
+    new THREE.Vector3(wx, wy + 2.5, wz),
+    1200
+  );
+  showToast(`Teleported to ${site.name}`);
+}
+
+function flyCameraTo(targetCamPos, targetLookAt, duration = 1000) {
+  const startCamPos = camera.position.clone();
+  const startTarget = controls.target.clone();
+  const startTime = performance.now();
+
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1.0);
+    // Smooth easeInOutCubic
+    const ease = progress < 0.5
+      ? 4 * progress * progress * progress
+      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+    camera.position.lerpVectors(startCamPos, targetCamPos, ease);
+    controls.target.lerpVectors(startTarget, targetLookAt, ease);
+    controls.update();
+
+    if (progress < 1.0) {
+      requestAnimationFrame(step);
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+// --- 6. Prop Placement Engine ---
+function renderPropsCatalog(categoryFilter = 'all') {
+  dom.propsCatalogGrid.innerHTML = '';
+
+  const filtered = state.propsCatalog.filter(
+    (p) => categoryFilter === 'all' || p.category === categoryFilter
+  );
+
+  filtered.forEach((p) => {
+    const card = document.createElement('div');
+    card.className = `prop-card ${state.activePropId === p.id ? 'active' : ''}`;
+    card.dataset.id = p.id;
+    card.innerHTML = `
+      <div class="prop-icon">${p.icon}</div>
+      <div class="prop-name">${p.name}</div>
+      <div class="prop-category">${p.category}</div>
+    `;
+
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.prop-card').forEach((c) => c.classList.remove('active'));
+      card.classList.add('active');
+      state.activePropId = p.id;
+      showToast(`Selected prop: ${p.name}`);
+    });
+
+    dom.propsCatalogGrid.appendChild(card);
+  });
+}
+
+async function loadPropModel(propDef) {
+  if (propModelCache.has(propDef.id)) {
+    return propModelCache.get(propDef.id).clone();
+  }
+
+  const loader = new GLTFLoader();
+  return new Promise((resolve, reject) => {
+    loader.load(
+      propDef.url,
+      (gltf) => {
+        const root = gltf.scene;
+        root.scale.setScalar(propDef.scale || 1.0);
+        root.traverse((c) => {
+          if (c.isMesh) {
+            c.castShadow = true;
+            c.receiveShadow = true;
+          }
+        });
+        propModelCache.set(propDef.id, root);
+        resolve(root.clone());
+      },
+      undefined,
+      (err) => reject(err)
+    );
+  });
+}
+
+async function placePropAtPosition(hitPoint, hitNormal) {
+  const propDef = state.propsCatalog.find((p) => p.id === state.activePropId);
+  if (!propDef) return;
+
+  try {
+    const mesh = await loadPropModel(propDef);
+    mesh.position.copy(hitPoint);
+
+    // Random slight rotation for natural appearance
+    mesh.rotation.y = Math.random() * Math.PI * 2;
+
+    const uniqueId = `prop_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+    mesh.userData = {
+      isProp: true,
+      propId: propDef.id,
+      name: propDef.name,
+      uniqueId
+    };
+
+    propsGroup.add(mesh);
+
+    const placedEntry = {
+      id: uniqueId,
+      propId: propDef.id,
+      name: propDef.name,
+      icon: propDef.icon,
+      mesh,
+      position: mesh.position,
+      rotation: mesh.rotation,
+      scale: mesh.scale
+    };
+    state.placedProps.push(placedEntry);
+
+    selectPlacedProp(placedEntry);
+    renderPlacedPropsList();
+    showToast(`Placed ${propDef.name}`);
+  } catch (err) {
+    console.error('Failed to load and place prop:', err);
+    showToast('Failed to load prop model');
+  }
+}
+
+function selectPlacedProp(placedEntry) {
+  state.selectedPlacedProp = placedEntry;
+  if (placedEntry && placedEntry.mesh) {
+    transformControls.attach(placedEntry.mesh);
+  } else {
+    transformControls.detach();
+  }
+  renderPlacedPropsList();
+}
+
+function renderPlacedPropsList() {
+  dom.placedPropsCount.textContent = state.placedProps.length;
+  dom.placedPropsList.innerHTML = '';
+
+  if (state.placedProps.length === 0) {
+    dom.placedPropsList.innerHTML =
+      '<p style="font-size: 0.78rem; color: var(--text-dim); text-align: center; padding: 12px 0;">No props placed yet. Select a prop and click anywhere on the island!</p>';
+    return;
+  }
+
+  state.placedProps.forEach((p, idx) => {
+    const item = document.createElement('div');
+    item.className = `placed-prop-item ${state.selectedPlacedProp && state.selectedPlacedProp.id === p.id ? 'selected' : ''}`;
+    item.innerHTML = `
+      <span>${p.icon} ${p.name} #${idx + 1}</span>
+      <div style="display: flex; gap: 4px;">
+        <button class="btn btn-chip" data-action="focus" title="Focus camera on prop">🔍</button>
+        <button class="btn btn-chip" data-action="delete" title="Delete prop" style="color: var(--accent-red);">✕</button>
+      </div>
+    `;
+
+    item.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (btn) {
+        const action = btn.dataset.action;
+        if (action === 'focus') {
+          flyCameraTo(
+            p.mesh.position.clone().add(new THREE.Vector3(12, 10, 14)),
+            p.mesh.position.clone(),
+            800
+          );
+        } else if (action === 'delete') {
+          deleteProp(p);
+        }
+        return;
+      }
+      selectPlacedProp(p);
+    });
+
+    dom.placedPropsList.appendChild(item);
+  });
+}
+
+function deleteProp(p) {
+  if (state.selectedPlacedProp && state.selectedPlacedProp.id === p.id) {
+    transformControls.detach();
+    state.selectedPlacedProp = null;
+  }
+  propsGroup.remove(p.mesh);
+  state.placedProps = state.placedProps.filter((item) => item.id !== p.id);
+  renderPlacedPropsList();
+  showToast(`Deleted ${p.name}`);
+}
+
+function clearAllProps() {
+  if (state.placedProps.length === 0) return;
+  transformControls.detach();
+  state.selectedPlacedProp = null;
+  propsGroup.clear();
+  state.placedProps = [];
+  renderPlacedPropsList();
+  showToast('All placed props removed');
+}
+
+// --- 7. Screen View Capture Widget (Without UI Elements) ---
+function captureCurrentScreenView(supersample = 1) {
+  // 1. Temporarily detach all visual helpers in the 3D scene
+  transformControls.detach();
+  dom.sitePinsLayer.style.display = 'none';
+
+  // 2. Render clean 3D scene
+  renderer.render(scene, camera);
+
+  // 3. Compute crop bounding box based on active aspect ratio
+  const parts = state.aspect.split(':');
+  const targetAspect = parseFloat(parts[0]) / parseFloat(parts[1]);
+
+  const canvasW = renderer.domElement.width;
+  const canvasH = renderer.domElement.height;
+  const screenAspect = canvasW / canvasH;
+
+  let cropW, cropH;
+  if (screenAspect > targetAspect) {
+    cropH = canvasH;
+    cropW = cropH * targetAspect;
+  } else {
+    cropW = canvasW;
+    cropH = cropW / targetAspect;
+  }
+
+  const cropX = (canvasW - cropW) / 2;
+  const cropY = (canvasH - cropH) / 2;
+
+  // 4. Draw to offscreen canvas
+  const offscreen = document.createElement('canvas');
+  offscreen.width = Math.round(cropW);
+  offscreen.height = Math.round(cropH);
+  const ctx = offscreen.getContext('2d');
+
+  ctx.drawImage(
+    renderer.domElement,
+    cropX, cropY, cropW, cropH,
+    0, 0, offscreen.width, offscreen.height
+  );
+
+  const dataURL = offscreen.toDataURL('image/png', 0.95);
+
+  // 5. Restore 3D visual helpers
+  if (state.selectedPlacedProp && state.selectedPlacedProp.mesh) {
+    transformControls.attach(state.selectedPlacedProp.mesh);
+  }
+  if (state.showLabels) {
+    dom.sitePinsLayer.style.display = 'block';
+  }
+
+  // 6. Update state & UI
+  state.capturedImageURL = dataURL;
+  dom.capturePreviewImg.src = dataURL;
+  dom.previsMetaBadge.textContent = `${offscreen.width}×${offscreen.height} · ${state.aspect}`;
+
+  // Automatically save previs capture to backend
+  saveCaptureToBackend(dataURL);
+
+  return dataURL;
+}
+
+async function saveCaptureToBackend(dataURL) {
+  try {
+    const res = await fetch('/api/capture', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        image_data: dataURL,
+        book_id: state.activeBook,
+        shot_id: state.shotId || 'capture',
+        metadata: {
+          cam: [camera.position.x, camera.position.y, camera.position.z],
+          target: [controls.target.x, controls.target.y, controls.target.z],
+          lens: state.lens,
+          aspect: state.aspect,
+          cast: state.selectedCast
+        }
+      })
+    });
+    const data = await res.json();
+    if (data.status === 'success') {
+      state.captureFilename = data.filename;
+    }
+  } catch (err) {
+    console.warn('Backend capture save failed:', err);
+  }
+}
+
+async function copyCapturedImageToClipboard() {
+  if (!state.capturedImageURL) return;
+  try {
+    const res = await fetch(state.capturedImageURL);
+    const blob = await res.blob();
+    await navigator.clipboard.write([
+      new ClipboardItem({ 'image/png': blob })
+    ]);
+    showToast('Image copied to clipboard!');
+  } catch (err) {
+    console.error('Clipboard copy failed:', err);
+    showToast('Could not copy image. Downloading PNG instead.');
+    downloadCapturedImage();
+  }
+}
+
+function downloadCapturedImage() {
+  if (!state.capturedImageURL) return;
+  const link = document.createElement('a');
+  link.href = state.capturedImageURL;
+  link.download = `daag_${state.shotId || 'previs'}_${state.lens}mm.png`;
+  link.click();
+  showToast('Downloaded previs image');
+}
+
+// --- 8. Character Reference Cast Picker ---
+function renderCastDrawer(filterSheet = 'all', searchQuery = '') {
+  dom.castSheetTabs.innerHTML = '';
+  dom.castCatalogGrid.innerHTML = '';
+
+  const chars = state.castData.characters || [];
+  const sheets = state.castData.sheets || {};
+
+  // Build sheet tabs
+  const allTab = document.createElement('span');
+  allTab.className = `prop-filter-chip ${filterSheet === 'all' ? 'active' : ''}`;
+  allTab.textContent = `All (${chars.length})`;
+  allTab.addEventListener('click', () => renderCastDrawer('all', searchQuery));
+  dom.castSheetTabs.appendChild(allTab);
+
+  Object.entries(sheets).forEach(([sheetKey, sheetLabel]) => {
+    const chip = document.createElement('span');
+    chip.className = `prop-filter-chip ${filterSheet === sheetKey ? 'active' : ''}`;
+    chip.textContent = sheetLabel.split(':')[0];
+    chip.addEventListener('click', () => renderCastDrawer(sheetKey, searchQuery));
+    dom.castSheetTabs.appendChild(chip);
+  });
+
+  // Filter characters
+  const q = searchQuery.toLowerCase().trim();
+  const filtered = chars.filter((c) => {
+    const matchSheet = filterSheet === 'all' || (c.sheets && c.sheets.includes(filterSheet));
+    const matchQuery = !q || c.id.toLowerCase().includes(q) || c.name.toLowerCase().includes(q) || c.description.toLowerCase().includes(q);
+    return matchSheet && matchQuery;
+  });
+
+  filtered.forEach((c) => {
+    const isSelected = state.selectedCast.includes(c.id);
+    const card = document.createElement('div');
+    card.className = `cast-card ${isSelected ? 'selected' : ''}`;
+    card.dataset.id = c.id;
+
+    card.innerHTML = `
+      <div class="cast-img-box">
+        <img src="${c.image_url || '/cast/images/legislator-man.png'}" alt="${c.name}">
+      </div>
+      <div class="cast-card-name">${c.name}</div>
+      <div class="cast-card-kind">${c.kind}</div>
+    `;
+
+    card.addEventListener('click', () => {
+      toggleCastSelection(c.id);
+      card.classList.toggle('selected', state.selectedCast.includes(c.id));
+    });
+
+    dom.castCatalogGrid.appendChild(card);
+  });
+}
+
+function toggleCastSelection(charId) {
+  const idx = state.selectedCast.indexOf(charId);
+  if (idx >= 0) {
+    state.selectedCast.splice(idx, 1);
+  } else {
+    state.selectedCast.push(charId);
+  }
+  updateCastSummaryUI();
+  updatePrompt();
+}
+
+function updateCastSummaryUI() {
+  const count = state.selectedCast.length;
+  dom.castBadgeCount.textContent = count;
+
+  if (count === 0) {
+    dom.hudCastNames.textContent = 'None selected';
+    dom.modalCastStrip.innerHTML = '<span style="font-size: 0.8rem; color: var(--text-dim); padding: 8px 0;">No cast selected. Click "+ Pick Characters" to add cast reference portraits.</span>';
+    return;
+  }
+
+  const names = state.selectedCast.map((id) => id.replace(/-/g, ' '));
+  dom.hudCastNames.textContent = names.slice(0, 3).join(', ') + (names.length > 3 ? ` +${names.length - 3}` : '');
+
+  // Render horizontal strip in Capture Modal
+  dom.modalCastStrip.innerHTML = '';
+  state.selectedCast.forEach((cid, index) => {
+    const char = (state.castData.characters || []).find((c) => c.id === cid) || {
+      id: cid,
+      name: cid.replace(/-/g, ' '),
+      image_url: `/cast/images/${cid}.png`
+    };
+
+    const item = document.createElement('div');
+    item.className = 'cast-thumb-item';
+    item.innerHTML = `
+      <div class="cast-thumb-badge">Image ${index + 2}</div>
+      <img src="${char.image_url || `/cast/images/${cid}.png`}" alt="${char.name}">
+      <div class="cast-thumb-name">${char.name}</div>
+      <div style="display: flex; gap: 2px; margin-top: 2px;">
+        <button class="btn btn-chip" data-action="copy" title="Copy reference image" style="padding: 2px 4px; font-size: 0.65rem;">📋</button>
+        <button class="btn btn-chip" data-action="remove" title="Remove from shot" style="padding: 2px 4px; font-size: 0.65rem; color: var(--accent-red);">✕</button>
+      </div>
+    `;
+
+    item.querySelector('[data-action="copy"]').addEventListener('click', async (e) => {
+      e.stopPropagation();
+      await copyImageUrlToClipboard(char.image_url);
+    });
+
+    item.querySelector('[data-action="remove"]').addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleCastSelection(cid);
+    });
+
+    dom.modalCastStrip.appendChild(item);
+  });
+}
+
+async function copyImageUrlToClipboard(imgUrl) {
+  try {
+    const res = await fetch(imgUrl);
+    const blob = await res.blob();
+    await navigator.clipboard.write([
+      new ClipboardItem({ 'image/png': blob })
+    ]);
+    showToast('Character reference copied to clipboard!');
+  } catch (err) {
+    console.error('Failed to copy character image:', err);
+    showToast('Failed to copy reference image');
+  }
+}
+
+// --- 9. AI Prompt Generator ---
+function updatePrompt() {
+  const isPhoto = state.promptStyle === 'photo';
+  const keep = isPhoto ? KEEP_PHOTO : KEEP_LIGNE_CLAIRE;
+  const picture = isPhoto ? 'photograph' : 'illustration';
+
+  let prompt = `${keep} ${state.promptAction.trim()}`;
+
+  const ids = state.selectedCast;
+  const n = ids.length;
+
+  if (n > 0) {
+    const which = n === 1 ? 'Image 2 is a reference photograph of one person' : `Images 2 to ${n + 1} are reference photographs of people, one person each`;
+    const listing = ids.map((id, k) => `image ${k + 2} is ${id}`).join(', ');
+    const drawn = !isPhoto ? ', drawn in the same ligne claire style' : '';
+
+    prompt += ` ${which}: ${listing}. Put into the ${picture} only these people, each with exactly the face, build and clothes of their reference${drawn}. The names are labels only and appear nowhere in the ${picture}.`;
+  }
+
+  const others = state.promptOthers.trim();
+  if (others) {
+    prompt += n > 0
+      ? ` Besides the ${n} named, the only other people in the ${picture} are these: ${others}`
+      : ` The only people in the ${picture} are these: ${others}`;
+  } else {
+    prompt += n === 1
+      ? ` There is exactly 1 person in the ${picture}; nobody else.`
+      : n > 1
+      ? ` There are exactly ${n} people in the ${picture}; nobody else.`
+      : ` There is nobody in the ${picture}.`;
+  }
+
+  dom.promptOutputText.textContent = prompt;
+  return prompt;
+}
+
+// --- 10. Book Shots Storage (shots.json) ---
+async function saveShotToBook() {
+  const bookId = dom.saveBookSelect.value;
+  const shotId = dom.saveShotId.value.trim() || state.shotId || 'shot';
+
+  if (!bookId) {
+    showToast('Please select a book');
+    return;
+  }
+
+  // Construct canonical shot object
+  const islandName = (camera.position.x < -50) ? 'arche' : 'paxos';
+
+  const shotData = {
+    island: islandName,
+    aspect: state.aspect,
+    cam: [
+      parseFloat(camera.position.x.toFixed(2)),
+      parseFloat(camera.position.y.toFixed(2)),
+      parseFloat(camera.position.z.toFixed(2))
+    ],
+    target: [
+      parseFloat(controls.target.x.toFixed(2)),
+      parseFloat(controls.target.y.toFixed(2)),
+      parseFloat(controls.target.z.toFixed(2))
+    ],
+    lens: state.lens,
+    cast: [...state.selectedCast],
+    prompt: state.promptAction.trim(),
+    others: state.promptOthers.trim(),
+    light: state.timeOfDay,
+    sun_from: Math.round(state.sunAzimuth)
+  };
+
+  try {
+    const res = await fetch(`/api/books/${bookId}/shots`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        shot_id: shotId,
+        shot: shotData
+      })
+    });
+    const result = await res.json();
+    if (result.status === 'success') {
+      showToast(`Saved shot '${shotId}' into ${bookId}/shots.json`);
+      loadBooksList(); // Refresh counts
+    } else {
+      showToast(`Save failed: ${result.error}`);
+    }
+  } catch (err) {
+    console.error('Failed to save shot:', err);
+    showToast('Error saving shot to backend');
+  }
+}
+
+async function loadBookShotsBrowser(bookId) {
+  try {
+    const res = await fetch(`/api/books/${bookId}/shots`);
+    const data = await res.json();
+    renderShotsBrowser(bookId, data.shots || {});
+  } catch (err) {
+    console.error('Failed to load shots for browser:', err);
+  }
+}
+
+function renderShotsBrowser(bookId, shots) {
+  dom.shotsBrowserList.innerHTML = '';
+  const entries = Object.entries(shots);
+
+  if (entries.length === 0) {
+    dom.shotsBrowserList.innerHTML = '<p style="color: var(--text-dim); text-align: center;">No shots recorded for this book yet.</p>';
+    return;
+  }
+
+  entries.forEach(([sid, s]) => {
+    const card = document.createElement('div');
+    card.className = 'control-section';
+    card.style.cursor = 'pointer';
+    card.innerHTML = `
+      <div class="section-title">
+        <span>${sid}</span>
+        <span class="control-val">${s.lens || 26}mm · ${s.aspect || '3:4'}</span>
+      </div>
+      <div style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;">
+        <strong>Island:</strong> ${s.island || 'paxos'} · <strong>Light:</strong> ${s.light || 'golden'}<br>
+        <strong>Cast:</strong> ${(s.cast || []).join(', ') || 'none'}<br>
+        <p style="margin-top: 4px; color: var(--text-main); font-style: italic;">"${(s.prompt || '').substring(0, 95)}..."</p>
+      </div>
+      <button class="btn btn-primary btn-chip" style="margin-top: 6px;">🎯 Jump to this Shot</button>
+    `;
+
+    card.addEventListener('click', () => {
+      applyBookShot(sid, s);
+      dom.shotsBrowserModal.style.display = 'none';
+      showToast(`Loaded shot: ${sid}`);
+    });
+
+    dom.shotsBrowserList.appendChild(card);
+  });
+}
+
+function applyBookShot(shotId, shot) {
+  state.shotId = shotId;
+  dom.saveShotId.value = shotId;
+
+  if (shot.cam && shot.target) {
+    flyCameraTo(
+      new THREE.Vector3(shot.cam[0], shot.cam[1], shot.cam[2]),
+      new THREE.Vector3(shot.target[0], shot.target[1], shot.target[2]),
+      1200
+    );
+  }
+
+  if (shot.lens) applyFocalLength(shot.lens);
+  if (shot.aspect) {
+    state.aspect = shot.aspect;
+    document.querySelectorAll('[data-aspect]').forEach((b) => {
+      b.classList.toggle('active', b.dataset.aspect === shot.aspect);
+    });
+    updateFramingMatte();
+  }
+
+  if (shot.light) {
+    state.timeOfDay = shot.light;
+    document.querySelectorAll('[data-tod]').forEach((b) => {
+      b.classList.toggle('active', b.dataset.tod === shot.light);
+    });
+  }
+
+  if (shot.sun_from !== undefined) {
+    state.sunAzimuth = shot.sun_from;
+    dom.sunAzimuthSlider.value = shot.sun_from;
+    dom.sunAzimuthVal.textContent = `${shot.sun_from}°`;
+  }
+  updateSunPosition();
+
+  if (shot.cast) {
+    state.selectedCast = [...shot.cast];
+    updateCastSummaryUI();
+  }
+
+  if (shot.prompt) {
+    state.promptAction = shot.prompt;
+    dom.promptActionInput.value = shot.prompt;
+  }
+
+  if (shot.others) {
+    state.promptOthers = shot.others;
+    dom.promptOthersInput.value = shot.others;
+  }
+
+  updatePrompt();
+}
+
+// --- 11. Event Listeners ---
+function setupEventListeners() {
+  window.addEventListener('resize', onWindowResize);
+
+  // Keyboard navigation & Shortcuts
+  window.addEventListener('keydown', onKeyDown);
+  window.addEventListener('keyup', onKeyUp);
+
+  // Mouse Raycasting & Prop Placement
+  renderer.domElement.addEventListener('pointerdown', onPointerDown);
+
+  // Left Dock Tabs
+  document.querySelectorAll('.tab-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      const tab = btn.dataset.tab;
+      document.querySelectorAll('.tab-content').forEach((tc) => (tc.style.display = 'none'));
+      const activeEl = document.getElementById(`tab-${tab}`);
+      if (activeEl) activeEl.style.display = 'flex';
+    });
+  });
+
+  // Dock Collapse/Expand
+  dom.btnDockCollapse.addEventListener('click', () => {
+    dom.leftDock.classList.add('collapsed');
+    dom.btnDockExpand.style.display = 'block';
+  });
+  dom.btnDockExpand.addEventListener('click', () => {
+    dom.leftDock.classList.remove('collapsed');
+    dom.btnDockExpand.style.display = 'none';
+  });
+
+  // Camera Sliders & Presets
+  dom.focalSlider.addEventListener('input', (e) => {
+    applyFocalLength(parseInt(e.target.value));
+  });
+
+  document.querySelectorAll('[data-lens]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-lens]').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFocalLength(parseInt(btn.dataset.lens));
+    });
+  });
+
+  document.querySelectorAll('[data-aspect]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-aspect]').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.aspect = btn.dataset.aspect;
+      updateFramingMatte();
+      dom.hudCamSummary.textContent = `Cam: ${state.lens}mm · ${state.aspect}`;
+    });
+  });
+
+  // Ground snap (+1.7m human eye level)
+  document.getElementById('btn-snap-eye').addEventListener('click', () => {
+    snapCameraToEyeLevel();
+  });
+
+  // Sun & Environment Sliders
+  dom.sunAzimuthSlider.addEventListener('input', (e) => {
+    state.sunAzimuth = parseInt(e.target.value);
+    dom.sunAzimuthVal.textContent = `${state.sunAzimuth}°`;
+    updateSunPosition();
+  });
+
+  dom.sunElevationSlider.addEventListener('input', (e) => {
+    state.sunElevation = parseInt(e.target.value);
+    dom.sunElevationVal.textContent = `${state.sunElevation}°`;
+    updateSunPosition();
+  });
+
+  dom.sunIntensitySlider.addEventListener('input', (e) => {
+    state.sunIntensity = parseFloat(e.target.value);
+    dom.sunIntensityVal.textContent = state.sunIntensity.toFixed(1);
+    updateSunPosition();
+  });
+
+  dom.fogDensitySlider.addEventListener('input', (e) => {
+    state.fogDensity = parseInt(e.target.value);
+    dom.fogDensityVal.textContent = `${state.fogDensity}%`;
+    applyTimeOfDayAtmosphere();
+  });
+
+  dom.seaWavesToggle.addEventListener('change', (e) => {
+    state.seaWaves = e.target.checked;
+  });
+
+  document.querySelectorAll('[data-tod]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-tod]').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.timeOfDay = btn.dataset.tod;
+      if (btn.dataset.tod === 'golden') {
+        state.sunAzimuth = 250;
+        state.sunElevation = 24;
+      } else if (btn.dataset.tod === 'morning') {
+        state.sunAzimuth = 100;
+        state.sunElevation = 32;
+      } else if (btn.dataset.tod === 'noon') {
+        state.sunAzimuth = 180;
+        state.sunElevation = 70;
+      } else if (btn.dataset.tod === 'sunset') {
+        state.sunAzimuth = 270;
+        state.sunElevation = 6;
+      }
+      dom.sunAzimuthSlider.value = state.sunAzimuth;
+      dom.sunAzimuthVal.textContent = `${state.sunAzimuth}°`;
+      dom.sunElevationSlider.value = state.sunElevation;
+      dom.sunElevationVal.textContent = `${state.sunElevation}°`;
+      updateSunPosition();
+    });
+  });
+
+  // View Presets
+  document.getElementById('btn-view-both').addEventListener('click', () => {
+    flyCameraTo(new THREE.Vector3(120, 260, 520), new THREE.Vector3(0, 15, 0), 1000);
+  });
+  document.getElementById('btn-view-arche').addEventListener('click', () => {
+    flyCameraTo(new THREE.Vector3(-180, 220, -160), new THREE.Vector3(-180, 15, -220), 1000);
+  });
+  document.getElementById('btn-view-paxos').addEventListener('click', () => {
+    flyCameraTo(new THREE.Vector3(190, 180, 280), new THREE.Vector3(190, 15, 180), 1000);
+  });
+
+  // Teleport Select
+  dom.teleportSelect.addEventListener('change', (e) => {
+    const siteId = e.target.value;
+    if (!siteId || !state.layout) return;
+    const site = state.layout.buildings.find((b) => b.id === siteId);
+    if (site) teleportToSite(site);
+  });
+
+  // Roof Cutaway
+  document.getElementById('btn-roof-cutaway').addEventListener('click', (e) => {
+    state.roofsLifted = !state.roofsLifted;
+    e.target.classList.toggle('active', state.roofsLifted);
+    toggleRoofCutaway(state.roofsLifted);
+  });
+
+  // Labels Toggle
+  document.getElementById('btn-toggle-labels').addEventListener('click', (e) => {
+    state.showLabels = !state.showLabels;
+    e.target.classList.toggle('active', state.showLabels);
+    updateSitePinsScreenPos();
+  });
+
+  // Grid Toggle
+  document.getElementById('btn-toggle-grid').addEventListener('click', (e) => {
+    state.showGrid = !state.showGrid;
+    e.target.classList.toggle('active', state.showGrid);
+    dom.framingBox.classList.toggle('guide-grid', state.showGrid);
+  });
+
+  // Prop Placement Mode
+  dom.btnPlacePropMode.addEventListener('click', () => {
+    state.placePropMode = !state.placePropMode;
+    dom.btnPlacePropMode.classList.toggle('active', state.placePropMode);
+    dom.btnPlacePropMode.textContent = state.placePropMode
+      ? '🎯 Active: Click Island Surface'
+      : '🎯 Click Island to Place Prop';
+    dom.hudStatusDot.classList.toggle('placing', state.placePropMode);
+    dom.hudStatusText.textContent = state.placePropMode ? 'Prop Placement Active' : 'Aegean View Active';
+  });
+
+  document.getElementById('gizmo-mode-translate').addEventListener('click', (e) => {
+    setGizmoMode('translate', e.target);
+  });
+  document.getElementById('gizmo-mode-rotate').addEventListener('click', (e) => {
+    setGizmoMode('rotate', e.target);
+  });
+  document.getElementById('gizmo-mode-scale').addEventListener('click', (e) => {
+    setGizmoMode('scale', e.target);
+  });
+
+  dom.btnClearProps.addEventListener('click', clearAllProps);
+
+  // Prop Category Filter Chips
+  dom.propCategoryFilters.addEventListener('click', (e) => {
+    const chip = e.target.closest('.prop-filter-chip');
+    if (!chip) return;
+    document.querySelectorAll('.prop-filter-chip').forEach((c) => c.classList.remove('active'));
+    chip.classList.add('active');
+    renderPropsCatalog(chip.dataset.category);
+  });
+
+  // Capture & Compose Modal Controls
+  document.getElementById('btn-capture-modal').addEventListener('click', () => {
+    captureCurrentScreenView();
+    dom.captureModal.classList.remove('hidden');
+  });
+
+  document.getElementById('btn-quick-capture').addEventListener('click', () => {
+    captureCurrentScreenView();
+    dom.captureModal.classList.remove('hidden');
+  });
+
+  document.getElementById('btn-close-capture-modal').addEventListener('click', () => {
+    dom.captureModal.classList.add('hidden');
+  });
+
+  dom.btnCopyImage.addEventListener('click', copyCapturedImageToClipboard);
+  dom.btnDownloadImage.addEventListener('click', downloadCapturedImage);
+  dom.btnRecapture.addEventListener('click', () => {
+    captureCurrentScreenView();
+    showToast('Recaptured view');
+  });
+
+  // Prompt Style Buttons
+  document.querySelectorAll('.style-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.style-btn').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.promptStyle = btn.dataset.style;
+      updatePrompt();
+    });
+  });
+
+  dom.promptActionInput.addEventListener('input', (e) => {
+    state.promptAction = e.target.value;
+    updatePrompt();
+  });
+
+  dom.promptOthersInput.addEventListener('input', (e) => {
+    state.promptOthers = e.target.value;
+    updatePrompt();
+  });
+
+  dom.btnCopyPrompt.addEventListener('click', async () => {
+    const prompt = updatePrompt();
+    await navigator.clipboard.writeText(prompt);
+    showToast('Prompt copied to clipboard!');
+  });
+
+  dom.btnExportBundle.addEventListener('click', () => {
+    const prompt = updatePrompt();
+    const query = new URLSearchParams({
+      shot: state.shotId || 'composition',
+      capture: state.captureFilename || '',
+      prompt
+    });
+    state.selectedCast.forEach((cid) => query.append('cast', cid));
+    window.location.href = `/api/bundle?${query.toString()}`;
+  });
+
+  dom.btnSaveShotBook.addEventListener('click', saveShotToBook);
+
+  // Cast Drawer Controls
+  document.getElementById('btn-open-cast').addEventListener('click', () => {
+    dom.castDrawer.classList.add('open');
+  });
+  dom.btnModalAddCast.addEventListener('click', () => {
+    dom.castDrawer.classList.add('open');
+  });
+  document.getElementById('hud-cast-pill').addEventListener('click', () => {
+    dom.castDrawer.classList.add('open');
+  });
+  document.getElementById('btn-close-cast-drawer').addEventListener('click', () => {
+    dom.castDrawer.classList.remove('open');
+  });
+  document.getElementById('btn-clear-cast-selection').addEventListener('click', () => {
+    state.selectedCast = [];
+    renderCastDrawer();
+    updateCastSummaryUI();
+    updatePrompt();
+  });
+
+  dom.castSearchInput.addEventListener('input', (e) => {
+    renderCastDrawer('all', e.target.value);
+  });
+
+  // Book Shots Browser Controls
+  document.getElementById('btn-open-shots-browser').addEventListener('click', () => {
+    dom.shotsBrowserModal.style.display = 'flex';
+    loadBookShotsBrowser(dom.browserBookSelect.value || state.activeBook);
+  });
+  document.getElementById('btn-close-shots-browser').addEventListener('click', () => {
+    dom.shotsBrowserModal.style.display = 'none';
+  });
+  dom.browserBookSelect.addEventListener('change', (e) => {
+    loadBookShotsBrowser(e.target.value);
+  });
+}
+
+function setGizmoMode(mode, targetBtn) {
+  state.gizmoMode = mode;
+  transformControls.setMode(mode);
+  ['translate', 'rotate', 'scale'].forEach((m) => {
+    const btn = document.getElementById(`gizmo-mode-${m}`);
+    if (btn) btn.classList.remove('active');
+  });
+  if (targetBtn) targetBtn.classList.add('active');
+}
+
+function toggleRoofCutaway(lift) {
+  if (!state.islandModel) return;
+  state.islandModel.traverse((child) => {
+    if (child.isMesh && child.name.toLowerCase().includes('roof')) {
+      child.position.y = lift ? 9.0 : 0.0;
+    }
+  });
+  showToast(lift ? 'Roofs lifted by 9m to inspect interiors' : 'Roofs restored to normal');
+}
+
+function snapCameraToEyeLevel() {
+  raycaster.set(camera.position, new THREE.Vector3(0, -1, 0));
+  const intersects = raycaster.intersectObjects(islandGroup.children, true);
+  if (intersects.length > 0) {
+    const groundY = intersects[0].point.y;
+    camera.position.y = groundY + 1.7; // 1.7m eye level
+    controls.update();
+    showToast('Camera snapped to 1.7m eye level');
+  }
+}
+
+// --- 12. Pointer Raycasting for Prop Placement ---
+function onPointerDown(event) {
+  // Ignore clicks on UI elements
+  if (event.target !== renderer.domElement) return;
+
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+
+  // If in Prop Placement Mode: place active prop
+  if (state.placePropMode) {
+    const intersects = raycaster.intersectObjects(islandGroup.children, true);
+    if (intersects.length > 0) {
+      const hit = intersects[0];
+      placePropAtPosition(hit.point, hit.face ? hit.face.normal : new THREE.Vector3(0, 1, 0));
+      return;
+    }
+  }
+
+  // Otherwise: test selection of placed props
+  const propIntersects = raycaster.intersectObjects(propsGroup.children, true);
+  if (propIntersects.length > 0) {
+    let obj = propIntersects[0].object;
+    while (obj && obj.parent !== propsGroup) {
+      obj = obj.parent;
+    }
+    if (obj) {
+      const placed = state.placedProps.find((p) => p.mesh === obj);
+      if (placed) {
+        selectPlacedProp(placed);
+        return;
+      }
+    }
+  }
+
+  // Clicked empty space: deselect prop
+  if (!state.placePropMode && state.selectedPlacedProp) {
+    selectPlacedProp(null);
+  }
+}
+
+// --- 13. Keyboard Fly Navigation & Shortcuts ---
+function onKeyDown(e) {
+  keyState[e.code] = true;
+
+  // Spacebar: quick capture
+  if (e.code === 'Space' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    e.preventDefault();
+    captureCurrentScreenView();
+    dom.captureModal.classList.remove('hidden');
+    return;
+  }
+
+  // Delete / Backspace: delete selected prop
+  if ((e.code === 'Delete' || e.code === 'Backspace') && state.selectedPlacedProp && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    deleteProp(state.selectedPlacedProp);
+    return;
+  }
+
+  // Shortcuts: G = move, R = rotate, S = scale
+  if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    if (e.code === 'KeyG') setGizmoMode('translate', document.getElementById('gizmo-mode-translate'));
+    if (e.code === 'KeyR') setGizmoMode('rotate', document.getElementById('gizmo-mode-rotate'));
+    if (e.code === 'KeyS') setGizmoMode('scale', document.getElementById('gizmo-mode-scale'));
+  }
+}
+
+function onKeyUp(e) {
+  keyState[e.code] = false;
+}
+
+function updateFlyControls(delta) {
+  // Active fly controls via WASDQE
+  if (!keyState['KeyW'] && !keyState['KeyS'] && !keyState['KeyA'] && !keyState['KeyD'] && !keyState['KeyQ'] && !keyState['KeyE']) {
+    return;
+  }
+
+  const speed = (keyState['ShiftLeft'] || keyState['ShiftRight'] ? 160 : 60) * delta;
+
+  const forward = new THREE.Vector3();
+  camera.getWorldDirection(forward);
+
+  const right = new THREE.Vector3();
+  right.crossVectors(forward, camera.up).normalize();
+
+  const moveDelta = new THREE.Vector3();
+
+  if (keyState['KeyW']) moveDelta.addScaledVector(forward, speed);
+  if (keyState['KeyS']) moveDelta.addScaledVector(forward, -speed);
+  if (keyState['KeyD']) moveDelta.addScaledVector(right, speed);
+  if (keyState['KeyA']) moveDelta.addScaledVector(right, -speed);
+  if (keyState['KeyE']) moveDelta.y += speed;
+  if (keyState['KeyQ']) moveDelta.y -= speed;
+
+  camera.position.add(moveDelta);
+  controls.target.add(moveDelta);
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  updateFramingMatte();
+}
+
+function updateCoordsDisplay() {
+  dom.camX.textContent = camera.position.x.toFixed(1);
+  dom.camY.textContent = camera.position.y.toFixed(1);
+  dom.camZ.textContent = camera.position.z.toFixed(1);
+
+  dom.tarX.textContent = controls.target.x.toFixed(1);
+  dom.tarY.textContent = controls.target.y.toFixed(1);
+  dom.tarZ.textContent = controls.target.z.toFixed(1);
+}
+
+function showToast(msg) {
+  dom.toast.textContent = msg;
+  dom.toast.classList.add('show');
+  clearTimeout(dom.toast._timer);
+  dom.toast._timer = setTimeout(() => {
+    dom.toast.classList.remove('show');
+  }, 2600);
+}
+
+// --- 14. Main Animation Loop ---
+let lastTime = performance.now();
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const now = performance.now();
+  const delta = (now - lastTime) / 1000;
+  lastTime = now;
+
+  // Fly Keyboard Navigation
+  updateFlyControls(delta);
+
+  // Orbit controls update
+  controls.update();
+
+  // Sea Wave Shader Animation
+  if (state.seaWaves && seaMesh && seaMesh.material.uniforms) {
+    seaMesh.material.uniforms.uTime.value += delta * 1.2;
+  }
+
+  // Update real-time HUD coords & 3D site labels
+  updateCoordsDisplay();
+  updateSitePinsScreenPos();
+
+  // Render Scene
+  renderer.render(scene, camera);
+}
+
+// Start application
+init();
