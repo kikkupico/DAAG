@@ -298,7 +298,8 @@ def get_available_books():
 
 # --- Full-detail renders: the composed shot rendered by Blender from the built island ---------------
 
-RENDER_KEYS = {"cam", "target", "lens", "light", "sun_from", "base", "site", "dof", "hazeD", "hazeS", "placed_props"}
+RENDER_KEYS = {"cam", "target", "lens", "light", "sun_from", "base", "site", "dof", "hazeD", "hazeS", "placed_props",
+               "sun_elev", "sun_scale", "fog_scale"}
 RES_1K = {"1:1": (1024, 1024), "2:3": (848, 1264), "3:2": (1264, 848), "3:4": (896, 1200), "4:3": (1200, 896),
           "4:5": (928, 1152), "5:4": (1152, 928), "9:16": (768, 1376), "16:9": (1376, 768), "21:9": (1584, 672)}
 QUALITIES = ("preview", "check", "final")      # render.py: half size 32 samples / full size 48 / full size 160
@@ -307,10 +308,21 @@ jobs = {}
 render_lock = threading.Lock()                 # one Blender at a time
 
 
+def light_presets_full():
+    """render.py's PRESETS as plain data: {name: {sky, elev, strength, ...}}, read from its source so the
+    composer and the renderer cannot disagree about what a time of day is."""
+    import ast
+    tree = ast.parse((WORLD / "src" / "render.py").read_text(encoding="utf-8"))
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and getattr(node.targets[0], "id", "") == "PRESETS":
+            return {k.value: {kw.arg: ast.literal_eval(kw.value) for kw in v.keywords}
+                    for k, v in zip(node.value.keys, node.value.values)}
+    return {}
+
+
 def light_presets():
     """The light names render.py knows."""
-    text = (WORLD / "src" / "render.py").read_text(encoding="utf-8")
-    return re.findall(r"^\s+'(\w+)': dict\(sky=", text, re.M)
+    return list(light_presets_full())
 
 
 def is_coordinate(v):
@@ -337,6 +349,9 @@ def clean_spec(body):
             and isinstance(p.get("scale", 1), (int, float)) for p in items)
         if not ok:
             return None, "'placed_props' must be a list of {prop, at, face, scale}"
+    for key, lo, hi in (("sun_elev", -5, 85), ("sun_scale", 0.05, 5), ("fog_scale", 0, 10), ("sun_from", 0, 360)):
+        if key in spec and not (isinstance(spec[key], (int, float)) and lo <= spec[key] <= hi):
+            return None, f"'{key}' must be a number from {lo} to {hi}"
     if spec.get("light") not in light_presets():
         spec["light"] = "golden"
     if spec.get("site") is not None and spec["site"] not in SITES_WITH_FRAME:
@@ -513,6 +528,10 @@ class ComposerHandler(SimpleHTTPRequestHandler):
         if path == "/api/tests":
             tests = read_tests()
             self.send_json({"shots": tests, "renders": {tid: test_renders(tid) for tid in tests}})
+            return
+
+        if path == "/api/lights":
+            self.send_json({"presets": light_presets_full()})
             return
 
         if path == "/api/prompt":

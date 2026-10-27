@@ -11,6 +11,9 @@ Positions can be given two ways besides world metres:
                       shot stays framed on the building wherever the terrain puts it
   a height "+1.7"     1.7 m above the ground at that point (world positions only)
 
+"sun_elev" (degrees; a sun sky only), "sun_scale" (the sun's strength relative to the light preset) and "fog_scale"
+(the preset's haze, 1 = as is, 0 = none) adjust the "light" preset; "sun_from" is the compass bearing the light comes from.
+
 "placed_props" are the live props the composer places (world/composer): [{"prop": id, "at": [x, y, z], "face":
 degrees, "scale"}], in world metres, each the prototype of that name from the island (cart_0, amphora_1, ionic,
 statue_plato, ...), standing on its z, centred on its footprint, built with the other props.
@@ -25,7 +28,8 @@ import json
 import math
 import os
 
-KEYS = ("cam", "target", "lens", "light", "sun_from", "res", "hide", "lights", "dof", "light_override", "hazeD", "hazeS")
+KEYS = ("cam", "target", "lens", "light", "sun_from", "res", "hide", "lights", "dof", "light_override", "hazeD", "hazeS",
+        "sun_elev", "sun_scale", "fog_scale")
 
 
 def frame(mod, site):
