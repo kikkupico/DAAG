@@ -30,6 +30,12 @@ class ServerTest(unittest.TestCase):
         (server.BOOKS_DIR / "eighteen-books-in-one-scroll" / "index.html").write_text("<title>x</title>")
         server.CAPTURES_DIR = tmp / "captures"
         server.CAPTURES_DIR.mkdir()
+        server.DRAFTS_DIR = tmp / "drafts"
+        server.DRAFTS_FILE = server.DRAFTS_DIR / "shots.json"
+        server.RENDERS_DIR = tmp / "renders"
+        server.FLUX_DIR = tmp / "flux"
+        server.RENDERS_DIR.mkdir()
+        server.FLUX_DIR.mkdir()
         server.TESTS_DIR = tmp / "tests"
         server.TESTS_FILE = server.TESTS_DIR / "shots.json"
         (server.TESTS_DIR / "renders").mkdir(parents=True)
@@ -155,6 +161,55 @@ class ServerTest(unittest.TestCase):
                     {"cast": ["../x"]}, {"cast": ["no-such-person"]}, {"seed": -1}, {"seed": "7"}):
             self.assertIsNotNone(server.clean_flux(dict(ok, **bad))[1], bad)
         self.assertEqual(self.call("/api/flux", {"previs": "capture:nope.png", "prompt": "p"})[0], 400)
+
+    def test_attempts_are_those_from_the_same_camera_and_target(self):
+        def put(folder, name, note):
+            (folder / f"{name}.png").write_bytes(b"x")
+            (folder / f"{name}.json").write_text(json.dumps(note))
+        here = {"cam": [1.0, 2.0, 3.0], "target": [4.0, 5.0, 6.0]}
+        put(server.RENDERS_DIR, "r-here", {"view": here, "lens": 26, "aspect": "3:4", "light": "golden"})
+        put(server.RENDERS_DIR, "r-other-light", {"view": here, "lens": 50, "aspect": "16:9", "light": "dusk"})
+        put(server.RENDERS_DIR, "r-moved", {"view": {"cam": [1.0, 2.5, 3.0], "target": [4.0, 5.0, 6.0]}})
+        put(server.RENDERS_DIR, "r-turned", {"view": {"cam": [1.0, 2.0, 3.0], "target": [4.0, 5.0, 7.0]}})
+        (server.RENDERS_DIR / "r-unknown.png").write_bytes(b"x")                 # made before views were recorded
+        put(server.CAPTURES_DIR, "c-here", dict(here, lens=26))
+        put(server.FLUX_DIR, "f-from-render", {"previs": str(server.RENDERS_DIR / "r-here.png"), "seed": 7})
+        put(server.FLUX_DIR, "f-from-capture", {"previs": str(server.CAPTURES_DIR / "c-here.png"), "seed": 8})
+        put(server.FLUX_DIR, "f-elsewhere", {"previs": str(server.RENDERS_DIR / "r-moved.png"), "seed": 9})
+        q = "cam=1.0,2.0,3.0&target=4.0,5.0,6.0"
+        got = json.loads(self.call(f"/api/history?{q}")[1])
+        self.assertEqual(sorted(r["url"] for r in got["renders"]), ["/renders/r-here.png", "/renders/r-other-light.png"])
+        self.assertEqual(sorted(f["url"] for f in got["flux"]), ["/flux/f-from-capture.png", "/flux/f-from-render.png"])
+        self.assertEqual([r.get("lens") for r in got["renders"] if r["url"].endswith("r-other-light.png")], [50])
+        everything = json.loads(self.call("/api/history")[1])
+        self.assertEqual(len(everything["renders"]), 5)
+
+    def test_shots_have_ids_and_their_pictures_carry_them(self):
+        shot = {"island": "paxos", "cam": [1.0, 2.0, 3.0], "target": [4.0, 5.0, 6.0], "lens": 26, "aspect": "3:4", "evil": 1}
+        a = json.loads(self.call("/api/shots", {"shot": shot})[1])["id"]
+        b = json.loads(self.call("/api/shots", {"shot": dict(shot, lens=50)})[1])["id"]
+        self.assertEqual((a, b), ("shot-1", "shot-2"))
+        self.call("/api/shots", {"id": a, "name": "Door", "shot": shot})              # saving again keeps the id
+        data = json.loads(self.call("/api/shots")[1])
+        self.assertEqual(sorted(data["shots"]), ["shot-1", "shot-2"])
+        self.assertEqual((data["shots"][a]["name"], "evil" in data["shots"][a]), ("Door", False))
+        self.assertEqual(self.call("/api/shots", {"id": "../x", "shot": shot})[0], 400)
+
+        def put(folder, name, note):
+            (folder / f"{name}.png").write_bytes(b"x")
+            (folder / f"{name}.json").write_text(json.dumps(note))
+        view = {"cam": shot["cam"], "target": shot["target"]}
+        put(server.RENDERS_DIR, "s1-a", {"shot": a, "view": view})
+        put(server.RENDERS_DIR, "s1-b", {"shot": a, "view": {"cam": [9, 9, 9], "target": shot["target"]}})
+        put(server.RENDERS_DIR, "s2-a", {"shot": b, "view": view})
+        put(server.FLUX_DIR, "f1", {"shot": a, "previs": str(server.RENDERS_DIR / "s1-a.png"), "seed": 1})
+        urls = lambda q: sorted(r["url"] for r in json.loads(self.call(f"/api/history?{q}")[1])["renders"])
+        self.assertEqual(urls(f"shot={a}"), ["/renders/s1-a.png", "/renders/s1-b.png"])        # every view of the shot
+        self.assertEqual(urls(f"shot={a}&cam=1.0,2.0,3.0&target=4.0,5.0,6.0"), ["/renders/s1-a.png"])
+        summary = json.loads(self.call("/api/shots")[1])["summary"]
+        self.assertEqual((summary[a]["counts"], summary[b]["counts"]), ({"renders": 2, "flux": 1}, {"renders": 1, "flux": 0}))
+        self.call("/api/shots/delete", {"id": b})
+        self.assertEqual(sorted(json.loads(self.call("/api/shots")[1])["shots"]), [a])
 
     def test_render_spec_is_cleaned(self):
         spec, err = server.clean_spec({"island": "paxos", "size": "1K", "shot": {

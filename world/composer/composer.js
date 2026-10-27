@@ -50,6 +50,9 @@ const state = {
   capturedImageURL: null,
   captureFilename: null,
   renderJob: null,       // the Blender render in progress, if any
+  draftId: null,         // the id of the shot being composed (null until it is first saved: a capture, a render, a FLUX picture)
+  drafts: {},            // the shots saved so far, by id
+  draftSummary: {},      // each one's newest pictures
   renderURL: null,       // its picture when done
   renderView: null,      // the camera the render was made from, to tell when the view has moved since
   lastCaptureFile: null, // the viewport capture on disk (captureFilename may name a render instead)
@@ -137,6 +140,12 @@ const dom = {
   renderImg: document.getElementById('render-img'),
   btnRenderUse: document.getElementById('btn-render-use'),
   btnFlux: document.getElementById('btn-flux'),
+  shotSwitch: document.getElementById('shot-switch'),
+  captureShotChips: document.getElementById('capture-shot-chips'),
+  shotNameInput: document.getElementById('shot-name-input'),
+  explorerModal: document.getElementById('explorer-modal'),
+  explorerList: document.getElementById('explorer-list'),
+  historyThisView: document.getElementById('history-this-view'),
   historyImg: document.getElementById('history-img'),
   historyCaption: document.getElementById('history-caption'),
   historyStrip: document.getElementById('history-strip'),
@@ -219,6 +228,7 @@ async function init() {
   await loadCastData();
   await loadBooksList();
   await loadPromptParts();
+  await loadDrafts();
   state.lightPresets = (await (await fetch('/api/lights')).json()).presets || {};
   applyLightPreset(state.timeOfDay);
 
@@ -1165,8 +1175,9 @@ async function saveCaptureToBackend(dataURL) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         image_data: dataURL,
-        shot_id: state.shotId || 'capture',
+        shot_id: state.draftId || state.shotId || 'capture',
         metadata: {
+          shot: state.draftId,
           island: state.island,
           cam: shotPoint(camera.position),
           target: shotPoint(controls.target),
@@ -1426,6 +1437,7 @@ async function saveShotToBook() {
 
 // --- Full-detail renders ---
 async function startRender() {
+  await saveDraft().catch(() => {});
   const shotId = dom.saveShotId.value.trim() || state.shotId || 'shot';
   const shot = composedShot(shotId);
   dom.btnRender.disabled = true;
@@ -1434,7 +1446,7 @@ async function startRender() {
     const res = await fetch('/api/render', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ island: state.island, shot, quality: dom.renderQuality.value, size: dom.renderSize.value })
+      body: JSON.stringify({ island: state.island, shot, quality: dom.renderQuality.value, size: dom.renderSize.value, view: currentView(), shot_id: state.draftId })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || res.statusText);
@@ -1480,12 +1492,137 @@ async function pollRender(job, t0) {
   }
 }
 
+// --- Shots being composed, each with an id ---
+const draftLabel = (id) => `${id}${state.drafts[id]?.name ? ` · ${state.drafts[id].name}` : ''}`;
+
+async function loadDrafts() {
+  const data = await (await fetch('/api/shots')).json();
+  state.drafts = data.shots || {};
+  state.draftSummary = data.summary || {};
+  updateShotSwitch();
+  if (dom.explorerModal.style.display === 'flex') renderExplorer();
+}
+
+/** Save the composition on screen as the current shot, creating it (shot-N) the first time. */
+async function saveDraft() {
+  const res = await fetch('/api/shots', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: state.draftId || undefined,
+      name: dom.shotNameInput.value.trim(),
+      shot: composedShot(state.shotId)
+    })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error);
+  state.draftId = data.id;
+  await loadDrafts();
+  return data.id;
+}
+
+function updateShotSwitch() {
+  const ids = Object.keys(state.drafts);
+  dom.shotSwitch.innerHTML = `<option value="">${state.draftId ? 'New shot…' : 'Unsaved shot'}</option>` +
+    ids.map((id) => `<option value="${esc(id)}">${esc(draftLabel(id))}</option>`).join('');
+  dom.shotSwitch.value = state.draftId && state.drafts[state.draftId] ? state.draftId : '';
+
+  dom.captureShotChips.innerHTML = '';
+  ids.forEach((id) => {
+    const chip = document.createElement('button');
+    chip.className = `btn btn-chip${id === state.draftId ? ' active' : ''}`;
+    chip.textContent = draftLabel(id);
+    chip.addEventListener('click', () => switchDraft(id, { recapture: true }));
+    dom.captureShotChips.appendChild(chip);
+  });
+  if (document.activeElement !== dom.shotNameInput) dom.shotNameInput.value = state.drafts[state.draftId]?.name || '';
+}
+
+/** Leave the current shot (saved as it is) and open another: its island, camera, lens, light, cast, prompt and props. */
+async function switchDraft(id, { recapture = false } = {}) {
+  if (id === state.draftId) return;
+  if (state.draftId) await saveDraft().catch(() => {});
+  const shot = state.drafts[id];
+  if (!shot) return;
+  applyBookShot(id, shot, { draft: id });
+  showToast(`Shot ${draftLabel(id)}`);
+  if (recapture) {
+    setTimeout(() => { captureCurrentScreenView(); loadHistory(); }, 1500);   // after the camera has flown there
+  }
+}
+
+function newShot() {
+  state.draftId = null;
+  updateShotSwitch();
+  showToast('New shot: it gets an id when you capture, render or save');
+}
+
+async function deleteDraft(id) {
+  await fetch('/api/shots/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
+  if (state.draftId === id) state.draftId = null;
+  await loadDrafts();
+}
+
+function renderExplorer() {
+  const ids = Object.keys(state.drafts).sort((a, b) => (state.drafts[b].updated || '').localeCompare(state.drafts[a].updated || ''));
+  dom.explorerList.innerHTML = ids.length ? '' :
+    '<p style="color: var(--text-dim);">No shots yet. A shot gets its id when you first capture, render or save it.</p>';
+  ids.forEach((id) => {
+    const s = state.drafts[id];
+    const sum = state.draftSummary[id] || { renders: [], flux: [], counts: { renders: 0, flux: 0 } };
+    const pic = (url, label) => url ? `
+      <a href="${esc(url)}" target="_blank" rel="noopener" style="flex: 1; min-width: 0; text-decoration: none; color: var(--text-dim); font-size: 0.7rem; text-align: center;">
+        <img loading="lazy" src="${esc(url)}?w=320" alt="${esc(label)}" style="width: 100%; border-radius: 6px; display: block;">${esc(label)}</a>` : '';
+    const card = document.createElement('div');
+    card.className = 'control-section';
+    card.innerHTML = `
+      <div class="section-title">
+        <span>${esc(id)}</span>
+        <span class="control-val">${esc(s.island)} · ${esc(s.lens || '')}mm · ${esc(s.aspect || '')}${id === state.draftId ? ' · open' : ''}</span>
+      </div>
+      <input type="text" class="input-text" data-act="name" value="${esc(s.name || '')}" placeholder="name this shot" style="margin-bottom: 6px;">
+      <div style="display: flex; gap: 6px; margin-bottom: 6px; min-height: 40px;">
+        ${pic(sum.renders[0], `render (${sum.counts.renders})`) + pic(sum.flux[0], `FLUX (${sum.counts.flux})`) || '<span style="color: var(--text-dim); font-size: 0.8rem;">no pictures yet</span>'}
+      </div>
+      <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px;">${esc((s.prompt || '').slice(0, 110))}${(s.prompt || '').length > 110 ? '…' : ''}</div>
+      <div style="display: flex; gap: 6px;">
+        <button class="btn btn-primary btn-chip" data-act="open">🎯 Open</button>
+        <button class="btn btn-chip" data-act="delete" style="color: var(--accent-red);">✕ Delete</button>
+      </div>`;
+    card.addEventListener('click', async (e) => {
+      const act = e.target.closest('[data-act]')?.dataset.act;
+      if (act === 'open') {
+        await switchDraft(id);
+        dom.explorerModal.style.display = 'none';
+      } else if (act === 'delete') deleteDraft(id);
+    });
+    card.querySelector('[data-act="name"]').addEventListener('change', async (e) => {
+      await fetch('/api/shots', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, name: e.target.value.trim(), shot: s }) });
+      loadDrafts();
+    });
+    dom.explorerList.appendChild(card);
+  });
+}
+
 // --- Attempts: a view-only switcher over earlier renders and FLUX pictures ---
 const history = { kind: 'renders', items: { renders: [], flux: [] }, index: 0 };
 
+/** The camera position and look-at point in world (Blender) coordinates. */
+function currentView() {
+  return { cam: shotPoint(camera.position), target: shotPoint(controls.target) };
+}
+
 async function loadHistory() {
   try {
-    history.items = await (await fetch('/api/history')).json();
+    const v = currentView();
+    const query = new URLSearchParams();
+    if (state.draftId) query.set('shot', state.draftId);
+    if (dom.historyThisView.checked || !state.draftId) {
+      query.set('cam', v.cam.join(','));
+      query.set('target', v.target.join(','));
+    }
+    history.items = await (await fetch(`/api/history?${query}`)).json();
   } catch (err) {
     history.items = { renders: [], flux: [] };
   }
@@ -1495,6 +1632,9 @@ async function loadHistory() {
 
 function historyLabel(it) {
   const bits = [it.made];
+  if (it.lens) bits.push(`${it.lens}mm`);
+  if (it.aspect) bits.push(it.aspect);
+  if (it.light) bits.push(it.light);
   if (it.seed !== undefined && it.seed !== null) bits.push(`seed ${it.seed}`);
   if (it.seconds) bits.push(`${it.seconds}s`);
   if (it.from) bits.push(`from ${it.from}`);
@@ -1507,7 +1647,10 @@ function showHistory() {
   document.getElementById('history-tab-flux').classList.toggle('active', history.kind === 'flux');
   dom.historyEmpty.style.display = list.length ? 'none' : 'block';
   dom.historyViewer.style.display = list.length ? 'block' : 'none';
-  if (!list.length) return;
+  if (!list.length) {
+    dom.historyStrip.innerHTML = '';
+    return;
+  }
   history.index = Math.min(Math.max(history.index, 0), list.length - 1);
   const it = list[history.index];
   dom.historyImg.src = it.url;
@@ -1550,6 +1693,7 @@ function updateFluxSourceNote() {
 }
 
 async function startFlux() {
+  await saveDraft().catch(() => {});
   const source = fluxSource();
   let kindFile;
   if (source === 'render') {
@@ -1569,7 +1713,8 @@ async function startFlux() {
         previs: kindFile,
         prompt: currentPrompt({ labels: false }),     // FLUX copies printed names, so the references carry none
         cast: state.selectedCast,
-        seed: parseInt(dom.fluxSeed.value, 10) || 0
+        seed: parseInt(dom.fluxSeed.value, 10) || 0,
+        shot_id: state.draftId
       })
     });
     const data = await res.json();
@@ -1787,11 +1932,17 @@ function renderShotsBrowser() {
   });
 }
 
-function applyBookShot(shotId, shot) {
-  const [baseId, variantId = ''] = shotId.split('/');
-  state.shotId = baseId;
-  dom.saveShotId.value = baseId;
-  dom.saveVariant.value = variantId;
+function applyBookShot(shotId, shot, { draft = null } = {}) {
+  if (draft) {
+    state.draftId = draft;                  // one of your own shots: keep the book-shot name as it is
+  } else {
+    const [baseId, variantId = ''] = shotId.split('/');
+    state.shotId = baseId;
+    dom.saveShotId.value = baseId;
+    dom.saveVariant.value = variantId;
+    state.draftId = null;                   // a book or test shot starts a new shot of your own
+  }
+  updateShotSwitch();
 
   state.shotSite = shot.site || null;
   const flyToShot = () => {
@@ -2035,7 +2186,8 @@ function setupEventListeners() {
   });
 
   // Capture & Compose Modal Controls
-  document.getElementById('btn-quick-capture').addEventListener('click', () => {
+  document.getElementById('btn-quick-capture').addEventListener('click', async () => {
+    await saveDraft().catch((err) => showToast(`Shot not saved: ${err.message}`));
     loadHistory();
     captureCurrentScreenView();
     dom.captureModal.classList.remove('hidden');
@@ -2096,6 +2248,16 @@ function setupEventListeners() {
   document.getElementById('btn-prop-turn-right').addEventListener('click', () => turnSelectedProp(90));
   document.getElementById('btn-prop-drop').addEventListener('click', dropSelectedProp);
   dom.btnFlux.addEventListener('click', startFlux);
+  dom.historyThisView.addEventListener('change', loadHistory);
+  dom.shotSwitch.addEventListener('change', (e) => (e.target.value ? switchDraft(e.target.value) : newShot()));
+  document.getElementById('btn-new-shot').addEventListener('click', newShot);
+  document.getElementById('btn-open-explorer').addEventListener('click', async () => {
+    dom.explorerModal.style.display = 'flex';
+    if (state.draftId) await saveDraft().catch(() => {});
+    else await loadDrafts();
+  });
+  document.getElementById('btn-close-explorer').addEventListener('click', () => { dom.explorerModal.style.display = 'none'; });
+  dom.shotNameInput.addEventListener('change', () => (state.draftId ? saveDraft() : null));
   document.getElementById('history-tab-renders').addEventListener('click', () => { history.kind = 'renders'; history.index = 0; showHistory(); });
   document.getElementById('history-tab-flux').addEventListener('click', () => { history.kind = 'flux'; history.index = 0; showHistory(); });
   document.getElementById('history-prev').addEventListener('click', () => { history.index += 1; showHistory(); });
