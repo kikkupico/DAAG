@@ -52,8 +52,8 @@ const state = {
   renderURL: null,       // its picture when done
   shotsData: null,       // the book on show in the shots browser: { book, shots, images }
   promptStyle: 'photo', // 'photo' | 'ligne-claire'
-  promptAction: 'On the terrace before the colonnade, legislator-man stands writing on an open papyrus scroll while paxos-messenger hands him a small papyrus slip.',
-  promptOthers: 'a dozen more legislators in long white chitons strolling across the terrace and in and out by the open door.',
+  promptAction: '',     // what the shot shows; typed in the capture dialog
+  promptOthers: '',     // people with no portrait of their own (a crowd); empty means nobody else
 
   // Book Storage
   books: [],
