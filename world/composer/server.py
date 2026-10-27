@@ -257,16 +257,6 @@ def get_frames(island):
 def get_props_catalog():
     """Return categorized list of available 3D prop models."""
     props = [
-        # Flora & Trees
-        {"id": "cypress", "name": "Mediterranean Cypress", "category": "Flora", "type": "kit", "url": "/props/kit/cypress.glb", "scale": 1.0, "icon": "🌲"},
-        {"id": "olive", "name": "Olive Tree", "category": "Flora", "type": "kit", "url": "/props/kit/olive.glb", "scale": 1.0, "icon": "🫒"},
-        {"id": "pine", "name": "Aegean Pine", "category": "Flora", "type": "kit", "url": "/props/kit/pine.glb", "scale": 1.0, "icon": "🌲"},
-        {"id": "oak", "name": "Gnarled Oak", "category": "Flora", "type": "kit", "url": "/props/kit/oak.glb", "scale": 1.0, "icon": "🌳"},
-        {"id": "maquis", "name": "Maquis Shrub Patch", "category": "Flora", "type": "kit", "url": "/props/kit/maquis.glb", "scale": 1.0, "icon": "🌿"},
-        {"id": "vine_row", "name": "Terraced Vine Row", "category": "Flora", "type": "kit", "url": "/props/kit/vine_row.glb", "scale": 1.0, "icon": "🍇"},
-        {"id": "shrub_01", "name": "Aegean Coastal Shrub", "category": "Flora", "type": "polyhaven", "url": "/props/polyhaven/shrub_01/shrub_01_2k.gltf", "scale": 1.5, "icon": "🌿"},
-        {"id": "shrub_02", "name": "Wild Rooibos Shrub", "category": "Flora", "type": "polyhaven", "url": "/props/polyhaven/wild_rooibos_bush/wild_rooibos_bush_2k.gltf", "scale": 1.5, "icon": "🌱"},
-
         # Vessels & Transport
         {"id": "cart", "name": "Wooden Oxcart", "category": "Transport", "type": "kit", "url": "/props/kit/cart.glb", "scale": 1.0, "icon": "🛒"},
         {"id": "skiff", "name": "Harbour Skiff / Rowboat", "category": "Transport", "type": "kit", "url": "/props/kit/skiff.glb", "scale": 1.0, "icon": "🚣"},
