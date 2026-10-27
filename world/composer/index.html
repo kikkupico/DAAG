@@ -360,6 +360,34 @@
           </div>
         </div>
 
+        <div class="cast-strip-card" id="render-card">
+          <div class="section-title">
+            <span>Full-detail render (Blender)</span>
+            <span id="render-status" class="control-val">idle</span>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <select id="render-quality" class="dropdown" title="preview: half size, 32 samples · check: 48 samples · final: 160 samples">
+              <option value="preview">Preview (fast)</option>
+              <option value="check" selected>Check</option>
+              <option value="final">Final (slow)</option>
+            </select>
+            <select id="render-size" class="dropdown" title="Gemini 1K or 2K frame for the aspect">
+              <option value="1K" selected>1K</option>
+              <option value="2K">2K</option>
+            </select>
+            <button class="btn btn-primary" id="btn-render">🎞 Render shot</button>
+          </div>
+          <p style="font-size: 0.75rem; color: var(--text-dim); margin: 6px 0;">Rendered from the built island at this camera, lens, light and aspect. Props placed in the composer are not in the Blender scene.</p>
+          <div id="render-result" style="display: none;">
+            <img id="render-img" alt="Blender render" style="width: 100%; border-radius: 8px;">
+            <div class="capture-actions">
+              <button class="btn btn-accent" id="btn-render-use">Use as Image 1</button>
+              <a class="btn" id="btn-render-open" target="_blank" rel="noopener">Open full size</a>
+              <a class="btn" id="btn-render-download" download>💾 Download</a>
+            </div>
+          </div>
+        </div>
+
         <div class="cast-strip-card">
           <div class="section-title">
             <span>Character References (Images 2..N)</span>
@@ -467,13 +495,15 @@
     <div class="modal-header">
       <div class="modal-title-group">
         <h2>BOOK SHOTS ARCHIVE</h2>
-        <p>Inspect &amp; Jump to Any Canonical Shot Across the 5 Published DAAG Books</p>
+        <p>Browse every shot of every book with its previs and scene pictures; click one to jump to it</p>
       </div>
       <button class="btn btn-icon" id="btn-close-shots-browser">✕</button>
     </div>
     <div style="padding: 16px 24px; border-bottom: 1px solid var(--border-subtle); display: flex; gap: 12px; align-items: center;">
       <label style="color: var(--gold);">Choose Book:</label>
       <select id="browser-book-select" class="dropdown" style="min-width: 240px;"></select>
+      <input type="text" id="browser-search" class="input-text" placeholder="Filter by shot, cast or words in the prompt..." style="flex: 1; max-width: 420px;">
+      <label style="color: var(--text-dim); display: flex; gap: 6px; align-items: center;"><input type="checkbox" id="browser-only-pictures"> only with pictures</label>
     </div>
     <div id="shots-browser-list" style="flex: 1; overflow-y: auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;"></div>
   </div>

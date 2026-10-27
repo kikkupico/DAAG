@@ -96,6 +96,30 @@ class ServerTest(unittest.TestCase):
             self.assertTrue(all({"id", "name", "x", "y", "z"} <= s.keys() for s in sites))
         self.assertEqual(self.call("/api/sites/..")[0], 404)
 
+    def test_render_spec_is_cleaned(self):
+        spec, err = server.clean_spec({"island": "paxos", "size": "1K", "shot": {
+            "cam": [1, 2, "+1.7"], "target": [0, 0, 0], "aspect": "3:4", "light": "nonsense", "evil": "x", "lights": []}})
+        self.assertIsNone(err)
+        self.assertEqual((spec["light"], spec["res"], "evil" in spec, "lights" in spec), ("golden", [896, 1200], False, False))
+        for bad in ({"island": "x", "shot": {}}, {"island": "paxos", "shot": {"cam": [1, 2], "target": [0, 0, 0]}},
+                    {"island": "paxos", "shot": {"cam": [1, 2, "__import__('os')"], "target": [0, 0, 0]}},
+                    {"island": "paxos", "shot": {"cam": [1, 2, 3], "target": [0, 0, 0], "site": "../x"}}):
+            self.assertIsNotNone(server.clean_spec(bad)[1], bad)
+        self.assertEqual(self.call("/api/render", {"island": "paxos", "shot": {}})[0], 400)
+        self.assertEqual(self.call("/api/render/nope")[0], 404)
+
+    def test_shot_pictures_listed_and_served(self):
+        d = server.PANELS_DIR / "b" / "s" / "a"
+        d.mkdir(parents=True)
+        from PIL import Image
+        Image.new("RGB", (40, 60)).save(d / "previs-abc.png")
+        Image.new("RGB", (40, 60)).save(server.PANELS_DIR / "b" / "s" / "scene-abc.png")
+        imgs = json.loads(self.call("/api/books/b/shots")[1])["images"]
+        self.assertEqual(imgs["s/a"], {"previs": "/panels/b/s/a/previs-abc.png"})
+        self.assertEqual(imgs["s"], {"scene": "/panels/b/s/scene-abc.png"})
+        self.assertEqual(self.call("/panels/b/s/a/previs-abc.png?w=20")[0], 200)
+        self.assertEqual(self.call("/panels/..%2Fx.png")[0], 404)
+
     def test_prompt_comes_from_pipeline(self):
         st, raw = self.call("/api/prompt")
         data = json.loads(raw)

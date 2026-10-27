@@ -76,6 +76,9 @@ Open the printed URL in any modern browser (Chrome, Safari, Firefox, Edge).
 - **PNG Download**: Downloads the captured previs image with metadata naming.
 - **Capture Saving**: Saves the capture and a metadata sidecar to `world/composer/captures/` only. Captures never go into `world/panels`: `previs.py` owns the `previs-*.png` files there and the scene step refuses any without its record.
 
+#### Full-detail render
+The capture dialog has a **Render shot** button. It sends the composed shot (island, camera, lens, light, sun bearing, aspect, and the site frame for site shots) to `POST /api/render`, which runs Blender on the built island through `world/src/render.py` and `shots_panels`, one job at a time, and polls `GET /api/render/<job>`. Quality *preview* is half size at 32 samples (about 10 s), *check* is full size at 48, *final* is full size at 160; size is the Gemini 1K or 2K frame for the aspect. The picture lands in `composer/renders/` and shows in the dialog with *Open full size*, *Download* and *Use as Image 1* (which makes the render the previs in the prompt and the ZIP bundle). These renders are scratch pictures, not canonical previs: they carry no provenance record, and props placed in the composer are not in the Blender scene. Canonical previs still come from `world/panels/previs.py` after the shot is saved and committed.
+
 ### 6. Character Reference Cast Picker
 - **35 Canon Figures**: Browse characters from `world/cast/cast.json` with high-resolution studio reference portraits from `world/cast/out/nb2/`.
 - **Filter Groups**:
@@ -109,7 +112,7 @@ Generates prompts the way `pipeline.request()` does. The style text and cast not
 - **Direct Book Saving**: Select any book under `world/panels` with a `shots.json`; for example (`the-part-time-parliament`, `ordering-without-clocks`, `the-limits-of-agreement`, `one-leader-at-a-time`, `examples`).
 - **Auto-Aggregated Shot Data**: Collects current camera position, target look-at, lens focal length, aspect ratio, lighting condition, sun azimuth, selected cast, scene prompt, and background crowd.
 - **Safety First**: Automatically creates a backup (`shots.json.bak`) before saving to avoid data loss.
-- **Shot Archive Browser**: Browse all shots in any book and click "Jump to this Shot" to instantly teleport the camera, set lens optics, restore lighting, select the cast, and populate the prompt!
+- **Shot Archive Browser**: every shot of a book, one card per variant, with its newest previs, scene and ligne claire pictures (thumbnails; click one for full size). Filter by shot name, cast or words in the prompt, or show only shots that have pictures. Click a card to jump to the shot: camera (resolving `site` frames), lens, lighting, cast and prompt.
 
 ---
 
@@ -137,7 +140,9 @@ world/composer/
 |---|---|---|
 | `GET` | `/api/status` | Server health and resource counts |
 | `GET` | `/api/books` | Available books and their shot counts |
-| `GET` | `/api/books/<book>/shots` | Retrieve all shots for a given book |
+| `GET` | `/api/books/<book>/shots` | All shots of a book, with `images`: the pictures found under each shot and variant |
+| `GET` | `/panels/<book>/<path>.png` | A shot picture; add `?w=360` for a cached JPEG thumbnail |
+| `POST` | `/api/render` | Start a Blender render of a composed shot; `GET /api/render/<job>` polls it; the picture is at `/renders/<job>.png` |
 | `POST` | `/api/books/<book>/shots` | Merge `shot` (optionally into `variant`, with `if_new` keys for new shots) into `shots.json`; atomic write, `.bak` first |
 | `GET` | `/api/cast` | Character definitions and portrait URLs |
 | `GET` | `/api/prompt` | Style prompts and cast note from `pipeline.py` |

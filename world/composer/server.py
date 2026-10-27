@@ -9,6 +9,7 @@ and save book shots with prompt and character exports for image AI generators.
 """
 
 import base64
+import hashlib
 import html
 import io
 import json
@@ -19,6 +20,8 @@ import re
 import shutil
 import signal
 import socket
+import subprocess
+import tempfile
 import sys
 import threading
 import time
@@ -44,8 +47,11 @@ CAST_DIR = WORLD / "cast"
 CAST_IMG_DIR = WORLD / "cast" / "out" / "nb2"
 PANELS_DIR = WORLD / "panels"
 CAPTURES_DIR = HERE / "captures"
+RENDERS_DIR = HERE / "renders"          # full-detail Blender renders asked for from the page
+THUMBS_DIR = HERE / "thumbs"
 
-CAPTURES_DIR.mkdir(parents=True, exist_ok=True)
+for _d in (CAPTURES_DIR, RENDERS_DIR, THUMBS_DIR):
+    _d.mkdir(parents=True, exist_ok=True)
 
 # Register custom MIME types
 mimetypes.add_type("model/gltf-binary", ".glb")
@@ -79,6 +85,40 @@ def inside(root, rel):
     except (ValueError, OSError):
         return None
     return p if p.is_file() else None
+
+
+IMAGE_KINDS = (("previs-", "previs"), ("scene-", "scene"), ("ligne-claire-", "ligne"), ("flux-scene-", "scene"))
+
+
+def shot_images(book_id):
+    """The pictures under panels/<book>/<shot>[/<variant>]/, newest of each kind, keyed "shot" or "shot/variant"."""
+    out = {}
+    root = PANELS_DIR / book_id
+    for png in root.rglob("*.png"):
+        rel_dir = png.parent.relative_to(root)
+        kind = next((k for p, k in IMAGE_KINDS if png.name.startswith(p)), None)
+        if not kind or not rel_dir.parts or len(rel_dir.parts) > 2:
+            continue
+        slot = out.setdefault(rel_dir.as_posix(), {})
+        if kind not in slot or png.stat().st_mtime > slot[kind][1]:
+            slot[kind] = (png.relative_to(PANELS_DIR).as_posix(), png.stat().st_mtime)
+    return {k: {kind: f"/panels/{p}" for kind, (p, _) in v.items()} for k, v in out.items()}
+
+
+def thumbnail(png, width):
+    """A cached JPEG of png no wider than width, or None if it cannot be made."""
+    try:
+        from PIL import Image
+        st = png.stat()
+        name = hashlib.sha1(f"{png}{st.st_mtime_ns}{width}".encode()).hexdigest()[:20] + ".jpg"
+        out = THUMBS_DIR / name
+        if not out.exists():
+            im = Image.open(png).convert("RGB")
+            im.thumbnail((width, width * 4))
+            im.save(out, "JPEG", quality=82)
+        return out
+    except Exception:
+        return None
 
 
 def rel(path):
@@ -290,6 +330,80 @@ def get_available_books():
     return books
 
 
+# --- Full-detail renders: the composed shot rendered by Blender from the built island ---------------
+
+RENDER_KEYS = {"cam", "target", "lens", "light", "sun_from", "base", "site", "dof", "hazeD", "hazeS"}
+RES_1K = {"1:1": (1024, 1024), "2:3": (848, 1264), "3:2": (1264, 848), "3:4": (896, 1200), "4:3": (1200, 896),
+          "4:5": (928, 1152), "5:4": (1152, 928), "9:16": (768, 1376), "16:9": (1376, 768), "21:9": (1584, 672)}
+QUALITIES = ("preview", "check", "final")      # render.py: half size 32 samples / full size 48 / full size 160
+SITES_WITH_FRAME = ("chamber", "tholos", "oracle", "stoa", "festival")
+jobs = {}
+render_lock = threading.Lock()                 # one Blender at a time
+
+
+def light_presets():
+    """The light names render.py knows."""
+    text = (WORLD / "src" / "render.py").read_text(encoding="utf-8")
+    return re.findall(r"^\s+'(\w+)': dict\(sky=", text, re.M)
+
+
+def is_coordinate(v):
+    """A number, or a height such as "+1.7" above the ground (shots_panels.place)."""
+    return isinstance(v, (int, float)) or (isinstance(v, str) and re.fullmatch(r"[+-]?\d+(\.\d+)?", v) is not None)
+
+
+def clean_spec(body):
+    """The shot a render is asked for, cut down to what render.py reads, or (None, message)."""
+    island = body.get("island")
+    shot = body.get("shot")
+    if island not in ISLANDS or not isinstance(shot, dict):
+        return None, "Needs an island and a shot object"
+    spec = {k: v for k, v in shot.items() if k in RENDER_KEYS and v is not None}
+    for key in ("cam", "target"):
+        p = spec.get(key)
+        if not (isinstance(p, list) and len(p) == 3 and all(is_coordinate(v) for v in p)):
+            return None, f"'{key}' must be three coordinates"
+    if spec.get("light") not in light_presets():
+        spec["light"] = "golden"
+    if spec.get("site") is not None and spec["site"] not in SITES_WITH_FRAME:
+        return None, "Unknown site"
+    if spec.get("base") is not None and not safe_name(spec["base"]):
+        return None, "Invalid base"
+    spec["island"] = island
+    aspect = shot.get("aspect") if shot.get("aspect") in RES_1K else "16:9"
+    scale = {"1K": 1, "2K": 2}.get(body.get("size"), 1)
+    spec["res"] = [d * scale for d in RES_1K[aspect]]
+    return spec, None
+
+
+def run_render(job_id):
+    """Render one job with Blender, shots_panels and render.py, and move the picture to composer/renders/."""
+    job = jobs[job_id]
+    with render_lock:
+        job["status"] = "running"
+        started = time.time()
+        key = f"composer__{job_id}"
+        with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+            json.dump({key: job["spec"]}, f)
+        try:
+            done = subprocess.run(
+                ["blender", "-b", f"build/{job['spec']['island']}.blend", "-P", "src/render.py", "--",
+                 "shots_panels", key, job["quality"]],
+                cwd=WORLD, env=dict(os.environ, PANEL_SPECS=f.name), capture_output=True, text=True, timeout=3600)
+            out_dir = {"preview": "preview", "check": "check"}.get(job["quality"], "final")
+            png = WORLD / "renders" / out_dir / f"{key}.png"
+            if done.returncode == 0 and png.is_file():
+                shutil.move(str(png), RENDERS_DIR / f"{job_id}.png")
+                job.update(status="done", url=f"/renders/{job_id}.png")
+            else:
+                job.update(status="error", error=(done.stdout[-800:] + done.stderr[-800:]).strip() or "Blender failed")
+        except Exception as e:
+            job.update(status="error", error=str(e))
+        finally:
+            os.unlink(f.name)
+            job["seconds"] = round(time.time() - started)
+
+
 class ComposerHandler(SimpleHTTPRequestHandler):
     """HTTP handler with range-request file streaming and Composer REST APIs."""
 
@@ -362,7 +476,7 @@ class ComposerHandler(SimpleHTTPRequestHandler):
                 if shots_file.exists():
                     try:
                         data = json.loads(shots_file.read_text(encoding="utf-8"))
-                        self.send_json({"book": book_id, "shots": data})
+                        self.send_json({"book": book_id, "shots": data, "images": shot_images(book_id)})
                     except Exception as e:
                         self.send_json({"error": f"Failed to parse shots.json: {e}"}, status=500)
                 else:
@@ -376,6 +490,15 @@ class ComposerHandler(SimpleHTTPRequestHandler):
         m = re.fullmatch(r"/api/sites/(\w+)", path)
         if m and m.group(1) in ISLANDS:
             self.send_json({"island": m.group(1), "sites": get_sites(m.group(1)), "frames": get_frames(m.group(1))})
+            return
+
+        m = re.fullmatch(r"/api/render/([\w-]+)", path)
+        if m:
+            job = jobs.get(m.group(1))
+            if job:
+                self.send_json({k: v for k, v in job.items() if k != "spec"})
+            else:
+                self.send_json({"error": "No such job"}, status=404)
             return
 
         if path == "/api/prompt":
@@ -439,6 +562,25 @@ class ComposerHandler(SimpleHTTPRequestHandler):
             self.send_error(HTTPStatus.NOT_FOUND, f"Cast image not found: {filename}")
             return
 
+        # Pictures of the books' shots (previs, scenes), full size or as a thumbnail (?w=480)
+        if path.startswith("/panels/") and path.endswith(".png"):
+            png = inside(PANELS_DIR, path[len("/panels/"):])
+            if png:
+                width = int(parse_qs(url.query).get("w", ["0"])[0] or 0)
+                thumb = thumbnail(png, min(width, 2000)) if width else None
+                self.stream_file(thumb or png, "image/jpeg" if thumb else "image/png")
+                return
+            self.send_error(HTTPStatus.NOT_FOUND, "No such picture")
+            return
+
+        if path.startswith("/renders/") and path.endswith(".png"):
+            png = inside(RENDERS_DIR, path[len("/renders/"):])
+            if png:
+                self.stream_file(png, "image/png")
+                return
+            self.send_error(HTTPStatus.NOT_FOUND, "No such render")
+            return
+
         # 4. Captured shots
         if path.startswith("/captures/"):
             filename = path[len("/captures/"):]
@@ -481,6 +623,22 @@ class ComposerHandler(SimpleHTTPRequestHandler):
                     return
                 self.handle_save_shot(book_id, body)
                 return
+
+        # 1b. Render a composed shot in full detail with Blender
+        if path == "/api/render":
+            body = self.read_json_body()
+            if body is None:
+                return
+            spec, err = clean_spec(body)
+            quality = body.get("quality", "check")
+            if err or quality not in QUALITIES:
+                self.send_json({"error": err or "Unknown quality"}, status=400)
+                return
+            job_id = datetime.now().strftime("%Y%m%d-%H%M%S-%f")[:-3]
+            jobs[job_id] = {"id": job_id, "status": "queued", "quality": quality, "spec": spec}
+            threading.Thread(target=run_render, args=(job_id,), daemon=True).start()
+            self.send_json({"job": job_id, "status": "queued"})
+            return
 
         # 2. Capture screenshot & save to disk
         if path == "/api/capture":
@@ -618,7 +776,8 @@ class ComposerHandler(SimpleHTTPRequestHandler):
 
             # 2. Previs / capture image (Image 1)
             if capture_name:
-                cap_file = inside(CAPTURES_DIR, capture_name)
+                is_render = capture_name.startswith("render:")
+                cap_file = inside(RENDERS_DIR if is_render else CAPTURES_DIR, capture_name.removeprefix("render:"))
                 if cap_file:
                     zf.write(cap_file, arcname="01_image_previs.png")
 
