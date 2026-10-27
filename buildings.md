@@ -16,12 +16,12 @@ a long version — or when a later paper is best told as a change of procedure i
 They get separate buildings when they make **different claims about the same subject**, and
 then the buildings stand next to each other so the difference is a short walk rather than a footnote.
 
-Seven shares below cover **seventeen papers in seven buildings**. Everything else gets its
-own, which comes to **15 buildings for 25 papers**.
+Seven shares below fall in **six places and cover nineteen papers**, the oracle's companion among
+them. Every other paper has a place of its own, which comes to **13 places for 25 papers**.
 
 **A book is not a building.** A book may walk between two adjacent buildings when the
 difference between them is best read in one sitting: *Ordering Without Clocks* covers the
-tally house and the column room. The buildings stay separate because the claims do.
+counting room and the column room. The rooms stay separate because the claims do.
 
 ---
 
@@ -29,8 +29,8 @@ tally house and the column room. The buildings stay separate because the claims 
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The tally house** | Lamport 1978 | Three rooms for one paper's three parts: the front room where clerks ink rising numbers on slips and push their own past any number that arrives; the middle room where ties are broken by the house's number, which turns the partial order into a total one; and at the back, the drift-corrected clocks Lamport describes for orders that arrive outside the letters, which the houses cannot keep: they need a longest crossing and a common hour the trading season does not give. |
-| **The column room** | Fidge 1988 · Mattern 1988 <span title="shared">◆</span> | Next door to the tally house, and the difference between them is the whole point: one column per house instead of one number. Two clerks can now tell whether their requests were placed in ignorance of each other, which the tally house can only fail to rule out. |
+| **The counting room** (in each house) | Lamport 1978 | A room in each house, by the clerks' office, in three parts for the paper's three parts: the front where clerks ink rising numbers on slips and push their own past any number that arrives; the middle where ties are broken by the house's number, which turns the partial order into a total one; and at the back, the drift-corrected clocks Lamport describes for orders that arrive outside the letters, which the houses cannot keep: they need a longest crossing and a common hour the trading season does not give. |
+| **The column room** (in each house) | Fidge 1988 · Mattern 1988 <span title="shared">◆</span> | Next door to the counting room in the same house, and the difference between them is the whole point: one column per house instead of one number. Two clerks can now tell whether their requests were placed in ignorance of each other, which the counting room can only fail to rule out. |
 | **The customs seat and the storehouses** | Chandy &amp; Lamport 1985 | Scribes record each house's storehouse; a messenger in a red sash goes down every stretch of road as the marker, and each house keeps a slate for each incoming stretch until the sash arrives. The total is a state the island could have been in, though no one ever saw it. |
 | **The request board** (at House 3) | Herlihy &amp; Wing 1990 | A board at House 3's gate on which the other houses' requests for its grain are entered, and the one placed first is filled first: a FIFO queue. The same requests the tallies of *Ordering Without Clocks* put in sequence by chains of slips are here ordered by the sun: a request finished before another began is served first. *Before* is judged by the sun, which no one on Arche can read in the trading season; the goatherd of *Ordering Without Clocks* is the witness who could catch the houses out. The board has numbered **slots** for request tablets and one **peg** at the next free slot; clerks enter requests (take a number, put the tablet in) and loaders serve (go up from slot 1, take the first tablet) at once, with no one standing aside: the paper's §4 queue. Oil from House 2's presses has a board of its own, and all three houses ask for both. The rule is judged at the gates, so one board and copies acting as one are judged alike. |
 
@@ -53,7 +53,7 @@ scholars' copies are not law, and no decree settles which copy is right.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The Chamber** | Lamport 1998 · Lamport 2001 <span title="shared">◆</span> | Lamport's own Chamber, drawn as a rotunda to fit his description. *"The acoustics of the Chamber were poor, making oratory impossible"*, so: a circular hall with hard stone walls under one conical roof held up by columns inside, with no podium, no head of the room and no seating aimed at a speaker; legislators communicate only by messenger. One doorway, as a real tholos has, closed by a door that can be locked; legislators and messengers come and go through it whenever they like; statues on the terrace outside, one of which falls. The round plan and the colonnade illustrate Lamport's text and carry no meaning of their own. The two papers are one algorithm in two presentations and are not retold. Lamport's §3.3.4 (a farmer, a merchant and a black goat) states for Paxos the two readings of *before* that Arche's request board sets side by side. |
+| **The Chamber** | Lamport 1998 · Lamport 2001 <span title="shared">◆</span> | Lamport's own Chamber, drawn as a rotunda to fit his description. *"The acoustics of the Chamber were poor, making oratory impossible"*, so: a circular hall with hard stone walls under one conical roof held up by columns inside, with no podium, no head of the room and no seating aimed at a speaker; legislators communicate only by messenger. One doorway, as a real tholos has, closed by a door that can be locked; legislators and messengers come and go through it whenever they like; statues on the terrace outside, one of which falls. Paxos tells time by the sun: a bronze meridian line runs north across the floor, where the noon light from the lantern crosses it. The round plan and the colonnade illustrate Lamport's text and carry no meaning of their own. The two papers are one algorithm in two presentations and are not retold. Lamport's §3.3.4 (a farmer, a merchant and a black goat) states for Paxos the two readings of *before* that Arche's request board sets side by side. |
 
 ## Paxos — Schedia
 
@@ -64,7 +64,7 @@ other.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The Tholos** | Oki &amp; Liskov 1988 | A rotunda like the Chamber, with its poor acoustics, messengers and legislators on part-time duty, and one difference: a podium at the centre. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has a city of its own, and the two law scrolls never conflict. The podium is an office, not a pulpit: only its holder may propose, the others write down what its messengers bring, and those messengers all leave from the centre. Authority rides on the board number every note carries. The law is kept on wax tablets left on the benches and smoothed when their holder goes home, against the Chamber's indelible ink. When the podium falls silent, another legislator raises a higher board, and the new holder gathers what a majority hold before proposing anything. The council is five: Okios, Liskovia, Kleon, Melissa and Theron. The name is Athenian: the round building of the prytaneis, the committee on duty in turn, with one member presiding. |
+| **The Tholos** | Oki &amp; Liskov 1988 | A round hall with the Chamber's poor acoustics, messengers and legislators on part-time duty, built plainer: a drum of honey-coloured limestone with no colonnade outside, a porch at its one door and six columns inside, where the Chamber has a Doric colonnade outside and a ring of Corinthian columns within. Its one difference in use is a podium at the centre. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has a city of its own, and the two law scrolls never conflict. The podium is an office, not a pulpit: only its holder may propose, the others write down what its messengers bring, and those messengers all leave from the centre. Authority rides on the board number every note carries. The law is kept on wax tablets left on the benches and smoothed when their holder goes home, against the Chamber's indelible ink. When the podium falls silent, another legislator raises a higher board, and the new holder gathers what a majority hold before proposing anything. The council is five: Okios, Liskovia, Kleon, Melissa and Theron. The name is Athenian: the round building of the prytaneis, the committee on duty in turn, with one member presiding. |
 
 ## Paxos — the scholars' coast
 
@@ -107,7 +107,7 @@ argument.
 
 **The near-misses** — pairs that look shareable and are not:
 
-- **Tally house / column room.** Both are clocks. But one respects causality and the other
+- **Counting room / column room.** Both are clocks. But one respects causality and the other
   *detects concurrency exactly*, which is a different claim. Adjacent, not merged.
 - **Request board / cut-off tent.** Both are about answering as one. But one states the rule for
   House 3's board and the other proves it cannot be kept while birds are lost. Different
