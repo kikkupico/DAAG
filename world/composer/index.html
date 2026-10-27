@@ -412,7 +412,13 @@
             <input type="number" id="flux-seed" class="input-text" value="7" min="0" style="width: 90px;">
             <button class="btn btn-primary" id="btn-flux">✨ Generate with FLUX</button>
           </div>
-          <p style="font-size: 0.75rem; color: var(--text-dim); margin: 6px 0;">FLUX.2 klein 4B on this Mac, free and about a minute a picture. Image 1 is the current previs (the capture, or the Blender render if you chose it), then the cast crops, with the prompt below; it keeps the camera and the counts less well than Nano Banana 2, so use it for trials. Printed names are left off the references, since FLUX copies them into the picture.</p>
+          <div style="display: flex; gap: 14px; align-items: center; margin-top: 6px; font-size: 0.8rem; color: var(--text-muted);">
+            <span>Image 1:</span>
+            <label><input type="radio" name="flux-source" value="capture" checked> the viewport capture</label>
+            <label><input type="radio" name="flux-source" value="render" id="flux-source-render" disabled> the Blender render</label>
+          </div>
+          <div id="flux-source-note" style="font-size: 0.72rem; color: var(--text-dim); margin-top: 2px;"></div>
+          <p style="font-size: 0.75rem; color: var(--text-dim); margin: 6px 0;">FLUX.2 klein 4B on this Mac, free and about a minute a picture. Image 1 is the source you pick above (the capture, or the Blender render once one is done), then the cast crops, with the prompt below; it keeps the camera and the counts less well than Nano Banana 2, so use it for trials. Printed names are left off the references, since FLUX copies them into the picture.</p>
           <div id="flux-result" style="display: none;">
             <img id="flux-img" alt="FLUX picture" style="width: 100%; border-radius: 8px;">
             <div class="capture-actions">
