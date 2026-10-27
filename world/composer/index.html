@@ -94,6 +94,9 @@
         <button class="btn" id="btn-open-cast" title="Select character cast for this shot">
           👥 Cast (<span id="cast-badge-count">0</span>)
         </button>
+        <button class="btn" id="btn-open-tests" title="Throwaway shots for trying world changes">
+          🧪 Test Shots
+        </button>
         <button class="btn" id="btn-open-shots-browser" title="Browse existing shots in books">
           📖 Book Shots
         </button>
@@ -372,6 +375,10 @@
             <button class="btn btn-primary" id="btn-render">🎞 Render shot</button>
           </div>
           <p style="font-size: 0.75rem; color: var(--text-dim); margin: 6px 0;">Rendered from the built island at this camera, lens, light and aspect. Props placed in the composer are not in the Blender scene.</p>
+          <div style="display: flex; gap: 8px; align-items: center; margin-top: 6px;">
+            <input type="text" id="test-shot-name" class="input-text" placeholder="test shot name, e.g. chamber-door" style="flex: 1;">
+            <button class="btn" id="btn-save-test" title="Keep this view as a throwaway test shot (not in any book)">🧪 Save as test shot</button>
+          </div>
           <div id="render-result" style="display: none;">
             <img id="render-img" alt="Blender render" style="width: 100%; border-radius: 8px;">
             <div class="capture-actions">
@@ -500,6 +507,27 @@
       <label style="color: var(--text-dim); display: flex; gap: 6px; align-items: center;"><input type="checkbox" id="browser-only-pictures"> only with pictures</label>
     </div>
     <div id="shots-browser-list" style="flex: 1; overflow-y: auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;"></div>
+  </div>
+
+  <!-- TEST SHOTS MODAL -->
+  <div id="tests-modal" class="drawer" style="position: fixed; inset: 60px; border-radius: 14px; display: none; flex-direction: column;">
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <h2>TEST SHOTS</h2>
+        <p>Throwaway views for trying world changes: rebuild the island, render them all, compare with the last render. Not in any book, never committed.</p>
+      </div>
+      <button class="btn btn-icon" id="btn-close-tests">✕</button>
+    </div>
+    <div style="padding: 16px 24px; border-bottom: 1px solid var(--border-subtle); display: flex; gap: 12px; align-items: center;">
+      <select id="tests-quality" class="dropdown">
+        <option value="preview" selected>Preview (fast)</option>
+        <option value="check">Check</option>
+        <option value="final">Final (slow)</option>
+      </select>
+      <button class="btn btn-primary" id="btn-render-all-tests">🎞 Render all</button>
+      <span id="tests-status" style="color: var(--text-dim); font-size: 0.8rem;"></span>
+    </div>
+    <div id="tests-list" style="flex: 1; overflow-y: auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 16px;"></div>
   </div>
 
   <!-- Toast Notification -->

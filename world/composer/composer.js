@@ -135,6 +135,11 @@ const dom = {
   btnRenderOpen: document.getElementById('btn-render-open'),
   btnRenderDownload: document.getElementById('btn-render-download'),
   browserSearch: document.getElementById('browser-search'),
+  testsModal: document.getElementById('tests-modal'),
+  testsList: document.getElementById('tests-list'),
+  testsQuality: document.getElementById('tests-quality'),
+  testsStatus: document.getElementById('tests-status'),
+  testShotName: document.getElementById('test-shot-name'),
   browserOnlyPictures: document.getElementById('browser-only-pictures'),
   btnSaveShotBook: document.getElementById('btn-save-shot-book'),
 
@@ -1307,6 +1312,110 @@ async function useRenderAsPrevis() {
   showToast('The render is now Image 1');
 }
 
+// --- Test shots: throwaway views for trying world changes ---
+let testsData = { shots: {}, renders: {} };
+
+async function loadTests() {
+  testsData = await (await fetch('/api/tests')).json();
+  renderTestsList();
+}
+
+async function saveTestShot() {
+  const id = dom.testShotName.value.trim().replace(/[^A-Za-z0-9_.-]+/g, '-').replace(/^[^A-Za-z0-9]+/, '');
+  if (!id) return showToast('Name the test shot first');
+  const res = await fetch('/api/tests', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, shot: composedShot(id) })
+  });
+  const data = await res.json();
+  showToast(res.ok ? `Saved test shot '${id}'` : `Not saved: ${data.error}`);
+}
+
+async function deleteTest(id) {
+  await fetch('/api/tests/delete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id })
+  });
+  await loadTests();
+}
+
+/** Render one test shot and wait for the picture. Resolves when the job is over. */
+async function renderTest(id, quality, onStatus) {
+  const shot = testsData.shots[id];
+  const res = await fetch('/api/render', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ island: shot.island, shot, quality, test: id })
+  });
+  const { job, error } = await res.json();
+  if (error) throw new Error(error);
+  const t0 = performance.now();
+  for (;;) {
+    await new Promise((r) => setTimeout(r, 2000));
+    const data = await (await fetch(`/api/render/${job}`)).json();
+    if (data.status === 'done') return data;
+    if (data.status === 'error') throw new Error(String(data.error).slice(-200));
+    onStatus(`${data.status}… ${Math.round((performance.now() - t0) / 1000)}s`);
+  }
+}
+
+async function renderTests(ids) {
+  dom.testsStatus.textContent = '';
+  for (const [k, id] of ids.entries()) {
+    const note = (s) => { dom.testsStatus.textContent = `${id} (${k + 1}/${ids.length}): ${s}`; };
+    try {
+      await renderTest(id, dom.testsQuality.value, note);
+    } catch (err) {
+      showToast(`${id}: ${err.message}`);
+    }
+    await loadTests();
+  }
+  dom.testsStatus.textContent = 'done';
+}
+
+function renderTestsList() {
+  const ids = Object.keys(testsData.shots);
+  dom.testsList.innerHTML = ids.length ? '' :
+    '<p style="color: var(--text-dim);">No test shots yet. Frame a view, then use "Save as test shot" in the capture dialog.</p>';
+  ids.forEach((id) => {
+    const s = testsData.shots[id];
+    const renders = testsData.renders[id] || [];
+    const pic = (r, label) => r ? `
+      <a href="${esc(r.url)}" target="_blank" rel="noopener" style="flex: 1; min-width: 0; text-decoration: none; color: var(--text-dim); font-size: 0.7rem; text-align: center;"
+         title="${esc(`${r.quality}, made ${r.made}; island built ${r.blend_built}; commit ${r.commit}${(r.uncommitted || []).length ? ` + ${r.uncommitted.length} uncommitted in world/src` : ''}`)}">
+        <img loading="lazy" src="${esc(r.url)}?w=420" alt="${esc(label)}" style="width: 100%; border-radius: 6px; display: block;">
+        ${esc(label)} · ${esc((r.made || '').replace('T', ' ').slice(5, 16))}
+      </a>` : '';
+    const card = document.createElement('div');
+    card.className = 'control-section';
+    card.innerHTML = `
+      <div class="section-title">
+        <span>${esc(id)}</span>
+        <span class="control-val">${esc(s.island)} · ${esc(s.lens || '')}mm · ${esc(s.aspect || '')}</span>
+      </div>
+      <div style="display: flex; gap: 6px; margin-bottom: 8px;">
+        ${pic(renders[0], 'latest') || '<span style="color: var(--text-dim); font-size: 0.8rem;">not rendered yet</span>'}
+        ${pic(renders[1], 'before')}
+      </div>
+      <div style="display: flex; gap: 6px;">
+        <button class="btn btn-primary btn-chip" data-act="render">🎞 Render</button>
+        <button class="btn btn-chip" data-act="jump">🎯 Open in composer</button>
+        <button class="btn btn-chip" data-act="delete" style="color: var(--accent-red);">✕ Delete</button>
+      </div>`;
+    card.addEventListener('click', (e) => {
+      const act = e.target.closest('button')?.dataset.act;
+      if (act === 'render') renderTests([id]);
+      else if (act === 'jump') {
+        applyBookShot(id, s);
+        dom.testsModal.style.display = 'none';
+      } else if (act === 'delete') deleteTest(id);
+    });
+    dom.testsList.appendChild(card);
+  });
+}
+
 // --- Shots browser ---
 async function loadBookShotsBrowser(bookId) {
   try {
@@ -1695,6 +1804,13 @@ function setupEventListeners() {
 
   dom.btnSaveShotBook.addEventListener('click', saveShotToBook);
   dom.btnRender.addEventListener('click', startRender);
+  document.getElementById('btn-save-test').addEventListener('click', saveTestShot);
+  document.getElementById('btn-open-tests').addEventListener('click', () => {
+    dom.testsModal.style.display = 'flex';
+    loadTests();
+  });
+  document.getElementById('btn-close-tests').addEventListener('click', () => { dom.testsModal.style.display = 'none'; });
+  document.getElementById('btn-render-all-tests').addEventListener('click', () => renderTests(Object.keys(testsData.shots)));
   dom.btnRenderUse.addEventListener('click', useRenderAsPrevis);
   dom.browserSearch.addEventListener('input', renderShotsBrowser);
   dom.browserOnlyPictures.addEventListener('change', renderShotsBrowser);

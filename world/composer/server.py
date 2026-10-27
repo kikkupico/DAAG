@@ -51,8 +51,11 @@ PANELS_DIR = WORLD / "panels"
 CAPTURES_DIR = HERE / "captures"
 RENDERS_DIR = HERE / "renders"          # full-detail Blender renders asked for from the page
 THUMBS_DIR = HERE / "thumbs"
+TESTS_DIR = HERE / "tests"               # throwaway shots for trying world changes: shots.json and renders/<id>/
+TESTS_FILE = TESTS_DIR / "shots.json"
+KEEP_RENDERS = 6                         # renders kept per test shot
 
-for _d in (CAPTURES_DIR, RENDERS_DIR, THUMBS_DIR):
+for _d in (CAPTURES_DIR, RENDERS_DIR, THUMBS_DIR, TESTS_DIR / "renders"):
     _d.mkdir(parents=True, exist_ok=True)
 
 # Register custom MIME types
@@ -347,8 +350,33 @@ def clean_spec(body):
     return spec, None
 
 
+def render_note(job, started):
+    """What a test render was made against: the island's .blend as it was, and the repository state."""
+    def git(*a):
+        return subprocess.run(["git", *a], cwd=REPO, capture_output=True, text=True).stdout.strip()
+    blend = BUILD_DIR / f"{job['spec']['island']}.blend"
+    return {"quality": job["quality"], "island": job["spec"]["island"], "made": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+            "blend_built": datetime.fromtimestamp(blend.stat().st_mtime).strftime("%Y-%m-%dT%H:%M:%S") if blend.exists() else None,
+            "commit": git("rev-parse", "--short", "HEAD"),
+            "uncommitted": [l.split(None, 1)[1] for l in git("status", "--porcelain", "--", "world/src").splitlines()]}
+
+
+def read_tests():
+    return json.loads(TESTS_FILE.read_text(encoding="utf-8")) if TESTS_FILE.is_file() else {}
+
+
+def test_renders(test_id):
+    """The renders of a test shot, newest first, each with its note."""
+    out = []
+    for png in sorted((TESTS_DIR / "renders" / test_id).glob("*.png"), reverse=True):
+        note = png.with_suffix(".json")
+        out.append(dict(json.loads(note.read_text()) if note.exists() else {}, url=f"/tests/renders/{test_id}/{png.name}"))
+    return out
+
+
 def run_render(job_id):
-    """Render one job with Blender, shots_panels and render.py, and move the picture to composer/renders/."""
+    """Render one job with Blender, shots_panels and render.py, and move the picture to composer/renders/
+    (or to tests/renders/<id>/ for a test shot, with a note of the world it was made against)."""
     job = jobs[job_id]
     with render_lock:
         job["status"] = "running"
@@ -364,8 +392,18 @@ def run_render(job_id):
             out_dir = {"preview": "preview", "check": "check"}.get(job["quality"], "final")
             png = WORLD / "renders" / out_dir / f"{key}.png"
             if done.returncode == 0 and png.is_file():
-                shutil.move(str(png), RENDERS_DIR / f"{job_id}.png")
-                job.update(status="done", url=f"/renders/{job_id}.png")
+                if job.get("test"):
+                    dest = TESTS_DIR / "renders" / job["test"]
+                    dest.mkdir(parents=True, exist_ok=True)
+                    shutil.move(str(png), dest / f"{job_id}.png")
+                    (dest / f"{job_id}.json").write_text(json.dumps(render_note(job, started), indent=1))
+                    for old in sorted(dest.glob("*.png"))[:-KEEP_RENDERS]:
+                        old.unlink()
+                        old.with_suffix(".json").unlink(missing_ok=True)
+                    job.update(status="done", url=f"/tests/renders/{job['test']}/{job_id}.png")
+                else:
+                    shutil.move(str(png), RENDERS_DIR / f"{job_id}.png")
+                    job.update(status="done", url=f"/renders/{job_id}.png")
             else:
                 job.update(status="error", error=(done.stdout[-800:] + done.stderr[-800:]).strip() or "Blender failed")
         except Exception as e:
@@ -472,6 +510,11 @@ class ComposerHandler(SimpleHTTPRequestHandler):
                 self.send_json({"error": "No such job"}, status=404)
             return
 
+        if path == "/api/tests":
+            tests = read_tests()
+            self.send_json({"shots": tests, "renders": {tid: test_renders(tid) for tid in tests}})
+            return
+
         if path == "/api/prompt":
             self.send_json(prompt_parts())
             return
@@ -526,6 +569,16 @@ class ComposerHandler(SimpleHTTPRequestHandler):
             self.send_error(HTTPStatus.NOT_FOUND, "No such picture")
             return
 
+        if path.startswith("/tests/renders/") and path.endswith(".png"):
+            png = inside(TESTS_DIR / "renders", path[len("/tests/renders/"):])
+            if png:
+                width = int(parse_qs(url.query).get("w", ["0"])[0] or 0)
+                thumb = thumbnail(png, min(width, 2000)) if width else None
+                self.stream_file(thumb or png, "image/jpeg" if thumb else "image/png")
+                return
+            self.send_error(HTTPStatus.NOT_FOUND, "No such render")
+            return
+
         if path.startswith("/renders/") and path.endswith(".png"):
             png = inside(RENDERS_DIR, path[len("/renders/"):])
             if png:
@@ -577,6 +630,31 @@ class ComposerHandler(SimpleHTTPRequestHandler):
                 self.handle_save_shot(book_id, body)
                 return
 
+        # 1a. Throwaway test shots
+        if path in ("/api/tests", "/api/tests/delete"):
+            body = self.read_json_body()
+            if body is None:
+                return
+            test_id = safe_name(body.get("id"))
+            if not test_id:
+                self.send_json({"error": "A plain 'id' is required"}, status=400)
+                return
+            with shots_lock:
+                tests = read_tests()
+                if path.endswith("/delete"):
+                    tests.pop(test_id, None)
+                    shutil.rmtree(TESTS_DIR / "renders" / test_id, ignore_errors=True)
+                else:
+                    spec, err = clean_spec({"island": body.get("shot", {}).get("island"), "shot": body.get("shot")})
+                    if err:
+                        self.send_json({"error": err}, status=400)
+                        return
+                    tests[test_id] = {k: v for k, v in body["shot"].items() if k in RENDER_KEYS | {"island", "aspect"}}
+                TESTS_DIR.mkdir(parents=True, exist_ok=True)
+                TESTS_FILE.write_text(json.dumps(tests, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+            self.send_json({"status": "success", "count": len(tests)})
+            return
+
         # 1b. Render a composed shot in full detail with Blender
         if path == "/api/render":
             body = self.read_json_body()
@@ -587,8 +665,13 @@ class ComposerHandler(SimpleHTTPRequestHandler):
             if err or quality not in QUALITIES:
                 self.send_json({"error": err or "Unknown quality"}, status=400)
                 return
+            test = body.get("test")
+            if test is not None and test not in read_tests():
+                self.send_json({"error": f"No test shot '{test}'"}, status=400)
+                return
             job_id = datetime.now().strftime("%Y%m%d-%H%M%S-%f")[:-3]
-            jobs[job_id] = {"id": job_id, "status": "queued", "quality": quality, "spec": spec}
+            jobs[job_id] = {"id": job_id, "status": "queued", "quality": quality, "spec": spec,
+                            **({"test": test} if test else {})}
             threading.Thread(target=run_render, args=(job_id,), daemon=True).start()
             self.send_json({"job": job_id, "status": "queued"})
             return
