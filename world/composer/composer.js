@@ -1850,11 +1850,6 @@ function setupEventListeners() {
   });
 
   // Capture & Compose Modal Controls
-  document.getElementById('btn-capture-modal').addEventListener('click', () => {
-    captureCurrentScreenView();
-    dom.captureModal.classList.remove('hidden');
-  });
-
   document.getElementById('btn-quick-capture').addEventListener('click', () => {
     captureCurrentScreenView();
     dom.captureModal.classList.remove('hidden');
