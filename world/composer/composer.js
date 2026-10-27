@@ -141,6 +141,8 @@ const dom = {
   btnRenderUse: document.getElementById('btn-render-use'),
   btnFlux: document.getElementById('btn-flux'),
   shotSwitch: document.getElementById('shot-switch'),
+  recentModal: document.getElementById('recent-modal'),
+  recentList: document.getElementById('recent-list'),
   captureShotChips: document.getElementById('capture-shot-chips'),
   shotNameInput: document.getElementById('shot-name-input'),
   explorerModal: document.getElementById('explorer-modal'),
@@ -226,6 +228,7 @@ async function init() {
   await loadBooksList();
   await loadPromptParts();
   await loadDrafts();
+  updatePendingBadge();
   state.lightPresets = (await (await fetch('/api/lights')).json()).presets || {};
   applyLightPreset(state.timeOfDay);
 
@@ -1187,6 +1190,7 @@ async function saveCaptureToBackend(dataURL) {
     const data = await res.json();
     if (data.status === 'success') {
       state.lastCaptureFile = data.filename;
+      addPending(data.filename);
       if (!state.image1IsRender) state.captureFilename = data.filename;
     }
   } catch (err) {
@@ -1422,6 +1426,7 @@ async function saveShotToBook() {
     const result = await res.json();
     if (result.status === 'success') {
       showToast(`${result.created ? 'Created' : 'Updated'} '${shotId}${variant ? '/' + variant : ''}' in ${bookId}/shots.json`);
+      dropPending(state.lastCaptureFile);      // saved into a book: no longer pending
       loadBooksList(); // Refresh counts
     } else {
       showToast(`Save failed: ${result.error}`);
@@ -1435,6 +1440,7 @@ async function saveShotToBook() {
 // --- Full-detail renders ---
 async function startRender() {
   await saveDraft().catch(() => {});
+  const captureAtStart = state.lastCaptureFile;     // the capture this render belongs to, for the recent list
   const shotId = dom.saveShotId.value.trim() || state.shotId || 'shot';
   const shot = composedShot(shotId);
   dom.btnRender.disabled = true;
@@ -1448,20 +1454,21 @@ async function startRender() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || res.statusText);
     state.renderJob = data.job;
-    pollRender(data.job, performance.now());
+    pollRender(data.job, performance.now(), captureAtStart);
   } catch (err) {
     dom.renderStatus.textContent = `failed: ${err.message}`;
     dom.btnRender.disabled = false;
   }
 }
 
-async function pollRender(job, t0) {
+async function pollRender(job, t0, captureAtStart) {
   try {
     const data = await (await fetch(`/api/render/${job}`)).json();
     const secs = Math.round((performance.now() - t0) / 1000);
     if (data.status === 'done') {
       state.renderURL = data.url;
-      loadAttempts({ newest: true });
+      loadAttempts({ view: data.view, newest: true });
+      attachPending('renders', data.url, captureAtStart);
       state.renderView = viewSignature();
       dom.fluxSourceRender.disabled = false;
       setFluxSource('render');
@@ -1477,7 +1484,7 @@ async function pollRender(job, t0) {
       return;
     }
     dom.renderStatus.textContent = `${data.status}… ${secs}s`;
-    setTimeout(() => pollRender(job, t0), 2500);
+    setTimeout(() => pollRender(job, t0, captureAtStart), 2500);
   } catch (err) {
     dom.renderStatus.textContent = 'lost contact with server';
     dom.btnRender.disabled = false;
@@ -1610,6 +1617,107 @@ function currentView() {
   return { cam: shotPoint(camera.position), target: shotPoint(controls.target) };
 }
 
+// --- Captures not yet saved to a book, kept in local storage so they can be revisited ---
+const PENDING_KEY = 'daag.composer.pending';
+const PENDING_MAX = 60;
+
+function readPending() {
+  try {
+    return JSON.parse(localStorage.getItem(PENDING_KEY) || '[]');
+  } catch (err) {
+    return [];
+  }
+}
+
+function writePending(list) {
+  try {
+    localStorage.setItem(PENDING_KEY, JSON.stringify(list.slice(0, PENDING_MAX)));
+  } catch (err) {
+    console.warn('Could not keep recent captures:', err);
+  }
+  updatePendingBadge();
+}
+
+/** A capture was saved to composer/captures: remember its composition and path. */
+function addPending(file) {
+  const shot = composedShot(state.shotId);
+  const entry = {
+    file, capture: `/captures/${file}`, at: new Date().toISOString(), island: state.island, draft: state.draftId,
+    shot, view: currentView(), renders: [], flux: []
+  };
+  writePending([entry, ...readPending().filter((e) => e.file !== file)]);
+}
+
+/** A render or FLUX picture was made for a capture: add its path to that entry. */
+function attachPending(kind, url, file) {
+  if (!file) return;
+  const list = readPending();
+  const entry = list.find((e) => e.file === file);
+  if (!entry) return;
+  if (!entry[kind].includes(url)) entry[kind].unshift(url);
+  writePending(list);
+}
+
+/** The capture was saved into a book's shots.json: it no longer needs keeping. */
+function dropPending(file) {
+  if (file) writePending(readPending().filter((e) => e.file !== file));
+}
+
+function updatePendingBadge() {
+  const n = readPending().length;
+  const el = document.getElementById('pending-count');
+  if (el) el.textContent = n;
+}
+
+function renderRecent() {
+  const list = readPending();
+  dom.recentList.innerHTML = list.length ? '' :
+    '<p style="color: var(--text-dim);">Nothing here. Each capture that has not been saved into a book is kept here, with its renders and FLUX pictures, in this browser.</p>';
+  list.forEach((e) => {
+    const s = e.shot || {};
+    const when = new Date(e.at).toLocaleString();
+    const card = document.createElement('div');
+    card.className = 'control-section';
+    const link = (url, label) => `<a href="${esc(url)}" target="_blank" rel="noopener" style="color: var(--gold);">${esc(label)}</a>`;
+    card.innerHTML = `
+      <div class="section-title">
+        <span>${esc(when)}</span>
+        <span class="control-val">${esc(e.island)} · ${esc(s.lens || '')}mm · ${esc(s.aspect || '')}</span>
+      </div>
+      <img loading="lazy" src="${esc(e.capture)}?w=360" alt="capture" style="width: 100%; border-radius: 6px; display: block; margin-bottom: 6px;">
+      <div style="font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 6px; word-break: break-all;">
+        ${link(e.capture, 'capture')}: ${esc(e.file)}<br>
+        ${e.renders.map((u, i) => link(u, `render ${e.renders.length - i}`)).join(' · ') || 'no renders'}<br>
+        ${e.flux.map((u, i) => link(u, `FLUX ${e.flux.length - i}`)).join(' · ') || 'no FLUX pictures'}
+      </div>
+      <div style="display: flex; gap: 6px;">
+        <button class="btn btn-primary btn-chip" data-act="open">🎯 Open</button>
+        <button class="btn btn-chip" data-act="forget" style="color: var(--accent-red);">✕ Forget</button>
+      </div>`;
+    card.addEventListener('click', (ev) => {
+      const act = ev.target.closest('button')?.dataset.act;
+      if (act === 'open') openRecent(e);
+      else if (act === 'forget') { dropPending(e.file); renderRecent(); }
+    });
+    dom.recentList.appendChild(card);
+  });
+}
+
+/** Go back to a recent capture: its composition, its capture picture, and the attempts from its view. */
+function openRecent(e) {
+  dom.recentModal.style.display = 'none';
+  applyBookShot(e.file, e.shot, { draft: e.draft && state.drafts[e.draft] ? e.draft : null });
+  state.lastCaptureFile = e.file;
+  state.captureFilename = e.file;
+  state.image1IsRender = false;
+  state.capturedImageURL = e.capture;
+  dom.capturePreviewImg.src = e.capture;
+  dom.previsMetaBadge.textContent = `Earlier capture · ${new Date(e.at).toLocaleString()}`;
+  setFluxSource('capture');
+  loadAttempts({ view: e.view, newest: true });
+  setTimeout(() => dom.captureModal.classList.remove('hidden'), 1300);     // after the camera has flown there
+}
+
 // --- Earlier attempts, in the Blender and FLUX panels ---
 // A picture is an attempt at this shot when it was made from this camera position looking the same way;
 // the lens, aspect and time of day may differ. Stepping through them only shows them.
@@ -1623,9 +1731,12 @@ function panelOf(kind) {
         open: dom.btnFluxOpen, download: dom.btnFluxDownload };
 }
 
-async function loadAttempts({ newest = false } = {}) {
+/** Load the attempts for a view: the one given (a job's, or a recent capture's), else the camera's now. The view
+ *  is kept, so what is listed stays that view's however the camera has moved since. */
+async function loadAttempts({ view = null, newest = false } = {}) {
   try {
-    const v = currentView();
+    const v = view || currentView();
+    state.attemptsView = v;
     const data = await (await fetch(`/api/history?cam=${v.cam.join(',')}&target=${v.target.join(',')}`)).json();
     attempts.renders = data.renders || [];
     attempts.flux = data.flux || [];
@@ -1701,6 +1812,7 @@ function updateFluxSourceNote() {
 
 async function startFlux() {
   await saveDraft().catch(() => {});
+  const captureAtStart = state.lastCaptureFile;
   const source = fluxSource();
   let kindFile;
   if (source === 'render') {
@@ -1731,7 +1843,8 @@ async function startFlux() {
       await new Promise((r) => setTimeout(r, 3000));
       const job = await (await fetch(`/api/render/${data.job}`)).json();
       if (job.status === 'done') {
-        loadAttempts({ newest: true });
+        loadAttempts({ view: job.view, newest: true });
+        attachPending('flux', job.url, captureAtStart);
         dom.fluxStatus.textContent = `done in ${job.seconds}s · from the ${source === 'render' ? 'Blender render' : 'capture'}`;
         break;
       }
@@ -1938,9 +2051,9 @@ function renderShotsBrowser() {
   });
 }
 
-function applyBookShot(shotId, shot, { draft = null } = {}) {
-  if (draft) {
-    state.draftId = draft;                  // one of your own shots: keep the book-shot name as it is
+function applyBookShot(shotId, shot, { draft } = {}) {
+  if (draft !== undefined) {
+    state.draftId = draft;                  // one of your own shots, or a recent capture: keep the book-shot name as it is
   } else {
     const [baseId, variantId = ''] = shotId.split('/');
     state.shotId = baseId;
@@ -2256,6 +2369,11 @@ function setupEventListeners() {
   dom.btnFlux.addEventListener('click', startFlux);
   dom.shotSwitch.addEventListener('change', (e) => (e.target.value ? switchDraft(e.target.value) : newShot()));
   document.getElementById('btn-new-shot').addEventListener('click', newShot);
+  document.getElementById('btn-open-recent').addEventListener('click', () => {
+    dom.recentModal.style.display = 'flex';
+    renderRecent();
+  });
+  document.getElementById('btn-close-recent').addEventListener('click', () => { dom.recentModal.style.display = 'none'; });
   document.getElementById('btn-open-explorer').addEventListener('click', async () => {
     dom.explorerModal.style.display = 'flex';
     if (state.draftId) await saveDraft().catch(() => {});

@@ -843,7 +843,8 @@ class ComposerHandler(SimpleHTTPRequestHandler):
                 self.send_json({"error": err}, status=400)
                 return
             job_id = datetime.now().strftime("%Y%m%d-%H%M%S-%f")[:-3]
-            jobs[job_id] = {"id": job_id, "status": "queued", "kind": "flux", "spec": spec}
+            jobs[job_id] = {"id": job_id, "status": "queued", "kind": "flux", "spec": spec,
+                            "view": view_of(Path(spec["previs"]))}
             threading.Thread(target=run_flux, args=(job_id,), daemon=True).start()
             self.send_json({"job": job_id, "status": "queued"})
             return
