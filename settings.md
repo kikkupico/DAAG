@@ -53,11 +53,11 @@ travelled both ways, give **one FIFO channel per ordered pair of houses: six in 
   cloud that silences the sundials, and in any season it is held by the siege, so the houses
   light no beacon there.
 - **The mountain paths** are the siege's ground. The goatherd of *Ordering Without Clocks* is a rare
-  smuggler, with no bound on his crossing time.
+  smuggler, with no bound on their crossing time.
 - **The sea**: reefs and tide-races off every headland stop small boats coasting between
   coves. Big ships go out to sea, not round the island.
 - **The camps** carry nothing from one house to another, so they are never a channel between
-  houses. The houses hired the four mercenaries, each man separately, which is why none commands another. Traders keep no ravens.
+  houses. The houses hired the four mercenaries, each separately, which is why none commands another. Traders keep no ravens.
 
 **The ring road.** Three houses, known by number, **House 1**, **House 2** and **House 3**, act as an
 island-wide distribution network.
@@ -88,7 +88,7 @@ small high windows. Nothing sets one town apart.
   both in the 3 house storehouses and in transit along the 6 directed road tracks. A messenger
   wearing a **red sash** serves as the marker dividing pre-recording shipments from
   post-recording shipments. Proves cut consistency, reachability ($S_\iota \to S^* \to S_\phi$),
-  and stable property detection. Bandits take carts but never a red sash messenger (he carries
+  and stable property detection. Bandits take carts but never a red sash messenger (the messenger carries
   nothing worth taking); a taken cart's goods leave the count like a sale, so on a day with no
   port-town trade a shortfall against the account scrolls is a deficit, a stable property. Stable properties are those of the trade between the houses,
   with the port towns' buying and selling set aside; the census is taken at no one moment, so the book counts no
@@ -123,7 +123,7 @@ there are bandits about the island, and their loot is on the hilltop. The crown'
 there by choice, because the loot cannot be left; bandits met elsewhere need not be of their
 band, and no one outside can tell. The crown's four, in turn, know the camps are below and nothing
 of what the mercenaries mean to do. Why a liar on the crown lies is never given, in any book: the
-liars' motives stay hidden, and nobody ever learns which man lied.
+liars' motives stay hidden, and nobody ever learns which of them lied.
 
 ---
 
@@ -285,8 +285,10 @@ of the Chamber were poor, making oratory impossible. Legislators could communica
 messenger."* A circular hall with hard stone walls under one conical roof held up by columns inside, with no podium and no head of the room,
 illustrates that faithfully, and its one doorway, with a door that can be locked, shows legislators and messengers
 coming and going. The round plan illustrates Lamport's text and carries no meaning of its own; in
-Lamport nobody speaks aloud at all. The Tholos of Schedia is the same kind of hall with the one
-thing the Chamber lacks: a podium at the centre.
+Lamport nobody speaks aloud at all. The Tholos of Schedia is a round hall of the same kind, built
+plainer: a drum of honey-coloured limestone with no colonnade outside, a porch at its one door and six
+columns inside, where the Chamber has a Doric colonnade outside and a ring of Corinthian columns within.
+It has the one thing the Chamber lacks: a podium at the centre.
 
 ### Schedia and the Tholos
 
@@ -321,8 +323,7 @@ holder and two others hold its line. They are told apart by colour: Okios blue-g
 saffron, Kleon green, Melissa madder red, Theron grey. The podium's runners are young men in short
 brown tunics, one to each bench, who carry the lines in order and never skip one. Citizens
 petition the podium only; a petition that reaches a bench comes back with the holder's name.
-The Tholos set seats more than five (twelve benches); the book is right and the set may be
-brought down to five.
+The Tholos has five benches, one for each legislator.
 
 **Why a Tholos.** In Athens the Tholos was the round building of the prytaneis, the committee
 on duty in turn, with one member presiding: a round civic hall with a head, on part-time duty.
