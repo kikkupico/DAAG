@@ -5,11 +5,17 @@ const FALLBACK = {
   styles: {
     photo: {
       picture: 'photograph',
-      keep: 'Turn image 1 into a real photograph of the same place: keep its camera, framing, buildings, objects and ' +
-        'layout exactly, and make the ground, plants, stone, cloth and light fully photographic. Hellenistic Greece, ' +
-        '3rd century BC; nothing modern. Every building is in daily use, clean and well kept: no ruin, no weeds between the ' +
-        'stones. Everything behind the people stays as it is in image 1, the same hills, trees, bushes and buildings, with ' +
-        'nothing built that image 1 does not show. Natural daylight; people at true scale, with real shadows on the ground.'
+      keep: 'Image 1 is a rough 3D render of the place, a guide to what is where and nothing more. Turn it into a real ' +
+        'photograph of the same place: keep its camera, framing and light, and the position, shape and size of every ' +
+        'building, hill, tree, bush and object, but repaint every surface with the detail of a real photograph ' +
+        "instead of copying the render's flat colours, smooth slopes, speckled foliage and repeating textures. The " +
+        'ground is worn earth and gravel with stones, ruts, footprints and dust, merging into its verges with no hard ' +
+        'straight edge. Hillsides and banks are dry Mediterranean ground: stony soil, pale limestone breaking ' +
+        'through, dry grass and low scrub. Trees and bushes have real leaves, branches and gaps. Plaster walls show ' +
+        'stains, scuffs and patching; roof tiles vary in tone and sit unevenly. Hellenistic Greece, 3rd century BC; ' +
+        'nothing modern. Every building is in daily use, clean and well kept: no ruin, no weeds between the stones. ' +
+        'Nothing is added that image 1 does not show: no other buildings, trees or hills. People at true scale, with ' +
+        'real shadows on the ground.'
     },
     'ligne-claire': {
       picture: 'illustration',

@@ -153,9 +153,17 @@ def terrain_material(name, him, d, meta):
                      nt.math('MULTIPLY', rockm, nt.ramp(sml, [(0.4, (0, 0, 0)), (0.6, (0.8, 0.8, 0.8))])))
     cutm = _mask(nt, d, 'cut', uv)
     blend(nt.math('MULTIPLY', w_rock, nt.math('SUBTRACT', 1.0, nt.math('MULTIPLY', cutm, 0.85))), rock_c, rock_r, rock_h)
-    # cut-and-fill slopes round levelled sites and roads: loose soil and scree, not bedrock
-    blend(nt.math('MULTIPLY', cutm, nt.ramp(sml, [(0.3, (0.55, 0.55, 0.55)), (0.7, (0.85, 0.85, 0.85))])), scree_c, scree_r, scree_h)
-    blend(nt.math('MULTIPLY', cutm, nt.ramp(mid, [(0.4, (0, 0, 0)), (0.65, (0.6, 0.6, 0.6))])), red_c, red_r, red_h)
+    # cut-and-fill banks round levelled sites and roads: stony soil with patches of red earth and dry grass,
+    # pale limestone showing through, and grey scree only in streaks down the fall line
+    gpatch = nt.noise(wpos, 0.08, 4, 0.6).outputs['Fac']                              # ~12 m
+    fall = nt.noise(nt.mapping(wpos, (0.35, 0.35, 0.04)), 1.0, 4).outputs['Fac']     # long down the slope
+    blend(nt.math('MULTIPLY', cutm, 0.95), soil_c, soil_r, soil_h)
+    blend(nt.math('MULTIPLY', cutm, nt.ramp(nt.math('ADD', mid, nt.math('MULTIPLY', sml, 0.5)),
+                                            [(0.48, (0, 0, 0)), (0.66, (0.75, 0.75, 0.75))])), red_c, red_r, red_h)
+    blend(nt.math('MULTIPLY', cutm, nt.ramp(gpatch, [(0.42, (0, 0, 0)), (0.58, (0.85, 0.85, 0.85))])), grass_c, grass_r, grass_h)
+    blend(nt.math('MULTIPLY', cutm, nt.ramp(nt.math('ADD', sml, nt.math('MULTIPLY', steep, 0.4)),
+                                            [(0.6, (0, 0, 0)), (0.7, (0.95, 0.95, 0.95))])), rg_c, rg_r, rg_h)
+    blend(nt.math('MULTIPLY', cutm, nt.ramp(fall, [(0.56, (0, 0, 0)), (0.64, (0.7, 0.7, 0.7))])), scree_c, scree_r, scree_h)
     blend(sand, sand_c, sand_r, sand_h)
     blend(nt.math('MAXIMUM', built, clear), dirt_c, dirt_r, dirt_h)
     blend(road, road_c, road_r, road_h)
