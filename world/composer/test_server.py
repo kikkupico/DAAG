@@ -136,6 +136,16 @@ class ServerTest(unittest.TestCase):
         self.call("/api/tests/delete", {"id": "door"})
         self.assertEqual(json.loads(self.call("/api/tests")[1])["shots"], {})
 
+    def test_light_presets_come_from_render_py_and_weather_is_validated(self):
+        presets = json.loads(self.call("/api/lights")[1])["presets"]
+        self.assertEqual(presets["golden"]["sky"], "sun")
+        self.assertEqual(presets["overcast"]["sky"], "hdri")
+        shot = {"cam": [1, 2, 3], "target": [0, 0, 0], "light": "cloudy_sun"}
+        spec, err = server.clean_spec({"island": "paxos", "shot": dict(shot, sun_elev=30, sun_scale=0.5, fog_scale=0)})
+        self.assertEqual((err, spec["light"], spec["sun_elev"], spec["fog_scale"]), (None, "cloudy_sun", 30, 0))
+        for bad in ({"sun_elev": 200}, {"sun_scale": 0}, {"fog_scale": "x"}):
+            self.assertIsNotNone(server.clean_spec({"island": "paxos", "shot": dict(shot, **bad)})[1], bad)
+
     def test_render_spec_is_cleaned(self):
         spec, err = server.clean_spec({"island": "paxos", "size": "1K", "shot": {
             "cam": [1, 2, "+1.7"], "target": [0, 0, 0], "aspect": "3:4", "light": "nonsense", "evil": "x", "lights": []}})

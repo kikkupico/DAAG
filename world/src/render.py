@@ -94,8 +94,12 @@ for name in names:
     t = time.time()
     p = dict(PRESETS[sh.get('light', 'morning')])
     p.update(sh.get('light_override', {}))
+    if 'sun_elev' in sh and p['sky'] == 'sun':      # an HDRI sky has its own sun
+        p['elev'] = sh['sun_elev']
+    p['strength'] *= sh.get('sun_scale', 1.0)       # brighter or dimmer than the preset
+    fog = sh.get('fog_scale', 1.0)                  # 1 = the preset's haze, 0 = none, 2 = twice as dense
     set_light(p, sh.get('sun_from', 210))
-    compositor(p['haze'], sh.get('hazeD', p['hazeD']), sh.get('hazeS', p['hazeS']))
+    compositor(p['haze'], sh.get('hazeD', p['hazeD']) / max(fog, 0.05), sh.get('hazeS', p['hazeS']) if fog > 0 else 0.0)
     cam = core.camera('cam_' + name, sh['cam'], sh['target'], lens=sh.get('lens', 35))
     if sh.get('dof'):
         cam.data.dof.use_dof = True; cam.data.dof.aperture_fstop = sh['dof'][1]; cam.data.dof.focus_distance = sh['dof'][0]

@@ -29,7 +29,8 @@ const state = {
   timeOfDay: 'golden',  // 'morning', 'golden', 'noon', 'overcast', 'late', 'dusk'
   sunAzimuth: 250,      // degrees (0 = North, 90 = East, 180 = South, 270 = West)
   sunElevation: 24,     // degrees
-  sunIntensity: 1.5,
+  sunIntensity: 1.5,    // the viewport's own scale: 1.5 is the light preset as it is
+  lightPresets: {},     // render.py's light presets, from /api/lights
   fogDensity: 25,       // %
   seaWaves: true,
 
@@ -193,6 +194,8 @@ async function init() {
   await loadCastData();
   await loadBooksList();
   await loadPromptParts();
+  state.lightPresets = (await (await fetch('/api/lights')).json()).presets || {};
+  applyLightPreset(state.timeOfDay);
 
   // Load 3D Island Model
   loadIslandModel(state.island);
@@ -391,6 +394,32 @@ function aimSun() {
   if (dir.y < 0.02) sunLight.position.y = aim.y + 10;
 }
 
+// A light preset's own compass bearing for the sun in the viewport (render.py takes the bearing from the shot)
+const PRESET_BEARING = { golden: 250, morning: 100, noon: 180, late: 245, overcast: 210, cloudy_sun: 200, evening_cloud: 250, dusk: 270 };
+
+/** Select a time of day or weather as render.py has it: its sun elevation (a sun sky only), the sun at
+ *  the preset's own strength and its own haze. The sliders are offsets from that. */
+function applyLightPreset(name) {
+  const p = state.lightPresets[name] || {};
+  state.timeOfDay = name;
+  state.sunAzimuth = PRESET_BEARING[name] ?? state.sunAzimuth;
+  if (p.sky === 'sun' && p.elev !== undefined) state.sunElevation = p.elev;
+  state.sunIntensity = 1.5;
+  state.fogDensity = 25;
+  dom.sunElevationSlider.disabled = p.sky === 'hdri';      // an HDRI sky has its own sun: the render ignores elevation
+  dom.sunElevationSlider.title = p.sky === 'hdri' ? 'This sky has its own sun; the render ignores elevation' : '';
+  document.querySelectorAll('[data-tod]').forEach((b) => b.classList.toggle('active', b.dataset.tod === name));
+  dom.sunAzimuthSlider.value = state.sunAzimuth;
+  dom.sunAzimuthVal.textContent = `${state.sunAzimuth}°`;
+  dom.sunElevationSlider.value = state.sunElevation;
+  dom.sunElevationVal.textContent = `${state.sunElevation}°`;
+  dom.sunIntensitySlider.value = state.sunIntensity;
+  dom.sunIntensityVal.textContent = state.sunIntensity.toFixed(1);
+  dom.fogDensitySlider.value = state.fogDensity;
+  dom.fogDensityVal.textContent = `${state.fogDensity}%`;
+  updateSunPosition();
+}
+
 function updateSunPosition() {
   const radEl = (state.sunElevation * Math.PI) / 180;
 
@@ -443,6 +472,20 @@ function applyTimeOfDayAtmosphere() {
       skyGround = 0x5a343c;
       lightColor = 0xff8c55;
       fogCol = 0x985250;
+      break;
+    case 'cloudy_sun':
+      skyTop = 0x5a86b0;
+      skyHorizon = 0xc4d2de;
+      skyGround = 0x8aa4bc;
+      lightColor = 0xf2f0ea;
+      fogCol = 0xc4d2de;
+      break;
+    case 'evening_cloud':
+      skyTop = 0x4a5f80;
+      skyHorizon = 0xe0a070;
+      skyGround = 0x6a5a5a;
+      lightColor = 0xf0b080;
+      fogCol = 0xc89478;
       break;
     case 'dusk':
       skyTop = 0x0f1c2c;
@@ -1197,6 +1240,16 @@ function updatePrompt() {
 // --- 10. Book Shots Storage (shots.json) ---
 /** The shot on screen as shots.json holds it: camera in Blender coordinates, or in the building's frame
  *  when the shot being edited has a site. */
+/** What the sliders change from the light preset, as render.py reads it; null where they are as the preset has them. */
+function weatherOffsets() {
+  const p = state.lightPresets[state.timeOfDay] || {};
+  return {
+    sun_elev: p.sky === 'sun' && state.sunElevation !== p.elev ? state.sunElevation : null,
+    sun_scale: Math.abs(state.sunIntensity - 1.5) > 0.05 ? parseFloat((state.sunIntensity / 1.5).toFixed(2)) : null,
+    fog_scale: state.fogDensity !== 25 ? parseFloat((state.fogDensity / 25).toFixed(2)) : null
+  };
+}
+
 function composedShot(shotId) {
   const frame = state.shotSite && state.shotId === shotId ? state.frames[state.shotSite] : null;
   const inShotSpace = (v) => frame ? worldToFrame(threeToBlender(v), frame).map((n) => parseFloat(n.toFixed(2))) : shotPoint(v);
@@ -1210,6 +1263,7 @@ function composedShot(shotId) {
     prompt: state.promptAction.trim(),
     light: state.timeOfDay,
     sun_from: Math.round(state.sunAzimuth),
+    ...weatherOffsets(),
     others: state.promptOthers.trim() || null,
     placed_props: state.placedProps.length ? placedPropsForShot() : null,
     ...(frame ? { site: state.shotSite } : {})
@@ -1519,17 +1573,27 @@ function applyBookShot(shotId, shot) {
     updateFramingMatte();
   }
 
-  if (shot.light) {
-    state.timeOfDay = shot.light;
-    document.querySelectorAll('[data-tod]').forEach((b) => {
-      b.classList.toggle('active', b.dataset.tod === shot.light);
-    });
-  }
+  if (shot.light) applyLightPreset(shot.light);
 
   if (shot.sun_from !== undefined) {
     state.sunAzimuth = shot.sun_from;
     dom.sunAzimuthSlider.value = shot.sun_from;
     dom.sunAzimuthVal.textContent = `${shot.sun_from}°`;
+  }
+  if (shot.sun_elev !== undefined) {
+    state.sunElevation = shot.sun_elev;
+    dom.sunElevationSlider.value = shot.sun_elev;
+    dom.sunElevationVal.textContent = `${shot.sun_elev}°`;
+  }
+  if (shot.sun_scale !== undefined) {
+    state.sunIntensity = Math.min(3, Math.max(0.2, 1.5 * shot.sun_scale));
+    dom.sunIntensitySlider.value = state.sunIntensity;
+    dom.sunIntensityVal.textContent = state.sunIntensity.toFixed(1);
+  }
+  if (shot.fog_scale !== undefined) {
+    state.fogDensity = Math.min(100, Math.round(25 * shot.fog_scale));
+    dom.fogDensitySlider.value = state.fogDensity;
+    dom.fogDensityVal.textContent = `${state.fogDensity}%`;
   }
   updateSunPosition();
 
@@ -1647,21 +1711,7 @@ function setupEventListeners() {
       document.querySelectorAll('[data-tod]').forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       state.timeOfDay = btn.dataset.tod;
-      if (btn.dataset.tod === 'golden') {
-        state.sunAzimuth = 250;
-        state.sunElevation = 24;
-      } else if (btn.dataset.tod === 'morning') {
-        state.sunAzimuth = 100;
-        state.sunElevation = 32;
-      } else if (btn.dataset.tod === 'noon') {
-        state.sunAzimuth = 180;
-        state.sunElevation = 70;
-      } else if (btn.dataset.tod === 'late') {
-        state.sunAzimuth = 245;
-        state.sunElevation = 18;
-      } else if (btn.dataset.tod === 'overcast') {
-        state.sunElevation = 50;
-      }
+      applyLightPreset(btn.dataset.tod);
       dom.sunAzimuthSlider.value = state.sunAzimuth;
       dom.sunAzimuthVal.textContent = `${state.sunAzimuth}°`;
       dom.sunElevationSlider.value = state.sunElevation;

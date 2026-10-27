@@ -47,15 +47,9 @@ Open the printed URL in any modern browser (Chrome, Safari, Firefox, Edge).
 - **Coordinate Telemetry**: Real-time readout of Camera `[X, Y, Z]` and Target `[X, Y, Z]`.
 
 ### 3. Weather, Time of Day & Sun Angle
-- **Sun Angles**: Independent sliders for **Azimuth Heading** (0° to 360°) and **Elevation Zenith** (-5° to 85°).
-- **Time of Day Presets**:
-  - `Morning`: Crisp, directional eastern sunlight with long shadows.
-  - `Golden Hour`: Warm amber low-angle western sun (250° azimuth, 24° elevation).
-  - `Noon`: Bright overhead Mediterranean sun.
-  - `Sunset`: Deep orange and crimson twilight horizon.
-  - `Dusk`: Cool starlit indigo night.
-  - `Arche Overcast`: Winter trading diffuse sky (where sundials cast no shadows, canon from `settings.md`).
-- **Dynamic Atmosphere & Sea**: Real-time PCF soft shadow maps, volumetric haze/fog density slider, and animated ocean surface with wave shimmer and specular reflections.
+- **Presets are the renderer's**: the buttons are `render.py`'s light presets, read from its source through `/api/lights` (`morning`, `golden`, `late`, `noon`, `overcast`, `cloudy_sun`, `evening_cloud`, `dusk`). Choosing one sets the sun at that preset's own elevation, strength and haze, with the sky colours in the viewport matched to it. A preset with an HDRI sky (`overcast`, `cloudy_sun`, `evening_cloud`, `dusk`) has its own sun, so the elevation slider is disabled for it.
+- **Sliders are offsets from the preset**, and the Blender render follows them: **Azimuth** is the compass bearing the light comes from (`sun_from`); **Elevation** is `sun_elev` (sun skies only); **Intensity** is `sun_scale`, the sun's strength relative to the preset (1.5 on the slider is the preset as it is); **Fog** is `fog_scale`, the preset's haze (25% on the slider is the preset as it is, 0 is none, 50% is twice as dense). They are saved in the shot, and written only where they differ from the preset. `render.py` reads them for book previs too.
+- **Viewport only**: soft shadow maps, the animated sea and the sky dome are for framing; Blender's own sky, sun and haze make the picture.
 
 ### 4. Interactive Prop Placement Engine
 - **Click-to-Place Raycasting**: Enable "Click Island to Place Prop" mode and click anywhere on terrain, quays, or terraces to spawn models at that exact coordinate.
