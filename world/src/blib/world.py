@@ -73,6 +73,26 @@ def _mask(nt, d, key, uv):
     return nd.outputs['Color']
 
 
+def _soft_mask(nt, d, name, keys, r, uv):
+    """A blurred union of masks from masks.npz, saved once as mask_<name>.png, so edges can fade and wander
+    instead of stopping at the hard pixel edge of the on/off masks."""
+    src = os.path.join(d, 'masks.npz'); p = os.path.join(d, f'mask_{name}.png')
+    if not os.path.exists(src):
+        return 0.0
+    if not os.path.exists(p) or os.path.getmtime(p) < os.path.getmtime(src):
+        from .fieldops import blur
+        z = np.load(src)
+        a = np.max([z[k] for k in keys if k in z.files], axis=0).astype(np.float32) / 255
+        a = np.clip(blur(a, r), 0, 1)
+        N = a.shape[0]
+        im = bpy.data.images.new('mask_' + name, N, N, alpha=False)
+        px = np.ones((N, N, 4), np.float32); px[..., :3] = a[::-1, :, None]
+        im.pixels.foreach_set(px.ravel())
+        im.filepath_raw = p; im.file_format = 'PNG'; im.save()
+        bpy.data.images.remove(im)
+    return _mask(nt, d, name, uv)
+
+
 def terrain_material(name, him, d, meta):
     m, nt = new_mat(name + '_ground')
     if nt is None:
@@ -96,7 +116,9 @@ def terrain_material(name, him, d, meta):
     vor = nt.n('ShaderNodeTexVoronoi', feature='F1', distance='EUCLIDEAN')
     nt.set(vor.inputs['Vector'], wpos); vor.inputs['Scale'].default_value = 0.35
     crag = nt.math('MULTIPLY', nt.math('POWER', vor.outputs['Distance'], 0.6), rockm)
-    fine = nt.math('ADD', nt.math('MULTIPLY', nt.math('SUBTRACT', f1, 0.5), 1.1),
+    # cut-and-fill banks are graded fill, so only shallow lumps there (and their grass is not buried)
+    bank_flat = nt.math('SUBTRACT', 1.0, nt.math('MULTIPLY', _mask(nt, d, 'cut', uv), 0.8))
+    fine = nt.math('ADD', nt.math('MULTIPLY', nt.math('MULTIPLY', nt.math('SUBTRACT', f1, 0.5), 1.1), bank_flat),
                    nt.math('MULTIPLY', nt.math('SUBTRACT', f2, 0.5), 0.25))
     fine = nt.math('ADD', fine, nt.math('MULTIPLY', crag, 2.2))
     cliffm = _mask(nt, d, 'cliff', uv)
@@ -106,7 +128,13 @@ def terrain_material(name, him, d, meta):
     strata.inputs['Distortion'].default_value = 9.0; strata.inputs['Detail'].default_value = 3
     fine = nt.math('ADD', fine, nt.math('MULTIPLY', nt.math('MULTIPLY', strata.outputs['Fac'], 0.9), cliffm))
     land = nt.math('GREATER_THAN', h, 0.5)
-    fine = nt.math('MULTIPLY', fine, nt.math('MULTIPLY', nt.math('SUBTRACT', 1.0, flatm), land))
+    # the lumps die away over several metres before roads and levelled ground, so there is no lip at their edge;
+    # roads themselves get shallow ruts and bumps
+    flat_soft = _soft_mask(nt, d, 'flat_soft', ('road', 'built', 'quay', 'clearing'), 2, uv)
+    lumps = nt.math('SUBTRACT', 1.0, nt.math('MAXIMUM', flatm, nt.math('MULTIPLY', flat_soft, 2.5, clamp=True)))
+    fine = nt.math('MULTIPLY', fine, nt.math('MULTIPLY', lumps, land))
+    ruts = nt.math('MULTIPLY', nt.math('SUBTRACT', nt.noise(nt.mapping(wpos, (0.8, 0.8, 0.8)), 1.0, 5, 0.6).outputs['Fac'], 0.5), 0.1)
+    fine = nt.math('ADD', fine, nt.math('MULTIPLY', ruts, road))
     disp = nt.n('ShaderNodeDisplacement')
     disp.inputs['Midlevel'].default_value = 0.0; disp.inputs['Scale'].default_value = 1.0
     nt.set(disp.inputs['Height'], nt.math('ADD', h, fine))
@@ -153,20 +181,30 @@ def terrain_material(name, him, d, meta):
                      nt.math('MULTIPLY', rockm, nt.ramp(sml, [(0.4, (0, 0, 0)), (0.6, (0.8, 0.8, 0.8))])))
     cutm = _mask(nt, d, 'cut', uv)
     blend(nt.math('MULTIPLY', w_rock, nt.math('SUBTRACT', 1.0, nt.math('MULTIPLY', cutm, 0.85))), rock_c, rock_r, rock_h)
-    # cut-and-fill banks round levelled sites and roads: stony soil with patches of red earth and dry grass,
+    # cut-and-fill banks round levelled sites and roads: stony soil mostly grown over with dry grass, red earth,
     # pale limestone showing through, and grey scree only in streaks down the fall line
     gpatch = nt.noise(wpos, 0.08, 4, 0.6).outputs['Fac']                              # ~12 m
     fall = nt.noise(nt.mapping(wpos, (0.35, 0.35, 0.04)), 1.0, 4).outputs['Fac']     # long down the slope
     blend(nt.math('MULTIPLY', cutm, 0.95), soil_c, soil_r, soil_h)
     blend(nt.math('MULTIPLY', cutm, nt.ramp(nt.math('ADD', mid, nt.math('MULTIPLY', sml, 0.5)),
                                             [(0.48, (0, 0, 0)), (0.66, (0.75, 0.75, 0.75))])), red_c, red_r, red_h)
-    blend(nt.math('MULTIPLY', cutm, nt.ramp(gpatch, [(0.42, (0, 0, 0)), (0.58, (0.85, 0.85, 0.85))])), grass_c, grass_r, grass_h)
+    blend(nt.math('MULTIPLY', cutm, nt.ramp(gpatch, [(0.3, (0, 0, 0)), (0.5, (0.9, 0.9, 0.9))])), grass_c, grass_r, grass_h)
     blend(nt.math('MULTIPLY', cutm, nt.ramp(nt.math('ADD', sml, nt.math('MULTIPLY', steep, 0.4)),
-                                            [(0.6, (0, 0, 0)), (0.7, (0.95, 0.95, 0.95))])), rg_c, rg_r, rg_h)
-    blend(nt.math('MULTIPLY', cutm, nt.ramp(fall, [(0.56, (0, 0, 0)), (0.64, (0.7, 0.7, 0.7))])), scree_c, scree_r, scree_h)
+                                            [(0.66, (0, 0, 0)), (0.74, (0.9, 0.9, 0.9))])), rg_c, rg_r, rg_h)
+    blend(nt.math('MULTIPLY', cutm, nt.ramp(fall, [(0.6, (0, 0, 0)), (0.68, (0.6, 0.6, 0.6))])), scree_c, scree_r, scree_h)
     blend(sand, sand_c, sand_r, sand_h)
-    blend(nt.math('MAXIMUM', built, clear), dirt_c, dirt_r, dirt_h)
-    blend(road, road_c, road_r, road_h)
+    # roads and levelled ground with wandering edges: the blurred mask, pushed about by noise at two scales,
+    # then a shoulder of loose gravel trodden into the verge before the road surface proper
+    wob = nt.math('ADD', nt.math('MULTIPLY', nt.math('SUBTRACT', sml, 0.5), 0.35),
+                  nt.math('MULTIPLY', nt.math('SUBTRACT', nt.noise(wpos, 0.9, 4, 0.6).outputs['Fac'], 0.5), 0.3))
+    built_soft = _soft_mask(nt, d, 'built_soft', ('built', 'clearing'), 1, uv)
+    blend(nt.ramp(nt.math('ADD', built_soft, wob), [(0.4, (0, 0, 0)), (0.55, (1, 1, 1))]), dirt_c, dirt_r, dirt_h)
+    gravel_c, gravel_r, gravel_h = layer(nt, 'rocky_gravel', vec(2.5))
+    road_soft = _soft_mask(nt, d, 'road_soft', ('road',), 1, uv)
+    re = nt.math('ADD', road_soft, wob)
+    blend(nt.math('MULTIPLY', nt.ramp(re, [(0.22, (0, 0, 0)), (0.4, (0.85, 0.85, 0.85))]),
+                  nt.ramp(sml, [(0.3, (0.4, 0.4, 0.4)), (0.6, (1, 1, 1))])), gravel_c, gravel_r, gravel_h)
+    blend(nt.ramp(re, [(0.42, (0, 0, 0)), (0.56, (1, 1, 1))]), road_c, road_r, road_h)
     blend(quay, dirt_c, dirt_r, dirt_h)
     # wet rock and weed at and below the water line
     wet = nt.ramp(h, [(-0.8, (1, 1, 1)), (0.9, (0, 0, 0))])

@@ -54,8 +54,12 @@ def set_light(p, sun_from):
 
 
 def compositor(haze, D, strength, depth=60000.0):
+    """Distance haze over the surfaces, not the sky. The sky is rendered as its own pass (the film is
+    transparent), so a pixel that is partly sky, at a roof edge or through the gaps in a cypress, takes the
+    haze of its surfaces' own distance instead of the sky's, which left pale fringes and speckle."""
     vl = bpy.context.view_layer
     vl.use_pass_mist = True
+    vl.use_pass_environment = True
     s.world.mist_settings.start = 0.0
     s.world.mist_settings.depth = depth
     s.world.mist_settings.falloff = 'LINEAR'
@@ -65,12 +69,23 @@ def compositor(haze, D, strength, depth=60000.0):
     nt = NT(tree)
     rl = nt.n('CompositorNodeRLayers')
     out = nt.n('NodeGroupOutput')
-    mist = rl.outputs['Mist']
-    dist = nt.math('MULTIPLY', mist, depth)
+    a = rl.outputs['Alpha']
+    # the mist pass counts sky as 1; take that share out to leave the surfaces' own mist
+    mist = nt.math('DIVIDE', nt.math('SUBTRACT', rl.outputs['Mist'], nt.math('SUBTRACT', 1.0, a)),
+                   nt.math('MAXIMUM', a, 1e-4))
+    # through leaf cards the mist pass is noisy, single pixels reading kilometres off; the nearest distance
+    # within two pixels takes them out
+    near = nt.n('CompositorNodeDilateErode')
+    nt.link(mist, near.inputs['Mask']); near.inputs['Type'].default_value = 'Steps'; near.inputs['Size'].default_value = -2
+    dist = nt.math('MULTIPLY', near.outputs[0], depth)
     fac = nt.math('SUBTRACT', 1.0, nt.math('EXPONENT', nt.math('DIVIDE', dist, -D)))
-    fac = nt.math('MULTIPLY', fac, strength)
-    fac = nt.math('MULTIPLY', fac, nt.math('LESS_THAN', mist, 0.9995))
-    mixed = nt.mix(fac, rl.outputs['Image'], (*haze, 1.0))
+    fac = nt.math('MULTIPLY', fac, strength, clamp=True)
+    # surfaces (premultiplied by their coverage) toward the haze colour, then the sky behind them
+    surf = nt.mix(fac, rl.outputs['Image'], nt.mix(1.0, (*haze, 1.0), a, blend='MULTIPLY'))
+    mixed = nt.mix(1.0, surf, rl.outputs['Environment'], blend='ADD')
+    opaque = nt.n('CompositorNodeSetAlpha')
+    nt.link(mixed, opaque.inputs['Image']); opaque.inputs['Alpha'].default_value = 1.0
+    mixed = opaque.outputs['Image']
     gl = nt.n('CompositorNodeGlare')
     try:
         gl.inputs['Type'].default_value = 'Fog Glow'
@@ -112,6 +127,8 @@ for name in names:
     else:
         core.cycles(s, samples=sh.get('samples', 160), res=res, pct=100)
         s.cycles.adaptive_threshold = 0.01
+    s.render.film_transparent = True              # the sky comes back in the compositor (see compositor)
+    s.render.image_settings.color_mode = 'RGB'
     for hide in sh.get('hide', []):
         for o in bpy.data.objects:
             if o.name.startswith(hide):

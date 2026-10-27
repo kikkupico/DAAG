@@ -39,5 +39,12 @@ def vegetate(F, sites, P, coll, k=1.0):
     grass = (1 / 14) * (alt < 350) * (s < 26) * np.clip((n3 - 0.4) * 3, 0, 1) * (1 - 0.5 * grove)
     place('grass', F, grass * ok * k * 0.6, P['grass'], coll, 1.2, 2.5, tilt=0.1)
 
+    # cut-and-fill banks grow back with dry grass and thyme, right down to the levelled ground (excl's blur would
+    # leave them bare)
+    bank = M['cut'] * land * (1 - np.clip(M['road'] + M['built'] + M['quay'] + M['clearing'], 0, 1)) * (1 - rock)
+    bn = np.clip(0.45 + n3, 0.5, 1)
+    place('bank_grass', F, 2.5 * bank * bn * k, P['grass_bank'], coll, 1.5, 3.0, tilt=0.15, sink=0.1)
+    place('bank_thyme', F, (1 / 7) * bank * bn * k, P['thyme'], coll, 0.7, 1.5, tilt=0.1)
+
     bould = (1 / 90) * rock + (1 / 900) * (alt > 150) + (1 / 400) * np.clip((alt - 500) / 200, 0, 1)
     place('boulders', F, bould * land * (1 - excl) * k, P['boulder'], coll, 0.6, 2.8, tilt=0.6, sink=0.5)

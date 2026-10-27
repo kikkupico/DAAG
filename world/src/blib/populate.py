@@ -106,6 +106,10 @@ def build_protos(full=True):
     c = scatter.proto_collection('p_grass')
     _ph('grass_medium_02', c)
     P['grass'] = c
+    c = scatter.proto_collection('p_grass_bank')     # fuller clumps for banks, which read as bare skin without them
+    _ph('grass_medium_01', c)
+    _ph('grass_medium_02', c)
+    P['grass_bank'] = c
     c = scatter.proto_collection('p_boulder')
     for a in ('namaqualand_boulder_02', 'namaqualand_boulder_03', 'namaqualand_boulder_05', 'boulder_01'):
         _ph(a, c, grey=(0.18, 1.0, (0.92, 0.9, 0.86, 1)))
