@@ -370,6 +370,27 @@
           </div>
         </div>
 
+        <div class="cast-strip-card" id="history-card">
+          <div class="section-title">
+            <span>Attempts (view only)</span>
+            <span>
+              <button class="btn btn-chip active" id="history-tab-renders">Renders</button>
+              <button class="btn btn-chip" id="history-tab-flux">FLUX</button>
+            </span>
+          </div>
+          <div id="history-empty" style="font-size: 0.8rem; color: var(--text-dim);">Nothing yet.</div>
+          <div id="history-viewer" style="display: none;">
+            <img id="history-img" alt="Earlier attempt" style="width: 100%; border-radius: 8px; display: block;">
+            <div style="display: flex; gap: 8px; align-items: center; margin: 6px 0;">
+              <button class="btn btn-chip" id="history-prev" title="Older">‹</button>
+              <span id="history-caption" style="flex: 1; text-align: center; font-size: 0.75rem; color: var(--text-dim);"></span>
+              <button class="btn btn-chip" id="history-next" title="Newer">›</button>
+              <a class="btn btn-chip" id="history-open" target="_blank" rel="noopener">Open</a>
+            </div>
+            <div id="history-strip" style="display: flex; gap: 4px; overflow-x: auto; padding-bottom: 4px;"></div>
+          </div>
+        </div>
+
         <div class="cast-strip-card" id="render-card">
           <div class="section-title">
             <span>Full-detail render (Blender)</span>
