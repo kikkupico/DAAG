@@ -144,6 +144,13 @@ const dom = {
   btnRenderDownload: document.getElementById('btn-render-download'),
   browserSearch: document.getElementById('browser-search'),
   testsModal: document.getElementById('tests-modal'),
+  propInspector: document.getElementById('prop-inspector'),
+  propInspectorName: document.getElementById('prop-inspector-name'),
+  propX: document.getElementById('prop-x'),
+  propY: document.getElementById('prop-y'),
+  propZ: document.getElementById('prop-z'),
+  propYaw: document.getElementById('prop-yaw'),
+  propScale: document.getElementById('prop-scale'),
   testsList: document.getElementById('tests-list'),
   testsQuality: document.getElementById('tests-quality'),
   testsStatus: document.getElementById('tests-status'),
@@ -377,10 +384,17 @@ function setupControls() {
     controls.enabled = !event.value;
   });
 
-  transformControls.addEventListener('change', () => {
-    if (state.selectedPlacedProp) {
-      updateCoordsDisplay();
+  transformControls.addEventListener('objectChange', () => {
+    const p = state.selectedPlacedProp;
+    if (!p) return;
+    // A shot records a prop's position, yaw and one scale: keep to those
+    if (state.gizmoMode === 'scale') {
+      const s = Math.cbrt(Math.abs(p.mesh.scale.x * p.mesh.scale.y * p.mesh.scale.z)) || 1;
+      p.mesh.scale.setScalar(s);
     }
+    p.mesh.rotation.x = 0;
+    p.mesh.rotation.z = 0;
+    refreshPropInspector();
   });
 }
 
@@ -884,30 +898,49 @@ async function placePropAtPosition(hitPoint) {
   }
 }
 
-/** Put a prop of the catalog into the scene: a three.js position, a yaw about up in radians, a scale. */
-async function spawnProp(propDef, position, yaw, scale) {
-  const mesh = await loadPropModel(propDef);
-  mesh.position.copy(position);
-  mesh.rotation.y = yaw;
-  mesh.scale.multiplyScalar(scale);
+/** Put a prop of the catalog into the scene: a three.js position of its base, a yaw about up in radians, a scale.
+ *  The prop hangs from a pivot group at the middle of its bounding box, so the gizmo sits in the model and
+ *  turning it turns it about its own middle; the entry's mesh is that pivot. */
+async function spawnProp(propDef, base, yaw, scale) {
+  const model = await loadPropModel(propDef);
+  const box = new THREE.Box3().setFromObject(model);
+  const centre = box.getCenter(new THREE.Vector3());
+  model.position.sub(centre);
+  const pivot = new THREE.Group();
+  pivot.add(model);
+  pivot.rotation.y = yaw;
+  pivot.scale.setScalar(scale);
 
   const uniqueId = `prop_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
-  mesh.userData = { isProp: true, propId: propDef.id, name: propDef.name, uniqueId };
-  propsGroup.add(mesh);
+  pivot.userData = { isProp: true, propId: propDef.id, name: propDef.name, uniqueId };
+  propsGroup.add(pivot);
 
   const entry = {
-    id: uniqueId, propId: propDef.id, name: propDef.name, icon: propDef.icon, mesh,
-    position: mesh.position, rotation: mesh.rotation, scale: mesh.scale
+    id: uniqueId, propId: propDef.id, name: propDef.name, icon: propDef.icon, mesh: pivot, model, centre,
+    position: pivot.position, rotation: pivot.rotation, scale: pivot.scale
   };
+  setPropBase(entry, base);
   state.placedProps.push(entry);
   return entry;
+}
+
+/** Where the prop stands: its base, the origin of the model, in three.js coordinates. */
+function propBase(p) {
+  return p.model.getWorldPosition(new THREE.Vector3());
+}
+
+/** Move the pivot so the prop's base is at `base`, keeping its turn and scale. */
+function setPropBase(p, base) {
+  p.mesh.updateMatrixWorld(true);
+  const offset = p.centre.clone().multiply(p.mesh.scale).applyQuaternion(p.mesh.quaternion);
+  p.mesh.position.copy(base).add(offset);
 }
 
 /** The placed props as a shot records them: catalog id, Blender position, yaw in degrees (from +x), scale. */
 function placedPropsForShot() {
   return state.placedProps.map((p) => ({
     prop: p.propId,
-    at: shotPoint(p.mesh.position),
+    at: shotPoint(propBase(p)),
     face: parseFloat(((p.mesh.rotation.y * 180) / Math.PI).toFixed(1)),
     scale: parseFloat(p.mesh.scale.x.toFixed(3))
   }));
@@ -926,6 +959,46 @@ async function restorePlacedProps(items) {
   renderPlacedPropsList();
 }
 
+/** The numeric fields for the selected prop: position of its base in Blender metres, yaw, scale. */
+function refreshPropInspector() {
+  const p = state.selectedPlacedProp;
+  dom.propInspector.style.display = p ? 'block' : 'none';
+  if (!p) return;
+  const [x, y, z] = shotPoint(propBase(p));
+  const set = (el, v) => { if (document.activeElement !== el) el.value = v; };
+  set(dom.propX, x); set(dom.propY, y); set(dom.propZ, z);
+  set(dom.propYaw, ((p.mesh.rotation.y * 180) / Math.PI).toFixed(1));
+  set(dom.propScale, p.mesh.scale.x.toFixed(2));
+  dom.propInspectorName.textContent = p.name;
+}
+
+/** Apply the inspector's fields to the selected prop. */
+function applyPropInspector() {
+  const p = state.selectedPlacedProp;
+  if (!p) return;
+  p.mesh.rotation.y = (parseFloat(dom.propYaw.value) || 0) * Math.PI / 180;
+  p.mesh.scale.setScalar(Math.max(0.05, parseFloat(dom.propScale.value) || 1));
+  setPropBase(p, blenderToThree([parseFloat(dom.propX.value) || 0, parseFloat(dom.propY.value) || 0, parseFloat(dom.propZ.value) || 0]));
+  refreshPropInspector();
+}
+
+function turnSelectedProp(degrees) {
+  const p = state.selectedPlacedProp;
+  if (!p) return;
+  const base = propBase(p);
+  p.mesh.rotation.y += (degrees * Math.PI) / 180;
+  setPropBase(p, base);
+  refreshPropInspector();
+}
+
+function dropSelectedProp() {
+  const p = state.selectedPlacedProp;
+  if (!p) return;
+  const [x, y] = threeToBlender(propBase(p));
+  setPropBase(p, blenderToThree([x, y, groundAt(x, y)]));
+  refreshPropInspector();
+}
+
 function selectPlacedProp(placedEntry) {
   state.selectedPlacedProp = placedEntry;
   if (placedEntry && placedEntry.mesh) {
@@ -934,6 +1007,7 @@ function selectPlacedProp(placedEntry) {
     transformControls.detach();
   }
   renderPlacedPropsList();
+  refreshPropInspector();
 }
 
 function renderPlacedPropsList() {
@@ -1904,6 +1978,10 @@ function setupEventListeners() {
 
   dom.btnSaveShotBook.addEventListener('click', saveShotToBook);
   dom.btnRender.addEventListener('click', startRender);
+  [dom.propX, dom.propY, dom.propZ, dom.propYaw, dom.propScale].forEach((el) => el.addEventListener('change', applyPropInspector));
+  document.getElementById('btn-prop-turn-left').addEventListener('click', () => turnSelectedProp(-90));
+  document.getElementById('btn-prop-turn-right').addEventListener('click', () => turnSelectedProp(90));
+  document.getElementById('btn-prop-drop').addEventListener('click', dropSelectedProp);
   dom.btnFlux.addEventListener('click', startFlux);
   document.getElementById('btn-save-test').addEventListener('click', saveTestShot);
   document.getElementById('btn-open-tests').addEventListener('click', () => {
@@ -1956,6 +2034,10 @@ function setupEventListeners() {
 function setGizmoMode(mode, targetBtn) {
   state.gizmoMode = mode;
   transformControls.setMode(mode);
+  // Turning is about up only (a shot records a yaw): the ring for that axis alone; move and scale show everything
+  transformControls.showX = mode !== 'rotate';
+  transformControls.showY = true;
+  transformControls.showZ = mode !== 'rotate';
   ['translate', 'rotate', 'scale'].forEach((m) => {
     const btn = document.getElementById(`gizmo-mode-${m}`);
     if (btn) btn.classList.remove('active');
@@ -1991,6 +2073,8 @@ function snapCameraToEyeLevel() {
 function onPointerDown(event) {
   // Ignore clicks on UI elements
   if (event.target !== renderer.domElement) return;
+  // A click on a gizmo handle is the gizmo's, even where the handle lies outside the prop's outline
+  if (transformControls.dragging || transformControls.axis) return;
 
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
