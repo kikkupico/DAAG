@@ -43,7 +43,7 @@ roof, dome, ceiling, people, humans, person, human figures, crowd, characters, s
 >
 > **Why the island plate shows habitation.** It carries every book location in place, so the geography can be checked against the books in one image: a narrow coastal road rather than an inland one, ports spread round the coast, a steep broad mountain, and a walled summit.
 >
-> **No people, no animals.** At island scale a person or a mule is a blob of a few pixels, and the 3D conversion turns each one into wasted polygons. The island plate shows habitation and activity **only through objects**: laden carts, stacked cargo, moored ships, drying nets, tents and lofts. People and animals are added later, in the **scene prompts**, which are generated from renders of the island's 3D model at chosen camera positions.
+> **No people, no animals, in the plate only.** This is a guideline for the overhead plate that goes to the image-to-3D converter, not a canon rule: it applies to no photoreal render. At island scale a person or a mule is a blob of a few pixels, and the 3D conversion turns each one into wasted polygons. The island plate shows habitation and activity **only through objects**: laden carts, stacked cargo, moored ships, drying nets, tents and lofts. People and animals are added later, in the **scene prompts**, which are generated from renders of the island's 3D model at chosen camera positions. Photoreal renders, of the island or of anywhere else, may show people, mules and other animals wherever the scene calls for them.
 
 ### 2.1 Island Plate Prompt (Geography, Habitation & Book Locations)
 The Arche plate is made from a top-down map, so the layout can be checked before any picture is made. The model `art/arche-3d.glb` is the Meshy conversion of the result.
@@ -74,9 +74,10 @@ The crown: a small ruined ring wall on the very summit, about the size of the la
 Coastal road: one cliff road with a lane each way, drawn as a dark red double line, running right round the island close to the coast, with no branches, no inland roads and no road over the mountain.
 
 The three ports, each on its own side of the island so that no two share a side:
-1. The port WEST-SOUTH-WEST: a rocky inlet with a long stone quay along the waterfront, one slipway, a large trade depot and a colonnaded tally hall facing the quay, and a village of small house blocks behind them.
-2. The port due NORTH: a sheltered cove with a short stone dock and one slipway, a large wine and oil compound with a press house, a village of small house blocks, and hatched vine and olive terraces on the lower slopes to either side of the village (not directly behind it, where the north gully is). Just along the road east of the village, one small block cut into the cliff beside the road: the rock-cut granary.
-3. The port EAST-SOUTH-EAST, the largest: a crescent bay with a sandy beach, a long stone pier running straight out into the bay, two slipways, a large customs house built round a courtyard, a long granary block, and a village of small house blocks.
+1. The port WEST-SOUTH-WEST: a rocky inlet with a long stone quay along the waterfront and one slipway; the house, one long building block facing the quay across the waterfront road; and a village of small house blocks behind it.
+2. The port due NORTH: a sheltered cove with a short stone dock and one slipway; the house, the same long block facing the quay across the waterfront road, with a small press house beside it; a village of small house blocks; and hatched vine and olive terraces on the lower slopes to either side of the village (not directly behind it, where the north gully is). Just along the road east of the village, one small block cut into the cliff beside the road: the rock-cut granary.
+3. The port EAST-SOUTH-EAST: a crescent bay with a sandy beach, a long stone pier running straight out into the bay and two slipways; the house, the same long block facing the quay across the waterfront road; and a village of small house blocks.
+The three houses are the same building; nothing sets one town apart.
 On the southern cape, between the west-south-west and east-south-east ports, one small square block beside the road: the sundial platform.
 
 THE ROAD REACHES EVERY PORT. At each port the double line comes down to the waterfront and runs straight along it, past the quay or pier. Every quay, pier and slipway touches the road on its landward end; every building block stands on or directly beside the road, or within its village, whose lanes lead to the road. No block, quay or pier stands apart from the road or is cut off from it by cliff, slope or water.
@@ -114,7 +115,7 @@ Overall Layout & Scale:
 Mount Phyle (natural massif with book locations):
 - A broad, climbable mountain, not a tower. Its profile is a wide, irregular cone. The slopes rise continuously from the coastal strip to the peak: gentle lower flanks of about 15–20°, steepening to about 30–35° near the top. Nowhere is there a sheer vertical face encircling the summit, and nowhere a cliff band that would stop a man on foot. A determined climber could walk up any spur.
 - Organic natural karst geomorphology: eight radiating wooded spurs separated by gullies. Rough limestone outcrops, broken crags, ledges and scree break through the scrub on the upper third, as scattered rocks on a slope, not as walls. Maritime pine, cypress and maquis cover the lower slopes. NO concentric rings, NO stepped tiers, NO artificial plateaus, NO mesa or tabletop, NO crater or caldera, NO switchback roads.
-- The mountain is not a thoroughfare. There is no road over it and no made trail. Only two faint, rough goat paths climb two spurs to the wall's north slot and south gap, vanishing into scrub and scree lower down.
+- The mountain is not a thoroughfare. There is no road over it and no made trail, and no path climbs to the wall, which has no gate, gap or stair.
 - Four deep wooded gullies at the foot, one at each quarter-point (N, E, S, W), each between two wooded spurs, with two spurs between any two of these gullies. The gullies are empty wooded clefts with nothing built in them.
 - The summit crown: a modest rounded rocky top, levelled a little, crowned by a small ruined cyclopean polygonal dry-stone ring wall with jagged, uneven tops, solid all round with no opening of any kind. Out on the slopes, far apart, three small separate lookout posts, each a hollow among crags with a rough low dry-stone breastwork, each hidden from the others and from the wall by rock. No council ring, no roofs.
 
@@ -127,9 +128,10 @@ Coastal Ring Road (one cliff road, a lane each way):
 
 Three Port Villages (inhabited, working, no people):
 Compact organic clusters of Hellenistic vernacular buildings: dry-stone and ashlar cottages, boat sheds, pergolas, walled yards, oxblood terracotta roofs (no smoke, steam or haze anywhere). Evidence of work everywhere: stacked crates, sacks, amphorae and pithoi on the quays, fishing nets drying on frames, hauled-up boats, carts parked in yards, laundry lines, tethering posts, water cisterns, small kitchen gardens.
-1. The west-south-west house: a rugged fishing and trading haven on a rocky inlet with a stone quay and small boat basin. At its heart is the house's trade depot and tally station: an ashlar building with an open colonnaded loggia sheltering slate tally tables. Fishing skiffs and a small coastal cargo ship are moored; timber slipways hold one broad-beamed merchantman on a cradle.
-2. The north house: a wine and oil compound on terraces above a sheltered northern cove, with cellar vaults, timber cart-loading platforms and a beam press, and terraced vineyards and olive groves behind. A stone dock and slipway hold one broad-beamed merchantman. Just along the road from the house, cut into the cliff beside the road, is the island's common dry storehouse: a rock-cut granary with a heavy timber door.
-3. The east-south-east house: the largest harbour, on a crescent bay with a sandy beach and a long stone pier. At its heart is the customs house: broad colonnaded porticos, a records courtyard with slate tablets on stone pillars, and vaulted granaries. A large merchantman is tied at the pier, two more stand on timber slipways, and grain sacks, crates and sealed ingots are stacked on the wharf.
+The three houses are built alike: one long range under a gable roof of flat terracotta pan tiles with narrow cover tiles and a decorated tile at each eave end, on hand-hewn timbers; lime-plastered walls over rubble on a low bare-rubble base; on a terrace cut into the slope above the harbour, facing the quay across the waterfront road. The clerks' office is at one end, the gate (a deep entrance opening onto the road) in the middle, the storehouse with its loading doors at the other end. A portico of plain Doric columns, standing straight on the paving with no bases, runs the length of the range along the road's edge under a lean-to roof, and by the gate hangs the house's board of requests: a row of numbered slots with a peg beside it. Nothing sets one town apart; only the harbours differ.
+1. The west-south-west house: above a rocky inlet with a stone quay and a small boat basin. Fishing skiffs and a small coastal cargo ship are moored; a timber slipway holds one broad-beamed merchantman on a cradle.
+2. The north house: above a sheltered northern cove with a stone dock and slipway, with its small oil press house beside it and terraced vineyards and olive groves on the slopes either side. Just along the road from the house, cut into the cliff beside the road, is the island's common dry storehouse: a rock-cut granary with a heavy timber door.
+3. The east-south-east house: above a crescent bay with a sandy beach and a long stone pier. A large merchantman is tied at the pier, two more stand on timber slipways, and grain sacks, crates and amphorae are stacked on the wharf.
 
 Vegetation & Palette:
 Maritime pine, dark slender cypress, gnarled olive groves and vine terraces near the north port, silver-green maquis, bare pale limestone higher up. Photorealistic PBR stone, timber, terracotta and water materials; muted, cool winter palette.
@@ -178,31 +180,31 @@ people, humans, person, human figures, crowd, pedestrians, sailors, soldiers, ch
 ### 2.2 Architectural Features Prompts
 
 #### Feature 0: Three Ports & Ships Composite (For use with attached Island Map Reference)
-> The island plate (2.1) now carries the ports. Use this prompt only to refine the ports on an existing plate render. It must follow the plate's layout, overcast light and no-people rule.
+> The island plate (2.1) now carries the ports. Use this prompt only to refine the ports on an existing plate render. It must follow the plate's layout, light and no-people rule.
 ```text
 Isometric 3D environment composition of the Greek island Arche, Hellenistic Mediterranean period (~3rd Century BC), directly matching the attached island reference image.
 High-angle orthographic axonometric projection, hyperfocal deep focus (NO_DOF), crisp fine geometry, 8k resolution.
 Unpopulated clean stage: completely empty quays, decks, and streets, zero people, no human figures, no characters.
 
 Reference Image Continuity:
-Maintain the exact camera perspective, island coastline, ring road, mountain contours and lighting (soft, even, overcast winter light with no hard cast shadows) from the attached reference image. No people, no animals: show activity only through cargo, parked carts and moored ships.
+Maintain the exact camera perspective, island coastline, ring road, mountain contours and lighting of the attached reference image. No people, no animals: show activity only through cargo, parked carts and moored ships.
 
-Populate the three coastal port sites with their canonical Hellenistic hero trading architecture and ancient Greek merchant ships, fitting their exact geographic footprints:
+Populate the three coastal port sites with the house and ancient Greek merchant ships, fitting their exact geographic footprints. The three houses are the same building: one long range under a gable roof of flat terracotta pan tiles with narrow cover tiles and a decorated tile at each eave end, on hand-hewn timbers; lime-plastered walls over rubble on a low bare-rubble base; on a terrace cut into the slope above the harbour, facing the quay across the waterfront road. The clerks' office is at one end, the gate (a deep entrance opening onto the road) in the middle, the storehouse with its loading doors at the other end. A portico of plain Doric columns, standing straight on the paving with no bases, runs the length of the range along the road's edge under a lean-to roof, and by the gate hangs the house's board of requests: a row of numbered slots with a peg beside it.
 
 1. West-South-West Port (harbour of the west-south-west house):
 - Sited in the rectangular stone-lined harbour basin and open waterfront terrace from the reference image.
-- Architecture: the house—a sturdy, weathered ashlar limestone trade depot and tally station with low-pitched oxblood terracotta roofs, open exterior colonnaded loggia sheltering wide slate tally tables with bronze pegs and inkpots.
+- Architecture: the house, as above.
 - Ships & Water: Moored inside the rectangular stone basin are 2-3 ancient Greek wooden fishing skiffs and a small coastal cargo ship with timber mast and furled linen sail, tied with hemp ropes to stone mooring bollards; timber hauling slipways with greased log rollers leading into the water; drying linen nets and stacked wooden crates on the quays.
 
 2. Northern Port (harbour of the north house):
-- Sited along the L-shaped stone pier and cleared waterfront terrace beneath the terraced olive groves from the reference image.
-- Architecture: the house—an agricultural distribution wine compound with arched semi-subterranean limestone cellar vaults, heavy timber cart loading platforms, wooden ramps, and an outdoor timber beam olive/wine press.
-- Ships & Water: 2 ancient Greek coastal wine transport ships with broad curved hulls and a round-hulled merchant ship tied alongside the L-shaped stone pier, rigged with furled sails and steering oars, loading wooden crates and rows of terracotta wine amphorae and oil pithoi directly from the stone dock.
+- Sited along the short stone dock and cleared waterfront terrace beneath the terraced olive groves from the reference image.
+- Architecture: the house, as above, with its small oil press house beside it.
+- Ships & Water: 2 ancient Greek coastal transport ships with broad curved hulls and a round-hulled merchant ship tied alongside the stone dock, rigged with furled sails and steering oars, loading wooden crates and rows of terracotta wine amphorae and oil pithoi directly from the stone dock.
 
 3. East-South-East Port (harbour of the east-south-east house):
 - Sited along the wide crescent beach, long stone pier, and open flagstone esplanade from the reference image.
-- Architecture: the house—a grand ashlar limestone customs house with broad colonnaded porticos, open records courtyard with slate tablets on stone pillars, and vaulted granary warehouses.
-- Ships & Water: The main merchant harbour: a large, broad-beamed Hellenistic merchant sailing ship (holkas) with double steering oars and rigging tied alongside the outer end of the long stone pier; 2 smaller wooden cargo skiffs and sailing dinghies pulled up onto the sandy beach on timber hauling cradles; stacks of grain sacks, cargo crates, and sealed silver ingots arranged neatly on the stone wharf.
+- Architecture: the house, as above.
+- Ships & Water: The main merchant harbour: a large, broad-beamed Hellenistic merchant sailing ship (holkas) with double steering oars and rigging tied alongside the outer end of the long stone pier; 2 smaller wooden cargo skiffs and sailing dinghies pulled up onto the sandy beach on timber hauling cradles; stacks of grain sacks, cargo crates and amphorae arranged neatly on the stone wharf.
 
 Cohesion:
 All architecture and ships integrate seamlessly into the existing terrain, stone quays, and beaches of the attached image. Weathered limestone masonry, oxblood roof tiles, aged timber, calm turquoise shoals, continuous deep Aegean sea plane (Z = 0).
@@ -223,33 +225,31 @@ Two pairs of clear stone cartwheel ruts worn into the roadbed, one for each dire
 Pristine empty roadbed, dry earth and limestone dust, sparse tufts of wild thyme and caper bushes clinging to rock crevices.
 ```
 
+#### Features 2–4: The three houses
+> The three houses are built alike; only the harbour each stands above differs. Each prompt repeats the same building.
+
 #### Feature 2: The west-south-west house
 ```text
 Detailed 3D isometric architectural diorama of the west-south-west trading house on Arche, Hellenistic Ancient Greece.
-Axonometric orthographic projection, hyperfocal focus, clean unpopulated trade station, zero people.
-Sited on a rugged, wave-battered western limestone shelf directly beside the sea.
-A low-slung, sturdy commercial trade depot constructed of weathered ashlar limestone blocks with a low-pitched oxblood terracotta tiled roof and heavy cedar roof timbers.
-Features timber hauling slipways with wooden greased log rollers leading into a small rocky sea inlet; carved stone mooring bollards; an open exterior colonnaded loggia sheltering wide slate tally tables with inkpots and bronze tally pegs; stacks of dried cod crates and amphorae; drying linen fishing nets draped over wooden railings.
-Sea spray glistening on wet stone slipways, turquoise shallow water lapping at the quay, continuous flat sea plane.
+Axonometric orthographic projection, hyperfocal focus, clean unpopulated trade house, zero people.
+The house: one long range under a gable roof of flat terracotta pan tiles with narrow cover tiles and a decorated tile at each eave end, on hand-hewn timbers; lime-plastered walls over rubble on a low bare-rubble base; on a terrace cut into the slope above the harbour, facing the quay across the waterfront road. The clerks' office is at one end, the gate (a deep entrance opening onto the road) in the middle, the storehouse with its loading doors at the other end. A portico of plain Doric columns, standing straight on the paving with no bases, runs the length of the range along the road's edge under a lean-to roof, and by the gate hangs the house's board of requests: a row of numbered slots with a peg beside it.
+Sited above a rocky inlet with a stone quay and a small boat basin: timber hauling slipways with greased log rollers, carved stone mooring bollards, stacked crates and amphorae, fishing nets drying on frames.
 ```
 
 #### Feature 3: The north house
 ```text
 Detailed 3D isometric architectural diorama of the north trading house on Arche, Hellenistic Ancient Greece.
-Axonometric orthographic projection, hyperfocal focus, clean unpopulated estate, zero people.
-Sited on the northern terraced slopes of Mount Phyle overlooking the coastal cliff road.
-A multi-level Hellenistic agricultural and distribution compound built of dry-stacked limestone retaining walls and dressed stone buildings with terracotta roofs.
-Includes heavy timber loading platforms equipped with wooden ramps for carts; cool semi-subterranean cellars with arched limestone doorways filled with rows of large earthenware oil amphorae and wine pithoi; an outdoor timber beam lever-press for olives; stone paved courtyards; wooden cartwheel repair racks; stepped terraces planted with ancient gnarled olive trees and grape trellises.
+Axonometric orthographic projection, hyperfocal focus, clean unpopulated trade house, zero people.
+The house: one long range under a gable roof of flat terracotta pan tiles with narrow cover tiles and a decorated tile at each eave end, on hand-hewn timbers; lime-plastered walls over rubble on a low bare-rubble base; on a terrace cut into the slope above the harbour, facing the quay across the waterfront road. The clerks' office is at one end, the gate (a deep entrance opening onto the road) in the middle, the storehouse with its loading doors at the other end. A portico of plain Doric columns, standing straight on the paving with no bases, runs the length of the range along the road's edge under a lean-to roof, and by the gate hangs the house's board of requests: a row of numbered slots with a peg beside it.
+Sited above a sheltered northern cove with a short stone dock. Beside the house, its small oil press house: a long room open on its front between two piers, with a timber beam lever-press and storage jars inside. Terraced olive groves and vines on the slopes either side.
 ```
 
-#### Feature 4: The east-south-east house & customs slipways
+#### Feature 4: The east-south-east house
 ```text
 Detailed 3D isometric architectural diorama of the east-south-east trading house on Arche, Hellenistic Ancient Greece.
-Axonometric orthographic projection, hyperfocal focus, clean unpopulated harbour facility, zero people.
-Sited on the sheltered eastern bay of Arche where foreign merchantmen land.
-A substantial ashlar limestone customs house and distribution depot with broad open colonnades and deep overhanging tiled eaves.
-Features a massive squared-stone quay extending into deep azure water; large timber ship slipways holding two broad-beamed Hellenistic merchant sailing ships drydocked on timber cradles; an open customs record courtyard containing large slate slates mounted on stone pillars; vaulted dry granary storehouses with raised timber floors; neatly stacked rows of cargo crates, grain sacks, and sealed silver ingots.
-Calm turquoise harbor water, wooden mooring bollards, iron chains, and continuous open sea.
+Axonometric orthographic projection, hyperfocal focus, clean unpopulated trade house, zero people.
+The house: one long range under a gable roof of flat terracotta pan tiles with narrow cover tiles and a decorated tile at each eave end, on hand-hewn timbers; lime-plastered walls over rubble on a low bare-rubble base; on a terrace cut into the slope above the harbour, facing the quay across the waterfront road. The clerks' office is at one end, the gate (a deep entrance opening onto the road) in the middle, the storehouse with its loading doors at the other end. A portico of plain Doric columns, standing straight on the paving with no bases, runs the length of the range along the road's edge under a lean-to roof, and by the gate hangs the house's board of requests: a row of numbered slots with a peg beside it.
+Sited above a crescent bay with a sandy beach and a long stone pier where merchantmen land: two broad-beamed merchant ships on timber slipways, grain sacks, crates and amphorae stacked on the wharf, wooden mooring bollards.
 ```
 
 #### Feature 5: The Four Mercenary Camps (one tent each)
@@ -311,7 +311,7 @@ predate this rule; use them with a tint, and build new ones to it.
 > - **The Chamber** (the western arm): a round colonnaded hall under a conical tiled roof, on a terrace above the bay, where the parliament sits, looking across the water at the Tholos. The island road runs up the stem, forks, and runs out along the western arm past the Chamber to the harbour town at the arm's tip, so the Chamber is on a through route.
 > - **Schedia and the Tholos** (the eastern arm): a small unwalled city of its own above a cove on the bay, with the Tholos, a round hall with a conical tiled roof and a podium at its centre, on a terrace facing the Chamber across the bay.
 > - **The oracle at the fork**: a sanctuary on common ground belonging to neither city, in the manner of Dodona: a low wall round an old oak, a small temple and an altar beside the tree; its north gate opens on the road up the bay to the Chamber and the Tholos, its south gate on the road down the stem to the scholars' coast.
-> - **The scholars' coast** (the body of the island), which the scholars call Homonoia: lower, deeply indented country of coves and valleys, with the stoa and festival ground on an eastern harbour, about a dozen small libraries within casual reach of one another along footpaths of differing length, a courier cove on the rocky southwest shore, and in every library a reading room whose pigeonholes hold its copy of the scholars' compendium, an entry to a short scroll, and a desk whose marble boards of pebbles keep the counts some entries hold. The scholars hold no assembly.
+> - **The scholars' coast** (the body of the island), which the scholars call Homonoia: lower, deeply indented country of coves and valleys, with the stoa and festival ground on an eastern harbour, about a dozen small libraries within casual reach of one another along footpaths of differing length, a narrow rocky courier cove in the cliffs at the southern tip, an inlet in the western coast crossed only by one ferry, with a landing stage on each bank, and in every library a reading room whose pigeonholes hold its copy of the scholars' compendium, an entry to a short scroll, and a desk whose marble boards of pebbles keep the counts some entries hold. The scholars hold no assembly.
 
 ### 3.1 Island Plate Prompt (Geography, Habitation & Book Locations)
 Like Arche's, the Paxos plate carries its buildings in place. It is made in three steps.
@@ -322,9 +322,9 @@ Detailed 3D isometric diorama of the Greek island Paxos, Hellenistic Greece, 3rd
 True orthographic axonometric view, deep focus, warm directional sunlight, zero people.
 The island's outline follows the attached sketch: a limestone island shaped like the letter Y. Two slender high rocky arms reach north, side by side, enclosing a sheltered bay of turquoise water between them. They join at a fork, and below the fork a distinct narrow stem, clearly narrower than either arm is long, runs south and then widens into a broad, lower body. The body is by far the largest part of the island, larger than both arms together, and fills the whole southern half of the frame. Calm deep Aegean blue sea reaches every frame edge, turquoise shoals and white surf at the shore; no pedestal, no cutaway.
 Outer coasts of both arms: sheer white limestone sea-cliffs with sea-caves. Inner slopes facing the bay: terraced olive groves, cypresses and maquis.
-The western arm: on a level civic terrace above the bay stands a single round hall of white ashlar limestone ringed by an unbased Doric colonnade, under one conical roof of oxblood terracotta tiles with a small louvred lantern, with evenly spaced doorways and statues round it; a paved road crosses the terrace past it and runs on to the arm's tip, where a small harbour town of red-tiled stone houses, a market square, quays and moored merchant ships sits on a cove.
-The eastern arm, directly across the bay from the rotunda: a small town of red-tiled stone houses above a cove, and above it, on a level terrace facing the bay, a round hall of warm honey-coloured limestone with plain walls, several doorways round it and no colonnade, under a single low conical roof of oxblood terracotta tiles rising to a small louvred lantern, and a small columned porch facing the water. It is clearly unlike the white colonnaded round hall across the bay.
-The fork, where the two arms meet: one small symmetrical gabled hall of pale limestone with a door in each end wall, one facing north up the bay, one facing south down the stem.
+The western arm: on a level civic terrace above the bay stands a single round hall of white ashlar limestone ringed by an unbased Doric colonnade, under one conical roof of oxblood terracotta tiles with a small louvred lantern, with one doorway, closed by a door that can be locked, and statues round it; a paved road crosses the terrace past it and runs on to the arm's tip, where a small harbour town of red-tiled stone houses, a market square, quays and moored merchant ships sits on a cove.
+The eastern arm, directly across the bay from the rotunda: a small town of red-tiled stone houses above a cove, and above it, on a level terrace facing the bay, a round hall of warm honey-coloured limestone with plain walls, one doorway and no colonnade, under a single low conical roof of oxblood terracotta tiles rising to a small louvred lantern, and a small columned porch facing the water. It is clearly unlike the white colonnaded round hall across the bay.
+The fork, where the two arms meet: on common ground, a sanctuary in the manner of Dodona: a low wall of rough limestone round a single great old oak, a small temple of pale limestone and an altar beside the tree, and two gates in the wall, one to the north up the bay and one to the south down the stem.
 The body of the island, well south of the stem: lower rolling hills and valleys with a deeply indented coast of coves and pebble beaches. On a harbour on the body's eastern shore, far down from the fork, a long colonnaded stoa facing an open ground set with rows of long tables. About a dozen small porched library buildings scattered in clearings among olive trees across the valleys and hill shoulders, linked by footpaths of differing length. A small rocky cove on the southwest shore with timber piers and small boats. At the remote southern tip, the farthest point from the fork, narrow stepped terraces with long stone tables on steep slopes facing the open sea.
 Farmsteads along one road running from the southern body up the stem, forking at the oracle, one branch along each arm.
 No open-air theatre or exposed seating bowl anywhere, no citadel, no quarry, no ruins.
@@ -332,7 +332,7 @@ No open-air theatre or exposed seating bowl anywhere, no citadel, no quarry, no 
 
 **Step 2 — town pass** (image-to-image on the step 1 image, `banana_pro`, aspect 16:9). Small, tightly packed houses reconstruct in 3D as tall blocks, so the town is redrawn as low courtyard houses before conversion:
 ```text
-Keep [image 1] exactly as it is: the same Y-shaped island, arms, bay, cliffs, sea, rotunda, round tiled hall, hall at the fork, stoa, libraries, terraces, road, olive terraces, trees, farmsteads, quays, ships, camera and lighting.
+Keep [image 1] exactly as it is: the same Y-shaped island, arms, bay, cliffs, sea, rotunda, round tiled hall, sanctuary at the fork, stoa, libraries, terraces, road, olive terraces, trees, farmsteads, quays, ships, camera and lighting.
 Change only the two towns: replace their houses with low single-storey Hellenistic courtyard houses of rough limestone, each a squat box with a shallow red-tiled roof and a small open courtyard, spaced a little apart with narrow lanes between them, clearly no taller than they are wide.
 No multi-storey buildings anywhere.
 Zero people.
@@ -396,7 +396,7 @@ Detailed 3D isometric architectural diorama of The Stoa and Festival Ground on P
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated civic space, zero people.
 Sited on the waterfront of the scholars' eastern harbour.
 A long two-storey colonnaded stoa of pale limestone with a terracotta roof runs along the harbour front, its back wall lined with carved stone benches, wooden boards pinned thick with small scraps of papyrus, and niches holding rolled papyrus scrolls; a bronze armillary sphere and a painted diagram of the Sun at the centre with the Earth circling it stand on a plinth at the middle of the colonnade.
-In front of it, an open festival ground of beaten earth and flagstones set with rows of long plain wooden collation tables, paired facing each other, each with two scroll rests, oil lamps and inkpots.
+In front of it, an open festival ground of beaten earth and flagstones set with rows of long stone tables, paired facing each other, each with two scroll rests, oil lamps and inkpots.
 Stone quays with wooden mooring posts and small courier boats moored alongside; calm turquoise water.
 ```
 
@@ -441,12 +441,19 @@ Two simple gateways in the enclosure wall, one facing north to the road that for
 Beaten earth and stone flags inside, gnarled wild olives and maquis outside.
 ```
 
+#### Feature 6a: The Ferry across the Inlet
+```text
+Detailed 3D isometric architectural diorama of the ferry across the inlet on Paxos's scholars' coast, Hellenistic Greece.
+Axonometric orthographic projection, hyperfocal focus, clean unpopulated crossing, zero people.
+A narrow inlet of calm water between two low wooded banks. On each bank, facing the other across the water, a landing stage: stone steps down into the water, a short timber jetty on posts with mooring posts, and a small open shelter with benches where those who share the crossing wait. Footpaths from several directions converge on each landing. One broad, flat-bottomed rowed ferry boat lies at one stage.
+```
+
 #### Feature 7: The Tholos
 ```text
 Detailed 3D isometric architectural diorama of The Tholos of Schedia, on Paxos, Hellenistic Greece.
 Axonometric orthographic projection, hyperfocal focus, clean unpopulated round hall, zero people.
 On a level terrace on the eastern arm of Paxos, above a cove on the bay, facing the Chamber across the water.
-A round hall of warm honey-coloured limestone with plain walls and no surrounding colonnade, under a single low conical roof of oxblood terracotta tiles that rises to a small louvred lantern; several plain doorways evenly spaced round the drum, and a small columned porch on the side facing the bay.
+A round hall of warm honey-coloured limestone with plain walls and no surrounding colonnade, under a single low conical roof of oxblood terracotta tiles that rises to a small louvred lantern; one doorway, with a small columned porch, on the side facing the bay.
 Surrounded by a paved terrace with low stone parapets, stone benches by the doors, and silver-green olive trees.
 ```
 
@@ -456,11 +463,11 @@ The roof is lifted away. The legislators' benches run round the wall, each with 
 Isometric 3D interior model of the Tholos of Schedia, on Paxos, a round Hellenistic Greek hall.
 Orthographic axonometric view, deep focus, zero people.
 The conical tiled roof is lifted away to show the whole interior.
-A single ring of identical stone benches with backs runs round the inside of the wall, broken only by the doorways; each bench has a small stone stand holding a stack of hinged wooden tablets filled with yellow beeswax (no books, no scrolls), and every bench faces the centre.
+Five identical stone benches with backs stand round the inside of the wall, clear of the doorway; each bench has a small stone stand holding a stack of hinged wooden tablets filled with yellow beeswax (no books, no scrolls), and every bench faces the centre.
 Six plain columns stand in a ring between the benches and the centre, which carry the roof.
 At the exact centre, a low round stone podium with two steps, a single stone seat and a writing desk on it, and a blank painted wooden board on a post beside the desk for a number. The podium has no lectern and is not raised for speaking.
-A paved stone floor with clear paths from the podium to every doorway.
-Warm daylight through the doorways, photorealistic PBR stone, marble and timber.
+A paved stone floor with a clear path from the podium to the doorway.
+Warm daylight through the doorway, photorealistic PBR stone, marble and timber.
 ```
 
 ---
@@ -499,7 +506,7 @@ The ring road's rule holds: every garment is one loom-woven rectangle, pinned or
 |---|---|
 | Legislators (men and women) | a long white linen chiton pinned at both shoulders with small bronze pins, a purple cord belt, a purple woven band at the hem |
 | Priests | the same in plain white, an olive wreath, a red cord belt |
-| Messengers, who are all men | bare-headed, a short blue wool *exōmis* bare on one shoulder, a soft hide sack (*pera*) on a cord at the hip, strapped sandals |
+| Messengers | bare-headed, a short blue wool *exōmis* bare on one shoulder, a soft hide sack (*pera*) on a cord at the hip, strapped sandals |
 | The merchant | a short cream chiton pinned at both shoulders, an ochre band at the hem, a cord belt, a small hide sack |
 | The goatherd | a rough brown wool *exōmis*, a rope belt |
 | The scholar | a short grey chiton pinned at both shoulders, a cord belt |
