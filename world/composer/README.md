@@ -54,7 +54,7 @@ Open the printed URL in any modern browser (Chrome, Safari, Firefox, Edge).
 ### 4. Interactive Prop Placement Engine
 - **Click-to-Place Raycasting**: Enable "Click Island to Place Prop" mode and click anywhere on terrain, quays, or terraces to spawn models at that exact coordinate.
 - **Prop Library (live props)**: the prototypes the islands themselves use (`p_*` collections), exported by `export_props.py` (part of `export.sh`) to `world/build/composer/props/`: carts and handcart, skiff, courier boat, ferry and merchant ship, amphorae, pithoi, crates, sacks, nets, baskets, scrolls, the Doric, Ionic and Corinthian columns, the five statues. Vegetation, rocks, roof tiles and wall blocks are not offered; the scene carries them. Categories become filter chips from the catalog.
-- **Transform Gizmo**: Switch between **Translate** (`G`), **Rotate Yaw** (`R`), and **Scale** (`S`) with interactive 3D handles.
+- **Transform Gizmo**: Move (`G`), Rotate (`R`, the vertical axis only, since a shot records a yaw) and Scale (`S`, kept uniform). The gizmo sits at the middle of the prop's bounding box and turns it about its own middle; clicking a handle never deselects the prop, even where the handle lies outside the prop's outline. The selected prop also has numeric fields (position of its base in Blender metres, yaw, scale), ±90° buttons and *Drop to ground*, which work from any camera angle, including where a ring is edge-on.
 - **Prop Management**: Placed props list with camera focus, individual deletion (`Del`/`Backspace`), and bulk clear.
 
 ### 5. Screen View Capture Widget (Without UI Elements)

@@ -292,6 +292,21 @@
             <span>Placed Props (<span id="placed-props-count">0</span>)</span>
             <button class="btn btn-chip" id="btn-clear-props" style="color: var(--accent-red);">Clear All</button>
           </div>
+          <div id="prop-inspector" style="display: none; margin-bottom: 10px;">
+            <div style="font-size: 0.8rem; color: var(--gold); margin-bottom: 6px;">Selected: <span id="prop-inspector-name"></span> · numbers work from any view</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;">
+              <label style="font-size: 0.7rem; color: var(--text-dim);">X (m)<input type="number" id="prop-x" class="input-text" step="0.1"></label>
+              <label style="font-size: 0.7rem; color: var(--text-dim);">Y (m)<input type="number" id="prop-y" class="input-text" step="0.1"></label>
+              <label style="font-size: 0.7rem; color: var(--text-dim);">Z (m)<input type="number" id="prop-z" class="input-text" step="0.1"></label>
+              <label style="font-size: 0.7rem; color: var(--text-dim);">Yaw (°)<input type="number" id="prop-yaw" class="input-text" step="5"></label>
+              <label style="font-size: 0.7rem; color: var(--text-dim);">Scale<input type="number" id="prop-scale" class="input-text" step="0.1" min="0.05"></label>
+            </div>
+            <div style="display: flex; gap: 6px; margin-top: 6px;">
+              <button class="btn btn-chip" id="btn-prop-turn-left">⟲ 90°</button>
+              <button class="btn btn-chip" id="btn-prop-turn-right">⟳ 90°</button>
+              <button class="btn btn-chip" id="btn-prop-drop" title="Set the prop on the ground below it">⤓ Drop to ground</button>
+            </div>
+          </div>
           <div class="placed-props-list" id="placed-props-list">
             <p style="font-size: 0.78rem; color: var(--text-dim); text-align: center; padding: 12px 0;">No props placed yet. Select a prop and click anywhere on the island!</p>
           </div>
