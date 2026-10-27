@@ -408,7 +408,7 @@ function setupControls() {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.06;
-  controls.maxPolarAngle = Math.PI * 0.495;
+  controls.maxPolarAngle = Math.PI;      // eye-level shots sit at or past the horizon; a clamp would move them on load
   controls.minDistance = 2.0;
   controls.maxDistance = 40000.0;
   controls.target.set(0, 0, 0);
