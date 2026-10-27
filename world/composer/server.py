@@ -123,21 +123,6 @@ def thumbnail(png, width):
         return None
 
 
-def world_version(island):
-    """What the shot was composed against: the commit the repository is at, whether the world scripts had
-    uncommitted changes, and the island build (world/build/<island>.build.json, the stamp previs.py checks)."""
-    def git(*args):
-        return subprocess.run(["git", *args], cwd=REPO, capture_output=True, text=True).stdout.strip()
-    dirty = [l[3:] for l in git("status", "--porcelain", "--", "world/src", "world/cast/cast.json").splitlines()]
-    stamp = BUILD_DIR / f"{island}.build.json"
-    build = {}
-    if stamp.is_file():
-        st = json.loads(stamp.read_text(encoding="utf-8"))
-        build = {k: st[k] for k in ("hash", "built", "commit") if k in st}
-    return {"commit": git("rev-parse", "--short", "HEAD") or None, **({"uncommitted": dirty} if dirty else {}),
-            "build": build, "at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S")}
-
-
 def rel(path):
     """path relative to the repository, or as is when it lies elsewhere."""
     try:
@@ -630,8 +615,7 @@ class ComposerHandler(SimpleHTTPRequestHandler):
 
         A shot that exists keeps every key the body does not name (base, site, variants, ...); with
         "variant" the keys land in that variant instead. Keys set to null are removed. "if_new" holds keys
-        written only when the shot is created. The saved shot also gets "composed_with": the commit the repository
-        was at, the island build and the time, so the world it was framed against can be told later. The file is
+        written only when the shot is created. The file is
         replaced atomically after a .bak copy of the previous one."""
         shot_id = safe_name(body.get("shot_id"))
         fields = body.get("shot")
@@ -664,9 +648,6 @@ class ComposerHandler(SimpleHTTPRequestHandler):
                     target.pop(k, None)
                 else:
                     target[k] = v
-            island = target.get("island") or entry.get("island")
-            if island in ISLANDS:
-                target["composed_with"] = world_version(island)
 
             try:
                 book_dir.mkdir(parents=True, exist_ok=True)

@@ -62,12 +62,12 @@ class ServerTest(unittest.TestCase):
         self.assertEqual((s["base"], s["cam"], s["prompt"]), ("x", [1, 2, 3], "p"))
         self.assertIn("a", s["variants"])
 
-    def test_saved_shot_records_the_world_it_was_composed_against(self):
+    def test_placed_props_are_saved_and_removed(self):
         self.call("/api/books/b/shots", {"shot_id": "w", "shot": {"island": "paxos", "prompt": "p",
                                                                    "placed_props": [{"prop": "cart_0", "at": [1, 2, 3], "face": 90, "scale": 1}]}})
         w = self.shots()["w"]
         self.assertEqual(w["placed_props"][0]["prop"], "cart_0")
-        self.assertTrue({"commit", "build", "at"} <= w["composed_with"].keys())
+        self.assertNotIn("composed_with", w)      # a shot is a description; provenance lives in the pictures
         self.call("/api/books/b/shots", {"shot_id": "w", "shot": {"placed_props": None}})
         self.assertNotIn("placed_props", self.shots()["w"])
 
