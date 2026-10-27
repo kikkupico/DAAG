@@ -41,8 +41,10 @@ ISLANDS = ("arche", "paxos")
 BUILD_DIR = WORLD / "build"
 MODELS_DIR = BUILD_DIR / "composer"      # <island>.glb, made by export_glb.py from build/<island>.blend
 TERRAIN_DIR = BUILD_DIR / "terrain"      # <island>/sites.json, in the same Blender coordinates
-KIT_MODELS_DIR = REPO / "archive" / "art" / "archive" / "iso-ref-pipeline" / "kit" / "models"
-POLYHAVEN_DIR = WORLD / "assets" / "polyhaven" / "models"
+PROPS_DIR = BUILD_DIR / "composer" / "props"   # <id>.glb and props.json, made by export_props.py from the islands
+BOOKS_DIR = REPO / "books"
+# books/ pages that are not books of shots
+NOT_BOOKS = {"eighteen-books-in-one-scroll"}
 CAST_DIR = WORLD / "cast"
 CAST_IMG_DIR = WORLD / "cast" / "out" / "nb2"
 PANELS_DIR = WORLD / "panels"
@@ -119,6 +121,21 @@ def thumbnail(png, width):
         return out
     except Exception:
         return None
+
+
+def world_version(island):
+    """What the shot was composed against: the commit the repository is at, whether the world scripts had
+    uncommitted changes, and the island build (world/build/<island>.build.json, the stamp previs.py checks)."""
+    def git(*args):
+        return subprocess.run(["git", *args], cwd=REPO, capture_output=True, text=True).stdout.strip()
+    dirty = [l[3:] for l in git("status", "--porcelain", "--", "world/src", "world/cast/cast.json").splitlines()]
+    stamp = BUILD_DIR / f"{island}.build.json"
+    build = {}
+    if stamp.is_file():
+        st = json.loads(stamp.read_text(encoding="utf-8"))
+        build = {k: st[k] for k in ("hash", "built", "commit") if k in st}
+    return {"commit": git("rev-parse", "--short", "HEAD") or None, **({"uncommitted": dirty} if dirty else {}),
+            "build": build, "at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S")}
 
 
 def rel(path):
@@ -255,68 +272,39 @@ def get_frames(island):
 
 
 def get_props_catalog():
-    """Return categorized list of available 3D prop models."""
-    props = [
-        # Vessels & Transport
-        {"id": "cart", "name": "Wooden Oxcart", "category": "Transport", "type": "kit", "url": "/props/kit/cart.glb", "scale": 1.0, "icon": "🛒"},
-        {"id": "skiff", "name": "Harbour Skiff / Rowboat", "category": "Transport", "type": "kit", "url": "/props/kit/skiff.glb", "scale": 1.0, "icon": "🚣"},
-        {"id": "merchantman", "name": "Aegean Merchant Ship", "category": "Transport", "type": "kit", "url": "/props/kit/merchantman.glb", "scale": 1.0, "icon": "⛵"},
+    """The live props: the prototypes of the built islands, exported by export_props.py."""
+    f = PROPS_DIR / "props.json"
+    return json.loads(f.read_text(encoding="utf-8")) if f.is_file() else []
 
-        # Architecture & Shelter
-        {"id": "camp_tent", "name": "Mercenary Tent", "category": "Architecture", "type": "kit", "url": "/props/kit/camp_tent.glb", "scale": 1.0, "icon": "⛺"},
-        {"id": "stall", "name": "Market Stall (Agora)", "category": "Architecture", "type": "kit", "url": "/props/kit/stall.glb", "scale": 1.0, "icon": "🎪"},
-        {"id": "granary", "name": "Stone Granary", "category": "Architecture", "type": "kit", "url": "/props/kit/granary.glb", "scale": 1.0, "icon": "🏛️"},
-        {"id": "depot", "name": "Quayside Depot", "category": "Architecture", "type": "kit", "url": "/props/kit/depot.glb", "scale": 1.0, "icon": "🏠"},
-        {"id": "warehouse", "name": "Harbour Warehouse", "category": "Architecture", "type": "kit", "url": "/props/kit/warehouse.glb", "scale": 1.0, "icon": "🏬"},
-        {"id": "customs_house", "name": "Customs House", "category": "Architecture", "type": "kit", "url": "/props/kit/customs_house.glb", "scale": 1.0, "icon": "🏛️"},
-        {"id": "cottage_8x6", "name": "Stone Cottage", "category": "Architecture", "type": "kit", "url": "/props/kit/cottage_8x6.glb", "scale": 1.0, "icon": "🏡"},
-        {"id": "courtyard_house", "name": "Hellenistic Courtyard House", "category": "Architecture", "type": "kit", "url": "/props/kit/courtyard_house_12x12.glb", "scale": 1.0, "icon": "🏛️"},
 
-        # Statues & Figures
-        {"id": "horse_statue", "name": "Equestrian Bronze Statue", "category": "Statues", "type": "polyhaven", "url": "/props/polyhaven/horse_statue_01/horse_statue_01_2k.gltf", "scale": 1.0, "icon": "🐎"},
-        {"id": "marble_bust", "name": "Philosopher Marble Bust", "category": "Statues", "type": "polyhaven", "url": "/props/polyhaven/marble_bust_01/marble_bust_01_2k.gltf", "scale": 1.2, "icon": "🗿"},
-        {"id": "warrior_figure", "name": "Hellenistic Guard Standee", "category": "Statues", "type": "kit", "url": "/props/warrior.glb", "scale": 1.0, "icon": "🛡️"},
+def book_title(slug):
+    """A book's title from its page, up to the dash that introduces the paper's name."""
+    page = BOOKS_DIR / slug / "index.html"
+    m = re.search(r"<title[^>]*>([^<]+)", page.read_text(encoding="utf-8")) if page.is_file() else None
+    return m.group(1).split(" — ")[0].strip() if m else slug.replace("-", " ").title()
 
-        # Daily Life & Goods
-        {"id": "wicker_basket_01", "name": "Wicker Grain Basket", "category": "Everyday", "type": "polyhaven", "url": "/props/polyhaven/wicker_basket_01/wicker_basket_01_2k.gltf", "scale": 1.2, "icon": "🧺"},
-        {"id": "wooden_bucket", "name": "Well Water Bucket", "category": "Everyday", "type": "polyhaven", "url": "/props/polyhaven/wooden_bucket_01/wooden_bucket_01_2k.gltf", "scale": 1.2, "icon": "🪣"},
-        {"id": "cellar", "name": "Amphora Cellar Hatch", "category": "Everyday", "type": "kit", "url": "/props/kit/cellar.glb", "scale": 1.0, "icon": "🏺"},
 
-        # Rocks & Geology
-        {"id": "boulder_01", "name": "Limestone Cliff Boulder", "category": "Geology", "type": "polyhaven", "url": "/props/polyhaven/boulder_01/boulder_01_2k.gltf", "scale": 1.5, "icon": "🪨"},
-        {"id": "stone_01", "name": "Aegean Flat Stone", "category": "Geology", "type": "polyhaven", "url": "/props/polyhaven/stone_01/stone_01_2k.gltf", "scale": 1.5, "icon": "🪨"},
-        {"id": "rock_07", "name": "Craggy Coast Rock", "category": "Geology", "type": "polyhaven", "url": "/props/polyhaven/rock_07/rock_07_2k.gltf", "scale": 1.8, "icon": "🪨"}
-    ]
-    return props
+def book_ids():
+    """The books of the site: each folder under books/ with a page, except pages that are not books."""
+    if not BOOKS_DIR.is_dir():
+        return []
+    return [p.name for p in sorted(BOOKS_DIR.iterdir())
+            if p.is_dir() and (p / "index.html").is_file() and p.name not in NOT_BOOKS and safe_name(p.name)]
 
 
 def get_available_books():
-    """List all book directories under world/panels with a shots.json file."""
+    """Every book of the site with the number of shots in its world/panels/<book>/shots.json (none yet is 0)."""
     books = []
-    if not PANELS_DIR.exists():
-        return books
-
-    for item in sorted(PANELS_DIR.iterdir()):
-        if item.is_dir() and not item.name.startswith((".", "_")):
-            shots_file = item / "shots.json"
-            if shots_file.exists():
-                try:
-                    data = json.loads(shots_file.read_text(encoding="utf-8"))
-                    shots_list = list(data.keys())
-                    books.append({
-                        "id": item.name,
-                        "title": item.name.replace("-", " ").title(),
-                        "shots_count": len(shots_list),
-                        "shots": shots_list
-                    })
-                except Exception as e:
-                    books.append({
-                        "id": item.name,
-                        "title": item.name.replace("-", " ").title(),
-                        "shots_count": 0,
-                        "shots": [],
-                        "error": str(e)
-                    })
+    for slug in book_ids():
+        shots_file = PANELS_DIR / slug / "shots.json"
+        entry = {"id": slug, "title": book_title(slug), "shots_count": 0, "shots": []}
+        if shots_file.is_file():
+            try:
+                shots = list(json.loads(shots_file.read_text(encoding="utf-8")))
+                entry.update(shots_count=len(shots), shots=shots)
+            except Exception as e:
+                entry["error"] = str(e)
+        books.append(entry)
     return books
 
 
@@ -515,31 +503,13 @@ class ComposerHandler(SimpleHTTPRequestHandler):
             return
 
         # 2. Props
-        if path.startswith("/props/kit/"):
-            filename = path[len("/props/kit/"):]
-            file_path = inside(KIT_MODELS_DIR, filename)
-            if file_path:
-                self.stream_file(file_path, "model/gltf-binary")
-                return
-            self.send_error(HTTPStatus.NOT_FOUND, f"Kit prop not found: {filename}")
-            return
-
-        if path == "/props/warrior.glb":
-            warrior_path = REPO / "archive" / "art" / "archive" / "cast" / "warrior.glb"
-            if warrior_path.exists():
-                self.stream_file(warrior_path, "model/gltf-binary")
-                return
-            self.send_error(HTTPStatus.NOT_FOUND, "Warrior model not found")
-            return
-
-        if path.startswith("/props/polyhaven/"):
-            rel_path = path[len("/props/polyhaven/"):]
-            file_path = inside(POLYHAVEN_DIR, rel_path)
-            if file_path:
-                mime = mimetypes.guess_type(str(file_path))[0] or "application/octet-stream"
-                self.stream_file(file_path, mime)
-                return
-            self.send_error(HTTPStatus.NOT_FOUND, f"Polyhaven asset not found: {rel_path}")
+        m = re.fullmatch(r"/props/live/([\w.-]+\.glb)", path)
+        if m:
+            glb = inside(PROPS_DIR, m.group(1))
+            if glb:
+                self.stream_file(glb, "model/gltf-binary")
+            else:
+                self.send_error(HTTPStatus.NOT_FOUND, "Run: sh world/composer/export.sh")
             return
 
         # 3. Cast Images
@@ -605,8 +575,8 @@ class ComposerHandler(SimpleHTTPRequestHandler):
             parts = path.strip("/").split("/")
             if len(parts) == 4 and parts[0] == "api" and parts[1] == "books" and parts[3] == "shots":
                 book_id = safe_name(parts[2])
-                if not book_id:
-                    self.send_json({"error": "Invalid book id"}, status=400)
+                if book_id not in book_ids():
+                    self.send_json({"error": f"'{parts[2]}' is not a book of the site"}, status=400)
                     return
                 body = self.read_json_body()
                 if body is None:
@@ -660,8 +630,8 @@ class ComposerHandler(SimpleHTTPRequestHandler):
 
         A shot that exists keeps every key the body does not name (base, site, variants, ...); with
         "variant" the keys land in that variant instead. Keys set to null are removed. "if_new" holds keys
-        written only when the shot is created (the camera, which the composer frames in its own model's
-        coordinates, not the Blender ones previs.py renders from). The file is
+        written only when the shot is created. The saved shot also gets "composed_with": the commit the repository
+        was at, the island build and the time, so the world it was framed against can be told later. The file is
         replaced atomically after a .bak copy of the previous one."""
         shot_id = safe_name(body.get("shot_id"))
         fields = body.get("shot")
@@ -694,6 +664,9 @@ class ComposerHandler(SimpleHTTPRequestHandler):
                     target.pop(k, None)
                 else:
                     target[k] = v
+            island = target.get("island") or entry.get("island")
+            if island in ISLANDS:
+                target["composed_with"] = world_version(island)
 
             try:
                 book_dir.mkdir(parents=True, exist_ok=True)

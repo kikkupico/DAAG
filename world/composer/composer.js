@@ -586,6 +586,17 @@ async function loadPropsCatalog() {
     const res = await fetch('/api/props');
     const data = await res.json();
     state.propsCatalog = data.props || [];
+    // One filter chip per category of the catalog
+    [...new Set(state.propsCatalog.map((p) => p.category))].forEach((cat) => {
+      const chip = document.createElement('span');
+      chip.className = 'prop-filter-chip';
+      chip.dataset.category = cat;
+      chip.textContent = cat;
+      dom.propCategoryFilters.appendChild(chip);
+    });
+    if (!state.propsCatalog.length) {
+      dom.propsCatalogGrid.innerHTML = '<p style="font-size: 0.78rem; color: var(--text-dim); padding: 12px 0;">No props yet. Run: sh world/composer/export.sh</p>';
+    }
     state.activePropId = state.activePropId || (state.propsCatalog[0] && state.propsCatalog[0].id);
     renderPropsCatalog();
   } catch (err) {
@@ -794,46 +805,61 @@ async function loadPropModel(propDef) {
   });
 }
 
-async function placePropAtPosition(hitPoint, hitNormal) {
+async function placePropAtPosition(hitPoint) {
   const propDef = state.propsCatalog.find((p) => p.id === state.activePropId);
   if (!propDef) return;
-
   try {
-    const mesh = await loadPropModel(propDef);
-    mesh.position.copy(hitPoint);
-
-    // Random slight rotation for natural appearance
-    mesh.rotation.y = Math.random() * Math.PI * 2;
-
-    const uniqueId = `prop_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
-    mesh.userData = {
-      isProp: true,
-      propId: propDef.id,
-      name: propDef.name,
-      uniqueId
-    };
-
-    propsGroup.add(mesh);
-
-    const placedEntry = {
-      id: uniqueId,
-      propId: propDef.id,
-      name: propDef.name,
-      icon: propDef.icon,
-      mesh,
-      position: mesh.position,
-      rotation: mesh.rotation,
-      scale: mesh.scale
-    };
-    state.placedProps.push(placedEntry);
-
-    selectPlacedProp(placedEntry);
+    // A slight random turn, so repeated props do not stand in line
+    const entry = await spawnProp(propDef, hitPoint, Math.random() * Math.PI * 2, 1);
+    selectPlacedProp(entry);
     renderPlacedPropsList();
     showToast(`Placed ${propDef.name}`);
   } catch (err) {
     console.error('Failed to load and place prop:', err);
     showToast('Failed to load prop model');
   }
+}
+
+/** Put a prop of the catalog into the scene: a three.js position, a yaw about up in radians, a scale. */
+async function spawnProp(propDef, position, yaw, scale) {
+  const mesh = await loadPropModel(propDef);
+  mesh.position.copy(position);
+  mesh.rotation.y = yaw;
+  mesh.scale.multiplyScalar(scale);
+
+  const uniqueId = `prop_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+  mesh.userData = { isProp: true, propId: propDef.id, name: propDef.name, uniqueId };
+  propsGroup.add(mesh);
+
+  const entry = {
+    id: uniqueId, propId: propDef.id, name: propDef.name, icon: propDef.icon, mesh,
+    position: mesh.position, rotation: mesh.rotation, scale: mesh.scale
+  };
+  state.placedProps.push(entry);
+  return entry;
+}
+
+/** The placed props as a shot records them: catalog id, Blender position, yaw in degrees (from +x), scale. */
+function placedPropsForShot() {
+  return state.placedProps.map((p) => ({
+    prop: p.propId,
+    at: shotPoint(p.mesh.position),
+    face: parseFloat(((p.mesh.rotation.y * 180) / Math.PI).toFixed(1)),
+    scale: parseFloat(p.mesh.scale.x.toFixed(3))
+  }));
+}
+
+async function restorePlacedProps(items) {
+  clearAllProps();
+  for (const it of items || []) {
+    const def = state.propsCatalog.find((p) => p.id === it.prop);
+    if (!def) {
+      console.warn(`Saved prop '${it.prop}' is not in the catalog`);
+      continue;
+    }
+    await spawnProp(def, blenderToThree(it.at), (it.face * Math.PI) / 180, it.scale || 1);
+  }
+  renderPlacedPropsList();
 }
 
 function selectPlacedProp(placedEntry) {
@@ -1180,6 +1206,7 @@ function composedShot(shotId) {
     light: state.timeOfDay,
     sun_from: Math.round(state.sunAzimuth),
     others: state.promptOthers.trim() || null,
+    placed_props: state.placedProps.length ? placedPropsForShot() : null,
     ...(frame ? { site: state.shotSite } : {})
   };
 }
@@ -1412,6 +1439,7 @@ function applyBookShot(shotId, shot) {
     dom.promptOthersInput.value = shot.others;
   }
 
+  restorePlacedProps(shot.placed_props);
   updatePrompt();
 }
 
@@ -1601,7 +1629,7 @@ function setupEventListeners() {
   dom.propCategoryFilters.addEventListener('click', (e) => {
     const chip = e.target.closest('.prop-filter-chip');
     if (!chip) return;
-    document.querySelectorAll('.prop-filter-chip').forEach((c) => c.classList.remove('active'));
+    dom.propCategoryFilters.querySelectorAll('.prop-filter-chip').forEach((c) => c.classList.remove('active'));
     chip.classList.add('active');
     renderPropsCatalog(chip.dataset.category);
   });
