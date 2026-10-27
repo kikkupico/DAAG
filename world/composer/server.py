@@ -12,6 +12,7 @@ import base64
 import html
 import io
 import json
+import math
 import mimetypes
 import os
 import re
@@ -33,8 +34,10 @@ WORLD = HERE.parent
 REPO = WORLD.parent
 
 # Asset roots
-ISLAND_V2_DIR = REPO / "archive" / "island-v2"
-ART_DIR = REPO / "archive" / "art"
+ISLANDS = ("arche", "paxos")
+BUILD_DIR = WORLD / "build"
+MODELS_DIR = BUILD_DIR / "composer"      # <island>.glb, made by export_glb.py from build/<island>.blend
+TERRAIN_DIR = BUILD_DIR / "terrain"      # <island>/sites.json, in the same Blender coordinates
 KIT_MODELS_DIR = REPO / "archive" / "art" / "archive" / "iso-ref-pipeline" / "kit" / "models"
 POLYHAVEN_DIR = WORLD / "assets" / "polyhaven" / "models"
 CAST_DIR = WORLD / "cast"
@@ -56,7 +59,7 @@ mimetypes.add_type("image/jpeg", ".jpeg")
 mimetypes.add_type("application/json", ".json")
 
 PORT = int(next((a for a in sys.argv[1:] if a.isdigit()), 8767))
-HOST = sys.argv[sys.argv.index("--host") + 1] if "--host" in sys.argv[1:-1] else "127.0.0.1"
+HOST = sys.argv[sys.argv.index("--host") + 1] if "--host" in sys.argv[1:-1] else "0.0.0.0"
 
 shots_lock = threading.Lock()
 
@@ -152,6 +155,63 @@ def get_cast_data():
         "sheets": sheets,
         "characters": characters
     }
+
+
+def get_sites(island):
+    """Named places of an island with their Blender coordinates (metres, z up), from the terrain build."""
+    f = TERRAIN_DIR / island / "sites.json"
+    if not f.is_file():
+        return []
+    d = json.loads(f.read_text(encoding="utf-8"))
+    out = []
+
+    def add(sid, name, p, face=None):
+        out.append({"id": sid, "name": name, "x": p["x"], "y": p["y"], "z": p.get("z", 3.0), "face": face})
+
+    if island == "arche":
+        for n, p in d.get("ports", {}).items():
+            q = next((b for b in d["buildings"] if b.get("house") == int(n)), None)
+            add(f"house-{n}", f"House {n} (port {n})", q or p, q and q.get("ang"))
+        for c in d.get("camps", []):
+            add(f"camp-{c['n']}", f"Camp {c['n']}", c)
+        for p in d.get("posts", []):
+            add(f"post-{p['n']}", f"Post {p['n']}", p, p.get("facing"))
+        if d.get("crown"):
+            add("crown", "The Crown", d["crown"])
+        if d.get("granary"):
+            add("granary", "Granary", d["granary"], d["granary"].get("face"))
+        for i, p in enumerate(d.get("sundials", []), 1):
+            add(f"sundial-{i}", f"Sundial {i}", p)
+    else:
+        for key, name in (("chamber", "The Chamber"), ("tholos", "The Tholos"), ("oracle", "Oracle at the Fork"),
+                          ("stoa", "Stoa"), ("festival", "Festival ground")):
+            if d.get(key):
+                add(key, name, d[key], d[key].get("face"))
+        for h in d.get("harbours", []):
+            add(f"harbour-{h['name']}", f"Harbour of {h['name'].title()}", h)
+        for lib in d.get("libraries", []):
+            add(f"library-{lib['n']}", f"Library {lib['n']}", lib, lib.get("face"))
+    return out
+
+
+def get_frames(island):
+    """Building frames as world/src/shots_panels.frame() has them: x, y, floor z, and the angle the door
+    faces, for the shots whose "site" gives cam and target in the building's own frame."""
+    f = TERRAIN_DIR / island / "sites.json"
+    if island != "paxos" or not f.is_file():
+        return {}
+    d = json.loads(f.read_text(encoding="utf-8"))
+    frames = {}
+    for key in ("chamber", "tholos", "oracle", "stoa", "festival"):
+        s = d.get(key)
+        if not s:
+            continue
+        if key == "chamber":     # its door looks across the bay to the Tholos
+            face = math.atan2(d["tholos"]["y"] - s["y"], d["tholos"]["x"] - s["x"])
+            frames[key] = [s["x"], s["y"], s["z"] + 1.02, face]
+        else:
+            frames[key] = [s["x"], s["y"], s["z"], s.get("face", s.get("ang", 0.0))]
+    return frames
 
 
 def get_props_catalog():
@@ -253,9 +313,6 @@ class ComposerHandler(SimpleHTTPRequestHandler):
     def do_HEAD(self):
         url = urlsplit(self.path)
         path = unquote(url.path)
-        if path == "/models/island-v2.glb":
-            self.head_file(ISLAND_V2_DIR / "island-v2.glb", "model/gltf-binary")
-            return
         local_file = inside(HERE, path.lstrip("/"))
         if local_file:
             mime = mimetypes.guess_type(str(local_file))[0] or "application/octet-stream"
@@ -316,6 +373,11 @@ class ComposerHandler(SimpleHTTPRequestHandler):
             self.send_json(get_cast_data())
             return
 
+        m = re.fullmatch(r"/api/sites/(\w+)", path)
+        if m and m.group(1) in ISLANDS:
+            self.send_json({"island": m.group(1), "sites": get_sites(m.group(1)), "frames": get_frames(m.group(1))})
+            return
+
         if path == "/api/prompt":
             self.send_json(prompt_parts())
             return
@@ -330,17 +392,13 @@ class ComposerHandler(SimpleHTTPRequestHandler):
 
         # Static asset routing
         # 1. Models
-        if path == "/models/island-v2.glb":
-            self.stream_file(ISLAND_V2_DIR / "island-v2.glb", "model/gltf-binary")
-            return
-        if path == "/models/arche-3d.glb":
-            self.stream_file(ART_DIR / "arche-3d.glb", "model/gltf-binary")
-            return
-        if path == "/models/paxos-3d.glb":
-            self.stream_file(ART_DIR / "paxos-3d.glb", "model/gltf-binary")
-            return
-        if path == "/models/layout.json":
-            self.stream_file(ISLAND_V2_DIR / "layout.json", "application/json")
+        m = re.fullmatch(r"/models/(\w+)\.glb", path)
+        if m and m.group(1) in ISLANDS:
+            glb = MODELS_DIR / f"{m.group(1)}.glb"
+            if glb.is_file():
+                self.stream_file(glb, "model/gltf-binary")
+            else:
+                self.send_error(HTTPStatus.NOT_FOUND, f"Run: sh world/composer/export.sh {m.group(1)}")
             return
 
         # 2. Props

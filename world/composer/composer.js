@@ -13,6 +13,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 import { buildPrompt, loadPromptParts } from './js/prompt.js';
 import { esc } from './js/util.js';
+import { blenderToThree, threeToBlender, shotPoint, bearingToThree, shotToWorld, worldToFrame } from './js/coords.js';
 
 // --- Application State ---
 const state = {
@@ -25,7 +26,7 @@ const state = {
   roofsLifted: false,
 
   // Environment & Light
-  timeOfDay: 'golden',  // 'morning', 'golden', 'noon', 'overcast', 'sunset', 'dusk'
+  timeOfDay: 'golden',  // 'morning', 'golden', 'noon', 'overcast', 'late', 'dusk'
   sunAzimuth: 250,      // degrees (0 = North, 90 = East, 180 = South, 270 = West)
   sunElevation: 24,     // degrees
   sunIntensity: 1.5,
@@ -57,7 +58,10 @@ const state = {
   shotId: 'cover-alt',
 
   // Layout & Sites
-  layout: null,
+  island: 'paxos',      // the island model on screen: 'arche' | 'paxos'
+  sites: [],            // named places of that island, Blender coordinates
+  frames: {},           // building frames for shots given with a "site"
+  shotSite: null,       // the site of the shot on screen, if its camera is in that building's frame
   islandModel: null
 };
 
@@ -143,7 +147,8 @@ const dom = {
   leftDock: document.getElementById('left-dock'),
   btnDockCollapse: document.getElementById('btn-dock-collapse'),
   btnDockExpand: document.getElementById('btn-dock-expand'),
-  teleportSelect: document.getElementById('teleport-select')
+  teleportSelect: document.getElementById('teleport-select'),
+  islandSelect: document.getElementById('island-select')
 };
 
 // --- Three.js Globals ---
@@ -165,14 +170,13 @@ async function init() {
   setupEventListeners();
 
   // Load backend data
-  await loadLayoutData();
   await loadPropsCatalog();
   await loadCastData();
   await loadBooksList();
   await loadPromptParts();
 
   // Load 3D Island Model
-  loadIslandModel('/models/island-v2.glb');
+  loadIslandModel(state.island);
 
   // Start Animation Loop
   animate();
@@ -195,15 +199,15 @@ function setupRenderer() {
   renderer.toneMappingExposure = 1.15;
   dom.container.appendChild(renderer.domElement);
 
-  camera = new THREE.PerspectiveCamera(state.fov, window.innerWidth / window.innerHeight, 0.5, 5000);
-  camera.position.set(120, 260, 520);
+  camera = new THREE.PerspectiveCamera(state.fov, window.innerWidth / window.innerHeight, 1, 80000);
+  camera.position.copy(blenderToThree([3000, -9000, 5500]));
   applyFocalLength(state.lens);
 }
 
 function setupScene() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x8cb6d8);
-  scene.fog = new THREE.FogExp2(0x8cb6d8, 0.00045);
+  scene.fog = new THREE.FogExp2(0x8cb6d8, 0.00004);
 
   islandGroup = new THREE.Group();
   propsGroup = new THREE.Group();
@@ -211,7 +215,7 @@ function setupScene() {
   scene.add(propsGroup);
 
   // Sky Dome with subtle gradient
-  const skyGeo = new THREE.SphereGeometry(3800, 32, 16);
+  const skyGeo = new THREE.SphereGeometry(60000, 32, 16);
   const skyMat = new THREE.ShaderMaterial({
     side: THREE.BackSide,
     uniforms: {
@@ -244,7 +248,7 @@ function setupScene() {
 }
 
 function setupLighting() {
-  ambientLight = new THREE.AmbientLight(0xd9e5f2, 0.5);
+  ambientLight = new THREE.AmbientLight(0xd9e5f2, 0.9);
   scene.add(ambientLight);
 
   hemisphereLight = new THREE.HemisphereLight(0xaed3ee, 0x485a6a, 0.6);
@@ -271,7 +275,7 @@ function setupLighting() {
 }
 
 function setupSea() {
-  const seaGeo = new THREE.PlaneGeometry(6000, 6000, 96, 96);
+  const seaGeo = new THREE.PlaneGeometry(80000, 80000, 96, 96);
   seaGeo.rotateX(-Math.PI / 2);
 
   const seaMat = new THREE.ShaderMaterial({
@@ -332,8 +336,8 @@ function setupControls() {
   controls.dampingFactor = 0.06;
   controls.maxPolarAngle = Math.PI * 0.495;
   controls.minDistance = 2.0;
-  controls.maxDistance = 2500.0;
-  controls.target.set(0, 15, 0);
+  controls.maxDistance = 40000.0;
+  controls.target.set(0, 0, 0);
 
   transformControls = new TransformControls(camera, renderer.domElement);
   transformControls.size = 0.8;
@@ -357,21 +361,25 @@ function setupRaycaster() {
 }
 
 // --- 2. Sun, Lighting & Weather Simulation ---
+/** Put the sun on its bearing and elevation, with the shadow box around what the camera looks at. */
+function aimSun() {
+  const radEl = (state.sunElevation * Math.PI) / 180;
+  const dir = bearingToThree(state.sunAzimuth).multiplyScalar(Math.cos(radEl));
+  dir.y = Math.sin(radEl);
+  const aim = controls ? controls.target : new THREE.Vector3();
+  sunLight.target.position.copy(aim);
+  sunLight.position.copy(aim).addScaledVector(dir, 800);
+  if (dir.y < 0.02) sunLight.position.y = aim.y + 10;
+}
+
 function updateSunPosition() {
-  const radAz = (state.sunAzimuth * Math.PI) / 180;
   const radEl = (state.sunElevation * Math.PI) / 180;
 
-  const distance = 800;
-  const y = Math.sin(radEl) * distance;
-  const x = Math.cos(radEl) * Math.sin(radAz) * distance;
-  const z = Math.cos(radEl) * Math.cos(radAz) * distance;
-
-  sunLight.position.set(x, Math.max(y, 10), z);
-  sunLight.target.position.set(0, 10, 0);
+  aimSun();
   sunLight.intensity = Math.max(0.1, state.sunIntensity * Math.sin(Math.max(radEl, 0.05)));
 
   if (seaMesh && seaMesh.material.uniforms) {
-    seaMesh.material.uniforms.uSunDir.value.copy(sunLight.position).normalize();
+    seaMesh.material.uniforms.uSunDir.value.copy(sunLight.position).sub(sunLight.target.position).normalize();
   }
 
   // Update atmosphere & sky dome colors
@@ -410,7 +418,7 @@ function applyTimeOfDayAtmosphere() {
       lightColor = 0xdfe4ea;
       fogCol = 0xb2bcc4;
       break;
-    case 'sunset':
+    case 'late':
       skyTop = 0x243552;
       skyHorizon = 0xdf5a3c;
       skyGround = 0x5a343c;
@@ -443,8 +451,8 @@ function applyTimeOfDayAtmosphere() {
   renderer.setClearColor(fogCol);
 
   // Fog density
-  const baseFog = 0.00015;
-  const maxFog = 0.0018;
+  const baseFog = 0.00001;
+  const maxFog = 0.00012;
   scene.fog.density = baseFog + (state.fogDensity / 100) * (maxFog - baseFog);
 }
 
@@ -488,59 +496,75 @@ function updateFramingMatte() {
 }
 
 // --- 4. Loading Models & Assets ---
-function loadIslandModel(url) {
+const OVERVIEW = {
+  paxos: { cam: [3200, -11800, 8200], target: [-200, 300, 0] },
+  arche: { cam: [0, -9500, 6500], target: [0, 0, 0] }
+};
+
+function loadIslandModel(island, afterLoad = null) {
   const loader = new GLTFLoader();
+  state.island = island;
+  dom.islandSelect.value = island;
 
   dom.loadingOverlay.classList.remove('hidden');
-  dom.loadingStatus.textContent = 'Loading 3D islands model (island-v2.glb)...';
+  dom.progressBarFill.style.width = '0%';
+  dom.loadingStatus.textContent = `Loading ${island} model...`;
+  loadSites(island);
 
   loader.load(
-    url,
+    `/models/${island}.glb`,
     (gltf) => {
       const model = gltf.scene;
       state.islandModel = model;
 
-      // Adjust material properties for Greek Mediterranean light
       model.traverse((child) => {
+        if (child.name === 'sea') {   // the composer draws its own, animated sea
+          child.visible = false;
+          return;
+        }
         if (child.isMesh) {
           child.castShadow = true;
           child.receiveShadow = true;
-          if (child.material) {
-            child.material.roughness = 0.86;
-            child.material.metalness = 0.04;
-          }
         }
       });
 
       islandGroup.clear();
       islandGroup.add(model);
+      state.roofsLifted = false;
 
       dom.loadingOverlay.classList.add('hidden');
-      showToast('Archipelago loaded successfully');
-      setupSitePins();
+      showToast(`${island[0].toUpperCase()}${island.slice(1)} loaded`);
+      if (afterLoad) afterLoad();
+      else flyCameraTo(blenderToThree(OVERVIEW[island].cam), blenderToThree(OVERVIEW[island].target), 800);
     },
     (xhr) => {
       if (xhr.total > 0) {
         const pct = Math.round((xhr.loaded / xhr.total) * 100);
         dom.progressBarFill.style.width = `${pct}%`;
-        dom.loadingStatus.textContent = `Loading 3D islands model (${pct}%)...`;
+        dom.loadingStatus.textContent = `Loading ${island} model (${pct}%)...`;
       }
     },
     (err) => {
       console.error('Error loading island GLB:', err);
-      dom.loadingStatus.textContent = 'Failed to load island model. Please check console.';
+      dom.loadingStatus.textContent =
+        `No model for ${island}. Run: sh world/composer/export.sh ${island}`;
     }
   );
 }
 
-async function loadLayoutData() {
+async function loadSites(island) {
   try {
-    const res = await fetch('/models/layout.json');
-    state.layout = await res.json();
-    populateTeleportMenu();
+    const res = await fetch(`/api/sites/${island}`);
+    const data = await res.json();
+    state.sites = data.sites || [];
+    state.frames = data.frames || {};
   } catch (err) {
-    console.warn('Could not load layout.json:', err);
+    console.warn('Could not load sites:', err);
+    state.sites = [];
+    state.frames = {};
   }
+  setupSitePins();
+  populateTeleportMenu();
 }
 
 async function loadPropsCatalog() {
@@ -597,26 +621,19 @@ function setupSitePins() {
   dom.sitePinsLayer.innerHTML = '';
   sitePins = [];
 
-  if (!state.layout || !state.layout.buildings) return;
-
-  state.layout.buildings.forEach((b) => {
+  state.sites.forEach((site) => {
     const el = document.createElement('div');
     el.className = 'site-pin';
-    el.textContent = b.name.split('·')[0].trim();
-    el.dataset.id = b.id;
+    el.textContent = site.name;
+    el.dataset.id = site.id;
 
     el.addEventListener('click', (e) => {
       e.stopPropagation();
-      teleportToSite(b);
+      teleportToSite(site);
     });
 
     dom.sitePinsLayer.appendChild(el);
-
-    sitePins.push({
-      el,
-      pos: new THREE.Vector3(b.world[0], (b.elevation_m || 8.0) + 4.0, b.world[1]),
-      b
-    });
+    sitePins.push({ el, pos: blenderToThree([site.x, site.y, site.z + 6]), site });
   });
 }
 
@@ -656,40 +673,30 @@ function updateSitePinsScreenPos() {
 
 function populateTeleportMenu() {
   dom.teleportSelect.innerHTML = '<option value="">Teleport to site...</option>';
-  if (!state.layout || !state.layout.buildings) return;
-
-  const archeOptGroup = document.createElement('optgroup');
-  archeOptGroup.label = 'Arche Island (NW)';
-  const paxosOptGroup = document.createElement('optgroup');
-  paxosOptGroup.label = 'Paxos Island (SE)';
-
-  state.layout.buildings.forEach((b) => {
+  state.sites.forEach((site) => {
     const opt = document.createElement('option');
-    opt.value = b.id;
-    opt.textContent = b.name;
-    if (b.island === 'arche') {
-      archeOptGroup.appendChild(opt);
-    } else {
-      paxosOptGroup.appendChild(opt);
-    }
+    opt.value = site.id;
+    opt.textContent = site.name;
+    dom.teleportSelect.appendChild(opt);
   });
-
-  dom.teleportSelect.appendChild(archeOptGroup);
-  dom.teleportSelect.appendChild(paxosOptGroup);
 }
 
 function teleportToSite(site) {
-  const wx = site.world[0];
-  const wz = site.world[1];
-  const wy = site.elevation_m || 8.0;
-
-  const dist = (site.type === 'chamber' || site.type === 'tholos' || site.type === 'stoa') ? 42 : 30;
-  flyCameraTo(
-    new THREE.Vector3(wx + dist * 0.7, wy + dist * 0.5, wz + dist * 0.8),
-    new THREE.Vector3(wx, wy + 2.5, wz),
-    1200
-  );
+  const big = ['chamber', 'tholos', 'stoa', 'festival', 'crown', 'granary'].includes(site.id);
+  const dist = big ? 60 : 35;
+  // Stand in front of the site when it has a facing (radians from +X), else to its south
+  const ang = site.face ?? -Math.PI / 2;
+  const at = [site.x, site.y, site.z + 3];
+  const from = [site.x + Math.cos(ang) * dist, site.y + Math.sin(ang) * dist, site.z + dist * 0.45];
+  flyCameraTo(blenderToThree(from), blenderToThree(at), 1200);
   showToast(`Teleported to ${site.name}`);
+}
+
+/** Ground height at a Blender (x, y), from the island model. */
+function groundAt(x, y) {
+  const ray = new THREE.Raycaster(blenderToThree([x, y, 2000]), new THREE.Vector3(0, -1, 0));
+  const hit = ray.intersectObjects(islandGroup.children, true)[0];
+  return hit ? hit.point.y : 0;
 }
 
 function flyCameraTo(targetCamPos, targetLookAt, duration = 1000) {
@@ -959,8 +966,9 @@ async function saveCaptureToBackend(dataURL) {
         image_data: dataURL,
         shot_id: state.shotId || 'capture',
         metadata: {
-          cam: [camera.position.x, camera.position.y, camera.position.z],
-          target: [controls.target.x, controls.target.y, controls.target.z],
+          island: state.island,
+          cam: shotPoint(camera.position),
+          target: shotPoint(controls.target),
           lens: state.lens,
           aspect: state.aspect,
           cast: state.selectedCast
@@ -1150,21 +1158,20 @@ async function saveShotToBook() {
     return;
   }
 
-  // What the composer owns goes into every save; the camera only into a new shot (see server.py).
-  const round = (v) => parseFloat(v.toFixed(2));
+  // Camera and lens are saved in Blender coordinates, as previs.py reads them.
+  const frame = state.shotSite && state.shotId === shotId ? state.frames[state.shotSite] : null;
+  const inShotSpace = (v) => frame ? worldToFrame(threeToBlender(v), frame).map((n) => parseFloat(n.toFixed(2))) : shotPoint(v);
   const shotData = {
+    island: state.island,
+    cam: inShotSpace(camera.position),
+    target: inShotSpace(controls.target),
+    lens: state.lens,
     aspect: state.aspect,
     cast: [...state.selectedCast],
     prompt: state.promptAction.trim(),
     light: state.timeOfDay,
     sun_from: Math.round(state.sunAzimuth),
     others: state.promptOthers.trim() || null
-  };
-  const ifNew = {
-    island: (camera.position.x < -50) ? 'arche' : 'paxos',
-    cam: [camera.position.x, camera.position.y, camera.position.z].map(round),
-    target: [controls.target.x, controls.target.y, controls.target.z].map(round),
-    lens: state.lens
   };
   const variant = dom.saveVariant.value.trim() || null;
 
@@ -1175,8 +1182,7 @@ async function saveShotToBook() {
       body: JSON.stringify({
         shot_id: shotId,
         variant,
-        shot: shotData,
-        if_new: ifNew
+        shot: shotData
       })
     });
     const result = await res.json();
@@ -1250,12 +1256,19 @@ function applyBookShot(shotId, shot) {
   dom.saveShotId.value = baseId;
   dom.saveVariant.value = variantId;
 
+  state.shotSite = shot.site || null;
+  const flyToShot = () => {
+    const frame = state.shotSite && state.frames[state.shotSite];
+    if (state.shotSite && !frame) showToast(`No frame for site '${state.shotSite}'; camera not moved`);
+    else flyCameraTo(
+      blenderToThree(shotToWorld(shot.cam, frame, groundAt)),
+      blenderToThree(shotToWorld(shot.target, frame, groundAt)), 1200);
+  };
   if (shot.cam && shot.target) {
-    flyCameraTo(
-      new THREE.Vector3(shot.cam[0], shot.cam[1], shot.cam[2]),
-      new THREE.Vector3(shot.target[0], shot.target[1], shot.target[2]),
-      1200
-    );
+    if (shot.island && shot.island !== state.island) loadIslandModel(shot.island, flyToShot);
+    else flyToShot();
+  } else if (shot.base) {
+    showToast(`'${shotId}' takes its camera from the world shot '${shot.base}'`);
   }
 
   if (shot.lens) applyFocalLength(shot.lens);
@@ -1403,9 +1416,11 @@ function setupEventListeners() {
       } else if (btn.dataset.tod === 'noon') {
         state.sunAzimuth = 180;
         state.sunElevation = 70;
-      } else if (btn.dataset.tod === 'sunset') {
-        state.sunAzimuth = 270;
-        state.sunElevation = 6;
+      } else if (btn.dataset.tod === 'late') {
+        state.sunAzimuth = 245;
+        state.sunElevation = 18;
+      } else if (btn.dataset.tod === 'overcast') {
+        state.sunElevation = 50;
       }
       dom.sunAzimuthSlider.value = state.sunAzimuth;
       dom.sunAzimuthVal.textContent = `${state.sunAzimuth}°`;
@@ -1419,20 +1434,21 @@ function setupEventListeners() {
   document.getElementById('btn-view-both').addEventListener('click', () => {
     flyCameraTo(new THREE.Vector3(120, 260, 520), new THREE.Vector3(0, 15, 0), 1000);
   });
-  document.getElementById('btn-view-arche').addEventListener('click', () => {
-    flyCameraTo(new THREE.Vector3(-180, 220, -160), new THREE.Vector3(-180, 15, -220), 1000);
-  });
-  document.getElementById('btn-view-paxos').addEventListener('click', () => {
-    flyCameraTo(new THREE.Vector3(190, 180, 280), new THREE.Vector3(190, 15, 180), 1000);
+  ['arche', 'paxos'].forEach((island) => {
+    document.getElementById(`btn-view-${island}`).addEventListener('click', () => {
+      if (state.island !== island) return loadIslandModel(island);
+      flyCameraTo(blenderToThree(OVERVIEW[island].cam), blenderToThree(OVERVIEW[island].target), 1000);
+    });
   });
 
   // Teleport Select
   dom.teleportSelect.addEventListener('change', (e) => {
-    const siteId = e.target.value;
-    if (!siteId || !state.layout) return;
-    const site = state.layout.buildings.find((b) => b.id === siteId);
+    const site = state.sites.find((s) => s.id === e.target.value);
     if (site) teleportToSite(site);
+    e.target.value = '';
   });
+
+  dom.islandSelect.addEventListener('change', (e) => loadIslandModel(e.target.value));
 
   // Roof Cutaway
   document.getElementById('btn-roof-cutaway').addEventListener('click', (e) => {
@@ -1595,10 +1611,13 @@ function setGizmoMode(mode, targetBtn) {
   if (targetBtn) targetBtn.classList.add('active');
 }
 
+// The roofs are instanced tile, ridge and antefix meshes; lifting them shows the rooms below
+const ROOF_PARTS = /roof|^inst_(pan|cover|antefix|ridge|slab)/i;
+
 function toggleRoofCutaway(lift) {
   if (!state.islandModel) return;
   state.islandModel.traverse((child) => {
-    if (child.isMesh && child.name.toLowerCase().includes('roof')) {
+    if (child.isMesh && ROOF_PARTS.test(child.name)) {
       child.position.y = lift ? 9.0 : 0.0;
     }
   });
@@ -1694,7 +1713,8 @@ function updateFlyControls(delta) {
     return;
   }
 
-  const speed = (keyState['ShiftLeft'] || keyState['ShiftRight'] ? 160 : 60) * delta;
+  const pace = Math.max(20, camera.position.y * 0.4);   // faster the higher the camera is
+  const speed = (keyState['ShiftLeft'] || keyState['ShiftRight'] ? 3 : 1) * pace * delta;
 
   const forward = new THREE.Vector3();
   camera.getWorldDirection(forward);
@@ -1723,13 +1743,15 @@ function onWindowResize() {
 }
 
 function updateCoordsDisplay() {
-  dom.camX.textContent = camera.position.x.toFixed(1);
-  dom.camY.textContent = camera.position.y.toFixed(1);
-  dom.camZ.textContent = camera.position.z.toFixed(1);
-
-  dom.tarX.textContent = controls.target.x.toFixed(1);
-  dom.tarY.textContent = controls.target.y.toFixed(1);
-  dom.tarZ.textContent = controls.target.z.toFixed(1);
+  // Blender coordinates, the ones shots.json holds
+  const [cx, cy, cz] = threeToBlender(camera.position);
+  const [tx, ty, tz] = threeToBlender(controls.target);
+  dom.camX.textContent = cx.toFixed(1);
+  dom.camY.textContent = cy.toFixed(1);
+  dom.camZ.textContent = cz.toFixed(1);
+  dom.tarX.textContent = tx.toFixed(1);
+  dom.tarY.textContent = ty.toFixed(1);
+  dom.tarZ.textContent = tz.toFixed(1);
 }
 
 function showToast(msg) {
@@ -1756,6 +1778,8 @@ function animate() {
 
   // Orbit controls update
   controls.update();
+  aimSun();
+  skyDome.position.copy(camera.position);
 
   // Sea Wave Shader Animation
   if (state.seaWaves && seaMesh && seaMesh.material.uniforms) {

@@ -87,6 +87,15 @@ class ServerTest(unittest.TestCase):
                   "/props/polyhaven/..%2F..%2F..%2FREADME.md", "/%2e%2e/README.md"):
             self.assertEqual(self.call(p)[0], 404, p)
 
+    def test_sites_in_blender_coordinates(self):
+        for island in server.ISLANDS:
+            st, raw = self.call(f"/api/sites/{island}")
+            sites = json.loads(raw)["sites"]
+            self.assertEqual(st, 200)
+            self.assertTrue(sites, island)
+            self.assertTrue(all({"id", "name", "x", "y", "z"} <= s.keys() for s in sites))
+        self.assertEqual(self.call("/api/sites/..")[0], 404)
+
     def test_prompt_comes_from_pipeline(self):
         st, raw = self.call("/api/prompt")
         data = json.loads(raw)
