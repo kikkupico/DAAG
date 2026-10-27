@@ -12,7 +12,7 @@ Launch the Composer server from the DAAG repository root:
 python3 world/composer/server.py
 ```
 
-By default, the server binds to `http://127.0.0.1:8767/` (or the next free port). It has no CORS headers and writes into `world/panels`, so it is loopback-only unless you pass `--host 0.0.0.0` yourself.
+By default the server binds to all interfaces (`0.0.0.0`, port 8767 or the next free one) and prints its network URL, so other machines on the LAN can open it. It writes into `world/panels` and has no authentication, so use it on a network you trust, or pass `--host 127.0.0.1` to keep it local. It sends no CORS headers: only the page it serves can call its API.
 
 To specify a custom port or host:
 
@@ -27,13 +27,13 @@ Open the printed URL in any modern browser (Chrome, Safari, Firefox, Edge).
 ## Key Features
 
 ### 1. 3D Archipelago Exploration
-- **Combined High-Poly Model (`island-v2.glb`)**: Loads the complete archipelago featuring both Arche (Foundations & Faults) and Paxos (Consensus & Convergence), with all stone quays, harbour piers, ring roads, mountain paths, and canonical buildings.
+- **The live islands**: loads `world/build/composer/<island>.glb`, exported from the built Blender islands (`world/build/arche.blend`, `paxos.blend`) by `sh world/composer/export.sh [arche paxos]`. The ground is a heightmap mesh from `terrain/<island>/height.npy`, coloured from the terrain masks (`ground.py`); architectural and prop instancers (columns, statues, pottery, boats) are realized, while roof-tile, tree and rock instancers are left out as too many. The models are gitignored; rebuild them after the islands change. Pick the island in the header; each is a separate model.
+- **Blender coordinates throughout**: the models keep Blender metres (+Z up; three.js sees them as (x, z, −y), `js/coords.js`), so the camera readout and every `cam` and `target` saved to or loaded from `shots.json` are the same numbers `previs.py` renders from. Shots given with a `site` (`chamber`, `tholos`) are read and saved in that building's own frame, as `shots_panels.py` does, and `"+1.7"`-style heights are resolved against the ground. The sun azimuth is a compass bearing (0° = north = Blender +Y), matching `sun_from`, and the time-of-day buttons use the renderer's preset names (`morning`, `golden`, `late`, `noon`, `overcast`, `dusk`).
 - **Dual Navigation**:
   - **Orbit Navigation**: Left-click drag to orbit, right-click drag to pan, scroll wheel to zoom.
   - **First-Person / Drone Fly Mode**: `W`, `A`, `S`, `D` to fly forward/left/backward/right, `Q` / `E` to descend / ascend, and `Shift` for high-speed flight across the islands.
-- **Site Teleportation**: Quick-jump dropdown to all 17 canonical sites across Arche and Paxos (House 1, House 2, House 3, Mount Phyle Crown, Mercenary Camps 1–4, The Chamber, The Tholos, Schedia Bay, Oracle at the Fork, Homonoia Libraries, Stoa, etc.).
-- **Interactive Roof Cutaway**: Toggle "Roof Cutaway" at any time to lift all terracotta tiled roofs by 9 meters, revealing interior rooms, water-clocks, pebble boards, and council benches.
-- **3D Site Pins**: Visual markers showing the location and elevation of every building and sanctuary.
+- **Site Teleportation**: dropdown and labelled pins for the island's named places, read from `terrain/<island>/sites.json` through `/api/sites/<island>` (Arche: the three houses, camps, posts, the Crown, granary, sundials; Paxos: the Chamber, Tholos, oracle, stoa, festival ground, harbours, libraries).
+- **Roof Cutaway**: lifts the roof-tile meshes 9 m where a model has them.
 
 ### 2. Camera Optics & Framing
 - **Focal Length & Lens Presets**: Real-time focal length slider (14mm to 150mm) and prime lens shortcuts (`18mm`, `24mm`, `26mm`, `35mm`, `50mm`, `85mm`) with dynamic Vertical FOV computation.
@@ -105,7 +105,7 @@ Generates prompts the way `pipeline.request()` does. The style text and cast not
   - "Download All as AI Bundle (ZIP)" packages `prompt.txt`, `01_image_previs.png`, and all selected `02_character.png` reference files into a single zip archive ready for any image generation AI (Nano Banana 2, Gemini, Midjourney, FLUX, Stable Diffusion).
 
 ### 8. Book Shots Storage (`shots.json`)
-- **Merge, never replace**: saving into an existing shot changes only the composer's fields (aspect, cast, prompt, others, light, sun_from) and keeps `base`, `site`, `variants` and everything else. The camera (`cam`, `target`, `lens`, `island`) is written only when the shot is new, because the composer frames in its own model's coordinates, not the Blender ones `previs.py` renders from. A *Variant* name saves into `variants.<name>` instead.
+- **Merge, never replace**: saving into an existing shot changes only the fields the composer owns (island, cam, target, lens, aspect, cast, prompt, others, light, sun_from) and keeps `base`, `site`, `variants` and everything else. Camera, lens and island are saved with it, in the shot's own space (world, or the building's frame when the shot has a `site`). A *Variant* name saves into `variants.<name>` instead.
 - **Direct Book Saving**: Select any book under `world/panels` with a `shots.json`; for example (`the-part-time-parliament`, `ordering-without-clocks`, `the-limits-of-agreement`, `one-leader-at-a-time`, `examples`).
 - **Auto-Aggregated Shot Data**: Collects current camera position, target look-at, lens focal length, aspect ratio, lighting condition, sun azimuth, selected cast, scene prompt, and background crowd.
 - **Safety First**: Automatically creates a backup (`shots.json.bak`) before saving to avoid data loss.
@@ -117,6 +117,9 @@ Generates prompts the way `pipeline.request()` does. The style text and cast not
 
 ```
 world/composer/
+├── export.sh        # rebuilds the island models: ground.py, then export_glb.py in Blender
+├── export_glb.py    # Blender: built island -> world/build/composer/<island>.glb
+├── ground.py        # paints the ground colour texture from the terrain masks
 ├── server.py        # Python ThreadingHTTPServer with Range requests and REST APIs
 ├── index.html       # Single-page studio interface
 ├── composer.css     # Glassmorphic Hellenistic dark theme
@@ -141,6 +144,7 @@ world/composer/
 | `GET` | `/api/props` | Categorized catalog of 3D prop models |
 | `POST` | `/api/capture` | Save base64 viewport screenshot to disk |
 | `GET` | `/api/bundle` | Download ZIP archive of previs, cast, and prompt |
-| `GET` | `/models/...` | Stream 3D island models with HTTP 206 Partial Content |
+| `GET` | `/api/sites/<island>` | Named places (Blender coordinates) and building frames |
+| `GET` | `/models/<island>.glb` | Stream an island model with HTTP 206 Partial Content |
 | `GET` | `/props/...` | Stream kit and Polyhaven GLB/GLTF prop models |
 | `GET` | `/cast/images/...` | Serve high-resolution character portraits |
