@@ -133,6 +133,13 @@ const dom = {
   renderResult: document.getElementById('render-result'),
   renderImg: document.getElementById('render-img'),
   btnRenderUse: document.getElementById('btn-render-use'),
+  btnFlux: document.getElementById('btn-flux'),
+  fluxStatus: document.getElementById('flux-status'),
+  fluxSeed: document.getElementById('flux-seed'),
+  fluxResult: document.getElementById('flux-result'),
+  fluxImg: document.getElementById('flux-img'),
+  btnFluxOpen: document.getElementById('btn-flux-open'),
+  btnFluxDownload: document.getElementById('btn-flux-download'),
   btnRenderOpen: document.getElementById('btn-render-open'),
   btnRenderDownload: document.getElementById('btn-render-download'),
   browserSearch: document.getElementById('browser-search'),
@@ -1226,13 +1233,19 @@ async function copyImageUrlToClipboard(imgUrl) {
 }
 
 // --- 9. AI Prompt Generator ---
-function updatePrompt() {
-  const prompt = buildPrompt({
+/** The prompt for the style and cast on screen; labels=false for models that copy printed names (FLUX). */
+function currentPrompt({ labels = true } = {}) {
+  return buildPrompt({
     style: state.promptStyle,
     action: state.promptAction,
     others: state.promptOthers,
-    cast: state.selectedCast
+    cast: state.selectedCast,
+    labels
   });
+}
+
+function updatePrompt() {
+  const prompt = currentPrompt();
   dom.promptOutputText.textContent = prompt;
   return prompt;
 }
@@ -1354,6 +1367,49 @@ async function pollRender(job, t0) {
   } catch (err) {
     dom.renderStatus.textContent = 'lost contact with server';
     dom.btnRender.disabled = false;
+  }
+}
+
+// --- FLUX generation ---
+async function startFlux() {
+  if (!state.captureFilename) return showToast('Capture the view first');
+  const kindFile = state.captureFilename.startsWith('render:') ? state.captureFilename : `capture:${state.captureFilename}`;
+  dom.btnFlux.disabled = true;
+  dom.fluxStatus.textContent = 'queued';
+  try {
+    const res = await fetch('/api/flux', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        previs: kindFile,
+        prompt: currentPrompt({ labels: false }),     // FLUX copies printed names, so the references carry none
+        cast: state.selectedCast,
+        seed: parseInt(dom.fluxSeed.value, 10) || 0
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || res.statusText);
+    const t0 = performance.now();
+    for (;;) {
+      await new Promise((r) => setTimeout(r, 3000));
+      const job = await (await fetch(`/api/render/${data.job}`)).json();
+      if (job.status === 'done') {
+        dom.fluxStatus.textContent = `done in ${job.seconds}s`;
+        dom.fluxImg.src = job.url;
+        dom.btnFluxOpen.href = job.url;
+        dom.btnFluxDownload.href = job.url;
+        dom.btnFluxDownload.download = `${state.shotId || 'shot'}-flux-${data.job}.png`;
+        dom.fluxResult.style.display = 'block';
+        break;
+      }
+      if (job.status === 'error') throw new Error(String(job.error).slice(-200));
+      dom.fluxStatus.textContent = `${job.status}… ${Math.round((performance.now() - t0) / 1000)}s`;
+    }
+  } catch (err) {
+    dom.fluxStatus.textContent = 'failed';
+    showToast(`FLUX: ${err.message}`);
+  } finally {
+    dom.btnFlux.disabled = false;
   }
 }
 
@@ -1854,6 +1910,7 @@ function setupEventListeners() {
 
   dom.btnSaveShotBook.addEventListener('click', saveShotToBook);
   dom.btnRender.addEventListener('click', startRender);
+  dom.btnFlux.addEventListener('click', startFlux);
   document.getElementById('btn-save-test').addEventListener('click', saveTestShot);
   document.getElementById('btn-open-tests').addEventListener('click', () => {
     dom.testsModal.style.display = 'flex';

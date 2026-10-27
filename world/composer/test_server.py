@@ -146,6 +146,16 @@ class ServerTest(unittest.TestCase):
         for bad in ({"sun_elev": 200}, {"sun_scale": 0}, {"fog_scale": "x"}):
             self.assertIsNotNone(server.clean_spec({"island": "paxos", "shot": dict(shot, **bad)})[1], bad)
 
+    def test_flux_request_is_checked(self):
+        (server.RENDERS_DIR / "r.png").write_bytes(b"x")
+        ok = {"previs": "render:r.png", "prompt": "p", "cast": [], "seed": 3}
+        spec, err = server.clean_flux(ok)
+        self.assertEqual((err, spec["seed"], spec["cast"]), (None, 3, []))
+        for bad in ({"previs": "render:../server.py"}, {"previs": "other:r.png"}, {"previs": "r.png"}, {"prompt": " "},
+                    {"cast": ["../x"]}, {"cast": ["no-such-person"]}, {"seed": -1}, {"seed": "7"}):
+            self.assertIsNotNone(server.clean_flux(dict(ok, **bad))[1], bad)
+        self.assertEqual(self.call("/api/flux", {"previs": "capture:nope.png", "prompt": "p"})[0], 400)
+
     def test_render_spec_is_cleaned(self):
         spec, err = server.clean_spec({"island": "paxos", "size": "1K", "shot": {
             "cam": [1, 2, "+1.7"], "target": [0, 0, 0], "aspect": "3:4", "light": "nonsense", "evil": "x", "lights": []}})

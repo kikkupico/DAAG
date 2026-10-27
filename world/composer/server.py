@@ -51,11 +51,12 @@ PANELS_DIR = WORLD / "panels"
 CAPTURES_DIR = HERE / "captures"
 RENDERS_DIR = HERE / "renders"          # full-detail Blender renders asked for from the page
 THUMBS_DIR = HERE / "thumbs"
+FLUX_DIR = HERE / "flux"                 # FLUX trial pictures from the composer, with a note beside each
 TESTS_DIR = HERE / "tests"               # throwaway shots for trying world changes: shots.json and renders/<id>/
 TESTS_FILE = TESTS_DIR / "shots.json"
 KEEP_RENDERS = 6                         # renders kept per test shot
 
-for _d in (CAPTURES_DIR, RENDERS_DIR, THUMBS_DIR, TESTS_DIR / "renders"):
+for _d in (CAPTURES_DIR, RENDERS_DIR, THUMBS_DIR, FLUX_DIR, TESTS_DIR / "renders"):
     _d.mkdir(parents=True, exist_ok=True)
 
 # Register custom MIME types
@@ -389,6 +390,57 @@ def test_renders(test_id):
     return out
 
 
+flux_lock = threading.Lock()                   # one FLUX at a time: it takes most of the Mac's memory
+
+
+def clean_flux(body):
+    """A FLUX request reduced to what flux_job.py takes, or (None, message). The previs is a capture or a render."""
+    import importlib.util
+    name = body.get("previs")
+    if not isinstance(name, str) or ":" not in name:
+        return None, "'previs' must be capture:<file> or render:<file>"
+    kind, _, fname = name.partition(":")
+    png = inside({"capture": CAPTURES_DIR, "render": RENDERS_DIR}.get(kind, HERE / "nowhere"), fname)
+    if not png:
+        return None, f"No such {kind}: {fname}"
+    prompt = body.get("prompt")
+    cast = body.get("cast", [])
+    if not isinstance(prompt, str) or not prompt.strip() or len(prompt) > 8000:
+        return None, "A prompt is required"
+    cast_dir = CAST_IMG_DIR
+    if not (isinstance(cast, list) and len(cast) <= 8 and all(safe_name(c) and (cast_dir / f"{c}.png").is_file() for c in cast)):
+        return None, "'cast' must list ids that have portraits"
+    seed = body.get("seed", 7)
+    if not isinstance(seed, int) or not 0 <= seed < 2**31:
+        return None, "'seed' must be an integer"
+    return {"previs": str(png), "prompt": prompt.strip(), "cast": cast, "seed": seed}, None
+
+
+def run_flux(job_id):
+    """Generate one picture with local FLUX.2 klein in its own process (the flux venv's Python)."""
+    job = jobs[job_id]
+    with flux_lock:
+        job["status"] = "running"
+        started = time.time()
+        out = FLUX_DIR / f"{job_id}.png"
+        with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+            json.dump(dict(job["spec"], out=str(out)), f)
+        try:
+            py = Path.home() / "Projects/flux/.venv/bin/python"
+            if not py.is_file():
+                raise RuntimeError(f"FLUX is not installed ({py} missing); see world/fluxlocal.py")
+            done = subprocess.run([str(py), str(HERE / "flux_job.py"), f.name], capture_output=True, text=True, timeout=1800)
+            if done.returncode == 0 and out.is_file():
+                job.update(status="done", url=f"/flux/{job_id}.png")
+            else:
+                job.update(status="error", error=(done.stdout[-600:] + done.stderr[-1000:]).strip() or "FLUX failed")
+        except Exception as e:
+            job.update(status="error", error=str(e))
+        finally:
+            os.unlink(f.name)
+            job["seconds"] = round(time.time() - started)
+
+
 def run_render(job_id):
     """Render one job with Blender, shots_panels and render.py, and move the picture to composer/renders/
     (or to tests/renders/<id>/ for a test shot, with a note of the world it was made against)."""
@@ -481,6 +533,7 @@ class ComposerHandler(SimpleHTTPRequestHandler):
                 "repo": str(REPO),
                 "books_count": len(get_available_books()),
                 "cast_count": len(get_cast_data().get("characters", [])),
+                "flux": (Path.home() / "Projects/flux/.venv/bin/python").is_file(),
                 "props_count": len(get_props_catalog())
             })
             return
@@ -598,6 +651,14 @@ class ComposerHandler(SimpleHTTPRequestHandler):
             self.send_error(HTTPStatus.NOT_FOUND, "No such render")
             return
 
+        if path.startswith("/flux/") and path.endswith(".png"):
+            png = inside(FLUX_DIR, path[len("/flux/"):])
+            if png:
+                self.stream_file(png, "image/png")
+                return
+            self.send_error(HTTPStatus.NOT_FOUND, "No such picture")
+            return
+
         if path.startswith("/renders/") and path.endswith(".png"):
             png = inside(RENDERS_DIR, path[len("/renders/"):])
             if png:
@@ -648,6 +709,21 @@ class ComposerHandler(SimpleHTTPRequestHandler):
                     return
                 self.handle_save_shot(book_id, body)
                 return
+
+        # 1c. A FLUX trial picture from a capture or a render
+        if path == "/api/flux":
+            body = self.read_json_body()
+            if body is None:
+                return
+            spec, err = clean_flux(body)
+            if err:
+                self.send_json({"error": err}, status=400)
+                return
+            job_id = datetime.now().strftime("%Y%m%d-%H%M%S-%f")[:-3]
+            jobs[job_id] = {"id": job_id, "status": "queued", "kind": "flux", "spec": spec}
+            threading.Thread(target=run_flux, args=(job_id,), daemon=True).start()
+            self.send_json({"job": job_id, "status": "queued"})
+            return
 
         # 1a. Throwaway test shots
         if path in ("/api/tests", "/api/tests/delete"):

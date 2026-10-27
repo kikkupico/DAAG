@@ -391,6 +391,26 @@
           </div>
         </div>
 
+        <div class="cast-strip-card" id="flux-card">
+          <div class="section-title">
+            <span>FLUX generation (local)</span>
+            <span id="flux-status" class="control-val">idle</span>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <label style="color: var(--text-dim); font-size: 0.8rem;">Seed</label>
+            <input type="number" id="flux-seed" class="input-text" value="7" min="0" style="width: 90px;">
+            <button class="btn btn-primary" id="btn-flux">✨ Generate with FLUX</button>
+          </div>
+          <p style="font-size: 0.75rem; color: var(--text-dim); margin: 6px 0;">FLUX.2 klein 4B on this Mac, free and about a minute a picture. Image 1 is the current previs (the capture, or the Blender render if you chose it), then the cast crops, with the prompt below; it keeps the camera and the counts less well than Nano Banana 2, so use it for trials. Printed names are left off the references, since FLUX copies them into the picture.</p>
+          <div id="flux-result" style="display: none;">
+            <img id="flux-img" alt="FLUX picture" style="width: 100%; border-radius: 8px;">
+            <div class="capture-actions">
+              <a class="btn" id="btn-flux-open" target="_blank" rel="noopener">Open full size</a>
+              <a class="btn" id="btn-flux-download" download>💾 Download</a>
+            </div>
+          </div>
+        </div>
+
         <div class="cast-strip-card">
           <div class="section-title">
             <span>Character References (Images 2..N)</span>
