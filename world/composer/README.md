@@ -59,8 +59,7 @@ Open the printed URL in any modern browser (Chrome, Safari, Firefox, Edge).
 
 ### 4. Interactive Prop Placement Engine
 - **Click-to-Place Raycasting**: Enable "Click Island to Place Prop" mode and click anywhere on terrain, quays, or terraces to spawn models at that exact coordinate.
-- **Prop Library (28+ models)**:
-  - **Flora**: Mediterranean Cypress, Olive Tree, Aegean Pine, Gnarled Oak, Maquis Patch, Vine Rows, Coastal Shrubs.
+- **Prop Library (20 models)**:
   - **Transport & Vessels**: Wooden Oxcart, Harbour Skiff / Rowboat, Merchant Sailing Ship.
   - **Architecture & Shelters**: Mercenary Tents, Market Stalls, Stone Granary, Quayside Depot, Harbour Warehouse, Customs House, Courtyard House.
   - **Statues & Figures**: Equestrian Bronze Statue, Marble Philosopher Bust, Hellenistic Soldier Guard Standee.

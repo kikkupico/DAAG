@@ -35,7 +35,7 @@ const state = {
 
   // Props
   placePropMode: false,
-  activePropId: 'cypress',
+  activePropId: null,   // the first prop of the catalog until one is picked
   propsCatalog: [],
   placedProps: [],
   selectedPlacedProp: null,
@@ -586,6 +586,7 @@ async function loadPropsCatalog() {
     const res = await fetch('/api/props');
     const data = await res.json();
     state.propsCatalog = data.props || [];
+    state.activePropId = state.activePropId || (state.propsCatalog[0] && state.propsCatalog[0].id);
     renderPropsCatalog();
   } catch (err) {
     console.error('Failed to load props catalog:', err);
