@@ -30,6 +30,9 @@ class ServerTest(unittest.TestCase):
         (server.BOOKS_DIR / "eighteen-books-in-one-scroll" / "index.html").write_text("<title>x</title>")
         server.CAPTURES_DIR = tmp / "captures"
         server.CAPTURES_DIR.mkdir()
+        server.TESTS_DIR = tmp / "tests"
+        server.TESTS_FILE = server.TESTS_DIR / "shots.json"
+        (server.TESTS_DIR / "renders").mkdir(parents=True)
         book = server.PANELS_DIR / "b"
         book.mkdir(parents=True)
         (book / "shots.json").write_text(json.dumps({"s": {"base": "x", "cam": [1, 2, 3], "variants": {"a": {"lens": 20}}}}))
@@ -118,6 +121,20 @@ class ServerTest(unittest.TestCase):
         self.assertEqual(self.call("/api/books/examples/shots", {"shot_id": "x", "shot": {"a": 1}})[0], 400)
         self.assertEqual(self.call("/api/books/other/shots", {"shot_id": "x", "shot": {"a": 1}})[0], 200)
         self.assertEqual(json.loads(self.call("/api/books/other/shots")[1])["shots"]["x"], {"a": 1})
+
+    def test_test_shots_are_kept_apart_from_books(self):
+        shot = {"island": "paxos", "cam": [1, 2, 3], "target": [0, 0, 0], "lens": 26, "aspect": "3:4", "evil": 1}
+        self.assertEqual(self.call("/api/tests", {"id": "door", "shot": shot})[0], 200)
+        self.assertEqual(self.call("/api/tests", {"id": "../x", "shot": shot})[0], 400)
+        self.assertEqual(self.call("/api/tests", {"id": "bad", "shot": {"island": "paxos", "cam": [1]}})[0], 400)
+        data = json.loads(self.call("/api/tests")[1])
+        self.assertEqual(sorted(data["shots"]), ["door"])
+        self.assertNotIn("evil", data["shots"]["door"])
+        self.assertEqual(data["renders"]["door"], [])
+        self.assertFalse((server.PANELS_DIR / "door").exists())              # nothing lands in world/panels
+        self.assertEqual(self.call("/api/render", {"island": "paxos", "shot": shot, "test": "nope"})[0], 400)
+        self.call("/api/tests/delete", {"id": "door"})
+        self.assertEqual(json.loads(self.call("/api/tests")[1])["shots"], {})
 
     def test_render_spec_is_cleaned(self):
         spec, err = server.clean_spec({"island": "paxos", "size": "1K", "shot": {

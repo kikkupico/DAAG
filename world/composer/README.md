@@ -73,6 +73,9 @@ Open the printed URL in any modern browser (Chrome, Safari, Firefox, Edge).
 #### Full-detail render
 The capture dialog has a **Render shot** button. It sends the composed shot (island, camera, lens, light, sun bearing, aspect, and the site frame for site shots) to `POST /api/render`, which runs Blender on the built island through `world/src/render.py` and `shots_panels`, one job at a time, and polls `GET /api/render/<job>`. Quality *preview* is half size at 32 samples (about 10 s), *check* is full size at 48, *final* is full size at 160; size is the Gemini 1K or 2K frame for the aspect. The picture lands in `composer/renders/` and shows in the dialog with *Open full size*, *Download* and *Use as Image 1* (which makes the render the previs in the prompt and the ZIP bundle). Props placed in the composer are in the render: they travel as `placed_props`, and `shots_panels` builds the island's own prototypes at those positions. These renders are scratch pictures, not canonical previs: they carry no provenance record. Canonical previs still come from `world/panels/previs.py` after the shot is saved and committed.
 
+#### Test shots
+For trying world changes there is a throwaway set of shots, kept apart from the books. In the capture dialog, name a view and press **Save as test shot**; they live in `composer/tests/shots.json` (same shot fields, gitignored, never in `world/panels`). The **Test Shots** button opens them with their last renders: **Render** one, or **Render all** (preview, check or final) after rebuilding an island, and each card shows the latest render beside the one before, so a change shows as a before and after. Renders come from `world/build/<island>.blend` as it is now, with no commit check and no provenance record; each notes the time, the island's build time, the commit and how many `world/src` files were uncommitted (hover a picture). The last six renders of each test shot are kept. *Open in composer* loads a test shot's camera, light and props back into the view.
+
 ### 6. Character Reference Cast Picker
 - **35 Canon Figures**: Browse characters from `world/cast/cast.json` with high-resolution studio reference portraits from `world/cast/out/nb2/`.
 - **Filter Groups**:
@@ -137,6 +140,7 @@ world/composer/
 | `GET` | `/api/books` | Available books and their shot counts |
 | `GET` | `/api/books/<book>/shots` | All shots of a book, with `images`: the pictures found under each shot and variant |
 | `GET` | `/panels/<book>/<path>.png` | A shot picture; add `?w=360` for a cached JPEG thumbnail |
+| `GET`/`POST` | `/api/tests`, `/api/tests/delete` | The throwaway test shots; `POST /api/render` with `"test": id` files the render under that shot |
 | `POST` | `/api/render` | Start a Blender render of a composed shot; `GET /api/render/<job>` polls it; the picture is at `/renders/<job>.png` |
 | `POST` | `/api/books/<book>/shots` | Merge `shot` (optionally into `variant`, with `if_new` keys for new shots) into `shots.json`; atomic write, `.bak` first |
 | `GET` | `/api/cast` | Character definitions and portrait URLs |
