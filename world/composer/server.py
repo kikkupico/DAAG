@@ -146,6 +146,12 @@ def prompt_parts():
     except Exception as e:  # PIL or the Gemini client missing: the page falls back to its own copy
         return {"error": str(e)}
     return {"styles": {k: {"keep": v[0], "picture": v[1]} for k, v in pipeline.STYLES.items()},
+            "keep_interior": getattr(pipeline, "KEEP_INTERIOR", ""),
+            "anchors": {
+                "photo_exterior": getattr(pipeline, "ANCHOR_EXTERIOR", ""),
+                "photo_interior": getattr(pipeline, "ANCHOR_INTERIOR", ""),
+                "ligne-claire": getattr(pipeline, "ANCHOR_LIGNE_CLAIRE", "")
+            },
             "cast_note": pipeline.CAST_NOTE}
 
 
