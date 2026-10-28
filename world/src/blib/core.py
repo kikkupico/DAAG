@@ -76,9 +76,9 @@ def look_at(ob, target):
     ob.rotation_euler = d.to_track_quat('-Z', 'Y').to_euler()
 
 
-def camera(name, loc, target, lens=50, coll=None, sensor=36):
+def camera(name, loc, target, lens=50, coll=None, sensor=36, clip_end=250000):
     cd = bpy.data.cameras.new(name); cd.lens = lens; cd.sensor_width = sensor
-    cd.clip_start = 0.1; cd.clip_end = 80000
+    cd.clip_start = 0.2; cd.clip_end = clip_end
     ob = bpy.data.objects.new(name, cd); ob.location = loc
     link(ob, coll)
     look_at(ob, target)

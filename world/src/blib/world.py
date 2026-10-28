@@ -225,7 +225,7 @@ def terrain_material(name, him, d, meta):
     return m
 
 
-def sea(meta, him_path, coll=None, size=90000.0):
+def sea(meta, him_path, coll=None, size=250000.0):
     m, nt = new_mat('sea')
     if nt is not None:
         L = meta['L']
@@ -235,35 +235,122 @@ def sea(meta, him_path, coll=None, size=90000.0):
         hn.interpolation = 'Cubic'
         nt.link(uv, hn.inputs['Vector'])
         sp = nt.n('ShaderNodeSeparateColor'); nt.link(hn.outputs['Color'], sp.inputs[0])
+        # Water depth in metres (elevation is negative on the sea floor)
         depth = nt.math('MAXIMUM', nt.math('MULTIPLY', sp.outputs[0], -1.0), 0.0)
-        col = nt.ramp(nt.math('DIVIDE', depth, 45.0, clamp=True),
-                      [(0.0, (0.09, 0.22, 0.19)), (0.04, (0.025, 0.12, 0.13)), (0.15, (0.007, 0.045, 0.07)),
-                       (0.5, (0.003, 0.02, 0.038)), (1.0, (0.002, 0.011, 0.024))])
-        clear = nt.math('EXPONENT', nt.math('DIVIDE', depth, -2.2))
-        # foam: a broken line at the shore and over the reef heads, and rare whitecaps
-        fn = nt.noise(obj, 0.12, 6, 0.65).outputs['Fac']
-        fn2 = nt.noise(obj, 0.9, 5, 0.6).outputs['Fac']
-        shore = nt.math('SUBTRACT', 1.0, nt.math('DIVIDE', depth, 0.7, clamp=True))
-        foam = nt.math('MULTIPLY', shore, nt.math('ADD', fn, nt.math('MULTIPLY', fn2, 0.5)))
-        foam = nt.ramp(foam, [(0.5, (0, 0, 0)), (0.75, (1, 1, 1))])
-        wc = nt.noise(obj, 0.02, 3, 0.5).outputs['Fac']
-        wc2 = nt.noise(obj, 0.6, 6, 0.7).outputs['Fac']
-        caps = nt.ramp(nt.math('MULTIPLY', wc, wc2), [(0.42, (0, 0, 0)), (0.47, (1, 1, 1))])
-        foam = nt.math('MAXIMUM', foam, nt.math('MULTIPLY', caps, 0.8))
-        col = nt.mix(foam, col, (0.85, 0.88, 0.88, 1))
-        # waves: long swell lines plus chop
-        wv = nt.n('ShaderNodeTexWave', wave_type='BANDS', bands_direction='DIAGONAL', wave_profile='SIN')
-        nt.set(wv.inputs['Vector'], obj); wv.inputs['Scale'].default_value = 0.0012
-        wv.inputs['Distortion'].default_value = 8; wv.inputs['Detail'].default_value = 4; wv.inputs['Detail Scale'].default_value = 2
-        ch = nt.noise(obj, 0.08, 8, 0.62).outputs['Fac']
-        ch2 = nt.noise(obj, 0.7, 5, 0.55).outputs['Fac']
-        ch3 = nt.noise(obj, 3.0, 4, 0.5).outputs['Fac']
-        hgt = nt.math('ADD', nt.math('MULTIPLY', wv.outputs['Fac'], 1.0), nt.math('ADD', nt.math('MULTIPLY', ch, 0.8), nt.math('ADD', nt.math('MULTIPLY', ch2, 0.25), nt.math('MULTIPLY', ch3, 0.08))))
-        rough = nt.mix(foam, 0.03, 0.7, kind='FLOAT')
-        trans = nt.math('MULTIPLY', clear, nt.math('SUBTRACT', 1.0, foam))
-        bsdf, out = finish(nt, col, rough, hgt, bump=0.3, dist=0.12, spec=0.5)
+
+        # ------------------------------------------------------------------
+        # 1. Multi-scale Trochoidal Waves (Prevailing swell, cross-waves, chop, ripples)
+        # ------------------------------------------------------------------
+        gust = nt.noise(obj, scale=0.0035, detail=2, rough=0.5).outputs['Fac']
+
+        # Coordinate warp (prevents rigid parallel ridges without folding coordinates)
+        warp_n = nt.noise(obj, scale=0.028, detail=3, rough=0.5).outputs['Fac']
+        warp_v = nt.math('MULTIPLY', nt.math('SUBTRACT', warp_n, 0.5), 1.8)
+
+        # Primary ocean swell (~38m wavelength, travelling at ~28 deg azimuth)
+        p_map = nt.mapping(obj, scale=0.026, rot=(0, 0, math.radians(28)))
+        p_coord = nt.mix(1.0, p_map, nt.n('ShaderNodeCombineColor', inputs={0: warp_v, 1: 0, 2: 0}).outputs[0], kind='RGBA', blend='ADD')
+        wv1 = nt.n('ShaderNodeTexWave', wave_type='BANDS', bands_direction='X', wave_profile='SIN')
+        nt.set(wv1.inputs['Vector'], p_coord)
+        wv1.inputs['Scale'].default_value = 1.0; wv1.inputs['Distortion'].default_value = 1.6
+        wv1.inputs['Detail'].default_value = 2.0; wv1.inputs['Detail Scale'].default_value = 1.0
+        sw1 = nt.math('POWER', wv1.outputs['Color'], 1.5)
+
+        # Secondary cross-swell (~18m wavelength, cross-angle -32 deg)
+        warp_n2 = nt.noise(obj, scale=0.055, detail=2, rough=0.5).outputs['Fac']
+        warp_v2 = nt.math('MULTIPLY', nt.math('SUBTRACT', warp_n2, 0.5), 1.2)
+        s_map = nt.mapping(obj, scale=0.055, rot=(0, 0, math.radians(-32)))
+        s_coord = nt.mix(1.0, s_map, nt.n('ShaderNodeCombineColor', inputs={0: warp_v2, 1: 0, 2: 0}).outputs[0], kind='RGBA', blend='ADD')
+        wv2 = nt.n('ShaderNodeTexWave', wave_type='BANDS', bands_direction='X', wave_profile='SIN')
+        nt.set(wv2.inputs['Vector'], s_coord)
+        wv2.inputs['Scale'].default_value = 1.0; wv2.inputs['Distortion'].default_value = 2.0
+        wv2.inputs['Detail'].default_value = 2.0; wv2.inputs['Detail Scale'].default_value = 1.0
+        sw2 = nt.math('POWER', wv2.outputs['Color'], 1.4)
+
+        # Wind chop (~4-8m) with elongated crests
+        chop_map = nt.mapping(obj, scale=(0.14, 0.32, 0.14), rot=(0, 0, math.radians(12)))
+        chop_n = nt.noise(chop_map, scale=1.0, detail=4, rough=0.55).outputs['Fac']
+        chop = nt.math('POWER', chop_n, 1.4)
+
+        # Fine surface ripples (~0.8 - 1.5m)
+        ripples = nt.noise(obj, scale=0.9, detail=3, rough=0.52).outputs['Fac']
+
+        # Micro sparkle (~0.25m)
+        micro = nt.noise(obj, scale=3.2, detail=2, rough=0.45).outputs['Fac']
+
+        # Wave height combination
+        h_swell = nt.math('ADD', nt.math('MULTIPLY', sw1, 0.38), nt.math('MULTIPLY', sw2, 0.22))
+        h_fine = nt.math('ADD', nt.math('MULTIPLY', chop, 0.16),
+                                nt.math('ADD', nt.math('MULTIPLY', ripples, 0.08),
+                                               nt.math('MULTIPLY', micro, 0.025)))
+        total_h = nt.math('ADD', h_swell, h_fine)
+
+        # Gentle swell damping right at the water contact line in shallow coves (< 1.5m)
+        shallow_mod = nt.ramp(nt.math('DIVIDE', depth, 2.0, clamp=True),
+                              [(0.0, (0.65, 0.65, 0.65)), (1.0, (1.0, 1.0, 1.0))])
+        wave_h = nt.math('MULTIPLY', total_h, shallow_mod)
+
+        b = nt.n('ShaderNodeBump')
+        b.inputs['Strength'].default_value = 0.88; b.inputs['Distance'].default_value = 0.52
+        nt.set(b.inputs['Height'], wave_h)
+
+        # ------------------------------------------------------------------
+        # 2. Water Color & Transmission based on physical depth
+        # ------------------------------------------------------------------
+        col_ramp = nt.ramp(nt.math('DIVIDE', depth, 50.0, clamp=True), [
+            (0.00, (0.040, 0.21, 0.19)),    # 0m: crystal pale turquoise shallows
+            (0.05, (0.014, 0.14, 0.17)),    # 2.5m: Aegean aquamarine
+            (0.15, (0.007, 0.080, 0.15)),   # 7.5m: Mediterranean cerulean
+            (0.35, (0.003, 0.035, 0.090)),  # 17.5m: deep sapphire
+            (0.70, (0.002, 0.016, 0.050)),  # 35m: deep Aegean navy
+            (1.00, (0.0012, 0.010, 0.035))  # 50m+: open sea deep indigo
+        ])
+
+        # Transmission: crystal clear in shallows, softly fading into deep backscattering body
+        trans = nt.ramp(nt.math('DIVIDE', depth, 18.0, clamp=True), [
+            (0.00, (0.96, 0.96, 0.96)),
+            (0.12, (0.88, 0.88, 0.88)),     # 2m: 88%
+            (0.32, (0.62, 0.62, 0.62)),     # 6m: 62%
+            (0.65, (0.20, 0.20, 0.20)),     # 12m: 20%
+            (1.00, (0.00, 0.00, 0.00))      # 18m+: fully absorbed, deep scattering
+        ])
+
+        # ------------------------------------------------------------------
+        # 3. Organic Shoreline Wash & Surface Slicks
+        # ------------------------------------------------------------------
+        shore_prox = nt.math('SUBTRACT', 1.0, nt.math('DIVIDE', depth, 0.65, clamp=True))
+        f_noise = nt.noise(obj, scale=0.7, detail=4, rough=0.6).outputs['Fac']
+        foam_fac = nt.ramp(nt.math('MULTIPLY', shore_prox, f_noise), [
+            (0.35, (0.0, 0.0, 0.0)),
+            (0.58, (0.5, 0.5, 0.5)),
+            (0.78, (0.92, 0.92, 0.92))
+        ])
+
+        col = nt.mix(foam_fac, col_ramp, (0.88, 0.90, 0.90, 1.0))
+        final_trans = nt.math('MULTIPLY', trans, nt.math('SUBTRACT', 1.0, foam_fac))
+
+        # Surface roughness: liquid glass (0.025 to 0.05) with natural wind slicks
+        slick = nt.ramp(gust, [(0.25, (0.025, 0.025, 0.025)), (0.75, (0.050, 0.050, 0.050))])
+        rough = nt.mix(foam_fac, slick, 0.7, kind='FLOAT')
+
+        # ------------------------------------------------------------------
+        # 4. Principled BSDF with Subsurface Scattering
+        # ------------------------------------------------------------------
+        bsdf = nt.n('ShaderNodeBsdfPrincipled')
+        nt.set(bsdf.inputs['Base Color'], col)
+        nt.set(bsdf.inputs['Roughness'], rough)
+        nt.set(bsdf.inputs['Transmission Weight'], final_trans)
+        nt.link(b.outputs['Normal'], bsdf.inputs['Normal'])
         bsdf.inputs['IOR'].default_value = 1.333
-        nt.set(bsdf.inputs['Transmission Weight'], nt.math('MULTIPLY', trans, 0.92))
+        bsdf.inputs['Specular IOR Level'].default_value = 0.5
+
+        # Subsurface scattering gives wave crests realistic internal scattering
+        nt.set(bsdf.inputs['Subsurface Weight'], nt.math('MULTIPLY', nt.math('SUBTRACT', 1.0, final_trans), 0.32))
+        nt.set(bsdf.inputs['Subsurface Scale'], 0.7)
+        nt.set(bsdf.inputs['Subsurface Radius'], (0.1, 0.45, 0.85))
+
+        out = nt.n('ShaderNodeOutputMaterial')
+        nt.link(bsdf.outputs[0], out.inputs['Surface'])
     verts = np.array([[-size, -size, 0], [size, -size, 0], [size, size, 0], [-size, size, 0]], np.float32)
     ob = mesh_from_arrays('sea', verts, np.array([[0, 1, 2, 3]]), coll, m)
     return ob

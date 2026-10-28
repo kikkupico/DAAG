@@ -35,7 +35,7 @@ def deg(b):
 
 def shots():
     S = {}
-    S['arche_overview_golden'] = dict(cam=(2100, -6900, 2300), target=(0, -250, 150), lens=33, light='golden', sun_from=255, hazeS=0.16, hazeD=50000)
+    S['arche_overview_golden'] = dict(cam=(2100, -6900, 2300), target=(0, -250, 150), lens=36, light='golden', sun_from=255, hazeS=0.40, hazeD=45000)
     S['arche_overview_overcast'] = dict(cam=(-6200, -3300, 1700), target=(0, 0, 200), lens=33, light='overcast', sun_from=200, hazeS=0.28, hazeD=30000)
     c3, o3, t3, b3 = port(3)
     S['port3_aerial'] = dict(cam=at(3, -330, -260, 150), target=at(3, 60, 10, 0), lens=32, light='morning', sun_from=deg(b3) + 40)

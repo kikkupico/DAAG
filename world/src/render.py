@@ -53,7 +53,7 @@ def set_light(p, sun_from):
     s.view_settings.exposure = p['exposure']
 
 
-def compositor(haze, D, strength, depth=60000.0):
+def compositor(haze, D, strength, depth=180000.0):
     """Distance haze over the surfaces, not the sky. The sky is rendered as its own pass (the film is
     transparent), so a pixel that is partly sky, at a roof edge or through the gaps in a cypress, takes the
     haze of its surfaces' own distance instead of the sky's, which left pale fringes and speckle."""
@@ -77,9 +77,16 @@ def compositor(haze, D, strength, depth=60000.0):
     # within two pixels takes them out
     near = nt.n('CompositorNodeDilateErode')
     nt.link(mist, near.inputs['Mask']); near.inputs['Type'].default_value = 'Steps'; near.inputs['Size'].default_value = -2
-    dist = nt.math('MULTIPLY', near.outputs[0], depth)
+    # At the image boundaries, DilateErode with negative size samples out-of-bounds as 0.0; restore mist if eroded to 0
+    mist_valid = nt.mix(nt.math('LESS_THAN', near.outputs[0], 1e-4), near.outputs[0], mist, kind='FLOAT')
+    dist = nt.math('MULTIPLY', mist_valid, depth)
     fac = nt.math('SUBTRACT', 1.0, nt.math('EXPONENT', nt.math('DIVIDE', dist, -D)))
     fac = nt.math('MULTIPLY', fac, strength, clamp=True)
+    # Toward the distant horizon (> 35 km), atmospheric extinction rises smoothly to 1.0
+    # so the sea seamlessly merges into the sky without an abrupt geometric edge
+    fade_horiz = nt.ramp(nt.math('DIVIDE', dist, depth, clamp=True),
+                         [(0.25, (0, 0, 0)), (0.85, (1, 1, 1))])
+    fac = nt.math('MAXIMUM', fac, fade_horiz)
     # surfaces (premultiplied by their coverage) toward the haze colour, then the sky behind them
     surf = nt.mix(fac, rl.outputs['Image'], nt.mix(1.0, (*haze, 1.0), a, blend='MULTIPLY'))
     mixed = nt.mix(1.0, surf, rl.outputs['Environment'], blend='ADD')
@@ -114,8 +121,9 @@ for name in names:
     p['strength'] *= sh.get('sun_scale', 1.0)       # brighter or dimmer than the preset
     fog = sh.get('fog_scale', 1.0)                  # 1 = the preset's haze, 0 = none, 2 = twice as dense
     set_light(p, sh.get('sun_from', 210))
-    compositor(p['haze'], sh.get('hazeD', p['hazeD']) / max(fog, 0.05), sh.get('hazeS', p['hazeS']) if fog > 0 else 0.0)
-    cam = core.camera('cam_' + name, sh['cam'], sh['target'], lens=sh.get('lens', 35))
+    mist_depth = max(180000.0, sh.get('hazeD', p['hazeD']) * 3.5)
+    compositor(p['haze'], sh.get('hazeD', p['hazeD']) / max(fog, 0.05), sh.get('hazeS', p['hazeS']) if fog > 0 else 0.0, depth=mist_depth)
+    cam = core.camera('cam_' + name, sh['cam'], sh['target'], lens=sh.get('lens', 35), clip_end=sh.get('clip_end', 250000))
     if sh.get('dof'):
         cam.data.dof.use_dof = True; cam.data.dof.aperture_fstop = sh['dof'][1]; cam.data.dof.focus_distance = sh['dof'][0]
     s.camera = cam
