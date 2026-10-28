@@ -28,6 +28,10 @@ PRESETS = {
     'cloudy_sun': dict(sky='hdri', hdri='kloofendal_48d_partly_cloudy_puresky', strength=1.0, exposure=-0.4, haze=(0.72, 0.76, 0.82), hazeD=12000, hazeS=0.5),
     'dusk': dict(sky='hdri', hdri='qwantani_dusk_2_puresky', strength=1.6, exposure=0.1, haze=(0.5, 0.44, 0.42), hazeD=7000, hazeS=0.55),
     'evening_cloud': dict(sky='hdri', hdri='belfast_sunset_puresky', strength=1.2, exposure=-0.1, haze=(0.7, 0.6, 0.52), hazeD=8000, hazeS=0.5),
+    # a long-exposure moonlit sky, brought down to night; adaptive=False so adapt_exposure does not lift it back to day
+    # tint and sat grade the whole picture cool and pale, as moonlight looks to the eye
+    'moonlit': dict(sky='hdri', hdri='qwantani_moon_noon_puresky', strength=1.0, exposure=-2.5, haze=(0.14, 0.19, 0.27), hazeD=7000, hazeS=0.5,
+                    adaptive=False, tint=(0.78, 0.9, 1.15), sat=0.6),
 }
 
 
@@ -158,12 +162,15 @@ def adapt_exposure(filepath, rr, max_iterations=3):
         print(f"  [Adaptive Exposure] Adjusted {orig_exp:+.2f} -> {exp:+.2f} EV (mean: {stats['mean']:.2f}, clipped: {stats['clipped']*100:.1f}%)")
 
 
-def compositor(haze, D, strength, depth=180000.0):
+def compositor(haze, D, strength, depth=180000.0, tan_half=0.36, tint=None, sat=None):
     """Distance haze over the surfaces, not the sky. The sky is rendered as its own pass (the film is
     transparent), so a pixel that is partly sky, at a roof edge or through the gaps in a cypress, takes the
-    haze of its surfaces' own distance instead of the sky's, which left pale fringes and speckle."""
+    haze of its surfaces' own distance instead of the sky's, which left pale fringes and speckle.
+    tan_half: tangent of half the camera's angle of view across the frame's longer side.
+    tint (an RGB multiplier) and sat (saturation, 1 = as is) grade the finished picture."""
     vl = bpy.context.view_layer
     vl.use_pass_mist = True
+    vl.use_pass_z = True
     vl.use_pass_environment = True
     s.world.mist_settings.start = 0.0
     s.world.mist_settings.depth = depth
@@ -178,13 +185,22 @@ def compositor(haze, D, strength, depth=180000.0):
     # the mist pass counts sky as 1; take that share out to leave the surfaces' own mist
     mist = nt.math('DIVIDE', nt.math('SUBTRACT', rl.outputs['Mist'], nt.math('SUBTRACT', 1.0, a)),
                    nt.math('MAXIMUM', a, 1e-4))
-    # through leaf cards the mist pass is noisy, single pixels reading kilometres off; the nearest distance
-    # within two pixels takes them out
+    # Through leaf cards the mist pass is useless: on a bush 100 m off, about two pixels in five read 0 and one
+    # in five reads kilometres, and the far ones hazed dark leaves into white speckle under dusk and cloud.
+    # The depth pass only sees surfaces solid enough to count (alpha threshold), so it holds the leaves'
+    # true distance. It is measured along the camera's axis; scaled to the length of each pixel's ray, as mist is.
+    uv = nt.n('ShaderNodeSeparateXYZ')
+    ic = nt.n('CompositorNodeImageCoordinates')
+    nt.link(rl.outputs['Image'], ic.inputs['Image']); nt.link(ic.outputs['Uniform'], uv.inputs['Vector'])
+    r2 = nt.math('ADD', nt.math('MULTIPLY', uv.outputs['X'], uv.outputs['X']), nt.math('MULTIPLY', uv.outputs['Y'], uv.outputs['Y']))
+    ray = nt.math('SQRT', nt.math('ADD', 1.0, nt.math('MULTIPLY', r2, tan_half * tan_half)))
+    zn = nt.math('MINIMUM', nt.math('DIVIDE', nt.math('MULTIPLY', rl.outputs['Depth'], ray), depth), 1.0)
+    # a pixel whose depth found only sky (a roof edge, a leaf's fringe) takes the nearest surface within two pixels
     near = nt.n('CompositorNodeDilateErode')
-    nt.link(mist, near.inputs['Mask']); near.inputs['Type'].default_value = 'Steps'; near.inputs['Size'].default_value = -2
-    # At the image boundaries, DilateErode with negative size samples out-of-bounds as 0.0; restore mist if eroded to 0
-    mist_valid = nt.mix(nt.math('LESS_THAN', near.outputs[0], 1e-4), near.outputs[0], mist, kind='FLOAT')
-    dist = nt.math('MULTIPLY', mist_valid, depth)
+    nt.link(zn, near.inputs['Mask']); near.inputs['Type'].default_value = 'Steps'; near.inputs['Size'].default_value = -2
+    # and with no surface in reach, its own mist
+    edge = nt.mix(nt.math('LESS_THAN', near.outputs[0], 1.0), mist, near.outputs[0], kind='FLOAT')
+    dist = nt.math('MULTIPLY', nt.mix(nt.math('LESS_THAN', zn, 1.0), edge, zn, kind='FLOAT'), depth)
     fac = nt.math('SUBTRACT', 1.0, nt.math('EXPONENT', nt.math('DIVIDE', dist, -D)))
     fac = nt.math('MULTIPLY', fac, strength, clamp=True)
     # Toward the distant horizon (> 35 km), atmospheric extinction rises smoothly to 1.0
@@ -198,6 +214,12 @@ def compositor(haze, D, strength, depth=180000.0):
     opaque = nt.n('CompositorNodeSetAlpha')
     nt.link(mixed, opaque.inputs['Image']); opaque.inputs['Alpha'].default_value = 1.0
     mixed = opaque.outputs['Image']
+    if sat is not None:
+        hs = nt.n('CompositorNodeHueSat')
+        nt.link(mixed, hs.inputs['Image']); hs.inputs['Saturation'].default_value = sat
+        mixed = hs.outputs['Image']
+    if tint is not None:
+        mixed = nt.mix(1.0, mixed, (*tint, 1.0), blend='MULTIPLY')
     gl = nt.n('CompositorNodeGlare')
     try:
         gl.inputs['Type'].default_value = 'Fog Glow'
@@ -228,7 +250,8 @@ if mod:
         fog = sh.get('fog_scale', 1.0)                  # 1 = the preset's haze, 0 = none, 2 = twice as dense
         set_light(p, sh.get('sun_from', 210), shot=sh)
         mist_depth = max(180000.0, sh.get('hazeD', p['hazeD']) * 3.5)
-        compositor(p['haze'], sh.get('hazeD', p['hazeD']) / max(fog, 0.05), sh.get('hazeS', p['hazeS']) if fog > 0 else 0.0, depth=mist_depth)
+        compositor(p['haze'], sh.get('hazeD', p['hazeD']) / max(fog, 0.05), sh.get('hazeS', p['hazeS']) if fog > 0 else 0.0, depth=mist_depth,
+                   tan_half=18.0 / sh.get('lens', 35), tint=p.get('tint'), sat=p.get('sat'))      # core.camera's 36 mm sensor spans the longer side
         cam = core.camera('cam_' + name, sh['cam'], sh['target'], lens=sh.get('lens', 35), clip_end=sh.get('clip_end', 250000))
         if sh.get('dof'):
             cam.data.dof.use_dof = True; cam.data.dof.aperture_fstop = sh['dof'][1]; cam.data.dof.focus_distance = sh['dof'][0]
@@ -272,7 +295,7 @@ if mod:
         s.render.filepath = os.path.join(OUT, f'{name}.png')
         bpy.ops.render.render(write_still=True)
         rr = bpy.data.images.get('Render Result')
-        if rr and sh.get('adaptive_exposure', True) and 'exposure' not in sh:
+        if rr and sh.get('adaptive_exposure', p.get('adaptive', True)) and 'exposure' not in sh:
             adapt_exposure(s.render.filepath, rr)
         for hide in sh.get('hide', []):
             for o in bpy.data.objects:

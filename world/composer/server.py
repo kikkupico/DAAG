@@ -152,7 +152,9 @@ def prompt_parts():
                 "photo_interior": getattr(pipeline, "ANCHOR_INTERIOR", ""),
                 "ligne-claire": getattr(pipeline, "ANCHOR_LIGNE_CLAIRE", "")
             },
-            "cast_note": pipeline.CAST_NOTE}
+            "cast_note": pipeline.CAST_NOTE,
+            "lights": pipeline.LIGHTS,
+            "light_note": pipeline.LIGHT_NOTE}
 
 
 def get_cast_data():

@@ -28,7 +28,7 @@ Open the printed URL in any modern browser (Chrome, Safari, Firefox, Edge).
 
 ### 1. 3D Archipelago Exploration
 - **The live islands**: loads `world/build/composer/<island>.glb`, exported from the built Blender islands (`world/build/arche.blend`, `paxos.blend`) by `sh world/composer/export.sh [arche paxos]`. The ground is a heightmap mesh from `terrain/<island>/height.npy`, coloured from the terrain masks (`ground.py`); architectural and prop instancers (columns, statues, pottery, boats) are realized, while roof-tile, tree and rock instancers are left out as too many. The models are gitignored; rebuild them after the islands change. The islands are separate Blender scenes with no shared layout, and each model is about 160 MB, so the page asks which island to open (`?island=arche` or `?island=paxos` skips the question); the header selector switches later.
-- **Blender coordinates throughout**: the models keep Blender metres (+Z up; three.js sees them as (x, z, −y), `js/coords.js`), so the camera readout and every `cam` and `target` saved to or loaded from `shots.json` are the same numbers `previs.py` renders from. Shots given with a `site` (`chamber`, `tholos`) are read and saved in that building's own frame, as `shots_panels.py` does, and `"+1.7"`-style heights are resolved against the ground. The sun azimuth is a compass bearing (0° = north = Blender +Y), matching `sun_from`, and the time-of-day buttons use the renderer's preset names (`morning`, `golden`, `late`, `noon`, `overcast`, `dusk`).
+- **Blender coordinates throughout**: the models keep Blender metres (+Z up; three.js sees them as (x, z, −y), `js/coords.js`), so the camera readout and every `cam` and `target` saved to or loaded from `shots.json` are the same numbers `previs.py` renders from. Shots given with a `site` (`chamber`, `tholos`) are read and saved in that building's own frame, as `shots_panels.py` does, and `"+1.7"`-style heights are resolved against the ground. The sun azimuth is a compass bearing (0° = north = Blender +Y), matching `sun_from`, and the time-of-day buttons use the renderer's preset names (`morning`, `golden`, `late`, `noon`, `overcast`, `moonlit`).
 - **Dual Navigation**:
   - **Orbit Navigation**: Left-click drag to orbit, right-click drag to pan, scroll wheel to zoom.
   - **First-Person / Drone Fly Mode**: `W`, `A`, `S`, `D` to fly forward/left/backward/right, `Q` / `E` to descend / ascend, and `Shift` for high-speed flight across the islands.
@@ -47,7 +47,7 @@ Open the printed URL in any modern browser (Chrome, Safari, Firefox, Edge).
 - **Coordinate Telemetry**: Real-time readout of Camera `[X, Y, Z]` and Target `[X, Y, Z]`.
 
 ### 3. Weather, Time of Day & Sun Angle
-- **Presets are the renderer's**: the buttons are `render.py`'s light presets, read from its source through `/api/lights` (`morning`, `golden`, `late`, `noon`, `overcast`, `cloudy_sun`, `evening_cloud`, `dusk`). Choosing one sets the sun at that preset's own elevation, strength and haze, with the sky colours in the viewport matched to it. A preset with an HDRI sky (`overcast`, `cloudy_sun`, `evening_cloud`, `dusk`) has its own sun, so the elevation slider is disabled for it.
+- **Presets are the renderer's**: the buttons are `render.py`'s light presets, read from its source through `/api/lights` (`morning`, `golden`, `late`, `noon`, `overcast`, `cloudy_sun`, `evening_cloud`, `moonlit`). `dusk` stays a preset for the shots that use it but has no button. Choosing one sets the sun at that preset's own elevation, strength and haze, with the sky colours in the viewport matched to it. A preset with an HDRI sky (`overcast`, `cloudy_sun`, `evening_cloud`, `moonlit`, `dusk`) has its own sun, so the elevation slider is disabled for it.
 - **Sliders are offsets from the preset**, and the Blender render follows them: **Azimuth** is the compass bearing the light comes from (`sun_from`); **Elevation** is `sun_elev` (sun skies only); **Intensity** is `sun_scale`, the sun's strength relative to the preset (1.5 on the slider is the preset as it is); **Fog** is `fog_scale`, the preset's haze (25% on the slider is the preset as it is, 0 is none, 50% is twice as dense). They are saved in the shot, and written only where they differ from the preset. `render.py` reads them for book previs too.
 - **Viewport only**: soft shadow maps, the animated sea and the sky dome are for framing; Blender's own sky, sun and haze make the picture.
 
@@ -95,10 +95,11 @@ For trying world changes there is a throwaway set of shots, kept apart from the 
 - **Individual Copy & Export**: One-click copy or download for each character reference image to pass as image input to AI tools.
 
 ### 7. AI Prompt Studio (Photoreal & Ligne Claire)
-Generates prompts the way `pipeline.request()` does. The style text and cast note are read from `world/panels/pipeline.py` through `/api/prompt`, so they cannot drift (the page keeps a fallback copy for when the server cannot import it):
+Generates prompts the way `pipeline.request()` does. The style text, cast note and time-of-day sentences are read from `world/panels/pipeline.py` through `/api/prompt`, so they cannot drift (the page keeps a fallback copy for when the server cannot import it):
 - **Style Toggle**:
-  - **Photoreal**: Uses the canonical `KEEP` prompt for photographic realism (Hellenistic Greece, 3rd century BC, true scale, natural daylight, real shadows).
+  - **Photoreal**: Uses the canonical `KEEP` prompt for photographic realism (true scale, real shadows, every surface repainted). It names no period: the previs and the cast pictures carry the setting (tested in `reports/period-prompt/`, 28 October 2026).
   - **Ligne Claire**: Uses the canonical `KEEP_LIGNE_CLAIRE` prompt for Franco-Belgian comic illustration (clean black ink outlines, flat clear colors, Hergé / Jacobs manner).
+- **Time of day and weather**: the light preset chosen in the composer adds one sentence describing it (`pipeline.LIGHTS`, e.g. *Night under a bright high moon…* for `moonlit`), so the picture keeps the previs's light instead of drifting to daylight. Choosing another preset updates the prompt.
 - **Automatic Reference Mapping**:
   - `Image 1` is designated as the Previs camera view.
   - `Images 2 to N+1` are mapped to the selected character portraits with their canonical IDs.
