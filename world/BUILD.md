@@ -53,6 +53,8 @@ The terrain scripts print and store (in `sites.json`) the canon tests:
 | `src/blib/paxos_bld.py` | the Chamber, the Tholos, the oracle, the libraries, the stoa and festival ground, the courier landing, the ferry stages |
 | `src/blib/props.py`, `veg.py`, `populate.py` | pottery, carts, ships; procedural olive, cypress, pine, oak, lentisk, thyme; scattering |
 | `src/shots_*.py`, `src/render.py` | camera shots and the renderer |
+| `src/blib/solids.py` | the ground under floors, steps, paving and walls, mapped at half a metre from the built geometry and saved as `build/<island>.floors.npz`; the built plants and the render-time detail keep clear of it |
+| `src/blib/detail.py` | ground cover at render time: more shrubs, grass and thyme, and stones, where the shot's camera sees them, from the island's own density maps (`layers()` in `src/paxos_veg.py`); `detail: False` on a shot, or `DETAIL=0`, renders the built layer alone |
 | `src/captions.py`, `src/showcase_template.html`, `src/gen_showcase.py` | the showcase page |
 | `src/build_all.sh` | the whole rebuild in one run |
 | `cast/cast.json`, `cast/gen.py` | reference pictures of the cast, people only (props are modelled): Nano Banana 2 through the Batch API by default, or FLUX.2 klein 4B locally, and sheets of each setting's people side by side (`cast/README.md`); not part of the rebuild |

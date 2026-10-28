@@ -177,11 +177,16 @@ class Field:
         return w
 
 
-def place(name, F, density, protos, coll, smin=0.8, smax=1.2, tilt=0.0, cap=None, sink=0.2):
+def place(name, F, density, protos, coll, smin=0.8, smax=1.2, tilt=0.0, cap=None, sink=0.2, clear=None, r=0.0):
+    """clear: a solids.Floors; nothing is placed whose footprint, radius r, touches a floor, step or wall."""
     pts = F.sample(density, cap)
     pts[:, 2] -= sink - 0.2
     n = len(pts)
     sc = F.rng.uniform(smin, smax, n).astype(F32)
+    if clear is not None:            # after the draws, so the plants that stay are the ones placed without it
+        ok = clear.clear_of(pts[:, 0], pts[:, 1], r)
+        pts, sc = pts[ok], sc[ok]
+        n = len(pts)
     ob = scatter.instances(name, pts, protos, coll, scale=sc, tilt=tilt, seed=hash(name) % 1000)
     print('SCATTER', name, n)
     return ob
