@@ -365,12 +365,19 @@ def sky(kind='sun', elevation=35, azimuth=210, hdri=None, strength=1.0, rotation
     bg = nt.n('ShaderNodeBackground'); out = nt.n('ShaderNodeOutputWorld')
     nt.link(bg.outputs[0], out.inputs['Surface'])
     if hdri:
-        env = nt.n('ShaderNodeTexEnvironment'); env.image = bpy.data.images.load(os.path.join(PH, 'hdri', hdri + '.hdr'))
-        mp = nt.mapping(nt.n('ShaderNodeTexCoord').outputs['Generated'], 1.0, rot=(0, 0, math.radians(rotation)))
-        nt.link(mp, env.inputs['Vector'])
-        nt.link(env.outputs['Color'], bg.inputs['Color'])
-        bg.inputs['Strength'].default_value = strength
-        return w
+        hdr_path = os.path.join(PH, 'hdri', hdri if hdri.endswith('.hdr') else f"{hdri}.hdr")
+        if not os.path.isfile(hdr_path):
+            hdri_dir = os.path.join(PH, 'hdri')
+            available = [f for f in os.listdir(hdri_dir) if f.endswith('.hdr')] if os.path.isdir(hdri_dir) else []
+            hdr_path = os.path.join(hdri_dir, available[0]) if available else None
+        if hdr_path:
+            env = nt.n('ShaderNodeTexEnvironment')
+            env.image = bpy.data.images.load(hdr_path, check_existing=True)
+            mp = nt.mapping(nt.n('ShaderNodeTexCoord').outputs['Generated'], 1.0, rot=(0, 0, math.radians(rotation)))
+            nt.link(mp, env.inputs['Vector'])
+            nt.link(env.outputs['Color'], bg.inputs['Color'])
+            bg.inputs['Strength'].default_value = strength
+            return w
     st = nt.n('ShaderNodeTexSky', sky_type='MULTIPLE_SCATTERING')
     st.sun_elevation = math.radians(elevation)
     # Blender's sun_rotation: 0 = sun towards +Y? we convert compass bearing (from north, clockwise)

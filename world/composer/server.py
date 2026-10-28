@@ -219,10 +219,40 @@ def get_sites(island):
     d = json.loads(f.read_text(encoding="utf-8"))
     out = []
 
-    def add(sid, name, p, face=None):
-        out.append({"id": sid, "name": name, "x": p["x"], "y": p["y"], "z": p.get("z", 3.0), "face": face})
+    def add(sid, name, p, face=None, cam=None, target=None, kind="landmark", lens=None):
+        entry = {"id": sid, "name": name, "x": p["x"], "y": p["y"], "z": p.get("z", 3.0), "face": face, "kind": kind}
+        if cam:
+            entry["cam"] = [round(c, 2) for c in cam]
+        if target:
+            entry["target"] = [round(t, 2) for t in target]
+        if lens:
+            entry["lens"] = lens
+        out.append(entry)
 
     if island == "arche":
+        # 1. Building Interiors & Courtyards
+        if d.get("crown"):
+            cr = d["crown"]
+            add("crown-interior", "The Crown · Inside Fortification", cr,
+                cam=[4.0, -2.0, 524.7], target=[-6.0, 3.0, 523.6], kind="interior", lens=24)
+        if d.get("ports", {}).get("3"):
+            p3 = d["ports"]["3"]
+            add("house3-portico", "House 3 · Portico & Request Board", p3,
+                cam=[2162.67, -1274.02, 4.4], target=[2170.18, -1246.02, 2.8], kind="interior", lens=24)
+        if d.get("ports", {}).get("1"):
+            p1 = d["ports"]["1"]
+            add("house1-portico", "House 1 · Trading Portico", p1,
+                cam=[-2206.54, -1248.54, 4.4], target=[-2186.04, -1269.04, 2.8], kind="interior", lens=24)
+        if d.get("ports", {}).get("2"):
+            p2 = d["ports"]["2"]
+            add("house2-portico", "House 2 · Trading Portico", p2,
+                cam=[22.0, 2633.95, 4.4], target=[-6.0, 2626.45, 2.8], kind="interior", lens=24)
+        if d.get("granary"):
+            gr = d["granary"]
+            add("granary-interior", "Granary · Storehouse Interior", gr, gr.get("face"),
+                cam=[914.59, 2957.33, 28.84], target=[901.31, 2944.66, 28.64], kind="interior", lens=28)
+
+        # 2. Landmarks & Sites (Exterior)
         for n, p in d.get("ports", {}).items():
             q = next((b for b in d["buildings"] if b.get("house") == int(n)), None)
             add(f"house-{n}", f"House {n} (port {n})", q or p, q and q.get("ang"))
@@ -237,6 +267,47 @@ def get_sites(island):
         for i, p in enumerate(d.get("sundials", []), 1):
             add(f"sundial-{i}", f"Sundial {i}", p)
     else:
+        # 1. Building Interiors
+        if d.get("chamber"):
+            ch = d["chamber"]
+            zs = ch["z"] + 1.02
+            add("chamber-interior", "The Chamber · Interior (Meridian)", ch,
+                cam=[ch["x"] + 0.7, ch["y"] - 7.0, zs + 2.3],
+                target=[ch["x"] - 0.1, ch["y"] + 4.0, zs + 0.5],
+                kind="interior", lens=17)
+        if d.get("tholos"):
+            th = d["tholos"]
+            a = th.get("face", 0.0) + math.pi * 0.92
+            tx, ty, tz = th["x"], th["y"], th["z"]
+            add("tholos-interior", "The Tholos · Interior (Council Hall)", th, th.get("face"),
+                cam=[tx + 6.6 * math.cos(a), ty + 6.6 * math.sin(a), tz + 0.6 + 1.7],
+                target=[tx + 1.0 * math.cos(th.get("face", 0.0)), ty + 1.0 * math.sin(th.get("face", 0.0)), tz + 1.2],
+                kind="interior", lens=18)
+        if d.get("libraries"):
+            libs = d["libraries"]
+            l = min(libs, key=lambda x: abs(x["z"] - 40))
+            la = l.get("face", 0.0) - math.pi / 2
+            cla, sla = math.cos(la), math.sin(la)
+            lcam = [l["x"] + 1.6 * cla - 2.6 * sla, l["y"] + 1.6 * sla + 2.6 * cla, l["z"] + 1.85]
+            ltar = [l["x"] - 0.2 * cla - (-0.7) * sla, l["y"] - 0.2 * sla + (-0.7) * cla, l["z"] + 1.2]
+            add("library-interior", "Library · Interior (Scrolls & Pebble Boards)", l, l.get("face"),
+                cam=lcam, target=ltar, kind="interior", lens=22)
+        if d.get("stoa"):
+            st = d["stoa"]
+            sa = st.get("ang", 0.0)
+            csa, ssa = math.cos(sa), math.sin(sa)
+            stcam = [st["x"] + 8 * csa - 4.5 * ssa, st["y"] + 8 * ssa + 4.5 * csa, st["z"] + 1.7]
+            sttar = [st["x"] + 0 * csa - (-6.6) * ssa, st["y"] + 0 * ssa + (-6.6) * csa, st["z"] + 3.2]
+            add("stoa-inside", "Stoa · Inside Colonnade", st, sa,
+                cam=stcam, target=sttar, kind="interior", lens=20)
+        if d.get("oracle"):
+            ora = d["oracle"]
+            add("oracle-interior", "Oracle · Inner Shrine & Altar", ora,
+                cam=[ora["x"] - 2.0, ora["y"] - 2.0, ora["z"] + 1.7],
+                target=[ora["x"] + 1.5, ora["y"] + 1.5, ora["z"] + 1.2],
+                kind="interior", lens=24)
+
+        # 2. Landmarks & Sites (Exterior)
         for key, name in (("chamber", "The Chamber"), ("tholos", "The Tholos"), ("oracle", "Oracle at the Fork"),
                           ("stoa", "Stoa"), ("festival", "Festival ground")):
             if d.get(key):
@@ -308,7 +379,7 @@ def get_available_books():
 # --- Full-detail renders: the composed shot rendered by Blender from the built island ---------------
 
 RENDER_KEYS = {"cam", "target", "lens", "light", "sun_from", "base", "site", "dof", "hazeD", "hazeS", "placed_props",
-               "sun_elev", "sun_scale", "fog_scale"}
+               "sun_elev", "sun_scale", "fog_scale", "exposure", "adaptive_exposure"}
 RES_1K = {"1:1": (1024, 1024), "2:3": (848, 1264), "3:2": (1264, 848), "3:4": (896, 1200), "4:3": (1200, 896),
           "4:5": (928, 1152), "5:4": (1152, 928), "9:16": (768, 1376), "16:9": (1376, 768), "21:9": (1584, 672)}
 QUALITIES = ("preview", "check", "final")      # render.py: half size 32 samples / full size 48 / full size 160
@@ -358,9 +429,12 @@ def clean_spec(body):
             and isinstance(p.get("scale", 1), (int, float)) for p in items)
         if not ok:
             return None, "'placed_props' must be a list of {prop, at, face, scale}"
-    for key, lo, hi in (("sun_elev", -5, 85), ("sun_scale", 0.05, 5), ("fog_scale", 0, 10), ("sun_from", 0, 360)):
+    for key, lo, hi in (("sun_elev", -5, 85), ("sun_scale", 0.05, 5), ("fog_scale", 0, 10), ("sun_from", 0, 360),
+                        ("exposure", -5, 5)):
         if key in spec and not (isinstance(spec[key], (int, float)) and lo <= spec[key] <= hi):
             return None, f"'{key}' must be a number from {lo} to {hi}"
+    if "adaptive_exposure" in spec and not isinstance(spec["adaptive_exposure"], bool):
+        return None, "'adaptive_exposure' must be a boolean"
     if spec.get("light") not in light_presets():
         spec["light"] = "golden"
     if spec.get("site") is not None and spec["site"] not in SITES_WITH_FRAME:

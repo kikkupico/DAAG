@@ -29,7 +29,7 @@ import math
 import os
 
 KEYS = ("cam", "target", "lens", "light", "sun_from", "res", "hide", "lights", "dof", "light_override", "hazeD", "hazeS",
-        "sun_elev", "sun_scale", "fog_scale")
+        "sun_elev", "sun_scale", "fog_scale", "exposure", "adaptive_exposure")
 
 
 def frame(mod, site):
