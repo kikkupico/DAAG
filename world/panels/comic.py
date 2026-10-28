@@ -18,12 +18,16 @@ from pathlib import Path
 from pipeline import MODEL, SIZE, aspect_of, generate, part, provenance
 
 PROMPT = os.environ.get("COMIC_PROMPT") or (
-    "Redraw image 1 as a Franco-Belgian ligne claire comic illustration in the manner of Hergé and Edgar P. "
-    "Jacobs: clean black ink outlines of even weight, flat areas of clear colour with no gradients, no hatching "
-    "and very little shading, detailed accurate architecture, readable figures. Keep the composition, the camera, "
-    "and every person, animal, object and building exactly where they are, with the same faces, costumes and "
-    "colours. One single illustration. No lettering, no title, no speech balloons, no captions, no logos, no "
-    "signature, no panel border.")
+    "Redraw image 1 as a Franco-Belgian bande dessinée illustration in the classic ligne claire tradition of "
+    "Jacques Martin (Alix), Hergé (Tintin), and Edgar P. Jacobs. Graphic style: uniform, unbroken black ink "
+    "outlines of consistent fine weight defining all architectural lines, figures, and landscape elements, with "
+    "zero sketchiness and no cross-hatching. Flat, unshaded gouache color planes with clean matte tones; no "
+    "photographic gradients, blurs, or halftone dots. Cast shadows are flat, hard-edged geometric shapes filled "
+    "with a single uniform darker tone. Keep the composition, the camera, and every person, animal, object and "
+    "building exactly where they are, with the same faces, costumes and colours. One single illustration filling the "
+    "frame: no lettering, no title, no speech balloons, no sound effects, no captions, no logos, no signature, "
+    "no panel border."
+)
 
 
 def main():

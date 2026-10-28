@@ -77,12 +77,15 @@ KEEP_INTERIOR = (
     "contact shadows."
 )
 KEEP_LIGNE_CLAIRE = (
-    "Draw image 1 as a Franco-Belgian ligne claire comic illustration in the classic manner of Hergé and Edgar P. Jacobs: "
-    "clean black ink outlines of even weight defining all architectural lines, figures, and objects, with flat areas of "
-    "clear matte colour without gradients or cross-hatching. Keep the camera, framing, buildings, and layout of image 1 "
-    "exactly. Authentic ancient Hellenistic Greece, 3rd century BC. Every building is in daily use and well kept. People at "
-    "true scale, with clear graphic readability. One single illustration filling the frame: no lettering, no title, no "
-    "speech balloons, no captions, no logos, no signature, no panel border."
+    "Draw image 1 as a Franco-Belgian bande dessinée illustration in the classic ligne claire tradition of "
+    "Jacques Martin (Alix), Hergé (Tintin), and Edgar P. Jacobs. Graphic style: uniform, unbroken black ink "
+    "outlines of consistent fine weight defining all architectural lines, figures, and landscape elements, with "
+    "zero sketchiness and no cross-hatching. Flat, unshaded gouache color planes with clean matte tones; no "
+    "photographic gradients, blurs, or halftone dots. Cast shadows are flat, hard-edged geometric shapes filled "
+    "with a single uniform darker tone. Keep the camera, framing, buildings, and layout of image 1 exactly. "
+    "Authentic ancient Hellenistic Greece, 3rd century BC. Every building is in daily use and well kept. Figures at "
+    "true scale with expressive, clear graphic readability. One single illustration filling the frame: no lettering, "
+    "no title, no speech balloons, no sound effects, no captions, no logos, no signature, no panel border."
 )
 ANCHOR_EXTERIOR = (
     "A real photograph repainting the exact 3D architecture, landscape, and perspective of Image 1 without adding, "
@@ -96,8 +99,8 @@ ANCHOR_INTERIOR = (
     "architecture in Image 1, never on newly generated benches."
 )
 ANCHOR_LIGNE_CLAIRE = (
-    "A Franco-Belgian ligne claire comic illustration repainting the exact 3D architecture and composition of Image 1 "
-    "without adding, moving, or removing any buildings, walls, columns, or furniture."
+    "A Franco-Belgian ligne claire comic illustration repainting the exact 3D architecture, landscape, and composition "
+    "of Image 1 without adding, moving, or removing any buildings, walls, columns, or furniture."
 )
 KEEP = KEEP_EXTERIOR
 # style: (the prompt that comes first, what the picture is called in the prompt, the output's name)
@@ -214,7 +217,7 @@ def request(previs, style="photo", labels=False):
             which=which, listing=listing, picture=picture,
             printed=", with their name printed below" if labels else "",
             labels=f" The names are labels only and appear nowhere in the {picture}." if labels else "",
-            drawn=", drawn in the same ligne claire style" if style != "photo" else ""
+            drawn=", translated into this ligne claire comic style with expressive ink linework and matching flat-coloured clothes" if style != "photo" else ""
         ).replace("a reference photographs", "a reference photograph")
 
     if entry.get("keep") is False:
