@@ -91,9 +91,10 @@ export async function loadPromptParts() {
  * anchor out; labels=false means clean cast crops (default).
  */
 export function buildPrompt({ style, action, others = '', cast = [], keep = true, labels = false, interior = false, light = '' }) {
-  const s = parts.styles[style] || FALLBACK.styles.photo;
-  const picture = s.picture;
-  const n = cast.length;
+  const stylesObj = (parts && parts.styles) || FALLBACK.styles;
+  const s = stylesObj[style] || FALLBACK.styles.photo;
+  const picture = s.picture || 'photograph';
+  const n = Array.isArray(cast) ? cast.length : 0;
   const a = (action || '').trim();
   const o = (others || '').trim();
 
@@ -118,13 +119,14 @@ export function buildPrompt({ style, action, others = '', cast = [], keep = true
       labels: labels ? ` The names are labels only and appear nowhere in the ${picture}.` : '',
       drawn: style === 'photo' ? '' : ', translated into this ligne claire comic style with expressive ink linework and matching flat-coloured clothes'
     };
-    const note = (parts.cast_note || FALLBACK.cast_note).replace(/\{(\w+)\}/g, (_, k) => fill[k] ?? '');
+    const note = (parts?.cast_note || FALLBACK.cast_note).replace(/\{(\w+)\}/g, (_, k) => fill[k] ?? '');
     body += ' ' + note.replace('a reference photographs', 'a reference photograph');
   }
 
-  const lightText = (parts.lights || FALLBACK.lights)[light];
+  const lights = (parts && parts.lights) || FALLBACK.lights || {};
+  const lightText = lights[light];
   if (lightText) {
-    body += ' ' + (parts.light_note || FALLBACK.light_note).replace('{}', lightText);
+    body += ' ' + (parts?.light_note || FALLBACK.light_note).replace('{}', lightText);
   }
 
   if (!keep) {
@@ -132,10 +134,11 @@ export function buildPrompt({ style, action, others = '', cast = [], keep = true
   }
 
   const anchorKey = style === 'photo' ? (interior ? 'photo_interior' : 'photo_exterior') : 'ligne-claire';
-  const anchor = parts.anchors?.[anchorKey] || FALLBACK.anchors[anchorKey];
-  let keepText = s.keep;
+  const anchors = (parts && parts.anchors) || FALLBACK.anchors || {};
+  const anchor = anchors[anchorKey] || FALLBACK.anchors[anchorKey] || '';
+  let keepText = s.keep || FALLBACK.styles.photo.keep;
   if (style === 'photo' && interior) {
-    keepText = parts.keep_interior || FALLBACK.keep_interior || s.keep;
+    keepText = parts?.keep_interior || FALLBACK.keep_interior || keepText;
   }
 
   return `${anchor} Within this exact architecture: ${body} ${keepText}`;
