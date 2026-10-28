@@ -39,7 +39,7 @@ PAXOS = [
     ('bay_chamber_to_tholos', 'Across the bay',
      'From the Tholos’s court on the northern summit the eye crosses the bay to the Chamber on the summit of the middle section. Each hall faces the other across the water.'),
     ('chamber_exterior', 'The Chamber',
-     'A round hall of white ashlar ringed by unbased Doric columns, under one conical tiled roof with a lantern and a bronze finial. Its ornament is painted, as Greek buildings were: blue triglyphs, a red band below them, and a running key in blue round the drum. It has one doorway, closed by a door that can be locked. Statues stand on tall pedestals round the terrace; one has fallen.'),
+     'A round hall of white ashlar ringed by unbased Doric columns, under one conical tiled roof with a lantern and a bronze finial. Its ornament is painted, as Greek buildings were: blue triglyphs, a red band below them, and a running key in blue round the drum. It has one doorway, closed by a door that can be locked. Statues stand on tall pedestals round the terrace.'),
     ('chamber_aerial', 'The Chamber’s terrace',
      'A paved round terrace on the summit of the middle section. No road climbs to it: like a temple on an acropolis it is reached on foot, by stepped ways from the road beyond the oracle and from the city. Legislators wander in and out.'),
     ('chamber_interior', 'Inside the Chamber',
