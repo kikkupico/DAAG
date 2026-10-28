@@ -271,35 +271,90 @@ def get_sites(island):
         if d.get("chamber"):
             ch = d["chamber"]
             zs = ch["z"] + 1.02
-            add("chamber-interior", "The Chamber · Interior (Meridian)", ch,
+            face_ch = math.atan2(d["tholos"]["y"] - ch["y"], d["tholos"]["x"] - ch["x"]) if d.get("tholos") else 0.0
+
+            def place_ch(p):
+                c, s = math.cos(face_ch), math.sin(face_ch)
+                return [round(ch["x"] + p[0] * c - p[1] * s, 2), round(ch["y"] + p[0] * s + p[1] * c, 2), round(zs + p[2], 2)]
+
+            add("chamber-meridian", "Chamber · Meridian Line & Noon Light", ch,
                 cam=[ch["x"] + 0.7, ch["y"] - 7.0, zs + 2.3],
                 target=[ch["x"] - 0.1, ch["y"] + 4.0, zs + 0.5],
                 kind="interior", lens=17)
+            add("chamber-rostrum", "Chamber · Speaker's Rostrum & Scrolls", ch,
+                cam=place_ch([-7.3, 0.0, 1.6]), target=place_ch([9.0, 0.0, 1.3]),
+                kind="interior", lens=22)
+            add("chamber-synod", "Chamber · Synod Table & Hourglass", ch,
+                cam=place_ch([2.0, 2.5, 1.55]), target=place_ch([-1.46, -8.27, 1.0]),
+                kind="interior", lens=30)
+            add("chamber-messengers", "Chamber · Scribes & Messengers Hall", ch,
+                cam=place_ch([-5.82, 4.23, 1.65]), target=place_ch([5.0, -3.0, 1.0]),
+                kind="interior", lens=20)
+            add("chamber-benches", "Chamber · High Synod Benches", ch,
+                cam=place_ch([15.0, -26.0, 0.7]), target=place_ch([0.0, 0.0, 3.5]),
+                kind="interior", lens=28)
+
         if d.get("tholos"):
             th = d["tholos"]
-            a = th.get("face", 0.0) + math.pi * 0.92
-            tx, ty, tz = th["x"], th["y"], th["z"]
-            add("tholos-interior", "The Tholos · Interior (Council Hall)", th, th.get("face"),
-                cam=[tx + 6.6 * math.cos(a), ty + 6.6 * math.sin(a), tz + 0.6 + 1.7],
-                target=[tx + 1.0 * math.cos(th.get("face", 0.0)), ty + 1.0 * math.sin(th.get("face", 0.0)), tz + 1.2],
-                kind="interior", lens=18)
+            face_th = th.get("face", 0.0)
+
+            def place_th(p):
+                c, s = math.cos(face_th), math.sin(face_th)
+                return [round(th["x"] + p[0] * c - p[1] * s, 2), round(th["y"] + p[0] * s + p[1] * c, 2), round(th["z"] + p[2], 2)]
+
+            add("tholos-interior", "Tholos · Council Hall (Round Chamber)", th, face_th,
+                cam=place_th([-3.6, 0.4, 1.8]), target=place_th([2.5, 0.2, 1.5]),
+                kind="interior", lens=22)
+            add("tholos-podium", "Tholos · Speaker's Dais & Hearth", th, face_th,
+                cam=place_th([-2.2, -1.5, 1.8]), target=place_th([0.5, 0.1, 1.5]),
+                kind="interior", lens=28)
+            add("tholos-benches", "Tholos · Council Benches", th, face_th,
+                cam=place_th([5.57, 1.88, 1.5]), target=place_th([6.17, 4.44, 1.0]),
+                kind="interior", lens=32)
+            add("tholos-porch", "Tholos · Outer Porch & Colonnade", th, face_th,
+                cam=place_th([11.2, 0.9, 1.7]), target=place_th([2.5, 0.2, 1.5]),
+                kind="interior", lens=28)
+
+        if d.get("stoa"):
+            st = d["stoa"]
+            sa = st.get("ang", 0.0)
+            csa, ssa = math.cos(sa), math.sin(sa)
+
+            def place_st(px, py, pz):
+                return [round(st["x"] + px * csa - py * ssa, 2), round(st["y"] + px * ssa + py * csa, 2), round(st["z"] + pz, 2)]
+
+            add("stoa-inside", "Stoa · Inside Colonnade (North)", st, sa,
+                cam=place_st(8.0, -4.5, 1.7), target=place_st(0.0, -6.6, 3.2),
+                kind="interior", lens=20)
+            add("stoa-promenade", "Stoa · Shaded Promenade Gallery", st, sa,
+                cam=place_st(35.0, 2.5, 1.7), target=place_st(-30.0, 2.5, 1.7),
+                kind="interior", lens=24)
+            add("stoa-armillary", "Stoa · Armillary Sphere & Plinth", st, sa,
+                cam=place_st(0.0, 1.5, 1.7), target=place_st(0.0, -1.5, 2.05),
+                kind="interior", lens=28)
+            add("stoa-benches", "Stoa · Papyrus Boards & Wall Benches", st, sa,
+                cam=place_st(15.0, -3.5, 1.6), target=place_st(-15.0, -5.5, 1.5),
+                kind="interior", lens=28)
+
         if d.get("libraries"):
             libs = d["libraries"]
             l = min(libs, key=lambda x: abs(x["z"] - 40))
             la = l.get("face", 0.0) - math.pi / 2
             cla, sla = math.cos(la), math.sin(la)
-            lcam = [l["x"] + 1.6 * cla - 2.6 * sla, l["y"] + 1.6 * sla + 2.6 * cla, l["z"] + 1.85]
-            ltar = [l["x"] - 0.2 * cla - (-0.7) * sla, l["y"] - 0.2 * sla + (-0.7) * cla, l["z"] + 1.2]
-            add("library-interior", "Library · Interior (Scrolls & Pebble Boards)", l, l.get("face"),
-                cam=lcam, target=ltar, kind="interior", lens=22)
-        if d.get("stoa"):
-            st = d["stoa"]
-            sa = st.get("ang", 0.0)
-            csa, ssa = math.cos(sa), math.sin(sa)
-            stcam = [st["x"] + 8 * csa - 4.5 * ssa, st["y"] + 8 * ssa + 4.5 * csa, st["z"] + 1.7]
-            sttar = [st["x"] + 0 * csa - (-6.6) * ssa, st["y"] + 0 * ssa + (-6.6) * csa, st["z"] + 3.2]
-            add("stoa-inside", "Stoa · Inside Colonnade", st, sa,
-                cam=stcam, target=sttar, kind="interior", lens=20)
+
+            def place_lib(px, py, pz):
+                return [round(l["x"] + px * cla - py * sla, 2), round(l["y"] + px * sla + py * cla, 2), round(l["z"] + pz, 2)]
+
+            add("library-interior", "Library 7 · Scrolls & Armarium Hall", l, l.get("face"),
+                cam=place_lib(1.6, -2.6, 1.85), target=place_lib(-0.2, 0.7, 1.2),
+                kind="interior", lens=22)
+            add("library-pebbles", "Library 7 · Pebble Counting Board & Desk", l, l.get("face"),
+                cam=place_lib(0.0, 0.8, 1.75), target=place_lib(0.0, -0.6, 1.15),
+                kind="interior", lens=35)
+            add("library-annex", "Library 7 · Reading Room Annex", l, l.get("face"),
+                cam=place_lib(5.0, 1.5, 1.65), target=place_lib(7.2, -0.5, 1.2),
+                kind="interior", lens=28)
+
         if d.get("oracle"):
             ora = d["oracle"]
             add("oracle-interior", "Oracle · Inner Shrine & Altar", ora,

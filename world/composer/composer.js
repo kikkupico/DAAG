@@ -51,7 +51,7 @@ const state = {
 
   // Cast & Characters
   castData: { characters: [], sheets: {} },
-  selectedCast: ['legislator-man', 'paxos-messenger'],
+  selectedCast: [],
 
   // Capture & Prompt Studio
   capturedImageURL: null,
@@ -291,7 +291,7 @@ function setupRenderer() {
   renderer.toneMappingExposure = 1.15;
   dom.container.appendChild(renderer.domElement);
 
-  camera = new THREE.PerspectiveCamera(state.fov, window.innerWidth / window.innerHeight, 1, 80000);
+  camera = new THREE.PerspectiveCamera(state.fov, window.innerWidth / window.innerHeight, 0.1, 80000);
   camera.position.copy(blenderToThree([3000, -9000, 5500]));
   applyFocalLength(state.lens);
 }
@@ -1690,6 +1690,10 @@ async function switchDraft(id, { recapture = false } = {}) {
 
 function newShot() {
   state.draftId = null;
+  state.selectedCast = [];
+  updateCastSummaryUI();
+  renderCastDrawer();
+  updatePrompt();
   updateShotSwitch();
   showToast('New shot: it gets an id when you capture, render or save');
 }
