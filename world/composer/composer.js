@@ -2730,12 +2730,12 @@ function onKeyDown(e) {
       dom.helpModal.style.display = 'none';
       return;
     }
-    if (!dom.captureModal.classList.contains('hidden')) {
-      dom.captureModal.classList.add('hidden');
-      return;
-    }
     if (dom.castDrawer.classList.contains('open')) {
       dom.castDrawer.classList.remove('open');
+      return;
+    }
+    if (!dom.captureModal.classList.contains('hidden')) {
+      dom.captureModal.classList.add('hidden');
       return;
     }
     if (dom.shotsBrowserModal.style.display === 'flex') {
