@@ -4,7 +4,7 @@ import sys, os, math, time, importlib
 sys.path.insert(0, os.path.dirname(__file__))
 import bpy
 import numpy as np
-from blib import core, world
+from blib import core, world, detail
 from blib.mats import NT
 
 if '--' in sys.argv:
@@ -12,7 +12,7 @@ if '--' in sys.argv:
     mod = importlib.import_module(argv[0])
     names = argv[1].split(',')
     quality = argv[2] if len(argv) > 2 else 'preview'
-    OUT = os.path.join(core.ROOT, 'renders', {'preview': 'preview', 'check': 'check'}.get(quality, 'final'))
+    OUT = os.environ.get('RENDER_OUT') or os.path.join(core.ROOT, 'renders', {'preview': 'preview', 'check': 'check'}.get(quality, 'final'))
     os.makedirs(OUT, exist_ok=True)
 else:
     mod, names, quality, OUT = None, [], 'preview', None
@@ -243,6 +243,11 @@ if mod:
             s.cycles.adaptive_threshold = 0.01
         s.render.film_transparent = True              # the sky comes back in the compositor (see compositor)
         s.render.image_settings.color_mode = 'RGB'
+        # denser ground cover, and stones, where this camera looks (blib/detail.py)
+        dense = []
+        if sh.get('detail', True) and os.environ.get('DETAIL', '1') != '0':
+            dp = detail.for_scene(s)
+            dense = dp.add(s, cam) if dp else []
         for hide in sh.get('hide', []):
             for o in bpy.data.objects:
                 if o.name.startswith(hide):
@@ -275,4 +280,6 @@ if mod:
                     o.hide_render = False
         for ob in added:
             bpy.data.objects.remove(ob)
+        for ob in dense:
+            detail.remove(ob)
         print('SHOT', name, round(time.time() - t, 1), s.render.filepath)

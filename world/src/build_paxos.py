@@ -4,7 +4,7 @@ import sys, os, math, time
 sys.path.insert(0, os.path.dirname(__file__))
 import bpy
 import numpy as np
-from blib import core, world, populate, kit, buildings, protos_arch, props, mountain, road, scatter, classical, paxos_bld, veg, mats as M
+from blib import core, world, populate, kit, buildings, protos_arch, props, mountain, road, scatter, classical, paxos_bld, veg, solids, mats as M
 from blib.kit import T, Rz, Rx, Ry, S
 import paxos_veg
 
@@ -240,9 +240,12 @@ for nm, pts in sites['roads'].items():
 for i, pts in enumerate(sites['paths']):
     road.ribbon(f'path_{i:02d}', np.array(pts), 1.8, pm, C['terrain'], lift=0.04)
 
-# ------------------------------------------------------------------ vegetation
-if VEG > 0:
-    paxos_veg.vegetate(F, sites, VP, C['veg'], VEG)
 bank.build(P, C['instances'])
+
+# ------------------------------------------------------------------ vegetation, clear of floors, steps and walls
+floors = solids.Floors.build(F, solids.SOLID_COLLECTIONS)
+floors.save(os.path.join(core.BUILD, 'paxos.floors.npz'))
+if VEG > 0:
+    paxos_veg.vegetate(F, sites, VP, C['veg'], VEG, clear=floors)
 core.save_blend(os.path.join(core.BUILD, 'paxos.blend'))
 print('SAVED', round(time.time() - t0, 1))

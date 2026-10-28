@@ -47,7 +47,7 @@ def shots():
     S['chamber_aerial'] = dict(cam=pol(C, face + 2.4, 75, ch['z'] + 45), target=(ch['x'], ch['y'], ch['z'] + 4), lens=35, light='golden', sun_from=deg(face) + 120)
     zs = ch['z'] + 1.02
     # stand south of the centre and look north along the bronze meridian line to the pool of noon light
-    S['chamber_interior'] = dict(cam=(ch['x'] + 0.7, ch['y'] - 7.0, zs + 2.3), target=(ch['x'] - 0.1, ch['y'] + 4.0, zs + 0.5),
+    S['chamber_interior'] = dict(detail=False, cam=(ch['x'] + 0.7, ch['y'] - 7.0, zs + 2.3), target=(ch['x'] - 0.1, ch['y'] + 4.0, zs + 0.5),
                                  lens=17, light='noon', sun_from=180, light_override=dict(exposure=-0.9), samples=384,
                                  lights=[dict(type='SPOT', loc=(ch['x'], ch['y'] - 1.0, zs + 12.6), at=(ch['x'], ch['y'] + 4.5, zs), energy=5000, cone=10, soft=0.3, color=(1.0, 0.88, 0.7)),
                                          dict(type='AREA', loc=pol(C, face, 8.2, zs + 2.2), at=(ch['x'], ch['y'], zs + 1.0), energy=2000, size=2.2, size_y=4.0, color=(1.0, 0.88, 0.72)),
@@ -59,7 +59,7 @@ def shots():
     mid_ = ((th['x'] + hs_['x']) / 2, (th['y'] + hs_['y']) / 2)
     S['tholos_schedia'] = dict(cam=(hs_['x'] + 420, hs_['y'] - 900, 170), target=(mid_[0], mid_[1], 120), lens=34, light='morning', sun_from=deg(th['face']) + 90)
     a = th['face'] + math.pi * 0.92
-    S['tholos_interior'] = dict(cam=pol(T_, a, 6.6, th['z'] + 0.6 + 1.7), target=(th['x'] + 1.0 * math.cos(th['face']), th['y'] + 1.0 * math.sin(th['face']), th['z'] + 1.2),
+    S['tholos_interior'] = dict(detail=False, cam=pol(T_, a, 6.6, th['z'] + 0.6 + 1.7), target=(th['x'] + 1.0 * math.cos(th['face']), th['y'] + 1.0 * math.sin(th['face']), th['z'] + 1.2),
                                 lens=18, light='morning', sun_from=deg(th['face']) + 10, light_override=dict(exposure=0.4), samples=384,
                                 lights=[dict(type='SPOT', loc=(th['x'], th['y'], th['z'] + 11.5), at=(th['x'] + 0.6, th['y'], th['z']), energy=8000, cone=18, soft=0.4, color=(1.0, 0.9, 0.75)),
                                         dict(type='AREA', loc=pol(T_, th['face'], 7.4, th['z'] + 2.2), at=(th['x'], th['y'], th['z'] + 0.8), energy=1500, size=2.0, size_y=3.4, color=(1.0, 0.88, 0.72)),
@@ -72,14 +72,14 @@ def shots():
     S['library_exterior'] = dict(cam=loc(l, la, -7, 16, 3.2), target=loc(l, la, 1.0, 2, 2.6), lens=24, light='late', sun_from=deg(l['face']) + 40)
     libl = [dict(type='AREA', loc=loc(l, la, 0, 3.9, 2.0), at=loc(l, la, 0, -1, 1.0), energy=500, size=2.2, size_y=3.0, color=(1.0, 0.86, 0.68)),
             dict(type='AREA', loc=loc(l, la, 0, 0, 4.2), at=loc(l, la, 0, 0, 0), energy=150, size=6, size_y=5, color=(0.95, 0.9, 0.85))]
-    S['library_interior'] = dict(cam=loc(l, la, 1.6, 2.6, 1.85), target=loc(l, la, -0.2, -0.7, 1.2), lens=22, light='late', sun_from=deg(l['face']) + 10,
+    S['library_interior'] = dict(detail=False, cam=loc(l, la, 1.6, 2.6, 1.85), target=loc(l, la, -0.2, -0.7, 1.2), lens=22, light='late', sun_from=deg(l['face']) + 10,
                                  light_override=dict(exposure=0.3), samples=384, lights=libl)
-    S['pebble_board'] = dict(cam=loc(l, la, 0.25, 0.3, 1.75), target=loc(l, la, 0.0, -0.65, 1.2), lens=45, light='late', sun_from=deg(l['face']) + 10,
+    S['pebble_board'] = dict(detail=False, cam=loc(l, la, 0.25, 0.3, 1.75), target=loc(l, la, 0.0, -0.65, 1.2), lens=45, light='late', sun_from=deg(l['face']) + 10,
                              light_override=dict(exposure=0.3), dof=(1.05, 2.8), samples=384, lights=libl)
     st = SITES['stoa']; fg = SITES['festival']
     sa = st['ang']
     S['stoa'] = dict(cam=loc(st, sa, 38, 30, 3.0), target=loc(st, sa, 0, 0, 5.0), lens=26, light='golden', sun_from=deg(sa + math.pi / 2) - 30)
-    S['stoa_inside'] = dict(cam=loc(st, sa, 8, 4.5, 1.7), target=loc(st, sa, 0, -6.6, 3.2), lens=20, light='golden', sun_from=deg(sa + math.pi / 2) - 30,
+    S['stoa_inside'] = dict(detail=False, cam=loc(st, sa, 8, 4.5, 1.7), target=loc(st, sa, 0, -6.6, 3.2), lens=20, light='golden', sun_from=deg(sa + math.pi / 2) - 30,
                             light_override=dict(exposure=0.6))
     S['festival_ground'] = dict(cam=loc(fg, fg['ang'], -40, -22, 2.8), target=loc(fg, fg['ang'], 15, 30, 1.2), lens=28, light='late', sun_from=deg(sa) + 30)
     cl = [h for h in SITES['harbours'] if h['name'] == 'couriers'][0]
