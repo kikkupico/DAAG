@@ -96,7 +96,7 @@ for i, nm in enumerate(names):
     a = face + math.radians(-75 + i * 30)
     x = ch['x'] + 23 * math.cos(a); y = ch['y'] + 23 * math.sin(a)
     kc.push(T(0, 0, 0))
-    paxos_bld.pedestal(kc, x, y, ch['z'], h=1.8, face=a, fallen=(i == 3), statue=nm)
+    paxos_bld.pedestal(kc, x, y, ch['z'], h=1.8, face=a, statue=nm)
     kc.pop()
 kc.build('chamber', AM, C['chamber'])
 cyp_pts = []
