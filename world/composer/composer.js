@@ -662,7 +662,7 @@ function loadIslandModel(island, afterLoad = null) {
   loadSites(island);
 
   loader.load(
-    `/models/${island}.glb`,
+    `/models/${island}.glb?t=${Date.now()}`,
     (gltf) => {
       const model = gltf.scene;
       state.islandModel = model;

@@ -1196,6 +1196,8 @@ class ComposerHandler(SimpleHTTPRequestHandler):
                 self.send_header("Content-Range", f"bytes {start}-{end}/{file_size}")
                 self.send_header("Content-Length", str(length))
                 self.send_header("Last-Modified", self.date_time_string(stat.st_mtime))
+                self.send_header("Cache-Control", "no-cache, must-revalidate")
+                self.send_header("ETag", f'"{int(stat.st_mtime)}-{file_size}"')
                 self.end_headers()
 
                 with open(file_path, "rb") as f:
@@ -1216,6 +1218,8 @@ class ComposerHandler(SimpleHTTPRequestHandler):
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(file_size))
         self.send_header("Last-Modified", self.date_time_string(stat.st_mtime))
+        self.send_header("Cache-Control", "no-cache, must-revalidate")
+        self.send_header("ETag", f'"{int(stat.st_mtime)}-{file_size}"')
         self.end_headers()
 
         try:

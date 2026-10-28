@@ -196,9 +196,20 @@ def realize_chamber_pines(radius=180.0):
     return tris
 
 
+def realize_chamber_cypresses():
+    """Realize the curved cypress arc directly behind the Chamber terrace."""
+    ob = bpy.data.objects.get("chamber_cypresses")
+    if not ob or ob.type != "MESH":
+        return 0
+    tris = realize(ob, name_prefix="chamber_cypress")
+    print(f"REALIZED chamber cypresses: {tris} triangles")
+    return tris
+
+
 bake_terrain()
 realize_instances()
 realize_chamber_pines()
+realize_chamber_cypresses()
 
 for c in bpy.data.collections:
     if c.name == "_protos" or c.name.startswith("p_"):
