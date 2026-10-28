@@ -380,9 +380,16 @@ def sky(kind='sun', elevation=35, azimuth=210, hdri=None, strength=1.0, rotation
             return w
     st = nt.n('ShaderNodeTexSky', sky_type='MULTIPLE_SCATTERING')
     st.sun_elevation = math.radians(elevation)
-    # Blender's sun_rotation: 0 = sun towards +Y? we convert compass bearing (from north, clockwise)
-    st.sun_rotation = math.radians(90 - azimuth) - math.pi / 2 + math.pi / 2
-    st.sun_rotation = math.radians((-azimuth) % 360)
+    # Blender's sun_rotation: 0 = North (+Y), 90 = East (+X), 180 = South (-Y), 270 = West (-X)
+    st.sun_rotation = math.radians(azimuth % 360)
+    rad_az = math.radians(azimuth)
+    rad_el = math.radians(elevation)
+    if hasattr(st, 'sun_direction'):
+        st.sun_direction = (
+            math.sin(rad_az) * math.cos(rad_el),
+            math.cos(rad_az) * math.cos(rad_el),
+            math.sin(rad_el)
+        )
     st.altitude = 50
     for attr, val in (('air_density', air), ('aerosol_density', turbidity_dust), ('dust_density', turbidity_dust),
                       ('ozone_density', ozone)):

@@ -82,7 +82,7 @@ def set_light(p, sun_from, shot=None):
         if hdr_path:
             hdr_name = os.path.splitext(os.path.basename(hdr_path))[0]
             cur = hdri_sun_bearing(hdr_name)
-            world.sky(hdri=hdr_name, strength=p['strength'], rotation=(cur - sun_from))
+            world.sky(hdri=hdr_name, strength=p['strength'], rotation=(sun_from - cur))
         else:
             print(f"Warning: No HDRI maps available for '{p.get('hdri')}', falling back to sun sky")
             world.sky(elevation=20, azimuth=sun_from, strength=p.get('strength', 1.0))
