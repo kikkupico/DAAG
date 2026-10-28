@@ -94,7 +94,7 @@ def euler_matrices(e):
     return rz @ ry @ rx
 
 
-def realize(ob):
+def realize(ob, mask=None, name_prefix=None):
     """Copies of the prototypes at the instancer's points (rot, scl, var attributes), as real meshes."""
     me = ob.data
     n = len(me.vertices)
@@ -118,11 +118,14 @@ def realize(ob):
     which = attr["var"] % len(protos)
     R = euler_matrices(attr["rot"].astype(np.float64))
     made = 0
+    prefix = name_prefix or ob.name
     for k, proto in enumerate(protos):
         sel = np.nonzero(which == k)[0]
+        if mask is not None:
+            sel = np.intersect1d(sel, np.nonzero(mask)[0])
         pm = proto.data
         pm.calc_loop_triangles()
-        if not len(sel) or not len(pm.loop_triangles) or len(sel) * len(pm.loop_triangles) > MAX_TRIS:
+        if not len(sel) or not len(pm.loop_triangles) or (mask is None and len(sel) * len(pm.loop_triangles) > MAX_TRIS):
             continue
         m = len(pm.vertices)
         V = np.empty(m * 3, np.float32)
@@ -135,7 +138,7 @@ def realize(ob):
         pm.loop_triangles.foreach_get("material_index", M)
         verts = np.einsum("nij,mj->nmi", R[sel], V) * attr["scl"][sel][:, None, :] + pts[sel][:, None, :]
         tris = (T[None] + (np.arange(len(sel)) * m)[:, None, None]).reshape(-1, 3)
-        out = bpy.data.meshes.new(f"{ob.name}_{k}")
+        out = bpy.data.meshes.new(f"{prefix}_{k}")
         out.vertices.add(len(sel) * m)
         out.vertices.foreach_set("co", verts.reshape(-1, 3).astype(np.float32).ravel())
         out.loops.add(len(tris) * 3)
@@ -148,11 +151,12 @@ def realize(ob):
             out.materials.append(mat)
         out.update()
         out.shade_smooth()
-        new = bpy.data.objects.new(f"{ob.name}_{k}", out)
+        new = bpy.data.objects.new(f"{prefix}_{k}", out)
         (ob.users_collection[0] if ob.users_collection else bpy.context.scene.collection).objects.link(new)
         made += len(tris)
-    ob.hide_viewport = True
-    ob.hide_set(True)
+    if mask is None:
+        ob.hide_viewport = True
+        ob.hide_set(True)
     return made
 
 
@@ -165,8 +169,36 @@ def realize_instances():
         print("REALIZED", ob.name, realize(ob), "triangles")
 
 
+def realize_chamber_pines(radius=180.0):
+    """Realize only the pines around the Chamber so they appear in Three.js Composer view."""
+    pines_ob = bpy.data.objects.get("pines")
+    if not pines_ob or pines_ob.type != "MESH":
+        return 0
+    sites_path = os.path.join(TERRAIN, "sites.json")
+    if not os.path.isfile(sites_path):
+        return 0
+    sites = json.load(open(sites_path))
+    ch = sites.get("chamber")
+    if not ch:
+        return 0
+    me = pines_ob.data
+    n = len(me.vertices)
+    pts = np.empty(n * 3, np.float32)
+    me.vertices.foreach_get("co", pts)
+    pts = pts.reshape(-1, 3)
+    dists = np.hypot(pts[:, 0] - ch["x"], pts[:, 1] - ch["y"])
+    mask = dists < radius
+    count = int(np.sum(mask))
+    if count == 0:
+        return 0
+    tris = realize(pines_ob, mask=mask, name_prefix="chamber_pine")
+    print(f"REALIZED chamber pines ({count} trees within {radius}m): {tris} triangles")
+    return tris
+
+
 bake_terrain()
 realize_instances()
+realize_chamber_pines()
 
 for c in bpy.data.collections:
     if c.name == "_protos" or c.name.startswith("p_"):

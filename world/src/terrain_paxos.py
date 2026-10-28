@@ -215,16 +215,16 @@ sites['harbours'].append(sh_stoa)
 # the couriers' landing in the notch at the southern tip
 cl = harbour('couriers', (2000.0, -4200), (0.0, -1.0), quay_w=40, town=False, mole=False, shelf=False)
 sites['harbours'].append(cl)
-# the stoa and the festival ground behind its quay
+# the festival ground in front with sea views, and the stoa building moved back behind it
 out = np.array(sh_stoa['out']); tan = np.array([out[1], -out[0]])
-sp = np.array([sh_stoa['x'], sh_stoa['y']]) - out * 34
-zs = 3.0
-carve_rect(g, sp[0], sp[1], sh_stoa['ang'], 70, 12, zs, fall=24, mask=masks['built'])
+fg = np.array([sh_stoa['x'], sh_stoa['y']]) - out * 44
+zf_ = 3.0
+carve_rect(g, fg[0], fg[1], sh_stoa['ang'], 75, 36, zf_, fall=24, mask=masks['built'])
+sites['festival'] = dict(x=fg[0], y=fg[1], z=zf_, ang=sh_stoa['ang'], w=140, d=68)
+sp = np.array([sh_stoa['x'], sh_stoa['y']]) - out * 105
+zs = 4.0
+carve_rect(g, sp[0], sp[1], sh_stoa['ang'], 70, 14, zs, fall=24, mask=masks['built'])
 sites['stoa'] = dict(x=sp[0], y=sp[1], z=zs, ang=sh_stoa['ang'], len=120)
-fg = np.array([sh_stoa['x'], sh_stoa['y']]) - out * 95
-zf_ = 4.0
-carve_rect(g, fg[0], fg[1], sh_stoa['ang'], 75, 40, zf_, fall=36, mask=masks['built'])
-sites['festival'] = dict(x=fg[0], y=fg[1], z=zf_, ang=sh_stoa['ang'], w=140, d=72)
 
 # the ferry across the inlet: two landing stages facing each other
 mid = INLET[1]

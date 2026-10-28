@@ -81,7 +81,7 @@ def shots():
     S['stoa'] = dict(cam=loc(st, sa, 38, 30, 3.0), target=loc(st, sa, 0, 0, 5.0), lens=26, light='golden', sun_from=deg(sa + math.pi / 2) - 30)
     S['stoa_inside'] = dict(cam=loc(st, sa, 8, 4.5, 1.7), target=loc(st, sa, 0, -6.6, 3.2), lens=20, light='golden', sun_from=deg(sa + math.pi / 2) - 30,
                             light_override=dict(exposure=0.6))
-    S['festival_ground'] = dict(cam=loc(st, sa, -70, 60, 40), target=loc(fg, fg['ang'], 0, 0, 0), lens=32, light='late', sun_from=deg(sa) + 30)
+    S['festival_ground'] = dict(cam=loc(fg, fg['ang'], -40, -22, 2.8), target=loc(fg, fg['ang'], 15, 30, 1.2), lens=28, light='late', sun_from=deg(sa) + 30)
     cl = [h for h in SITES['harbours'] if h['name'] == 'couriers'][0]
     o = np.array(cl['out'])
     cc = (cl['x'] + o[0] * 160 + o[1] * 40, cl['y'] + o[1] * 160 - o[0] * 40)
