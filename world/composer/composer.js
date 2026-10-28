@@ -1351,14 +1351,18 @@ async function copyImageUrlToClipboard(imgUrl) {
 }
 
 // --- 9. AI Prompt Generator ---
-/** The prompt for the style and cast on screen; labels=false for models that copy printed names (FLUX). */
-function currentPrompt({ labels = true } = {}) {
+/** The prompt for the style and cast on screen; labels=false for clean cast crops without printed banners. */
+function currentPrompt({ labels = false } = {}) {
+  const { shots } = state.shotsData || { shots: {} };
+  const current = (shots && shots[state.shotId]) || {};
+  const interior = Boolean(current.interior || (current.base && current.base.includes('interior')));
   return buildPrompt({
     style: state.promptStyle,
     action: state.promptAction,
     others: state.promptOthers,
     cast: state.selectedCast,
-    labels
+    labels,
+    interior
   });
 }
 

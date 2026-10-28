@@ -56,27 +56,52 @@ CAST = WORLD / "cast/out" / os.environ.get("CAST", "nb2")
 FONTS = ["/System/Library/Fonts/Supplemental/Arial.ttf", "/System/Library/Fonts/Helvetica.ttc",
          "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"]
 ASPECTS = ["1:1", "2:3", "3:2", "3:4", "4:3", "4:5", "5:4", "9:16", "16:9", "21:9"]
-KEEP = ("Image 1 is a rough 3D render of the place, a guide to what is where and nothing more. Turn it into a real "
-        "photograph of the same place: keep its camera, framing and light, and the position, shape and size of every "
-        "building, hill, tree, bush and object, but repaint every surface with the detail of a real photograph instead of "
-        "copying the render's flat colours, smooth slopes, speckled foliage and repeating textures. The ground is worn "
-        "earth and gravel with stones, ruts, footprints and dust, merging into its verges with no hard straight edge. "
-        "Hillsides and banks are dry Mediterranean ground: stony soil, pale limestone breaking through, dry grass and low "
-        "scrub. Trees and bushes have real leaves, branches and gaps. Plaster walls show stains, scuffs and patching; "
-        "roof tiles vary in tone and sit unevenly. Hellenistic Greece, 3rd century BC; nothing modern. Every building is "
-        "in daily use, clean and well kept: no ruin, no weeds between the stones. Nothing is added that image 1 does "
-        "not show: no other buildings, trees or hills. People at true scale, with real shadows on the ground.")
+KEEP_EXTERIOR = (
+    "Image 1 is a 3D previs guide for camera framing, focal perspective, and spatial layout. Turn it into a real "
+    "photograph of the same place: keep its camera, framing and light, and the position, shape and size of every "
+    "building, hill, tree, bush and object, repainting every surface with the authentic detail of a real photograph. "
+    "Authentic ancient Hellenistic Greece, 3rd century BC. Every building is in daily civic use, clean and well kept, "
+    "with dressed ashlar limestone masonry and natural tile. The ground is worn earth and gravel with scattered stones, "
+    "ruts, footprints and dust, merging into verges with dry grass and low Mediterranean scrub. Trees and bushes have "
+    "natural leaves, branches and growth. Render only the structures, trees, and terrain visible in image 1. People at "
+    "true scale, with real cast shadows on the ground."
+)
+KEEP_INTERIOR = (
+    "Image 1 is a 3D previs guide for camera framing, perspective, and architectural layout. Turn it into a real "
+    "photograph of the enclosed interior space: keep its camera, framing and light, and the position, shape and size "
+    "of every wall, column, bench, doorway, and interior object. Solid architectural enclosure: finely dressed ashlar "
+    "limestone masonry, smooth plaster walls, and worn flagstone flooring showing natural foot-traffic wear. Natural "
+    "daylight streams through open doorways and openings, illuminating the interior surfaces with soft ambient light. "
+    "Authentic classical civic interior: genuine papyrus scrolls, wax writing tablets, and bronze fittings. "
+    "Render strictly the enclosed architectural interior shown in image 1. People at true scale, with natural interior "
+    "contact shadows."
+)
 KEEP_LIGNE_CLAIRE = (
-    "Draw image 1 as a Franco-Belgian ligne claire comic illustration in the manner of Hergé and Edgar P. Jacobs: clean "
-    "black ink outlines of even weight, flat areas of clear colour with no gradients, no hatching and very little "
-    "shading, detailed accurate architecture, readable figures. Keep its camera, framing, buildings, objects and layout "
-    "exactly. Hellenistic Greece, 3rd century BC; nothing modern. Every building is in daily use, clean and well kept. "
-    "Everything behind the people stays as it is in image 1, the same hills, trees, bushes and buildings, with nothing "
-    "built that image 1 does not show. Daylight; people at true scale, with their shadows on the ground. One single "
-    "illustration filling the frame: no lettering, no title, no speech balloons, no captions, no logos, no signature, "
-    "no panel border.")
+    "Draw image 1 as a Franco-Belgian ligne claire comic illustration in the classic manner of Hergé and Edgar P. Jacobs: "
+    "clean black ink outlines of even weight defining all architectural lines, figures, and objects, with flat areas of "
+    "clear matte colour without gradients or cross-hatching. Keep the camera, framing, buildings, and layout of image 1 "
+    "exactly. Authentic ancient Hellenistic Greece, 3rd century BC. Every building is in daily use and well kept. People at "
+    "true scale, with clear graphic readability. One single illustration filling the frame: no lettering, no title, no "
+    "speech balloons, no captions, no logos, no signature, no panel border."
+)
+ANCHOR_EXTERIOR = (
+    "A real photograph repainting the exact 3D architecture, landscape, and perspective of Image 1 without adding, "
+    "moving, or removing any buildings, walls, columns, rocks, or terrain. Any ground shown clear in Image 1 must "
+    "remain completely clear and free of added structures or platforms."
+)
+ANCHOR_INTERIOR = (
+    "A real photograph repainting the exact 3D architecture of Image 1 without adding, moving, or removing any walls, "
+    "columns, benches, or doorways. The open floor shown in Image 1 must remain completely clear and free of added "
+    "furniture or freestanding benches. Seated figures must sit strictly on the benches already built into the "
+    "architecture in Image 1, never on newly generated benches."
+)
+ANCHOR_LIGNE_CLAIRE = (
+    "A Franco-Belgian ligne claire comic illustration repainting the exact 3D architecture and composition of Image 1 "
+    "without adding, moving, or removing any buildings, walls, columns, or furniture."
+)
+KEEP = KEEP_EXTERIOR
 # style: (the prompt that comes first, what the picture is called in the prompt, the output's name)
-STYLES = {"photo": (KEEP, "photograph", "scene"),
+STYLES = {"photo": (KEEP_EXTERIOR, "photograph", "scene"),
           "ligne-claire": (KEEP_LIGNE_CLAIRE, "illustration", "ligne-claire")}
 CAST_NOTE = ("{which} reference photographs of people, one person each{printed}: {listing}. "
              "Put into the {picture} only these people, each with exactly the face, build and clothes of their "
@@ -157,7 +182,11 @@ def labelled(im, name):
     return out
 
 
-def request(previs, style="photo", labels=True):
+def is_interior(entry):
+    return bool(entry.get("interior") or "interior" in entry.get("base", ""))
+
+
+def request(previs, style="photo", labels=False):
     """What one previs sends: (prompt, images as parts, aspect, where the picture goes, its record).
     labels=False sends the cast crops without their names printed, for models that copy the text."""
     source, entry = shot_of(previs)
@@ -167,21 +196,34 @@ def request(previs, style="photo", labels=True):
     if missing:
         sys.exit(f"{previs.relative_to(REPO)}: no cast picture for {missing} in {provenance.rel(CAST)}")
     keep, picture, out = STYLES[style]
-    prompt = entry["prompt"] if entry.get("keep") is False else keep + " " + entry["prompt"]
+    action = entry["prompt"].strip()
+    n, others = len(ids), entry.get("others")
+    if others:
+        headcount = f" Besides the {n} named, the only other people in the {picture} are these: {others.strip()}" if n else \
+                    f" The only people in the {picture} are these: {others.strip()}"
+    elif n > 0:
+        headcount = f" There {'is' if n == 1 else 'are'} exactly {n} {'person' if n == 1 else 'people'} in the {picture}; nobody else."
+    else:
+        headcount = f" There is nobody in the {picture}."
+
+    cast_block = ""
     if ids:
         which = "Image 2 is a" if len(ids) == 1 else f"Images 2 to {len(ids) + 1} are"
         listing = ", ".join(f"image {k + 2} is {i}" for k, i in enumerate(ids))
-        prompt += " " + CAST_NOTE.format(which=which, listing=listing, picture=picture,
-                                          printed=", with their name printed below" if labels else "",
-                                          labels=f" The names are labels only and appear nowhere in the {picture}." if labels else "",
-                                          drawn=", drawn in the same ligne claire style" if style != "photo" else "").replace("a reference photographs", "a reference photograph")
-    n, others = len(ids), entry.get("others")
-    if others:  # people the shot only describes: a crowd, passers-by
-        prompt += f" Besides the {n} named, the only other people in the {picture} are these: {others}" if n else \
-                  f" The only people in the {picture} are these: {others}"
+        cast_block = " " + CAST_NOTE.format(
+            which=which, listing=listing, picture=picture,
+            printed=", with their name printed below" if labels else "",
+            labels=f" The names are labels only and appear nowhere in the {picture}." if labels else "",
+            drawn=", drawn in the same ligne claire style" if style != "photo" else ""
+        ).replace("a reference photographs", "a reference photograph")
+
+    if entry.get("keep") is False:
+        prompt = f"{action}{headcount}{cast_block}"
     else:
-        prompt += (f" There {'is' if n == 1 else 'are'} exactly {n} {'person' if n == 1 else 'people'} in the {picture}; "
-                   "nobody else." if n else f" There is nobody in the {picture}.")
+        is_int = is_interior(entry)
+        anchor = ANCHOR_LIGNE_CLAIRE if style == "ligne-claire" else (ANCHOR_INTERIOR if is_int else ANCHOR_EXTERIOR)
+        keep_text = KEEP_LIGNE_CLAIRE if style == "ligne-claire" else (KEEP_INTERIOR if is_int else KEEP_EXTERIOR)
+        prompt = f"{anchor} Within this exact architecture: {action}{headcount}{cast_block} {keep_text}"
     images = [part(previs, 1920)] + [cast_part(p, i, labels) for i, p in zip(ids, cast)]
     aspect = aspect_of(previs)
     scene = provenance.record(
