@@ -4,7 +4,7 @@ import sys, os, math, time
 sys.path.insert(0, os.path.dirname(__file__))
 import bpy
 import numpy as np
-from blib import core, world, populate, kit, buildings, protos_arch, props, mountain, road, scatter
+from blib import core, world, populate, kit, buildings, protos_arch, props, mountain, road, scatter, solids
 from blib.kit import T, Rz, Rx, Ry, S
 import arche_veg
 
@@ -153,11 +153,13 @@ for cp in sites['camps']:
 km.build('mountain_sites', AM, C['mountain'])
 print('MOUNTAIN', round(time.time() - t0, 1))
 
-# ------------------------------------------------------------------ vegetation
-if VEG > 0:
-    arche_veg.vegetate(F, sites, VP, C['veg'], VEG)
-
 bank.build(P, C['instances'])
+
+# ------------------------------------------------------------------ vegetation, clear of floors, steps and walls
+floors = solids.Floors.build(F, solids.SOLID_COLLECTIONS)
+floors.save(os.path.join(core.BUILD, 'arche.floors.npz'))
+if VEG > 0:
+    arche_veg.vegetate(F, sites, VP, C['veg'], VEG, clear=floors)
 print('BUILD DONE', round(time.time() - t0, 1))
 import json
 json.dump({k_: v for k_, v in sites.items()}, open(os.path.join(core.BUILD, 'arche_sites_built.json'), 'w'), default=lambda o: o.tolist() if hasattr(o, 'tolist') else str(o))

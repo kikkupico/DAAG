@@ -41,7 +41,7 @@ def shots():
     S['port3_aerial'] = dict(cam=at(3, -330, -260, 150), target=at(3, 60, 10, 0), lens=32, light='morning', sun_from=deg(b3) + 40)
     S['house3_portico'] = dict(cam=at(3, 19.5, 22, 4.4), target=at(3, 27, -6, 2.8), lens=24, light='morning', sun_from=deg(b3) - 30)
     board_v = -31 + 13 + 5.2 + 1.35
-    S['house3_board'] = dict(cam=at(3, 27.2, board_v + 0.8, 5.05), target=at(3, 29.7, board_v, 5.15), lens=40, light='morning',
+    S['house3_board'] = dict(detail=False, cam=at(3, 27.2, board_v + 0.8, 5.05), target=at(3, 29.7, board_v, 5.15), lens=40, light='morning',
                              sun_from=deg(b3) - 30, dof=(3.0, 4.0))
     c2, o2, t2, b2 = port(2)
     S['port2_aerial'] = dict(cam=at(2, -260, 300, 170), target=at(2, 50, 40, 0), lens=30, light='golden', sun_from=300)

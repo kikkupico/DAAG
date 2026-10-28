@@ -116,4 +116,5 @@ class Floors:
         return ~bad
 
 
-SOLID_COLLECTIONS = ('buildings', 'harbour', 'instances', 'chamber', 'tholos', 'oracle', 'libraries', 'stoa', 'props')
+SOLID_COLLECTIONS = ('buildings', 'harbour', 'mountain', 'instances', 'chamber', 'tholos', 'oracle', 'libraries', 'stoa',
+                     'props')
