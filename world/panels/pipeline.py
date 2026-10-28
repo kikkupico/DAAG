@@ -20,7 +20,8 @@ the prompt says nobody else is there.
 Two styles: a photograph (the default) or, with --style ligne-claire, a Franco-Belgian ligne claire
 illustration drawn straight from the previs, everything else the same. The shot's prompt is appended
 to the style's KEEP, which turns the previs into that style without moving anything, and
-is followed by a note saying which image is whom, and a head count; a shot with "keep": false sends
+is followed by a note saying which image is whom, a head count, and the time of day and weather of the shot's
+light preset (LIGHTS, its own light or its base shot's); a shot with "keep": false sends
 its prompt without KEEP. The aspect is the previs's. Output: scene-<version>.png, or
 ligne-claire-<version>.png, beside the previs, at the size the model returns, with its record inside it (world/provenance.py): the commit (the prompt
 and the crop are this script's at that commit, with the shot's own prompt), the shot, the model and
@@ -60,7 +61,7 @@ KEEP_EXTERIOR = (
     "Image 1 is a 3D previs guide for camera framing, focal perspective, and spatial layout. Turn it into a real "
     "photograph of the same place: keep its camera, framing and light, and the position, shape and size of every "
     "building, hill, tree, bush and object, repainting every surface with the authentic detail of a real photograph. "
-    "Authentic ancient Hellenistic Greece, 3rd century BC. Every building is in daily civic use, clean and well kept, "
+    "Every building is in daily civic use, clean and well kept, "
     "with dressed ashlar limestone masonry and natural tile. The ground is worn earth and gravel with scattered stones, "
     "ruts, footprints and dust, merging into verges with dry grass and low Mediterranean scrub. Trees and bushes have "
     "natural leaves, branches and growth. Render only the structures, trees, and terrain visible in image 1. People at "
@@ -70,9 +71,8 @@ KEEP_INTERIOR = (
     "Image 1 is a 3D previs guide for camera framing, perspective, and architectural layout. Turn it into a real "
     "photograph of the enclosed interior space: keep its camera, framing and light, and the position, shape and size "
     "of every wall, column, bench, doorway, and interior object. Solid architectural enclosure: finely dressed ashlar "
-    "limestone masonry, smooth plaster walls, and worn flagstone flooring showing natural foot-traffic wear. Natural "
-    "daylight streams through open doorways and openings, illuminating the interior surfaces with soft ambient light. "
-    "Authentic classical civic interior: genuine papyrus scrolls, wax writing tablets, and bronze fittings. "
+    "limestone masonry, smooth plaster walls, and worn flagstone flooring showing natural foot-traffic wear. The light "
+    "outside comes in through open doorways and openings and lights the interior surfaces softly. "
     "Render strictly the enclosed architectural interior shown in image 1. People at true scale, with natural interior "
     "contact shadows."
 )
@@ -83,7 +83,7 @@ KEEP_LIGNE_CLAIRE = (
     "zero sketchiness and no cross-hatching. Flat, unshaded gouache color planes with clean matte tones; no "
     "photographic gradients, blurs, or halftone dots. Cast shadows are flat, hard-edged geometric shapes filled "
     "with a single uniform darker tone. Keep the camera, framing, buildings, and layout of image 1 exactly. "
-    "Authentic ancient Hellenistic Greece, 3rd century BC. Every building is in daily use and well kept. Figures at "
+    "Every building is in daily use and well kept. Figures at "
     "true scale with expressive, clear graphic readability. One single illustration filling the frame: no lettering, "
     "no title, no speech balloons, no sound effects, no captions, no logos, no signature, no panel border."
 )
@@ -106,6 +106,25 @@ KEEP = KEEP_EXTERIOR
 # style: (the prompt that comes first, what the picture is called in the prompt, the output's name)
 STYLES = {"photo": (KEEP_EXTERIOR, "photograph", "scene"),
           "ligne-claire": (KEEP_LIGNE_CLAIRE, "illustration", "ligne-claire")}
+# render.py's light presets as the picture should show them, so the time of day and weather follow the previs
+LIGHTS = {
+    "morning": "Clear morning: the sun fairly low in a cloudless pale blue sky, fresh soft light, long shadows and a light "
+               "haze in the distance.",
+    "golden": "Golden hour: the sun just above the horizon in a cloudless sky, warm amber light raking across every surface, "
+              "very long shadows and a warm haze in the distance.",
+    "late": "Late afternoon on a clear day: the sun low, warm light, long shadows and a soft haze in the distance.",
+    "noon": "Midday in summer: the sun high in a clear deep blue sky, bright hard light, short dark shadows under things.",
+    "overcast": "A fully overcast day: an even grey sky with no sun, soft light with no cast shadows, muted colours and a "
+                "grey haze in the distance.",
+    "cloudy_sun": "A bright day with scattered white clouds: sunshine between the clouds, clear shadows, blue sky.",
+    "evening_cloud": "Sunset under a heavily clouded grey sky: the sun hidden, dim warm light low on the horizon, soft "
+                     "shadows and muted colours.",
+    "dusk": "Dusk just after sunset: the sun below the horizon, a pale pink and lilac afterglow sky, dim soft light with no "
+            "sun shadows.",
+    "moonlit": "Night under a bright high moon in a clear starry sky: cool silvery-blue moonlight, deep soft shadows, dark "
+               "and desaturated colours; no sunlight and no daylight anywhere.",
+}
+LIGHT_NOTE = "Time of day and weather, as in image 1. {}"
 CAST_NOTE = ("{which} reference photographs of people, one person each{printed}: {listing}. "
              "Put into the {picture} only these people, each with exactly the face, build and clothes of their "
              "reference{drawn}.{labels}")
@@ -185,6 +204,25 @@ def labelled(im, name):
     return out
 
 
+def light_of(entry, island=None):
+    """The light preset a shot renders with: its own, its base shot's, or render.py's default (morning)."""
+    if entry.get("light"):
+        return entry["light"]
+    if entry.get("base"):
+        try:
+            sys.path.insert(0, str(WORLD / "src"))
+            import importlib
+            return importlib.import_module(f"shots_{island or entry['island']}").shots()[entry["base"]].get("light", "morning")
+        except Exception:
+            return None
+    return "morning"
+
+
+def light_note(light):
+    """The sentence on time of day and weather for a light preset, with a leading space; empty if unknown."""
+    return f" {LIGHT_NOTE.format(LIGHTS[light])}" if light in LIGHTS else ""
+
+
 def is_interior(entry):
     return bool(entry.get("interior") or "interior" in entry.get("base", ""))
 
@@ -220,13 +258,14 @@ def request(previs, style="photo", labels=False):
             drawn=", translated into this ligne claire comic style with expressive ink linework and matching flat-coloured clothes" if style != "photo" else ""
         ).replace("a reference photographs", "a reference photograph")
 
+    light = light_note(light_of(entry))
     if entry.get("keep") is False:
-        prompt = f"{action}{headcount}{cast_block}"
+        prompt = f"{action}{headcount}{cast_block}{light}"
     else:
         is_int = is_interior(entry)
         anchor = ANCHOR_LIGNE_CLAIRE if style == "ligne-claire" else (ANCHOR_INTERIOR if is_int else ANCHOR_EXTERIOR)
         keep_text = KEEP_LIGNE_CLAIRE if style == "ligne-claire" else (KEEP_INTERIOR if is_int else KEEP_EXTERIOR)
-        prompt = f"{anchor} Within this exact architecture: {action}{headcount}{cast_block} {keep_text}"
+        prompt = f"{anchor} Within this exact architecture: {action}{headcount}{cast_block}{light} {keep_text}"
     images = [part(previs, 1920)] + [cast_part(p, i, labels) for i, p in zip(ids, cast)]
     aspect = aspect_of(previs)
     scene = provenance.record(

@@ -30,7 +30,7 @@ MODELS = [
 HDRIS = [
     'qwantani_late_afternoon_puresky', 'kloofendal_48d_partly_cloudy_puresky',
     'kloofendal_overcast_puresky', 'qwantani_dusk_2_puresky', 'syferfontein_6d_clear_puresky',
-    'qwantani_noon_puresky', 'belfast_sunset_puresky',
+    'qwantani_noon_puresky', 'belfast_sunset_puresky', 'qwantani_moon_noon_puresky',
 ]
 MAPS = {'Diffuse': 'diff', 'nor_gl': 'nor', 'Rough': 'rough', 'Displacement': 'disp', 'AO': 'ao'}
 

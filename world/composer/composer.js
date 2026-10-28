@@ -33,7 +33,7 @@ const state = {
   roofsLifted: false,
 
   // Environment & Light
-  timeOfDay: 'golden',  // 'morning', 'golden', 'noon', 'overcast', 'late', 'dusk'
+  timeOfDay: 'golden',  // a render.py light preset: 'morning', 'golden', 'noon', 'overcast', 'late', 'moonlit', ...
   sunAzimuth: 250,      // degrees (0 = North, 90 = East, 180 = South, 270 = West)
   sunElevation: 24,     // degrees
   sunIntensity: 1.5,    // the viewport's own scale: 1.5 is the light preset as it is
@@ -472,7 +472,7 @@ function aimSun() {
 }
 
 // A light preset's own compass bearing for the sun in the viewport (render.py takes the bearing from the shot)
-const PRESET_BEARING = { golden: 250, morning: 100, noon: 180, late: 245, overcast: 210, cloudy_sun: 200, evening_cloud: 250, dusk: 270 };
+const PRESET_BEARING = { golden: 250, morning: 100, noon: 180, late: 245, overcast: 210, cloudy_sun: 200, evening_cloud: 250, dusk: 270, moonlit: 120 };
 
 /** Select a time of day or weather as render.py has it: its sun elevation (a sun sky only), the sun at
  *  the preset's own strength and its own haze. The sliders are offsets from that. */
@@ -564,7 +564,14 @@ function applyTimeOfDayAtmosphere() {
       lightColor = 0xf0b080;
       fogCol = 0xc89478;
       break;
-    case 'dusk':
+    case 'moonlit':
+      skyTop = 0x0c1626;
+      skyHorizon = 0x2a3a52;
+      skyGround = 0x121c2a;
+      lightColor = 0x9fb4d6;
+      fogCol = 0x1e2a3c;
+      break;
+    case 'dusk':                  // no longer a button, but shots made with it still load
       skyTop = 0x0f1c2c;
       skyHorizon = 0x364962;
       skyGround = 0x1a2636;
@@ -1464,7 +1471,8 @@ function currentPrompt({ labels = false } = {}) {
     others: state.promptOthers,
     cast: state.selectedCast,
     labels,
-    interior
+    interior,
+    light: state.timeOfDay       // the render's light preset, so the picture keeps the previs's time of day and weather
   });
 }
 
@@ -2390,6 +2398,7 @@ function setupEventListeners() {
       btn.classList.add('active');
       state.timeOfDay = btn.dataset.tod;
       applyLightPreset(btn.dataset.tod);
+      updatePrompt();
       dom.sunAzimuthSlider.value = state.sunAzimuth;
       dom.sunAzimuthVal.textContent = `${state.sunAzimuth}° · ${compassHeading(state.sunAzimuth)}`;
       dom.sunElevationSlider.value = state.sunElevation;
