@@ -381,7 +381,7 @@ def pottery(name, base=(0.48, 0.25, 0.15, 1), var=0.15):
     return mm
 
 
-def stone_rt(name, tex, target, scale=1.2, bump=0.5, var=0.1, contrast=1.0, ao=True):
+def stone_rt(name, tex, target, scale=1.2, bump=0.5, var=0.1, contrast=1.0, ao=True, rough=None):
     """Stone with a scanned texture's detail but a chosen albedo."""
     m, nt = new_mat(name)
     if nt is None:
@@ -395,7 +395,8 @@ def stone_rt(name, tex, target, scale=1.2, bump=0.5, var=0.1, contrast=1.0, ao=T
     if ao:
         a = nt.n('ShaderNodeAmbientOcclusion', samples=8); a.inputs['Distance'].default_value = 0.2
         c = nt.mix(1.0, c, nt.ramp(a.outputs['AO'], [(0.3, (0.6, 0.56, 0.5)), (0.85, (1, 1, 1))]), blend='MULTIPLY')
-    finish(nt, c, r, h, bump=bump, dist=0.01 * scale)
+    rf = r if rough is None else rough
+    finish(nt, c, rf, h, bump=bump, dist=0.01 * scale)
     return m
 
 

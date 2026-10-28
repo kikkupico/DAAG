@@ -42,6 +42,246 @@ def ring_courses(k, R, t, z0, z1, mat='ashlar', gap_angles=(), course=0.52, bloc
         z += hz; c += 1
 
 
+def epidaurus_floor(k, r_med=0.90, r_sty_in=5.10, r_sty_out=6.10, r_out=9.025, z=1.04, thick=0.20,
+                    mat_white='marble_floor', mat_dark='dark_floor', n_sectors=40, n_rings=6):
+    """Flush, true-curved interlocking rhomboid (diamond) floor inspired by the Tholos of Epidaurus:
+    - Central circular white marble plinth with a delicate recessed ring.
+    - Two opposing sets of radial logarithmic spirals originating from the central circular medallion,
+      intersecting to form curved diamond/rhomboid tiles that scale proportionally toward the perimeter.
+    - True-arc subdivision along smooth circles without faceting.
+    - Uniform flush plane at z, eliminating vertical steps between rings, with seam bevels reduced to near-zero (0.5-1mm).
+    - Continuous ring of flush rectangular stylobate slabs beneath the Corinthian colonnade.
+    - Concentric rings of flush ambulatory aisle slabs running under the drum wall.
+    - Strict checkerboard alternation between honed white Pentelic marble and dark bluish-black Eleusinian limestone.
+    """
+    j = 0.0007   # ~0.7mm seam gap (tight anathyrosis masonry)
+
+    # 1. Central Circular Plinth with Recessed Ring
+    r_rec_in = r_med * 0.70
+    r_rec_out = r_med * 0.82
+    z_rec = z - 0.003
+    prof = [
+        (0.0, z),
+        (r_rec_in, z),
+        (r_rec_in, z_rec),
+        (r_rec_out, z_rec),
+        (r_rec_out, z),
+        (r_med - j, z),
+        (r_med - j, z - thick),
+        (0.0, z - thick)
+    ]
+    k.lathe(mat_white, prof, seg=128)
+
+    # Continuous level mortar bed underneath the entire floor
+    k.lathe('mortar', [(r_out, z - thick - 0.04), (r_out, z - thick + 0.004), (0.0, z - thick + 0.004)], seg=128)
+
+    # 2. Interlocking Rhomboid Logarithmic Spirals
+    N = n_sectors
+    K = n_rings
+    alpha = (r_sty_in / r_med) ** (1.0 / K)
+    radii = [r_med * (alpha ** i) for i in range(K + 1)]
+
+    def phi(k_idx, u_idx):
+        return (2 * u_idx + k_idx) * (PI / N)
+
+    M = 2  # quad resolution per spiral edge (produces smooth curved arcs)
+
+    # Main diamond tiles in bands 0 to K-2
+    for k_idx in range(K - 1):
+        rk = radii[k_idx]
+        dr = radii[k_idx + 1] - rk
+        eps = j / max(dr, 0.05)
+        s_vals = np.linspace(eps, 1.0 - eps, M + 1)
+        t_vals = np.linspace(eps, 1.0 - eps, M + 1)
+
+        for u in range(N):
+            c_phi = phi(k_idx, u)
+            mat = mat_dark if (k_idx + u) % 2 else mat_white
+
+            V_top = []
+            for j_idx in range(M + 1):
+                for i_idx in range(M + 1):
+                    s = s_vals[i_idx]; t = t_vals[j_idx]
+                    r = rk * (alpha ** (s + t))
+                    ang = c_phi + (s - t) * (PI / N)
+                    V_top.append((r * math.cos(ang), r * math.sin(ang), z))
+
+            V_bot = [(x, y, z - thick) for x, y, _ in V_top]
+            V = V_top + V_bot
+            b_off = len(V_top)
+
+            Fs = []
+            # Top faces (normal +Z)
+            for j_idx in range(M):
+                for i_idx in range(M):
+                    p00 = j_idx * (M + 1) + i_idx
+                    p10 = j_idx * (M + 1) + (i_idx + 1)
+                    p11 = (j_idx + 1) * (M + 1) + (i_idx + 1)
+                    p01 = (j_idx + 1) * (M + 1) + i_idx
+                    Fs.append((p00, p10, p11, p01))
+            # Bottom faces (normal -Z)
+            for j_idx in range(M):
+                for i_idx in range(M):
+                    p00 = b_off + j_idx * (M + 1) + i_idx
+                    p10 = b_off + j_idx * (M + 1) + (i_idx + 1)
+                    p11 = b_off + (j_idx + 1) * (M + 1) + (i_idx + 1)
+                    p01 = b_off + (j_idx + 1) * (M + 1) + i_idx
+                    Fs.append((p00, p01, p11, p10))
+            # 4 Side faces
+            for i_idx in range(M):
+                Fs.append((i_idx, b_off + i_idx, b_off + i_idx + 1, i_idx + 1))
+            for j_idx in range(M):
+                t0 = j_idx * (M + 1) + M; t1 = (j_idx + 1) * (M + 1) + M
+                Fs.append((t0, b_off + t0, b_off + t1, t1))
+            for i_idx in range(M - 1, -1, -1):
+                t0 = M * (M + 1) + (i_idx + 1); t1 = M * (M + 1) + i_idx
+                Fs.append((t0, b_off + t0, b_off + t1, t1))
+            for j_idx in range(M - 1, -1, -1):
+                t0 = (j_idx + 1) * (M + 1); t1 = j_idx * (M + 1)
+                Fs.append((t0, b_off + t0, b_off + t1, t1))
+
+            k.add(mat, V, Fs)
+
+    # Inner Fillet Tiles at r_med (between band 0 inner tips)
+    r0 = radii[0]; r1 = radii[1]
+    dr = r1 - r0
+    eps_r = j / max(dr, 0.05)
+    t_vals = np.linspace(eps_r, 1.0 - eps_r, M + 1)
+    s_vals = np.linspace(-1.0, 1.0, M + 1)
+    for u in range(N):
+        phi_mid = phi(1, u)
+        mat = mat_dark if (u + 1) % 2 else mat_white
+        V_top = []
+        for t in t_vals:
+            r = r0 * (alpha ** t)
+            w = (1.0 - t) * (PI / N)
+            for s in s_vals:
+                ang = phi_mid + s * max(0.0, w - j / max(r, 0.5))
+                V_top.append((r * math.cos(ang), r * math.sin(ang), z))
+        V_bot = [(x, y, z - thick) for x, y, _ in V_top]
+        V = V_top + V_bot
+        b_off = len(V_top)
+        Fs = []
+        for row in range(M):
+            for col in range(M):
+                p00 = row * (M + 1) + col
+                p10 = row * (M + 1) + (col + 1)
+                p11 = (row + 1) * (M + 1) + (col + 1)
+                p01 = (row + 1) * (M + 1) + col
+                Fs.append((p00, p10, p11, p01))
+                Fs.append((b_off + p00, b_off + p01, b_off + p11, b_off + p10))
+        for col in range(M):
+            Fs.append((col, b_off + col, b_off + col + 1, col + 1))
+        for row in range(M):
+            t0 = row * (M + 1) + M; t1 = (row + 1) * (M + 1) + M
+            Fs.append((t0, b_off + t0, b_off + t1, t1))
+        for col in range(M - 1, -1, -1):
+            t0 = M * (M + 1) + (col + 1); t1 = M * (M + 1) + col
+            Fs.append((t0, b_off + t0, b_off + t1, t1))
+        for row in range(M - 1, -1, -1):
+            t0 = (row + 1) * (M + 1); t1 = row * (M + 1)
+            Fs.append((t0, b_off + t0, b_off + t1, t1))
+        k.add(mat, V, Fs)
+
+    # Outer Fillet Tiles at r_sty_in (between band K-2 outer tips)
+    r_prev = radii[K - 1]; r_last = radii[K]
+    dr = r_last - r_prev
+    eps_r = j / max(dr, 0.05)
+    t_vals = np.linspace(eps_r, 1.0 - eps_r, M + 1)
+    for u in range(N):
+        phi_mid = phi(K - 1, u)
+        mat = mat_dark if (K - 1 + u) % 2 else mat_white
+        V_top = []
+        for t in t_vals:
+            r = r_prev * (alpha ** t)
+            w = t * (PI / N)
+            for s in s_vals:
+                ang = phi_mid + s * max(0.0, w - j / max(r, 0.5))
+                V_top.append((r * math.cos(ang), r * math.sin(ang), z))
+        V_bot = [(x, y, z - thick) for x, y, _ in V_top]
+        V = V_top + V_bot
+        b_off = len(V_top)
+        Fs = []
+        for row in range(M):
+            for col in range(M):
+                p00 = row * (M + 1) + col
+                p10 = row * (M + 1) + (col + 1)
+                p11 = (row + 1) * (M + 1) + (col + 1)
+                p01 = (row + 1) * (M + 1) + col
+                Fs.append((p00, p10, p11, p01))
+                Fs.append((b_off + p00, b_off + p01, b_off + p11, b_off + p10))
+        for col in range(M):
+            Fs.append((col, b_off + col, b_off + col + 1, col + 1))
+        for row in range(M):
+            t0 = row * (M + 1) + M; t1 = (row + 1) * (M + 1) + M
+            Fs.append((t0, b_off + t0, b_off + t1, t1))
+        for col in range(M - 1, -1, -1):
+            t0 = M * (M + 1) + (col + 1); t1 = M * (M + 1) + col
+            Fs.append((t0, b_off + t0, b_off + t1, t1))
+        for row in range(M - 1, -1, -1):
+            t0 = (row + 1) * (M + 1); t1 = row * (M + 1)
+            Fs.append((t0, b_off + t0, b_off + t1, t1))
+        k.add(mat, V, Fs)
+
+    # 3. Continuous Ring of Flush Rectangular Stylobate Slabs
+    n_sty = N
+    m_arc = 4
+    r0_sty = r_sty_in + j
+    r1_sty = r_sty_out - j
+    for i in range(n_sty):
+        a0 = 2 * PI * i / n_sty + j / r0_sty
+        a1 = 2 * PI * (i + 1) / n_sty - j / r0_sty
+        V_top = []
+        for s in range(m_arc + 1):
+            a = a0 + (a1 - a0) * s / m_arc
+            V_top.append((r0_sty * math.cos(a), r0_sty * math.sin(a), z))
+            V_top.append((r1_sty * math.cos(a), r1_sty * math.sin(a), z))
+        V_bot = [(x, y, z - thick) for x, y, _ in V_top]
+        V = V_top + V_bot
+        b_off = len(V_top)
+        Fs = []
+        for s in range(m_arc):
+            i0, o0, i1, o1 = 2 * s, 2 * s + 1, 2 * s + 2, 2 * s + 3
+            Fs.append((i0, o0, o1, i1))
+            Fs.append((b_off + i0, b_off + i1, b_off + o1, b_off + o0))
+            Fs.append((i0, i1, b_off + i1, b_off + i0))
+            Fs.append((o0, b_off + o0, b_off + o1, o1))
+        Fs.append((0, b_off, b_off + 1, 1))
+        Fs.append((2 * m_arc, 2 * m_arc + 1, b_off + 2 * m_arc + 1, b_off + 2 * m_arc))
+        k.add(mat_white, V, Fs)
+
+    # 4. Ambulatory Aisle Flagstone Rings
+    n_amb_rings = 4
+    w_amb = (r_out - r_sty_out) / n_amb_rings
+    for q in range(n_amb_rings):
+        ra = r_sty_out + q * w_amb + j
+        rb = (r_sty_out + (q + 1) * w_amb - j) if q < n_amb_rings - 1 else r_out
+        rm = (ra + rb) / 2
+        n_sl = max(12, int(2 * PI * rm / 0.95))
+        off = (q % 2) * (PI / n_sl)
+        for i in range(n_sl):
+            a0 = off + 2 * PI * i / n_sl + j / ra
+            a1 = off + 2 * PI * (i + 1) / n_sl - j / ra
+            V_top = []
+            for s in range(m_arc + 1):
+                a = a0 + (a1 - a0) * s / m_arc
+                V_top.append((ra * math.cos(a), ra * math.sin(a), z))
+                V_top.append((rb * math.cos(a), rb * math.sin(a), z))
+            V_bot = [(x, y, z - thick) for x, y, _ in V_top]
+            V = V_top + V_bot
+            b_off = len(V_top)
+            Fs = []
+            for s in range(m_arc):
+                i0, o0, i1, o1 = 2 * s, 2 * s + 1, 2 * s + 2, 2 * s + 3
+                Fs.append((i0, o0, o1, i1))
+                Fs.append((b_off + i0, b_off + i1, b_off + o1, b_off + o0))
+                Fs.append((i0, i1, b_off + i1, b_off + i0))
+                Fs.append((o0, b_off + o0, b_off + o1, o1))
+            Fs.append((0, b_off, b_off + 1, 1))
+            Fs.append((2 * m_arc, 2 * m_arc + 1, b_off + 2 * m_arc + 1, b_off + 2 * m_arc))
+            k.add(mat_white, V, Fs)
+
+
 def radial_paving(k, r_in, r_out, z, ring=0.85, mat='pave', thick=0.2, alt=None):
     """Concentric courses of tapered flagstones with curved edges, so neighbouring rings meet along an
     even hairline joint; the outermost ring ends exactly at r_out (run it under the wall to close the edge)."""
@@ -172,16 +412,16 @@ def chamber(k, statues=True, north=PI / 2):
     C.lantern(k, apex_r - 0.05, z_roof + rise - 0.05)
     # ------------------------------------------------ interior
     R_in = R_drum - t_drum / 2
-    k._ring_i = 0
-    k.lathe('mortar', [(R_in, zs - 0.2), (R_in, zs + 0.004), (0.0, zs + 0.004)], seg=96)
-    radial_paving(k, 0.0, R_in + 0.15, zs + 0.02, ring=0.7, mat='marble_floor', alt='dark_floor')   # runs under the wall
-    # ten slender Corinthian columns carrying the roof
     Dc = 0.62; Hc = 10.0 * Dc
     R_ic = 5.6
+    z_floor = zs + 0.02
+    epidaurus_floor(k, r_med=0.90, r_sty_in=5.10, r_sty_out=6.10, r_out=R_in + 0.15, z=z_floor, thick=0.20,
+                    mat_white='marble_floor', mat_dark='dark_floor', n_sectors=40, n_rings=6)
+    # ten slender Corinthian columns carrying the roof
     for i in range(10):
         a = 2 * PI * (i + 0.5) / 10
-        k.inst('corinthian', T(R_ic * math.cos(a), R_ic * math.sin(a), zs) @ Rz(a) @ S(Dc))
-    zi = zs + Hc
+        k.inst('corinthian', T(R_ic * math.cos(a), R_ic * math.sin(a), z_floor) @ Rz(a) @ S(Dc))
+    zi = z_floor + Hc
     # inner epistyle ring and the radial roof timbers
     for i in range(40):
         a0 = 2 * PI * i / 40; a1 = 2 * PI * (i + 1) / 40
@@ -190,16 +430,6 @@ def chamber(k, statues=True, north=PI / 2):
         a = 2 * PI * i / 30
         k.beam('timber', ((R_ic - 0.1) * math.cos(a), (R_ic - 0.1) * math.sin(a), zi + 0.75), ((R_in + 0.1) * math.cos(a), (R_in + 0.1) * math.sin(a), z_roof - 0.15), 0.18, 0.26, 0.05)
         k.beam('timber', ((R_ic - 0.1) * math.cos(a), (R_ic - 0.1) * math.sin(a), zi + 0.75), ((apex_r + 0.05) * math.cos(a), (apex_r + 0.05) * math.sin(a), z_roof + rise - 0.3), 0.16, 0.24, 0.05)
-    # meridian line: a bronze strip running north on the floor with transverse marks
-    k.push(T(0, 0, zs + 0.03) @ Rz(north))      # the line runs toward true north, inlaid flush
-    k.box('dark_floor', 0.4, -0.2, -0.105, R_in - 0.3, 0.2, 0.0012)
-    k.box('meridian', 0.5, -0.06, -0.1, R_in - 0.4, 0.06, 0.0025)
-    for j, x in enumerate(np.linspace(1.0, R_in - 0.8, 13)):
-        w = 0.34 if j % 3 == 0 else 0.2
-        k.box('meridian', x - 0.022, -w, -0.1, x + 0.022, w, 0.0025)
-        if j % 3 == 0:
-            text_mesh(k, 'meridian', ['Α', 'Β', 'Γ', 'Δ', 'Ε'][j // 3], 0.22, x, w + 0.18, 0.006, rot=(0, 0, -PI / 2), depth=0.003)
-    k.pop()
     # benches round the wall, each with a small stone stand beside it holding an inkpot and a closed scroll
     # with its tag: Greeks wrote with the roll on their knees, not at desks
     nb = 22
