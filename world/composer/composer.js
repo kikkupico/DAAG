@@ -15,6 +15,13 @@ import { buildPrompt, loadPromptParts } from './js/prompt.js';
 import { esc } from './js/util.js';
 import { blenderToThree, threeToBlender, shotPoint, bearingToThree, shotToWorld, worldToFrame } from './js/coords.js';
 
+const COMPASS_POINTS = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+function compassHeading(deg) {
+  const norm = ((deg % 360) + 360) % 360;
+  const idx = Math.round(norm / 22.5) % 16;
+  return COMPASS_POINTS[idx];
+}
+
 // --- Application State ---
 const state = {
   // Camera & Framing
@@ -64,7 +71,9 @@ const state = {
 
   // Book Storage
   books: [],
-  activeBook: 'the-part-time-parliament',
+  activeBook: (() => {
+    try { return localStorage.getItem('daag.composer.activeBook') || 'the-part-time-parliament'; } catch (_) { return 'the-part-time-parliament'; }
+  })(),
   shotId: 'cover-alt',
 
   // Layout & Sites
@@ -95,6 +104,7 @@ const dom = {
   tarX: document.getElementById('tar-x'),
   tarY: document.getElementById('tar-y'),
   tarZ: document.getElementById('tar-z'),
+  btnCopyCoords: document.getElementById('btn-copy-coords'),
 
   // Environment Tab
   sunAzimuthSlider: document.getElementById('sun-azimuth-slider'),
@@ -200,6 +210,14 @@ const dom = {
   leftDock: document.getElementById('left-dock'),
   btnDockCollapse: document.getElementById('btn-dock-collapse'),
   btnDockExpand: document.getElementById('btn-dock-expand'),
+  btnViewArche: document.getElementById('btn-view-arche'),
+  btnViewPaxos: document.getElementById('btn-view-paxos'),
+  btnToggleProps: document.getElementById('btn-toggle-props'),
+  btnOpenHelp: document.getElementById('btn-open-help'),
+  btnCloseHelp: document.getElementById('btn-close-help'),
+  helpModal: document.getElementById('help-modal'),
+  propSearchInput: document.getElementById('prop-search-input'),
+  interiorJumpChips: document.getElementById('interior-jump-chips'),
   teleportSelect: document.getElementById('teleport-select'),
   islandSelect: document.getElementById('island-select')
 };
@@ -469,7 +487,7 @@ function applyLightPreset(name) {
   dom.sunElevationSlider.title = p.sky === 'hdri' ? 'This sky has its own sun; the render ignores elevation' : '';
   document.querySelectorAll('[data-tod]').forEach((b) => b.classList.toggle('active', b.dataset.tod === name));
   dom.sunAzimuthSlider.value = state.sunAzimuth;
-  dom.sunAzimuthVal.textContent = `${state.sunAzimuth}°`;
+  dom.sunAzimuthVal.textContent = `${state.sunAzimuth}° · ${compassHeading(state.sunAzimuth)}`;
   dom.sunElevationSlider.value = state.sunElevation;
   dom.sunElevationVal.textContent = `${state.sunElevation}°`;
   dom.sunIntensitySlider.value = state.sunIntensity;
@@ -635,6 +653,8 @@ function loadIslandModel(island, afterLoad = null) {
   const loader = new GLTFLoader();
   state.island = island;
   dom.islandSelect.value = island;
+  if (dom.btnViewArche) dom.btnViewArche.classList.toggle('active', island === 'arche');
+  if (dom.btnViewPaxos) dom.btnViewPaxos.classList.toggle('active', island === 'paxos');
 
   dom.loadingOverlay.classList.remove('hidden');
   dom.progressBarFill.style.width = '0%';
@@ -695,6 +715,7 @@ async function loadSites(island) {
   }
   setupSitePins();
   populateTeleportMenu();
+  populateInteriorJumpChips();
 }
 
 async function loadPropsCatalog() {
@@ -737,6 +758,13 @@ async function loadBooksList() {
     const data = await res.json();
     state.books = data.books || [];
 
+    // Selected book to preserve: current select value, or state.activeBook, or localStorage
+    const savedActiveBook = (() => {
+      try { return localStorage.getItem('daag.composer.activeBook'); } catch (_) { return null; }
+    })();
+    const targetBook = dom.saveBookSelect.value || state.activeBook || savedActiveBook;
+    const targetBrowserBook = dom.browserBookSelect.value || state.activeBook || savedActiveBook;
+
     // Populate save & browser dropdowns
     dom.saveBookSelect.innerHTML = '';
     dom.browserBookSelect.innerHTML = '';
@@ -745,14 +773,20 @@ async function loadBooksList() {
       const opt1 = document.createElement('option');
       opt1.value = b.id;
       opt1.textContent = `${b.title} (${b.shots_count} shots)`;
-      if (b.id === state.activeBook) opt1.selected = true;
+      if (b.id === targetBook) opt1.selected = true;
       dom.saveBookSelect.appendChild(opt1);
 
       const opt2 = document.createElement('option');
       opt2.value = b.id;
       opt2.textContent = `${b.title} (${b.shots_count} shots)`;
+      if (b.id === targetBrowserBook) opt2.selected = true;
       dom.browserBookSelect.appendChild(opt2);
     });
+
+    if (dom.saveBookSelect.value) {
+      state.activeBook = dom.saveBookSelect.value;
+      try { localStorage.setItem('daag.composer.activeBook', state.activeBook); } catch (_) {}
+    }
   } catch (err) {
     console.error('Failed to load books:', err);
   }
@@ -765,8 +799,9 @@ function setupSitePins() {
 
   state.sites.forEach((site) => {
     const el = document.createElement('div');
-    el.className = 'site-pin';
-    el.textContent = site.name;
+    const isInterior = site.kind === 'interior' || (site.cam && site.target);
+    el.className = isInterior ? 'site-pin site-pin-interior' : 'site-pin';
+    el.innerHTML = isInterior ? `<span class="pin-icon">🏛</span>${site.name}` : site.name;
     el.dataset.id = site.id;
 
     el.addEventListener('click', (e) => {
@@ -775,7 +810,10 @@ function setupSitePins() {
     });
 
     dom.sitePinsLayer.appendChild(el);
-    sitePins.push({ el, pos: blenderToThree([site.x, site.y, site.z + 6]), site });
+    const pinCoord = (site.x != null && site.y != null && site.z != null)
+      ? [site.x, site.y, site.z + (isInterior ? 3 : 6)]
+      : (site.target || site.cam);
+    sitePins.push({ el, pos: blenderToThree(pinCoord), site });
   });
 }
 
@@ -814,23 +852,73 @@ function updateSitePinsScreenPos() {
 }
 
 function populateTeleportMenu() {
-  dom.teleportSelect.innerHTML = '<option value="">Teleport to site...</option>';
-  state.sites.forEach((site) => {
-    const opt = document.createElement('option');
-    opt.value = site.id;
-    opt.textContent = site.name;
-    dom.teleportSelect.appendChild(opt);
+  dom.teleportSelect.innerHTML = '<option value="">Teleport to location...</option>';
+  const interiors = state.sites.filter((s) => s.kind === 'interior' || (s.cam && s.target));
+  const exteriors = state.sites.filter((s) => s.kind !== 'interior' && !(s.cam && s.target));
+
+  if (interiors.length > 0) {
+    const grp = document.createElement('optgroup');
+    grp.label = '🏛 Building Interiors';
+    interiors.forEach((site) => {
+      const opt = document.createElement('option');
+      opt.value = site.id;
+      opt.textContent = site.name;
+      grp.appendChild(opt);
+    });
+    dom.teleportSelect.appendChild(grp);
+  }
+
+  if (exteriors.length > 0) {
+    const grp = document.createElement('optgroup');
+    grp.label = '📍 Sites & Landmarks (Exterior)';
+    exteriors.forEach((site) => {
+      const opt = document.createElement('option');
+      opt.value = site.id;
+      opt.textContent = site.name;
+      grp.appendChild(opt);
+    });
+    dom.teleportSelect.appendChild(grp);
+  }
+}
+
+function populateInteriorJumpChips() {
+  if (!dom.interiorJumpChips) return;
+  dom.interiorJumpChips.innerHTML = '';
+  const interiors = state.sites.filter((s) => s.kind === 'interior' || (s.cam && s.target));
+  if (interiors.length === 0) {
+    dom.interiorJumpChips.innerHTML = '<span style="font-size: 0.75rem; color: var(--text-dim); padding: 4px 0;">No interior locations on this island</span>';
+    return;
+  }
+  interiors.forEach((site) => {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-chip interior-chip';
+    btn.title = `Jump to ${site.name}${site.lens ? ` (${site.lens}mm)` : ''}`;
+    btn.innerHTML = `<span style="font-size: 0.85rem;">🏛</span> <span>${site.name}</span>`;
+    btn.addEventListener('click', () => {
+      teleportToSite(site);
+    });
+    dom.interiorJumpChips.appendChild(btn);
   });
 }
 
 function teleportToSite(site) {
-  const big = ['chamber', 'tholos', 'stoa', 'festival', 'crown', 'granary'].includes(site.id);
-  const dist = big ? 60 : 35;
-  // Stand in front of the site when it has a facing (radians from +X), else to its south
-  const ang = site.face ?? -Math.PI / 2;
-  const at = [site.x, site.y, site.z + 3];
-  const from = [site.x + Math.cos(ang) * dist, site.y + Math.sin(ang) * dist, site.z + dist * 0.45];
-  flyCameraTo(blenderToThree(from), blenderToThree(at), 1200);
+  if (site.cam && site.target) {
+    flyCameraTo(blenderToThree(site.cam), blenderToThree(site.target), 1200);
+    if (site.lens) {
+      applyFocalLength(site.lens);
+      document.querySelectorAll('[data-lens]').forEach((b) => {
+        b.classList.toggle('active', parseInt(b.dataset.lens) === site.lens);
+      });
+    }
+  } else {
+    const big = ['chamber', 'tholos', 'stoa', 'festival', 'crown', 'granary'].includes(site.id);
+    const dist = big ? 60 : 35;
+    // Stand in front of the site when it has a facing (radians from +X), else to its south
+    const ang = site.face ?? -Math.PI / 2;
+    const at = [site.x, site.y, site.z + 3];
+    const from = [site.x + Math.cos(ang) * dist, site.y + Math.sin(ang) * dist, site.z + dist * 0.45];
+    flyCameraTo(blenderToThree(from), blenderToThree(at), 1200);
+  }
   showToast(`Teleported to ${site.name}`);
 }
 
@@ -866,12 +954,21 @@ function flyCameraTo(targetCamPos, targetLookAt, duration = 1000) {
 }
 
 // --- 6. Prop Placement Engine ---
-function renderPropsCatalog(categoryFilter = 'all') {
+function renderPropsCatalog(categoryFilter = 'all', textFilter = '') {
   dom.propsCatalogGrid.innerHTML = '';
 
-  const filtered = state.propsCatalog.filter(
-    (p) => categoryFilter === 'all' || p.category === categoryFilter
-  );
+  const q = (textFilter || (dom.propSearchInput ? dom.propSearchInput.value : '')).trim().toLowerCase();
+
+  const filtered = state.propsCatalog.filter((p) => {
+    const matchCat = categoryFilter === 'all' || p.category === categoryFilter;
+    const matchText = !q || p.name.toLowerCase().includes(q) || (p.category && p.category.toLowerCase().includes(q));
+    return matchCat && matchText;
+  });
+
+  if (filtered.length === 0) {
+    dom.propsCatalogGrid.innerHTML = '<p style="grid-column: 1 / -1; font-size: 0.78rem; color: var(--text-dim); text-align: center; padding: 16px 0;">No props match search.</p>';
+    return;
+  }
 
   filtered.forEach((p) => {
     const card = document.createElement('div');
@@ -1062,8 +1159,8 @@ function renderPlacedPropsList() {
     const item = document.createElement('div');
     item.className = `placed-prop-item ${state.selectedPlacedProp && state.selectedPlacedProp.id === p.id ? 'selected' : ''}`;
     item.innerHTML = `
-      <span>${esc(p.icon)} ${esc(p.name)} #${idx + 1}</span>
-      <div style="display: flex; gap: 4px;">
+      <span class="prop-label">${esc(p.icon)} ${esc(p.name)} #${idx + 1}</span>
+      <div style="display: flex; gap: 4px; flex-shrink: 0;">
         <button class="btn btn-chip" data-action="focus" title="Focus camera on prop">🔍</button>
         <button class="btn btn-chip" data-action="delete" title="Delete prop" style="color: var(--accent-red);">✕</button>
       </div>
@@ -1207,6 +1304,11 @@ async function copyCapturedImageToClipboard() {
       new ClipboardItem({ 'image/png': blob })
     ]);
     showToast('Image copied to clipboard!');
+    if (dom.btnCopyImage) {
+      const orig = dom.btnCopyImage.textContent;
+      dom.btnCopyImage.textContent = '✓ Copied!';
+      setTimeout(() => { dom.btnCopyImage.textContent = orig; }, 1500);
+    }
   } catch (err) {
     console.error('Clipboard copy failed:', err);
     showToast('Could not copy image. Downloading PNG instead.');
@@ -1414,10 +1516,18 @@ async function saveShotToBook() {
     return;
   }
 
+  // Update activeBook in state and persist
+  state.activeBook = bookId;
+  try { localStorage.setItem('daag.composer.activeBook', bookId); } catch (_) {}
+
   const shotData = composedShot(shotId);
   const variant = dom.saveVariant.value.trim() || null;
 
   try {
+    if (dom.btnSaveShotBook) {
+      dom.btnSaveShotBook.disabled = true;
+      dom.btnSaveShotBook.textContent = '💾 Saving shot...';
+    }
     const res = await fetch(`/api/books/${bookId}/shots`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1429,15 +1539,31 @@ async function saveShotToBook() {
     });
     const result = await res.json();
     if (result.status === 'success') {
-      showToast(`${result.created ? 'Created' : 'Updated'} '${shotId}${variant ? '/' + variant : ''}' in ${bookId}/shots.json`);
+      showToast(`✓ ${result.created ? 'Created' : 'Updated'} '${shotId}${variant ? '/' + variant : ''}' in ${bookId}/shots.json`);
       dropPending(state.lastCaptureFile);      // saved into a book: no longer pending
-      loadBooksList(); // Refresh counts
+      await loadBooksList(); // Refresh counts
+      dom.saveBookSelect.value = bookId; // Explicitly ensure dropdown stays where shot was saved
+      if (dom.btnSaveShotBook) {
+        dom.btnSaveShotBook.textContent = '✓ Saved to Book!';
+        setTimeout(() => {
+          dom.btnSaveShotBook.textContent = "💾 Save Shot into Book's shots.json";
+          dom.btnSaveShotBook.disabled = false;
+        }, 1600);
+      }
     } else {
       showToast(`Save failed: ${result.error}`);
+      if (dom.btnSaveShotBook) {
+        dom.btnSaveShotBook.textContent = "💾 Save Shot into Book's shots.json";
+        dom.btnSaveShotBook.disabled = false;
+      }
     }
   } catch (err) {
     console.error('Failed to save shot:', err);
     showToast('Error saving shot to backend');
+    if (dom.btnSaveShotBook) {
+      dom.btnSaveShotBook.textContent = "💾 Save Shot into Book's shots.json";
+      dom.btnSaveShotBook.disabled = false;
+    }
   }
 }
 
@@ -2056,6 +2182,12 @@ function renderShotsBrowser() {
 }
 
 function applyBookShot(shotId, shot, { draft } = {}) {
+  if (state.shotsData?.book) {
+    state.activeBook = state.shotsData.book;
+    if (dom.saveBookSelect) dom.saveBookSelect.value = state.activeBook;
+    try { localStorage.setItem('daag.composer.activeBook', state.activeBook); } catch (_) {}
+  }
+
   if (draft !== undefined) {
     state.draftId = draft;                  // one of your own shots, or a recent capture: keep the book-shot name as it is
   } else {
@@ -2096,7 +2228,7 @@ function applyBookShot(shotId, shot, { draft } = {}) {
   if (shot.sun_from !== undefined) {
     state.sunAzimuth = shot.sun_from;
     dom.sunAzimuthSlider.value = shot.sun_from;
-    dom.sunAzimuthVal.textContent = `${shot.sun_from}°`;
+    dom.sunAzimuthVal.textContent = `${shot.sun_from}° · ${compassHeading(shot.sun_from)}`;
   }
   if (shot.sun_elev !== undefined) {
     state.sunElevation = shot.sun_elev;
@@ -2134,6 +2266,20 @@ function applyBookShot(shotId, shot, { draft } = {}) {
   updatePrompt();
 }
 
+function switchDockTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.tab-content').forEach((tc) => (tc.style.display = 'none'));
+  const activeEl = document.getElementById(`tab-${tab}`);
+  if (activeEl) {
+    activeEl.style.display = 'flex';
+    activeEl.style.flexDirection = 'column';
+  }
+  if (dom.leftDock && dom.leftDock.classList.contains('collapsed')) {
+    dom.leftDock.classList.remove('collapsed');
+    dom.btnDockExpand.style.display = 'none';
+  }
+}
+
 // --- 11. Event Listeners ---
 function setupEventListeners() {
   window.addEventListener('resize', onWindowResize);
@@ -2148,12 +2294,7 @@ function setupEventListeners() {
   // Left Dock Tabs
   document.querySelectorAll('.tab-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
-      const tab = btn.dataset.tab;
-      document.querySelectorAll('.tab-content').forEach((tc) => (tc.style.display = 'none'));
-      const activeEl = document.getElementById(`tab-${tab}`);
-      if (activeEl) activeEl.style.display = 'flex';
+      switchDockTab(btn.dataset.tab);
     });
   });
 
@@ -2195,10 +2336,25 @@ function setupEventListeners() {
     snapCameraToEyeLevel();
   });
 
+  // Copy coordinates
+  if (dom.btnCopyCoords) {
+    dom.btnCopyCoords.addEventListener('click', async () => {
+      const [cx, cy, cz] = threeToBlender(camera.position);
+      const [tx, ty, tz] = threeToBlender(controls.target);
+      const text = `cam: [${cx.toFixed(2)}, ${cy.toFixed(2)}, ${cz.toFixed(2)}], target: [${tx.toFixed(2)}, ${ty.toFixed(2)}, ${tz.toFixed(2)}]`;
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast('Camera coordinates copied to clipboard');
+      } catch (_) {
+        showToast(text);
+      }
+    });
+  }
+
   // Sun & Environment Sliders
   dom.sunAzimuthSlider.addEventListener('input', (e) => {
     state.sunAzimuth = parseInt(e.target.value);
-    dom.sunAzimuthVal.textContent = `${state.sunAzimuth}°`;
+    dom.sunAzimuthVal.textContent = `${state.sunAzimuth}° · ${compassHeading(state.sunAzimuth)}`;
     updateSunPosition();
   });
 
@@ -2231,7 +2387,7 @@ function setupEventListeners() {
       state.timeOfDay = btn.dataset.tod;
       applyLightPreset(btn.dataset.tod);
       dom.sunAzimuthSlider.value = state.sunAzimuth;
-      dom.sunAzimuthVal.textContent = `${state.sunAzimuth}°`;
+      dom.sunAzimuthVal.textContent = `${state.sunAzimuth}° · ${compassHeading(state.sunAzimuth)}`;
       dom.sunElevationSlider.value = state.sunElevation;
       dom.sunElevationVal.textContent = `${state.sunElevation}°`;
       updateSunPosition();
@@ -2240,11 +2396,33 @@ function setupEventListeners() {
 
   // View Presets
   ['arche', 'paxos'].forEach((island) => {
-    document.getElementById(`btn-view-${island}`).addEventListener('click', () => {
-      if (state.island !== island) return loadIslandModel(island);
-      flyCameraTo(blenderToThree(OVERVIEW[island].cam), blenderToThree(OVERVIEW[island].target), 1000);
-    });
+    const el = document.getElementById(`btn-view-${island}`);
+    if (el) {
+      el.addEventListener('click', () => {
+        if (state.island !== island) return loadIslandModel(island);
+        flyCameraTo(blenderToThree(OVERVIEW[island].cam), blenderToThree(OVERVIEW[island].target), 1000);
+      });
+    }
   });
+
+  // Toggle props from header
+  if (dom.btnToggleProps) {
+    dom.btnToggleProps.addEventListener('click', () => {
+      switchDockTab('props');
+    });
+  }
+
+  // Help modal controls
+  if (dom.btnOpenHelp) {
+    dom.btnOpenHelp.addEventListener('click', () => {
+      if (dom.helpModal) dom.helpModal.style.display = 'flex';
+    });
+  }
+  if (dom.btnCloseHelp) {
+    dom.btnCloseHelp.addEventListener('click', () => {
+      if (dom.helpModal) dom.helpModal.style.display = 'none';
+    });
+  }
 
   // Teleport Select
   dom.teleportSelect.addEventListener('change', (e) => {
@@ -2299,13 +2477,28 @@ function setupEventListeners() {
 
   dom.btnClearProps.addEventListener('click', clearAllProps);
 
+  // Prop search input
+  if (dom.propSearchInput) {
+    dom.propSearchInput.addEventListener('input', (e) => {
+      const activeChip = dom.propCategoryFilters.querySelector('.prop-filter-chip.active');
+      const cat = activeChip ? activeChip.dataset.category : 'all';
+      renderPropsCatalog(cat, e.target.value);
+    });
+  }
+
   // Prop Category Filter Chips
   dom.propCategoryFilters.addEventListener('click', (e) => {
     const chip = e.target.closest('.prop-filter-chip');
     if (!chip) return;
     dom.propCategoryFilters.querySelectorAll('.prop-filter-chip').forEach((c) => c.classList.remove('active'));
     chip.classList.add('active');
-    renderPropsCatalog(chip.dataset.category);
+    renderPropsCatalog(chip.dataset.category, dom.propSearchInput ? dom.propSearchInput.value : '');
+  });
+
+  // Save Book Select change listener
+  dom.saveBookSelect.addEventListener('change', (e) => {
+    state.activeBook = e.target.value;
+    try { localStorage.setItem('daag.composer.activeBook', state.activeBook); } catch (_) {}
   });
 
   // Capture & Compose Modal Controls
@@ -2351,6 +2544,9 @@ function setupEventListeners() {
     const prompt = updatePrompt();
     await navigator.clipboard.writeText(prompt);
     showToast('Prompt copied to clipboard!');
+    const orig = dom.btnCopyPrompt.textContent;
+    dom.btnCopyPrompt.textContent = '✓ Copied!';
+    setTimeout(() => { dom.btnCopyPrompt.textContent = orig; }, 1500);
   });
 
   dom.btnExportBundle.addEventListener('click', () => {
@@ -2524,6 +2720,50 @@ function onPointerDown(event) {
 function onKeyDown(e) {
   keyState[e.code] = true;
 
+  // Escape: close active modal, clear selection, or exit placement mode
+  if (e.code === 'Escape') {
+    if (dom.helpModal && dom.helpModal.style.display === 'flex') {
+      dom.helpModal.style.display = 'none';
+      return;
+    }
+    if (!dom.captureModal.classList.contains('hidden')) {
+      dom.captureModal.classList.add('hidden');
+      return;
+    }
+    if (dom.castDrawer.classList.contains('open')) {
+      dom.castDrawer.classList.remove('open');
+      return;
+    }
+    if (dom.shotsBrowserModal.style.display === 'flex') {
+      dom.shotsBrowserModal.style.display = 'none';
+      return;
+    }
+    if (dom.recentModal.style.display === 'flex') {
+      dom.recentModal.style.display = 'none';
+      return;
+    }
+    if (dom.explorerModal.style.display === 'flex') {
+      dom.explorerModal.style.display = 'none';
+      return;
+    }
+    if (dom.testsModal.style.display === 'flex') {
+      dom.testsModal.style.display = 'none';
+      return;
+    }
+    if (state.selectedPlacedProp) {
+      selectPlacedProp(null);
+      return;
+    }
+    if (state.placePropMode) {
+      state.placePropMode = false;
+      dom.btnPlacePropMode.classList.remove('active');
+      dom.btnPlacePropMode.textContent = '🎯 Click Island to Place Prop';
+      dom.hudStatusDot.classList.remove('placing');
+      dom.hudStatusText.textContent = 'Aegean View Active';
+      return;
+    }
+  }
+
   // Spacebar: quick capture
   if (e.code === 'Space' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
     e.preventDefault();
@@ -2538,8 +2778,14 @@ function onKeyDown(e) {
     return;
   }
 
-  // Shortcuts: G = move, R = rotate, S = scale
+  // Shortcuts: G = move, R = rotate, S = scale, 1/2/3 = tabs, ? = help
   if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    if (e.code === 'Digit1') switchDockTab('camera');
+    if (e.code === 'Digit2') switchDockTab('lighting');
+    if (e.code === 'Digit3') switchDockTab('props');
+    if (e.key === '?') {
+      if (dom.helpModal) dom.helpModal.style.display = dom.helpModal.style.display === 'flex' ? 'none' : 'flex';
+    }
     if (e.code === 'KeyG') setGizmoMode('translate', document.getElementById('gizmo-mode-translate'));
     if (e.code === 'KeyR') setGizmoMode('rotate', document.getElementById('gizmo-mode-rotate'));
     if (e.code === 'KeyS') setGizmoMode('scale', document.getElementById('gizmo-mode-scale'));

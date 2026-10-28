@@ -7,31 +7,61 @@ import numpy as np
 from blib import core, world
 from blib.mats import NT
 
-argv = sys.argv[sys.argv.index('--') + 1:]
-mod = importlib.import_module(argv[0])
-names = argv[1].split(',')
-quality = argv[2] if len(argv) > 2 else 'preview'
-OUT = os.path.join(core.ROOT, 'renders', {'preview': 'preview', 'check': 'check'}.get(quality, 'final'))
-os.makedirs(OUT, exist_ok=True)
+if '--' in sys.argv:
+    argv = sys.argv[sys.argv.index('--') + 1:]
+    mod = importlib.import_module(argv[0])
+    names = argv[1].split(',')
+    quality = argv[2] if len(argv) > 2 else 'preview'
+    OUT = os.path.join(core.ROOT, 'renders', {'preview': 'preview', 'check': 'check'}.get(quality, 'final'))
+    os.makedirs(OUT, exist_ok=True)
+else:
+    mod, names, quality, OUT = None, [], 'preview', None
 s = bpy.context.scene
 
 PRESETS = {
     # sun: elevation, azimuth (compass bearing the light comes from); haze colour; haze distance
-    'golden': dict(sky='sun', elev=9, strength=0.5, exposure=0.1, haze=(0.78, 0.66, 0.52), hazeD=9000, hazeS=0.55),
-    'late': dict(sky='sun', elev=18, strength=0.3, exposure=-0.4, haze=(0.74, 0.72, 0.68), hazeD=12000, hazeS=0.5),
+    'golden': dict(sky='sun', elev=9, strength=0.5, exposure=-0.6, haze=(0.78, 0.66, 0.52), hazeD=9000, hazeS=0.55),
+    'late': dict(sky='sun', elev=18, strength=0.3, exposure=-0.5, haze=(0.74, 0.72, 0.68), hazeD=12000, hazeS=0.5),
     'morning': dict(sky='sun', elev=24, strength=0.25, exposure=-0.6, haze=(0.72, 0.76, 0.82), hazeD=14000, hazeS=0.5),
     'noon': dict(sky='sun', elev=58, strength=0.2, exposure=-0.9, haze=(0.74, 0.8, 0.88), hazeD=16000, hazeS=0.45),
-    'overcast': dict(sky='hdri', hdri='kloofendal_overcast_puresky', strength=1.4, exposure=0.2, haze=(0.62, 0.64, 0.66), hazeD=5000, hazeS=0.7),
+    'overcast': dict(sky='hdri', hdri='kloofendal_overcast_puresky', strength=1.4, exposure=0.0, haze=(0.62, 0.64, 0.66), hazeD=5000, hazeS=0.7),
     'cloudy_sun': dict(sky='hdri', hdri='kloofendal_48d_partly_cloudy_puresky', strength=1.0, exposure=-0.4, haze=(0.72, 0.76, 0.82), hazeD=12000, hazeS=0.5),
-    'dusk': dict(sky='hdri', hdri='qwantani_dusk_2_puresky', strength=1.6, exposure=0.6, haze=(0.5, 0.44, 0.42), hazeD=7000, hazeS=0.55),
-    'evening_cloud': dict(sky='hdri', hdri='belfast_sunset_puresky', strength=1.2, exposure=0.2, haze=(0.7, 0.6, 0.52), hazeD=8000, hazeS=0.5),
+    'dusk': dict(sky='hdri', hdri='qwantani_dusk_2_puresky', strength=1.6, exposure=0.1, haze=(0.5, 0.44, 0.42), hazeD=7000, hazeS=0.55),
+    'evening_cloud': dict(sky='hdri', hdri='belfast_sunset_puresky', strength=1.2, exposure=-0.1, haze=(0.7, 0.6, 0.52), hazeD=8000, hazeS=0.5),
 }
+
+
+def resolve_hdri_path(name):
+    """Path to an equirect HDRI in assets/polyhaven/hdri, with robust fallbacks if missing."""
+    hdri_dir = os.path.join(core.PH, 'hdri')
+    if name:
+        target = os.path.join(hdri_dir, name if name.endswith('.hdr') else f"{name}.hdr")
+        if os.path.isfile(target):
+            return target
+    # Fallback to closest matching available HDRI
+    if os.path.isdir(hdri_dir):
+        available = sorted([f for f in os.listdir(hdri_dir) if f.endswith('.hdr')])
+        if available:
+            name_lower = (name or '').lower()
+            for cand in available:
+                cand_lower = cand.lower()
+                if any(k in name_lower and k in cand_lower for k in ('dusk', 'sunset', 'late', 'evening', 'overcast', 'cloud')):
+                    print(f"Warning: HDRI '{name}' not found, falling back to matched '{cand}'")
+                    return os.path.join(hdri_dir, cand)
+            print(f"Warning: HDRI '{name}' not found, falling back to '{available[0]}'")
+            return os.path.join(hdri_dir, available[0])
+    return None
 
 
 def hdri_sun_bearing(name):
     """Compass azimuth of the brightest region in an equirect HDR (so rotation can aim the sun)."""
-    img = bpy.data.images.load(os.path.join(core.PH, 'hdri', name + '.hdr'), check_existing=True)
+    path = resolve_hdri_path(name)
+    if not path or not os.path.isfile(path):
+        return 210.0
+    img = bpy.data.images.load(path, check_existing=True)
     w, h = img.size
+    if w == 0 or h == 0:
+        return 210.0
     px = np.empty(w * h * 4, np.float32); img.pixels.foreach_get(px)
     a = px.reshape(h, w, 4)[..., :3].sum(-1)
     a = a[::8, ::8]
@@ -43,14 +73,89 @@ def hdri_sun_bearing(name):
     return math.degrees(math.atan2(math.cos(phi), math.sin(phi))) % 360
 
 
-def set_light(p, sun_from):
+def set_light(p, sun_from, shot=None):
     old = s.world
     if p['sky'] == 'sun':
         world.sky(elevation=p['elev'], azimuth=sun_from, strength=p['strength'])
     else:
-        cur = hdri_sun_bearing(p['hdri'])
-        world.sky(hdri=p['hdri'], strength=p['strength'], rotation=(cur - sun_from))
-    s.view_settings.exposure = p['exposure']
+        hdr_path = resolve_hdri_path(p.get('hdri'))
+        if hdr_path:
+            hdr_name = os.path.splitext(os.path.basename(hdr_path))[0]
+            cur = hdri_sun_bearing(hdr_name)
+            world.sky(hdri=hdr_name, strength=p['strength'], rotation=(cur - sun_from))
+        else:
+            print(f"Warning: No HDRI maps available for '{p.get('hdri')}', falling back to sun sky")
+            world.sky(elevation=20, azimuth=sun_from, strength=p.get('strength', 1.0))
+
+    # Base exposure: start from preset exposure, compensated for sun_scale
+    exp = p.get('exposure', 0.0)
+    if shot and shot.get('sun_scale') and shot['sun_scale'] != 1.0 and shot['sun_scale'] > 0:
+        exp -= 0.5 * math.log2(shot['sun_scale'])
+    if shot and 'exposure' in shot:
+        exp = shot['exposure']
+    s.view_settings.exposure = exp
+
+
+def analyze_image_exposure(filepath):
+    """Analyze image luminance and highlight clipping using numpy."""
+    try:
+        img = bpy.data.images.load(filepath)
+        w, h = img.size
+        if w == 0 or h == 0:
+            bpy.data.images.remove(img)
+            return None
+        px = np.empty(w * h * 4, np.float32)
+        img.pixels.foreach_get(px)
+        bpy.data.images.remove(img)
+        rgb = px.reshape(-1, 4)[:, :3]
+        lum = np.dot(rgb, [0.2126, 0.7152, 0.0722])
+        max_c = np.max(rgb, axis=1)
+        clipped = float(np.mean(max_c >= 0.985))
+        mean_lum = float(np.mean(lum))
+        p95 = float(np.percentile(lum, 95))
+        p99 = float(np.percentile(lum, 99))
+        return {'mean': mean_lum, 'p95': p95, 'p99': p99, 'clipped': clipped}
+    except Exception as e:
+        print(f"Warning: could not evaluate exposure: {e}")
+        return None
+
+
+def adapt_exposure(filepath, rr, max_iterations=3):
+    """Automatically balance exposure to avoid blown-out sunny highlights or overly dark shadows."""
+    stats = analyze_image_exposure(filepath)
+    if not stats:
+        return
+    
+    orig_exp = s.view_settings.exposure
+    exp = orig_exp
+    
+    for _ in range(max_iterations):
+        delta = 0.0
+        # Check for blown out highlights
+        if stats['clipped'] > 0.015 or (stats['mean'] > 0.62 and stats['p99'] >= 0.98):
+            if stats['clipped'] > 0.12 or stats['mean'] > 0.72:
+                delta = -0.7 - min(1.3, (stats['clipped'] - 0.12) * 4.0)
+            elif stats['clipped'] > 0.04 or stats['mean'] > 0.65:
+                delta = -0.45 - (stats['clipped'] - 0.04) * 4.0
+            else:
+                delta = -0.3
+        # Check for severely underexposed scenes (e.g. interior without sunlight)
+        elif stats['p95'] < 0.22 and stats['mean'] < 0.10:
+            delta = min(1.8, max(0.4, 0.5 * math.log2(0.20 / max(0.01, stats['mean']))))
+        
+        if abs(delta) < 0.05:
+            break
+            
+        exp += delta
+        s.view_settings.exposure = exp
+        rr.save_render(filepath, scene=s)
+        new_stats = analyze_image_exposure(filepath)
+        if not new_stats:
+            break
+        stats = new_stats
+        
+    if abs(exp - orig_exp) >= 0.05:
+        print(f"  [Adaptive Exposure] Adjusted {orig_exp:+.2f} -> {exp:+.2f} EV (mean: {stats['mean']:.2f}, clipped: {stats['clipped']*100:.1f}%)")
 
 
 def compositor(haze, D, strength, depth=180000.0):
@@ -108,62 +213,66 @@ def hide_except(keep):
     pass
 
 
-shots = mod.shots()
-if names == ['all']:
-    names = list(shots)
-for name in names:
-    sh = shots[name]
-    t = time.time()
-    p = dict(PRESETS[sh.get('light', 'morning')])
-    p.update(sh.get('light_override', {}))
-    if 'sun_elev' in sh and p['sky'] == 'sun':      # an HDRI sky has its own sun
-        p['elev'] = sh['sun_elev']
-    p['strength'] *= sh.get('sun_scale', 1.0)       # brighter or dimmer than the preset
-    fog = sh.get('fog_scale', 1.0)                  # 1 = the preset's haze, 0 = none, 2 = twice as dense
-    set_light(p, sh.get('sun_from', 210))
-    mist_depth = max(180000.0, sh.get('hazeD', p['hazeD']) * 3.5)
-    compositor(p['haze'], sh.get('hazeD', p['hazeD']) / max(fog, 0.05), sh.get('hazeS', p['hazeS']) if fog > 0 else 0.0, depth=mist_depth)
-    cam = core.camera('cam_' + name, sh['cam'], sh['target'], lens=sh.get('lens', 35), clip_end=sh.get('clip_end', 250000))
-    if sh.get('dof'):
-        cam.data.dof.use_dof = True; cam.data.dof.aperture_fstop = sh['dof'][1]; cam.data.dof.focus_distance = sh['dof'][0]
-    s.camera = cam
-    res = sh.get('res', (1920, 1080))
-    if quality == 'preview':
-        core.cycles(s, samples=sh.get('psamples', 32), res=res, pct=50)
-    elif quality == 'check':
-        core.cycles(s, samples=48, res=res, pct=100)
-    else:
-        core.cycles(s, samples=sh.get('samples', 160), res=res, pct=100)
-        s.cycles.adaptive_threshold = 0.01
-    s.render.film_transparent = True              # the sky comes back in the compositor (see compositor)
-    s.render.image_settings.color_mode = 'RGB'
-    for hide in sh.get('hide', []):
-        for o in bpy.data.objects:
-            if o.name.startswith(hide):
-                o.hide_render = True
-    added = []
-    for L in sh.get('lights', []):
-        ld = bpy.data.lights.new('fill', L.get('type', 'AREA'))
-        ld.energy = L['energy']; ld.color = L.get('color', (1.0, 0.92, 0.8))
-        if ld.type == 'AREA':
-            ld.shape = 'DISK' if L.get('disk') else 'RECTANGLE'; ld.size = L.get('size', 2.0); ld.size_y = L.get('size_y', L.get('size', 2.0))
-        if ld.type == 'SPOT':
-            ld.spot_size = math.radians(L.get('cone', 40)); ld.spot_blend = 0.6; ld.shadow_soft_size = L.get('soft', 0.3)
-        if ld.type == 'POINT':
-            ld.shadow_soft_size = L.get('soft', 0.5)
-        ob = bpy.data.objects.new('fill', ld); s.collection.objects.link(ob)
-        ob.location = L['loc']
-        core.look_at(ob, L['at']) if 'at' in L else None
-        ob.visible_camera = False
-        added.append(ob)
-    if 'pre' in sh:
-        sh['pre'](s)
-    s.render.filepath = os.path.join(OUT, f'{name}.png')
-    bpy.ops.render.render(write_still=True)
-    for hide in sh.get('hide', []):
-        for o in bpy.data.objects:
-            if o.name.startswith(hide):
-                o.hide_render = False
-    for ob in added:
-        bpy.data.objects.remove(ob)
-    print('SHOT', name, round(time.time() - t, 1), s.render.filepath)
+if mod:
+    shots = mod.shots()
+    if names == ['all']:
+        names = list(shots)
+    for name in names:
+        sh = shots[name]
+        t = time.time()
+        p = dict(PRESETS[sh.get('light', 'morning')])
+        p.update(sh.get('light_override', {}))
+        if 'sun_elev' in sh and p['sky'] == 'sun':      # an HDRI sky has its own sun
+            p['elev'] = sh['sun_elev']
+        p['strength'] *= sh.get('sun_scale', 1.0)       # brighter or dimmer than the preset
+        fog = sh.get('fog_scale', 1.0)                  # 1 = the preset's haze, 0 = none, 2 = twice as dense
+        set_light(p, sh.get('sun_from', 210), shot=sh)
+        mist_depth = max(180000.0, sh.get('hazeD', p['hazeD']) * 3.5)
+        compositor(p['haze'], sh.get('hazeD', p['hazeD']) / max(fog, 0.05), sh.get('hazeS', p['hazeS']) if fog > 0 else 0.0, depth=mist_depth)
+        cam = core.camera('cam_' + name, sh['cam'], sh['target'], lens=sh.get('lens', 35), clip_end=sh.get('clip_end', 250000))
+        if sh.get('dof'):
+            cam.data.dof.use_dof = True; cam.data.dof.aperture_fstop = sh['dof'][1]; cam.data.dof.focus_distance = sh['dof'][0]
+        s.camera = cam
+        res = sh.get('res', (1920, 1080))
+        if quality == 'preview':
+            core.cycles(s, samples=sh.get('psamples', 32), res=res, pct=50)
+        elif quality == 'check':
+            core.cycles(s, samples=48, res=res, pct=100)
+        else:
+            core.cycles(s, samples=sh.get('samples', 160), res=res, pct=100)
+            s.cycles.adaptive_threshold = 0.01
+        s.render.film_transparent = True              # the sky comes back in the compositor (see compositor)
+        s.render.image_settings.color_mode = 'RGB'
+        for hide in sh.get('hide', []):
+            for o in bpy.data.objects:
+                if o.name.startswith(hide):
+                    o.hide_render = True
+        added = []
+        for L in sh.get('lights', []):
+            ld = bpy.data.lights.new('fill', L.get('type', 'AREA'))
+            ld.energy = L['energy']; ld.color = L.get('color', (1.0, 0.92, 0.8))
+            if ld.type == 'AREA':
+                ld.shape = 'DISK' if L.get('disk') else 'RECTANGLE'; ld.size = L.get('size', 2.0); ld.size_y = L.get('size_y', L.get('size', 2.0))
+            if ld.type == 'SPOT':
+                ld.spot_size = math.radians(L.get('cone', 40)); ld.spot_blend = 0.6; ld.shadow_soft_size = L.get('soft', 0.3)
+            if ld.type == 'POINT':
+                ld.shadow_soft_size = L.get('soft', 0.5)
+            ob = bpy.data.objects.new('fill', ld); s.collection.objects.link(ob)
+            ob.location = L['loc']
+            core.look_at(ob, L['at']) if 'at' in L else None
+            ob.visible_camera = False
+            added.append(ob)
+        if 'pre' in sh:
+            sh['pre'](s)
+        s.render.filepath = os.path.join(OUT, f'{name}.png')
+        bpy.ops.render.render(write_still=True)
+        rr = bpy.data.images.get('Render Result')
+        if rr and sh.get('adaptive_exposure', True) and 'exposure' not in sh:
+            adapt_exposure(s.render.filepath, rr)
+        for hide in sh.get('hide', []):
+            for o in bpy.data.objects:
+                if o.name.startswith(hide):
+                    o.hide_render = False
+        for ob in added:
+            bpy.data.objects.remove(ob)
+        print('SHOT', name, round(time.time() - t, 1), s.render.filepath)

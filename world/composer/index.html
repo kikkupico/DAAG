@@ -103,6 +103,9 @@
         <button class="btn" id="btn-open-shots-browser" title="Browse existing shots in books">
           📖 Book Shots
         </button>
+        <button class="btn" id="btn-open-help" title="Keyboard shortcuts and composer guide (?)">
+          ⌨ Help
+        </button>
       </div>
     </div>
   </header>
@@ -124,7 +127,7 @@
         <div class="control-section">
           <div class="section-title">
             <span>Camera Optics</span>
-            <span id="fov-display" class="control-val">Focal: 26mm</span>
+            <span id="fov-display" class="control-val">26mm</span>
           </div>
 
           <div class="control-row">
@@ -133,7 +136,7 @@
             <span id="focal-val" class="control-val">26mm</span>
           </div>
 
-          <div class="btn-grid">
+          <div class="lens-grid">
             <button class="btn btn-chip" data-lens="18">18mm</button>
             <button class="btn btn-chip active" data-lens="24">24mm</button>
             <button class="btn btn-chip" data-lens="26">26mm</button>
@@ -147,7 +150,7 @@
           <div class="section-title">
             <span>Aspect Ratio &amp; Framing</span>
           </div>
-          <div class="btn-grid">
+          <div class="aspect-grid">
             <button class="btn btn-chip active" data-aspect="3:4">3:4 (Book)</button>
             <button class="btn btn-chip" data-aspect="16:9">16:9</button>
             <button class="btn btn-chip" data-aspect="1:1">1:1 (Square)</button>
@@ -160,19 +163,22 @@
         <div class="control-section">
           <div class="section-title">
             <span>Camera Position (m)</span>
-            <button class="btn btn-chip" id="btn-snap-eye" title="Snap to human standing eye height (1.7m above ground)">🚶 Eye Level</button>
+            <div style="display: flex; gap: 6px;">
+              <button class="btn btn-chip" id="btn-copy-coords" title="Copy Blender camera and target coordinates to clipboard">📋 Copy</button>
+              <button class="btn btn-chip" id="btn-snap-eye" title="Snap to human standing eye height (1.7m above ground)">🚶 Eye Level</button>
+            </div>
           </div>
           <div class="coords-box">
             <div class="coord-item">
-              <label>X</label>
+              <label>X (East)</label>
               <span id="cam-x">0.0</span>
             </div>
             <div class="coord-item">
-              <label>Y (Elev)</label>
+              <label>Y (North)</label>
               <span id="cam-y">0.0</span>
             </div>
             <div class="coord-item">
-              <label>Z</label>
+              <label>Z (Elev)</label>
               <span id="cam-z">0.0</span>
             </div>
           </div>
@@ -200,11 +206,19 @@
 
         <div class="control-section">
           <div class="section-title">
+            <span>🏛 Building Interiors</span>
+          </div>
+          <div id="interior-jump-chips" style="display: flex; flex-direction: column; gap: 6px;"></div>
+        </div>
+
+        <div class="control-section">
+          <div class="section-title">
             <span>Controls &amp; Navigation</span>
           </div>
-          <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">
+          <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.45;">
             <strong>Mouse:</strong> Left drag to orbit, right drag to pan, wheel to zoom.<br>
-            <strong>Keys:</strong> WASD to fly camera, Q/E for down/up, Shift to speed up.
+            <strong>Keys:</strong> WASD to fly camera, Q/E for down/up, Shift for 3× speed.<br>
+            <strong>Shortcuts:</strong> Press <kbd style="background: var(--bg-input); padding: 1px 4px; border-radius: 3px; border: 1px solid var(--border-subtle); color: var(--gold);">?</kbd> for full cheat sheet.
           </p>
         </div>
       </div>
@@ -215,7 +229,7 @@
           <div class="section-title">
             <span>Time of Day Presets</span>
           </div>
-          <div class="btn-grid">
+          <div class="tod-grid">
             <button class="btn btn-chip" data-tod="morning">Morning</button>
             <button class="btn btn-chip active" data-tod="golden">Golden</button>
             <button class="btn btn-chip" data-tod="noon">Noon</button>
@@ -234,7 +248,7 @@
           <div class="control-row">
             <span class="control-label">Azimuth (Heading)</span>
             <input type="range" id="sun-azimuth-slider" min="0" max="360" step="5" value="250">
-            <span id="sun-azimuth-val" class="control-val">250°</span>
+            <span id="sun-azimuth-val" class="control-val">250° · WSW</span>
           </div>
           <div class="control-row">
             <span class="control-label">Elevation (Zenith)</span>
@@ -250,7 +264,7 @@
           <div class="control-row">
             <span class="control-label">Sunlight Intensity</span>
             <input type="range" id="sun-intensity-slider" min="0.2" max="3.0" step="0.1" value="1.5">
-            <span id="sun-intensity-val" class="control-val">1.5</span>
+            <span id="sun-intensity-val" class="control-val">1.5×</span>
           </div>
           <div class="control-row">
             <span class="control-label">Aegean Haze / Fog</span>
@@ -284,6 +298,7 @@
           <div class="section-title">
             <span>Prop Library</span>
           </div>
+          <input type="text" id="prop-search-input" class="input-text" placeholder="Search props (e.g. column, statue, boat)..." style="margin-bottom: 8px;">
           <div class="prop-filter-tabs" id="prop-category-filters">
             <span class="prop-filter-chip active" data-category="all">All</span>
           </div>
@@ -297,12 +312,12 @@
           </div>
           <div id="prop-inspector" style="display: none; margin-bottom: 10px;">
             <div style="font-size: 0.8rem; color: var(--gold); margin-bottom: 6px;">Selected: <span id="prop-inspector-name"></span> · numbers work from any view</div>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;">
-              <label style="font-size: 0.7rem; color: var(--text-dim);">X (m)<input type="number" id="prop-x" class="input-text" step="0.1"></label>
-              <label style="font-size: 0.7rem; color: var(--text-dim);">Y (m)<input type="number" id="prop-y" class="input-text" step="0.1"></label>
-              <label style="font-size: 0.7rem; color: var(--text-dim);">Z (m)<input type="number" id="prop-z" class="input-text" step="0.1"></label>
-              <label style="font-size: 0.7rem; color: var(--text-dim);">Yaw (°)<input type="number" id="prop-yaw" class="input-text" step="5"></label>
-              <label style="font-size: 0.7rem; color: var(--text-dim);">Scale<input type="number" id="prop-scale" class="input-text" step="0.1" min="0.05"></label>
+            <div class="prop-inputs-grid">
+              <label>X (m)<input type="number" id="prop-x" class="input-text" step="0.1"></label>
+              <label>Y (m)<input type="number" id="prop-y" class="input-text" step="0.1"></label>
+              <label>Z (m)<input type="number" id="prop-z" class="input-text" step="0.1"></label>
+              <label>Yaw (°)<input type="number" id="prop-yaw" class="input-text" step="5"></label>
+              <label>Scale<input type="number" id="prop-scale" class="input-text" step="0.1" min="0.05"></label>
             </div>
             <div style="display: flex; gap: 6px; margin-top: 6px;">
               <button class="btn btn-chip" id="btn-prop-turn-left">⟲ 90°</button>
@@ -633,6 +648,45 @@
       <span id="tests-status" style="color: var(--text-dim); font-size: 0.8rem;"></span>
     </div>
     <div id="tests-list" style="flex: 1; overflow-y: auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 16px;"></div>
+  </div>
+
+  <!-- KEYBOARD SHORTCUTS & HELP MODAL -->
+  <div id="help-modal" class="drawer" style="position: fixed; inset: 80px auto auto 50%; transform: translateX(-50%); width: 560px; max-width: 90vw; border-radius: 14px; display: none; flex-direction: column; z-index: 100;">
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <h2>COMPOSER SHORTCUTS &amp; CONTROLS</h2>
+        <p>Interactive 3D Aegean composition quick reference</p>
+      </div>
+      <button class="btn btn-icon" id="btn-close-help">✕</button>
+    </div>
+    <div style="padding: 20px; display: flex; flex-direction: column; gap: 14px; font-size: 0.85rem; max-height: 70vh; overflow-y: auto;">
+      <div class="control-section">
+        <div class="section-title"><span>Camera &amp; Navigation</span></div>
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px; line-height: 1.5;">
+          <span style="font-family: var(--font-mono); color: var(--gold);">Mouse Drag</span><span>Left-click: orbit · Right-click: pan · Wheel: zoom</span>
+          <span style="font-family: var(--font-mono); color: var(--gold);">W · A · S · D</span><span>Fly camera forward, left, backward, right</span>
+          <span style="font-family: var(--font-mono); color: var(--gold);">Q · E</span><span>Descend / ascend vertically</span>
+          <span style="font-family: var(--font-mono); color: var(--gold);">Shift (Hold)</span><span>High-speed flight across the archipelago (3×)</span>
+          <span style="font-family: var(--font-mono); color: var(--gold);">Spacebar</span><span>Capture current view &amp; open Composition Studio</span>
+        </div>
+      </div>
+      <div class="control-section">
+        <div class="section-title"><span>Props &amp; Placement</span></div>
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px; line-height: 1.5;">
+          <span style="font-family: var(--font-mono); color: var(--gold);">G · R · S</span><span>Switch gizmo: Move (G), Rotate (R), Scale (S)</span>
+          <span style="font-family: var(--font-mono); color: var(--gold);">Del / Backspace</span><span>Delete selected placed prop</span>
+          <span style="font-family: var(--font-mono); color: var(--gold);">Click on island</span><span>Spawn chosen prop (in placement mode)</span>
+        </div>
+      </div>
+      <div class="control-section">
+        <div class="section-title"><span>Panel &amp; Modal Shortcuts</span></div>
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px; line-height: 1.5;">
+          <span style="font-family: var(--font-mono); color: var(--gold);">1 · 2 · 3</span><span>Switch dock tabs: Camera (1), Environment (2), Props (3)</span>
+          <span style="font-family: var(--font-mono); color: var(--gold);">Escape</span><span>Close active modal or exit placement mode</span>
+          <span style="font-family: var(--font-mono); color: var(--gold);">?</span><span>Toggle this shortcuts guide</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Toast Notification -->
