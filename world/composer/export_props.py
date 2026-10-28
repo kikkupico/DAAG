@@ -6,7 +6,7 @@
 The props are the prototypes the islands scatter and the buildings use (the p_* collections), so
 what is placed in the composer is the model a render shows. Each is moved to stand on z = 0 with its
 footprint centred on the origin, in metres. Writes world/build/composer/props/<id>.glb and props.json.
-Vegetation, rocks, roof tiles and wall blocks are left out: the scene already carries them.
+Vegetation, roof tiles and wall blocks are left out: the scene already carries them.
 """
 import json
 import os
@@ -34,9 +34,12 @@ WANTED = {
     "statue_hermes": ("Statues", "Hermes"), "statue_plato": ("Statues", "Plato"),
     "statue_jungling": ("Statues", "Youth"),
     "flag": ("Goods", "Flag"),
+    "boulder": ("Rocks", "Boulder"),
+    "rock_small": ("Rocks", "Rock"),
+    "crag": ("Rocks", "Crag"),
 }
 EXTRA = {"merchantman": ["merchant_sail"]}      # collections exported together with it
-ICON = {"Transport": "🛒", "Vessels": "⛵", "Goods": "🏺", "Columns": "🏛️", "Statues": "🗿"}
+ICON = {"Transport": "🛒", "Vessels": "⛵", "Goods": "🏺", "Columns": "🏛️", "Statues": "🗿", "Rocks": "🪨"}
 
 catalog_path = os.path.join(OUT, "props.json")
 catalog = {p["id"]: p for p in json.load(open(catalog_path))} if os.path.exists(catalog_path) else {}
@@ -44,7 +47,7 @@ catalog = {p["id"]: p for p in json.load(open(catalog_path))} if os.path.exists(
 
 def objects_of(stem):
     c = bpy.data.collections.get("p_" + stem)
-    return [o for o in (c.objects if c else []) if o.type == "MESH"]
+    return sorted([o for o in (c.objects if c else []) if o.type == "MESH"], key=lambda o: o.name)
 
 
 def export(pid, objs):

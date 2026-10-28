@@ -12,7 +12,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 import { buildPrompt, loadPromptParts } from './js/prompt.js';
-import { esc } from './js/util.js';
+import { esc, copyTextToClipboard } from './js/util.js';
 import { blenderToThree, threeToBlender, shotPoint, bearingToThree, shotToWorld, worldToFrame } from './js/coords.js';
 
 const COMPASS_POINTS = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
@@ -1312,7 +1312,8 @@ async function copyCapturedImageToClipboard() {
     ]);
     showToast('Image copied to clipboard!');
     if (dom.btnCopyImage) {
-      const orig = dom.btnCopyImage.textContent;
+      const orig = dom.btnCopyImage.getAttribute('data-orig-text') || dom.btnCopyImage.textContent;
+      dom.btnCopyImage.setAttribute('data-orig-text', orig);
       dom.btnCopyImage.textContent = '✓ Copied!';
       setTimeout(() => { dom.btnCopyImage.textContent = orig; }, 1500);
     }
@@ -2355,8 +2356,16 @@ function setupEventListeners() {
       const [tx, ty, tz] = threeToBlender(controls.target);
       const text = `cam: [${cx.toFixed(2)}, ${cy.toFixed(2)}, ${cz.toFixed(2)}], target: [${tx.toFixed(2)}, ${ty.toFixed(2)}, ${tz.toFixed(2)}]`;
       try {
-        await navigator.clipboard.writeText(text);
-        showToast('Camera coordinates copied to clipboard');
+        const copied = await copyTextToClipboard(text);
+        if (copied) {
+          showToast('Camera coordinates copied to clipboard');
+          const orig = dom.btnCopyCoords.getAttribute('data-orig-text') || dom.btnCopyCoords.textContent;
+          dom.btnCopyCoords.setAttribute('data-orig-text', orig);
+          dom.btnCopyCoords.textContent = '✓ Copied!';
+          setTimeout(() => { dom.btnCopyCoords.textContent = orig; }, 1500);
+        } else {
+          showToast(text);
+        }
       } catch (_) {
         showToast(text);
       }
@@ -2553,14 +2562,38 @@ function setupEventListeners() {
     updatePrompt();
   });
 
-  dom.btnCopyPrompt.addEventListener('click', async () => {
-    const prompt = updatePrompt();
-    await navigator.clipboard.writeText(prompt);
-    showToast('Prompt copied to clipboard!');
-    const orig = dom.btnCopyPrompt.textContent;
-    dom.btnCopyPrompt.textContent = '✓ Copied!';
-    setTimeout(() => { dom.btnCopyPrompt.textContent = orig; }, 1500);
-  });
+  if (dom.btnCopyPrompt) {
+    dom.btnCopyPrompt.addEventListener('click', async () => {
+      try {
+        const prompt = updatePrompt();
+        if (!prompt) {
+          showToast('Prompt is empty');
+          return;
+        }
+        const copied = await copyTextToClipboard(prompt);
+        if (copied) {
+          showToast('Prompt copied to clipboard!');
+          const orig = dom.btnCopyPrompt.getAttribute('data-orig-text') || dom.btnCopyPrompt.textContent;
+          dom.btnCopyPrompt.setAttribute('data-orig-text', orig);
+          dom.btnCopyPrompt.textContent = '✓ Copied!';
+          setTimeout(() => { dom.btnCopyPrompt.textContent = orig; }, 1500);
+        } else {
+          // If clipboard access is blocked by browser permissions, select the text for manual copying
+          if (dom.promptOutputText) {
+            const range = document.createRange();
+            range.selectNodeContents(dom.promptOutputText);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }
+          showToast('Clipboard access blocked. Prompt text selected — press Cmd+C / Ctrl+C to copy.');
+        }
+      } catch (err) {
+        console.error('Copy prompt failed:', err);
+        showToast(`Could not copy prompt: ${err.message}`);
+      }
+    });
+  }
 
   dom.btnExportBundle.addEventListener('click', () => {
     const prompt = updatePrompt();
