@@ -25,12 +25,12 @@ function Tholos(svg,o={}){
   el("rect",{x:cx-26,y:cy+rr-2,width:52,height:26,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3,class:"i"},svg);
   el("text",{x:cx,y:cy+rr+42,class:"lab i",style:"font-size:12px"},svg).textContent="the porch";
   const under=el("g",{},svg),pod=el("g",{class:"podium"},svg),seats=el("g",{},svg),over=el("g",{},svg);
-  /* the podium shows the seal: the caller's signet and the number in the middle, a slot at each bench's place, a wreath round the holder's */
-  el("circle",{cx,cy,r:46,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":4},pod);
-  const sr=28,slot={},mw=el("circle",{cx,cy,r:15,class:"wreath"},pod),mid=el("circle",{cx,cy,r:11,class:"slot"},pod),num=el("text",{x:cx,y:cy,class:"sn"},pod);
+  /* the podium shows the seal, in wax with no colours: the caller's initial and the number in the middle, the initials of the others who answered at their benches' places, a wreath round the holder's */
+  el("circle",{cx,cy,r:50,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":4},pod);
+  const sr=32,slot={},mw=el("circle",{cx,cy,r:17.5,class:"wreath"},pod),mid=el("circle",{cx,cy,r:13.5,class:"slot"},pod),num=el("text",{x:cx,y:cy,class:"sn"},pod);
   ALL.forEach(k=>{const a=A[k]*Math.PI/180,x=cx+sr*Math.cos(a),y=cy+sr*Math.sin(a);
-    slot[k]={w:el("circle",{cx:x,cy:y,r:11.5,class:"wreath"},pod),c:el("circle",{cx:x,cy:y,r:7.5,class:"slot"},pod)}});
-  const slab=el("text",{x:cx,y:cy+64,class:"lab halo",style:"font-size:12px"},svg);
+    const w=el("circle",{cx:x,cy:y,r:13,class:"wreath"},pod),g=el("g",{},pod);el("circle",{cx:x,cy:y,r:9,class:"slot"},g);el("text",{x,y,class:"sg"},g).textContent=WHO[k].g;slot[k]={w,c:g}});
+  const slab=el("text",{x:cx,y:cy+68,class:"lab halo",style:"font-size:12px"},svg);
   const T={svg,cx,cy,under,over,seat:{},porch:[cx,cy+rr+12],
     at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
     put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
@@ -39,11 +39,11 @@ function Tholos(svg,o={}){
     /* a runner or a note u of the way from one place to another */
     run(g,a,b,u){const [x1,y1]=T.pos(a),[x2,y2]=T.pos(b);T.put(g,x1+(x2-x1)*u,y1+(y2-y1)*u)},
     /* s: {n, by: the caller, ring: who answered (the caller among them), hold: who has the wreath (none while the seal is being made)} */
-    seal(s){num.textContent=s.n;mid.setAttribute("fill",WHO[s.by].c);
+    seal(s){num.textContent=WHO[s.by].g+s.n;
       /* the caller's signet is in the middle, so their place in the ring is bare, like the place of anyone who did not answer;
          the wreath goes round the middle when the caller holds the podium */
       mw.style.opacity=s.hold&&s.hold===s.by?1:0;
-      ALL.forEach(k=>{const on=s.ring.includes(k)&&k!==s.by;slot[k].c.setAttribute("fill",on?WHO[k].c:"none");slot[k].c.style.opacity=on?1:0;
+      ALL.forEach(k=>{const on=s.ring.includes(k)&&k!==s.by;slot[k].c.style.opacity=on?1:0;
         slot[k].w.style.opacity=on&&k===s.hold?1:0;T.seat[k].g.classList.toggle("holder",k===s.hold)});
       slab.textContent=`seal ${s.n}, ${WHO[s.by].n}`+(s.hold?"":" · being made")},
     note(k,s,m){const t=T.seat[k].s;t[0].textContent=s;t[1].textContent=m===undefined?M_(s):m},
