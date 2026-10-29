@@ -626,7 +626,7 @@ def tholos(k):
             k.box('board', -0.13, 0.095, 0, 0.13, 0.275, 0.025); k.box('wax', -0.115, 0.11, 0.024, 0.115, 0.26, 0.029)
         k.pop()
     k.push(T(0.1, -0.04, zd + 0.034) @ Rz(0.5)); k.beam('bronze', (-0.08, 0, 0), (0.08, 0, 0), 0.008, 0.008); k.pop()   # a stylus
-    seal_impression(k, 0.4, -0.04, zd, SEAL7, R=0.085, up=-PI / 2)               # the seal in wax, as every line carries it
+    seal_impression(k, 0.4, -0.04, zd, SEAL7, R=0.1, up=-PI / 2)               # the seal in wax, as every line carries it
     seal_stamp(k, 0.38, 0.27, zd)                                                # the bronze stamp, face down
     die_tray(k, 0.52, 0.24, zd, ['Ο', 'Θ'])                                       # the signets not in the stamp
     return dict(zs=zs, R=R, zr=zr, apex=zr + rise)
@@ -730,35 +730,38 @@ def desk(k, x, y, z):
 
 
 def seal_impression(k, x, y, z, seal, R=0.08, rot=0.0, up=0.0):
-    """The seal pressed in red wax, lying flat: a disc with a raised rim; bosses where signets stood, each with its
-    initial, the middle with the number beside it, a wreath of leaves round the holder's. rot turns the ring so
-    each boss sits at its bench's bearing in the hall; up turns the letters to read from that side."""
+    """The seal pressed in red wax, lying flat: a disc with a raised rim, and a raised bench seen from above for each
+    signet that stood in the stamp: a round bench in the middle with the manager's initial and the number inside it,
+    and a curved bench at each other answerer's bearing with their initial; a wreath of leaves round the holder's.
+    rot turns the ring so each bench sits at its bearing in the hall; up turns the letters to read from that side."""
     mid, num, ring, wreath_mid = seal
-    h = 0.012
+    h = 0.012; rel = 0.004
     k.push(T(x, y, z) @ Rz(rot))
     k.lathe('sealwax', [(R * 0.97, 0), (R * 1.02, h * 0.4), (R, h), (R * 0.9, h * 1.15), (R * 0.86, h), (0.0, h)], seg=48)
-    rm, rr_, dr = R * 0.27, R * 0.68, R * 0.17
-    rel = 0.004
-    k.lathe('sealwax', [(rm, h - 0.001), (rm, h + rel), (0.0, h + rel)], seg=36)
-    text_mesh(k, 'sealwax', mid + num, rm * 1.2, 0.0, 0.0, h + rel, rot=(0, 0, up - rot), depth=0.0025)
-    if wreath_mid:                                           # a wreath of paired leaves round the middle
-        rw = rm + R * 0.07; L_ = R * 0.11; W_ = R * 0.035
-        for i in range(16):
-            a = 2 * PI * i / 16
-            for side in (-1, 1):
-                k.push(T((rw + side * W_ * 0.9) * math.cos(a), (rw + side * W_ * 0.9) * math.sin(a), h) @ Rz(a + PI / 2 + side * 0.45))
-                k.add('sealwax', [(-L_ / 2, 0, 0), (0, -W_ / 2, 0), (L_ / 2, 0, 0), (0, W_ / 2, 0),
-                                  (-L_ / 2, 0, rel * 0.4), (0, -W_ / 2, rel * 0.9), (L_ / 2, 0, rel * 0.4), (0, W_ / 2, rel * 0.9)],
-                      [(0, 3, 2, 1), (4, 5, 6, 7), (0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)])
-                k.pop()
+    ri, ro = R * 0.24, R * 0.34                               # the round bench in the middle
+    arc_sweep(k, 'sealwax', [(ri, h - 0.001), (ro, h - 0.001), (ro, h + rel), (ri, h + rel)], 0, 2 * PI, 48)
+    text_mesh(k, 'sealwax', mid + num, R * 0.24, 0.0, 0.0, h, rot=(0, 0, up - rot), depth=rel * 0.9)
+    if wreath_mid:
+        wreath(k, ro + R * 0.06, R, h, rel)
+    rr_ = R * 0.72; dw = R * 0.13; da = 0.4                  # the curved benches round it
     for b in ring:
         a = BENCH_A[b]
-        cx, cy = rr_ * math.cos(a), rr_ * math.sin(a)
-        k.push(T(cx, cy, 0))
-        k.lathe('sealwax', [(dr, h - 0.001), (dr, h + rel), (0.0, h + rel)], seg=24)
-        k.pop()
-        text_mesh(k, 'sealwax', NAMES[b][0], dr * 1.55, cx, cy, h + rel, rot=(0, 0, up - rot), depth=0.0025)
+        arc_sweep(k, 'sealwax', [(rr_ - dw, h - 0.001), (rr_ + dw, h - 0.001), (rr_ + dw, h + rel), (rr_ - dw, h + rel)], a - da, a + da, 12)
+        text_mesh(k, 'sealwax', NAMES[b][0], R * 0.2, rr_ * math.cos(a), rr_ * math.sin(a), h + rel, rot=(0, 0, up - rot), depth=0.0025)
     k.pop()
+
+
+def wreath(k, rw, R, h, rel, n=16):
+    """A wreath of paired leaves on a circle of radius rw, lying on the wax at height h."""
+    L_ = R * 0.11; W_ = R * 0.035
+    for i in range(n):
+        a = 2 * PI * i / n
+        for side in (-1, 1):
+            k.push(T((rw + side * W_ * 0.9) * math.cos(a), (rw + side * W_ * 0.9) * math.sin(a), h) @ Rz(a + PI / 2 + side * 0.45))
+            k.add('sealwax', [(-L_ / 2, 0, 0), (0, -W_ / 2, 0), (L_ / 2, 0, 0), (0, W_ / 2, 0),
+                              (-L_ / 2, 0, rel * 0.4), (0, -W_ / 2, rel * 0.9), (L_ / 2, 0, rel * 0.4), (0, W_ / 2, rel * 0.9)],
+                  [(0, 3, 2, 1), (4, 5, 6, 7), (0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)])
+            k.pop()
 
 
 def seal_stamp(k, x, y, z):
