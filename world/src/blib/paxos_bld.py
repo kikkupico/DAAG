@@ -626,9 +626,9 @@ def tholos(k):
             k.box('board', -0.13, 0.095, 0, 0.13, 0.275, 0.025); k.box('wax', -0.115, 0.11, 0.024, 0.115, 0.26, 0.029)
         k.pop()
     k.push(T(0.1, -0.04, zd + 0.034) @ Rz(0.5)); k.beam('bronze', (-0.08, 0, 0), (0.08, 0, 0), 0.008, 0.008); k.pop()   # a stylus
-    seal_impression(k, 0.4, -0.04, zd, SEAL7, R=0.1, up=-PI / 2)               # the seal in wax, as every line carries it
-    seal_stamp(k, 0.38, 0.27, zd)                                                # the bronze stamp, face down
-    die_tray(k, 0.52, 0.24, zd, ['Ο', 'Θ'])                                       # the signets not in the stamp
+    seal_stamp(k, 0.38, -0.12, zd, SEAL7, up=-PI / 2)                            # the stamp, set for seal 7, back up
+    seal_impression(k, 0.42, 0.2, zd, SEAL7, R=0.1, up=-PI / 2)                 # and its print in wax, as every line carries it
+    die_tray(k, 0.12, 0.36, zd, ['Ο', 'Θ'])                                       # the signets not in the stamp
     return dict(zs=zs, R=R, zr=zr, apex=zr + rise)
 
 
@@ -751,23 +751,56 @@ def seal_impression(k, x, y, z, seal, R=0.08, rot=0.0, up=0.0):
     k.pop()
 
 
-def wreath(k, rw, R, h, rel, n=16):
+def wreath(k, rw, R, h, rel, n=16, mat='sealwax'):
     """A wreath of paired leaves on a circle of radius rw, lying on the wax at height h."""
     L_ = R * 0.11; W_ = R * 0.035
     for i in range(n):
         a = 2 * PI * i / n
         for side in (-1, 1):
             k.push(T((rw + side * W_ * 0.9) * math.cos(a), (rw + side * W_ * 0.9) * math.sin(a), h) @ Rz(a + PI / 2 + side * 0.45))
-            k.add('sealwax', [(-L_ / 2, 0, 0), (0, -W_ / 2, 0), (L_ / 2, 0, 0), (0, W_ / 2, 0),
+            k.add(mat, [(-L_ / 2, 0, 0), (0, -W_ / 2, 0), (L_ / 2, 0, 0), (0, W_ / 2, 0),
                               (-L_ / 2, 0, rel * 0.4), (0, -W_ / 2, rel * 0.9), (L_ / 2, 0, rel * 0.4), (0, W_ / 2, rel * 0.9)],
                   [(0, 3, 2, 1), (4, 5, 6, 7), (0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)])
             k.pop()
 
 
-def seal_stamp(k, x, y, z):
-    """The bronze stamp, lying face down: a disc with a knob to hold it by."""
+def seal_stamp(k, x, y, z, seal, R=0.1, up=0.0):
+    """The stamp: a bronze disc with six slots cut through it, each the shape of a bench seen from above. The middle is
+    a fixed round bench round a socket that takes two half-dies, the manager's initial and the number; round it, a
+    curved slot at each bench's bearing takes that legislator's die, and a slot left empty prints nothing. A bronze
+    wreath clips round the holder's slot. It lies back up, so the dies show their initials as they are set."""
+    mid, num, ring, wreath_mid = seal
+    t = 0.016
+    rs, rf = R * 0.22, R * 0.34                              # the socket, and the fixed round bench round it
+    r0, r1 = R * 0.58, R * 0.86                              # the band the curved slots are cut in
+    da = 0.4
     k.push(T(x, y, z))
-    k.lathe('bronze', [(0.0, 0), (0.07, 0), (0.072, 0.012), (0.066, 0.018), (0.022, 0.026), (0.014, 0.05), (0.022, 0.062), (0.014, 0.072), (0.0, 0.072)], seg=40)
+    arc_sweep(k, 'bronze', [(rs, 0), (r0, 0), (r0, t), (rs, t)], 0, 2 * PI, 48)                  # plate inside the slots
+    k.lathe('dark', [(0.0, 0.001), (rs, 0.001)], seg=32, caps=False)                                 # the socket's floor
+    arc_sweep(k, 'bronze', [(rs, t), (rf, t), (rf, t + 0.004), (rs, t + 0.004)], 0, 2 * PI, 48)   # the round bench, raised
+    arc_sweep(k, 'bronze', [(r1, 0), (R, 0), (R * 1.01, t * 0.5), (R, t), (r1, t)], 0, 2 * PI, 64)  # the rim
+    cuts = sorted(BENCH_A[i] % (2 * PI) for i in range(5))
+    for i, a in enumerate(cuts):                                                               # plate between the slots
+        a_next = cuts[(i + 1) % 5] + (2 * PI if i == 4 else 0)
+        arc_sweep(k, 'bronze', [(r0, 0), (r1, 0), (r1, t), (r0, t)], a + da, a_next - da, 12)
+    for side in (-1, 1):                                                                        # lugs to lift it by
+        k.push(Rz(PI / 2 + side * PI / 2 + 0.3)); k.box('bronze', R * 0.98, -0.012, 0.004, R * 1.12, 0.012, t - 0.002); k.pop()
+    # the two half-dies in the socket: initial and number, side by side as they read
+    k.push(Rz(up))
+    for sx, ch in ((-1, mid), (1, num)):
+        arc_sweep(k, 'bronze_die', [(0.0015, 0), (rs - 0.001, 0), (rs - 0.001, t + 0.006), (0.0015, t + 0.006)],
+                  (PI if sx < 0 else 0) + PI / 2 - PI / 2, (PI if sx < 0 else 0) + PI / 2 + PI / 2, 12)
+        text_mesh(k, 'dark', ch, rs * 0.85, sx * rs * 0.48, 0.0, t + 0.006, rot=(0, 0, 0), depth=0.0012)
+    k.pop()
+    for b in ring:                                                                              # the dies in their slots
+        a = BENCH_A[b]
+        arc_sweep(k, 'bronze_die', [(r0 + 0.001, 0.0), (r1 - 0.001, 0.0), (r1 - 0.001, t + 0.006), (r0 + 0.001, t + 0.006)], a - da + 0.006, a + da - 0.006, 12)
+        rm_ = (r0 + r1) / 2
+        text_mesh(k, 'dark', NAMES[b][0], R * 0.17, rm_ * math.cos(a), rm_ * math.sin(a), t + 0.006, rot=(0, 0, up), depth=0.0012)
+    if wreath_mid:
+        k.push(T(0, 0, t + 0.004 - 0.012 + 0.002))
+        wreath(k, rf + R * 0.06, R, 0.012, 0.004, mat='bronze_die')
+        k.pop()
     k.pop()
 
 
