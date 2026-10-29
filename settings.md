@@ -307,19 +307,24 @@ present. A holder who has stepped out and not noticed a new seal can go on sendi
 old one, and settles nothing, since any majority they reach includes a legislator who has taken
 the new seal and refuses the old one.
 
-**The seal.** Each spell at the podium has its own seal, a round stamp laid out like the Tholos:
-six slots for signets, one in the middle and five round it, one at each bench's place. Each
-signet is cut with its owner's initial (Ο, Λ, Κ, Μ, Θ), and the seal carries no colour, so the
-same seal works in diagrams and in pictures of wax. The middle holds the manager's initial with
-a number beside it, one higher than any seal they have seen, so seal 7 called by Liskovia reads Λ7 (the paper's viewid, ⟨count, manager⟩); the ring holds the signets of the
-others who answered the call (with the middle, the view's members). A slot without a signet
-leaves no mark, so nothing shows at the place of anyone who did not answer, nor at the manager's
-own place. A wreath goes round the signet of the one who takes the podium (the primary), and
-round the middle when the manager takes it. The middle says who called;
-the wreath says who holds the podium. Seals are ordered by their middle alone, by number and
-then by the manager's name. A seal never changes once made, so a legislator missing from it who
-comes back within reach means a new seal must be called. Each line is known by its seal and line
-(the viewstamp).
+**The seal.** Each spell at the podium has its own seal, a bronze disc laid out like the Tholos,
+with round slots sunk in it, all one size: one at each bench's place round the edge and one in the
+middle. Each legislator's signet is a round die cut with their initial (Ο, Λ, Κ, Μ, Θ), so any
+signet fits any round slot. The seal carries no colour, so the same seal works in diagrams and in
+pictures of wax and bronze. The middle has two slots: the round one takes the signet of the one who
+called the seal, its manager, and a square one beside it takes a number one higher than any seal
+they have seen, so seal 7 called by Liskovia shows Λ and 7 side by side (the paper's viewid,
+⟨count, manager⟩). The slots round the edge take the signets of the others who answered the call
+(with the middle, the view's members). A slot left empty prints nothing, so nothing shows at the
+place of anyone who did not answer, nor at the manager's own place. A wreath, a bronze ring that
+fits over any round slot, goes round the signet of the one who takes the podium (the primary): at
+their bench's place, or in the middle when the manager takes it. The middle says who called; the
+wreath says who holds the podium. Seals are ordered by their middle alone, by number and then by
+the manager's name. A seal never changes once made, so a legislator missing from it who comes back
+within reach means a new seal must be called. The holder presses the seal in wax beside every
+line, so each line is known by its seal and line (the viewstamp). On the podium's desk the stamp
+lies back up, beside its print in wax and a tray of the signets not in use; each bench's stand
+keeps a print of the seal that bench serves under.
 
 **Wax, not ink.** Lamport's legislators write in indelible ink; Schedia's keep the law on wax
 tablets that stay on their bench and are smoothed when their holder goes home, while the bench's

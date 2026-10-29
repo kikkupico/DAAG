@@ -739,25 +739,67 @@ def seal_layout(R, up):
     return rs, ring, mgr, num, R * 0.085
 
 
+def holed_top(k, mat, R, z, inside, nr=30, na=200):
+    """The flat top of a disc of radius R at height z, as a polar grid of facets, leaving out every facet whose
+    middle inside(x, y) says is in a hole; a lip or wall round each hole hides the grid's stepped edge."""
+    V = []; F = []
+    for i in range(nr):
+        r0 = R * i / nr; r1 = R * (i + 1) / nr
+        for j in range(na):
+            a0 = 2 * PI * j / na; a1 = 2 * PI * (j + 1) / na
+            rm = (r0 + r1) / 2; am = (a0 + a1) / 2
+            if inside(rm * math.cos(am), rm * math.sin(am)):
+                continue
+            n = len(V)
+            V += [(r0 * math.cos(a0), r0 * math.sin(a0), z), (r1 * math.cos(a0), r1 * math.sin(a0), z),
+                  (r1 * math.cos(a1), r1 * math.sin(a1), z), (r0 * math.cos(a1), r0 * math.sin(a1), z)]
+            F.append((n, n + 1, n + 2, n + 3))
+    k.add(mat, V, F)
+
+
 def seal_impression(k, x, y, z, seal, R=0.08, rot=0.0, up=0.0):
-    """The seal pressed in red wax, lying flat: a disc with a raised rim; a round boss with an initial where each signet
-    stood, the manager's in the middle with the number in its square beside it, and a wreath of leaves round the
-    holder's. rot turns the disc so each boss sits at its bench's bearing in the hall; up turns the letters to read
-    from that side. A slot left empty prints nothing."""
+    """The seal pressed in red wax, lying flat. The stamp's dies stand proud of the bronze, so each leaves a hollow:
+    a round pit where each signet stood, the manager's in the middle with a square pit beside it for the number, and
+    a ring groove where the wreath was round the holder's; the letters cut in the dies stand up inside the pits.
+    A slot left empty leaves the wax flat. rot turns the disc so each pit sits at its bench's bearing in the hall;
+    up turns the letters to read from that side."""
     mid, num, ring, hold = seal
-    h = 0.012; rel = 0.004; th = up - rot
-    k.push(T(x, y, z) @ Rz(rot))
-    k.lathe('sealwax', [(R * 0.97, 0), (R * 1.02, h * 0.4), (R, h), (R * 0.9, h * 1.15), (R * 0.86, h), (0.0, h)], seg=48)
+    h = 0.012; dep = 0.0035; th = up - rot
     rs, pos, mgr, npos, hs = seal_layout(R, th)
-    def boss(px, py, ch):
-        k.push(T(px, py, 0)); k.lathe('sealwax', [(rs, h - 0.001), (rs, h + rel), (0.0, h + rel)], seg=28); k.pop()
-        text_mesh(k, 'sealwax', ch, rs * 1.2, px, py, h + rel, rot=(0, 0, th), depth=0.0025)
-    boss(*mgr, mid)
-    k.push(T(*npos, 0) @ Rz(th)); k.box('sealwax', -hs, -hs, h - 0.001, hs, hs, h + rel); k.pop()
-    text_mesh(k, 'sealwax', num, hs * 1.6, *npos, h + rel, rot=(0, 0, th), depth=0.0025)
-    k.push(T(*(mgr if hold == 'mid' else pos[hold]), 0)); wreath(k, rs + R * 0.05, R * 0.6, h, rel, n=11); k.pop()
-    for b in ring:
-        boss(*pos[b], NAMES[b][0])
+    pits = [(mgr, mid)] + [(pos[b], NAMES[b][0]) for b in ring]
+    wc = mgr if hold == 'mid' else pos[hold]
+    w0, w1 = rs + R * 0.018, rs + R * 0.058                  # the wreath's groove
+    def inside(px, py):
+        if any((px - c[0]) ** 2 + (py - c[1]) ** 2 < rs ** 2 for c, _ in pits):
+            return True
+        u = (px - npos[0]) * math.cos(th) + (py - npos[1]) * math.sin(th)
+        v = -(px - npos[0]) * math.sin(th) + (py - npos[1]) * math.cos(th)
+        if abs(u) < hs and abs(v) < hs:
+            return True
+        return w0 ** 2 < (px - wc[0]) ** 2 + (py - wc[1]) ** 2 < w1 ** 2
+    k.push(T(x, y, z) @ Rz(rot))
+    k.lathe('sealwax', [(R * 0.97, 0), (R * 1.02, h * 0.4), (R, h), (R * 0.9, h * 1.15), (R * 0.86, h)], seg=48, caps=False)
+    k.lathe('sealwax', [(0.0, 0.0), (R * 0.97, 0.0)], seg=48, caps=False)
+    holed_top(k, 'sealwax', R * 0.86, h, inside)
+    for (cx, cy), ch in pits:                                # the round pits, each with its letter standing up in it
+        k.push(T(cx, cy, 0))
+        k.lathe('sealwax', [(rs, h), (rs, h - dep)], seg=32, caps=False)
+        k.lathe('sealwax', [(rs, h - dep), (0.0, h - dep)], seg=32, caps=False)
+        k.lathe('sealwax', [(rs, h), (rs + 0.0012, h + 0.0008), (rs + 0.0024, h)], seg=32, caps=False)   # the wax pushed up at the rim
+        k.pop()
+        text_mesh(k, 'sealwax', ch, rs * 1.15, cx, cy, h - dep, rot=(0, 0, th), depth=dep * 0.75)
+    k.push(T(*npos, 0) @ Rz(th))                             # the number's square pit
+    for (x0, y0, x1, y1) in ((-hs, -hs, hs, -hs + 0.0006), (-hs, hs - 0.0006, hs, hs), (-hs, -hs, -hs + 0.0006, hs), (hs - 0.0006, -hs, hs, hs)):
+        k.box('sealwax', x0, y0, h - dep, x1, y1, h)
+    k.box('sealwax', -hs, -hs, h - dep - 0.0005, hs, hs, h - dep)
+    k.pop()
+    text_mesh(k, 'sealwax', num, hs * 1.5, *npos, h - dep, rot=(0, 0, th), depth=dep * 0.75)
+    k.push(T(*wc, 0))                                        # the wreath's groove, its leaves standing in it
+    k.lathe('sealwax', [(w0, h), (w0, h - dep * 0.7)], seg=40, caps=False)
+    k.lathe('sealwax', [(w1, h - dep * 0.7), (w1, h)], seg=40, caps=False)
+    k.lathe('sealwax', [(w0, h - dep * 0.7), (w1, h - dep * 0.7)], seg=40, caps=False)
+    wreath(k, (w0 + w1) / 2, R * 0.6, h - dep * 0.7, dep * 0.55, n=11)
+    k.pop()
     k.pop()
 
 
