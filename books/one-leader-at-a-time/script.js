@@ -16,40 +16,79 @@ $("#cast").innerHTML=ALL.map(who).join("");
 /* the five as lanes, for a Tholos picture's computing twin (Unfold in book.js) */
 const LN={};ALL.forEach(k=>LN[k]=[0,WHO[k].g,WHO[k].c,WHO[k].m]);
 
-/* a laurel wreath round a seat, shown on whoever holds the wreath: two leafy branches rising
-   from a red tie at the bottom, open at the top */
-function laurel(g,r){
-  const w=el("g",{class:"ring"},g),p=a=>[r*Math.cos(a*Math.PI/180),r*Math.sin(a*Math.PI/180)],n=7;
-  [1,-1].forEach(s=>{const a0=90+s*10,a1=90+s*148,[x0,y0]=p(a0),[x1,y1]=p(a1);
-    el("path",{d:`M${x0.toFixed(1)} ${y0.toFixed(1)}A${r} ${r} 0 0 ${s>0?1:0} ${x1.toFixed(1)} ${y1.toFixed(1)}`,class:"stem"},w);
-    for(let i=0;i<n;i++){const a=a0+(a1-a0)*(i+.5)/n,[x,y]=p(a),dir=a+s*90;
-      for(const t of [-1,1])el("path",{d:"M0 0Q5.5-4.6 13 0Q5.5 4.6 0 0",class:"leaf",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(dir+t*36).toFixed(0)})`},w)}
-    el("path",{d:"M0 0Q5.5-4.6 13 0Q5.5 4.6 0 0",class:"leaf",transform:`translate(${x1.toFixed(1)} ${y1.toFixed(1)}) rotate(${(a1+s*90).toFixed(0)})`},w)});
-  el("circle",{cx:0,cy:r,r:3,class:"tie"},w);
-  return w}
+/* a marker round the seat of whoever is currently the writer */
+function writerMark(g,r){
+  const w=el("g",{class:"ring"},g);
+  el("circle",{cx:0,cy:0,r:r,class:"wring"},w);
+  el("circle",{cx:0,cy:0,r:r+3.5,class:"wring-out"},w);
+  return w;
+}
+const laurel=writerMark;
 
-/* ===== the Tholos, seen from above: the table with the seal at the centre, five benches round the wall, the porch door below ===== */
+/* ===== the Tholos, seen from above: five benches round the wall, open floor, the porch door below ===== */
 function Tholos(svg,o={}){
   const cx=220,cy=215,rr=204,R=138,A={O:-90,L:-18,K:54,M:126,T:198};
   svg.innerHTML="";svg.setAttribute("viewBox","0 0 440 470");
   el("circle",{cx,cy,r:rr,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5,class:"i"},svg);
-  el("circle",{cx,cy,r:R+36,fill:"none",stroke:"#b5602c","stroke-width":3,"stroke-dasharray":"3 8",class:"i"},svg);
+  /* the Hellenistic Epidaurus floor: central circular medallion and radiating spiral lozenge guides */
+  el("circle",{cx,cy,r:R+36,fill:"none",stroke:"#1c1512","stroke-width":2.5,class:"i"},svg);
+  el("circle",{cx,cy,r:108,fill:"none",stroke:"#8c7e68","stroke-width":1.5,class:"i"},svg);
+  el("circle",{cx,cy,r:24,fill:"none",stroke:"#8c7e68","stroke-width":1.2,class:"i"},svg);
+  const floorG = el("g", {class: "i"}, svg);
+  for(let j=0; j<18; j++){
+    const aj = j * Math.PI * 2 / 18;
+    const r0 = 24, r1 = 108;
+    const x0 = cx + r0 * Math.cos(aj), y0 = cy + r0 * Math.sin(aj);
+    const x1 = cx + r1 * Math.cos(aj + 0.42), y1 = cy + r1 * Math.sin(aj + 0.42);
+    const mx = cx + 64 * Math.cos(aj + 0.18), my = cy + 64 * Math.sin(aj + 0.18);
+    el("path", {d: `M${x0.toFixed(1)} ${y0.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${x1.toFixed(1)} ${y1.toFixed(1)}`, fill: "none", stroke: "#c8bea2", "stroke-width": 1}, floorG);
+    const x2 = cx + r1 * Math.cos(aj - 0.42), y2 = cy + r1 * Math.sin(aj - 0.42);
+    const mx2 = cx + 64 * Math.cos(aj - 0.18), my2 = cy + 64 * Math.sin(aj - 0.18);
+    el("path", {d: `M${x0.toFixed(1)} ${y0.toFixed(1)} Q${mx2.toFixed(1)} ${my2.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`, fill: "none", stroke: "#c8bea2", "stroke-width": 1}, floorG);
+  }
   el("rect",{x:cx-26,y:cy+rr-2,width:52,height:26,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3,class:"i"},svg);
   el("text",{x:cx,y:cy+rr+42,class:"lab i",style:"font-size:12px"},svg).textContent="the porch";
   const under=el("g",{},svg),pod=el("g",{class:"podium"},svg),seats=el("g",{},svg),over=el("g",{},svg);
-  /* the table shows the seal, in wax with no colours. Every signet slot is round and the same size, so a signet fits
-     any of them: one at each bench's place round the edge with the initial of another who answered, one in the middle
-     with the manager's, and beside it a square slot for the number; a wreath round the holder's */
-  el("circle",{cx,cy,r:50,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":4},pod);
-  const sr=34,rs=6.5,d=7.5,slot={},mw=el("circle",{cx:cx-d,cy,r:9.5,class:"wreath"},pod);
-  el("circle",{cx:cx-d,cy,r:rs,class:"slot"},pod);el("rect",{x:cx+d-5,y:cy-5,width:10,height:10,class:"slot"},pod);
-  const mgr=el("text",{x:cx-d,y:cy,class:"sg"},pod),num=el("text",{x:cx+d,y:cy,class:"sn"},pod);
-  ALL.forEach(k=>{const a=A[k]*Math.PI/180,[x,y]=[cx+sr*Math.cos(a),cy+sr*Math.sin(a)];
-    const w=el("circle",{cx:x,cy:y,r:9.5,class:"wreath"},pod),g=el("g",{},pod);
-    el("circle",{cx:x,cy:y,r:rs,class:"slot"},g);el("text",{x,y,class:"sg"},g).textContent=WHO[k].g;slot[k]={w,c:g}});
-  const slab=el("text",{x:cx,y:cy+68,class:"lab halo",style:"font-size:12px"},svg);
-  /* o.bare: an empty table, for pictures that come before the seal is explained */
-  if(o.bare){[...pod.children].slice(1).forEach(c=>c.remove());slab.remove()}
+
+  /* the concentric seal disc:
+     center square slot for view counter,
+     manager peg on inner radius,
+     writer peg on middle radius,
+     quorum signets along the rim.
+     Decluttered: markers are filled circles, blank otherwise. */
+  const r_disc=54, r_mgr=20, r_wri=33, r_rim=45;
+  el("circle",{cx,cy,r:r_disc,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3},pod);
+
+  /* center square slot for number */
+  el("rect",{x:cx-6.5,y:cy-6.5,width:13,height:13,class:"slot"},pod);
+  const num=el("text",{x:cx,y:cy,class:"sn"},pod);
+
+  /* markers for active pegs and signets (blank when not active) */
+  const mgrPeg={}, wriPeg={}, rimSlot={};
+  ALL.forEach(k=>{
+    const a=A[k]*Math.PI/180;
+    const cos=Math.cos(a), sin=Math.sin(a);
+    /* inner ring: manager peg */
+    const mx=cx+r_mgr*cos, my=cy+r_mgr*sin;
+    mgrPeg[k]=el("circle",{cx:mx,cy:my,r:3.8,class:"peg-mgr",opacity:0},pod);
+
+    /* middle ring: writer peg */
+    const wx=cx+r_wri*cos, wy=cy+r_wri*sin;
+    wriPeg[k]=el("circle",{cx:wx,cy:wy,r:4.2,class:"peg-wri",opacity:0},pod);
+
+    /* outer ring: member signet */
+    const rx=cx+r_rim*cos, ry=cy+r_rim*sin;
+    const sg=el("g",{opacity:0},pod);
+    el("circle",{cx:rx,cy:ry,r:6.5,class:"slot"},sg);
+    el("text",{x:rx,y:ry,class:"sg"},sg).textContent=WHO[k].g;
+    rimSlot[k]=sg;
+  });
+
+  const slab=el("text",{x:cx,y:cy+72,class:"lab halo",style:"font-size:12px"},svg);
+
+  /* o.bare: an empty hall with open paved floor, for pictures before the seal is explained */
+  if(o.bare){[...pod.children].forEach(c=>c.remove());slab.remove()}
+
   const T={svg,cx,cy,under,over,seat:{},porch:[cx,cy+rr+12],
     at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
     put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
@@ -57,21 +96,23 @@ function Tholos(svg,o={}){
     token(fill,glyph,gm){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);dtext(g,{},glyph,gm===undefined?glyph:gm);return g},
     /* a runner or a note u of the way from one place to another */
     run(g,a,b,u){const [x1,y1]=T.pos(a),[x2,y2]=T.pos(b);T.put(g,x1+(x2-x1)*u,y1+(y2-y1)*u)},
-    /* s: {n, by: the manager, ring: who answered (the manager among them), hold: who has the wreath (none while the seal is being made)} */
-    seal(s){mgr.textContent=WHO[s.by].g;num.textContent=s.n;
-      /* the manager's signet is in the middle, so their place in the ring is bare, like the place of anyone who did not answer;
-         the wreath goes round the middle when the manager also holds the wreath */
-      mw.style.opacity=s.hold&&s.hold===s.by?1:0;
-      ALL.forEach(k=>{const on=s.ring.includes(k)&&k!==s.by;slot[k].c.style.opacity=on?1:0;
-        slot[k].w.style.opacity=on&&k===s.hold?1:0;T.seat[k].g.classList.toggle("holder",k===s.hold)});
+    /* s: {n, by: manager, ring: who answered, hold: who is the writer} */
+    seal(s){
+      num.textContent=s.n;
+      ALL.forEach(k=>{
+        mgrPeg[k].style.opacity=s.by===k?1:0;
+        wriPeg[k].style.opacity=s.hold&&s.hold===k?1:0;
+        rimSlot[k].style.opacity=s.ring.includes(k)?1:0;
+        T.seat[k].g.classList.toggle("writer",k===s.hold);
+        T.seat[k].g.classList.toggle("holder",k===s.hold);
+      });
       slab.textContent=`seal ${s.n}, ${WHO[s.by].n}`+(s.hold?"":" · being made")},
-    /* the wreath alone, with no seal shown */
-    hold(h){ALL.forEach(k=>T.seat[k].g.classList.toggle("holder",k===h))},
+    hold(h){ALL.forEach(k=>{T.seat[k].g.classList.toggle("writer",k===h);T.seat[k].g.classList.toggle("holder",k===h)})},
     note(k,s,m){const t=T.seat[k].s;t[0].textContent=s;t[1].textContent=m===undefined?M_(s):m},
     out(k,on){T.seat[k].g.classList.toggle("out",!!on)}
   };
   ALL.forEach(k=>{const [x,y]=T.at(A[k]),g=el("g",{class:"seat"},seats);T.put(g,x,y);
-    laurel(g,32);el("circle",{class:"b",r:24,fill:WHO[k].c},g);dtext(g,{class:"g"},WHO[k].g,WHO[k].gm);
+    writerMark(g,32);el("circle",{class:"b",r:24,fill:WHO[k].c},g);dtext(g,{class:"g"},WHO[k].g,WHO[k].gm);
     const s=dtext(g,{class:"s halo",y:A[k]<0&&A[k]>-180?-46:54},"","");T.seat[k]={x,y,g,s}});
   return T;
 }
@@ -128,10 +169,10 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   async function runner(k){
     if(away[k]||hold[k]>=line)return;flying++;paint();
     const g=T.token(WHO.O.c,line),carry=line;g.setAttribute("opacity",1);
-    await tween(pace[k],u=>T.run(g,"P",k,.2+.62*u));
+    await tween(pace[k],u=>T.run(g,"O",k,.12+.76*u));
     if(away[k]){L.lose(g);g.remove();flying--;paint();return}
     hold[k]=Math.max(hold[k],carry);paint();g.querySelectorAll("text").forEach(t=>t.textContent="✓");g.firstChild.setAttribute("fill",WHO[k].c);g.lnLab="ack "+carry;
-    await tween(pace[k],u=>T.run(g,k,"P",.2+.62*u));g.remove();
+    await tween(pace[k],u=>T.run(g,k,"O",.12+.76*u));g.remove();
     word[k]=Math.max(word[k],carry);flying--;
     const now=count();paint();if(now)L.state("O","committed "+passed);
     if(now)say.innerHTML=dual(`${WHO[k].n}'s word is the second to come back for line ${passed}. With Okios, three of five hold it: <span class="ok">line ${passed} has passed</span>, and the petitioner is told it is law.`,`${WHO[k].m}'s acknowledgment is the second to come back for record ${passed}. With R1, three of five hold it: <span class="ok">record ${passed} has committed</span>, and the client is told.`);
@@ -139,7 +180,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     else say.innerHTML=dual(`${WHO[k].n} sends word: up to line ${carry}. One word is not enough. Line ${carry} is still a draft.`,`${WHO[k].m} acknowledges up to record ${carry}. One acknowledgment is not enough. Record ${carry} is still a draft.`);
   }
   bw.onclick=()=>{line++;hold.O=line;L.state("O","appended "+line);const here=["L","K","M","T"].filter(k=>!away[k]);
-    say.innerHTML=here.length?dual(`Okios writes line ${line} and gives it to the runners.`,`R1 appends record ${line} and sends it to the backups.`):dual(`Okios writes line ${line}, but no bench is within reach. It stays a draft.`,`R1 appends record ${line}, but no backup is reachable. It stays a draft.`);
+    say.innerHTML=here.length?dual(`Okios writes line ${line} at his bench and gives it to the runners.`,`R1 appends record ${line} and sends it to the backups.`):dual(`Okios writes line ${line}, but no copier is within reach. It stays a draft.`,`R1 appends record ${line}, but no backup is reachable. It stays a draft.`);
     paint();here.forEach(runner)};
   ["L","K","M","T"].forEach(k=>{T.seat[k].g.classList.add("pick");button(T.seat[k].g,`${WHO[k].n}: step out or come back`,flip[k]=()=>{away[k]=!away[k];paint();
     if(away[k])say.innerHTML=dual(`${WHO[k].n} steps out of reach. The tablets stay on the bench.`,`${WHO[k].m} is cut off. Its state stays as it was.`);
@@ -181,8 +222,8 @@ function mayForm(ans){                       // ans[k]: "with" tablets, "without
 function verdict(r,checks,say){
   checks.innerHTML=`<li><b>A majority has answered</b> ${yes(r.maj)} (${r.w.length+r.x.length} of 5)</li>`+
     `<li><b>First:</b> ${dual("a majority answered with tablets","a majority answered with intact state")} ${yes(r.c1)} (${r.w.length} of 5)</li>`+
-    `<li><b>Third:</b> ${dual("same seal, and its holder Okios answered with tablets","same view, and its primary R1 answered with intact state")} ${r.x.length?yes(r.c3):dual("· no tablets are lost","· no state is lost")}</li>`;
-  say.innerHTML=r.forms?dual(`<span class="ok">Seal 7 forms.</span> ${WHO[r.holder].n} shows the latest line${r.holder==="O"?" and wore the wreath before, so nothing changes but the seal":""}, takes the wreath holding line ${HELD[r.holder]}, and opens the seal with the whole law.`,`<span class="ok">View 7 forms.</span> ${WHO[r.holder].m} shows the latest record${r.holder==="O"?" and was primary before, so nothing changes but the view":""}, becomes primary holding record ${HELD[r.holder]}, and opens the view with its whole log.`)
+    `<li><b>Third:</b> ${dual("same seal, and its writer Okios answered with tablets","same view, and its primary R1 answered with intact state")} ${r.x.length?yes(r.c3):dual("· no tablets are lost","· no state is lost")}</li>`;
+  say.innerHTML=r.forms?dual(`<span class="ok">Seal 7 forms.</span> ${WHO[r.holder].n} shows the latest line${r.holder==="O"?" and was writer before, so nothing changes but the seal":""}, becomes the writer holding line ${HELD[r.holder]}, and opens the seal with the whole law.`,`<span class="ok">View 7 forms.</span> ${WHO[r.holder].m} shows the latest record${r.holder==="O"?" and was primary before, so nothing changes but the view":""}, becomes primary holding record ${HELD[r.holder]}, and opens the view with its whole log.`)
     :r.maj?dual(`<span class="bad">No seal forms.</span> A majority answered, but the answers cannot be sure of showing line 12. The manager waits and calls again.`,`<span class="bad">No view forms.</span> A majority answered, but the answers cannot be sure of showing record 12. The view manager waits and tries again.`)
     :dual(`<span class="bad">No seal forms.</span> Fewer than three have answered. The manager waits and calls again.`,`<span class="bad">No view forms.</span> Fewer than three have answered. The view manager waits and tries again.`);
 }
@@ -198,22 +239,22 @@ function verdict(r,checks,say){
 /* ===== scrollytelling: a change of seal ===== */
 (function(){
   const T=Tholos($("#changesvg")),side=$("#changeside");
-  /* how things stand at each step: seal and line at each bench, who is out, the seal on the table, who wears the wreath */
+  /* how things stand at each step: seal and line at each bench, who is out, the seal, who is the writer */
   const b6=n=>`6 · ${n}`,b7=n=>`7 · ${n}`,b8=n=>`8 · ${n}`,H6={O:b6(13),L:b6(12),K:b6(12),M:b6(10),T:b6(10)};
   const ST=[
-    {seal:S6,turn:"O",h:H6,out:{},n:dual("Okios wears the wreath","R1 is the primary")},
+    {seal:S6,turn:"O",h:H6,out:{},n:dual("Okios is the writer","R1 is the primary")},
     {seal:S6,turn:null,h:H6,out:{O:1},n:dual("no note from Okios","no message from R1")},
-    {seal:{n:7,by:"L",ring:["L"]},turn:null,h:H6,out:{O:1},n:dual("Liskovia calls seal 7: her signet in the middle","R2 invites all to view 7")},
-    {seal:{n:7,by:"L",ring:["L","K","M"]},turn:null,h:H6,out:{O:1},n:dual("Kleon and Melissa answer with tablets and go into the ring; Theron's answer is slow","R3 and R4 accept with intact state; R5's reply is slow")},
-    {seal:S7,turn:"L",h:H6,out:{O:1},n:dual("the wreath goes on Liskovia's head","R2 becomes primary")},
+    {seal:{n:7,by:"L",ring:["L"]},turn:null,h:H6,out:{O:1},n:dual("Liskovia calls seal 7: manager peg at her spoke","R2 invites all to view 7")},
+    {seal:{n:7,by:"L",ring:["L","K","M"]},turn:null,h:H6,out:{O:1},n:dual("Kleon and Melissa answer with tablets; signets in outer ring","R3 and R4 accept with intact state; R5's reply is slow")},
+    {seal:S7,turn:"L",h:H6,out:{O:1},n:dual("writer peg at Liskovia's spoke: Liskovia is the writer","R2 becomes primary")},
     {seal:S7,turn:"L",h:{O:b6(13),L:b7(1),K:b7(1),M:b7(1),T:b6(10)},out:{O:1},n:dual("the opening line, the whole law to line 12, for everyone on seal 7","the opening record, the whole log to record 12, for the members of view 7")},
     {seal:S8,turn:"L",h:{O:b8(1),L:b8(1),K:b8(1),M:b8(1),T:b8(1)},out:{},n:dual("Okios and Theron are back, and seal 8 takes in all five; line 13 is smoothed away","R1 and R5 are reachable again, and view 8 includes all five; record 13 is discarded")}];
   /* notes and runners: from, to, glyph, colour, where each is at which step, and a label for the computing twin */
-  const toks=[["L","K","7","L",{2:.5}],["L","M","7","L",{2:.5}],["L","T","7","L",{2:.5,3:.62}],["L","O","7","L",{2:.45}],
-              ["K","L","12","K",{3:.55}],["M","L","10","M",{3:.55}],
-              ["P","K","1","L",{5:.6}],["P","M","1","L",{5:.6}],
-              ["P","O","1","L",{6:.6},"view 8, record 1"],["P","K","1","L",{6:.6}],["P","M","1","L",{6:.6}],["P","T","1","L",{6:.6}]]
-    .map(([a,b,g,c,plan,lab])=>({a,b,n:g,plan,lab,g:T.token(WHO[c].c,g),u:.2,run:0,start:Math.min(...Object.keys(plan)),end:Math.max(...Object.keys(plan))}));
+  const toks=[["L","K","7","L",{2:.88}],["L","M","7","L",{2:.88}],["L","T","7","L",{2:.88}],["L","O","7","L",{2:.88}],
+              ["K","L","12","K",{3:.88}],["M","L","10","M",{3:.88}],["T","L","10","T",{3:.48}],
+              ["L","K","1","L",{5:.88}],["L","M","1","L",{5:.88}],
+              ["L","O","1","L",{6:.88},"view 8, record 1"],["L","K","1","L",{6:.88}],["L","M","1","L",{6:.88}],["L","T","1","L",{6:.88}]]
+    .map(([a,b,g,c,plan,lab])=>({a,b,n:g,plan,lab,g:T.token(WHO[c].c,g),u:.12,u0:.12,run:0,start:Math.min(...Object.keys(plan)),end:Math.max(...Object.keys(plan))}));
   /* computing: the view change so far as one timeline, a step to each unit of time; each process shows its view and
      last record, and R1's lane is hatched while it is cut off */
   const L=Unfold(T.svg,{nodes:LN,span:6.6,alias:{P:"L"}});
@@ -226,14 +267,14 @@ function verdict(r,checks,say){
     L.setT(s+.15)}
   scrolly($("#change"),s=>{const S=ST[s];T.seal(S.seal);lanes(s);
     ALL.forEach(k=>{T.out(k,S.out[k]);T.note(k,S.h[k])});
-    side.innerHTML=ALL.map(k=>`<div class="hc"><h5>${dual(WHO[k].n,WHO[k].m)}</h5><div>${dual(`seal ${S.h[k].split(" · ")[0]}, line ${S.h[k].split(" · ")[1]}`,`view ${S.h[k].split(" · ")[0]}, record ${S.h[k].split(" · ")[1]}`)}</div><div class="chk">${S.out[k]?dual("out of reach","unreachable"):k===S.turn?dual("wears the wreath","primary"):""}</div></div>`).join("")+`<div class="hc" style="grid-column:1/-1;min-height:0"><div class="chk" style="margin:0">${S.n}</div></div>`;
+    side.innerHTML=ALL.map(k=>`<div class="hc"><h5>${dual(WHO[k].n,WHO[k].m)}</h5><div>${dual(`seal ${S.h[k].split(" · ")[0]}, line ${S.h[k].split(" · ")[1]}`,`view ${S.h[k].split(" · ")[0]}, record ${S.h[k].split(" · ")[1]}`)}</div><div class="chk">${S.out[k]?dual("out of reach","unreachable"):k===S.turn?dual("the writer","primary"):""}</div></div>`).join("")+`<div class="hc" style="grid-column:1/-1;min-height:0"><div class="chk" style="margin:0">${S.n}</div></div>`;
     toks.forEach(k=>{const u=k.plan[s],id=++k.run;
-      if(u==null){k.g.setAttribute("opacity",0);k.u=s>k.end?.8:.2;T.run(k.g,k.a,k.b,k.u);return}
-      k.g.setAttribute("opacity",1);const u0=k.u;tween(800,e=>{if(k.run!==id)return;k.u=u0+(u-u0)*e;T.run(k.g,k.a,k.b,k.u)})});
+      if(u==null){k.g.setAttribute("opacity",0);k.u=s>k.end?.88:.12;T.run(k.g,k.a,k.b,k.u);return}
+      k.g.setAttribute("opacity",1);const u0=(s===k.start)?k.u0||.12:k.u;tween(850,e=>{if(k.run!==id)return;k.u=u0+(u-u0)*e;T.run(k.g,k.a,k.b,k.u)})});
   });
 })();
 
-/* ===== the holder who has not noticed: lines written on the porch reach nobody who will take them ===== */
+/* ===== the writer who has not noticed: lines written on the porch reach nobody who will take them ===== */
 (function(){
   const T=Tholos($("#porchsvg")),say=$("#porchsay"),bw=$("#porchwrite"),n=$("#porchn");
   let heard=false,busy=false;const og=T.token(WHO.O.c,WHO.O.g,WHO.O.gm);
