@@ -613,7 +613,7 @@ def tholos(k):
         k.pop(); k.pop()
         k.pop()
     # the middle: a round stone table whose lower step is the seat. The manager of the present seal sits on the step on
-    # the side away from the door, facing it, and marks the table as theirs by setting their signet in the socket at the
+    # the side away from the door, facing it, and marks the table as theirs by setting a token with their initial in the socket at the
     # table's edge; the seal and the tablets lie on the table before them
     k.lathe('marble', [(1.66, zf - 0.02), (1.66, zf + 0.39), (1.63, zf + 0.42), (1.6, zf + 0.45), (1.22, zf + 0.45),
                        (1.22, zf + 0.68), (1.25, zf + 0.71), (1.3, zf + 0.74), (1.3, zf + 0.8), (0.0, zf + 0.8)], seg=96)
@@ -625,7 +625,7 @@ def tholos(k):
             k.box('board', -0.13, 0.095, 0, 0.13, 0.275, 0.025); k.box('wax', -0.115, 0.11, 0.024, 0.115, 0.26, 0.029)
         k.pop()
     k.push(T(-0.98, -0.24, zd + 0.034) @ Rz(1.3)); k.beam('bronze', (-0.07, 0, 0), (0.07, 0, 0), 0.008, 0.008); k.pop()   # a stylus
-    table_socket(k, -1.12, 0.0, zd, SEAL7[0], up=-PI / 2)                       # Liskovia's signet: she manages seal 7
+    table_socket(k, -1.12, 0.0, zd, SEAL7[0], up=-PI / 2)                       # Liskovia's token: she manages seal 7
     seal_stamp(k, -0.8, -0.13, zd, SEAL7, up=-PI / 2)                            # the stamp, set for seal 7, back up
     seal_impression(k, -0.8, 0.17, zd, SEAL7, R=0.1, up=-PI / 2)                # and its print in wax, as every line carries it
     die_tray(k, -0.58, 0.4, zd, ['Ο', 'Θ'])                                       # the signets not in the stamp
@@ -849,7 +849,7 @@ def seal_stamp(k, x, y, z, seal, R=0.1, up=0.0):
 
 
 def table_socket(k, x, y, z, letter, up=0.0):
-    """A bronze ring let into the stone table with a socket the size of a signet, and the manager's signet set in it."""
+    """A bronze ring let into the stone table with a socket, and the manager's token, cut with their initial, set in it."""
     rs = 0.012
     k.push(T(x, y, z))
     k.lathe('bronze', [(rs, 0.0015), (0.034, 0.0015), (0.036, 0.0005), (0.036, -0.002)], seg=40, caps=False)

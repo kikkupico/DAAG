@@ -230,7 +230,7 @@ is bounded, but men lie, yielding the 3m + 1 threshold.
 
 ---
 
-## Paxos · *The Island of the Parliament, the Podium and the Scholars*
+## Paxos · *The Island of the Parliament, the Wreath and the Scholars*
 
 *One island, two ways of keeping records.* Paxos holds two assemblies, each keeping one
 append-only law scroll across absent members and changing leaders — Lamport's parliament and
@@ -295,7 +295,8 @@ coming and going. The round plan illustrates Lamport's text and carries no meani
 Lamport nobody speaks aloud at all. The Tholos of Schedia is a round hall of the same kind, built
 plainer: a drum of honey-coloured limestone with no colonnade outside, a porch at its one door and six
 columns inside, where the Chamber has a Doric colonnade outside and a ring of Corinthian columns within.
-It has the one thing the Chamber lacks: a podium at the centre.
+It has what the Chamber lacks: one leader at a time, who wears a wreath, and a round stone table at
+the centre where seals are made.
 
 **Both halls are painted, as Greek buildings were.** The Chamber's stone is white, and its ornament
 is coloured on the white: the triglyphs of the Doric frieze dark blue, the mouldings and the eaves
@@ -306,22 +307,22 @@ Greece, not the Greeks' own.
 
 ### Schedia and the Tholos
 
-*A city on the northern section, with its own laws, governed from a round hall with a podium.*
+*A city on the northern section, with its own laws, governed from a round hall where one leader wears a wreath.*
 
 | Paper | In the world |
 |---|---|
-| `oki-liskov-1988` | **The Tholos.** A rotunda like the Chamber, with the same poor acoustics, messengers and legislators on part-time duty, and one difference: a podium at the centre. Only the legislator who holds the podium may propose; the others write down what its messengers bring. When the podium falls silent, another legislator calls a seal with a higher number, and the new holder first gathers what a majority hold, so nothing a majority knew is lost. *One Leader at a Time* |
+| `oki-liskov-1988` | **The Tholos.** A rotunda like the Chamber, with the same poor acoustics, messengers and legislators on part-time duty, and one difference: a leader. Only the legislator who wears the wreath may propose; the others write down what its messengers bring. When the holder falls silent, another legislator calls a seal with a higher number, and the new holder first gathers what a majority hold, so nothing a majority knew is lost. *One Leader at a Time* |
 
-**The podium is an office, not a pulpit.** Nobody can be heard from it either. It stands where
-every bench is the same distance away, the current seal is kept on it, and the podium's
-messengers all leave from it, so where messengers in the Chamber cross the floor in every
-direction, in the Tholos they run out from the centre. Authority rides on the seal pressed
-beside every line, not on standing at the podium, which is only where the holder sits when
-present. A holder who has stepped out and not noticed a new seal can go on sending under the
+**The wreath is an office, not a seat.** Nobody can be heard across the floor. At the centre,
+where every bench is the same distance away, stands a round stone table where seals are made and
+kept. The holder writes each line there and presses the seal beside it, and the runners all leave
+from it, so where messengers in the Chamber cross the floor in every direction, in the Tholos they
+run out from the centre. Sitting at the table makes no one leader; only the wreath does, and
+authority rides on the seal pressed beside every line, not on where anyone sits. A holder who has stepped out and not noticed a new seal can go on sending under the
 old one, and settles nothing, since any majority they reach includes a legislator who has taken
 the new seal and refuses the old one.
 
-**The seal.** Each spell at the podium has its own seal, a bronze disc laid out like the Tholos,
+**The seal.** Each spell under one wreath has its own seal, a bronze disc laid out like the Tholos,
 with round slots sunk in it, all one size: one at each bench's place round the edge and one in the
 middle. Each legislator's signet is a round die cut with their initial (Ο, Λ, Κ, Μ, Θ), so any
 signet fits any round slot. The seal carries no colour, so the same seal works in diagrams and in
@@ -331,13 +332,13 @@ they have seen, so seal 7 called by Liskovia shows Λ and 7 side by side (the pa
 ⟨count, manager⟩). The slots round the edge take the signets of the others who answered the call
 (with the middle, the view's members). A slot left empty prints nothing, so nothing shows at the
 place of anyone who did not answer, nor at the manager's own place. A wreath, a bronze ring that
-fits over any round slot, goes round the signet of the one who takes the podium (the primary): at
+fits over any round slot, goes round the signet of the one who takes the wreath (the primary): at
 their bench's place, or in the middle when the manager takes it. The middle says who called; the
-wreath says who holds the podium. Seals are ordered by their middle alone, by number and then by
+wreath says who wears the wreath. Seals are ordered by their middle alone, by number and then by
 the manager's name. A seal never changes once made, so a legislator missing from it who comes back
 within reach means a new seal must be called. The holder presses the seal in wax beside every
 line, so each line is known by its seal and line (the viewstamp). At the middle of the hall stands a round stone table whose step is the seat: the manager of
-the present seal sits there and marks the table as theirs by setting their signet in a socket at its
+the present seal sits there and marks the table as theirs by setting a token cut with their initial in a socket at its
 edge, and the stamp lies on it back up, beside its print in wax and a tray of the signets not in use; each bench's stand
 keeps a print of the seal that bench serves under.
 
@@ -354,9 +355,9 @@ what makes that safe.
 **The council.** Five legislators: Okios and Liskovia (Oki and Liskov), and Kleon, Melissa and
 Theron, ordinary names for seats no author fills. A majority is three, so a law passes when the
 holder and two others hold its line. They are told apart by colour: Okios blue-grey, Liskovia
-saffron, Kleon green, Melissa madder red, Theron grey. The podium's runners are young men in short
+saffron, Kleon green, Melissa madder red, Theron grey. The holder's runners are young men in short
 brown tunics, one to each bench, who carry the lines in order and never skip one. Citizens
-petition the podium only; a petition that reaches a bench comes back with the holder's name.
+petition the holder only; a petition that reaches a bench comes back with the holder's name.
 The Tholos has five benches, one for each legislator.
 
 **Why a Tholos.** In Athens the Tholos was the round building of the prytaneis, the committee

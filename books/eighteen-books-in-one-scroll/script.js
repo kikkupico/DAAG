@@ -558,7 +558,7 @@ def("ptp", "priests", [
   tg(on("B", 5.2, -96, 0), V("ask most, propose the latest", "phase 1, then phase 2"), { own: 1, id: "t2" })
 ]);
 
-/* One Leader at a Time: a podium; a line passes on the holder and two benches; a silent podium is replaced */
+/* One Leader at a Time: one holder wears the wreath; a line passes on the holder and two benches; a silent holder is replaced */
 def("vr", "tholos", [
   { t: "halo", n: "O", cls: "gold", c: 1, id: "pod" },
   { t: "gap", n: "Th", t1: .5, t2: 3.3, id: "away" },
@@ -569,8 +569,8 @@ def("vr", "tholos", [
   sl("Th", 3.6, "L", 4.4, { dir: 1, lab: V("seal 7?", "view 7?"), la: .26, id: "n1" }), sl("Th", 3.6, "M", 4.2, { id: "n2" }),
   sl("L", 4.55, "Th", 5.35, { dir: -1, lab: V("seal 6, line 12", "viewstamp 6.12"), la: .3, id: "n3" }), sl("M", 4.4, "Th", 5.0, { id: "n4" }),
   ev("L", 5.8, { num: "", fill: "#e0b84a", big: 1, ring: 1, id: "newp" }),
-  tg(on("O", 1.2, -100, -20), V("only the podium writes", "only the primary orders"), { c: 1, own: 1, id: "t1" }),
-  tg(on("L", 5.8, 10, 34), V("the latest takes the podium", "highest viewstamp: primary"), { own: 1, id: "t2" })
+  tg(on("O", 1.2, -100, -20), V("only the holder writes", "only the primary orders"), { c: 1, own: 1, id: "t1" }),
+  tg(on("L", 5.8, 10, 34), V("the latest takes the wreath", "highest viewstamp: primary"), { own: 1, id: "t2" })
 ]);
 
 /* Keeping Order Among Liars: the registrar may lie, and an entry stands only on three seals of four */
