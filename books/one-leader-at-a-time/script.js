@@ -16,6 +16,18 @@ $("#cast").innerHTML=ALL.map(who).join("");
 /* the five as lanes, for a Tholos picture's computing twin (Unfold in book.js) */
 const LN={};ALL.forEach(k=>LN[k]=[0,WHO[k].g,WHO[k].c,WHO[k].m]);
 
+/* a laurel wreath round a seat, shown on whoever holds the wreath: two leafy branches rising
+   from a red tie at the bottom, open at the top */
+function laurel(g,r){
+  const w=el("g",{class:"ring"},g),p=a=>[r*Math.cos(a*Math.PI/180),r*Math.sin(a*Math.PI/180)],n=7;
+  [1,-1].forEach(s=>{const a0=90+s*10,a1=90+s*148,[x0,y0]=p(a0),[x1,y1]=p(a1);
+    el("path",{d:`M${x0.toFixed(1)} ${y0.toFixed(1)}A${r} ${r} 0 0 ${s>0?1:0} ${x1.toFixed(1)} ${y1.toFixed(1)}`,class:"stem"},w);
+    for(let i=0;i<n;i++){const a=a0+(a1-a0)*(i+.5)/n,[x,y]=p(a),dir=a+s*90;
+      for(const t of [-1,1])el("path",{d:"M0 0Q5.5-4.6 13 0Q5.5 4.6 0 0",class:"leaf",transform:`translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(dir+t*36).toFixed(0)})`},w)}
+    el("path",{d:"M0 0Q5.5-4.6 13 0Q5.5 4.6 0 0",class:"leaf",transform:`translate(${x1.toFixed(1)} ${y1.toFixed(1)}) rotate(${(a1+s*90).toFixed(0)})`},w)});
+  el("circle",{cx:0,cy:r,r:3,class:"tie"},w);
+  return w}
+
 /* ===== the Tholos, seen from above: the table with the seal at the centre, five benches round the wall, the porch door below ===== */
 function Tholos(svg,o={}){
   const cx=220,cy=215,rr=204,R=138,A={O:-90,L:-18,K:54,M:126,T:198};
@@ -36,6 +48,8 @@ function Tholos(svg,o={}){
     const w=el("circle",{cx:x,cy:y,r:9.5,class:"wreath"},pod),g=el("g",{},pod);
     el("circle",{cx:x,cy:y,r:rs,class:"slot"},g);el("text",{x,y,class:"sg"},g).textContent=WHO[k].g;slot[k]={w,c:g}});
   const slab=el("text",{x:cx,y:cy+68,class:"lab halo",style:"font-size:12px"},svg);
+  /* o.bare: an empty table, for pictures that come before the seal is explained */
+  if(o.bare){[...pod.children].slice(1).forEach(c=>c.remove());slab.remove()}
   const T={svg,cx,cy,under,over,seat:{},porch:[cx,cy+rr+12],
     at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
     put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
@@ -51,12 +65,14 @@ function Tholos(svg,o={}){
       ALL.forEach(k=>{const on=s.ring.includes(k)&&k!==s.by;slot[k].c.style.opacity=on?1:0;
         slot[k].w.style.opacity=on&&k===s.hold?1:0;T.seat[k].g.classList.toggle("holder",k===s.hold)});
       slab.textContent=`seal ${s.n}, ${WHO[s.by].n}`+(s.hold?"":" · being made")},
+    /* the wreath alone, with no seal shown */
+    hold(h){ALL.forEach(k=>T.seat[k].g.classList.toggle("holder",k===h))},
     note(k,s,m){const t=T.seat[k].s;t[0].textContent=s;t[1].textContent=m===undefined?M_(s):m},
     out(k,on){T.seat[k].g.classList.toggle("out",!!on)}
   };
   ALL.forEach(k=>{const [x,y]=T.at(A[k]),g=el("g",{class:"seat"},seats);T.put(g,x,y);
-    el("circle",{class:"ring",r:31},g);el("circle",{class:"b",r:24,fill:WHO[k].c},g);dtext(g,{class:"g"},WHO[k].g,WHO[k].gm);
-    const s=dtext(g,{class:"s halo",y:A[k]<0&&A[k]>-180?-34:43},"","");T.seat[k]={x,y,g,s}});
+    laurel(g,32);el("circle",{class:"b",r:24,fill:WHO[k].c},g);dtext(g,{class:"g"},WHO[k].g,WHO[k].gm);
+    const s=dtext(g,{class:"s halo",y:A[k]<0&&A[k]>-180?-46:54},"","");T.seat[k]={x,y,g,s}});
   return T;
 }
 
@@ -97,7 +113,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 
 /* ===== when a law passes: on the second word back ===== */
 (function(){
-  const T=Tholos($("#passsvg")),say=$("#passsay"),bw=$("#pwrite"),pl=$("#pline"),pp=$("#ppass");
+  const T=Tholos($("#passsvg"),{bare:true}),say=$("#passsay"),bw=$("#pwrite"),pl=$("#pline"),pp=$("#ppass");
   const hold={O:11,L:11,K:11,M:11,T:9},word={L:11,K:11,M:11,T:9},away={T:true},pace={L:800,K:1300,M:2400,T:1800};
   let line=11,passed=11,flying=0;
   /* computing: the records going out and the acknowledgments coming back, on a timeline that slides as it runs;
@@ -105,7 +121,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const flip={};
   const L=Unfold(T.svg,{nodes:LN,span:8,slide:true,alias:{P:"O"},land:.81,labels:true,mtext:M_,
     press:Object.fromEntries(["L","K","M","T"].map(k=>[k,[`${WHO[k].m}: cut off or reconnect`,()=>flip[k]()]]))});L.wrap(T);
-  T.seal(S6);L.turn("O");
+  T.hold("O");L.turn("O");
   function paint(){ALL.forEach(k=>{T.note(k,k==="O"?"":"to line "+hold[k]);T.out(k,away[k]);L.cut(k,!!away[k])});pl.textContent=line;pp.textContent=passed;bw.disabled=flying>0}
   /* a line has passed when two benches have sent word that they hold it and all before it */
   function count(){const n=Object.values(word).sort((a,b)=>b-a)[1];if(n>passed){passed=n;return true}return false}

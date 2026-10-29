@@ -157,9 +157,9 @@
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4><span class="i">The runners go out <em>and come back with a word</em></span><span class="m">The messages go out <em>and come back with an acknowledgment</em></span></h4>
       <div class="hill-wrap">
-        <svg class="isle-svg fig" id="passsvg" role="group" aria-label="The Tholos from above: the table with the seal at the centre, five benches round the wall, and runners carrying lines out and words back" data-al-m="Five lanes, one for each replica, with real time running left to right and the primary's name ringed: records go out to the backups and acknowledgments come back as arrows, dashed while in transit, and a cut-off backup's lane is hatched"></svg>
+        <svg class="isle-svg fig" id="passsvg" role="group" aria-label="The Tholos from above: the table at the centre, five benches round the wall, and runners carrying lines out and words back" data-al-m="Five lanes, one for each replica, with real time running left to right and the primary's name ringed: records go out to the backups and acknowledgments come back as arrows, dashed while in transit, and a cut-off backup's lane is hatched"></svg>
         <div>
-          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem"><span class="i">The Tholos from above, with the seal on the table in the middle. The ringed legislator wears the wreath. Click a bench to have its legislator step out of reach, or come back.</span><span class="m">Each lane is one replica, with real time running left to right; the ringed name is the primary. Each arrow is a record going out or an acknowledgment coming back, dashed while in transit; a hatched lane is cut off. Click a backup's name to cut it off, or reconnect it.</span></p>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem"><span class="i">The Tholos from above, with the table in the middle. Click a bench to have its legislator step out of reach, or come back.</span><span class="m">Each lane is one replica, with real time running left to right; the ringed name is the primary. Each arrow is a record going out or an acknowledgment coming back, dashed while in transit; a hatched lane is cut off. Click a backup's name to cut it off, or reconnect it.</span></p>
           <div class="counts"><span><b id="pline">11</b><bdi class="i">last line written</bdi><bdi class="m">last record appended</bdi></span><span><b id="ppass">11</b><bdi class="i">passed up to</bdi><bdi class="m">committed up to</bdi></span></div>
           <p class="say" id="passsay"><span class="i">Okios wears the wreath. Theron has stepped out. Write the next line.</span><span class="m">R1 is the primary. R5 is cut off. Append the next record.</span></p>
         </div>
@@ -189,35 +189,58 @@
     <div class="narrow" style="margin:0 0 1rem">
       <div class="kicker"><span class="i">Numbers that survive a change of holder</span><span class="m">Numbers that survive a change of primary</span></div>
       <h2><span class="i">Seal and line</span><span class="m">View and timestamp</span></h2>
-      <p class="lede"><span class="i">Because a line number makes sense only under a single holder's term, every spell under one wreath is given its own <b>seal</b> (a <i>view</i>), made and kept at the round table in the middle of the hall. Every legislator owns a round signet cut with their initial, and a seal is a bronze disc with round slots for signets, all the same size, laid out like the Tholos itself: five round the edge, one at each bench's place, and one in the middle, so any signet fits any slot.</span><span class="m">Because a record number makes sense only under a single primary's term, every period under a single primary is a <b>view</b>, with an identifier of its own (a <code>viewid</code>) and a fixed set of members.</span></p>
-      <p><span class="i">The middle has two slots. The round one takes the signet of the one who <b>called</b> the seal, and a square one beside it takes a number one higher than any seal they have seen, such as <i>Seal 7, Liskovia</i>, which shows Λ and 7 side by side. Round the edge go the signets of the others who <b>answered</b> the call, each at their own bench's place. A slot left without a signet leaves no mark in the wax, so the seal shows nothing at the place of anyone who did not answer, nor at the manager's own place, since the manager's signet is already in the middle. A <b>wreath</b>, a bronze ring that fits round any round slot, goes around the signet of the one who takes the wreath: at their bench's place, or in the middle when the manager takes it. The middle says who called; the wreath says who leads. Once a seal is made it never changes: if someone missing from it comes back within reach, a new seal has to be called.</span><span class="m">A viewid pairs a rising counter with the identity of the replica that started the view, such as <i>view 7, R2</i>. The view's members are the view manager and the replicas that accepted its invitation, and one of them is the primary. Membership is fixed for the life of the view: if a replica outside it becomes reachable, a new view must start.</span></p>
-      <p><span class="i">Seals are ordered by their middle alone: first by number, and if two legislators happen to call a seal with the same number at the same time, alphabetically by the manager's name. The ring and the wreath never change the order. Because each legislator only ever puts their own signet in the middle of a seal they call, no two seals ever share a middle.</span><span class="m">Views are ordered by viewid alone: first by counter, and if two replicas happen to start a view with the same counter at the same time, by the replica's identifier. Membership and primary play no part in the order. Because each replica only ever puts its own identity on a view it starts, no two views ever share a viewid.</span></p>
+      <p class="lede"><span class="i">Every spell under one wreath gets its own <b>seal</b> (a <i>view</i>): a bronze disc laid out like the Tholos, with a slot at each bench's place and two in the middle. Signets go in the slots; an empty slot leaves no mark in the wax.</span><span class="m">Because a record number makes sense only under a single primary's term, every period under a single primary is a <b>view</b>, with an identifier of its own (a <code>viewid</code>) and a fixed set of members.</span></p>
     </div>
     <div class="pop"><div class="leaf"><div class="paper well">
       <h4><span class="i">Seal 7, Liskovia <em>what each slot says</em></span><span class="m">View 7 <em>what it records</em></span></h4>
-      <svg class="sealfig" viewBox="0 0 650 230" role="img" aria-label="Seal 7: in the middle Liskovia's round signet with a wreath around it and the number 7 in a square beside it; round signets at Kleon's and Melissa's places; nothing at Okios's, Theron's or Liskovia's own place">
+      <svg class="sealfig" viewBox="0 0 650 330" role="img" aria-label="Above, seal 7: in the middle Liskovia's round signet with a wreath around it and the number 7 in a square beside it; signets at Kleon's and Melissa's places; empty slots at Okios's, Theron's and Liskovia's own place. Below, four seal middles in order: 6 Okios, 7 Kleon, 7 Liskovia, 8 Theron" data-al-m="Above, view 7: viewid 7, R2; members R2, R3, R4; primary R2. Below, four viewids in order: 6 R1, 7 R2, 7 R3, 8 R5">
         <g class="i">
-          <circle cx="130" cy="115" r="94" fill="#efe6cf" stroke="#1c1512" stroke-width="4"/>
-          <circle cx="130" cy="115" r="82" fill="none" stroke="#1c1512" stroke-width="1.5" stroke-dasharray="2 6"/>
-          <line class="lead" x1="130" y1="62" x2="246" y2="31"/><line class="lead" x1="127" y1="103" x2="246" y2="77"/><line class="lead" x1="153" y1="115" x2="246" y2="118"/><line class="lead" x1="116" y1="131" x2="246" y2="150"/><line class="lead" x1="175" y1="170" x2="246" y2="190"/>
-          <circle cx="116" cy="115" r="16" class="wreath"/>
-          <circle cx="166.4" cy="165.2" r="12" class="slot"/><text x="166.4" y="165.2" class="sg">Κ</text><circle cx="93.6" cy="165.2" r="12" class="slot"/><text x="93.6" y="165.2" class="sg">Μ</text>
-          <circle cx="116" cy="115" r="12" class="slot"/><text x="116" y="115" class="sg">Λ</text>
-          <rect x="135" y="106" width="18" height="18" class="slot"/><text x="144" y="115" class="sn">7</text>
-          <text x="252" y="31" class="note">no mark: did not answer (Okios, Theron)</text>
-          <text x="252" y="77" class="note">wreath: the manager is also the holder</text>
-          <text x="252" y="118" class="note">square slot in the middle: the number</text>
-          <text x="252" y="150" class="note">round slot in the middle: the manager (Λ, Liskovia)</text>
-          <text x="252" y="190" class="note">a round slot at each place: the others who answered</text>
+          <circle cx="130" cy="120" r="94" fill="#efe6cf" stroke="#1c1512" stroke-width="4"/>
+          <circle cx="130" cy="120" r="82" fill="none" stroke="#1c1512" stroke-width="1.5" stroke-dasharray="2 6"/>
+          <line class="lead" x1="139" y1="50" x2="246" y2="28"/><line class="lead" x1="110" y1="105" x2="246" y2="66"/><line class="lead" x1="201" y1="101" x2="246" y2="104"/><line class="lead" x1="153" y1="122" x2="246" y2="142"/><line class="lead" x1="116" y1="132" x2="246" y2="180"/><line class="lead" x1="175" y1="179" x2="246" y2="218"/>
+          <circle cx="130" cy="58" r="12" class="empty"/><text x="130" y="58" class="sg ghost">Ο</text>
+          <circle cx="189" cy="100.8" r="12" class="empty"/><text x="189" y="100.8" class="sg ghost">Λ</text>
+          <circle cx="71" cy="100.8" r="12" class="empty"/><text x="71" y="100.8" class="sg ghost">Θ</text>
+          <circle cx="116" cy="120" r="16" class="wreath"/>
+          <circle cx="166.4" cy="170.2" r="12" class="slot"/><text x="166.4" y="170.2" class="sg">Κ</text><circle cx="93.6" cy="170.2" r="12" class="slot"/><text x="93.6" y="170.2" class="sg">Μ</text>
+          <circle cx="116" cy="120" r="12" class="slot"/><text x="116" y="120" class="sg">Λ</text>
+          <rect x="135" y="111" width="18" height="18" class="slot"/><text x="144" y="120" class="sn">7</text>
+          <text x="252" y="28" class="note">empty: did not answer (Okios, Theron)</text>
+          <text x="252" y="66" class="note">wreath: who leads (here, the manager)</text>
+          <text x="252" y="104" class="note">empty: the manager's own place</text>
+          <text x="252" y="142" class="note">square in the middle: the number</text>
+          <text x="252" y="180" class="note">round in the middle: who called (Liskovia)</text>
+          <text x="252" y="218" class="note">at each place: who answered</text>
+          <line x1="20" y1="248" x2="630" y2="248" stroke="#6b5a48" stroke-width="1" stroke-dasharray="2 4"/>
+          <text x="40" y="274" class="note"><tspan font-weight="700">Order:</tspan> by the middle alone (number, then name); edge and wreath don't count</text>
+          <g transform="translate(70 308)"><circle cx="0" cy="0" r="12" class="slot"/><text x="0" y="0" class="sg">Ο</text><rect x="17" y="-9" width="18" height="18" class="slot"/><text x="26" y="0" class="sn">6</text></g>
+          <text x="148" y="308" class="sn">&lt;</text>
+          <g transform="translate(210 308)"><circle cx="0" cy="0" r="12" class="slot"/><text x="0" y="0" class="sg">Κ</text><rect x="17" y="-9" width="18" height="18" class="slot"/><text x="26" y="0" class="sn">7</text></g>
+          <text x="288" y="308" class="sn">&lt;</text>
+          <g transform="translate(350 308)"><circle cx="0" cy="0" r="12" class="slot"/><text x="0" y="0" class="sg">Λ</text><rect x="17" y="-9" width="18" height="18" class="slot"/><text x="26" y="0" class="sn">7</text></g>
+          <text x="428" y="308" class="sn">&lt;</text>
+          <g transform="translate(490 308)"><circle cx="0" cy="0" r="12" class="slot"/><text x="0" y="0" class="sg">Θ</text><rect x="17" y="-9" width="18" height="18" class="slot"/><text x="26" y="0" class="sn">8</text></g>
         </g>
         <g class="m">
           <text x="40" y="62" class="note"><tspan font-weight="700">view 7</tspan></text>
           <text x="40" y="100" class="note">viewid = ⟨7, R2⟩   (the only part that orders views)</text>
           <text x="40" y="138" class="note">members = {R2, R3, R4}</text>
           <text x="40" y="176" class="note">primary = R2</text>
+          <line x1="20" y1="248" x2="630" y2="248" stroke="#6b5a48" stroke-width="1" stroke-dasharray="2 4"/>
+          <text x="40" y="274" class="note"><tspan font-weight="700">Order:</tspan> by viewid alone, counter first, then replica</text>
+          <text x="40" y="308" class="note">⟨6, R1⟩   &lt;   ⟨7, R2⟩   &lt;   ⟨7, R3⟩   &lt;   ⟨8, R5⟩</text>
         </g>
       </svg>
     </div></div></div>
+    <div class="narrow" style="margin:1.4rem 0 1rem">
+      <ul class="sealkey">
+        <li><span class="i"><b>Middle:</b> who <b>called</b> the seal, plus a number one higher than any seal they have seen.</span><span class="m"><b>viewid:</b> a rising counter plus the replica that started the view.</span></li>
+        <li><span class="i"><b>Edge:</b> who <b>answered</b> the call, each at their own bench's place.</span><span class="m"><b>Members:</b> the view manager and the replicas that accepted.</span></li>
+        <li><span class="i"><b>Wreath:</b> who <b>leads</b>; it fits round any round slot.</span><span class="m"><b>Primary:</b> one of the members.</span></li>
+        <li><span class="i"><b>Fixed:</b> a seal never changes; anyone missing who returns needs a new seal.</span><span class="m"><b>Fixed:</b> a replica outside the view that becomes reachable needs a new view.</span></li>
+        <li><span class="i"><b>Unique:</b> each legislator puts only their own signet in the middle of a seal they call, so no two seals share a middle.</span><span class="m"><b>Unique:</b> only its starter puts its identity on a viewid, so no two views share one.</span></li>
+      </ul>
+    </div>
     <div class="pop i" style="max-width:640px;margin:1.6rem auto 0"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/o06-seal.jpg" alt="Close on the round stone table: the bronze seal, a disc with round slots, set with Λ and a square 7 in the middle under a bronze wreath and with Μ and Κ at their benches' places, three slots open; beside it its print in red wax, hollow where the dies pressed; Liskovia's token, Λ, in a socket at the table's edge, and a tray of spare signets" loading="lazy"></div></div></div>
     <div class="narrow" style="margin:1.4rem 0 1rem">
       <p><span class="i">The holder presses the seal beside every line they write, and under each new seal the line numbers start fresh from 1. Thus every line of law is uniquely identified by its <b>seal and line</b> (a <i>viewstamp</i> = ⟨<code>viewid</code>, <code>ts</code>⟩). When comparing two marks, the one from the <b>later seal</b> always wins; within the same seal, the <b>higher line number</b> wins. Each legislator also keeps a compact <b>note</b> (their <i>history</i>) in the margin of their tablets recording the last line they hold for each seal they have served under. Pick any two marks below to see how they compare:</span><span class="m">Whenever a new view starts, record numbers start fresh from 1. Thus every record is uniquely identified by its <b>view and timestamp</b> (a <i>viewstamp</i> = ⟨<code>viewid</code>, <code>ts</code>⟩). When comparing two viewstamps, the one from the <b>later view</b> always wins; within the same view, the <b>higher timestamp</b> wins. Each replica also keeps a compact <b>history</b> recording the last timestamp it holds for each view it has served in. Pick any two viewstamps below to see how they compare:</span></p>
