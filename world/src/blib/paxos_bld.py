@@ -733,10 +733,10 @@ def seal_layout(R, up):
     """Where the stamp's slots are, in its own frame: every signet slot is round and the same size, so a signet fits any
     of them, one at each bench's bearing round the edge and one in the middle for the manager; beside the middle one is
     a square slot for the number. up turns the middle pair to read from that side."""
-    rs = R * 0.17; rr = R * 0.64; d = R * 0.2
+    rs = R * 0.12; rr = R * 0.64; d = R * 0.14
     ring = {b: (rr * math.cos(BENCH_A[b]), rr * math.sin(BENCH_A[b])) for b in range(5)}
     mgr = (-d * math.cos(up), -d * math.sin(up)); num = (d * math.cos(up), d * math.sin(up))
-    return rs, ring, mgr, num, R * 0.12
+    return rs, ring, mgr, num, R * 0.085
 
 
 def seal_impression(k, x, y, z, seal, R=0.08, rot=0.0, up=0.0):

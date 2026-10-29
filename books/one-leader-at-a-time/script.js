@@ -29,11 +29,11 @@ function Tholos(svg,o={}){
      any of them: one at each bench's place round the edge with the initial of another who answered, one in the middle
      with the manager's, and beside it a square slot for the number; a wreath round the holder's */
   el("circle",{cx,cy,r:50,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":4},pod);
-  const sr=33,rs=8.5,d=9.5,slot={},mw=el("circle",{cx:cx-d,cy,r:12,class:"wreath"},pod);
-  el("circle",{cx:cx-d,cy,r:rs,class:"slot"},pod);el("rect",{x:cx+d-6.5,y:cy-6.5,width:13,height:13,class:"slot"},pod);
+  const sr=34,rs=6.5,d=7.5,slot={},mw=el("circle",{cx:cx-d,cy,r:9.5,class:"wreath"},pod);
+  el("circle",{cx:cx-d,cy,r:rs,class:"slot"},pod);el("rect",{x:cx+d-5,y:cy-5,width:10,height:10,class:"slot"},pod);
   const mgr=el("text",{x:cx-d,y:cy,class:"sg"},pod),num=el("text",{x:cx+d,y:cy,class:"sn"},pod);
   ALL.forEach(k=>{const a=A[k]*Math.PI/180,[x,y]=[cx+sr*Math.cos(a),cy+sr*Math.sin(a)];
-    const w=el("circle",{cx:x,cy:y,r:12,class:"wreath"},pod),g=el("g",{},pod);
+    const w=el("circle",{cx:x,cy:y,r:9.5,class:"wreath"},pod),g=el("g",{},pod);
     el("circle",{cx:x,cy:y,r:rs,class:"slot"},g);el("text",{x,y,class:"sg"},g).textContent=WHO[k].g;slot[k]={w,c:g}});
   const slab=el("text",{x:cx,y:cy+68,class:"lab halo",style:"font-size:12px"},svg);
   const T={svg,cx,cy,under,over,seat:{},porch:[cx,cy+rr+12],
