@@ -16,7 +16,7 @@ $("#cast").innerHTML=ALL.map(who).join("");
 /* the five as lanes, for a Tholos picture's computing twin (Unfold in book.js) */
 const LN={};ALL.forEach(k=>LN[k]=[0,WHO[k].g,WHO[k].c,WHO[k].m]);
 
-/* ===== the Tholos, seen from above: the podium at the centre, five benches round the wall, the porch door below ===== */
+/* ===== the Tholos, seen from above: the table with the seal at the centre, five benches round the wall, the porch door below ===== */
 function Tholos(svg,o={}){
   const cx=220,cy=215,rr=204,R=138,A={O:-90,L:-18,K:54,M:126,T:198};
   svg.innerHTML="";svg.setAttribute("viewBox","0 0 440 470");
@@ -25,7 +25,7 @@ function Tholos(svg,o={}){
   el("rect",{x:cx-26,y:cy+rr-2,width:52,height:26,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3,class:"i"},svg);
   el("text",{x:cx,y:cy+rr+42,class:"lab i",style:"font-size:12px"},svg).textContent="the porch";
   const under=el("g",{},svg),pod=el("g",{class:"podium"},svg),seats=el("g",{},svg),over=el("g",{},svg);
-  /* the podium shows the seal, in wax with no colours. Every signet slot is round and the same size, so a signet fits
+  /* the table shows the seal, in wax with no colours. Every signet slot is round and the same size, so a signet fits
      any of them: one at each bench's place round the edge with the initial of another who answered, one in the middle
      with the manager's, and beside it a square slot for the number; a wreath round the holder's */
   el("circle",{cx,cy,r:50,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":4},pod);
@@ -46,7 +46,7 @@ function Tholos(svg,o={}){
     /* s: {n, by: the manager, ring: who answered (the manager among them), hold: who has the wreath (none while the seal is being made)} */
     seal(s){mgr.textContent=WHO[s.by].g;num.textContent=s.n;
       /* the manager's signet is in the middle, so their place in the ring is bare, like the place of anyone who did not answer;
-         the wreath goes round the middle when the manager holds the podium */
+         the wreath goes round the middle when the manager also holds the wreath */
       mw.style.opacity=s.hold&&s.hold===s.by?1:0;
       ALL.forEach(k=>{const on=s.ring.includes(k)&&k!==s.by;slot[k].c.style.opacity=on?1:0;
         slot[k].w.style.opacity=on&&k===s.hold?1:0;T.seat[k].g.classList.toggle("holder",k===s.hold)});
@@ -166,7 +166,7 @@ function verdict(r,checks,say){
   checks.innerHTML=`<li><b>A majority has answered</b> ${yes(r.maj)} (${r.w.length+r.x.length} of 5)</li>`+
     `<li><b>First:</b> ${dual("a majority answered with tablets","a majority answered with intact state")} ${yes(r.c1)} (${r.w.length} of 5)</li>`+
     `<li><b>Third:</b> ${dual("same seal, and its holder Okios answered with tablets","same view, and its primary R1 answered with intact state")} ${r.x.length?yes(r.c3):dual("· no tablets are lost","· no state is lost")}</li>`;
-  say.innerHTML=r.forms?dual(`<span class="ok">Seal 7 forms.</span> ${WHO[r.holder].n} shows the latest line${r.holder==="O"?" and held the podium before, so nothing changes but the seal":""}, takes the podium holding line ${HELD[r.holder]}, and opens the seal with the whole law.`,`<span class="ok">View 7 forms.</span> ${WHO[r.holder].m} shows the latest record${r.holder==="O"?" and was primary before, so nothing changes but the view":""}, becomes primary holding record ${HELD[r.holder]}, and opens the view with its whole log.`)
+  say.innerHTML=r.forms?dual(`<span class="ok">Seal 7 forms.</span> ${WHO[r.holder].n} shows the latest line${r.holder==="O"?" and wore the wreath before, so nothing changes but the seal":""}, takes the wreath holding line ${HELD[r.holder]}, and opens the seal with the whole law.`,`<span class="ok">View 7 forms.</span> ${WHO[r.holder].m} shows the latest record${r.holder==="O"?" and was primary before, so nothing changes but the view":""}, becomes primary holding record ${HELD[r.holder]}, and opens the view with its whole log.`)
     :r.maj?dual(`<span class="bad">No seal forms.</span> A majority answered, but the answers cannot be sure of showing line 12. The manager waits and calls again.`,`<span class="bad">No view forms.</span> A majority answered, but the answers cannot be sure of showing record 12. The view manager waits and tries again.`)
     :dual(`<span class="bad">No seal forms.</span> Fewer than three have answered. The manager waits and calls again.`,`<span class="bad">No view forms.</span> Fewer than three have answered. The view manager waits and tries again.`);
 }
@@ -182,14 +182,14 @@ function verdict(r,checks,say){
 /* ===== scrollytelling: a change of seal ===== */
 (function(){
   const T=Tholos($("#changesvg")),side=$("#changeside");
-  /* how things stand at each step: seal and line at each bench, who is out, the seal the podium shows, who holds it */
+  /* how things stand at each step: seal and line at each bench, who is out, the seal on the table, who wears the wreath */
   const b6=n=>`6 · ${n}`,b7=n=>`7 · ${n}`,b8=n=>`8 · ${n}`,H6={O:b6(13),L:b6(12),K:b6(12),M:b6(10),T:b6(10)};
   const ST=[
-    {seal:S6,turn:"O",h:H6,out:{},n:dual("Okios holds the podium","R1 is the primary")},
+    {seal:S6,turn:"O",h:H6,out:{},n:dual("Okios wears the wreath","R1 is the primary")},
     {seal:S6,turn:null,h:H6,out:{O:1},n:dual("no note from Okios","no message from R1")},
     {seal:{n:7,by:"L",ring:["L"]},turn:null,h:H6,out:{O:1},n:dual("Liskovia calls seal 7: her signet in the middle","R2 invites all to view 7")},
     {seal:{n:7,by:"L",ring:["L","K","M"]},turn:null,h:H6,out:{O:1},n:dual("Kleon and Melissa answer with tablets and go into the ring; Theron's answer is slow","R3 and R4 accept with intact state; R5's reply is slow")},
-    {seal:S7,turn:"L",h:H6,out:{O:1},n:dual("the wreath goes to Liskovia, who takes the podium","R2 becomes primary")},
+    {seal:S7,turn:"L",h:H6,out:{O:1},n:dual("the wreath goes on Liskovia's head","R2 becomes primary")},
     {seal:S7,turn:"L",h:{O:b6(13),L:b7(1),K:b7(1),M:b7(1),T:b6(10)},out:{O:1},n:dual("the opening line, the whole law to line 12, for everyone on seal 7","the opening record, the whole log to record 12, for the members of view 7")},
     {seal:S8,turn:"L",h:{O:b8(1),L:b8(1),K:b8(1),M:b8(1),T:b8(1)},out:{},n:dual("Okios and Theron are back, and seal 8 takes in all five; line 13 is smoothed away","R1 and R5 are reachable again, and view 8 includes all five; record 13 is discarded")}];
   /* notes and runners: from, to, glyph, colour, where each is at which step, and a label for the computing twin */
@@ -210,7 +210,7 @@ function verdict(r,checks,say){
     L.setT(s+.15)}
   scrolly($("#change"),s=>{const S=ST[s];T.seal(S.seal);lanes(s);
     ALL.forEach(k=>{T.out(k,S.out[k]);T.note(k,S.h[k])});
-    side.innerHTML=ALL.map(k=>`<div class="hc"><h5>${dual(WHO[k].n,WHO[k].m)}</h5><div>${dual(`seal ${S.h[k].split(" · ")[0]}, line ${S.h[k].split(" · ")[1]}`,`view ${S.h[k].split(" · ")[0]}, record ${S.h[k].split(" · ")[1]}`)}</div><div class="chk">${S.out[k]?dual("out of reach","unreachable"):k===S.turn?dual("holds the podium","primary"):""}</div></div>`).join("")+`<div class="hc" style="grid-column:1/-1;min-height:0"><div class="chk" style="margin:0">${S.n}</div></div>`;
+    side.innerHTML=ALL.map(k=>`<div class="hc"><h5>${dual(WHO[k].n,WHO[k].m)}</h5><div>${dual(`seal ${S.h[k].split(" · ")[0]}, line ${S.h[k].split(" · ")[1]}`,`view ${S.h[k].split(" · ")[0]}, record ${S.h[k].split(" · ")[1]}`)}</div><div class="chk">${S.out[k]?dual("out of reach","unreachable"):k===S.turn?dual("wears the wreath","primary"):""}</div></div>`).join("")+`<div class="hc" style="grid-column:1/-1;min-height:0"><div class="chk" style="margin:0">${S.n}</div></div>`;
     toks.forEach(k=>{const u=k.plan[s],id=++k.run;
       if(u==null){k.g.setAttribute("opacity",0);k.u=s>k.end?.8:.2;T.run(k.g,k.a,k.b,k.u);return}
       k.g.setAttribute("opacity",1);const u0=k.u;tween(800,e=>{if(k.run!==id)return;k.u=u0+(u-u0)*e;T.run(k.g,k.a,k.b,k.u)})});

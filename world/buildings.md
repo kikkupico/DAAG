@@ -58,14 +58,14 @@ scholars' copies are not law, and no decree settles which copy is right.
 
 ## Paxos — Schedia
 
-A city on the northern section, governed from a round hall with a podium, with laws of its own: its founders came
+A city on the northern section, governed from a round hall where one leader wears a wreath, with laws of its own: its founders came
 from a different mother city and brought their laws with them, and the Parliament's decrees
 have never run there. Each law scroll covers its own city, so the two never contradict each
 other.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The Tholos** | Oki &amp; Liskov 1988 | A round hall with the Chamber's poor acoustics, messengers and legislators on part-time duty, built plainer: a drum of honey-coloured limestone with no colonnade outside and only a painted band under its eaves, a porch at its one door and six columns inside, where the Chamber has a Doric colonnade outside and a ring of Corinthian columns within. Its one difference in use is a podium at the centre. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has a city of its own, and the two law scrolls never conflict. The podium is an office, not a pulpit: only its holder may propose, the others write down what its messengers bring, and those messengers all leave from the centre. Authority rides on the seal pressed beside every line: a bronze disc of round slots, with the manager's signet and the number in the middle, the signets of the others who answered the call round it, and a wreath round the holder's, or round the middle when the manager holds the podium. The law is kept on wax tablets left on the benches and smoothed when their holder goes home, against the Chamber's indelible ink. When the podium falls silent, another legislator calls a seal with a higher number, and the new holder gathers what a majority hold before proposing anything. The council is five: Okios, Liskovia, Kleon, Melissa and Theron. The name is Athenian: the round building of the prytaneis, the committee on duty in turn, with one member presiding. |
+| **The Tholos** | Oki &amp; Liskov 1988 | A round hall with the Chamber's poor acoustics, messengers and legislators on part-time duty, built plainer: a drum of honey-coloured limestone with no colonnade outside and only a painted band under its eaves, a porch at its one door and six columns inside, where the Chamber has a Doric colonnade outside and a ring of Corinthian columns within. Its one difference in use is a leader, who wears a wreath, and a round stone table at the centre where seals are made and kept. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has a city of its own, and the two law scrolls never conflict. The wreath is an office, not a seat: only its holder may propose, the others write down what its messengers bring, and those messengers all leave from the centre. Authority rides on the seal pressed beside every line: a bronze disc of round slots, with the manager's signet and the number in the middle, the signets of the others who answered the call round it, and a wreath round the holder's, or round the middle when the manager wears the wreath. The law is kept on wax tablets left on the benches and smoothed when their holder goes home, against the Chamber's indelible ink. When the holder falls silent, another legislator calls a seal with a higher number, and the new holder gathers what a majority hold before proposing anything. The council is five: Okios, Liskovia, Kleon, Melissa and Theron. The name is Athenian: the round building of the prytaneis, the committee on duty in turn, with one member presiding. |
 
 ## Paxos — the scholars' coast
 
@@ -116,8 +116,8 @@ argument.
 - **Chamber / Tholos.** Both keep a law scroll by majority, in the same kind of hall. But VR was
   found independently and is a genuine alternative, not a variant, so they are different halls,
   on the summits of two sections of the island, facing each other across the bay: one with no head of the room,
-  where whoever thinks themselves president may start a ballot, and one with a podium, whose
-  holder wears the wreath on the seal.
+  where whoever thinks themselves president may start a ballot, and one with a round table of seals at its middle,
+  whose leader wears a wreath.
 
 ---
 

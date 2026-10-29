@@ -375,7 +375,7 @@ and `tick(dt)` (time that passes with nothing flying), `turn(k)` (the name ringe
 that stays, such as each coin flip or each refusal), and for a scene told step by step `msg(a,b,t0,t1,label,cls)` (t1 null
 while in transit; `ln-red` for a marker, `ln-aside` for an outside channel), `land`, `band(t0,t1,label,hot,low)` and
 `setT(t)`; a band returned by `band` can be moved, as the coast's partition follows a sliding window. A scroll draws the story so far at a step to each unit of time. Options: `alias` gives a place that is not a
-process the lane of whoever stands for it (the podium is its holder), `labels` writes each token's value on its arrow,
+process the lane of whoever stands for it (the Tholos's table is whoever writes there), `labels` writes each token's value on its arrow,
 `press` makes a process's name a button where the reader presses a place in the picture. Time runs while a message
 flies; views read side by side share a clock; an endless run slides, and a process's last state stays at the left edge.
 A process's label keeps the moment it last changed. A widget that starts and stops with its picture's visibility watches
