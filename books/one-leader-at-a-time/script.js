@@ -25,7 +25,7 @@ function Tholos(svg,o={}){
   el("rect",{x:cx-26,y:cy+rr-2,width:52,height:26,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3,class:"i"},svg);
   el("text",{x:cx,y:cy+rr+42,class:"lab i",style:"font-size:12px"},svg).textContent="the porch";
   const under=el("g",{},svg),pod=el("g",{class:"podium"},svg),seats=el("g",{},svg),over=el("g",{},svg);
-  /* the podium shows the seal, in wax with no colours: the caller's initial and the number in the middle, the initials of the others who answered at their benches' places, a wreath round the holder's */
+  /* the podium shows the seal, in wax with no colours: the manager's initial and the number in the middle, the initials of the others who answered at their benches' places, a wreath round the holder's */
   el("circle",{cx,cy,r:50,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":4},pod);
   const sr=32,slot={},mw=el("circle",{cx,cy,r:17.5,class:"wreath"},pod),mid=el("circle",{cx,cy,r:13.5,class:"slot"},pod),num=el("text",{x:cx,y:cy,class:"sn"},pod);
   ALL.forEach(k=>{const a=A[k]*Math.PI/180,x=cx+sr*Math.cos(a),y=cy+sr*Math.sin(a);
@@ -38,10 +38,10 @@ function Tholos(svg,o={}){
     token(fill,glyph,gm){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);dtext(g,{},glyph,gm===undefined?glyph:gm);return g},
     /* a runner or a note u of the way from one place to another */
     run(g,a,b,u){const [x1,y1]=T.pos(a),[x2,y2]=T.pos(b);T.put(g,x1+(x2-x1)*u,y1+(y2-y1)*u)},
-    /* s: {n, by: the caller, ring: who answered (the caller among them), hold: who has the wreath (none while the seal is being made)} */
+    /* s: {n, by: the manager, ring: who answered (the manager among them), hold: who has the wreath (none while the seal is being made)} */
     seal(s){num.textContent=WHO[s.by].g+s.n;
-      /* the caller's signet is in the middle, so their place in the ring is bare, like the place of anyone who did not answer;
-         the wreath goes round the middle when the caller holds the podium */
+      /* the manager's signet is in the middle, so their place in the ring is bare, like the place of anyone who did not answer;
+         the wreath goes round the middle when the manager holds the podium */
       mw.style.opacity=s.hold&&s.hold===s.by?1:0;
       ALL.forEach(k=>{const on=s.ring.includes(k)&&k!==s.by;slot[k].c.style.opacity=on?1:0;
         slot[k].w.style.opacity=on&&k===s.hold?1:0;T.seat[k].g.classList.toggle("holder",k===s.hold)});
@@ -130,14 +130,14 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 (function(){
   const M=[{b:6,w:"Okios",l:12},{b:6,w:"Okios",l:40},{b:7,w:"Kleon",l:3},{b:7,w:"Liskovia",l:1},{b:7,w:"Liskovia",l:12}],box=$("#marks"),say=$("#marksay");
   const MW={Okios:1,Liskovia:2,Kleon:3},name=m=>dual(`seal ${m.b}, ${m.w} · line ${m.l}`,`view ${m.b}, R${MW[m.w]} · record ${m.l}`),nameM=m=>`view ${m.b}, R${MW[m.w]} · record ${m.l}`,nameI=m=>`seal ${m.b}, ${m.w} · line ${m.l}`;let sel=[];
-  /* seals by their middle alone: number, then the caller's name in the order of the alphabet; under one seal, by line */
+  /* seals by their middle alone: number, then the manager's name in the order of the alphabet; under one seal, by line */
   const cmp=(x,y)=>x.b-y.b||x.w.localeCompare(y.w)||x.l-y.l,cmpM=(x,y)=>x.b-y.b||MW[x.w]-MW[y.w]||x.l-y.l;
   box.innerHTML=M.map((m,i)=>`<button class="mark" data-i="${i}" aria-pressed="false">${name(m)}</button>`).join("");
   $$("button",box).forEach(bt=>bt.onclick=()=>{const i=+bt.dataset.i;if(sel.length===2||sel.includes(i))sel=[];sel.push(i);
     $$("button",box).forEach(x=>x.setAttribute("aria-pressed",sel.includes(+x.dataset.i)));
     if(sel.length<2){say.innerHTML=dual("Now choose a second mark.","Now choose a second viewstamp.");return}
     let [x,y]=sel.map(i=>M[i]),[xm,ym]=[x,y];if(cmp(x,y)>0)[x,y]=[y,x];if(cmpM(xm,ym)>0)[xm,ym]=[ym,xm];
-    const why=x.b!==y.b?`seal ${y.b} is the later seal, whatever the line numbers`+(x.l>y.l?`. Line ${x.l} is a higher number than line ${y.l}, and still the older mark`:""):x.w!==y.w?`both are seal ${y.b}, so the callers in their middles decide, and ${x.w} comes before ${y.w} in the order of the alphabet`:`under the same seal, the higher line is the later`;
+    const why=x.b!==y.b?`seal ${y.b} is the later seal, whatever the line numbers`+(x.l>y.l?`. Line ${x.l} is a higher number than line ${y.l}, and still the older mark`:""):x.w!==y.w?`both are seal ${y.b}, so the managers in their middles decide, and ${x.w} comes before ${y.w} in the order of the alphabet`:`under the same seal, the higher line is the later`;
     const whyM=xm.b!==ym.b?`view ${ym.b} is the later view, whatever the record numbers`+(xm.l>ym.l?`. Record ${xm.l} is a higher number than record ${ym.l}, and still the older viewstamp`:""):xm.w!==ym.w?`both are view ${ym.b}, and R${MW[xm.w]} comes before R${MW[ym.w]} in the order of the identifiers`:`within the same view, the higher timestamp is the later`;
     say.innerHTML=dual(`<b>${nameI(y)}</b> is the later: ${why}.`,`<b>${nameM(ym)}</b> is the later: ${whyM}.`)});
 })();
@@ -162,8 +162,8 @@ function verdict(r,checks,say){
     `<li><b>First:</b> ${dual("a majority answered with tablets","a majority answered with intact state")} ${yes(r.c1)} (${r.w.length} of 5)</li>`+
     `<li><b>Third:</b> ${dual("same seal, and its holder Okios answered with tablets","same view, and its primary R1 answered with intact state")} ${r.x.length?yes(r.c3):dual("· no tablets are lost","· no state is lost")}</li>`;
   say.innerHTML=r.forms?dual(`<span class="ok">Seal 7 forms.</span> ${WHO[r.holder].n} shows the latest line${r.holder==="O"?" and held the podium before, so nothing changes but the seal":""}, takes the podium holding line ${HELD[r.holder]}, and opens the seal with the whole law.`,`<span class="ok">View 7 forms.</span> ${WHO[r.holder].m} shows the latest record${r.holder==="O"?" and was primary before, so nothing changes but the view":""}, becomes primary holding record ${HELD[r.holder]}, and opens the view with its whole log.`)
-    :r.maj?dual(`<span class="bad">No seal forms.</span> A majority answered, but the answers cannot be sure of showing line 12. The caller waits and calls again.`,`<span class="bad">No view forms.</span> A majority answered, but the answers cannot be sure of showing record 12. The view manager waits and tries again.`)
-    :dual(`<span class="bad">No seal forms.</span> Fewer than three have answered. The caller waits and calls again.`,`<span class="bad">No view forms.</span> Fewer than three have answered. The view manager waits and tries again.`);
+    :r.maj?dual(`<span class="bad">No seal forms.</span> A majority answered, but the answers cannot be sure of showing line 12. The manager waits and calls again.`,`<span class="bad">No view forms.</span> A majority answered, but the answers cannot be sure of showing record 12. The view manager waits and tries again.`)
+    :dual(`<span class="bad">No seal forms.</span> Fewer than three have answered. The manager waits and calls again.`,`<span class="bad">No view forms.</span> Fewer than three have answered. The view manager waits and tries again.`);
 }
 (function(){
   const box=$("#formans"),checks=$("#formchecks"),say=$("#formsay"),ex={O:"without",L:"none",K:"none",M:"with",T:"with"};let ans={...ex};
