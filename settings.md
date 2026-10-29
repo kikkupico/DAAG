@@ -296,24 +296,35 @@ It has the one thing the Chamber lacks: a podium at the centre.
 
 | Paper | In the world |
 |---|---|
-| `oki-liskov-1988` | **The Tholos.** A rotunda like the Chamber, with the same poor acoustics, messengers and legislators on part-time duty, and one difference: a podium at the centre. Only the legislator who holds the podium may propose; the others write down what its messengers bring. When the podium falls silent, another legislator raises a higher board, and the new holder first gathers what a majority hold, so nothing a majority knew is lost. *One Leader at a Time* |
+| `oki-liskov-1988` | **The Tholos.** A rotunda like the Chamber, with the same poor acoustics, messengers and legislators on part-time duty, and one difference: a podium at the centre. Only the legislator who holds the podium may propose; the others write down what its messengers bring. When the podium falls silent, another legislator calls a seal with a higher number, and the new holder first gathers what a majority hold, so nothing a majority knew is lost. *One Leader at a Time* |
 
 **The podium is an office, not a pulpit.** Nobody can be heard from it either. It stands where
-every bench is the same distance away, the current board hangs on it, and the podium's
+every bench is the same distance away, the current seal is kept on it, and the podium's
 messengers all leave from it, so where messengers in the Chamber cross the floor in every
-direction, in the Tholos they run out from the centre. Authority rides on the board number that
-every note carries, not on standing at the podium, which is only where the holder sits when
-present. A holder who has stepped out and not noticed a new board can go on sending under the
+direction, in the Tholos they run out from the centre. Authority rides on the seal pressed
+beside every line, not on standing at the podium, which is only where the holder sits when
+present. A holder who has stepped out and not noticed a new seal can go on sending under the
 old one, and settles nothing, since any majority they reach includes a legislator who has taken
-the new board and refuses the old number. That is why boards are numbered.
+the new seal and refuses the old one.
+
+**The seal.** Each spell at the podium has its own seal, a round stamp laid out like the Tholos:
+six slots for signets, one in the middle and five round it, one at each bench's place. The
+middle holds the signet of the legislator who called the seal and a number one higher than any
+seal they have seen (the paper's viewid, ⟨count, caller⟩); the ring holds the signets of those
+who answered the call, and stays empty for anyone who did not (the view's members); a wreath
+goes round the signet of the one who takes the podium (the primary). The middle says who called;
+the wreath says who holds the podium. Seals are ordered by their middle alone, by number and
+then by the caller's name. A seal never changes once made, so a legislator missing from it who
+comes back within reach means a new seal must be called. Each line is known by its seal and line
+(the viewstamp).
 
 **Wax, not ink.** Lamport's legislators write in indelible ink; Schedia's keep the law on wax
 tablets that stay on their bench and are smoothed when their holder goes home, while the bench's
-name and the last board it served under are cut into its stone. A legislator who steps out
-comes back to their tablets; one who goes home comes back to smooth wax, calls for a new board at
-once, and is brought up to date only by that board's opening line. If a majority go home at
-once, the council can stop for good: a board may then form only on answers that still show every
-law that passed, as the old holder's tablets would, and it never starts a board missing a law
+name and the middle of the last seal it served under are cut into its stone. A legislator who steps out
+comes back to their tablets; one who goes home comes back to smooth wax, calls for a new seal at
+once, and is brought up to date only by that seal's opening line. If a majority go home at
+once, the council can stop for good: a seal may then form only on answers that still show every
+law that passed, as the old holder's tablets would, and it never starts a seal missing a law
 that passed. VR keeps its group state in volatile memory, and a majority remembering is
 what makes that safe.
 

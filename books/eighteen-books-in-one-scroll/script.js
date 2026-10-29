@@ -566,8 +566,8 @@ def("vr", "tholos", [
   sl("L", 1.6, "O", 2.3, { id: "r1" }), sl("K", 1.9, "O", 2.6, { id: "r2" }),
   ev("O", 2.6, { num: "✓", big: 1, id: "pass" }),
   { t: "x", n: "O", at: 3.45, id: "sil" },
-  sl("Th", 3.6, "L", 4.4, { dir: 1, lab: V("board 7?", "view 7?"), la: .26, id: "n1" }), sl("Th", 3.6, "M", 4.2, { id: "n2" }),
-  sl("L", 4.55, "Th", 5.35, { dir: -1, lab: V("board 6, line 12", "viewstamp 6.12"), la: .3, id: "n3" }), sl("M", 4.4, "Th", 5.0, { id: "n4" }),
+  sl("Th", 3.6, "L", 4.4, { dir: 1, lab: V("seal 7?", "view 7?"), la: .26, id: "n1" }), sl("Th", 3.6, "M", 4.2, { id: "n2" }),
+  sl("L", 4.55, "Th", 5.35, { dir: -1, lab: V("seal 6, line 12", "viewstamp 6.12"), la: .3, id: "n3" }), sl("M", 4.4, "Th", 5.0, { id: "n4" }),
   ev("L", 5.8, { num: "", fill: "#e0b84a", big: 1, ring: 1, id: "newp" }),
   tg(on("O", 1.2, -100, -20), V("only the podium writes", "only the primary orders"), { c: 1, own: 1, id: "t1" }),
   tg(on("L", 5.8, 10, 34), V("the latest takes the podium", "highest viewstamp: primary"), { own: 1, id: "t2" })

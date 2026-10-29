@@ -187,7 +187,7 @@ What each place, building, character, prop and practice of the setting has in co
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| the Tholos, a plain round hall with a podium | The building follows the Athenian Tholos: a plain drum with no colonnade outside, six columns inside carrying a conical tiled roof, and a porch at its one door†. The Athenian Tholos housed the committee on duty, with one member presiding for a day and a night chosen by lot (Aristotle, Constitution of Athens 44). The podium is the setting's version of that president's place; the real president was chosen by lot, not by a numbered board. | Close |
+| the Tholos, a plain round hall with a podium | The building follows the Athenian Tholos: a plain drum with no colonnade outside, six columns inside carrying a conical tiled roof, and a porch at its one door†. The Athenian Tholos housed the committee on duty, with one member presiding for a day and a night chosen by lot (Aristotle, Constitution of Athens 44). The podium is the setting's version of that president's place; the real president was chosen by lot, not by a numbered seal. | Close |
 
 ### Characters
 
@@ -208,8 +208,9 @@ What each place, building, character, prop and practice of the setting has in co
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| a higher board raised when the podium falls silent | Athens renewed its presidency daily by lot. A new holder taking a higher board number is the setting's rule, not a Greek one. | Invented |
-| a board with a number, hung beside the podium | Boards of notices stood in Athenian public places (Aristotle, Constitution of Athens 47–48)†. A number that outranks whoever holds the podium is the setting’s own. | Loose |
+| a seal with a higher number called when the podium falls silent | Athens renewed its presidency daily by lot. A new holder under a seal with a higher number is the setting's rule, not a Greek one. | Invented |
+| a seal of six signets, the caller's and a number in the middle, those who answered round it | The president in the Athenian Tholos kept the city's public seal for his day and night in office (Aristotle, Constitution of Athens 44)†, and any Greek of standing had a signet of their own. Contracts were sealed by several witnesses at once: six on early Ptolemaic contracts, such as the marriage contract from Elephantine of 311 BC†. A stamp made of six signets, and a number that outranks whoever holds the podium, are the setting's own. | Loose |
+| a wreath round the holder's signet | Athenian officials wore a myrtle wreath while in office and set it aside when their term ended†. A wreath on a seal, marking who holds an office, is the setting's own. | Loose |
 | a roll, “I am here”, answered every so often | Councillors’ attendance was checked by a herald and by tokens in Athens†. A roll whose silence is taken to mean an empty podium is the setting’s own. | Loose |
 
 ---
