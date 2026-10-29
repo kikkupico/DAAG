@@ -47,7 +47,7 @@ PAXOS = [
     ('tholos_exterior', 'The Tholos of Schedia',
      'The same kind of hall as the Chamber, plainer: a drum of honey-coloured limestone with no colonnade and a single painted band under its eaves, a porch at its one door, a low conical roof and a lantern. It stands on the island’s highest summit.'),
     ('tholos_interior', 'Inside the Tholos',
-     'Five benches with backs, each name cut into its stone, each with a stand of wax tablets. At the centre, the same distance from every bench, the podium: two steps, a stone seat, a small table and the board on its post.'),
+     'Six columns of fluted drums carry the roof timbers; the lower wall is painted red. Five marble benches, each with its owner’s name and last seal cut in its back and a stand of wax tablets beside it. At the centre, the same distance from every bench, the podium: two moulded steps, a marble chair and a timber desk with the seal, a bronze disc of round slots set with signets, beside its print in wax.'),
     ('tholos_schedia', 'Schedia',
      'A city of its own on a cove on the bay’s north shore, founded from another mother city and keeping its own laws. The Tholos stands on the summit above it, reached by a stepped way from the town.'),
     ('paxos_city', 'The city of Paxos',
