@@ -9,7 +9,8 @@ const WHO={O:{n:"Okios",m:"R1",gm:"R1",g:"Ο",c:"#8fa3b8"},L:{n:"Liskovia",m:"R2
 const ALL=["O","L","K","M","T"];
 const who=k=>`<span class="who"><i style="background:${WHO[k].c}"></i>${dual(WHO[k].n,WHO[k].m)}</span>`;
 /* a note on a bench, said again for computing */
-const M_=s=>s.replace(/board/g,"view").replace(/to line/g,"to record").replace(/smooth wax/g,"state lost").replace(/on the porch/g,"cut off").replace(/\bline\b/g,"record");
+const M_=s=>s.replace(/\bseal\b/g,"view").replace(/to line/g,"to record").replace(/smooth wax/g,"state lost").replace(/on the porch/g,"cut off").replace(/\bline\b/g,"record");
+const S6={n:6,by:"O",ring:ALL,hold:"O"},S7={n:7,by:"L",ring:["L","K","M"],hold:"L"},S8={n:8,by:"L",ring:ALL,hold:"L"};
 const yes=ok=>ok?"<span class='ok'>✓</span>":"<span class='bad'>✗</span>";
 $("#cast").innerHTML=ALL.map(who).join("");
 /* the five as lanes, for a Tholos picture's computing twin (Unfold in book.js) */
@@ -24,7 +25,12 @@ function Tholos(svg,o={}){
   el("rect",{x:cx-26,y:cy+rr-2,width:52,height:26,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3,class:"i"},svg);
   el("text",{x:cx,y:cy+rr+42,class:"lab i",style:"font-size:12px"},svg).textContent="the porch";
   const under=el("g",{},svg),pod=el("g",{class:"podium"},svg),seats=el("g",{},svg),over=el("g",{},svg);
-  const disc=el("circle",{cx,cy,r:34,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":4},pod),bt=dtext(pod,{x:cx,y:cy},"","");
+  /* the podium shows the seal: the caller's signet and the number in the middle, a slot at each bench's place, a wreath round the holder's */
+  el("circle",{cx,cy,r:46,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":4},pod);
+  const sr=28,slot={},mid=el("circle",{cx,cy,r:11,class:"slot"},pod),num=el("text",{x:cx,y:cy,class:"sn"},pod);
+  ALL.forEach(k=>{const a=A[k]*Math.PI/180,x=cx+sr*Math.cos(a),y=cy+sr*Math.sin(a);
+    slot[k]={w:el("circle",{cx:x,cy:y,r:11.5,class:"wreath"},pod),c:el("circle",{cx:x,cy:y,r:7.5,class:"slot"},pod)}});
+  const slab=el("text",{x:cx,y:cy+64,class:"lab halo",style:"font-size:12px"},svg);
   const T={svg,cx,cy,under,over,seat:{},porch:[cx,cy+rr+12],
     at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
     put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
@@ -32,7 +38,11 @@ function Tholos(svg,o={}){
     token(fill,glyph,gm){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);dtext(g,{},glyph,gm===undefined?glyph:gm);return g},
     /* a runner or a note u of the way from one place to another */
     run(g,a,b,u){const [x1,y1]=T.pos(a),[x2,y2]=T.pos(b);T.put(g,x1+(x2-x1)*u,y1+(y2-y1)*u)},
-    board(text,k){bt[0].textContent=text;bt[1].textContent=M_(text);disc.setAttribute("fill",k?WHO[k].c:"#d9cfb4");ALL.forEach(x=>T.seat[x].g.classList.toggle("holder",x===k))},
+    /* s: {n, by: the caller, ring: who answered, hold: who has the wreath (none while the seal is being made)} */
+    seal(s){num.textContent=s.n;mid.setAttribute("fill",WHO[s.by].c);
+      ALL.forEach(k=>{const on=s.ring.includes(k);slot[k].c.setAttribute("fill",on?WHO[k].c:"none");slot[k].c.classList.toggle("empty",!on);
+        slot[k].w.style.opacity=k===s.hold?1:0;T.seat[k].g.classList.toggle("holder",k===s.hold)});
+      slab.textContent=`seal ${s.n}, ${WHO[s.by].n}`+(s.hold?"":" · being made")},
     note(k,s,m){const t=T.seat[k].s;t[0].textContent=s;t[1].textContent=m===undefined?M_(s):m},
     out(k,on){T.seat[k].g.classList.toggle("out",!!on)}
   };
@@ -87,7 +97,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const flip={};
   const L=Unfold(T.svg,{nodes:LN,span:8,slide:true,alias:{P:"O"},land:.81,labels:true,mtext:M_,
     press:Object.fromEntries(["L","K","M","T"].map(k=>[k,[`${WHO[k].m}: cut off or reconnect`,()=>flip[k]()]]))});L.wrap(T);
-  T.board("board 6","O");L.turn("O");
+  T.seal(S6);L.turn("O");
   function paint(){ALL.forEach(k=>{T.note(k,k==="O"?"":"to line "+hold[k]);T.out(k,away[k]);L.cut(k,!!away[k])});pl.textContent=line;pp.textContent=passed;bw.disabled=flying>0}
   /* a line has passed when two benches have sent word that they hold it and all before it */
   function count(){const n=Object.values(word).sort((a,b)=>b-a)[1];if(n>passed){passed=n;return true}return false}
@@ -113,44 +123,44 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   paint();
 })();
 
-/* ===== board and line: which mark is the later ===== */
+/* ===== seal and line: which mark is the later ===== */
 (function(){
   const M=[{b:6,w:"Okios",l:12},{b:6,w:"Okios",l:40},{b:7,w:"Kleon",l:3},{b:7,w:"Liskovia",l:1},{b:7,w:"Liskovia",l:12}],box=$("#marks"),say=$("#marksay");
-  const MW={Okios:1,Liskovia:2,Kleon:3},name=m=>dual(`board ${m.b}, ${m.w} · line ${m.l}`,`view ${m.b}, R${MW[m.w]} · record ${m.l}`),nameM=m=>`view ${m.b}, R${MW[m.w]} · record ${m.l}`,nameI=m=>`board ${m.b}, ${m.w} · line ${m.l}`;let sel=[];
-  /* boards by count, then by name in the order of the alphabet; under one board, by line */
+  const MW={Okios:1,Liskovia:2,Kleon:3},name=m=>dual(`seal ${m.b}, ${m.w} · line ${m.l}`,`view ${m.b}, R${MW[m.w]} · record ${m.l}`),nameM=m=>`view ${m.b}, R${MW[m.w]} · record ${m.l}`,nameI=m=>`seal ${m.b}, ${m.w} · line ${m.l}`;let sel=[];
+  /* seals by their middle alone: number, then the caller's name in the order of the alphabet; under one seal, by line */
   const cmp=(x,y)=>x.b-y.b||x.w.localeCompare(y.w)||x.l-y.l,cmpM=(x,y)=>x.b-y.b||MW[x.w]-MW[y.w]||x.l-y.l;
   box.innerHTML=M.map((m,i)=>`<button class="mark" data-i="${i}" aria-pressed="false">${name(m)}</button>`).join("");
   $$("button",box).forEach(bt=>bt.onclick=()=>{const i=+bt.dataset.i;if(sel.length===2||sel.includes(i))sel=[];sel.push(i);
     $$("button",box).forEach(x=>x.setAttribute("aria-pressed",sel.includes(+x.dataset.i)));
     if(sel.length<2){say.innerHTML=dual("Now choose a second mark.","Now choose a second viewstamp.");return}
     let [x,y]=sel.map(i=>M[i]),[xm,ym]=[x,y];if(cmp(x,y)>0)[x,y]=[y,x];if(cmpM(xm,ym)>0)[xm,ym]=[ym,xm];
-    const why=x.b!==y.b?`board ${y.b} is the later board, whatever the line numbers`+(x.l>y.l?`. Line ${x.l} is a higher number than line ${y.l}, and still the older mark`:""):x.w!==y.w?`both are board ${y.b}, and ${x.w} comes before ${y.w} in the order of the alphabet`:`under the same board, the higher line is the later`;
+    const why=x.b!==y.b?`seal ${y.b} is the later seal, whatever the line numbers`+(x.l>y.l?`. Line ${x.l} is a higher number than line ${y.l}, and still the older mark`:""):x.w!==y.w?`both are seal ${y.b}, so the callers in their middles decide, and ${x.w} comes before ${y.w} in the order of the alphabet`:`under the same seal, the higher line is the later`;
     const whyM=xm.b!==ym.b?`view ${ym.b} is the later view, whatever the record numbers`+(xm.l>ym.l?`. Record ${xm.l} is a higher number than record ${ym.l}, and still the older viewstamp`:""):xm.w!==ym.w?`both are view ${ym.b}, and R${MW[xm.w]} comes before R${MW[ym.w]} in the order of the identifiers`:`within the same view, the higher timestamp is the later`;
     say.innerHTML=dual(`<b>${nameI(y)}</b> is the later: ${why}.`,`<b>${nameM(ym)}</b> is the later: ${whyM}.`)});
 })();
 
-/* ===== the rule for forming a board, as the long edition states it =====
-   Everyone last served under board 6, held by Okios; line 12 passed (Okios, Liskovia, Kleon). */
+/* ===== the rule for forming a seal, as the long edition states it =====
+   Everyone last served under seal 6, held by Okios; line 12 passed (Okios, Liskovia, Kleon). */
 const HELD={O:12,L:12,K:12,M:10,T:10},PASSED=12;
 function mayForm(ans){                       // ans[k]: "with" tablets, "without", or "none" (no answer)
   const w=ALL.filter(k=>ans[k]==="with"),x=ALL.filter(k=>ans[k]==="without");
   const maj=w.length+x.length>=3,c1=w.length>=3,c3=x.length>0&&ans.O==="with";
-  /* the second condition needs a lost tablet from an older board; here every bench says board 6 */
+  /* the second condition needs a lost tablet from an older seal; here every bench says seal 6 */
   const forms=maj&&(c1||c3);
   let holder=null;
   if(forms){const top=Math.max(...w.map(k=>HELD[k])),best=w.filter(k=>HELD[k]===top);holder=best.includes("O")?"O":best[0]}
   return {maj,c1,c3,forms,holder,w,x};
 }
-/* try every way the five can answer: a board never forms without the passed line */
+/* try every way the five can answer: a seal never forms without the passed line */
 (function(){const opts=["with","without","none"];for(let n=0;n<243;n++){const a={};let m=n;ALL.forEach(k=>{a[k]=opts[m%3];m=Math.floor(m/3)});const r=mayForm(a);
-  if(r.forms&&HELD[r.holder]<PASSED)throw new Error("a board formed without line 12: "+JSON.stringify(a))}})();
+  if(r.forms&&HELD[r.holder]<PASSED)throw new Error("a seal formed without line 12: "+JSON.stringify(a))}})();
 function verdict(r,checks,say){
   checks.innerHTML=`<li><b>A majority has answered</b> ${yes(r.maj)} (${r.w.length+r.x.length} of 5)</li>`+
     `<li><b>First:</b> ${dual("a majority answered with tablets","a majority answered with intact state")} ${yes(r.c1)} (${r.w.length} of 5)</li>`+
-    `<li><b>Third:</b> ${dual("same board, and its holder Okios answered with tablets","same view, and its primary R1 answered with intact state")} ${r.x.length?yes(r.c3):dual("· no tablets are lost","· no state is lost")}</li>`;
-  say.innerHTML=r.forms?dual(`<span class="ok">Board 7 forms.</span> ${WHO[r.holder].n} shows the latest line${r.holder==="O"?" and held the podium before, so nothing changes but the board":""}, takes the podium holding line ${HELD[r.holder]}, and opens the board with the whole law.`,`<span class="ok">View 7 forms.</span> ${WHO[r.holder].m} shows the latest record${r.holder==="O"?" and was primary before, so nothing changes but the view":""}, becomes primary holding record ${HELD[r.holder]}, and opens the view with its whole log.`)
-    :r.maj?dual(`<span class="bad">No board forms.</span> A majority answered, but the answers cannot be sure of showing line 12. The caller waits and calls again.`,`<span class="bad">No view forms.</span> A majority answered, but the answers cannot be sure of showing record 12. The view manager waits and tries again.`)
-    :dual(`<span class="bad">No board forms.</span> Fewer than three have answered. The caller waits and calls again.`,`<span class="bad">No view forms.</span> Fewer than three have answered. The view manager waits and tries again.`);
+    `<li><b>Third:</b> ${dual("same seal, and its holder Okios answered with tablets","same view, and its primary R1 answered with intact state")} ${r.x.length?yes(r.c3):dual("· no tablets are lost","· no state is lost")}</li>`;
+  say.innerHTML=r.forms?dual(`<span class="ok">Seal 7 forms.</span> ${WHO[r.holder].n} shows the latest line${r.holder==="O"?" and held the podium before, so nothing changes but the seal":""}, takes the podium holding line ${HELD[r.holder]}, and opens the seal with the whole law.`,`<span class="ok">View 7 forms.</span> ${WHO[r.holder].m} shows the latest record${r.holder==="O"?" and was primary before, so nothing changes but the view":""}, becomes primary holding record ${HELD[r.holder]}, and opens the view with its whole log.`)
+    :r.maj?dual(`<span class="bad">No seal forms.</span> A majority answered, but the answers cannot be sure of showing line 12. The caller waits and calls again.`,`<span class="bad">No view forms.</span> A majority answered, but the answers cannot be sure of showing record 12. The view manager waits and tries again.`)
+    :dual(`<span class="bad">No seal forms.</span> Fewer than three have answered. The caller waits and calls again.`,`<span class="bad">No view forms.</span> Fewer than three have answered. The view manager waits and tries again.`);
 }
 (function(){
   const box=$("#formans"),checks=$("#formchecks"),say=$("#formsay"),ex={O:"without",L:"none",K:"none",M:"with",T:"with"};let ans={...ex};
@@ -161,37 +171,38 @@ function verdict(r,checks,say){
   $("#formreset").onclick=()=>{ans={...ex};paint()};paint();
 })();
 
-/* ===== scrollytelling: a change of board ===== */
+/* ===== scrollytelling: a change of seal ===== */
 (function(){
   const T=Tholos($("#changesvg")),side=$("#changeside");
-  /* how things stand at each step: board and line at each bench, who is out, the board on the post */
-  const b6=n=>`6 · ${n}`,b7=n=>`7 · ${n}`;
+  /* how things stand at each step: seal and line at each bench, who is out, the seal the podium shows, who holds it */
+  const b6=n=>`6 · ${n}`,b7=n=>`7 · ${n}`,b8=n=>`8 · ${n}`,H6={O:b6(13),L:b6(12),K:b6(12),M:b6(10),T:b6(10)};
   const ST=[
-    {post:["board 6","O"],h:{O:b6(13),L:b6(12),K:b6(12),M:b6(10),T:b6(10)},out:{},n:dual("Okios holds the podium","R1 is the primary")},
-    {post:["board 6",null],h:{O:b6(13),L:b6(12),K:b6(12),M:b6(10),T:b6(10)},out:{O:1},n:dual("no note from Okios","no message from R1")},
-    {post:["board 6",null],h:{O:b6(13),L:b6(12),K:b6(12),M:b6(10),T:b6(10)},out:{O:1},n:dual("Liskovia invites all to board 7","R2 invites all to view 7")},
-    {post:["board 6",null],h:{O:b6(13),L:b6(12),K:b6(12),M:b6(10),T:b6(10)},out:{O:1},n:dual("three answers, all with tablets","three answers, all with intact state")},
-    {post:["board 7","L"],h:{O:b6(13),L:b6(12),K:b6(12),M:b6(10),T:b6(10)},out:{O:1},n:dual("Liskovia takes the podium","R2 becomes primary")},
-    {post:["board 7","L"],h:{O:b6(13),L:b7(1),K:b7(1),M:b7(1),T:b7(1)},out:{O:1},n:dual("the opening line: the whole law to line 12","the opening record: the whole log to record 12")},
-    {post:["board 7","L"],h:{O:b7(1),L:b7(1),K:b7(1),M:b7(1),T:b7(1)},out:{},n:dual("Okios joins board 7; line 13 is smoothed away","R1 joins view 7; record 13 is discarded")}];
-  /* notes and runners: from, to, glyph, colour, and where each is at which step */
+    {seal:S6,turn:"O",h:H6,out:{},n:dual("Okios holds the podium","R1 is the primary")},
+    {seal:S6,turn:null,h:H6,out:{O:1},n:dual("no note from Okios","no message from R1")},
+    {seal:{n:7,by:"L",ring:["L"]},turn:null,h:H6,out:{O:1},n:dual("Liskovia calls seal 7: her signet in the middle","R2 invites all to view 7")},
+    {seal:{n:7,by:"L",ring:["L","K","M"]},turn:null,h:H6,out:{O:1},n:dual("Kleon and Melissa answer with tablets and go into the ring; Theron's answer is slow","R3 and R4 accept with intact state; R5's reply is slow")},
+    {seal:S7,turn:"L",h:H6,out:{O:1},n:dual("the wreath goes to Liskovia, who takes the podium","R2 becomes primary")},
+    {seal:S7,turn:"L",h:{O:b6(13),L:b7(1),K:b7(1),M:b7(1),T:b6(10)},out:{O:1},n:dual("the opening line, the whole law to line 12, for everyone on seal 7","the opening record, the whole log to record 12, for the members of view 7")},
+    {seal:S8,turn:"L",h:{O:b8(1),L:b8(1),K:b8(1),M:b8(1),T:b8(1)},out:{},n:dual("Okios and Theron are back, and seal 8 takes in all five; line 13 is smoothed away","R1 and R5 are reachable again, and view 8 includes all five; record 13 is discarded")}];
+  /* notes and runners: from, to, glyph, colour, where each is at which step, and a label for the computing twin */
   const toks=[["L","K","7","L",{2:.5}],["L","M","7","L",{2:.5}],["L","T","7","L",{2:.5,3:.62}],["L","O","7","L",{2:.45}],
               ["K","L","12","K",{3:.55}],["M","L","10","M",{3:.55}],
-              ["P","K","1","L",{5:.6}],["P","M","1","L",{5:.6}],["P","T","1","L",{5:.6}],["P","O","1","L",{6:.6}]]
-    .map(([a,b,g,c,plan])=>({a,b,n:g,plan,g:T.token(WHO[c].c,g),u:.2,run:0,start:Math.min(...Object.keys(plan)),end:Math.max(...Object.keys(plan))}));
+              ["P","K","1","L",{5:.6}],["P","M","1","L",{5:.6}],
+              ["P","O","1","L",{6:.6},"view 8, record 1"],["P","K","1","L",{6:.6}],["P","M","1","L",{6:.6}],["P","T","1","L",{6:.6}]]
+    .map(([a,b,g,c,plan,lab])=>({a,b,n:g,plan,lab,g:T.token(WHO[c].c,g),u:.2,run:0,start:Math.min(...Object.keys(plan)),end:Math.max(...Object.keys(plan))}));
   /* computing: the view change so far as one timeline, a step to each unit of time; each process shows its view and
      last record, and R1's lane is hatched while it is cut off */
   const L=Unfold(T.svg,{nodes:LN,span:6.6,alias:{P:"L"}});
   const LAB={"7":"view 7","12":"to 12","10":"to 10","1":"record 1"};
-  function lanes(s){L.reset();L.turn(ST[s].post[1]);
+  function lanes(s){L.reset();L.turn(ST[s].turn);
     /* a message sent to several at once is labelled once */
-    const said=new Set();toks.forEach(k=>{if(k.start>s)return;const key=k.a+k.n+k.start;L.msg(k.a,k.b,k.start-.6,s>k.end?k.end+.4:null,said.has(key)?"":LAB[k.n]);said.add(key)});
+    const said=new Set();toks.forEach(k=>{if(k.start>s)return;const key=k.a+k.n+k.start;L.msg(k.a,k.b,k.start-.6,s>k.end?k.end+.4:null,said.has(key)?"":k.lab||LAB[k.n]);said.add(key)});
     if(s>=1){L.setT(.6);L.cut("O",true);if(s>=6){L.setT(5.6);L.cut("O",false)}}
     ALL.forEach(k=>{let j=s;while(j>0&&ST[j-1].h[k]===ST[s].h[k])j--;L.setT(j===0?0:j-.2);L.state(k,ST[s].h[k])});
     L.setT(s+.15)}
-  scrolly($("#change"),s=>{const S=ST[s];T.board(S.post[0],S.post[1]);lanes(s);
+  scrolly($("#change"),s=>{const S=ST[s];T.seal(S.seal);lanes(s);
     ALL.forEach(k=>{T.out(k,S.out[k]);T.note(k,S.h[k])});
-    side.innerHTML=ALL.map(k=>`<div class="hc"><h5>${dual(WHO[k].n,WHO[k].m)}</h5><div>${dual(`board ${S.h[k].split(" · ")[0]}, line ${S.h[k].split(" · ")[1]}`,`view ${S.h[k].split(" · ")[0]}, record ${S.h[k].split(" · ")[1]}`)}</div><div class="chk">${S.out[k]?dual("out of reach","unreachable"):k===S.post[1]?dual("holds the podium","primary"):""}</div></div>`).join("")+`<div class="hc" style="grid-column:1/-1;min-height:0"><div class="chk" style="margin:0">${S.n}</div></div>`;
+    side.innerHTML=ALL.map(k=>`<div class="hc"><h5>${dual(WHO[k].n,WHO[k].m)}</h5><div>${dual(`seal ${S.h[k].split(" · ")[0]}, line ${S.h[k].split(" · ")[1]}`,`view ${S.h[k].split(" · ")[0]}, record ${S.h[k].split(" · ")[1]}`)}</div><div class="chk">${S.out[k]?dual("out of reach","unreachable"):k===S.turn?dual("holds the podium","primary"):""}</div></div>`).join("")+`<div class="hc" style="grid-column:1/-1;min-height:0"><div class="chk" style="margin:0">${S.n}</div></div>`;
     toks.forEach(k=>{const u=k.plan[s],id=++k.run;
       if(u==null){k.g.setAttribute("opacity",0);k.u=s>k.end?.8:.2;T.run(k.g,k.a,k.b,k.u);return}
       k.g.setAttribute("opacity",1);const u0=k.u;tween(800,e=>{if(k.run!==id)return;k.u=u0+(u-u0)*e;T.run(k.g,k.a,k.b,k.u)})});
@@ -206,31 +217,31 @@ function verdict(r,checks,say){
      does what pressing its seat does */
   const pick={};
   const L=Unfold(T.svg,{nodes:LN,span:3.2,alias:{porch:"O"},land:.83,mtext:M_,press:{T:["R5: has it joined view 7?",()=>pick.T()]}});L.wrap(T);L.turn("L");
-  T.board("board 7","L");T.out("O",true);T.note("O","on the porch");
-  T.put(og,...T.porch);og.setAttribute("opacity",1);dtext(T.over,{class:"lab halo",x:T.porch[0]+48,y:T.porch[1]+4,style:"font-size:12px;text-anchor:start"},"board 6","view 6");
-  function paint(){["L","K","M"].forEach(k=>T.note(k,"board 7"));T.note("T",heard?"board 7":"board 6")}
+  T.seal(S7);T.out("O",true);T.note("O","on the porch");
+  T.put(og,...T.porch);og.setAttribute("opacity",1);dtext(T.over,{class:"lab halo",x:T.porch[0]+48,y:T.porch[1]+4,style:"font-size:12px;text-anchor:start"},"seal 6","view 6");
+  function paint(){["L","K","M"].forEach(k=>T.note(k,"seal 7"));T.note("T",heard?"seal 7":"seal 6");T.seal(heard?{...S7,ring:[...S7.ring,"T"]}:S7)}
   T.seat.T.g.classList.add("pick");
-  button(T.seat.T.g,"Theron: has he heard of board 7?",pick.T=()=>{if(busy)return;heard=!heard;paint();n.textContent=1;say.innerHTML=heard?dual("Theron has taken board 7.","R5 has taken view 7."):dual("Theron has not heard of board 7.","R5 has not joined view 7.")});
+  button(T.seat.T.g,"Theron: is he on seal 7?",pick.T=()=>{if(busy)return;heard=!heard;paint();n.textContent=1;say.innerHTML=heard?dual("Theron answered the call in time: his signet is in seal 7's ring.","R5 has joined view 7."):dual("Theron has not heard of seal 7.","R5 has not joined view 7.")});
   bw.onclick=async()=>{busy=true;bw.disabled=true;let took=1;n.textContent=took;
-    L.reset();L.turn("L");T.note("O","on the porch");paint();L.setT(.1);L.state("O","appends in view 6","appends in view 6");say.innerHTML=dual("Okios writes a line under board 6 and sends it to every bench.","R1 appends a record in view 6 and sends it to every backup.");
+    L.reset();L.turn("L");T.note("O","on the porch");paint();L.setT(.1);L.state("O","appends in view 6","appends in view 6");say.innerHTML=dual("Okios writes a line under seal 6 and sends it to every bench.","R1 appends a record in view 6 and sends it to every backup.");
     await Promise.all(["L","K","M","T"].map(async k=>{const g=T.token(WHO.O.c,"6");g.setAttribute("opacity",1);
       await tween(1300,u=>T.run(g,"porch",k,.1+.74*u));
       const takes=k==="T"&&!heard;L.mark(k,takes?"✓":"✗",takes?"#a9c25a":"#fde0d4");g.querySelectorAll("text").forEach(t=>t.textContent=takes?"✓":"✗");g.firstChild.setAttribute("fill",takes?"#a9c25a":"#fde0d4");if(takes)took++;
       await sleep(900);g.remove()}));
-    if(took>=3)throw new Error("a line passed under the old board");
+    if(took>=3)throw new Error("a line passed under the old seal");
     n.textContent=took;
-    say.innerHTML=dual(`Liskovia, Kleon and Melissa have taken board 7 and refuse any note that carries board 6. ${heard?"So does Theron.":"Theron takes the line."} ${took===1?"Only Okios holds it":"Two hold it"}, and a line needs three. <span class="bad">It cannot pass.</span> Board 7 formed on three, which leaves at most one other who might take his lines.`,`R2, R3 and R4 have taken view 7 and refuse any message that carries view 6. ${heard?"So does R5.":"R5 takes the record."} ${took===1?"Only R1 holds it":"Two hold it"}, and a record needs three. <span class="bad">It cannot commit.</span> View 7 formed on three, which leaves at most one other that might take its records.`);
+    say.innerHTML=dual(`Liskovia, Kleon and Melissa have taken seal 7 and refuse any note that carries seal 6. ${heard?"So does Theron.":"Theron takes the line."} ${took===1?"Only Okios holds it":"Two hold it"}, and a line needs three. <span class="bad">It cannot pass.</span> Seal 7 formed on three, which leaves at most one other who might take his lines.`,`R2, R3 and R4 have taken view 7 and refuse any message that carries view 6. ${heard?"So does R5.":"R5 takes the record."} ${took===1?"Only R1 holds it":"Two hold it"}, and a record needs three. <span class="bad">It cannot commit.</span> View 7 formed on three, which leaves at most one other that might take its records.`);
     busy=false;bw.disabled=false};
   paint();
 })();
 
-/* ===== wax and stone: who goes home, and whether a board can ever form again ===== */
+/* ===== wax and stone: who goes home, and whether a seal can ever form again ===== */
 (function(){
   const T=Tholos($("#waxsvg")),checks=$("#waxchecks"),say=$("#waxsay");let home={};
-  T.board("board 6","O");
+  T.seal(S6);
   function paint(){const ans={};ALL.forEach(k=>{ans[k]=home[k]?"without":"with";T.out(k,home[k]);T.note(k,home[k]?"smooth wax":"to line "+HELD[k])});
     const r=mayForm(ans);verdict(r,checks,say);
-    if(!r.forms)say.innerHTML=dual(`<span class="bad">No board forms, tonight or ever.</span> All five have answered, so there is nobody left to wait for, and too few answers can show what passed. The council stops for good. The law is lost, but no board starts without line 12.`,`<span class="bad">No view forms, now or ever.</span> All five have answered, so there is nobody left to wait for, and too few answers can show what committed. The group stops for good. The log is lost, but no view starts without record 12.`)}
+    if(!r.forms)say.innerHTML=dual(`<span class="bad">No seal forms, tonight or ever.</span> All five have answered, so there is nobody left to wait for, and too few answers can show what passed. The council stops for good. The law is lost, but no seal starts without line 12.`,`<span class="bad">No view forms, now or ever.</span> All five have answered, so there is nobody left to wait for, and too few answers can show what committed. The group stops for good. The log is lost, but no view starts without record 12.`)}
   ALL.forEach(k=>{T.seat[k].g.classList.add("pick");button(T.seat[k].g,`${WHO[k].n}: go home or stay`,()=>{home[k]=!home[k];paint()})});
   $("#waxreset").onclick=()=>{home={};paint()};paint();
 })();
