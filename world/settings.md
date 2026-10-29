@@ -336,8 +336,9 @@ their bench's place, or in the middle when the manager takes it. The middle says
 wreath says who holds the podium. Seals are ordered by their middle alone, by number and then by
 the manager's name. A seal never changes once made, so a legislator missing from it who comes back
 within reach means a new seal must be called. The holder presses the seal in wax beside every
-line, so each line is known by its seal and line (the viewstamp). On the podium's desk the stamp
-lies back up, beside its print in wax and a tray of the signets not in use; each bench's stand
+line, so each line is known by its seal and line (the viewstamp). At the middle of the hall stands a round stone table whose step is the seat: the manager of
+the present seal sits there and marks the table as theirs by setting their signet in a socket at its
+edge, and the stamp lies on it back up, beside its print in wax and a tray of the signets not in use; each bench's stand
 keeps a print of the seal that bench serves under.
 
 **Wax, not ink.** Lamport's legislators write in indelible ink; Schedia's keep the law on wax

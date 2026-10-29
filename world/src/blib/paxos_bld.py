@@ -494,8 +494,8 @@ def painted_band(k, R, z0, z1, keys=True, n=None):
 
 def tholos(k):
     """A plain round hall of honey limestone, no colonnade outside, porch at its one door (facing +x);
-    six columns of fluted drums inside; five named benches with wax tablets; the podium at the centre,
-    with the seal of the present spell on its desk."""
+    six columns of fluted drums inside; five named benches with wax tablets; the podium at the centre, a round
+    stone table whose step is the seat, with the seal of the present spell on it."""
     R = 8.6; t = 0.8; zs = 0.5
     k.lathe('honey', [(R + 0.9, -0.6), (R + 0.9, zs), (0.0, zs)], seg=96)
     door_w, door_h = 2.0, 3.6
@@ -612,23 +612,23 @@ def tholos(k):
         seal_impression(k, 0.15, 0.04, 0.04, seal, R=0.055, rot=-(a - PI / 2), up=0.0)
         k.pop(); k.pop()
         k.pop()
-    # the podium: two moulded steps, a stone chair facing the door, a timber desk with the seal of the present spell
-    k.lathe('marble', [(1.62, zf - 0.02), (1.62, zf + 0.24), (1.59, zf + 0.27), (1.56, zf + 0.3), (1.25, zf + 0.3),
-                       (1.25, zf + 0.54), (1.22, zf + 0.57), (1.19, zf + 0.6), (0.0, zf + 0.6)], seg=96)
-    zp = zf + 0.6
-    throne(k, -0.62, 0.0, zp)
-    desk(k, 0.18, 0.0, zp)
-    zd = zp + 0.76                                           # the desk top
-    for j, (dx, dy, rz) in enumerate(((0.05, -0.28, 0.12), (0.12, 0.3, -0.18))):      # tablets, one open
+    # the middle: a round stone table whose lower step is the seat. The manager of the present seal sits on the step on
+    # the side away from the door, facing it, and marks the table as theirs by setting their signet in the socket at the
+    # table's edge; the seal and the tablets lie on the table before them
+    k.lathe('marble', [(1.66, zf - 0.02), (1.66, zf + 0.39), (1.63, zf + 0.42), (1.6, zf + 0.45), (1.22, zf + 0.45),
+                       (1.22, zf + 0.68), (1.25, zf + 0.71), (1.3, zf + 0.74), (1.3, zf + 0.8), (0.0, zf + 0.8)], seg=96)
+    zd = zf + 0.8                                            # the table top
+    for j, (dx, dy, rz) in enumerate(((-0.98, -0.42, PI / 2 + 0.12), (-0.95, 0.5, PI / 2 - 0.18))):     # tablets, one open
         k.push(T(dx, dy, zd) @ Rz(rz))
         k.box('board', -0.13, -0.09, 0, 0.13, 0.09, 0.025); k.box('wax', -0.115, -0.075, 0.024, 0.115, 0.075, 0.029)
         if j == 0:
             k.box('board', -0.13, 0.095, 0, 0.13, 0.275, 0.025); k.box('wax', -0.115, 0.11, 0.024, 0.115, 0.26, 0.029)
         k.pop()
-    k.push(T(0.1, -0.04, zd + 0.034) @ Rz(0.5)); k.beam('bronze', (-0.08, 0, 0), (0.08, 0, 0), 0.008, 0.008); k.pop()   # a stylus
-    seal_stamp(k, 0.38, -0.12, zd, SEAL7, up=-PI / 2)                            # the stamp, set for seal 7, back up
-    seal_impression(k, 0.42, 0.2, zd, SEAL7, R=0.1, up=-PI / 2)                 # and its print in wax, as every line carries it
-    die_tray(k, 0.12, 0.36, zd, ['Ο', 'Θ'])                                       # the signets not in the stamp
+    k.push(T(-0.98, -0.24, zd + 0.034) @ Rz(1.3)); k.beam('bronze', (-0.07, 0, 0), (0.07, 0, 0), 0.008, 0.008); k.pop()   # a stylus
+    table_socket(k, -1.12, 0.0, zd, SEAL7[0], up=-PI / 2)                       # Liskovia's signet: she manages seal 7
+    seal_stamp(k, -0.8, -0.13, zd, SEAL7, up=-PI / 2)                            # the stamp, set for seal 7, back up
+    seal_impression(k, -0.8, 0.17, zd, SEAL7, R=0.1, up=-PI / 2)                # and its print in wax, as every line carries it
+    die_tray(k, -0.58, 0.4, zd, ['Ο', 'Θ'])                                       # the signets not in the stamp
     return dict(zs=zs, R=R, zr=zr, apex=zr + rise)
 
 
@@ -692,41 +692,6 @@ def bench(k, name, last):
     text_mesh(k, 'dark_stone', name, 0.1, 0.0, 0.278, 1.18, rot=(PI / 2, 0, 0), depth=0.003)
     text_mesh(k, 'red', last, 0.12, 0.0, 0.278, 0.96, rot=(PI / 2, 0, 0), depth=0.003)
     k.push(T(0, 0.279, 0.96) @ Rx(PI / 2)); k.lathe('red', [(0.115, -0.0015), (0.125, -0.0015), (0.125, 0.0015), (0.115, 0.0015)], seg=40, caps=False); k.pop()
-
-
-def throne(k, x, y, z):
-    """A marble chair facing +x, after the front-row chairs of the theatre at Athens: a solid seat on a plinth,
-    a carved panel in front, solid arms with rounded rails and scrolled ends, a back with a rolled crest."""
-    k.push(T(x, y, z))
-    k.box('marble', -0.36, -0.38, 0, 0.34, 0.38, 0.06)                            # plinth
-    k.box('marble', -0.3, -0.31, 0.06, 0.28, 0.31, 0.44)                          # seat block
-    k.box('marble', 0.28, -0.24, 0.12, 0.295, 0.24, 0.38)                         # the carved panel in front
-    k.box('marble', -0.32, -0.33, 0.44, 0.3, 0.33, 0.5)                           # seat slab
-    k.push(T(0.3, 0, 0.47) @ Rx(PI / 2)); k.cyl('marble', 0.03, -0.33, 0.33, 12); k.pop()
-    for sy in (-1, 1):                                                            # arms
-        k.box('marble', -0.3, sy * 0.36 - 0.035, 0.06, 0.24, sy * 0.36 + 0.035, 0.68)
-        k.push(T(-0.03, sy * 0.36, 0.7) @ Ry(PI / 2)); k.cyl('marble', 0.045, -0.29, 0.27, 14); k.pop()
-        k.push(T(0.25, sy * 0.36, 0.66) @ Rx(PI / 2)); k.cyl('marble', 0.07, -0.045, 0.045, 18); k.pop()
-    k.box('marble', -0.36, -0.36, 0.5, -0.29, 0.36, 1.02)                         # back
-    k.push(T(-0.325, 0, 1.03) @ Rx(PI / 2)); k.cyl('marble', 0.055, -0.38, 0.38, 16); k.pop()
-    for sy in (-1, 1):
-        k.push(T(-0.325, sy * 0.38, 1.03) @ Rx(PI / 2)); k.cyl('marble', 0.075, -0.012, 0.012, 18); k.pop()
-    k.pop()
-
-
-def desk(k, x, y, z):
-    """A timber desk with turned legs and stretchers, its long side toward the chair."""
-    k.push(T(x, y, z))
-    for sx in (-1, 1):
-        for sy in (-1, 1):
-            k.push(T(sx * 0.32, sy * 0.46, 0))
-            k.lathe('timber', [(0.03, 0), (0.035, 0.03), (0.022, 0.1), (0.028, 0.3), (0.02, 0.5), (0.03, 0.62), (0.03, 0.72), (0.0, 0.72)], seg=14)
-            k.pop()
-        k.box('timber', sx * 0.32 - 0.02, -0.46, 0.14, sx * 0.32 + 0.02, 0.46, 0.18)
-    k.box('timber', -0.32, -0.02, 0.14, 0.32, 0.02, 0.18)
-    k.box('timber', -0.36, -0.5, 0.64, 0.36, 0.5, 0.72)                          # apron
-    k.box('timber', -0.4, -0.55, 0.72, 0.4, 0.55, 0.76)                           # top
-    k.pop()
 
 
 def seal_layout(R, up):
@@ -881,6 +846,18 @@ def seal_stamp(k, x, y, z, seal, R=0.1, up=0.0):
     wreath(k, rs + 0.0056, R * 0.6, t + 0.0022, 0.0035, n=11, mat='bronze_die')
     k.pop()
     k.pop()
+
+
+def table_socket(k, x, y, z, letter, up=0.0):
+    """A bronze ring let into the stone table with a socket the size of a signet, and the manager's signet set in it."""
+    rs = 0.012
+    k.push(T(x, y, z))
+    k.lathe('bronze', [(rs, 0.0015), (0.034, 0.0015), (0.036, 0.0005), (0.036, -0.002)], seg=40, caps=False)
+    k.lathe('dark', [(0.0, -0.004), (rs, -0.004)], seg=24, caps=False)
+    k.lathe('bronze', [(rs, -0.004), (rs, 0.0015)], seg=24, caps=False)
+    k.lathe('bronze_die', [(0.0, -0.004), (rs - 0.0008, -0.004), (rs - 0.0008, 0.0075), (rs - 0.002, 0.009), (0.0, 0.009)], seg=32)
+    k.pop()
+    text_mesh(k, 'dark', letter, rs * 1.15, x, y, z + 0.009, rot=(0, 0, up), depth=0.0012)
 
 
 def die_tray(k, x, y, z, letters):
