@@ -25,11 +25,16 @@ function Tholos(svg,o={}){
   el("rect",{x:cx-26,y:cy+rr-2,width:52,height:26,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3,class:"i"},svg);
   el("text",{x:cx,y:cy+rr+42,class:"lab i",style:"font-size:12px"},svg).textContent="the porch";
   const under=el("g",{},svg),pod=el("g",{class:"podium"},svg),seats=el("g",{},svg),over=el("g",{},svg);
-  /* the podium shows the seal, in wax with no colours: the manager's initial and the number in the middle, the initials of the others who answered at their benches' places, a wreath round the holder's */
+  /* the podium shows the seal, in wax with no colours. Every signet slot is round and the same size, so a signet fits
+     any of them: one at each bench's place round the edge with the initial of another who answered, one in the middle
+     with the manager's, and beside it a square slot for the number; a wreath round the holder's */
   el("circle",{cx,cy,r:50,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":4},pod);
-  const sr=32,slot={},mw=el("circle",{cx,cy,r:17.5,class:"wreath"},pod),mid=el("circle",{cx,cy,r:13.5,class:"slot"},pod),num=el("text",{x:cx,y:cy,class:"sn"},pod);
-  ALL.forEach(k=>{const a=A[k]*Math.PI/180,x=cx+sr*Math.cos(a),y=cy+sr*Math.sin(a);
-    const w=el("circle",{cx:x,cy:y,r:13,class:"wreath"},pod),g=el("g",{},pod);el("circle",{cx:x,cy:y,r:9,class:"slot"},g);el("text",{x,y,class:"sg"},g).textContent=WHO[k].g;slot[k]={w,c:g}});
+  const sr=33,rs=8.5,d=9.5,slot={},mw=el("circle",{cx:cx-d,cy,r:12,class:"wreath"},pod);
+  el("circle",{cx:cx-d,cy,r:rs,class:"slot"},pod);el("rect",{x:cx+d-6.5,y:cy-6.5,width:13,height:13,class:"slot"},pod);
+  const mgr=el("text",{x:cx-d,y:cy,class:"sg"},pod),num=el("text",{x:cx+d,y:cy,class:"sn"},pod);
+  ALL.forEach(k=>{const a=A[k]*Math.PI/180,[x,y]=[cx+sr*Math.cos(a),cy+sr*Math.sin(a)];
+    const w=el("circle",{cx:x,cy:y,r:12,class:"wreath"},pod),g=el("g",{},pod);
+    el("circle",{cx:x,cy:y,r:rs,class:"slot"},g);el("text",{x,y,class:"sg"},g).textContent=WHO[k].g;slot[k]={w,c:g}});
   const slab=el("text",{x:cx,y:cy+68,class:"lab halo",style:"font-size:12px"},svg);
   const T={svg,cx,cy,under,over,seat:{},porch:[cx,cy+rr+12],
     at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
@@ -39,7 +44,7 @@ function Tholos(svg,o={}){
     /* a runner or a note u of the way from one place to another */
     run(g,a,b,u){const [x1,y1]=T.pos(a),[x2,y2]=T.pos(b);T.put(g,x1+(x2-x1)*u,y1+(y2-y1)*u)},
     /* s: {n, by: the manager, ring: who answered (the manager among them), hold: who has the wreath (none while the seal is being made)} */
-    seal(s){num.textContent=WHO[s.by].g+s.n;
+    seal(s){mgr.textContent=WHO[s.by].g;num.textContent=s.n;
       /* the manager's signet is in the middle, so their place in the ring is bare, like the place of anyone who did not answer;
          the wreath goes round the middle when the manager holds the podium */
       mw.style.opacity=s.hold&&s.hold===s.by?1:0;
