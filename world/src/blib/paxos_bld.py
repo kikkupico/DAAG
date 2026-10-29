@@ -588,7 +588,7 @@ def tholos(k):
         for i in range(24):
             a0 = 2 * PI * i / 24; a1 = 2 * PI * (i + 1) / 24
             k.beam('timber', (rp * math.cos(a0), rp * math.sin(a0), zp_ + 0.16), (rp * math.cos(a1), rp * math.sin(a1), zp_ + 0.16), 0.1, 0.1)
-    # five benches, one for each legislator, evenly spaced with the door (angle 0) halfway between two of them;
+    # five benches, one for each legislator, each centred in a bay between two columns, the door (angle 0) in the sixth bay;
     # each back carries its owner's name and, cut beneath it, the middle of the last seal they joined
     # (the model shows the hall under seal 7, called by Liskovia: Okios and Theron last joined seal 6, called by Okios)
     LAST = ['Ο6', 'Λ7', 'Λ7', 'Λ7', 'Ο6']
@@ -632,8 +632,10 @@ def tholos(k):
     return dict(zs=zs, R=R, zr=zr, apex=zr + rise)
 
 
-# the benches' bearings in the hall (door at 0): Okios, Liskovia, Kleon, Melissa, Theron
-BENCH_A = [2 * PI * (i + 1.5) / 5 for i in range(5)]
+# the benches' bearings in the hall (door at 0): Okios, Liskovia, Kleon, Melissa, Theron.
+# The six columns stand at 30°, 90°, ... 330°, so the six bays between them are centred on 0°, 60°, ... 300°;
+# the door takes the bay at 0° and each bench sits in the middle of one of the other five, clear of the columns.
+BENCH_A = [2 * PI * (i + 1) / 6 for i in range(5)]
 # seals as the model shows them: (manager's initial, number, the others who answered by bench index, the holder: 'mid' or a bench index)
 SEAL7 = ('Λ', '7', [2, 3], 'mid')           # called by Liskovia, who holds the podium; Kleon and Melissa answered
 SEAL6 = ('Ο', '6', [1, 2, 3, 4], 'mid')     # called by Okios, who held the podium; all five
