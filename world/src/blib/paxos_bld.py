@@ -494,12 +494,13 @@ def painted_band(k, R, z0, z1, keys=True, n=None):
 
 def tholos(k):
     """A plain round hall of honey limestone, no colonnade outside, porch at its one door (facing +x);
-    six columns inside; five named benches with wax tablets; the podium at the centre."""
+    six columns of fluted drums inside; five named benches with wax tablets; the podium at the centre,
+    with the seal of the present spell on its desk."""
     R = 8.6; t = 0.8; zs = 0.5
     k.lathe('honey', [(R + 0.9, -0.6), (R + 0.9, zs), (0.0, zs)], seg=96)
     door_w, door_h = 2.0, 3.6
     H = 6.4
-    ring_courses(k, R, t, zs, zs + H, 'honey', [(-door_w / 2 / R, door_w / 2 / R, zs, zs + door_h)], course=0.48, block=1.1)
+    ring_courses(k, R, t, zs, zs + H, 'honey', [(-(door_w / 2 + 0.55) / R, (door_w / 2 + 0.55) / R, zs, zs + door_h)], course=0.48, block=1.1)
     k.lathe('honey', [(R + t / 2, zs + H), (R + t / 2 + 0.25, zs + H + 0.15), (R + t / 2 + 0.25, zs + H + 0.32), (R - t / 2, zs + H + 0.32)], seg=96, caps=False)
     zr = zs + H + 0.32
     painted_band(k, R + t / 2, zs + H - 0.42, zs + H - 0.04, keys=False)        # a single painted band under the eaves
@@ -529,58 +530,257 @@ def tholos(k):
     arch.door_leaf(k, -door_w / 2, door_w / 2, 0.0, door_h, y=-0.42, open_deg=62)
     k.box('honey', -door_w / 2 - 0.3, -0.05, door_h, door_w / 2 + 0.3, 0.12, door_h + 0.4)
     k.pop()
-    # interior
+    # jambs and a lintel through the wall's thickness, so the doorway has clean sides
+    for sy in (-1, 1):
+        k.box('honey', R - t / 2 - 0.06, sy * door_w / 2, zs, R + t / 2 + 0.04, sy * (door_w / 2 + 1.12), zs + door_h + 0.02)
+    k.box('honey', R - t / 2 - 0.06, -door_w / 2 - 1.12, zs + door_h, R + t / 2 + 0.04, door_w / 2 + 1.12, zs + door_h + 0.5)
+    # ------------------------------------------------ interior
     Rin = R - t / 2
+    zf = zs + 0.1                                            # the floor
+    gap = (door_w / 2 + 0.05) / Rin                          # the doorway, left open by every ring that runs round the wall
     k.lathe('mortar', [(Rin, zs - 0.2), (Rin, zs + 0.085), (0.0, zs + 0.085)], seg=64)
-    radial_paving(k, 1.5, Rin + 0.15, zs + 0.1, ring=0.9, mat='pave_honey')     # from the podium's foot to under the wall
+    # floor: a dark ring round the podium, honey rings of slabs in two tones, a paler stylobate ring under the columns
+    radial_paving(k, 1.62, 1.95, zf, ring=0.33, mat='dark_floor')
+    radial_paving(k, 1.95, 4.2, zf, ring=0.75, mat='pave_honey', alt='pave_pale')
+    for i in range(36):                                      # stylobate: long curved slabs, one joint midway between columns
+        a0 = 2 * PI * i / 36 + 0.002; a1 = 2 * PI * (i + 1) / 36 - 0.002
+        arc_sweep(k, 'pave_pale', [(4.2, zf - 0.2), (5.0, zf - 0.2), (5.0, zf + 0.006), (4.2, zf + 0.006)], a0, a1, 6)
+    radial_paving(k, 5.0, Rin + 0.15, zf, ring=0.85, mat='pave_honey', alt='pave_pale')
+    # the wall inside: a moulded plinth, a dado painted red ochre, a moulding above it, and a painted band under the rafters
+    A0, A1 = gap, 2 * PI - gap
+    arc_sweep(k, 'honey', [(Rin + 0.02, zf), (Rin - 0.13, zf), (Rin - 0.13, zf + 0.26), (Rin - 0.09, zf + 0.3),
+                           (Rin - 0.07, zf + 0.36), (Rin + 0.02, zf + 0.36)], A0, A1, 160)
+    arc_sweep(k, 'ochre_paint', [(Rin - 0.026, zf + 0.36), (Rin - 0.026, zf + 1.42), (Rin + 0.02, zf + 1.42), (Rin + 0.02, zf + 0.36)], A0, A1, 160)
+    arc_sweep(k, 'honey', [(Rin + 0.02, zf + 1.42), (Rin - 0.03, zf + 1.42), (Rin - 0.07, zf + 1.47), (Rin - 0.07, zf + 1.53),
+                           (Rin - 0.03, zf + 1.56), (Rin + 0.02, zf + 1.56)], A0, A1, 160)
+    zr_in = zr - 0.12
+    arc_sweep(k, 'paint_red', [(Rin - 0.026, zr_in - 0.62), (Rin - 0.026, zr_in - 0.56), (Rin + 0.02, zr_in - 0.56), (Rin + 0.02, zr_in - 0.62)], 0, 2 * PI, 160)
+    arc_sweep(k, 'paint_blue', [(Rin - 0.026, zr_in - 0.52), (Rin - 0.026, zr_in - 0.4), (Rin + 0.02, zr_in - 0.4), (Rin + 0.02, zr_in - 0.52)], 0, 2 * PI, 160)
+    # six columns of fluted drums with Doric capitals, carrying a hexagon of squared beams
+    Dc = 0.6; Hc = 7.0 * Dc; Rc = 4.6
     for i in range(6):
         a = 2 * PI * (i + 0.5) / 6
-        k.inst('doric_plain', T(4.6 * math.cos(a), 4.6 * math.sin(a), zs + 0.1) @ Rz(a) @ S(0.6))
-    zi = zs + 0.1 + 7.0 * 0.6
+        drum_column(k, Rc * math.cos(a), Rc * math.sin(a), zf, Dc, Hc, a, 'honey')
+    zi = zf + Hc
     for i in range(6):
         a0 = 2 * PI * (i + 0.5) / 6; a1 = 2 * PI * (i + 1.5) / 6
-        k.beam('timber', (4.6 * math.cos(a0), 4.6 * math.sin(a0), zi + 0.2), (4.6 * math.cos(a1), 4.6 * math.sin(a1), zi + 0.2), 0.4, 0.4)
+        p0 = (Rc * math.cos(a0), Rc * math.sin(a0)); p1 = (Rc * math.cos(a1), Rc * math.sin(a1))
+        k.beam('timber', (*p0, zi + 0.2), (*p1, zi + 0.2), 0.42, 0.4)
+        k.beam('timber', (*p0, zi + 0.6), (*p1, zi + 0.6), 0.3, 0.18)            # a lighter plate on the beam
+        for s_ in (0.18, 0.82):                                                   # braces from each column to its beams
+            q = (p0[0] + (p1[0] - p0[0]) * s_, p0[1] + (p1[1] - p0[1]) * s_)
+            c_ = p0 if s_ < 0.5 else p1
+            k.beam('timber', (c_[0] + (q[0] - c_[0]) * 0.15, c_[1] + (q[1] - c_[1]) * 0.15, zi - 0.55), (*q, zi), 0.14, 0.14)
+    # a wall plate on stone corbels where the rafters land
+    for i in range(48):
+        a0 = 2 * PI * i / 48; a1 = 2 * PI * (i + 1) / 48
+        k.beam('timber', ((Rin - 0.14) * math.cos(a0), (Rin - 0.14) * math.sin(a0), zr_in - 0.2),
+               ((Rin - 0.14) * math.cos(a1), (Rin - 0.14) * math.sin(a1), zr_in - 0.2), 0.24, 0.2)
     for i in range(24):
         a = 2 * PI * i / 24
-        k.beam('timber', (4.5 * math.cos(a), 4.5 * math.sin(a), zi + 0.45), (Rin * math.cos(a), Rin * math.sin(a), zr - 0.12), 0.16, 0.22, 0.05)
-        k.beam('timber', (4.5 * math.cos(a), 4.5 * math.sin(a), zi + 0.45), (apex_r * math.cos(a), apex_r * math.sin(a), zr + rise - 0.25), 0.15, 0.2, 0.05)
-    # five benches with backs, a stand of wax tablets at each, names cut in the stone; spaced evenly
-    # with the door (angle 0) halfway between two of them
+        k.push(Rz(a)); k.box('honey', Rin - 0.3, -0.13, zr_in - 0.48, Rin + 0.02, 0.13, zr_in - 0.3); k.pop()
+        k.beam('timber', (4.5 * math.cos(a), 4.5 * math.sin(a), zi + 0.75), ((Rin - 0.1) * math.cos(a), (Rin - 0.1) * math.sin(a), zr_in), 0.16, 0.22, 0.05)
+        k.beam('timber', (4.5 * math.cos(a), 4.5 * math.sin(a), zi + 0.75), (apex_r * math.cos(a), apex_r * math.sin(a), zr + rise - 0.25), 0.15, 0.2, 0.05)
+    rc = R + t / 2 + 0.6                                     # boarding under the tiles, seen between the rafters
+    k.lathe('board', [(Rin, zr + (rc - Rin) * math.tan(math.radians(18)) - 0.05), (apex_r + 0.05, zr + rise - 0.1)], seg=96, caps=False)
+    for rp in (2.4, 3.4, 6.2, 7.2):                                              # purlins across the rafters
+        zp_ = zi + 0.75 + (zr + rise - 0.25 - zi - 0.75) * (4.5 - rp) / (4.5 - apex_r) if rp < 4.5 else zi + 0.75 + (zr_in - zi - 0.75) * (rp - 4.5) / (Rin - 0.1 - 4.5)
+        for i in range(24):
+            a0 = 2 * PI * i / 24; a1 = 2 * PI * (i + 1) / 24
+            k.beam('timber', (rp * math.cos(a0), rp * math.sin(a0), zp_ + 0.16), (rp * math.cos(a1), rp * math.sin(a1), zp_ + 0.16), 0.1, 0.1)
+    # five benches, one for each legislator, evenly spaced with the door (angle 0) halfway between two of them;
+    # each back carries its owner's name and, cut beneath it, the middle of the last seal they joined
+    # (the model shows the hall under seal 7, called by Liskovia: Okios and Theron last joined seal 6, called by Okios)
+    LAST = ['Ο6', 'Λ7', 'Λ7', 'Λ7', 'Ο6']
     for i in range(5):
-        a = 2 * PI * (i + 1.5) / 5
-        rb = Rin - 0.55
-        k.push(T(rb * math.cos(a), rb * math.sin(a), zs + 0.1) @ Rz(a - PI / 2))     # local +y toward the wall
-        k.box('marble', -1.1, -0.28, 0, 1.1, 0.3, 0.46)
-        k.box('marble', -1.15, 0.22, 0.46, 1.15, 0.36, 1.25)
-        k.box('marble', -1.2, -0.3, 0.46, -1.08, 0.36, 0.8)
-        k.box('marble', 1.08, -0.3, 0.46, 1.2, 0.36, 0.8)
-        text_mesh(k, 'dark_stone', NAMES[i], 0.11, 0.0, 0.215, 1.06, rot=(PI / 2, 0, 0), depth=0.003)
-        text_mesh(k, 'dark_stone', ['Η', 'Ζ', 'Η', 'Ε', 'Ζ'][i], 0.09, 0.0, 0.215, 0.88, rot=(PI / 2, 0, 0), depth=0.003)
-        # stone stand with a stack of hinged wax tablets
-        k.box('marble', 1.4, -0.35, 0, 1.75, -0.05, 0.75)
-        for j in range(4):
-            k.push(T(1.575, -0.2, 0.75 + j * 0.035) @ Rz(0.04 * j))
-            k.box('board', -0.14, -0.1, 0, 0.14, 0.1, 0.03)
-            k.box('wax', -0.12, -0.08, 0.029, 0.12, 0.08, 0.034)
+        a = BENCH_A[i]
+        rb = Rin - 0.62
+        k.push(T(rb * math.cos(a), rb * math.sin(a), zf) @ Rz(a - PI / 2))     # local +y toward the wall, -y to the podium
+        bench(k, NAMES[i], LAST[i])
+        # the stand: a short column with a sloping top holding wax tablets, and the impression of the seal the bench serves under
+        k.push(T(1.62, -0.12, 0))
+        k.lathe('marble', [(0.2, 0), (0.2, 0.06), (0.16, 0.1), (0.11, 0.14), (0.1, 0.62), (0.13, 0.66), (0.16, 0.7), (0.16, 0.74), (0.0, 0.74)], seg=28)
+        k.push(T(0, 0, 0.74) @ Rx(0.32))
+        k.box('marble', -0.24, -0.19, 0, 0.24, 0.19, 0.04)
+        k.box('marble', -0.24, -0.21, 0.04, 0.24, -0.18, 0.07)                   # a lip so the tablets stay
+        for j in range(3):
+            k.push(T(-0.08, 0.0, 0.04 + j * 0.028) @ Rz(0.05 * (j - 1)))
+            k.box('board', -0.13, -0.09, 0, 0.13, 0.09, 0.025)
+            k.box('wax', -0.115, -0.075, 0.024, 0.115, 0.075, 0.029)
             k.pop()
+        seal = SEAL7 if LAST[i] == 'Λ7' else SEAL6
+        seal_impression(k, 0.15, 0.04, 0.04, seal, R=0.055, rot=-(a - PI / 2), up=0.0)
+        k.pop(); k.pop()
         k.pop()
-    # the podium: round, two steps, a single stone seat and a small table, a board on a post for a number
-    k.lathe('marble', [(1.5, zs), (1.5, zs + 0.28), (1.15, zs + 0.28), (1.15, zs + 0.56), (0.0, zs + 0.56)], seg=48)
-    zp = zs + 0.56
-    k.box('marble', -0.35, -0.3, zp, 0.25, 0.3, zp + 0.45)
-    k.box('marble', -0.45, -0.32, zp + 0.45, -0.32, 0.32, zp + 1.0)
-    k.box('timber', 0.35, -0.4, zp + 0.72, 0.85, 0.4, zp + 0.76)
-    for sx in (0.38, 0.82):
-        for sy in (-0.36, 0.36):
-            k.box('timber', sx - 0.025, sy - 0.025, zp, sx + 0.025, sy + 0.025, zp + 0.72)
-    k.push(T(0.6, 0.1, zp + 0.76) @ Rz(0.3))
-    k.box('board', -0.13, -0.09, 0, 0.13, 0.09, 0.028)
-    k.box('wax', -0.11, -0.07, 0.027, 0.11, 0.07, 0.032)
-    k.pop()
-    k.box('timber', 0.95, 0.55, zp, 1.0, 0.6, zp + 1.7)
-    k.box('board_paint', 0.85, 0.54, zp + 1.25, 1.1, 0.62, zp + 1.65)
-    text_mesh(k, 'red', 'Ζ', 0.22, 0.975, 0.625, zp + 1.45, rot=(PI / 2, 0, 0), depth=0.002)
+    # the podium: two moulded steps, a stone chair facing the door, a timber desk with the seal of the present spell
+    k.lathe('marble', [(1.62, zf - 0.02), (1.62, zf + 0.24), (1.59, zf + 0.27), (1.56, zf + 0.3), (1.25, zf + 0.3),
+                       (1.25, zf + 0.54), (1.22, zf + 0.57), (1.19, zf + 0.6), (0.0, zf + 0.6)], seg=96)
+    zp = zf + 0.6
+    throne(k, -0.62, 0.0, zp)
+    desk(k, 0.18, 0.0, zp)
+    zd = zp + 0.76                                           # the desk top
+    for j, (dx, dy, rz) in enumerate(((0.05, -0.28, 0.12), (0.12, 0.3, -0.18))):      # tablets, one open
+        k.push(T(dx, dy, zd) @ Rz(rz))
+        k.box('board', -0.13, -0.09, 0, 0.13, 0.09, 0.025); k.box('wax', -0.115, -0.075, 0.024, 0.115, 0.075, 0.029)
+        if j == 0:
+            k.box('board', -0.13, 0.095, 0, 0.13, 0.275, 0.025); k.box('wax', -0.115, 0.11, 0.024, 0.115, 0.26, 0.029)
+        k.pop()
+    k.push(T(0.1, -0.04, zd + 0.034) @ Rz(0.5)); k.beam('bronze', (-0.08, 0, 0), (0.08, 0, 0), 0.008, 0.008); k.pop()   # a stylus
+    seal_impression(k, 0.4, -0.04, zd, SEAL7, R=0.085, up=-PI / 2)               # the seal in wax, as every line carries it
+    seal_stamp(k, 0.38, 0.27, zd)                                                # the bronze stamp, face down
+    die_tray(k, 0.52, 0.24, zd, ['Ο', 'Θ'])                                       # the signets not in the stamp
     return dict(zs=zs, R=R, zr=zr, apex=zr + rise)
+
+
+# the benches' bearings in the hall (door at 0): Okios, Liskovia, Kleon, Melissa, Theron
+BENCH_A = [2 * PI * (i + 1.5) / 5 for i in range(5)]
+# seals as the model shows them: (middle initial, number, the others in the ring by bench index, the wreath on the middle?)
+SEAL7 = ('Λ', '7', [2, 3], True)            # called by Liskovia, who holds the podium; Kleon and Melissa answered
+SEAL6 = ('Ο', '6', [1, 2, 3, 4], True)      # called by Okios, who held the podium; all five
+
+
+def arc_sweep(k, mat, poly, a0, a1, seg):
+    """Sweep a closed (r, z) outline round the z axis from angle a0 to a1, capped at both ends."""
+    n = len(poly); V = []; F = []
+    for s in range(seg + 1):
+        a = a0 + (a1 - a0) * s / seg
+        V += [(r * math.cos(a), r * math.sin(a), z) for r, z in poly]
+    for s in range(seg):
+        for i in range(n):
+            j = (i + 1) % n
+            F.append((s * n + i, s * n + j, (s + 1) * n + j, (s + 1) * n + i))
+    if abs(a1 - a0 - 2 * PI) > 1e-6:
+        F.append(tuple(range(n - 1, -1, -1))); F.append(tuple(seg * n + i for i in range(n)))
+    k.add(mat, V, F)
+
+
+def drum_column(k, x, y, z, D, H, face, mat, drums=5, flutes=20):
+    """A Doric column built of fluted drums with hairline joints, an echinus capital and a square abacus."""
+    r0 = D / 2; r1 = r0 * 0.8; cap = 0.5 * D; hs = H - cap
+    k.push(T(x, y, z) @ Rz(face))
+    rr = lambda t: r0 + (r1 - r0) * t + 0.012 * D * math.sin(PI * t)
+    for d in range(drums):
+        t0 = d / drums; t1 = (d + 1) / drums
+        prof = [(rr(t0 + (t1 - t0) * u / 3) * (0.985 if u in (0, 3) else 1.0), hs * (t0 + (t1 - t0) * u / 3) + (0.004 if u == 0 and d else 0) - (0.004 if u == 3 and d < drums - 1 else 0)) for u in range(4)]
+        k.lathe(mat, prof, seg=80, flutes=flutes, fdepth=0.07)
+        if d:
+            k.lathe(mat, [(r0 * 0.9, hs * t0 - 0.005), (r0 * 0.9, hs * t0 + 0.005)], seg=24, caps=False)
+    s = D
+    k.lathe(mat, [(r1, hs), (r1 * 1.03, hs + 0.02 * s), (r1, hs + 0.035 * s), (r1 * 1.03, hs + 0.055 * s), (r1, hs + 0.07 * s)], seg=48)
+    k.lathe(mat, [(r1 + (0.66 * s - r1) * (1 - (1 - i / 8) ** 2.2), hs + 0.07 * s + 0.2 * s * i / 8) for i in range(9)], seg=48)
+    a_ = 0.68 * s
+    k.box(mat, -a_, -a_, hs + 0.27 * s, a_, a_, hs + 0.5 * s)
+    k.pop()
+
+
+def bench(k, name, last):
+    """A marble bench in its own frame (seat along x, back toward +y): a step to rest the feet, end blocks rolled
+    into scrolls, a seat slab with a rounded front, a tall back with a moulded cap; the name and the last seal cut in it."""
+    k.box('marble', -1.32, -0.62, 0, 1.32, 0.42, 0.1)                            # the step
+    for sx in (-1, 1):
+        k.box('marble', sx * 1.12 - 0.11, -0.3, 0.1, sx * 1.12 + 0.11, 0.3, 0.5)
+        k.push(T(sx * 1.12, -0.12, 0.62) @ Ry(PI / 2))
+        k.lathe('marble', [(0.0, -0.11), (0.14, -0.11), (0.15, -0.09), (0.15, 0.09), (0.14, 0.11), (0.0, 0.11)], seg=20)
+        k.pop()
+        k.box('marble', sx * 1.12 - 0.11, -0.12, 0.5, sx * 1.12 + 0.11, 0.3, 0.76)
+    k.box('marble', -1.02, -0.28, 0.1, 1.02, 0.26, 0.4)                          # the seat's body, set back
+    k.box('marble', -1.02, -0.34, 0.4, 1.02, 0.3, 0.48)                          # the seat slab
+    k.push(T(0, -0.34, 0.44) @ Ry(PI / 2)); k.cyl('marble', 0.04, -1.02, 1.02, 12); k.pop()
+    k.box('marble', -1.24, 0.28, 0.1, 1.24, 0.42, 1.36)                          # the back
+    k.box('marble', -1.3, 0.24, 1.36, 1.3, 0.46, 1.42)
+    k.box('marble', -1.27, 0.26, 1.42, 1.27, 0.44, 1.47)
+    text_mesh(k, 'dark_stone', name, 0.1, 0.0, 0.278, 1.18, rot=(PI / 2, 0, 0), depth=0.003)
+    text_mesh(k, 'red', last, 0.12, 0.0, 0.278, 0.96, rot=(PI / 2, 0, 0), depth=0.003)
+    k.push(T(0, 0.279, 0.96) @ Rx(PI / 2)); k.lathe('red', [(0.115, -0.0015), (0.125, -0.0015), (0.125, 0.0015), (0.115, 0.0015)], seg=40, caps=False); k.pop()
+
+
+def throne(k, x, y, z):
+    """A marble chair facing +x, after the front-row chairs of the theatre at Athens: a solid seat on a plinth,
+    a carved panel in front, solid arms with rounded rails and scrolled ends, a back with a rolled crest."""
+    k.push(T(x, y, z))
+    k.box('marble', -0.36, -0.38, 0, 0.34, 0.38, 0.06)                            # plinth
+    k.box('marble', -0.3, -0.31, 0.06, 0.28, 0.31, 0.44)                          # seat block
+    k.box('marble', 0.28, -0.24, 0.12, 0.295, 0.24, 0.38)                         # the carved panel in front
+    k.box('marble', -0.32, -0.33, 0.44, 0.3, 0.33, 0.5)                           # seat slab
+    k.push(T(0.3, 0, 0.47) @ Rx(PI / 2)); k.cyl('marble', 0.03, -0.33, 0.33, 12); k.pop()
+    for sy in (-1, 1):                                                            # arms
+        k.box('marble', -0.3, sy * 0.36 - 0.035, 0.06, 0.24, sy * 0.36 + 0.035, 0.68)
+        k.push(T(-0.03, sy * 0.36, 0.7) @ Ry(PI / 2)); k.cyl('marble', 0.045, -0.29, 0.27, 14); k.pop()
+        k.push(T(0.25, sy * 0.36, 0.66) @ Rx(PI / 2)); k.cyl('marble', 0.07, -0.045, 0.045, 18); k.pop()
+    k.box('marble', -0.36, -0.36, 0.5, -0.29, 0.36, 1.02)                         # back
+    k.push(T(-0.325, 0, 1.03) @ Rx(PI / 2)); k.cyl('marble', 0.055, -0.38, 0.38, 16); k.pop()
+    for sy in (-1, 1):
+        k.push(T(-0.325, sy * 0.38, 1.03) @ Rx(PI / 2)); k.cyl('marble', 0.075, -0.012, 0.012, 18); k.pop()
+    k.pop()
+
+
+def desk(k, x, y, z):
+    """A timber desk with turned legs and stretchers, its long side toward the chair."""
+    k.push(T(x, y, z))
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            k.push(T(sx * 0.32, sy * 0.46, 0))
+            k.lathe('timber', [(0.03, 0), (0.035, 0.03), (0.022, 0.1), (0.028, 0.3), (0.02, 0.5), (0.03, 0.62), (0.03, 0.72), (0.0, 0.72)], seg=14)
+            k.pop()
+        k.box('timber', sx * 0.32 - 0.02, -0.46, 0.14, sx * 0.32 + 0.02, 0.46, 0.18)
+    k.box('timber', -0.32, -0.02, 0.14, 0.32, 0.02, 0.18)
+    k.box('timber', -0.36, -0.5, 0.64, 0.36, 0.5, 0.72)                          # apron
+    k.box('timber', -0.4, -0.55, 0.72, 0.4, 0.55, 0.76)                           # top
+    k.pop()
+
+
+def seal_impression(k, x, y, z, seal, R=0.08, rot=0.0, up=0.0):
+    """The seal pressed in red wax, lying flat: a disc with a raised rim; bosses where signets stood, each with its
+    initial, the middle with the number beside it, a wreath of leaves round the holder's. rot turns the ring so
+    each boss sits at its bench's bearing in the hall; up turns the letters to read from that side."""
+    mid, num, ring, wreath_mid = seal
+    h = 0.012
+    k.push(T(x, y, z) @ Rz(rot))
+    k.lathe('sealwax', [(R * 0.97, 0), (R * 1.02, h * 0.4), (R, h), (R * 0.9, h * 1.15), (R * 0.86, h), (0.0, h)], seg=48)
+    rm, rr_, dr = R * 0.27, R * 0.68, R * 0.17
+    rel = 0.004
+    k.lathe('sealwax', [(rm, h - 0.001), (rm, h + rel), (0.0, h + rel)], seg=36)
+    text_mesh(k, 'sealwax', mid + num, rm * 1.2, 0.0, 0.0, h + rel, rot=(0, 0, up - rot), depth=0.0025)
+    if wreath_mid:                                           # a wreath of paired leaves round the middle
+        rw = rm + R * 0.07; L_ = R * 0.11; W_ = R * 0.035
+        for i in range(16):
+            a = 2 * PI * i / 16
+            for side in (-1, 1):
+                k.push(T((rw + side * W_ * 0.9) * math.cos(a), (rw + side * W_ * 0.9) * math.sin(a), h) @ Rz(a + PI / 2 + side * 0.45))
+                k.add('sealwax', [(-L_ / 2, 0, 0), (0, -W_ / 2, 0), (L_ / 2, 0, 0), (0, W_ / 2, 0),
+                                  (-L_ / 2, 0, rel * 0.4), (0, -W_ / 2, rel * 0.9), (L_ / 2, 0, rel * 0.4), (0, W_ / 2, rel * 0.9)],
+                      [(0, 3, 2, 1), (4, 5, 6, 7), (0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)])
+                k.pop()
+    for b in ring:
+        a = BENCH_A[b]
+        cx, cy = rr_ * math.cos(a), rr_ * math.sin(a)
+        k.push(T(cx, cy, 0))
+        k.lathe('sealwax', [(dr, h - 0.001), (dr, h + rel), (0.0, h + rel)], seg=24)
+        k.pop()
+        text_mesh(k, 'sealwax', NAMES[b][0], dr * 1.55, cx, cy, h + rel, rot=(0, 0, up - rot), depth=0.0025)
+    k.pop()
+
+
+def seal_stamp(k, x, y, z):
+    """The bronze stamp, lying face down: a disc with a knob to hold it by."""
+    k.push(T(x, y, z))
+    k.lathe('bronze', [(0.0, 0), (0.07, 0), (0.072, 0.012), (0.066, 0.018), (0.022, 0.026), (0.014, 0.05), (0.022, 0.062), (0.014, 0.072), (0.0, 0.072)], seg=40)
+    k.pop()
+
+
+def die_tray(k, x, y, z, letters):
+    """A small box holding the signets that are not in the stamp, each a bronze die with its initial on top."""
+    k.push(T(x, y, z))
+    k.box('timber', -0.07, -0.05, 0, 0.07, 0.05, 0.012)
+    for sx in (-1, 1):
+        k.box('timber', sx * 0.07 - 0.006, -0.05, 0.012, sx * 0.07 + 0.006, 0.05, 0.035)
+    for sy in (-1, 1):
+        k.box('timber', -0.07, sy * 0.05 - 0.006, 0.012, 0.07, sy * 0.05 + 0.006, 0.035)
+    for i, L in enumerate(letters):
+        cx = -0.03 + 0.06 * i
+        k.push(T(cx, 0, 0.012)); k.lathe('bronze', [(0.0, 0), (0.018, 0), (0.018, 0.02), (0.012, 0.03), (0.0, 0.03)], seg=20); k.pop()
+        text_mesh(k, 'bronze', L, 0.02, cx, 0.0, 0.042 - 0.012, rot=(0, 0, -PI / 2), depth=0.0015)
+    k.pop()
 
 
 def _porch_roof(k, x0, x1, z):
