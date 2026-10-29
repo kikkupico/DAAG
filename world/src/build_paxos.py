@@ -28,6 +28,7 @@ AM['honey'] = M.plaster('honey_lime', (0.7, 0.55, 0.34, 1), base_tex='sandstone_
 AM['pave_honey'] = M.stone_rt('pave_honey', 'rock_surface', (0.55, 0.45, 0.32, 1), 1.0, var=0.15)
 AM['pave_pale'] = M.stone_rt('pave_pale', 'rock_surface', (0.66, 0.58, 0.45, 1), 1.0, var=0.12)
 AM['ochre_paint'] = M.plaster('ochre_paint', (0.5, 0.17, 0.08, 1), base_tex='white_plaster_rough_01', loss=0.12, scale=1.5)
+AM['bronze_die'] = M.bronze('bronze_die', patina=0.1)
 AM['sealwax'] = M.flat('sealwax', (0.36, 0.05, 0.03, 1), 0.4, sss=0.05)
 AM['limewall'] = M.plaster('limewall', (0.7, 0.67, 0.6, 1), base_tex='sandstone_cracks', loss=0.0, scale=1.5)
 AM['shelf'] = M.timber('shelf', 'rough_wood', (0.55, 0.42, 0.3, 1), 0.8)
