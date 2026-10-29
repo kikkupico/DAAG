@@ -27,7 +27,7 @@ function Tholos(svg,o={}){
   const under=el("g",{},svg),pod=el("g",{class:"podium"},svg),seats=el("g",{},svg),over=el("g",{},svg);
   /* the podium shows the seal: the caller's signet and the number in the middle, a slot at each bench's place, a wreath round the holder's */
   el("circle",{cx,cy,r:46,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":4},pod);
-  const sr=28,slot={},mid=el("circle",{cx,cy,r:11,class:"slot"},pod),num=el("text",{x:cx,y:cy,class:"sn"},pod);
+  const sr=28,slot={},mw=el("circle",{cx,cy,r:15,class:"wreath"},pod),mid=el("circle",{cx,cy,r:11,class:"slot"},pod),num=el("text",{x:cx,y:cy,class:"sn"},pod);
   ALL.forEach(k=>{const a=A[k]*Math.PI/180,x=cx+sr*Math.cos(a),y=cy+sr*Math.sin(a);
     slot[k]={w:el("circle",{cx:x,cy:y,r:11.5,class:"wreath"},pod),c:el("circle",{cx:x,cy:y,r:7.5,class:"slot"},pod)}});
   const slab=el("text",{x:cx,y:cy+64,class:"lab halo",style:"font-size:12px"},svg);
@@ -38,10 +38,13 @@ function Tholos(svg,o={}){
     token(fill,glyph,gm){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);dtext(g,{},glyph,gm===undefined?glyph:gm);return g},
     /* a runner or a note u of the way from one place to another */
     run(g,a,b,u){const [x1,y1]=T.pos(a),[x2,y2]=T.pos(b);T.put(g,x1+(x2-x1)*u,y1+(y2-y1)*u)},
-    /* s: {n, by: the caller, ring: who answered, hold: who has the wreath (none while the seal is being made)} */
+    /* s: {n, by: the caller, ring: who answered (the caller among them), hold: who has the wreath (none while the seal is being made)} */
     seal(s){num.textContent=s.n;mid.setAttribute("fill",WHO[s.by].c);
-      ALL.forEach(k=>{const on=s.ring.includes(k);slot[k].c.setAttribute("fill",on?WHO[k].c:"none");slot[k].c.classList.toggle("empty",!on);
-        slot[k].w.style.opacity=k===s.hold?1:0;T.seat[k].g.classList.toggle("holder",k===s.hold)});
+      /* the caller's signet is in the middle, so their place in the ring is bare, like the place of anyone who did not answer;
+         the wreath goes round the middle when the caller holds the podium */
+      mw.style.opacity=s.hold&&s.hold===s.by?1:0;
+      ALL.forEach(k=>{const on=s.ring.includes(k)&&k!==s.by;slot[k].c.setAttribute("fill",on?WHO[k].c:"none");slot[k].c.style.opacity=on?1:0;
+        slot[k].w.style.opacity=on&&k===s.hold?1:0;T.seat[k].g.classList.toggle("holder",k===s.hold)});
       slab.textContent=`seal ${s.n}, ${WHO[s.by].n}`+(s.hold?"":" · being made")},
     note(k,s,m){const t=T.seat[k].s;t[0].textContent=s;t[1].textContent=m===undefined?M_(s):m},
     out(k,on){T.seat[k].g.classList.toggle("out",!!on)}
@@ -230,7 +233,7 @@ function verdict(r,checks,say){
       await sleep(900);g.remove()}));
     if(took>=3)throw new Error("a line passed under the old seal");
     n.textContent=took;
-    say.innerHTML=dual(`Liskovia, Kleon and Melissa have taken seal 7 and refuse any note that carries seal 6. ${heard?"So does Theron.":"Theron takes the line."} ${took===1?"Only Okios holds it":"Two hold it"}, and a line needs three. <span class="bad">It cannot pass.</span> Seal 7 formed on three, which leaves at most one other who might take his lines.`,`R2, R3 and R4 have taken view 7 and refuse any message that carries view 6. ${heard?"So does R5.":"R5 takes the record."} ${took===1?"Only R1 holds it":"Two hold it"}, and a record needs three. <span class="bad">It cannot commit.</span> View 7 formed on three, which leaves at most one other that might take its records.`);
+    say.innerHTML=dual(`Liskovia, Kleon and Melissa have taken seal 7 and refuse any note that carries seal 6. ${heard?"So does Theron.":"Theron takes the line."} ${took===1?"Only Okios holds it":"Two hold it"}, and a line needs three. <span class="bad">It cannot pass.</span> ${heard?"Seal 7 formed on four, so nobody is left who might take his lines.":"Seal 7 formed on three, which leaves at most one other who might take his lines."}`,`R2, R3 and R4 have taken view 7 and refuse any message that carries view 6. ${heard?"So does R5.":"R5 takes the record."} ${took===1?"Only R1 holds it":"Two hold it"}, and a record needs three. <span class="bad">It cannot commit.</span> ${heard?"View 7 formed on four, so no replica is left that might take its records.":"View 7 formed on three, which leaves at most one other that might take its records."}`);
     busy=false;bw.disabled=false};
   paint();
 })();
