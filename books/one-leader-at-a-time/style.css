@@ -33,11 +33,13 @@
 .seat text.s{font-family:var(--sans);font-size:12.5px;text-anchor:middle;fill:#1c1512}
 
 .seat .ring{opacity:0;transition:opacity .4s}
+.seat .ring .wring{fill:none;stroke:#b5602c;stroke-width:3;stroke-dasharray:5 3}
+.seat .ring .wring-out{fill:none;stroke:#e8b03a;stroke-width:1.5}
 .seat .ring .leaf{fill:#8f9d3c;stroke:#3f4a16;stroke-width:.9}
 .seat .ring .stem{fill:none;stroke:#3f4a16;stroke-width:1.8}
 .seat .ring .tie{fill:#b5302a;stroke:#1c1512;stroke-width:1}
 
-.seat.holder .ring{opacity:1}
+.seat.holder .ring,.seat.writer .ring{opacity:1}
 
 .seat.out circle.b{opacity:.3}
 
@@ -86,12 +88,16 @@
 
 @media(max-width:860px){.cards3.pair{grid-template-columns:1fr}}
 
-/* ---------- the seal: a middle slot and five round it, a wreath for the holder ---------- */
+/* ---------- the seal: concentric tracks, center number, manager peg, writer peg, rim signets ---------- */
 .podium .slot,.sealfig .slot{fill:#f7f0dc;stroke:#1c1512;stroke-width:2.5}
-.podium .hole{fill:#d9cfb4;stroke:#1c1512;stroke-width:2}
+.podium .hole{fill:#efe6cf;stroke:#1c1512;stroke-width:1.8}
 .sealfig .hole{fill:#efe6cf;stroke:#1c1512;stroke-width:2.5}
+.podium .track{fill:none;stroke:#b8ad96;stroke-width:1;stroke-dasharray:2 2}
+.podium .peg-mgr{fill:#1c1512;stroke:#1c1512;stroke-width:1}
+.podium .peg-wri{fill:#b5602c;stroke:#1c1512;stroke-width:1.5}
+.podium .empty{fill:none;stroke:#a69b85;stroke-width:1.2;stroke-dasharray:2 2}
 .podium .wreath,.sealfig .wreath{fill:none;stroke:#1c1512;stroke-width:3;stroke-dasharray:1.6 1.6;transition:opacity .4s}
-.podium .sn{font-size:8px}
+.podium .sn{font-size:9px}
 .podium .sg{font-family:var(--sans);font-weight:700;font-size:7.5px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
 .podium g{transition:opacity .4s}
 .sealfig{width:100%;height:auto;display:block}

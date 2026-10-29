@@ -346,16 +346,16 @@ def linen(name='linen', tint=(0.6, 0.56, 0.48, 1)):
     return m
 
 
-def marble(name='marble', tint=(0.95, 0.93, 0.88, 1)):
+def marble(name='marble', tint=(0.76, 0.71, 0.62, 1)):
     m, nt = new_mat(name)
     if nt is None:
         return m
-    vec = nt.mapping(nt.coords('Object'), 1 / 1.5)
-    c, r, h = layer(nt, 'marble_01', vec)
-    c = nt.mix(1.0, c, tint, blend='MULTIPLY')
-    nz = nt.noise(nt.coords('Object'), 2, 5).outputs['Fac']
-    c = nt.mix(nt.math('MULTIPLY', nz, 0.25), c, (0.7, 0.66, 0.58, 1), blend='MULTIPLY')
-    bsdf, _ = finish(nt, c, nt.math('ADD', nt.math('MULTIPLY', r, 0.5), 0.25), h, bump=0.1, sss=0.0)
+    vec = nt.mapping(nt.coords('Object'), 1 / 2.0)
+    c, r, h = layer(nt, 'rock_surface', vec)
+    c = retint(nt, c, 'rock_surface', tint, contrast=0.5)
+    nz = nt.noise(nt.coords('Object'), 1.5, 4).outputs['Fac']
+    c = nt.mix(nt.math('MULTIPLY', nz, 0.12), c, (0.85, 0.82, 0.76, 1), blend='MULTIPLY')
+    bsdf, _ = finish(nt, c, nt.math('ADD', nt.math('MULTIPLY', r, 0.3), 0.35), h, bump=0.03, dist=0.01, sss=0.02)
     return m
 
 
