@@ -310,9 +310,11 @@ the new seal and refuses the old one.
 **The seal.** Each spell at the podium has its own seal, a round stamp laid out like the Tholos:
 six slots for signets, one in the middle and five round it, one at each bench's place. The
 middle holds the signet of the legislator who called the seal and a number one higher than any
-seal they have seen (the paper's viewid, ⟨count, caller⟩); the ring holds the signets of those
-who answered the call, and stays empty for anyone who did not (the view's members); a wreath
-goes round the signet of the one who takes the podium (the primary). The middle says who called;
+seal they have seen (the paper's viewid, ⟨count, caller⟩); the ring holds the signets of the
+others who answered the call (with the middle, the view's members). A slot without a signet
+leaves no mark, so nothing shows at the place of anyone who did not answer, nor at the caller's
+own place. A wreath goes round the signet of the one who takes the podium (the primary), and
+round the middle when the caller takes it. The middle says who called;
 the wreath says who holds the podium. Seals are ordered by their middle alone, by number and
 then by the caller's name. A seal never changes once made, so a legislator missing from it who
 comes back within reach means a new seal must be called. Each line is known by its seal and line
