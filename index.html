@@ -74,8 +74,8 @@
 <circle cx="-139.2" cy="97.5" r="7"></circle><text x="-152.2" y="97.5" text-anchor="end">Partial synchrony</text><title>Agreeing When Messages Run Late</title></a>
 <a href="books/agreeing-by-chance/index.html" class="tnode">
 <circle cx="-27.7" cy="157.5" r="7"></circle><text x="-27.7" y="175.5" text-anchor="middle">Ben-Or</text><title>Agreeing by Chance</title></a>
-<a href="books/telling-the-dead-from-the-slow/index.html" class="tnode">
-<circle cx="-119.9" cy="207.8" r="7"></circle><text x="-132.9" y="207.8" text-anchor="end">Failure detectors</text><title>Telling the Dead from the Slow</title></a>
+<a href="books/telling-the-absent-from-the-slow/index.html" class="tnode">
+<circle cx="-119.9" cy="207.8" r="7"></circle><text x="-132.9" y="207.8" text-anchor="end">Failure detectors</text><title>Telling the Absent from the Slow</title></a>
 <a href="books/answering-while-cut-off/index.html" class="tnode">
 <circle cx="135.2" cy="-36.2" r="7"></circle><text x="135.2" y="-18.2" text-anchor="middle">CAP</text><title>Answering While Cut Off</title></a>
 <a href="books/agreeing-among-liars/index.html" class="tnode">
@@ -147,42 +147,64 @@
         <p class="kicker"><span class="i">Paxos · The Chamber</span><span class="m">Consensus with crash and recovery</span></p>
         <h2><span class="i">Part-Time Legislators Passing Laws</span><span class="m">Consensus &amp; Replicated State Machines</span></h2>
         <p class="sub i">Consensus &amp; Replicated State Machines</p>
-        <p class="i">Part-time legislators who wander in and out, each with their own scroll, passing laws by notes that messengers may carry late, twice or never. The laws never contradict one another.</p>
-        <p class="m">Processes crash and recover with stable storage; messages may be slow, lost or duplicated. The log of decrees must never diverge.</p>
-        <dl class="cast i"><dt>Who</dt><dd>Part-time legislators, each with a scroll</dd><dt>Word</dt><dd>Messengers: late, twice or never</dd><dt>Sent</dt><dd>Notes about numbered ballots</dd></dl>
+        <p class="i">Part-time legislators who wander in and out, each with their own scroll, passing laws by notes that messengers may carry late, twice or never. Across three trials, the Chamber tests the limits of agreement, majority quorums, and door attendance slates.</p>
+        <p class="m">Processes crash and recover with stable storage; messages may be slow, lost or duplicated. Core consensus and failure detectors.</p>
+        <dl class="cast i"><dt>Who</dt><dd>Part-time legislators, each with a scroll</dd><dt>Word</dt><dd>Messengers across the floor and olive groves</dd><dt>Sent</dt><dd>Decree notes, attendance slates, and ballots</dd></dl>
       </figcaption>
     </a>
-    <div class="bks n1">
+    <div class="bks n3">
+      <div class="pop"><article class="leaf paper bk" id="b-flp" data-key="flp"><a class="cardlink" href="books/the-limits-of-agreement/index.html">
+        <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-cover-d6d86459e9-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-cover-d6d86459e9-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-cover-d6d86459e9-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-cover-d6d86459e9-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/the-limits-of-agreement.jpg" alt="" loading="lazy"></div>
+        <div class="cvr m"><svg data-cover="the-limits-of-agreement" role="img" aria-label="A tree of configurations with one thick path of bivalent configurations that never reaches a decision, deciding branches hanging off every step, and a row of initial configurations from 0000 to 1111"></svg></div>
+        <div class="body">
+          <h3>The Limits of Agreement</h3>
+          <p class="punch"><span class="i">An absent colleague looks exactly like a slow runner.</span><span class="m">A crashed process looks exactly like a slow one.</span></p>
+          <p class="q">Can machines always agree when one of them may stop silently and messages take any time at all?</p>
+          <p class="how i">We find out by exploring how four part-time legislators in the Chamber of Paxos, sending messengers across the checkerboard floor and olive groves, tried to pass a decree when any of them might have departed.</p>
+          <span class="credit">Fischer, Lynch &amp; Paterson 1985</span>
+        </div>
+      </a></article></div>
       <div class="pop"><article class="leaf paper bk" id="b-ptp" data-key="ptp"><a class="cardlink" href="books/the-part-time-parliament/index.html">
         <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-cover-8a2d2c4426-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-cover-8a2d2c4426-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-cover-8a2d2c4426-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-part-time-parliament-cover-8a2d2c4426-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/the-part-time-parliament.jpg" alt="" loading="lazy"></div>
         <div class="cvr m"><svg data-cover="the-part-time-parliament" role="img" aria-label="A table of ballots and votes for five processes with a quorum highlighted in the last ballot, the earlier vote carried forward, and a log of slots"></svg></div>
         <div class="body">
           <h3>The Part-Time Parliament</h3>
           <p class="punch"><span class="i">Any two majorities share a legislator.</span><span class="m">Any two majorities intersect.</span></p>
-          <p class="q">How can a group of machines agree on a sequence of commands when any of them may wander off at any time, and no one is in charge for long?</p>
+          <p class="q">How can a group of machines agree on a sequence of commands when any of them may crash and recover at any time, and no one is in charge for long?</p>
           <p class="how i">Lamport answered this himself, with the part-time legislators of the Greek island of Paxos. We present his paper as he wrote it, with interactive figures. It is the paper that inspired this entire project. Lamport ends it with the parliament's fall; the other books set that aside, and in them the parliament is still sitting.</p>
           <span class="credit">Lamport 1998 · Lamport 2001</span>
+        </div>
+      </a></article></div>
+      <div class="pop"><article class="leaf paper bk" id="b-ct" data-key="ct"><a class="cardlink" href="books/telling-the-absent-from-the-slow/index.html">
+        <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/telling-the-dead-from-the-slow-cover-9010b898fd-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/telling-the-dead-from-the-slow-cover-9010b898fd-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/telling-the-dead-from-the-slow-cover-9010b898fd-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/telling-the-dead-from-the-slow-cover-9010b898fd-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/telling-the-dead-from-the-slow.jpg" alt="" loading="lazy"></div>
+        <div class="cvr m"><svg data-cover="telling-the-absent-from-the-slow" role="img" aria-label="Heartbeats arriving from three processes, one late and one crashed, timeout brackets that grow after a false suspicion, and the suspect list over time"></svg></div>
+        <div class="body">
+          <h3>Telling the Absent from the Slow</h3>
+          <p class="punch"><span class="i">Bad slates can stall the parliament, never split it.</span><span class="m">Safe under any detector.</span></p>
+          <p class="q">A machine that has crashed looks exactly like one that is merely slow, and that alone makes agreement impossible. How well must we tell the dead from the slow before agreement becomes possible again?</p>
+          <p class="how i">We find out by exploring how attendance slates chalked at the Chamber doors let a rotating presidency pass decrees under unreliable failure detectors.</p>
+          <span class="credit">Chandra &amp; Toueg 1996</span>
         </div>
       </a></article></div>
     </div>
   </div>
 </section>
 
-<section class="spread light setting" id="schedia" data-name="A Council of Five Keeping One Law" data-name-m="Leader-Driven Consensus">
+<section class="spread light setting" id="schedia" data-name="One Law Kept in the Tholos" data-name-m="Primary-Backup &amp; BFT Replication">
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
   <div class="wrap">
     <a class="band" href="places/schedia/index.html">
       <img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-tholos-inside-7bb622c7fe-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-tholos-inside-7bb622c7fe-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-tholos-inside-7bb622c7fe-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-tholos-inside-7bb622c7fe-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="assets/img/places/tholos-inside.jpg" alt="Inside the Tholos: a round hall of sandstone columns with a stepped podium at its centre" loading="lazy">
       <figcaption>
-        <p class="kicker"><span class="i">Paxos · Schedia</span><span class="m">Primary-backup replication</span></p>
-        <h2><span class="i">A Council of Five Keeping One Law</span><span class="m">Leader-Driven Consensus</span></h2>
-        <p class="sub i">Leader-Driven Consensus</p>
-        <p class="i">A council of five, one of whom wears the leader's wreath and alone writes the law, sending it line by line to the others' benches by runner. When the holder falls silent, another takes the wreath under a new seal.</p>
-        <p class="m">A replica group with one primary at a time, state kept in volatile memory, and view changes when the primary falls silent.</p>
-        <dl class="cast i"><dt>Who</dt><dd>Five legislators; one wears the wreath</dd><dt>Word</dt><dd>A runner to each bench, never skipping a line</dd><dt>Sent</dt><dd>Petitions, lines of law pressed with the seal, a call for a new seal</dd></dl>
+        <p class="kicker"><span class="i">Paxos · Schedia</span><span class="m">Primary-backup and Byzantine replication</span></p>
+        <h2><span class="i">One Law Kept in the Tholos</span><span class="m">Primary-Backup &amp; BFT Replication</span></h2>
+        <p class="sub i">Primary-Backup &amp; BFT Replication</p>
+        <p class="i">In the round hall of Schedia, one writer at a time writes the city's law scroll, sending lines to the others by runner. When the five legislators sail away, four unvetted stewards take over the scroll and must keep order even when one of them lies.</p>
+        <p class="m">Leader-driven state-machine replication with view changes: first under benign crash faults, then surviving Byzantine liars, moving from all-to-all echoes to linear chained certificates.</p>
+        <dl class="cast i"><dt>Who</dt><dd>Five legislators, then four stewards; one is the writer</dd><dt>Word</dt><dd>A runner to each bench across the stone floor</dd><dt>Sent</dt><dd>Petitions, numbered lines, seals and bundles</dd></dl>
       </figcaption>
     </a>
-    <div class="bks n1">
+    <div class="bks n3">
       <div class="pop"><article class="leaf paper bk" id="b-vr" data-key="vr"><a class="cardlink" href="books/one-writer-at-a-time/index.html">
         <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-cover-dd6fa3054e-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-cover-dd6fa3054e-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-cover-dd6fa3054e-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-cover-dd6fa3054e-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/one-leader-at-a-time.jpg" alt="" loading="lazy"></div>
         <div class="cvr m"><svg data-cover="one-writer-at-a-time" role="img" aria-label="Five replica logs with a commit point at record 12, a cut-off replica, quorum intersection, and a view change from primary R1 to primary R2"></svg></div>
@@ -192,6 +214,28 @@
           <p class="q">Many systems put one leader in charge at a time. When the leader falls silent, how does another take over without losing anything the last one promised?</p>
           <p class="how i">We find out by exploring how Schedia, a Greek city on Paxos with laws of its own, kept its law with one legislator at a time serving as the writer, and how a new writer took over when the last one fell silent.</p>
           <span class="credit">Oki &amp; Liskov 1988</span>
+        </div>
+      </a></article></div>
+      <div class="pop"><article class="leaf paper bk" id="b-pbft" data-key="pbft"><a class="cardlink" href="books/keeping-order-among-liars/index.html">
+        <div class="photo i"><img src="books/keeping-order-among-liars/img/cover.jpg" data-local="books/keeping-order-among-liars/img/cover.jpg" alt="Inside the Tholos of Schedia: a round stone hall with marble benches along the red drum" loading="lazy"></div>
+        <div class="cvr m"><svg data-cover="keeping-order-among-liars" role="img" aria-label="Four replicas and a client on time lanes: request, pre-prepare, prepare and commit messages between the lanes, one faulty replica sending a conflicting digest, quorum brackets, and a log slot"></svg></div>
+        <div class="body">
+          <h3>Keeping Order Among Liars</h3>
+          <p class="punch"><span class="i">Any two groups of three share an honest steward.</span><span class="m">Any two quorums of 2f + 1 share a correct replica.</span></p>
+          <p class="q">Can a replicated service keep its commands in order when some of its machines lie, the leader included, and messages take arbitrarily long?</p>
+          <p class="how i">We find out by exploring how four stewards in the Tholos held one scroll of their law when any of them, the writer included, might be lying.</p>
+          <span class="credit">Castro &amp; Liskov 1999</span>
+        </div>
+      </a></article></div>
+      <div class="pop"><article class="leaf paper bk" id="b-hs" data-key="hs"><a class="cardlink" href="books/changing-leaders-among-liars/index.html">
+        <div class="photo i"><img src="books/changing-leaders-among-liars/img/cover.jpg" data-local="books/changing-leaders-among-liars/img/cover.jpg" alt="Inside the Tholos of Schedia: a round stone hall under a timber roof with stone benches along the drum" loading="lazy"></div>
+        <div class="cvr m"><svg data-cover="changing-leaders-among-liars" role="img" aria-label="A chain of five blocks with quorum certificates, a three-chain bracket, a star of replicas voting to a leader, and a rotating leader across views"></svg></div>
+        <div class="body">
+          <h3>Changing Leaders Among Liars</h3>
+          <p class="punch"><span class="i">A change of hands costs no more than an entry.</span><span class="m">A linear, responsive view change.</span></p>
+          <p class="q">When some machines may lie, replacing a leader has been slow and costly. Can a new leader take over as cheaply as any ordinary step, and at the pace of the messages rather than of a timer?</p>
+          <p class="how i">We find out by exploring how four stewards in the Tholos rotated the writer's office at every line of their law scroll, each gathering the others' seals into one bundle instead of sending runners to every other bench.</p>
+          <span class="credit">Yin, Malkhi, Reiter, Gueta &amp; Abraham 2019</span>
         </div>
       </a></article></div>
     </div>
@@ -259,23 +303,12 @@
         <p class="kicker"><span class="i">Arche · The Foot of Mount Phyle</span><span class="m">Consensus and its limits</span></p>
         <h2><span class="i">Four Mercenaries Who Must Agree</span><span class="m">Consensus &amp; Crash Faults</span></h2>
         <p class="sub i">Consensus &amp; Crash Faults</p>
-        <p class="i">Four mercenaries, one to a tent and out of sight of one another, who must all attack or all hold. Their only word is a strip carried by raven, and any of them may be dead.</p>
-        <p class="m">Four processes, asynchronous channels that always deliver but take any time, and one process that may crash. All must decide the same value.</p>
-        <dl class="cast i"><dt>Who</dt><dd>Four mercenaries; any of them may die</dd><dt>Word</dt><dd>Ravens, with no longest flight</dd><dt>Sent</dt><dd>Sightings at dusk: attack or hold</dd></dl>
+        <p class="i">Four mercenaries at the foot of Mount Phyle, one to a tent and out of sight of one another, who must all attack or all hold. Between the siege of Chance, Time, and Lost Birds, they overcome late messages when mountain winds drop, defeat delays with the toss of an Athenian coin, and face hunting hawks that cut a tent off from the rest.</p>
+        <p class="m">Four processes, asynchronous channels with delays, and one process that may crash. Overcoming crash impossibility through partial synchrony and randomized tie-breaking, and the partition boundary of the CAP theorem.</p>
+        <dl class="cast i"><dt>Who</dt><dd>Four mercenaries in separate tents</dd><dt>Word</dt><dd>Ravens, delayed by gusts or intercepted by hawks</dd><dt>Sent</dt><dd>Sightings at dusk, turns, coin flips, and standing plans</dd></dl>
       </figcaption>
     </a>
-    <div class="bks n5">
-      <div class="pop"><article class="leaf paper bk" id="b-flp" data-key="flp"><a class="cardlink" href="books/the-limits-of-agreement/index.html">
-        <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-cover-d6d86459e9-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-cover-d6d86459e9-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-cover-d6d86459e9-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/the-limits-of-agreement-cover-d6d86459e9-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/the-limits-of-agreement.jpg" alt="" loading="lazy"></div>
-        <div class="cvr m"><svg data-cover="the-limits-of-agreement" role="img" aria-label="A tree of configurations with one thick path of bivalent configurations that never reaches a decision, deciding branches hanging off every step, and a row of initial configurations from 0000 to 1111"></svg></div>
-        <div class="body">
-          <h3>The Limits of Agreement</h3>
-          <p class="punch"><span class="i">A dead mercenary looks exactly like a slow bird.</span><span class="m">A crashed process looks exactly like a slow one.</span></p>
-          <p class="q">Can machines always agree when one of them may stop silently and messages take any time at all?</p>
-          <p class="how i">We find out by exploring how four mercenaries at the foot of a hill, unable to see one another, tried to agree whether to attack or hold when any of them might be dead.</p>
-          <span class="credit">Fischer, Lynch &amp; Paterson 1985</span>
-        </div>
-      </a></article></div>
+    <div class="bks n3">
       <div class="pop"><article class="leaf paper bk" id="b-dls" data-key="dls"><a class="cardlink" href="books/agreeing-when-messages-run-late/index.html">
         <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-when-messages-run-late-cover-18b34ba932-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-when-messages-run-late-cover-18b34ba932-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-when-messages-run-late-cover-18b34ba932-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-when-messages-run-late-cover-18b34ba932-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/agreeing-when-messages-run-late.jpg" alt="" loading="lazy"></div>
         <div class="cvr m"><svg data-cover="agreeing-when-messages-run-late" role="img" aria-label="Four process lanes: late messages before the global stabilization time, then four-round phases with a coordinator, locks and decisions after it"></svg></div>
@@ -283,19 +316,8 @@
           <h3>Agreeing When Messages Run Late</h3>
           <p class="punch"><span class="i">Safe in any wind. Done once it drops.</span><span class="m">Safe always. Live after GST.</span></p>
           <p class="q">If messages can run late without limit, agreement cannot be guaranteed; yet real networks are prompt most of the time. Can a protocol stay safe however late messages run, and still decide once they arrive on time again?</p>
-          <p class="how i">We find out by exploring how the same Greek mercenaries, on a windy night when no one could tell how long a raven would take, agreed whether to attack or hold once the wind had dropped.</p>
+          <p class="how i">We find out by exploring how four Greek mercenaries, on a windy night when no one could tell how long a raven would take, agreed whether to attack or hold once the wind had dropped.</p>
           <span class="credit">Dwork, Lynch &amp; Stockmeyer 1988</span>
-        </div>
-      </a></article></div>
-      <div class="pop"><article class="leaf paper bk" id="b-cap" data-key="cap"><a class="cardlink" href="books/answering-while-cut-off/index.html">
-        <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/answering-while-cut-off-cover-3f0e49958b-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/answering-while-cut-off-cover-3f0e49958b-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/answering-while-cut-off-cover-3f0e49958b-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/answering-while-cut-off-cover-3f0e49958b-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/answering-while-cut-off.jpg" alt="" loading="lazy"></div>
-        <div class="cvr m"><svg data-cover="answering-while-cut-off" role="img" aria-label="Four nodes with a network partition separating P4 from the rest, an update to 1 lost at the partition, a client that wrote 1 at P2 and a client that reads 0 at P4, and a C, A, P triangle"></svg></div>
-        <div class="body">
-          <h3>Answering While Cut Off</h3>
-          <p class="punch"><span class="i">Answer, or answer as one.</span><span class="m">Available, or linearizable.</span></p>
-          <p class="q">When one part of a system is cut off from the rest, should it keep answering and risk being wrong, or stay silent until it can be sure? Can it ever have both?</p>
-          <p class="how i">We find out by exploring what the same Greek mercenaries could promise one another about their standing plan when ravens were lost and one tent was cut off.</p>
-          <span class="credit">Brewer 2000 · Gilbert &amp; Lynch 2002</span>
         </div>
       </a></article></div>
       <div class="pop"><article class="leaf paper bk" id="b-bo" data-key="bo"><a class="cardlink" href="books/agreeing-by-chance/index.html">
@@ -309,36 +331,36 @@
           <span class="credit">Ben-Or 1983</span>
         </div>
       </a></article></div>
-      <div class="pop"><article class="leaf paper bk" id="b-ct" data-key="ct"><a class="cardlink" href="books/telling-the-dead-from-the-slow/index.html">
-        <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/telling-the-dead-from-the-slow-cover-9010b898fd-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/telling-the-dead-from-the-slow-cover-9010b898fd-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/telling-the-dead-from-the-slow-cover-9010b898fd-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/telling-the-dead-from-the-slow-cover-9010b898fd-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/telling-the-dead-from-the-slow.jpg" alt="" loading="lazy"></div>
-        <div class="cvr m"><svg data-cover="telling-the-dead-from-the-slow" role="img" aria-label="Heartbeats arriving from three processes, one late and one crashed, timeout brackets that grow after a false suspicion, and the suspect list over time"></svg></div>
+      <div class="pop"><article class="leaf paper bk" id="b-cap" data-key="cap"><a class="cardlink" href="books/answering-while-cut-off/index.html">
+        <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/answering-while-cut-off-cover-3f0e49958b-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/answering-while-cut-off-cover-3f0e49958b-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/answering-while-cut-off-cover-3f0e49958b-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/answering-while-cut-off-cover-3f0e49958b-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/answering-while-cut-off.jpg" alt="" loading="lazy"></div>
+        <div class="cvr m"><svg data-cover="answering-while-cut-off" role="img" aria-label="Four nodes with a network partition separating P4 from the rest, an update to 1 lost at the partition, a client that wrote 1 at P2 and a client that reads 0 at P4, and a C, A, P triangle"></svg></div>
         <div class="body">
-          <h3>Telling the Dead from the Slow</h3>
-          <p class="punch"><span class="i">Bad slates can stall the camp, never split it.</span><span class="m">Safe under any detector.</span></p>
-          <p class="q">A machine that has crashed looks exactly like one that is merely slow, and that alone makes agreement impossible. How well must we tell the dead from the slow before agreement becomes possible again?</p>
-          <p class="how i">We find out by exploring how the same Greek mercenaries, each keeping a slate of the tents they thought dead, agreed whether to attack or hold though the slates were often wrong.</p>
-          <span class="credit">Chandra &amp; Toueg 1996</span>
+          <h3>Answering While Cut Off</h3>
+          <p class="punch"><span class="i">Answer, or answer as one.</span><span class="m">Available, or linearizable.</span></p>
+          <p class="q">When one part of a system is cut off from the rest, should it keep answering and risk being wrong, or stay silent until it can be sure? Can it ever have both?</p>
+          <p class="how i">We find out by exploring what four mercenaries at the foot of Mount Phyle could promise when hunting hawks cut one tent off from the others.</p>
+          <span class="credit">Brewer 2000 · Gilbert &amp; Lynch 2002</span>
         </div>
       </a></article></div>
     </div>
   </div>
 </section>
 
-<section class="spread dark setting" id="the-crown-of-mount-phyle" data-name="Four Bandits Who Must Agree Though Some Lie" data-name-m="Byzantine Faults &amp; Replication">
+<section class="spread dark setting" id="the-crown-of-mount-phyle" data-name="Four Bandits Who Must Agree Though Some Lie" data-name-m="Byzantine Faults">
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
   <div class="wrap">
     <a class="band" href="places/the-crown/index.html">
       <img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-crown-05522e4f25-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-crown-05522e4f25-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-crown-05522e4f25-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/places-crown-05522e4f25-1200.avif 1200w" sizes="(max-width: 700px) 90vw, 560px" data-local="assets/img/places/crown.jpg" alt="A ruined ring wall of rough stones on a misty crag, seen from above among pines" loading="lazy">
       <figcaption>
         <p class="kicker"><span class="i">Arche · The Crown of Mount Phyle</span><span class="m">Byzantine faults</span></p>
-        <h2><span class="i">Four Bandits Who Must Agree Though Some Lie</span><span class="m">Byzantine Faults &amp; Replication</span></h2>
-        <p class="sub i">Byzantine Faults &amp; Replication</p>
+        <h2><span class="i">Four Bandits Who Must Agree Though Some Lie</span><span class="m">Byzantine Faults</span></h2>
+        <p class="sub i">Byzantine Faults</p>
         <p class="i">Four bandits at posts out of sight of one another, who must all hold or all scatter, with word between them only by rat. Nobody dies up here. But some of them may lie, and nobody ever learns which.</p>
         <p class="m">Four processes, any of which may behave arbitrarily: send conflicting messages, or none. Each signs with a key no one else can forge.</p>
-        <dl class="cast i"><dt>Who</dt><dd>Four bandits; some of them may lie</dd><dt>Word</dt><dd>Rats, on short runs that always arrive</dd><dt>Sent</dt><dd>Orders under seal; entries for the loot scroll</dd></dl>
+        <dl class="cast i"><dt>Who</dt><dd>Four bandits; some of them may lie</dd><dt>Word</dt><dd>Rats, on short runs that always arrive</dd><dt>Sent</dt><dd>Orders under seal: hold or scatter</dd></dl>
       </figcaption>
     </a>
-    <div class="bks n3">
+    <div class="bks n1">
       <div class="pop"><article class="leaf paper bk" id="b-bgp" data-key="bgp"><a class="cardlink" href="books/agreeing-among-liars/index.html">
         <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-among-liars-cover-0eed5a01c0-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-among-liars-cover-0eed5a01c0-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-among-liars-cover-0eed5a01c0-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/agreeing-among-liars-cover-0eed5a01c0-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/agreeing-among-liars.jpg" alt="" loading="lazy"></div>
         <div class="cvr m"><svg data-cover="agreeing-among-liars" role="img" aria-label="A commander sends 1 to three lieutenants, the lieutenants relay to each other with the traitor sending 0, and each honest lieutenant takes the majority of its three values and decides 1"></svg></div>
@@ -348,28 +370,6 @@
           <p class="q">Can machines agree when some of them may lie, telling one thing to one and something else to another? How many honest machines does each liar cost?</p>
           <p class="how i">We find out by exploring how four bandits holding a hilltop, some of whom might lie, agreed whether to hold it or scatter, first by plain word and then under seal.</p>
           <span class="credit">Lamport, Shostak &amp; Pease 1982 · Pease, Shostak &amp; Lamport 1980</span>
-        </div>
-      </a></article></div>
-      <div class="pop"><article class="leaf paper bk" id="b-pbft" data-key="pbft"><a class="cardlink" href="books/keeping-order-among-liars/index.html">
-        <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/keeping-order-among-liars-cover-a2b3884596-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/keeping-order-among-liars-cover-a2b3884596-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/keeping-order-among-liars-cover-a2b3884596-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/keeping-order-among-liars-cover-a2b3884596-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/keeping-order-among-liars.jpg" alt="" loading="lazy"></div>
-        <div class="cvr m"><svg data-cover="keeping-order-among-liars" role="img" aria-label="Four replicas and a client on time lanes: request, pre-prepare, prepare and commit messages between the lanes, one faulty replica sending a conflicting digest, quorum brackets, and a log slot"></svg></div>
-        <div class="body">
-          <h3>Keeping Order Among Liars</h3>
-          <p class="punch"><span class="i">Any two groups of three share an honest bandit.</span><span class="m">Any two quorums of 2f + 1 share a correct replica.</span></p>
-          <p class="q">Can a replicated service keep its commands in order when some of its machines lie, the leader included, and messages take arbitrarily long?</p>
-          <p class="how i">We find out by exploring how four bandits holding a hilltop held one book of their loot when any of them, their chief included, might be lying.</p>
-          <span class="credit">Castro &amp; Liskov 1999</span>
-        </div>
-      </a></article></div>
-      <div class="pop"><article class="leaf paper bk" id="b-hs" data-key="hs"><a class="cardlink" href="books/changing-leaders-among-liars/index.html">
-        <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/changing-leaders-among-liars-cover-6030cb076c-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/changing-leaders-among-liars-cover-6030cb076c-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/changing-leaders-among-liars-cover-6030cb076c-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/changing-leaders-among-liars-cover-6030cb076c-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/changing-leaders-among-liars.jpg" alt="" loading="lazy"></div>
-        <div class="cvr m"><svg data-cover="changing-leaders-among-liars" role="img" aria-label="A chain of five blocks with quorum certificates, a three-chain bracket, a star of replicas voting to a leader, and a rotating leader across views"></svg></div>
-        <div class="body">
-          <h3>Changing Leaders Among Liars</h3>
-          <p class="punch"><span class="i">A change of hands costs no more than an entry.</span><span class="m">A linear, responsive view change.</span></p>
-          <p class="q">When some machines may lie, replacing a leader has been slow and costly. Can a new leader take over as cheaply as any ordinary step, and at the pace of the messages rather than of a timer?</p>
-          <p class="how i">We find out by exploring how four bandits holding a hilltop took turns keeping their loot scroll, each gathering the others' seals into one bundle instead of every bandit writing to every other.</p>
-          <span class="credit">Yin, Malkhi, Reiter, Gueta &amp; Abraham 2019</span>
         </div>
       </a></article></div>
     </div>

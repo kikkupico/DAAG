@@ -484,7 +484,7 @@ const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd
 };
 return COVER;})();
 
-BOOK_COVERS["telling-the-dead-from-the-slow"]=(()=>{
+BOOK_COVERS["telling-the-absent-from-the-slow"]=BOOK_COVERS["telling-the-dead-from-the-slow"]=(()=>{
 const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · A FAILURE DETECTOR AT P1","◇P · eventually perfect");
   const x0=106,x1=488,ys=[106,154,202],T0=[0,1,2,3,4,5,6,7,8,9,10];
