@@ -4,14 +4,14 @@ const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar,Timeline,
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
-/* the four stewards in the Tholos, told apart by colour; Steward 1 opens the first term */
+/* the four legislators in the Tholos, told apart by colour; Legislator 1 opens the first term */
 const BC={1:"#a57fc0",2:"#9aa0a8",3:"#e8964d",4:"#b07a55"};
 const yesno=ok=>ok?"<span class='ok'>✓</span>":"<span class='bad'>✗</span>";
-const chip=k=>`<span class="chip"><i style="background:${BC[k]}"></i>${dual("Steward "+k,"R"+k)}</span>`;
+const chip=k=>`<span class="chip"><i style="background:${BC[k]}"></i>${dual("Legislator "+k,"R"+k)}</span>`;
 const chips=a=>a.map(chip).join(" ");
 const men=[1,2,3,4];
 /* the four as lanes, for a Tholos picture's computing twin (Unfold in book.js) */
-const LANES={1:[-135,"S1",BC[1],"R1"],2:[-45,"S2",BC[2],"R2"],3:[45,"S3",BC[3],"R3"],4:[135,"S4",BC[4],"R4"]};
+const LANES={1:[-135,"L1",BC[1],"R1"],2:[-45,"L2",BC[2],"R2"],3:[45,"L3",BC[3],"R3"],4:[135,"L4",BC[4],"R4"]};
 
 /* ===== the Tholos, seen from above: circular limestone floor, four benches along the wall, porch door below ===== */
 function Tholos(svg){
@@ -43,7 +43,7 @@ function Tholos(svg){
     put(g,x1+dx*u-dy/L*o,y1+dy*u+dx/L*o)};
   C.state=(k,s)=>{const [i,m]=Array.isArray(s)?s:[s,s],t=C.site[k].st;t[0].textContent=i;t[1].textContent=m};
   for(const k of men){const [x,y]=pos[k],g=el("g",{class:"site"},sites);put(g,x,y);
-    el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:BC[k]},g);dtext(g,{},"S"+k,"R"+k);
+    el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:BC[k]},g);dtext(g,{},"L"+k,"R"+k);
     const in_a=(A[k]+180)*Math.PI/180;
     const st=dtext(g,{class:"state halo",x:42*Math.cos(in_a),y:42*Math.sin(in_a)+4},"","");
     C.site[k]={g,st}}
@@ -90,11 +90,11 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const flight=(a,b,fill,glyph,ms)=>{const g=C.token(fill,glyph);g.setAttribute("opacity",1);C.fly(g,a,b,0);return tween(ms,u=>C.fly(g,a,b,u)).then(()=>g.remove())};
   const lock=on=>b1.disabled=b2.disabled=on;
   b1.onclick=async()=>{lock(true);L.reset();const pairs=[];for(const a of men)for(const b of men)if(a!==b)pairs.push([a,b]);
-    cnt.textContent=pairs.length;say.innerHTML=dual("Every steward sends a runner across the floor to every other steward.","Every replica messages every other replica.");
+    cnt.textContent=pairs.length;say.innerHTML=dual("Every legislator sends a runner across the floor to every other legislator.","Every replica messages every other replica.");
     await Promise.all(pairs.map(([a,b])=>flight(a,b,BC[a],"",1100+rnd(800))));
-    say.innerHTML=dual(`<b>${pairs.length} runners</b> in one stage: each of the four stewards sends a runner to the other three.`,`<b>${pairs.length} messages</b> in one phase: each of the four replicas messages the other three.`);lock(false)};
+    say.innerHTML=dual(`<b>${pairs.length} runners</b> in one stage: each of the four legislators sends a runner to the other three.`,`<b>${pairs.length} messages</b> in one phase: each of the four replicas messages the other three.`);lock(false)};
   b2.onclick=async()=>{lock(true);L.reset();const votes=[2,3,4].map(k=>[k,1]),bundle=[2,3,4].map(k=>[1,k]);
-    cnt.textContent=votes.length;say.innerHTML=dual("Each steward sends their sealed vote to the writer, Steward 1.","Each replica sends its signed vote to the leader, R1.");
+    cnt.textContent=votes.length;say.innerHTML=dual("Each legislator sends their sealed vote to the writer, Legislator 1.","Each replica sends its signed vote to the leader, R1.");
     await Promise.all(votes.map(([a,b])=>flight(a,b,BC[a],"",1100+rnd(500))));
     cnt.textContent=votes.length+bundle.length;say.innerHTML=dual("The writer has three votes, ties them into a bundle, and sends the bundle to the other three.","The leader has three votes, combines them into a certificate, and sends the certificate to the other three.");
     await Promise.all(bundle.map(([a,b])=>flight(a,b,BC[1],"3",1100+rnd(500))));
@@ -144,9 +144,9 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
       L[0].innerHTML=dual(`<b>Lies on the chain of the line they are locked on</b> ${yesno(h1)}`,`<b>Lies on the chain of the block it is locked on</b> ${yesno(h1)}`);
       L[1].innerHTML=dual(`<b>Carries a bundle from a later term than their lock</b> ${yesno(h2)}<br>the bundle is from term ${b}, the lock from term ${LOCK}`,`<b>Carries a certificate from a later view than its lock</b> ${yesno(h2)}<br>the certificate is from view ${b}, the lock from view ${LOCK}`);
       L[2].innerHTML=dual(`<b>Votes for the proposal</b> ${yesno(vote)}`,`<b>Votes for the proposal</b> ${yesno(vote)}`);
-      say.innerHTML=h1?dual("<b>The first half holds.</b> The proposal builds on the line the steward is locked on, so voting for it helps nothing conflicting forward.","<b>The first half holds.</b> The proposal builds on the block the replica is locked on, so voting for it helps nothing conflicting forward.")
-        :h2?dual(`<b>The second half holds.</b> The proposal conflicts with the lock, but the bundle it carries is from term ${b}, later than term ${LOCK}. The rest have gone past the lock, the steward is shown that they have, and they let go.`,`<b>The second half holds.</b> The proposal conflicts with the lock, but the certificate it carries is from view ${b}, later than view ${LOCK}. The rest have gone past the lock, the replica is shown that they have, and it lets go.`)
-        :dual(`<b>Neither half holds.</b> The proposal conflicts with the lock and carries no later bundle. The steward refuses.`,`<b>Neither half holds.</b> The proposal conflicts with the lock and carries no later certificate. The replica refuses.`)}});
+      say.innerHTML=h1?dual("<b>The first half holds.</b> The proposal builds on the line the legislator is locked on, so voting for it helps nothing conflicting forward.","<b>The first half holds.</b> The proposal builds on the block the replica is locked on, so voting for it helps nothing conflicting forward.")
+        :h2?dual(`<b>The second half holds.</b> The proposal conflicts with the lock, but the bundle it carries is from term ${b}, later than term ${LOCK}. The rest have gone past the lock, the legislator is shown that they have, and they let go.`,`<b>The second half holds.</b> The proposal conflicts with the lock, but the certificate it carries is from view ${b}, later than view ${LOCK}. The rest have gone past the lock, the replica is shown that they have, and it lets go.`)
+        :dual(`<b>Neither half holds.</b> The proposal conflicts with the lock and carries no later bundle. The legislator refuses.`,`<b>Neither half holds.</b> The proposal conflicts with the lock and carries no later certificate. The replica refuses.`)}});
 })();
 
 /* ===== two bundles of the same stage share an honest man ===== */
@@ -154,11 +154,11 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const A=$("#lackA"),B=$("#lackB"),stand=$("#lackstand"),say=$("#lacksay");let a=null,b=null;
   function render(){
     $$("button",A).forEach(x=>x.classList.toggle("on",+x.dataset.k===a));$$("button",B).forEach(x=>x.classList.toggle("on",+x.dataset.k===b));
-    if(a==null||b==null){stand.innerHTML="";say.innerHTML=dual("Pick one steward for each bundle.","Pick one replica for each certificate.");return}
+    if(a==null||b==null){stand.innerHTML="";say.innerHTML=dual("Pick one legislator for each bundle.","Pick one replica for each certificate.");return}
     const sealed=l=>men.filter(k=>k!==l),shared=men.filter(k=>k!==a&&k!==b);
     stand.innerHTML=`<div>${dual("Bundle A is sealed by","Certificate A is signed by")} ${chips(sealed(a))}</div><div>${dual("Bundle B is sealed by","Certificate B is signed by")} ${chips(sealed(b))}</div><div><b>${dual("Sealed both:","Signed both:")}</b> ${chips(shared)}</div>`;
-    say.innerHTML=dual(`<b>${shared.length} stewards sealed both bundles.</b> If one of them lies, at least ${shared.length-1} honest ${shared.length-1>1?"stewards":"steward"} still did. An honest steward votes once a stage a term, so two bundles of the same stage cannot vouch for conflicting lines.`,`<b>${shared.length} replicas signed both certificates.</b> If one of them is faulty, at least ${shared.length-1} honest ${shared.length-1>1?"replicas":"replica"} still did. An honest replica votes once a phase in a view, so two certificates of the same phase cannot vouch for conflicting blocks.`)}
-  [[A,k=>a=k],[B,k=>b=k]].forEach(([box,setk])=>men.forEach(k=>{const bt=document.createElement("button");bt.className="btn alt chipb";bt.dataset.k=k;bt.innerHTML=dual("Steward "+k,"R"+k);bt.onclick=()=>{setk(k);render()};box.appendChild(bt)}));
+    say.innerHTML=dual(`<b>${shared.length} legislators sealed both bundles.</b> If one of them lies, at least ${shared.length-1} honest ${shared.length-1>1?"legislators":"legislator"} still did. An honest legislator votes once a stage a term, so two bundles of the same stage cannot vouch for conflicting lines.`,`<b>${shared.length} replicas signed both certificates.</b> If one of them is faulty, at least ${shared.length-1} honest ${shared.length-1>1?"replicas":"replica"} still did. An honest replica votes once a phase in a view, so two certificates of the same phase cannot vouch for conflicting blocks.`)}
+  [[A,k=>a=k],[B,k=>b=k]].forEach(([box,setk])=>men.forEach(k=>{const bt=document.createElement("button");bt.className="btn alt chipb";bt.dataset.k=k;bt.innerHTML=dual("Legislator "+k,"R"+k);bt.onclick=()=>{setk(k);render()};box.appendChild(bt)}));
   render();
 })();
 
@@ -170,23 +170,23 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   function render(){
     b2.classList.toggle("on",stages===2);b3.classList.toggle("on",stages===3);b2.classList.toggle("alt",stages!==2);b3.classList.toggle("alt",stages!==3);
     mode.innerHTML=stages===2?dual("two stages","two phases"):dual("three stages","three phases");
-    scene.innerHTML=stages===2?dual("A steward locks as soon as they see a first bundle. In this term only <b>Steward 3</b> saw the first bundle before the sandglasses ran out, and Steward 3 is locked on it.","A replica locks as soon as it sees a first certificate. In this view only <b>R3</b> saw the first certificate before the timers ran out, and R3 is locked on it.")
-      :dual("A steward locks only on a second bundle, and a second bundle exists only because three stewards voted on a first bundle and kept it. Here <b>Stewards 2, 3 and 4</b> hold the first bundle, and Steward 3 is locked on it.","A replica locks only on a second certificate, and a second certificate exists only because three replicas voted on a first certificate and kept it. Here <b>R2, R3 and R4</b> hold the first certificate, and R3 is locked on it.");
-    menBox.innerHTML=men.map(k=>`<div class="pm${holds().includes(k)?" has":""}${k===LOCK?" lock":""}${k===slow?" slow":""}"><h5><i style="background:${BC[k]}"></i>${dual("Steward "+k,"R"+k)}</h5>${dual("first bundle:","first certificate:")} ${holds().includes(k)?"yes":"no"}<br>locked: ${k===LOCK?"yes":"no"}<br>${slow==null?"":k===slow?"answers last":"heard"}</div>`).join("");
-    if(slow==null){say.innerHTML=dual("Pick the slowest steward.","Pick the slowest replica.");return}
+    scene.innerHTML=stages===2?dual("A legislator locks as soon as they see a first bundle. In this term only <b>Legislator 3</b> saw the first bundle before the sandglasses ran out, and Legislator 3 is locked on it.","A replica locks as soon as it sees a first certificate. In this view only <b>R3</b> saw the first certificate before the timers ran out, and R3 is locked on it.")
+      :dual("A legislator locks only on a second bundle, and a second bundle exists only because three legislators voted on a first bundle and kept it. Here <b>Legislators 2, 3 and 4</b> hold the first bundle, and Legislator 3 is locked on it.","A replica locks only on a second certificate, and a second certificate exists only because three replicas voted on a first certificate and kept it. Here <b>R2, R3 and R4</b> hold the first certificate, and R3 is locked on it.");
+    menBox.innerHTML=men.map(k=>`<div class="pm${holds().includes(k)?" has":""}${k===LOCK?" lock":""}${k===slow?" slow":""}"><h5><i style="background:${BC[k]}"></i>${dual("Legislator "+k,"R"+k)}</h5>${dual("first bundle:","first certificate:")} ${holds().includes(k)?"yes":"no"}<br>locked: ${k===LOCK?"yes":"no"}<br>${slow==null?"":k===slow?"answers last":"heard"}</div>`).join("");
+    if(slow==null){say.innerHTML=dual("Pick the slowest legislator.","Pick the slowest replica.");return}
     const heard=men.filter(k=>k!==slow),who=heard.filter(k=>holds().includes(k));
-    if(who.length)say.innerHTML=dual(`The writer hears ${chips(heard)} and learns the latest first bundle from ${chips(who)}. `+(stages===3?"At least two honest stewards hold the first bundle, so any three answers include one of them. The lock cannot hide."
-      :"Here nothing hides. But the writer need only wait for three answers, and the three need not include Steward 3."),`The leader hears ${chips(heard)} and learns the latest first certificate from ${chips(who)}. `+(stages===3?"At least two honest replicas hold the first certificate, so any three answers include one of them. The lock cannot hide."
+    if(who.length)say.innerHTML=dual(`The writer hears ${chips(heard)} and learns the latest first bundle from ${chips(who)}. `+(stages===3?"At least two honest legislators hold the first bundle, so any three answers include one of them. The lock cannot hide."
+      :"Here nothing hides. But the writer need only wait for three answers, and the three need not include Legislator 3."),`The leader hears ${chips(heard)} and learns the latest first certificate from ${chips(who)}. `+(stages===3?"At least two honest replicas hold the first certificate, so any three answers include one of them. The lock cannot hide."
       :"Here nothing hides. But the leader need only wait for three answers, and the three need not include R3."));
-    else say.innerHTML=dual(`The writer hears ${chips(heard)}. <span class="bad">None of them has the first bundle.</span> The writer proposes a line that conflicts with Steward 3's lock, and Steward 3 refuses. The lock stayed hidden.`,`The leader hears ${chips(heard)}. <span class="bad">None of them has the first certificate.</span> The leader proposes a block that conflicts with R3's lock, and R3 refuses. The lock stayed hidden.`);
+    else say.innerHTML=dual(`The writer hears ${chips(heard)}. <span class="bad">None of them has the first bundle.</span> The writer proposes a line that conflicts with Legislator 3's lock, and Legislator 3 refuses. The lock stayed hidden.`,`The leader hears ${chips(heard)}. <span class="bad">None of them has the first certificate.</span> The leader proposes a block that conflicts with R3's lock, and R3 refuses. The lock stayed hidden.`);
   }
-  men.forEach(k=>{const bt=document.createElement("button");bt.className="btn alt chipb";bt.innerHTML=dual(`Steward ${k} answers last`,`R${k} answers last`);bt.onclick=()=>{slow=k;render()};slowBox.appendChild(bt)});
+  men.forEach(k=>{const bt=document.createElement("button");bt.className="btn alt chipb";bt.innerHTML=dual(`Legislator ${k} answers last`,`R${k} answers last`);bt.onclick=()=>{slow=k;render()};slowBox.appendChild(bt)});
   b2.onclick=()=>{stages=2;render()};b3.onclick=()=>{stages=3;render()};render();
 })();
 
 /* ===== a new writer every line: terms in a row, read by the chain rule ===== */
 (function(){
-  const nodes={1:[-135,"S1",BC[1],"R1"],2:[-45,"S2",BC[2],"R2"],3:[45,"S3",BC[3],"R3"],4:[135,"S4",BC[4],"R4"]};
+  const nodes={1:[-135,"L1",BC[1],"R1"],2:[-45,"L2",BC[2],"R2"],3:[45,"L3",BC[3],"R3"],4:[135,"L4",BC[4],"R4"]};
   const list=$("#chainlist"),say=$("#chainsay"),term=$("#chainterm"),bn=$("#chainnext"),br=$("#chainreset"),MAX=7;
   const writer=k=>(k-1)%4+1,t=k=>1.4+1.2*(k-1);
   const kinds=[["new proposal","#fffaf0","#1c1512","","new proposal"],["first bundle","#fbe7a1","#1c1512","","first certificate"],["locked on","#f0b429","#1c1512","s-lock","locked on"],["stands","#3f7a2a","#fffaf0","s-stands","committed"]];
@@ -203,12 +203,12 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   function next(){
     k++;const h=writer(k);place(k);
     term.innerHTML=dual(`term ${k}`,`view ${k}`);paint();
-    let s=`<b>Term ${k}.</b> Steward ${h} proposes a line`,m=`<b>View ${k}.</b> R${h} proposes a block`;
+    let s=`<b>Term ${k}.</b> Legislator ${h} proposes a line`,m=`<b>View ${k}.</b> R${h} proposes a block`;
     if(k===1){s+=". There is no bundle for any line yet.";m+=". There is no certificate for any block yet."}
     else{s+=` carrying the bundle for the line of term ${k-1}, which now has its first bundle`;m+=` carrying the certificate for the block of view ${k-1}, which now has its first certificate`;if(k>=3){s+=`; the line of term ${k-2} is ready to lock on`;m+=`; the block of view ${k-2} is ready to lock on`}if(k>=4){s+=`; and the line of term ${k-3} stands`;m+=`; and the block of view ${k-3} is committed`}s+=".";m+="."}
     if(k===MAX){bn.disabled=true;s+=" Three proposals in a row stand behind each line from now on, one more line standing at every term.";m+=" Three proposals in a row stand behind each block from now on, one more block committed at every view."}
     say.innerHTML=dual(s,m)}
-  function reset(){P.slips.innerHTML="";P.evs.innerHTML="";dots=[];k=0;bn.disabled=false;term.innerHTML=dual("no term yet","no view yet");list.innerHTML="";say.innerHTML=dual("The office starts at Steward 1. Press the button to run a term.","The leader's role starts at R1. Press the button to run a view.")}
+  function reset(){P.slips.innerHTML="";P.evs.innerHTML="";dots=[];k=0;bn.disabled=false;term.innerHTML=dual("no term yet","no view yet");list.innerHTML="";say.innerHTML=dual("The office starts at Legislator 1. Press the button to run a term.","The leader's role starts at R1. Press the button to run a view.")}
   /* in the round, or on lanes in computing, with the terms run so far */
   Timeline($("#chainsvg"),{vb:"0 0 560 560",cx:280,cy:280,r0:46,step:22,rings:10,tEnd:9.6,note:[12,22],nodes},Q=>{P=Q;dots=[];for(let j=1;j<=k;j++)place(j);if(k)paint()});
   bn.onclick=next;br.onclick=reset;reset();

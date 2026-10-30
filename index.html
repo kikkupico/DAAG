@@ -199,9 +199,9 @@
         <p class="kicker"><span class="i">Paxos · Schedia</span><span class="m">Primary-backup and Byzantine replication</span></p>
         <h2><span class="i">One Law Kept in the Tholos</span><span class="m">Primary-Backup &amp; BFT Replication</span></h2>
         <p class="sub i">Primary-Backup &amp; BFT Replication</p>
-        <p class="i">In the round hall of Schedia, one writer at a time writes the city's law scroll, sending lines to the others by runner. When the five legislators sail away, four unvetted stewards take over the scroll and must keep order even when one of them lies.</p>
+        <p class="i">In the round hall of Schedia, one writer at a time writes the city's law scroll, sending lines to the others by runner. When democratic reform replaces the five elders with four legislators chosen at random by lot, they must keep order even when one of them lies.</p>
         <p class="m">Leader-driven state-machine replication with view changes: first under benign crash faults, then surviving Byzantine liars, moving from all-to-all echoes to linear chained certificates.</p>
-        <dl class="cast i"><dt>Who</dt><dd>Five legislators, then four stewards; one is the writer</dd><dt>Word</dt><dd>A runner to each bench across the stone floor</dd><dt>Sent</dt><dd>Petitions, numbered lines, seals and bundles</dd></dl>
+        <dl class="cast i"><dt>Who</dt><dd>Five legislators, then four drawn by lot; one is the writer</dd><dt>Word</dt><dd>A runner to each bench across the stone floor</dd><dt>Sent</dt><dd>Petitions, numbered lines, seals and bundles</dd></dl>
       </figcaption>
     </a>
     <div class="bks n3">
@@ -221,9 +221,9 @@
         <div class="cvr m"><svg data-cover="keeping-order-among-liars" role="img" aria-label="Four replicas and a client on time lanes: request, pre-prepare, prepare and commit messages between the lanes, one faulty replica sending a conflicting digest, quorum brackets, and a log slot"></svg></div>
         <div class="body">
           <h3>Keeping Order Among Liars</h3>
-          <p class="punch"><span class="i">Any two groups of three share an honest steward.</span><span class="m">Any two quorums of 2f + 1 share a correct replica.</span></p>
+          <p class="punch"><span class="i">Any two groups of three share an honest legislator.</span><span class="m">Any two quorums of 2f + 1 share a correct replica.</span></p>
           <p class="q">Can a replicated service keep its commands in order when some of its machines lie, the leader included, and messages take arbitrarily long?</p>
-          <p class="how i">We find out by exploring how four stewards in the Tholos held one scroll of their law when any of them, the writer included, might be lying.</p>
+          <p class="how i">We find out by exploring how four random legislators drawn by lot in the Tholos held one scroll of their law when any of them, the writer included, might be lying.</p>
           <span class="credit">Castro &amp; Liskov 1999</span>
         </div>
       </a></article></div>
@@ -234,7 +234,7 @@
           <h3>Changing Leaders Among Liars</h3>
           <p class="punch"><span class="i">A change of hands costs no more than an entry.</span><span class="m">A linear, responsive view change.</span></p>
           <p class="q">When some machines may lie, replacing a leader has been slow and costly. Can a new leader take over as cheaply as any ordinary step, and at the pace of the messages rather than of a timer?</p>
-          <p class="how i">We find out by exploring how four stewards in the Tholos rotated the writer's office at every line of their law scroll, each gathering the others' seals into one bundle instead of sending runners to every other bench.</p>
+          <p class="how i">We find out by exploring how a newly drawn council of four legislators rotated the writer's office at every line of their law scroll, each gathering the others' seals into one bundle instead of sending runners to every other bench.</p>
           <span class="credit">Yin, Malkhi, Reiter, Gueta &amp; Abraham 2019</span>
         </div>
       </a></article></div>
