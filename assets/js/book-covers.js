@@ -308,7 +308,7 @@ const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd
 };
 return COVER;})();
 
-BOOK_COVERS["one-leader-at-a-time"]=(()=>{
+BOOK_COVERS["one-writer-at-a-time"]=(()=>{
 const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · ONE PRIMARY, A COMMIT POINT, A VIEW CHANGE","view 6 → 7");
   const Y=[108,160,212,264,316],len=[13,12,12,10,9],sx=104,sw=28,cm=12;

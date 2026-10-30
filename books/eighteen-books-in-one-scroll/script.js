@@ -1557,7 +1557,7 @@ const treeFrame = (function family() {
     cap: ["answering-while-cut-off", "Cut Off", "CAP", "mc"],
     bgp: ["agreeing-among-liars", "Among Liars", "Byzantine generals", "flp"],
     ptp: ["the-part-time-parliament", "Parliament", "Paxos", "dls"],
-    vr: ["one-leader-at-a-time", "One Writer", "Viewstamped", "ptp"],
+    vr: ["one-writer-at-a-time", "One Writer", "Viewstamped", "ptp"],
     pbft: ["keeping-order-among-liars", "Keeping Order", "PBFT", "vr"],
     hs: ["changing-leaders-among-liars", "Changing Leaders", "HotStuff", "pbft"],
     gos: ["spreading-by-word-of-mouth", "Word of Mouth", "Epidemics", "cap"],

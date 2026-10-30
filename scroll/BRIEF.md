@@ -10,7 +10,7 @@ Three finished books are the models. Read them before writing anything:
 
 - `scroll/parts/ordering-without-clocks/` (the ring road: houses, messengers, slips)
 - `scroll/parts/the-limits-of-agreement/` (the foot of the hill: tents, ravens)
-- `scroll/parts/one-leader-at-a-time/` (the Tholos: named legislators, rules on cards)
+- `scroll/parts/one-writer-at-a-time/` (the Tholos: named legislators, rules on cards)
 
 ## The kit
 
