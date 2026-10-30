@@ -8,7 +8,7 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 
 ## One Leader at a Time
 
-Written: `books/one-leader-at-a-time/`. The Tholos of Schedia, its council of five and the podium;
+Written: `books/one-writer-at-a-time/`. The Tholos of Schedia, its council of five and the podium;
 see `settings.md`.
 
 ---
