@@ -4,9 +4,9 @@ const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar,Timeline,
 const {isM,dual,vis,dtext,onReg}=REG;
 BOOK.init();
 
-/* the four stewards in the Tholos, told apart by colour; Steward 1 opens the first term */
+/* the four legislators in the Tholos, told apart by colour; Legislator 1 opens the first term */
 const BC={1:"#a57fc0",2:"#9aa0a8",3:"#e8964d",4:"#b07a55"};
-const chip=k=>`<span class="chip"><i style="background:${BC[k]}"></i>${dual("Steward "+k,"R"+k)}</span>`;
+const chip=k=>`<span class="chip"><i style="background:${BC[k]}"></i>${dual("Legislator "+k,"R"+k)}</span>`;
 const chips=a=>a.length?a.map(chip).join(""):`<i>${dual("nobody","nobody")}</i>`;
 
 /* a row of buttons for choosing one thing; keeps keyboard focus when it redraws */
@@ -49,7 +49,7 @@ function Tholos(svg){
     state(k,i,m){const t=C.tent[k].st;t[0].textContent=i;t[1].textContent=m===undefined?i:m}
   };
   for(const k of [1,2,3,4]){const [x,y]=C.pos(k),g=el("g",{class:"site"},sites);C.put(g,x,y);
-    el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:BC[k]},g);dtext(g,{},"S"+k,"R"+k);
+    el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:BC[k]},g);dtext(g,{},"L"+k,"R"+k);
     const in_a=(A[k]+180)*Math.PI/180;
     const st=dtext(g,{class:"state halo",x:42*Math.cos(in_a),y:42*Math.sin(in_a)+4},"","");
     C.tent[k]={x,y,g,st}}
@@ -90,25 +90,25 @@ const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd
 COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* cover:end */
 
-/* ===== why three seals, and four stewards: two groups always share an honest steward ===== */
+/* ===== why three seals, and four legislators: two groups always share an honest legislator ===== */
 (function(){
   const C=Tholos($("#sealsvg")),ctl=$("#sealctl"),stand=$("#sealstand"),say=$("#sealsay");
   let n=4,liar=null,x=1,y=3;
   const all=m=>[...Array(m)].map((_,i)=>i+1);
-  /* the least number of honest stewards two groups can share, over every choice of leaving out, and every supposed liar */
+  /* the least number of honest legislators two groups can share, over every choice of leaving out, and every supposed liar */
   const least=m=>{let lo=99;all(m).forEach(a=>all(m).forEach(b=>all(m).forEach(l=>{
     const sh=all(m).filter(k=>k!==a&&k!==b&&k!==l);lo=Math.min(lo,sh.length)})));return lo};
   function paint(){
     const A=all(n),gx=A.filter(k=>k!==x),gy=A.filter(k=>k!==y),sh=gx.filter(k=>gy.includes(k)),hon=sh.filter(k=>k!==liar);
     [1,2,3,4].forEach(k=>{const g=C.tent[k].g;g.classList.toggle("gone",k>n);g.classList.toggle("shared",sh.includes(k));g.classList.toggle("sus",k===liar)});
-    stand.innerHTML=`<div>First group (everyone but ${chip(x)}) ${gx.map(chip).join("")}</div><div>Second group (everyone but ${chip(y)}) ${gy.map(chip).join("")}</div><div>In both groups ${chips(sh)}</div><div>Honest, and in both ${liar==null?dual("<i>suppose one steward lies</i>","<i>suppose one replica is faulty</i>"):chips(hon)}</div>`;
-    if(liar==null)say.innerHTML=dual(`Each group is ${n===4?"three stewards out of four":"two stewards out of three"}: all but one, since one may be a silent liar. Suppose one steward lies, and see who is left in both groups.`,`Each group is ${n===4?"three replicas out of four":"two replicas out of three"}: all but one, since one may be a silent faulty replica. Suppose one replica is faulty, and see who is left in both groups.`);
-    else if(hon.length)say.innerHTML=dual(`<span class="ok">An honest steward sits in both groups.</span> An honest steward seals only one line for a number in a term, so the two groups cannot have sealed different lines.`,`<span class="ok">An honest replica sits in both groups.</span> An honest replica signs only one request for a number in a view, so the two groups cannot have signed different requests.`);
-    else say.innerHTML=dual(`<span class="bad">The only steward in both groups is the one who lies.</span> They could seal one line to the first group and a different one to the second. With ${n} stewards, the groups can fail.`,`<span class="bad">The only replica in both groups is the faulty one.</span> It could sign one request for the first group and a different one for the second. With ${n} replicas, the groups can fail.`);
-    say.innerHTML+=dual(` Over every choice, the fewest honest stewards two groups can share is <b>${least(n)}</b>${n===4?"":", so three stewards are too few"}.`,` Over every choice, the fewest honest replicas two groups can share is <b>${least(n)}</b>${n===4?"":", so three replicas are too few"}.`);
-    const opts=A.map(k=>[k,dual("Steward "+k,"R"+k)]);
-    picker($("#sealp1")||mk("sealp1"),dual("How many stewards?","How many replicas?"),[[3,dual("Three stewards","Three replicas")],[4,dual("Four stewards","Four replicas")]],n,v=>{n=v;if(liar>n)liar=null;if(x>n)x=1;if(y>n)y=n;paint()});
-    picker($("#sealp2")||mk("sealp2"),dual("Suppose this steward lies:","Suppose this replica is faulty:"),opts,liar,v=>{liar=v;paint()});
+    stand.innerHTML=`<div>First group (everyone but ${chip(x)}) ${gx.map(chip).join("")}</div><div>Second group (everyone but ${chip(y)}) ${gy.map(chip).join("")}</div><div>In both groups ${chips(sh)}</div><div>Honest, and in both ${liar==null?dual("<i>suppose one legislator lies</i>","<i>suppose one replica is faulty</i>"):chips(hon)}</div>`;
+    if(liar==null)say.innerHTML=dual(`Each group is ${n===4?"three legislators out of four":"two legislators out of three"}: all but one, since one may be a silent liar. Suppose one legislator lies, and see who is left in both groups.`,`Each group is ${n===4?"three replicas out of four":"two replicas out of three"}: all but one, since one may be a silent faulty replica. Suppose one replica is faulty, and see who is left in both groups.`);
+    else if(hon.length)say.innerHTML=dual(`<span class="ok">An honest legislator sits in both groups.</span> An honest legislator seals only one line for a number in a term, so the two groups cannot have sealed different lines.`,`<span class="ok">An honest replica sits in both groups.</span> An honest replica signs only one request for a number in a view, so the two groups cannot have signed different requests.`);
+    else say.innerHTML=dual(`<span class="bad">The only legislator in both groups is the one who lies.</span> They could seal one line to the first group and a different one to the second. With ${n} legislators, the groups can fail.`,`<span class="bad">The only replica in both groups is the faulty one.</span> It could sign one request for the first group and a different one for the second. With ${n} replicas, the groups can fail.`);
+    say.innerHTML+=dual(` Over every choice, the fewest honest legislators two groups can share is <b>${least(n)}</b>${n===4?"":", so three legislators are too few"}.`,` Over every choice, the fewest honest replicas two groups can share is <b>${least(n)}</b>${n===4?"":", so three replicas are too few"}.`);
+    const opts=A.map(k=>[k,dual("Legislator "+k,"R"+k)]);
+    picker($("#sealp1")||mk("sealp1"),dual("How many legislators?","How many replicas?"),[[3,dual("Three legislators","Three replicas")],[4,dual("Four legislators","Four replicas")]],n,v=>{n=v;if(liar>n)liar=null;if(x>n)x=1;if(y>n)y=n;paint()});
+    picker($("#sealp2")||mk("sealp2"),dual("Suppose this legislator lies:","Suppose this replica is faulty:"),opts,liar,v=>{liar=v;paint()});
     picker($("#sealp3")||mk("sealp3"),dual("The first group leaves out:","The first group leaves out:"),opts,x,v=>{x=v;paint()});
     picker($("#sealp4")||mk("sealp4"),dual("The second group leaves out:","The second group leaves out:"),opts,y,v=>{y=v;paint()});
   }
@@ -124,38 +124,38 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   const writer=t=>((t-1)%4)+1;
   /* computing: the views as one timeline that slides as it runs, each view a band and the primary's name ringed;
      a numbering held up by the network is a dashed arrow that lands only after the view has changed */
-  const L=Unfold(C.svg,{nodes:{1:[-135,"S1",BC[1],"R1"],2:[-45,"S2",BC[2],"R2"],3:[45,"S3",BC[3],"R3"],4:[135,"S4",BC[4],"R4"]},span:7,slide:true});
+  const L=Unfold(C.svg,{nodes:{1:[-135,"L1",BC[1],"R1"],2:[-45,"L2",BC[2],"R2"],3:[45,"L3",BC[3],"R3"],4:[135,"L4",BC[4],"R4"]},span:7,slide:true});
   let vT=0,held=[];
   function paint(){
     const h=writer(term);[1,2,3,4].forEach(k=>C.tent[k].g.classList.toggle("turn",k===h));L.turn(h);
-    tEl.textContent=term;sEl.textContent=stood;info.innerHTML=dual(`term ${term}, writer Steward ${h}`,`view ${term}, primary R${h}`);
+    tEl.textContent=term;sEl.textContent=stood;info.innerHTML=dual(`term ${term}, writer Legislator ${h}`,`view ${term}, primary R${h}`);
     bF.disabled=busy||waiting;bN.disabled=bS.disabled=busy||!waiting;bW.disabled=bR.disabled=busy;
     bW.innerHTML=delayed?dual("Messengers are delayed","Messages are delayed"):dual("Messengers cross quickly","Delays are short");bW.setAttribute("aria-pressed",delayed);
   }
   async function change(){
     busy=true;paint();const h=writer(term),next=writer(term+1),others=[1,2,3,4].filter(k=>k!==next);
     L.band(vT,L.clock.t,"view "+term);[1,2,3,4].forEach(k=>L.state(k,"timer expired"));
-    say.innerHTML=dual(`The sandglasses run out. Each steward who is waiting asks for a change: a sealed request for the next term, with proof of every line readied at their bench, goes to <b>Steward ${next}</b>.`,`The timers expire. Each replica that is waiting asks for a view change: a signed request for the next view, with proof of every request prepared at that replica, goes to <b>R${next}</b>.`);
+    say.innerHTML=dual(`The sandglasses run out. Each legislator who is waiting asks for a change: a sealed request for the next term, with proof of every line readied at their bench, goes to <b>Legislator ${next}</b>.`,`The timers expire. Each replica that is waiting asks for a view change: a signed request for the next view, with proof of every request prepared at that replica, goes to <b>R${next}</b>.`);
     const toks=others.map(k=>{const g=C.token(BC[k],"");g.setAttribute("opacity",1);C.fly(g,k,next,.1);L.fly(g,k,next,.1);return [k,g]});
     await Promise.all(toks.map(([k,g])=>tween(1100+rnd(700),u=>{C.fly(g,k,next,.1+.8*u);L.fly(g,k,next,.1+.8*u)}).then(()=>g.remove())));
     held.forEach(r=>L.land(r));held=[];vT=L.clock.t;L.state(next,"primary, view "+(term+1));
     term++;busy=false;paint();
-    say.innerHTML=dual(`Three requests are in, and three are enough. <b>Steward ${next}</b> now holds the writer's office, in term ${term}. The line is still waiting. Nobody judged whether Steward ${h} stalled or messengers dawdled across the floor.`,`Three requests are in, and three are enough. <b>R${next}</b> is now the primary, in view ${term}. The request is still waiting. Nobody judged whether R${h} stalled or the network delayed its messages.`);
+    say.innerHTML=dual(`Three requests are in, and three are enough. <b>Legislator ${next}</b> now holds the writer's office, in term ${term}. The line is still waiting. Nobody judged whether Legislator ${h} stalled or messengers dawdled across the floor.`,`Three requests are in, and three are enough. <b>R${next}</b> is now the primary, in view ${term}. The request is still waiting. Nobody judged whether R${h} stalled or the network delayed its messages.`);
   }
-  bF.onclick=()=>{waiting=true;L.tick(.35);L.state(writer(term),"has request");paint();say.innerHTML=dual(`A line is petitioned at <b>Steward ${writer(term)}'s</b> bench, who holds the writer's office, and the steward turns a sandglass. ${delayed?"Messengers are delayed across the floor.":"Messengers cross the floor quickly."}`,`A request is submitted to <b>R${writer(term)}</b>, the primary, and the client starts a timer. ${delayed?"Messages are being delayed.":"Delays are short."}`)};
+  bF.onclick=()=>{waiting=true;L.tick(.35);L.state(writer(term),"has request");paint();say.innerHTML=dual(`A line is petitioned at <b>Legislator ${writer(term)}'s</b> bench, who holds the writer's office, and the legislator turns a sandglass. ${delayed?"Messengers are delayed across the floor.":"Messengers cross the floor quickly."}`,`A request is submitted to <b>R${writer(term)}</b>, the primary, and the client starts a timer. ${delayed?"Messages are being delayed.":"Delays are short."}`)};
   bN.onclick=async()=>{const h=writer(term);
-    if(delayed){say.innerHTML=dual(`<b>Steward ${h}</b> numbers the line and sends the numbering out, but messengers are delayed across the stone floor. The sandglass runs out first. From where anyone sits, this looks exactly like a writer who said nothing.`,`<b>R${h}</b> numbers the request and sends the numbering out, but the network delays the messages. The timer expires first. From where anyone sits, this looks exactly like a primary that said nothing.`);
+    if(delayed){say.innerHTML=dual(`<b>Legislator ${h}</b> numbers the line and sends the numbering out, but messengers are delayed across the stone floor. The sandglass runs out first. From where anyone sits, this looks exactly like a writer who said nothing.`,`<b>R${h}</b> numbers the request and sends the numbering out, but the network delays the messages. The timer expires first. From where anyone sits, this looks exactly like a primary that said nothing.`);
       [1,2,3,4].filter(k=>k!==h).forEach(k=>held.push(L.msg(h,k,L.clock.t,null)));L.tick(.9);await sleep(900);await change();return}
     const t=L.clock.t;[1,2,3,4].filter(k=>k!==h).forEach(k=>L.msg(h,k,t,t+.5));L.band(t+.55,t+1.35,"prepare · commit",false,true);L.setT(t+1.4);[1,2,3,4].forEach(k=>L.state(k,"committed"));
     waiting=false;stood++;paint();
-    say.innerHTML=dual(`<b>Steward ${h}</b> numbers the line, the others echo it twice, and it <span class="ok">stands</span> before the sandglass runs out. The writer's office stays where it is.`,`<b>R${h}</b> numbers the request, the others echo it twice, and it <span class="ok">commits</span> before the timer expires. The primary stays where it is.`)};
-  bS.onclick=async()=>{const h=writer(term);say.innerHTML=dual(`<b>Steward ${h}</b> numbers nothing. The sandglass runs out, and nobody can say whether that is a stall or slow messengers.`,`<b>R${h}</b> numbers nothing. The timer expires, and nobody can say whether that is a stall or network delay.`);L.tick(.9);await sleep(900);await change()};
+    say.innerHTML=dual(`<b>Legislator ${h}</b> numbers the line, the others echo it twice, and it <span class="ok">stands</span> before the sandglass runs out. The writer's office stays where it is.`,`<b>R${h}</b> numbers the request, the others echo it twice, and it <span class="ok">commits</span> before the timer expires. The primary stays where it is.`)};
+  bS.onclick=async()=>{const h=writer(term);say.innerHTML=dual(`<b>Legislator ${h}</b> numbers nothing. The sandglass runs out, and nobody can say whether that is a stall or slow messengers.`,`<b>R${h}</b> numbers nothing. The timer expires, and nobody can say whether that is a stall or network delay.`);L.tick(.9);await sleep(900);await change()};
   bW.onclick=()=>{delayed=!delayed;paint();say.innerHTML=delayed?dual("Messengers are delayed across the floor. Nobody can see delays end, and nobody can see them start.","Messages are being delayed. Nobody can see the delays end, and nobody can see them start."):dual("Messengers cross the floor quickly again, though nobody sitting at their bench can tell. Runs are short again.","Delays have become short, though no replica can tell. Message runs are short again.")};
   bR.onclick=()=>{term=1;waiting=false;delayed=true;stood=0;L.reset();vT=0;held=[];paint();say.innerHTML=dual("A line is petitioned and waits to be numbered. Messengers are delayed across the floor.","A request is submitted and waits to be numbered. Messages are being delayed.")};
   paint();
 })();
 
-/* ===== three requests always meet the stewards who hold the line ===== */
+/* ===== three requests always meet the legislators who hold the line ===== */
 (function(){
   const C=Tholos($("#reqsvg")),ctl=$("#reqctl"),stand=$("#reqstand"),say=$("#reqsay");
   let out=4,liar=null,left=1;const writer=2,all=[1,2,3,4];
@@ -165,13 +165,13 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     all.forEach(k=>{const g=C.tent[k].g;g.classList.toggle("shared",E.includes(k));g.classList.toggle("sus",k===liar);g.classList.toggle("out",k===left)});
     const line=k=>{const yes=honE.includes(k),isL=k===liar;
       return `<div class="rq${yes?" yes":""}">${chip(k)} ${yes?dual("shows line X readied under 7, in term 1","shows X prepared under 7, in view 1"):isL?dual("may say anything at all","may say anything at all"):dual("may show it, or may show nothing","may show it, or may show nothing")}</div>`};
-    stand.innerHTML=`<div>${dual("Sent second echoes for line X","Sent commits for X")} ${chips(E)}</div><div>${dual("Of them, honest","Of them, honest")} ${liar==null?chips(E):chips(honE)} ${dual("(they have line X readied)","(they have X prepared)")}</div><div>${dual(`Steward ${writer} has the writer's office in term 2, and collects requests from`,`R${writer} is the primary in view 2, and collects requests from`)} ${chips(R)}</div><div class="req">${R.map(line).join("")}</div>`;
-    if(show.length)say.innerHTML=dual(`<span class="ok">At least one request shows line X readied under 7.</span> The new writer must number X under 7, and the other stewards check that they do. For number 8 no request shows anything readied, so the new writer numbers a blank line there.`,`<span class="ok">At least one request shows X prepared under 7.</span> The new primary must number X under 7, and the other replicas check that it does. For number 8 no request shows anything prepared, so the new primary numbers a null request there.`);
-    else say.innerHTML=dual(`<span class="bad">No request shows X.</span> This cannot happen: two honest stewards have line X readied, and three requests out of four always include one of them.`,`<span class="bad">No request shows X.</span> This cannot happen: two honest replicas have X prepared, and three requests out of four always include one of them.`);
-    const opts=all.map(k=>[k,dual("Steward "+k,"R"+k)]);
+    stand.innerHTML=`<div>${dual("Sent second echoes for line X","Sent commits for X")} ${chips(E)}</div><div>${dual("Of them, honest","Of them, honest")} ${liar==null?chips(E):chips(honE)} ${dual("(they have line X readied)","(they have X prepared)")}</div><div>${dual(`Legislator ${writer} has the writer's office in term 2, and collects requests from`,`R${writer} is the primary in view 2, and collects requests from`)} ${chips(R)}</div><div class="req">${R.map(line).join("")}</div>`;
+    if(show.length)say.innerHTML=dual(`<span class="ok">At least one request shows line X readied under 7.</span> The new writer must number X under 7, and the other legislators check that they do. For number 8 no request shows anything readied, so the new writer numbers a blank line there.`,`<span class="ok">At least one request shows X prepared under 7.</span> The new primary must number X under 7, and the other replicas check that it does. For number 8 no request shows anything prepared, so the new primary numbers a null request there.`);
+    else say.innerHTML=dual(`<span class="bad">No request shows X.</span> This cannot happen: two honest legislators have line X readied, and three requests out of four always include one of them.`,`<span class="bad">No request shows X.</span> This cannot happen: two honest replicas have X prepared, and three requests out of four always include one of them.`);
+    const opts=all.map(k=>[k,dual("Legislator "+k,"R"+k)]);
     picker($("#reqp1")||mk("reqp1"),dual("Second echoes for X came from everyone but:","Commits for X came from everyone but:"),opts,out,v=>{out=v;paint()});
-    picker($("#reqp2")||mk("reqp2"),dual("Suppose this steward lies:","Suppose this replica is faulty:"),[[null,dual("Nobody","Nobody")]].concat(opts),liar,v=>{liar=v;paint()});
-    picker($("#reqp3")||mk("reqp3"),dual("The new writer leaves out the request of:","The new primary leaves out the request of:"),all.filter(k=>k!==writer).map(k=>[k,dual("Steward "+k,"R"+k)]),left,v=>{left=v;paint()});
+    picker($("#reqp2")||mk("reqp2"),dual("Suppose this legislator lies:","Suppose this replica is faulty:"),[[null,dual("Nobody","Nobody")]].concat(opts),liar,v=>{liar=v;paint()});
+    picker($("#reqp3")||mk("reqp3"),dual("The new writer leaves out the request of:","The new primary leaves out the request of:"),all.filter(k=>k!==writer).map(k=>[k,dual("Legislator "+k,"R"+k)]),left,v=>{left=v;paint()});
   }
   paint();
 })();
@@ -198,7 +198,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   function reset(){gen++;list.innerHTML="";run.disabled=false;pickers();say.innerHTML=dual("Every writer is honest in this picture, and the first sandglass is the time a short run across the floor takes at most. A term's worth is counted as three short runs: the numbering and the two echoes.","Every primary is honest in this picture, and the first timeout is the time a short message run takes at most. A view's worth is counted as three short runs: the numbering and the two echoes.")}
   run.onclick=async()=>{const g0=++gen,rows=sim(),max=Math.max(...rows.map(r=>r.g));run.disabled=true;list.innerHTML="";
     for(const r of rows){if(g0!==gen)return;const d=document.createElement("div");d.className="trow "+r.kind;
-      d.innerHTML=`<b>${dual("Term","View")} ${r.k}</b><span class="gl"><i style="width:${Math.max(4,r.g/max*100)}%"></i></span><em>${dual(`Steward ${r.h} has the writer's office, glass ${r.g}.`,`R${r.h} is the primary, timeout ${r.g}.`)} ${why[r.kind](r.g)}</em>`;list.appendChild(d);await sleep(450)}
+      d.innerHTML=`<b>${dual("Term","View")} ${r.k}</b><span class="gl"><i style="width:${Math.max(4,r.g/max*100)}%"></i></span><em>${dual(`Legislator ${r.h} has the writer's office, glass ${r.g}.`,`R${r.h} is the primary, timeout ${r.g}.`)} ${why[r.kind](r.g)}</em>`;list.appendChild(d);await sleep(450)}
     if(g0!==gen)return;const last=rows[rows.length-1];
     if(last.kind==="ok")say.innerHTML=dual(`<span class="ok">The lines stand at term ${last.k}.</span> ${dbl?"The doubling sandglass grew past a term's worth of short runs across the floor, and the first term to begin with prompt messengers after that worked.":"The sandglass never changed, and prompt messengers were enough because it was long enough from the start."}`,`<span class="ok">The requests commit in view ${last.k}.</span> ${dbl?"The doubling timeout grew past a view's worth of short runs, and the first view to begin with short delays after that one worked.":"The timeout never changed, and short delays were enough because it was long enough from the start."}`);
     else{const d=document.createElement("div");d.className="trow more";d.textContent="…and so on, for ever";list.appendChild(d);
@@ -219,7 +219,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     bF.disabled=N+50>S+DIST;bS.disabled=Math.floor(N/100)*100<=S;bG.disabled=N>=S+DIST;
   }
   bF.onclick=()=>{N+=50;paint();say.innerHTML=dual(`Fifty more lines stand, up to line ${N}. Every echo for them is held, in case a change of office calls for it.${N+50>S+DIST?" <span class='bad'>No more numbers are allowed until a checkpoint settles.</span>":""}`,`Fifty more requests commit, up to number ${N}. Every message for them is held, in case a view change calls for it.${N+50>S+DIST?" <span class='bad'>No more numbers are allowed until a checkpoint becomes stable.</span>":""}`)};
-  bS.onclick=()=>{const to=Math.floor(N/100)*100;S=to;paint();say.innerHTML=dual(`Each steward sealed a summary of their copy up to <b>${to}</b>. Three matching summaries settle the checkpoint: at least two honest stewards have the same scroll up to there. Every echo for lines up to ${to} is thrown away, and the allowed numbers move up.`,`Each replica signed a summary of its state up to <b>${to}</b>. Three matching summaries make the checkpoint stable: at least two honest replicas have the same state up to there. Every message for numbers up to ${to} is discarded, and the allowed numbers move up.`)};
+  bS.onclick=()=>{const to=Math.floor(N/100)*100;S=to;paint();say.innerHTML=dual(`Each legislator sealed a summary of their copy up to <b>${to}</b>. Three matching summaries settle the checkpoint: at least two honest legislators have the same scroll up to there. Every echo for lines up to ${to} is thrown away, and the allowed numbers move up.`,`Each replica signed a summary of its state up to <b>${to}</b>. Three matching summaries make the checkpoint stable: at least two honest replicas have the same state up to there. Every message for numbers up to ${to} is discarded, and the allowed numbers move up.`)};
   bB.onclick=()=>{say.innerHTML=dual(`<span class="bad">Refused.</span> Line 1,000,000 lies far beyond the last settled checkpoint plus ${DIST}. A writer cannot use up the numbers by jumping to an enormous one.`,`<span class="bad">Refused.</span> Number 1,000,000 lies far beyond the last stable checkpoint plus ${DIST}. A primary cannot use up the numbers by jumping to an enormous one.`)};
   bG.onclick=()=>{N++;paint();say.innerHTML=dual(`Line ${N} lies between the last settled checkpoint and ${S+DIST}, so it is allowed.`,`Number ${N} lies between the last stable checkpoint and ${S+DIST}, so it is allowed.`)};
   bR.onclick=()=>{N=0;S=0;paint();say.innerHTML=dual("Nothing is written yet. The allowed numbers run two hundred beyond the last settled checkpoint.","Nothing is executed yet. The water marks run two hundred beyond the last stable checkpoint.")};
@@ -229,7 +229,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* ===== scrollytelling: one line, from petition to standing ===== */
 (function(){
   const svg=$("#echosvg"),side=$("#echoside");
-  const nodes={1:[-135,"S1",BC[1],"R1"],2:[-45,"S2",BC[2],"R2"],3:[45,"S3",BC[3],"R3"],4:[135,"S4",BC[4],"R4"]};
+  const nodes={1:[-135,"L1",BC[1],"R1"],2:[-45,"L2",BC[2],"R2"],3:[45,"L3",BC[3],"R3"],4:[135,"L4",BC[4],"R4"]};
   let P,items=[],cur=0;
   /* the rule: every note is a row, sent at s and taken in at r */
   const HOLD=1,M=[];
@@ -237,7 +237,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   [2,3,4].forEach(b=>M.push({kind:"num",a:HOLD,b,s:2.4,r:3.4,held:b===4}));
   [2,3].forEach(a=>[1,2,3].filter(b=>b!==a).forEach(b=>M.push({kind:"first",a,b,s:3.4,r:4.4})));
   [1,2,3].forEach(a=>[1,2,3].filter(b=>b!==a).forEach(b=>M.push({kind:"second",a,b,s:4.4,r:5.4})));
-  /* what each steward holds at moment T, by the rules of the book */
+  /* what each legislator holds at moment T, by the rules of the book */
   function know(k,T){
     const has=k===HOLD?T>=2.4:M.some(m=>m.kind==="num"&&m.b===k&&!m.held&&m.r<=T);
     const fe=M.filter(m=>m.kind==="first"&&m.b===k&&m.r<=T).map(m=>m.a),own1=k!==HOLD&&k!==4&&has&&T>=3.4;
@@ -249,14 +249,14 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   function card(k,s){
     const T=Ts[s],K=know(k,T),role=k===HOLD?dual("writer","primary"):"";
     const note=[];
-    if(k===4)return `<div class="hc dim"><h5><span><i class="dot" style="background:${BC[k]}"></i>${dual("Steward 4","R4")}</span></h5><div class="chk">${s>=1?dual("Messenger delayed across the floor. Nobody waits for them.","Messages delayed. Nobody waits for them."):", "}</div></div>`;
+    if(k===4)return `<div class="hc dim"><h5><span><i class="dot" style="background:${BC[k]}"></i>${dual("Legislator 4","R4")}</span></h5><div class="chk">${s>=1?dual("Messenger delayed across the floor. Nobody waits for them.","Messages delayed. Nobody waits for them."):", "}</div></div>`;
     if(s===0&&k===2)note.push(dual("petitioned the line","submitted the request"));
     note.push(K.has?(k===HOLD?dual("has numbered it","has numbered it"):dual("holds the numbering","holds the pre-prepare")):dual("no numbering yet","no numbering yet"));
     if(s>=2)note.push(dual(`first echoes ${Math.min(K.first,2)} of 2`,`prepares ${Math.min(K.first,2)} of 2`));
     if(s>=3&&K.ready)note.push(dual("readied","prepared"));
     if(s>=4)note.push(dual(`second echoes ${Math.min(K.second,3)} of 3`,`commits ${Math.min(K.second,3)} of 3`));
     if(K.stands)note.push(dual("<b>stands</b>","<b>committed</b>"));
-    return `<div class="hc${K.stands?" done":""}"><h5><span><i class="dot" style="background:${BC[k]}"></i>${dual("Steward "+k,"R"+k)}</span><span>${role}</span></h5><div class="chk">${note.join("<br>")}</div></div>`;
+    return `<div class="hc${K.stands?" done":""}"><h5><span><i class="dot" style="background:${BC[k]}"></i>${dual("Legislator "+k,"R"+k)}</span><span>${role}</span></h5><div class="chk">${note.join("<br>")}</div></div>`;
   }
   const apply=s=>{cur=s;
     items.forEach(it=>it.e.classList.toggle("on",s>=it.from&&s<=it.to));

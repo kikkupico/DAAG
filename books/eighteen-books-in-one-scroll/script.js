@@ -1382,7 +1382,7 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
     const k = $(".bun-k", gNode); if (k) k.style.opacity = mode === "star" ? 1 : 0;
     $$("button", seg).forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.n === n)));
     count(A, n * (n - 1)); count(B, 2 * (n - 1));
-    flip.innerHTML = mode === "all" ? T2("Tie the bundles", "Aggregate") : T2("Every steward to every other", "All-to-all");
+    flip.innerHTML = mode === "all" ? T2("Tie the bundles", "Aggregate") : T2("Every legislator to every other", "All-to-all");
   }
   $$("button", seg).forEach(b => b.addEventListener("click", () => { n = +b.dataset.n; draw(); }));
   flip.addEventListener("click", () => { mode = mode === "all" ? "star" : "all"; paint(); });

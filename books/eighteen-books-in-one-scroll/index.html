@@ -635,7 +635,7 @@
     <div class="il-text">
       <p class="kicker"><span class="i">Paxos · setting five · Schedia and the Tholos</span><span class="m">Leader-driven replication</span></p>
       <h2 class="place">A Council of Five Keeping One Law</h2>
-      <p class="i">A city with laws of its own, governed from a round hall like the Chamber's, through designated leaders and rotating unvetted stewards.</p>
+      <p class="i">A city with laws of its own, governed from a round hall like the Chamber's, through designated leaders and rotating random legislators.</p>
       <p class="m">The replication lineage: Viewstamped Replication, Practical Byzantine Fault Tolerance, and HotStuff.</p>
     </div>
   </div>
@@ -667,9 +667,9 @@
     <p class="eq-to">→ Keeping Order Among Liars</p>
   </article>
   <article class="card book" id="s-pbft" data-scene="pbft" data-book="pbft">
-    <h3 class="punch"><span class="i">Any two groups of three share an honest steward.</span><span class="m">Any two quorums of 2f + 1 share a correct replica.</span></h3>
+    <h3 class="punch"><span class="i">Any two groups of three share an honest legislator.</span><span class="m">Any two quorums of 2f + 1 share a correct replica.</span></h3>
     <h4 class="title">Keeping Order Among Liars</h4>
-    <p class="i">With the legislators away, four stewards in the Tholos keep one law scroll, a copy at each bench, and the writer who numbers its lines may lie. <b>A line stands only after two echoes, each gathering three seals of four</b>; any two groups of three share an honest steward, so no number can hold two lines. A writer who stalls loses the office to the next bench, who must keep every line readied before.</p>
+    <p class="i">Under sortition, four legislators chosen by lot keep one law scroll in the Tholos, a copy at each bench, and the writer who numbers its lines may lie. <b>A line stands only after two echoes, each gathering three seals of four</b>; any two groups of three share an honest legislator, so no number can hold two lines. A writer who stalls loses the office to the next bench, who must keep every line readied before.</p>
     <p class="m">PBFT: 3f + 1 replicas; the primary assigns sequence numbers; <b>pre-prepare, prepare and commit each need 2f + 1 matching signed messages</b>, and any two such quorums share a correct replica. A view change carries prepared certificates, so committed requests survive; doubling timeouts give liveness once delays stop growing.</p>
     <a class="read" href="../keeping-order-among-liars/index.html">Read the book ›</a>
     <div class="papers">
@@ -688,7 +688,7 @@
   <article class="card book" id="s-hs" data-scene="hs" data-book="hs">
     <h3 class="punch"><span class="i">A change of hands costs no more than an entry.</span><span class="m">A linear, responsive view change.</span></h3>
     <h4 class="title">Changing Leaders Among Liars</h4>
-    <p class="i">Instead of every steward sending runners across the stone floor to every other, <b>each sends a sealed vote to the writer alone, who ties three into one bundle</b>. A third stage of bundles means any steward's lock is backed by two honest stewards holding its first bundle, so a new writer learns of it from the first three replies and goes at the messengers' pace, not a sandglass's. The writer's office can pass at every line.</p>
+    <p class="i">Instead of every legislator sending runners across the stone floor to every other, <b>each sends a sealed vote to the writer alone, who ties three into one bundle</b>. A third stage of bundles means any legislator's lock is backed by two honest legislators holding its first bundle, so a new writer learns of it from the first three replies and goes at the messengers' pace, not a sandglass's. The writer's office can pass at every line.</p>
     <p class="m">HotStuff: <b>replicas vote only to the leader, which aggregates 2f + 1 votes into a quorum certificate</b>, so each phase is linear. A third phase makes the view change linear and optimistically responsive: a new leader learns the lock from any n − f replies. Chained HotStuff pipelines the phases and rotates the leader every block.</p>
     <a class="read" href="../changing-leaders-among-liars/index.html">Read the book ›</a>
     <div class="papers">
