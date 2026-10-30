@@ -2,13 +2,13 @@
 
 One page per book, centred on the **allegorical devices**: each device, what it stands for in the paper, and where it meets the other books. Read with `settings.md`, `buildings.md` and `process.md`; where this file and those disagree, those are right until this file's decisions are taken back into them.
 
-*The Part-Time Parliament* is not here: it is Lamport's own allegory, already a scroll. *One Leader at a Time* is a scroll too. The other five books below are still in the chapter layout; when one is converted to the scroll format (`process.md`, `art/scroll/BRIEF.md`), its **Chapters** list is the order of its spreads.
+*The Part-Time Parliament* is not here: it is Lamport's own allegory. Every book here is a scroll (`process.md`, `scroll/BRIEF.md`); a book's **Chapters** list is the order of its spreads.
 
 ---
 
 ## One Leader at a Time
 
-Written: `books/one-leader-at-a-time/`. The Tholos of Schedia, its council of five and the podium;
+Written: `books/one-writer-at-a-time/`. The Tholos of Schedia, its council of five and the podium;
 see `settings.md`.
 
 ---
@@ -31,7 +31,7 @@ see `settings.md`.
 | losing interest: after meeting k who already knew, or at a toss | Loss of interest: feedback or blind, counter or coin. | The coin of *Agreeing by Chance*, used differently |
 | telling, asking, or both | Push, pull, push-pull. |  |
 | the libraries the news never reached | The residue. |  |
-| the festival: pairs of copyists compare whole copies of the compendium and keep the newer version of each entry | Anti-entropy, a simple epidemic that reaches everyone. |  |
+| the festival, once a year: pairs of copyists compare whole copies of the compendium and keep the newer version of each entry | Anti-entropy, a simple epidemic that reaches everyone. |  |
 | comparing a sum worked from each whole copy first, and the list of recent versions | Checksums and recent-update lists, which make anti-entropy cheap. |  |
 | a notice of withdrawal: "this entry is withdrawn, as of tally t" | A death certificate: a deletion must travel like an update, or an old copy brings the entry back. |  |
 | the old notice kept by only a few libraries, woken when a stale copy turns up | Dormant death certificates and reactivation. |  |
@@ -50,9 +50,7 @@ see `settings.md`.
 
 **Must not exist:** anyone organising the spread; an assembly or a vote; a register of who knows what; a promise that word of mouth alone reaches everyone.
 
-**Open.**
-1. **How often the festival meets.** `settings.md` makes it yearly; the paper runs anti-entropy regularly, as the backstop to rumour. Keep it yearly (slow and sure), or make it a regular meeting?
-2. **Names.** Nine authors. Demerios and two or three others; the footnote credits all nine.
+**Names.** One author is named, Demerios; the others are not.
 
 ---
 
@@ -92,9 +90,10 @@ see `settings.md`.
 
 **Must not exist:** any certainty that a copy is current; a reader who asks every home library; a store in the book (the paper is a model); an assembly.
 
+**Names.** The book names no one.
+
 **Open.**
 1. **Clocks.** t-visibility is in hours. Paxos tells time by the sun (the Chamber's meridian), so the scholars can read an hour; confirm that the scholars' coast is not under Arche's cloud.
-2. **Names.** Bailios and four others for five authors, or two names and the footnote.
 
 ---
 
@@ -182,14 +181,13 @@ Written: `books/changes-that-never-clash/`.
 
 **Must not exist:** an assembly; a library waiting on a courier before answering; a promise that needs another library; lending; a lost change that anyone is blamed for.
 
-**Open.**
-1. **Names.** Bailios again, with Davidsonia, Feketeos and others for the seven authors; the footnote says names follow papers.
+**Names.** The book names no one.
 
 ---
 
 ## Knowing When to Wait
 
-**Hellerstein 2010 · Ameloot, Neven & Van den Bussche 2011 · Hellerstein & Alvaro 2020 · the hall of two doors, Paxos**
+**Hellerstein 2010 · Ameloot, Neven & Van den Bussche 2011 · Hellerstein & Alvaro 2020 · the oracle at the fork, Paxos**
 
 **The idea.** **CALM:** a program has a consistent, coordination-free distributed implementation if and only if it is **monotonic**: more input never retracts an output. Conjectured by Hellerstein (2010); proved by Ameloot, Neven and Van den Bussche (2011) for networks of relational transducers, where coordination-free programs compute exactly the monotone queries, as do **oblivious** ones that know neither the other nodes nor how many there are; restated by Hellerstein and Alvaro (2020), who show how to **seal** a non-monotone step so that only it needs coordination.
 
@@ -197,37 +195,38 @@ Written: `books/changes-that-never-clash/`.
 
 | Device | In the paper | Also in |
 |---|---|---|
-| a question brought to the hall | A program or query. |  |
+| a group's work, written on a folded strip of lead and brought to the priestess | A program or query. |  |
 | "has the comet been seen at least once?": once yes, yes for ever | A monotone query. |  |
 | "is this every sighting?", "no library has withdrawn this entry" | A non-monotone query: it rests on absence. |  |
-| the scholars' door | Coordination-free. | The scholars' coast |
-| the door of the assemblies, facing north up the bay to the Chamber and the Tholos | Coordination. | *The Part-Time Parliament*; *One Leader at a Time* |
+| the south gate, down the stem to the scholars' life: a post in a library, no roster | Coordination-free. | The scholars' coast |
+| the north gate, up the road that forks to the Chamber and the Tholos: the assemblies' life, keeping a roster and waiting on every name on it | Coordination. | *The Part-Time Parliament*; *One Leader at a Time* |
 | a waiting chain: scholar A waits on B's correction, B on C's, C on A's; once found, it stays found | Deadlock detection: monotone. |  |
 | an entry nothing in the core cites may be withdrawn, but only once all have been heard from | Garbage collection: non-monotone. |  |
-| a librarian who knows neither how many libraries there are nor their names | An oblivious transducer. |  |
-| every library already holding every fact, so nobody needs to read a letter | Ameloot's coordination-free: an ideal distribution on which no message is needed. |  |
-| a reading list sent sealed with its count, so the receiver knows when he has it all | Sealing (the 2020 shopping-cart checkout). |  |
+| a student at a post who knows neither how many posts there are nor who holds them | An oblivious transducer. |  |
+| every post already holding every fact, so nobody needs to read a letter | Ameloot's coordination-free: an ideal distribution on which no message is needed. |  |
+| a manifest: a closing notice naming the notices before it, so that only that one step waits, and only for those | Sealing (the 2020 shopping-cart checkout). |  |
 | the larger pile in each column of the pebble boards | A monotone merge. | *Changes That Never Clash* |
 | a count read and written over | Lost update needs coordination because it is non-monotone. | *What You Can Promise Alone* |
 | a stable property: once true, true for ever | Detectable from a partial view. | *Taking Stock Without Stopping* |
 
 **Chapters.**
-1. Two doors.
+1. Two gates.
 2. Questions that only grow.
 3. Questions that rest on absence.
 4. The waiting chain and the unwanted work.
-5. The librarian without a roster.
+5. The student without a roster.
 6. The proof, in outline.
-7. Sealing: waiting only once.
-8. What goes out by each door, across the series.
+7. The manifest: waiting only once.
+8. What goes out by each gate, across the series.
 9. In the Book, In the Paper.
 
-**Must not exist:** the hall ruling on anything; a question it cannot sort; a third door; an assembly inside the hall.
+**Must not exist:** the oracle ruling on anything; a work it cannot sort; a third gate or a third road; an assembly inside the sanctuary.
 
 **Open.**
 1. **The proof.** Ameloot's definition of coordination-free (an ideal distribution on which no message is needed) is subtle. How much of it goes in the prose, and how much in closed proofs?
 2. **The 2010 paper's other conjectures** (CRON, Fateful Time) are left out.
-3. **Names.** Hellersteinos and Alvaria, with Ameloot, Neven and Van den Bussche as three of the questioners; the footnote credits all five.
+
+**Names.** The book names no one.
 
 ---
 
@@ -237,5 +236,5 @@ Written: `books/changes-that-never-clash/`.
 - **Versions carry tallies.** Which version is newer is settled by a tally, the device of *Ordering Without Clocks*; where causality matters, by columns, as in its column room.
 - **Schedia is on the same island.** Its laws are its own, but the sun, the couriers and the scholars' roads reach it as they reach the rest of Paxos.
 - **Paxos can read the sun.** Unlike Arche in the trading season, Paxos tells time by the sun; the Chamber has a meridian line.
-- **Names follow papers**, with a footnote in every book.
+- **Names.** Only *Spreading by Word of Mouth* names an author, Demerios; the other coast books name no one.
 - **Order.** *Spreading by Word of Mouth* first on the coast, since it sets the vocabulary; then *Probably Up to Date*, *Changes That Never Clash*, *What You Can Promise Alone*; *Knowing When to Wait* last, since it sorts all of them. *One Leader at a Time* can be written any time.

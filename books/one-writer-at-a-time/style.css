@@ -1,0 +1,114 @@
+/* Only what is particular to this book. Shared: ../../assets/css/book.css, ../../assets/css/widgets.css. */
+
+/* Only what is particular to this book; the rest is in ../../assets/css/book.css. */
+
+/* ---------- five logs ---------- */
+.logs{padding:18px 18px 14px}
+
+.logs h4{font-family:var(--sans);margin:0 0 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#6b5a48}
+
+.reps5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+
+.rep5{border:3px solid var(--ink);background:#fff;padding:6px 4px;min-height:150px;text-align:center;font-family:var(--sans);font-size:.7rem;transition:opacity .4s,background .4s}
+
+.rep5 h5{margin:0 0 5px;font-size:.66rem;letter-spacing:.04em}
+
+.rep5.down{opacity:.4;background:#ddd}
+
+.rep5.lead{box-shadow:0 0 0 3px var(--gold)}
+
+.rep5 .op{margin:2px 0;padding:1px 0;background:var(--parch-lo);border-left:4px solid var(--aegean)}
+
+.rep5 .op.done{border-left-color:#5f6e28;background:#e3ecc4}
+
+.logs .note{font-size:.9rem;color:#6b5a48;margin:10px 0 0;min-height:3.6em;font-style:italic}
+
+/* ---------- the Tholos from above ---------- */
+.seat{cursor:default}
+
+.seat circle.b{stroke:var(--ink);stroke-width:4;transition:opacity .4s}
+
+.seat text.g{font-family:var(--sans);font-weight:700;font-size:17px;text-anchor:middle;dominant-baseline:central;fill:#1c1512;pointer-events:none}
+
+.seat text.s{font-family:var(--sans);font-size:12.5px;text-anchor:middle;fill:#1c1512}
+
+.seat .ring{opacity:0;transition:opacity .4s}
+.seat .ring .wring{fill:none;stroke:#b5602c;stroke-width:3;stroke-dasharray:5 3}
+.seat .ring .wring-out{fill:none;stroke:#e8b03a;stroke-width:1.5}
+.seat .ring .leaf{fill:#8f9d3c;stroke:#3f4a16;stroke-width:.9}
+.seat .ring .stem{fill:none;stroke:#3f4a16;stroke-width:1.8}
+.seat .ring .tie{fill:#b5302a;stroke:#1c1512;stroke-width:1}
+
+.seat.holder .ring,.seat.writer .ring{opacity:1}
+
+.seat.out circle.b{opacity:.3}
+
+.seat.out text.g{opacity:.45}
+
+.seat.pick{cursor:pointer}
+
+.seat.pick:focus-visible{outline:none}
+
+.seat.pick:focus-visible circle.b{stroke:var(--aegean-d);stroke-width:7}
+
+.podium text{font-family:var(--sans);font-weight:700;font-size:12px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+
+.who{display:inline-block;white-space:nowrap;font-family:var(--sans);font-weight:700}
+
+.who i{display:inline-block;width:.75em;height:.75em;border-radius:50%;border:1.5px solid var(--ink);margin-right:4px;vertical-align:-.03em}
+
+.cast{display:flex;flex-wrap:wrap;gap:8px 16px;margin:.6rem 0 1rem}
+
+/* ---------- choices ---------- */
+.marks{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 4px}
+
+.mark{background:#fff;border:3px solid var(--ink);padding:6px 10px;font-family:var(--sans);font-size:.86rem;font-weight:700}
+
+.mark[aria-pressed=true]{background:var(--gold)}
+
+.ans{display:grid;gap:8px}
+
+.ans .r{display:grid;grid-template-columns:minmax(0,7.5em) minmax(0,1fr);gap:8px;align-items:center}
+
+.seg{display:flex;flex-wrap:wrap;gap:0}
+
+.seg button{background:#fff;border:3px solid var(--ink);margin-right:-3px;padding:4px 8px;font-family:var(--sans);font-size:.76rem}
+
+@media(max-width:760px){.hill-wrap{grid-template-columns:minmax(0,1fr)}}
+
+.checks{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px;font-size:.92rem}
+
+.checks li{padding:6px 10px;background:#fff;border:3px solid var(--ink)}
+
+@media(max-width:899px){.side.five{grid-template-columns:repeat(5,minmax(0,1fr))}}
+
+.counts{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--sans);font-size:.85rem;margin:10px 0 0}
+
+.counts span b{font-size:1.4rem;margin-right:5px}
+
+@media(max-width:860px){.cards3.pair{grid-template-columns:1fr}}
+
+/* ---------- the seal: concentric tracks, center number, manager peg, writer peg, rim signets ---------- */
+.podium .slot,.sealfig .slot{fill:#f7f0dc;stroke:#1c1512;stroke-width:2.5}
+.podium .hole{fill:#efe6cf;stroke:#1c1512;stroke-width:1.8}
+.sealfig .hole{fill:#efe6cf;stroke:#1c1512;stroke-width:2.5}
+.podium .track{fill:none;stroke:#b8ad96;stroke-width:1;stroke-dasharray:2 2}
+.podium .peg-mgr{fill:#1c1512;stroke:#1c1512;stroke-width:1}
+.podium .peg-wri{fill:#b5602c;stroke:#1c1512;stroke-width:1.5}
+.podium .empty{fill:none;stroke:#a69b85;stroke-width:1.2;stroke-dasharray:2 2}
+.podium .wreath,.sealfig .wreath{fill:none;stroke:#1c1512;stroke-width:3;stroke-dasharray:1.6 1.6;transition:opacity .4s}
+.podium .sn{font-size:9px}
+.podium .sg{font-family:var(--sans);font-weight:700;font-size:7.5px;text-anchor:middle;dominant-baseline:central;fill:#1c1512}
+.podium g{transition:opacity .4s}
+.sealfig{width:100%;height:auto;display:block}
+.sealfig text{font-family:var(--sans);fill:#1c1512}
+.sealfig .sn,.sealfig .sg{font-weight:700;text-anchor:middle;dominant-baseline:central}
+.sealfig .sn{font-size:14px}
+.sealfig .sg{font-size:13px}
+.sealfig .note{font-size:15px}
+.sealfig .lead{stroke:#6b5a48;stroke-width:1.2}
+.sealfig .empty{fill:none;stroke:#6b5a48;stroke-width:1.5;stroke-dasharray:3 3}
+.sealfig .ghost{fill:#9a8a76;font-weight:400}
+.sealkey{list-style:none;padding:0;margin:0}
+.sealkey li{padding:.45rem 0;border-bottom:1px dotted rgba(28,21,18,.25)}
+.sealkey li:last-child{border-bottom:0}

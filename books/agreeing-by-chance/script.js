@@ -17,7 +17,7 @@ function night(o){
     const send=men.filter(m=>active.includes(m)||(parted[m]&&parted[m].c===r-1));
     const rep={};send.forEach(m=>rep[m]=active.includes(m)?fav[m]:parted[m].a);
     const sure={},R={},S={},out={},sec={};
-    active.forEach(m=>{const others=send.filter(x=>x!==m);if(others.length<2)throw new Error("a man would wait for ever");
+    active.forEach(m=>{const others=send.filter(x=>x!==m);if(others.length<2)throw new Error("a mercenary would wait for ever");
       R[m]=reads(r,m,"rep",others);sure[m]=sureOf([rep[m],...R[m].map(x=>rep[x])])});
     send.forEach(m=>sec[m]=active.includes(m)?sure[m]:parted[m].a);
     active.forEach(m=>{const others=send.filter(x=>x!==m);S[m]=reads(r,m,"sec",others);
@@ -26,7 +26,7 @@ function night(o){
     active.slice().forEach(m=>{const x=out[m];if(x.kind==="toss")fav[m]=x.t;else{fav[m]=x.a;if(x.kind==="settle"){parted[m]={c:r,a:x.a};active.splice(active.indexOf(m),1)}}});
   }
   const ans=Object.values(parted).map(p=>p.a);
-  if(ans.some(a=>a!==ans[0]))throw new Error("two men committed to different answers");
+  if(ans.some(a=>a!==ans[0]))throw new Error("two mercenaries committed to different answers");
   if([1,2,3,4].every(m=>sight[m]===sight[1])){if(rounds.length!==1||rounds[0].active.some(m=>rounds[0].out[m].kind!=="settle"))throw new Error("matching sightings were not followed in the first round")}
   return {rounds,parted,done:!active.length,men,silent};
 }
@@ -87,7 +87,7 @@ function describeR(rd,c){
   const act=rd.active;let s=`Reports: ${act.map(k=>`${tn(k)} ${w(rd.rep[k])}`).join(", ")}. `;
   const sures=act.filter(k=>rd.sure[k]);
   if(!sures.length){const n={H:0,A:0};act.forEach(k=>n[rd.rep[k]]++);const t=n.H>=n.A?"H":"A";
-    s+=n[t]*2>act.length?(c?`${n[t]} of the ${act.length} favour ${w(t)}, but to be sure a process needs more than half of all four, which is three alike. `:`${n[t]} of the ${act.length} favour ${w(t)}, but to be sure a man needs more than half of all four, which is three alike. `):"";
+    s+=n[t]*2>act.length?(c?`${n[t]} of the ${act.length} favour ${w(t)}, but to be sure a process needs more than half of all four, which is three alike. `:`${n[t]} of the ${act.length} favour ${w(t)}, but to be sure a mercenary needs more than half of all four, which is three alike. `):"";
     s+=c?"Nobody proposes a D-value. ":"Nobody is sure. "}
   else s+=c?`${tl(sures)} send${sures.length>1?"":"s"} D(${w(rd.sure[sures[0]])}). `:`${list(sures.map(k=>"tent "+k))} write${sures.length>1?"":"s"} sure of ${w(rd.sure[sures[0]])}. `;
   const g={toss:[],favour:[],settle:[]};act.forEach(k=>g[rd.out[k].kind].push(k));
@@ -176,7 +176,7 @@ const LANES={1:[-90,"T1",TC[1],"P1"],2:[0,"T2",TC[2],"P2"],3:[90,"T3",TC[3],"P3"
     const N=night({sight,silent}),k=N.rounds.length,from=Math.max(0,k-12),toss=N.rounds.reduce((a,x)=>a+Object.values(x.out).filter(o=>o.kind==="toss").length,0);
     grid(host,N,null,null,from);
     const ans=Object.values(N.parted)[0].a,who=N.men.map(m=>m);
-    say.innerHTML=dual(`<b>This night took ${k} round${k>1?"s":""}.</b> Every man who spoke committed to ${W[ans]}, and no two differed (worked out by the rules, not typed in). There were ${toss} toss${toss===1?"":"es"}. `+
+    say.innerHTML=dual(`<b>This night took ${k} round${k>1?"s":""}.</b> Every mercenary who spoke committed to ${W[ans]}, and no two differed (worked out by the rules, not typed in). There were ${toss} toss${toss===1?"":"es"}. `+
       (toss===0?`Nobody tossed: the sightings left no room for a coin. `:"")+`Another night may take more or fewer rounds, and no round can be named in advance. Press again and the coins fall differently.`,
       `<b>This execution took ${k} round${k>1?"s":""}.</b> Every process that ran decided ${GL[ans]}, and no two differed (worked out by the rules, not typed in). There ${toss===1?"was 1 flip":`were ${toss} flips`}. `+
       (toss===0?`Nobody flipped: the inputs left no room for a coin. `:"")+`Another execution may take more or fewer rounds, and no round can be named in advance. Press again and the coins fall differently.`)};

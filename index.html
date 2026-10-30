@@ -6,8 +6,8 @@
 <title>Distributed Algorithms of Ancient Greece</title>
 <meta name="description" content="Eighteen books on two islands explain 25 landmark papers in distributed computing with Lamport's ancient Greek allegory. Every book reads two ways, as the allegory or in computing terms, and the reader can switch at any point.">
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
-<link rel="stylesheet" href="art/scroll/shell.css">
-<link rel="stylesheet" href="art/scroll/place.css">
+<link rel="stylesheet" href="scroll/shell.css">
+<link rel="stylesheet" href="scroll/place.css">
 <link rel="stylesheet" href="assets/css/registers.css">
 <link rel="stylesheet" href="landing.css">
 <script>document.documentElement.classList.add("js")</script>
@@ -82,8 +82,8 @@
 <circle cx="-137.8" cy="-24.3" r="7"></circle><text x="-150.8" y="-24.3" text-anchor="end">Byzantine generals</text><title>Agreeing Among Liars</title></a>
 <a href="books/the-part-time-parliament/index.html" class="tnode">
 <circle cx="-217.3" cy="58.2" r="7"></circle><text x="-230.3" y="58.2" text-anchor="end">Paxos</text><title>The Part-Time Parliament</title></a>
-<a href="books/one-leader-at-a-time/index.html" class="tnode">
-<circle cx="-225.5" cy="-82.0" r="7"></circle><text x="-238.5" y="-82.0" text-anchor="end">Viewstamped</text><title>One Leader at a Time</title></a>
+<a href="books/one-writer-at-a-time/index.html" class="tnode">
+<circle cx="-225.5" cy="-82.0" r="7"></circle><text x="-238.5" y="-82.0" text-anchor="end">Viewstamped</text><title>One Writer at a Time</title></a>
 <a href="books/keeping-order-among-liars/index.html" class="tnode">
 <circle cx="-154.2" cy="-183.8" r="7"></circle><text x="-167.2" y="-183.8" text-anchor="end">PBFT</text><title>Keeping Order Among Liars</title></a>
 <a href="books/changing-leaders-among-liars/index.html" class="tnode">
@@ -147,7 +147,7 @@
         <p class="kicker"><span class="i">Paxos · The Chamber</span><span class="m">Consensus with crash and recovery</span></p>
         <h2><span class="i">Part-Time Legislators Passing Laws</span><span class="m">Consensus &amp; Replicated State Machines</span></h2>
         <p class="sub i">Consensus &amp; Replicated State Machines</p>
-        <p class="i">Part-time legislators who wander in and out, each with his own scroll, passing laws by notes that messengers may carry late, twice or never. The laws never contradict one another.</p>
+        <p class="i">Part-time legislators who wander in and out, each with their own scroll, passing laws by notes that messengers may carry late, twice or never. The laws never contradict one another.</p>
         <p class="m">Processes crash and recover with stable storage; messages may be slow, lost or duplicated. The log of decrees must never diverge.</p>
         <dl class="cast i"><dt>Who</dt><dd>Part-time legislators, each with a scroll</dd><dt>Word</dt><dd>Messengers: late, twice or never</dd><dt>Sent</dt><dd>Notes about numbered ballots</dd></dl>
       </figcaption>
@@ -177,20 +177,20 @@
         <p class="kicker"><span class="i">Paxos · Schedia</span><span class="m">Primary-backup replication</span></p>
         <h2><span class="i">A Council of Five Keeping One Law</span><span class="m">Leader-Driven Consensus</span></h2>
         <p class="sub i">Leader-Driven Consensus</p>
-        <p class="i">A council of five, one of whom holds the podium and alone writes the law, sending it line by line to the others' benches by runner. When the podium falls silent, another takes it.</p>
+        <p class="i">A council of five, one of whom wears the leader's wreath and alone writes the law, sending it line by line to the others' benches by runner. When the holder falls silent, another takes the wreath under a new seal.</p>
         <p class="m">A replica group with one primary at a time, state kept in volatile memory, and view changes when the primary falls silent.</p>
-        <dl class="cast i"><dt>Who</dt><dd>Five legislators; one holds the podium</dd><dt>Word</dt><dd>A runner to each bench, never skipping a line</dd><dt>Sent</dt><dd>Petitions, numbered lines of law, a new board</dd></dl>
+        <dl class="cast i"><dt>Who</dt><dd>Five legislators; one wears the wreath</dd><dt>Word</dt><dd>A runner to each bench, never skipping a line</dd><dt>Sent</dt><dd>Petitions, lines of law pressed with the seal, a call for a new seal</dd></dl>
       </figcaption>
     </a>
     <div class="bks n1">
-      <div class="pop"><article class="leaf paper bk" id="b-vr" data-key="vr"><a class="cardlink" href="books/one-leader-at-a-time/index.html">
+      <div class="pop"><article class="leaf paper bk" id="b-vr" data-key="vr"><a class="cardlink" href="books/one-writer-at-a-time/index.html">
         <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-cover-dd6fa3054e-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-cover-dd6fa3054e-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-cover-dd6fa3054e-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/one-leader-at-a-time-cover-dd6fa3054e-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/one-leader-at-a-time.jpg" alt="" loading="lazy"></div>
-        <div class="cvr m"><svg data-cover="one-leader-at-a-time" role="img" aria-label="Five replica logs with a commit point at record 12, a cut-off replica, quorum intersection, and a view change from primary R1 to primary R2"></svg></div>
+        <div class="cvr m"><svg data-cover="one-writer-at-a-time" role="img" aria-label="Five replica logs with a commit point at record 12, a cut-off replica, quorum intersection, and a view change from primary R1 to primary R2"></svg></div>
         <div class="body">
-          <h3>One Leader at a Time</h3>
-          <p class="punch"><span class="i">The latest board and line takes the podium.</span><span class="m">The highest viewstamp becomes primary.</span></p>
+          <h3>One Writer at a Time</h3>
+          <p class="punch"><span class="i">The latest seal and line becomes writer.</span><span class="m">The highest viewstamp becomes primary.</span></p>
           <p class="q">Many systems put one leader in charge at a time. When the leader falls silent, how does another take over without losing anything the last one promised?</p>
-          <p class="how i">We find out by exploring how Schedia, a Greek city on Paxos with laws of its own, kept its law from a podium that one legislator held at a time, and how a new holder took over when the last one fell silent.</p>
+          <p class="how i">We find out by exploring how Schedia, a Greek city on Paxos with laws of its own, kept its law with one legislator at a time serving as the writer, and how a new writer took over when the last one fell silent.</p>
           <span class="credit">Oki &amp; Liskov 1988</span>
         </div>
       </a></article></div>
@@ -209,7 +209,7 @@
         <p class="sub i">Clocks, State &amp; Linearizability</p>
         <p class="i">Three trading houses that keep no common hour, sending one another slips and goods down a road on which no messenger can pass another.</p>
         <p class="m">Three processes, no shared clock, reliable FIFO channels. Everything a process knows is in its own log or has arrived as a message.</p>
-        <dl class="cast i"><dt>Who</dt><dd>Three trading houses with no common hour</dd><dt>Word</dt><dd>Messengers and carts; nobody overtakes</dd><dt>Sent</dt><dd>Requests, goods, and the tallies on the slips</dd></dl>
+        <dl class="cast i"><dt>Who</dt><dd>Three trading houses with no common hour</dd><dt>Word</dt><dd>Messengers and carts; nobody overtakes</dd><dt>Sent</dt><dd>Requests, goods, and the tallies on the papyrus</dd></dl>
       </figcaption>
     </a>
     <div class="bks n3">
@@ -270,7 +270,7 @@
         <div class="cvr m"><svg data-cover="the-limits-of-agreement" role="img" aria-label="A tree of configurations with one thick path of bivalent configurations that never reaches a decision, deciding branches hanging off every step, and a row of initial configurations from 0000 to 1111"></svg></div>
         <div class="body">
           <h3>The Limits of Agreement</h3>
-          <p class="punch"><span class="i">A dead man looks exactly like a slow bird.</span><span class="m">A crashed process looks exactly like a slow one.</span></p>
+          <p class="punch"><span class="i">A dead mercenary looks exactly like a slow bird.</span><span class="m">A crashed process looks exactly like a slow one.</span></p>
           <p class="q">Can machines always agree when one of them may stop silently and messages take any time at all?</p>
           <p class="how i">We find out by exploring how four mercenaries at the foot of a hill, unable to see one another, tried to agree whether to attack or hold when any of them might be dead.</p>
           <span class="credit">Fischer, Lynch &amp; Paterson 1985</span>
@@ -305,7 +305,7 @@
           <h3>Agreeing by Chance</h3>
           <p class="punch"><span class="i">Sooner or later, the coins land alike.</span><span class="m">Termination with probability 1.</span></p>
           <p class="q">If no plan can guarantee agreement when a machine may stop without warning, can chance succeed where planning cannot? What if a machine that is stuck simply tosses a coin?</p>
-          <p class="how i">We find out by exploring how Greek mercenary camps, deadlocked over a plan, let a coin, tossed by each man alone in his tent, break the tie.</p>
+          <p class="how i">We find out by exploring how Greek mercenary camps, deadlocked over a plan, let a coin, tossed by each mercenary alone in their tent, break the tie.</p>
           <span class="credit">Ben-Or 1983</span>
         </div>
       </a></article></div>
@@ -316,7 +316,7 @@
           <h3>Telling the Dead from the Slow</h3>
           <p class="punch"><span class="i">Bad slates can stall the camp, never split it.</span><span class="m">Safe under any detector.</span></p>
           <p class="q">A machine that has crashed looks exactly like one that is merely slow, and that alone makes agreement impossible. How well must we tell the dead from the slow before agreement becomes possible again?</p>
-          <p class="how i">We find out by exploring how the same Greek mercenaries, each keeping a slate of the tents he thought dead, agreed whether to attack or hold though the slates were often wrong.</p>
+          <p class="how i">We find out by exploring how the same Greek mercenaries, each keeping a slate of the tents they thought dead, agreed whether to attack or hold though the slates were often wrong.</p>
           <span class="credit">Chandra &amp; Toueg 1996</span>
         </div>
       </a></article></div>
@@ -355,7 +355,7 @@
         <div class="cvr m"><svg data-cover="keeping-order-among-liars" role="img" aria-label="Four replicas and a client on time lanes: request, pre-prepare, prepare and commit messages between the lanes, one faulty replica sending a conflicting digest, quorum brackets, and a log slot"></svg></div>
         <div class="body">
           <h3>Keeping Order Among Liars</h3>
-          <p class="punch"><span class="i">Any two groups of three share an honest man.</span><span class="m">Any two quorums of 2f + 1 share a correct replica.</span></p>
+          <p class="punch"><span class="i">Any two groups of three share an honest bandit.</span><span class="m">Any two quorums of 2f + 1 share a correct replica.</span></p>
           <p class="q">Can a replicated service keep its commands in order when some of its machines lie, the leader included, and messages take arbitrarily long?</p>
           <p class="how i">We find out by exploring how four bandits holding a hilltop held one book of their loot when any of them, their chief included, might be lying.</p>
           <span class="credit">Castro &amp; Liskov 1999</span>
@@ -368,7 +368,7 @@
           <h3>Changing Leaders Among Liars</h3>
           <p class="punch"><span class="i">A change of hands costs no more than an entry.</span><span class="m">A linear, responsive view change.</span></p>
           <p class="q">When some machines may lie, replacing a leader has been slow and costly. Can a new leader take over as cheaply as any ordinary step, and at the pace of the messages rather than of a timer?</p>
-          <p class="how i">We find out by exploring how four bandits holding a hilltop took turns keeping their loot scroll, each gathering the others' seals into one bundle instead of every man writing to every other.</p>
+          <p class="how i">We find out by exploring how four bandits holding a hilltop took turns keeping their loot scroll, each gathering the others' seals into one bundle instead of every bandit writing to every other.</p>
           <span class="credit">Yin, Malkhi, Reiter, Gueta &amp; Abraham 2019</span>
         </div>
       </a></article></div>
@@ -387,7 +387,7 @@
         <p class="sub i">Replication Without Assembly</p>
         <p class="i">Libraries up and down a coast, each keeping its own copy of one compendium of knowledge, changing it at once and sending word of every change by courier. Nothing waits for a vote: everyone ends of one mind, by merging rather than by assembly.</p>
         <p class="m">Replicas that answer from local state without coordination, and converge only eventually. The question here is what that can still promise.</p>
-        <dl class="cast i"><dt>Who</dt><dd>Libraries, each with its copy of the compendium</dd><dt>Word</dt><dd>Couriers, who may be stopped</dd><dt>Sent</dt><dd>Revised entries, slips, notices of withdrawal</dd></dl>
+        <dl class="cast i"><dt>Who</dt><dd>Libraries, each with its copy of the compendium</dd><dt>Word</dt><dd>Couriers, who may be stopped</dd><dt>Sent</dt><dd>Revised entries, scrolls, notices of withdrawal</dd></dl>
       </figcaption>
     </a>
     <div class="bks n4">
@@ -455,7 +455,7 @@
     </a>
     <div class="bks n1">
       <div class="pop"><article class="leaf paper bk" id="b-calm" data-key="calm"><a class="cardlink" href="books/knowing-when-to-wait/index.html">
-        <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/knowing-when-to-wait-cover-ec05ccc5bd-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/knowing-when-to-wait-cover-ec05ccc5bd-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/knowing-when-to-wait-cover-ec05ccc5bd-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/knowing-when-to-wait-cover-ec05ccc5bd-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/knowing-when-to-wait.jpg" alt="" loading="lazy"></div>
+        <div class="photo i"><img src="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/knowing-when-to-wait-cover-a954a28b7c-800.avif" srcset="https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/knowing-when-to-wait-cover-a954a28b7c-400.avif 400w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/knowing-when-to-wait-cover-a954a28b7c-800.avif 800w, https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev/knowing-when-to-wait-cover-a954a28b7c-896.avif 896w" sizes="(max-width: 700px) 80vw, 370px" data-local="assets/img/covers/knowing-when-to-wait.jpg" alt="" loading="lazy"></div>
         <div class="cvr m"><svg data-cover="knowing-when-to-wait" role="img" aria-label="Two columns: on the left a deadlock cycle and growing bars of answers that never retract, on the right an unreachable object and an answer taken back, with coordination-free equal to monotonic below"></svg></div>
         <div class="body">
           <h3>Knowing When to Wait</h3>
@@ -471,7 +471,7 @@
 
 <footer>Distributed Algorithms of Ancient Greece</footer>
 
-<script src="art/scroll/shell.js"></script>
+<script src="scroll/shell.js"></script>
 <script src="assets/js/registers.js"></script>
 <script>window.BOOK=window.BOOK||{el,reduce}</script>
 <script src="assets/js/covers.js"></script>

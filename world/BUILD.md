@@ -1,0 +1,76 @@
+# Arche and Paxos: the 3D model
+
+A procedural Blender model of both islands, built from the descriptions in this folder (`settings.md`, `buildings.md`, `arche-plans.md`, `paxos-plans.md`, `reality.md`, `world-prompt.md`). Arche's layout follows the text alone. Paxos stands on the real ground of Leros, turned end to end, at 0.8 of its size with its real heights, lowered where the halls must stand highest (`world-prompt.md` §3.4). Otherwise layout follows the text, and where the art prompts in `world-prompt.md` differ from `settings.md` or `buildings.md`, the latter win.
+
+## Rebuild
+
+Blender 5.1 and Python 3 with numpy and Pillow. One script rebuilds everything, from the downloads to the showcase:
+
+```sh
+sh src/build_all.sh            # final renders into renders/final, then showcase/index.html
+sh src/build_all.sh preview    # half size and few samples, into renders/preview
+```
+
+Downloads are kept once fetched. The steps it runs, in order:
+
+```sh
+python3 src/fetch_polyhaven.py          # CC0 textures, rocks, shrubs, skies -> assets/polyhaven
+python3 src/fetch_statues.py            # statue scans from Three D Scans -> assets/statues
+python3 src/fetch_leros.py              # Leros's coastline (OpenStreetMap) and elevation (AWS Terrain Tiles) -> assets/leros
+python3 src/gen_leaves.py               # leaf-spray textures for the trees -> assets/leaves
+python3 src/gen_diagram.py              # the stoa's painted panel -> assets/painted
+blender -b -P src/prep_statues.py       # statue scans -> assets/statues/statues.blend
+python3 src/terrain_arche.py 4096       # height field, masks, sites -> build/terrain/arche
+python3 src/terrain_paxos.py 6144       # the same for Paxos
+python3 src/road_maps.py                # grade-coloured road plans -> renders/preview
+blender -b -P src/build_arche.py -- 1   # -> build/arche.blend
+blender -b -P src/build_paxos.py -- 1   # -> build/paxos.blend
+blender -b build/arche.blend -P src/render.py -- shots_arche all final
+blender -b build/paxos.blend -P src/render.py -- shots_paxos all final
+python3 src/gen_showcase.py final       # showcase/index.html and showcase/img, captions from src/captions.py
+```
+
+## What checks itself
+
+The terrain scripts print and store (in `sites.json`) the canon tests:
+
+- Arche: every house-to-house, camp-to-camp and post-to-post line of sight is blocked by the mountain, whose summit stands about 520 m, a height believable for an Aegean island of its size.
+- Paxos: the Chamber and the Tholos, on the island's two highest summits, see each other across the bay; no road or path crosses the water except by the one ferry; no road reaches either hall, only stepped ways.
+- Both: a road audit measures every road and path on the carved ground for grade and for any length on a building, terrace or ground. `python3 src/road_maps.py` draws grade-coloured plans of both into `renders/preview`.
+
+## Layout
+
+| Module | What it holds |
+|---|---|
+| `src/noise.py`, `src/terrain_common.py` | numpy gradient noise, levelled sites with batter slopes, road carving |
+| `src/roadnet.py` | grade-aware road routing (A* over the ground, round obstacles) and the road audit |
+| `src/terrain_arche.py`, `src/terrain_paxos.py` | each island's ground, sites, roads and checks |
+| `src/fetch_leros.py`, `src/leros.py` | the Leros data Paxos is built on, and its turned, scaled coastline, distance field and heights |
+| `src/blib/world.py` | displaced terrain (adaptive subdivision), sea, sky |
+| `src/blib/kit.py`, `arch.py`, `classical.py` | geometry kit: walls with openings, tiled roofs, Doric/Ionic/Corinthian orders, conical roofs |
+| `src/blib/buildings.py` | Arche: the trading houses and their board of requests, town houses, harbour works, the rock-cut storehouse, sundials |
+| `src/blib/mountain.py` | the ring wall, the slope posts, the camps |
+| `src/blib/paxos_bld.py` | the Chamber, the Tholos, the oracle, the libraries, the stoa and festival ground, the courier landing, the ferry stages |
+| `src/blib/props.py`, `veg.py`, `populate.py` | pottery, carts, ships; procedural olive, cypress, pine, oak, lentisk, thyme; scattering |
+| `src/shots_*.py`, `src/render.py` | camera shots and the renderer |
+| `src/blib/solids.py` | the ground under floors, steps, paving and walls, mapped at half a metre from the built geometry and saved as `build/<island>.floors.npz`; the built plants and the render-time detail keep clear of it |
+| `src/blib/detail.py` | ground cover at render time: more shrubs, grass and thyme, and stones, where the shot's camera sees them, from the island's own density maps (`layers()` in `src/paxos_veg.py`); `detail: False` on a shot, or `DETAIL=0`, renders the built layer alone |
+| `src/captions.py`, `src/showcase_template.html`, `src/gen_showcase.py` | the showcase page |
+| `src/build_all.sh` | the whole rebuild in one run |
+| `cast/cast.json`, `cast/gen.py` | reference pictures of the cast, people only (props are modelled): Nano Banana 2 through the Batch API by default, or FLUX.2 klein 4B locally, and sheets of each setting's people side by side (`cast/README.md`); not part of the rebuild |
+| `gemini.py` | Gemini image generation shared by the cast and the book pictures: one picture at once, or many through the Batch API at half price |
+| `panels/<book>/shots.json`, `panels/previs.py`, `src/shots_panels.py` | a book's shots, and their previs: each shot's camera rendered without people to `previs-<version>.png`, carrying the shot entry and its commit |
+| `panels/batch.py` | book pictures from previs images, the usual route: the cast put in and each picture made a photograph, or with `--style ligne-claire` a ligne claire illustration, by Nano Banana 2 at 1K through the Gemini Batch API, at half price; `submit`, `status`, `fetch`; jobs recorded in `panels/batches/` (not in git) |
+| `panels/pipeline.py` | the same picture at once, for a single take; holds the prompt and request both scripts share |
+| `panels/flux.py` | trial book pictures with FLUX.2 klein 4B locally instead of Gemini: the same request, photo or ligne claire, free and slower; written beside the previs as `flux-…` |
+| `fluxlocal.py` | FLUX.2 klein 4B, run locally, shared by the cast and the trial book pictures |
+| `panels/comic.py` | the ligne claire redraw of a finished picture, for covers; a separate step |
+| `provenance.py` | where every picture came from: the record in each cast picture, previs and scene (commit, source, model, island build, input pictures); `show` follows the chain, `export` makes a JPEG that keeps it. Island builds are stamped in `build/<island>.build.json` when saved |
+| `web/images.py`, `web/images.json` | publishes the renders used on the site's pages to the image bucket and points the pages at them; `web/out/` holds the encoded files |
+
+## Credits
+
+- Textures, rock and shrub models, skies: [Poly Haven](https://polyhaven.com), CC0.
+- Leros's coastline: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors, ODbL. Its elevation: [AWS Terrain Tiles](https://registry.opendata.aws/terrain-tiles/) (SRTM and other open data).
+- Statues on the Chamber's terrace: scans from [Three D Scans](https://threedscans.com), published free of copyright restrictions.
+- Everything else (terrain, buildings, trees, props, leaf textures, the painted panel) is generated by the scripts here.

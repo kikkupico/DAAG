@@ -53,11 +53,11 @@ travelled both ways, give **one FIFO channel per ordered pair of houses: six in 
   cloud that silences the sundials, and in any season it is held by the siege, so the houses
   light no beacon there.
 - **The mountain paths** are the siege's ground. The goatherd of *Ordering Without Clocks* is a rare
-  smuggler, with no bound on his crossing time.
+  smuggler, with no bound on their crossing time.
 - **The sea**: reefs and tide-races off every headland stop small boats coasting between
   coves. Big ships go out to sea, not round the island.
 - **The camps** carry nothing from one house to another, so they are never a channel between
-  houses. The houses hired the four mercenaries, each man separately, which is why none commands another. Traders keep no ravens.
+  houses. The houses hired the four mercenaries, each separately, which is why none commands another. Traders keep no ravens.
 
 **The ring road.** Three houses, known by number, **House 1**, **House 2** and **House 3**, act as an
 island-wide distribution network.
@@ -69,7 +69,7 @@ office at one end; the **gate**, a deep entrance opening onto the road, where sl
 the storehouse at the other end, with loading doors onto the road. A portico of plain Doric
 columns, standing straight on the paving with no bases, under a lean-to roof runs the length of the range along the road's edge, and under it, by the
 gate, hangs the house's **board** of requests, a row of numbered slots with the peg beside it (House
-3's is Herlios' board). Each port town round it is a compact cluster on terraces cut into the slopes round the
+3's is the request board of *Many Copies, Acting as One*). Each port town round it is a compact cluster on terraces cut into the slopes round the
 harbour, of one-storey houses, courtyard houses and long storehouses, plastered off-white or pale ochre under gabled terracotta roofs. Houses
 face inwards, so the streets, of beaten earth, see mostly blank walls with a door and a few
 small high windows. Nothing sets one town apart.
@@ -88,7 +88,7 @@ small high windows. Nothing sets one town apart.
   both in the 3 house storehouses and in transit along the 6 directed road tracks. A messenger
   wearing a **red sash** serves as the marker dividing pre-recording shipments from
   post-recording shipments. Proves cut consistency, reachability ($S_\iota \to S^* \to S_\phi$),
-  and stable property detection. Bandits take carts but never a red sash messenger (he carries
+  and stable property detection. Bandits take carts but never a red sash messenger (the messenger carries
   nothing worth taking); a taken cart's goods leave the count like a sale, so on a day with no
   port-town trade a shortfall against the account scrolls is a deficit, a stable property. Stable properties are those of the trade between the houses,
   with the port towns' buying and selling set aside; the census is taken at no one moment, so the book counts no
@@ -102,10 +102,10 @@ small high windows. Nothing sets one town apart.
   the rule; serving by tally need not; neither sequence contains the other. Locality is shown with two
   boards, grain at House 3 and oil at House 2, ordered by all three houses (H8 for the looser rule). The **looser rule**
   (sequential consistency) passes each board and fails both together; several things done as one
-  (serializability) is one plain paragraph, with no device. The
-  paper's §4 queue is **Herlios' board** itself: numbered **slots**, a **peg** (`INC`), clerks entering requests (Glaukos, Mikon) and a loader serving (Sosias) with `SWAP`, all at one house. The
+  (serializability) is a short passage with one small three-case widget (two houses each doing two things as one). The
+  paper's §4 queue is **House 3's board** itself: numbered **slots**, a **peg** (`INC`), clerks entering requests and a loader serving with `SWAP`, all at one house. The
   rule is judged only at the houses' gates, so it cannot tell one board from copies acting as one;
-  no way of keeping copies is described. Herlios keeps the board.
+  no way of keeping copies is described.
 **Why linearizability is on Arche.** It is defined by real time: one operation finished before
 another began. Arche has real time — the sun rises over it whether or not a dial can be read —
 but in the trading season no one can read it, and no house can learn of another's order except
@@ -123,7 +123,7 @@ there are bandits about the island, and their loot is on the hilltop. The crown'
 there by choice, because the loot cannot be left; bandits met elsewhere need not be of their
 band, and no one outside can tell. The crown's four, in turn, know the camps are below and nothing
 of what the mercenaries mean to do. Why a liar on the crown lies is never given, in any book: the
-liars' motives stay hidden, and nobody ever learns which man lied.
+liars' motives stay hidden, and nobody ever learns which of them lied.
 
 ---
 
@@ -226,7 +226,7 @@ is bounded, but men lie, yielding the 3m + 1 threshold.
 
 ---
 
-## Paxos · *The Island of the Parliament, the Podium and the Scholars*
+## Paxos · *The Island of the Parliament, the Wreath and the Scholars*
 
 *One island, two ways of keeping records.* Paxos holds two assemblies, each keeping one
 append-only law scroll across absent members and changing leaders — Lamport's parliament and
@@ -250,7 +250,7 @@ on the scholars' coast waits for a vote, although the Chamber is a morning's wal
 
 | Paper | In the world |
 |---|---|
-| `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and not retold, drawn as a round hall, a tholos ringed by a colonnade, because its acoustics make oratory impossible. Legislators wander in and out, each keeps a scroll, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved |
+| `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and kept as he wrote it, drawn as a round hall, a tholos ringed by a colonnade, because its acoustics make oratory impossible. Legislators wander in and out, each keeps a scroll, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved |
 
 **The ground must provide:** the **Chamber** on the western arm, looking across the bay at
 the Tholos, and on a route rather than at a dead end (legislators wander in and out): the
@@ -285,44 +285,66 @@ of the Chamber were poor, making oratory impossible. Legislators could communica
 messenger."* A circular hall with hard stone walls under one conical roof held up by columns inside, with no podium and no head of the room,
 illustrates that faithfully, and its one doorway, with a door that can be locked, shows legislators and messengers
 coming and going. The round plan illustrates Lamport's text and carries no meaning of its own; in
-Lamport nobody speaks aloud at all. The Tholos of Schedia is the same kind of hall with the one
-thing the Chamber lacks: a podium at the centre.
+Lamport nobody speaks aloud at all. The Tholos of Schedia is a round hall of the same kind, built
+plainer: a drum of honey-coloured limestone with no colonnade outside, a porch at its one door and six
+columns inside, where the Chamber has a Doric colonnade outside and a ring of Corinthian columns within.
+It has what the Chamber lacks: one leader at a time, who wears a wreath, and a round stone table at
+the centre where seals are made.
 
 ### Schedia and the Tholos
 
-*A city on the eastern arm, with its own laws, governed from a round hall with a podium.*
+*A city on the eastern arm, with its own laws, governed from a round hall where one leader wears a wreath.*
 
 | Paper | In the world |
 |---|---|
-| `oki-liskov-1988` | **The Tholos.** A rotunda like the Chamber, with the same poor acoustics, messengers and legislators on part-time duty, and one difference: a podium at the centre. Only the legislator who holds the podium may propose; the others write down what its messengers bring. When the podium falls silent, another legislator raises a higher board, and the new holder first gathers what a majority hold, so nothing a majority knew is lost. *One Leader at a Time* |
+| `oki-liskov-1988` | **The Tholos.** A rotunda like the Chamber, with the same poor acoustics, messengers and legislators on part-time duty, and one difference: a leader. Only the legislator who wears the wreath may propose; the others write down what its messengers bring. When the holder falls silent, another legislator calls a seal with a higher number, and the new holder first gathers what a majority hold, so nothing a majority knew is lost. *One Leader at a Time* |
 
-**The podium is an office, not a pulpit.** Nobody can be heard from it either. It stands where
-every bench is the same distance away, the current board hangs on it, and the podium's
-messengers all leave from it, so where messengers in the Chamber cross the floor in every
-direction, in the Tholos they run out from the centre. Authority rides on the board number that
-every note carries, not on standing at the podium, which is only where the holder sits when
-present. A holder who has stepped out and not noticed a new board can go on sending under the
+**The wreath is an office, not a seat.** Nobody can be heard across the floor. At the centre,
+where every bench is the same distance away, stands a round stone table where seals are made and
+kept. The holder writes each line there and presses the seal beside it, and the runners all leave
+from it, so where messengers in the Chamber cross the floor in every direction, in the Tholos they
+run out from the centre. Sitting at the table makes no one leader; only the wreath does, and
+authority rides on the seal pressed beside every line, not on where anyone sits. A holder who has stepped out and not noticed a new seal can go on sending under the
 old one, and settles nothing, since any majority they reach includes a legislator who has taken
-the new board and refuses the old number. That is why boards are numbered.
+the new seal and refuses the old one.
+
+**The seal.** Each spell under one wreath has its own seal, a bronze disc laid out like the Tholos,
+with round slots sunk in it, all one size: one at each bench's place round the edge and one in the
+middle. Each legislator's signet is a round die cut with their initial (Ο, Λ, Κ, Μ, Θ), so any
+signet fits any round slot. The seal carries no colour, so the same seal works in diagrams and in
+pictures of wax and bronze. The middle has two slots: the round one takes the signet of the one who
+called the seal, its manager, and a square one beside it takes a number one higher than any seal
+they have seen, so seal 7 called by Liskovia shows Λ and 7 side by side (the paper's viewid,
+⟨count, manager⟩). The slots round the edge take the signets of the others who answered the call
+(with the middle, the view's members). A slot left empty prints nothing, so nothing shows at the
+place of anyone who did not answer, nor at the manager's own place. A wreath, a bronze ring that
+fits over any round slot, goes round the signet of the one who takes the wreath (the primary): at
+their bench's place, or in the middle when the manager takes it. The middle says who called; the
+wreath says who wears the wreath. Seals are ordered by their middle alone, by number and then by
+the manager's name. A seal never changes once made, so a legislator missing from it who comes back
+within reach means a new seal must be called. The holder presses the seal in wax beside every
+line, so each line is known by its seal and line (the viewstamp). At the middle of the hall stands a round stone table whose step is the seat: the manager of
+the present seal sits there and marks the table as theirs by setting a token cut with their initial in a socket at its
+edge, and the stamp lies on it back up, beside its print in wax and a tray of the signets not in use; each bench's stand
+keeps a print of the seal that bench serves under.
 
 **Wax, not ink.** Lamport's legislators write in indelible ink; Schedia's keep the law on wax
 tablets that stay on their bench and are smoothed when their holder goes home, while the bench's
-name and the last board it served under are cut into its stone. A legislator who steps out
-comes back to their tablets; one who goes home comes back to smooth wax, calls for a new board at
-once, and is brought up to date only by that board's opening line. If a majority go home at
-once, the council can stop for good: a board may then form only on answers that still show every
-law that passed, as the old holder's tablets would, and it never starts a board missing a law
+name and the middle of the last seal it served under are cut into its stone. A legislator who steps out
+comes back to their tablets; one who goes home comes back to smooth wax, calls for a new seal at
+once, and is brought up to date only by that seal's opening line. If a majority go home at
+once, the council can stop for good: a seal may then form only on answers that still show every
+law that passed, as the old holder's tablets would, and it never starts a seal missing a law
 that passed. VR keeps its group state in volatile memory, and a majority remembering is
 what makes that safe.
 
 **The council.** Five legislators: Okios and Liskovia (Oki and Liskov), and Kleon, Melissa and
 Theron, ordinary names for seats no author fills. A majority is three, so a law passes when the
 holder and two others hold its line. They are told apart by colour: Okios blue-grey, Liskovia
-saffron, Kleon green, Melissa madder red, Theron grey. The podium's runners are young men in short
+saffron, Kleon green, Melissa madder red, Theron grey. The holder's runners are young men in short
 brown tunics, one to each bench, who carry the lines in order and never skip one. Citizens
-petition the podium only; a petition that reaches a bench comes back with the holder's name.
-The Tholos set seats more than five (twelve benches); the book is right and the set may be
-brought down to five.
+petition the holder only; a petition that reaches a bench comes back with the holder's name.
+The Tholos has five benches, one for each legislator.
 
 **Why a Tholos.** In Athens the Tholos was the round building of the prytaneis, the committee
 on duty in turn, with one member presiding: a round civic hall with a head, on part-time duty.
