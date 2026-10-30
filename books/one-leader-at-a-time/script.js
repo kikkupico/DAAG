@@ -304,10 +304,17 @@ function verdict(r,checks,say){
 (function(){
   const T=Tholos($("#waxsvg")),checks=$("#waxchecks"),say=$("#waxsay");let home={};
   T.seal(S6);
-  function paint(){const ans={};ALL.forEach(k=>{ans[k]=home[k]?"without":"with";T.out(k,home[k]);T.note(k,home[k]?"smooth wax":"to line "+HELD[k])});
+  const flip={};
+  ALL.forEach(k=>{flip[k]=()=>{home[k]=!home[k];paint()}});
+  const L=Unfold(T.svg,{nodes:LN,span:3.2,alias:{P:"O"},mtext:M_,
+    press:Object.fromEntries(ALL.map(k=>[k,[`${WHO[k].m}: crash or recover`,flip[k]]]))});L.wrap(T);
+  L.turn("O");
+  function paint(){
+    L.reset();L.turn("O");
+    const ans={};ALL.forEach(k=>{ans[k]=home[k]?"without":"with";T.out(k,home[k]);T.note(k,home[k]?"smooth wax":"to line "+HELD[k])});
     const r=mayForm(ans);verdict(r,checks,say);
     if(!r.forms)say.innerHTML=dual(`<span class="bad">No seal forms, tonight or ever.</span> All five have answered, so there is nobody left to wait for, and too few answers can show what passed. The council stops for good. The law is lost, but no seal starts without line 12.`,`<span class="bad">No view forms, now or ever.</span> All five have answered, so there is nobody left to wait for, and too few answers can show what committed. The group stops for good. The log is lost, but no view starts without record 12.`)}
-  ALL.forEach(k=>{T.seat[k].g.classList.add("pick");button(T.seat[k].g,`${WHO[k].n}: go home or stay`,()=>{home[k]=!home[k];paint()})});
+  ALL.forEach(k=>{T.seat[k].g.classList.add("pick");button(T.seat[k].g,`${WHO[k].n}: go home or stay`,flip[k])});
   $("#waxreset").onclick=()=>{home={};paint()};paint();
 })();
 
