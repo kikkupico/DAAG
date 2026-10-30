@@ -20,8 +20,8 @@ Verified against `ls sources/`, not asserted:
 
 | Island | Papers |
 |---|--:|
-| Arche (ring road and Mount Phyle) | 15 |
-| Paxos (the Chamber, Schedia, the scholars' coast, the oracle at the fork) | 10 |
+| Arche (ring road and Mount Phyle) | 13 |
+| Paxos (the Chamber, Schedia, the scholars' coast, the oracle at the fork) | 12 |
 
 No PDF is unassigned and nothing is blocked. Every paper the islands name is on disk and has
 been verified by opening it.
@@ -151,14 +151,10 @@ outcome, and an outcome is plot.
 
 | Paper | In the world |
 |---|---|
-| `fischer-lynch-paterson-1985_flp-impossibility` | In an asynchronous gorge with one silent crash, commanders stay trapped in bivalence: an overrun camp cannot be told from a delayed raven. (*The Limits of Agreement*) |
-| `dwork-lynch-stockmeyer-1988` | **The camps on windy nights.** The one change from *The Limits of Agreement* is the **wind**: while it blows, a raven goes down among the crows of the folds and sits it out, for any time and even past the drop, so no one can say how long a bird will take; it always drops in the end and stays down, and a bird let go in still air is at its perch within a **glass** (Δ holds eventually; the drop is GST, which no man can see). The **glasses** were started together as the last light left the crown, which every tent can see on a clear evening, and run alike; a count of glasses is common to all (synchronous processors, Φ = 1, §4). A strip taken in during a later glass than it was written in is set aside. Four glasses make a **turn**, owned in number order by the count (Algorithm 1's phases): the **asking glass** (acceptable answers to the owner), the **calling glass** (the owner calls an answer three men can accept), the **answering glass** (**pledges** tied to the tent pole, *pledged* back; the owner commits on two), the **untying glass** (lock release). **The sighted answers** are the PROPER set. Every man who commits sends a **parting bird** to each tent before he leaves it (Remark 2; birds are never lost). Safe in any wind; once it drops all commit, within twenty glasses if no one committed while it blew, otherwise when the first parting birds arrive, with no bound; four men bear one death and no arrangement bears two (Theorem 4.3). The book closes with the liar bounds (3t + 1, sealed or not) and points up to the crown. The men are the four of *The Limits of Agreement*, known by their tents' numbers, 1 to 4. The turn's owner is not a leader. Nothing follows from committing. (*Agreeing When Messages Run Late*) |
-| `brewer-2000`, `gilbert-lynch-2002` (+ the 2012 retrospective) | **The camps on nights of lost birds.** The one change: a raven can be **lost** (a hawk takes it in the folds, unseen); when every bird between one tent and the rest is lost, that tent is **cut off**. There is no wind: a bird that arrives does so within a known **flight**, and each tent's glass runs alike (G&L's partially synchronous model, §4). The object is the **standing plan**, hold at dusk, which any man may move and any may ask after: a read/write register over the camps' own two answers. **Answering as one** is linearizability (the rule of *Many Copies*, restated); **every man is answered** is availability. The cut-off tent (Number 4) cannot do both (Theorem 2). One tent, the **muster-master** (tent 1), holds the only note of the plan (the centralized algorithm); **waiting a glass** is the timeout; the **promise of the span t** is Delayed-t, with every bird to the muster-master carrying the sender's unacknowledged moves, since ravens are not FIFO. On a windy night even nights with no loss cannot answer as one (Corollary 1.1). The same four numbered men, as in DLS. Nobody commits; nothing follows from which plan stands. (*Answering While Cut Off*) |
+| `dwork-lynch-stockmeyer-1988` | **The camps on windy nights.** Across the sea on Paxos, FLP proved that in an asynchronous hall with one crash, consensus is impossible. On Mount Phyle, DLS resolves the dilemma with the **wind**: while it blows, a raven goes down among the crows of the folds and sits it out, for any time and even past the drop, so no one can say how long a bird will take; it always drops in the end and stays down, and a bird let go in still air is at its perch within a **glass** (Δ holds eventually; the drop is GST, which no man can see). The **glasses** were started together as the last light left the crown, which every tent can see on a clear evening, and run alike; a count of glasses is common to all (synchronous processors, Φ = 1, §4). A strip taken in during a later glass than it was written in is set aside. Four glasses make a **turn**, owned in number order by the count (Algorithm 1's phases): the **asking glass** (acceptable answers to the owner), the **calling glass** (the owner calls an answer three men can accept), the **answering glass** (**pledges** tied to the tent pole, *pledged* back; the owner commits on two), the **untying glass** (lock release). **The sighted answers** are the PROPER set. Every man who commits sends a **parting bird** to each tent before he leaves it (Remark 2; birds are never lost). Safe in any wind; once it drops all commit, within twenty glasses if no one committed while it blew, otherwise when the first parting birds arrive, with no bound; four men bear one death and no arrangement bears two (Theorem 4.3). The book closes with the liar bounds (3t + 1, sealed or not) and points up to the crown. The men are the four of the mercenary camps, known by their tents' numbers, 1 to 4. The turn's owner is not a leader. Nothing follows from committing. (*Agreeing When Messages Run Late*) |
 | `pease-shostak-lamport-1980`, `lamport-shostak-pease-1982` | In synchronous rounds with traitors sending conflicting scrolls, loyal commanders agree iff N ≥ 3m + 1 — or, **with unforgeable wax signets, for any number of generals at all**. (*Agreeing Among Liars*) |
-| `chandra-toueg-1996` | Each tent keeps **the slate**: a row per other tent, chalked against a tent the man suspects and rubbed out when a bird comes from it. The suspicion is often wrong — an empty perch is a dead man or a raven still in the folds. The paper's classes are ways a slate may be wrong (completeness, accuracy; perpetual or eventual), and men copying one another's chalk turns weak completeness into strong. With **S** (one live man never wrongly chalked) the camps can agree with any number silent, relaying estimates round by round and no coordinator; with **◇S** they need a majority alive and use **a turn to propose**, passing round the tents in number order by round number, not by anyone's command (the turn of *Agreeing When Messages Run Late*, at the same tents, which the book points to). The slate's guarantees are **granted, not earned**: ravens with unbounded flights cannot build such a slate, and the paper treats the detector as given in the same way. The men are the same four numbered men, as in DLS and CAP. With S the book's arrangement is the **sheet of sightings** relayed for three rounds; with ◇S, **turns** with **estimates**, *agreed* / *not agreed*, and a **parting bird** relayed before committing. On windy nights (DLS) a slate in the end perfect can be kept by growing waits (Theorem 9). As always on the hill, nothing follows from the decision. (*Telling the Dead from the Slow*) |
-| `ben-or-1983` | The camps below, deadlocked as FLP says they may be forever, let chance break the tie. The choice is binary, attack or hold, which is exactly Ben-Or's model. The one change from *The Limits of Agreement* is lifting its "they may not draw lots": each man was paid in Attic silver, and a man who cannot settle tosses his own coin and catches it, alone in his tent (a local coin; tossed, not spun, since a spun coin is not fair); **owl for hold, goddess for attack**, fixed in advance. The camps send ravens in numbered **rounds**: a **report** (the answer he favours), then a second bird, **sure of** an answer (more than half of all four reports seen) or **unsure**. Every wait is for three birds (N − t). Favour an answer on one *sure* bird, be **settled** on two, toss on none. **The rule of parting**: a settled man at once sends both birds of the next round, then commits, since committing is silence; this is not in Ben-Or's paper (decided processes keep running there) and changes nothing the others see. Four camps bear one silent man (N > 2t); with half silent, no arrangement works. With probability 1 the tosses eventually line up and all commit; no night can be named, and courses that never end exist with probability 0. The paper gives no proofs; the full one is Aguilera & Toueg 2012. Ben-Or's version for liars (N > 5t) does not belong below: the mercenaries do not lie. The men are the same four numbered men as in every camp book. As always on the hill, nothing follows from the decision. (*Agreeing by Chance*) |
-| `castro-liskov-1999` | **The crown, on a later night of the siege.** The four keep one **loot scroll**, a copy at each post: where each strongbox lies and whose share it is. Each man is also a client: he files an entry and trusts it only when two sealed replies agree (f + 1). One man holds the chief's job and numbers the entries; the others echo twice, each time waiting for three seals (2f + 1), before an entry stands. The job starts with Number 1, the chief, and passes in number order (view change) when the others suspect its registrar of stalling or of numbering two ways. *Agreeing Among Liars* already says the chief is a job, not a rank. Four is exactly 3f + 1 for one liar, and the seal rings are that book's. On these nights **wind over the crown** holds the rats in their holes for as long as it blows, so a run has no bound; the entries stay safe in any wind, and progress returns once the wind drops for long enough (PBFT's delay(t) assumption). Each man's sandglass is only a timer for suspecting the chief, doubling at each change. The two-seal rule for clients is stated and shown redundant for an honest man, whose own copy already tells him an entry stands. MACs appear only in the mapping table. The men are the crown's four of *Agreeing Among Liars* (Number 1, the chief inside the wall, holds the job first, then Numbers 2, 3 and 4). An entry is **readied** on three seals (numbering and two first echoes) and **stands** on three second echoes; a job change needs three **requests**, and a man joins on two; **settled checkpoints** are the paper's stable checkpoints. The wind that blows over the whole hill is the same wind as the camps'. Nothing follows from any entry. (*Keeping Order Among Liars*) |
-| `yin-2019_hotstuff` | **The same crown and loot scroll, later again.** The chief's job passes to the next man with every entry, whether or not anyone suspects its registrar. Each man sends his sealed vote only to the man who has the job, who ties three of them into one **bundle** and sends the bundle on, instead of every man writing to every other. After the wind drops (GST), a new registrar proceeds as fast as the rats run, not when a sandglass runs out (optimistic responsiveness), and a change of registrar costs no more than an ordinary entry (linear view change). The bundle is three seals, not one: say plainly that the paper's threshold signature makes it the size of a single seal. The case for three stages (the hidden lock) is shown on the crown as a two-stage procedure that must wait out a full sandglass after each change of registrar. The men are the crown's four of *Agreeing Among Liars*; the footnote credits all five authors. Devices: **votes** to the registrar alone, **bundles** of three; a man's **lock** is the latest second bundle he voted on; the rule for the first vote (extends your lock, or carries a later bundle); the **hidden lock** of two stages; the chain in which three in a row make the first stand. Must not contradict *Keeping Order Among Liars*; nothing follows from any entry. (*Changing Leaders Among Liars*) |
+| `ben-or-1983` | The camps below, deadlocked as FLP proved across the water that asynchronous actors may be forever, let chance break the tie. The choice is binary, attack or hold, which is exactly Ben-Or's model. Each man was paid in Attic silver, and a man who cannot settle tosses his own coin and catches it, alone in his tent (a local coin; tossed, not spun, since a spun coin is not fair); **owl for hold, goddess for attack**, fixed in advance. The camps send ravens in numbered **rounds**: a **report** (the answer he favours), then a second bird, **sure of** an answer (more than half of all four reports seen) or **unsure**. Every wait is for three birds (N − t). Favour an answer on one *sure* bird, be **settled** on two, toss on none. **The rule of parting**: a settled man at once sends both birds of the next round, then commits, since committing is silence; this is not in Ben-Or's paper (decided processes keep running there) and changes nothing the others see. Four camps bear one silent man (N > 2t); with half silent, no arrangement works. With probability 1 the tosses eventually line up and all commit; no night can be named, and courses that never end exist with probability 0. The paper gives no proofs; the full one is Aguilera & Toueg 2012. Ben-Or's version for liars (N > 5t) does not belong below: the mercenaries do not lie. The men are the same four numbered men as in every camp book. As always on the hill, nothing follows from the decision. (*Agreeing by Chance*) |
+| `brewer-2000`, `gilbert-lynch-2002` (+ the 2012 retrospective) | **The camps on nights of lost birds.** The one change: a raven can be **lost** (a hawk takes it in the folds, unseen); when every bird between one tent and the rest is lost, that tent is **cut off**. There is no wind: a bird that arrives does so within a known **flight**, and each tent's glass runs alike (G&L's partially synchronous model, §4). The object is the **standing plan**, hold at dusk, which any man may move and any may ask after: a read/write register over the camps' own two answers. **Answering as one** is linearizability (the rule of *Many Copies*, restated); **every man is answered** is availability. The cut-off tent (Number 4) cannot do both (Theorem 2). One tent, the **muster-master** (tent 1), holds the only note of the plan (the centralized algorithm); **waiting a glass** is the timeout; the **promise of the span t** is Delayed-t, with every bird to the muster-master carrying the sender's unacknowledged moves, since ravens are not FIFO. On a windy night even nights with no loss cannot answer as one (Corollary 1.1). The same four numbered men, as in DLS. Nobody commits; nothing follows from which plan stands. (*Answering While Cut Off*) |
 
 **The ground:** a broad massif with broad lower slopes and a steep cragged top crowned by a small ruined ring wall, eight spurs and gullies (only the four with camps have a way down; the folds between end in crags), and four camps at the quarter points with no pair able
 to see each other. It fills the centre of Arche and blocks every line of sight between the
@@ -166,10 +162,10 @@ houses.
 
 ### The synchrony split on Mount Phyle
 
-- **The camps at the base carry the asynchronous model and its ways out.** Ravens, unbounded
-  delay, no fire or signal. FLP, DLS, Brewer / Gilbert & Lynch, Ben-Or and Chandra & Toueg live
-  here, each changing one assumption of FLP: nothing, a wind that drops, lost birds, a coin, a
-  failure detector. The mercenaries have
+- **The camps at the base carry the escape routes from asynchronous impossibility.** Ravens, unbounded
+  delay, no fire or signal. Where the Chamber of Paxos establishes the impossibility of agreement under
+  pure asynchrony, DLS (partial synchrony via a wind that drops) and Ben-Or (randomization via coin tosses)
+  live here at the foot of Mount Phyle. The mercenaries have
   no leader and do not lie. On the windy nights of DLS each tent has a glass, started together as
   the last light left the crown; no other common moment exists below.
 - **The summit carries the synchronous model.** On the very top stands a small ruined ring wall of rough
@@ -189,28 +185,22 @@ houses.
   small except a runner, and a runner or a homing bird would be seen and heard. The rats stand for any private,
   bounded message from one post to one other, which is all the paper asks of a messenger, and the wind can still
   hold them back.
-- **The crown on later nights carries partial synchrony with liars.** The sandglasses were turned
-  together once, on the first night, and never again: the hill's shoulders take the light from each post at a
-  different moment, and the chief inside his wall sees only sky, so the last light that the tents below turn their glasses by is not theirs to use. On later nights the wind that blows over the whole hill holds the crown's rats in their holes for
-  as long as it blows; once it drops, every run is short again (GST, then Δ). The same wind
-  carries crashes below (DLS) and liars above (PBFT, HotStuff). The bandits have what the mercenaries lack, a chief and reason to distrust one another,
-  so the leader-based papers live here: PBFT, then HotStuff.
+- **The crown carries pure synchrony with liars.** The sandglasses were turned
+  together once, on the first night; every run of a rat is bounded by a sandglass, and silence within a round is detectable.
+  Leader-based state machine replication under partial synchrony with liars (*Keeping Order Among Liars*, *Changing Leaders Among Liars*) lives in the Tholos of Schedia.
 
-*Agreeing Among Liars* closes on the contrast: below, honest men can die and messages take
-arbitrary time, yielding impossibility (*The Limits of Agreement*); above, nobody dies and time
+*Agreeing Among Liars* closes on the contrast: across the water on Paxos, honest legislators can step out and messages take
+arbitrary time, yielding impossibility (*The Limits of Agreement*); on the crown of Phyle, nobody dies and time
 is bounded, but men lie, yielding the 3m + 1 threshold.
 
 ### The synchrony spectrum on Arche
 
-- **Pure asynchrony (unbounded delay, crash faults):** the camps (FLP 1985); with a coin (Ben-Or
-  1983) or a slate (Chandra & Toueg 1996).
+- **Asynchronous randomized consensus (crash faults):** the camps with coins (Ben-Or 1983).
 - **Asynchronous FIFO with causality and snapshots:** the ring road in the cloudy trading season
   (Lamport 1978, Chandy–Lamport 1985).
 - **Partial synchrony (unbounded delay → GST → bounded delay Δ), crash faults:** the camps on
   windy nights (DLS 1988).
-- **Bounded delay with message loss:** the camps on nights of lost birds (Gilbert & Lynch 2002).
 - **Pure synchrony (bounded rounds, Byzantine faults):** the crown's first night (PSL 1980, LSP 1982).
-- **Partial synchrony with Byzantine faults:** the crown on windy nights (PBFT 1999, HotStuff 2019).
 
 ### Two precision notes
 
@@ -248,9 +238,13 @@ on the scholars' coast waits for a vote, although the Chamber is a morning's wal
 
 ### The Chamber
 
+The western arm of Paxos hosts the parliamentary forum where the core problems of distributed consensus and consistency are enacted across three trials of parliamentary law.
+
 | Paper | In the world |
 |---|---|
-| `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and kept as he wrote it, drawn as a round hall, a tholos ringed by a colonnade, because its acoustics make oratory impossible. Legislators wander in and out, each keeps a scroll, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved |
+| `fischer-lynch-paterson-1985_flp-impossibility` | **The Chamber of Paxos.** In an asynchronous hall with poor acoustics, messengers wandering across the floor and through olive groves, and legislators stepping out, the Chamber cannot guarantee a decree ever passes. Trapped in bivalent configurations, an absent colleague cannot be told from a delayed messenger. (*The Limits of Agreement*) |
+| `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and kept as he wrote it, drawn as a round hall, a tholos ringed by a colonnade, because its acoustics make oratory impossible. Legislators wander in and out, each keeps a scroll, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved. (*The Part-Time Parliament*) |
+| `chandra-toueg-1996` | **The Chamber with door slates.** Absent colleagues stepping out into the olive groves leave legislators uncertain whether an empty bench is a crash or a slow return. Each legislator chalks an attendance slate (*pinakion*) at the Chamber door. With an unreliable detector of class $\diamond\mathcal{S}$ and a rotating presidency (*epistatai* of the round), the parliament circumvents FLP and safely passes decrees. (*Telling the Absent from the Slow*) |
 
 **The ground must provide:** the **Chamber** on the western arm, looking across the bay at
 the Tholos, and on a route rather than at a dead end (legislators wander in and out): the
@@ -276,8 +270,9 @@ systems paper outside the series that set out to leave the island of Paxos; it n
 the city carries.
 
 **Later papers reuse existing rooms** instead of adding devices, so that approaches can be
-compared directly and the reader carries fewer allegories. Ben-Or and Chandra & Toueg return
-to FLP's camps, and PBFT and HotStuff to the Byzantine Generals' crown. What separates a later paper from an earlier one in the
+compared directly and the reader carries fewer allegories. Chandra & Toueg joins FLP and
+Paxos in the Chamber, while Ben-Or, DLS, and CAP share the mercenary camps below Mount Phyle, and
+PBFT and HotStuff join VR in the Tholos of Schedia. What separates a later paper from an earlier one in the
 same place is a rule of procedure, not a building.
 
 **The Chamber is drawn as a rotunda.** Lamport gives it one physical property: *"The acoustics
@@ -298,6 +293,8 @@ the centre where seals are made.
 | Paper | In the world |
 |---|---|
 | `oki-liskov-1988` | **The Tholos.** A rotunda like the Chamber, with the same poor acoustics, messengers and legislators on part-time duty, and one difference: a leader. Only the legislator who wears the wreath may propose; the others write down what its messengers bring. When the holder falls silent, another legislator calls a seal with a higher number, and the new holder first gathers what a majority hold, so nothing a majority knew is lost. *One Leader at a Time* |
+| `castro-liskov-1999` | **The Tholos under four stewards.** When the legislators sail away, four unvetted stewards take over the city's law scroll and round hall. At most one steward may lie ($n = 3f + 1 = 4$, $f = 1$); nobody learns who lies and motive stays hidden. A line stands only after two echoes, each gathering three seals of four; a writer who stalls is replaced under a doubling sandglass. Stable checkpoints keep the log bounded. *Keeping Order Among Liars* |
+| `yin-2019_hotstuff` | **The Tholos with rotating writers.** The four stewards rotate the writer's office at every line of law. Stewards vote only to the writer, who bundles three seals into one and sends it out. A three-stage commit makes the lock visible, allowing a new writer to proceed at the pace of the messengers (optimistic responsiveness). Chained HotStuff pipelines the stages into a continuous stream. *Changing Leaders Among Liars* |
 
 **The wreath is an office, not a seat.** Nobody can be heard across the floor. At the centre,
 where every bench is the same distance away, stands a round stone table where seals are made and
@@ -345,6 +342,8 @@ saffron, Kleon green, Melissa madder red, Theron grey. The holder's runners are 
 brown tunics, one to each bench, who carry the lines in order and never skip one. Citizens
 petition the holder only; a petition that reaches a bench comes back with the holder's name.
 The Tholos has five benches, one for each legislator.
+
+**The four stewards.** When the five legislators leave on a voyage, four unvetted stewards (Stewards 1, 2, 3, 4) take charge of the hall and the law scroll. They differ only by clothing colour. At most one steward may lie ($n = 3f + 1 = 4$, $f = 1$). Nobody learns who lies; motive stays hidden. Quorums are three of four ($2f + 1 = 3$), guaranteeing that any two quorums share at least two stewards, of whom at least one is honest. Messengers cross the open stone floor carrying notes stamped with bronze signets in wax.
 
 **Why a Tholos.** In Athens the Tholos was the round building of the prytaneis, the committee
 on duty in turn, with one member presiding: a round civic hall with a head, on part-time duty.
@@ -441,5 +440,4 @@ snapshots) · Corbett et al. 2012 (Spanner) · Thomson et al. 2012 (Calvin).
 1. **How many books per island.** The grounds and buildings are fixed; the book count is not.
    Current plan: one paper per book except *Ordering Without Clocks* (Lamport with Fidge and Mattern), *Agreeing Among Liars*
    (the two Byzantine Generals papers) and the paired papers (Lamport 1998 with 2001, Brewer with Gilbert & Lynch, Shapiro's two, Hellerstein
-   with Ameloot). The camps keep five books (*The Limits of Agreement*, DLS, CAP, Ben-Or, Chandra & Toueg) and the crown
-   three (*Agreeing Among Liars*, Castro & Liskov, HotStuff).
+   with Ameloot). The camps keep three books (*Agreeing When Messages Run Late*, *Agreeing by Chance*, *Answering While Cut Off*), the crown one (*Agreeing Among Liars*), the Chamber three (*The Limits of Agreement*, *The Part-Time Parliament*, *Telling the Absent from the Slow*), and the Tholos three (*One Writer at a Time*, *Keeping Order Among Liars*, *Changing Leaders Among Liars*).

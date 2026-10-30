@@ -487,8 +487,8 @@ def("flp", "tents", [
   sl("T1", 4.0, "T2", 4.9, { id: "h4" }), ev("T2", 4.9, { hollow: 1, id: "r4" }),
   sl("T2", 5.0, "T1", 5.9, { id: "h5" }), ev("T1", 5.9, { hollow: 1, id: "r5" }),
   { t: "x", n: "T4", at: 1.6, c: 1, id: "dead" },
-  tg(on("T4", 1.6, 64, 18), V("dead, or a slow bird?", "crashed, or slow?"), { c: 1, own: 1, id: "t1" }),
-  tg([0, 236], V("nobody ever commits", "no process decides"), { c: 1, own: 1, id: "t2" })
+  tg(on("T4", 1.6, 64, 18), V("absent, or a slow runner?", "crashed, or slow?"), { c: 1, own: 1, id: "t1" }),
+  tg([0, 236], V("no decree ever passes", "no process decides"), { c: 1, own: 1, id: "t2" })
 ]);
 const LATE = ["flp.h4", "flp.r4", "flp.h5", "flp.r5"];
 
@@ -513,7 +513,7 @@ grow("bo", "flp", { drop: LATE, add: [
   tg(on("T3", 6.1, 0, -30), V("alike at last: all commit", "decide, with probability 1"), { own: 1, id: "t2" })
 ] });
 
-/* Telling the Dead from the Slow: a slate in each tent instead of the wind */
+/* Telling the Absent from the Slow: attendance slates chalked at the chamber door */
 grow("ct", "dls", { drop: ["dls.band", "dls.ring"], add: [
   { t: "slate", n: "T3", at: 1.6, txt: "T1", struck: 1, side: -1, c: 1, id: "w" },
   { t: "slate", n: "T1", at: 2.7, txt: "T4", side: -1, c: 1, id: "s1" },
@@ -573,7 +573,7 @@ def("vr", "tholos", [
   tg(on("L", 5.8, 10, 34), V("the latest takes the wreath", "highest viewstamp: primary"), { own: 1, id: "t2" })
 ]);
 
-/* Keeping Order Among Liars: the registrar may lie, and an entry stands only on three seals of four */
+/* Keeping Order Among Liars: the writer may lie, and a line stands only on three seals of four */
 def("pbft", "b4", [
   { t: "halo", n: "B1", cls: "red", c: 1, id: "liar" },
   sl("B1", .6, "B2", 1.4, { lab: "X", id: "o2" }), sl("B1", .6, "B3", 1.6, { lab: "X", dir: 1, la: .62, id: "o3" }), sl("B1", .6, "B4", 1.4, { lab: "Y", c: 1, id: "o4" }),
@@ -581,11 +581,11 @@ def("pbft", "b4", [
   sl("B3", 1.9, "B2", 2.7, { id: "e32" }), sl("B3", 1.9, "B4", 2.7, { id: "e34" }),
   sl("B4", 1.9, "B2", 2.9, { dir: 1, id: "e42" }), sl("B4", 1.9, "B3", 2.7, { id: "e43" }),
   ev("B2", 3.2, { v: "X", big: 1, id: "k2" }), ev("B3", 3.2, { v: "X", big: 1, id: "k3" }), ev("B4", 3.2, { hollow: 1, id: "k4" }),
-  tg(on("B1", .8, 104, -30), V("the registrar may lie", "a Byzantine primary"), { c: 1, own: 1, id: "t1" }),
+  tg(on("B1", .8, 104, -30), V("the writer may lie", "a Byzantine primary"), { c: 1, own: 1, id: "t1" }),
   tg([0, 222], V("echo: three seals of four", "prepare: 2f + 1 of 3f + 1"), { own: 1, id: "t2" })
 ]);
 
-/* Changing Leaders Among Liars: votes go only to the registrar, tied into bundles of three */
+/* Changing Leaders Among Liars: votes go only to the writer, tied into bundles of three */
 grow("hs", "pbft", { drop: ["pbft.e23", "pbft.e24", "pbft.e32", "pbft.e34", "pbft.e42", "pbft.e43", "pbft.k2", "pbft.k3", "pbft.k4"], add: [
   sl("B2", 1.55, "B1", 2.05, { c: 1, id: "v12" }), sl("B3", 1.7, "B1", 2.2, { c: 1, dir: 1, id: "v13" }),
   { t: "bun", n: "B1", at: 2.35, c: 1, id: "q1" },
@@ -595,7 +595,7 @@ grow("hs", "pbft", { drop: ["pbft.e23", "pbft.e24", "pbft.e32", "pbft.e34", "pbf
   sl("B1", 4.05, "B2", 4.55, { id: "x2" }), sl("B1", 4.05, "B3", 4.65, { dir: 1, id: "x3" }), sl("B1", 4.05, "B4", 4.55, { id: "x4" }),
   sl("B2", 4.65, "B1", 5.15, { c: 1, id: "v32" }), sl("B4", 4.65, "B1", 5.15, { c: 1, id: "v34" }), sl("B3", 4.7, "B1", 5.25, { c: 1, dir: 1, id: "v33" }),
   { t: "bun", n: "B1", at: 5.45, c: 1, id: "q3" },
-  tg(on("B1", 4.5, 110, 0), V("votes to the registrar only", "votes to the leader only"), { c: 1, own: 1, id: "t1" }),
+  tg(on("B1", 4.5, 110, 0), V("votes to the writer only", "votes to the leader only"), { c: 1, own: 1, id: "t1" }),
   tg([0, 236], V("tied in bundles of three", "quorum certificates"), { c: 1, own: 1, id: "t2" })
 ] });
 
@@ -1373,7 +1373,7 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
     const k = sv("rect", { class: "bun-k", x: -9, y: -9, width: 18, height: 18, rx: 3, transform: `translate(${pos[0][0]} ${pos[0][1] - 24}) rotate(45)` }, gNode);
     k.style.opacity = mode === "star" ? 1 : 0;
     const lb = sv("text", { x: pos[0][0] + 18, y: pos[0][1] + 4, "text-anchor": "start", style: "font:600 12px var(--sans);fill:#f5f5f7" }, gNode);
-    lb.textContent = isM() ? "leader" : "registrar";
+    lb.textContent = isM() ? "leader" : "writer";
     paint();
   }
   function paint() {
@@ -1382,7 +1382,7 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
     const k = $(".bun-k", gNode); if (k) k.style.opacity = mode === "star" ? 1 : 0;
     $$("button", seg).forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.n === n)));
     count(A, n * (n - 1)); count(B, 2 * (n - 1));
-    flip.innerHTML = mode === "all" ? T2("Tie the bundles", "Aggregate") : T2("Every bandit to every other", "All-to-all");
+    flip.innerHTML = mode === "all" ? T2("Tie the bundles", "Aggregate") : T2("Every steward to every other", "All-to-all");
   }
   $$("button", seg).forEach(b => b.addEventListener("click", () => { n = +b.dataset.n; draw(); }));
   flip.addEventListener("click", () => { mode = mode === "all" ? "star" : "all"; paint(); });
@@ -1553,7 +1553,7 @@ const treeFrame = (function family() {
     flp: ["the-limits-of-agreement", "The Limits", "FLP", "owc"],
     dls: ["agreeing-when-messages-run-late", "Running Late", "Partial synchrony", "flp"],
     bo: ["agreeing-by-chance", "By Chance", "Ben-Or", "flp"],
-    ct: ["telling-the-dead-from-the-slow", "Dead or Slow", "Failure detectors", "dls"],
+    ct: ["telling-the-absent-from-the-slow", "Absent or Slow", "Failure detectors", "dls"],
     cap: ["answering-while-cut-off", "Cut Off", "CAP", "mc"],
     bgp: ["agreeing-among-liars", "Among Liars", "Byzantine generals", "flp"],
     ptp: ["the-part-time-parliament", "Parliament", "Paxos", "dls"],
