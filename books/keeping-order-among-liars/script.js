@@ -230,7 +230,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
   function card(k,s){
     const T=Ts[s],K=know(k,T),role=k===HOLD?dual("has the job","primary"):"";
     const note=[];
-    if(k===4)return `<div class="hc dim"><h5><span><i class="dot" style="background:${BC[k]}"></i>${dual("Number 4","R4")}</span></h5><div class="chk">${s>=1?dual("Rats held by the wind. Nobody waits for them.","Messages delayed. Nobody waits for them."):"—"}</div></div>`;
+    if(k===4)return `<div class="hc dim"><h5><span><i class="dot" style="background:${BC[k]}"></i>${dual("Number 4","R4")}</span></h5><div class="chk">${s>=1?dual("Rats held by the wind. Nobody waits for them.","Messages delayed. Nobody waits for them."):", "}</div></div>`;
     if(s===0&&k===2)note.push(dual("filed the entry","submitted the request"));
     note.push(K.has?(k===HOLD?dual("has numbered it","has numbered it"):dual("holds the numbering","holds the pre-prepare")):dual("no numbering yet","no numbering yet"));
     if(s>=2)note.push(dual(`first echoes ${Math.min(K.first,2)} of 2`,`prepares ${Math.min(K.first,2)} of 2`));

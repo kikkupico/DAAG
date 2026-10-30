@@ -558,7 +558,7 @@ def("ptp", "priests", [
   tg(on("B", 5.2, -96, 0), V("ask most, propose the latest", "phase 1, then phase 2"), { own: 1, id: "t2" })
 ]);
 
-/* One Leader at a Time: a podium; a line passes on the holder and two benches; a silent podium is replaced */
+/* One Leader at a Time: one holder wears the wreath; a line passes on the holder and two benches; a silent holder is replaced */
 def("vr", "tholos", [
   { t: "halo", n: "O", cls: "gold", c: 1, id: "pod" },
   { t: "gap", n: "Th", t1: .5, t2: 3.3, id: "away" },
@@ -566,11 +566,11 @@ def("vr", "tholos", [
   sl("L", 1.6, "O", 2.3, { id: "r1" }), sl("K", 1.9, "O", 2.6, { id: "r2" }),
   ev("O", 2.6, { num: "✓", big: 1, id: "pass" }),
   { t: "x", n: "O", at: 3.45, id: "sil" },
-  sl("Th", 3.6, "L", 4.4, { dir: 1, lab: V("board 7?", "view 7?"), la: .26, id: "n1" }), sl("Th", 3.6, "M", 4.2, { id: "n2" }),
-  sl("L", 4.55, "Th", 5.35, { dir: -1, lab: V("board 6, line 12", "viewstamp 6.12"), la: .3, id: "n3" }), sl("M", 4.4, "Th", 5.0, { id: "n4" }),
+  sl("Th", 3.6, "L", 4.4, { dir: 1, lab: V("seal 7?", "view 7?"), la: .26, id: "n1" }), sl("Th", 3.6, "M", 4.2, { id: "n2" }),
+  sl("L", 4.55, "Th", 5.35, { dir: -1, lab: V("seal 6, line 12", "viewstamp 6.12"), la: .3, id: "n3" }), sl("M", 4.4, "Th", 5.0, { id: "n4" }),
   ev("L", 5.8, { num: "", fill: "#e0b84a", big: 1, ring: 1, id: "newp" }),
-  tg(on("O", 1.2, -100, -20), V("only the podium writes", "only the primary orders"), { c: 1, own: 1, id: "t1" }),
-  tg(on("L", 5.8, 10, 34), V("the latest takes the podium", "highest viewstamp: primary"), { own: 1, id: "t2" })
+  tg(on("O", 1.2, -100, -20), V("only the holder writes", "only the primary orders"), { c: 1, own: 1, id: "t1" }),
+  tg(on("L", 5.8, 10, 34), V("the latest takes the wreath", "highest viewstamp: primary"), { own: 1, id: "t2" })
 ]);
 
 /* Keeping Order Among Liars: the registrar may lie, and an entry stands only on three seals of four */
@@ -1196,7 +1196,7 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
     els.forEach((c, i) => c.classList.toggle("sure", v >= 0 && pref[i] === v));
     if (v >= 0) {
       done = true;
-      st.innerHTML = T2(`Round ${round}: three or more favour ${v ? "attack" : "hold"}. Every man is sure, and <span class="g">the whole camp commits to ${v ? "attack" : "hold"}</span>.`, `Round ${round}: a strict majority for ${v}. Every process proposes ${v} and <span class="g">decides ${v}</span>.`);
+      st.innerHTML = T2(`Round ${round}: three or more favour ${v ? "attack" : "hold"}. Every mercenary is sure, and <span class="g">the whole camp commits to ${v ? "attack" : "hold"}</span>.`, `Round ${round}: a strict majority for ${v}. Every process proposes ${v} and <span class="g">decides ${v}</span>.`);
       go.innerHTML = T2("Another night", "New trial");
     } else {
       st.innerHTML = round === 1 ? T2("Round 1: two favour hold, two favour attack. <b>Nobody is sure.</b>", "Round 1: a 2–2 split. <b>No proposal anywhere.</b>")
@@ -1209,7 +1209,7 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
     if (done) { done = false; round = 1; els.forEach(c => c.classList.remove("sure")); [0, 1, 0, 1].forEach((v, i) => set(i, v, true)); setTimeout(judge, reduce ? 0 : 900); return; }
     rolling = true; round++;
     pref.forEach((_, i) => set(i, rnd(2), true));
-    st.innerHTML = T2("Every man tosses…", "Every process flips…");
+    st.innerHTML = T2("Every mercenary tosses…", "Every process flips…");
     setTimeout(() => { rolling = false; judge(); }, reduce ? 0 : 1450);
   }
   go.addEventListener("click", toss);
@@ -1268,7 +1268,7 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
     if (msg) { st.innerHTML = msg; return; }
     st.innerHTML = !c ? (A && K ? T2("The birds get through: <span class=\"g\">tent 4 answers every question, and answers as one.</span>", "No partition: <span class=\"g\">available and linearizable.</span>") : T2("The birds get through, so tent 4 could have both. Turn both on.", "No partition: both are possible. Turn both on."))
       : A && !K ? T2("Tent 4 answers from what it last heard: <b>hold, though the plan has moved to attack.</b>", "Answering locally: available, <b>not consistent</b>; the read returns 0 after write(1).")
-      : K && !A ? T2("A muster-master keeps the camp as one and <b>leaves the cut-off man waiting.</b>", "A single primary: consistent, <b>not available</b>; the request never returns.")
+      : K && !A ? T2("A muster-master keeps the camp as one and <b>leaves the cut-off mercenary waiting.</b>", "A single primary: consistent, <b>not available</b>; the request never returns.")
       : T2("Tent 4 neither answers nor keeps the camp as one.", "Neither available nor consistent.");
   }
   const conflict = T2("<b>Not while cut off.</b> Tent 4 cannot tell a night when the plan was moved from one when it was not.", "<b>Not under partition.</b> The replica cannot tell a run with a completed write from one without.");
@@ -1335,13 +1335,13 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
     $$("button", seg).forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.f === f)));
     const n = 3 * f + 1;
     if (!seals.checked) {
-      num.innerHTML = T2(`${cap(WORD[n])} men<small>to bear ${WORD[f]} ${f === 1 ? "liar" : "liars"}. ${cap(WORD[n - 1])} cannot.</small>`, `n ≥ ${n}<small>for m = ${f}: n ≥ 3m + 1, with oral messages</small>`);
+      num.innerHTML = T2(`${cap(WORD[n])} bandits<small>to bear ${WORD[f]} ${f === 1 ? "liar" : "liars"}. ${cap(WORD[n - 1])} cannot.</small>`, `n ≥ ${n}<small>for m = ${f}: n ≥ 3m + 1, with oral messages</small>`);
       men.innerHTML = Array.from({ length: n }, (_, i) => `<i class="${i < f ? "liar" : ""}" style="animation-delay:${i * 40}ms"></i>`).join("");
       note.innerHTML = T2("Relay every order and take the greater count. An honest guard cannot tell a lying chief from a lying peer, so the liars must be fewer than a third of the posts.", "OM(m): m + 1 rounds of relaying and majority vote. A loyal lieutenant cannot tell a faulty commander from a faulty peer.");
     } else {
       num.innerHTML = T2(`Any number<small>of liars, with seal rings, while time can be kept</small>`, `Any number<small>of traitors: SM(m), in synchronous rounds</small>`);
       men.innerHTML = Array.from({ length: f + 2 }, (_, i) => `<i class="${i < f ? "liar" : ""}" style="animation-delay:${i * 40}ms"></i>`).join("") + `<i class="more">${T2("and any more", "any n")}</i>`;
-      note.innerHTML = T2("A forged order is impossible, so a liar can only send different sealed orders, and those expose him. <b>In the wind, it takes four to bear one liar, sealed or not.</b>", "Signatures stop relayed orders being altered. <b>Under partial synchrony, n ≥ 3t + 1, signed or not.</b>");
+      note.innerHTML = T2("A forged order is impossible, so a liar can only send different sealed orders, and those expose the liar. <b>In the wind, it takes four to bear one liar, sealed or not.</b>", "Signatures stop relayed orders being altered. <b>Under partial synchrony, n ≥ 3t + 1, signed or not.</b>");
     }
   }
   $$("button", seg).forEach(b => b.addEventListener("click", () => { f = +b.dataset.f; paint(); }));
@@ -1382,7 +1382,7 @@ onReg.push(() => { lastWhere = ""; if (R && activeCard) R.show(activeCard.datase
     const k = $(".bun-k", gNode); if (k) k.style.opacity = mode === "star" ? 1 : 0;
     $$("button", seg).forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.n === n)));
     count(A, n * (n - 1)); count(B, 2 * (n - 1));
-    flip.innerHTML = mode === "all" ? T2("Tie the bundles", "Aggregate") : T2("Every man to every other", "All-to-all");
+    flip.innerHTML = mode === "all" ? T2("Tie the bundles", "Aggregate") : T2("Every bandit to every other", "All-to-all");
   }
   $$("button", seg).forEach(b => b.addEventListener("click", () => { n = +b.dataset.n; draw(); }));
   flip.addEventListener("click", () => { mode = mode === "all" ? "star" : "all"; paint(); });
@@ -1557,7 +1557,7 @@ const treeFrame = (function family() {
     cap: ["answering-while-cut-off", "Cut Off", "CAP", "mc"],
     bgp: ["agreeing-among-liars", "Among Liars", "Byzantine generals", "flp"],
     ptp: ["the-part-time-parliament", "Parliament", "Paxos", "dls"],
-    vr: ["one-leader-at-a-time", "One Leader", "Viewstamped", "ptp"],
+    vr: ["one-writer-at-a-time", "One Writer", "Viewstamped", "ptp"],
     pbft: ["keeping-order-among-liars", "Keeping Order", "PBFT", "vr"],
     hs: ["changing-leaders-among-liars", "Changing Leaders", "HotStuff", "pbft"],
     gos: ["spreading-by-word-of-mouth", "Word of Mouth", "Epidemics", "cap"],

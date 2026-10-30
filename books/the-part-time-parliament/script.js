@@ -169,7 +169,7 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
     let h;
     if(!prev.length) h=dual(`<b>Ballot ${b.n}</b>: nobody in its quorum had voted before, so it was free to carry <i>any</i> decree.`,`<b>Ballot ${b.n}</b>: nobody in its quorum had voted before, so it was free to carry <i>any</i> value.`);
     else{const latest=prev.reduce((a,c)=>c.e.n>a.e.n?c:a);
-      const ok=latest.e.d===b.d?"<span class='ok'>It does.</span>":"<span class='bad'>It doesn't!</span>",done=b.q.every(p=>b.v.includes(p));
+      const ok=latest.e.d===b.d?"<span class='ok'>It does.</span>":"<span class='bad'>It does not!</span>",done=b.q.every(p=>b.v.includes(p));
       h=dual(`<b>Ballot ${b.n}</b> looks back: `+prev.map(o=>`${o.p} voted in ballot ${o.e.n} (${o.e.d})`).join(", ")+`. The latest is ballot ${latest.e.n}, so ballot ${b.n} <b>must</b> carry <span class="pc dec">${latest.e.d}</span>. `+ok+` <i>(${done?"Everyone voted: this ballot succeeded.":"Not everyone voted, so this ballot has not succeeded."})</i>`,
         `<b>Ballot ${b.n}</b> looks back: `+prev.map(o=>`${GM[o.p]} voted in ballot ${o.e.n} (${o.e.d})`).join(", ")+`. The latest is ballot ${latest.e.n}, so ballot ${b.n} <b>must</b> carry <span class="pc dec">${latest.e.d}</span>. `+ok+` <i>(${done?"Everyone voted: this ballot succeeded.":"Not everyone voted, so this ballot has not succeeded."})</i>`);
       render(); $$("tr",body).find(tr=>+tr.dataset.n===sel).children[2].innerHTML=chips(b,prev.filter(o=>o.e.n===latest.e.n).map(o=>o.p)); }

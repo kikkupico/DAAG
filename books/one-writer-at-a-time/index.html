@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-m="One Writer at a Time — Viewstamped Replication">One Writer at a Time — A Council of Five Keeping One Law</title>
+<meta name="description" content="Viewstamped Replication told in the Tholos of Schedia: five legislators, one law, a single writer who alone may write the law, copiers who keep duplicate copies, and a new writer chosen from the fullest copy a majority can show.">
+<link rel="icon" type="image/svg+xml" href="../../assets/img/favicon.svg">
+<link rel="stylesheet" href="../../assets/css/book.css">
+<link rel="stylesheet" href="../../assets/css/widgets.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../../assets/css/registers.css">
+</head>
+<body data-reg="i">
+
+<div class="bar">
+  <a href="../../index.html">← The Books</a>
+  <span class="now" id="now"></span>
+  <div class="regseg" role="group" aria-label="Which words to read"><button type="button" class="segb" data-reg="i" aria-pressed="true">Allegory</button><button type="button" class="segb" data-reg="m" aria-pressed="false">Computing</button></div>
+  <i id="prog"></i>
+</div>
+
+<!-- ============================================================ cover -->
+<header class="spread dark" id="cover" data-name="Cover">
+  <div class="cut" style="left:-30px;bottom:-10px;width:90px;opacity:.3" data-depth="-26"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#5f6e28"/></svg></div>
+  <div class="cut" style="right:-20px;bottom:-14px;width:80px;opacity:.3" data-depth="-40"><svg viewBox="0 0 80 260"><path d="M40 0C58 50 70 110 62 170c-3 30-6 60-8 90H26c-2-30-5-60-8-90C10 110 22 50 40 0z" fill="#7c8f3a"/></svg></div>
+  <div class="wrap grid">
+    <div>
+      <h1>One Writer at a Time</h1>
+      <p class="generic">Many replicated systems put a single leader in charge at a time so that operations can be ordered without dueling ballots. When that leader crashes or falls silent, how does a new leader take over without losing anything the previous leader promised?</p>
+      <p class="allegory i">To find out, we visit Schedia, a sister city on the eastern arm of Paxos with laws of its own, where five legislators maintain the city's law with one of them at a time serving as the writer, and see how a new writer takes over whenever the previous one goes silent.</p>
+      <p class="allegory m">We find out by following the protocol directly: a group of five replicas with one primary at a time, and how a new primary takes over whenever the old one goes silent without losing anything committed.</p>
+      <p class="source">After Brian M. Oki and Barbara H. Liskov, <i>Viewstamped Replication: A New Primary Copy Method to Support Highly-Available Distributed Systems</i>, 1988</p>
+    </div>
+    <div class="pop m" data-auto><div class="leaf"><svg class="cover-fig" id="coversvg" role="img" aria-label="Five replica logs with a commit point at record 12, a cut-off replica, quorum intersection, and a view change from primary R1 to primary R2"></svg></div></div>
+    <div class="pop i" data-auto>
+      <div class="leaf">
+        <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" alt="Inside the Tholos of Schedia, empty: the open circular floor of alternating white Pentelic marble and dark Eleusinian limestone lozenges, with five marble benches along the red-painted wall, each with wax tablets and a bronze seal kit on its stand; six fluted columns carry the roof timbers, and the open door looks out on the bay"></div>
+        <div class="fold-shadow"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- lineage -->
+<section class="spread dark" id="lineage" data-name="Where this book sits">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap lin-wrap">
+    <div class="kicker">Where this book sits</div>
+    <div class="lin">
+    <svg class="lin-edges" aria-hidden="true"></svg>
+    <div class="lin-side in"></div>
+    <div class="lin-mid">
+      <h5>This book retells</h5>
+      <ul class="lin-nodes">
+        <li><a class="lin-node here" data-n="m:oki-liskov-1988_viewstamped-replication" data-label="Oki &amp; Liskov 1988" href="https://www.cs.princeton.edu/courses/archive/fall09/cos518/papers/viewstamped.pdf"><b>Viewstamped Replication: A New Primary Copy Method to Support Highly-Available Distributed Systems</b><span class="by">Oki &amp; Liskov 1988</span></a></li>
+      </ul>
+    </div>
+    <div class="lin-side out">
+      <h5>Leads to</h5>
+      <ul class="lin-nodes">
+        <li><a class="lin-node book" data-n="o:castro-liskov-1999_practical-byzantine-fault-tolerance" data-label="Castro &amp; Liskov 1999" href="../keeping-order-among-liars/index.html"><b>Practical Byzantine Fault Tolerance</b><span class="by">Castro &amp; Liskov 1999 · Keeping Order Among Liars</span></a><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:oki-liskov-1988_viewstamped-replication" data-to="o:castro-liskov-1999_practical-byzantine-fault-tolerance" tabindex="0"><em>primary and view change</em><span class="ends"></span><span class="why">Carries VR's primary-backup architecture and numbered view changes into a world where faulty machines may lie rather than merely crash.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:liskov-cowling-2012" data-label="Liskov &amp; Cowling 2012"><b>Viewstamped Replication Revisited</b><span class="by">Liskov &amp; Cowling 2012</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:oki-liskov-1988_viewstamped-replication" data-to="o:liskov-cowling-2012" tabindex="0"><em>the protocol</em><span class="ends"></span><span class="why">Restates Viewstamped Replication as a standalone state-machine replication protocol separated from distributed transactions.</span></li></ul></li>
+        <li><div class="lin-node ext" data-n="o:ongaro-ousterhout-2014" data-label="Ongaro &amp; Ousterhout 2014"><b>In Search of an Understandable Consensus Algorithm</b><span class="by">Ongaro &amp; Ousterhout 2014</span></div><ul class="lin-links"><li class="lin-link" data-side="out" data-from="m:oki-liskov-1988_viewstamped-replication" data-to="o:ongaro-ousterhout-2014" tabindex="0"><em>leader and terms</em><span class="ends"></span><span class="why">Uses the same strong-leader, numbered-view architecture (under the name Raft) where logs flow solely from the leader to followers and the most up-to-date log wins election.</span></li></ul></li>
+      </ul>
+    </div>
+    <p class="lin-say">Each link traces an idea that one paper borrowed from another. Point at a link, or tap it, to see how.</p>
+    <p class="lin-key"><i class="k here"></i>a paper this book retells <i class="k book"></i>a paper retold in another book <i class="k ext"></i>a paper outside the series</p>
+    </div>
+  </div>
+</section>
+<!-- /lineage -->
+
+<!-- ============================================================ machines -->
+
+
+<!-- ============================================================ the Tholos -->
+<section class="spread dark" id="hall" data-name="Schedia and the Tholos" data-name-m="The system model">
+  <div class="bleed">
+    <img class="i" src="img/o01-court.jpg" alt="The Tholos from its paved court: a round hall of honey limestone under a conical tiled roof with a painted band under the eaves, and a gabled porch on two columns before its open door" data-parallax>
+    <div class="hall-title"><div class="t">
+      <div class="kicker"><span class="i">The Tholos of Schedia</span><span class="m">The model</span></div>
+      <h2><span class="i">Five legislators, one law</span><span class="m">Five replicas, one log</span></h2>
+      <p><span class="i">Schedia, the independent city on the eastern arm of Paxos, makes its own laws in the Tholos, a round stone hall looking across the bay toward the Paxon Chamber. Just as in the Chamber, the acoustics are so poor that no voice carries across the floor, so every word goes by messenger.<sup class="xref"><a href="../../places/schedia/index.html" title="The Setting: A Council of Five Keeping One Law">*</a></sup></span><span class="m">Five replicas of a service communicate only by messages: none can see another's state directly. Messages can be delayed, reordered, or lost, and replicas may be cut off or may crash and recover.</span></p>
+    </div></div>
+    <div class="pins">
+      <div class="pin pop"><div class="leaf"><span class="i"><b>Slow messengers</b>Messengers across the floor can be delayed, reordered, or lost altogether.</span><span class="m"><b>An unreliable network</b>Messages can be delayed, reordered, or lost altogether.</span></div></div>
+      <div class="pin pop"><div class="leaf"><span class="i"><b>Stepping out, going home</b>A legislator may step out onto the porch for a while (a network partition) or go home for the night and return to smooth wax tablets in the morning (a crash and recovery).</span><span class="m"><b>Partitions and crashes</b>A replica may be cut off for a while (a network partition) or crash and recover with its memory empty.</span></div></div>
+      <div class="pin pop"><div class="leaf"><span class="i"><b>Nobody lies</b>Every legislator and messenger is honest: whatever they write or report is truthful, and no one ever forges a note.</span><span class="m"><b>No Byzantine faults</b>Every replica and every message is honest: whatever is written or reported is truthful, and no one ever forges a message.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ s1 the council -->
+<section class="spread light" id="council" data-name="The council and its law" data-name-m="The replicated log">
+  <a class="anchor" id="s1"></a>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">What is kept</div>
+      <h2><span class="i">The council and its law</span><span class="m">The group and its log</span></h2>
+      <p class="lede"><span class="i">Schedia's council has five legislators. Okios, Liskovia, Kleon, Melissa, and Theron. Each sits at their own stone bench along the wall and keeps a complete copy of the city's law on wax tablets:</span><span class="m">The group has five replicas, R1 to R5. Each keeps a complete copy of the service's log:</span></p>
+      <div class="cast" id="cast"></div>
+      <p><span class="i">The law grows line by line: <i>harbour dues are two obols a hull</i>; <i>the cove is closed to nets in spring</i>; <i>the dues above are halved for boats of Schedia</i>. Every bench's copy must record the exact same lines in the exact same order, because later lines depend on earlier ones, halving the harbour dues means nothing unless the dues have already been set.</span><span class="m">The log grows record by record: <i>set the first key to 2</i>; <i>delete the second key</i>; <i>halve the first key</i>. Every replica's copy must record the exact same records in the exact same order, because later records depend on earlier ones, halving a value means nothing unless it has already been set.</span></p>
+      <p><span class="i">Even as legislators step out or go home and messengers dawdle across the floor, the council owes the citizens of Schedia two strict guarantees:</span><span class="m">Even as replicas are cut off or crash and messages dawdle, the group owes its clients two strict guarantees:</span></p>
+    </div>
+    <div class="cards3 pair">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First guarantee · Consistency</div><h3><span class="i">One law</span><span class="m">One log</span></h3><p><span class="i">All five copies act as if they were a single law scroll kept in a single place. No citizen ever sees two different laws occupying the same line.</span><span class="m">All five copies act as if they were a single log kept in a single place. No client ever sees two different records occupying the same position.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second guarantee · Durability</div><h3><span class="i">Passed stays passed</span><span class="m">Committed stays committed</span></h3><p><span class="i">Once a law has been declared <b>passed</b> (committed), it stands permanently in its place, no matter who becomes writer afterward.</span><span class="m">Once a record has been declared <b>committed</b>, it stands permanently in its place, no matter which replica is primary afterward.</span></p></div></div></div>
+    </div>
+    <p class="tell"><span class="i">With five copies of the law and legislators constantly coming and going, the council must still decide what goes into the law next without conflicting ballots.</span><span class="m">With five copies of the log and replicas constantly coming and going, the group must still decide what goes into the log next without conflicting proposals.</span></p>
+    <details class="proof">
+      <summary>In the paper · the group and its failures</summary>
+      <p class="given">A module group of cohorts behaves as a single logical entity; nodes may crash (fail-stop) and recover; the network may lose, delay, duplicate, and reorder messages and may partition; failures are non-Byzantine. Events known to a majority of cohorts survive view changes. (§§1–2, §4.)</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ s2 the writer -->
+<section class="spread dark" id="podium" data-name="The writer" data-name-m="The primary">
+  <a class="anchor" id="s2"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">Who decides what goes in</div>
+        <h2><span class="i">The writer</span><span class="m">The primary</span></h2>
+        <p class="lede"><span class="i">Unlike the Synod in the Chamber across the bay, where any priest may start a ballot, the Tholos has a designated <b>writer</b>. Only one legislator holds this office at a time: the <b>writer</b> (the paper's <i>primary</i>). Only the writer may write new lines into the law.</span><span class="m">Unlike Paxos, where any replica may start a ballot, here a single replica, the <b>primary</b>, is in charge at a time. Only the primary may append new records to the log.</span></p>
+        <p><span class="i">The writer is an office, not a seat: it gives its holder no special dress and no place of honour. Each legislator sits at their own stone bench along the wall, equipped with their own wax tablets and bronze seal kit. The writer receives each citizen's petition at their bench, writes the new line of law, presses the seal beside it, gives it the next number and sends copies out by runner; the other four legislators sit passively at their benches as <b>copiers</b> (as <i>backups</i>) and simply copy the lines the runners bring them. Three rules govern the writer's work:</span><span class="m">The primary executes client calls, assigns each new record its number, and sends it out; the other four replicas are passive <b>backups</b> and simply apply the records the primary sends them. Three rules govern the primary's work:</span></p>
+      </div>
+      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/o02-podium.jpg" alt="Inside the Tholos of Schedia: looking across the open limestone floor towards the marble benches along the red-painted wall, each with its wax tablets and seal kit; beyond, a fluted column and the open door looking out on the bay" loading="lazy"></div></div></div>
+      <div class="pop fromright m"><div class="leaf"><svg class="cover-fig" data-crop="0 50 520 330" role="img" aria-label="Five replica logs: records up to 12 are committed on a majority, record 13 is a draft"></svg></div></div>
+    </div>
+    <div class="cards3">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First · Writing</div><h3><span class="i">Only the writer writes</span><span class="m">Only the primary writes</span></h3><p><span class="i">The writer receives each citizen's petition, writes the new line of law on their own tablets, gives it the next line number, and hands it to the runners.</span><span class="m">The primary receives each client's request, appends the new record to its own log, gives it the next record number, and hands it to the communication buffers.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num"><span class="i">Second · Running</span><span class="m">Second · Delivery</span></div><h3><span class="i">Runners never skip a line</span><span class="m">Messages never skip a record</span></h3><p><span class="i">Each bench has a dedicated <b>runner</b> (the paper's <i>communication buffer</i>) who delivers lines strictly in order without ever skipping a number. A runner may be delayed, but any copier that holds Line 12 is guaranteed to hold Lines 1 through 11 as well.</span><span class="m">Each backup has a dedicated <b>communication buffer</b> that delivers records strictly in order without ever skipping a number. A message may be delayed, but any backup that holds record 12 is guaranteed to hold records 1 through 11 as well.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num"><span class="i">Third · Petitions</span><span class="m">Third · Calls</span></div><h3><span class="i">Citizens petition the writer</span><span class="m">Clients call the primary</span></h3><p><span class="i">Citizens at the door send their <b>petitions</b> (client calls) to the writer. If a petition accidentally goes to a copier's bench instead, that copier simply sends it back with the current writer's name.</span><span class="m">Clients send their <b>calls</b> to the primary. If a call accidentally goes to a backup instead, that backup simply sends it back with the current primary's identity.</span></p></div></div></div>
+    </div>
+    <p class="tell"><span class="i">Once the writer writes a new line and dispatches the runners to the copiers' benches, the citizen who petitioned is waiting at the door for an answer. The writer must know how many runners have to return before the new line can safely be declared passed into law.</span><span class="m">Once the primary appends a new record and sends it to the backups, the client that called is waiting for an answer. The primary must know how many backups have to acknowledge before the new record can safely be declared committed.</span></p>
+    <details class="proof">
+      <summary>In the paper · primary, backups and the communication buffer</summary>
+      <p class="given">The primary executes client calls and generates event records; backups are passive and apply event records received from the primary. The primary's communication buffer delivers event records reliably and in timestamp order to every backup in the current view; if delivery fails for too long, a view change is triggered. Any cohort that is not the active primary rejects client calls, returning the current <code>viewid</code> and primary identity. (§2, §3.3.)</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ s3 when a law passes -->
+<section class="spread light" id="passes" data-name="When a law passes" data-name-m="Commit">
+  <a class="anchor" id="s3"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker"><span class="i">When the writer may say “it is law”</span><span class="m">When the primary may say “it is committed”</span></div>
+      <h2><span class="i">When a law passes</span><span class="m">When a record commits</span></h2>
+      <p class="lede"><span class="i">A new line becomes law as soon as it is held by a <b>majority of the council</b>, which out of five legislators means at least <b>three</b>: the writer plus at least two copiers (a <i>sub-majority</i> of backups).</span><span class="m">A new record becomes committed as soon as it is held by a <b>majority of the group</b>, which out of five replicas means at least <b>three</b>: the primary plus at least two backups (a <i>sub-majority</i> of backups).</span></p>
+      <p><span class="i">Because three out of five is enough, the writer never has to wait for everyone. As each runner returns from a copier's bench, they bring the copier's confirmation: <i>"I hold everything up to Line 12."</i> The moment two copiers have confirmed Line 12, three legislators in all (the writer plus those two copiers) hold it: Line 12 <b>passes</b>, and the writer tells the waiting petitioner that it is law. Try it below with Okios as writer while Theron has stepped out.</span><span class="m">Because three out of five is enough, the primary never has to wait for everyone. As each backup acknowledges, it reports: <i>"I hold everything up to record 12."</i> The moment two backups have acknowledged record 12, three replicas in all (the primary plus those two backups) hold it: record 12 is <b>committed</b>, and the primary tells the waiting client. Try it below with R1 as primary while R5 is cut off.</span></p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4><span class="i">The runners go out <em>and come back with a word</em></span><span class="m">The messages go out <em>and come back with an acknowledgment</em></span></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg fig" id="passsvg" role="group" aria-label="The Tholos from above: five stone benches round the wall, and runners carrying lines out and words back" data-al-m="Five lanes, one for each replica, with real time running left to right and the primary's name ringed: records go out to the backups and acknowledgments come back as arrows, dashed while in transit, and a cut-off backup's lane is hatched"></svg>
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem"><span class="i">The Tholos from above, with five stone benches along the wall. Click a copier's bench to have that legislator step out of reach, or come back.</span><span class="m">Each lane is one replica, with real time running left to right; the ringed name is the primary. Each arrow is a record going out or an acknowledgment coming back, dashed while in transit; a hatched lane is cut off. Click a backup's name to cut it off, or reconnect it.</span></p>
+          <div class="counts"><span><b id="pline">11</b><bdi class="i">last line written</bdi><bdi class="m">last record appended</bdi></span><span><b id="ppass">11</b><bdi class="i">passed up to</bdi><bdi class="m">committed up to</bdi></span></div>
+          <p class="say" id="passsay"><span class="i">Okios is the writer. Theron has stepped out. Write the next line.</span><span class="m">R1 is the primary. R5 is cut off. Append the next record.</span></p>
+        </div>
+      </div>
+      <div class="row"><button class="btn" id="pwrite"><span class="i">Okios writes the next line</span><span class="m">R1 appends the next record</span></button></div>
+    </div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num"><span class="i">Passed means three hold it</span><span class="m">Committed means three hold it</span></div><h3><span class="i">A law has passed when its line, and every line before it, is held by the writer and at least two copiers</span><span class="m">A record has committed when it, and every record before it, is held by the primary and at least two other replicas</span></h3></div></div></div>
+    <p class="tell"><span class="i">Waiting for three out of five solves two problems at once. First, up to two legislators can step out of reach without stalling the city's business. Second, if the writer steps out tomorrow and a new writer takes over after polling a majority of three legislators, any two majorities of five must overlap in at least one legislator, the exact same quorum-intersection principle used in the Chamber across the bay.<sup class="xref"><a href="../the-part-time-parliament/index.html#s2" title="The Part-Time Parliament: One Decree, Once Every Nineteen Years">*</a></sup></span><span class="m">Waiting for three out of five solves two problems at once. First, up to two replicas can be cut off without stalling the group. Second, if the primary fails tomorrow and a new primary takes over after polling a majority of three replicas, any two majorities of five must overlap in at least one replica, the exact same quorum-intersection principle used in Paxos.<sup class="xref"><a href="../the-part-time-parliament/index.html#s2" title="The Part-Time Parliament: One Decree, Once Every Nineteen Years">*</a></sup></span></p>
+    <p class="tell"><span class="i">Any line that the writer has written on their tablets but that has not yet reached two copiers is merely a <b>draft</b>. If the writer steps out before a draft reaches a majority, a change of writer may discard that draft, which is completely harmless, because no citizen was ever told it had passed.</span><span class="m">Any record that the primary has appended but that has not yet reached two backups is merely a <b>draft</b>. If the primary fails before a draft reaches a majority, a view change may discard that record, which is completely harmless, because no client was ever told it had committed.</span></p>
+    <p class="tell"><span class="i">There is a catch, however: if every writer numbers their lines starting from 1, or continues numbering while another writer takes over, "Line 12 written by Okios" cannot be told apart from "Line 12 written by Liskovia".</span><span class="m">There is a catch, however: if every primary numbers its records starting from 1, or continues numbering while another primary takes over, “record 12 appended by R1” cannot be told apart from “record 12 appended by R2”.</span></p>
+    <details class="proof i">
+      <summary>In the paper · waiting for a sub-majority</summary>
+      <p class="given">The operation <code>force-to(v)</code> waits until a sub-majority of backups (one fewer than a majority of the group configuration) acknowledge receiving every event of the current view up to timestamp <code>v.ts</code>; together with the primary itself, a full majority then holds the event. (§3. In Oki and Liskov's full distributed-transaction system, <code>force-to</code> is invoked at transaction prepare and commit; in our single-group telling, passing a law stands for committing an operation.)</p>
+    </details>
+    <details class="proof m">
+      <summary>In the paper · waiting for a sub-majority</summary>
+      <p class="given">The operation <code>force-to(v)</code> waits until a sub-majority of backups (one fewer than a majority of the group configuration) acknowledge receiving every event of the current view up to timestamp <code>v.ts</code>; together with the primary itself, a full majority then holds the event. (§3. In Oki and Liskov's full distributed-transaction system, <code>force-to</code> is invoked at transaction prepare and commit; in a single group, committing a record stands for committing an operation.)</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ s4 seal and line -->
+<section class="spread dark" id="seal" data-name="Seal and line" data-name-m="Views and viewstamps">
+  <a class="anchor" id="s4"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker"><span class="i">Numbers that survive a change of writer</span><span class="m">Numbers that survive a change of primary</span></div>
+      <h2><span class="i">Seal and line</span><span class="m">View and timestamp</span></h2>
+      <p class="lede"><span class="i">Every term under one writer gets its own <b>seal</b> (a <i>view</i>): a bronze disc with five radial spokes for the five benches. In the center is a slot for the seal's number. Inside are two concentric rings of peg holes—the inner ring marked for the <b>manager</b> who called the seal, and the middle ring marked for the <b>writer</b> who writes under it. Around the outer edge, five signet sockets hold the seals of whoever answered the call. An empty socket leaves smooth wax.</span><span class="m">Because a record number makes sense only under a single primary's term, every period under a single primary is a <b>view</b>, with an identifier of its own (a <code>viewid</code>) and a fixed set of members.</span></p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4><span class="i">Seal 7, Liskovia <em>what each slot says</em></span><span class="m">View 7 <em>what it records</em></span></h4>
+      <svg class="sealfig" viewBox="0 0 650 330" role="img" aria-label="Above, seal 7: in the center the number 7; inner ring manager peg at Liskovia; middle ring writer peg at Liskovia; outer ring signets at Kleon, Melissa and Liskovia; empty sockets at Okios and Theron. Below, four seal cores in order: 6 Okios, 7 Kleon, 7 Liskovia, 8 Theron" data-al-m="Above, view 7: viewid 7, R2; primary R2; members R2, R3, R4. Below, four viewids in order: 6 R1, 7 R2, 7 R3, 8 R5">
+        <g class="i">
+          <circle cx="140" cy="120" r="98" fill="#efe6cf" stroke="#1c1512" stroke-width="4"/>
+          <!-- center slot: number -->
+          <rect x="128" y="108" width="24" height="24" class="slot"/><text x="140" y="120" class="sn">7</text>
+          <!-- inner ring: manager pegs (radius 38, dashed when empty) -->
+          <circle cx="140" cy="82" r="3.5" fill="none" stroke="#6b5a48" stroke-width="1.2" stroke-dasharray="2 2"/>
+          <circle cx="176" cy="108" r="5.5" fill="#1c1512" stroke="#1c1512" stroke-width="1.5"/>
+          <circle cx="162" cy="151" r="3.5" fill="none" stroke="#6b5a48" stroke-width="1.2" stroke-dasharray="2 2"/>
+          <circle cx="118" cy="151" r="3.5" fill="none" stroke="#6b5a48" stroke-width="1.2" stroke-dasharray="2 2"/>
+          <circle cx="104" cy="108" r="3.5" fill="none" stroke="#6b5a48" stroke-width="1.2" stroke-dasharray="2 2"/>
+          <!-- middle ring: writer pegs (radius 58, dashed when empty) -->
+          <circle cx="140" cy="62" r="4" fill="none" stroke="#6b5a48" stroke-width="1.2" stroke-dasharray="2 2"/>
+          <circle cx="195" cy="102" r="6" fill="#1c1512" stroke="#1c1512" stroke-width="1.5"/>
+          <circle cx="174" cy="167" r="4" fill="none" stroke="#6b5a48" stroke-width="1.2" stroke-dasharray="2 2"/>
+          <circle cx="106" cy="167" r="4" fill="none" stroke="#6b5a48" stroke-width="1.2" stroke-dasharray="2 2"/>
+          <circle cx="85" cy="102" r="4" fill="none" stroke="#6b5a48" stroke-width="1.2" stroke-dasharray="2 2"/>
+          <!-- outer ring: member signets (radius 82, dashed when empty) -->
+          <circle cx="140" cy="38" r="12" fill="none" stroke="#6b5a48" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <circle cx="218" cy="95" r="12" class="slot"/><text x="218" y="95" class="sg">Λ</text>
+          <circle cx="188" cy="186" r="12" class="slot"/><text x="188" y="186" class="sg">Κ</text>
+          <circle cx="92" cy="186" r="12" class="slot"/><text x="92" y="186" class="sg">Μ</text>
+          <circle cx="62" cy="95" r="12" fill="none" stroke="#6b5a48" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <!-- leader lines -->
+          <line class="lead" x1="140" y1="26" x2="252" y2="28"/>
+          <line class="lead" x1="230" y1="95" x2="252" y2="66"/>
+          <line class="lead" x1="201" y1="102" x2="252" y2="104"/>
+          <line class="lead" x1="181" y1="108" x2="252" y2="142"/>
+          <line class="lead" x1="152" y1="120" x2="252" y2="180"/>
+          <line class="lead" x1="188" y1="198" x2="252" y2="218"/>
+          <text x="258" y="28" class="note">empty outer: did not answer (Okios, Theron)</text>
+          <text x="258" y="66" class="note">outer ring: who answered (signets at Λ, Κ, Μ)</text>
+          <text x="258" y="104" class="note">middle ring: who writes (peg at Liskovia)</text>
+          <text x="258" y="142" class="note">inner ring: who called (peg at Liskovia)</text>
+          <text x="258" y="180" class="note">center: the number (7)</text>
+          <text x="258" y="218" class="note">spokes: align with the five benches</text>
+          <line x1="20" y1="248" x2="630" y2="248" stroke="#6b5a48" stroke-width="1" stroke-dasharray="2 4"/>
+          <text x="40" y="274" class="note"><tspan font-weight="700">Order:</tspan> by center and inner ring alone (number, then manager); writer and outer ring don't count</text>
+          <g transform="translate(70 308)"><rect x="-10" y="-10" width="20" height="20" class="slot"/><text x="0" y="0" class="sn">6</text><circle cx="24" cy="0" r="10" class="slot"/><text x="24" y="0" class="sg">Ο</text></g>
+          <text x="148" y="308" class="sn">&lt;</text>
+          <g transform="translate(210 308)"><rect x="-10" y="-10" width="20" height="20" class="slot"/><text x="0" y="0" class="sn">7</text><circle cx="24" cy="0" r="10" class="slot"/><text x="24" y="0" class="sg">Κ</text></g>
+          <text x="288" y="308" class="sn">&lt;</text>
+          <g transform="translate(350 308)"><rect x="-10" y="-10" width="20" height="20" class="slot"/><text x="0" y="0" class="sn">7</text><circle cx="24" cy="0" r="10" class="slot"/><text x="24" y="0" class="sg">Λ</text></g>
+          <text x="428" y="308" class="sn">&lt;</text>
+          <g transform="translate(490 308)"><rect x="-10" y="-10" width="20" height="20" class="slot"/><text x="0" y="0" class="sn">8</text><circle cx="24" cy="0" r="10" class="slot"/><text x="24" y="0" class="sg">Θ</text></g>
+        </g>
+        <g class="m">
+          <text x="40" y="62" class="note"><tspan font-weight="700">view 7</tspan></text>
+          <text x="40" y="100" class="note">viewid = ⟨7, R2⟩   (the only part that orders views)</text>
+          <text x="40" y="138" class="note">primary = R2</text>
+          <text x="40" y="176" class="note">members = {R2, R3, R4}</text>
+          <line x1="20" y1="248" x2="630" y2="248" stroke="#6b5a48" stroke-width="1" stroke-dasharray="2 4"/>
+          <text x="40" y="274" class="note"><tspan font-weight="700">Order:</tspan> by viewid alone, counter first, then replica</text>
+          <text x="40" y="308" class="note">⟨6, R1⟩   &lt;   ⟨7, R2⟩   &lt;   ⟨7, R3⟩   &lt;   ⟨8, R5⟩</text>
+        </g>
+      </svg>
+    </div></div></div>
+    <div class="narrow" style="margin:1.4rem 0 1rem">
+      <ul class="sealkey">
+        <li><span class="i"><b>Center:</b> the rising <b>number</b>, one higher than any seal seen so far.</span><span class="m"><b>viewid counter:</b> a rising counter one higher than any view seen.</span></li>
+        <li><span class="i"><b>Inner ring:</b> a peg at the spoke of who <b>called</b> the seal (the manager). Together with the center number, this forms the seal's unique identity.</span><span class="m"><b>view manager:</b> the replica that initiated the view; paired with counter as <code>⟨cnt, mid⟩</code>.</span></li>
+        <li><span class="i"><b>Middle ring:</b> a peg at the spoke of who <b>writes</b> under this seal (the writer).</span><span class="m"><b>primary:</b> one of the members.</span></li>
+        <li><span class="i"><b>Outer ring:</b> signets of who <b>answered</b> the call, each at their own bench's place.</span><span class="m"><b>Members:</b> the view manager and the replicas that accepted.</span></li>
+        <li><span class="i"><b>Fixed:</b> a seal never changes; anyone missing who returns needs a new seal.</span><span class="m"><b>Fixed:</b> a replica outside the view that becomes reachable needs a new view.</span></li>
+        <li><span class="i"><b>Unique:</b> only its manager pegs their spoke on that number, so no two seals share an inner core.</span><span class="m"><b>Unique:</b> only its starter puts its identity on a viewid, so no two views share one.</span></li>
+      </ul>
+    </div>
+    <div class="pop i" style="max-width:640px;margin:1.6rem auto 0"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/o06-seal.jpg" alt="Close on a bench's stone stand: the bronze seal, a circular disc with a central number 7, inner manager peg, middle writer peg, and outer signets for Liskovia, Kleon, and Melissa; beside it its print in red wax and a tray of spare dies" loading="lazy"></div></div></div>
+    <div class="narrow" style="margin:1.4rem 0 1rem">
+      <p><span class="i">The writer presses the seal beside every line they write, and under each new seal the line numbers start fresh from 1. Thus every line of law is uniquely identified by its <b>seal and line</b> (a <i>viewstamp</i> = ⟨<code>viewid</code>, <code>ts</code>⟩). When comparing two marks, the one from the <b>later seal</b> always wins; within the same seal, the <b>higher line number</b> wins. Each legislator also keeps a compact <b>note</b> (their <i>history</i>) in the margin of their tablets recording the last line they hold for each seal they have served under. Pick any two marks below to see how they compare:</span><span class="m">Whenever a new view starts, record numbers start fresh from 1. Thus every record is uniquely identified by its <b>view and timestamp</b> (a <i>viewstamp</i> = ⟨<code>viewid</code>, <code>ts</code>⟩). When comparing two viewstamps, the one from the <b>later view</b> always wins; within the same view, the <b>higher timestamp</b> wins. Each replica also keeps a compact <b>history</b> recording the last timestamp it holds for each view it has served in. Pick any two viewstamps below to see how they compare:</span></p>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well">
+      <h4><span class="i">Which is the later? <em>choose two marks</em></span><span class="m">Which is the later? <em>choose two viewstamps</em></span></h4>
+      <div class="marks" id="marks"></div>
+      <p class="say" id="marksay">Choose any two.</p>
+    </div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num"><span class="i">The later line knows more</span><span class="m">The later viewstamp knows more</span></div><h3><span class="i">A copy with a later seal-and-line mark holds every passed law that an earlier mark holds</span><span class="m">A copy with a later viewstamp holds every committed record that an earlier viewstamp holds</span></h3></div></div></div>
+    <p class="tell"><span class="i">A later mark <em>always</em> knows at least as much passed law as an earlier one. Within a single seal, this holds because runners never skip a line: anyone who holds Line 12 of Seal 6 necessarily holds Lines 1 through 11 of Seal 6 as well. Across different seals, it holds because every new seal opens with its new writer sending their entire law copy out as the new seal's opening line, so anyone who holds even Line 1 of Seal 7 already holds everything Seal 7 started with! Notice that a raw line number means nothing without its seal: <i>Seal 6, Line 40</i> may have a bigger line number than <i>Seal 7, Line 1</i>, yet <i>Seal 7, Line 1</i> is the later mark.</span><span class="m">A later viewstamp <em>always</em> knows at least as much committed history as an earlier one. Within a single view, this holds because messages never skip a record: anyone who holds record 12 of view 6 necessarily holds records 1 through 11 of view 6 as well. Across different views, it holds because every new view opens with its new primary sending its entire log out as the view's opening record, so anyone who holds even record 1 of view 7 already holds everything view 7 started with! Notice that a raw record number means nothing without its view: <i>view 6, record 40</i> may have a bigger number than <i>view 7, record 1</i>, yet <i>view 7, record 1</i> is the later viewstamp.</span></p>
+    <p class="tell"><span class="i">When the writer steps out or falls silent, one of the copiers at the benches has to notice, and call for a new seal.</span><span class="m">When the primary is cut off or falls silent, some backup has to notice, and start a new view.</span></p>
+    <details class="proof">
+      <summary>In the paper · viewids and viewstamps</summary>
+      <p class="given">A view identifier is a pair <code>viewid = ⟨cnt, mid⟩</code>, totally ordered lexicographically and unique to its creator <code>mid</code>; a timestamp <code>ts</code> is unique and ordered within a view; a <code>viewstamp = ⟨viewid, ts⟩</code> pairs the two. Each cohort's <code>history</code> is a sequence of viewstamps (the largest timestamp it holds for each view it has participated in), and because event records arrive in order without gaps, its state reflects every event up to each viewstamp in its history. (§2, Figures 1 and 4.)</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ s5 a silent writer -->
+<section class="spread light" id="empty" data-name="A silent writer" data-name-m="Starting a view">
+  <a class="anchor" id="s5"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v10l-60 7-80-9-70 11-100-9-80 10-90-11-90 9-90-8-110 11-100-9-80 10z"/></svg>
+  <div class="wrap">
+    <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker">Who notices, and what they do</div>
+        <h2><span class="i">A silent writer</span><span class="m">A silent primary</span></h2>
+        <p class="lede"><span class="i">The council keeps track of who is reachable through a periodic heartbeat called the <b>roll</b>: every so often, each legislator sends a brief note, <i>"I am here"</i> (<code>I am alive</code>), to the others.</span><span class="m">The group keeps track of who is reachable through periodic heartbeat messages: every so often, each replica sends a brief <code>I am alive</code> message to the others.</span></p>
+        <p><span class="i">Whenever a copier stops hearing from the writer (or from another member), hears again from someone who was away, or has just walked back in from home, they call for a new seal from their bench and become its <b>manager</b> (the paper's <i>view manager</i>). Of course, the manager cannot tell whether a silent writer actually went home, stepped out onto the porch, or merely had slow messengers, and the manager does not need to know, because calling a new seal is safe in every case.</span><span class="m">Whenever a replica stops hearing from the primary (or from another member), hears again from someone who was cut off, or has just recovered from a crash, it starts a new view and becomes its <b>view manager</b>. Of course, the view manager cannot tell whether a silent primary actually crashed, was partitioned, or merely has slow messages, and it does not need to know, because starting a new view is safe in every case.</span></p>
+        <p><span class="i">To call a new seal, the manager places their peg in the inner ring at their own spoke, inserts a number in the center one higher than any seal they have ever seen, and sends an <b>invitation</b> bearing that core to every bench. Any legislator who receives an invitation for a seal higher than their current one immediately accepts it, stops working under the old seal, and replies in one of two ways depending on whether they still have their wax tablets:</span><span class="m">To start a new view, the view manager picks a view counter one higher than any view it has ever seen, attaches its own identity, and sends an <b>invitation</b> to every replica. Any replica that receives an invitation for a view higher than its current one immediately accepts it, stops working under the old view, and replies in one of two ways depending on whether it still has its volatile state:</span></p>
+      </div>
+      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/o03-caller.jpg" alt="Across the empty Tholos: looking across the open limestone floor towards the ring of fluted columns and the marble benches against the red-painted lower wall" loading="lazy"></div></div></div>
+      <div class="pop fromright m"><div class="leaf"><svg class="cover-fig" data-crop="20 350 500 150" role="img" aria-label="Any two majorities share a replica, so view 7 sees every committed record"></svg></div></div>
+    </div>
+    <div class="cards3 pair">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">First kind of reply · Normal acceptance</div><h3><span class="i">With tablets intact</span><span class="m">With its state intact</span></h3><p><span class="i"><i>"I accept, and my tablets hold up to Seal 6, Line 40"</i>, along with whether they were the writer of Seal 6.</span><span class="m"><i>"I accept, and my log holds up to viewstamp ⟨view 6, 40⟩"</i>, along with whether it was the primary of view 6.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Second kind of reply · Crash acceptance</div><h3><span class="i">Without tablets (after going home)</span><span class="m">Without its state (after a crash)</span></h3><p><span class="i"><i>"I accept, but I went home and my tablets were smoothed; the stone on my bench says I last served under Seal 6."</i></span><span class="m"><i>"I accept, but I crashed and my volatile state is gone; stable storage says I last served in view 6."</i></span></p></div></div></div>
+    </div>
+    <p class="tell"><span class="i">If two copiers notice the silent writer at the same time and both send out invitations, the higher seal wins, because no two seals ever have the same core, and the manager of the lower seal receives the invitation to the higher seal, abandons their own call, and replies to the higher seal like everyone else.</span><span class="m">If two replicas notice the silent primary at the same time and both send out invitations, the higher view wins, because no two views ever have the same identifier, the manager of the lower view receives the invitation to the higher view, abandons its own, and replies to the higher view like everyone else.</span></p>
+    <p class="tell"><span class="i">Once invitations go out and replies come back to the manager, the manager must decide whether the new seal is allowed to form, and who becomes the writer.</span><span class="m">Once invitations go out and replies come back to the view manager, it must decide whether the new view is allowed to form, and which replica becomes primary.</span></p>
+    <details class="proof">
+      <summary>In the paper · the view manager and its invitations</summary>
+      <p class="given">Periodic <code>“I am alive”</code> messages detect changes in reachability; the cohort that initiates a view change acts as the <i>view manager</i> and sends invitations carrying a higher <code>viewid</code>. A cohort with intact volatile state replies with a <i>normal-accept</i> carrying its latest <code>viewstamp</code> and whether it was the primary; a cohort recovering from a crash replies with a <i>crash-accept</i> carrying only the <code>cur-viewid</code> recorded on stable storage. (§4.)</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ s6 who becomes the writer -->
+<section class="spread dark has-scrolly" id="takes" data-name="Who becomes the writer" data-name-m="Choosing the primary">
+  <a class="anchor" id="s6"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-70 8-80-10-70 11-90-9-100 10-80-8-100 11-80-9-100 9-90-10-90 8z"/></svg>
+  <div class="wrap" style="margin-bottom:-1rem">
+    <div class="narrow">
+      <div class="kicker"><span class="i">A change of seal</span><span class="m">A view change</span></div>
+      <h2><span class="i">Who becomes the writer</span><span class="m">Who becomes primary</span></h2>
+      <p class="lede"><span class="i">A new seal can form as soon as a <b>majority of the council</b> has accepted the invitation, provided we can be sure that at least one of those respondents holds every law that has ever passed. When nobody has gone home and lost their wax tablets, any majority of three out of five automatically satisfies that requirement! Scroll through the seven steps below to watch Seal 7 take over from Seal 6.</span><span class="m">A new view can form as soon as a <b>majority of the group</b> has accepted the invitation, provided we can be sure that at least one of those respondents holds every record that has ever committed. When no replica has crashed and lost its state, any majority of three out of five automatically satisfies that requirement! Scroll through the seven steps below to watch view 7 take over from view 6.</span></p>
+    </div>
+  </div>
+  <div class="scrolly" id="change">
+    <div class="stage"><div class="stage-inner split">
+      <svg class="fig svg-dark" id="changesvg" role="img" aria-label="The Tholos from above during a change of seal: invitations go out from the manager, answers come back, and the new writer sends the whole law" data-al-m="Five lanes with time running left to right a step at a time, during a view change: invitations go out from R2, replies come back with each replica's state, and the new primary sends its whole log; each replica shows its view and last record, and R1's lane is hatched while it is cut off"></svg>
+      <div class="side five" id="changeside" data-live></div>
+    </div></div>
+    <div class="steps">
+      <div class="step on"><div class="card"><div class="num"><span class="i">1 · Seal 6</span><span class="m">1 · View 6</span></div><h3><span class="i">Okios is the writer</span><span class="m">R1 is the primary</span></h3><p><span class="i">Under Seal 6, Line 12 has <b>passed</b>: Okios, Liskovia, and Kleon all hold it on their tablets. Melissa and Theron are slightly behind, holding up to Line 10. Meanwhile, Okios has just drafted Line 13 on his tablets at his bench, an unconfirmed <b>draft</b> that has not yet reached any copier.</span><span class="m">In view 6, record 12 has <b>committed</b>: R1, R2, and R3 all hold it. R4 and R5 are slightly behind, holding up to record 10. Meanwhile, R1 has just appended record 13, an unconfirmed <b>draft</b> that has not yet reached any backup.</span></p></div></div>
+      <div class="step"><div class="card"><div class="num">2 · Silence</div><h3><span class="i">The roll goes unanswered</span><span class="m">The heartbeats go unanswered</span></h3><p><span class="i">Okios steps out onto the porch, and his notes stop reaching the floor. At her bench, Liskovia stops hearing from him.</span><span class="m">R1 is cut off, and its messages stop reaching the others. R2 stops hearing from the primary.</span></p></div></div>
+      <div class="step"><div class="card"><div class="num"><span class="i">3 · The manager</span><span class="m">3 · The view manager</span></div><h3><span class="i">Liskovia calls Seal 7</span><span class="m">R2 starts view 7</span></h3><p><span class="i">From her bench, Liskovia places her peg in the inner ring at her spoke, sets the center number to 7 (<i>Seal 7, Liskovia</i>), and sends an invitation to every copier.</span><span class="m">R2 picks a counter one higher than view 6, adds its own identity (<i>view 7, R2</i>), and sends an invitation to every replica.</span></p></div></div>
+      <div class="step"><div class="card"><div class="num">4 · The answers</div><h3><span class="i">A majority replies with intact tablets</span><span class="m">A majority replies with intact state</span></h3><p><span class="i">Kleon replies <i>Seal 6, Line 12</i>, and Melissa replies <i>Seal 6, Line 10</i>. Together with Liskovia's own <i>Seal 6, Line 12</i>, that makes a majority of three out of five, and Kleon's and Melissa's signets go into the outer ring of Seal 7! Theron's reply is slow, and nobody needs to wait for it, so his socket stays empty.</span><span class="m">R3 replies <i>⟨view 6, 12⟩</i>, and R4 replies <i>⟨view 6, 10⟩</i>. Together with R2's own <i>⟨view 6, 12⟩</i>, that makes a majority of three out of five! R5's reply is slow, and nobody needs to wait for it.</span></p></div></div>
+      <div class="step"><div class="card"><div class="num"><span class="i">5 · Choosing the writer</span><span class="m">5 · Choosing the primary</span></div><h3><span class="i">The latest seal-and-line becomes writer</span><span class="m">The latest viewstamp becomes primary</span></h3><p><span class="i">Because three legislators held passed Line 12 and three legislators replied to the call, the two majorities must overlap. Therefore, whichever respondent reports the <b>latest seal and line</b> is guaranteed to hold Line 12 and every earlier passed law! Here Liskovia and Kleon are tied at <i>Seal 6, Line 12</i>, so Liskovia places the peg in the middle ring at her spoke, and becomes the writer of Seal 7.</span><span class="m">Because three replicas held committed record 12 and three replicas replied to the invitation, the two majorities must overlap. Therefore, whichever respondent reports the <b>latest viewstamp</b> is guaranteed to hold record 12 and every earlier committed record! Here R2 and R3 are tied at <i>⟨view 6, 12⟩</i>, so R2 becomes primary.</span></p></div></div>
+      <div class="step"><div class="card"><div class="num"><span class="i">6 · The opening line</span><span class="m">6 · The opening record</span></div><h3><span class="i">Sending out the whole law to open Seal 7</span><span class="m">Sending the whole log to open view 7</span></h3><p><span class="i">Liskovia opens Seal 7 by sending everyone on it her complete copy of the law (through Line 12) as Seal 7's opening line (a <code>newview</code> message). Melissa's tablets are immediately brought up to Line 12. Theron, whose socket is empty, gets nothing yet.</span><span class="m">R2 opens view 7 by sending every member of the new view its complete log (through record 12) as view 7's opening state (a <code>newview</code> message). R4's log is immediately brought up to record 12. R5, which is not a member, receives nothing yet.</span></p></div></div>
+      <div class="step"><div class="card"><div class="num"><span class="i">7 · A draft is smoothed away</span><span class="m">7 · A draft is discarded</span></div><h3><span class="i">Okios walks back in</span><span class="m">R1 reconnects</span></h3><p><span class="i">When Okios returns from the porch, Liskovia hears from him again, and Theron's slow answer arrives at last. Neither has a socket on Seal 7, and a seal never changes, so Liskovia calls <i>Seal 8, Liskovia</i>. This time all five answer. Liskovia, Kleon and Melissa show <i>Seal 7, Line 1</i>, later than anything Okios or Theron can show, so Liskovia remains the writer, and her opening line of Seal 8 brings every bench up to Line 12. Okios's unconfirmed draft (Line 13 of Seal 6) is smoothed away, which is completely safe, because it never reached a majority and no citizen was ever told it had passed.</span><span class="m">When R1 reconnects, R2 receives its messages again, and R5's slow reply finally arrives. Neither is a member of view 7, so R2 starts view 8. This time all five accept. R2, R3 and R4 report ⟨view 7, 1⟩, later than anything R1 or R5 can report, so R2 stays primary, and its newview record for view 8 brings every replica up to record 12. R1's unconfirmed draft (record 13 of view 6) is discarded, which is completely safe, because it never reached a majority and no client was ever told it had committed.</span></p></div></div>
+    </div>
+  </div>
+  <div class="wrap" style="padding-bottom:clamp(4.5rem,11vw,8rem)">
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px"><div class="body"><div class="num"><span class="i">What passed survives</span><span class="m">What committed survives</span></div><h3><span class="i">Any law that passed under an earlier seal is preserved in every later seal</span><span class="m">Any record that committed in an earlier view is preserved in every later view</span></h3><p><span class="i">Notice one nice detail: if the old writer happens to be tied for the latest seal-and-line among the respondents, the old writer remains writer so that no tablets need to be copied unnecessarily.</span><span class="m">Notice one nice detail: if the old primary happens to be tied for the latest viewstamp among the respondents, the old primary is chosen to stay primary so that no log needs to be copied unnecessarily.</span></p></div></div></div>
+    <p class="tell"><span class="i">In the walkthrough above, every legislator who answered the call still had their wax tablets intact. The harder case is someone who has gone home for the night, had their wax tablets smoothed clean, and answers the call <em>without</em> tablets.</span><span class="m">In the walkthrough above, every replica that answered still had its volatile state intact. The harder case is a replica that has crashed, lost its state, and answers the invitation <em>without</em> it.</span></p>
+    <details class="proof i">
+      <summary>Sketch · that what passed survives, while everyone keeps their tablets</summary>
+      <p class="given">Let <var>b</var> and <var>c</var> be seals (views), ordered by their seal marks. A line has passed under <var>b</var> when the writer of <var>b</var> and at least two other copiers hold that line and every line before it. <b>Claim.</b> Any line that passed under seal <var>b</var> is held by every member of every seal that forms after <var>b</var>.</p>
+
+    <ol class="proofsteps">
+      <li>Oki and Liskov state this argument in §§2 and 4; here we lay it out step by step across consecutive seals.</li>
+      <li>Suppose a law's line passed under seal <var>b</var>: at least three of the five legislators held that line (and every line before it) under seal <var>b</var>.</li>
+      <li>Let <var>c</var> (&gt; <var>b</var>) be the very next seal that successfully forms. Seal <var>c</var> forms on replies from at least three of the five legislators. By majority intersection, those three respondents share at least one legislator with the three who held the passed line; assuming no tablets were lost, that shared legislator replies with seal <var>b</var> and a line number at or past the passed line.</li>
+      <li>The new writer of seal <var>c</var> is chosen as the respondent with the largest seal-and-line mark (<code>viewstamp</code>). By <em>The Later Line Knows More</em>, the new writer's tablets contain everything the shared legislator's tablets contain, including the passed line.</li>
+      <li>Seal <var>c</var> opens with the new writer sending their complete law state to every member of <var>c</var>, so every member of <var>c</var> holds the passed line, and any new lines in <var>c</var> are ordered after it.</li>
+      <li>By induction from seal <var>c</var> to every subsequent seal that forms, the passed line survives in every later seal.<span class="qed">∎</span></li>
+    </ol>
+    </details>
+    <details class="proof m">
+      <summary>Sketch · that what committed survives, while everyone keeps their state</summary>
+      <p class="given">Let <var>b</var> and <var>c</var> be views, ordered by their viewids. A record has committed in <var>b</var> when the primary of <var>b</var> and at least two other replicas hold that record and every record before it. <b>Claim.</b> Any record that committed in view <var>b</var> is held by every member of every view that forms after <var>b</var>.</p>
+    <ol class="proofsteps">
+      <li>Oki and Liskov state this argument in §§2 and 4; here we lay it out step by step across consecutive views.</li>
+      <li>Suppose a record committed in view <var>b</var>: at least three of the five replicas held that record (and every record before it) in view <var>b</var>.</li>
+      <li>Let <var>c</var> (&gt; <var>b</var>) be the very next view that successfully forms. View <var>c</var> forms on replies from at least three of the five replicas. By majority intersection, those three respondents share at least one replica with the three that held the committed record; assuming no state was lost, that shared replica replies with view <var>b</var> and a timestamp at or past the committed record.</li>
+      <li>The new primary of view <var>c</var> is chosen as the respondent with the largest viewstamp (<code>viewstamp</code>). By <em>The Later Viewstamp Knows More</em>, the new primary's log contains everything the shared replica's log contains, including the committed record.</li>
+      <li>View <var>c</var> opens with the new primary sending its complete log to every member of <var>c</var>, so every member of <var>c</var> holds the committed record, and any new records in <var>c</var> are ordered after it.</li>
+      <li>By induction from view <var>c</var> to every subsequent view that forms, the committed record survives in every later view.<span class="qed">∎</span></li>
+    </ol>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ s6 continued: lost tablets -->
+<section class="spread light" id="lost" data-name="When tablets are lost" data-name-m="When state is lost">
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-60 9-70-8-90 11-100-9-80 10-90-11-100 9-80-8-110 10-90-9-90 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">A majority of answers is not always enough</div>
+      <h2><span class="i">When tablets are lost</span><span class="m">When state is lost</span></h2>
+      <p class="lede"><span class="i">When a legislator goes home and returns to smooth wax, a simple majority of three replies is no longer enough on its own! To see why, look at Seal 6 again: suppose Line 12 passed because Okios, Liskovia, and Kleon held it, while Melissa and Theron held only up to Line 10. Now suppose Okios goes home (losing his tablets) and comes back, while Liskovia and Kleon step out. When a call for Seal 7 goes out, Okios (without tablets), Melissa (at Line 10), and Theron (at Line 10) answer, three out of five!</span><span class="m">When a replica crashes and recovers with empty memory, a simple majority of three replies is no longer enough on its own! To see why, look at view 6 again: suppose record 12 committed because R1, R2, and R3 held it, while R4 and R5 held only up to record 10. Now suppose R1 crashes (losing its volatile state) and recovers, while R2 and R3 are cut off. When the invitation to view 7 goes out, R1 (without its log), R4 (at record 10), and R5 (at record 10) answer, three out of five!</span></p>
+      <p><span class="i">If Seal 7 were allowed to form from those three replies, the best intact tablet among them would stop at Line 10, and passed Line 12 would be lost forever! Majority overlap failed because the one person in the overlap between {Okios, Liskovia, Kleon} and {Okios, Melissa, Theron} was Okios, and Okios lost his tablets! To prevent this, Oki and Liskov require that a new seal may form only when a majority of the council has answered <b>and at least one of three safety conditions holds</b>:</span><span class="m">If view 7 were allowed to form from those three replies, the best intact log among them would stop at record 10, and committed record 12 would be lost forever! Quorum intersection failed because the one replica in the overlap between {R1, R2, R3} and {R1, R4, R5} was R1, and R1 lost its state! To prevent this, Oki and Liskov require that a new view may form only when a majority of the group has answered <b>and at least one of three safety conditions holds</b>:</span></p>
+    </div>
+    <div class="cards3">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Condition 1</div><h3><span class="i">A majority still has its tablets</span><span class="m">A majority still has its state</span></h3><p><span class="i">At least three of the five legislators replied <em>with intact tablets</em> (normal acceptances). Then the three intact replies alone form a majority and overlap the three who passed Line 12.</span><span class="m">At least three of the five replicas replied <em>with intact state</em> (normal accepts). Then the three intact replies alone form a majority and overlap the three that committed record 12.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Condition 2</div><h3><span class="i">The lost tablets are from an older seal</span><span class="m">The lost state is from an older view</span></h3><p><span class="i">Every reply <em>without</em> tablets names an older seal on its bench stone than the latest seal shown by a reply <em>with</em> tablets. Since that later seal already formed safely, everything from the older seal was already carried forward into it!</span><span class="m">Every reply <em>without</em> state names an older view in stable storage than the latest view shown by a reply <em>with</em> state. Since that later view already formed safely, everything from the older view was already carried forward into it!</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num">Condition 3</div><h3><span class="i">That seal's writer still has their tablets</span><span class="m">That view's primary still has its state</span></h3><p><span class="i">A reply without tablets names the same seal as the latest reply with tablets, <b>and that seal's writer replied with intact tablets</b>. Because every line under a seal is written by its writer first, the writer's intact tablets hold every line of that seal, covering for any copier whose tablets were smoothed!</span><span class="m">A reply without state names the same view as the latest reply with state, <b>and that view's primary replied with intact state</b>. Because every record in a view is appended at the primary first, the primary's intact log holds every record of that view, covering for any backup whose state was lost!</span></p></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+      <h4><span class="i">May seal 7 form? <em>set each answer</em></span><span class="m">May view 7 form? <em>set each answer</em></span></h4>
+      <div class="hill-wrap">
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin:0 0 .8rem"><span class="i">Seal 6, with writer Okios. Line 12 has passed: Okios, Liskovia and Kleon held it. Melissa and Theron held up to line 10.</span><span class="m">View 6, primary R1. Record 12 has committed: R1, R2 and R3 held it. R4 and R5 held up to record 10.</span></p>
+          <div class="ans" id="formans"></div>
+        </div>
+        <div>
+          <ul class="checks" id="formchecks" data-live></ul>
+          <p class="say" id="formsay"></p>
+        </div>
+      </div>
+      <div class="row"><button class="btn alt" id="formreset">The example above</button></div>
+      <p style="font-size:.88rem;color:#6b5a48;margin:12px 0 0"><span class="i">Everyone here last served under Seal 6, so Condition 2 does not apply in this scenario. You can test all 243 combinations of how the five legislators might answer: in every single case where the rules allow Seal 7 to form, its new writer has Line 12!</span><span class="m">Everyone here last served in view 6, so Condition 2 does not apply in this scenario. You can test all 243 combinations of how the five replicas might answer: in every single case where the rules allow view 7 to form, its new primary has record 12!</span></p>
+    </div></div></div>
+    <p class="tell"><span class="i">When none of the three conditions is met, Seal 7 simply waits and does not form yet. The manager keeps trying until Liskovia or Kleon steps back inside with their intact tablets, satisfying Condition 1 so Seal 7 can safely form with Line 12 intact.</span><span class="m">When none of the three conditions is met, view 7 simply waits and does not form yet. The view manager keeps trying until R2 or R3 reconnects with its intact state, satisfying Condition 1 so view 7 can safely form with record 12 intact.</span></p>
+    <p class="tell"><span class="i">One more hazard remains: the old writer, Okios, may still be standing out on the porch with no idea that Seal 7 has formed inside.</span><span class="m">One more hazard remains: the old primary, R1, may still be partitioned away with no idea that view 7 has formed.</span></p>
+    <details class="proof">
+      <summary>In the paper · when a view may form</summary>
+      <p class="given">A new view may form when the view manager has received acceptances from a majority of cohorts in the group configuration, and either: (1) a majority of the group sent normal-accepts, or (2) every crash-accept has <code>crash-viewid &lt; normal-viewid</code> (the highest viewid among normal-accepts), or (3) the highest <code>crash-viewid</code> equals <code>normal-viewid</code> and the primary of that view sent a normal-accept. The new primary is chosen as the respondent with the largest viewstamp (preferring the old primary on a tie). (§4.)</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ s7 the writer who has not noticed -->
+<section class="spread dark" id="porch" data-name="The writer who has not noticed" data-name-m="The primary that has not noticed">
+  <a class="anchor" id="s7"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-9-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div class="pop fromleft i"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/o04-porch.jpg" alt="From the porch of the Tholos through its open door: the two door leaves stand open, looking past a fluted column across the open stone floor of the hall to the benches inside" loading="lazy"></div></div></div>
+      <div>
+        <div class="kicker"><span class="i">Two who believe they are writer</span><span class="m">Two replicas that believe they are primary</span></div>
+        <h2><span class="i">The writer who has not noticed</span><span class="m">A primary that has not noticed</span></h2>
+        <p class="lede"><span class="i">Suppose Okios, the writer of Seal 6, steps out onto the porch. While no word passes through the doorway, Liskovia, Kleon, and Melissa inside the hall make Seal 7 and designate Liskovia as writer. Out on the porch, Okios knows nothing of this and his own tablets still name him writer under Seal 6.</span><span class="m">Suppose R1, the primary of view 6, is cut off from the others. While no messages get through, R2, R3, and R4 form view 7 and make R2 the new primary. Cut off, R1 knows nothing of this and still believes it is primary in view 6.</span></p>
+        <p><span class="i">Now two legislators simultaneously believe they are the writer (<i>split brain</i>)! Nothing lets Okios pass conflicting laws out on the porch, because authority rides on the <b>seal</b> pressed beside every line: a copier only copies lines bearing the seal configured on their bench. Even if Okios takes a petition at the porch and sends his runners into the hall under Seal 6, watch what happens when those runners reach the benches:</span><span class="m">Now two replicas simultaneously believe they are primary (<i>split brain</i>)! Nothing lets R1 commit conflicting records while partitioned, because authority rides on the <b>view number</b> carried by every message. Even if R1 accepts a client call and sends records to the others under view 6, watch what happens when those messages reach the backups:</span></p>
+      </div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+      <h4><span class="i">Can Okios pass a line? <em>seal 6 on the porch, seal 7 inside</em></span><span class="m">Can R1 commit a record? <em>view 6 on one side, view 7 on the other</em></span></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg fig" id="porchsvg" role="group" aria-label="The Tholos from above with Okios out on the porch under seal 6 and Liskovia as writer under seal 7" data-al-m="Five lanes with real time running left to right: R2 is the primary in view 7, and R1, still in view 6, sends a record to every backup; each arrow ends in a tick where the record is taken and a cross where it is refused"></svg>
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem"><span class="i">Seal 7 formed with Liskovia as manager and writer, and Kleon and Melissa in its quorum. Click Theron's bench to choose whether he answered the call in time and is on it too.</span><span class="m">View 7 formed on a majority: R2, R3 and R4. Click R5's name to choose whether it has joined view 7 yet.</span></p>
+          <div class="counts"><span><b id="porchn">1</b><bdi class="i">hold the line under seal 6</bdi><bdi class="m">hold the record in view 6</bdi></span></div>
+          <p class="say" id="porchsay"><span class="i">Theron has not heard of seal 7.</span><span class="m">R5 has not joined view 7.</span></p>
+        </div>
+      </div>
+      <div class="row"><button class="btn" id="porchwrite"><span class="i">Okios writes a line under seal 6</span><span class="m">R1 appends a record in view 6</span></button></div>
+    </div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num"><span class="i">Two writers, one law</span><span class="m">Two primaries, one log</span></div><h3><span class="i">A deposed writer who has missed a later seal can still write drafts, but can never pass them</span><span class="m">A deposed primary that has missed a later view can still append drafts, but can never commit them</span></h3></div></div></div>
+    <p class="tell"><span class="i">Because Seal 7 required a majority of three (Liskovia, Kleon, and Melissa) to form, all three of them have already moved to Seal 7 and reject any note bearing the old mark of Seal 6! Even if Theron has not yet heard of Seal 7 and accepts Okios's note, Okios + Theron is only two out of five, one short of a majority. Okios can never get two copiers to confirm his draft, so he can never tell a petitioner that a new law has passed. And the moment any message from inside reaches him, he learns of Seal 7 and steps down.</span><span class="m">Because view 7 required a majority of three (R2, R3, and R4) to form, all three have already moved to view 7 and reject any message bearing the old view 6! Even if R5 has not yet heard of view 7 and accepts R1's record, R1 + R5 is only two out of five, one short of a majority. R1 can never get two backups to confirm its draft, so it can never tell a client that a new record has committed. And the moment any message from the others reaches it, it learns of view 7 and steps down.</span></p>
+    <p class="tell"><span class="i">Notice how everything we have seen, passing laws by majority and recovering safely when a writer steps out, relies on enough legislators keeping their wax tablets intact. Let us look closely at the price of writing in wax rather than indelible ink.</span><span class="m">Notice how everything we have seen, committing by majority and recovering safely when a primary fails, relies on enough replicas keeping their volatile state intact. Let us look closely at the price of keeping the log in volatile memory rather than on disk.</span></p>
+    <details class="proof">
+      <summary>In the paper · several active primaries</summary>
+      <p class="given">“The system performs correctly even if there are several active primaries (in different partitions) at the same time… The old primary will not be able to prepare and commit user transactions, however, since it cannot force their effects to the backups.” (§4.1.)</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ s8 wax, not ink -->
+<section class="spread light" id="wax" data-name="Wax, not ink" data-name-m="Volatile state">
+  <a class="anchor" id="s8"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-40 9-60-8-70 12-90-10-80 9-110-11-80 12-100-9-90 10-90-12-80 10-110-9-100 11z"/></svg>
+  <div class="wrap">
+    <div class="two solo" style="gap:clamp(20px,4vw,50px);align-items:center">
+      <div>
+        <div class="kicker"><span class="i">What going home costs</span><span class="m">What a crash costs</span></div>
+        <h2><span class="i">Wax, not ink</span><span class="m">Memory, not disk</span></h2>
+        <p class="lede"><span class="i">Schedia's legislators write the law on <b>wax tablets</b> (<i>volatile memory</i>) that remain on their benches and are smoothed clean whenever their owner goes home for the night (a <i>crash</i>).</span><span class="m">Each replica keeps its log in <b>volatile memory</b>, which is lost whenever the replica crashes.</span></p>
+        <p><span class="i">Only two facts are chiselled into the <b>stone</b> of the bench itself (<i>stable storage</i>): the legislator's name, and the core of the last seal they joined (its number and its manager), which is recut only when a new seal forms. Stepping out onto the porch leaves a legislator's wax tablets untouched, whereas going home wipes them clean. When a legislator returns from home to smooth wax, they know only their name and the last seal's core carved into their bench: they immediately call for a new seal, answer <em>without tablets</em>, and recover the law from the new writer's opening line.</span><span class="m">Only a few facts are written to <b>stable storage</b>: the replica's identity and configuration, and the identifier of the last view it joined, which is rewritten only when a new view forms. Being partitioned leaves a replica's volatile state untouched, whereas a crash wipes it clean. When a replica recovers from a crash, it knows only its identity and the last view recorded on disk: it immediately starts a view change, answers <em>without state</em>, and recovers the log from the new primary's opening record.</span></p>
+        <p><span class="i">Writing in wax is fast, because nobody has to chisel every single line of law into stone before answering a runner! Instead, Schedia relies on the assumption that a majority of the council will not all go home on the same night. Click the benches below to send legislators home for the night and see when the council can recover in the morning, and when it halts for good:</span><span class="m">Keeping the log in memory is fast, because nobody has to write every single record to disk before answering a message! Instead, the system relies on the assumption that a majority of the group will not all crash at the same time. Click the replicas below to crash them and see when the group can recover, and when it halts for good:</span></p>
+      </div>
+      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/o05-bench.jpg" alt="Theron's marble bench against the red-painted wall of the Tholos, with scrolled ends and a tall back cut with his name, ΘΗΡΩΝ, and beneath it, in a red ring, Ο6, the middle of the last seal he joined" loading="lazy"></div></div></div>
+    </div>
+    <div class="pop"><div class="leaf"><div class="paper well" style="margin-top:2rem">
+      <h4><span class="i">Who goes home tonight? <em>click a bench</em></span><span class="m">Which replicas crash? <em>click a replica</em></span></h4>
+      <div class="hill-wrap">
+        <svg class="isle-svg fig" id="waxsvg" role="group" aria-label="The Tholos from above: click a legislator to send them home, which smooths their tablets" data-al-m="Five lanes, one for each replica, with the primary's name ringed: click a replica to crash it, which clears its volatile state"></svg>
+        <div>
+          <p style="font-size:.92rem;color:#6b5a48;margin-bottom:.6rem"><span class="i">Seal 6 again, with line 12 passed. In the morning all five are back and answer the call for seal 7. Those who went home answer without tablets.</span><span class="m">View 6 again, with record 12 committed. After the crashes all five are back and answer the invitation to view 7. Those that crashed answer without state.</span></p>
+          <ul class="checks" id="waxchecks" data-live></ul>
+          <p class="say" id="waxsay"></p>
+        </div>
+      </div>
+      <div class="row"><button class="btn alt" id="waxreset"><span class="i">Nobody goes home</span><span class="m">Nobody crashes</span></button></div>
+    </div></div></div>
+    <div class="pop"><div class="leaf paper card3" style="max-width:760px;margin-top:1.6rem"><div class="body"><div class="num">Stopped, never wrong</div><h3><span class="i">If too many tablets are smoothed at once, the council stops forever, it never starts a new seal with a passed law missing</span><span class="m">If too many replicas lose their state at once, the group stops forever, it never starts a new view with a committed record missing</span></h3><p>Oki and Liskov note two ways to make this catastrophe arbitrarily unlikely in practice: have the primary alone log to disk, or equip each machine with an uninterruptible power supply (UPS) so it can flush its volatile memory to disk when power fails.</p></div></div></div>
+    <p class="tell"><span class="i">Across the bay, the Paxon Parliament makes the opposite trade-off: its legislators write every promise and vote in indelible ink on parchment scrolls, and no one in its Chamber wears a wreath. Let us set the two halls side by side.</span><span class="m">Paxos makes the opposite trade-off: its replicas write every promise and vote to stable storage, and there is no single primary. Let us set the two side by side.</span></p>
+    <details class="proof">
+      <summary>In the paper · what survives a crash</summary>
+      <p class="given">Almost all of a cohort's state is kept in volatile memory. Only <code>mymid</code>, <code>configuration</code>, and <code>mygroupid</code> (written when the cohort is created) and <code>cur-viewid</code> (written once at the end of each view change) reside on stable storage. When a cohort recovers from a crash, it sets <code>up-to-date = false</code> and initiates a view change. A simultaneous crash of a majority (a “catastrophe”) “does not cause a group to enter a new view missing some needed information. Rather, it causes the algorithm to never again form a new view.” (§4, §4.2.)</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ s9 across the bay -->
+<section class="spread dark" id="bay" data-name="Across the bay" data-name-m="Compared with Paxos">
+  <a class="anchor" id="s9"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-50 10-80-9-60 11-100-10-90 8-90-11-90 12-100-10-80 8-110-9-100 12-80-10-70 8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker"><span class="i">The other hall</span><span class="m">The other protocol</span></div>
+      <h2><span class="i">Across the bay</span><span class="m">Compared with Paxos</span></h2>
+      <p class="lede"><span class="i">Across the water on the western arm of the island stands the Paxon Chamber, another round stone hall where speeches cannot be heard, legislators wander in and out, and messengers take as long as they take.<sup class="xref"><a href="../../places/the-chamber/index.html" title="The Setting: Part-Time Legislators Passing Laws">*</a></sup></span><span class="m">Paxos is the other well-known way to keep a replicated log consistent: any replica may propose, ballots compete, and replicas write their promises and votes to stable storage.</span></p>
+      <p><span class="i">Because each hall legislates only for its own city, their two law scrolls never conflict.<sup class="xref"><a href="../../places/schedia/index.html#s4" title="A Council of Five Keeping One Law: The City and the Tholos">*</a></sup> Comparing the two halls side by side shows how closely related Viewstamped Replication and Paxos really are, and where each makes its own design choice:</span><span class="m">Comparing the two side by side shows how closely related Viewstamped Replication and Paxos really are, and where each makes its own design choice:</span></p>
+    </div>
+    <div class="cards3">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num"><span class="i">What the Chamber's ink buys</span><span class="m">What Paxos's stable storage buys</span></div><h3><span class="i">Immunity to everyone going home at once</span><span class="m">Immunity to everyone crashing at once</span></h3><p><span class="i">Because a Paxon legislator writes every promise, vote, and decree in indelible ink on their scroll (<i>stable storage on every step</i>), the entire Parliament can go home for the weekend and resume on Monday morning with nothing lost.<sup class="xref"><a href="../the-part-time-parliament/index.html#s1" title="The Part-Time Parliament: A Parliament Whose Members Come and Go">*</a></sup> Schedia's wax tablets avoid disk writes during normal operation, at the cost of requiring that a majority not lose their wax at once.</span><span class="m">Because a Paxos replica writes every promise, vote, and decision to stable storage, the entire group can crash and resume later with nothing lost.<sup class="xref"><a href="../the-part-time-parliament/index.html#s1" title="The Part-Time Parliament: A Parliament Whose Members Come and Go">*</a></sup> Viewstamped Replication's volatile state avoids disk writes during normal operation, at the cost of requiring that a majority not lose their state at once.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num"><span class="i">What Schedia's writer buys</span><span class="m">What the primary buys</span></div><h3>Strict primary-to-backup streaming</h3><p><span class="i">In the Chamber, any legislator can initiate a ballot for any decree slot, and a newly elected president runs Phase 1 across open slots.<sup class="xref"><a href="../the-part-time-parliament/index.html#s2" title="The Part-Time Parliament: One Decree, Once Every Nineteen Years">*</a></sup> In Schedia's Tholos, only the writer ever authors lines, copiers receive them strictly in order without gaps, and switching writers is an explicit view-change step that transfers the most up-to-date log.</span><span class="m">In Paxos, any replica can initiate a ballot for any log slot, and a newly elected leader runs phase 1 across open slots.<sup class="xref"><a href="../the-part-time-parliament/index.html#s2" title="The Part-Time Parliament: One Decree, Once Every Nineteen Years">*</a></sup> In Viewstamped Replication, only the primary ever appends records, backups receive them strictly in order without gaps, and switching primaries is an explicit view-change step that transfers the most up-to-date log.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num"><span class="i">What the two halls share</span><span class="m">What the two share</span></div><h3>Overlapping majorities</h3><p>Both protocols rest on the exact same mathematical foundation: any two majorities of a group share at least one member, ensuring that whatever a majority committed in the past is discovered and preserved in the future.</p></div></div></div>
+    </div>
+    <p class="tell"><span class="i">Remarkably, the two protocols were invented independently at almost the same time: Oki and Liskov published Viewstamped Replication in 1988, while Lamport's Paxos manuscript began circulating in 1989 and was published in 1998. That is why Schedia has a city and a Tholos of its own on the eastern arm of the island.</span><span class="m">Remarkably, the two protocols were invented independently at almost the same time: Oki and Liskov published Viewstamped Replication in 1988, while Lamport's Paxos manuscript began circulating in 1989 and was published in 1998.</span></p>
+  </div>
+</section>
+
+<!-- ============================================================ s10 what it does not say -->
+<section class="spread light" id="nots" data-name="What it does not say">
+  <a class="anchor" id="s10"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
+  <div class="wrap">
+    <div class="narrow" style="margin:0 0 1rem">
+      <div class="kicker">The limits</div>
+      <h2>What it does not say</h2>
+      <p class="lede"><span class="i">The Tholos guarantees that every passed law survives any change of writer. Five questions mark the exact boundaries of what Oki and Liskov's 1988 paper promises:</span><span class="m">The protocol guarantees that every committed record survives any change of primary. Five questions mark the exact boundaries of what Oki and Liskov's 1988 paper promises:</span></p>
+    </div>
+    <div class="cards3 five">
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3><span class="i">Does the council always form a new seal right away?</span><span class="m">Does the group always form a new view right away?</span></h3><p><span class="i">Not if notes keep getting delayed or lost. If a manager stops waiting too early and forms a seal without a reachable colleague, that colleague may soon call a still higher seal, causing repeated view changes. The paper notes this explicitly and recommends generous timeouts and message retransmissions: progress requires the network to settle long enough for a view to complete.</span><span class="m">Not if messages keep getting delayed or lost. If a view manager stops waiting too early and forms a view without a reachable replica, that replica may soon start a still higher view, causing repeated view changes. The paper notes this explicitly and recommends generous timeouts and message retransmissions: progress requires the network to settle long enough for a view to complete.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3><span class="i">What if a petitioner gets no answer before the writer changes?</span><span class="m">What if a client gets no answer before the primary changes?</span></h3><p><span class="i">A citizen waiting at the door cannot tell whether their petition was passed just before the old writer stepped out or lost as an unconfirmed draft. In Oki and Liskov's transaction system, rather than risk running a non-idempotent operation twice, an unanswered call causes the enclosing transaction to abort cleanly.</span><span class="m">A client waiting for a reply cannot tell whether its call committed just before the old primary failed or was lost as an unconfirmed draft. In Oki and Liskov's transaction system, rather than risk running a non-idempotent operation twice, an unanswered call causes the enclosing transaction to abort cleanly.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3><span class="i">Was the paper written for a single council alone?</span><span class="m">Was the paper written for a single group alone?</span></h3><p><span class="i">In the 1988 paper, each council (module group) is one of several that share a larger enterprise, coordinated by a two-step agreement among the councils. The telling here keeps one council on its own.</span><span class="m">In the 1988 paper, each group (module group) is one shard of a larger distributed transaction system coordinated by two-phase commit (<i>prepare</i> and <i>commit</i>). The description here keeps one group on its own.</span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3><span class="i">Could a legislator lie?</span><span class="m">Could a replica lie?</span></h3><p><span class="i">Not in the Tholos. Here legislators may step out, go home, or miss notes, but everything they write and report is honest (<i>crash-recovery faults</i>). Tolerating lying legislators requires larger majorities and two-echo cross-checks of Castro and Liskov's PBFT.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s3" title="Keeping Order Among Liars: Two Echoes">*</a></sup></span><span class="m">Not in this protocol. Here replicas may be partitioned, crash, or miss messages, but everything they write and report is honest (<i>crash-recovery faults</i>). Tolerating lying replicas requires the 3<i>f</i> + 1 quorums and three-phase cross-checks of Castro and Liskov's PBFT.<sup class="xref"><a href="../keeping-order-among-liars/index.html#s3" title="Keeping Order Among Liars: Two Echoes">*</a></sup></span></p></div></div></div>
+      <div class="pop"><div class="leaf paper card3"><div class="body"><h3><span class="i">How does a citizen find out who is the writer?</span><span class="m">How does a client find out who is primary?</span></h3><p><span class="i">Citizens check the tablet at the door or ask a copier, who redirects them to the current writer, or they consult a location directory service.</span><span class="m">Clients cache the current primary's identity; if they send a call to a backup by mistake, the backup redirects them to the current primary, or they consult a location directory service.</span></p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ s11 relevance -->
+<section class="spread dark" id="why" data-name="The result" data-name-m="The result">
+  <a class="anchor" id="s11"></a>
+  <a class="anchor" id="refs"></a>
+  <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#f6eed6"><path d="M0 0h1200v9l-60 9-80-8-70 10-100-9-90 11-80-10-110 9-100-8-80 10-90-9-90 11z"/></svg>
+  <div class="wrap">
+    <div class="end">
+      <p class="big">One primary orders every operation, and a new primary starts from the fullest log a majority can show, so nothing committed is ever lost.</p>
+      <p class="lede" style="margin:0 auto">Keeping logs in volatile memory means that simultaneous crashes can halt the group, but the view-formation rules ensure it will never resume with a committed operation missing.</p>
+      <div class="links">
+        <a class="i" href="../../places/schedia/index.html">A Council of Five Keeping One Law, in detail</a>
+        <a href="../../papers/index.html">All the papers</a>
+      </div>
+    </div>
+    <div class="apparatus">
+      <p class="lineage i"><span class="lbl">Setting</span> <a href="../../places/schedia/index.html">A Council of Five Keeping One Law</a></p>
+      <details class="proof">
+        <summary>The paper behind this book</summary>
+        <p>Brian M. Oki and Barbara H. Liskov, <i>Viewstamped Replication: A New Primary Copy Method to Support Highly-Available Distributed Systems</i>. Proceedings of the Seventh Annual ACM Symposium on Principles of Distributed Computing (PODC), Toronto, August 1988, 8–17. — Introduces the primary-copy replication method, viewids and viewstamps, forcing event records to a sub-majority of backups, the view-change algorithm and its crash-safe formation conditions, and integration with two-phase commit.</p>
+        <p><b>The ideas, plainly.</b></p>
+        <p>Oki and Liskov replicate a service across a group of cohorts that may crash, recover, and suffer network partitions or lost messages, but never lie. In each view, a single cohort acts as the <i>primary</i>, executing client calls and streaming event records in timestamp order to the passive <i>backups</i>. An event is committed once a majority of the group holds it (the primary plus a sub-majority of backups via <code>force-to</code>).</p>
+        <p>Each period under a single primary is a <i>view</i> identified by a unique, totally ordered <code>viewid = ⟨cnt, mid⟩</code>, and each event is tagged with a <code>viewstamp = ⟨viewid, ts⟩</code>. When the primary appears unreachable or membership changes, any cohort can act as a <i>view manager</i> and invite the group into a higher view. It collects responses from a majority of cohorts, chooses the respondent with the latest viewstamp as the new primary, and starts the new view by broadcasting that primary's full state. Because any two majorities intersect and event records arrive in order without gaps, the respondent with the largest viewstamp in a majority is guaranteed to hold every committed event.</p>
+        <p>Because cohorts keep their logs and state in volatile memory rather than writing every event to disk, a cohort that crashes and recovers loses its log and remembers only the <code>cur-viewid</code> stored on disk. Three view-formation conditions prevent a new view from forming if too many cohorts have lost their volatile state to guarantee that all committed events are present: if a majority crash at once, the group halts safely rather than starting a view with missing history. Meanwhile, a deposed primary in a minority partition can do no harm because its old <code>viewid</code> is rejected by the majority in the new view.</p>
+        <p class="fnote i">Brian Oki and Barbara Liskov appear in the council as Okios and Liskovia; Kleon, Melissa, and Theron fill the remaining three seats. The five legislators are distinguished by cloak colour: Okios in blue-grey, Liskovia in saffron, Kleon in green, Melissa in madder red, and Theron in grey.</p>
+      </details>
+      <details class="proof i">
+        <summary>In the paper, term by term</summary>
+        <table class="terms2"><tbody>
+          <tr><td><span class="term">the council of five, each with a copy of the law</span></td><td>A module group of cohorts; the fixed set is the configuration; three or five is typical. <span class="paper">§2.</span></td></tr>
+          <tr><td><span class="term">the law; a line</span></td><td>The group state; an event record. <span class="paper">§2–3.</span></td></tr>
+          <tr><td><span class="term">slow or lost messengers; stepping out; going home</span></td><td>A network that loses, delays and reorders messages and partitions; a partition; a crash. No Byzantine faults. <span class="paper">§1.</span></td></tr>
+          <tr><td><span class="term">one law; passed stays passed</span></td><td>The group behaves as one logical entity; events known to a majority survive view changes. <span class="paper">§2, §4.</span></td></tr>
+          <tr><td><span class="term">the writer; the copiers</span></td><td>The primary; the backups, passive. <span class="paper">§2.</span></td></tr>
+          <tr><td><span class="term">a runner who never skips a line</span></td><td>The communication buffer: reliable delivery in timestamp order. <span class="paper">§2.</span></td></tr>
+          <tr><td><span class="term">a petition; sent back with the writer's name</span></td><td>A call from a client; rejection with the current viewid and primary. <span class="paper">§3.1, §3.3.</span></td></tr>
+          <tr><td><span class="term">Passed Means Three Hold It; waiting for two</span></td><td>force-to: wait for a sub-majority of backups. <span class="paper">§3. In the paper, at prepare and commit.</span></td></tr>
+          <tr><td><span class="term">a seal; its number, manager, writer, and quorum</span></td><td>A view; viewid = ⟨cnt, mid⟩, which alone orders views; primary; members. <span class="paper">§2, §4.</span></td></tr>
+          <tr><td><span class="term">seal and line; the note</span></td><td>Viewstamp = ⟨viewid, ts⟩; the history. <span class="paper">§2.</span></td></tr>
+          <tr><td><span class="term">The Later Line Knows More</span></td><td>In-order delivery: a later viewstamp for a view implies knowledge of every earlier event in it. <span class="paper">§4.</span></td></tr>
+          <tr><td><span class="term">the roll; the manager; an invitation</span></td><td>“I am alive” messages; the view manager; an invitation with a new viewid. <span class="paper">§4.</span></td></tr>
+          <tr><td><span class="term">each bench's seal kit; the opening line</span></td><td>The view configuration, distributed to all replicas via newview. Replicas share no central hardware or table. <span class="paper">§4.</span></td></tr>
+          <tr><td><span class="term">an answer with tablets; without</span></td><td>A normal acceptance with the viewstamp; a crash-accept with the viewid. <span class="paper">§4.</span></td></tr>
+          <tr><td><span class="term">when a seal may form</span></td><td>A majority accepted, and conditions (1)–(3). <span class="paper">§4.</span></td></tr>
+          <tr><td><span class="term">who becomes the writer; the opening line</span></td><td>The largest viewstamp, the old primary if possible; the “newview” record with view, history and state. <span class="paper">§4.</span></td></tr>
+          <tr><td><span class="term">What Passed Survives</span></td><td>The paper's informal argument; here set out by seal. <span class="paper">§2, §4.</span></td></tr>
+          <tr><td><span class="term">Two Writers, One Law</span></td><td>Several active primaries; the old one cannot force. <span class="paper">§4.1.</span></td></tr>
+          <tr><td><span class="term">wax; the stone, with a name and a seal's core</span></td><td>Volatile state; mymid, configuration, mygroupid and cur-viewid on stable storage. <span class="paper">§4, §4.2.</span></td></tr>
+          <tr><td><span class="term">coming back from home</span></td><td>up-to-date = false; the cohort starts a view change. <span class="paper">§4.</span></td></tr>
+          <tr><td><span class="term">Stopped, Never Wrong</span></td><td>A catastrophe means no new view is ever formed. <span class="paper">§4.2.</span></td></tr>
+          <tr><td><span class="term">no promise of a new seal</span></td><td>The algorithm is “not tolerant of lost messages and slow responses”; long timeouts, duplicate messages. <span class="paper">§4.1.</span></td></tr>
+          <tr><td><span class="term">a petition with no answer</span></td><td>No reply: abort, since a retried call might run twice. <span class="paper">§3.1.</span></td></tr>
+          <tr><td><span class="term">the piece of work settled together</span></td><td>Transactions across groups, psets and two-phase commit. <span class="paper">§3.</span></td></tr>
+          <tr><td><span class="term">asking who is the writer</span></td><td>The location server and each client's cache. <span class="paper">§3.1.</span></td></tr>
+        </tbody></table>
+      </details>
+    </div>
+  </div>
+</section>
+<footer>Distributed Algorithms of Ancient Greece · “One Writer at a Time”, after Oki and Liskov, PODC 1988.</footer>
+<script src="../../assets/js/registers.js"></script>
+<script src="../../assets/js/book.js"></script>
+<script src="../../assets/js/covers.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

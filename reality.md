@@ -62,6 +62,7 @@ What each place, building, character, prop and practice of the setting has in co
 | the red sash on the messenger who carries the marker | Heralds were sacrosanct under Hermes, and killing them was thought to bring a curse: the Spartans' killing of Persian heralds is the famous case (Herodotus 7.133–137)†. A red sash itself is the setting's own. | Loose |
 | carts, mules, oil jars, merchant ships | The Kyrenia ship, a fourth-century BC merchantman found off Cyprus, carried wine jars, millstones and almonds†; mule and ox carts took goods on land. | Close |
 | the houses' account scrolls | Hellenistic accounts were kept on papyrus rolls and sheets and on wax tablets; the Zenon papyri are the surviving archive of one such manager†. | Close |
+| a wax slate kept for each incoming track until its sash arrives | Wax tablets were the Greek notebook for temporary records (Plato, Theaetetus 191c–d)†; one kept per track is the setting’s own. | Close |
 | the tally kept in a counting room | Greek reckoning used pebbles on a counting board; the marble Salamis tablet is an example†. | Close |
 
 ### Practices
@@ -105,12 +106,17 @@ What each place, building, character, prop and practice of the setting has in co
 | ravens carrying messages, a strip in a bronze tube | Real ravens do not carry messages, as the setting says. The real bird is the pigeon: Taurosthenes of Aegina is said to have sent news of his Olympic win home to his father by a pigeon on the same day (Aelian, Varia Historia 9.2; Pliny, Natural History 10.53). Apollo's raven is a mythical messenger (Hesiod fr. 60)†. | Loose |
 | a glass, started at last light | The hourglass is not attested before the fourteenth century AD (its earliest evidence is Lorenzetti's fresco of 1338), and the Greek instrument is the water-clock. The setting keeps the sandglass on purpose, a deliberate anachronism for narrative convenience: it can be turned over at a stroke, so that four men who cannot see one another start together. | Anachronism |
 | the slate on which a man chalks the tents he thinks dead | Greeks wrote notes on wax tablets, whitened boards and potsherds; chalk on slate is not attested for them†. The slate is a convenience of the allegory. | Loose |
+| hawks that take a raven in the folds | The hawk (hierax) was the pigeon’s natural enemy, and keepers of tame pigeons guarded them from hawks (Aristotle, History of Animals 9.36)†. A raven taken unseen, so that a tent is cut off, is the setting’s own. | Loose |
 | one tent's roll is the only note that counts: the muster-master | Armies kept muster rolls, and pay was drawn up from them; the rolls of the Ptolemaic army are known from papyri†. That one man's roll settled a fact for the whole company is the setting's use, and a muster-master with no say in what the company does is the setting's own. | Loose |
 | a coin: owl for hold, goddess for attack | The Athenian silver tetradrachm showed the head of Athena on one side and her owl on the other, and was accepted as money across the Greek world. The pairing with the two answers is the setting's own. | Close |
 | rats as messengers, a cord knotted with the sender's number | No Greek army used rats; the setting says so. Apollo was “Smintheus”, lord of mice (Iliad 1.39)†, but that is a cult title, not a postal service. A knotted cord as a message is real: Darius left the Ionians a thong with sixty knots to undo one a day (Herodotus 4.98). | Invented |
 | the sandglasses turned together at dusk | The hourglass is not attested before the fourteenth century AD (its earliest evidence is Lorenzetti's fresco of 1338), and the Greek instrument is the water-clock. The setting keeps the sandglass on purpose, a deliberate anachronism for narrative convenience: it can be turned over at a stroke, so that four men who cannot see one another start together. | Anachronism |
 | seal rings cut with each man's number | Signet rings were the Greek proof of sender and of an unopened message: Polycrates' ring (Herodotus 3.41)†, and the seals Aeneas Tacticus describes for messages (31)†. | Close |
 | the loot scroll, a copy at each post | Papyrus rolls were the ordinary Hellenistic form for lists and accounts, written in columns with new entries added at the end†. | Close |
+| a sandglass that doubles each time a term fails | Invented. It is the paper’s backoff, given the sandglass the crown already has; see the sandglass row for the anachronism. | Invented |
+| an entry echoed twice, in sealed rats, before it stands | Athenian auditors (euthynoi) checked a magistrate’s accounts after his term (Aristotle, Constitution of Athens 48)†. A two-stage echo before an entry counts is the setting’s own. | Invented |
+| three seals tied into one bundle | Documents were closed with clay sealings, and sealings from archives such as Seleucia on the Tigris show several seals on one cord†. A bundle that stands for three votes is the setting’s own. | Loose |
+| the chief’s job passes from post to post in number order | Athenian prytaneis presided in turn, and the chairman changed daily by lot (Aristotle, Constitution of Athens 43–44)†. Passing it by number is the setting’s own. | Loose |
 | a timber ladder drawn up after the chief | Ladders and walls: the Plataeans' breakout used ladders over the besiegers' wall (Thucydides 3.20–24)†. | Close |
 | strongboxes on a stone shelf | Treasure was kept in chests (*kibōtoi*) and temple treasuries†. | Close |
 
@@ -121,6 +127,9 @@ What each place, building, character, prop and practice of the setting has in co
 | no fire and no signal, because the other side is listening | Fire signals were real: the beacon stations of the Cyclades were called *phryktoriai*, and Polybius describes a signalling code (10.43–47). The weakness of fire signals is that the enemy can read them too. | Close |
 | a hill that cannot be left unwatched, attack or hold | Councils of commanders voted on whether to fight or withdraw: Herodotus's account of the council before Salamis is the model (8.49–63)†. | Close |
 | a man who cannot settle tosses a coin | Greeks decided by lot (the *klērotērion*) and played *ostrakinda*, in which a shell black on one side and white on the other was tossed while a player called “night” or “day” (Pollux 9.111, a later account of an older game). The coin toss as a decision rule is Roman, “heads or ships”†. | Loose |
+| a pledge tied to the tent pole, untied by a later one | Invented. The nearest real thing is a token left with a keeper to bind a later decision; nothing is tied to a tent pole†. | Invented |
+| a parting bird sent to every tent before a man leaves his own | A commander who left a post sent word of it by runner or herald†. That every man must do so, so that those left behind can finish, is the setting’s own. | Loose |
+| a sheet of sightings relayed round by round | Whitened boards (leukomata) carried public notices in Athens (Aristotle, Constitution of Athens 47–48)†, and lists were copied from one to another; relaying one round by round is the setting’s own. | Loose |
 | the glasses started together as the last light leaves the crown | The civil day began at sunset in Athens†, so a common moment fixed by the evening light is a real one. | Close |
 
 ---
@@ -154,6 +163,7 @@ What each place, building, character, prop and practice of the setting has in co
 |---|---|---|
 | a bronze meridian line on the Chamber's floor | Greeks told the hour by the shadow of a gnomon, and Meton set up a sun instrument, a *hēliotropion*, on the Pnyx in Athens to mark the solstices†. A line on a floor that a spot of sunlight crosses at noon is later: Augustus's meridian in Rome and the church meridians of the Renaissance†. | Loose |
 | a legislator's scroll in indelible ink | Greek ink was soot in gum and could be wiped off with a sponge†, so indelible ink is the story's own; the scroll itself is the ordinary Hellenistic form of a record. | Loose |
+| hourglass timers | Lamport’s own: his Paxons “were given simple hourglass timers”. The hourglass is not attested before the fourteenth century AD, the same anachronism as the camps’ glass. | Anachronism |
 | a decree and its number | Athenian decrees were dated by the year's chief magistrate and the number of the prytany, and cut in stone†. | Close |
 
 ### Practices
@@ -161,6 +171,7 @@ What each place, building, character, prop and practice of the setting has in co
 | In the setting | The real precedent | How close |
 |---|---|---|
 | a decree passes by a majority | The Athenian Assembly voted by show of hands, and law-courts by pebbles; decisions went by simple majority†. | Close |
+| a president who alone starts ballots, so that two do not duel | Athenian assemblies had presiding officers (the epistatai of the prytaneis, Aristotle, Constitution of Athens 44)†. A president who only keeps ballots from dueling is Lamport’s own. | Loose |
 
 ---
 
@@ -176,7 +187,7 @@ What each place, building, character, prop and practice of the setting has in co
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| the Tholos, a plain round hall with a podium | The building follows the Athenian Tholos: a plain drum with no colonnade outside, six columns inside carrying a conical tiled roof, and a porch at its one door†. The Athenian Tholos housed the committee on duty, with one member presiding for a day and a night chosen by lot (Aristotle, Constitution of Athens 44). The podium is the setting's version of that president's place; the real president was chosen by lot, not by a numbered board. | Close |
+| the Tholos, a plain round hall with a round stone table at its centre | The building follows the Athenian Tholos: a plain drum with no colonnade outside, six columns inside carrying a conical tiled roof, and a porch at its one door†. The Athenian Tholos housed the committee on duty, with one member presiding for a day and a night chosen by lot (Aristotle, Constitution of Athens 44). The wreath is the setting's version of that president's office; the real president was chosen by lot, not under a numbered seal. | Close |
 
 ### Characters
 
@@ -184,7 +195,7 @@ What each place, building, character, prop and practice of the setting has in co
 |---|---|---|
 | a council of five, a majority of three | Sparta had five ephors, elected each year†. Councils and colleges of other sizes were common. | Loose |
 | the five told apart by colour; plain Greek names for the seats | Kleon, Theron and Melissa are ordinary Greek names (Kleon was an Athenian politician, Theron a tyrant of Akragas)†. Colours only tell the figures apart. | Close |
-| young men who run the lines from the podium | Heralds and runners again†. | Close |
+| young men who run the lines from the table at the middle | Heralds and runners again†. | Close |
 
 ### Props
 
@@ -197,7 +208,13 @@ What each place, building, character, prop and practice of the setting has in co
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| a higher board raised when the podium falls silent | Athens renewed its presidency daily by lot. A new holder taking a higher board number is the setting's rule, not a Greek one. | Invented |
+| a seal with a higher number called when the holder falls silent | Athens renewed its presidency daily by lot. A new holder under a seal with a higher number is the setting's rule, not a Greek one. | Invented |
+| a seal: a bronze disc with round slots for signets, the manager's and a number in the middle, those who answered round the edge | The president in the Athenian Tholos kept the city's public seal for his day and night in office (Aristotle, Constitution of Athens 44)†, and any Greek of standing had a signet of their own. Contracts were sealed by several witnesses at once: six on early Ptolemaic contracts, such as the marriage contract from Elephantine of 311 BC†. A stamp whose signets are set in slots and changed, and a number that outranks whoever wears the wreath, are the setting's own. | Loose |
+| a wreath, a ring that fits round any signet, for the holder | Athenian officials wore a myrtle wreath while in office and set it aside when their term ended†. A wreath set on a seal to mark who holds an office is the setting's own. | Loose |
+| the seal's number in our digits (7, not Ζ) | Greeks wrote numbers with letters of the alphabet, Ζ for seven, or with Attic strokes and signs; the digits used today came to Europe in the Middle Ages. The seal keeps them so that it reads the same in the diagrams and the pictures. | Anachronism |
+| a round stone table at the middle of the hall, its step the seat, marked with the manager's token | Greek officials sealed and marked what was theirs with their signets, and the Athenian Tholos was where the committee on duty met and ate†. A table that is also the seat, marked by setting a token in it, is the setting's own. | Invented |
+| the lower wall painted red, with a moulding above it | Greek interiors were often painted in bands, a dark red dado below and plain or imitation-masonry plaster above, as in the houses of Delos and Olynthus†. | Close |
+| a roll, “I am here”, answered every so often | Councillors’ attendance was checked by a herald and by tokens in Athens†. A roll whose silence is taken to mean a silent holder is the setting’s own. | Loose |
 
 ---
 

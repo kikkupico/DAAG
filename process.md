@@ -9,9 +9,9 @@ analysis, the constraints that cannot be broken, and the islands themselves), `r
 (the real Greek precedent for each device, and how close it is), and `hellenistic-reference.html`
 (buildings, tools, weapons, dress, transport, town planning and civic procedure of the period, with
 measurements for modelling).
-**Read as models:** the finished books in `books/`, and their sources in `art/scroll/parts/`.
+**Read as models:** the finished books in `books/`, and their sources in `scroll/parts/`.
 They are the specification. Where this document and a finished book disagree, the book is right.
-**Read before writing a page:** `art/scroll/BRIEF.md`, the authoring guide for the format.
+**Read before writing a page:** `scroll/BRIEF.md`, the authoring guide for the format.
 
 ---
 
@@ -24,13 +24,13 @@ closing spread that returns to machines. Each mechanism has one live interactive
 stage for a sequence, a click-through widget for a choice. Proofs sit in collapsed panels at the
 end of the spread they belong to. Photographs and cards unfold as they enter view.
 
-A page is self-contained. Its source is four parts in `art/scroll/parts/<slug>/` (`meta.json`,
-`body.html`, `page.css`, `page.js`); `python3 art/scroll/assemble.py <slug>` copies the shared
-`shell.css` and `shell.js` round them and writes the page, and `art/scroll/shot.sh` checks it in
-headless Chrome. Never edit a built page by hand. *The Part-Time Parliament* predates the kit, and
-its page is edited directly. The question a book asks, its "We find out by exploring…" line and
+A page is self-contained. The files to edit are `books/<slug>/index.html`, `style.css` and `script.js`;
+`scroll/shot.sh` checks a page in headless Chrome. The four-part sources in `scroll/parts/<slug>/`
+(`meta.json`, `body.html`, `page.css`, `page.js`) and `assemble.py` were the original build; the books have
+moved on from them, and `cover.py` reports every page as stale, so do not run `assemble.py` over a book.
+`meta.json` still holds the words a cover and its card share. The question a book asks, its "We find out by exploring…" line and
 its papers are written once, in `meta.json`; the cover and the book's card on the home page both
-carry them, and `python3 art/scroll/cover.py` checks that they agree (`--write` puts them into
+carry them, and `python3 scroll/cover.py` checks that they agree (`--write` puts them into
 the cards). The pictures a book uses are copied into `books/<slug>/img/`.
 
 **Shared code.** Every book in `books/` (not the one-scroll overview) is assembled from shared layers, so a
@@ -50,8 +50,8 @@ dot-grid card, loaded after `book.js`; each book's `script.js` calls `COVERS.dra
 with the figure that is that paper's signature picture (a lane diagram, a lattice, a field of sites), and the
 svg is class `cover-fig`. The same figure is cropped into the spreads it illustrates: an `<svg class="cover-fig" data-crop="x y w h">` inside a `pop m` beside the text, drawn by `COVERS.mount(COVER)`; such a spread drops its `solo` class.
 The cover function sits between `/* cover:start */` and `/* cover:end */` in the book's `script.js`.
-`python3 art/scroll/book_covers.py` copies every such block into `assets/js/book-covers.js` as `BOOK_COVERS["<slug>"]`,
-which the home page (`index.html`, with `landing.css` and `landing.js`) draws on its book cards in computing; rerun it after changing a cover. The earlier home page is kept as `home-archive.html` and is not published. In computing the home page's cover shows, in place of the chart, a static copy of the family tree from Eighteen Books in One Scroll, which `python3 art/scroll/home_tree.py` takes from that page in headless Chrome and writes between `<!-- family:start -->` and `<!-- family:end -->`; rerun it after changing the tree.
+`python3 scroll/book_covers.py` copies every such block into `assets/js/book-covers.js` as `BOOK_COVERS["<slug>"]`,
+which the home page (`index.html`, with `landing.css` and `landing.js`) draws on its book cards in computing; rerun it after changing a cover. The earlier home page is kept as `home-archive.html` and is not published. In computing the home page's cover shows, in place of the chart, a static copy of the family tree from Eighteen Books in One Scroll, which `python3 scroll/home_tree.py` takes from that page in headless Chrome and writes between `<!-- family:start -->` and `<!-- family:end -->`; rerun it after changing the tree.
 
 **Two registers.** A book can be read as allegory or as computing, by a switch in its bar that shares
 its choice with the scroll page. Both are always in the page: every paragraph, heading, proof step,
@@ -66,8 +66,8 @@ own script keeps diagrams and live captions in step by writing both registers, n
 re-rendering on a switch. All eighteen books have the switch. The allegory is the default; the computing register shows only when the reader has chosen it.
 
 Setting pages (`places/<place>/index.html`), the home page and `papers/index.html` wear the same
-look. They are ordinary hand-edited pages that link `art/scroll/shell.css`, `art/scroll/place.css`
-and `art/scroll/shell.js`.
+look. They are ordinary hand-edited pages that link `scroll/shell.css`, `scroll/place.css`
+and `scroll/shell.js`.
 
 A setting is described by who acts there, what carries word between them and what the word says;
 the island and its buildings come second. Every setting page runs in that order: the actors (how
@@ -96,9 +96,32 @@ whatever pictures already exist (the place shots in `assets/img/places/` at leas
 whose picture does not exist yet is written without one; the prose never refers to a picture, so
 the book reads as finished.
 
-**Phase 2 — art.** Happens later and separately: the cover and the panels, made from the
-book's shots (`art/panels/<slug>/shots.json`) and published to `assets/img/`. A picture enters the
-scroll as a `.photo` inside a `.pop`, copied into the book's `img/`. The allegorical devices must
+**Phase 2 — art.** Happens later and separately. Every picture, the cover among them, starts as a
+render of the world model (`world/`; `world/BUILD.md` says how it is built), in three steps, each
+its own run:
+
+1. **Shot.** The book's shots are entries in `world/panels/<book>/shots.json`: the island, the
+   camera (a world shot from `world/src/shots_arche.py` or `shots_paxos.py`, adjusted or given
+   in full), the cast and what they do.
+2. **Previs.** `world/panels/previs.py` renders a shot's camera, with no people, to
+   `previs-<version>.png`; the version is the hash of the shot's entry, and the image carries that
+   entry with the commit it came from, so every picture can be traced to the shot that made it.
+3. **Scene.** `world/panels/batch.py` takes a set of previs images, puts the cast in from their
+   reference pictures (`world/cast/`) and makes each picture a photograph, keeping the previs's
+   camera, buildings and props, in one job through the Batch API at half the price; Nano Banana 2
+   at 1K is the default. `world/panels/pipeline.py` makes the same picture at once, for a single
+   take. Both read the cast and the prompt from the previs, not from the current shots, and both
+   can draw the picture as Franco-Belgian ligne claire instead of a photograph (`--style ligne-claire`).
+   `world/panels/flux.py` makes the same pictures with FLUX locally, free, for trials.
+
+A finished photograph can also be redrawn as ligne claire afterwards, by itself (`world/panels/comic.py`). Every cast
+picture, previs and scene carries a record of where it came from: the commit it was made at, what in
+that commit made it, the model that ran (and for a previs, the island build, itself stamped with its
+commit), and the pictures it was made from. The generators refuse to run with uncommitted changes to
+what they read, so the commit always tells the truth; `python3 world/provenance.py show <picture>`
+prints the chain. The picture is exported as a JPEG into `assets/img/` with
+`python3 world/provenance.py export`, which keeps the record, enters the scroll as a `.photo` inside a `.pop`, copied into the
+book's `img/`, and is published by `world/web/images.py`. The allegorical devices must
 nevertheless be **fully in place in the prose**, because phase 2 is built from what you write.
 Never bend the prose to fit a picture.
 
@@ -111,7 +134,7 @@ Where the setting is wrong for the period, say so; do not defend it.
 
 ---
 
-## The seven rules that are not negotiable
+## The eight rules that are not negotiable
 
 These are correctness constraints, not preferences.
 
@@ -119,7 +142,7 @@ These are correctness constraints, not preferences.
    findings are explored*. Nothing is resolved, nobody wins, there is no protagonist and no
    arc. If your draft has a climax, it is wrong.
 2. **No fantasy.** No gods, omens, curses or prophecies. Every mechanism is mundane and could
-   be built. Where a paper proves an impossibility, the impossibility is a fact about wood,
+   be built. The one sanctuary on Paxos, the oracle at the fork, is a place where students are told which of two lives their work allows; it is exact and foresees nothing, so it breaks no part of this rule. Where a paper proves an impossibility, the impossibility is a fact about wood,
    distance, birds and daylight — never a curse.
 3. **The allegory is exact.** Every device maps onto an element of the paper's model. Nothing
    may be added that changes the model. Write a *must not exist* list before you draft, and
@@ -195,7 +218,7 @@ The shape that has worked before:
 | | |
 |---|---|
 | **Cover** | Four pieces of text beside the picture: the title; the book's question in machine terms; its "We find out by exploring…" line; and the source papers with their titles and every author, in small print. The last three come from `meta.json`. |
-| **Where this book sits** | A spread of its own after the cover: the graph of the book's papers, what each draws on and what it leads to, with the idea that passes along every link. It is built from `papers/lineage.json`, which keeps lineage by paper and records only the reuse of an idea, never an order of reading; a new paper or link is added there (see `art/scroll/lineage.py`). |
+| **Where this book sits** | A spread of its own after the cover: the graph of the book's papers, what each draws on and what it leads to, with the idea that passes along every link. It is built from `papers/lineage.json`, which keeps lineage by paper and records only the reuse of an idea, never an order of reading; a new paper or link is added there (see `scroll/lineage.py`). |
 | **In machine terms** | The paper's problem and result in plain distributed-systems words, with one small interactive that shows the difficulty with machines. |
 | **The setting** | A photograph of the place with the premise in two or three sentences. Link the setting page with a superscript; do not describe the place again. |
 | **The model** | One spread per device, each built up by an interactive. The reader should not notice they are being handed a formal system. |
@@ -214,7 +237,7 @@ narrated, so rule 1 stands. Keep one line of argument: threads never alternate.
 **A spread reads on into the next.** A heading, a lede, a paragraph or two, its interactive or
 cards, and the connecting paragraphs that join them. A card that names a rule holds the rule
 alone, and the reason for it stands in the text beside the card. Every sentence carries a
-reason, a consequence or a connection; `art/scroll/BRIEF.md` ("Continuous prose") has the detail.
+reason, a consequence or a connection; `scroll/BRIEF.md` ("Continuous prose") has the detail.
 
 **An interactive follows the book's rules exactly.** Work its numbers out in code by those
 rules, and make the code refuse a state the rules forbid. Where a page shows a pattern and does
@@ -352,7 +375,7 @@ and `tick(dt)` (time that passes with nothing flying), `turn(k)` (the name ringe
 that stays, such as each coin flip or each refusal), and for a scene told step by step `msg(a,b,t0,t1,label,cls)` (t1 null
 while in transit; `ln-red` for a marker, `ln-aside` for an outside channel), `land`, `band(t0,t1,label,hot,low)` and
 `setT(t)`; a band returned by `band` can be moved, as the coast's partition follows a sliding window. A scroll draws the story so far at a step to each unit of time. Options: `alias` gives a place that is not a
-process the lane of whoever stands for it (the podium is its holder), `labels` writes each token's value on its arrow,
+process the lane of whoever stands for it (the Tholos's table is whoever writes there), `labels` writes each token's value on its arrow,
 `press` makes a process's name a button where the reader presses a place in the picture. Time runs while a message
 flies; views read side by side share a clock; an endless run slides, and a process's last state stays at the left edge.
 A process's label keeps the moment it last changed. A widget that starts and stops with its picture's visibility watches
@@ -411,20 +434,15 @@ Before calling a book done (the brief's checklist has the mechanics):
       reports that the card and the cover agree with `meta.json`.
 - [ ] The place's setting page, `places/<place>/index.html`, lists the book, adds its row to
   the table of what the messages say, and still describes the place truly. Each home-page section opens with its setting page, the brief a
-  reader needs before reading that section's books in any order. Its opening picture is a
-  photorealistic establishing shot: a Blender previs render put through `pipeline.py scene` with a
-  crop of the island plate (`art/refs/places/`) and any people refs on the board, with no comic
-  pass. Its other pictures are previs renders. Shots are in `art/panels/places/shots.json`,
-  published to `assets/img/places/`.
-- [ ] A building that recurs across pictures is modelled in full before any picture is generated
-  (the Chamber, the Tholos, Arche's three houses, the oracle at the fork, and on the scholars' coast
+  reader needs before reading that section's books in any order. Its pictures are renders of the
+  world model, the first an establishing shot of the place, published to `assets/img/places/`.
+- [ ] A building that recurs across pictures is modelled in full in the world model before it
+  appears in any picture (the Chamber, the Tholos, the oracle at the fork, and on the scholars' coast
   the libraries with their reading-room desks and pebble boards, the stoa with its festival ground and the
-  courier landing: `art/sets/paxos_chamber.py`, `schedia_tholos.py`, `house.py`, `hall.py`,
-  `libraries.py`, `stoa.py` and `terraces.py` (which builds the landing as the set `landing`), on the helpers in
-  `masonry.py`: every block, joint, flute, capital, coffer, rafter, door board, tile, paving slab,
-  scroll and pebble is geometry), and its scene prompts say so: keep every modelled
-  part where it is, give it its real material, add no architecture. The image pass then adds
-  only materials, light, people and props, and the building is the same in every picture.
+  courier landing in `world/src/blib/paxos_bld.py`; Arche's three houses and the harbours in
+  `buildings.py`; the camps and the crown in `mountain.py`). Every block, joint, flute, capital,
+  rafter, door board, tile, paving slab, scroll and pebble is geometry, so the building is the same
+  in every picture.
 - [ ] The book is on Eighteen Books in One Scroll, `books/eighteen-books-in-one-scroll/`: every
   book in one long page, each drawn on one round as the book it grows from with one change in red.
   A new book adds, in the page's `index.html`, a change card (`card eq`: the parent, the change in
@@ -447,10 +465,10 @@ book depends on vocabulary an earlier one establishes.
 
 | Building | Paper(s) | Note |
 |---|---|---|
-| The request board | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Shares the requests premise of *Ordering Without Clocks*: the tallies put requests in sequence by slips, this book by the sun. The object is House 3's board of requests, a FIFO queue; Herlios' board with its slots and peg is the paper's §4 queue. Must not give Arche a readable hour in the trading season. Written: `books/many-copies-acting-as-one/`. |
+| The request board | Herlihy &amp; Wing 1990 | *Many Copies, Acting as One.* Shares the requests premise of *Ordering Without Clocks*: the tallies put requests in sequence by slips, this book by the sun. The object is House 3's board of requests, a FIFO queue; House 3's board with its slots and peg is the paper's §4 queue. Must not give Arche a readable hour in the trading season. Written: `books/many-copies-acting-as-one/`. |
 | The camps | Chandra &amp; Toueg 1996 | *Telling the Dead from the Slow.* Shares the camps with FLP. The camps may decide; nothing follows from it. The slate's guarantees are granted, not earned — see `settings.md`. With a majority alive, a turn to propose, not a leader; point to *Agreeing When Messages Run Late* for it and stay on the detector. Written: `books/telling-the-dead-from-the-slow/`. |
 | The Part-Time Parliament | Lamport 1998, 2001 | Lamport's own allegory, the one the whole project borrows, retold as a scroll with his Paxons kept. The paper's formal conditions, its proofs and its appendix are carried in panels; the rest of the paper's prose is not reproduced. Written: `books/the-part-time-parliament/`. The paper ends with a scribe's error that destroys the parliament; later books ignore this for convenience, and in them the parliament is still sitting. |
-| The Tholos, Schedia | Oki &amp; Liskov 1988 | *One Leader at a Time.* VR, a genuine alternative to Paxos, found independently and published first, in Schedia, the city on Paxos's eastern arm with laws of its own. One council of five and one law scroll; the paper's transactions are stated, not carried. Written: `books/one-leader-at-a-time/`. |
+| The Tholos, Schedia | Oki &amp; Liskov 1988 | *One Writer at a Time.* VR, a genuine alternative to Paxos, found independently and published first, in Schedia, the city on Paxos's eastern arm with laws of its own. One council of five and one law scroll; the paper's transactions are stated, not carried. Written: `books/one-writer-at-a-time/`. |
 | The crown | Castro &amp; Liskov 1999 | *Keeping Order Among Liars.* Needs the vocabulary of *Agreeing Among Liars* and must not contradict it. A later, windy night: the loot scroll, each man both replica and client (the client's rule of two agreeing seals, f + 1, stated and shown redundant for the four), the chief's job numbering entries and passing in a fixed order when suspected. Safe in any wind; progress once the wind drops. Nothing follows from any entry. Written: `books/keeping-order-among-liars/`. |
 | The crown | Yin et al. 2019 (HotStuff) | *Changing Leaders Among Liars.* Needs the vocabulary of *Keeping Order Among Liars* and must not contradict it. Tell only what changes: the chief's job passes with every entry, and its registrar bundles the others' seals instead of every man writing to every other. Say plainly that a threshold signature makes the bundle one seal's size. Nothing follows from any entry. Written: `books/changing-leaders-among-liars/`. |
 | The stoa and festival ground | Demers 1987 | *Spreading by Word of Mouth.* Letters to everyone, the festival and the telling in the stoa, each covering what the other misses; a withdrawal travels as a notice. Nobody is in charge and no library records what another holds. Written: `books/spreading-by-word-of-mouth/`. |
@@ -491,22 +509,17 @@ every tent sees and no post on the crown does.
 ## Changing art direction
 
 Art direction flows from the Hellenistic reference (`hellenistic-reference.html`) through the world
-guides, the book guides and the books to the images. `art/direction/decisions.json` lists each decision
-with the reference section it comes from, the words that betray it in a file or a prompt, and the commit
-it stands at (`since`). Everything is tied to git: each node in the tree carries its last commit and how
-many commits it is behind, and an image, which git does not track, carries the commit it was built at.
+model's own documents (`world/world-prompt.md`, `world/buildings.md`, `world/reality.md`) into the
+model, and from the model to every picture. A change is made once, in the documents and then in the
+model's scripts, and committed.
 
-1. `python3 art/direction/tree.py impact <decision-id | file | regex>`: what mentions it, what lies
-   downstream, the images to regenerate and their cost.
-2. Make the change and commit it.
-3. `tree.py touch <decision-id>`: the decision now stands at HEAD, and everything older that it touches
-   is stale. Commit `decisions.json`.
-4. `tree.py stale` lists what is still behind. After regenerating images, `tree.py stamp <paths>`
-   records the commit they were built at.
-5. `tree.py review` lists decisions whose lines changed in the reference or the guides after they were
-   last touched; `tree.py log <id>` shows that history. `tree.py build` refreshes `art/direction/TREE.md`.
+1. Rebuild and render everything: `sh world/src/build_all.sh` (`preview` first to look). No picture
+   is made any other way, so none can be left behind by the change.
+2. Look at the renders, and save each changed one over its JPEG in `assets/img/`.
+3. `python3 world/web/images.py`: a re-rendered picture gets a new name on the bucket, and the
+   pages are pointed at it.
 
-Add a decision when a new rule is settled.
+Write a settled rule into `world/world-prompt.md`.
 
 A scroll carries its own copies of its pictures in `books/<slug>/img/`. After regenerating a
 picture in `assets/img/`, copy it over the book's copy in the same pass.

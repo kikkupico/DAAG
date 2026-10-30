@@ -1,5 +1,5 @@
 /* Every book's computing cover, copied from the cover:start … cover:end block of its script.js by
-   art/scroll/book_covers.py. Do not edit here: change the book's script.js and rerun that script.
+   scroll/book_covers.py. Do not edit here: change the book's script.js and rerun that script.
    Draw one with  COVERS.draw(svg, BOOK_COVERS[slug]) ; needs assets/js/covers.js. */
 "use strict";
 window.BOOK_COVERS={};
@@ -308,7 +308,7 @@ const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd
 };
 return COVER;})();
 
-BOOK_COVERS["one-leader-at-a-time"]=(()=>{
+BOOK_COVERS["one-writer-at-a-time"]=(()=>{
 const COVER=(svg,{P,W,H,stage,T,chip,node,link,mid,packet,lane,dot,vec,bandX,rnd32,el,reduce})=>{
   const g=stage(svg,"FIG. 1 · ONE PRIMARY, A COMMIT POINT, A VIEW CHANGE","view 6 → 7");
   const Y=[108,160,212,264,316],len=[13,12,12,10,9],sx=104,sw=28,cm=12;
