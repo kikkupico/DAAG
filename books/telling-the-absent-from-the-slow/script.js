@@ -175,9 +175,9 @@ const LANES={1:[225,"L1",TC[1],"P1"],2:[135,"L2",TC[2],"P2"],3:[315,"L3",TC[3],"
 (function(){
   const box=$("#copyrows")||$("#copybox"),say=$("#copysay"),bG=$("#copygo"),bR=$("#copyr");
   const LIVE=[1,2,3];let r=0,copy={},order={};
-  const slate=(p,round)=>{const out=[];if(round>=1)out.push(4);if(p===1&&round===1)out.push(2);if(p===3&&round===2)out.push(1);return out};
+  const slate=(p,round)=>round<=2?({1:[2,4],2:[],3:[1]})[p]:({1:[4],2:[],3:[]})[p];
   function reset(){r=0;copy={1:new Set(),2:new Set(),3:new Set()};order={1:[1],2:[2],3:[3]};bG.disabled=false;paint();
-    say.innerHTML=dual("Legislator 4 has stepped out. The door-slate only chalks Legislator 4 from the view of one bench; watch how copying notes spreads the suspicion to every bench.","P4 has crashed. Only one process's detector suspects it at first; watch how sharing suspicions spreads to every process.")}
+    say.innerHTML=dual("Legislator 4 has left for good. Only Legislator 1's own slate chalks Legislator 4; watch how copying notes spreads the mark to every bench.","P4 has crashed. Only one process's detector suspects it at first; watch how sharing suspicions spreads to every process.")}
   function paint(){
     box.innerHTML=`<div class="chead"><span>legislator</span><span>suspicions on their roster</span></div>`+
       LIVE.map(p=>`<div class="crow">${legChip(p)}<span class="chips">${copy[p].size?[...copy[p]].map(k=>legChip(k)).join(""):dual("<i>clean</i>","<i>none</i>")}</span></div>`).join("")}
@@ -186,8 +186,8 @@ const LANES={1:[225,"L1",TC[1],"P1"],2:[135,"L2",TC[2],"P2"],3:[315,"L3",TC[3],"
     paint();
     const all4=LIVE.every(p=>copy[p].has(4)),w=LIVE.some(p=>copy[p].has(2)||copy[p].has(1)||copy[p].has(3));
     say.innerHTML=dual(`Round ${r}. Each legislator added the marks of every note received, and rubbed out the mark against the legislator the note came from.`+
-      (all4?` <b>Legislator 4 is chalked in every roster,</b> and no note from Legislator 4 will ever come to rub it out.`:"")+
-      (r<3?(w?" Some rosters still hold a mark against a present legislator. That is only the scribes' mistake, passed on, and any note from that member rubs it out.":""):
+      (all4?` <b>Legislator 4 is chalked in every copy,</b> and no note from Legislator 4 will ever come to rub it out.`:"")+
+      (r<3?(w?" Some copies still hold a mark against a present legislator. That is only a slate's mistake, passed on, and any note from that member rubs it out.":""):
         " The slates are right about the present now. Every copy holds Legislator 4 and nobody else: the copy is only as wrong as the slates it was copied from, and it rights itself when they do."),
       `Round ${r}. Each process added the suspicions in every message received, and removed the suspicion of the process the message came from.`+
       (all4?` <b>P4 is suspected in every copy,</b> and no message from P4 will ever come to remove it.`:"")+
@@ -275,20 +275,20 @@ const strongRun=(function(){
   bN.onclick=()=>{
     if(!st)return;const o=playRound(st,st.r>=2);paint(o.owner);
     const own=o.owner,H=dual(`<b>Round ${o.r}</b> belongs to Legislator ${own} as president. `,`<b>Round ${o.r}</b> belongs to P${own}. `);
-    if(o.kind==="deadowner"){ev(H+dual(`Legislator ${own} is absent. Scribes chalk them in the end, and the round comes to nothing.`,`P${own} has crashed. Every process suspects it in the end, and the round comes to nothing.`),"bad");say.innerHTML=dual("An absent president costs one round. Failing is always safe, and the presidency passes to the next legislator.","A crashed coordinator costs one round. Failing is always safe, and the next round begins with the next process.");return}
+    if(o.kind==="deadowner"){ev(H+dual(`Legislator ${own} is absent. Every slate chalks them in the end, and the round comes to nothing.`,`P${own} has crashed. Every process suspects it in the end, and the round comes to nothing.`),"bad");say.innerHTML=dual("An absent president costs one round. Failing is always safe, and the presidency passes to the next legislator.","A crashed coordinator costs one round. Failing is always safe, and the next round begins with the next process.");return}
     if(o.kind==="stuck"){ev(H+dual(`The president must wait for three estimates, and only two legislators are present. It waits forever.`,`The coordinator must wait for three estimates, and only two processes are alive. It waits forever.`),"bad");say.innerHTML=dual("<span class='bad'>The Chamber is deadlocked.</span> More than half must be present for a rotating presidency to work.","<span class='bad'>The system is deadlocked.</span> More than half must be correct for a rotating coordinator to work.");bN.disabled=true;return}
     ev(H+dual(`Legislator ${own} asks for estimates, and hears from ${legs(o.gather)}. The newest estimate among them is ${word2(o.e)}, adopted in round ${o.best||"at start"}. Legislator ${own} proposes ${word2(o.e)} to all.`,
       `P${own} gathers estimates from ${pn(o.gather)}. The highest timestamp among them is ${word2(o.e)}, from round ${o.best}. P${own} proposes ${word2(o.e)} to all.`));
     if(o.kind==="parting"){
       ev(dual(`The proposal reached a majority (${legs(o.three)}). All three adopt it and reply. <b>Legislator ${own} dispatches the decree to all: pass ${word2(o.e)}.</b> The decree is settled.`,
         `The proposal reached a majority (${pn(o.three)}). All three adopt it and reply. <b>P${own} broadcasts the decision: ${word2(o.e)}.</b> The consensus is settled.`),"ok");
-      say.innerHTML=dual(`<b>A decree has passed!</b> Scribes spared Legislator ${own}, a majority confirmed the estimate, and the decree was dispatched. Take more rounds to see the decision stand.`,
+      say.innerHTML=dual(`<b>A decree has passed!</b> No slate chalked Legislator ${own}, a majority confirmed the estimate, and the decree was dispatched. Take more rounds to see the decision stand.`,
         `<b>Consensus reached!</b> Detector spared P${own}, a majority acknowledged the proposal, and the decision was broadcast. Take more rounds to see the decision stand.`);
       bN.disabled=true;
     }else{
-      ev(dual(`Scribes falsely suspected Legislator ${own}; the proposal was abandoned. The round failed safely.`,
+      ev(dual(`A colleague's slate falsely chalked Legislator ${own}; the proposal was abandoned. The round failed safely.`,
         `A process falsely suspected P${own}; the proposal was abandoned. The round failed safely.`),"bad");
-      say.innerHTML=dual("A false suspicion on the door-slate aborted the round. Safety is preserved, and the presidency rotates to the next legislator.",
+      say.innerHTML=dual("A false chalk mark on a slate aborted the round. Safety is preserved, and the presidency rotates to the next legislator.",
         "A false suspicion aborted the round. Safety is preserved, and the coordinator rotates to the next process.");
     }
   };
@@ -312,7 +312,7 @@ const strongRun=(function(){
     const exch=(a,b)=>{P.slip(a,1.4,b,2.6,12);P.slip(b,1.4,a,2.6,12)};
     if(n===1)exch(1,2);else if(n===2)exch(3,4);else{exch(1,2);exch(3,4);
       [[1,3],[2,4],[3,1],[4,2]].forEach(([a,b])=>{const s=P.slip(a,1.4,b,7.2,14);s.classList.add("hi");s.style.strokeDasharray="6 4";s.style.strokeWidth=3.4})}
-    live.forEach(k=>dot(k,4.2,v==="H"?HOLD:ATT,v));
+    live.forEach(k=>{const v=n===2?"A":n===1?"H":ans[k];dot(k,4.2,v==="H"?HOLD:ATT,v)});
     return live;
   }
   const texts={

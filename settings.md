@@ -20,8 +20,8 @@ Verified against `ls sources/`, not asserted:
 
 | Island | Papers |
 |---|--:|
-| Arche (ring road and Mount Phyle) | 13 |
-| Paxos (the Chamber, Schedia, the scholars' coast, the oracle at the fork) | 12 |
+| Arche (ring road and Mount Phyle) | 11 |
+| Paxos (the Chamber, Schedia, the scholars' coast, the oracle at the fork) | 14 |
 
 No PDF is unassigned and nothing is blocked. Every paper the islands name is on disk and has
 been verified by opening it.
@@ -244,7 +244,7 @@ The western arm of Paxos hosts the parliamentary forum where the core problems o
 |---|---|
 | `fischer-lynch-paterson-1985_flp-impossibility` | **The Chamber of Paxos.** In an asynchronous hall with poor acoustics, messengers wandering across the floor and through olive groves, and legislators stepping out, the Chamber cannot guarantee a decree ever passes. Trapped in bivalent configurations, an absent colleague cannot be told from a delayed messenger. (*The Limits of Agreement*) |
 | `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and kept as he wrote it, drawn as a round hall, a tholos ringed by a colonnade, because its acoustics make oratory impossible. Legislators wander in and out, each keeps a scroll, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved. (*The Part-Time Parliament*) |
-| `chandra-toueg-1996` | **The Chamber with door slates.** Absent colleagues stepping out into the olive groves leave legislators uncertain whether an empty bench is a crash or a slow return. Each legislator chalks an attendance slate (*pinakion*) at the Chamber door. With an unreliable detector of class $\diamond\mathcal{S}$ and a rotating presidency (*epistatai* of the round), the parliament circumvents FLP and safely passes decrees. (*Telling the Absent from the Slow*) |
+| `chandra-toueg-1996` | **The Chamber with attendance slates.** A colleague who has left for good falls silent, and a silent bench cannot be told from a slow runner: benches stand far apart and members come and go on errands while their runners still carry their notes. Each legislator keeps an attendance slate (*pinakion*) at their own bench, chalking the colleagues they believe have left. With an unreliable detector of class $\diamond\mathcal{S}$ and a rotating presidency (*epistatai* of the round), the parliament circumvents FLP and safely passes decrees. (*Telling the Absent from the Slow*) |
 
 **The ground must provide:** the **Chamber** on the western arm, looking across the bay at
 the Tholos, and on a route rather than at a dead end (legislators wander in and out): the
@@ -293,8 +293,8 @@ the centre where seals are made.
 | Paper | In the world |
 |---|---|
 | `oki-liskov-1988` | **The Tholos.** A rotunda like the Chamber, with the same poor acoustics, messengers and legislators on part-time duty, and one difference: a leader. Only the legislator who wears the wreath may propose; the others write down what its messengers bring. When the holder falls silent, another legislator calls a seal with a higher number, and the new holder first gathers what a majority hold, so nothing a majority knew is lost. *One Leader at a Time* |
-| `castro-liskov-1999` | **The Tholos under four stewards.** When the legislators sail away, four unvetted stewards take over the city's law scroll and round hall. At most one steward may lie ($n = 3f + 1 = 4$, $f = 1$); nobody learns who lies and motive stays hidden. A line stands only after two echoes, each gathering three seals of four; a writer who stalls is replaced under a doubling sandglass. Stable checkpoints keep the log bounded. *Keeping Order Among Liars* |
-| `yin-2019_hotstuff` | **The Tholos with rotating writers.** The four stewards rotate the writer's office at every line of law. Stewards vote only to the writer, who bundles three seals into one and sends it out. A three-stage commit makes the lock visible, allowing a new writer to proceed at the pace of the messengers (optimistic responsiveness). Chained HotStuff pipelines the stages into a continuous stream. *Changing Leaders Among Liars* |
+| `castro-liskov-1999` | **The Tholos under a council drawn by lot.** Democratic reform replaces the old council of five with four legislators drawn by lot from the citizen roll, unvetted, who sit at four of the Tholos's five benches. At most one of them may lie ($n = 3f + 1 = 4$, $f = 1$); nobody learns who lies and motive stays hidden. A line stands only after two echoes, each gathering three seals of four; a writer who stalls is replaced under a doubling sandglass. Stable checkpoints keep the log bounded. *Keeping Order Among Liars* |
+| `yin-2019_hotstuff` | **The Tholos with rotating writers.** The next council of four, drawn by lot again, rotates the writer's office at every line of law. Legislators vote only to the writer, who bundles three seals into one and sends it out. A three-stage commit makes the lock visible, allowing a new writer to proceed at the pace of the messengers (optimistic responsiveness). Chained HotStuff pipelines the stages into a continuous stream. *Changing Leaders Among Liars* |
 
 **The wreath is an office, not a seat.** Nobody can be heard across the floor. At the centre,
 where every bench is the same distance away, stands a round stone table where seals are made and
@@ -343,7 +343,7 @@ brown tunics, one to each bench, who carry the lines in order and never skip one
 petition the holder only; a petition that reaches a bench comes back with the holder's name.
 The Tholos has five benches, one for each legislator.
 
-**The four stewards.** When the five legislators leave on a voyage, four unvetted stewards (Stewards 1, 2, 3, 4) take charge of the hall and the law scroll. They differ only by clothing colour. At most one steward may lie ($n = 3f + 1 = 4$, $f = 1$). Nobody learns who lies; motive stays hidden. Quorums are three of four ($2f + 1 = 3$), guaranteeing that any two quorums share at least two stewards, of whom at least one is honest. Messengers cross the open stone floor carrying notes stamped with bronze signets in wax.
+**The councils drawn by lot.** To keep power from settling for good with the five founding legislators, Schedia reforms its council: four citizens are drawn by lot from the citizen roll (Legislators 1, 2, 3, 4) and sit at four of the five benches, the fifth left empty. Because they are drawn rather than vetted, at most one may lie ($n = 3f + 1 = 4$, $f = 1$). Nobody learns who lies; motive stays hidden. Quorums are three of four ($2f + 1 = 3$), guaranteeing that any two quorums share at least two legislators, of whom at least one is honest. Terms are short: *Keeping Order Among Liars* follows the first council drawn, *Changing Leaders Among Liars* the next. Messengers cross the open stone floor carrying notes stamped with bronze signets in wax.
 
 **Why a Tholos.** In Athens the Tholos was the round building of the prytaneis, the committee
 on duty in turn, with one member presiding: a round civic hall with a head, on part-time duty.

@@ -4,7 +4,7 @@ One page per book: the idea, the allegory, the order of the argument, and the de
 Read with `settings.md`, `buildings.md` and `process.md`; where this file and those disagree,
 those are right until this file's decisions are taken back into them.
 
-All four are written: one on the ring road, three on Mount Phyle.
+All four are written: one on the ring road; the other three have since moved to Paxos (the Chamber and the Tholos).
 
 ---
 
@@ -15,27 +15,27 @@ of *Ordering Without Clocks*; see `settings.md`.
 
 ---
 
-## Telling the Dead from the Slow
+## Telling the Absent from the Slow
 
-**Chandra & Toueg 1996 · the four camps, Mount Phyle**
+**Chandra & Toueg 1996 · moved to the Chamber of Paxos**
 
-Written: `books/telling-the-dead-from-the-slow/`. the four numbered mercenaries; see `settings.md`.
+Written: `books/telling-the-absent-from-the-slow/`. Four part-time legislators, each keeping an attendance slate at their bench; see `settings.md`.
 
 ---
 
 ## Keeping Order Among Liars
 
-**Castro & Liskov 1999 · the crown on a later night, Mount Phyle**
+**Castro & Liskov 1999 · moved to the Tholos of Schedia, Paxos**
 
-Written: `books/keeping-order-among-liars/`. The crown's four bandits; see `settings.md`.
+Written: `books/keeping-order-among-liars/`. Four legislators drawn by lot, at most one a liar; see `settings.md`.
 
 ---
 
 ## Changing Leaders Among Liars
 
-**Yin, Malkhi, Reiter, Gueta & Abraham 2019 (HotStuff) · the same crown and loot scroll**
+**Yin, Malkhi, Reiter, Gueta & Abraham 2019 (HotStuff) · moved to the Tholos of Schedia, Paxos**
 
-Written: `books/changing-leaders-among-liars/`. The crown's four bandits; see `settings.md`.
+Written: `books/changing-leaders-among-liars/`. The next council of four drawn by lot; see `settings.md`.
 
 ---
 

@@ -60,7 +60,7 @@ def by_hand(page, slug):
 
 
 def card_re(slug):
-    return re.compile(r'(href="books/' + re.escape(slug) + r'/index\.html">.*?<p class="q">)(.*?)(</p>\s*<p class="how[^"]*">)(.*?)'
+    return re.compile(r'(class="cardlink" href="books/' + re.escape(slug) + r'/index\.html">.*?<p class="q">)(.*?)(</p>\s*<p class="how[^"]*">)(.*?)'
                       r'(</p>\s*<span class="credit">)(.*?)(</span>)', re.S)
 
 

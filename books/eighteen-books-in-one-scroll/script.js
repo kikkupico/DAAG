@@ -25,7 +25,9 @@ const LIB = "#efe6cf";
 const CASTS = {
   houses:  [["H1", "#9cb648", -90], ["H2", "#e0b84a", 30], ["H3", "#5b9be0", 150]],
   tents:   [["T1", "#e0b84a", 225], ["T2", "#6583d6", 135], ["T3", "#c45448", 315], ["T4", "#9cb648", 45]],
+  chamber: [["T1", "#e0b84a", 225, "L1"], ["T2", "#6583d6", 135, "L2"], ["T3", "#c45448", 315, "L3"], ["T4", "#9cb648", 45, "L4"]],
   b4:      [["B1", "#a57fc0", -90], ["B2", "#9aa0a8", 0], ["B3", "#e8964d", 90], ["B4", "#b07a55", 180]],
+  tholos4: [["B1", "#a57fc0", -90, "L1"], ["B2", "#9aa0a8", 0, "L2"], ["B3", "#e8964d", 90, "L3"], ["B4", "#b07a55", 180, "L4"]],
   b3:      [["B1", "#a57fc0", -90], ["B2", "#9aa0a8", 150], ["B3", "#e8964d", 30]],
   priests: [["A", "#e0b84a", 200, "Α"], ["B", "#5b9be0", 270, "Β"], ["G", "#e2564e", 340, "Γ"], ["D", "#9cb648", 40, "Δ"], ["E", "#b58be0", 140, "Ε"]],
   tholos:  [["O", "#8fa3b8", -90, "Ο"], ["L", "#e8b03a", -18, "Λ"], ["K", "#8fb35a", 54, "Κ"], ["M", "#cf5a4a", 126, "Μ"], ["Th", "#b3aea4", 198, "Θ"]],
@@ -400,7 +402,7 @@ const DRAW = {
     text2(gg, 0, 0, VAL[m.face], "coint");
     return g;
   },
-  /* a slate chalked with the man its tent thinks dead */
+  /* a slate chalked with the colleague its keeper thinks absent */
   slate(m) {
     const g = wrap("e", tone(m) + " slate"), [x, y] = P(m.n, m.at), a = (LN ? -90 * (m.side || 1) : A(m.n) + 90 * (m.side || 1)) * Math.PI / 180;
     const cx = x + 32 * Math.cos(a), cy = y + 32 * Math.sin(a), gg = el("g", { transform: `translate(${f(cx)} ${f(cy)})` }, g);
@@ -478,8 +480,8 @@ grow("ts", "owc", { add: [
   tg({ deg: -25, at: 3.0, dx: 60, dy: -20 }, V("red sashes: count now", "markers: record now"), { c: 1, id: "t2" })
 ] });
 
-/* The Limits of Agreement: four tents, ravens timed to keep the night open, a man who falls silent */
-def("flp", "tents", [
+/* The Limits of Agreement: four benches, messengers timed to keep the Chamber open, a legislator who falls silent */
+def("flp", "chamber", [
   ev("T1", .9, { v: "H", id: "p1" }), ev("T2", .9, { v: "A", id: "p2" }), ev("T3", .9, { v: "H", id: "p3" }), ev("T4", .9, { v: "A", id: "p4" }),
   sl("T2", 1.15, "T1", 1.9, { id: "h1" }), ev("T1", 1.9, { hollow: 1, id: "r1" }),
   sl("T1", 2.0, "T3", 2.9, { id: "h2" }), ev("T3", 2.9, { hollow: 1, id: "r2" }),
@@ -493,7 +495,7 @@ def("flp", "tents", [
 const LATE = ["flp.h4", "flp.r4", "flp.h5", "flp.r5"];
 
 /* Running Late: the wind drops, unseen, and a turn commits on two pledges */
-grow("dls", "flp", { drop: ["flp.h3", "flp.r3"].concat(LATE), add: [
+grow("dls", "flp", { cast: "tents", drop: ["flp.h3", "flp.r3"].concat(LATE), add: [
   { t: "band", t1: 0, t2: 3.2, cls: "wind", c: 1, id: "band" }, { t: "ring", at: 3.2, cls: "drop", c: 1, id: "ring" },
   tg({ deg: 90, at: 3.2 }, V("the wind drops, unseen", "GST, known to no one"), { c: 1, own: 1, id: "t1" }),
   sl("T1", 3.5, "T2", 4.1, { lab: "H", id: "c1" }), sl("T1", 3.5, "T3", 4.1, { lab: "H", id: "c2" }),
@@ -505,7 +507,7 @@ grow("dls", "flp", { drop: ["flp.h3", "flp.r3"].concat(LATE), add: [
 ] });
 
 /* By Chance: a coin in each tent, tossed until they land alike */
-grow("bo", "flp", { drop: LATE, add: [
+grow("bo", "flp", { cast: "tents", drop: LATE, add: [
   { t: "coin", n: "T1", at: 4.3, face: "H", c: 1, id: "c11" }, { t: "coin", n: "T2", at: 4.3, face: "A", c: 1, id: "c12" }, { t: "coin", n: "T3", at: 4.3, face: "H", c: 1, id: "c13" },
   { t: "coin", n: "T1", at: 5.2, face: "H", c: 1, id: "c21" }, { t: "coin", n: "T2", at: 5.2, face: "H", c: 1, id: "c22" }, { t: "coin", n: "T3", at: 5.2, face: "H", c: 1, id: "c23" },
   ev("T1", 6.1, { v: "H", big: 1, id: "k1" }), ev("T2", 6.1, { v: "H", big: 1, id: "k2" }), ev("T3", 6.1, { v: "H", big: 1, id: "k3" }),
@@ -513,13 +515,13 @@ grow("bo", "flp", { drop: LATE, add: [
   tg(on("T3", 6.1, 0, -30), V("alike at last: all commit", "decide, with probability 1"), { own: 1, id: "t2" })
 ] });
 
-/* Telling the Absent from the Slow: attendance slates chalked at the chamber door */
-grow("ct", "dls", { drop: ["dls.band", "dls.ring"], add: [
-  { t: "slate", n: "T3", at: 1.6, txt: "T1", struck: 1, side: -1, c: 1, id: "w" },
-  { t: "slate", n: "T1", at: 2.7, txt: "T4", side: -1, c: 1, id: "s1" },
-  { t: "slate", n: "T2", at: 2.7, txt: "T4", side: 1, c: 1, id: "s2" },
+/* Telling the Absent from the Slow: each legislator keeps an attendance slate at their bench */
+grow("ct", "flp", { drop: LATE, add: [
+  { t: "slate", n: "T3", at: 1.6, txt: V("L1", "p₁"), struck: 1, side: -1, c: 1, id: "w" },
+  { t: "slate", n: "T1", at: 2.7, txt: V("L4", "p₄"), side: -1, c: 1, id: "s1" },
+  { t: "slate", n: "T2", at: 2.7, txt: V("L4", "p₄"), side: 1, c: 1, id: "s2" },
   tg(on("T3", 1.6, 70, 10), V("wrong, rubbed out", "false suspicion, revoked"), { c: 1, own: 1, id: "t1" }),
-  tg({ deg: 90, at: 3.6 }, V("slates, not the wind, end the wait", "◇S ends the wait, not GST"), { c: 1, own: 1, id: "t3" })
+  tg({ deg: 90, at: 3.6 }, V("the slates end the wait", "◇S ends the wait"), { c: 1, own: 1, id: "t3" })
 ] });
 
 /* Answering While Cut Off: hawks take a bird, and the cut-off tent cannot answer as one */
@@ -574,7 +576,7 @@ def("vr", "tholos", [
 ]);
 
 /* Keeping Order Among Liars: the writer may lie, and a line stands only on three seals of four */
-def("pbft", "b4", [
+def("pbft", "tholos4", [
   { t: "halo", n: "B1", cls: "red", c: 1, id: "liar" },
   sl("B1", .6, "B2", 1.4, { lab: "X", id: "o2" }), sl("B1", .6, "B3", 1.6, { lab: "X", dir: 1, la: .62, id: "o3" }), sl("B1", .6, "B4", 1.4, { lab: "Y", c: 1, id: "o4" }),
   sl("B2", 1.9, "B3", 2.7, { id: "e23" }), sl("B2", 1.9, "B4", 2.9, { dir: 1, id: "e24" }),
@@ -1553,10 +1555,10 @@ const treeFrame = (function family() {
     flp: ["the-limits-of-agreement", "The Limits", "FLP", "owc"],
     dls: ["agreeing-when-messages-run-late", "Running Late", "Partial synchrony", "flp"],
     bo: ["agreeing-by-chance", "By Chance", "Ben-Or", "flp"],
-    ct: ["telling-the-absent-from-the-slow", "Absent or Slow", "Failure detectors", "dls"],
+    ct: ["telling-the-absent-from-the-slow", "Absent or Slow", "Failure detectors", "flp"],
     cap: ["answering-while-cut-off", "Cut Off", "CAP", "mc"],
     bgp: ["agreeing-among-liars", "Among Liars", "Byzantine generals", "flp"],
-    ptp: ["the-part-time-parliament", "Parliament", "Paxos", "dls"],
+    ptp: ["the-part-time-parliament", "Parliament", "Paxos", "flp"],
     vr: ["one-writer-at-a-time", "One Writer", "Viewstamped", "ptp"],
     pbft: ["keeping-order-among-liars", "Keeping Order", "PBFT", "vr"],
     hs: ["changing-leaders-among-liars", "Changing Leaders", "HotStuff", "pbft"],
@@ -1566,7 +1568,7 @@ const treeFrame = (function family() {
     hat: ["what-you-can-promise-alone", "Promise Alone", "HATs", "cap"],
     calm: ["knowing-when-to-wait", "When to Wait", "CALM", "crdt"]
   };
-  const KIDS = { owc: ["ts", "mc", "flp"], mc: ["cap"], cap: ["hat", "gos"], gos: ["pbs", "crdt"], crdt: ["calm"], flp: ["bo", "dls", "bgp"], dls: ["ct", "ptp"], ptp: ["vr"], vr: ["pbft"], pbft: ["hs"] };
+  const KIDS = { owc: ["ts", "mc", "flp"], mc: ["cap"], cap: ["hat", "gos"], gos: ["pbs", "crdt"], crdt: ["calm"], flp: ["bo", "dls", "bgp", "ct", "ptp"], ptp: ["vr"], vr: ["pbft"], pbft: ["hs"] };
   const order = [], depth = { owc: 0 };
   (function walk(k) { (KIDS[k] || []).forEach(c => { depth[c] = depth[k] + 1; order.push(c); walk(c); }); })("owc");
   /* angle (0 is east, clockwise), distance from the centre, and the side the name sits on */

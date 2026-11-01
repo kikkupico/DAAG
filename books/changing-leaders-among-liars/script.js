@@ -13,9 +13,9 @@ const men=[1,2,3,4];
 /* the four as lanes, for a Tholos picture's computing twin (Unfold in book.js) */
 const LANES={1:[-135,"L1",BC[1],"R1"],2:[-45,"L2",BC[2],"R2"],3:[45,"L3",BC[3],"R3"],4:[135,"L4",BC[4],"R4"]};
 
-/* ===== the Tholos, seen from above: circular limestone floor, four benches along the wall, porch door below ===== */
+/* ===== the Tholos, seen from above: circular limestone floor, five benches along the wall (one empty), porch door below ===== */
 function Tholos(svg){
-  const cx=235,cy=215,rr=200,R=145,A={1:-135,2:-45,3:45,4:135};
+  const cx=235,cy=215,rr=200,R=145,A={1:-150,2:-90,3:-30,4:30},EMPTY=150;
   svg.innerHTML="";svg.setAttribute("viewBox","0 0 470 470");
   el("circle",{cx,cy,r:rr,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5,class:"i"},svg);
   el("circle",{cx,cy,r:R+32,fill:"none",stroke:"#1c1512","stroke-width":2.5,class:"i"},svg);
@@ -34,6 +34,10 @@ function Tholos(svg){
   }
   el("rect",{x:cx-26,y:cy+rr-2,width:52,height:24,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":3,class:"i"},svg);
   el("text",{x:cx,y:cy+rr+36,class:"lab i",style:"font-size:12px;text-anchor:middle"},svg).textContent="the door";
+  /* the Tholos has five benches; the fifth stands empty */
+  {const a=EMPTY*Math.PI/180,g=el("g",{transform:`translate(${(cx+R*Math.cos(a)).toFixed(1)} ${(cy+R*Math.sin(a)).toFixed(1)})`,class:"i"},svg);
+    el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:"none",stroke:"#8c7e68","stroke-width":1.5,"stroke-dasharray":"4 3"},g);
+    el("text",{y:4,class:"lab",style:"font-size:10px;text-anchor:middle;fill:#8c7e68"},g).textContent="empty"}
   const sites=el("g",{},svg),over=el("g",{},svg),pos={},C={svg,over,site:{},pos};
   for(const k of men){const a=A[k]*Math.PI/180;pos[k]=[cx+R*Math.cos(a),cy+R*Math.sin(a)]}
   const put=(g,x,y)=>g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`);
