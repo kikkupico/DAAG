@@ -571,8 +571,8 @@ def("vr", "tholos", [
   sl("Th", 3.6, "L", 4.4, { dir: 1, lab: V("seal 7?", "view 7?"), la: .26, id: "n1" }), sl("Th", 3.6, "M", 4.2, { id: "n2" }),
   sl("L", 4.55, "Th", 5.35, { dir: -1, lab: V("seal 6, line 12", "viewstamp 6.12"), la: .3, id: "n3" }), sl("M", 4.4, "Th", 5.0, { id: "n4" }),
   ev("L", 5.8, { num: "", fill: "#e0b84a", big: 1, ring: 1, id: "newp" }),
-  tg(on("O", 1.2, -100, -20), V("only the holder writes", "only the primary orders"), { c: 1, own: 1, id: "t1" }),
-  tg(on("L", 5.8, 10, 34), V("the latest takes the wreath", "highest viewstamp: primary"), { own: 1, id: "t2" })
+  tg(on("O", 1.2, -100, -20), V("only the writer writes", "only the primary orders"), { c: 1, own: 1, id: "t1" }),
+  tg(on("L", 5.8, 10, 34), V("the latest becomes writer", "highest viewstamp: primary"), { own: 1, id: "t2" })
 ]);
 
 /* Keeping Order Among Liars: the writer may lie, and a line stands only on three seals of four */
@@ -666,14 +666,14 @@ def("calm", "libs3", [
 
 /* ---------- the walls: two nights, the same from one post ---------- */
 const nightTag = n => tg([-190, -236], n ? V("second night", "second run") : V("first night", "first run"), { cls: "night", k: "night" + n });
-def("w1", "tents", [
+def("w1", "chamber", [
   { t: "obs", n: "T1", t1: 0, t2: 4.4, id: "obs" },
   sl("T3", 1.0, "T1", 2.0, { id: "s3" }), ev("T1", 2.0, { id: "e3" }),
   sl("T4", 1.2, "T1", 2.9, { dir: -1, id: "s4" }), ev("T1", 2.9, { id: "e4" }),
   tg(on("T1", 4.4, 10, -30), V("the same, up to here", "identical so far"), { cls: "gold", id: "t" })
 ], { nights: [
-  [nightTag(0), { t: "x", n: "T2", at: 1.0, c: 1, k: "w1.n0x" }, tg(on("T2", 2.6, -30, 30), V("T2 dies", "p₂ crashes"), { c: 1, k: "w1.n0t" })],
-  [nightTag(1), sl("T2", 1.0, "T1", 5.6, { held: 1, c: 1, k: "w1.n1s" }), tg(on("T2", 2.6, -30, 30), V("T2's bird sits in a pine", "p₂'s message is slow"), { c: 1, k: "w1.n1t" })]
+  [nightTag(0), { t: "x", n: "T2", at: 1.0, c: 1, k: "w1.n0x" }, tg(on("T2", 2.6, -30, 30), V("L2 steps out", "p₂ crashes"), { c: 1, k: "w1.n0t" })],
+  [nightTag(1), sl("T2", 1.0, "T1", 5.6, { held: 1, c: 1, k: "w1.n1s" }), tg(on("T2", 2.6, -30, 30), V("L2's runner is delayed", "p₂'s message is slow"), { c: 1, k: "w1.n1t" })]
 ] });
 def("w2", "b3", [
   { t: "obs", n: "B2", t1: 0, t2: 4.0, id: "obs" },

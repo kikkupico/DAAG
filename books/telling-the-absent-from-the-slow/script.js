@@ -179,7 +179,7 @@ const LANES={1:[225,"L1",TC[1],"P1"],2:[135,"L2",TC[2],"P2"],3:[315,"L3",TC[3],"
   function reset(){r=0;copy={1:new Set(),2:new Set(),3:new Set()};order={1:[1],2:[2],3:[3]};bG.disabled=false;paint();
     say.innerHTML=dual("Legislator 4 has left for good. Only Legislator 1's own slate chalks Legislator 4; watch how copying notes spreads the mark to every bench.","P4 has crashed. Only one process's detector suspects it at first; watch how sharing suspicions spreads to every process.")}
   function paint(){
-    box.innerHTML=`<div class="chead"><span>legislator</span><span>suspicions on their roster</span></div>`+
+    box.innerHTML=`<div class="chead"><span>${dual("legislator","process")}</span><span>${dual("marks on their copy","suspicions on its copy")}</span></div>`+
       LIVE.map(p=>`<div class="crow">${legChip(p)}<span class="chips">${copy[p].size?[...copy[p]].map(k=>legChip(k)).join(""):dual("<i>clean</i>","<i>none</i>")}</span></div>`).join("")}
   bG.onclick=()=>{r++;
     LIVE.forEach(p=>{order[p]=shuffle(LIVE);order[p].forEach(q=>{const c=copy[p];slate(q,r).forEach(k=>c.add(k));c.delete(q)})});
@@ -282,8 +282,8 @@ const strongRun=(function(){
     if(o.kind==="parting"){
       ev(dual(`The proposal reached a majority (${legs(o.three)}). All three adopt it and reply. <b>Legislator ${own} dispatches the decree to all: pass ${word2(o.e)}.</b> The decree is settled.`,
         `The proposal reached a majority (${pn(o.three)}). All three adopt it and reply. <b>P${own} broadcasts the decision: ${word2(o.e)}.</b> The consensus is settled.`),"ok");
-      say.innerHTML=dual(`<b>A decree has passed!</b> No slate chalked Legislator ${own}, a majority confirmed the estimate, and the decree was dispatched. Take more rounds to see the decision stand.`,
-        `<b>Consensus reached!</b> Detector spared P${own}, a majority acknowledged the proposal, and the decision was broadcast. Take more rounds to see the decision stand.`);
+      say.innerHTML=dual(`<b>A decree has passed.</b> No slate chalked Legislator ${own}, a majority confirmed the estimate, and the decree was dispatched. Take more rounds to see the decision stand.`,
+        `<b>Consensus reached.</b> The detector spared P${own}, a majority acknowledged the proposal, and the decision was broadcast. Take more rounds to see the decision stand.`);
       bN.disabled=true;
     }else{
       ev(dual(`A colleague's slate falsely chalked Legislator ${own}; the proposal was abandoned. The round failed safely.`,
@@ -357,7 +357,7 @@ const strongRun=(function(){
     head.innerHTML=`<span>time</span>`+Array.from({length:N},(_,i)=>`<span>${i+1}</span>`).join("");
     tl.appendChild(head);
     const row=document.createElement("div");row.className="wrow";
-    row.innerHTML=`<span>${dual("roster mark","detector")}</span>`+res.state.map((s,i)=>`<span class="wcell ${s==="chalked"?"bad":"ok"}">${s==="chalked"?"✗":"✓"}</span>`).join("");
+    row.innerHTML=`<span>${dual("slate","detector")}</span>`+res.state.map((s,i)=>`<span class="wcell ${s==="chalked"?"bad":"ok"}">${s==="chalked"?"✗":"✓"}</span>`).join("");
     tl.appendChild(row);
     const wrow=document.createElement("div");wrow.className="wrow";
     wrow.innerHTML=`<span>${dual("wait","timeout")}</span>`+res.waits.map(w=>`<span class="wcell wait">${w}</span>`).join("");

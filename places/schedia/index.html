@@ -21,8 +21,8 @@
     <div>
       <div class="kicker">Paxos · Schedia and the Tholos</div>
       <h1>One Law Kept in the Tholos</h1>
-      <p class="hook">A council of five, one of whom serves as the writer and alone writes the law, sending it line by line to the copiers' benches by runner.</p>
-      <p class="pub">Read this first, and the book set in Schedia can be read on its own. It says who the council are, what carries word between them and what the notes say. The city and its round hall come last.</p>
+      <p class="hook">A round hall of five stone benches where one legislator holds the writer's office and sends the law line by line across the limestone floor by runner.</p>
+      <p class="pub">Read this first, and the three books set in Schedia can be read on their own. It says who sits in the council, what carries word between them and what the notes say. The city and its round hall come last.</p>
     </div>
     <div class="pop" data-auto>
       <div class="leaf">
@@ -40,8 +40,8 @@
     <h2>The Council of Five</h2>
     <div class="prosecol">
 
-    <p>Schedia is governed by a council of five legislators, <b>Okios</b>, <b>Liskovia</b>, <b>Kleon</b>,
-    <b>Melissa</b> and <b>Theron</b>. They serve part time, coming and going as Lamport's legislators do, and
+    <p>Schedia is first governed by a standing council of five legislators, <b>Okios</b>, <b>Liskovia</b>, <b>Kleon</b>,
+    <b>Melissa</b> and <b>Theron</b>. They serve part time, coming and going as the legislators in the Chamber across the bay do, and
     nobody lies. Each sits at a bench of their own with a copy of the city's law, which grows line by line, and
     every copy must hold the same lines in the same order.</p>
 
@@ -57,6 +57,8 @@
     go home; only the bench's name and the core of the last seal it served under are cut into its stone. A legislator who
     steps out comes back to their tablets. One who goes home comes back to smooth wax and must be brought up to
     date from the others. If a majority went home at once, the law would be lost.</p>
+
+    <p>In later reforms, Schedia replaces the standing council of five with short-term councils of <b>four legislators drawn by lot</b> from the citizenry, seating them on four of the five benches. Because lots are blind, at most one of the four may be a liar who forges contradictory proposals or stays silent, while each legislator stamps their notes in wax with their own personal bronze signet and keeps a sandglass on their bench to time a stalled writer.</p>
 
     <p>Citizens at the doors send their petitions to the writer, and wait there for an answer.</p>
   </div>
@@ -158,6 +160,8 @@
       <div class="l"><span class="term">seal and line</span></div><div class="mid">⟷</div><div class="r">A viewstamp: viewid and timestamp.</div>
       <div class="l"><span class="term">a new seal: center number, manager peg, writer peg, rim signets</span></div><div class="mid">⟷</div><div class="r">A view change: a new, higher viewid, the view's members, and its primary.</div>
       <div class="l"><span class="term">gathering what a majority of the benches hold</span></div><div class="mid">⟷</div><div class="r">Recovering state from a majority, so committed work survives.</div>
+      <div class="l"><span class="term">four legislators drawn by lot, one of whom may lie</span></div><div class="mid">⟷</div><div class="r">A group of 3<i>f</i> + 1 = 4 replicas tolerating up to <i>f</i> = 1 Byzantine faults.</div>
+      <div class="l"><span class="term">a personal bronze signet; a bundle of three wax seals</span></div><div class="mid">⟷</div><div class="r">An unforgeable digital signature; a quorum certificate (QC) of 2<i>f</i> + 1 = 3 votes.</div>
     </div>
   </div>
 </section>
