@@ -2,7 +2,8 @@
 (function(){
 const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar,Timeline,Unfold}=BOOK;
 const {isM,dual,vis,dtext,onReg}=REG;
-const GL={H:"0",A:"1","0":"0","1":"1"};   /* initial opinion: Decree 0 (H) or Decree 1 (A) */
+const GL={H:"0",A:"1","0":"0","1":"1"};   /* initial opinion: blue (H, 0) or red (A, 1); the allegory shows paint, the computing register 0 or 1 */
+const PAINT={H:"#136f9e",A:"#bf4a26"};
 BOOK.init();
 
 /* the four legislators in the Chamber, told apart by colour and bench */
@@ -26,16 +27,16 @@ function Chamber(svg){
   const H={svg,cx,cy,R,A,under,over,tent:{},
     at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
     put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
-    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);dtext(g,{},glyph,GL[glyph]||glyph);return g},
+    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);if(PAINT[glyph])el("circle",{class:"i",r:5.5,style:`fill:${PAINT[glyph]}`},g);dtext(g,{},"",GL[glyph]||glyph);return g},
     /* a messenger u of the way from bench a to bench b across the checkerboard floor */
     fly(g,a,b,u){const d=((A[b]-A[a]+540)%360)-180;H.put(g,...H.at(A[a]+d*u,R-(d>0?24:46)*Math.sin(Math.PI*u)))},
     state(k,i,m){const t=H.tent[k].st;t[0].textContent=i;t[1].textContent=i&&(m||i)},
-    badge(k,s){const b=H.tent[k].badge;b.setAttribute("opacity",s?1:0);b.t[0].textContent=s||"";b.t[1].textContent=GL[s]||""}
+    badge(k,s){const b=H.tent[k].badge;b.setAttribute("opacity",s?1:0);b.t[0].textContent="";b.t[1].textContent=GL[s]||"";if(PAINT[s])b.paint.style.fill=PAINT[s]}
   };
   for(const k of [1,2,3,4]){const a=A[k]*Math.PI/180,[x,y]=H.at(A[k]),g=el("g",{class:"site"},sites);H.put(g,x,y);
     el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:TC[k]},g);dtext(g,{},"L"+k,"P"+k);
     const st=dtext(g,{class:"state halo",x:-48*Math.cos(a),y:-46*Math.sin(a)},"","");
-    const badge=el("g",{class:"badge",opacity:0,transform:`translate(${(38*Math.cos(a)).toFixed(1)} ${(34*Math.sin(a)).toFixed(1)})`},g);el("circle",{r:11},badge);badge.t=dtext(badge,{},"","");
+    const badge=el("g",{class:"badge",opacity:0,transform:`translate(${(38*Math.cos(a)).toFixed(1)} ${(34*Math.sin(a)).toFixed(1)})`},g);el("circle",{class:"m",r:11},badge);badge.paint=el("circle",{class:"i",r:11},badge);badge.t=dtext(badge,{},"","");
     H.tent[k]={x,y,g,st,badge}}
   return H;
 }
@@ -85,7 +86,7 @@ const LANES={1:[225,"L1",TC[1],"P1"],2:[135,"L2",TC[2],"P2"],3:[315,"L3",TC[3],"
 /* ===== two easy plans, each giving up one demand ===== */
 (function(){
   const H=Chamber($("#plansvg")),L=Unfold(H.svg,{nodes:LANES,span:3.2,vals:GL}),say=$("#plansay"),D=[1,2,3].map(i=>$("#d"+i)),btn=["plan1","plan2","plan3","plannew"].map(i=>$("#"+i));
-  const names=[dual("No two commit differently","No two processes decide differently"),dual("Both decrees stay possible","Both values stay possible"),dual("Somebody eventually commits","Some process eventually decides")],T=[1,2,3,4];
+  const names=[dual("No two commit differently","No two processes decide differently"),dual("Both colours stay possible","Both values stay possible"),dual("Somebody eventually commits","Some process eventually decides")],T=[1,2,3,4];
   let sight={},toks=[];L.wrap(H);
   const checks=(v,why)=>D.forEach((li,i)=>li.innerHTML=`<b>${names[i]}</b> ${v[i]==null?"":yesno(v[i])}${why[i]?"<br>"+why[i]:""}`);
   const lock=on=>btn.forEach(b=>b.disabled=on);
@@ -94,13 +95,13 @@ const LANES={1:[225,"L1",TC[1],"P1"],2:[135,"L2",TC[2],"P2"],3:[315,"L3",TC[3],"
   /* every legislator in `from` sends their initial opinion to the other three; messengers take as long as they take */
   function birds(from){const ps=[];from.forEach(a=>T.forEach(b=>{if(b===a)return;const g=H.token(TC[a],sight[a]);toks.push(g);H.fly(g,a,b,.12);g.setAttribute("opacity",1);
     ps.push(tween(900+rnd(1900),u=>H.fly(g,a,b,.12+.76*u)).then(()=>g.setAttribute("opacity",0)))}));return Promise.all(ps)}
-  btn[0].onclick=()=>{clear();T.forEach(k=>H.state(k,"decree 0","decides 0"));
-    checks([true,false,true],[dual("All four pass Decree 0.","All four decide 0."),dual("They pass Decree 0 whatever anyone thought, so voting is pointless.","They decide 0 whatever the inputs were, so the inputs are pointless."),dual("Everyone commits at once.","Everyone decides at once.")]);
-    say.innerHTML=dual("<b>Always Decree 0</b> keeps the first and third demands, and gives up the second.","<b>Always decide 0</b> keeps agreement and termination, and gives up validity.")};
+  btn[0].onclick=()=>{clear();T.forEach(k=>H.state(k,"blue","decides 0"));
+    checks([true,false,true],[dual("All four paint it blue.","All four decide 0."),dual("They paint it blue whatever anyone thought, so voting is pointless.","They decide 0 whatever the inputs were, so the inputs are pointless."),dual("Everyone commits at once.","Everyone decides at once.")]);
+    say.innerHTML=dual("<b>Always blue</b> keeps the first and third demands, and gives up the second.","<b>Always decide 0</b> keeps agreement and termination, and gives up validity.")};
   btn[1].onclick=async()=>{lock(true);clear();checks([null,null,null],["","",""]);say.innerHTML=dual("Every legislator sends their opinion to the other three, and waits until holding all four notes.","Every process sends its input to the other three, and waits until it holds all four inputs.");
-    await birds(T);const n=T.filter(k=>sight[k]==="A").length,att=n>=3;T.forEach(k=>H.state(k,att?"decree 1":"decree 0",att?"decides 1":"decides 0"));
-    checks([true,true,true],[dual("All four apply one rule to the same four notes.","All four apply one rule to the same four inputs."),dual(`${n} of the 4 favoured Decree 1, so today the rule says ${att?"Decree 1":"Decree 0"}. Other opinions would say otherwise.`,`${n} of the 4 inputs are 1, so for these inputs the rule says ${att?1:0}. Other inputs would say otherwise.`),dual("Everyone commits once the last note arrives.","Everyone decides once the last message is in.")]);
-    say.innerHTML=dual("On a session when every legislator stays in the hall, <b>waiting for every note</b> keeps all three demands. The rule used here: pass Decree 1 if at least three favour it, otherwise Decree 0.","When no process crashes, <b>waiting for every input</b> keeps all three properties. The rule used here: decide 1 if at least three inputs are 1, otherwise 0.");lock(false)};
+    await birds(T);const n=T.filter(k=>sight[k]==="A").length,att=n>=3;T.forEach(k=>H.state(k,att?"red":"blue",att?"decides 1":"decides 0"));
+    checks([true,true,true],[dual("All four apply one rule to the same four notes.","All four apply one rule to the same four inputs."),dual(`${n} of the 4 favoured red, so today the rule says ${att?"red":"blue"}. Other opinions would say otherwise.`,`${n} of the 4 inputs are 1, so for these inputs the rule says ${att?1:0}. Other inputs would say otherwise.`),dual("Everyone commits once the last note arrives.","Everyone decides once the last message is in.")]);
+    say.innerHTML=dual("On a session when every legislator stays in the hall, <b>waiting for every note</b> keeps all three demands. The rule used here: paint it red if at least three favour it, otherwise blue.","When no process crashes, <b>waiting for every input</b> keeps all three properties. The rule used here: decide 1 if at least three inputs are 1, otherwise 0.");lock(false)};
   btn[2].onclick=async()=>{lock(true);clear();checks([null,null,null],["","",""]);H.tent[3].g.classList.add("out");L.crash(3);H.state(3,"silent","crashed");say.innerHTML=dual("Suppose Legislator 3 steps out into the grove. The other three send what they hold, and wait for all four notes.","Suppose P3 has crashed and nothing ever comes from it. The other three send their inputs, and wait for all four.");
     await birds([1,2,4]);[1,2,4].forEach(k=>H.state(k,"waits","waiting"));
     checks([true,true,false],[dual("Nobody commits, so no two differ.","Nobody decides, so no two differ."),dual("The rule still depends on what each member favoured.","The rule still depends on the inputs."),dual("Three legislators wait on a member who has stepped out, and can never learn that they have left.","Three processes wait on a process that will never answer, and can never learn that it will not.")]);
@@ -155,11 +156,11 @@ const LANES={1:[225,"L1",TC[1],"P1"],2:[135,"L2",TC[2],"P2"],3:[315,"L3",TC[3],"
 /* ===== the opening that settles nothing: however the row is settled, two neighbours split ===== */
 (function(){
   const box=$("#dusk"),say=$("#dusksay"),B=[0,1,2,3,4].map(n=>[1,2,3,4].map(k=>k<=n?"A":"H")),fate=["H","H","H","A","A"];
-  const word={H:"Decree 0",A:"Decree 1"},ing={H:"passing Decree 0",A:"passing Decree 1"},val={H:0,A:1};
+  const word={H:"blue",A:"red"},ing={H:"painting it blue",A:"painting it red"},val={H:0,A:1};
   function render(focus){
     const i=fate.findIndex((f,j)=>j<4&&f!==fate[j+1]),p=i+1;
     box.innerHTML=B.map((b,j)=>{const end=j===0||j===4,tag=end?"div":"button",hot=j===i||j===i+1;
-      return `<${tag} class="beg${hot?" split":""}"${end?"":` data-j="${j}" aria-label="${isM()?`An initial configuration fixed at ${val[fate[j]]}`:`A beginning settled for ${word[fate[j]]}`}. Press to change it."`}><div class="sq">${b.map((s,k)=>`<span style="background:${TC[k+1]}"${hot&&k+1===p?' class="p"':""}>${dual(s==="H"?"0":"1",GL[s])}</span>`).join("")}</div><small>${dual("settled for","univalent")}<b class="${fate[j]==="H"?"hold":"att"}">${dual(word[fate[j]],val[fate[j]])}</b>${end?"forced":"&nbsp;"}</small></${tag}>`}).join("");
+      return `<${tag} class="beg${hot?" split":""}"${end?"":` data-j="${j}" aria-label="${isM()?`An initial configuration fixed at ${val[fate[j]]}`:`A beginning settled for ${word[fate[j]]}`}. Press to change it."`}><div class="sq">${b.map((s,k)=>`<span style="background:${TC[k+1]};--paint:${PAINT[s]}"${hot&&k+1===p?' class="p"':""}>${dual("",GL[s])}</span>`).join("")}</div><small>${dual("settled for","univalent")}<b class="${fate[j]==="H"?"hold":"att"}">${dual(word[fate[j]],val[fate[j]])}</b>${end?"forced":"&nbsp;"}</small></${tag}>`}).join("");
     $$("button",box).forEach(bt=>bt.onclick=()=>{const j=+bt.dataset.j;fate[j]=fate[j]==="H"?"A":"H";render(j)});
     if(focus!=null)$(`button[data-j="${focus}"]`,box).focus();
     const x=fate[i],y=fate[i+1];
@@ -176,7 +177,7 @@ const LANES={1:[225,"L1",TC[1],"P1"],2:[135,"L2",TC[2],"P2"],3:[315,"L3",TC[3],"
   const m=el("marker",{id:"defer-k",markerWidth:9,markerHeight:9,refX:7.5,refY:3.2,orient:"auto"},el("defs",{},svg));el("path",{d:"M0,0 L7.5,3.2 L0,6.4 z",fill:"#1c1512"},m);
   const kinds={open:[HOLD,ATT,""],H:[HOLD,HOLD,"0"],A:[ATT,ATT,"1"],q:["#b9a77e","#b9a77e","?"],plain:[PLAIN,PLAIN,""]};
   function node(x,y){const n=el("g",{class:"gr-node fade",transform:`translate(${x} ${y})`},svg),l=el("path",{d:"M0,-28 A28,28 0 0 0 0,28 z"},n),r=el("path",{d:"M0,-28 A28,28 0 0 1 0,28 z"},n);
-    el("circle",{class:"rim",r:28},n);const t=dtext(n,{},"","");n.set=k=>{l.setAttribute("fill",kinds[k][0]);r.setAttribute("fill",kinds[k][1]);t[0].textContent=kinds[k][2];t[1].textContent=GL[kinds[k][2]]||kinds[k][2]};return n}
+    el("circle",{class:"rim",r:28},n);const t=dtext(n,{},"","");n.set=k=>{l.setAttribute("fill",kinds[k][0]);r.setAttribute("fill",kinds[k][1]);t[0].textContent=PAINT[kinds[k][2]]?"":kinds[k][2];t[1].textContent=GL[kinds[k][2]]||kinds[k][2]};return n}
   const arrow=(x1,y1,x2,y2,cls="")=>el("line",{class:"gr-arrow fade "+cls,x1,y1,x2,y2,"marker-end":"url(#defer-k)"},svg);
   const label=(x,y,s,m,anchor)=>{const t=dtext(svg,{class:"gr-lab fade",x,y},s,m);if(anchor)t.forEach(e=>e.style.textAnchor=anchor);return t};
   const mark=(x,y,ok)=>{const t=el("text",{class:(ok?"gr-ok":"gr-x")+" fade",x,y},svg);t.textContent=ok?"✓":"✗";return t};
@@ -188,7 +189,7 @@ const LANES={1:[225,"L1",TC[1],"P1"],2:[135,"L2",TC[2],"P2"],3:[315,"L3",TC[3],"
   const quiet=node(320,64),qa=arrow(X[1]+16,YT-34,302,92,"dash"),ql=label(398,58,"the other three finish","the other three finish","start"),ql2=label(398,80,"without that member: open still","without that process: bivalent still","start"),qx=mark(372,64,false),ok=mark(X[1]+46,YB-30,true);
   quiet.set("open");
   /* the key along the bottom */
-  [["H","settled for Decree 0","0-valent",40],["A","settled for Decree 1","1-valent",235],["open","open","bivalent",445]].forEach(([k,s,m,x])=>{const n=node(x,440);n.setAttribute("transform",`translate(${x} 440) scale(.42)`);n.set(k);n.classList.add("on");n.lastChild.textContent=n.lastChild.previousSibling.textContent="";label(x+20,445,s,m,"start").forEach(e=>e.classList.add("on"))});
+  [["H","settled for blue","0-valent",40],["A","settled for red","1-valent",235],["open","open","bivalent",445]].forEach(([k,s,m,x])=>{const n=node(x,440);n.setAttribute("transform",`translate(${x} 440) scale(.42)`);n.set(k);n.classList.add("on");n.lastChild.textContent=n.lastChild.previousSibling.textContent="";label(x+20,445,s,m,"start").forEach(e=>e.classList.add("on"))});
   const on=(e,v)=>[].concat(e).forEach(x=>x.classList.toggle("on",!!v));
   scrolly($("#defer"),s=>{
     top.forEach((n,i)=>{on(n,i===0||s>=1);n.set(i===0?"open":"plain")});

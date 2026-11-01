@@ -7,7 +7,8 @@ BOOK.init();
 /* the four legislators in the Chamber, told apart by colour and bench */
 const TC={1:"#e0b84a",2:"#6583d6",3:"#c45448",4:"#9cb648"};
 const T=[1,2,3,4],HOLD="#136f9e",ATT="#bf4a26";
-const word={H:"Decree 0",A:"Decree 1"},GL={H:"0",A:"1"};   /* Decree 0 or Decree 1 in allegory, 0 or 1 in computing */
+const word={H:"blue",A:"red"},GL={H:"0",A:"1"};   /* blue or red paint in allegory, 0 or 1 in computing */
+const PAINT={H:HOLD,A:ATT},SW=x=>PAINT[x]?`<i class="sw" style="background:${PAINT[x]}"></i>`:x;
 const WD=x=>dual(word[x],GL[x]);
 const legChip=(k,extra="")=>`<span class="chip"${extra}><i style="background:${TC[k]}"></i>${dual("Legislator "+k,"P"+k)}</span>`;
 const tentChip=legChip;
@@ -78,16 +79,16 @@ function Chamber(svg){
   const H={svg,cx,cy,R,A,under,over,tent:{},
     at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
     put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
-    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);dtext(g,{},glyph,GL[glyph]||glyph);return g},
+    token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);if(PAINT[glyph])el("circle",{class:"i",r:5.5,style:`fill:${PAINT[glyph]}`},g);dtext(g,{},PAINT[glyph]?"":glyph,GL[glyph]||glyph);return g},
     /* a messenger u of the way from bench a to bench b across the floor */
     fly(g,a,b,u){const d=((A[b]-A[a]+540)%360)-180;H.put(g,...H.at(A[a]+d*u,R-(d>0?24:46)*Math.sin(Math.PI*u)))},
     state(k,i,m){const t=H.tent[k].st;t[0].textContent=i;t[1].textContent=i&&(m||i)},
-    badge(k,s){const b=H.tent[k].badge;b.setAttribute("opacity",s?1:0);b.t[0].textContent=s||"";b.t[1].textContent=GL[s]||s||""}
+    badge(k,s){const b=H.tent[k].badge;b.setAttribute("opacity",s?1:0);b.t[0].textContent=PAINT[s]?"":(s||"");b.t[1].textContent=GL[s]||s||"";if(PAINT[s])b.paint.style.fill=PAINT[s]}
   };
   for(const k of [1,2,3,4]){const a=A[k]*Math.PI/180,[x,y]=H.at(A[k]),g=el("g",{class:"site"},sites);H.put(g,x,y);
     el("rect",{x:-22,y:-16,width:44,height:32,rx:5,fill:TC[k]},g);dtext(g,{},"L"+k,"P"+k);
     const st=dtext(g,{class:"state halo",x:-48*Math.cos(a),y:-46*Math.sin(a)},"","");
-    const badge=el("g",{class:"badge",opacity:0,transform:`translate(${(38*Math.cos(a)).toFixed(1)} ${(34*Math.sin(a)).toFixed(1)})`},g);el("circle",{r:11},badge);badge.t=dtext(badge,{},"","");
+    const badge=el("g",{class:"badge",opacity:0,transform:`translate(${(38*Math.cos(a)).toFixed(1)} ${(34*Math.sin(a)).toFixed(1)})`},g);el("circle",{class:"m",r:11},badge);badge.paint=el("circle",{class:"i",r:11},badge);badge.t=dtext(badge,{},"","");
     H.tent[k]={x,y,g,st,badge}}
   return H;
 }
@@ -210,8 +211,8 @@ const strongRun=(function(){
   H.state(2,"spared","spared");
   const deadMark=cross(H.over,H.tent[4].x,H.tent[4].y);deadMark.setAttribute("opacity",0);
   const on=(e,v)=>e.classList.toggle("on",!!v);
-  const rowCell=(V,P,k)=>{const v=V[k],was=P&&P[k];return `<span class="tc ${v?"f":""} ${v&&!was?"new":""} ${!v&&was?"gone":""}">${v?dual(v,GL[v]):"–"}</span>`};
-  const word2={A:"Decree 1",H:"Decree 0"};
+  const rowCell=(V,P,k)=>{const v=V[k],was=P&&P[k];return `<span class="tc ${v?"f":""} ${v&&!was?"new":""} ${!v&&was?"gone":""}">${v?dual(SW(v),GL[v]):"–"}</span>`};
+  const word2={A:"red",H:"blue"};
   function card(p,i,snapI){
     const S=R.snaps[snapI],P=snapI>0?R.snaps[snapI-1]:null,gone=p===4&&i>=1,V=S.V[p];
     const head=`<h5>${legChip(p)}<span>${gone?dual("absent","crashed"):p===2?dual("never chalked","never suspected"):"present"}</span></h5>`;
@@ -245,12 +246,12 @@ const strongRun=(function(){
     const when=r=>r===0?dual("stepped out before session","crashed before sending anything"):r<4?dual(`stepped out in round ${r}`,`crashed in round ${r}`):dual("stepped out while comparing","crashed while comparing");
     out.innerHTML=`<div class="chead t"><span>${dual("legislator","process")}</span><span>${dual("favoured","input")}</span><span>state</span><span>${dual("final sheet","final vector")}</span><span>${dual("commits to","decides")}</span></div>`+
       T.map(p=>{const d=dies[p]!=null,V=R.V[p];
-        return `<div class="crow t${d?" dead":""}">${legChip(p)}<span><b>${dual(sight[p]==="A"?"1":"0",GL[sight[p]])}</b></span><span>${d?when(dies[p]):p===c?dual("present, never chalked","alive, never suspected"):"present"}</span>`+
-          (d?`<span></span><span>–</span>`:`<span><div class="tally">${T.map(k=>`<span class="tc ${V[k]?"f":""}">${V[k]?dual(V[k]==="A"?"1":"0",GL[V[k]]):"–"}</span>`).join("")}</div></span><span><b>${WD(R.commit[p])}</b></span>`)+`</div>`}).join("");
+        return `<div class="crow t${d?" dead":""}">${legChip(p)}<span><b>${dual(SW(sight[p]),GL[sight[p]])}</b></span><span>${d?when(dies[p]):p===c?dual("present, never chalked","alive, never suspected"):"present"}</span>`+
+          (d?`<span></span><span>–</span>`:`<span><div class="tally">${T.map(k=>`<span class="tc ${V[k]?"f":""}">${V[k]?dual(SW(V[k]),GL[V[k]]):"–"}</span>`).join("")}</div></span><span><b>${WD(R.commit[p])}</b></span>`)+`</div>`}).join("");
     const same=tallies.size===1,one=ans.size===1,seen=[...ans].every(a=>Object.values(sight).includes(a));
     say.innerHTML=dual(`${n?cap(legs(dead))+(n>1?" have":" has")+" stepped out.":"Nobody has stepped out."} Legislator ${c} is present and never chalked, and every other present legislator may be chalked, over and over. `+
       `<span class="${same?"ok":"bad"}">${same?"Every present legislator ends with the same sheet.":"The sheets differ."}</span> `+
-      `<span class="${one&&seen?"ok":"bad"}">${one&&seen?"All commit to "+word[[...ans][0]]+", a decree someone favoured.":"The decrees differ."}</span>`,
+      `<span class="${one&&seen?"ok":"bad"}">${one&&seen?"All commit to "+word[[...ans][0]]+", a colour someone favoured.":"The colours differ."}</span>`,
       `${n?cap(pn(dead))+(n>1?" crash.":" crashes."):"Nobody crashes."} P${c} stays correct and is never suspected, and every other correct process may be suspected by anyone, over and over. `+
       `<span class="${same?"ok":"bad"}">${same?"Every correct process ends with the same vector.":"The vectors differ."}</span> `+
       `<span class="${one&&seen?"ok":"bad"}">${one&&seen?"All decide "+GL[[...ans][0]]+", a value some process had as input.":"The decisions differ."}</span>`);
@@ -280,9 +281,9 @@ const strongRun=(function(){
     ev(H+dual(`Legislator ${own} asks for estimates, and hears from ${legs(o.gather)}. The newest estimate among them is ${word2(o.e)}, adopted in round ${o.best||"at start"}. Legislator ${own} proposes ${word2(o.e)} to all.`,
       `P${own} gathers estimates from ${pn(o.gather)}. The highest timestamp among them is ${word2(o.e)}, from round ${o.best}. P${own} proposes ${word2(o.e)} to all.`));
     if(o.kind==="parting"){
-      ev(dual(`The proposal reached a majority (${legs(o.three)}). All three adopt it and reply. <b>Legislator ${own} dispatches the decree to all: pass ${word2(o.e)}.</b> The decree is settled.`,
+      ev(dual(`The proposal reached a majority (${legs(o.three)}). All three adopt it and reply. <b>Legislator ${own} sends the colour scroll to all: paint it ${word2(o.e)}.</b> The colour is settled.`,
         `The proposal reached a majority (${pn(o.three)}). All three adopt it and reply. <b>P${own} broadcasts the decision: ${word2(o.e)}.</b> The consensus is settled.`),"ok");
-      say.innerHTML=dual(`<b>A decree has passed.</b> No slate chalked Legislator ${own}, a majority confirmed the estimate, and the decree was dispatched. Take more rounds to see the decision stand.`,
+      say.innerHTML=dual(`<b>A colour has been settled.</b> No slate chalked Legislator ${own}, a majority confirmed the estimate, and the colour scroll was sent. Take more rounds to see the decision stand.`,
         `<b>Consensus reached.</b> The detector spared P${own}, a majority acknowledged the proposal, and the decision was broadcast. Take more rounds to see the decision stand.`);
       bN.disabled=true;
     }else{
@@ -307,7 +308,7 @@ const strongRun=(function(){
     const dead=n===1?[3,4]:n===2?[1,2]:[];
     dead.forEach(k=>{const [x,y]=P.pt(k,1);spokes[k-1].setAttribute("x2",x);spokes[k-1].setAttribute("y2",y);cross(P.over,x,y,12)});
     const live=T.filter(k=>!dead.includes(k)),ans={1:"H",2:"H",3:"A",4:"A"};
-    const dot=(k,t,fill,txt)=>{const g=P.event(k,t,fill,10);g.style.cursor="default";g.label.remove();const lb=dtext(g,{},txt||"",GL[txt]||txt||"");if(fill!=="#fffaf0")lb.forEach(e=>e.style.fill="#fff");return g};
+    const dot=(k,t,fill,txt)=>{const g=P.event(k,t,fill,10);g.style.cursor="default";g.label.remove();const lb=dtext(g,{},PAINT[txt]?"":txt||"",GL[txt]||txt||"");if(fill!=="#fffaf0")lb.forEach(e=>e.style.fill="#fff");else if(PAINT[txt]){const c=g.querySelector("circle");if(c){c.style.stroke=PAINT[txt];c.style.strokeWidth=4}}return g};
     live.forEach(k=>dot(k,1.4,"#fffaf0",n===3?ans[k]:n===1?"H":"A"));
     const exch=(a,b)=>{P.slip(a,1.4,b,2.6,12);P.slip(b,1.4,a,2.6,12)};
     if(n===1)exch(1,2);else if(n===2)exch(3,4);else{exch(1,2);exch(3,4);
@@ -316,11 +317,11 @@ const strongRun=(function(){
     return live;
   }
   const texts={
-    1:dual(`<b>First session.</b> All four favoured Decree 0. Legislators 3 and 4 are absent from the start, and Legislators 1 and 2 chalk them all along. That slate is in the end perfect: it chalks the absent, and nobody else. Legislators 1 and 2 commit to Decree 0.`,
+    1:dual(`<b>First session.</b> All four favoured blue. Legislators 3 and 4 are absent from the start, and Legislators 1 and 2 chalk them all along. That slate is in the end perfect: it chalks the absent, and nobody else. Legislators 1 and 2 commit to blue.`,
        `<b>First execution.</b> All four have input 0. P3 and P4 crash at the start, and P1 and P2 suspect them all along. That detector is in the end perfect: it suspects the crashed, and nobody else. P1 and P2 decide, within some time, and decide 0, since only 0 was an input.`),
-    2:dual(`<b>Second session.</b> The same with the pairs and decrees swapped: all four favoured Decree 1, Legislators 1 and 2 are absent from the start, and Legislators 3 and 4 commit to Decree 1.`,
+    2:dual(`<b>Second session.</b> The same with the pairs and colours swapped: all four favoured red, Legislators 1 and 2 are absent from the start, and Legislators 3 and 4 commit to red.`,
        `<b>Second execution.</b> The same with the pairs and the values swapped: all four have input 1, P1 and P2 crash at the start, and P3 and P4 decide 1 within some time.`),
-    3:dual(`<b>Third session.</b> Legislators 1 and 2 favour Decree 0, Legislators 3 and 4 favour Decree 1. <span class="ok">Nobody is absent.</span> Every note between the two pairs is delayed across the hall until after both pairs have committed, and until then each pair chalks the other. Afterwards all notes arrive and all chalk is rubbed out. That slate is in the end perfect too. <span class="bad">Each pair sees exactly what it saw in its own session, and commits: one pair to Decree 0, the other to Decree 1.</span>`,
+    3:dual(`<b>Third session.</b> Legislators 1 and 2 favour blue, Legislators 3 and 4 favour red. <span class="ok">Nobody is absent.</span> Every note between the two pairs is delayed across the hall until after both pairs have committed, and until then each pair chalks the other. Afterwards all notes arrive and all chalk is rubbed out. That slate is in the end perfect too. <span class="bad">Each pair sees exactly what it saw in its own session, and commits: one pair to blue, the other to red.</span>`,
        `<b>Third execution.</b> P1 and P2 have input 0, P3 and P4 have input 1. <span class="ok">Nobody crashes.</span> Every message between the two pairs is delayed until after both pairs have decided, and until then each pair suspects the other. Afterwards all the messages arrive and all the suspicions are removed. That detector is in the end perfect too. <span class="bad">Each pair sees exactly what it saw in its own execution, and decides: one pair 0, the other 1.</span>`)};
   const chalks={1:{1:[3,4],2:[3,4],3:[],4:[]},2:{1:[],2:[],3:[1,2],4:[1,2]},3:{1:[3,4],2:[3,4],3:[1,2],4:[1,2]}};
   function show(n){cur=n;
