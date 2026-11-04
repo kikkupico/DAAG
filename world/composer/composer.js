@@ -1080,23 +1080,63 @@ function setPropBase(p, base) {
 
 /** The placed props as a shot records them: catalog id, Blender position, yaw in degrees (from +x), scale. */
 function placedPropsForShot() {
-  return state.placedProps.map((p) => ({
-    prop: p.propId,
-    at: shotPoint(propBase(p)),
-    face: parseFloat(((p.mesh.rotation.y * 180) / Math.PI).toFixed(1)),
-    scale: parseFloat(p.mesh.scale.x.toFixed(3))
-  }));
+  return state.placedProps
+    .map((p) => {
+      const base = shotPoint(propBase(p));
+      if (!Array.isArray(base) || base.length !== 3 || base.some((n) => typeof n !== 'number' || !Number.isFinite(n))) {
+        return null;
+      }
+      const yawDeg = (p.mesh.rotation.y * 180) / Math.PI;
+      const scale = p.mesh.scale.x;
+      return {
+        prop: p.propId,
+        at: base,
+        face: Number.isFinite(yawDeg) ? parseFloat(yawDeg.toFixed(1)) : 0,
+        scale: Number.isFinite(scale) && scale > 0 ? parseFloat(scale.toFixed(3)) : 1
+      };
+    })
+    .filter(Boolean);
 }
 
 async function restorePlacedProps(items) {
   clearAllProps();
   for (const it of items || []) {
+    if (!it || !it.prop) continue;
     const def = state.propsCatalog.find((p) => p.id === it.prop);
     if (!def) {
       console.warn(`Saved prop '${it.prop}' is not in the catalog`);
       continue;
     }
-    await spawnProp(def, blenderToThree(it.at), (it.face * Math.PI) / 180, it.scale || 1);
+    if (!Array.isArray(it.at) || it.at.length < 3 || it.at[0] == null || it.at[1] == null || it.at[2] == null) {
+      console.warn(`Saved prop '${it.prop}' has invalid coordinates:`, it.at);
+      continue;
+    }
+    const x = Number(it.at[0]);
+    const y = Number(it.at[1]);
+    let z = it.at[2];
+    if (typeof z === 'string') {
+      z = (typeof groundAt === 'function' ? groundAt(x, y) : 0) + parseFloat(z);
+    } else {
+      z = Number(z);
+    }
+    if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(z)) {
+      console.warn(`Saved prop '${it.prop}' has non-finite coordinates:`, it.at);
+      continue;
+    }
+
+    let yaw = 0;
+    if (Array.isArray(it.face) && it.face.length >= 2 && it.face[0] != null && it.face[1] != null) {
+      const fx = Number(it.face[0]);
+      const fy = Number(it.face[1]);
+      if (Number.isFinite(fx) && Number.isFinite(fy)) {
+        yaw = Math.atan2(fy - y, fx - x);
+      }
+    } else if (typeof it.face === 'number' && Number.isFinite(it.face)) {
+      yaw = (it.face * Math.PI) / 180;
+    }
+
+    const scale = (typeof it.scale === 'number' && Number.isFinite(it.scale) && it.scale > 0) ? it.scale : 1;
+    await spawnProp(def, blenderToThree([x, y, z]), yaw, scale);
   }
   renderPlacedPropsList();
 }
@@ -1108,9 +1148,12 @@ function refreshPropInspector() {
   if (!p) return;
   const [x, y, z] = shotPoint(propBase(p));
   const set = (el, v) => { if (document.activeElement !== el) el.value = v; };
-  set(dom.propX, x); set(dom.propY, y); set(dom.propZ, z);
-  set(dom.propYaw, ((p.mesh.rotation.y * 180) / Math.PI).toFixed(1));
-  set(dom.propScale, p.mesh.scale.x.toFixed(2));
+  set(dom.propX, Number.isFinite(x) ? x : 0);
+  set(dom.propY, Number.isFinite(y) ? y : 0);
+  set(dom.propZ, Number.isFinite(z) ? z : 0);
+  const yaw = (p.mesh.rotation.y * 180) / Math.PI;
+  set(dom.propYaw, Number.isFinite(yaw) ? yaw.toFixed(1) : '0.0');
+  set(dom.propScale, Number.isFinite(p.mesh.scale.x) ? p.mesh.scale.x.toFixed(2) : '1.00');
   dom.propInspectorName.textContent = p.name;
 }
 
@@ -1499,6 +1542,7 @@ function weatherOffsets() {
 function composedShot(shotId) {
   const frame = state.shotSite && state.shotId === shotId ? state.frames[state.shotSite] : null;
   const inShotSpace = (v) => frame ? worldToFrame(threeToBlender(v), frame).map((n) => parseFloat(n.toFixed(2))) : shotPoint(v);
+  const placed = placedPropsForShot();
   return {
     island: state.island,
     cam: inShotSpace(camera.position),
@@ -1511,7 +1555,7 @@ function composedShot(shotId) {
     sun_from: Math.round(state.sunAzimuth),
     ...weatherOffsets(),
     others: state.promptOthers.trim() || null,
-    placed_props: state.placedProps.length ? placedPropsForShot() : null,
+    placed_props: placed.length ? placed : null,
     ...(frame ? { site: state.shotSite } : {})
   };
 }

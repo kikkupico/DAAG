@@ -91,9 +91,9 @@ def place_proto(p, coll, i):
     hi = [max(v[k] for v in pts) for k in range(3)]
     settle = Matrix.Translation((-(lo[0] + hi[0]) / 2, -(lo[1] + hi[1]) / 2, -lo[2]))
     x, y, z = p["at"]
-    face = p.get("face", 0.0)
+    face = 0.0 if p.get("face") is None else p["face"]
     a = math.atan2(face[1] - y, face[0] - x) if isinstance(face, (list, tuple)) else math.radians(face)
-    s = p.get("scale", 1.0)
+    s = 1.0 if p.get("scale") is None else p["scale"]
     put = Matrix.Translation((x, y, z)) @ Matrix.Rotation(a, 4, "Z") @ Matrix.Diagonal((s, s, s, 1.0))
     for o in obs:
         ob = bpy.data.objects.new(f"prop_{p['proto']}_{i}", o.data)
@@ -120,10 +120,10 @@ def place(props):
             place_proto(p, coll, i)
             continue
         x, y, z = p["at"]
-        face = p.get("face", 0.0)
+        face = 0.0 if p.get("face") is None else p["face"]
         a = math.atan2(face[1] - y, face[0] - x) if isinstance(face, (list, tuple)) else math.radians(face)
         k = Kit(seed=i)
-        k.push(T(x, y, z) @ Rz(a) @ S(p.get("scale", 1.0)))
+        k.push(T(x, y, z) @ Rz(a) @ S(1.0 if p.get("scale") is None else p["scale"]))
         KINDS[p["kind"]](k)
         k.pop()
         k.build(f"prop_{p['kind']}_{i}", mats, coll, smooth=p["kind"] != "sandglass" or 30)

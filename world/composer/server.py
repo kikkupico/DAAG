@@ -429,12 +429,30 @@ def clean_spec(body):
             return None, f"'{key}' must be three coordinates"
     if "placed_props" in spec:
         items = spec["placed_props"]
+
+        def ok_face(f):
+            if f is None or isinstance(f, (int, float)):
+                return True
+            return isinstance(f, (list, tuple)) and len(f) == 2 and all(is_coordinate(v) for v in f)
+
+        def ok_scale(s):
+            return s is None or (isinstance(s, (int, float)) and s > 0)
+
         ok = isinstance(items, list) and len(items) <= 200 and all(
-            isinstance(p, dict) and safe_name(p.get("prop")) and isinstance(p.get("at"), list) and len(p["at"]) == 3
-            and all(isinstance(v, (int, float)) for v in p["at"]) and isinstance(p.get("face", 0), (int, float))
-            and isinstance(p.get("scale", 1), (int, float)) for p in items)
+            isinstance(p, dict) and safe_name(p.get("prop"))
+            and isinstance(p.get("at"), (list, tuple)) and len(p["at"]) == 3
+            and all(is_coordinate(v) for v in p["at"])
+            and ok_face(p.get("face"))
+            and ok_scale(p.get("scale"))
+            for p in items)
         if not ok:
             return None, "'placed_props' must be a list of {prop, at, face, scale}"
+        spec["placed_props"] = [
+            {"prop": p["prop"], "at": list(p["at"]),
+             **({"face": list(p["face"]) if isinstance(p["face"], (list, tuple)) else p["face"]} if p.get("face") is not None else {}),
+             **({"scale": p["scale"]} if p.get("scale") is not None else {})}
+            for p in items
+        ]
     for key, lo, hi in (("sun_elev", -5, 85), ("sun_scale", 0.05, 5), ("fog_scale", 0, 10), ("sun_from", 0, 360),
                         ("exposure", -5, 5)):
         if key in spec and not (isinstance(spec[key], (int, float)) and lo <= spec[key] <= hi):

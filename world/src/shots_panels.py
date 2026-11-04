@@ -87,8 +87,10 @@ def shots():
                 sh[k] = v
         from blib import panel_props  # inside Blender only
         # "placed_props" (the composer's) are in world metres and degrees, whatever the shot's site
-        placed = [dict(kind="proto", proto=p["prop"], at=place(mod, p["at"], None), face=p.get("face", 0.0),
-                       scale=p.get("scale", 1.0)) for p in sp.get("placed_props", [])]
+        placed = [dict(kind="proto", proto=p["prop"], at=place(mod, p["at"], None),
+                       face=0.0 if p.get("face") is None else p["face"],
+                       scale=1.0 if p.get("scale") is None else p["scale"])
+                  for p in sp.get("placed_props", [])]
         sh["pre"] = (lambda scene, P=props(mod, sp.get("props", []), fr) + placed: panel_props.place(P))
         out[name] = sh
     return out

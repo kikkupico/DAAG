@@ -227,8 +227,14 @@ class ServerTest(unittest.TestCase):
                                                  "placed_props": [{"prop": "../x", "at": [0, 0, 0]}]}}
         self.assertIsNotNone(server.clean_spec(bad_props)[1])
         good = {"island": "paxos", "shot": {"cam": [1, 2, 3], "target": [0, 0, 0],
-                                            "placed_props": [{"prop": "cart_0", "at": [0, 0, 0], "face": 90, "scale": 1}]}}
-        self.assertEqual(server.clean_spec(good)[0]["placed_props"][0]["prop"], "cart_0")
+                                            "placed_props": [{"prop": "cart_0", "at": [0, 0, 0], "face": 90, "scale": 1},
+                                                             {"prop": "cart_1", "at": [-594.1, 2745.3, "+1.7"], "face": [-585.6, 2748.4]},
+                                                             {"prop": "cart_2", "at": [1, 2, 3], "face": None, "scale": None}]}}
+        cleaned_props = server.clean_spec(good)[0]["placed_props"]
+        self.assertEqual(len(cleaned_props), 3)
+        self.assertEqual(cleaned_props[0]["prop"], "cart_0")
+        self.assertEqual(cleaned_props[1]["face"], [-585.6, 2748.4])
+        self.assertNotIn("face", cleaned_props[2])
         self.assertEqual(self.call("/api/render", {"island": "paxos", "shot": {}})[0], 400)
         self.assertEqual(self.call("/api/render/nope")[0], 404)
 
