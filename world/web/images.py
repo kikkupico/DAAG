@@ -8,7 +8,7 @@ Run it again after a page gains a picture or a picture is replaced; it only does
 Which pictures: every <img> on the home page, the setting pages and the books. A picture is
 published when it is a render of the world model: its file matches one of world/renders/final/*.png
 (the render of the same name first, then any). The few named in EXTRA (the home page's chart) are
-published from their own source. A picture already on the bucket keeps its link until its file is
+published from their own source. A ligne claire picture (a file named *-lc.jpg) is published from itself. A picture already on the bucket keeps its link until its file is
 replaced by a render. Anything else stays local; the old previs pictures among those are listed in
 images.json under "previs" and in a block of .gitignore, and are not in git.
 
@@ -57,7 +57,7 @@ SIZES = (("bleed", "100vw"),
          ("cardlink", "(max-width: 700px) 80vw, 370px"),
          ("", "(max-width: 700px) 90vw, 560px"))
 # pictures that are not renders but are published all the same, and the file each is made from
-EXTRA = {"assets/img/map.jpg": "archive/art/full-map-cartographic.jpeg"}  # the home page's chart
+EXTRA = {"assets/img/map.jpg": "world/renders/chart/chart-295ojhyz7x.png"}  # the home page's chart (world/src/chart_gen.py)
 PUBLISHED = re.compile(re.escape(BASE) + r"/(?:.+)-([0-9a-f]{10})-\d+\.avif$")
 DRY = "--dry" in sys.argv
 
@@ -144,6 +144,7 @@ def main():
     manifest = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {"images": {}, "pages": {}}
     images, pages = manifest["images"], {}
     previs = set(manifest.get("previs", []))
+    own = set()
     edits, skipped = {}, set()  # file -> [(offset, old tag, new tag)]; local pictures left alone
 
     for file, base in sources():
@@ -160,6 +161,9 @@ def main():
                 source = ROOT / EXTRA[name]
             elif local.is_file():
                 source = render_of(local)
+                if not source and (local.stem.endswith("-lc") or name in manifest.get("own", [])):
+                    source = local  # a ligne claire picture (made by world/panels, exported as -lc.jpg) is published as it is
+                    own.add(name)
             else:
                 source = None
             if not source:
@@ -175,7 +179,8 @@ def main():
                                   "source": source.relative_to(ROOT).as_posix(), "size": [width, height],
                                   "widths": sorted({min(w, width) for w in WIDTHS})}
             pages[name] = digest
-            previs.discard(name)
+            if name not in own:
+                previs.discard(name)
             image = images[digest]
             url = lambda w: f"{BASE}/{image['name']}-{digest}-{w}.avif"
             if earlier == digest and attrs.get("data-local") == src:
@@ -219,7 +224,7 @@ def main():
             print("   ", key, why)
         sys.exit("some uploads failed; no link was changed")
 
-    MANIFEST.write_text(json.dumps({"base": BASE, "bucket": BUCKET, "images": used, "previs": sorted(previs), "pages": dict(sorted(pages.items()))},
+    MANIFEST.write_text(json.dumps({"base": BASE, "bucket": BUCKET, "images": used, "own": sorted(own), "previs": sorted(previs), "pages": dict(sorted(pages.items()))},
                                    indent=1) + "\n")
     ignore = ROOT / ".gitignore"
     block = "# previs pictures on the pages (world/web/images.py)\n" + "".join(f"/{n}\n" for n in sorted(previs))
