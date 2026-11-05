@@ -4,7 +4,7 @@ A building for each paper, and a shared building where sharing is right. The isl
 described in `settings.md`; this file is the next resolution down. What each building is
 modelled on in the real Greek world is in `reality.md`.
 
-**Map pins are districts, not buildings.** A pin called *the libraries* is twelve
+**Map pins are districts, not buildings.** A pin called *the libraries* is many
 buildings; a pin called *the Tholos* is one. Keeping the maps at district resolution is what stops
 them turning into floor plans.
 

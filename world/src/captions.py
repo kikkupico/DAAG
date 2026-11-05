@@ -57,7 +57,7 @@ PAXOS = [
     ('oracle_aerial', 'Two gates',
      'Common ground on the southern neck that belongs to neither city. The north gate opens on the way that forks to the two assemblies, a stepped way up to the Chamber and the road on to the city and Schedia; the south gate on the road down to the scholars’ coast.'),
     ('library_exterior', 'A library',
-     'One of a dozen small libraries in clearings among the olives, each with a columned porch and heavy double doors standing open.'),
+     'One of the coast’s many small libraries in clearings among the olives, each with a columned porch and heavy double doors standing open.'),
     ('library_interior', 'The library’s copy of the compendium',
      'Walls of pigeonholes, each entry a short scroll with its tag. The desk faces the door, with the marble pebble board on it and a stepped stand of smaller boards beside it, each with a wax tag of its own colour.'),
     ('pebble_board', 'The pebble board',
