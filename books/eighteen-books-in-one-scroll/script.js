@@ -672,7 +672,7 @@ def("w1", "chamber", [
   sl("T4", 1.2, "T1", 2.9, { dir: -1, id: "s4" }), ev("T1", 2.9, { id: "e4" }),
   tg(on("T1", 4.4, 10, -30), V("the same, up to here", "identical so far"), { cls: "gold", id: "t" })
 ], { nights: [
-  [nightTag(0), { t: "x", n: "T2", at: 1.0, c: 1, k: "w1.n0x" }, tg(on("T2", 2.6, -30, 30), V("L2 steps out", "p₂ crashes"), { c: 1, k: "w1.n0t" })],
+  [nightTag(0), { t: "x", n: "T2", at: 1.0, c: 1, k: "w1.n0x" }, tg(on("T2", 2.6, -30, 30), V("L2 goes home", "p₂ crashes"), { c: 1, k: "w1.n0t" })],
   [nightTag(1), sl("T2", 1.0, "T1", 5.6, { held: 1, c: 1, k: "w1.n1s" }), tg(on("T2", 2.6, -30, 30), V("L2's runner is delayed", "p₂'s message is slow"), { c: 1, k: "w1.n1t" })]
 ] });
 def("w2", "b3", [
