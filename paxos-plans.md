@@ -237,4 +237,4 @@ Written: `books/changes-that-never-clash/`.
 - **Schedia is on the same island.** Its laws are its own, but the sun, the couriers and the scholars' roads reach it as they reach the rest of Paxos.
 - **Paxos can read the sun.** Unlike Arche in the trading season, Paxos tells time by the sun; the Chamber has a meridian line.
 - **Names.** Only *Spreading by Word of Mouth* names an author, Demerios; the other coast books name no one.
-- **Order.** *Spreading by Word of Mouth* first on the coast, since it sets the vocabulary; then *Probably Up to Date*, *Changes That Never Clash*, *What You Can Promise Alone*; *Knowing When to Wait* last, since it sorts all of them. *One Leader at a Time* can be written any time.
+- **Order.** *Spreading by Word of Mouth* first on the coast, since it sets the vocabulary; then *Probably Up to Date*, *Changes That Never Clash*, *What You Can Promise Alone*; *Knowing When to Wait* last, since it sorts all of them. *One Writer at a Time* can be written any time.

@@ -9,7 +9,7 @@ analysis, the constraints that cannot be broken, and the islands themselves), `r
 (the real Greek precedent for each device, and how close it is), and `hellenistic-reference.html`
 (buildings, tools, weapons, dress, transport, town planning and civic procedure of the period, with
 measurements for modelling).
-**Read as models:** the finished books in `books/`, and their sources in `scroll/parts/`.
+**Read as models:** the finished books in `books/`.
 They are the specification. Where this document and a finished book disagree, the book is right.
 **Read before writing a page:** `scroll/BRIEF.md`, the authoring guide for the format.
 
@@ -25,13 +25,12 @@ stage for a sequence, a click-through widget for a choice. Proofs sit in collaps
 end of the spread they belong to. Photographs and cards unfold as they enter view.
 
 A page is self-contained. The files to edit are `books/<slug>/index.html`, `style.css` and `script.js`;
-`scroll/shot.sh` checks a page in headless Chrome. The four-part sources in `scroll/parts/<slug>/`
-(`meta.json`, `body.html`, `page.css`, `page.js`) and `assemble.py` were the original build; the books have
-moved on from them, and `cover.py` reports every page as stale, so do not run `assemble.py` over a book.
-`meta.json` still holds the words a cover and its card share. The question a book asks, its "We find out by exploring…" line and
-its papers are written once, in `meta.json`; the cover and the book's card on the home page both
-carry them, and `python3 scroll/cover.py` checks that they agree (`--write` puts them into
-the cards). The pictures a book uses are copied into `books/<slug>/img/`.
+`scroll/shot.sh` checks a page in headless Chrome. A new book starts as a copy of a finished one.
+The question a book asks, its "We find out by exploring…" line and its papers appear twice, on the
+cover and on the book's card on the home page, and the two are kept word for word the same by hand.
+The graph of the book's papers sits between `<!-- lineage -->` and `<!-- /lineage -->`;
+`python3 scroll/lineage.py <slug>` prints it from `papers/lineage.json`. The pictures a book uses
+are copied into `books/<slug>/img/`.
 
 **Shared code.** Every book in `books/` (not the one-scroll overview) is assembled from shared layers, so a
 change made once reaches all of them. Styles load in this order: `assets/css/book.css` (tokens, bar,
@@ -420,7 +419,7 @@ Check things by content, never by name.
 
 Before calling a book done (the brief's checklist has the mechanics):
 
-- [ ] `assemble.py` builds the page; `shot.sh` at 500 and 1280 reports equal widths and no
+- [ ] `shot.sh` at 500 and 1280 reports equal widths and no
       errors; the page has been looked at, and each scroll-driven stage checked step by step.
 - [ ] Every interactive has been pressed through against the paper's rules.
 - [ ] Every formal argument is inside `<details class="proof">`, and each opens with its `given`.
@@ -430,8 +429,8 @@ Before calling a book done (the brief's checklist has the mechanics):
 - [ ] The *must not exist* list is checked against the finished draft.
 - [ ] Nothing contradicts a book that shares the setting.
 - [ ] Every claim traceable to the paper has been checked against the PDF.
-- [ ] Added to the home page, `index.html`, as a cover card in its section, and `cover.py`
-      reports that the card and the cover agree with `meta.json`.
+- [ ] Added to the home page, `index.html`, as a cover card in its section, whose words match
+      the book's cover.
 - [ ] The place's setting page, `places/<place>/index.html`, lists the book, adds its row to
   the table of what the messages say, and still describes the place truly. Each home-page section opens with its setting page, the brief a
   reader needs before reading that section's books in any order. Its pictures are renders of the

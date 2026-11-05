@@ -8,41 +8,38 @@ anchor carry over.
 
 Three finished books are the models. Read them before writing anything:
 
-- `scroll/parts/ordering-without-clocks/` (the ring road: houses, messengers, slips)
-- `scroll/parts/the-limits-of-agreement/` (the foot of the hill: tents, ravens)
-- `scroll/parts/one-writer-at-a-time/` (the Tholos: named legislators, rules on cards)
+- `books/ordering-without-clocks/` (the ring road: houses, messengers, slips)
+- `books/the-limits-of-agreement/` (the foot of the hill: tents, ravens)
+- `books/one-writer-at-a-time/` (the Tholos: named legislators, rules on cards)
 
 ## The kit
 
 ```
-scroll/shell.css      shared styles (never edit)
-scroll/shell.js       shared script (never edit)
-scroll/assemble.py    python3 scroll/assemble.py <slug>   -> books/<slug>/index.html
-scroll/cover.py       python3 scroll/cover.py [--write]   cards and covers against meta.json
+assets/css/book.css, widgets.css, registers.css    shared styles
+assets/js/book.js, registers.js                    shared script
+scroll/lineage.py     python3 scroll/lineage.py <slug>    the graph of the book's papers
 scroll/shot.sh        scroll/shot.sh <slug> <width> <out.png>   headless check
-scroll/parts/<slug>/  meta.json, body.html, page.css, page.js   (what you write)
-books/<slug>/img/         the book's pictures (you copy them in)
+books/<slug>/         index.html, style.css, script.js   (what you write)
+books/<slug>/img/     the book's pictures (you copy them in)
 ```
 
-The books have moved on from `parts/`: edit `books/<slug>/index.html`, `style.css` and `script.js`
-directly, and do not run `assemble.py` over a finished book. Run everything from the repository root.
+Start a new book as a copy of a model's three files and edit them in place. Run everything from
+the repository root.
 
-`meta.json` holds the page's `title` and `description` and the words the cover shares with the
-book's card on the home page: `question`, `how`, `credit` (the card's short credit line) and
-`papers` (a list of `{"authors", "title", "year"}`, authors by full name). Write them there
-and nowhere else. `assemble.py` puts them on the cover. `cover.py` checks that every card in
-`index.html` and every cover says what its `meta.json` says, and `cover.py --write` puts
-`meta.json`'s words into the cards and into the Part-Time Parliament's cover, whose page is
-edited by hand and has only a `meta.json` in `parts/`.
+The cover shares its words with the book's card on the home page, `index.html`: the question,
+the "We find out by exploring…" line, and the papers (authors by full name). Keep the two word
+for word the same; the card adds a short credit line.
 
 `shot.sh` prints one line, `PROBE width=<page>/<window> errors=[...]`, and writes a full-page
 screenshot. The two widths must be equal (no sideways scroll) and `errors` must be empty. Check
 at 500 and at 1280, then **look at the screenshots** (the Read tool shows images; crop tall ones
-with PIL first). Also run `node --check` on `page.js`.
+with PIL first). Also run `node --check` on `script.js`.
 
-## What `shell.js` gives `page.js`
+## What `book.js` gives `script.js`
 
-`page.js` runs after `shell.js` in the same function scope, so these are in reach:
+A book's `script.js` is wrapped in one `(function(){ ... })();`, opens with
+`const {$,$$,reduce,NS,sleep,el,rnd,tween,button,stepDots,scrolly,Polar}=BOOK;` (adding `Unfold`
+and the rest as it needs them) and calls `BOOK.init();`. These are then in reach:
 
 | name | what it does |
 |---|---|
@@ -56,8 +53,7 @@ with PIL first). Also run `node --check` on `page.js`.
 | `Polar(svg, opts)` | space-time drawn in the round (see below) |
 | `reduce` | true when the reader asked for reduced motion |
 
-Do not declare a top-level `tick`, `io`, `secs`, `now`, `prog`, `dep` or `par`: the shell uses
-those names. Wrap each interactive in its own `(function(){ ... })();`.
+Wrap each interactive in its own `(function(){ ... })();`.
 
 `Polar(svg, {vb, cx, cy, r0, step, rings, tEnd, nodes, note})` draws rings (later moments further
 out), one spoke per place, and a label box per place. `nodes` is `{key: [angleDegrees, "label",
@@ -67,8 +63,8 @@ time `ta` to place `b` at `tb`, the short way round, with an arrowhead), `P.seg(
 `g.label` a text node inside it), and the layers `P.under`, `P.slips`, `P.evs`, `P.over`.
 
 Each model book also has its own "place from above" picture (`Isle` for Arche's ring road, `Hill`
-for the foot of the hill, `Tholos` for Schedia in *One Leader at a Time*, `Coast` for the scholars'
-coast in *Probably Up to Date*). Copy the one for your setting into your `page.js` and keep it the
+for the foot of the hill, `Tholos` for Schedia in *One Writer at a Time*, `Coast` for the scholars'
+coast in *Probably Up to Date*). Copy the one for your setting into your `script.js` and keep it the
 same, so the series reads as one. The coast books also share a few small parts, copied the same
 way: `seg` (a row of choices), tables of pebbles (*Changes That Never Clash*), shelves of what a
 library holds, and squares for a coast of many libraries (*Spreading by Word of Mouth*). A crown book draws the crown from above in the same manner: the
@@ -76,13 +72,12 @@ ring wall at the centre with the chief inside, three posts out on the slopes.
 
 ## The page, top to bottom
 
-Copy the markup from a model's `body.html`. The spreads, in order:
+Copy the markup from a model's `index.html`. The spreads, in order:
 
 1. **Top bar** (`.bar`): only `← The Books`, the section name (`#now`) and the progress line.
 2. **Cover** (`header.spread.dark#cover`): four pieces of text and no more, beside the cover
    picture (`img/cover.jpg`, 3:4). The title alone in the `h1`, with no subtitle. Then
-   `<p class="generic">{{question}}</p>`, `<p class="allegory">{{how}}</p>` and
-   `<p class="source">{{source}}</p>`, which `assemble.py` fills from `meta.json`: the question
+   `<p class="generic">`, `<p class="allegory">` and `<p class="source">`: the question
    in machine terms, the "We find out by exploring…" line, and every paper as
    `After <authors>, <i>title</i>, <year>` in small print.
 3. **In machine terms** (`section#machines`): the paper's problem in a lede and a framing
@@ -110,13 +105,12 @@ and a column of `.step` cards). Everything that unfolds is wrapped
 
 Give every `section` a `data-name` (shown in the top bar) and an `id`.
 
-`.tell`, `.cards3.pair` and `.card3 h3:last-child` are styled in each book's `page.css`; copy the
-five rules from the end of a model's.
+`.tell`, `.cards3.pair` and `.card3 h3:last-child` are styled in `assets/css/widgets.css`.
 
 ## Continuous prose
 
 A reader should be able to go from one spread's lede through its paragraphs and into the next
-spread's lede as one line of thought. *Ordering Without Clocks* and *One Leader at a Time* are
+spread's lede as one line of thought. *Ordering Without Clocks* and *One Writer at a Time* are
 the models for this.
 
 - **Bridges.** An argument spread ends on a `p.tell` that states what is still open, and the next
@@ -218,12 +212,12 @@ for effect.
 ## Lessons from the books already converted
 
 - **Ids are unique across the whole page.** A `section` id must not equal the id of an `svg` or
-  any element `page.js` looks up (`section#nine` and `svg#nine` broke a page). Suffix sections
+  any element `script.js` looks up (`section#nine` and `svg#nine` broke a page). Suffix sections
   (`ninesec`) or figures (`ninesvg`).
 - **Every `Isle`, `Hill` or crown figure carries `class="isle-svg fig"`**, or its labels lose
   their styling.
 - **On Arche, personal names become roles** (Paxos books keep their named, colour-coded
-  figures, as *One Leader at a Time* does). The Arche long editions give the paper's authors Hellenised names
+  figures, as *One Writer at a Time* does). The Arche long editions give the paper's authors Hellenised names
   (Lamportios, Chandyos). The scroll says "House 1's accountant", "the recorder of the
   customs rolls". Their old footnote is dropped.
 - **Prose stays neutral about people.** No "he", "his", "she" for a numbered figure or a role;
@@ -259,12 +253,12 @@ the picture first). A picture may disagree with the prose; never bend the prose 
 
 ## Finishing checklist
 
-- [ ] `python3 scroll/assemble.py <slug>` runs; `node --check` passes on `page.js`
-- [ ] `python3 scroll/cover.py` reports that cards and covers agree with `meta.json`
+- [ ] `node --check` passes on `script.js`
+- [ ] the home page's card says what the cover says
 - [ ] `shot.sh` at 500 and 1280: widths equal, `errors=[]`, screenshots looked at
 - [ ] every interactive pressed through in your head against the long edition's rules
 - [ ] every proof panel present, steps verbatim, each with a `given`
-- [ ] every old `sN` anchor present once; references carried; `{{lineage}}` between the cover and the first spread, and the book's papers and their links in `papers/lineage.json`
+- [ ] every old `sN` anchor present once; references carried; the graph from `scroll/lineage.py <slug>` between the cover and the first spread, and the book's papers and their links in `papers/lineage.json`
 - [ ] no id used twice on the page
 - [ ] grep the body outside proof panels for `<var`, `σ`, `⟹`, `book`, `ledger`, `Chapter`,
       `metre`, ` m ` and personal names

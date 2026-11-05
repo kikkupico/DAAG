@@ -5,10 +5,10 @@ This document provides modular, high-fidelity generation prompts for the islands
 Rather than a single monolithic world prompt, this specification provides:
 1. **Universal Pipeline Directives & Negative Prompts** ensuring watertight 3D reconstruction.
 2. For each island:
-   - **One Natural Geography & Clearings Prompt** establishing pristine terrain, coastline, and unbuilt settlement clearings. *(Arche's and Paxos's are full island plates carrying their buildings and book locations; see 2.1 and 3.1.)*
+   - **One Natural Geography & Clearings Prompt** establishing pristine terrain, coastline, and unbuilt settlement clearings. *(Arche's is a full island plate carrying its buildings and book locations; see 2.1.)*
    - **A Set of Focused Architectural Prompts** capturing individual structures, houses, and civil engineering landmarks.
 
-**The island 3D models are Meshy image-to-3D conversions of the island plates** (`archive/art/arche-3d.glb`, `archive/art/paxos-3d.glb`), loaded by `explorer.html` and rendered for previs by `archive/art/previs/render.py`. The prompts here are the visual brief, and the source for scene images.
+**The live island models are built by script in Blender** in `world/` (see `README.md` and `BUILD.md`); the image-to-3D steps of §2.1 made the archived Arche model in `archive/art/`. The prompts here are the visual brief, and the source for scene images.
 
 ---
 
@@ -313,56 +313,6 @@ predate this rule; use them with a tint, and build new ones to it.
 > - **The oracle at the fork**: on the southern neck, where the island road forks, a sanctuary on common ground belonging to neither city, in the manner of Dodona: a low wall round an old oak, a small temple and an altar beside the tree; its north gate opens on the way that forks to the Chamber and the Tholos (a stepped way up to the Chamber, the road on to the city and Schedia), its south gate on the road down to the scholars' coast.
 > - **The scholars' coast** (the southern section, the largest and the lowest), which the scholars call Homonoia: deeply indented country of coves and valleys, with the stoa and festival ground on the eastern bay just south of the neck, many small libraries within casual reach of one another along footpaths of differing length, a narrow rocky courier cove in the cliffs at the southern tip, a long inlet cutting into the section and crossed only by one ferry, with a landing stage on each bank, and in every library a reading room whose pigeonholes hold its copy of the scholars' compendium, an entry to a short scroll, and a desk whose marble boards of pebbles keep the counts some entries hold. The scholars hold no assembly.
 
-### 3.1 Island Plate Prompt (Geography, Habitation & Book Locations)
-The plate prompts in 3.1 and 3.1a made the image-to-3D model in `archive/art/`, which is drawn as a Y; the island's shape is the narrative setting above.
-
-Like Arche's, the Paxos plate carries its buildings in place. It is made in three steps.
-
-**Step 1 — plate** (text-to-image, `banana_pro`, aspect 16:9, with `archive/art/refs/paxos-outline-sketch.png` attached as the outline reference; without it the Y comes out as a V with no stem):
-```text
-Detailed 3D isometric diorama of the Greek island Paxos, Hellenistic Greece, 3rd century BC.
-True orthographic axonometric view, deep focus, warm directional sunlight, zero people.
-The island's outline follows the attached sketch: a limestone island shaped like the letter Y. Two slender high rocky arms reach north, side by side, enclosing a sheltered bay of turquoise water between them. They join at a fork, and below the fork a distinct narrow stem, clearly narrower than either arm is long, runs south and then widens into a broad, lower body. The body is by far the largest part of the island, larger than both arms together, and fills the whole southern half of the frame. Calm deep Aegean blue sea reaches every frame edge, turquoise shoals and white surf at the shore; no pedestal, no cutaway.
-Outer coasts of both arms: sheer white limestone sea-cliffs with sea-caves. Inner slopes facing the bay: terraced olive groves, cypresses and maquis.
-The western arm: on a level civic terrace above the bay stands a single round hall of white ashlar limestone ringed by an unbased Doric colonnade, under one conical roof of oxblood terracotta tiles with a small louvred lantern, with one doorway, closed by a door that can be locked, and statues round it; a paved road crosses the terrace past it and runs on to the arm's tip, where a small harbour town of red-tiled stone houses, a market square, quays and moored merchant ships sits on a cove.
-The eastern arm, directly across the bay from the rotunda: a small town of red-tiled stone houses above a cove, and above it, on a level terrace facing the bay, a round hall of warm honey-coloured limestone with plain walls, one doorway and no colonnade, under a single low conical roof of oxblood terracotta tiles rising to a small louvred lantern, and a small columned porch facing the water. It is clearly unlike the white colonnaded round hall across the bay.
-The fork, where the two arms meet: on common ground, a sanctuary in the manner of Dodona: a low wall of rough limestone round a single great old oak, a small temple of pale limestone and an altar beside the tree, and two gates in the wall, one to the north up the bay and one to the south down the stem.
-The body of the island, well south of the stem: lower rolling hills and valleys with a deeply indented coast of coves and pebble beaches. On a harbour on the body's eastern shore, far down from the fork, a long colonnaded stoa facing an open ground set with rows of long tables. About a dozen small porched library buildings scattered in clearings among olive trees across the valleys and hill shoulders, linked by footpaths of differing length. A small rocky cove on the southwest shore with timber piers and small boats. At the remote southern tip, the farthest point from the fork, narrow stepped terraces with long stone tables on steep slopes facing the open sea.
-Farmsteads along one road running from the southern body up the stem, forking at the oracle, one branch along each arm.
-No open-air theatre or exposed seating bowl anywhere, no citadel, no quarry, no ruins.
-```
-
-**Step 2 — town pass** (image-to-image on the step 1 image, `banana_pro`, aspect 16:9). Small, tightly packed houses reconstruct in 3D as tall blocks, so the town is redrawn as low courtyard houses before conversion:
-```text
-Keep [image 1] exactly as it is: the same Y-shaped island, arms, bay, cliffs, sea, rotunda, round tiled hall, sanctuary at the fork, stoa, libraries, terraces, road, olive terraces, trees, farmsteads, quays, ships, camera and lighting.
-Change only the two towns: replace their houses with low single-storey Hellenistic courtyard houses of rough limestone, each a squat box with a shallow red-tiled roof and a small open courtyard, spaced a little apart with narrow lanes between them, clearly no taller than they are wide.
-No multi-storey buildings anywhere.
-Zero people.
-```
-
-**Step 3 — 3D.** A Meshy image-to-3D conversion of this plate, downloaded without resizing, is the island model, `archive/art/paxos-3d.glb`; the plate it was made from is `archive/art/refs/paxos-plate.jpeg`. `explorer.html` and `archive/art/previs/render.py` place it at 104 m per model unit, a scale set by eye so that a person beside the rotunda looks right, and give it a quarter turn, since the model's arms point along its +Z and canon's point north. Meshy lost the stoa's shoreline, so the stoa and festival ground stand in the sea off the east coast.
-
-### 3.1a Terrain Plate (bare land, for a model the buildings are added to)
-
-`archive/art/refs/paxos-terrain-plate.jpeg` is a bare-terrain plate, like Arche's (§2.1a): the two arms round the bay, the fork and the broad body, with the earthworks for every site and nothing built. The round terrace on the western arm is the Chamber's; the terrace above the eastern cove, with Schedia's terraces below it, is the Tholos's (square: the Tholos stands on a paved court); the platform at the fork is the oracle's; on the body, the eastern harbour's quay and flat ground are the stoa's and the festival ground's, the scattered clearings the libraries', the south-west landing the couriers', and the stepped terraces at the southern tip, made for the far terraces that no book uses now, are left as hillside, with the couriers' quay and stair at their foot (the set `landing`). The Y is imperfect, its arms spreading rather than parallel, which looks more natural and keeps what the setting needs: two arms round a bay, the Chamber and the Tholos looking at each other across the water from round terraces, a fork for the oracle, a short stem, and the scholars' coast in the body with every site joined to the road. Its Meshy conversion (2026-09-28) is `archive/art/archive/paxos-meshy-2026-09-28/paxos-3d.glb`, the untouched source the bake reads. Made in Gemini (text-to-image) from:
-```text
-Photorealistic isometric terrain diorama of the Greek island of Paxos, Hellenistic Greece, 3rd century BC: the bare land and its earthworks only, made for 3D reconstruction. True orthographic axonometric view from the south, looking north and down at about 45 degrees, north at the top, the whole island in frame with a margin of sea all round. Deep focus, crisp fine geometry.
-
-NO BUILDINGS OF ANY KIND: no houses, no halls, no temples, no rotundas, no porticoes, no stoas, no walls, no ruins, no towers, no roofs. No ships, boats, carts, people or animals. No trees: the ground is covered only in low maquis, dry grass and bare rock, so the shape of the land reads clearly.
-
-The island is shaped like the letter Y, following the attached sketch. Two slender, high rocky arms reach north side by side, enclosing a sheltered bay of calm turquoise water between them. They join at a fork. Below the fork a distinct narrow stem, clearly narrower than either arm is long, runs south and then widens into a broad, lower body. The body is by far the largest part of the island, larger than both arms together, and fills the whole southern half of the frame.
-
-The arms: sheer white limestone sea-cliffs with sea-caves on their outer coasts, and steep slopes down to the bay on their inner sides. On the western arm, halfway along, a broad round levelled terrace high above the bay, bare and empty. At the western arm's tip, a small cove with a levelled waterfront shelf, stone quays and a short mole, and a few bare levelled building terraces behind it. On the eastern arm, directly across the bay from the round terrace: a sheltered cove with a small shingle beach and a stone quay, bare levelled terraces climbing the slope above it for a small town, and above them one broad levelled terrace facing the bay across the water, bare and empty.
-
-The fork, where the two arms meet the stem: a small, flat, levelled open platform on common ground, bare.
-
-The body of the island: lower rolling hills and small valleys, and a deeply indented coast of coves and pebble beaches. On a harbour on the body's eastern shore, far down from the fork, a long straight levelled waterfront terrace with a stone quay, and a broad flat open ground beside it. Scattered across the valleys and hill shoulders, about a dozen small separate levelled clearings, bare. A small rocky cove on the south-west shore with short stone landing stages. At the remote southern tip, the farthest point from the fork, narrow stepped dry-stone terraces on steep slopes facing the open sea, bare.
-
-One narrow road, one cart wide, runs from the southern body up the stem to the fork, where it forks: one branch runs out along the western arm past the round terrace to the cove at its tip, the other along the eastern arm to the cove on the bay and up through the terraces above it. Every harbour and landing is joined to the road: from the main road a branch road, one cart wide, descends by a cut ramp to the long quay on the body's eastern shore and its flat ground, and another descends to the landing cove on the south-west shore. Tracks of differing length link every clearing and the stepped terraces at the southern tip to the road. No quay, terrace, clearing or platform stands cut off by slope or cliff.
-
-Bright, clear sunlight from the upper right, casting crisp, well-defined shadows that model every cliff, slope, valley, terrace, quay and road cutting. Dry, transparent air: no haze, fog, mist or cloud, full sharpness everywhere. Calm deep Aegean blue sea reaching every edge of the frame, turquoise shoals and white surf at the shore. No text, no pedestal, no cutaway.
-```
-
 ### 3.2 Architectural Features Prompts
 
 #### Feature 1: The Chamber (a rotunda)
@@ -477,10 +427,15 @@ Warm daylight through the doorway, photorealistic PBR stone, marble and timber.
 
 ## 3.3 The Home Page Chart
 
-`assets/img/map.jpg` comes from a render of the two island models, never from editing an old chart.
-1. **Views:** `blender -b -P archive/art/refs/chart_views.py -- <arche|paxos> out.png 25 560 <yaw>` renders one island, placed from archive/art/islands.json, from directly above tilted 25° south, north up, on a transparent ground (frame 560 m so a turned island isn't clipped; resolution scales with it). Both islands turn together 15° anticlockwise from the explorer's placement so the pair lies along the diagonal: Arche yaw 15, Paxos yaw 37 (22° more, so its stem runs down the diagonal and its two arms open towards Arche).
-2. **Layout:** `python3 archive/art/refs/chart_layout.py` sets the two views at one scale on a 2048² canvas, Arche top-left tucked in the crook of Paxos's Y, and centres the pair as a group. The top-right and bottom-left corners stay empty. Result: archive/art/refs/chart-layout.png.
-3. **Home page:** the user converts the layout to the final chart themselves in Gemini (AI engravings made here were rejected). The result, a sepia copperplate chart with a compass rose top-right and rhumb lines, is `archive/art/full-map-cartographic.jpeg` (2048²) and, resized to 1240², `assets/img/map.jpg`.
+`assets/img/map.jpg` comes from a render of the two island builds, never from editing an old chart.
+`python3 world/src/chart_gen.py layout` renders each island from above (`world/src/chart_views.py`:
+an orthographic camera tilted 25° towards the south, north at the top, one scale for both islands,
+the sea hidden) and lays the two views on one square canvas (`world/src/chart_layout.py`: Arche
+top-left, Paxos along the diagonal to the bottom-right, the top-right corner clear for the compass
+and the bottom-left for the waves). `chart_gen.py submit` sends the layout, with the current chart
+as a style reference, to Gemini (Nano Banana 2) to be drawn as a sepia copperplate chart, and
+`chart_gen.py fetch` saves it as `world/renders/chart/chart-<job>.png`. `world/web/images.py`
+publishes it as the home page's chart.
 
 ## 3.4 Scale canon for modelling
 

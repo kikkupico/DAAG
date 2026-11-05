@@ -16,9 +16,8 @@ What is made: from the render, AVIF at each of WIDTHS no wider than the render, 
 (not in git). Each goes to the bucket under a name that carries the render's hash, so it never
 changes and is cached for a year; a re-rendered picture gets a new name.
 
-Where the links are rewritten: in every page, the books' index.html among them, and in each book's
-source, scroll/parts/<slug>/body.html, so the two stay in step. A rewritten tag keeps the local path
-as data-local, which is how a later run finds it again.
+Where the links are rewritten: in every page, the books' index.html among them. A rewritten tag
+keeps the local path as data-local, which is how a later run finds it again.
 
 world/web/images.json records what was published. Uploading uses wrangler (npx) and the login
 it already has.
@@ -42,7 +41,6 @@ HERE = Path(__file__).resolve().parent
 OUT = HERE / "out"
 MANIFEST = HERE / "images.json"
 RENDERS = ROOT / "world/renders/final"
-PARTS = ROOT / "scroll/parts"
 
 BUCKET = "daag-images"
 BASE = "https://pub-c335d307e76c41618eb522e0049e35e2.r2.dev"  # the bucket's public address; a custom domain goes here
@@ -69,9 +67,6 @@ def sources():
         yield page, page.parent
     for page in sorted(ROOT.glob("books/*/index.html")):
         yield page, page.parent
-        body = PARTS / page.parent.name / "body.html"
-        if body.exists():
-            yield body, page.parent
 
 
 class Imgs(HTMLParser):

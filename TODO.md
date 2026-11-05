@@ -14,8 +14,6 @@ page, the shared docs and the 3D model. What is left:
 - [ ] **Showcase.** `world/showcase` still has the old Tholos renders. Run
       `render.py -- shots_paxos` for the Tholos shots, then `gen_showcase.py final`. The captions are
       already updated.
-- [ ] **Scroll copy.** `scroll/parts/one-writer-at-a-time/` is far behind the built book: board,
-      podium, old pictures. Bring it up to date or retire it.
 - [ ] **Other shot variants.** Only variant `a` of each book shot was reframed and rendered. Variants
       `b`, `c`, `r` and `g1` in `world/panels/one-writer-at-a-time/shots.json` still frame the old
       podium and chair.

@@ -15,9 +15,9 @@ Lineage is kept by paper, never by book, in papers/lineage.json:
 
 A book's lineage is that of its papers: they stand in the middle column, one node each, with
 what they draw on to the left and what they lead to on the right. The graph is a spread of its
-own, between the cover and the first spread: where a book's body.html says {{lineage}},
-assemble.py puts it; lineage.css lays it out and lineage.js draws its edges.
-The Part-Time Parliament's page, written by hand, is kept in step by cover.py --write.
+own, between the cover and the first spread, between <!-- lineage --> and <!-- /lineage --> in
+the book's index.html; lineage.css lays it out and lineage.js draws its edges. The pages are
+edited by hand: print a book's graph with this script and paste it in when its lineage changes.
 """
 import html
 import json
@@ -27,7 +27,6 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-PARTS = HERE / "parts"
 OPEN, CLOSE = "<!-- lineage -->", "<!-- /lineage -->"
 esc = html.escape
 # the torn edge every spread opens with; the one after the cover is coloured by shell.css
@@ -52,7 +51,8 @@ def year(label):
 
 
 def title_of(slug):
-    return json.loads((PARTS / slug / "meta.json").read_text())["title"].split(" — ")[0]
+    page = (ROOT / "books" / slug / "index.html").read_text()
+    return html.unescape(re.search(r"<title[^>]*>(.*?)</title>", page, re.S)[1]).split(" — ")[0]
 
 
 def names(labels):
@@ -152,7 +152,7 @@ if __name__ == "__main__":
         print(line)
     if bad:
         sys.exit(1)
-    for part in sorted(PARTS.iterdir()):
-        text = block(part.name)
-        print(f'{part.name}: {text.count("lin-node here")} retold, {text.count("data-n=" + chr(34) + "i:")} drawn on, '
+    for slug in sorted({p["book"] for p in load()[1].values()}):
+        text = block(slug)
+        print(f'{slug}: {text.count("lin-node here")} retold, {text.count("data-n=" + chr(34) + "i:")} drawn on, '
               f'{text.count("data-n=" + chr(34) + "o:")} led to')
