@@ -102,6 +102,11 @@ ANCHOR_LIGNE_CLAIRE = (
     "A Franco-Belgian ligne claire comic illustration repainting the exact 3D architecture, landscape, and composition "
     "of Image 1 without adding, moving, or removing any buildings, walls, columns, or furniture."
 )
+# interiors drawn in ligne claire grew sky, windows and arches that the set does not have
+ENCLOSED_LIGNE_CLAIRE = (
+    " The interior stays fully enclosed under its roof: no sky, and no doorway, window or arch that is not already in "
+    "Image 1."
+)
 KEEP = KEEP_EXTERIOR
 # style: (the prompt that comes first, what the picture is called in the prompt, the output's name)
 STYLES = {"photo": (KEEP_EXTERIOR, "photograph", "scene"),
@@ -263,7 +268,8 @@ def request(previs, style="photo", labels=False):
         prompt = f"{action}{headcount}{cast_block}{light}"
     else:
         is_int = is_interior(entry)
-        anchor = ANCHOR_LIGNE_CLAIRE if style == "ligne-claire" else (ANCHOR_INTERIOR if is_int else ANCHOR_EXTERIOR)
+        anchor = ANCHOR_LIGNE_CLAIRE + (ENCLOSED_LIGNE_CLAIRE if is_int else "") if style == "ligne-claire" \
+            else (ANCHOR_INTERIOR if is_int else ANCHOR_EXTERIOR)
         keep_text = KEEP_LIGNE_CLAIRE if style == "ligne-claire" else (KEEP_INTERIOR if is_int else KEEP_EXTERIOR)
         prompt = f"{anchor} Within this exact architecture: {action}{headcount}{cast_block}{light} {keep_text}"
     images = [part(previs, 1920)] + [cast_part(p, i, labels) for i, p in zip(ids, cast)]
