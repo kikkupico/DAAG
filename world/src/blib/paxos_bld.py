@@ -52,7 +52,7 @@ def epidaurus_floor(k, r_med=0.90, r_sty_in=5.10, r_sty_out=6.10, r_out=9.025, z
     - Uniform flush plane at z, eliminating vertical steps between rings, with seam bevels reduced to near-zero (0.5-1mm).
     - Continuous ring of flush rectangular stylobate slabs beneath the Corinthian colonnade.
     - Concentric rings of flush ambulatory aisle slabs running under the drum wall.
-    - Strict checkerboard alternation between honed white Pentelic marble and dark bluish-black Eleusinian limestone.
+    - Strict alternation of honed white Pentelic marble and dark bluish-black Eleusinian limestone.
     """
     j = 0.0007   # ~0.7mm seam gap (tight anathyrosis masonry)
 
