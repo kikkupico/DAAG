@@ -495,8 +495,8 @@ def painted_band(k, R, z0, z1, keys=True, n=None):
 
 def tholos(k):
     """A plain round hall of honey limestone, no colonnade outside, porch at its one door (facing +x);
-    six columns of fluted drums inside; five named benches with wax tablets; the podium at the centre, a round
-    stone table whose step is the seat, with the seal of the present spell on it."""
+    six columns of fluted drums inside; five named benches, each with wax tablets and its own seal kit; an open
+    spiral floor with nothing standing at the centre."""
     R = 8.6; t = 0.8; zs = 0.5
     k.lathe('honey', [(R + 0.9, -0.6), (R + 0.9, zs), (0.0, zs)], seg=96)
     door_w, door_h = 2.0, 3.6
@@ -589,13 +589,13 @@ def tholos(k):
             a0 = 2 * PI * i / 24; a1 = 2 * PI * (i + 1) / 24
             k.beam('timber', (rp * math.cos(a0), rp * math.sin(a0), zp_ + 0.16), (rp * math.cos(a1), rp * math.sin(a1), zp_ + 0.16), 0.1, 0.1)
     # five benches, one for each legislator, each centred in a bay between two columns, the door (angle 0) in the sixth bay;
-    # each back carries its owner's name and, cut beneath it, the middle of the last seal they joined
+    # each back carries its owner's name and, cut beneath it, the core of the last seal they joined
     # (the model shows the hall under seal 7, called by Liskovia: Okios and Theron last joined seal 6, called by Okios)
     LAST = ['Ο6', 'Λ7', 'Λ7', 'Λ7', 'Ο6']
     for i in range(5):
         a = BENCH_A[i]
         rb = Rin - 0.62
-        k.push(T(rb * math.cos(a), rb * math.sin(a), zf) @ Rz(a - PI / 2))     # local +y toward the wall, -y to the podium
+        k.push(T(rb * math.cos(a), rb * math.sin(a), zf) @ Rz(a - PI / 2))     # local +y toward the wall, -y to the centre
         bench(k, NAMES[i], LAST[i])
         # the stand: a short column with a sloping top holding wax tablets, stylus, and the seal impression
         k.push(T(1.36, -0.18, 0))

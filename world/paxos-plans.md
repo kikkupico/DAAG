@@ -6,10 +6,10 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 
 ---
 
-## One Leader at a Time
+## One Writer at a Time
 
-Written: `books/one-writer-at-a-time/`. The Tholos of Schedia, its council of five and the podium;
-see `settings.md`.
+Written: `books/one-writer-at-a-time/`. The Tholos of Schedia, its council of five, the writer and
+the seal; see `settings.md`.
 
 ---
 
@@ -199,7 +199,7 @@ Written: `books/changes-that-never-clash/`.
 | "has the comet been seen at least once?": once yes, yes for ever | A monotone query. |  |
 | "is this every sighting?", "no library has withdrawn this entry" | A non-monotone query: it rests on absence. |  |
 | the south gate, down to the scholars' coast and the scholars' life: a post in a library, no roster | Coordination-free. | The scholars' coast |
-| the north gate, up the way that forks to the Chamber and the Tholos: the assemblies' life, keeping a roster and waiting on every name on it | Coordination. | *The Part-Time Parliament*; *One Leader at a Time* |
+| the north gate, up the way that forks to the Chamber and the Tholos: the assemblies' life, keeping a roster and waiting on every name on it | Coordination. | *The Part-Time Parliament*; *One Writer at a Time* |
 | a waiting chain: scholar A waits on B's correction, B on C's, C on A's; once found, it stays found | Deadlock detection: monotone. |  |
 | an entry nothing in the core cites may be withdrawn, but only once all have been heard from | Garbage collection: non-monotone. |  |
 | a student at a post who knows neither how many posts there are nor who holds them | An oblivious transducer. |  |

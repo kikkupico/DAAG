@@ -6,10 +6,10 @@ One page per book, centred on the **allegorical devices**: each device, what it 
 
 ---
 
-## One Leader at a Time
+## One Writer at a Time
 
-Written: `books/one-writer-at-a-time/`. The Tholos of Schedia, its council of five and the podium;
-see `settings.md`.
+Written: `books/one-writer-at-a-time/`. The Tholos of Schedia, its council of five, the writer and
+the seal; see `settings.md`.
 
 ---
 
@@ -24,10 +24,10 @@ see `settings.md`.
 | Device | In the paper | Also in |
 |---|---|---|
 | the libraries along the coast, each with its own copy of the compendium | Sites, each with a replica of the database. |  |
-| an entry under its heading, each version carrying a tally; the newer version wins | A database entry with its timestamp. | The tallies of the tally house (*Ordering Without Clocks*) |
+| an entry under its heading, each version carrying a tally; the newer version wins | A database entry with its timestamp. | The tallies of the counting room (*Ordering Without Clocks*) |
 | a scrap of papyrus with a new version of an entry: the entry on the heavens revised to say the Earth goes round the Sun | An update. |  |
 | letters to every library at once | Direct mail: n messages, some lost, and the sender may not know every site. | Slips on Arche's road |
-| the scholar in the stoa telling whoever he meets while the news is fresh | Rumour mongering: an infective site. |  |
+| the scholar in the stoa telling whoever they meet while the news is fresh | Rumour mongering: an infective site. |  |
 | losing interest: after meeting k who already knew, or at a toss | Loss of interest: feedback or blind, counter or coin. | The coin of *Agreeing by Chance*, used differently |
 | telling, asking, or both | Push, pull, push-pull. |  |
 | the libraries the news never reached | The residue. |  |
@@ -67,7 +67,7 @@ see `settings.md`.
 | an entry's home libraries: the same N libraries answer for it, though every library keeps the whole compendium | The replication factor N. |  |
 | a new version sent to all N home libraries, announced as done once W have acknowledged it | The write quorum W. |  |
 | a reader who asks R home libraries and takes the newest copy handed over | The read quorum R. |  |
-| the Chamber's rule: R + W > N, so the two groups always share a library | A strict quorum; intersection. | The Chamber's majorities; the camps' pledges, where two pledged and three needed to call the other gate exceed four (*Agreeing When Messages Run Late*) |
+| the Chamber's rule: R + W > N, so the two groups always share a library | A strict quorum; intersection. | The Chamber's majorities; the camps' pledges, where two pledged and three needed to call the other answer exceed four (*Agreeing When Messages Run Late*) |
 | the scholars' rule: R + W ≤ N, quicker, and the groups may miss | A partial quorum. |  |
 | the version still on its way to the other home libraries after it is announced | Expanding quorums; anti-entropy. | The festival (*Spreading by Word of Mouth*) |
 | "one of the last k versions" | k-staleness. |  |
@@ -122,7 +122,7 @@ Written: `books/changes-that-never-clash/`.
 | white pebbles for sightings recorded, black for sightings struck at that library, whichever recorded them | Two counters, one up and one down (PN-Counter). |  |
 | two libraries striking the one sighting, and the count at −1 | A global invariant cannot be kept locally (report §3.1.4: two replicas at 1 decrement and converge to −1). |  |
 | a library strikes only sightings it recorded itself | The local invariant P[g] − N[g] ≥ 0; rights reserved in advance (escrow). |  |
-| the account of the comet, the later by tally or both kept, "some say … others say …" | LWW-Register; MV-Register with version vectors. | The tally house (*Ordering Without Clocks*) |
+| the account of the comet, the later by tally or both kept, "some say … others say …" | LWW-Register; MV-Register with version vectors. | The counting room (*Ordering Without Clocks*) |
 | cross-references, only added; a struck-off list; a tag for every writing | G-Set; 2P-Set; OR-Set (add wins). |  |
 | headings with a tag for every writing into the entry; a withdrawn heading written into stands | A map on an OR-Set of keys (the report's OR-Cart). |  |
 | a reference to a withdrawn heading | An invariant across components; objects independent, no transactions. | *What You Can Promise Alone*: a new entry and the reference to it bound under one cord |
@@ -157,7 +157,7 @@ Written: `books/changes-that-never-clash/`.
 |---|---|---|
 | a reader's business at one visit: several entries consulted, or several corrected | A transaction. |  |
 | the couriers stopped | A partition. | Lost birds at the camps (*Answering While Cut Off*) |
-| the library that answers from its own copy of the compendium | High availability. | The gate-glass: answering from one's own book |
+| the library that answers from its own copy of the compendium | High availability. | *Answering While Cut Off*: each tent answering from its own note of the plan |
 | a reader who keeps to one library | Sticky availability. |  |
 | never shown a correction abandoned or half written | Read committed. |  |
 | corrections to several entries bound under one cord, such as a new entry and the cross-reference to it: seen all together or not at all | Monotonic atomic view. | *Changes That Never Clash*: a reference to a withdrawn heading |
@@ -198,8 +198,8 @@ Written: `books/changes-that-never-clash/`.
 | a group's work, written on a folded strip of lead and brought to the priestess | A program or query. |  |
 | "has the comet been seen at least once?": once yes, yes for ever | A monotone query. |  |
 | "is this every sighting?", "no library has withdrawn this entry" | A non-monotone query: it rests on absence. |  |
-| the south gate, down the stem to the scholars' life: a post in a library, no roster | Coordination-free. | The scholars' coast |
-| the north gate, up the road that forks to the Chamber and the Tholos: the assemblies' life, keeping a roster and waiting on every name on it | Coordination. | *The Part-Time Parliament*; *One Leader at a Time* |
+| the south gate, down to the scholars' coast and the scholars' life: a post in a library, no roster | Coordination-free. | The scholars' coast |
+| the north gate, up the way that forks to the Chamber and the Tholos: the assemblies' life, keeping a roster and waiting on every name on it | Coordination. | *The Part-Time Parliament*; *One Writer at a Time* |
 | a waiting chain: scholar A waits on B's correction, B on C's, C on A's; once found, it stays found | Deadlock detection: monotone. |  |
 | an entry nothing in the core cites may be withdrawn, but only once all have been heard from | Garbage collection: non-monotone. |  |
 | a student at a post who knows neither how many posts there are nor who holds them | An oblivious transducer. |  |

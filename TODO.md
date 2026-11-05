@@ -1,9 +1,9 @@
 # To do
 
-## One Leader at a Time and the Tholos
+## One Writer at a Time and the Tholos
 
-The seal, the wreath and the remodelled Tholos (October 2026) are in the book, the Schedia page, the
-shared docs and the 3D model. What is left:
+The writer, the pegged seal and the remodelled Tholos (October 2026) are in the book, the Schedia
+page, the shared docs and the 3D model. What is left:
 
 - [ ] **Home page cover.** The book's card on `index.html` still shows the old cover from R2: people,
       the board on its post, the old podium. Swap in the local plain render
@@ -20,11 +20,11 @@ shared docs and the 3D model. What is left:
       `b`, `c`, `r` and `g1` in `world/panels/one-writer-at-a-time/shots.json` still frame the old
       podium and chair.
 - [ ] **Photoreal pass with people.** The book now uses empty-hall renders. A pass with the council
-      needs a wreath on the holder's head in the cast references and prompts, and the prompts should
-      say who sits at the table as manager.
-- [ ] **A seal where manager and holder differ.** Seals 6, 7 and 8 in the book have the same person in
-      the middle and under the wreath. One example where they differ (Kleon calls, Liskovia takes the
-      wreath) would show why the wreath is a separate piece.
+      needs prompts that say who is the writer and at which bench; the writer wears nothing to mark
+      the office.
+- [ ] **A seal where manager and writer differ.** Seals 6, 7 and 8 in the book have the manager's and
+      the writer's pegs on the same spoke. One example where they differ (Kleon calls, Liskovia
+      writes) would show why the two rings are separate.
 - [ ] **Check the † citations.** Each is in `reality.md` and on the Schedia page: the Athenian public
-      seal (Constitution of Athens 44), the six-witness contract from Elephantine, the myrtle wreath
-      of office, and the painted dados of Delos and Olynthus.
+      seal (Constitution of Athens 44), the six-witness contract from Elephantine, and the painted dados
+      of Delos and Olynthus.

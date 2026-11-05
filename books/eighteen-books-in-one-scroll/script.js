@@ -560,7 +560,7 @@ def("ptp", "priests", [
   tg(on("B", 5.2, -96, 0), V("ask most, propose the latest", "phase 1, then phase 2"), { own: 1, id: "t2" })
 ]);
 
-/* One Leader at a Time: one holder wears the wreath; a line passes on the holder and two benches; a silent holder is replaced */
+/* One Writer at a Time: one writer at a time; a line passes on the writer and two benches; a silent writer is replaced */
 def("vr", "tholos", [
   { t: "halo", n: "O", cls: "gold", c: 1, id: "pod" },
   { t: "gap", n: "Th", t1: .5, t2: 3.3, id: "away" },

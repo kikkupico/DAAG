@@ -25,8 +25,9 @@ What each place, building, character, prop and practice of the setting has in co
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| Arche, the island | The name is the Greek word *archē*, “beginning, first principle, rule”. For a round island with one great massif, the nearest real match is Samothrace, whose mountain Homer makes Poseidon's lookout over Troy (Iliad 13.12–14)†. The geometry itself is invented. | Loose |
+| Arche, the island | The name is the Greek word *archē*, “beginning, first principle, rule”. For a round island filled by one mountain the model is Serifos in the western Cyclades: its mountain fills the island, ridges run out from the summit to the coast with valleys between them, and its harbours lie at the valley mouths†. Kimolos and Polyaigos, near Milos, are rounder and lower, closer to a mountain that is broad rather than high†. Samothrace, whose mountain Homer makes Poseidon's lookout over Troy (Iliad 13.12–14)†, has the shape, but its peak is far higher than Phyle's. Three harbours evenly spaced is the setting's own. | Loose |
 | the ring road, one lane each way, no overtaking | The real cliff road of the Greek coast is the Scironian road from Megara to Corinth. In classical times it was a ledge fit for walkers and pack animals; the emperor Hadrian widened it so that vehicles could pass one another in opposite directions (Pausanias 1.44.6). A lane each way is a Roman standard, so a Hellenistic cliff road would be single track. | Loose |
+| a harbour where a valley reaches the sea, the ground rising gently behind the town | The Aegean harbour is a valley mouth: Serifos's Livadi, whose name means meadow, sits on the small plain where a valley opens to its bay, and the hills rise behind it without a cliff†. Sea-cliffs belong to the headlands between the bays. | Close |
 | three harbour towns on terraces round a harbour | Hellenistic trading harbours such as Delos and Rhodes: terraced towns of courtyard houses, with warehouses and quays at the water†. | Close |
 
 ### Buildings
@@ -102,7 +103,7 @@ What each place, building, character, prop and practice of the setting has in co
 | In the setting | The real precedent | How close |
 |---|---|---|
 | a wind that drops | The Aegean's summer north wind (the *etesiai*, now the meltemi) blows by day and tends to die away at dusk†, and the Tower of the Winds in Athens names eight winds. | Close |
-| a linen tent, a plain bronze-faced shield, a chest, a wicker basket | The *skēnē* (tent), the *aspis* (the round shield, bronze-faced in Sparta's case, Xenophon 11.3), the chest and the basket are all ordinary kit†. | Close |
+| a linen tent, a plain bronze-faced shield, a chest, a wicker basket | The *aspis* (the round shield, bronze-faced in Sparta's case, Xenophon 11.3), the chest and the basket are ordinary kit†. Greek army tents were covered with hides: Xenophon's men stuffed their tent-skins with hay to float across a river (Anabasis 1.5.10)†. A linen tent is the setting's own. | Loose |
 | ravens carrying messages, a strip in a bronze tube | Real ravens do not carry messages, as the setting says. The real bird is the pigeon: Taurosthenes of Aegina is said to have sent news of his Olympic win home to his father by a pigeon on the same day (Aelian, Varia Historia 9.2; Pliny, Natural History 10.53). Apollo's raven is a mythical messenger (Hesiod fr. 60)†. | Loose |
 | a glass, started at last light | The hourglass is not attested before the fourteenth century AD (its earliest evidence is Lorenzetti's fresco of 1338), and the Greek instrument is the water-clock. The setting keeps the sandglass on purpose, a deliberate anachronism for narrative convenience: it can be turned over at a stroke, so that four men who cannot see one another start together. | Anachronism |
 | the slate on which a man chalks the tents he thinks dead | Greeks wrote notes on wax tablets, whitened boards and potsherds; chalk on slate is not attested for them†. The slate is a convenience of the allegory. | Loose |
@@ -141,13 +142,16 @@ What each place, building, character, prop and practice of the setting has in co
 | In the setting | The real precedent | How close |
 |---|---|---|
 | the island of Paxos | Lamport's story puts a thriving mercantile Paxos in the Aegean and warns that it is not the Ionian island of Paxoi. Real Paxos is a small island in the Ionian Sea. | Invented |
-| the Y shape: a stem that forks into two arms round a bay | A whole island in this shape is rare; the parts are common. Chalkidiki is a peninsula that splits into three prongs, Pallene, Sithonia and Athos†, and Lesbos is cut by two deep gulfs, Kalloni and Gera, so that its land falls into lobes†. Sicily was called *Trinakria*, “three-cape”†, and Strabo likened the Peloponnese to a plane leaf†. The Aegean coast is a drowned one: the sea rose over a mountain country and filled its valleys†, and a bay between two ridges that run out as arms is just what that makes. | Loose |
+| three sections joined by two narrow necks, a deep bay between the two northern ones | The shape is Leros in the Dodecanese, turned end to end. Deep bays cut into Leros from both coasts, so that the island falls into a northern, a middle and a southern section joined by narrow necks; the deep, sheltered Lakki bay lies between two of them, with heights on either shore†, and the long inlet of Partheni cuts into the largest section†. The Aegean coast is a drowned one: the sea rose over a mountain country and filled its valleys†, which is what makes such bays and necks. | Close |
+| the two assemblies' halls on the two summits | Greek cities built on heights: ancient Thera stood along a high ridge with its agora and public buildings on the crest†, and Lindos crowned its acropolis above the bay with its sanctuary†. Councils usually met in the agora, so halls of assembly on the summits are the setting's choice, made so that they can see each other across the bay. Like the Acropolis of Athens, each summit is reached on foot by a stepped way, not by a road. | Loose |
 
 ### Buildings
 
 | In the setting | The real precedent | How close |
 |---|---|---|
 | the Chamber, a round hall ringed by a Doric colonnade under a conical tiled roof | Greek round halls were tholoi under conical roofs. The Athenian Tholos, a round building on the west side of the agora, housed the prytaneis (Aristotle, Constitution of Athens 44), and its roof was held up by columns inside†; the tholos at Delphi and the Philippeion at Olympia add a colonnade round the drum†. The tholos at Epidaurus has a Doric colonnade outside and a ring of Corinthian columns inside the drum†, and the Chamber has both. Like a real tholos, it has one door, which can be locked. | Close |
+| white stone with painted ornament: blue triglyphs, red and blue mouldings, a meander band, painted statues | Greek buildings and statues were painted. Traces of colour survive on the Parthenon's mouldings and on the temple of Aphaia on Aegina, whose painted pediment figures have been reconstructed†; triglyphs were commonly dark blue and mouldings red and blue†. Limestone was often coated with a fine stucco and painted in the same way†. Bare white stone is the neoclassical picture of Greece, made after the paint had weathered off. | Close |
+| a small lantern at the top of the conical roof | Greek roofs could be opened to the light: the Telesterion at Eleusis had a raised opening in its roof, the *opaion*†. A lantern crowning a round hall is a loose borrowing; the tholos at Epidaurus seems to have ended in a finial†. | Loose |
 | poor acoustics, so legislators send messengers | This is Lamport's own conceit, which the setting follows faithfully. The real Greek councils met in halls built for hearing, such as the bouleuteria of Priene and Miletus†. | Invented |
 
 ### Characters
@@ -181,13 +185,13 @@ What each place, building, character, prop and practice of the setting has in co
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| Schedia, a city that keeps its own laws on the eastern arm | *Schedia* is the Greek word for a raft, as in Odysseus' raft (Odyssey 5)†. A city founded from a different mother city kept its own laws: Amorgos held three cities in Classical times, Minoa from Samos, Aigiale from Miletus, Arkesine from Naxos, though the Naxian settlement is not securely attested until later. Lesbos held five (Herodotus 1.151)†. | Close |
+| Schedia, a city that keeps its own laws on the northern section | *Schedia* is the Greek word for a raft, as in Odysseus' raft (Odyssey 5)†. A city founded from a different mother city kept its own laws: Amorgos held three cities in Classical times, Minoa from Samos, Aigiale from Miletus, Arkesine from Naxos, though the Naxian settlement is not securely attested until later. Lesbos held five (Herodotus 1.151)†. | Close |
 
 ### Buildings
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| the Tholos, a plain round hall with a round stone table at its centre | The building follows the Athenian Tholos: a plain drum with no colonnade outside, six columns inside carrying a conical tiled roof, and a porch at its one door†. The Athenian Tholos housed the committee on duty, with one member presiding for a day and a night chosen by lot (Aristotle, Constitution of Athens 44). The wreath is the setting's version of that president's office; the real president was chosen by lot, not under a numbered seal. | Close |
+| the Tholos, a plain round hall with an open circular limestone floor | The building follows the Athenian Tholos: a plain drum with no colonnade outside, six columns inside carrying a conical tiled roof, and a porch at its one door†. The Athenian Tholos housed the committee on duty, with one member presiding for a day and a night chosen by lot (Aristotle, Constitution of Athens 44). An open circular paved floor without a central dais reflects the equal distributed authority of the benches. | Close |
 
 ### Characters
 
@@ -195,26 +199,25 @@ What each place, building, character, prop and practice of the setting has in co
 |---|---|---|
 | a council of five, a majority of three | Sparta had five ephors, elected each year†. Councils and colleges of other sizes were common. | Loose |
 | the five told apart by colour; plain Greek names for the seats | Kleon, Theron and Melissa are ordinary Greek names (Kleon was an Athenian politician, Theron a tyrant of Akragas)†. Colours only tell the figures apart. | Close |
-| young men who run the lines from the table at the middle | Heralds and runners again†. | Close |
+| young men who run the lines between benches across the open floor | Heralds and runners again†. | Close |
 
 ### Props
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| wax tablets smoothed when their holder goes home | Wax tablets were the Greek notebook; the stylus's flat end smooths them. Plato uses a wax block as his image of memory (Theaetetus 191c–d)†. | Close |
+| wax tablets smoothed when their copier goes home | Wax tablets were the Greek notebook; the stylus's flat end smooths them. Plato uses a wax block as his image of memory (Theaetetus 191c–d)†. | Close |
 | a bench's name cut into its stone | Seats in the Theatre of Dionysus at Athens were inscribed with the names of the priests and officials who held them†. | Close |
 
 ### Practices
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| a seal with a higher number called when the holder falls silent | Athens renewed its presidency daily by lot. A new holder under a seal with a higher number is the setting's rule, not a Greek one. | Invented |
-| a seal: a bronze disc with round slots for signets, the manager's and a number in the middle, those who answered round the edge | The president in the Athenian Tholos kept the city's public seal for his day and night in office (Aristotle, Constitution of Athens 44)†, and any Greek of standing had a signet of their own. Contracts were sealed by several witnesses at once: six on early Ptolemaic contracts, such as the marriage contract from Elephantine of 311 BC†. A stamp whose signets are set in slots and changed, and a number that outranks whoever wears the wreath, are the setting's own. | Loose |
-| a wreath, a ring that fits round any signet, for the holder | Athenian officials wore a myrtle wreath while in office and set it aside when their term ended†. A wreath set on a seal to mark who holds an office is the setting's own. | Loose |
+| a seal with a higher number called when the writer falls silent | Athens renewed its presidency daily by lot. A new writer under a seal with a higher number is the setting's rule, not a Greek one. | Invented |
+| a seal: a bronze disc with center number, manager peg, writer peg, and rim signets | The president in the Athenian Tholos kept the city's public seal for his day and night in office (Aristotle, Constitution of Athens 44)†, and any Greek of standing had a signet of their own. Contracts were sealed by several witnesses at once: six on early Ptolemaic contracts, such as the marriage contract from Elephantine of 311 BC†. A modular bronze disc with concentric tracks, peg slots, and a number that outranks any individual, is the setting's own. | Loose |
+| distributed seal kits at each wall bench | Each official having their own signet and records was standard, but a complete distributed kit with interchangeable pegs and signets at each bench is the setting's own design to remove any single point of hardware failure. | Invented |
 | the seal's number in our digits (7, not Ζ) | Greeks wrote numbers with letters of the alphabet, Ζ for seven, or with Attic strokes and signs; the digits used today came to Europe in the Middle Ages. The seal keeps them so that it reads the same in the diagrams and the pictures. | Anachronism |
-| a round stone table at the middle of the hall, its step the seat, marked with the manager's token | Greek officials sealed and marked what was theirs with their signets, and the Athenian Tholos was where the committee on duty met and ate†. A table that is also the seat, marked by setting a token in it, is the setting's own. | Invented |
 | the lower wall painted red, with a moulding above it | Greek interiors were often painted in bands, a dark red dado below and plain or imitation-masonry plaster above, as in the houses of Delos and Olynthus†. | Close |
-| a roll, “I am here”, answered every so often | Councillors’ attendance was checked by a herald and by tokens in Athens†. A roll whose silence is taken to mean a silent holder is the setting’s own. | Loose |
+| a roll, “I am here”, answered every so often | Councillors’ attendance was checked by a herald and by tokens in Athens†. A roll whose silence is taken to mean a silent writer is the setting’s own. | Loose |
 
 ---
 
@@ -233,7 +236,7 @@ What each place, building, character, prop and practice of the setting has in co
 | the libraries | The Library and Museum of Alexandria, and Pergamon's rival library, kept and collated copies of the works of Greek literature†. | Close |
 | the stoa, where scholars pass on news | Zeno taught under the Stoa Poikile in Athens, which gave the Stoics their name†; philosophers and scholars gathered in colonnades. | Close |
 | the festival ground, where copyists compare whole copies of the compendium once a year | Panhellenic festivals drew poets, rhapsodes and scholars from across the Greek world; the yearly collation itself is the setting's own. | Loose |
-| a marble board grooved in columns, with piles of pebbles, on every library's desk | The Salamis Tablet, a marble counting board of the fourth century BC, was used for reckoning with pebbles†; *psēphoi* are pebbles used to count. | Close |
+| a marble board grooved in columns, with piles of pebbles, on every library's desk | The Salamis Tablet, a marble counting board of the fourth century BC, was used for reckoning with pebbles†; *psēphoi* are pebbles used to count. A Greek banker was a *trapezitēs*, a man of the table, from the counting table he worked at†, so the desk is a counting table. Readers held their scrolls in their hands, with no lectern†. | Close |
 | the reading room in every library, where the compendium is consulted | The one set of Greek library rules that survives, from the library of Pantainos in the Athenian Agora (about AD 100), forbids taking any book out and gives the opening hours (SEG 21.500). | Close |
 | a count kept in voting pebbles | Greek *psēphoi* were pebbles used to vote and to count, and the Greek for “to reckon” (*psēphizein*) comes from them†. | Close |
 | the reading room in every library, where a reader consults and corrects | Scholars read in the rooms and colonnades of the Museum and library at Alexandria†. | Close |

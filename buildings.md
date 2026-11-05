@@ -45,26 +45,27 @@ Built, and fixed by *The Limits of Agreement* (the camps) and *Agreeing Among Li
 
 ## Paxos — the Chamber
 
-One island shaped like a Y, and its shape groups the papers. Two arms reach north and face
-each other across a bay: the Chamber on the western arm, the city of Schedia and its Tholos on the
-eastern. The oracle stands at the fork, and the stem widens into the scholars'
-coast. The parliament passes decrees, the law of Paxos; Schedia keeps its own laws; the
+One island of three sections joined by two narrow necks, and its shape groups the papers. The
+Chamber stands on the summit of the middle section, the Tholos on the summit of the northern
+section above the city of Schedia, and the two face each other across the bay between the
+sections. The oracle stands on the southern neck, where the road forks, and the southern section
+is the scholars' coast. The parliament passes decrees, the law of Paxos; Schedia keeps its own laws; the
 scholars' copies are not law, and no decree settles which copy is right.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The Chamber** | Lamport 1998 · Lamport 2001 <span title="shared">◆</span> | Lamport's own Chamber, drawn as a rotunda to fit his description. *"The acoustics of the Chamber were poor, making oratory impossible"*, so: a circular hall with hard stone walls under one conical roof held up by columns inside, with no podium, no head of the room and no seating aimed at a speaker; legislators communicate only by messenger. One doorway, as a real tholos has, closed by a door that can be locked; legislators and messengers come and go through it whenever they like; statues on the terrace outside, one of which falls. Paxos tells time by the sun: a bronze meridian line runs north across the floor, where the noon light from the lantern crosses it. The round plan and the colonnade illustrate Lamport's text and carry no meaning of their own. The two papers are one algorithm in two presentations and are not retold. Lamport's §3.3.4 (a farmer, a merchant and a black goat) states for Paxos the two readings of *before* that Arche's request board sets side by side. |
+| **The Chamber** | Lamport 1998 · Lamport 2001 <span title="shared">◆</span> | Lamport's own Chamber, drawn as a rotunda to fit his description. *"The acoustics of the Chamber were poor, making oratory impossible"*, so: a circular hall with hard stone walls under one conical roof held up by columns inside, with no podium, no head of the room and no seating aimed at a speaker; legislators communicate only by messenger. One doorway, as a real tholos has, closed by a door that can be locked; legislators and messengers come and go through it whenever they like; statues on the terrace outside, one of which falls. The stone is white and the ornament painted, as on every Greek building: dark blue triglyphs, mouldings and eaves in red and blue, a painted meander band round the drum under the roof, painted statues. Paxos tells time by the sun: a bronze meridian line runs north across the floor, where the noon light from the lantern crosses it. The round plan and the colonnade illustrate Lamport's text and carry no meaning of their own. The two papers are one algorithm in two presentations and are not retold. Lamport's §3.3.4 (a farmer, a merchant and a black goat) states for Paxos the two readings of *before* that Arche's request board sets side by side. |
 
 ## Paxos — Schedia
 
-A city on the eastern arm, governed from a round hall where one leader wears a wreath, with laws of its own: its founders came
+A city on the northern section, governed from a round hall where one legislator at a time holds the writer's office, with laws of its own: its founders came
 from a different mother city and brought their laws with them, and the Parliament's decrees
 have never run there. Each law scroll covers its own city, so the two never contradict each
 other.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The Tholos** | Oki &amp; Liskov 1988 | A round hall with the Chamber's poor acoustics, messengers and legislators on part-time duty, built plainer: a drum of honey-coloured limestone with no colonnade outside, a porch at its one door and six columns inside, where the Chamber has a Doric colonnade outside and a ring of Corinthian columns within. Its one difference in use is a leader, who wears a wreath, and a round stone table at the centre where seals are made and kept. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has a city of its own, and the two law scrolls never conflict. The wreath is an office, not a seat: only its holder may propose, the others write down what its messengers bring, and those messengers all leave from the centre. Authority rides on the seal pressed beside every line: a bronze disc of round slots, with the manager's signet and the number in the middle, the signets of the others who answered the call round it, and a wreath round the holder's, or round the middle when the manager wears the wreath. The law is kept on wax tablets left on the benches and smoothed when their holder goes home, against the Chamber's indelible ink. When the holder falls silent, another legislator calls a seal with a higher number, and the new holder gathers what a majority hold before proposing anything. The council is five: Okios, Liskovia, Kleon, Melissa and Theron. The name is Athenian: the round building of the prytaneis, the committee on duty in turn, with one member presiding. |
+| **The Tholos** | Oki &amp; Liskov 1988 | A round hall with the Chamber's poor acoustics, messengers and legislators on part-time duty, built plainer: a drum of honey-coloured limestone with no colonnade outside and only a painted band under its eaves, a porch at its one door and six columns inside, where the Chamber has a Doric colonnade outside and a ring of Corinthian columns within. Its one difference in use is a writer: one legislator at a time holds the office and alone writes new lines of law. Viewstamped Replication is a genuine alternative to Paxos, developed independently and published first, so it has a city of its own, and the two law scrolls never conflict. The writer is an office, not a seat: the writer works at their own bench like the others, with no special dress and no place of honour, and the others copy what the writer's runners bring across the open floor. Authority rides on the seal pressed beside every line: a bronze disc with the number in a square slot at the centre, the manager's peg in an inner ring, the writer's peg in a middle ring and, round the rim, the signets of those who answered the call; every bench keeps its own seal kit. The law is kept on wax tablets left on the benches and smoothed when their legislator goes home, against the Chamber's indelible ink. When the writer falls silent, another legislator calls a seal with a higher number, and the new writer gathers what a majority hold before writing anything. The council is five: Okios, Liskovia, Kleon, Melissa and Theron. The name is Athenian: the round building of the prytaneis, the committee on duty in turn, with one member presiding. |
 
 ## Paxos — the scholars' coast
 
@@ -89,7 +90,7 @@ argument.
 
 | Building | Papers | What it is |
 |---|---|---|
-| **The oracle at the fork** | Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020 <span title="shared">◆</span> | At the fork of the island, on common ground that belongs to neither city: a sanctuary in the manner of Dodona, a low wall round an old oak with a small temple and an altar beside the tree, and two gates. The north gate opens on the road that forks up the two arms to the bodies that assemble, the Chamber and the Tholos; the south gate on the road down the stem to the scholars' coast. Groups of students bring the priestess the work they mean to do together; work that only ever adds is sent south, to the scholars' life with no roster, and work that rests on an absence — *no one has claimed this* — is sent north, to the legislators' life of waiting for every name on the roster. The oracle does not rule; it counsels. |
+| **The oracle at the fork** | Hellerstein 2010 · Ameloot et al. 2011 · Hellerstein &amp; Alvaro 2020 <span title="shared">◆</span> | On the southern neck, where the island road forks, on common ground that belongs to neither city: a sanctuary in the manner of Dodona, a low wall round an old oak with a small temple and an altar beside the tree, and two gates. The north gate opens on the way that forks to the bodies that assemble: a stepped way up to the Chamber, and the road on to the city and to Schedia below the Tholos; the south gate on the road down to the scholars' coast. Groups of students bring the priestess the work they mean to do together; work that only ever adds is sent south, to the scholars' life with no roster, and work that rests on an absence — *no one has claimed this* — is sent north, to the legislators' life of waiting for every name on the roster. The oracle does not rule; it counsels. |
 
 ---
 
@@ -114,9 +115,9 @@ argument.
   places, one rule, restated in each.
 - **Chamber / Tholos.** Both keep a law scroll by majority, in the same kind of hall. But VR was
   found independently and is a genuine alternative, not a variant, so they are different halls,
-  on either arm of the island, facing each other across the bay: one with no head of the room,
-  where whoever thinks themselves president may start a ballot, and one with a round table of seals at its middle,
-  whose leader wears a wreath.
+  on the summits of two sections of the island, facing each other across the bay: one with no head of the room,
+  where whoever thinks themselves president may start a ballot, and one where only the writer may write,
+  under a seal pressed beside every line.
 
 ---
 

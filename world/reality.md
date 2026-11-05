@@ -191,7 +191,7 @@ What each place, building, character, prop and practice of the setting has in co
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| the Tholos, a plain round hall with a round stone table at its centre | The building follows the Athenian Tholos: a plain drum with no colonnade outside, six columns inside carrying a conical tiled roof, and a porch at its one door†. The Athenian Tholos housed the committee on duty, with one member presiding for a day and a night chosen by lot (Aristotle, Constitution of Athens 44). The wreath is the setting's version of that president's office; the real president was chosen by lot, not under a numbered seal. | Close |
+| the Tholos, a plain round hall with an open circular limestone floor | The building follows the Athenian Tholos: a plain drum with no colonnade outside, six columns inside carrying a conical tiled roof, and a porch at its one door†. The Athenian Tholos housed the committee on duty, with one member presiding for a day and a night chosen by lot (Aristotle, Constitution of Athens 44). An open circular paved floor without a central dais reflects the equal distributed authority of the benches. | Close |
 
 ### Characters
 
@@ -199,27 +199,25 @@ What each place, building, character, prop and practice of the setting has in co
 |---|---|---|
 | a council of five, a majority of three | Sparta had five ephors, elected each year†. Councils and colleges of other sizes were common. | Loose |
 | the five told apart by colour; plain Greek names for the seats | Kleon, Theron and Melissa are ordinary Greek names (Kleon was an Athenian politician, Theron a tyrant of Akragas)†. Colours only tell the figures apart. | Close |
-| young men who run the lines from the table at the middle | Heralds and runners again†. | Close |
+| young men who run the lines between benches across the open floor | Heralds and runners again†. | Close |
 
 ### Props
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| wax tablets smoothed when their holder goes home | Wax tablets were the Greek notebook; the stylus's flat end smooths them. Plato uses a wax block as his image of memory (Theaetetus 191c–d)†. | Close |
-| the round stone table at the middle, where the holder writes and presses the seal | Greeks wrote with the roll or the tablet on their knees, and the writing desk is a late arrival, of the late Roman and medieval world†. Tables were ordinary furniture, and a stone table at the middle of the hall is the setting's own use of one. | Loose |
+| wax tablets smoothed when their copier goes home | Wax tablets were the Greek notebook; the stylus's flat end smooths them. Plato uses a wax block as his image of memory (Theaetetus 191c–d)†. | Close |
 | a bench's name cut into its stone | Seats in the Theatre of Dionysus at Athens were inscribed with the names of the priests and officials who held them†. | Close |
 
 ### Practices
 
 | In the setting | The real precedent | How close |
 |---|---|---|
-| a seal with a higher number called when the holder falls silent | Athens renewed its presidency daily by lot. A new holder under a seal with a higher number is the setting's rule, not a Greek one. | Invented |
-| a seal: a bronze disc with round slots for signets, the manager's and a number in the middle, those who answered round the edge | The president in the Athenian Tholos kept the city's public seal for his day and night in office (Aristotle, Constitution of Athens 44)†, and any Greek of standing had a signet of their own. Contracts were sealed by several witnesses at once: six on early Ptolemaic contracts, such as the marriage contract from Elephantine of 311 BC†. A stamp whose signets are set in slots and changed, and a number that outranks whoever wears the wreath, are the setting's own. | Loose |
-| a wreath, a ring that fits round any signet, for the holder | Athenian officials wore a myrtle wreath while in office and set it aside when their term ended†. A wreath set on a seal to mark who holds an office is the setting's own. | Loose |
+| a seal with a higher number called when the writer falls silent | Athens renewed its presidency daily by lot. A new writer under a seal with a higher number is the setting's rule, not a Greek one. | Invented |
+| a seal: a bronze disc with center number, manager peg, writer peg, and rim signets | The president in the Athenian Tholos kept the city's public seal for his day and night in office (Aristotle, Constitution of Athens 44)†, and any Greek of standing had a signet of their own. Contracts were sealed by several witnesses at once: six on early Ptolemaic contracts, such as the marriage contract from Elephantine of 311 BC†. A modular bronze disc with concentric tracks, peg slots, and a number that outranks any individual, is the setting's own. | Loose |
+| distributed seal kits at each wall bench | Each official having their own signet and records was standard, but a complete distributed kit with interchangeable pegs and signets at each bench is the setting's own design to remove any single point of hardware failure. | Invented |
 | the seal's number in our digits (7, not Ζ) | Greeks wrote numbers with letters of the alphabet, Ζ for seven, or with Attic strokes and signs; the digits used today came to Europe in the Middle Ages. The seal keeps them so that it reads the same in the diagrams and the pictures. | Anachronism |
-| a round stone table at the middle of the hall, its step the seat, marked with the manager's token | Greek officials sealed and marked what was theirs with their signets, and the Athenian Tholos was where the committee on duty met and ate†. A table that is also the seat, marked by setting a token in it, is the setting's own. | Invented |
 | the lower wall painted red, with a moulding above it | Greek interiors were often painted in bands, a dark red dado below and plain or imitation-masonry plaster above, as in the houses of Delos and Olynthus†. | Close |
-| a roll, “I am here”, answered every so often | Councillors’ attendance was checked by a herald and by tokens in Athens†. A roll whose silence is taken to mean a silent holder is the setting’s own. | Loose |
+| a roll, “I am here”, answered every so often | Councillors’ attendance was checked by a herald and by tokens in Athens†. A roll whose silence is taken to mean a silent writer is the setting’s own. | Loose |
 
 ---
 
