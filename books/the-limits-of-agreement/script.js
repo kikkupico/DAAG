@@ -6,8 +6,9 @@ const GL={H:"0",A:"1","0":"0","1":"1"};   /* initial opinion: blue (H, 0) or red
 const PAINT={H:"#136f9e",A:"#bf4a26"};
 BOOK.init();
 
-/* the four legislators in the Chamber, told apart by colour and bench */
-const TC={1:"#e0b84a",2:"#6583d6",3:"#c45448",4:"#9cb648"};
+/* the four legislators in the Chamber, one neutral grey, told apart by bench and number (colour is the thing being decided) */
+const GREY="#b4b4b4";
+const TC={1:GREY,2:GREY,3:GREY,4:GREY};
 const yesno=ok=>ok?"<span class='ok'>✓</span>":"<span class='bad'>✗</span>";
 const legChip=(k,extra="")=>`<span class="chip"${extra}><i style="background:${TC[k]}"></i>${dual("Legislator "+k,"P"+k)}</span>`;
 const tentChip=legChip;
