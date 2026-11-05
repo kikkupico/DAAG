@@ -356,21 +356,29 @@ c = p + inward * 9
 sites['granary'] = dict(x=float(c[0]), y=float(c[1]), z=float(zg), ang=float(-t_), face=float(t_))
 carve_rect(g, c[0], c[1], -t_, 6, 5, zg, fall=1.5, mask=masks['built'])
 
-# sundials on the headlands; the platform on the southern cape
+# sundials on the headlands; the platform on the southern cape. Each stands seaward of the road on the
+# headland's own top (up to 22 m out, never past the cliff edge); its pad is levelled after the road below
+sundial_at = []
 for hb in (D(180), D(60), D(300)):
     i = int(np.argmin(np.abs(angdiff(tt, hb))))
-    p = road3[i, :2]
+    p, zr = road3[i, :2], road3[i, 2]
     r_, t_ = polar(*p)
-    q = p + np.array([math.sin(t_), math.cos(t_)]) * 22
-    zq = float(g.sample(*q))
-    carve_disc(g, q[0], q[1], 5 if hb == D(180) else 2.5, zq, fall=4, mask=masks['built'])
-    sites['sundials'].append(dict(x=float(q[0]), y=float(q[1]), z=zq, platform=hb == D(180)))
+    o = np.array([math.sin(t_), math.cos(t_)])
+    d = 22.0
+    while d > 12 and float(g.sample(*(p + o * d), H0)) < zr - 3:
+        d -= 1.0
+    sundial_at.append((p + o * d, hb))
 
 # re-level each building's exact footprint (neighbouring blends overlap)
 for b_ in sites['buildings']:
     carve_rect(g, b_['x'], b_['y'], b_['ang'], b_['w'] / 2 + 0.3, b_['d'] / 2 + 0.3, b_['z'], fall=0.6, batter=0.0, reach=0.0)
 # road last, so it wins over pads it crosses
 carve_road(g, road_closed, 3.2, 9.0, mask=masks['road'])
+# the sundial pads after it, at the ground the road leaves there, so its fill cannot bury them
+for q, hb in sundial_at:
+    zq = float(g.sample(*q))
+    carve_disc(g, q[0], q[1], 5 if hb == D(180) else 2.5, zq, fall=4, mask=masks['built'], reach=8)
+    sites['sundials'].append(dict(x=float(q[0]), y=float(q[1]), z=zq, platform=hb == D(180)))
 
 # ---------------------------------------------------------------- masks
 sl = slope_deg(g)
