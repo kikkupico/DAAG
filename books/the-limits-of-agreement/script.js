@@ -29,7 +29,7 @@ function Chamber(svg){
     at(deg,r=R){const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]},
     put(g,x,y){g.setAttribute("transform",`translate(${x.toFixed(1)} ${y.toFixed(1)})`)},
     token(fill,glyph){const g=el("g",{class:"tok",opacity:0},over);el("circle",{r:12,fill,stroke:"#1c1512","stroke-width":2.5},g);if(PAINT[glyph])el("circle",{class:"i",r:5.5,style:`fill:${PAINT[glyph]}`},g);dtext(g,{},"",GL[glyph]||glyph);return g},
-    /* a messenger u of the way from bench a to bench b across the checkerboard floor */
+    /* a messenger u of the way from bench a to bench b across the black-and-white marble floor */
     fly(g,a,b,u){const d=((A[b]-A[a]+540)%360)-180;H.put(g,...H.at(A[a]+d*u,R-(d>0?24:46)*Math.sin(Math.PI*u)))},
     state(k,i,m){const t=H.tent[k].st;t[0].textContent=i;t[1].textContent=i&&(m||i)},
     badge(k,s){const b=H.tent[k].badge;b.setAttribute("opacity",s?1:0);b.t[0].textContent="";b.t[1].textContent=GL[s]||"";if(PAINT[s])b.paint.style.fill=PAINT[s]}
