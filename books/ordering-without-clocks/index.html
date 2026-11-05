@@ -35,7 +35,7 @@
     <div class="pop m" data-auto><div class="leaf"><svg class="cover-fig" id="coversvg" role="img" aria-label="Three process lanes with events labelled by Lamport clock and vector clock, a causal chain of messages, a concurrent pair, an outside phone call, and the clock update rules"></svg></div></div>
     <div class="pop i" data-auto>
       <div class="leaf">
-        <div class="photo tilt-r" data-depth="14"><img src="img/cover.jpg" data-local="img/cover.jpg" alt="Before House 1's columned portico under an overcast sky: a rough boulder in the foreground, a cart of amphorae by the road, the town's white houses and a tall cypress on the slope above"></div>
+        <div class="photo tilt-r" data-depth="14"><img src="img/cover-lc.jpg" data-local="img/cover-lc.jpg" alt="Before House 1's columned portico under an overcast sky: the accountant sits on a boulder reading a scroll, a clerk and a messenger argue in the portico, and two more messengers jog along the road towards a cart of amphorae"></div>
         <div class="fold-shadow"></div>
       </div>
     </div>
@@ -88,7 +88,7 @@
 <!-- ============================================================ the road -->
 <section class="spread dark" id="hall" data-name="The Ring Road" data-name-m="The system model">
   <div class="bleed">
-    <img class="i" src="img/ring-road.jpg" data-local="img/ring-road.jpg" alt="Under low cloud, the long sea cliff seen from the water: a pale wall of rock with scrub on its face, and cypresses along the ring road on its top" data-parallax>
+    <img class="i" src="img/ring-road-lc.jpg" data-local="img/ring-road-lc.jpg" alt="Under low cloud, the long sea cliff seen from the water: a pale wall of rock with scrub on its face, cypresses along the ring road on top, and a small messenger running along the edge" data-parallax>
     <div class="hall-title"><div class="t">
       <div class="kicker"><span class="i">The ring road of Arche</span><span class="m">The model</span></div>
       <h2><span class="i">Three houses, one narrow road</span><span class="m">Three processes, one network</span></h2>
@@ -171,7 +171,7 @@
         <h2><span class="i">The tally</span><span class="m">Logical clocks</span></h2>
         <p class="lede"><span class="i">The number is called the <b>tally</b>. Every counting room keeps a tally of its own, writes its current tally on every slip it sends out, and raises the number using two simple rules. Scroll slowly to watch the tallies rise across the morning's work.</span><span class="m">That counter is called a <b>logical clock</b>. Every process keeps a clock of its own, stamps its current value on every message it sends, and raises it using two simple rules. Scroll slowly to watch the clocks rise across the execution.</span></p>
       </div>
-      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/t03-slip.jpg" data-local="img/t03-slip.jpg" alt="House 1's harbour under cloud, seen from the water: the end of the stone pier ahead, the town's white houses and the long portico on the shore, a wooded hill above" loading="lazy"></div></div></div>
+      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/t03-slip-lc.jpg" data-local="img/t03-slip-lc.jpg" alt="House 1's harbour under cloud, seen from the water: at the end of the stone pier the accountant hands a narrow slip to a messenger, the town's white houses and the long portico on the shore behind" loading="lazy"></div></div></div>
     </div>
   </div>
   <div class="scrolly" id="tally">
@@ -282,7 +282,7 @@
   <svg class="tear" viewBox="0 0 1200 26" preserveAspectRatio="none" style="--prev:#eae4d4"><path d="M0 0h1200v8l-70 10-70-9-90 11-80-10-110 9-80-8-100 12-90-10-90 9-80-11-110 10-80-8z"/></svg>
   <div class="wrap">
     <div class="two" style="gap:clamp(20px,4vw,50px);align-items:center">
-      <div class="pop fromleft i"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/mount-phyle.jpg" data-local="img/mount-phyle.jpg" alt="Mount Phyle under cloud seen from out over the sea: the long wooded mountain rising to its summit, a trading town small on the shore at its foot" loading="lazy"></div></div></div>
+      <div class="pop fromleft i"><div class="leaf"><div class="photo tilt-l" style="aspect-ratio:4/3"><img src="img/mount-phyle-lc.jpg" data-local="img/mount-phyle-lc.jpg" alt="Mount Phyle under cloud seen from out over the sea: the long wooded mountain rising to its summit, a trading town small on the shore at its foot" loading="lazy"></div></div></div>
       <div class="pop fromleft m"><div class="leaf"><svg class="cover-fig" data-crop="200 80 320 320" role="img" aria-label="A phone call carries information that no message records"></svg></div></div>
       <div>
         <div class="kicker"><span class="i">What the tally cannot see</span><span class="m">What a logical clock cannot see</span></div>
@@ -357,7 +357,7 @@
         <p><span class="i">In principle, such synchronized physical clocks can be built: each house keeps a steady clock that barely drifts, every slip carries the sender's clock reading, and any house that falls behind nudges its clock forward. As long as the houses' clocks never disagree by more than the goatherd's fastest sprint across the mountain, the goatherd can never arrive at a house at an earlier timestamp than when they set out.</span><span class="m">In principle, such synchronized physical clocks can be built: each machine keeps a steady clock that barely drifts, every message carries the sender’s clock reading, and any machine that falls behind nudges its clock forward. As long as the clocks never disagree by more than the fastest the outside channel can deliver, a message can never arrive with an earlier timestamp than when it was sent.</span></p>
         <p><span class="i">On cloudy Arche, however, water-clocks drift and no one can guarantee a maximum travel time for messengers along the road. So the houses rely on the tally and the column, and it is worth stating plainly what each one can and cannot see:</span><span class="m">In this system, however, physical clocks drift and no one can guarantee a maximum delivery time for messages. So the processes rely on the logical clock and the vector clock, and it is worth stating plainly what each one can and cannot see:</span></p>
       </div>
-      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/sundial.jpg" data-local="img/sundial.jpg" alt="A stone sundial on its pillar on a bare headland under a grey overcast sky, casting no shadow; the cliff edge at the left, scrub and cypresses behind" loading="lazy"></div></div></div>
+      <div class="pop fromright i"><div class="leaf"><div class="photo tilt-r" style="aspect-ratio:4/3"><img src="img/sundial-lc.jpg" data-local="img/sundial-lc.jpg" alt="A stone sundial on its pillar on a bare headland under a grey overcast sky, casting no shadow; the cliff edge at the left, scrub and cypresses behind" loading="lazy"></div></div></div>
     </div>
     <div class="cards3">
       <div class="pop"><div class="leaf paper card3"><div class="body"><div class="num"><span class="i">The tally</span><span class="m">Logical clock</span></div><h3><span class="i">Respects every chain of slips</span><span class="m">Respects every chain of messages</span></h3><p><span class="i">Gives every house the exact same global sequence using just one number per event, but cannot tell by itself whether two events were connected or unrelated.</span><span class="m">Gives every process the exact same global sequence using just one number per event, but cannot tell by itself whether two events were connected or concurrent.</span></p></div></div></div>
