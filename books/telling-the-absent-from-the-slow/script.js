@@ -148,7 +148,7 @@ const LANES={1:[225,"L1",TC[1],"P1"],2:[135,"L2",TC[2],"P2"],3:[315,"L3",TC[3],"
     T.forEach(k=>{H.tent[k].g.classList.remove("out");H.state(k,"");H.badge(k,"");L.badge(k,"")});H.tent[1].g.classList.add("turn");H.state(1,"you");
     L.reset();L.turn(1);L.state(1,"you","you");K.forEach(k=>{if(truth[k]==="fine")L.msg(k,1,.3,1.1)});L.setT(2.4);
     bR.disabled=false;paint();
-    say.innerHTML=dual("Legislator 1 has had no note from some members. Which of them have stepped out? Chalk the ones you suspect, then reveal the hall.","P1 has had no message from some processes. Which of them have crashed? Mark the ones you think have, then reveal the execution.")}
+    say.innerHTML=dual("Legislator 1 has had no note from some members. Which of them have gone home? Chalk the ones you suspect, then reveal the hall.","P1 has had no message from some processes. Which of them have crashed? Mark the ones you think have, then reveal the execution.")}
   const bird=k=>truth[k]==="fine"?dual("a note arrived","a message came in"):dual("no note yet","no message yet");
   function paint(){
     rows.innerHTML=K.map(k=>`<div class="srow">${legChip(k)}<span class="sb">${bird(k)}</span><button class="btn alt" data-k="${k}" ${shown?"disabled":""}>${mark[k]?dual("Rub out","Remove"):dual("Chalk","Suspect")}</button><span class="sv" id="sv${k}"></span></div>`).join("");
@@ -243,13 +243,13 @@ const strongRun=(function(){
     const dies={},part={};dead.forEach(k=>{dies[k]=rnd(5);part[k]=T.filter(q=>q!==k&&rnd(2))});
     const skips={},o={sight,c,dies,part,skip:(p,r)=>skips[p+"-"+r]||(skips[p+"-"+r]=T.filter(q=>q!==p&&q!==c&&rnd(2)))};
     const R=runStrong(o),fin=R.finish,tallies=new Set(fin.map(p=>JSON.stringify(R.V[p]))),ans=new Set(Object.values(R.commit));
-    const when=r=>r===0?dual("stepped out before session","crashed before sending anything"):r<4?dual(`stepped out in round ${r}`,`crashed in round ${r}`):dual("stepped out while comparing","crashed while comparing");
+    const when=r=>r===0?dual("went home before the session","crashed before sending anything"):r<4?dual(`went home in round ${r}`,`crashed in round ${r}`):dual("went home while comparing","crashed while comparing");
     out.innerHTML=`<div class="chead t"><span>${dual("legislator","process")}</span><span>${dual("favoured","input")}</span><span>state</span><span>${dual("final sheet","final vector")}</span><span>${dual("commits to","decides")}</span></div>`+
       T.map(p=>{const d=dies[p]!=null,V=R.V[p];
         return `<div class="crow t${d?" dead":""}">${legChip(p)}<span><b>${dual(SW(sight[p]),GL[sight[p]])}</b></span><span>${d?when(dies[p]):p===c?dual("present, never chalked","alive, never suspected"):"present"}</span>`+
           (d?`<span></span><span>–</span>`:`<span><div class="tally">${T.map(k=>`<span class="tc ${V[k]?"f":""}">${V[k]?dual(SW(V[k]),GL[V[k]]):"–"}</span>`).join("")}</div></span><span><b>${WD(R.commit[p])}</b></span>`)+`</div>`}).join("");
     const same=tallies.size===1,one=ans.size===1,seen=[...ans].every(a=>Object.values(sight).includes(a));
-    say.innerHTML=dual(`${n?cap(legs(dead))+(n>1?" have":" has")+" stepped out.":"Nobody has stepped out."} Legislator ${c} is present and never chalked, and every other present legislator may be chalked, over and over. `+
+    say.innerHTML=dual(`${n?cap(legs(dead))+(n>1?" have":" has")+" gone home.":"Nobody has gone home."} Legislator ${c} is present and never chalked, and every other present legislator may be chalked, over and over. `+
       `<span class="${same?"ok":"bad"}">${same?"Every present legislator ends with the same sheet.":"The sheets differ."}</span> `+
       `<span class="${one&&seen?"ok":"bad"}">${one&&seen?"All commit to "+word[[...ans][0]]+", a colour someone favoured.":"The colours differ."}</span>`,
       `${n?cap(pn(dead))+(n>1?" crash.":" crashes."):"Nobody crashes."} P${c} stays correct and is never suspected, and every other correct process may be suspected by anyone, over and over. `+
@@ -369,7 +369,7 @@ const strongRun=(function(){
     say.innerHTML=alive?
       dual("The legislator is present. Early delays on the road cause occasional false suspicions; by growing the wait whenever a mark is made, false marks cease entirely once messengers move freely. In the end, the legislator is never chalked.",
            "The process is live. Early delays cause occasional false suspicions; by growing the timeout whenever a false suspicion occurs, false suspicions cease entirely once the network settles. In the end, the process is never suspected."):
-      dual("The legislator stepped out at step 9. Once the wait runs out, they are chalked permanently. The attendance slate is eventually perfect.",
+      dual("The legislator went home at step 9. Once the wait runs out, they are chalked permanently. The attendance slate is eventually perfect.",
            "The process crashed at step 9. Once the timeout expires, it is suspected permanently. The detector is eventually perfect.");
   }
   bL.onclick=()=>run(true);bD.onclick=()=>run(false);bR.onclick=()=>run(true);
