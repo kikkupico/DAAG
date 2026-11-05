@@ -181,11 +181,19 @@ carve_disc(g, 0, 0, 16, top, fall=26, mask=masks['built'])
 sites['crown'] = dict(x=0.0, y=0.0, z=top, wall_r=8.5)
 
 # three slope posts in hollows, well down the slopes on three sides, hidden from one another
+def downhill(x, y, r0=15, r1=45):
+    """Bearing in which the uncarved ground falls away from (x, y), from the mean drop out to r0..r1 metres."""
+    th_ = np.radians(np.arange(0, 360, 5)); r_ = np.arange(r0, r1, 3.0)
+    X_ = x + np.outer(np.sin(th_), r_); Y_ = y + np.outer(np.cos(th_), r_)
+    drop = float(g.sample(x, y, H0)) - g.sample(X_, Y_, H0).mean(axis=1)
+    return math.atan2(float((drop * np.sin(th_)).sum()), float((drop * np.cos(th_)).sum())) % (2 * np.pi)
+
+
 for k, (b, rr) in enumerate(((D(68), 390), (D(196), 430), (D(318), 360)), start=2):
     p = pt(rr, b)
     z = float(g.sample(*p)) - 1.6                                   # a flat-floored hollow
     carve_disc(g, p[0], p[1], 4.5, z, fall=5, mask=masks['clearing'], batter=0.6, reach=12)
-    sites['posts'].append(dict(n=k, x=p[0], y=p[1], z=z, facing=b))
+    sites['posts'].append(dict(n=k, x=p[0], y=p[1], z=z, facing=downhill(*p)))   # breastwork on the downhill side
 
 # ---------------------------------------------------------------- camps at the foot of the four cardinal gullies
 for n, b in CAMPS.items():
