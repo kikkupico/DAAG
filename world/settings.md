@@ -225,12 +225,12 @@ hold no assembly.
 Putting them on one island makes the difference a walk: the scholars could take any question
 to an assembly, and the oracle at the fork tells which work needs one.
 
-**The island is a Y, and its shape groups the papers.** Two arms reach north, spreading a little as
-natural arms do: the western arm holds the Chamber, the eastern arm the city of **Schedia** and
-its Tholos, and the two look at each other across the bay between the arms. The two ways of keeping one law scroll share the top of
-the island. The arms join at a fork, and below it the stem widens into the body of the island,
-the scholars' coast, which eventual consistency has to itself. The oracle stands at
-the fork.
+**The island is three sections joined by two narrow necks, and its shape groups the papers.**
+The Chamber stands on the summit of the middle section, the Tholos on the summit of the northern
+section above the city of **Schedia**, and the two look at each other across the deep bay between
+the sections. The two ways of keeping one law scroll share the top of the island. The southern
+section, the largest and the lowest, is the scholars' coast, which eventual consistency has to
+itself. The oracle stands on the southern neck, where the island road forks.
 
 **The parliament has no say over the scholars' copies.** It passes decrees, the island's law;
 an entry in the scholars' compendium is knowledge, not law, and no decree settles which copy is right. So nothing
@@ -238,7 +238,7 @@ on the scholars' coast waits for a vote, although the Chamber is a morning's wal
 
 ### The Chamber
 
-The western arm of Paxos hosts the parliamentary forum where the core problems of distributed consensus and consistency are enacted across three trials of parliamentary law.
+The summit of Paxos's middle section hosts the parliamentary forum where the core problems of distributed consensus and consistency are enacted across three trials of parliamentary law.
 
 | Paper | In the world |
 |---|---|
@@ -246,10 +246,10 @@ The western arm of Paxos hosts the parliamentary forum where the core problems o
 | `lamport-1998_part-time-parliament`, `lamport-2001_paxos-made-simple` | **The Chamber**, Lamport's own and kept as he wrote it, drawn as a round hall, a tholos ringed by a colonnade, because its acoustics make oratory impossible. Legislators wander in and out, each keeps a scroll, messengers take as long as they take, and any two majorities share a legislator, so past decrees are preserved. (*The Part-Time Parliament*) |
 | `chandra-toueg-1996` | **The Chamber with attendance slates.** A colleague who has left for good falls silent, and a silent bench cannot be told from a slow runner: benches stand far apart and members come and go on errands while their runners still carry their notes. Each legislator keeps an attendance slate (*pinakion*) at their own bench, chalking the colleagues they believe have left. With an unreliable detector of class $\diamond\mathcal{S}$ and a rotating presidency (*epistatai* of the round), the parliament circumvents FLP and safely passes decrees. (*Telling the Absent from the Slow*) |
 
-**The ground must provide:** the **Chamber** on the western arm, looking across the bay at
-the Tholos, and on a route rather than at a dead end (legislators wander in and out): the
-island road runs up the stem, forks, and runs out along the western arm past the Chamber to
-the harbour town at the arm's tip.
+**The ground must provide:** the **Chamber** on the summit of the middle section, looking across
+the bay at the Tholos, and on a way through rather than at a dead end (legislators wander in and
+out). No road reaches it: it is reached on foot, by a stepped way from the island road just beyond
+the oracle's north gate and another from the city of Paxos at the head of the bay.
 
 **The parliament is still sitting.** Lamport's §3.3.6 ends the Paxon parliament — a scribe's
 error names drowned sailors as the only legislators, government halts, a coup and an invasion
@@ -257,9 +257,9 @@ follow. Every later book ignores this, as a matter of convenience, and says so o
 index entry and at that point in our rendition.
 
 **One legislature per city.** Paxos has two cities and two law scrolls. The Paxon Parliament
-makes the law of Paxos: the western arm, the stem and the scholars' coast. **Schedia** keeps its
+makes the law of Paxos: the middle section, with its city, and the scholars' coast. **Schedia** keeps its
 own. Its name means *raft*: it was founded by settlers from a different mother city, who came
-by sea and brought their founders' laws with them, and the Parliament's decrees have never run on the eastern arm. That is
+by sea and brought their founders' laws with them, and the Parliament's decrees have never run on the northern section. That is
 ordinary Greek practice: Amorgos, a small island, held three independent cities — Minoa
 settled from Samos, Aigiale from Miletus, Arkesine from Naxos — each with its own laws, and
 Lesbos held five. Each law scroll covers its own city, so the two never contradict each other,
@@ -288,7 +288,7 @@ the centre where seals are made.
 
 ### Schedia and the Tholos
 
-*A city on the eastern arm, with its own laws, governed from a round hall where one leader wears a wreath.*
+*A city on the northern section, with its own laws, governed from a round hall where one leader wears a wreath.*
 
 | Paper | In the world |
 |---|---|
@@ -348,8 +348,9 @@ The Tholos has five benches, one for each legislator.
 **Why a Tholos.** In Athens the Tholos was the round building of the prytaneis, the committee
 on duty in turn, with one member presiding: a round civic hall with a head, on part-time duty.
 
-**The ground must provide:** a terrace on the eastern arm, above a sheltered cove on the bay,
-so the Tholos faces the Chamber across the water.
+**The ground must provide:** a terrace on the summit of the northern section, above the town on
+a sheltered cove on the bay and reached from it by a stepped way, so the Tholos faces the Chamber
+across the water.
 
 ### The scholars' coast
 
@@ -405,7 +406,7 @@ and an inlet crossed only by one ferry that many routes share.
 
 | Paper | In the world |
 |---|---|
-| `hellerstein-2010`, `ameloot-2011` | **The oracle at the fork**, a sanctuary on common ground that belongs to neither city, as the Messon on Lesbos was the common sanctuary of that island's cities, and built in the manner of Dodona: a low wall round an old oak, a small temple and an altar beside the tree, a gate to the north and a gate to the south. Groups of **students**, their schooling done, bring the **priestess** the work they mean to do together, written on a folded strip of lead, before they choose how to live. She reads the work and nothing else, and sends the group out by one gate: **north**, up the road that forks to the Chamber and the Tholos, to live as the assemblies do, keeping a **roster** of members and settling nothing until every name on it has been heard from; or **south**, down the stem, to live as scholars, each at a post in a library, with no roster, answering from whatever has reached it. The students do not join the Parliament or Schedia's council; they live as those bodies live. A group's work is a question about the libraries' facts, so in the examples the libraries are the students' posts: work that only grows (any sighting recorded, a ring of waiting) can be answered with no roster and without waiting; work that rests on an absence (every sighting, an entry nothing cites) needs every post heard from. The counsel is always one road or the other, never a third: mixed work may still go south if its one step that rests on an absence is closed with a manifest naming the notices before it, so that only that step waits, and only for those. The oracle is exact and foresees nothing; that real oracles were vague is said once, as a leak. *Knowing When to Wait* |
+| `hellerstein-2010`, `ameloot-2011` | **The oracle at the fork**, a sanctuary on common ground that belongs to neither city, as the Messon on Lesbos was the common sanctuary of that island's cities, and built in the manner of Dodona: a low wall round an old oak, a small temple and an altar beside the tree, a gate to the north and a gate to the south. Groups of **students**, their schooling done, bring the **priestess** the work they mean to do together, written on a folded strip of lead, before they choose how to live. She reads the work and nothing else, and sends the group out by one gate: **north**, up the road that forks to the Chamber and the Tholos, to live as the assemblies do, keeping a **roster** of members and settling nothing until every name on it has been heard from; or **south**, down the road to the coast, to live as scholars, each at a post in a library, with no roster, answering from whatever has reached it. The students do not join the Parliament or Schedia's council; they live as those bodies live. A group's work is a question about the libraries' facts, so in the examples the libraries are the students' posts: work that only grows (any sighting recorded, a ring of waiting) can be answered with no roster and without waiting; work that rests on an absence (every sighting, an entry nothing cites) needs every post heard from. The counsel is always one road or the other, never a third: mixed work may still go south if its one step that rests on an absence is closed with a manifest naming the notices before it, so that only that step waits, and only for those. The oracle is exact and foresees nothing; that real oracles were vague is said once, as a leak. *Knowing When to Wait* |
 
 ---
 
@@ -427,11 +428,12 @@ snapshots) · Corbett et al. 2012 (Spanner) · Thomson et al. 2012 (Calvin).
 
 - **Mount Phyle must block every sightline between the three houses.** It fills Arche's
   interior; a small cone would leave the lines between evenly spaced houses clear.
-- **Paxos is a Y, and its shape groups its papers.** Two arms reach north and face each
-  other across a bay: the Chamber on the western arm, on the road to the harbour town at its
-  tip; Schedia and its Tholos on the eastern arm. The oracle stands at the fork. The
-  stem widens into the scholars' coast, with many libraries within casual reach, courier
-  routes of different length and a landing for the couriers' boats at the southern tip.
+- **Paxos is three sections joined by two narrow necks, and its shape groups its papers.** The
+  Chamber and the Tholos stand on the summits of the middle and northern sections and face each
+  other across the bay between them, each reached on foot by stepped ways. The oracle stands on
+  the southern neck, where the road forks. The southern section is the scholars' coast, with many
+  libraries within casual reach, courier routes of different length, an inlet crossed by one
+  ferry and a landing for the couriers' boats at the southern tip.
 
 ---
 

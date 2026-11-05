@@ -140,7 +140,7 @@ const anyCopy=S=>S.some(f=>f[0]==="copy"),noClaim=S=>!S.some(f=>f[0]==="claim");
   const svg=$("#hallsvg");svg.setAttribute("viewBox","0 0 440 400");
   dtext(svg,{x:220,y:26,class:"lab",style:"font-size:14px"},"north · to live as legislators","north · needs coordination");
   dtext(svg,{x:220,y:388,class:"lab",style:"font-size:14px"},"south · to live as scholars","south · coordination-free");
-  /* the road forks north of the sanctuary, one branch to each arm; south it runs down the stem */
+  /* north of the sanctuary the way forks, a stepped way up to the Chamber and the road on to the Tholos; south the road runs down to the coast */
   el("path",{class:"way",d:"M220 150V96L120 46M220 96L320 46"},svg);el("path",{class:"way",d:"M220 250V366"},svg);
   el("circle",{cx:220,cy:200,r:56,fill:"#efe6cf",stroke:"#1c1512","stroke-width":5},svg);
   el("circle",{class:"i",cx:204,cy:196,r:21,fill:"#8a9550",stroke:"#1c1512","stroke-width":2.5},svg);el("rect",{class:"i",x:230,y:186,width:26,height:22,fill:"#d9cfb4",stroke:"#1c1512","stroke-width":2.5},svg);
