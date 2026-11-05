@@ -1,4 +1,4 @@
-"""Props a book shot places for itself: cheese wheels, a sandglass. Built into the scene just before
+"""Props a book shot places for itself: cheese wheels, a sandglass, a bird perch. Built into the scene just before
 the shot renders (shots_panels.py) and cleared before the next, so the island model itself is unchanged.
 
 A prop is {"kind", "at": [x, y, z], "face": degrees or [x, y] to face, "scale"}; positions are already
@@ -62,7 +62,15 @@ def sandglass(k):
     k.push(T(0, 0, 0.022)); k.lathe("sand", [(0.0, 0.0), (0.028, 0.008), (0.036, 0.025), (0.0, 0.05)], seg=20); k.pop()
 
 
-KINDS = {"cheese": cheese_wheel, "sandglass": sandglass}
+def perch(k):
+    """A bird perch outside a tent: a rough stake 1.2 m high with a crossbar for the birds to land on."""
+    k.cyl("timber", 0.03, 0.0, 1.2, seg=10)
+    k.beam("timber", (-0.28, 0.0, 1.15), (0.28, 0.0, 1.15), 0.035, 0.035)
+    for s in (-1, 1):                                    # two short braces under the bar
+        k.beam("timber", (0.0, 0.0, 0.95), (s * 0.16, 0.0, 1.13), 0.02, 0.02)
+
+
+KINDS = {"cheese": cheese_wheel, "sandglass": sandglass, "perch": perch}
 
 
 PROTO_EXTRA = {"merchantman": ["merchant_sail"]}      # prototypes drawn together with another
