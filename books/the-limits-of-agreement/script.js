@@ -84,30 +84,76 @@ COVERS.draw("#coversvg",COVER);COVERS.mount(COVER);
 /* the four as lanes, for a Chamber picture's computing twin (Unfold in book.js) */
 const LANES={1:[225,"L1",TC[1],"P1"],2:[135,"L2",TC[2],"P2"],3:[315,"L3",TC[3],"P3"],4:[45,"L4",TC[4],"P4"]};
 
-/* ===== two easy plans, each giving up one demand ===== */
+/* ===== the first two rules: always blue, and wait for every note ===== */
 (function(){
   const H=Chamber($("#plansvg")),L=Unfold(H.svg,{nodes:LANES,span:3.2,vals:GL}),say=$("#plansay"),D=[1,2,3].map(i=>$("#d"+i)),btn=["plan1","plan2","plan3","plannew"].map(i=>$("#"+i));
-  const names=[dual("No two commit differently","No two processes decide differently"),dual("Both colours stay possible","Both values stay possible"),dual("Somebody eventually commits","Some process eventually decides")],T=[1,2,3,4];
+  const names=[dual("No two commit differently","No two processes decide differently"),dual("A unanimous opinion wins","A shared input wins"),dual("Somebody eventually commits","Some process eventually decides")],T=[1,2,3,4];
   let sight={},toks=[];L.wrap(H);
   const checks=(v,why)=>D.forEach((li,i)=>li.innerHTML=`<b>${names[i]}</b> ${v[i]==null?"":yesno(v[i])}${why[i]?"<br>"+why[i]:""}`);
   const lock=on=>btn.forEach(b=>b.disabled=on);
   function clear(){toks.forEach(g=>g.remove());toks=[];L.reset();T.forEach(k=>{H.state(k,"");H.tent[k].g.classList.remove("out")})}
-  function deal(){T.forEach(k=>{sight[k]=rnd(2)?"A":"H";H.badge(k,sight[k])});clear();checks([null,null,null],["","",""]);say.innerHTML=dual("Each easy plan keeps two demands. Find the one it gives up.","Each easy protocol keeps two properties. Find the one it gives up.")}
+  function deal(){T.forEach(k=>{sight[k]=rnd(2)?"A":"H";H.badge(k,sight[k])});clear();checks([null,null,null],["","",""]);say.innerHTML=dual("Try a rule, and see which demands it keeps.","Try a protocol, and see which properties it keeps.")}
   /* every legislator in `from` sends their initial opinion to the other three; messengers take as long as they take */
   function birds(from){const ps=[];from.forEach(a=>T.forEach(b=>{if(b===a)return;const g=H.token(TC[a],sight[a]);toks.push(g);H.fly(g,a,b,.12);g.setAttribute("opacity",1);
     ps.push(tween(900+rnd(1900),u=>H.fly(g,a,b,.12+.76*u)).then(()=>g.setAttribute("opacity",0)))}));return Promise.all(ps)}
   btn[0].onclick=()=>{clear();T.forEach(k=>H.state(k,"blue","decides 0"));
-    checks([true,false,true],[dual("All four paint it blue.","All four decide 0."),dual("They paint it blue whatever anyone thought, so voting is pointless.","They decide 0 whatever the inputs were, so the inputs are pointless."),dual("Everyone commits at once.","Everyone decides at once.")]);
+    checks([true,false,true],[dual("All four paint it blue.","All four decide 0."),dual("If all four favour red, they still paint it blue.","If every input is 1, they still decide 0."),dual("Everyone commits at once.","Everyone decides at once.")]);
     say.innerHTML=dual("<b>Always blue</b> keeps the first and third demands, and gives up the second.","<b>Always decide 0</b> keeps agreement and termination, and gives up validity.")};
   btn[1].onclick=async()=>{lock(true);clear();checks([null,null,null],["","",""]);say.innerHTML=dual("Every legislator sends their opinion to the other three, and waits until holding all four notes.","Every process sends its input to the other three, and waits until it holds all four inputs.");
     await birds(T);const n=T.filter(k=>sight[k]==="A").length,att=n>=3;T.forEach(k=>H.state(k,att?"red":"blue",att?"decides 1":"decides 0"));
-    checks([true,true,true],[dual("All four apply one rule to the same four notes.","All four apply one rule to the same four inputs."),dual(`${n} of the 4 favoured red, so today the rule says ${att?"red":"blue"}. Other opinions would say otherwise.`,`${n} of the 4 inputs are 1, so for these inputs the rule says ${att?1:0}. Other inputs would say otherwise.`),dual("Everyone commits once the last note arrives.","Everyone decides once the last message is in.")]);
+    checks([true,true,true],[dual("All four apply one rule to the same four notes.","All four apply one rule to the same four inputs."),dual(`${n} of the 4 favoured red, so the rule says ${att?"red":"blue"}. If all four favour one colour, all four notes say so, and the rule picks it.`,`${n} of the 4 inputs are 1, so the rule says ${att?1:0}. If every input is the same, all four messages say so, and the rule picks it.`),dual("Everyone commits once the last note arrives.","Everyone decides once the last message is in.")]);
     say.innerHTML=dual("On a session when every legislator stays in the hall, <b>waiting for every note</b> keeps all three demands. The rule used here: paint it red if at least three favour it, otherwise blue.","When no process crashes, <b>waiting for every input</b> keeps all three properties. The rule used here: decide 1 if at least three inputs are 1, otherwise 0.");lock(false)};
   btn[2].onclick=async()=>{lock(true);clear();checks([null,null,null],["","",""]);H.tent[3].g.classList.add("out");L.crash(3);H.state(3,"silent","crashed");say.innerHTML=dual("Suppose Legislator 3 has gone home. The other three send what they hold, and wait for all four notes.","Suppose P3 has crashed and nothing ever comes from it. The other three send their inputs, and wait for all four.");
     await birds([1,2,4]);[1,2,4].forEach(k=>H.state(k,"waits","waiting"));
-    checks([true,true,false],[dual("Nobody commits, so no two differ.","Nobody decides, so no two differ."),dual("The rule still depends on what each member favoured.","The rule still depends on the inputs."),dual("Three legislators wait on a member who has gone home, and can never learn that they have left.","Three processes wait on a process that will never answer, and can never learn that it will not.")]);
+    checks([true,true,false],[dual("Nobody commits, so no two differ.","Nobody decides, so no two differ."),dual("Nobody paints a colour against a unanimous opinion.","No process decides against a shared input."),dual("Three legislators wait on a member who has gone home, and can never learn that they have left.","Three processes wait on a process that will never answer, and can never learn that it will not.")]);
     say.innerHTML=dual("With one member absent, <b>waiting for every note</b> gives up the third demand. Nobody in the hall can tell this session from one in which Legislator 3's messenger is merely slow.","With one process crashed, <b>waiting for every input</b> gives up termination. None of the other three can tell this execution from one in which P3's message is merely slow.");lock(false)};
   btn[3].onclick=deal;deal();
+})();
+
+/* ===== two more rules that go on without one bench: the first three opinions, and one chooser ===== */
+(function(){
+  const H=Chamber($("#threesvg")),L=Unfold(H.svg,{nodes:LANES,span:7,slide:true,vals:GL}),say=$("#threesay"),D=[1,2,3].map(i=>$("#t"+i)),btn=["three1","three2","three3"].map(i=>$("#"+i));
+  const names=[dual("No two commit differently","No two processes decide differently"),dual("A unanimous opinion wins","A shared input wins"),dual("Somebody eventually commits","Some process eventually decides")],T=[1,2,3,4];
+  /* opinions divided two against two, so that the bench a legislator misses decides their colour */
+  const OP={1:"H",2:"A",3:"A",4:"H"},word={H:"blue",A:"red"},val={H:0,A:1};
+  let toks=[];L.wrap(H);
+  const checks=(v,why)=>D.forEach((li,i)=>li.innerHTML=`<b>${names[i]}</b> ${v[i]==null?"":yesno(v[i])}${why[i]?"<br>"+why[i]:""}`);
+  const lock=on=>btn.forEach(b=>b.disabled=on);
+  const paint=(k,s)=>H.state(k,word[s],"decides "+val[s]);
+  function clear(){toks.forEach(g=>g.remove());toks=[];L.reset();T.forEach(k=>{H.state(k,"");H.tent[k].g.classList.remove("out");H.badge(k,OP[k])});checks([null,null,null],["","",""])}
+  /* a messenger from a to b, carrying glyph, walking from u0 to u1 of the way in ms */
+  const walk=(g,a,b,u0,u1,ms)=>tween(ms,u=>H.fly(g,a,b,u0+(u1-u0)*u));
+  function send(a,b,glyph){const g=H.token(TC[a],glyph);toks.push(g);H.fly(g,a,b,.12);g.setAttribute("opacity",1);return g}
+  const land=(g,a,b,u0,ms)=>walk(g,a,b,u0,.88,ms).then(()=>g.setAttribute("opacity",0));
+  /* the first rule: paint the majority of the first three opinions held; four notes are slow, one to each bench,
+     and only the quick ones count, so the colours do not hang on the animation */
+  btn[0].onclick=async()=>{lock(true);clear();
+    say.innerHTML=dual("Every legislator sends their opinion to the other three, and paints as soon as they hold three opinions, their own among them.","Every process sends its input to the other three, and decides as soon as it holds three inputs, its own among them.");
+    const SLOW=new Set(["3>1","4>2","1>3","2>4"]),held={};T.forEach(k=>held[k]=[OP[k]]);const ps=[];
+    T.forEach(a=>T.forEach(b=>{if(a===b)return;const g=send(a,b,OP[a]),slow=SLOW.has(a+">"+b);
+      ps.push(land(g,a,b,.12,slow?4600+rnd(500):900+rnd(900)).then(()=>{if(slow)return;held[b].push(OP[a]);
+        if(held[b].length===3){const red=held[b].filter(s=>s==="A").length>=2;paint(b,red?"A":"H")}}))}));
+    await Promise.all(ps);
+    checks([false,true,true],[dual("Legislators 1 and 4 paint it blue, and Legislators 2 and 3 paint it red.","P1 and P4 decide 0, and P2 and P3 decide 1."),dual("If all four favour one colour, any three opinions agree on it.","If every input is the same, any three inputs agree on it."),dual("Every bench paints after three opinions, even with one member gone home.","Every process decides after three inputs, even with one crashed.")]);
+    say.innerHTML=dual("<b>Following the first three opinions</b> keeps the second and third demands, and gives up the first. Each bench missed a different note, and the notes they missed arrived after the paint was dry.","<b>Majority of the first three inputs</b> keeps validity and termination, and gives up agreement. Each process missed a different input, and the late messages were delivered after the decisions.");lock(false)};
+  /* the second rule, waiting: the chooser has gone home before choosing */
+  btn[1].onclick=async()=>{lock(true);clear();H.tent[1].g.classList.add("out");L.crash(1);H.state(1,"gone home","crashed");
+    say.innerHTML=dual("Legislator 1 is to choose, paint their own opinion, and send it to the others. Suppose Legislator 1 has gone home before choosing.","P1 is to choose its own input, decide it, and send it to the others. Suppose P1 has crashed before choosing.");
+    [2,3,4].forEach(k=>H.state(k,"waits","waiting"));L.tick(3);await sleep(reduce?0:1800);
+    checks([true,true,false],[dual("Nobody paints, so no two differ.","Nobody decides, so no two differ."),dual("The chooser paints their own opinion, so a unanimous opinion wins.","The chooser decides its own input, so a shared input wins."),dual("Three legislators wait for a note that will never come, and cannot tell that it will not.","Three processes wait for a message that will never come, and cannot tell that it will not.")]);
+    say.innerHTML=dual("<b>Waiting for the chooser</b> keeps the first two demands, and gives up the third: it is waiting for every note again, with one bench in place of four.","<b>Waiting for P1</b> keeps agreement and validity, and gives up termination: it is waiting for every input again, with one process in place of four.");lock(false)};
+  /* the second rule, with a successor: the chooser is present, but their messengers are slow */
+  btn[2].onclick=async()=>{lock(true);clear();
+    say.innerHTML=dual("Legislator 1 favours blue, paints it, and sends word to the other three. The messengers are slow.","P1 decides its input, 0, and sends it to the other three. The messages are slow.");
+    paint(1,"H");const late=[2,3,4].map(b=>({b,g:send(1,b,"H")}));[2,3,4].forEach(k=>H.state(k,"waits","waiting"));
+    await Promise.all(late.map(({b,g})=>walk(g,1,b,.12,.4,1300)));
+    L.tick(3);await sleep(reduce?0:1600);
+    say.innerHTML=dual("After a long while with no note, the others take Legislator 1 for gone. Legislator 2 chooses instead, paints their own opinion, red, and sends word.","After a timeout with no message, P1 is taken for crashed. P2 chooses instead, decides its own input, 1, and sends it.");
+    paint(2,"A");await Promise.all([1,3,4].map(b=>land(send(2,b,"A"),2,b,.12,1000+rnd(500)).then(()=>{if(b!==1)paint(b,"A")})));
+    await Promise.all(late.map(({b,g})=>land(g,1,b,.4,1200)));
+    checks([false,true,true],[dual("Legislator 1 painted blue before anyone gave up on them, and the other three painted red.","P1 decided 0 before the timeout, and the other three decided 1."),dual("Whoever chooses paints their own opinion, so a unanimous opinion wins.","Whoever chooses decides its own input, so a shared input wins."),dual("Everyone paints, even when the chooser has truly gone home.","Everyone decides, even when P1 has truly crashed.")]);
+    say.innerHTML=dual("<b>Naming a successor</b> keeps the second and third demands, and gives up the first. Legislator 1 had not gone home: their messengers were only slow, and their notes arrived after Legislator 2 had chosen.","<b>Taking over on timeout</b> keeps validity and termination, and gives up agreement. P1 had not crashed: its messages were only slow, and were delivered after P2 had chosen.");lock(false)};
+  clear();say.innerHTML=dual("Neither rule waits for all four benches. Find what each gives up instead.","Neither protocol waits for all four processes. Find what each gives up instead.");
 })();
 
 /* ===== two sessions that look the same from legislator 2's bench ===== */
