@@ -183,7 +183,10 @@ const LANES={1:[225,"L1",TC[1],"P1"],2:[135,"L2",TC[2],"P2"],3:[315,"L3",TC[3],"
   const trade=(a,b,n)=>{const t=1.4+3.1*n;dot(a,t);arc(a,t,b,t+1.1);dot(b,t+1.1);arc(b,t+1.1,a,t+2.2);dot(a,t+2.2)};
   /* drawn in the round, or on lanes in computing, with the trades made so far */
   Timeline($("#foldsvg"),{vb:"0 0 520 480",cx:260,cy:240,r0:40,step:27,rings:7,tEnd:7.4,
-    nodes:{1:[225,"L1",TC[1],"P1"],2:[135,"L2",TC[2],"P2"],3:[315,"L3",TC[3],"P3"],4:[45,"L4",TC[4],"P4"]}},Q=>{P=Q;done.forEach((a,n)=>trade(a,took[a],n))});
+    nodes:{1:[225,"L1",TC[1],"P1"],2:[135,"L2",TC[2],"P2"],3:[315,"L3",TC[3],"P3"],4:[45,"L4",TC[4],"P4"]}},Q=>{P=Q;
+      /* in the round, each bench's line is named at its outer end too, where the later arcs are drawn */
+      if(!isM())[1,2,3,4].forEach(k=>{const [x,y]=Q.pt(k,8.2);const t=el("text",{class:"lab halo",x,y:y+5,style:"font-size:15px;text-anchor:middle"},Q.over);t.textContent="Legislator "+k});
+      done.forEach((a,n)=>trade(a,took[a],n))});
   function run(a,b,btn){
     trade(a,b,done.length);
     took[b]=a;took[a]=b;done.push(a);btn.disabled=true;paint();
@@ -200,19 +203,38 @@ const LANES={1:[225,"L1",TC[1],"P1"],2:[135,"L2",TC[2],"P2"],3:[315,"L3",TC[3],"
   b12.onclick=()=>run(1,2,b12);b34.onclick=()=>run(3,4,b34);br.onclick=reset;reset();
 })();
 
-/* ===== the opening that settles nothing: however the row is settled, two neighbours split ===== */
+/* ===== the opening that settles nothing: a row of beginnings, one legislator to a line, and the reader tries to close them all ===== */
 (function(){
-  const box=$("#dusk"),say=$("#dusksay"),B=[0,1,2,3,4].map(n=>[1,2,3,4].map(k=>k<=n?"A":"H")),fate=["H","H","H","A","A"];
-  const word={H:"blue",A:"red"},ing={H:"painting it blue",A:"painting it red"},val={H:0,A:1};
+  const box=$("#dusk"),say=$("#dusksay"),T=[1,2,3,4];
+  /* beginning j: Legislators 1 to j favour red, the rest blue; the second demand fixes the two ends */
+  const B=[0,1,2,3,4].map(n=>T.map(k=>k<=n?"A":"H")),fate=["H","H","H","A","A"];
+  const NEXT={H:"A",A:"O",O:"H"},word={H:"blue",A:"red"},val={H:0,A:1};
+  const code=j=>B[j].map(s=>GL[s]).join("");
+  const verdict=f=>f==="O"?dual("<b>open</b>","<b>bivalent</b>"):dual(`<span class="long">closed for </span><b>${word[f]}</b>`,`<b>${val[f]}</b>-valent`);
+  const cls=f=>f==="O"?"open":f==="H"?"hold":"att";
+  const and=a=>a.length>1?a.slice(0,-1).join(", ")+" and "+a[a.length-1]:a[0];
+  const named=j=>isM()?code(j):j===1?"the beginning where only Legislator 1 favours red":`the beginning where Legislators ${and(T.slice(0,j))} favour red`;
   function render(focus){
-    const i=fate.findIndex((f,j)=>j<4&&f!==fate[j+1]),p=i+1;
-    box.innerHTML=B.map((b,j)=>{const end=j===0||j===4,tag=end?"div":"button",hot=j===i||j===i+1;
-      return `<${tag} class="beg${hot?" split":""}"${end?"":` data-j="${j}" aria-label="${isM()?`An initial configuration fixed at ${val[fate[j]]}`:`A beginning settled for ${word[fate[j]]}`}. Press to change it."`}><div class="sq">${b.map((s,k)=>`<span style="background:${TC[k+1]};--paint:${PAINT[s]}"${hot&&k+1===p?' class="p"':""}>${dual("",GL[s])}</span>`).join("")}</div><small>${dual("settled for","univalent")}<b class="${fate[j]==="H"?"hold":"att"}">${dual(word[fate[j]],val[fate[j]])}</b>${end?"forced":"&nbsp;"}</small></${tag}>`}).join("");
-    $$("button",box).forEach(bt=>bt.onclick=()=>{const j=+bt.dataset.j;fate[j]=fate[j]==="H"?"A":"H";render(j)});
+    /* the first pair of neighbours closed for opposite colours, if any; they differ in Legislator i+1 */
+    const i=fate.findIndex((f,j)=>j<4&&f!=="O"&&fate[j+1]!=="O"&&f!==fate[j+1]),p=i+1,hot=j=>i>=0&&(j===i||j===i+1);
+    const cell=(j,inner,c="")=>`<div class="c${c}${hot(j)?" split":""}">${inner}</div>`;
+    let h=`<div class="c lg"></div>`+B.map((b,j)=>cell(j,j===0?dual("all blue","0000"):j===4?dual("all red","1111"):dual("&nbsp;",code(j))," hd")).join("");
+    T.forEach(k=>{
+      h+=`<div class="c lg${i>=0&&k===p?" p":""}">${dual(`<span class="long">Legislator </span><span class="short">L</span>${k}`,"P"+k)}</div>`;
+      B.forEach((b,j)=>{const s=b[k-1],home=hot(j)&&k===p;
+        h+=cell(j,`<span class="op${home?" home":""}" style="--paint:${PAINT[s]}">${dual(word[s],GL[s])}</span>`)})});
+    h+=`<div class="c lg vd">${dual("the rule leaves it","valency")}</div>`;
+    h+=fate.map((f,j)=>{const end=j===0||j===4,tag=end?"div":"button";
+      const lab=`${isM()?"Configuration "+code(j):"Beginning "+(j+1)+" of 5"}: ${isM()?(f==="O"?"bivalent":val[f]+"-valent"):(f==="O"?"open":"closed for "+word[f])}. Press to change it.`;
+      return cell(j,`<${tag} class="vb ${cls(f)}"${end?"":` data-j="${j}" aria-label="${lab}"`}>${verdict(f)}${end?`<small>${dual("by the second demand","by validity")}</small>`:""}</${tag}>`)}).join("");
+    box.innerHTML=h;
+    $$("button",box).forEach(bt=>bt.onclick=()=>{const j=+bt.dataset.j;fate[j]=NEXT[fate[j]];render(j)});
     if(focus!=null)$(`button[data-j="${focus}"]`,box).focus();
-    const x=fate[i],y=fate[i+1];
-    say.innerHTML=dual(`The two marked beginnings are settled opposite ways, and differ only in what <b>Legislator ${p}</b> favoured on entering. Take a run from the one settled for ${word[x]} in which Legislator ${p} goes home, as one absent member may. It ends in ${ing[x]}. Run the same session from its neighbour: Legislator ${p} has told nobody their opinion, so the other three see the same notes in the same order, and it ends in ${ing[x]} there too. <span class="bad">But that beginning was settled for ${word[y]}.</span> However you settle the row, some pair splits like this. So some beginning is not settled at all.`,
-      `The two marked initial configurations are fixed at opposite values, and differ only in the input of <b>P${p}</b>. Take an execution from the one fixed at ${val[x]} in which P${p} takes no steps, as the one crashed process may. It decides ${val[x]}. Run the same execution from its neighbour: P${p} has told nobody its input there, so the other three see the same messages in the same order, and it decides ${val[x]} there too. <span class="bad">But that configuration was fixed at ${val[y]}.</span> However you fix the row, some pair splits like this. So some initial configuration is not fixed at all.`);
+    if(i>=0)say.innerHTML=dual(`<span class="bad">Neighbours closed for opposite colours.</span> The two marked beginnings differ only in what <b>Legislator ${p}</b> favoured. Let Legislator ${p} go home before sending a single note, as one member may. The other three hold the same opinions in both beginnings and receive the same notes, so whatever colour they paint in one, they paint in the other. One of the two cannot be closed the way it is marked. Change one of them.`,
+      `<span class="bad">Neighbours univalent for opposite values.</span> The two marked configurations differ only in the input of <b>P${p}</b>. Let P${p} crash before sending a single message. The other three hold the same inputs in both and receive the same messages, so whatever value they decide in one, they decide in the other. One of the two cannot be univalent the way it is marked. Change one of them.`);
+    else{const o=fate.map((f,j)=>f==="O"?j:-1).filter(j=>j>=0).map(named),are=o.length>1?"are":"is";
+      say.innerHTML=dual(`<span class="ok">No neighbours are closed for opposite colours</span>, but only because ${and(o)} ${are} open. The row has to turn from blue to red somewhere, and the only way across is through an open beginning. However you mark it, the row cannot be closed all the way.`,
+        `<span class="ok">No neighbours are univalent for opposite values</span>, but only because ${and(o)} ${are} bivalent. The row has to turn from 0 to 1 somewhere, and the only way across is through a bivalent configuration. However you mark it, the row cannot be univalent all the way.`)}
   }
   render();onReg.push(()=>render());
 })();

@@ -46,28 +46,46 @@ body[data-reg="m"] .two.solo{grid-template-columns:minmax(0,1fr);max-width:46rem
 
 .perch b{display:block;font-size:1rem}
 
-/* ---------- the row of beginnings ---------- */
-.dusk{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(4px,1.4vw,12px)}
+/* ---------- the row of beginnings: a line for each legislator, a column for each beginning ---------- */
+.dusk{display:grid;grid-template-columns:auto repeat(5,minmax(0,1fr));font-family:var(--sans);color:var(--ink);margin-bottom:6px}
 
-.beg{border:3px solid var(--ink);background:#fff;padding:8px 4px;text-align:center;font-family:var(--sans);transition:background .3s,box-shadow .3s;color:var(--ink)}
+.dusk .c{padding:4px clamp(2px,.8vw,7px);transition:background .3s;text-align:center}
 
-button.beg{cursor:pointer}
+.dusk .c.split{background:#fde8de}
 
-.beg.split{background:#fde8de;box-shadow:0 0 0 3px var(--blood)}
+.dusk .hd{font-size:.72rem;letter-spacing:.04em;color:#6b5a48;align-self:end;padding-top:8px}
 
-.beg .sq{display:grid;grid-template-columns:1fr 1fr;gap:3px;max-width:64px;margin:0 auto 6px}
+.dusk .lg{text-align:right;font-size:.85rem;white-space:nowrap;align-self:center;padding-right:10px}
 
-.beg .sq span{border:2px solid var(--ink);font-weight:700;font-size:.8rem;line-height:1.5}
+.dusk .lg.p{color:var(--blood);font-weight:700}
 
-.beg .sq span.p{outline:3px solid var(--blood);outline-offset:1px}
+.dusk .lg.vd{font-size:.72rem;color:#6b5a48;white-space:normal;max-width:6.5em}
 
-.beg small{display:block;font-size:.66rem;letter-spacing:.04em;line-height:1.25}
+.dusk .short{display:none}
 
-.beg small b{display:block;font-size:.8rem}
+.dusk .op{display:block;border:2px solid var(--ink);background:#fff;font-weight:700;font-size:.8rem;line-height:2em}
 
-.beg .hold{color:var(--aegean-d)}
+.dusk .op.home{outline:3px solid var(--blood);outline-offset:2px}
 
-.beg .att{color:var(--blood)}
+.dusk .vb{display:block;width:100%;margin-top:6px;border:3px solid var(--ink);background:#fff;padding:7px 2px;font:inherit;font-size:.74rem;line-height:1.25;color:var(--ink)}
+
+.dusk button.vb{cursor:pointer;box-shadow:3px 3px 0 var(--shadow)}
+
+.dusk button.vb:hover{background:#fffaf0}
+
+.dusk .vb b{font-size:.86rem}
+
+.dusk .vb small{display:block;font-size:.64rem;color:#6b5a48;margin-top:2px}
+
+.dusk .vb.hold b{color:var(--aegean-d)}
+
+.dusk .vb.att b{color:var(--blood)}
+
+.dusk .vb.open{background:#fbf1cf;border-style:dashed}
+
+.dusk .vb.open b{color:#8a6a00}
+
+@media(max-width:560px){.dusk .long,.dusk .vb small{display:none}.dusk .short{display:inline}.dusk .vb{padding:7px 0;font-size:.66rem}.dusk .vb b{font-size:.78rem}.dusk .lg.vd{max-width:4.5em}}
 
 /* ---------- standings, drawn as a small map ---------- */
 .gr-arrow{stroke:#1c1512;stroke-width:2.5;fill:none}
@@ -104,4 +122,4 @@ button.beg{cursor:pointer}
 @media(max-width:860px){.cards3.pair{grid-template-columns:1fr}}
 
 /* ---------- allegory: opinions are paint, not digits ---------- */
-body[data-reg="i"] .beg .sq span{background:var(--paint)!important;min-height:1.5em}
+body[data-reg="i"] .dusk .op{background:var(--paint);color:#fffaf0;font-weight:600;letter-spacing:.03em}
