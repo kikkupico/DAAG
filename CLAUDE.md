@@ -12,3 +12,8 @@
   - Equirectangular HDRI sky maps live in `world/assets/polyhaven/hdri/`.
   - All HDRI lookups must resolve through `resolve_hdri_path()` to guarantee graceful fallbacks if an asset is missing.
   - Exposure is automatically governed by `adapt_exposure()` in `world/src/render.py` to prevent blown-out specular highlights on Aegean marble while preserving midtone and shadow contrast.
+
+## Tests
+- `npm test` runs the widget tests (Vitest + jsdom). Each book's real `index.html` and scripts are loaded with reduced motion on, so the widgets run as in the browser; `tests/harness.js` has the loader and the stubs (canvas, observers, storage).
+- One file per book in `tests/`, named for the book; `smoke.test.js`, `widgets.test.js` (click-through of every control, both registers) and `shared.test.js` cover all books.
+- Read text with `shown()` (it drops the register that is switched off) and click with `click()` (it ignores disabled controls, as a user would).
