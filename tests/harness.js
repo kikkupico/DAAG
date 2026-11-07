@@ -41,3 +41,10 @@ export function loadBook(slug, { reg = "i" } = {}) {
 /* like a user: a disabled control does not respond */
 export const click = el => el.disabled ? false : el.dispatchEvent(new el.ownerDocument.defaultView.MouseEvent("click", { bubbles: true }));
 export const text = el => el.textContent.replace(/\s+/g, " ").trim();
+
+/* the text a reader sees: the register that is switched off is dropped */
+export const shown = el => {
+  const reg = el.ownerDocument.body.getAttribute("data-reg"), c = el.cloneNode(true);
+  c.querySelectorAll(reg === "m" ? ".i" : ".m").forEach(n => n.remove());
+  return c.textContent.replace(/\s+/g, " ").trim();
+};
