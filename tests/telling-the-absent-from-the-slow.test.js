@@ -127,12 +127,15 @@ describe("telling-the-absent-from-the-slow: rounds by turns", () => {
     expect($("#turnlog").children).toHaveLength(0); expect($("#turnnext").disabled).toBe(false);
     expect(b.errors).toEqual([]); b.close();
   });
-  /* KNOWN BUG: no scenario button carries the "on" class until one is pressed, so the Clear button, which is visible
-     from the start, looks the selected one up with $(".on[data-kill]") and reads .dataset of null. Remove .fails once fixed. */
-  it.fails("Clear works before any scenario has been chosen", async () => {
+  it("Clear works before any scenario has been chosen, and restarts the default one", async () => {
     const b = await open(); const $ = q(b);
     click($("#turnnext")); click($("#turnr"));
-    expect(b.errors).toEqual([]); b.close();
+    expect($("#turnlog").children).toHaveLength(0); expect(b.errors).toEqual([]); b.close();
+  });
+  it("Clear restarts the scenario last chosen", async () => {
+    const b = await open(); const $ = q(b);
+    kill(b, 0); click($("#turnnext")); click($("#turnr"));
+    expect(shown($("#turnsay"))).toMatch(/All four run/); b.close();
   });
 });
 

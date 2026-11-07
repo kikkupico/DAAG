@@ -262,13 +262,13 @@ const strongRun=(function(){
 /* ===== rounds by turns (rotating presidency) ===== */
 (function(){
   const rows=$("#turnrows"),log=$("#turnlog"),say=$("#turnsay"),bN=$("#turnnext"),bs=$$("[data-kill]"),bR=$("#turnr");
-  let st=null;
+  let st=null,last=1;   // last: the scenario Clear starts again (one crash, until a button is pressed)
   const word2=v=>`<b>${WD(v)}</b>`,L=(a,b)=>isM()?b:a;
   function paint(owner){
     rows.innerHTML=`<div class="chead t2"><span>${dual("legislator","process")}</span><span>estimate</span><span>${dual("taken up in round","adopted in round")}</span><span></span></div>`+
       T.map(k=>{const live=st.live.includes(k),own=owner===k;
         return `<div class="crow t2${live?"":" dead"}${own?" owner":""}">${legChip(k)}<span data-l="estimate">${word2(st.est[k])}</span><span data-l="${L("taken up in round","adopted in round")}">${st.ts[k]||dual("initial opinion","its input")}</span><span>${!live?dual("absent","crashed"):st.commit?dual("commits to "+word[st.commit],"decides "+GL[st.commit]):own?dual("president of this round","coordinator of this round"):""}</span></div>`}).join("")}
-  function start(nDead){const ks=shuffle(T),sight={};T.forEach(k=>sight[k]=rnd(2)?"A":"H");
+  function start(nDead){last=nDead;const ks=shuffle(T),sight={};T.forEach(k=>sight[k]=rnd(2)?"A":"H");
     st=newNight(ks.slice(nDead).sort(),sight);log.innerHTML="";bN.disabled=false;bR.hidden=false;paint(null);
     say.innerHTML=dual(`${nDead?(nDead>1?"Two legislators are":"One legislator is")+" absent.":"All four are present."} For the first two rounds the slates are wrong: a present president may be falsely chalked. From round 3 they are right. Take a round.`,
       `${nDead?(nDead>1?"Two processes crash.":"One process crashes."):"All four run."} For the first two rounds the detectors are wrong: a process may suspect a round's coordinator that is correct. From round 3 they are right. Take a round.`)}
@@ -294,7 +294,7 @@ const strongRun=(function(){
     }
   };
   bs.forEach(b=>b.onclick=()=>{bs.forEach(x=>x.classList.toggle("on",x===b));start(+b.dataset.kill)});
-  bR.onclick=()=>start(+($(".on[data-kill]",$("#turnbtns"))||$(".on[data-kill]")).dataset.kill);
+  bR.onclick=()=>start(last);
   start(1);
 })();
 
