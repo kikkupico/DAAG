@@ -40,6 +40,24 @@ jobs:
           cp scroll/shell.css scroll/shell.js scroll/place.css _site/scroll/
           python3 tutor/web.py _site
 
+      # Count visitors: Cloudflare Web Analytics on every published page, added here so a
+      # page regenerated from its source keeps it.
+      - name: Add the visitor count
+        run: |
+          python3 - <<'EOF'
+          from pathlib import Path
+          TAG = b"""<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b2bb6dae782241aeb4ff5956bb60694e"}'></script><!-- End Cloudflare Web Analytics -->\n"""
+          done = 0
+          for f in sorted(Path("_site").rglob("*.html")):
+              data = f.read_bytes()
+              at = data.find(b"</head>")
+              if at < 0 or b"cloudflareinsights" in data:
+                  continue
+              f.write_bytes(data[:at] + TAG + data[at:])
+              done += 1
+          print(f"analytics: {done} pages")
+          EOF
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
