@@ -40,13 +40,13 @@ jobs:
           cp scroll/shell.css scroll/shell.js scroll/place.css _site/scroll/
           python3 tutor/web.py _site
 
-      # Count visitors: Cloudflare Web Analytics on every published page, added here so a
+      # Count visitors: Cloudflare Web Analytics and GoatCounter on every published page, added here so a
       # page regenerated from its source keeps it.
       - name: Add the visitor count
         run: |
           python3 - <<'EOF'
           from pathlib import Path
-          TAG = b"""<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b2bb6dae782241aeb4ff5956bb60694e"}'></script><!-- End Cloudflare Web Analytics -->\n"""
+          TAG = b"""<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b2bb6dae782241aeb4ff5956bb60694e"}'></script><!-- End Cloudflare Web Analytics --><script data-goatcounter="https://kikkupico.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>\n"""
           done = 0
           for f in sorted(Path("_site").rglob("*.html")):
               data = f.read_bytes()
